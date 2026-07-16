@@ -1,0 +1,1698 @@
+{
+  "_comment": "処理済みファイルのハッシュと状態を管理。ubm-knowledge-sync コマンドで自動更新。",
+  "last_sync": "2026-07-16",
+  "total_processed": 102,
+  "files": [
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-05-25 - 【経営哲学】強い企業を作る秘訣｜組織構築に悩む税理士事務所経営者に向き合う北原孝彦のコンサルティング.md",
+      "file_hash": "720db069e3702f69f3019e7cfdfd598d",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 17,
+      "extracted_entry_ids": null,
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "phase-advice",
+        "action-guides",
+        "mindset",
+        "case-studies"
+      ],
+      "_note": "legacy: extracted_entry_ids not tracked at time of processing. Will be updated on next sync."
+    },
+    {
+      "file_path": "05_Project/UBM/動画教材/UBM - 選択と集中.md",
+      "file_hash": "ef9672d7f502965657056b9a98ddd262",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 7,
+      "extracted_entry_ids": null,
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "phase-advice",
+        "action-guides",
+        "mindset"
+      ],
+      "_note": "legacy: extracted_entry_ids not tracked at time of processing. Will be updated on next sync."
+    },
+    {
+      "file_path": "05_Project/UBM/動画教材/UBM - vol.1_商品づくりロードマップ.md",
+      "file_hash": "d8fa7b70060392b8b8011ad918a14864",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": null,
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "action-guides"
+      ],
+      "_note": "legacy: extracted_entry_ids not tracked at time of processing. Will be updated on next sync."
+    },
+    {
+      "file_path": "05_Project/UBM/動画教材/UBM - 無形ビジネス講座.md",
+      "file_hash": "2c62e52d405403924eeea20031e2fd37",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": null,
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "phase-advice"
+      ],
+      "_note": "legacy: extracted_entry_ids not tracked at time of processing. Will be updated on next sync."
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02-07（大阪）/2026-02-07 - 選択と集中.md",
+      "file_hash": "beb6a093957847b41aed3aba18a1df48",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 8,
+      "extracted_entry_ids": null,
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "phase-advice",
+        "action-guides",
+        "mindset",
+        "case-studies"
+      ],
+      "_note": "legacy: extracted_entry_ids not tracked at time of processing. Will be updated on next sync."
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-12-13（大阪）/minutes - 2025-12-13 - 高山さん事業相談.md",
+      "file_hash": "0849969a16ca4adc7279bf7070eb412c",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 6,
+      "extracted_entry_ids": null,
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "action-guides",
+        "case-studies"
+      ],
+      "_note": "legacy: extracted_entry_ids not tracked at time of processing. Will be updated on next sync."
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-11-05 - 自己中心的な経営でお客様に信用されない女性経営者に\"人が集まってくる思考\"を叩き込む.md",
+      "file_hash": "7fcf53f89f14ee75144b41e9b7bac330",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": null,
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "action-guides",
+        "mindset",
+        "case-studies"
+      ],
+      "_note": "legacy: extracted_entry_ids not tracked at time of processing. Will be updated on next sync."
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-10-18（大阪）/UBM - 大阪合宿 - 2025-10-18 - 事業相談（高山さん）.md",
+      "file_hash": "f3ebf3f5ba3a766c4b9670fce4f70c99",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "CP-011",
+        "MS-008"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-12-13（大阪）/UBM-大阪合宿事業相談（2025-12-13）.md",
+      "file_hash": "fc37f2fd5d9c33e79b76bed9a2dd2e96",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "CP-005"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation"
+      ],
+      "_note": "CP-005は minutes - 2025-12-13 - 高山さん事業相談.mdと重複ソース。このファイルに固有の追加エントリとして記録。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-09-21 - 【経営判断】迷ったら川上を見ろ｜事業の核心を見極める思考法｜北原孝彦のコンサルティング.md",
+      "file_hash": "22b18e623e8b3d3932e693ed66f4288b",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "PR-017",
+        "CS-010"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-07-20 - 【落とし穴】優しい経営者ほど失敗する理由を北原孝彦が語る.md",
+      "file_hash": "a8c6540f5e918c713c3cfd1372462fab",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "CP-008"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-07-09 - 【危険】高報酬が組織を破綻させる｜北原孝彦が語るレベニューシェアの致命的欠陥とは.md",
+      "file_hash": "0882937320008810045166d096946a99",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "CP-009"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-07-02 - 【億越え志望者必見】転落した起業家へ北原孝彦は何を伝えたのか【年商3500万→月商4万円】.md",
+      "file_hash": "3a44717c08c42c879645146164eca97a",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "CS-011",
+        "MS-010"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "case-studies",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-07-27 - 【ブレイクスルー】事業拡大に必要な力とは｜北原孝彦が説く「伝える努力」の重要性.md",
+      "file_hash": "8153ad237a1404479c20c56824ad6af9",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "PA-006"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "phase-advice"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02-07（大阪）/2026-02-07 - 事業相談の全体議事録.md",
+      "file_hash": "162e39a13cc4d251eabeafe7609b7710",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "CP-012",
+        "CP-013"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02-07（大阪）/2026-02-07 - UBM - 億超えルーム.md",
+      "file_hash": "0c8452908e7aaf3399fa2f1c32773be4",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "CS-012"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/UBM - 2026-02-19 - 交流会攻略セミナー.md",
+      "file_hash": "119ec229302a2dbf5ca69b407ff532ce",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "CP-010",
+        "AG-009"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "action-guides"
+      ],
+      "_note": "CP-010はconsultation-sales.json, AG-009はaction-guides-relationship.jsonに格納"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-12-13（大阪）/億超えルーム.md",
+      "file_hash": "1cfb7504581c037b01000bbf8191b519",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "PR-029"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-12-13（大阪）/事業相談後のネクストアクション.md",
+      "file_hash": "3aa35c76add9f1f7917cb9223bf59d45",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "アクションリスト集。他ファイルでカバー済みの原則を実践段階で記述したもの。固有エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-12-13（大阪）/成果対談.md",
+      "file_hash": "24677bccf071967f2d98e4cea2eaf30c",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "断片的メモ。固有エントリは他ファイルで既にカバー済み。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-12-13（大阪）/UBM - 目標と課題の確認.md",
+      "file_hash": "492847c19ae2431e43bb5a609d16ca40",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "目標フォーマット確認ファイル。構造的メモのみで固有エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/動画教材/UBM - vol.2_商品販売ロードマップ.md",
+      "file_hash": "6a25560e46c3f667857ecdbd4604542c",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "AG-015"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/動画教材/UBM - 店舗ビジネス講座.md",
+      "file_hash": "91a0eff9fc1ba8bde0462d865ed7252a",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "店舗向け内容。他ファイル（选択と集中等）で既にカバーされている原則が中心。固有エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/動画教材/UBM - グリッドパートナーセミナー.md",
+      "file_hash": "5d689460800b5c672aef1f635114892e",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "PR-031"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles"
+      ],
+      "_note": "ほぼ画像スライド構成。テキスト部分から「左手（目的）基準が人生を決める」を抽出。"
+    },
+    {
+      "file_path": "05_Project/UBM/動画教材/UBM - vol.3_関連商品づくりロードマップ.md",
+      "file_hash": "cd74f26ed63ddff186bcc58dcb9e07c2",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "AG-014"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/月報フィードバック/2025-12-10 - 月報フィードバック.md",
+      "file_hash": "848bd1a6853823ebdcdeb895d2128c0b",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "月報フィードバック内容。他ファイルで既にカバーされている原則が中心。固有エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/月報フィードバック/2026-01-09 - 月報フィードバック.md",
+      "file_hash": "f4210be8deaf20c646a8f139aa2862cd",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "ほぼ空テンプレート状態。固有エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-06-29 - 【実証済み】教わった通りに組織化したら利益率が劇的に改善した話.md",
+      "file_hash": "241da24ed0af7ebb595d93ad9c5ac94c",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "CS-016",
+        "CP-017"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "case-studies",
+        "consultation"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-07-13 - これが人材戦略の正解だった｜北原孝彦が辿り着いた属人化脱却術.md",
+      "file_hash": "d599fdacce255d9c0179964a7a32693a",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "CS-017"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-06-08 - 【組織構築】年商10億を目指す介護経営者の人材戦略｜北原孝彦が教える人材育成法.md",
+      "file_hash": "b50daf5038fd81d118fe86df749882a2",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "CP-029",
+        "CS-027",
+        "MS-023"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "case-studies",
+        "mindset"
+      ],
+      "_note": "2026-04-04再処理。CS-016（2025-06-29）の前回セッション。CP-029（介護経営者の人材抜擢相談）、CS-027（新店舗展開事例）、MS-023（降格の必要な恐怖）を抽出。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-06-01 - SNS戦略で迷う経営者必見｜北原孝彦から学ぶ\"お客様主役\"の発信術.md",
+      "file_hash": "72094f8f9603fba9e57ad3bfd626c150",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "PR-030"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-08-03 - 本当に優秀な人間とは？優秀な部下の真の育て方.md",
+      "file_hash": "9ec7e592496223ab3d39c80c498fcaef",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "アウトライン・構造説明が中心。月報フィードバック会（2025-10-14）でCP-015として既にカバー済み。固有エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-07-30 - 【広告費80万→成約0】「呪文」で資本を溶かす罠｜北原孝彦のコンサルティング.md",
+      "file_hash": "e4c380072efed7c5d63b6908209f8025",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "PR-036",
+        "PR-037",
+        "CP-027"
+      ],
+      "deleted_entry_ids": [
+        "PR-025",
+        "PR-026",
+        "CP-018"
+      ],
+      "target_categories": [
+        "principles",
+        "consultation"
+      ],
+      "_note": "2026-04-04再処理。旧エントリ(PR-025,PR-026,CP-018)を削除し、PR-036,PR-037,CP-027として再抽出。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-11-19 - 【事件】有望な若手がパンクしてしまいました…議事録.md",
+      "file_hash": "189b7d389c061ba8467a3742092487b4",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "PR-028",
+        "CS-018"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/【企業努力】法律の間を潜り抜ける\"勝ち筋と考え方\"を熱血指導.md",
+      "file_hash": "e252195ba641098707266018864d2a4c",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "法律の隙間を突くビジネス手法の説明。固有エントリとして抽出できる普遍的原則なし。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-06-15 - 【人材】年商1億達成後に待ち受ける壁｜北原孝彦が語るミッションステートメントの重要性.md",
+      "file_hash": "76a4f7c95d8a007536f892fba44d3c0a",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "CS-020",
+        "CP-019"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "case-studies",
+        "consultation"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-10-28 - ビジネスモデル根本的見直し.md",
+      "file_hash": "e187452b350fd0a6ecfad6f46bf7c176",
+      "status": "processed",
+      "processed_date": "2026-03-31T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "PR-027",
+        "CS-019"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-10-29 - 目標がブレる起業家へ告ぐ成果を出す\"経営者思考\"の真髄とは.md",
+      "file_hash": "a08abe9ac1d1b5a71028811e74600370",
+      "status": "processed",
+      "processed_date": "2026-04-01T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "PR-032",
+        "CP-020",
+        "MS-016",
+        "AG-016"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "mindset",
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-07-23 - 【即効】10分で経営者が激変！北原孝彦のコンサルティング結果を見逃すな.md",
+      "file_hash": "7847a49b8feccf84b3af52d0a59522a9",
+      "status": "processed",
+      "processed_date": "2026-04-01T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "PR-033",
+        "CP-021",
+        "MS-017",
+        "CS-021"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "mindset",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-07-16 - 北原孝彦の生き様が組織を強く育てた｜年商3300万円経営者が学んだ真実.md",
+      "file_hash": "09d7f550da4aed50aab1bbe44d7473fd",
+      "status": "processed",
+      "processed_date": "2026-04-01T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "PR-034",
+        "CP-022",
+        "MS-018"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-06-22- 【スカッと経営者】北原孝彦のコンサルで売上爆増！取引先を実績で見返した方法とは？.md",
+      "file_hash": "4787b5dd377158ba0a3664de8a46f3a3",
+      "status": "processed",
+      "processed_date": "2026-04-01T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "CP-023",
+        "CS-022",
+        "MS-019"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "case-studies",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/UBM - 2025-10-28 - 起業家マインドセット.md",
+      "file_hash": "21f82fef3499b5b54b889be9acf74afb",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "PR-035"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/UBM - 2025-10-24 - 集客力・販売力・継続力を2倍にする勉強会.md",
+      "file_hash": "cc4649a494171868489af64d42917543",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "PA-009"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "phase-advice"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/UBM - 2025-10-25 - 成果報告会.md",
+      "file_hash": "b0c9e85d69c84a8e9721895847ea7ca8",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "MS-021",
+        "CS-023"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "mindset",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/minutes - 2025-10-14 - 月報フィードバック会.md",
+      "file_hash": "cc8d409bc993db7a9f59d48b6d519da0",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "CP-024",
+        "AG-017",
+        "CS-025"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "action-guides",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/UBM - 2025-10-15 - X活用術.md",
+      "file_hash": "d3f35e50f653a9b1fc0e85e4b8652f65",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "X活用術の実践的テクニック。前バッチで既存エントリと重複する内容のため今回は新規エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/UBM - 2025-12-26 - 成果報告会.md",
+      "file_hash": "1ff895b017a90c1cae23a2d992337481",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "CS-024"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/UBM - Next Action - 2025-10-07.md",
+      "file_hash": "36c3e671a9d9f4223224de67cc0d2e3a",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "Next Actionリスト。個人の行動タスク記録であり普遍的ナレッジエントリとして抽出できる内容なし。"
+    },
+    {
+      "file_path": "05_Project/UBM/minutes - 2025-10-03 - UBM - 合宿オリエンテーション.md",
+      "file_hash": "aa226c9466ca88ced54d29783911f015",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "合宿オリエンテーション議事録。スケジュール・ロジ情報が主。ナレッジエントリ抽出対象なし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02/2026-02-09 - アカデミー説明会.md",
+      "file_hash": "9000e93b2cc1da7f49c056ca5d494b91",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "アカデミー説明会の概要。既存エントリと重複する内容のため新規エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02/2ヶ月間のやったこと.md",
+      "file_hash": "63c5937bf53e1e3849da464ffc80456a",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "個人の活動記録。ナレッジエントリ抽出対象なし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02/目標と課題の確認.md",
+      "file_hash": "243acb97980158e1dda8559519aedf10",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "個人の目標・課題確認シート。ナレッジエントリ抽出対象なし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02/相談内容.md",
+      "file_hash": "86e1ecb5cb95ba4080c7cee86f29ff2c",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "個人の相談事項メモ。ナレッジエントリ抽出対象なし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02/2026-02-07 - 高山さん事業相談.md",
+      "file_hash": "aa5c2e90cce4ac6eaccf01aa225b0bb9",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "CP-025"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/slide-2026-02-05-合宿相談事項/structure.md",
+      "file_hash": "70b14c21d010fd3c7cdf4752eaa3057c",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "スライド構造ファイル。ナレッジエントリ抽出対象なし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/UBM − 事業相談（高山さん） - 提出資料.md",
+      "file_hash": "19d589f83c516fceefc24e301f9e1550",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "事業相談提出資料。CP-025（2026-02-07高山さん相談）でカバー済み。重複のため新規エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-10-18（大阪）/UBM - 大阪合宿 - 2025-10-18 - 億超え.md",
+      "file_hash": "2c6eea4ff9f81f3f92fe9703f1e45932",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "MS-020"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-10-18（大阪）/UBM - 合宿（大阪） - 2025-10-18.md",
+      "file_hash": "dc0356b847f74e734ad0315b3f6f399b",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "合宿スケジュール・進行記録。ナレッジエントリ抽出対象なし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2026-02/UBM - 事業相談（高山さん） - プレゼン資料.md",
+      "file_hash": "01e4d78e95f327f2865d87b6c42a1b0e",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 0,
+      "extracted_entry_ids": [],
+      "deleted_entry_ids": [],
+      "target_categories": [],
+      "_note": "プレゼン資料。CP-025（高山さん事業相談）でカバー済み。重複のため新規エントリなし。"
+    },
+    {
+      "file_path": "05_Project/UBM/合宿/2025-10-18（大阪）/UBM - 大阪合宿 - 2025-10-18 - 今岡さんセミナー.md",
+      "file_hash": "631de1052681bf278365a786b66949ba",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 1,
+      "extracted_entry_ids": [
+        "CP-026"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-08-06 - なぜ北原孝彦は「この質問」でスキルより人格を見抜くのか｜億越えルーム.md",
+      "file_hash": "5e0abb8218c5d5175b16179a15ca1659",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "PR-038",
+        "CP-028",
+        "MS-022",
+        "CS-026"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "mindset",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-08-27 - 「\"想い\"をぶつけろ！」仲間が集まらない本当の理由｜北原孝彦のコンサルティング.md",
+      "file_hash": "98a4e6edd4a2a632b6f47ccfe678c946",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "PR-039",
+        "CP-030",
+        "MS-024",
+        "MS-025"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "mindset"
+      ],
+      "_note": "2026-04-04抽出。仲間が集まらない理由・思いとマインドの違い・テクニックの中に思いを入れる原則。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-08-10 - 「利益相反は100％起きる」それでも利他経営すべき理由｜北原孝彦の億越えルーム.md",
+      "file_hash": "531c2f79f064409191643a16742082ef",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "PR-040",
+        "CP-031"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation"
+      ],
+      "_note": "2026-04-04抽出。利益相反100%前提での同業者顧客化・ノウハウ開放による市場設計。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-08-17 - 高額商品の開発が必要な理由とは｜北原孝彦のコンサルティング.md",
+      "file_hash": "e5f76bd67f093955716d0e07b66c2790",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "PR-041",
+        "CP-032"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation"
+      ],
+      "_note": "2026-04-04抽出。一枚の絵から川上を先に設計・低価格帯より高単価上流商品を先に作る理由。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-08-20 - 【売上を追うな】施策に追われる経営者に北原孝彦が伝えたこと.md",
+      "file_hash": "c7a3d330363eee4c1017f8ce2f3eba7f",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "PR-042",
+        "CP-033"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "mindset"
+      ],
+      "_note": "2026-04-04抽出。チームへのビジョン訴求・売上目標ではなくビジョンを落とす・施策より先に会社の目的を定める。MS-025は2025-08-27ファイルに紐づけ。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-08-24 - 「大義を掲げなさい」組織化の本質を極めるアドバイス｜北原孝彦のコンサルティング.md",
+      "file_hash": "dfe541310af311cd980ef75302511086",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "PR-043",
+        "CP-034"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation"
+      ],
+      "_note": "2026-04-04抽出。人がついてくる人間かどうかが経営の最重要基準・大義・思想・ビジョンを語ることが組織化の土台。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-08-13 - 事業拡大の壁を突破する\"地上戦\"の極意｜北原孝彦のコンサルティング.md",
+      "file_hash": "a4c5498c13264d058e7d3d601c30767a",
+      "status": "processed",
+      "processed_date": "2026-04-04T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "CP-035",
+        "AG-018"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "action-guides"
+      ],
+      "_note": "2026-04-04抽出。上流を押さえる戦略への転換・地上戦×空中戦のエリア集中行動指針。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-05-17 - 利益が残る採用の視点｜北原孝彦のコンサルティング.md",
+      "file_hash": "0ed7e11c071e2eba02f48a2e491855ae",
+      "status": "processed",
+      "processed_date": "2026-07-12T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "CP-039",
+        "PR-048",
+        "PR-049",
+        "PR-050"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "principles"
+      ],
+      "_note": "2026-07-12抽出。ワーカー採用とリーダー採用が利益率に与える違い・関係構築を学びの起点に置く原則・原理原則と丸バツの比喩。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-06-14 - スタッフに「分からせよう」とするほど、人は動かなくなる｜北原孝彦のコンサルティング.md",
+      "file_hash": "36ab8e30038295762093eaa5bce12cf8",
+      "status": "processed",
+      "processed_date": "2026-07-12T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "PR-044",
+        "MS-026",
+        "CP-036"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "consultation"
+      ],
+      "_note": "2026-07-12抽出。命令ではなくお願いする関係の作り方・分かってあげる順番の原則・新人育成フィードバックが響かない相談。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-06-21 - 「一人が好き」と言う経営者が最後に一人になる理由｜北原孝彦のコンサルティング.md",
+      "file_hash": "c20c36f07d9fc11b2e17ef5d97b9f36f",
+      "status": "processed",
+      "processed_date": "2026-07-12T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "PR-045",
+        "MS-027",
+        "PR-046"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset"
+      ],
+      "_note": "2026-07-12抽出。口癖が現実を作る原則・習慣化はスケジュール共有という環境設計・存在意義の順序原則。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-06-28 - なぜ与えるだけでは関係が続かないのか｜北原孝彦のコンサルティング.md",
+      "file_hash": "bbe99d2c7dbd2227081d86f54d4eadc5",
+      "status": "processed",
+      "processed_date": "2026-07-12T00:00:00",
+      "entries_extracted": 2,
+      "extracted_entry_ids": [
+        "PR-047",
+        "CP-037"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation"
+      ],
+      "_note": "2026-07-12抽出。経済循環できる関係の見極め・無償運営から少額対価への一歩。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-07-05 - 組織化した経営者が「現場が見えない不安」から抜ける方法とは｜北原孝彦のコンサルティング.md",
+      "file_hash": "9d9df774ea58c3f6307aa27da1be8a09",
+      "status": "processed",
+      "processed_date": "2026-07-12T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "CP-038",
+        "MS-028",
+        "MS-029"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "mindset"
+      ],
+      "_note": "2026-07-12抽出。数字報告体制の設計と採用による前提の転換・不安の構造(後出しじゃんけんの原則)・採用設計による全員集合前提の転換。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-05-10 - 利益が消える会社の盲点｜北原孝彦のコンサルティング.md",
+      "file_hash": "3901e88ba00112d1e776f83150137e81",
+      "status": "processed",
+      "processed_date": "2026-07-12T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "PR-051",
+        "MS-030",
+        "CP-040",
+        "CP-041"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "consultation"
+      ],
+      "_note": "2026-07-12抽出。あえて突き返すことでリーダーを育てる原則・管理の本質は富の増減把握・管理過剰によるバックオフィス疲弊と利益消失・代表は自分と似た人間を登用する罠。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-05-03 - 顧客リストを引き継いでも信頼は引き継げない｜北原孝彦のコンサルティング.md",
+      "file_hash": "469d630607fc564d1f6cc3289c38034f",
+      "status": "processed",
+      "processed_date": "2026-07-12T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "CP-042",
+        "MS-031",
+        "MS-032",
+        "AG-019"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "mindset",
+        "action-guides"
+      ],
+      "_note": "2026-07-12抽出。顧客リストと信頼は別物・考え方の共有によるマイクロマネジメント解消・豊かさの定義の転換・大切な人を優先したスケジューリング。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-04-19 - 重く考えるほど遠回りになる経営拡張の本質｜北原孝彦のコンサルティング.md",
+      "file_hash": "6473bf117d5b85bcdb28e78ea1a6b912",
+      "status": "processed",
+      "processed_date": "2026-07-13T00:00:00",
+      "entries_extracted": 6,
+      "extracted_entry_ids": [
+        "PR-052",
+        "MS-033",
+        "MS-034",
+        "CP-043",
+        "CP-044",
+        "AG-020"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "consultation",
+        "action-guides"
+      ],
+      "_note": "2026-07-13抽出。重く考えず“ついで”で軽く始める原則・能力開花=存在意義・管理体制は軽量な教育ループから・低コスト交流会設計。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-04-12 - 目標を立てる前に教えるべき\"お金の使い方\"｜北原孝彦のコンサルティング.md",
+      "file_hash": "61e4c8250847538c8d580d3fb235bc91",
+      "status": "processed",
+      "processed_date": "2026-07-13T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "PR-053",
+        "MS-035",
+        "CP-045",
+        "CP-046"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "consultation"
+      ],
+      "_note": "2026-07-13抽出。作らせた目標は追わない・お金の使い方を教えてから稼がせる・階層拡張の土台整え・あえてうまくいってない子を採用する採用哲学。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-04-05 - 方法論ばかり聞く経営者が気づかない原理原則の本質｜北原孝彦のコンサルティング.md",
+      "file_hash": "1f5008892333568659e0013fc76b1335",
+      "status": "processed",
+      "processed_date": "2026-07-13T00:00:00",
+      "entries_extracted": 7,
+      "extracted_entry_ids": [
+        "MS-036",
+        "CP-047",
+        "MS-037",
+        "CP-048",
+        "CP-049",
+        "PR-054",
+        "PR-055"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "consultation"
+      ],
+      "_note": "2026-07-13抽出。チェック対象を成果物から離脱率・失客率へ／可愛がりたい人材の採用と信頼／裏側（姿勢・環境）を整えると表側が変わる／相手の想いという船に乗る／お金の使い方で徳の積み上げを見極める。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-03-29 - 発言より\"つじつま\"で人を見極める｜北原孝彦のコンサルティング.md",
+      "file_hash": "6cffb1204ed062ec8b499c9198a692b0",
+      "status": "processed",
+      "processed_date": "2026-07-13T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "PR-056",
+        "PR-057",
+        "MS-038",
+        "CP-050",
+        "AG-021"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "consultation",
+        "action-guides"
+      ],
+      "_note": "2026-07-13抽出。発言ではなく行動の辻褄で信用を見極める／年間スケジュールで会う理由を仕組み化する／お金をかけないことでご縁が紡がれる／運営メンバーは辻褄を合わせられる行動実績で選ぶ。mindset-organization.jsonが500行超過のためmindset-organization-management.json/mindset-organization-culture.jsonへ分割。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-03-22 - スタッフ教育より優先してやるべきこと｜北原孝彦のコンサルティング.md",
+      "file_hash": "f73fd64e242ed4cf6987c99cfbfe061a",
+      "status": "processed",
+      "processed_date": "2026-07-13T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "PR-058",
+        "MS-039",
+        "CS-028",
+        "CP-051",
+        "CP-052"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "case-studies",
+        "consultation"
+      ],
+      "_note": "2026-07-13抽出。信頼の相互性と大切にする逆算設計の教育観／愛してるゲーム実践で尖った言動のスタッフが劇的に丸くなった事例／上司力とシンプルな声かけ・戦友になる関係づくり／剥がして託す権限移譲とナンバー2育成。"
+    },
+    {
+      "file_path": "05_Project/UBM/アカデミー/北原学長からの挨拶.md",
+      "file_hash": "5cd4c92e58abca400bacbabe7ec00716",
+      "status": "processed",
+      "processed_date": "2026-07-13T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "PR-059",
+        "PR-060",
+        "PR-061",
+        "PR-062"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles"
+      ],
+      "_note": "2026-07-13抽出。北原孝彦アカデミー公式サイトの学長挨拶文（webページ）。既存原則（PR-011:ビジネスモデルは一時的なハック、PR-016:存在意義の積み上げ、PR-020:幸せとは失わないこと）と重複する部分は新規エントリ化せず、対極思考・脳の緩みの仕組み・観察による反発回避・学生時代の仲間ネットワークという新規性のある4点のみ抽出。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-04-26 - No.2が認められない本当の理由｜北原孝彦のコンサルティング.md",
+      "file_hash": "0dc77c5381f633d83c1126a3b6e3d152",
+      "status": "processed",
+      "processed_date": "2026-07-13T00:00:00",
+      "entries_extracted": 7,
+      "extracted_entry_ids": [
+        "CP-053",
+        "PR-063",
+        "MS-040",
+        "PR-064",
+        "CP-054",
+        "PR-065",
+        "PR-066"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "consultation",
+        "principles",
+        "mindset"
+      ],
+      "_note": "2026-07-13抽出。2026-04-26動画「No.2が認められない本当の理由」。前半（採用・教育哲学:CP-053,PR-063,MS-040,PR-064）と後半（ナンバー2の役割定義:CP-054,PR-065,PR-066）の2相談を統合処理。ナンバー2の権限移譲テーマは既存CP-052（剥がして託す）・CP-022（ナンバー1/2の違い）と隣接するが、今回の核心（代表の成長を疑わない/手を握ったら話さない/でかくなるのはナンバー2次第）は新規性を確認済み。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-03-15 - コミュニティが動き出す“接触設計”の原則｜北原孝彦のコンサルティング.md",
+      "file_hash": "1b92549321c53dbcb3e1dd374ba1365d",
+      "status": "processed",
+      "processed_date": "2026-07-14T00:00:00",
+      "entries_extracted": 6,
+      "extracted_entry_ids": [
+        "PR-067",
+        "PR-068",
+        "AG-022",
+        "AG-023",
+        "CP-055",
+        "MS-041"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "action-guides",
+        "consultation",
+        "mindset"
+      ],
+      "_note": "2026-07-14抽出。2026-03-15動画「コミュニティが動き出す“接触設計”の原則」。既存概念（信用醸成の3要素=接触回数×接触時間×目標共有:AG-017/CP系、信じてくれた人を勝たせる:PR-010、接触設計/低コスト交流会:AG-016/AG-020）との重複を除外し、新規性のある6点のみ抽出：物理的距離=心の距離で住む土地を選ぶ(PR-067)／撤退コスト最小=成長を待てるプラスにしかならない配置設計(PR-068)／人間相関図→お金の流れ整流(AG-022)／相手の自己紹介カードを作る徳の先出し(AG-023)／人間相関図で土地ごとの強いメンバーを面談で運営組成する地方イベント設計(CP-055)／表彰軸を成果から呼び出した・サポートした貢献行動へ転換し次会日を作る(MS-041)。教育=褒める配置の概念は既存MS-039（大切にする逆算設計の教育観）と重複のため除外。末尾アカデミー案内は定型プロモ（既存PR-059〜062と重複）のため抽出せず。相談者の固有属性（教育/サービス業/遠隔地スタッフ・多数メンバー・年間目標数・年商）は汎化して記録。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-06-07 - 「勝たせる」指導では属人性から抜け出せない｜北原孝彦のコンサルティング.md",
+      "file_hash": "ee737889ad63c74da765c4f1eb777870",
+      "status": "processed",
+      "processed_date": "2026-07-14T00:00:00",
+      "entries_extracted": 9,
+      "extracted_entry_ids": [
+        "PR-069",
+        "PR-070",
+        "PR-071",
+        "PR-072",
+        "PR-073",
+        "MS-042",
+        "MS-043",
+        "CP-056",
+        "CP-057"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "consultation"
+      ],
+      "_note": "2026-07-14抽出（mode:new）。2026-06-07動画「「勝たせる」指導では属人性から抜け出せない」。既存概念（属人化脱却/No.2:PR-063〜066、富の循環:PR-051/value-circulation、信じて待つ/信じてくれた人を勝たせる:PR-010、ディフェンス力↔オフェンス力＝売上力だけだと社員が離れる:PR-064）との重複を除外し、新規性のある9点を抽出：勝たせるな負けを作らない発想が富を循環させ講師が自立(PR-069)／お客さんにするな教え子にする(PR-070)／順番を間違えるな＝守りと思い入れのある人を先に作る思い入れの経済(PR-071)／期待も信じもするが当てにしない(PR-072)／スタンスを先に決めるから人を好きになる・変わらないから人が残る(PR-073)／属人性は剥がすのでなく数珠つなぎ＋川上で剥がれる(MS-042)／強さで維持するな弱さを埋めてもらう(MS-043)／言葉の定義を一致させマネジメントのブレをなくす(CP-056)／チーム3役割を特性で配置し累は友を呼ぶ同質化を避け異質を組ませる(CP-057)。相談者の固有属性（無形サービス業/講師育成・多様な前職の講師・一定規模の年収）と北原さんの私的逸話（尊敬する人からもらった物=思い入れの経済／取締役参画メンバー=ほっとけない動機）は個人特定情報を除き普遍原則のみ汎化記録。ディフェンス力→オフェンス転換の再説は既存PR-064と重複のため単独抽出せず、属人性(MS-042)・思い入れ(PR-071)へ内包。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-05-24 - リーダーを育てる前に代表がやめるべき\"働き方\"｜北原孝彦のコンサルティング.md",
+      "file_hash": "9492f9fc7831bf1af93222cf32d6bebf",
+      "status": "processed",
+      "processed_date": "2026-07-14T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "PR-074",
+        "PR-075",
+        "PR-076",
+        "MS-044",
+        "MS-045"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset"
+      ],
+      "_note": "2026-07-14抽出（mode:new）。2026-05-24動画「リーダーを育てる前に代表がやめるべき“働き方”」。緊張感ある1対1壁打ち。相談者の固有属性（建設・内装系サービス業/家具・大型ホテル案件/売上規模/銀行取引期/地方在住/長期にわたる壁打ち回数）は実名・社名・固有業種・具体金額・回数を汎化し、北原さんの診断・意図・介入のみ記録。抽出5点：代表の思考・視点が組織に転写されでかくする思考なら伸び減らす思考なら縮む(PR-074)／可愛がってもらう覚悟を決めその土地に師匠を持ち循環する学び方(PR-075)／代表は未来を追う・目先の売上を優先順位トップに置くと低レイヤーに留まる(PR-076)／多忙だからでなく優先順位を上げていないだけ＝上げないと次のレイヤーに行けずリーダーが育たない(MS-044)／生産力で評価制度を作るな生産性は年と共に落ち大切な人を守れない・ワーカーを作らない富の循環型給料設計(MS-045)。重複除外：『情報だけ取りに来るな/仲良くなれ』の一般部分は既存PR-049と重複のためPR-075は『可愛がってもらう覚悟＋地元師匠＋レイヤーを上げてもらう』の新規角度に限定して抽出／『信じて待つ』『川上を抑える・掌握』(PR-017/MS-042)は既存のため再抽出せず／『富を循環させる』の結論部(PR-051/PR-069/PR-071/value-circulation)は既存のためMS-045は評価・給料設計という新規角度に限定／『売上を追うな』の一般テーマ(PR-001/PR-042/MS-025)は既存のためPR-076は『未来を追う代表の優先順位・レイヤー』の新規角度と固有の名言に限定。末尾アカデミー案内（定型プロモ）は抽出対象外。"
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-01-11 - 教えると育たない。ならどうする？思考力を伸ばす条件｜北原孝彦のコンサルティング.md",
+      "file_hash": "ac440f158fde02b254d5e5e7eb6b1288",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "PR-085",
+        "PR-086",
+        "CP-064",
+        "CP-065",
+        "AG-030"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-01-18 - 人を繋ぐために必要な\"反省\"とは｜北原孝彦のコンサルティング.md",
+      "file_hash": "4ceeb27450c86f0d8b738a2e0165457f",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "PR-087",
+        "AG-025",
+        "MS-056"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "action-guides",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-01-25 - 応募者100人を集める勉強会採用術｜北原孝彦のコンサルティング.md",
+      "file_hash": "280377488c0b4a8622210a9cf4364a18",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "MS-057",
+        "AG-024",
+        "AG-026",
+        "CP-061",
+        "CS-029"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "mindset",
+        "action-guides",
+        "consultation",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-02-01 - \"失敗の経験\"で自立させる｜北原孝彦のコンサルティング.md",
+      "file_hash": "d82e0f1856d802388ba0b5b6d221e87e",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "PR-091",
+        "MS-053",
+        "MS-054",
+        "MS-055",
+        "AG-029"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-02-08 - 売上は伸びたのになぜ潰れる？\"人を見極めない\"事業拡大の罠｜北原孝彦のコンサルティング.md",
+      "file_hash": "56442674b44512e5f8fc6dad5d51d84e",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "MS-051",
+        "CP-063",
+        "CS-031"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "mindset",
+        "consultation",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-02-15 - 【採用の常識を疑え】転職歴の多い人材こそ定着する理由｜北原孝彦のコンサルティング.md",
+      "file_hash": "5b6da704160d6a23f306ed57f89283df",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 7,
+      "extracted_entry_ids": [
+        "PR-081",
+        "PR-082",
+        "PR-083",
+        "MS-049",
+        "MS-050",
+        "CP-062",
+        "CS-030"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "consultation",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-02-22 - 求心力が連鎖する組織の作り方｜北原孝彦のコンサルティング.md",
+      "file_hash": "634eee13b939a3eea92183198b358d3e",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "PR-084",
+        "MS-052",
+        "AG-028"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-03-01 - 感性経営の賞味期限｜二代目サロン経営者へのアドバイス｜北原孝彦のコンサルティング.md",
+      "file_hash": "5d9d71ec2f1ef348de4d933dbb16e7a4",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 7,
+      "extracted_entry_ids": [
+        "PR-088",
+        "PR-089",
+        "PR-090",
+        "CP-058",
+        "CP-059",
+        "CP-060",
+        "CS-032"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "case-studies"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-03-08 - \"約束\"が組織を作る｜北原孝彦のコンサルティング.md",
+      "file_hash": "8611b6ea7c139f804764002658175d5a",
+      "status": "processed",
+      "processed_date": "2026-07-15T00:00:00",
+      "entries_extracted": 8,
+      "extracted_entry_ids": [
+        "PR-077",
+        "PR-078",
+        "PR-079",
+        "PR-080",
+        "MS-046",
+        "MS-047",
+        "MS-048",
+        "AG-027"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset",
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2026-01-04 - \"好循環組織\"の作り方｜北原孝彦のコンサルティング.md",
+      "file_hash": "f2c61378e47822707d487f07cc4ac58b",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 8,
+      "extracted_entry_ids": [
+        "PR-092",
+        "PR-093",
+        "PR-094",
+        "PR-095",
+        "AG-031",
+        "AG-032",
+        "AG-033",
+        "MS-058"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "action-guides",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-11-09 - 【潰れる前に】クライアント依存経営からの脱却法｜北原孝彦のコンサルティング.md",
+      "file_hash": "a11281b27fcf07dc4917c918c1451a98",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "PR-096",
+        "PR-097",
+        "CP-066",
+        "CP-067",
+        "AG-034"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-11-16 - 【真理】崩さなければ成長する｜北原孝彦のコンサルティング.md",
+      "file_hash": "22093cc667e526d128a856ae01705375",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 6,
+      "extracted_entry_ids": [
+        "PR-098",
+        "PR-099",
+        "PR-100",
+        "CP-068",
+        "AG-035",
+        "MS-059"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "action-guides",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-11-24 - 経営者のやるべきことは「決める・任せる・責任を取る」｜北原孝彦のコンサルティング.md",
+      "file_hash": "8dbade39484f320878921f347ff5524e",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "PR-101",
+        "CP-069",
+        "MS-060"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-11-30 - 【FC必見】急拡大で破綻する原因は\"時間\"の使い方｜北原孝彦のコンサルティング.md",
+      "file_hash": "8d9a1089fbc6ef5e99c22a4b7dc920b5",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 3,
+      "extracted_entry_ids": [
+        "PR-102",
+        "CP-070",
+        "AG-036"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-12-07 - 壁を越える者だけが持つ習慣とは｜北原孝彦のコンサルティング.md",
+      "file_hash": "f4497a80b28b401bf86150917a0420d9",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 4,
+      "extracted_entry_ids": [
+        "PR-103",
+        "PR-108",
+        "PR-109",
+        "AG-037"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "action-guides"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-12-14 - 人材を見極める\"好き\"の習慣｜北原孝彦のコンサルティング.md",
+      "file_hash": "1c8c63bfbb831628cdde3e946d666892",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "PR-105",
+        "PR-111",
+        "AG-038",
+        "AG-039",
+        "CP-071"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "action-guides",
+        "consultation"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-12-21 - マニュアルより先に\"好かれる\"必要がある理由｜北原孝彦のコンサルティング.md",
+      "file_hash": "25d7924c260647b4e83388031d973f09",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 5,
+      "extracted_entry_ids": [
+        "PR-106",
+        "PR-107",
+        "MS-061",
+        "MS-062",
+        "MS-064"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "mindset"
+      ]
+    },
+    {
+      "file_path": "05_Project/UBM/YouTube/2025-12-28 - 仲間を本気にさせる\"お金の基準\"｜北原孝彦のコンサルティング.md",
+      "file_hash": "bfcfeafe6214bfc8601ef371c32eb495",
+      "status": "processed",
+      "processed_date": "2026-07-16T00:00:00",
+      "entries_extracted": 6,
+      "extracted_entry_ids": [
+        "PR-104",
+        "PR-110",
+        "PR-112",
+        "PR-113",
+        "CP-072",
+        "MS-063"
+      ],
+      "deleted_entry_ids": [],
+      "target_categories": [
+        "principles",
+        "consultation",
+        "mindset"
+      ]
+    }
+  ]
+}

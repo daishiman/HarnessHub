@@ -1,0 +1,1475 @@
+{
+  "_comment": "info-collectorが最初に読むファイル。routing_rulesでエントリの振り分け先を決定する。ファイル名はここで管理し、エージェントはハードコードしない。",
+  "last_sync": "2026-07-16",
+  "total_entries": 326,
+  "categories": {
+    "principles": {
+      "description": "北原さんの原則・名言（引用可能な言葉）",
+      "id_prefix": "PR",
+      "files": [
+        "principles-relationship-trust-leadership.json",
+        "principles-relationship-trust-learning.json",
+        "principles-relationship-value-circulation.json",
+        "principles-mindset-selfhood.json",
+        "principles-mindset-leadership.json",
+        "principles-business-growth-foundation.json",
+        "principles-business-growth-organization.json",
+        "principles-business-strategy.json",
+        "principles-business-execution.json",
+        "principles-business-product.json",
+        "principles-relationship-promise.json",
+        "principles-relationship-economic-rationality.json",
+        "principles-business-strategy-upstream.json",
+        "principles-business-growth-sustainability.json",
+        "principles-relationship-partnership-selection.json",
+        "principles-relationship-affection.json"
+      ],
+      "entry_count": 111,
+      "subcategory_counts": {
+        "principles-relationship-trust-leadership.json": 9,
+        "principles-relationship-trust-learning.json": 10,
+        "principles-relationship-value-circulation.json": 11,
+        "principles-mindset-selfhood.json": 9,
+        "principles-mindset-leadership.json": 9,
+        "principles-business-growth-foundation.json": 7,
+        "principles-business-growth-organization.json": 9,
+        "principles-business-strategy.json": 11,
+        "principles-business-execution.json": 8,
+        "principles-business-product.json": 5,
+        "principles-relationship-promise.json": 6,
+        "principles-relationship-economic-rationality.json": 5,
+        "principles-business-strategy-upstream.json": 1,
+        "principles-business-growth-sustainability.json": 3,
+        "principles-relationship-partnership-selection.json": 5,
+        "principles-relationship-affection.json": 3
+      }
+    },
+    "consultation": {
+      "description": "事業相談パターン（状況→課題→アドバイス）",
+      "id_prefix": "CP",
+      "files": [
+        "consultation-organization-structure-hierarchy.json",
+        "consultation-organization-structure-development.json",
+        "consultation-organization-purpose.json",
+        "consultation-organization-hiring.json",
+        "consultation-sales.json",
+        "consultation-business-model-expansion.json",
+        "consultation-business-model-pricing.json",
+        "consultation-organization-hiring-sourcing.json",
+        "consultation-business-model-dependency.json",
+        "consultation-profit-structure.json"
+      ],
+      "entry_count": 71,
+      "subcategory_counts": {
+        "consultation-organization-structure-hierarchy.json": 8,
+        "consultation-organization-structure-development.json": 12,
+        "consultation-organization-purpose.json": 7,
+        "consultation-organization-hiring.json": 12,
+        "consultation-sales.json": 10,
+        "consultation-business-model-expansion.json": 9,
+        "consultation-business-model-pricing.json": 6,
+        "consultation-organization-hiring-sourcing.json": 3,
+        "consultation-business-model-dependency.json": 2,
+        "consultation-profit-structure.json": 2
+      }
+    },
+    "phase-advice": {
+      "description": "フェーズ別アドバイス（0→1/1→10/10→100）",
+      "id_prefix": "PA",
+      "files": [
+        "phase-advice-0to1.json",
+        "phase-advice-1to10.json",
+        "phase-advice-10to100.json"
+      ],
+      "entry_count": 9,
+      "subcategory_counts": {
+        "phase-advice-0to1.json": 2,
+        "phase-advice-1to10.json": 4,
+        "phase-advice-10to100.json": 3
+      }
+    },
+    "action-guides": {
+      "description": "行動指針（推奨/非推奨の具体的行動）",
+      "id_prefix": "AG",
+      "files": [
+        "action-guides-relationship-networking.json",
+        "action-guides-relationship-circulation.json",
+        "action-guides-relationship-execution.json",
+        "action-guides-content.json",
+        "action-guides-study-group.json"
+      ],
+      "entry_count": 39,
+      "subcategory_counts": {
+        "action-guides-relationship-networking.json": 9,
+        "action-guides-relationship-circulation.json": 9,
+        "action-guides-relationship-execution.json": 8,
+        "action-guides-content.json": 6,
+        "action-guides-study-group.json": 7
+      }
+    },
+    "mindset": {
+      "description": "マインドセット転換（Before→After の思考変化）",
+      "id_prefix": "MS",
+      "files": [
+        "mindset-self.json",
+        "mindset-organization-management.json",
+        "mindset-organization-culture.json",
+        "mindset-goal-strategy.json",
+        "mindset-growth-habit.json",
+        "mindset-growth-reflection.json",
+        "mindset-hiring.json",
+        "mindset-money-habit.json",
+        "mindset-guidance-calibration.json",
+        "mindset-organization-affinity.json"
+      ],
+      "entry_count": 64,
+      "subcategory_counts": {
+        "mindset-self.json": 3,
+        "mindset-organization-management.json": 12,
+        "mindset-organization-culture.json": 13,
+        "mindset-goal-strategy.json": 12,
+        "mindset-growth-habit.json": 12,
+        "mindset-growth-reflection.json": 4,
+        "mindset-hiring.json": 2,
+        "mindset-money-habit.json": 2,
+        "mindset-guidance-calibration.json": 2,
+        "mindset-organization-affinity.json": 2
+      }
+    },
+    "case-studies": {
+      "description": "事例・実績（具体的な成功/失敗事例）",
+      "id_prefix": "CS",
+      "files": [
+        "case-studies-success.json",
+        "case-studies-failure.json",
+        "case-studies-organization.json",
+        "case-studies-crisis-recovery.json"
+      ],
+      "entry_count": 32,
+      "subcategory_counts": {
+        "case-studies-success.json": 21,
+        "case-studies-failure.json": 1,
+        "case-studies-organization.json": 8,
+        "case-studies-crisis-recovery.json": 2
+      }
+    }
+  },
+  "routing_rules": {
+    "_comment": "knowledge-extractorがエントリを格納するファイルをentry.tagsで決定するルール。tagsが複数ルールに一致する場合は最もマッチ数が多いファイルを選ぶ。どれにも一致しない場合はdefaultファイルを使う。",
+    "principles": {
+      "principles-relationship-trust-leadership.json": {
+        "topic": "求心力・リーダーの信頼・存在意義",
+        "tags": [
+          "信頼",
+          "存在意義",
+          "リーダーシップ",
+          "命令",
+          "お願い",
+          "ルール",
+          "大義",
+          "ビジョン",
+          "自己開示"
+        ],
+        "default": false
+      },
+      "principles-relationship-trust-learning.json": {
+        "topic": "信頼される作法・学び方・見極め",
+        "tags": [
+          "信頼",
+          "相談",
+          "学び",
+          "関係構築",
+          "見極め",
+          "辻褄",
+          "約束",
+          "コミットメント",
+          "教え子",
+          "師匠",
+          "可愛がられる"
+        ],
+        "default": false
+      },
+      "principles-relationship-value-circulation.json": {
+        "topic": "価値循環・利他的な関わり方・接点作り",
+        "tags": [
+          "関係構築",
+          "外交",
+          "繋がり",
+          "紹介",
+          "接点",
+          "感謝",
+          "コミュニティ",
+          "価値循環",
+          "経済循環",
+          "利他的思考"
+        ],
+        "default": false
+      },
+      "principles-mindset-selfhood.json": {
+        "topic": "自己の在り方・行動哲学・覚悟",
+        "tags": [
+          "姿勢",
+          "在り方",
+          "考え方",
+          "マインド",
+          "思考",
+          "覚悟",
+          "本気",
+          "自分",
+          "挑戦",
+          "感情管理",
+          "目的"
+        ],
+        "default": false
+      },
+      "principles-mindset-leadership.json": {
+        "topic": "経営者マインド・判断・優先順位・未来志向",
+        "tags": [
+          "幸せ",
+          "守り",
+          "経営哲学",
+          "選択と集中",
+          "大切な人",
+          "ナンバー2",
+          "未来を追う",
+          "優先順位",
+          "一貫性",
+          "スタンス"
+        ],
+        "default": false
+      },
+      "principles-business-growth-foundation.json": {
+        "topic": "事業成長の土台・信用の順番・存在意義・生き様",
+        "tags": [
+          "忍耐",
+          "信用",
+          "信頼",
+          "成長",
+          "存在意義",
+          "生き様",
+          "ぶれない",
+          "積み上げ",
+          "順番",
+          "軽量化"
+        ],
+        "default": false
+      },
+      "principles-business-growth-organization.json": {
+        "topic": "組織構築・採用・育成・お金の使い方教育",
+        "tags": [
+          "採用",
+          "人材",
+          "育成",
+          "リーダー",
+          "組織構築",
+          "お金の使い方",
+          "利益率",
+          "徳",
+          "当事者意識"
+        ],
+        "default": false
+      },
+      "principles-business-strategy.json": {
+        "topic": "事業戦略・川上・ビジネスモデル・資本保全・順番設計",
+        "tags": [
+          "事業",
+          "戦略",
+          "川上",
+          "ビジネスモデル",
+          "資本保全",
+          "オーディエンスファースト",
+          "外注",
+          "内製",
+          "原理原則"
+        ],
+        "default": false
+      },
+      "principles-business-execution.json": {
+        "topic": "行動管理・成果・意思決定・選択と集中",
+        "tags": [
+          "選択",
+          "集中",
+          "行動管理",
+          "成果",
+          "意思決定",
+          "迷い",
+          "原因作り",
+          "ファストチェス",
+          "行動量"
+        ],
+        "default": false
+      },
+      "principles-business-product.json": {
+        "topic": "商品設計・顧客理解・優先順位・目標数値化",
+        "tags": [
+          "商品設計",
+          "顧客理解",
+          "優先順位",
+          "目標設定",
+          "数字",
+          "当たり前",
+          "報告",
+          "事実ベース"
+        ],
+        "default": true
+      },
+      "principles-relationship-promise.json": {
+        "topic": "約束・繋がりの積み重ねによる組織形成・刹那的な繋がりの回避",
+        "tags": [
+          "約束",
+          "繋がり",
+          "組織構築",
+          "刹那的",
+          "拠点",
+          "ルール",
+          "リアル",
+          "Zoom",
+          "思い出",
+          "生き様"
+        ],
+        "default": false
+      },
+      "principles-relationship-economic-rationality.json": {
+        "topic": "経済的合理性による組織形成・富の循環・繋がりの濃さの判定",
+        "tags": [
+          "経済的合理性",
+          "経済循環",
+          "富",
+          "基準値",
+          "パートナー",
+          "大切ランキング",
+          "恩返し",
+          "合理性",
+          "濃さ",
+          "判定基準"
+        ],
+        "default": false
+      },
+      "principles-business-strategy-upstream.json": {
+        "topic": "上位概念・川上を押さえる事業設計／横展開の否定",
+        "tags": [
+          "川上",
+          "上位概念",
+          "横展開",
+          "事業",
+          "戦略",
+          "ビジネスモデル",
+          "囲う",
+          "ステージ"
+        ],
+        "default": false
+      },
+      "principles-business-growth-sustainability.json": {
+        "topic": "崩さない経営・潰れない構造・良い習慣と徳の土台",
+        "tags": [
+          "崩さない",
+          "習慣",
+          "徳",
+          "ご縁",
+          "潰れる",
+          "チーム",
+          "土台",
+          "積み上げ",
+          "横並び"
+        ],
+        "default": false
+      },
+      "principles-relationship-partnership-selection.json": {
+        "topic": "誰と組むか・誰に預けるか・続く関係の見極め",
+        "tags": [
+          "コラボ",
+          "提携",
+          "義理",
+          "判断基準",
+          "ビジョン",
+          "預ける",
+          "継続",
+          "会員数",
+          "登用",
+          "軸"
+        ],
+        "default": false
+      },
+      "principles-relationship-affection.json": {
+        "topic": "好きになる習慣・好かれる習慣・求心力の土台",
+        "tags": [
+          "好き",
+          "好かれる",
+          "求心力",
+          "習慣",
+          "マニュアル",
+          "大切にする",
+          "売れる人",
+          "関係構築"
+        ],
+        "default": false
+      }
+    },
+    "consultation": {
+      "consultation-organization-structure-hierarchy.json": {
+        "topic": "組織図・階層設計・管理体制強化・数字報告",
+        "tags": [
+          "組織",
+          "階層",
+          "管理体制",
+          "数字管理",
+          "報告",
+          "ルール",
+          "レベニューシェア",
+          "バックオフィス"
+        ],
+        "default": false
+      },
+      "consultation-organization-structure-development.json": {
+        "topic": "人材育成・チームマネジメント・目的整理・報連相",
+        "tags": [
+          "組織",
+          "報連相",
+          "育成",
+          "管理職",
+          "ビジョン",
+          "ミッション",
+          "目的整理",
+          "マネジメント"
+        ],
+        "default": false
+      },
+      "consultation-organization-purpose.json": {
+        "topic": "目的整理・ビジョン設計・論点整理",
+        "tags": [
+          "ビジョン",
+          "会社の目的",
+          "目的と手段",
+          "論点整理",
+          "目標設定",
+          "来させる設計",
+          "スケール"
+        ],
+        "default": false
+      },
+      "consultation-organization-hiring.json": {
+        "topic": "採用基準・人材選定・登用・権限移譲",
+        "tags": [
+          "採用",
+          "人材",
+          "定着",
+          "育成",
+          "抜擢",
+          "権限移譲",
+          "利益責任"
+        ],
+        "default": false
+      },
+      "consultation-sales.json": {
+        "topic": "売上・集客・商品設計・発信",
+        "tags": [
+          "売上",
+          "集客",
+          "商品",
+          "価格",
+          "発信",
+          "SNS",
+          "マーケティング",
+          "成約",
+          "追客"
+        ],
+        "default": false
+      },
+      "consultation-business-model-expansion.json": {
+        "topic": "事業拡大戦略・提携・エリア展開・事業設計",
+        "tags": [
+          "拡大戦略",
+          "提携",
+          "パートナー",
+          "エリア展開",
+          "アセットライト",
+          "事業設計",
+          "代行",
+          "インハウス",
+          "FC化",
+          "市場設計"
+        ],
+        "default": false
+      },
+      "consultation-business-model-pricing.json": {
+        "topic": "商品設計・価格戦略・サービス転換・事業承継",
+        "tags": [
+          "ビジネスモデル",
+          "事業転換",
+          "方針",
+          "構造",
+          "フェーズ転換",
+          "差別化",
+          "価格戦略",
+          "商品設計",
+          "事業承継",
+          "顧客リスト",
+          "新サービス"
+        ],
+        "default": true
+      },
+      "consultation-organization-hiring-sourcing.json": {
+        "topic": "採用の母集団形成・思いの連結による定着設計",
+        "tags": [
+          "求人",
+          "母集団",
+          "勉強会",
+          "採用",
+          "ガバナンス",
+          "接続",
+          "定着",
+          "エンジニア"
+        ],
+        "default": false
+      },
+      "consultation-business-model-dependency.json": {
+        "topic": "クライアント・プラットフォーム依存からの脱却・上位概念への移行",
+        "tags": [
+          "依存",
+          "川上",
+          "上位概念",
+          "プラットフォーム",
+          "株",
+          "リソース",
+          "事業転換",
+          "回収"
+        ],
+        "default": false
+      },
+      "consultation-profit-structure.json": {
+        "topic": "利益構造・撤退基準・新規事業の原資・利益率の階層",
+        "tags": [
+          "利益率",
+          "撤退",
+          "予算",
+          "コストダウン",
+          "新規事業",
+          "固定売上",
+          "仕入れ",
+          "収益構造",
+          "選択と集中"
+        ],
+        "default": false
+      }
+    },
+    "phase-advice": {
+      "phase-advice-0to1.json": {
+        "topic": "0→1フェーズ：初報酬・初顧客獲得",
+        "tags": [
+          "0to1",
+          "0→1",
+          "初顧客",
+          "初報酬",
+          "モニター",
+          "無料",
+          "起業初期"
+        ],
+        "default": false
+      },
+      "phase-advice-1to10.json": {
+        "topic": "1→10フェーズ：再現性確認・個人売上最大化",
+        "tags": [
+          "1to10",
+          "1→10",
+          "再現性",
+          "個人売上",
+          "安定",
+          "外交量"
+        ],
+        "default": false
+      },
+      "phase-advice-10to100.json": {
+        "topic": "10→100フェーズ：組織化・チーム構築・スケール",
+        "tags": [
+          "10to100",
+          "10→100",
+          "組織化",
+          "スケール",
+          "フロント",
+          "チーム構築"
+        ],
+        "default": true
+      }
+    },
+    "action-guides": {
+      "action-guides-relationship-networking.json": {
+        "topic": "外交・接点作り・フォロー・関係構築・信用醸成・経済循環",
+        "tags": [
+          "外交",
+          "接点",
+          "フォロー",
+          "メッセージ",
+          "アポ",
+          "個別連絡",
+          "関係構築",
+          "訪問",
+          "信用醸成",
+          "経済循環"
+        ],
+        "default": true
+      },
+      "action-guides-relationship-circulation.json": {
+        "topic": "信用醸成・経済循環・利他的営業",
+        "tags": [
+          "信用醸成",
+          "接触回数",
+          "接触時間",
+          "目標共有",
+          "経済循環",
+          "利他思考",
+          "人間相関図",
+          "お金の流れ",
+          "ボランティア"
+        ],
+        "default": false
+      },
+      "action-guides-relationship-execution.json": {
+        "topic": "顧客理解・施策管理・行動継続・組織内報連相",
+        "tags": [
+          "顧客ヒアリング",
+          "施策管理",
+          "行動管理",
+          "継続",
+          "グリットパートナー",
+          "時間管理",
+          "組織",
+          "報連相"
+        ],
+        "default": false
+      },
+      "action-guides-content.json": {
+        "topic": "発信・SNS・コンテンツ・広告",
+        "tags": [
+          "発信",
+          "SNS",
+          "コンテンツ",
+          "投稿",
+          "広告",
+          "YouTube",
+          "情報発信",
+          "ブログ"
+        ],
+        "default": false
+      },
+      "action-guides-study-group.json": {
+        "topic": "勉強会・会議体による人材集めと組織活性化の実践",
+        "tags": [
+          "勉強会",
+          "会議体",
+          "個別面談",
+          "グループ",
+          "基準値",
+          "納期",
+          "共犯者",
+          "イベント",
+          "利益分配",
+          "ポスト"
+        ],
+        "default": false
+      }
+    },
+    "mindset": {
+      "mindset-self.json": {
+        "topic": "自己評価・不安・自信・完璧主義・迷い",
+        "tags": [
+          "自信",
+          "不安",
+          "完璧主義",
+          "迷い",
+          "怖い",
+          "自己評価",
+          "焦り",
+          "比較"
+        ],
+        "default": false
+      },
+      "mindset-goal-strategy.json": {
+        "topic": "事業思考・目標設定・戦略判断・コンセプト・再現性",
+        "tags": [
+          "目標設定",
+          "アクションプラン",
+          "コンセプト",
+          "再現性",
+          "判断基準",
+          "数値化",
+          "思い",
+          "テクニック"
+        ],
+        "default": false
+      },
+      "mindset-growth-habit.json": {
+        "topic": "行動習慣・振り返り・成長継続・利他思考・自己認識",
+        "tags": [
+          "事業",
+          "経営",
+          "姿勢",
+          "向き合い",
+          "思考転換",
+          "主語",
+          "責任",
+          "覚悟",
+          "振り返り",
+          "月報",
+          "習慣",
+          "行動管理",
+          "利他思考"
+        ],
+        "default": true
+      },
+      "mindset-growth-reflection.json": {
+        "topic": "振り返り・月報・改善",
+        "tags": [
+          "振り返り",
+          "月報",
+          "改善",
+          "考察",
+          "前期比較",
+          "不足",
+          "成長",
+          "目標設定"
+        ],
+        "default": false
+      },
+      "mindset-organization-management.json": {
+        "topic": "組織管理・ルール設計・数字目標の思考転換",
+        "tags": [
+          "組織",
+          "ルール",
+          "管理",
+          "利益管理",
+          "数字目標",
+          "降格"
+        ],
+        "default": false
+      },
+      "mindset-organization-culture.json": {
+        "topic": "採用・信頼構築・組織文化の思考転換",
+        "tags": [
+          "採用",
+          "人材",
+          "チームづくり",
+          "ビジョン",
+          "リーダーシップ",
+          "生き様",
+          "信頼"
+        ],
+        "default": false
+      },
+      "mindset-hiring.json": {
+        "topic": "採用・人材の見極めに関するマインドセット転換",
+        "tags": [
+          "採用",
+          "転職回数",
+          "履歴書",
+          "見極め",
+          "ギラつき",
+          "右腕",
+          "左腕",
+          "定着",
+          "面接"
+        ],
+        "default": false
+      },
+      "mindset-money-habit.json": {
+        "topic": "お金の使い方・浪費・稼ぐストレスの習慣化",
+        "tags": [
+          "習慣",
+          "お金の使い方",
+          "浪費",
+          "ストレス",
+          "時間の使い方",
+          "休み",
+          "パフォーマンス"
+        ],
+        "default": false
+      },
+      "mindset-guidance-calibration.json": {
+        "topic": "指導の抽象度調整・相手に応じた概念と施策の使い分け",
+        "tags": [
+          "指導",
+          "抽象度",
+          "概念",
+          "施策",
+          "判断基準",
+          "目標設定",
+          "逆算"
+        ],
+        "default": false
+      },
+      "mindset-organization-affinity.json": {
+        "topic": "好きになる基準値・褒め方・チーム戦による向き合いの転換",
+        "tags": [
+          "褒める",
+          "基準値",
+          "好き",
+          "チーム戦",
+          "居場所",
+          "求心力",
+          "向き合い",
+          "共通言語"
+        ],
+        "default": false
+      }
+    },
+    "case-studies": {
+      "case-studies-success.json": {
+        "topic": "成功・成長事例（売上達成・関係構築成功等）",
+        "tags": [
+          "成功",
+          "成長",
+          "達成",
+          "関係構築成功",
+          "売上増加",
+          "受注"
+        ],
+        "default": false
+      },
+      "case-studies-failure.json": {
+        "topic": "失敗・転落・立て直し事例",
+        "tags": [
+          "失敗",
+          "転落",
+          "挫折",
+          "立て直し",
+          "ゼロから",
+          "減収"
+        ],
+        "default": false
+      },
+      "case-studies-organization.json": {
+        "topic": "組織化・人材・採用の成功・失敗事例",
+        "tags": [
+          "組織",
+          "採用",
+          "人材",
+          "組織化成功",
+          "組織化失敗",
+          "チーム"
+        ],
+        "default": true
+      },
+      "case-studies-crisis-recovery.json": {
+        "topic": "炎上・資金ショートなど危機からの反転事例",
+        "tags": [
+          "炎上",
+          "口コミ",
+          "危機対応",
+          "資金ショート",
+          "資金繰り",
+          "売上回復",
+          "役員報酬",
+          "レビュー"
+        ],
+        "default": false
+      }
+    }
+  },
+  "quick_lookup": {
+    "_comment": "info-collectorがユーザーの状況から読むべきファイルを特定するためのインデックス",
+    "by_phase": {
+      "0to1": {
+        "files": [
+          "phase-advice-0to1.json",
+          "principles-relationship-trust-leadership.json",
+          "principles-relationship-trust-learning.json",
+          "principles-relationship-value-circulation.json",
+          "action-guides-relationship-networking.json",
+          "action-guides-relationship-execution.json"
+        ],
+        "description": "商品作り、初顧客獲得、外交の開始"
+      },
+      "1to10": {
+        "files": [
+          "phase-advice-1to10.json",
+          "consultation-sales.json",
+          "action-guides-relationship-networking.json",
+          "action-guides-relationship-execution.json"
+        ],
+        "description": "外交量の安定化、再現性確認、売上最大化"
+      },
+      "10to100": {
+        "files": [
+          "phase-advice-10to100.json",
+          "consultation-organization-structure-hierarchy.json",
+          "consultation-organization-structure-development.json",
+          "consultation-organization-hiring.json",
+          "case-studies-organization.json"
+        ],
+        "description": "組織化、チーム構築、スケール"
+      }
+    },
+    "by_issue": {
+      "外交不足": {
+        "files": [
+          "action-guides-relationship-networking.json",
+          "action-guides-relationship-execution.json",
+          "principles-relationship-trust-leadership.json",
+          "principles-relationship-trust-learning.json",
+          "principles-relationship-value-circulation.json",
+          "consultation-sales.json"
+        ],
+        "tags": [
+          "外交",
+          "接点",
+          "メッセージ",
+          "アプローチ"
+        ]
+      },
+      "売上追求型": {
+        "files": [
+          "principles-relationship-trust-leadership.json",
+          "principles-relationship-trust-learning.json",
+          "principles-relationship-value-circulation.json",
+          "mindset-goal-strategy.json",
+          "consultation-sales.json"
+        ],
+        "tags": [
+          "売上",
+          "数字",
+          "成約",
+          "目標"
+        ]
+      },
+      "選択と集中": {
+        "files": [
+          "principles-business-execution.json",
+          "phase-advice-0to1.json",
+          "action-guides-relationship-networking.json",
+          "action-guides-relationship-execution.json",
+          "consultation-profit-structure.json"
+        ],
+        "tags": [
+          "選択",
+          "集中",
+          "散らかる",
+          "やること多い",
+          "迷い"
+        ]
+      },
+      "マインドセット": {
+        "files": [
+          "mindset-self.json",
+          "mindset-growth-habit.json",
+          "principles-mindset-selfhood.json",
+          "principles-mindset-leadership.json",
+          "mindset-money-habit.json"
+        ],
+        "tags": [
+          "自信",
+          "不安",
+          "迷惑",
+          "完璧主義"
+        ]
+      },
+      "関係構築": {
+        "files": [
+          "principles-relationship-trust-leadership.json",
+          "principles-relationship-trust-learning.json",
+          "principles-relationship-value-circulation.json",
+          "principles-relationship-economic-rationality.json",
+          "action-guides-relationship-networking.json",
+          "action-guides-relationship-circulation.json",
+          "action-guides-relationship-execution.json",
+          "case-studies-success.json",
+          "principles-relationship-partnership-selection.json",
+          "principles-relationship-affection.json"
+        ],
+        "tags": [
+          "信頼",
+          "相談",
+          "紹介",
+          "人脈",
+          "関係"
+        ]
+      },
+      "商品設計": {
+        "files": [
+          "phase-advice-0to1.json",
+          "consultation-sales.json",
+          "action-guides-relationship-networking.json",
+          "action-guides-relationship-execution.json"
+        ],
+        "tags": [
+          "商品",
+          "価格",
+          "提案",
+          "価値"
+        ]
+      },
+      "組織化": {
+        "files": [
+          "consultation-organization-structure-hierarchy.json",
+          "consultation-organization-structure-development.json",
+          "consultation-organization-hiring.json",
+          "phase-advice-10to100.json",
+          "case-studies-organization.json",
+          "principles-relationship-economic-rationality.json",
+          "principles-business-growth-sustainability.json"
+        ],
+        "tags": [
+          "組織",
+          "階層",
+          "中間管理職",
+          "報連相",
+          "ルール"
+        ]
+      },
+      "集客・デジタル化": {
+        "files": [
+          "action-guides-content.json",
+          "consultation-sales.json",
+          "case-studies-success.json"
+        ],
+        "tags": [
+          "Googleマップ",
+          "口コミ",
+          "ホームページ",
+          "SNS",
+          "コンセプト"
+        ]
+      },
+      "採用・人材": {
+        "files": [
+          "consultation-organization-structure-hierarchy.json",
+          "consultation-organization-structure-development.json",
+          "consultation-organization-hiring.json",
+          "case-studies-organization.json",
+          "principles-business-growth-foundation.json",
+          "principles-business-growth-organization.json",
+          "mindset-organization-affinity.json"
+        ],
+        "tags": [
+          "採用",
+          "ビジョン",
+          "人材育成",
+          "定着"
+        ]
+      },
+      "ビジネスモデル転換": {
+        "files": [
+          "consultation-business-model-expansion.json",
+          "consultation-business-model-pricing.json",
+          "case-studies-failure.json",
+          "principles-business-strategy.json",
+          "consultation-business-model-dependency.json",
+          "consultation-profit-structure.json",
+          "principles-business-strategy-upstream.json"
+        ],
+        "tags": [
+          "ビジネスモデル",
+          "転換",
+          "構造変化",
+          "方針"
+        ]
+      }
+    }
+  },
+  "abstraction_layers": {
+    "_comment": "info-collectorがユーザー入力を多層抽象化してデュアルパス検索を実行するための定義。具体的なユーザーの言葉→by_issueキー→メタテーマの3層でマッピングする",
+    "meta_themes": {
+      "行動量・先行指標の問題": {
+        "description": "やるべき行動の量・質・頻度に課題がある。結果を追って行動量が不足している状態",
+        "issues": [
+          "外交不足"
+        ],
+        "files": [
+          "action-guides-relationship-networking.json",
+          "action-guides-relationship-execution.json",
+          "principles-business-execution.json",
+          "phase-advice-1to10.json"
+        ]
+      },
+      "売上・成果の誤認": {
+        "description": "結果指標（売上）を追いかけすぎて先行指標（関係構築・接点数）を疎かにしている状態",
+        "issues": [
+          "売上追求型",
+          "外交不足"
+        ],
+        "files": [
+          "principles-relationship-trust-leadership.json",
+          "principles-relationship-trust-learning.json",
+          "principles-relationship-value-circulation.json",
+          "mindset-goal-strategy.json",
+          "consultation-sales.json"
+        ]
+      },
+      "フォーカス・優先順位の問題": {
+        "description": "やること・事業・コンセプトが散らかり、何に集中すべきか分からない状態",
+        "issues": [
+          "選択と集中",
+          "ビジネスモデル転換"
+        ],
+        "files": [
+          "principles-business-execution.json",
+          "phase-advice-0to1.json",
+          "mindset-goal-strategy.json",
+          "consultation-profit-structure.json"
+        ]
+      },
+      "人・組織の問題": {
+        "description": "採用・育成・組織構造・権限移譲に課題がある状態",
+        "issues": [
+          "組織化",
+          "採用・人材"
+        ],
+        "files": [
+          "consultation-organization-structure-hierarchy.json",
+          "consultation-organization-structure-development.json",
+          "consultation-organization-hiring.json",
+          "phase-advice-10to100.json",
+          "case-studies-organization.json",
+          "principles-business-growth-sustainability.json",
+          "mindset-organization-affinity.json"
+        ]
+      },
+      "マインドセット・思考の問題": {
+        "description": "自己評価・不安・完璧主義・前提・思考パターンに課題がある状態",
+        "issues": [
+          "マインドセット"
+        ],
+        "files": [
+          "mindset-self.json",
+          "mindset-growth-habit.json",
+          "principles-mindset-selfhood.json",
+          "principles-mindset-leadership.json",
+          "mindset-money-habit.json",
+          "mindset-guidance-calibration.json"
+        ]
+      },
+      "関係構築・接点の問題": {
+        "description": "人との繋がり・信頼・コミュニティ形成・相談される存在になることに課題がある状態",
+        "issues": [
+          "関係構築",
+          "外交不足"
+        ],
+        "files": [
+          "action-guides-relationship-networking.json",
+          "action-guides-relationship-circulation.json",
+          "action-guides-relationship-execution.json",
+          "principles-relationship-trust-leadership.json",
+          "principles-relationship-trust-learning.json",
+          "principles-relationship-value-circulation.json",
+          "principles-relationship-economic-rationality.json",
+          "case-studies-success.json",
+          "principles-relationship-partnership-selection.json",
+          "principles-relationship-affection.json"
+        ]
+      },
+      "集客・デジタル・発信の問題": {
+        "description": "コンテンツ・SNS・デジタルマーケティング・情報発信に課題がある状態",
+        "issues": [
+          "集客・デジタル化"
+        ],
+        "files": [
+          "action-guides-content.json",
+          "consultation-sales.json"
+        ]
+      },
+      "ビジネスモデル・構造の問題": {
+        "description": "事業の設計・収益構造・フェーズ転換・差別化に課題がある状態",
+        "issues": [
+          "ビジネスモデル転換"
+        ],
+        "files": [
+          "consultation-business-model-expansion.json",
+          "consultation-business-model-pricing.json",
+          "principles-business-strategy.json",
+          "case-studies-failure.json",
+          "consultation-business-model-dependency.json",
+          "consultation-profit-structure.json",
+          "principles-business-strategy-upstream.json"
+        ]
+      }
+    },
+    "concept_mapping": {
+      "_comment": "ユーザーの具体的な言葉 → by_issueキーへのマッピング。多対多で設計する。カテゴリ別に整理",
+      "_section_relationship": "関係構築・外交・接点系",
+      "外交": [
+        "外交不足",
+        "関係構築"
+      ],
+      "接点": [
+        "外交不足",
+        "関係構築"
+      ],
+      "アポ": [
+        "外交不足"
+      ],
+      "メッセージ": [
+        "外交不足",
+        "関係構築"
+      ],
+      "フォロー": [
+        "外交不足",
+        "関係構築"
+      ],
+      "訪問": [
+        "外交不足"
+      ],
+      "顧客": [
+        "外交不足",
+        "関係構築"
+      ],
+      "お客": [
+        "外交不足",
+        "関係構築"
+      ],
+      "クライアント": [
+        "外交不足",
+        "関係構築"
+      ],
+      "リピート": [
+        "関係構築"
+      ],
+      "口コミ": [
+        "関係構築"
+      ],
+      "クチコミ": [
+        "関係構築"
+      ],
+      "紹介": [
+        "関係構築"
+      ],
+      "信頼": [
+        "関係構築"
+      ],
+      "相談": [
+        "関係構築"
+      ],
+      "人脈": [
+        "関係構築"
+      ],
+      "コミュニティ": [
+        "関係構築"
+      ],
+      "_section_sales": "売上・成果・数字系",
+      "売上": [
+        "売上追求型"
+      ],
+      "数字": [
+        "売上追求型"
+      ],
+      "件数": [
+        "外交不足",
+        "売上追求型"
+      ],
+      "目標達成": [
+        "売上追求型",
+        "選択と集中"
+      ],
+      "未達": [
+        "売上追求型",
+        "マインドセット"
+      ],
+      "成約": [
+        "売上追求型",
+        "外交不足"
+      ],
+      "クロージング": [
+        "売上追求型"
+      ],
+      "利益": [
+        "売上追求型",
+        "ビジネスモデル転換"
+      ],
+      "粗利": [
+        "売上追求型",
+        "ビジネスモデル転換"
+      ],
+      "単価": [
+        "商品設計",
+        "売上追求型"
+      ],
+      "_section_product": "商品・価格・コンセプト系",
+      "商品": [
+        "商品設計"
+      ],
+      "価格": [
+        "商品設計",
+        "ビジネスモデル転換"
+      ],
+      "値上げ": [
+        "商品設計",
+        "マインドセット"
+      ],
+      "値段": [
+        "商品設計"
+      ],
+      "コンセプト": [
+        "商品設計",
+        "集客・デジタル化"
+      ],
+      "ブランド": [
+        "商品設計",
+        "集客・デジタル化"
+      ],
+      "サービス": [
+        "商品設計"
+      ],
+      "提案": [
+        "商品設計",
+        "外交不足"
+      ],
+      "_section_organization": "組織・人材・マネジメント系",
+      "組織": [
+        "組織化"
+      ],
+      "採用": [
+        "採用・人材",
+        "組織化"
+      ],
+      "人材": [
+        "採用・人材",
+        "組織化"
+      ],
+      "チーム": [
+        "組織化",
+        "採用・人材"
+      ],
+      "スタッフ": [
+        "組織化",
+        "採用・人材"
+      ],
+      "部下": [
+        "組織化",
+        "採用・人材"
+      ],
+      "社員": [
+        "組織化",
+        "採用・人材"
+      ],
+      "マネジメント": [
+        "組織化"
+      ],
+      "委任": [
+        "組織化"
+      ],
+      "権限": [
+        "組織化"
+      ],
+      "育成": [
+        "採用・人材",
+        "組織化"
+      ],
+      "定着": [
+        "採用・人材"
+      ],
+      "_section_marketing": "集客・デジタル・発信系",
+      "集客": [
+        "集客・デジタル化"
+      ],
+      "発信": [
+        "集客・デジタル化"
+      ],
+      "SNS": [
+        "集客・デジタル化"
+      ],
+      "コンテンツ": [
+        "集客・デジタル化"
+      ],
+      "広告": [
+        "集客・デジタル化"
+      ],
+      "ホームページ": [
+        "集客・デジタル化"
+      ],
+      "YouTube": [
+        "集客・デジタル化"
+      ],
+      "ブログ": [
+        "集客・デジタル化"
+      ],
+      "_section_focus": "選択・集中・優先順位系",
+      "選択": [
+        "選択と集中"
+      ],
+      "集中": [
+        "選択と集中"
+      ],
+      "散らかる": [
+        "選択と集中",
+        "ビジネスモデル転換"
+      ],
+      "迷い": [
+        "選択と集中",
+        "マインドセット"
+      ],
+      "優先": [
+        "選択と集中"
+      ],
+      "時間": [
+        "選択と集中"
+      ],
+      "忙しい": [
+        "選択と集中",
+        "組織化"
+      ],
+      "余裕": [
+        "選択と集中",
+        "組織化"
+      ],
+      "_section_mindset": "マインドセット・思考・感情系",
+      "不安": [
+        "マインドセット"
+      ],
+      "自信": [
+        "マインドセット"
+      ],
+      "完璧": [
+        "マインドセット"
+      ],
+      "怖い": [
+        "マインドセット"
+      ],
+      "焦り": [
+        "マインドセット"
+      ],
+      "モチベーション": [
+        "マインドセット"
+      ],
+      "やる気": [
+        "マインドセット"
+      ],
+      "継続": [
+        "マインドセット"
+      ],
+      "習慣": [
+        "マインドセット"
+      ],
+      "比較": [
+        "マインドセット"
+      ],
+      "_section_businessmodel": "ビジネスモデル・事業構造系",
+      "事業転換": [
+        "ビジネスモデル転換"
+      ],
+      "ビジネスモデル": [
+        "ビジネスモデル転換"
+      ],
+      "フェーズ": [
+        "ビジネスモデル転換",
+        "選択と集中"
+      ],
+      "構造": [
+        "ビジネスモデル転換"
+      ],
+      "収益": [
+        "ビジネスモデル転換",
+        "売上追求型"
+      ],
+      "差別化": [
+        "ビジネスモデル転換",
+        "商品設計"
+      ]
+    }
+  },
+  "growth_rules": {
+    "_comment": "ファイルが成長したときの対応ルール",
+    "entry_threshold": 25,
+    "action": "25件超過時に check-knowledge-split.py を実行してサブトピック分割を検討する",
+    "split_criteria": "ファイル内のエントリの tags を分析し、70%以上が共通サブタグを持つ場合に分割する",
+    "new_file_naming": "{category}-{existing_topic}-{new_subtopic}.json",
+    "example": "consultation-organization.json が肥大化したら → consultation-organization-hiring.json + consultation-organization-structure.json に分割",
+    "router_update": "分割後は必ず categories[カテゴリ].files と routing_rules を更新する"
+  }
+}
