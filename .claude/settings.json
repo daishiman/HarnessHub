@@ -2,252 +2,239 @@
   "_build_claude_settings": {
     "managed_hooks": [
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/company-master/hooks/hook-guard-secret.py",
-        "event": "PreToolUse",
-        "from_plugin": "company-master",
-        "matcher": "Bash"
+        "from_plugin": "company-master"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/contract-generator/hooks/hook-guard-secret.py",
-        "event": "PreToolUse",
-        "from_plugin": "contract-generator",
-        "matcher": "Bash"
+        "from_plugin": "contract-generator"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-        "event": "PostToolUse",
-        "from_plugin": "dev-graph",
-        "matcher": "Bash"
+        "from_plugin": "dev-graph"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-        "event": "PreToolUse",
-        "from_plugin": "dev-graph",
-        "matcher": "Bash"
+        "from_plugin": "dev-graph"
       },
       {
+        "event": "SessionStart",
+        "matcher": "startup|resume",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event session-start --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-        "event": "SessionStart",
-        "from_plugin": "dev-graph",
-        "matcher": "startup|resume"
+        "from_plugin": "dev-graph"
       },
       {
-        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\"",
         "event": "TaskCompleted",
-        "from_plugin": "dev-graph",
-        "matcher": null
+        "matcher": null,
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\"",
+        "from_plugin": "dev-graph"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash|WebFetch",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/extract-system-blueprint/hooks/pre-fetch-authz-guard.py",
-        "event": "PreToolUse",
-        "from_plugin": "extract-system-blueprint",
-        "matcher": "Bash|WebFetch"
+        "from_plugin": "extract-system-blueprint"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Edit",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-rubric-governance/scripts/diff-rubric-impact.py",
-        "event": "PostToolUse",
-        "from_plugin": "harness-creator",
-        "matcher": "Edit"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Edit|Write",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-build-skill/scripts/lint-capability-manifest.py",
-        "event": "PostToolUse",
-        "from_plugin": "harness-creator",
-        "matcher": "Edit|Write"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Edit|Write",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py",
-        "event": "PostToolUse",
-        "from_plugin": "harness-creator",
-        "matcher": "Edit|Write"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Skill",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-build-skill/scripts/auto-record-lesson.py",
-        "event": "PostToolUse",
-        "from_plugin": "harness-creator",
-        "matcher": "Skill"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Skill",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py",
-        "event": "PostToolUse",
-        "from_plugin": "harness-creator",
-        "matcher": "Skill"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Skill",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-update-notifier/scripts/hook-notify-skill-end.py",
-        "event": "PostToolUse",
-        "from_plugin": "harness-creator",
-        "matcher": "Skill"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/wrap-git-commit-safe/scripts/preflight-git-commit.py",
-        "event": "PreToolUse",
-        "from_plugin": "harness-creator",
-        "matcher": "Bash"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "SessionEnd",
+        "matcher": ".*",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-rubric-governance/scripts/aggregate-evals.py",
-        "event": "SessionEnd",
-        "from_plugin": "harness-creator",
-        "matcher": ".*"
+        "from_plugin": "harness-creator"
       },
       {
-        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/harness-creator/hooks/auto-sync-on-session-start.py\"",
         "event": "SessionStart",
-        "from_plugin": "harness-creator",
-        "matcher": "startup|resume|clear"
+        "matcher": "startup|resume|clear",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/harness-creator/hooks/auto-sync-on-session-start.py\"",
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "Stop",
+        "matcher": ".*",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py",
-        "event": "Stop",
-        "from_plugin": "harness-creator",
-        "matcher": ".*"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "UserPromptSubmit",
+        "matcher": ".*",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/ref-task-context-map/scripts/preload-context-map.py",
-        "event": "UserPromptSubmit",
-        "from_plugin": "harness-creator",
-        "matcher": ".*"
+        "from_plugin": "harness-creator"
       },
       {
+        "event": "UserPromptSubmit",
+        "matcher": ".*",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-update-notifier/scripts/hook-cache-refresh.py",
-        "event": "UserPromptSubmit",
-        "from_plugin": "harness-creator",
-        "matcher": ".*"
+        "from_plugin": "harness-creator"
       },
       {
-        "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-no-reinvent.py",
         "event": "PreToolUse",
-        "from_plugin": "mf-kessai-invoice-check",
-        "matcher": "Bash"
+        "matcher": "Bash",
+        "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-no-reinvent.py",
+        "from_plugin": "mf-kessai-invoice-check"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-readonly.py",
-        "event": "PreToolUse",
-        "from_plugin": "mf-kessai-invoice-check",
-        "matcher": "Bash"
+        "from_plugin": "mf-kessai-invoice-check"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Write|Edit|MultiEdit",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-no-reinvent.py",
-        "event": "PreToolUse",
-        "from_plugin": "mf-kessai-invoice-check",
-        "matcher": "Write|Edit|MultiEdit"
+        "from_plugin": "mf-kessai-invoice-check"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/notion-gmail-send/hooks/guard-gmail-send.py",
-        "event": "PreToolUse",
-        "from_plugin": "notion-gmail-send",
-        "matcher": "Bash"
+        "from_plugin": "notion-gmail-send"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Edit|Write",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/plugin-dev-planner/hooks/hook-validate-plugin-plan.py",
-        "event": "PostToolUse",
-        "from_plugin": "plugin-dev-planner",
-        "matcher": "Edit|Write"
+        "from_plugin": "plugin-dev-planner"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash|Task",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/plugin-dev-planner/hooks/enforce-provenance-chain.py",
-        "event": "PreToolUse",
-        "from_plugin": "plugin-dev-planner",
-        "matcher": "Bash|Task"
+        "from_plugin": "plugin-dev-planner"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Bash",
         "command": "\"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/post-publish-notify.sh\"",
-        "event": "PostToolUse",
-        "from_plugin": "skill-intake",
-        "matcher": "Bash"
+        "from_plugin": "skill-intake"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Skill",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
-        "event": "PostToolUse",
-        "from_plugin": "skill-intake",
-        "matcher": "Skill"
+        "from_plugin": "skill-intake"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "\"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/pre-publish-secret-scrub.sh\"",
-        "event": "PreToolUse",
-        "from_plugin": "skill-intake",
-        "matcher": "Bash"
+        "from_plugin": "skill-intake"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
-        "event": "PreToolUse",
-        "from_plugin": "skill-intake",
-        "matcher": "Bash"
+        "from_plugin": "skill-intake"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/pre-publish-schema-validate.py\"",
-        "event": "PreToolUse",
-        "from_plugin": "skill-intake",
-        "matcher": "Bash"
+        "from_plugin": "skill-intake"
       },
       {
-        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
         "event": "PreToolUse",
-        "from_plugin": "skill-intake",
-        "matcher": "Skill|Task"
+        "matcher": "Skill|Task",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
+        "from_plugin": "skill-intake"
       },
       {
-        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
         "event": "SessionEnd",
-        "from_plugin": "skill-intake",
-        "matcher": ".*"
-      },
-      {
+        "matcher": ".*",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
+        "from_plugin": "skill-intake"
+      },
+      {
         "event": "Stop",
-        "from_plugin": "skill-intake",
-        "matcher": ".*"
+        "matcher": ".*",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
+        "from_plugin": "skill-intake"
       },
       {
-        "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/slide-report-generator/hooks/hook-postgen-eval.py",
         "event": "PostToolUse",
-        "from_plugin": "slide-report-generator",
-        "matcher": "Write|Edit|MultiEdit"
+        "matcher": "Write|Edit|MultiEdit",
+        "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/slide-report-generator/hooks/hook-postgen-eval.py",
+        "from_plugin": "slide-report-generator"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Bash|Task",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/system-dev-planner/hooks/guard-implementation-readiness.py",
-        "event": "PreToolUse",
-        "from_plugin": "system-dev-planner",
-        "matcher": "Bash|Task"
+        "from_plugin": "system-dev-planner"
       },
       {
+        "event": "PreToolUse",
+        "matcher": "Write|Edit|Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py\"",
-        "event": "PreToolUse",
-        "from_plugin": "system-spec-harness",
-        "matcher": "Write|Edit|Bash"
+        "from_plugin": "system-spec-harness"
       },
       {
-        "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/ubm-goal-setting/hooks/ubm-write-path-guard.py",
         "event": "PreToolUse",
-        "from_plugin": "ubm-goal-setting",
-        "matcher": "Write|Edit|MultiEdit"
+        "matcher": "Write|Edit|MultiEdit",
+        "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/ubm-goal-setting/hooks/ubm-write-path-guard.py",
+        "from_plugin": "ubm-goal-setting"
       }
     ],
     "managed_permissions": []
   },
-  "enabledPlugins": {
-    "company-master@skills": true,
-    "contract-generator@skills": true,
-    "dev-graph@skills": true,
-    "extract-system-blueprint@skills": true,
-    "harness-creator@skills": true,
-    "mf-kessai-invoice-check@skills": true,
-    "notion-gmail-send@skills": true,
-    "plugin-dev-planner@skills": true,
-    "prompt-creator@skills": true,
-    "skill-governance-adapters@skills": true,
-    "skill-governance-automation@skills": true,
-    "skill-governance-config@skills": true,
-    "skill-governance-hooks@skills": true,
-    "skill-governance-lint@skills": true,
-    "skill-governance-migration@skills": true,
-    "skill-governance-secrets@skills": true,
-    "skill-intake@skills": true,
-    "slide-report-generator@skills": true,
-    "system-dev-planner@skills": true,
-    "system-spec-harness@skills": true,
-    "ubm-goal-setting@skills": true
+  "permissions": {
+    "ask": [],
+    "deny": [
+      "Write(.claude/skills/ref-skill-design-rubric/**)",
+      "Edit(.claude/skills/ref-skill-design-rubric/**)",
+      "Bash(rm -rf*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)"
+    ]
   },
   "hooks": {
     "FileChanged": [
@@ -291,103 +278,103 @@
         "matcher": "Write|Edit"
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\""
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Edit",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-rubric-governance/scripts/diff-rubric-impact.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-rubric-governance/scripts/diff-rubric-impact.py"
           }
-        ],
-        "matcher": "Edit"
+        ]
       },
       {
+        "matcher": "Edit|Write",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-build-skill/scripts/lint-capability-manifest.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-build-skill/scripts/lint-capability-manifest.py"
           }
-        ],
-        "matcher": "Edit|Write"
+        ]
       },
       {
+        "matcher": "Edit|Write",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py"
           }
-        ],
-        "matcher": "Edit|Write"
+        ]
       },
       {
+        "matcher": "Skill",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-build-skill/scripts/auto-record-lesson.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-build-skill/scripts/auto-record-lesson.py"
           }
-        ],
-        "matcher": "Skill"
+        ]
       },
       {
+        "matcher": "Skill",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py"
           }
-        ],
-        "matcher": "Skill"
+        ]
       },
       {
+        "matcher": "Skill",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-update-notifier/scripts/hook-notify-skill-end.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-update-notifier/scripts/hook-notify-skill-end.py"
           }
-        ],
-        "matcher": "Skill"
+        ]
       },
       {
+        "matcher": "Edit|Write",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/plugin-dev-planner/hooks/hook-validate-plugin-plan.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/plugin-dev-planner/hooks/hook-validate-plugin-plan.py"
           }
-        ],
-        "matcher": "Edit|Write"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "\"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/post-publish-notify.sh\"",
-            "type": "command"
+            "type": "command",
+            "command": "\"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/post-publish-notify.sh\""
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Skill",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\""
           }
-        ],
-        "matcher": "Skill"
+        ]
       },
       {
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/slide-report-generator/hooks/hook-postgen-eval.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/slide-report-generator/hooks/hook-postgen-eval.py"
           }
-        ],
-        "matcher": "Write|Edit|MultiEdit"
+        ]
       }
     ],
     "PreCompact": [
@@ -411,177 +398,157 @@
         "matcher": "Write|Edit"
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/company-master/hooks/hook-guard-secret.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/company-master/hooks/hook-guard-secret.py"
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/contract-generator/hooks/hook-guard-secret.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/contract-generator/hooks/hook-guard-secret.py"
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\""
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Bash|WebFetch",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/extract-system-blueprint/hooks/pre-fetch-authz-guard.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/extract-system-blueprint/hooks/pre-fetch-authz-guard.py"
           }
-        ],
-        "matcher": "Bash|WebFetch"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/wrap-git-commit-safe/scripts/preflight-git-commit.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/wrap-git-commit-safe/scripts/preflight-git-commit.py"
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-no-reinvent.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-no-reinvent.py"
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-readonly.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-readonly.py"
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-no-reinvent.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/mf-kessai-invoice-check/hooks/guard-mfk-no-reinvent.py"
           }
-        ],
-        "matcher": "Write|Edit|MultiEdit"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/notion-gmail-send/hooks/guard-gmail-send.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/notion-gmail-send/hooks/guard-gmail-send.py"
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Bash|Task",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/plugin-dev-planner/hooks/enforce-provenance-chain.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/plugin-dev-planner/hooks/enforce-provenance-chain.py"
           }
-        ],
-        "matcher": "Bash|Task"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "\"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/pre-publish-secret-scrub.sh\"",
-            "type": "command"
+            "type": "command",
+            "command": "\"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/pre-publish-secret-scrub.sh\""
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\""
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Bash",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/pre-publish-schema-validate.py\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/pre-publish-schema-validate.py\""
           }
-        ],
-        "matcher": "Bash"
+        ]
       },
       {
+        "matcher": "Skill|Task",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\""
           }
-        ],
-        "matcher": "Skill|Task"
+        ]
       },
       {
+        "matcher": "Bash|Task",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/system-dev-planner/hooks/guard-implementation-readiness.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/system-dev-planner/hooks/guard-implementation-readiness.py"
           }
-        ],
-        "matcher": "Bash|Task"
+        ]
       },
       {
+        "matcher": "Write|Edit|Bash",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py\""
           }
-        ],
-        "matcher": "Write|Edit|Bash"
+        ]
       },
       {
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/ubm-goal-setting/hooks/ubm-write-path-guard.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/ubm-goal-setting/hooks/ubm-write-path-guard.py"
           }
-        ],
-        "matcher": "Write|Edit|MultiEdit"
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-rubric-governance/scripts/aggregate-evals.py",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      },
-      {
-        "hooks": [
-          {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
+        ]
       }
     ],
     "SessionStart": [
@@ -595,42 +562,22 @@
         "matcher": ""
       },
       {
+        "matcher": "startup|resume",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event session-start --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event session-start --repo-root \"${CLAUDE_PROJECT_DIR}\""
           }
-        ],
-        "matcher": "startup|resume"
+        ]
       },
       {
+        "matcher": "startup|resume|clear",
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/harness-creator/hooks/auto-sync-on-session-start.py\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/harness-creator/hooks/auto-sync-on-session-start.py\""
           }
-        ],
-        "matcher": "startup|resume|clear"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      },
-      {
-        "hooks": [
-          {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\"",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
+        ]
       }
     ],
     "SubagentStop": [
@@ -655,8 +602,8 @@
       {
         "hooks": [
           {
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\""
           }
         ]
       }
@@ -671,35 +618,88 @@
         ]
       }
     ],
-    "UserPromptSubmit": [
+    "SessionEnd": [
       {
+        "matcher": ".*",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/ref-task-context-map/scripts/preload-context-map.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-rubric-governance/scripts/aggregate-evals.py"
           }
-        ],
-        "matcher": ".*"
+        ]
       },
       {
+        "matcher": ".*",
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-update-notifier/scripts/hook-cache-refresh.py",
-            "type": "command"
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\""
           }
-        ],
-        "matcher": ".*"
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py"
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/skill-intake/hooks/hook-guard-skillgen.py\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/ref-task-context-map/scripts/preload-context-map.py"
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/harness-creator/skills/run-skill-update-notifier/scripts/hook-cache-refresh.py"
+          }
+        ]
       }
     ]
   },
-  "permissions": {
-    "ask": [],
-    "deny": [
-      "Write(.claude/skills/ref-skill-design-rubric/**)",
-      "Edit(.claude/skills/ref-skill-design-rubric/**)",
-      "Bash(rm -rf*)",
-      "Bash(git push --force*)",
-      "Bash(git push -f*)"
-    ]
+  "enabledPlugins": {
+    "company-master@skills": true,
+    "contract-generator@skills": true,
+    "dev-graph@skills": true,
+    "extract-system-blueprint@skills": true,
+    "harness-creator@skills": true,
+    "mf-kessai-invoice-check@skills": true,
+    "notion-gmail-send@skills": true,
+    "plugin-dev-planner@skills": true,
+    "prompt-creator@skills": true,
+    "skill-governance-adapters@skills": true,
+    "skill-governance-automation@skills": true,
+    "skill-governance-config@skills": true,
+    "skill-governance-hooks@skills": true,
+    "skill-governance-lint@skills": true,
+    "skill-governance-migration@skills": true,
+    "skill-governance-secrets@skills": true,
+    "skill-intake@skills": true,
+    "slide-report-generator@skills": true,
+    "system-dev-planner@skills": true,
+    "system-spec-harness@skills": true,
+    "ubm-goal-setting@skills": true
   }
 }
