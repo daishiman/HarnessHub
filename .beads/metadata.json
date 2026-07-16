@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "HarnessHub",
+  "project_id": "c2510089-5f2b-45fa-8a66-425af8c8b684"
+}

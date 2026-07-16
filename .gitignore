@@ -1,0 +1,103 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.python-version
+.coverage
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+.obsidian/
+*.swp
+
+# Claude Code local artifacts
+.claude/logs/
+.claude/secrets/
+
+# Local config (機密含む可能性)
+*.local.json
+config/*.local.*
+references/governance-params.json
+
+# Secrets (絶対に commit しない)
+.env
+.env.*
+!.env.example
+.google-config.json
+
+# Per-repo Notion config (DB IDs / credential service identity)
+.notion-config.json
+!.notion-config.example.json
+
+# Tenant real-value overlays (templates and public contracts remain tracked)
+tenants/*/notion-config.json
+tenants/*/party_a.json
+tenants/*/google-config.json
+tenants/*/**/*.secret.*
+
+# Session-local artifacts
+output/
+dist/
+.claude/handoff/
+.worktrees/
+# run-* スキルの transient 作業ディレクトリ (skill-tree 第13条 nested dir 禁止)
+.run/
+# spec-drift-guardian の issue 別 triage 作業ディレクトリ (run-spec-drift-triage が生成)
+.spec-drift/
+# skill-intake 実行中フラグ lock (hook-guard-skillgen.py が生成・解除する揮発状態)
+eval-log/intake-locks/
+# C05 auto-sync-on-session-start.py の write-scope 全体 (lock/state/log の揮発状態)
+.build/
+# .claude/{agents,skills,commands} は build-claude-symlinks.py が
+# plugins/ から生成する symlink を含むため tracked。ignore しない。
+
+# Eval-log: 一時生成物 (再現性 schema 正本は plugins/ 配下)
+eval-log/skill-brief.json
+eval-log/skill-brief*.json
+!eval-log/skill-brief-prompt-creator.json
+# dev-graph live-trial のスクラッチ git repo / host fixture (各々が nested .git を持つ
+# 埋め込みリポジトリ = gitlink 化して壊れるため tracked にしない transient 生成物)
+eval-log/dev-graph/live-trial-fixtures/
+eval-log/dev-graph/live-trial-host-*/
+# skill-intake eval-log は一時生成物だが content-review verdict は CI 検査対象のため追跡する
+eval-log/skill-intake/**
+!eval-log/skill-intake/*/
+!eval-log/skill-intake/*/content-review/
+!eval-log/skill-intake/*/content-review/**
+# 移管元 snapshot で追跡済みの standalone elegant-review 証跡は保持する
+!eval-log/skill-intake/standalone/
+!eval-log/skill-intake/standalone/elegant-review/
+!eval-log/skill-intake/standalone/elegant-review/20260606T001612-standalone/
+!eval-log/skill-intake/standalone/elegant-review/20260606T001612-standalone/**
+eval-log/docs/
+eval-log/notion-conflicts.json
+
+# plugin-dev-planner の計画成果物は tracked。周回・buildごとの揮発投影だけを除外する。
+plugin-plans/*/run-plugin-dev-plan-progress.json
+plugin-plans/*/run-plugin-dev-plan-intermediate.jsonl
+plugin-plans/*/.goal-seek/
+plugin-plans/*/task-graph-status.json
+plugin-plans/*/task-progress.md
+plugin-plans/*/task-execution-report.html
+plugin-plans/*/.gate/
+
+# Plugin-local runtime
+plugins/skill-intake/output/
+plugins/skill-intake/.claude/
+plugins/prompt-creator/LOGS.md
+
+# GitHub 100MB file-size limit: this local tarball cannot be pushed
+google-cloud-cli-darwin-arm.tar.gz
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
