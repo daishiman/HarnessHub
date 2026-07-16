@@ -1,0 +1,29 @@
+{
+  "target": {
+    "plugin": "harness-creator",
+    "skill": "run-plugin-package-check",
+    "skill_md_sha256": "89ca764291ad7373690c963e46394943c41bea4606bfc687df12f893a1002090"
+  },
+  "review_kind": "rubric",
+  "verdict": "PASS",
+  "reviewer": "rubric-evaluator",
+  "reviewed_at": "2026-07-14",
+  "iterations": 1,
+  "human_review_required": false,
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["IN1", "IN2", "OUT1"],
+    "positive_feedback": [
+      "FM/BD 準拠: name=run-plugin-package-check (kebab + run prefix・ディレクトリ名一致)、description は Use-when 形、argument-hint/arguments と model:sonnet を宣言。Purpose & Output Contract・Gotchas 節が揃い本文は 300 行以内で PD を満たす。",
+      "単一責務・SSOT: orchestrator として契約適合検査に責務を限定し、PKG 定義を ref-pkg-contract に、eval-log パスを 27章 §3.1 に委譲して再定義しない。役割直交テーブルで規範採点・elegance lint との境界を明示し、Phase 別 PKG 件数・exit1・1run1line の数値契約で検証可能性を確保。"
+    ],
+    "negative_feedback": [
+      "低 severity (非ブロッキング): 局面カタログ ASCII 図 Step8 の『開each 時は fail』(line 157) は文字化け断片と見られ表記品質のみの問題。rubric の high severity には該当しない。"
+    ],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual",
+    "next_action": "none"
+  },
+  "notes": "ref-skill-design-rubric の規範 (FM/BD・単一責務・境界・出力契約・SSOT) で現 SKILL.md (sha256 89ca764291ad7373690c963e46394943c41bea4606bfc687df12f893a1002090) を genuine 採点。FM (name kebab+prefix / description=Use-when / argument-hint)、BD (Output Contract + Gotchas + 300 行以内)、単一責務 (契約適合 orchestrator に限定・PKG-002〜008/014 は fork 委譲)、境界 (5/5.5/6 役割直交テーブル)、SSOT (PKG 定義=ref-pkg-contract・eval-log パス=27章 §3.1 を再定義しない) を確認。high severity 0 件。line 157 の文字化けを低 severity 表記所見として記録するが非ブロッキング。閾値超過で PASS。"
+}

@@ -1,0 +1,27 @@
+{
+  "target": {
+    "plugin": "harness-creator",
+    "skill": "assign-plugin-package-evaluator",
+    "skill_md_sha256": "9cd38c57a9ceda7814cda556e1dc7529dc9cb557163023b7c3e8dd3be818b91e"
+  },
+  "review_kind": "elegance",
+  "verdict": "PASS",
+  "reviewer": "run-elegant-review-subagent-team",
+  "reviewed_at": "2026-07-14",
+  "iterations": 1,
+  "human_review_required": false,
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["C1", "C2", "C3", "C4"],
+    "positive_feedback": [
+      "検査スコープ (PKG-002〜008 / PKG-014 = 8 件) が Purpose・入力 pkg_ids 配列・PKG 詳細表 (8 行)・完了チェックリスト・findings 例・Gotchas の全箇所で完全一致し、B (run-plugin-package-check) が担う対象外 (PKG-001/009/010〜013/015) の帰属も矛盾なく明示されている。",
+      "PKG ID 表を ref-pkg-contract に委ね本 skill 内で再定義しない DRY 徹底 (Key Rule 1) と context:fork による親 sycophancy 排除 (Key Rule 7) が frontmatter 宣言と本文で整合。assign 系として goal-seek は Goal+Checklist 形のみで runtime loop を配線しない評価系の正しい扱いになっている。"
+    ],
+    "negative_feedback": [],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual",
+    "next_action": "none"
+  },
+  "notes": "現 SKILL.md (sha256 9cd38c57a9ceda7814cda556e1dc7529dc9cb557163023b7c3e8dd3be818b91e) を全文 read し 4 条件で genuine 再評価。①矛盾なし: 8 件スコープが Purpose/入力/PKG 詳細表/checklist/findings 例/Gotchas 全体で一致し、対象外 PKG も B 帰属で一貫。②漏れなし: 入力/出力/完了条件、package_mode=skill-only 時の not_applicable 判定 (Key Rule3・checklist・Gotcha4)、schema 準拠、schema 違反 exit2、exit!=0 でも findings は stdout 出力、が全て記述され欠落なし。③整合性: pair=run-plugin-package-check が B 側 pair 宣言と双方向一致し kind/prefix/effect/role_suffix も整合。④依存整合: responsibility_refs (R1-run-pkg-check.md)/schema_refs (findings.schema.json・ref-pkg-contract package-contract)/script_refs (validate-plugin-package.py・render-pkg-findings.py)/reference_refs (evaluator-contract.md)/rubric_refs (ref-pkg-contract) 及び goal-seek 正本 (../run-build-skill/references/goal-seek-paradigm.md) を実ディスクで確認、全て resolve し dangling なし。重大問題は検出されず PASS。"
+}

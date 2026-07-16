@@ -1,0 +1,37 @@
+{
+  "target": {
+    "plugin": "system-spec-harness",
+    "skill": "run-system-spec-compile",
+    "skill_md_sha256": "8c791dc0156cdf3ffb6fcf60eb2b523f8e83813d3031d510fca7391c587a08da"
+  },
+  "review_kind": "rubric",
+  "verdict": "PASS",
+  "reviewer": "rubric-evaluator",
+  "reviewed_at": "2026-07-14",
+  "iterations": 1,
+  "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 1
+  },
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["IN1", "OUT1"],
+    "positive_feedback": [
+      "検証可能性が高い: IN1 が validate-coverage-matrix.py と validate-source-citation.py の 2 決定論ゲート exit0、OUT1 が tests/test_compile_spec_doc.py の受入テストに接地し、frontmatter feedback_contract の verify_by (script/test) と実体が一致。",
+      "単一責務・境界・SSOT が rubric 通り: system-spec/ への正本書込を compile-spec-doc.py へ一本化し (単一 writer)、入力 (spec-state/fetched-references) 非改変を Key Rules2 で明示、機械=決定論組み立て / AI=章構成の意味付けの二層分離を宣言。allowed-tools は Read/Write/Bash の最小 allowlist。",
+      "出力契約が明確: 要件定義書 (00-requirements-definition.md) + 章別 Markdown + index.md という成果物形状と完了条件を Purpose で具体化し、日本語成果物 / 英語 id の言語規約も明記。"
+    ],
+    "negative_feedback": [
+      "[low/smell] 確定マーカーの真理値表と confirmed/draft 規則が SKILL.md 本体・R1/R2 プロンプト・chapter-template.md に重複記載される。責務プロンプト SSOT の二層分離意図に沿う許容範囲の重複だが密度はやや高い (簡潔性でわずかに減点、閾値は満たす)。"
+    ],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual",
+    "next_action": "none"
+  },
+  "notes": "現 SKILL.md (sha256=8c791dc0156cdf3ffb6fcf60eb2b523f8e83813d3031d510fca7391c587a08da) を ref-skill-design-rubric 規範で採点。FM: name=kebab+run prefix・description=Use when 形・kind/effect 整合。BD: Purpose & Output Contract 節・Gotcha 相当 (Key Rules/ゴールシーク)・出力契約あり (142 行、resource-map で Progressive Disclosure)。NM: ディレクトリ名一致。境界: 単一 writer + 入力非改変を明示。SSOT: compile-spec-doc.py が正本書込経路、責務プロンプトが判断 SSOT。全参照実在。high severity 0・低 smell 1 (真理値表重複) のみで全次元閾値クリアのため PASS。"
+}

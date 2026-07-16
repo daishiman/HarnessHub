@@ -1,0 +1,29 @@
+{
+  "target": {
+    "plugin": "harness-creator",
+    "skill": "assign-plugin-package-evaluator",
+    "skill_md_sha256": "9cd38c57a9ceda7814cda556e1dc7529dc9cb557163023b7c3e8dd3be818b91e"
+  },
+  "review_kind": "rubric",
+  "verdict": "PASS",
+  "reviewer": "rubric-evaluator",
+  "reviewed_at": "2026-07-14",
+  "iterations": 1,
+  "human_review_required": false,
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["C1", "C2", "C3", "C4"],
+    "positive_feedback": [
+      "FM/BD 準拠: name は kebab-case + assign prefix (ディレクトリ名一致)、description は Use-when 形 (発動条件のみ)、user-invocable:false が worker/assign kind に適合。Output Contract・Gotchas 節が揃い本文 156 行 (<300 行) で PD も references/ へ外出し済み。",
+      "単一責務・SSOT: 静的検証可能な 8 件 (PKG-002〜008/014) に責務を絞り、PKG ID 表は ref-pkg-contract を唯一正本として再定義しない (DRY/29章)。eval-log パス (27章 §3.1) も再定義せず、findings に location/evidence/severity/suggested_fix を要求し検証可能性が担保されている。"
+    ],
+    "negative_feedback": [
+      "低 severity (非ブロッキング): PKG 詳細表『検査関数』列 (validate_plugin_json_frontmatter 等) は概念名で実装関数シンボルと一字一致しない可能性があるが、検証の正規入口は CLI --check pkg-<id> で機械判定は保たれるため PASS を阻害しない。"
+    ],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual",
+    "next_action": "none"
+  },
+  "notes": "ref-skill-design-rubric の規範 (単一責務・命名・境界・出力契約・SSOT) で現 SKILL.md (sha256 9cd38c57a9ceda7814cda556e1dc7529dc9cb557163023b7c3e8dd3be818b91e) を genuine 採点。FM (name kebab+prefix / description=Use-when / 動作詳細混入なし)、BD (Output Contract + Gotchas + 156 行 <300)、PD (本文外出し済み)、単一責務 (静的 8 件のみ・B との責務分離明示)、SSOT (PKG ID 表と eval-log パスを外部正本へ委譲) を確認。high severity 0 件。検査関数列の概念名 vs 実関数名の追跡性を低 severity 所見として記録するが非ブロッキング。閾値超過で PASS。"
+}

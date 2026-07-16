@@ -1,0 +1,27 @@
+{
+  "target": {
+    "plugin": "harness-creator",
+    "skill": "run-skill-live-trial",
+    "skill_md_sha256": "a6a3a22555ab52ccc33d61d8cae6f71078e6fb20080b6dc053c7490275f73af9"
+  },
+  "review_kind": "rubric",
+  "verdict": "PASS",
+  "reviewer": "rubric-evaluator",
+  "reviewed_at": "2026-07-14",
+  "iterations": 1,
+  "human_review_required": false,
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2", "OUT3"],
+    "positive_feedback": [
+      "FM/BD/PD 準拠: name=run-skill-live-trial (kebab + run prefix・ディレクトリ名一致)、description は Use-when 形、argument-hint に --proof/--model を宣言。Purpose (Output Contract 相当) + Gotchas 節があり本文 300 行以内。completeness_exempt で prompts/manifest の免除理由を具体的に明記し PD を満たす。",
+      "単一責務・境界・検証可能性: acceptance 専用 (selection を扱わない・1 実走=1 skill) に責務を絞り、ローカル開発環境限定 / 量産先配備対象外 / denylist の配備境界を明示。poll exit code 表・STALL 分岐表・self-test/pytest コマンド・actual_model 機械 gate で検証可能性が高く、数値上限を convergence-policy.json 正本へ委譲する SSOT も守られている。"
+    ],
+    "negative_feedback": [],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual",
+    "next_action": "none"
+  },
+  "notes": "ref-skill-design-rubric の規範 (FM/BD/PD・単一責務・境界・出力契約・SSOT) で現 SKILL.md (sha256 a6a3a22555ab52ccc33d61d8cae6f71078e6fb20080b6dc053c7490275f73af9) を genuine 採点。FM (name kebab+prefix / description=Use-when / argument-hint)、BD (Purpose+Gotchas+300 行以内)、PD (completeness_exempt で prompts/manifest 免除理由を明記)、単一責務 (acceptance 専用・selection 非対象)、境界 (ローカル限定・配備対象外・denylist)、SSOT (数値上限を convergence-policy.json へ委譲)、出力契約 (verdict.json の schema 自己検証) を確認。high severity 0 件。閾値超過で PASS。"
+}
