@@ -37,7 +37,8 @@ python3 scripts/build-plugins-from-harness.py --adopt-new # harness 側の新規
 
 - **plugin 単位**の `rsync -a --delete` で更新するため、HarnessHub 独自 plugin には触れません
 - `--adopt-new` は新規 plugin をコピーし、marketplace.json へエントリを自動追記します。`.claude-plugin/plugin.json` が無い plugin は取り込み拒否されます。追記エントリの category は `uncategorized` になるので、後で手動で分類してください
-- 実行の最後に「plugin ディレクトリ ↔ marketplace.json エントリ ↔ version」の3点整合を検査し、警告があると **exit code 1** を返します
+- `distributable: false` を宣言した plugin (社内専用・開発メタ系) は**実体コピーのみ行い、marketplace.json には登録しません** (MK-004)。このため plugin 数 (22) と marketplace 登録数 (14) は一致しないのが正常です
+- 実行の最後に「plugin ディレクトリ ↔ marketplace.json エントリ ↔ version」の3点整合を検査し、警告があると **exit code 1** を返します。検査も distributable フラグに準拠します
 - `--check-only` は同期せず整合検査だけを行います (harness が手元に無い CI 環境用。GitHub Actions の `marketplace-integrity` ワークフローが PR / push 時に自動実行します)
 
 同期後は通常の `git add / commit / push` で公開してください。

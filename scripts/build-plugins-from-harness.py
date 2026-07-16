@@ -42,6 +42,27 @@ def load_manifest(plugin_dir: Path) -> dict | None:
     return json.loads(manifest.read_text(encoding="utf-8"))
 
 
+def is_distributable(plugin_dir: Path, manifest: dict | None) -> bool:
+    """validate-plugin-completeness.py と同じ sidecar-first 優先順位で判定する。
+
+    references/package-contract.json の distribution.distributable →
+    manifest 直下の distributable → 既定 True。distributable:false の plugin は
+    「実体は保持するが marketplace/bundle へは非登録 (社内専用)」(MK-004)。
+    """
+    contract_path = plugin_dir / "references" / "package-contract.json"
+    if contract_path.is_file():
+        try:
+            contract = json.loads(contract_path.read_text(encoding="utf-8"))
+            distribution = contract.get("distribution", {})
+            if isinstance(distribution, dict) and "distributable" in distribution:
+                return bool(distribution["distributable"])
+        except (ValueError, OSError):
+            pass
+    if manifest and "distributable" in manifest:
+        return bool(manifest["distributable"])
+    return True
+
+
 def rsync_plugin(src: Path, dst: Path, dry_run: bool) -> list[str]:
     cmd = ["rsync", "-a", "--delete", "--itemize-changes"]
     if dry_run:
@@ -94,10 +115,17 @@ def check_marketplace(plugins_dir: Path) -> list[str]:
     entries = {e["name"]: e for e in mp.get("plugins", [])}
     hub_plugins = list_plugins(plugins_dir)
     for name in hub_plugins:
-        if name not in entries:
-            warnings.append(f"marketplace.json にエントリがない: {name}")
-            continue
         manifest = load_manifest(plugins_dir / name)
+        distributable = is_distributable(plugins_dir / name, manifest)
+        if name not in entries:
+            if distributable:
+                warnings.append(f"marketplace.json にエントリがない: {name}")
+            continue
+        if not distributable:
+            warnings.append(
+                f"非配布 (distributable:false) の plugin が marketplace.json に"
+                f"登録されている: {name} (MK-004)"
+            )
         if manifest and manifest.get("version") != entries[name].get("version"):
             warnings.append(
                 f"version 不一致: {name} "
@@ -168,8 +196,13 @@ def main() -> int:
         if not args.adopt_new:
             print(f"[未取込] {name}: harness 側の新規プラグイン (--adopt-new で取り込み)")
             continue
+        manifest = load_manifest(src_plugins_dir / name)
+        if not is_distributable(src_plugins_dir / name, manifest):
+            rsync_plugin(src_plugins_dir / name, hub_plugins_dir / name, args.dry_run)
+            print(f"[取込/非配布] {name}: コピーのみ (distributable:false のため marketplace 非登録)")
+            continue
         try:
-            entry = marketplace_entry_for(name, load_manifest(src_plugins_dir / name))
+            entry = marketplace_entry_for(name, manifest)
         except ValueError as exc:
             print(f"[拒否] {exc}")
             continue
