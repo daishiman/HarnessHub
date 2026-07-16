@@ -8,10 +8,39 @@
 
 ## このドキュメントの読み方
 
+- **このハブの成り立ちと harness との同期を知りたい方** → [Part 0: このリポジトリ (HarnessHub) と harness の関係](#part-0-このリポジトリ-harnesshub-と-harness-の関係)
 - **インストールしたい方** → [Part 1: インストール手順](#part-1-インストール手順) を順番に実行
 - **API キーを設定したい方** → [Part 2: API キーの安全な保存 (Keychain)](#part-2-api-キーの安全な保存-keychain)
 - **どの plugin を入れるか迷う方** → [Part 3: plugin 一覧と役割](#part-3-plugin-一覧と役割)
 - **plugin の中身を理解したい方** → [Part 4: plugin の仕組み](#part-4-plugin-の仕組み)
+
+---
+
+# Part 0: このリポジトリ (HarnessHub) と harness の関係
+
+HarnessHub は、ローカルの開発リポジトリ **harness** で開発した plugin 群を共有するための**配布用ハブ**です。
+
+- **開発の正は harness 側**: plugin の開発・修正は harness で行い、HarnessHub へは同期スクリプトで反映します
+- `plugins/` 配下は harness からの**実体コピー**です (symlink ではないため、clone するだけでリンク切れなく利用できます)
+- `.claude-plugin/marketplace.json` は HarnessHub が**独自管理**します (HarnessHub 固有 plugin のエントリを追記できます)
+- HarnessHub 独自の plugin は `plugins/` に直接作成できます (同期で消されません)
+
+## harness からの同期手順
+
+```bash
+python3 scripts/sync-plugins-from-harness.py --dry-run   # 差分確認だけ (何も変更しない)
+python3 scripts/sync-plugins-from-harness.py             # 既存 plugin を同期
+python3 scripts/sync-plugins-from-harness.py --adopt-new # harness 側の新規 plugin も取り込み
+```
+
+同期スクリプトの挙動:
+
+- **plugin 単位**の `rsync -a --delete` で更新するため、HarnessHub 独自 plugin には触れません
+- `--adopt-new` は新規 plugin をコピーし、marketplace.json へエントリを自動追記します。`.claude-plugin/plugin.json` が無い plugin は取り込み拒否されます。追記エントリの category は `uncategorized` になるので、後で手動で分類してください
+- 実行の最後に「plugin ディレクトリ ↔ marketplace.json エントリ ↔ version」の3点整合を検査し、警告があると **exit code 1** を返します
+- `--check-only` は同期せず整合検査だけを行います (harness が手元に無い CI 環境用。GitHub Actions の `marketplace-integrity` ワークフローが PR / push 時に自動実行します)
+
+同期後は通常の `git add / commit / push` で公開してください。
 
 ---
 

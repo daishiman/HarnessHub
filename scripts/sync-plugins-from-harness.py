@@ -8,6 +8,7 @@
 - harness 側の新規プラグイン: --adopt-new 指定時のみ取り込み、
   marketplace.json へエントリを追記する
 - 同期後に marketplace.json とディレクトリ実体・version の整合を検査する
+- --check-only は同期せず整合検査のみ行う (harness が無い CI 環境用)
 
 exit code: 0=正常 / 1=整合警告あり / 2=source 不正
 """
@@ -124,10 +125,21 @@ def main() -> int:
         "--adopt-new", action="store_true",
         help="harness 側の新規プラグインを取り込み marketplace.json へ追記",
     )
+    parser.add_argument(
+        "--check-only", action="store_true",
+        help="同期せず marketplace 整合検査のみ実行 (source 不要・CI 用)",
+    )
     args = parser.parse_args()
 
-    src_plugins_dir = args.source / "plugins"
     hub_plugins_dir = REPO_ROOT / "plugins"
+    if args.check_only:
+        warnings = check_marketplace(hub_plugins_dir)
+        for w in warnings:
+            print(f"[警告] {w}")
+        print(f"整合検査のみ完了: 警告 {len(warnings)} 件")
+        return 1 if warnings else 0
+
+    src_plugins_dir = args.source / "plugins"
     if not src_plugins_dir.is_dir():
         print(f"error: source が見つからない: {src_plugins_dir}", file=sys.stderr)
         return 2
