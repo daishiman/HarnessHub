@@ -1,5 +1,5 @@
 {
-  "graph_revision": 10,
+  "graph_revision": 11,
   "nodes": [
     {
       "acceptance": [
@@ -990,9 +990,9 @@
         "status": "open"
       },
       "confirmation_evidence": {
+        "evaluated_digest": "0b9abd017b626ed25dd76cb2860a8a25dacd3a3ea6b6e8a4633220f7cd8dfad1",
         "evaluator": "user-design-review (claude session 9ce54d7a)",
-        "evidence_ref": "eval-log/run-dev-graph-node-confirm-feat-auth-tenancy.json",
-        "evaluated_digest": "0b9abd017b626ed25dd76cb2860a8a25dacd3a3ea6b6e8a4633220f7cd8dfad1"
+        "evidence_ref": "eval-log/run-dev-graph-node-confirm-feat-auth-tenancy.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:38:30Z",
@@ -1540,7 +1540,18 @@
       "depends_on": [],
       "domain": "documentation",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-HUB-FOUNDATION-P01",
+          "head_sha": "5c51653d9f84c7045218a5fa570ffdca73d5b37c",
+          "last_seen_at": "2026-07-18T00:43:28.606967Z",
+          "lease_acquired_at": "2026-07-18T00:43:28.605160Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_2a278c395bdc3152"
+        }
+      ],
       "feature_package_id": "feature-package/feat-hub-foundation",
       "file_path": "tasks/sys-hub-foundation-p01.md",
       "github_project_linkages": [],
@@ -1595,7 +1606,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-17T08:03:32Z"
+      "updated_at": "2026-07-18T00:43:28.606967Z"
     },
     {
       "artifact_kind": "task",
