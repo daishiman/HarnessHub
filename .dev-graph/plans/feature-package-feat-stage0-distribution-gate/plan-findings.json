@@ -1,0 +1,180 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で goal-spec (purpose/goal/scope_in 5 件/scope_out 2 件/acceptance 3 件/quality_constraints 8 件) との矛盾なし。workstream_kind 分布は quality=7 (P03,P04,P06,P07,P09,P10,P11)・infrastructure=3 (P02,P05,P08)・documentation=2 (P01,P12)・operations=1 (P13) であり、検証 feature としての性質 (品質・検証活動が中心) に対して実装偏重になっていない。唯一の実装 phase (P05) も『本番配布物ではなく H7 検証のためだけに存在する使い捨て可能な最小構成の artifact』と明記し、既存 installers/ ディレクトリ (harness-creator kit 配布用) を変更しないことも明記。全 13 task の スコープ外 節に scope_out 2 件 (Hub 本体の実装・課金商用配布) が一貫して記載され、混入 0 件。acceptance 3 件は P06 (実行)→P07 (受入確認)、P07 (条件付き pass)→P13 (登録依頼確定) の経路で過不足なく写像されている",
+      "evidence": [
+        "feature-package.json#feature_context_digest と goal-spec (purpose/goal/scope_in 5/scope_out 2/acceptance 3/quality_constraints 8) の整合",
+        "task-specs/phase-05-implementation.md#背景 (最小 artifact は使い捨て・既存 installers/ 非変更の明記)",
+        "task-specs/phase-06-test-run.md#実機検証実行 (acceptance A1/A3 の写像)",
+        "task-specs/phase-07-acceptance.md#受入確認 (2 経路以上 + Windows E2E)",
+        "task-specs/phase-13-release-deploy.md#採用経路 decision record 登録 (acceptance A2 の写像)",
+        "task-specs/phase-01-requirements.md#スコープ外 (scope_out 2 件。全 13 spec で同節を確認し混入 0 件)"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13 を validator 独立実行 (exit 0) で確認 (feature-package.json task_count=13・phase_refs=P01..P13、task-graph.json 13 node、workstream-inventory.json 13 task、全て exact set 一致で違反 0 件)。単一 skill への退化なし: 13 phase はそれぞれ異なる責務 (要件/設計/レビュー/テスト設計/実装/実行/受入/整理/QA/最終レビュー/証跡/文書化/リリース) を持ち、内容の重複や coppy-paste 的な水増しは確認されなかった。各 phase 単一責務: P08 (リファクタリング/マイグレーション) と P13 (リリース/デプロイ) は feature-execution-package-contract.md §3 が明文で定める『N/A: reason』適用パターン (P08: 不要でもN/A:reasonを成果とする、P13: 実デプロイ不要でもN/A:reasonとclose-out receiptを持つ) に正しく合致しており、恣意的な読み替えではない。決定論ゲート接地: 13 task 全ての『Verification and evidence』節が同一コマンド `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging` を参照している",
+      "evidence": [
+        "gate:deterministic-validation#exact-13/violations 0 (validator 独立実行 exit0)",
+        "task-specs/phase-08-refactoring-migration.md#N/A-with-reason (feature-execution-package-contract §3 準拠パターン)",
+        "task-specs/phase-13-release-deploy.md#N/A-with-reason (同上)",
+        "task-specs/phase-01-requirements.md#Verification and evidence (全 13 件が同一決定論ゲートコマンドを参照することを各 spec で確認)"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "feature_context_digest (sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0a) が goal-spec.json / feature-package.json (source_feature_digest) / system-build-handoff.json (identity.source_feature_digest) / .dev-graph/locks/system-dev-plan-lock.json (feature_digest) の 4 箇所で一致 (validator の handoff-identity 検査も違反 0 件)。lineage 3 件 (features/feat-stage0-distribution-gate.context.json, architecture/harness-hub-infrastructure.md, specs/harness-hub-system-specification.md) について本 agent が shasum -a 256 で独立再計算し、goal-spec.json 記載の sha256 値 (6b7340ade.../49b9f7cb.../0b9abd017...) と完全一致・全件 digest_status=resolved を確認。canonical digest は validator 独立再実行の validated_digest (sha256:304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9) と staging-manifest.json 記載の canonical_digest・team-lead 提供値の 3 者が完全一致し、staleness なし。system-build-handoff.json の digest_contract (2段階digest: handoff除外のsource_canonical_digest と handoff含むcanonical_digest) も validator の handoff-source-canonical-digest / handoff-manifest-contract 検査で違反 0 件を確認済み",
+      "evidence": [
+        "feature-package.json#feature_context_digest (goal-spec/handoff/lock の 4 箇所一致を確認)",
+        "system-build-handoff.json#source digest (exact-13 個別 SHA-256 と canonical digest の束縛)",
+        "gate:deterministic-validation#validated_digest = staging-manifest.canonical_digest = 提供値の 3 者一致"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "13 task 全ての write_scope が docs/features/feat-stage0-distribution-gate/ 配下 (本体文書または verification-artifacts/ サブディレクトリ) に完全に閉じており、他 feature の write_scope (packages/db/schema/, apps/hub, installers/ 等) への越境は 0 件。P05 は既存 installers/ (harness-creator kit 配布用) を明示的に変更対象外と宣言。repository_id=github:daishiman/HarnessHub が workstream-inventory.json#repo_context, system-build-handoff.json#identity, .dev-graph/config.json, .dev-graph/locks/system-dev-plan-lock.json の4箇所で一致し、validator の repo-identity 検査も違反 0 件。quality_constraints 8 件全てについて ID 表記の揺れなく (stage0-two-path-distribution-technical-gate-h7-qa003 / stage0-technical-gate-h3-h6-h7-stage1-entry-condition-i9 / author-environment-macos-windows-linux-out-of-scope-qa001 / npm-source-official-support-changelog-recheck-claude-code-plugins / cost-zero-verification-within-free-tier-c2 / solo-operator-ai-assisted-verification-c1 / h7-unresolved-blocks-stage1-fail-closed-gate / adopted-path-decision-record-registration-spec-state-decisions) 該当 phase に紐付いていることを全13 task spec の本文照合で確認 (P04 test-design と P10 final-review・P11 evidence-summary で8件全てが明示列挙・網羅)",
+      "evidence": [
+        "task-specs/phase-04-test-design.md#quality_constraints 8 件全列挙の紐付け",
+        "task-specs/phase-10-final-review.md#quality_constraints 8 件全列挙の紐付け",
+        "workstream-inventory.json#write_scope containment (docs/features/feat-stage0-distribution-gate/ 配下・越境 0 件)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9\", \"feature_package_id\": \"feature-package/feat-stage0-distribution-gate\", \"parent_feature\": \"feat-stage0-distribution-gate\", \"violations\": []}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "7665e0407020effcf3aa0bdcbfa6a7529a06f7b9fc68d19a6ece6b8d45574a48"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "a1d65ab976d2b523c5d1bee2d32414257a69a8d3be29ca0f699fc125ceeaab8e"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "e14a2d52264db9feb83084084854cabc3fd337a87140f9a9fd9adfbe4b23432d"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "d0930cf15a98c6d3d55bd45d61eb2a32f37cf69e3cce99995cf63e2cb327bc6d"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "fc82f1a42caac998d7acb91e6d7c08ce1e1a2e828d0554c9cc1871fa5f6cf18e"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "a696a285648cc4c62ec9c4cd587bd0fd71dedbf34afc3635737934c97c02d258"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "3f73349c5280a228c5bc400d80b72f0a5786b52011500b803ca5d135fe63959a"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "dbdd4dce42dd1cfac4192fa7a00bbf4c00ef65662e46b45d487525532884e728"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "06601b50c9bc5f153bd0f903c979ce32859a63f2fe465a0f635c1c1784f3fc6c"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "0b802c951458421dda11f5fa934c4d7884c16def4d397aecb42aa927a7e21536"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "ab7ec569a9165a8ef848cc27e9b60cf7c9257a35ee68e6f30bb82820ffe0ec41"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "12b3f05042eac32cd6e29bb103f3ecfe2ac04d9af47ff7e96212383bdae3358e"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "b6c7a5a663253d21135b95f69239e888771360d255b5680e36e7c0b02449011d"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "91939f52a805ec0af8f6b78c88900a47f62ff0cdc7ff370558bb244cf6bc0674"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "85abf64fa64d355f50e4013fafbae2656fb15440a001b3c38b3716490b299871"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "2aa97c728aca648602d73412adbb77dd2ca55fbef3b3514918cdacf849dcd823"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "6a24e8d7844d85d7e2059108350ced6cf68737b960ad55625e8f6c5a0c811611"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "ba1f791ac581d0f961a3c56682a0bccd53b8e50d855746ce0d942c83f45faf3b"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 task spec 全文読解・validator 独立再実行 (exit 0, violations=0)・lineage digest 3 件の独立 shasum 再計算一致・canonical digest 3 出典 (validator/manifest/team-lead提供値) 一致・write_scope 13 件の repository boundary 検査 (docs/features/feat-stage0-distribution-gate/ 配下に完全containment、他featureのwrite_scopeへの越境0件)・quality_constraints 8 件の全 phase 横断トレース (ID表記揺れ0件)・P08/P13 の N/A-with-reason 読み替えの正当性 (feature-execution-package-contract.md §3 との verbatim 照合) の確認を実施。blocking findings なし",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json",
+        "plugins/system-dev-planner/references/feature-execution-package-contract.md"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "process/stale-verification-metadata",
+      "observation": "goal-spec.json の verification ブロックに \"status\": \"complete_with_digest_gap\" というフィールドが残存しているが、同ブロック内の lineage 3 件は全て digest_status=resolved・digest_match=true・digest_recomputed_by=main-loop と記録されており、本 agent の独立 shasum 再計算でも 3 件全て完全一致した。矛盾はないが、main-loop によるギャップ解消後もこのラベルが更新されておらず、後続読者に未解決のギャップが残っているかのような誤解を与えうる。次回 goal-spec.json 更新時に \"status\" フィールドを実態 (gap 解消済み) に合わせて修正することを推奨する (blocking ではない)",
+      "evidence": [
+        ".dev-graph/staging/goal-spec.json#verification.status,verification.lineage"
+      ]
+    },
+    {
+      "bucket": "info",
+      "observation": "evidence パスは promote-system-plan.py の束縛文法 (staging manifest 相対 path + gate:<id>) へ main-loop が再束縛 (2026-07-18)。判定 status/summary は evaluator 原文のまま不変",
+      "severity": "info",
+      "evidence": []
+    }
+  ]
+}

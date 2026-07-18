@@ -15,7 +15,7 @@ tags: ["macro-feature", "stage-0", "platform"]
 file_path: features/feat-stage0-distribution-gate.md
 template_id: feature
 template_version: 1.0.0
-confirmation_status: draft
+confirmation_status: confirmed
 evaluation_status: pending
 confirmation_evidence: {"evaluator": null, "evidence_ref": null, "evaluated_digest": null}
 source_lineage: {"origin_kind": "generated", "source_plugin": "dev-graph", "source_path": "specs/harness-hub-system-specification.md", "source_version": null, "source_digest": null, "imported_at": "2026-07-17T00:38:30Z"}

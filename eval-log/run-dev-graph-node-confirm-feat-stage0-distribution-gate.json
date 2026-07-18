@@ -1,0 +1,24 @@
+{
+  "op": "confirm",
+  "graph_node_id": "feat-stage0-distribution-gate",
+  "transition": {
+    "confirmation_status": [
+      "draft",
+      "confirmed"
+    ]
+  },
+  "confirmed_at": "2026-07-18T10:15:52Z",
+  "source_digest_pinned": "0b9abd017b626ed25dd76cb2860a8a25dacd3a3ea6b6e8a4633220f7cd8dfad1",
+  "review_basis": [
+    "scope_in の 3 配布経路検証 (URL 型 marketplace / npm source / Bootstrap Installer) を system-spec 確定内容と突合: qa-003 (Publisher/Skill の作者環境への配布は URL 型 marketplace または Bootstrap Installer の 2 経路を Stage 0 technical gate H7 で検証し成立経路を採用) および 00-requirements-definition.md I9 (Stage 0 technical gate: URL 型 marketplace / Bootstrap Installer / wrangler 公開の成立検証 H3/H6/H7 と Stage 1 開始条件の判定。serves G1/G3) と矛盾なし",
+    "npm source 検証 (公式サポート確認済み) は fetched-references.json claude-code-plugins entry (source type は github・git URL・git-subdir に加え npm も許可、公式確認 2026-07-17。CLI 高頻度リリースのため H7 検証時に changelog 再照合の注記あり) と整合",
+    "Windows/macOS 実機 E2E は qa-001 (作者環境は macOS + Windows。desktop Linux 対象外) と整合",
+    "acceptance 3 件 (2 経路以上の実機検証記録 / 採用経路の decision record 登録 / Windows E2E 成功) は I9 の Stage 1 開始条件判定と整合し、U7 scope.in (Stage 0: Discovery Pilot と technical gate 検証 H3/H6/H7) の範囲内",
+    "depends_on なし (Stage 0 先頭 feature) は要件正本の Stage 順序と整合",
+    "ユーザー指示: 続行指示 (2026-07-18 「つづけて」— 残り未 plan feature の plan 継続)"
+  ],
+  "validator": {
+    "schema": "validate-graph-schema.py",
+    "valid": true
+  }
+}
