@@ -1,0 +1,4 @@
+{
+  "original_goal": "dev-workflow 章 (qa-038/qa-039) の参照型 wrapper ノード arch-harness-hub-dev-workflow を C02 単一 writer 手順 (temp 構成→schema 検証→atomic replace) で dev-graph へ登録し、併せて並行セッション再コンパイル (qa-045〜049) への lineage digest 追従 4 件を完了する",
+  "recorded_at": "2026-07-18T08:10:00Z"
+}

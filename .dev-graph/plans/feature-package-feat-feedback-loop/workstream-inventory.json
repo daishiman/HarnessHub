@@ -1,0 +1,755 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-feedback-loop",
+  "parent_feature": "feat-feedback-loop",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/ui-ux.md",
+      "system-spec/frontend.md",
+      "system-spec/security.md",
+      "system-spec/00-requirements-definition.md",
+      "system-spec/database.md",
+      "docs/backend-spec.md",
+      "docs/screen-inventory.md",
+      "docs/user-journeys.md",
+      "architecture/harness-hub-frontend.md",
+      "architecture/harness-hub-backend.md",
+      "features/feat-feedback-loop.md",
+      "features/feat-feedback-loop.context.json",
+      ".dev-graph/staging/goal-spec.json"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-FEEDBACK-LOOP-P01",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "改善要望フィードバックループ要件ベースライン確定",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "requirements-baseline"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": ["security", "quality"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": ["docs/features/feat-feedback-loop/requirements-baseline.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/ui-ux.md",
+        "system-spec/frontend.md",
+        "system-spec/security.md",
+        "system-spec/00-requirements-definition.md",
+        "docs/backend-spec.md",
+        "docs/screen-inventory.md",
+        "docs/user-journeys.md",
+        "features/feat-feedback-loop.md",
+        "features/feat-feedback-loop.context.json",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-feedback-loop.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.92, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p01.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-feedback-loop/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 8 件が過不足なく転記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "goal-spec と features/feat-feedback-loop.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P01",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p01.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P02",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "architecture"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "data",
+      "secondary_workstreams": ["frontend", "backend", "api", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P01"],
+      "write_scope": ["docs/features/feat-feedback-loop/architecture-decision-record.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "system-spec/ui-ux.md",
+        "system-spec/frontend.md",
+        "docs/backend-spec.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "docs/backend-spec.md の feedbacks/ai_jobs/notifications テーブル定義・feedback API・Feedback/AiJob 状態機械に基づき Feedback エンティティのスキーマと S14 画面構成・feedback API 契約・AI キュー連携・通知/publish 接続設計を確定する P02 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.9, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p02.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に feedbacks カラム一覧、S14 画面構成表、feedback API 契約 (4 endpoint)、AiJob(feedback_response) 連携方式、NotificationDispatcher 消費方式、PublishRequest 接続方式 (二重状態排除)、B1 zod スキーマ単一ソース方針の明記が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "P03 レビューで設計案が却下された場合、architecture-decision-record.md へ却下理由を追記し、本 task を再実行して代替設計を再評価する",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P02",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p02.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P03",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "design-review"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "data", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P02"],
+      "write_scope": ["docs/features/feat-feedback-loop/design-review-notes.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/database.md",
+        "system-spec/ui-ux.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P02 で確定した Feedback スキーマ・S14 画面構成・feedback API 契約・AI キュー連携・通知/publish 接続設計を、設計担当から独立した視点でレビューする P03 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.88, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p03.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に承認可否と SEC2/SEC6/SEC7/SEC8/SEC9・qa-021/qa-022・D4/D5/D6・I2/I3 適合確認結果が明記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "差し戻しと判定された場合、design-review-notes.md に指摘事項を記録し、sys-feedback-loop-p02 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P03",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p03.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P04",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "test-design"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["frontend", "backend", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P03"],
+      "write_scope": ["docs/features/feat-feedback-loop/test-design.md", "apps/hub/src/features/feedback-loop/__tests__/"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/database.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P03 で承認された設計に基づき P05 実装の受入契約となるテストスタブを作成する P04 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.88, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p04.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に two-route-single-resource・status-transition-workspace-admin-audit・ai-pull-queue-provider-admin-device-flow・resolved-notification-inapp-resend・markdown-sanitize-render・feedback-entity-tenant-scope-isolation・publish-connect-no-automerge・rest-zod-authz-mw の 8 テストカテゴリの合否基準が明記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "合否基準が P02/P03 設計と矛盾する場合、矛盾箇所を記録し sys-feedback-loop-p02 または sys-feedback-loop-p03 を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P04",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p04.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P05",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "implementation"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "frontend",
+      "secondary_workstreams": ["backend", "api", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P04"],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/feedback/",
+        "apps/hub/src/features/feedback-loop/",
+        "packages/schemas/feedback-loop/",
+        "packages/db/schema/feedback-loop/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/frontend.md",
+        "system-spec/security.md",
+        "system-spec/database.md",
+        "system-spec/00-requirements-definition.md",
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "P03 承認済み設計と P04 テストスタブに基づき S14 実装・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続を実装する P05 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.9, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p05.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P04 のテストスタブがすべて green であること、および pnpm build/test の成功ログが得られている"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "build/test が失敗する場合、失敗箇所を write_scope 内の該当 path に限定して修正し、影響が設計 (P02/P03) に及ぶ場合は該当 task を再実行対象として差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P05",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p05.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P06",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "test-run"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["frontend", "backend", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P05"],
+      "write_scope": ["docs/features/feat-feedback-loop/test-run-report.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/database.md",
+        "system-spec/ui-ux.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P04 のテストスタブ (2 経路正規化/status 遷移監査/AI pull キュー/通知/Markdown sanitize/tenant 分離/publish 接続/authz-mw の 8 カテゴリ) を P05 実装に対して実行し結果を記録する P06 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.87, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p06.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-report.md に P04 定義の 8 テストカテゴリ全件の pass/fail 結果が記録されている"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "fail が発生した場合、test-run-report.md に失敗詳細を記録し sys-feedback-loop-p05 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P06",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p06.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P07",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "acceptance"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P06"],
+      "write_scope": ["docs/features/feat-feedback-loop/acceptance-report.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.87, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p07.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-report.md に acceptance 3 項目それぞれの pass/fail 判定と test-run-report.md への参照が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "acceptance いずれかが未達の場合、acceptance-report.md に未達理由を記録し、原因が実装にある場合は sys-feedback-loop-p05 を、設計にある場合は sys-feedback-loop-p02 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P07",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p07.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P08",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "migration"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend"],
+      "workstream_kind": "data",
+      "secondary_workstreams": ["security", "quality"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P07"],
+      "write_scope": ["docs/features/feat-feedback-loop/refactoring-migration-note.md", "packages/db/schema/feedback-loop/"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/database.md",
+        "system-spec/00-requirements-definition.md",
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P05 で packages/db/schema/feedback-loop/ に追加した feedbacks テーブル定義から migration ファイルを生成し既存スキーマ (ai_jobs/notifications/publish_requests 含む) への後方互換性を確認する P08 タスク (feature-execution-package-contract.md により P08 は常設される)",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.85, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p08.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に migration ファイル生成結果と後方互換性確認 (破壊的変更なし、ai_job_id は新規 FK のみ) の記録がある"
+      ],
+      "verification": [
+        "pnpm --filter db migrate:generate",
+        "pnpm --filter db migrate:check",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "後方互換性違反が検出された場合、migration ファイルを破棄し、原因スキーマ定義を sys-feedback-loop-p05 の write_scope 内で修正してから本 task を再実行する",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P08",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p08.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P09",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "quality-assurance"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "operations", "frontend"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P08"],
+      "write_scope": ["docs/features/feat-feedback-loop/quality-assurance-report.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/ui-ux.md",
+        "system-spec/security.md",
+        "system-spec/database.md",
+        "docs/screen-inventory.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P06 テスト結果と P08 migration 結果を踏まえ CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査記録) の充足を確認する P09 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.85, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p09.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に axe/tenant 分離/認可/AI キュー lease/監査の 5 種の確認結果が記録されている"
+      ],
+      "verification": [
+        "pnpm --filter hub lint",
+        "pnpm --filter hub test -- --coverage",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "未達の品質ゲートがある場合、quality-assurance-report.md に未達理由を記録し、原因が実装にある場合は sys-feedback-loop-p05 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P09",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p09.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P10",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "final-review"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P09"],
+      "write_scope": ["docs/features/feat-feedback-loop/final-review-notes.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/database.md",
+        "system-spec/ui-ux.md",
+        "system-spec/frontend.md",
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P01-P09 の成果物を根拠に goal-spec の quality_constraints 8 件の充足を独立した視点で最終判定する P10 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.86, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p10.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-notes.md に quality_constraints 8 件それぞれの充足判定と根拠成果物への参照が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "いずれかが未充足の場合、final-review-notes.md に未充足理由を記録し、該当する原因 task (P02/P05/P08 等) を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P10",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p10.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P11",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "evidence"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P10"],
+      "write_scope": ["docs/features/feat-feedback-loop/evidence/"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.84, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p11.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence/index.md から P06/P07/P09/P10 の各成果物へのリンクと、それぞれの再実行コマンドが辿れる"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "参照先成果物が未整合 (欠落・矛盾) の場合、evidence/index.md に不整合箇所を記録し、該当する原因 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P11",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p11.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P12",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "documentation", "operations"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": ["operations", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P11"],
+      "write_scope": ["docs/features/feat-feedback-loop/runbook.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/ui-ux.md",
+        "system-spec/00-requirements-definition.md",
+        "system-spec/security.md",
+        "docs/backend-spec.md",
+        "docs/user-journeys.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P11 のエビデンスを踏まえ S14 運用手順・AI キュー運用・監査/通知運用を runbook 化する P12 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.85, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p12.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に S14 運用手順・AI キュー運用手順・監査運用手順・通知トラブルシュート手順の 4 項目が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "runbook.md の記載が P11 エビデンスと矛盾する場合、矛盾箇所を記録し sys-feedback-loop-p11 を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P12",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p12.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P13",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "owners": ["daishiman"],
+      "tags": ["feat-feedback-loop", "studio-extension", "feedback-loop", "release"],
+      "related_nodes": ["feat-feedback-loop", "arch-harness-hub-backend", "arch-harness-hub-frontend"],
+      "workstream_kind": "operations",
+      "secondary_workstreams": ["infrastructure", "frontend", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P12"],
+      "write_scope": ["docs/features/feat-feedback-loop/release-notes.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/ui-ux.md",
+        "system-spec/frontend.md",
+        "docs/backend-spec.md",
+        "docs/user-journeys.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P12 の runbook を踏まえ cloudflare-workers/hub への本番反映とスモークテストを実施し feature package を完了させる P13 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.86, "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-p13.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-notes.md に S14 到達性・feedback API 疎通・migration 適用確認・AI キュー pull 疎通の 4 点のスモークテスト結果が記録されている"
+      ],
+      "verification": [
+        "pnpm --filter hub deploy",
+        "pnpm --filter hub smoke-test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "スモークテストいずれかが失敗した場合、cloudflare-workers/hub を直前バージョンへロールバックし、migration が適用済みの場合は down migration を実行してから原因 task (P05/P08) へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P13",
+        "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-p13.md",
+        "parent_feature": "feat-feedback-loop",
+        "feature_package_id": "feature-package/feat-feedback-loop",
+        "phase_ref": "P13"
+      }
+    }
+  ]
+}

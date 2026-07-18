@@ -1,0 +1,28 @@
+{
+  "graph_node_id": "feat-feedback-loop",
+  "artifact_kind": "feature",
+  "purpose": "利用者の改善要望/レビュー依頼/バグ報告を CLI + Web (S14) の 2 経路で受け付け (B6)、D5 pull 型 AI キューで解析・修正案生成し、修正版の publish → update 通知まで閉じる改善ループ (G5/I12, J5) を確立する",
+  "goal": "フィードバックが status 遷移 (未対応→対応中→対応済み) で管理され、AI 対応結果 (aiResponse) が S14 に反映され、修正版が publish パイプライン経由で利用者へ届く状態",
+  "scope_in": [
+    "Feedback エンティティ (種別・経路・aiResponse・status)",
+    "CLI 受付 (claude harness feedback) + S14 Web フォームの 2 経路",
+    "AI キュー (D5) でのフィードバック解析・修正案生成",
+    "修正版 publish (既存パイプライン) と update 通知 (D6) の接続",
+    "Markdown 共通部品の消費 (sanitize)"
+  ],
+  "scope_out": [
+    "publish パイプラインの変更",
+    "自動マージ (修正案は人の確認を経て publish)"
+  ],
+  "acceptance": [
+    "2 経路の受付が同一 Feedback 資源に正規化される",
+    "AI 対応が pull 型で処理され status 遷移が監査記録される",
+    "対応済み通知がアプリ内 (正本) + メール (D6) で届く"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-frontend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-17T13:55:07Z"
+}

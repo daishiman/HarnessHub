@@ -1,0 +1,174 @@
+{
+  "references": [
+    {
+      "target_id": "nextjs",
+      "retrieved_at": "2026-07-16T07:43:43Z",
+      "source_url": "https://nextjs.org/docs",
+      "official_publisher": "Vercel, Inc.",
+      "official_host": "nextjs.org",
+      "version": "16.2.10",
+      "latest_checked_at": "2026-07-16T07:43:43Z",
+      "summary": "Next.js は React ベースのフルスタック Web フレームワークで、現行安定版は 16.2.10 (メジャー 16)。Server Components 対応の App Router と従来の Pages Router の 2 ルーター構成。Hub Web は App Router を採用する。"
+    },
+    {
+      "target_id": "typescript",
+      "retrieved_at": "2026-07-16T07:58:02Z",
+      "source_url": "https://www.typescriptlang.org/docs/",
+      "official_publisher": "Microsoft",
+      "official_host": "www.typescriptlang.org",
+      "version": "7.0",
+      "latest_checked_at": "2026-07-16T07:58:02Z",
+      "summary": "TypeScript は JavaScript に静的型付けを加える言語。公式 docs の Release Notes 最新項目は「What's new in 7.0」で現行メジャーは 7.0。Hub / Publisher / 検査ロジック共有パッケージの実装言語とする。"
+    },
+    {
+      "target_id": "pnpm",
+      "retrieved_at": "2026-07-16T07:43:50Z",
+      "source_url": "https://pnpm.io/motivation",
+      "official_publisher": "pnpm maintainers",
+      "official_host": "pnpm.io",
+      "version": "11.x",
+      "latest_checked_at": "2026-07-16T07:43:50Z",
+      "summary": "pnpm (現行 11.x) は依存を content-addressable store に一元保存しハードリンク配置するためディスク・時間効率が高い。node_modules は symlink ベースの非フラット構造で、宣言外依存へのアクセス (phantom dependency) を防ぐ strict 設計。本プロジェクトの唯一のパッケージマネージャとし npm は使用しない (ユーザー指定)。"
+    },
+    {
+      "target_id": "zod",
+      "retrieved_at": "2026-07-16T07:43:54Z",
+      "source_url": "https://zod.dev/",
+      "official_publisher": "Zod maintainers (Colin McDonnell)",
+      "official_host": "zod.dev",
+      "version": "4",
+      "latest_checked_at": "2026-07-16T07:43:54Z",
+      "summary": "Zod は TypeScript-first のスキーマバリデーションで現行安定版は Zod 4。外部依存ゼロ・JSON Schema 変換組込み。動作要件は TypeScript 5.5 以降 + strict モード。Hub API 境界の入力検証と OpenAPI 生成の単一ソースとする。"
+    },
+    {
+      "target_id": "github-actions",
+      "retrieved_at": "2026-07-16T07:43:59Z",
+      "source_url": "https://docs.github.com/en/actions",
+      "official_publisher": "GitHub, Inc.",
+      "official_host": "docs.github.com",
+      "last_updated": "2026-07-16 (取得日。ページ本文に最終更新日の明示なし)",
+      "latest_checked_at": "2026-07-16T07:43:59Z",
+      "summary": "GitHub Actions はリポジトリ内で CI/CD ワークフローを自動化・実行する機能。GitHub-hosted / self-hosted ランナーで実行し、Workflow syntax・トリガー・Limits が Reference に体系化されている。Hub の test → wrangler deploy の CI/CD に使用 (公開リポジトリ/無料枠内)。無料枠の具体的分数は本ページに記載がなく、Billing and usage 配下での確認が別途必要。"
+    },
+    {
+      "target_id": "turso",
+      "retrieved_at": "2026-07-16T08:15:11Z",
+      "source_url": "https://turso.tech/pricing",
+      "official_publisher": "Turso",
+      "official_host": "turso.tech",
+      "last_updated": "2026-07-16 (取得日。ページ内に明示の更新日なし)",
+      "latest_checked_at": "2026-07-16T08:15:11Z",
+      "summary": "Free プランは $0 でデータベース 100 個・ストレージ 5GB・月間読取 5 億行・月間書込 1,000 万行・Point-In-Time Restore 1 日・クレジットカード不要。上位は Developer $4.99/月〜。公式 docs では SQLite 完全後方互換 (Fully backwards compatible with SQLite) と明記。Hub control-plane DB として採用し、SQLite 方言互換を保って Cloudflare D1 への退避経路を温存する (D2 決定のヘッジ条件)。"
+    },
+    {
+      "target_id": "drizzle-orm",
+      "retrieved_at": "2026-07-16T14:09:13Z",
+      "source_url": "https://github.com/drizzle-team/drizzle-orm/releases",
+      "official_publisher": "Drizzle Team",
+      "official_host": "github.com",
+      "version": "v1.0.0-rc.4 (v1 プレリリース現行) / 安定版 0.45.2",
+      "latest_checked_at": "2026-07-16T14:09:13Z",
+      "summary": "Drizzle ORM は headless TypeScript ORM で serverless-ready を明記。SQLite 系ドキュメントに Turso 接続ガイド (connect-turso 系) と Cloudflare D1 接続ガイド (connect-cloudflare-d1) の両方が存在し、libSQL(Turso)/D1 両対応が公式に確認できる (D2 決定の退避経路の根拠)。バージョン系譜は publisher 直営 org (github.com/drizzle-team、正規 docs orm.drizzle.team からリンクされる公式 org) の releases で確認: 安定版 (v0系) は 0.45.2、v1 系は v1.0.0-rc.4 まで到達 (beta.22→rc.1〜rc.4)。docs の latest-releases 静的ページは v1.0.0-beta.2 告知が最新掲載で、リリース実態は GitHub releases が先行する。v1 は rc 段階のため、実装着手時に安定版 (0.45.x) 採用か v1 追随かを再判定し、バージョン固定と追随方針を運用に含める。"
+    },
+    {
+      "target_id": "authjs",
+      "retrieved_at": "2026-07-16T08:11:29Z",
+      "source_url": "https://authjs.dev/getting-started",
+      "official_publisher": "Auth.js (OSS)",
+      "official_host": "authjs.dev",
+      "version": "next-auth@5.0.0-beta 以降 (@auth/* namespace)",
+      "latest_checked_at": "2026-07-17T09:25:00Z",
+      "summary": "Auth.js は標準 Web API ベースのランタイム非依存な認証ライブラリで、Next.js 統合を公式サポート。provider 一覧に Microsoft Entra ID・Okta・Keycloak 等 OIDC 系 IdP を多数掲載。統治変更 (2026-07-17 再確認): Auth.js は Better Auth 傘下となり、さらに 2026-07-07 に Vercel が Better Auth を買収 (公式発表 https://vercel.com/blog/vercel-acquires-better-auth。ライブラリは MIT・名称維持・チーム継続と発表)。D3 決定 (Auth.js 採用) の帰趨リスクは高まっており、qa-020 の auth adapter 境界 (Better Auth 移行ヘッジ) を必須の緩和策として維持し、実装着手時に最新の統治状況を再確認する。DB 連携は Drizzle / D1 を含む adapter でオプション対応。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up)"
+    },
+    {
+      "target_id": "claude-code-plugins",
+      "retrieved_at": "2026-07-16T08:11:29Z",
+      "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
+      "official_publisher": "Anthropic",
+      "official_host": "code.claude.com",
+      "last_updated": "2026-07-17 (最新確認日。本文の記載anchor は v2.1.196 時点、CLI 本体は 2026-07 時点で v2.1.21x 系まで継続リリース)",
+      "latest_checked_at": "2026-07-17T09:25:00Z",
+      "summary": "marketplace は .claude-plugin/marketplace.json で定義し、GitHub owner/repo・git URL・marketplace.json への remote URL・ローカルパスで追加できる (URL はスキーム必須・https)。remote URL 型では marketplace.json しか取得されないため相対パス source の plugin は解決不能で、plugin 本体 source は外部 source が必要。source type は github・git URL・git-subdir に加え npm も許可されており、コンセプト文書 §8.1 の『npm 非対応』は現行仕様と不一致 (仕様書で事実修正済み)。Stage 0 technical gate (H7) の検証対象。鮮度注意 (2026-07-17 再確認): 記録の挙動 anchor は v2.1.196 時点だが CLI は高頻度リリースされており (2026-07 時点 v2.1.21x 系)、H7 検証と実装着手時に code.claude.com の changelog / 本ページを再照合する。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up)"
+    },
+    {
+      "target_id": "cloudflare-workers",
+      "retrieved_at": "2026-07-16T08:42:05Z",
+      "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
+      "official_publisher": "Cloudflare, Inc.",
+      "official_host": "developers.cloudflare.com",
+      "last_updated": "Jul 7, 2026",
+      "latest_checked_at": "2026-07-16T08:42:05Z",
+      "summary": "Workers Free プランは 100,000 リクエスト/日・1 呼出あたり CPU 10ms・static assets への配信は無料かつ無制限。Workers KV (読取 10 万/日)・Durable Objects (10 万 req/日・SQL 5GB)・Hyperdrive 等も Free プランに含まれる。Hub backend (Next.js on Workers) の無料枠運用の根拠。Standard (Paid $5/月) は 1,000 万 req/月込み。"
+    },
+    {
+      "target_id": "wrangler",
+      "retrieved_at": "2026-07-16T08:42:06Z",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/",
+      "official_publisher": "Cloudflare, Inc.",
+      "official_host": "developers.cloudflare.com",
+      "last_updated": "Jul 3, 2026",
+      "latest_checked_at": "2026-07-16T08:42:06Z",
+      "summary": "Wrangler は Workers の公式 CLI で、本ページが commands・configuration・install/update 等の正本索引。Publisher が作者 local session でスクリプト実行する deploy 主経路 (HH-D13) と、Hub 自身の CI/CD デプロイの両方で使用する。実行コマンド・引数・exit code を監査記録に残せることが MCP 非採用の根拠。"
+    },
+    {
+      "target_id": "cloudflare-r2",
+      "retrieved_at": "2026-07-16T08:42:06Z",
+      "source_url": "https://developers.cloudflare.com/r2/pricing/",
+      "official_publisher": "Cloudflare, Inc.",
+      "official_host": "developers.cloudflare.com",
+      "last_updated": "May 28, 2026",
+      "latest_checked_at": "2026-07-16T08:42:06Z",
+      "summary": "R2 の Free tier は毎月 Storage 10 GB-month・Class A 操作 100 万 req・Class B 操作 1,000 万 req で、egress (帯域) 課金なし。immutable PackageRegistry (SkillPackage 保存) と DB 日次バックアップ保存先として採用する根拠。"
+    },
+    {
+      "target_id": "cloudflare-d1",
+      "retrieved_at": "2026-07-16T08:42:06Z",
+      "source_url": "https://developers.cloudflare.com/d1/platform/pricing/",
+      "official_publisher": "Cloudflare, Inc.",
+      "official_host": "developers.cloudflare.com",
+      "last_updated": "Apr 21, 2026",
+      "latest_checked_at": "2026-07-16T08:42:06Z",
+      "summary": "D1 Free プランは行読取 500 万/日・行書込 10 万/日・ストレージ計 5GB。FAQ に『D1 は常に Free プランを持つか』の項があり、無料での試作継続が明言されている。顧客 Web App の標準 DB (HH-D14) および Turso からの退避先 (D2 ヘッジ) としての根拠。"
+    },
+    {
+      "target_id": "opennext-cloudflare",
+      "retrieved_at": "2026-07-16T08:42:07Z",
+      "source_url": "https://opennext.js.org/cloudflare",
+      "official_publisher": "OpenNext (OSS)",
+      "official_host": "opennext.js.org",
+      "last_updated": "2026-07-16 (取得日。ページに更新日・バージョン表記なし)",
+      "latest_checked_at": "2026-07-16T08:42:07Z",
+      "summary": "@opennextjs/cloudflare は Next.js の Node.js runtime を用いて Workers へデプロイする adapter。対応バージョンは Next.js 16 の全 minor/patch と 14/15 の最新 minor (14 は 2026Q1 でサポート終了予定)。App Router・Route Handlers・SSG/SSR・Middleware をサポート。重要な制約: Worker サイズ上限が Free プラン 3 MiB / Paid 10 MiB のため、費用ゼロ制約下では bundle サイズ管理が必須リスクとなる (D1 決定の caveat に追加)。"
+    },
+    {
+      "target_id": "resend",
+      "retrieved_at": "2026-07-17T08:52:19Z",
+      "source_url": "https://resend.com/pricing",
+      "official_publisher": "Resend, Inc.",
+      "official_host": "resend.com",
+      "last_updated": "2026-07-17",
+      "latest_checked_at": "2026-07-17T08:52:19Z",
+      "summary": "Resend はトランザクションメール送信 API。Free プランは 3,000 通/月・100 通/日・独自ドメイン 1 件 (送受信合算。複数宛先は宛先数分カウント。無料プランは超過時オーバーエイジなしで送信不可)。Hub の通知ディスパッチ (D6 確定) はこの無料枠内で生成完了・レビュー結果・週次サマリを送信する。"
+    },
+    {
+      "target_id": "owasp-asvs",
+      "retrieved_at": "2026-07-18T00:00:00Z",
+      "source_url": "https://owasp.org/www-project-application-security-verification-standard/",
+      "official_publisher": "OWASP Foundation",
+      "official_host": "owasp.org",
+      "version": "5.0.0",
+      "latest_checked_at": "2026-07-18T00:00:00Z",
+      "summary": "OWASP Application Security Verification Standard (ASVS) は Web アプリ/サービスの設計・開発・テスト向けセキュリティ要件を定める公開標準。現行安定版は 5.0.0 (2025-05 リリース、Global AppSec EU Barcelona 2025 で公開。次は patch 5.0.1 予定)。Level 1/2/3 の段階的検証モデルを持つ。Hub の security/auth 章の doctrine anchor (脅威モデル・認証・セッション・入力検証・secret 管理) の上流指針の正本として参照する (AI 向けの AISVS 1.0 は 2026-06-24 の別標準で ASVS とは区別する)。"
+    },
+    {
+      "target_id": "rehype-sanitize",
+      "retrieved_at": "2026-07-18T00:00:00Z",
+      "source_url": "https://github.com/rehypejs/rehype-sanitize",
+      "official_publisher": "rehype (unified collective)",
+      "official_host": "github.com",
+      "version": "6.0.0",
+      "latest_checked_at": "2026-07-18T00:00:00Z",
+      "summary": "rehype-sanitize は hast 構文木を清浄化する rehype プラグイン (現行 6.0.0・ESM only・Node.js 16+)。hast-util-sanitize 上に構築され、defaultSchema は GitHub 準拠の許可リスト。XSS 対策に加え DOM clobbering 対策として id/name を 'user-content-' で prefix する。重要な使用規約は『最後の unsafe 処理の後に sanitize する』こと。Hub の docs CMS (Markdown レンダリング) の XSS sanitize (SEC7) 実装の公式根拠として参照する。"
+    }
+  ]
+}

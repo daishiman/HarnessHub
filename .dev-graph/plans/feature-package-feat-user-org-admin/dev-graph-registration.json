@@ -1,0 +1,1227 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+  "promotion_receipt": ".dev-graph/plans/feature-package-feat-user-org-admin/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-user-org-admin",
+  "parent_feature": "feat-user-org-admin",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-USER-ORG-ADMIN-P01": "beads",
+    "SYS-USER-ORG-ADMIN-P02": "beads",
+    "SYS-USER-ORG-ADMIN-P03": "beads",
+    "SYS-USER-ORG-ADMIN-P04": "beads",
+    "SYS-USER-ORG-ADMIN-P05": "beads",
+    "SYS-USER-ORG-ADMIN-P06": "beads",
+    "SYS-USER-ORG-ADMIN-P07": "beads",
+    "SYS-USER-ORG-ADMIN-P08": "beads",
+    "SYS-USER-ORG-ADMIN-P09": "beads",
+    "SYS-USER-ORG-ADMIN-P10": "beads",
+    "SYS-USER-ORG-ADMIN-P11": "beads",
+    "SYS-USER-ORG-ADMIN-P12": "beads",
+    "SYS-USER-ORG-ADMIN-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ユーザー管理・アカウント設定 要件ベースライン確定",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-user-org-admin.md の purpose/goal/scope/acceptance を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "architecture"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P01"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "qa-024 の指示 (カラム定義の詳細設計は各 feature の P02 で行う) に従い TenantCoefficient/User 拡張のスキーマと共通層接続点を確定する P02 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P02"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/design-review-notes.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P02 で確定した TenantCoefficient/User 拡張スキーマと PII ガード/通知ディスパッチ接続点を、設計担当から独立した視点でレビューする P03 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P03"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/test-design.md",
+        "apps/hub/src/features/user-org-admin/__tests__/"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "承認済み設計を根拠に P05 実装前の salary 非露出・監査記録・axe a11y の test-first 受入契約を定義する P04 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "frontend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P04"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/(dashboard)/users/",
+        "apps/hub/src/app/(dashboard)/account/",
+        "apps/hub/src/features/user-org-admin/",
+        "packages/schemas/user-org-admin/",
+        "packages/db/schema/user-org-admin/"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "P02 承認設計と P04 テスト設計に基づき S17/S18・User拡張/TenantCoefficient・PIIガード・通知ディスパッチ接続を実装する P05 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P05"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/features/user-org-admin/__tests__/"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P04 test-design.md の受入契約に従って P05 実装物を実行検証する P06 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — goal-spec acceptance 3項目の確認",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P06"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/acceptance-report.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P06 のテスト実行結果を goal-spec acceptance と突合し feature 受入可否を判定する P07 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "refactoring-migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P07"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "packages/db/schema/user-org-admin/",
+        "docs/features/feat-user-org-admin/refactoring-migration-note.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "User テーブルへの department/salary 列追加と TenantCoefficient 新規テーブルの migration 適用・後方互換性確認を行う P08 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P08"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/quality-assurance-report.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "S17/S18と関連APIが既存の共有CI品質ゲートとTenant分離要件に適合していることを横断的に確認するP09タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終独立レビュー — feature全体のconfirmation前最終点検",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P09"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/final-review-notes.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P01〜P09の成果物一式をgoal-specと8件のquality_constraintsに対して独立して再点検するP10タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P10"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/evidence/"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P06〜P10の実行結果・判定記録を再現可能な証跡として収集・保存するP11タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "documentation-operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P11"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/runbook.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P13の本番反映に先立ちS17/S18のPIIガード運用・通知ディスパッチ運用のrunbookを整備するP12タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認",
+      "project_id": "feature-package-feat-user-org-admin",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "release-deploy"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T11:22:15Z",
+      "updated_at": "2026-07-17T11:22:15Z",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P12"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-user-org-admin/release-notes.md"
+      ],
+      "parent_feature": "feat-user-org-admin",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json",
+        "evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "imported_at": "2026-07-17T11:22:15Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "P12のrunbookに従いS17/S18を既存Workerへ本番反映しロールアウト後スモークチェックを行うP13タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    }
+  ]
+}

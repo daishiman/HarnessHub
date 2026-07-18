@@ -22,6 +22,23 @@ serves_goals: [G1]
 | デスクトップ (Linux) (desktop-linux) | 確定 | 確定質疑: qa-database |
 | デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-database |
 
+## 確定内容 (質疑録)
+
+### qa-database (対応セル: web, mobile, tablet, desktop-windows, desktop-linux, desktop-macos)
+
+**質問**: データ永続化方式は?
+
+**回答**: PostgreSQL 16 を全プラットフォーム共通で採用
+
+## 上流指針 (doctrine anchor)
+
+| concern | authority (正本) | 導く上流原則 | 出典 |
+|---|---|---|---|
+| data-access | Robert C. Martin — Clean Architecture | 永続化を境界の外側へ追い出し interface adapter で隔離する | Clean Architecture — gateways/repositories boundary |
+| reliability | Google SRE | SLO/エラーバジェット・冗長性・スケーリング・監視の上流指針 | https://sre.google/books/ |
+
+- 本章の確定内容 (質疑録) は上記 authority を上流指針として適用する。具体技術の選定はこの指針に従属し、指針との乖離は再オープン (R4-reopen) の根拠になる。
+
 ## 適用された設計知識
 
 ### Domain-Driven Design — deep knowledge card

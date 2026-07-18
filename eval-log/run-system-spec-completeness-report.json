@@ -1,0 +1,258 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec/",
+  "verdict": "FAIL",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "U1-U9 は全て値で確定 (confirmed=true / approval_ref=appr-005 実在)。00-requirements-definition.md は requirements_foundation と一致し、全章 frontmatter serves_goals・decisions.serves_goals・I1-I14 serves の goal 参照および章内 qa 参照に dangling 0 件。決定論ゲート validate-coverage-matrix.py --require-foundation exit0 (22:52 断面で再確認)。G5/U6 の一部要素の verbatim 遡及性は限定的 (low finding) だが pass 基準は充足。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-foundation exit0 (22:06 断面 / 22:52 断面とも)",
+        "spec-state.json requirements_foundation.confirmed=true, approval_ref=appr-005 (approval_log 実在)",
+        "serves_goals/qa 参照 dangling 検査 0 件 (章 8 + decisions 6 + intents 14)",
+        "C06 5th 軸: U3/U4 ラベルは qa-016 で requirements_foundation を唯一の正本と整理済み"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "D1-D6 全 6 決定が 3 案 + 無料/低コスト案 + cost_model(TCO)/free_tier_limits/goal_fit/security_fit/pros/cons/risks/lock_in/ops_burden/evidence_refs (公式 URL) を持ち、recommendation は comparison_basis 5 軸 (goal_fit/tco/security/operations/lock_in) + caveats + confidence + latest_checked_at (2026-07-16/17) を備える。全件 user_decision (AskUserQuestion) で確定し、D2 では AI 推奨 (d1-drizzle) をユーザーが棄却して turso-free を選択 = AI 推奨のみで confirmed にしていない実証。質問文の推奨埋め込み (qa-028/029/031) は C06 sub-input として matrix_coverage 側で FAIL 要因に計上。",
+      "evidence": [
+        "spec-state.json decisions[] 全 6 件 status=confirmed + user_decision 非空",
+        "D2 user_decision.note: AI 推奨でなく Turso を選択 (ヘッジ条件付き)",
+        "validate-coverage-matrix.py --require-foundation exit0"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "FAIL",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "C07 独立監査 verdict = loop_pass FAIL / final_ready FAIL。決定論ゲート validate-coverage-matrix.py --require-complete が exit1 (C05 再実行 22:52 断面で『未収集セルが 8 件残存』: database.web / auth.web,desktop-windows,desktop-macos / security.web,desktop-windows,desktop-macos / backend.web。再オープンによる能動追跡中で hearing_progress.complete=false)。高 severity: frontend.web の qa_ref=qa-034 は infrastructure 詳細質疑への取り違え参照 (frontend 該当は qa-035。C05 が qa_log 原文で独立照合済み)。対象外 26 セルの理由は全件具体的 (placeholder 0)・category_aggregate 真理値表整合・6 canonical platform 完備。sub-input C06 (hearing) も FAIL: 誘導質問疑い 6 件 (qa-028/029/031/034 の『AI 推奨=…』断定前提、qa-014/qa-030 の多論点一括承認。qa-034 は C06 再監査で追加検出・C05 独立照合済み [22:58 訂正])。C16 機械層 (required-info profile) は exit0 だが、再オープンにより auth/security の blocking item 被覆は確定待ちに戻っている。加えて章ドキュメント (22:12 compile) と正本 spec-state (22:52) が乖離 (auth/security/database/backend 章は集約 確定 表示だが正本は 収集中)。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-complete → exit1 'VIOLATION: 未収集セルが 8 件残存' (22:52 断面)",
+        "同 loop モード exit0 (再質問追跡中として正当)",
+        "C07: 確定16/対象外26/未収集6 (C07 断面)・qa_ref 要確認 3 (frontend.web 取り違え=高, infrastructure.desktop-windows/macos=薄い)・集約不一致 0・platform 欠落 0",
+        "C05 独立照合: qa-034=infrastructure 詳細 (環境構成/ドメイン/cron/CI-CD)、qa-035=スマホサイズ画面仕様 → frontend.web の qa-034 参照は内容不一致",
+        "C06: 誘導質問疑い qa-028/qa-029/qa-030/qa-031/qa-034/qa-014・聞き漏れ 0・早期停止 0・qa_ref dangling 0 (C06 再監査で qa-034 を追加検出、C05 が qa_log 原文で独立確認 [22:58 訂正、当初計上は 5 件])",
+        "aggregate-completeness.py --knowledge-graph: required-info profile exit0 (coverage certificate blocking_items = auth-model/domain-model/product-goal/security-posture/target-platforms)"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "機械層: 全 8 章が『適用された設計知識』節を持ち、resource-map.yaml の read_when 写像どおりカード注入 (database=ddd / auth,security=secure-by-design / backend=clean-architecture+api-design-patterns+ddd / frontend=clean-architecture / maintenance-ops=clean-code)。ui-ux/infrastructure は resource-map に該当カード未定義であることを正直に開示し doctrine anchor へ接地 (虚偽注入なし)。意味層 (存在確認に留めない): 各原則が確定セル要件へ具体適用されている — backend: Idempotency-Key の scope/TTL/422 payload 束縛・cursor pagination・RFC 9457・共有純関数 3 パッケージ (カードの失敗モードへの直接対処) / database: releases immutable・append-only 監査・tenant_id スコープ・salary 列暗号化 (DDD invariant) / auth,security: IdP 委譲でパスワード非保持・短命 token + OS 資格情報域・deny-by-default 単一 MW・SEC1-SEC9 (secure-by-design) / infrastructure,maintenance-ops: SLO 99.5%・エラーバジェット・restore drill・滞留監視 (SRE) / ui-ux,frontend: WCAG 2.2 AA・CWV・非同期 UI パターン (HIG)。C13/C15 機械層: validate-knowledge-graph knowledge/doctrine profile exit0、doctrine anchor は全章で concern→authority が具体反映。C14: 機械層 exit0・R5/R2-render 両 prompt が同一 topo コマンドを規定し確定順も上位概念先行 (foundation appr-001 → decisions → 詳細) だが、backend.md のカード描画順が topo_order (ddd→clean-architecture→api-design-patterns) でなく resource-map 出現順 — writer (render_design_refs) と R2-render 契約の矛盾として medium finding (差し戻し C03)。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph → knowledge/doctrine/required-info/cross 全 profile exit0",
+        "validate-knowledge-graph.py --profile knowledge --order → [clean-code, ddd, design-patterns, clean-architecture, api-design-patterns, secure-by-design]",
+        "backend.md カード順: Clean Architecture → API Design Patterns → DDD (topo 順違反)",
+        "test_compile_spec_doc.py::test_category_design_refs_derived_from_resource_map が resource-map 出現順を固定 (R2-render L28/L55 の topo 並べ替え要件と矛盾)",
+        "reopen_log: 上流変更時の確定巻き戻し運用が実在 (位相順の健全性)"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "FAIL",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "C08 独立監査 verdict=FAIL。形式層 C13 (validate-source-citation.py) は exit0 (15 target 全件対応・必須フィールド・host 文字列一致) だが、内容鮮度層で: (1) 非公式 host 1 件 — drizzle-orm の official_host=github.com は公式 doc host (orm.drizzle.team) と不一致 (C13 の自己申告一致検査では素通り)。(2) 世代落ち 2 件 — typescript 記録 7.0 に対し 7.0.2 (2026-07-14) 既出、claude-code-plugins の記載 anchor v2.1.196 に対し現行 CLI v2.1.211。(3) 鮮度未確認 1 件 — drizzle-orm v1.0.0-rc.4 は一次確認できず。監査環境で WebFetch 不可のため一次 GET 照合は未実施 (WebSearch 裏取りのみ) であり、C08 再監査 (WebFetch 可能環境) が必要。他 11 target (nextjs/pnpm/zod/cloudflare 系/resend/turso/github-actions/opennext) は host・版とも矛盾なし。",
+      "evidence": [
+        "C13 validate-source-citation.py exit0 (C08 実行)",
+        "C08: 欠落 target 0 / 非公式 host 1 (drizzle-orm) / 古い version・更新日 2 (typescript, claude-code-plugins) / 確認時刻・出典欠落 0 / 鮮度未確認 1 (drizzle-orm rc.4)",
+        "C08 監査環境で WebFetch 無効 → 一次 GET 照合は C02/C08 follow-up"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "決定論ゲート: system-spec-harness の全 18 prompt (elicit R0-R7 / doc-fetch R1-R4 / compile R1-R3 / ref R1 / evaluator R1-R2) に対し prompt-creator の verify-completeness.py と validate-prompt.py を実行し 18/18 双方 exit0 (依存 plugin prompt-creator は本環境で解決可能のため skip 例外は不適用)。意味層: L1-L7 役割分担・客観的停止条件 (5.3 checklist)・Self-Evaluation 停止ゲート・監査 agent の非干渉境界 (C06/C07/C08 相互) を確認、独立 design findings に high なし。",
+      "evidence": [
+        "verify-completeness.py + validate-prompt.py: 18 prompt × 2 validator 全て exit0",
+        "R1-score/R2-delegate/R6/R7/R4-audit の L5 停止条件・SSOT 参照・read-only 制約を確認"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "G-matrix-loop",
+      "name": "validate-coverage-matrix (loop)",
+      "conditions": ["matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop) を満たす"
+    },
+    {
+      "id": "G-matrix-complete",
+      "name": "validate-coverage-matrix (--require-complete)",
+      "conditions": ["matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-complete"],
+      "exit_code": 1,
+      "stdout": "VIOLATION: 未収集セルが 8 件残存 (最終時は未収集 0 が必須)\nFAIL: 1 件の網羅性違反",
+      "stderr": "22:52 断面。評価開始時 (22:06 断面) は exit0 だったが評価中に elicit 再オープンで正本が更新された"
+    },
+    {
+      "id": "G-foundation",
+      "name": "validate-coverage-matrix (--require-foundation)",
+      "conditions": ["foundation_trace", "decision_guidance"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-foundation"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-kg-knowledge",
+      "name": "validate-knowledge-graph (--profile knowledge)",
+      "conditions": ["design_knowledge_reflection"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-kg-doctrine",
+      "name": "validate-knowledge-graph (--profile doctrine)",
+      "conditions": ["design_knowledge_reflection"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-kg-required-info",
+      "name": "validate-knowledge-graph (--profile required-info)",
+      "conditions": ["matrix_coverage"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-kg-cross",
+      "name": "validate-knowledge-graph (--profile cross)",
+      "conditions": ["design_knowledge_reflection", "matrix_coverage"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-citation-form",
+      "name": "validate-source-citation (C13, C08 実行)",
+      "conditions": ["doc_freshness"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-prompt-quality",
+      "name": "verify-completeness + validate-prompt (18 prompts)",
+      "conditions": ["prompt_quality"],
+      "exit_code": 0,
+      "stdout": "TOTAL pass=18 fail=0"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "matrix_coverage",
+      "observation": "frontend.web (state=確定) の qa_ref=qa-034 が取り違え参照。qa-034 は infrastructure 詳細仕様 (環境構成/独自ドメイン/cron/CI-CD) の質疑で infrastructure.web が正しく参照しており、frontend 該当のスマホサイズ画面仕様は qa-035 (現在 ui-ux.web が参照)。確定セルの証跡が当該確定を裏付けていない。",
+      "suggested_fix": "C01 transition writer で frontend.web の qa_ref を qa-035 (または frontend-spec 対応の質疑) へ差し替える。評価者は書き換えない。",
+      "evidence": ["spec-state.json matrix.frontend.web.qa_ref=qa-034", "qa_log qa-034/qa-035 本文 (C05 独立照合)", "C07 監査 finding (c) 高 severity"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "matrix_coverage",
+      "observation": "未収集セルが 8 件残存 (database.web / auth.web,desktop-windows,desktop-macos / security.web,desktop-windows,desktop-macos / backend.web) し validate-coverage-matrix --require-complete が exit1。reopen_log に再オープン理由 (security 実装可能粒度深掘り・スマホ画面仕様・暗号化/rate limit 先送り解消) が記録され hearing_progress.next_question が能動追跡中のため放置ではないが、最終確定状態ではない。",
+      "suggested_fix": "C01 (run-system-spec-elicit) のヒアリングループを完了させ未収集 0 まで確定させる。",
+      "evidence": ["validate-coverage-matrix --require-complete exit1 (22:52 断面)", "hearing_progress.complete=false / next_question 非 null"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "matrix_coverage",
+      "observation": "評価対象の章ドキュメント (22:12 compile 出力) が正本 spec-state.json (22:52) と乖離。auth.md/security.md/database.md/backend.md は集約 確定 と表示するが正本は 収集中 (未収集セルあり)。評価実行中にも正本が更新され (22:06→22:52、C07 断面 6 件→C05 断面 8 件)、doc set は進行中の断面であり最終成果物として確定できない。",
+      "suggested_fix": "C01 完了後に C03 (run-system-spec-compile) で全章を再コンパイルし、パイプライン静止断面で C05 を再実行する。",
+      "evidence": ["system-spec/*.md mtime 22:12 vs spec-state.json mtime 22:52", "auth.md frontmatter aggregate: 確定 vs category_aggregate.auth=収集中"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "matrix_coverage",
+      "observation": "C06 (hearing sub-input) verdict=FAIL: 誘導質問疑い 6 件 [22:58 訂正: 当初 5 件から qa-034 を追加、C06 再監査の指摘を C05 が独立確認]。qa-028/qa-029/qa-031/qa-034 は質問文へ『AI 推奨 = …』の断定前提を埋め込み (qa-031 は 5 論点一括、qa-034 は 4 論点一括で多論点束ねも併発)、qa-014/qa-030 は複数の独立承認判断を 1 問に束ね個別反対の余地が乏しい。聞き漏れ 0・早期停止 0・qa_ref dangling 0。緩和事実: AskUserQuestion 多択提示で D2 では AI 推奨が棄却されており強制力は限定的。",
+      "suggested_fix": "C01 で該当確定 (D5/D6/backend 詳細・infrastructure 詳細・requirements_foundation 改訂) を中立設問で個別再確認するか、反証提示・選択肢等価提示の記録を qa_log に残して監査を解消する。",
+      "evidence": ["C06 監査 (22:58 再監査反映): qa-028/qa-029/qa-030/qa-031/qa-034/qa-014", "qa-034 本文『AI 推奨 = (1)…(2)…(3)…(4)…』を C05 が qa_log 原文で独立確認", "decisions D2 user_decision (AI 推奨棄却の実績)"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "doc_freshness",
+      "observation": "drizzle-orm の official_host=github.com (source_url=github.com/drizzle-team/drizzle-orm/releases) は publisher の公式ドキュメントホスト orm.drizzle.team と不一致。github.com/drizzle-team は開発元管理の正規ドメインでミラーではないが、official_host フィールド定義との不整合で C13 (自己申告一致検査) を素通りする。",
+      "suggested_fix": "C02 (doc-fetch) で official_host を orm.drizzle.team 系へ再記録するか、releases ページを正本とする根拠を summary に明記して再記録する。",
+      "evidence": ["fetched-references.json drizzle-orm entry", "C08 WebSearch 裏取り"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "design_knowledge_reflection",
+      "observation": "backend.md の『適用された設計知識』カード順が Clean Architecture → API Design Patterns → DDD (resource-map 出現順) で、C14 が要求する知識グラフ topo_order (ddd → clean-architecture → api-design-patterns。clean-architecture depends_on [ddd, design-patterns]) に違反。R2-render prompt (L28/L55) は topo 並べ替えを要求するが、決定論 writer render_design_refs は並べ替えず、test_category_design_refs_derived_from_resource_map が resource-map 出現順を固定しており契約と実装が矛盾。確定順自体 (foundation→decisions→詳細) は位相健全のため章確定の巻き戻しは不要。",
+      "suggested_fix": "C03 (compile) で category_design_refs/render_design_refs に topo_order 並べ替えを実装して backend.md を再生成するか、R2-render の C14 条項を writer 仕様に合わせて訂正する (どちらかに単一情報源を揃える)。",
+      "evidence": ["validate-knowledge-graph --profile knowledge --order の topo_order", "backend.md カード順", "compile-spec-doc.py render_design_refs (topo 並べ替えなし)", "R2-render.md L28/L55"]
+    },
+    {
+      "severity": "low",
+      "bucket": "doc_freshness",
+      "observation": "世代落ち 2 件: typescript 記録 '7.0' に対し 7.0.2 (2026-07-14) が取得 2 日前に既出 (パッチ粒度)。claude-code-plugins の記載 anchor v2.1.196 に対し現行 CLI v2.1.211 (記録自身が乖離リスクを開示済み)。加えて drizzle-orm v1.0.0-rc.4 は一次確認できず鮮度未確認 1 件。",
+      "suggested_fix": "C02 で 3 target を再確認・再記録する。",
+      "evidence": ["C08 監査軸 3 検出", "index.md 全体ドキュメント出典表"]
+    },
+    {
+      "severity": "low",
+      "bucket": "doc_freshness",
+      "observation": "C08 監査環境で WebFetch が無効だったため、内容鮮度層の一次 GET 照合 (SSOT 要求) は未実施で WebSearch 裏取りのみ。authjs/claude-code-plugins は記録本文自体も一次 GET 未了を自認している。",
+      "suggested_fix": "WebFetch 可能な環境で C08 (doc-freshness-auditor) を再実行し、一次 GET で現行版を確定する。",
+      "evidence": ["C08 報告の環境注記"]
+    },
+    {
+      "severity": "low",
+      "bucket": "matrix_coverage",
+      "observation": "infrastructure.desktop-windows / desktop-macos の qa_ref=qa-003 は Hub web hosting 主体の質疑で、desktop 配布への言及が末尾一文のみの薄い裏付け (C07 継続指摘)。",
+      "suggested_fix": "C01 で desktop 配布 (URL 型 marketplace / Bootstrap Installer) を直接裏付ける qa への差し替えまたは補強質疑を行う。",
+      "evidence": ["C07 監査 finding (c)"]
+    },
+    {
+      "severity": "low",
+      "bucket": "foundation_trace",
+      "observation": "G5 と U6 の一部要素 (顧客の情報システム/セキュリティ部門) は個別 qa 由来の verbatim 記録がなく、AI 起草文の一括承認 (qa-030 / appr-005) に遡及性を依存している (C06 5th 軸)。U1-U9 の確定自体は明示承認済みで pass 基準は満たす。",
+      "suggested_fix": "C01 で G5/U6 追加要素の由来を qa_log へ遡及記録する (appr-002 方式の遡及エントリ追加)。",
+      "evidence": ["C06 追加評価", "approval_log appr-002/appr-005"]
+    },
+    {
+      "severity": "info",
+      "bucket": "prompt_quality",
+      "observation": "全 18 prompt が verify-completeness.py (l5-contract v2.0) と validate-prompt.py の双方で exit0。L1-L7 役割・客観的停止条件・Self-Evaluation・監査 agent の非干渉境界を意味層でも確認し high なし。",
+      "evidence": ["G-prompt-quality: TOTAL pass=18 fail=0"]
+    },
+    {
+      "severity": "info",
+      "bucket": "decision_guidance",
+      "observation": "D1-D6 全件が 3 案 + 無料/低コスト案 + comparison_basis 5 軸 + caveats + 公式 evidence_refs + user_decision (AskUserQuestion) を備え、D2 で AI 推奨棄却の実績あり (AI 推奨のみで確定していない実証)。",
+      "evidence": ["spec-state.json decisions[]"]
+    },
+    {
+      "severity": "info",
+      "bucket": "foundation_trace",
+      "observation": "U1-U9 全項目が値で確定 (明示 N/A 不要)、goal-objective-intent-cell-chapter の参照 dangling 0 件、--require-foundation exit0 を確認。",
+      "evidence": ["G-foundation exit0", "dangling 検査 0 件"]
+    },
+    {
+      "severity": "info",
+      "bucket": "evaluation_process",
+      "observation": "評価実行中 (22:06→22:52) に spec-state.json が elicit の再オープンで複数回更新され、C07 断面 (未収集 6) と C05 最終断面 (未収集 8) でゲート実測が異なる。本レポートの判定は 2026-07-17 22:52 断面に接地する。",
+      "suggested_fix": "パイプライン (C01→C03) 静止後に C05 を再実行する。",
+      "evidence": ["spec-state.json mtime 22:06→22:52", "validate-coverage-matrix 実行値の差分"]
+    },
+    {
+      "severity": "info",
+      "bucket": "evaluation_process",
+      "observation": "[22:58 erratum] C06 (system-spec-hearing-auditor) の追加監査により、qa-034 も『AI 推奨 = …』断定前提の埋め込みパターンに該当することが判明。C05 の当初評価はこのパターンを qa-028/qa-029/qa-031/qa-014/qa-030 の 5 件のみ計上しており、qa-034 は別 finding (frontend.web qa_ref 取り違え, high) にのみ算入して誘導質問バケットには含めていなかった。C05 が qa-034 本文 (『AI 推奨 = (1) production+staging (2) 既存流用 (3) Better Stack Free (4) 全自動』) を独立確認し、同一パターンに該当すると認め 5 件→6 件に訂正した。既存の関連 finding/summary/gaps を本訂正で更新済み。この訂正は matrix_coverage の verdict (既に未収集 8 件・qa_ref 取り違え等の他要因で FAIL 確定) を変更しない。",
+      "evidence": ["c06-hearing-auditor からの指摘 (2026-07-17 22:5x)", "spec-state.json qa_log[qa-034] 本文 (C05 独立確認)"]
+    }
+  ],
+  "gaps": [
+    "C01 (run-system-spec-elicit) へ差し戻し: 再オープン中の未収集 8 セル (database.web / auth.web,desktop-windows,desktop-macos / security.web,desktop-windows,desktop-macos / backend.web) のヒアリングを完了し未収集 0 まで確定させる (hearing_progress.next_question から継続)",
+    "C01 へ差し戻し: frontend.web の qa_ref 取り違え (qa-034→qa-035 相当) の差し替えと、infrastructure.desktop-windows/desktop-macos の qa-003 薄い参照の補強",
+    "C01 へ差し戻し: C06 検出の誘導質問疑い 6 件 (qa-028/qa-029/qa-030/qa-031/qa-034/qa-014。qa-034 は 22:58 訂正で追加) について、中立設問での個別再確認または反証提示記録により監査を解消する",
+    "C01 へ差し戻し: G5/U6 追加要素の qa_log 遡及記録の補完 (appr-002 方式)",
+    "C02 (run-system-spec-doc-fetch) へ差し戻し: drizzle-orm の official_host 再記録 (orm.drizzle.team) と typescript (7.0.2) / claude-code-plugins (現行 CLI v2.1.21x) / drizzle-orm v1.0.0-rc.4 の再確認・再記録。その後 WebFetch 可能環境で C08 監査を再実行する",
+    "C03 (run-system-spec-compile) へ差し戻し: C01 完了後に全章を再コンパイルして章と正本 state の乖離 (auth/security/database/backend の集約表示) を解消する。併せて backend.md の設計知識カード順を topo_order へ揃える (render_design_refs の並べ替え実装 or R2-render C14 条項の訂正で単一情報源を回復)",
+    "監査再実行: パイプライン静止断面で C05 (本評価) を再実行し、C07/C06/C08 の fork 監査を再集約する"
+  ]
+}

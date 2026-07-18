@@ -1,0 +1,28 @@
+{
+  "graph_node_id": "feat-auth-tenancy",
+  "artifact_kind": "feature",
+  "purpose": "テナント別 OIDC (Auth.js) と role 4 種、全 API への Tenant/Workspace スコープ強制 (D4 row-level-scope)、Publisher 向け OAuth Device Flow を確立する",
+  "goal": "2 テナント同時稼働で認可の越境が分離テストにより 0 件と証明され、Device Flow で token 取得・失効が動作する状態",
+  "scope_in": [
+    "Auth.js マルチテナント OIDC 動的解決",
+    "role: provider-admin/workspace-admin/owner/member",
+    "認可の単一ミドルウェア集約",
+    "OAuth Device Flow + token 失効導線",
+    "テナント分離テスト"
+  ],
+  "scope_out": [
+    "承認キュー (Stage 2)",
+    "監査 UI (Stage 2)"
+  ],
+  "acceptance": [
+    "テナント越境アクセスが分離テストで 0 件",
+    "Device Flow の E2E (承認→token→失効) が成功する",
+    "Auth.js 依存が adapter 境界に隔離されている (D3 caveat)"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-security.md",
+    "architecture/harness-hub-backend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-18T00:41:26Z"
+}

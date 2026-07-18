@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-docs-cms",
+  "feature_context_digest": "sha256:6e8ea8a7a1042002d0bb0b3ff2a2b3464ea4a45ba77ddea709580cc3bed03d34",
+  "purpose": "利用ガイド・FAQ 等のドキュメントを common (全テナント) / tenant (テナント限定) スコープで管理し (B7/I13)、S15 の閲覧/編集 UI と D5 pull 型 AI キューによる下書き生成を提供する",
+  "goal": "ドキュメントがスコープ規則 (tenant 分離 + common 共有) 下で閲覧・編集でき、Markdown が sanitize 済みで描画され (SEC7)、AI 下書きがキュー経由で生成される状態",
+  "scope_in": [
+    "Doc エンティティ (scope=common/tenant・Markdown 本文)",
+    "S15 一覧/閲覧/編集 (編集は admin)",
+    "Markdown レンダラ + エディタ共通部品の消費 (XSS sanitize)",
+    "AI 下書き生成 (D5 キュー)",
+    "doc 編集の監査 event (SEC6)"
+  ],
+  "scope_out": [
+    "外部公開サイト生成",
+    "バージョン管理 (Git 連携)"
+  ],
+  "acceptance": [
+    "tenant スコープ doc が他テナントから参照できない (分離テスト)",
+    "Markdown 描画で XSS が sanitize される (テスト付き)",
+    "編集操作が監査 event に記録される"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-docs-cms.context.json",
+      "feature_id": "feat-docs-cms",
+      "exists": true,
+      "sha256": "6e8ea8a7a1042002d0bb0b3ff2a2b3464ea4a45ba77ddea709580cc3bed03d34",
+      "digest_status": "verified",
+      "digest_note": "team-lead (呼び出し元) から digest 値 (sha256:6e8ea8a7a1042002d0bb0b3ff2a2b3464ea4a45ba77ddea709580cc3bed03d34) として提供された。.dev-graph/locks/system-dev-plan-lock.json の feature_digest フィールド (同一値) と feature_id フィールド (feat-docs-cms) が一致することを Read/Grep で確認したが、本 agent は Read/Write/Glob/Grep のみ保有し sha256 を計算する exec ツールを持たないため独立再計算はしていない。features/feat-docs-cms.md frontmatter および .dev-graph/state/graph.json にも本 context.json ファイル自体の digest 記録は存在せず (両者に記録されている digest はいずれも specs/harness-hub-system-specification.md 側の source_digest 8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6 であり別物)。捏造回避のため raw 値のまま記録している。main-loop による再計算を要する。 [main-loop 再計算 2026-07-17T12:40:35Z: 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "27ec1b93168d2b00e6664b248aff3a45f4e807ce024035612d57fce7b1c1fc22",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-frontend、confirmation_status=confirmed、evaluation_status=pass (system-spec/frontend.md + system-spec/ui-ux.md からの R3-import wrapper)。frontmatter に記録されている source_digest (adf85021f88c7048cf02f1c2facb18cc3407e865b311ee881a684c8e7196ddd3) は正本 system-spec/frontend.md 側の digest であり、wrapper ファイル自体の sha256 ではない。wrapper 自体の digest は repo 内のどこにも記録されておらず、本 agent には計算手段 (exec ツール) がないため未解決。main-loop による再計算を要する。 [main-loop 訂正 2026-07-17T12:40:35Z: 記録値は wrapper が参照する正本章側の source_digest の転記だったため、wrapper ファイル自体の sha256 (27ec1b93168d2b00…) へ訂正]"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "67560d941eeee012eb73aa49837e000963ae2a350d50d8b702d3c8c0badc2f17",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-backend、confirmation_status=confirmed、evaluation_status=pass (system-spec/backend.md からの R3-import wrapper)。frontmatter に記録されている source_digest (2a76ddb666c9da93d596dd11617883994c6baebc3c45d61ffa7b37878d928752) は正本 system-spec/backend.md 側の digest であり、wrapper ファイル自体の sha256 ではない。wrapper 自体の digest は repo 内のどこにも記録されておらず、本 agent には計算手段 (exec ツール) がないため未解決。main-loop による再計算を要する。 [main-loop 訂正 2026-07-17T12:40:35Z: 記録値は wrapper が参照する正本章側の source_digest の転記だったため、wrapper ファイル自体の sha256 (67560d941eeee012…) へ訂正]"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、confirmation_status=confirmed、evaluation_status=pass、evidence_ref=system-spec/completeness-report.json (verdict=PASS。本 agent が Read で直接確認済み)。正本は system-spec/00-requirements-definition.md (status: confirmed, source_digest=8fc7b5878eb3b18f959c3b2fddcab7a5adf69d9201b1be782923659f096e8bf9 と frontmatter に記録済み)。ここに記載した sha256 (8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6) は features/feat-docs-cms.md frontmatter の source_lineage.source_digest (source_path=specs/harness-hub-system-specification.md と一致) として repo に記録されている値をそのまま転記したものであり、本 agent が独立に sha256 を計算したものではない (exec ツールを保有しないため)。main-loop による再計算・整合確認を要する。 [main-loop 再計算 2026-07-17T12:40:35Z: 一致/補完]"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "tenant-scope-d4-doc-entity",
+      "summary": "Doc を含む全新規テーブルに tenant_id/workspace_id スコープ列を必須とする (row-level tenant scope)。Doc は scope=common (全テナント共有) / tenant (テナント限定) の値を持ち、tenant スコープ doc は他テナントから参照できないようアプリ層で強制する",
+      "source": "system-spec/00-requirements-definition.md D4; system-spec/database.md qa-024"
+    },
+    {
+      "id": "markdown-sanitize-sec7-doc",
+      "summary": "doc 本文などの Markdown は共通レンダラの sanitize で一括担保し、XSS を防ぐ",
+      "source": "system-spec/security.md qa-025 (SEC7)"
+    },
+    {
+      "id": "markdown-common-component-qa021-qa022",
+      "summary": "Markdown レンダラ + エディタ (XSS sanitize) は design system の共通部品として組込み、doc 機能はこれを消費するのみで独自実装を行わない。frontend 側は共通レンダラの sanitize 済み HTML のみを描画する",
+      "source": "system-spec/ui-ux.md qa-021; system-spec/frontend.md qa-022 (5)"
+    },
+    {
+      "id": "doc-edit-audit-sec6",
+      "summary": "doc 編集操作は SEC6 で追加確定された監査対象 (工程操作・係数変更・doc 編集・フィードバック status 変更・ユーザー管理操作) に含まれ、監査 event に記録される",
+      "source": "system-spec/security.md qa-025 (SEC6)"
+    },
+    {
+      "id": "ai-queue-pull-type-d5-doc-draft",
+      "summary": "doc の AI 下書き生成 (I13) は D5 確定の pull 型キュー: ジョブ登録 → Claude Code セッションが pull → 結果書戻しで完結し、サーバ側 AI 課金は発生しない",
+      "source": "system-spec/00-requirements-definition.md D5, I13; system-spec/backend.md qa-023 (B5, B7)"
+    },
+    {
+      "id": "ai-queue-authz-payload-secret-ban",
+      "summary": "AiJob (AI キュー) の pull/書戻しの認可は Device Flow token 保有者に限定し、job payload に secret を含めない",
+      "source": "system-spec/security.md qa-025 (SEC8)"
+    },
+    {
+      "id": "doc-edit-admin-only-qa021-sec2",
+      "summary": "S15 ドキュメントの一覧/閲覧/編集のうち編集操作は admin 限定とする。新規 API 群は認可単一ミドルウェア (deny-by-default) 配下で role×操作の許可表に従う",
+      "source": "system-spec/ui-ux.md qa-021 (S15); system-spec/security.md qa-025 (SEC2)"
+    },
+    {
+      "id": "b7-zod-single-source-authz-mw",
+      "summary": "ドキュメント CMS を含む新規 REST 資源群 (B1) は zod スキーマ単一ソースへ追加し、全て認可単一ミドルウェア (deny-by-default) 配下に置く。B7 でドキュメント CMS の common/tenant スコープが確定している",
+      "source": "system-spec/backend.md qa-023 (B1, B7)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": false,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + evaluator PASS (specs/harness-hub-system-specification.md; system-spec/completeness-report.json verdict=PASS を Read で直接確認; 正本 system-spec/00-requirements-definition.md status=confirmed)",
+    "notes_ja": true,
+    "status": "complete",
+    "digest_recomputed_by": "main-loop (claude session 9ce54d7a, python3 hashlib, 2026-07-17T12:40:35Z)"
+  },
+  "extracted_at": "2026-07-17T13:10:00Z"
+}

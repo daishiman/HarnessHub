@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で goal-spec (quality_constraints 8 件含む) との矛盾なし。スコープ外事項 (認証方式変更・role 体系再設計・実行ログ ingest) の混入 0 件 (grep 検査: ヒットは phase-06 の『テスト実行ログ』という無関係文脈 1 件のみ)。全 task が D3 (IdP 委譲) 維持・qa-005 の 4 role 維持をスコープ外として一貫明記",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#quality_constraints転記",
+        "task-specs/phase-06-test-run.md#無関係文脈確認",
+        "task-specs/phase-02-architecture.md#スコープ外"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13 (欠落 0・14 件目 0)・各 spec 14 必須見出し全件・placeholder (山括弧/TODO/TBD) 0。qa-005/qa-023(B8/B10)/qa-024/qa-025(SEC2/SEC4/SEC6/SEC9)/D3/D4/D6/I14 への接地を全 task で確認。P10 が quality_constraints 8 件全件の最終充足確認を担う",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-10-final-review.md#8件充足確認"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "feature-package.json の source_feature_digest が feature context の独立 sha256 再計算値 (sha256:e67d33e37c98456225d7391c7f47a71c19e2efe043a76607487a50897adfa84f) と一致。staging-manifest.json の canonical_digest と validator の validated_digest が一致。boundary: staging 配下に絶対パス・symlink・repo 外参照なし (validator safe_path 検査 violations 0)",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json は 13 node の完全な線形前方依存 (SYS-USER-ORG-ADMIN-P01→…→P13)。循環・後方依存・機能間依存なし。validator の DAG 検査 exit0 (evaluator が独立再実行)",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2\", \"feature_package_id\": \"feature-package/feat-user-org-admin\", \"parent_feature\": \"feat-user-org-admin\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "31613b2a8079ed63ecbb815caaaa535a6c6ad1e47d9893526f351eb47e1e91ca"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "9097c5470cbc7b90af8d105abcced2dc1cdf9cb0a2cf5389b289a279510f0263"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "73ff9a98341c12fbb2ed27ef4ccb3a02f3ec99170a655724072adac97493b734"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "0de33b83b3fc4d437685a4d0cd7e8c2157fc5fc018111e3fca12fbce67bec182"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "0b611253e44c1633c631a3a0671e427d5ed2c4344d8998261b613b53b514ec1c"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "743e7c4aaa4cc60f3b0b49d616026c2bc72b744c037ea5c4788e9b9f2c7814ac"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "d43084d002837edd3c7210a042a8ede4b226f94ef6a54057819a4b9da35c455a"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "60966e889176a99ac1688eadc05dbd39b098ec5521ccf718b1283e639d619b2f"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "021946d861d6fcecbd7d3c43db9fbb24579bfcfa76fc5a0bbad0d6d668cdda6f"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "02c3dc193136429069f93ba5bddbb199a030e454053822761bee577485fa4931"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "ed5b6101387865da32e1f5b25b15827e59c72edc18f5f99841b365bc37e83dc7"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "35feee4af59ff6d05ca11703b09cb7e99301898a845dcba8e6087a120b8e4e19"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "a534b9689e975daaa87b47e44662a725b85bddf9b6f872800d25887b58a08a03"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "dd4363a4e0eb41ffb2904bb66f3cbbeb725b55624f85a2af25d5bed390bf5739"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "1f0d8332481d47c1916b952c6cf0eb04f3e817fbd6e1f549dad79b7a95515fca"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "5849d0829efa29e2ee6b826b582953ea638d2a0d8978608eaa79a9dfcfb14b36"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "3db6665f5646eb8e883d6cb19a1997be2d15452837639584d648e8256286ac40"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "92c7d8798d4e8eaed50ee88e5e333d446289947a51ff6d73cc31a8aa4b648d1d"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "low",
+      "bucket": "upstream/shared-layer-owner-ambiguity",
+      "observation": "docs/shared-layers.md は試算エンジンの実装 owner を feat-hub-foundation に一元化と記載する一方、features/feat-metrics-tracking.md は試算エンジン純関数を自身の scope_in に明記しており owner 記述に食い違いがある。本 feature (TenantCoefficient の保存管理のみ担当) の受入判定には影響しないが、feat-metrics-tracking の P02 設計時に解消が必要な上流の曖昧さとして記録",
+      "evidence": [
+        "task-specs/phase-02-architecture.md",
+        "feature-package.json"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "digest-contract/goal-spec-out-of-scope",
+      "observation": "goal-spec.json は staging-manifest.json の files / canonical_digest 計算対象 (BASE_DIGEST_FILES) に含まれない (validate-system-plan.py の仕様どおり)。goal-spec.json 自体の改変は canonical digest で検知されない設計上の性質として記録。promotion 非阻害",
+      "evidence": [
+        "staging-manifest.json",
+        "gate:deterministic-validation#BASE_DIGEST_FILES"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 spec 全文読解・validator 独立再実行 exit0・digest 2 系統 (feature context sha256:e67d33e3… / staging canonical sha256:66c53d61…) の独立再計算一致・repository boundary 検査 0 件・architect 設計判断 4 点 (file_path 新規約 / User 基底テーブル write_scope 限定 / 共有 CI ファイル不可侵 / 試算エンジン scope 外) の妥当性確認を実施",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    }
+  ]
+}

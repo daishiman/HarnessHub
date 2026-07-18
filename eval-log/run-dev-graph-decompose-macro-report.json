@@ -1,0 +1,106 @@
+{
+  "schema": "run-dev-graph-decompose/macro-report/1.0.0",
+  "decomposed_at": "2026-07-17T00:38:30Z",
+  "source": "specs/harness-hub-system-specification.md (confirmed + evaluator PASS)",
+  "features": [
+    {
+      "graph_node_id": "feat-stage0-distribution-gate",
+      "stage": "Stage 0",
+      "depends_on": [],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-hub-foundation",
+      "stage": "Stage 1",
+      "depends_on": [],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-domain-model-db",
+      "stage": "Stage 1",
+      "depends_on": [
+        "feat-hub-foundation"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-auth-tenancy",
+      "stage": "Stage 1",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-publish-pipeline",
+      "stage": "Stage 1",
+      "depends_on": [
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-publisher-plugin",
+      "stage": "Stage 1",
+      "depends_on": [
+        "feat-publish-pipeline"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-dual-catalog-web",
+      "stage": "Stage 1",
+      "depends_on": [
+        "feat-publish-pipeline",
+        "feat-stage0-distribution-gate"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-workspace-governance",
+      "stage": "Stage 2",
+      "depends_on": [
+        "feat-dual-catalog-web",
+        "feat-auth-tenancy"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "status": "draft"
+    }
+  ],
+  "external_writes": 0,
+  "note": "全 feature は draft 登録 (OUT1: 評価前 draft は起票 0 件)。13-task 細分解は system-dev-planner へ委譲。"
+}

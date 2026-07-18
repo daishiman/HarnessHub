@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:906f1acf5e23697a98382601bea20c910a9e5599b319385a29c5d983e13f89db",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で goal-spec (quality_constraints 8 件) との矛盾なし。docs/backend-spec.md と列単位・endpoint 単位で突合し一致 (§2.3 feedbacks 列/§3.3 認可/§3.8 監査 action/§4.7 4 endpoint/§4.10 Dispatcher/§4.11 lease 10 分・attempt 3/§5.4・§5.5 状態機械)。スコープ外 6 事項は全 task で consume-only・owner=他 feature と一貫明記され混入 0 件",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#backend-spec整合",
+        "task-specs/phase-05-implementation.md#スコープ外",
+        "task-specs/phase-09-quality-assurance.md#認可整合"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13・14 必須見出し・placeholder 0 (validator + grep)。根拠 id (qa-021/qa-022/qa-032/qa-025 SEC2・SEC6・SEC7・SEC8・SEC9/D4/D5/D6/I2/I3/B6) は十分接地。qa-033/B8 はリテラル出現 0 だが backend-spec 詳細引用と『アプリ内通知を正本』記述で内容面は充足 (low finding として記録)",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-10-final-review.md#8件充足確認"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "source_feature_digest が context の独立 sha256 再計算値 (sha256:072f4574b7156af35459d941d9c0655fe9f50453e151420d6e98fcb7da5499c3) と一致 (lock/goal-spec/package の全箇所)。canonical_digest は validator 独立実行値と manifest 記載が一致。manifest 17 ファイルの個別 sha256 も全一致。絶対パス 0 件・repo_identity 一致",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json 13 node の完全線形前方依存 (SYS-FEEDBACK-LOOP-P01→…→P13)。逆辺・cross-feature 辺・循環なし。validator 独立再実行 exit0",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:906f1acf5e23697a98382601bea20c910a9e5599b319385a29c5d983e13f89db\", \"feature_package_id\": \"feature-package/feat-feedback-loop\", \"parent_feature\": \"feat-feedback-loop\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "fdc8dbb5b978441837429a27bb15ad46dbbd3461407c49d3c8cd886213032adc"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "31fd80b1d2b1104283c1995a870b7893bc70779870d662bbcbdc13b40d81d70a"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "fd6ca8ae6246813b8f6829b114a8b045ec93a834f7bacc04d6ae3d4fffa2a5cb"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "882e179898f83a9ac2a3bf23f4430038476e6f212554521c5da274feec4681c5"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "10a04e647dff16fdb526cfe22e063bf8dba0191ea29506d35c679395588d0543"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "49797f5931292aedc90b26d2b015bb11e6e017643cf2de7ce03e1259af4268be"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "79cfb119480c34c90841bf4562503dc62e155d8af11b5d020f2284657749a0b7"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "c6cc899b257f75df4a78a4782b9a42b37709311ad8cf4a3c1ea8f242fb11ec22"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "235ff576e864e1c16815125fcb06526b81c0246bfce74d3acc6f60ca1a279994"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "3c2e6e382846cc04647738f363f7f497d40238673d093fabf276f6685949e64d"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "4e89b1a20801c30fbdd201d71f8d43b54dcf701833df147faa84ef745f258fa0"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "d0b4dedac6adfa119d66cc7d454e2f83ac9b24165958b40d26ccff0c4ac4567f"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "c3d002fb2bd3349203670de4551ca6eab31e750378a538771e5dca7cbb914fad"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "d2e8656c97f36965d245085b82fba50a76e052c16417a113b56f2b59aedc434f"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "0351bf96e1ab5b124f8a9c6edc1f96fcab07077f6e6b0b3c24579f802647fc00"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "7d4624b0cd70de41c30347346d44d0c3f833e17f5564e91af3fe2dd6f54af08c"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "9f979cc4ca4bae314ff6d1642139b0e0ca3115b11fa5adf5d404cd41a78557bf"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "73730ab66d10b9295682ae771759c1659ebeebbfc1c6bacf6e1a87022bfffde3"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "cross-feature/cli-feedback-owner-unassigned",
+      "observation": "claude harness feedback CLI サブコマンド本体の実装 owner が未確定 (backend-spec §3.2 は feedback CLI を Device Flow client 群に含めるが、feat-publisher-plugin.md の scope_in に未記載)。system 全体で I12/J5 の CLI 経路完成には feat-publisher-plugin P02 での確定が必要。features/feat-publisher-plugin.md の上流未解決節へ記録済み。本 plan 自体は API 側 (Bearer=harness 受理) を実装し境界を一貫明記しており違反なし",
+      "evidence": [
+        "task-specs/phase-05-implementation.md#スコープ外",
+        "goal-spec.json"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "cross-feature/notification-dispatcher-owner-mismatch",
+      "observation": "NotificationDispatcher (通知内容判断・チャネル決定の純関数層) の owner=feat-hub-foundation という帰属記述が、feat-hub-foundation.md の scope_out (業務ドメインロジック除外) と整合せず、どの feature も Dispatcher 実装の owner を宣言していない。試算エンジン owner 食い違い (feat-metrics-tracking 記録済み) と同型の共通層 owner 曖昧さ。本 plan は consume-only で一貫しており promotion 非阻害だが、共通層 owner の確定 (hub-foundation の plan --mode update か新規 feature 化) を上流 follow-up として記録",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#Dispatcher消費",
+        "task-specs/phase-12-documentation-operations.md#通知運用"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "traceability/literal-id-tags",
+      "observation": "根拠 id qa-033/B8 がリテラル文字列として本文に出現しない (内容面は backend-spec 詳細引用で充足)。I12 の言及は P01 のみ (feature 全体 id のため許容)。トレーサビリティ向上のため次回改訂時に明示タグ追加を推奨",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#参照情報"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 spec 全文読解・validator 独立再実行 exit0・digest 2 系統と manifest 17 ファイル個別 sha256 の独立再計算一致・boundary 検査 0 件・設計判断 4 点 (CLI スコープ外 / ai_jobs.kind に feedback_response 既含を実読確認 / consume-only / 共有 CI・wrapper 不可侵) の妥当性確認を実施",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    }
+  ]
+}

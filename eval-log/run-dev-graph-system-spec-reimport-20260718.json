@@ -1,0 +1,87 @@
+{
+  "schema": "run-dev-graph-system-spec/reimport-report/1.0.0",
+  "reimported_at": "2026-07-17T22:44:43Z",
+  "reason": "qa-035〜044 の確定反映 (frontend/ui-ux スマホサイズ仕様 + 技術選定 8 論点、auth/security 実装粒度、dev-workflow 新カテゴリ、infrastructure/maintenance-ops desktop 専用質疑 qa-043/044、qa 採番衝突修復 qa-040〜042) による正本再コンパイルへの digest 追従",
+  "evaluator_verdict": "PASS_WITH_FINDINGS",
+  "evidence_ref": "eval-log/run-system-spec-compile-c05-aggregate-20260718.json",
+  "gates": {
+    "coverage_require_complete_require_foundation": "exit 0",
+    "source_citation": "exit 0",
+    "compile_out1_tests": "42 passed",
+    "graph_schema": "valid: true, violations: []"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "spec-harness-hub-requirements",
+      "source_path": "system-spec/00-requirements-definition.md",
+      "digest": "8fc7b5878eb3b18f959c3b2fddcab7a5adf69d9201b1be782923659f096e8bf9",
+      "note": "requirements_foundation 不変のため digest 変更なし (更新スキップ)"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-frontend",
+      "source_path": "system-spec/frontend.md",
+      "old_digest": "adf85021f88c7048cf02f1c2facb18cc3407e865b311ee881a684c8e7196ddd3",
+      "new_digest": "6cdeda974957f4d281171c3a339bbd5ca063bda2e667836f5c5dd1e96daa608e",
+      "note": "qa-040 (技術選定 8 論点) 反映。ui-ux.md (qa-035 スマホサイズ仕様) は前回 compile から不変 (ecc94a2d…)"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-backend",
+      "source_path": "system-spec/backend.md",
+      "old_digest": "d79b66c458bc2d16a6661af8b547fee7cb111ff15bcdcb183693e84f192c7664",
+      "new_digest": "949ea283fb32cb306417570abd156d5442ae8f6dc357f5dffeaae5099272fa14",
+      "note": "qa-037 (security 波及差分)。docs/backend-spec.md へ GET /api/v1/publish を additive 追記 (qa-040 §3.4 要求の反映)"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-data",
+      "source_path": "system-spec/database.md",
+      "old_digest": "ab5805b0ac7a55560a70e210defb4fe89e9b98a2556214f15103d3f81edbf52e",
+      "new_digest": "1ece08caa2c5071981815b0e2c91ab11fa5303fa140d8f192c160773b0b26e81"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-security",
+      "source_path": "system-spec/security.md",
+      "old_digest": "cabdc46a2ddde69f766a5ea5a547c418e582fe459f271dd7bf818af9ea165830",
+      "new_digest": "6f600e0d200f36b377ea3b0ea417917b7aa478154d30880ff5d350ae3c409b3f",
+      "note": "qa-041/qa-042 反映。auth.md (qa-036/qa-041) も併載 (8735c886…)。docs/security-spec.md を confirmed 化"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-infrastructure",
+      "source_path": "system-spec/infrastructure.md",
+      "old_digest": "00c285af0f637766a650bd8e3e0a81125047fb7d1b26f6523302fe26f10641a3",
+      "new_digest": "08a812982b0a8320315aeebbc9cf633f72a05f19d45833d415e414d34848a60d",
+      "note": "qa-043 (desktop 専用質疑への qa_ref 差替 = C07 medium 対応)。maintenance-ops.md も qa-044 で同対応 (44e4e4f4…)"
+    }
+  ],
+  "gaps_followup": [],
+  "incremental_updates": [
+    {
+      "at": "2026-07-18T08:10:00Z",
+      "reason": "並行セッションの継続ヒアリング (qa-045〜049: 顧客業務データ保持の C4 改訂 = appr-007 等) による再コンパイルへの digest 追従 + gap 解消",
+      "gates": {
+        "coverage_require_complete_require_foundation": "exit 0 (再確認)",
+        "source_citation": "exit 0 (再確認)",
+        "graph_schema": "valid: true, violations: [] (nodes 113)"
+      },
+      "nodes": [
+        {"node": "spec-harness-hub-requirements", "source": "system-spec/00-requirements-definition.md", "old": "8fc7b5878eb3", "new": "6b24a06e4116"},
+        {"node": "arch-harness-hub-backend", "source": "system-spec/backend.md", "old": "949ea283fb32", "new": "290f63d1276b"},
+        {"node": "arch-harness-hub-data", "source": "system-spec/database.md", "old": "1ece08caa2c5", "new": "c3a50c796ae5"},
+        {"node": "arch-harness-hub-security", "source": "system-spec/security.md", "old": "6f600e0d200f", "new": "30c3035180c9"}
+      ],
+      "new_nodes": [
+        {
+          "graph_node_id": "arch-harness-hub-dev-workflow",
+          "source_path": "system-spec/dev-workflow.md",
+          "digest": "afae654e837de71247b60defbfc0321d472a6312fba5e04d9d61ce96019ff0ab",
+          "file_path": "architecture/harness-hub-dev-workflow.md",
+          "note": "gaps_followup を解消。artifact_subtypes は schema enum 制約により [infrastructure] へ写像 (domain=dev-workflow が実態)。C02 手順 (temp 構成→schema 検証→atomic replace)・既存 arch 5 ノードへ相互参照 additive 追記。eval-log: run-dev-graph-node-{goal-spec,progress,intermediate}"
+        }
+      ]
+    }
+  ],
+  "write_paths": {
+    "state": ".dev-graph/state/graph.json (lineage digest/imported_at/evaluated_digest のみの純更新)",
+    "wrappers": "architecture/harness-hub-{frontend,backend,data,security,infrastructure}.md",
+    "projection": "architecture/graph.json (派生投影を正本 state から再生成)"
+  }
+}

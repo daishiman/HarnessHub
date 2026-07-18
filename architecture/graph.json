@@ -1,0 +1,64 @@
+{
+  "schema": "architecture-graph-projection/1.0.0",
+  "derived_from": ".dev-graph/state/graph.json",
+  "generated_at": "2026-07-18T08:10:00Z",
+  "note": "派生投影 (正本は dev-graph)。graph 変更時に再生成する",
+  "nodes": [
+    {
+      "id": "spec-harness-hub-requirements",
+      "artifact_kind": "specification",
+      "title": "Harness Hub システム要件仕様 (system-spec 取込)",
+      "file_path": "specs/harness-hub-system-specification.md",
+      "source_path": "system-spec/00-requirements-definition.md",
+      "source_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15"
+    },
+    {
+      "id": "arch-harness-hub-frontend",
+      "artifact_kind": "architecture",
+      "title": "Harness Hub frontend アーキテクチャ (system-spec 取込)",
+      "file_path": "architecture/harness-hub-frontend.md",
+      "source_path": "system-spec/frontend.md",
+      "source_digest": "6cdeda974957f4d281171c3a339bbd5ca063bda2e667836f5c5dd1e96daa608e"
+    },
+    {
+      "id": "arch-harness-hub-backend",
+      "artifact_kind": "architecture",
+      "title": "Harness Hub backend アーキテクチャ (system-spec 取込)",
+      "file_path": "architecture/harness-hub-backend.md",
+      "source_path": "system-spec/backend.md",
+      "source_digest": "290f63d1276b36e971f6e79e874e5b118c9737449162bf5459c55f2f50551737"
+    },
+    {
+      "id": "arch-harness-hub-data",
+      "artifact_kind": "architecture",
+      "title": "Harness Hub data アーキテクチャ (system-spec 取込)",
+      "file_path": "architecture/harness-hub-data.md",
+      "source_path": "system-spec/database.md",
+      "source_digest": "c3a50c796ae50903f5f6e514873412190fd2e4db3be92f0c7a99de129d52a418"
+    },
+    {
+      "id": "arch-harness-hub-security",
+      "artifact_kind": "architecture",
+      "title": "Harness Hub security アーキテクチャ (system-spec 取込)",
+      "file_path": "architecture/harness-hub-security.md",
+      "source_path": "system-spec/security.md",
+      "source_digest": "30c3035180c916f7745831b8b1dc1b690ebc528cb8ca054001cfd1805a6387e6"
+    },
+    {
+      "id": "arch-harness-hub-infrastructure",
+      "artifact_kind": "architecture",
+      "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
+      "file_path": "architecture/harness-hub-infrastructure.md",
+      "source_path": "system-spec/infrastructure.md",
+      "source_digest": "08a812982b0a8320315aeebbc9cf633f72a05f19d45833d415e414d34848a60d"
+    },
+    {
+      "id": "arch-harness-hub-dev-workflow",
+      "artifact_kind": "architecture",
+      "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
+      "file_path": "architecture/harness-hub-dev-workflow.md",
+      "source_path": "system-spec/dev-workflow.md",
+      "source_digest": "afae654e837de71247b60defbfc0321d472a6312fba5e04d9d61ce96019ff0ab"
+    }
+  ]
+}

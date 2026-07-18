@@ -1,0 +1,139 @@
+{
+  "checklist": [
+    {
+      "item": "lineage closure 欠落0",
+      "status": "pass",
+      "evidence": "全14 node に source_path あり・artifact 実在 14/14 (readiness-matrix)"
+    },
+    {
+      "item": "C11 report と C02 保存済み readiness/evaluation/source digest の一致",
+      "status": "fail",
+      "evidence": "specification+architecture 6 node は再計算 digest 一致 (pass)。feature 8 node は source_digest=null で照合不能 (昇格前のため未 pin)"
+    },
+    {
+      "item": "incomplete/pending/fail/stale の missing_sections と remediation owner 全件表示",
+      "status": "pass",
+      "evidence": "feature 8 件の missing_sections + owner を本レポートに列挙"
+    },
+    {
+      "item": "全 gate PASS 時のみ handoff 生成",
+      "status": "pass",
+      "evidence": "gate 未達につき handoff 0 件で停止 (OUT2 発動。requirements document 未生成)"
+    },
+    {
+      "item": "実装 code 生成 0 件",
+      "status": "pass",
+      "evidence": "read-only 監査のみ"
+    }
+  ],
+  "verdict": "HANDOFF_WITHHELD",
+  "ready_layer": {
+    "specification": 1,
+    "architecture": 5
+  },
+  "blocked_layer": {
+    "feature": 8,
+    "reason": "draft / digest 未 pin / 13-task package 未生成"
+  },
+  "missing": [
+    {
+      "node_id": "feat-stage0-distribution-gate",
+      "missing_sections": [
+        "confirmation_status=draft (confirmed 昇格前)",
+        "source_lineage.source_digest 未 pin (昇格時に writer が刻む)",
+        "13-task package 未生成 (system-dev-planner 待ち)"
+      ],
+      "remediation_owner": {
+        "confirm昇格": "user レビュー → /dev-graph node <id> を confirmed へ昇格 (C02 writer)",
+        "13-task package": "/dev-graph plan --feature-id <id> --feature-context features/<id>.context.json (system-dev-planner)"
+      }
+    },
+    {
+      "node_id": "feat-hub-foundation",
+      "missing_sections": [
+        "confirmation_status=draft (confirmed 昇格前)",
+        "source_lineage.source_digest 未 pin (昇格時に writer が刻む)",
+        "13-task package 未生成 (system-dev-planner 待ち)"
+      ],
+      "remediation_owner": {
+        "confirm昇格": "user レビュー → /dev-graph node <id> を confirmed へ昇格 (C02 writer)",
+        "13-task package": "/dev-graph plan --feature-id <id> --feature-context features/<id>.context.json (system-dev-planner)"
+      }
+    },
+    {
+      "node_id": "feat-domain-model-db",
+      "missing_sections": [
+        "confirmation_status=draft (confirmed 昇格前)",
+        "source_lineage.source_digest 未 pin (昇格時に writer が刻む)",
+        "13-task package 未生成 (system-dev-planner 待ち)"
+      ],
+      "remediation_owner": {
+        "confirm昇格": "user レビュー → /dev-graph node <id> を confirmed へ昇格 (C02 writer)",
+        "13-task package": "/dev-graph plan --feature-id <id> --feature-context features/<id>.context.json (system-dev-planner)"
+      }
+    },
+    {
+      "node_id": "feat-auth-tenancy",
+      "missing_sections": [
+        "confirmation_status=draft (confirmed 昇格前)",
+        "source_lineage.source_digest 未 pin (昇格時に writer が刻む)",
+        "13-task package 未生成 (system-dev-planner 待ち)"
+      ],
+      "remediation_owner": {
+        "confirm昇格": "user レビュー → /dev-graph node <id> を confirmed へ昇格 (C02 writer)",
+        "13-task package": "/dev-graph plan --feature-id <id> --feature-context features/<id>.context.json (system-dev-planner)"
+      }
+    },
+    {
+      "node_id": "feat-publish-pipeline",
+      "missing_sections": [
+        "confirmation_status=draft (confirmed 昇格前)",
+        "source_lineage.source_digest 未 pin (昇格時に writer が刻む)",
+        "13-task package 未生成 (system-dev-planner 待ち)"
+      ],
+      "remediation_owner": {
+        "confirm昇格": "user レビュー → /dev-graph node <id> を confirmed へ昇格 (C02 writer)",
+        "13-task package": "/dev-graph plan --feature-id <id> --feature-context features/<id>.context.json (system-dev-planner)"
+      }
+    },
+    {
+      "node_id": "feat-publisher-plugin",
+      "missing_sections": [
+        "confirmation_status=draft (confirmed 昇格前)",
+        "source_lineage.source_digest 未 pin (昇格時に writer が刻む)",
+        "13-task package 未生成 (system-dev-planner 待ち)"
+      ],
+      "remediation_owner": {
+        "confirm昇格": "user レビュー → /dev-graph node <id> を confirmed へ昇格 (C02 writer)",
+        "13-task package": "/dev-graph plan --feature-id <id> --feature-context features/<id>.context.json (system-dev-planner)"
+      }
+    },
+    {
+      "node_id": "feat-dual-catalog-web",
+      "missing_sections": [
+        "confirmation_status=draft (confirmed 昇格前)",
+        "source_lineage.source_digest 未 pin (昇格時に writer が刻む)",
+        "13-task package 未生成 (system-dev-planner 待ち)"
+      ],
+      "remediation_owner": {
+        "confirm昇格": "user レビュー → /dev-graph node <id> を confirmed へ昇格 (C02 writer)",
+        "13-task package": "/dev-graph plan --feature-id <id> --feature-context features/<id>.context.json (system-dev-planner)"
+      }
+    },
+    {
+      "node_id": "feat-workspace-governance",
+      "missing_sections": [
+        "confirmation_status=draft (confirmed 昇格前)",
+        "source_lineage.source_digest 未 pin (昇格時に writer が刻む)",
+        "13-task package 未生成 (system-dev-planner 待ち)"
+      ],
+      "remediation_owner": {
+        "confirm昇格": "user レビュー → /dev-graph node <id> を confirmed へ昇格 (C02 writer)",
+        "13-task package": "/dev-graph plan --feature-id <id> --feature-context features/<id>.context.json (system-dev-planner)"
+      }
+    }
+  ],
+  "preflight": {
+    "validate-system-plan.py": "実在・entry point OK (--staging 必須)。staging/published 未生成のため package 検証対象なし"
+  }
+}

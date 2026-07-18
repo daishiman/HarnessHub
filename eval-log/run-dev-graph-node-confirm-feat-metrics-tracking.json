@@ -1,0 +1,22 @@
+{
+  "op": "confirm",
+  "graph_node_id": "feat-metrics-tracking",
+  "transition": {
+    "confirmation_status": [
+      "draft",
+      "confirmed"
+    ]
+  },
+  "confirmed_at": "2026-07-17T14:34:01Z",
+  "source_digest_pinned": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+  "review_basis": [
+    "scope_in/scope_out/acceptance を system-spec 確定内容 (qa-021 S09・S16 / qa-023 B2・B3 / qa-024 MetricsEvent・MetricsRollup・TenantCoefficient / qa-025 SEC5 / I10 / docs/backend-spec.md 詳細正本) と突合し矛盾なし",
+    "U7 改訂 (Studio 拡張・効果測定のスコープ入り) と I10 は appr-004/appr-005 + qa-030 でユーザー承認済み",
+    "上流未解決 (試算エンジン owner 食い違い) は本 feature の P02 で解消する条件付き承認 (feature 文書の上流未解決節に記録済み)",
+    "ユーザー指示: S4 続行指示 (2026-07-17 「つづけて」)"
+  ],
+  "validator": {
+    "schema": "validate-graph-schema.py",
+    "valid": true
+  }
+}

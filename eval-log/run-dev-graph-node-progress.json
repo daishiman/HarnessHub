@@ -1,0 +1,30 @@
+{
+  "recorded_at": "2026-07-18T08:10:00Z",
+  "checklist": [
+    {
+      "item": "C24 containment (repo root 一致)",
+      "status": "PASS",
+      "evidence": "resolve-repo-context.py --mode write receipt (repository = worktree root)"
+    },
+    {
+      "item": "classification 自動確定 (confidence>=0.80, margin>=0.15)",
+      "status": "PASS",
+      "evidence": "confidence 0.95 / R3-import 正規取込 (既存 5 wrapper と同型)"
+    },
+    {
+      "item": "frontmatter/body/path/template 整合",
+      "status": "PASS",
+      "evidence": "architecture/harness-hub-dev-workflow.md (template_id=architecture 1.0.0)"
+    },
+    {
+      "item": "package gate",
+      "status": "N/A",
+      "evidence": "通常 artifact 登録 (exact-13 package ではない)"
+    },
+    {
+      "item": "schema 検証と atomic 登録",
+      "status": "PASS",
+      "evidence": "temp コピーで validate-graph-schema valid:true → os.replace。登録後再検証 valid:true, violations:[] (nodes 113)"
+    }
+  ]
+}

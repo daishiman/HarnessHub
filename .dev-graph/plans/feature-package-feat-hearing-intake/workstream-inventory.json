@@ -1,0 +1,925 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-hearing-intake",
+  "parent_feature": "feat-hearing-intake",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/ui-ux.md",
+      "system-spec/frontend.md",
+      "system-spec/backend.md",
+      "system-spec/database.md",
+      "system-spec/security.md",
+      "system-spec/infrastructure.md",
+      "docs/shared-layers.md",
+      "docs/screen-inventory.md",
+      "docs/user-journeys.md",
+      "architecture/harness-hub-frontend.md",
+      "architecture/harness-hub-backend.md",
+      "architecture/harness-hub-data.md",
+      "features/feat-hearing-intake.md",
+      "features/feat-hearing-intake.context.json",
+      ".dev-graph/staging/goal-spec.json"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-HEARING-INTAKE-P01",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "ヒアリング intake 要件ベースライン確定",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "requirements-baseline"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": ["security", "quality"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": ["docs/features/feat-hearing-intake/requirements-baseline.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/ui-ux.md",
+        "system-spec/frontend.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "docs/user-journeys.md",
+        "features/feat-hearing-intake.md",
+        "features/feat-hearing-intake.context.json",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-hearing-intake.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hearing-intake/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 10 件が過不足なく転記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "goal-spec と features/feat-hearing-intake.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P01",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p01.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P02",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "アーキテクチャ設計 — HearingSheet/FormData/AiJob(hearing kind) スキーマ・受付番号採番・AI キュー API 契約の設計",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "architecture"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "data",
+      "secondary_workstreams": ["frontend", "backend", "api", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": ["SYS-HEARING-INTAKE-P01"],
+      "write_scope": ["docs/features/feat-hearing-intake/architecture-decision-record.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "system-spec/backend.md",
+        "system-spec/00-requirements-definition.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "qa-024 の指示 (カラム定義の詳細設計は各 feature の P02 で行う) に従い HearingSheet/FormData/AiJob(hearing kind) のスキーマと受付番号採番・AI キュー API 契約を確定する P02 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に HearingSheet/FormData/AiJob(hearing kind) のカラム一覧、受付番号採番方式、AI キュー API 契約、AiJob 共通層汎化の未解決論点の明記、S10-S12 の画面構成表が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "P03 レビューで設計案が却下された場合、architecture-decision-record.md へ却下理由を追記し、本 task を再実行して代替設計を再評価する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P02",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p02.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P03",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "独立設計レビュー — HearingSheet/FormData/AiJob(hearing kind) 設計・AI キュー認可・Markdown sanitize の妥当性確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "design-review"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "data", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": ["SYS-HEARING-INTAKE-P02"],
+      "write_scope": ["docs/features/feat-hearing-intake/design-review-notes.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/database.md",
+        "system-spec/backend.md",
+        "system-spec/ui-ux.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P02 で確定した HearingSheet/FormData/AiJob(hearing kind) スキーマと AI キュー API 契約・Markdown sanitize 適用点を、設計担当から独立した視点でレビューする P03 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に承認可否と SEC2/SEC5/SEC7/SEC8・qa-021/qa-022/qa-023/qa-024 適合確認結果が明記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "差し戻しと判定された場合、design-review-notes.md に指摘事項を記録し、sys-hearing-intake-p02 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P03",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p03.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P04",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "test-design"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["frontend", "backend", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": ["SYS-HEARING-INTAKE-P03"],
+      "write_scope": ["docs/features/feat-hearing-intake/test-design.md", "apps/hub/src/features/hearing-intake/__tests__/"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/database.md",
+        "docs/shared-layers.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P03 で承認された設計に基づき P05 実装の受入契約となるテストスタブを作成する P04 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に受付番号発番・AI キュー認可・Markdown sanitize・試算表示サーバ計算限定・axe a11y の 5 テストカテゴリの合否基準が明記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "合否基準が P02 設計と矛盾する場合、矛盾箇所を記録し sys-hearing-intake-p02 または sys-hearing-intake-p03 を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P04",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p04.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P05",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "implementation"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "frontend",
+      "secondary_workstreams": ["backend", "api", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": ["SYS-HEARING-INTAKE-P04"],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/hearing-intake/",
+        "apps/hub/src/app/(dashboard)/hearing-sheets/",
+        "apps/hub/src/features/hearing-intake/",
+        "packages/schemas/hearing-intake/",
+        "packages/db/schema/hearing-intake/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/frontend.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "system-spec/00-requirements-definition.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "P03 承認済み設計と P04 テストスタブに基づき S10-S12 実装・受付番号採番・AI キュー API・Markdown sanitize を実装する P05 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P04 のテストスタブがすべて green であること、および pnpm build/test の成功ログが得られている"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "build/test が失敗する場合、失敗箇所を write_scope 内の該当 path に限定して修正し、影響が設計 (P02/P03) に及ぶ場合は該当 task を再実行対象として差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P05",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p05.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P06",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "test-run"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["frontend", "backend", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": ["SYS-HEARING-INTAKE-P05"],
+      "write_scope": ["docs/features/feat-hearing-intake/test-run-report.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/database.md",
+        "system-spec/ui-ux.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P04 のテストスタブ(受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y)を P05 実装に対して実行し結果を記録する P06 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-report.md に P04 定義の 5 テストカテゴリ全件の pass/fail 結果が記録されている"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "fail が発生した場合、test-run-report.md に失敗詳細を記録し sys-hearing-intake-p05 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P06",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p06.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P07",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "acceptance"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": ["SYS-HEARING-INTAKE-P06"],
+      "write_scope": ["docs/features/feat-hearing-intake/acceptance-report.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/00-requirements-definition.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-report.md に acceptance 3 項目それぞれの pass/fail 判定と test-run-report.md への参照が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "acceptance いずれかが未達の場合、acceptance-report.md に未達理由を記録し、原因が実装にある場合は sys-hearing-intake-p05 を、設計にある場合は sys-hearing-intake-p02 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P07",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p07.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P08",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "リファクタリング/マイグレーション — HearingSheet/FormData/AiJob(hearing kind) 新規テーブルの migration 生成と後方互換性確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "refactoring-migration"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "data",
+      "secondary_workstreams": ["security", "quality"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": ["SYS-HEARING-INTAKE-P07"],
+      "write_scope": ["docs/features/feat-hearing-intake/refactoring-migration-note.md", "packages/db/schema/hearing-intake/"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/database.md",
+        "system-spec/00-requirements-definition.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "HearingSheet/FormData/AiJob(hearing kind) の新規テーブルに対する migration ファイル生成と後方互換性確認を行う P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に生成した migration ファイル一覧と後方互換性確認結果 (既存テーブル影響なし) が記載され、P06 テストが再度 green であることの記録がある"
+      ],
+      "verification": [
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "migration 適用でテストが fail する場合、refactoring-migration-note.md に失敗詳細を記録し packages/db/schema/hearing-intake/ の migration ファイルを修正または削除して再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P08",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p08.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P09",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "quality-assurance"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "operations", "frontend"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": ["SYS-HEARING-INTAKE-P08"],
+      "write_scope": ["docs/features/feat-hearing-intake/quality-assurance-report.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        "system-spec/00-requirements-definition.md",
+        "docs/shared-layers.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "feat-hub-foundation が確立した共有 CI 品質ゲート (axe/Tenant 分離/AI キュー認可) に対する本 feature の適合を確認する P09 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に axe/Tenant 分離/SEC5/SEC7/SEC8 の適合確認結果と AI キュー滞留監視 (qa-027) の P12 引き継ぎ事項が記載されている"
+      ],
+      "verification": [
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "品質ゲート不適合が判明した場合、quality-assurance-report.md に不適合詳細を記録し該当する P05/P08 の task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P09",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p09.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P10",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "最終独立レビュー — feature 全体の confirmation 前最終点検",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "final-review"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": ["SYS-HEARING-INTAKE-P09"],
+      "write_scope": ["docs/features/feat-hearing-intake/final-review-notes.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/ui-ux.md",
+        "system-spec/frontend.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "feature-execution-package-contract.md §7 が定める最終独立レビューゲートに従い、quality_constraints 10 件全件を P01-P09 の成果物に照らして最終点検する P10 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-notes.md に quality_constraints 10 件全件それぞれの充足判定と根拠成果物への参照が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "いずれかの quality_constraint が未充足の場合、final-review-notes.md に未充足理由を記録し、原因に応じて該当 task (P02/P05/P08/P09 等) を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P10",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p10.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P11",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "evidence"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": ["SYS-HEARING-INTAKE-P10"],
+      "write_scope": ["docs/features/feat-hearing-intake/evidence/"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/security.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "feature-execution-package-contract.md §7 が定める reproducible evidence 要件に従い P06/P07/P09/P10 の成果物を証跡として集約する P11 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence/index.md が P06/P07/P09/P10 の全成果物への参照を漏れなく含んでいる"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "参照先成果物の欠落が判明した場合、該当する P06/P07/P09/P10 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P11",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p11.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P12",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "documentation-operations"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": ["operations", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": ["SYS-HEARING-INTAKE-P11"],
+      "write_scope": ["docs/features/feat-hearing-intake/runbook.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/security.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "S10-S12 の運用手順・AI キュー滞留監視・受付番号運用を P11 の証跡を根拠にドキュメント化する P12 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に S10-S12 運用手順・AI キュー滞留監視/アラート運用 (qa-027)・受付番号運用の注意点が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "運用手順に矛盾や欠落が見つかった場合、runbook.md を修正し P09/P11 の該当箇所と再突合する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P12",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p12.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P13",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "title": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-hearing-intake", "studio-extension", "async-ai-queue", "release-deploy"],
+      "related_nodes": ["feat-hearing-intake", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data"],
+      "workstream_kind": "operations",
+      "secondary_workstreams": ["infrastructure", "frontend", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": ["SYS-HEARING-INTAKE-P12"],
+      "write_scope": ["docs/features/feat-hearing-intake/release-notes.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/infrastructure.md",
+        "system-spec/security.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P12 の runbook.md に基づき S10-S12 を feat-hub-foundation の既存 Cloudflare Workers パイプライン経由で本番反映し、feature 全体の完了を報告する P13 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-notes.md に本番反映日時・smoke test 結果・ロールアウト確認結果が記載されている"
+      ],
+      "verification": [
+        "wrangler deploy 相当のコマンド (runbook.md記載、feat-hub-foundationの既存パイプライン経由)",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "本番反映後に smoke test が失敗した場合、feat-hub-foundation の既存パイプラインのロールバック手順 (runbook.md 記載) に従い直前バージョンへ復元し、release-notes.md に発生事象を記録する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HEARING-INTAKE-P13",
+        "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p13.md",
+        "parent_feature": "feat-hearing-intake",
+        "feature_package_id": "feature-package/feat-hearing-intake",
+        "phase_ref": "P13"
+      }
+    }
+  ]
+}

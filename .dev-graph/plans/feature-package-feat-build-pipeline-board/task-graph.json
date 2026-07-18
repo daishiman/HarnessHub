@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-build-pipeline-board",
+  "parent_feature": "feat-build-pipeline-board",
+  "nodes": [
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P01",
+      "graph_node_id": "sys-build-pipeline-board-p01",
+      "title": "構築パイプラインボード要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P02",
+      "graph_node_id": "sys-build-pipeline-board-p02",
+      "title": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P01"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P03",
+      "graph_node_id": "sys-build-pipeline-board-p03",
+      "title": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P02"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P04",
+      "graph_node_id": "sys-build-pipeline-board-p04",
+      "title": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P03"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P05",
+      "graph_node_id": "sys-build-pipeline-board-p05",
+      "title": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P04"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P06",
+      "graph_node_id": "sys-build-pipeline-board-p06",
+      "title": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P05"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P07",
+      "graph_node_id": "sys-build-pipeline-board-p07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P06"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P08",
+      "graph_node_id": "sys-build-pipeline-board-p08",
+      "title": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P07"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P09",
+      "graph_node_id": "sys-build-pipeline-board-p09",
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P08"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P10",
+      "graph_node_id": "sys-build-pipeline-board-p10",
+      "title": "最終独立レビュー — quality_constraints 6 件の充足判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P09"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P11",
+      "graph_node_id": "sys-build-pipeline-board-p11",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P10"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P12",
+      "graph_node_id": "sys-build-pipeline-board-p12",
+      "title": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P11"]
+    },
+    {
+      "id": "SYS-BUILD-PIPELINE-BOARD-P13",
+      "graph_node_id": "sys-build-pipeline-board-p13",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "parent_feature": "feat-build-pipeline-board",
+      "depends_on": ["SYS-BUILD-PIPELINE-BOARD-P12"]
+    }
+  ]
+}

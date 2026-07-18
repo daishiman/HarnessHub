@@ -1,0 +1,6 @@
+{
+  "original_goal": "要件定義 (system-spec/ 配下、C05 完成度評価 PASS 済み) だけで作りたいものを実行できるかを確認したい。要件 handoff の readiness と lineage (specification/architecture/feature ノードの系譜・digest 整合) を検証し、実行に進むために不足しているものがあれば列挙する。",
+  "original_goal_hash": "ff5554873be512d0fd1a52163126ca16fad7fb3fa7b41d2948aa134e98b98a91",
+  "invoked_at": "2026-07-17T10:55:00+09:00",
+  "verb": "requirements"
+}

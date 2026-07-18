@@ -1,0 +1,22 @@
+{
+  "op": "confirm",
+  "graph_node_id": "feat-domain-model-db",
+  "transition": {
+    "confirmation_status": [
+      "draft",
+      "confirmed"
+    ]
+  },
+  "confirmed_at": "2026-07-17T22:42:02Z",
+  "source_digest_pinned": "3345481c33b226d3f4a16cfc9198cd95376f8862c149d0d8353123e880ba3751",
+  "review_basis": [
+    "scope_in/scope_out/acceptance を system-spec 確定内容 (qa-032 テーブル詳細 / qa-019 バックアップ・restore drill / D2 Turso + D1 退避ヘッジ / D4 row-level scope / docs/backend-spec.md §2 データモデル詳細正本) と突合し矛盾なし",
+    "上流未解決 (User 基底テーブルの owner) は本 feature の P02 で確定する条件付き承認 (feature 文書の上流未解決節に記録済み)",
+    "docs/shared-layers.md (repository 層/zod schemas の owner 境界) と整合",
+    "ユーザー指示: S4 続行指示 (2026-07-18 「つづけて」)"
+  ],
+  "validator": {
+    "schema": "validate-graph-schema.py",
+    "valid": true
+  }
+}

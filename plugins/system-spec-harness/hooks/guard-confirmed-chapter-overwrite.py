@@ -88,6 +88,18 @@ TERMINAL_STATES = {"確定", "対象外"}
 # (reopened_from/reopen_reason) + 後方互換キー。いずれかがあれば当該セルは R4-reopen 済み。
 _REOPEN_KEYS = ("reopened_from", "reopen_reason", "reopened", "reopen", "reopened_at", "reopened_by")
 
+# 記録・生成物 (保護対象外)。確定物ではなく「都度再生成される」ファイルで、正規 writer
+# (C02 build-fetched-references / C03 compile / evaluator) が上書きするのが正常動作。これらへの
+# 書込は監査経路 (R4-reopen) を要さないため遮断しない。境界定義: references/hook-guard-protection-scope.md。
+EXEMPT_NAMES = frozenset(
+    {
+        "fetched-references.json",  # C02 の取得記録 (都度全上書きが正規)
+        "index.md",                 # C03 の相互参照索引 (status 無し・純生成物)
+        "completeness-report.json",  # evaluator の評価レポート
+        "completeness-findings.json",  # evaluator の findings
+    }
+)
+
 # system-spec/ を参照する書込で in-place 変更を行うツール群 (対象ファイルを引数で受ける)。
 _MUTATION_TOOLS = (
     (re.compile(r"\bsed\s+(?:-[a-zA-Z]*i|--in-place)\b"), "sed -i"),
@@ -364,8 +376,11 @@ def _redirect_targets(cmd: str) -> list[str]:
     out = []
     for m in _REDIRECT.finditer(cmd):
         t = m.group(1).strip().strip('"').strip("'")
-        if t:
-            out.append(t)
+        # /dev/null 等の捨て先は書込対象でない。`2>/dev/null`/`>/dev/null` を書込指標に
+        # 数えると、保護領域を read するだけのコマンド (find/wc/grep) を誤遮断する (FP)。
+        if not t or t.startswith("/dev/"):
+            continue
+        out.append(t)
     return out
 
 
@@ -401,6 +416,33 @@ def _refs_protected_area(cmd: str) -> bool:
     return bool(_PROTECTED_SEG.search(cmd))
 
 
+def _refs_confirmed_artifact(cmd: str, root: Path) -> bool:
+    """コマンドが確定物 (正本 spec-state.json / 非除外の確定章 .md) を参照するか。
+
+    記録・生成物 (EXEMPT_NAMES) のみの参照、および新規 draft (不在の具体 .md) では False を返す。
+    列挙不能な glob (`system-spec/*.md` 等) は静的に確定/未確定を判別できないため安全側で True。
+    branch4 の過剰遮断緩和 (references/hook-guard-protection-scope.md 提案2) に用いる。
+    """
+    if _refs_canonical_spec_state(cmd):
+        return True
+    for tok in _system_spec_md_tokens(cmd):
+        if Path(tok).name in EXEMPT_NAMES:
+            continue  # index.md 等の生成物は確定物でない
+        p = Path(tok)
+        fpath = p if p.is_absolute() else (root / p)
+        try:
+            is_file = fpath.is_file()
+        except OSError:
+            is_file = False
+        if is_file:
+            if _token_is_protected_chapter(tok, root):
+                return True  # 解決できる確定章
+        elif any(ch in tok for ch in "*?["):
+            return True  # 列挙不能な glob は安全側で確定物扱い
+        # 不在の具体 .md は新規 draft 作成 → 確定物でない (通す)
+    return False
+
+
 def bash_decision(cmd: str, root: Path) -> tuple[int, str]:
     """Bash コマンドの許可 (0) / 遮断 (2) を判定する。"""
     redirects = _redirect_targets(cmd)
@@ -430,9 +472,15 @@ def bash_decision(cmd: str, root: Path) -> tuple[int, str]:
             if _token_is_protected_chapter(t, root):
                 return 2, f"確定章 '{t}' への動的書換を遮断"
 
-    # 4) 曖昧な動的書換が保護領域 (system-spec/ 配下・パス境界一致) を参照 → 安全側で遮断
-    if (_refs_protected_area(cmd) or refs_spec_state) and _DYNAMIC.search(cmd):
-        return 2, "保護領域 (system-spec/ 配下 または 正本 spec-state.json) を参照する曖昧な動的書換を安全側で遮断"
+    # 4) 確定物への「書込先を静的に確定できない」書換のみ安全側で遮断。
+    #    保護領域を read するだけの参照 (find/wc/grep) や、記録・生成物 (EXEMPT) への
+    #    書込、リダイレクト先が具体的で安全な書込は誤爆させない (branch1〜3 が具体書込を担保済み)。
+    #    詳細: references/hook-guard-protection-scope.md 提案2。
+    if _refs_confirmed_artifact(cmd, root):
+        if (mutation or py_write) and _DYNAMIC.search(cmd):
+            return 2, "確定物への動的書換 (書込先を静的に確定できない mutation/python) を安全側で遮断"
+        if any(_DYNAMIC.search(t) for t in redirects):
+            return 2, "確定物を参照し、リダイレクト先が動的で確定できない書換を安全側で遮断"
 
     return 0, ""
 

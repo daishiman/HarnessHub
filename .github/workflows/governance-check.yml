@@ -20,6 +20,11 @@ jobs:
         run: python3 scripts/guard-change-category.py --base origin/main --bypass-cooldown
       - name: lint script naming (28章 §4)
         run: python3 scripts/lint-script-naming.py
+      - name: lint artifact placement self-test (配置規約検査器の分岐検査)
+        run: python3 scripts/lint-artifact-placement.py --self-test
+      - name: "lint artifact placement (保存先の正規表 fail-closed。dev-graph 未初期化 repo は skip)"
+        run: python3 scripts/lint-artifact-placement.py
+        continue-on-error: false
       - name: lint skill description (03章 R1-R5)
         run: python3 scripts/lint-skill-description.py
       - name: lint dependency direction

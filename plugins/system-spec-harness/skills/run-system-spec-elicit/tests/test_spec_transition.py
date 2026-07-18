@@ -150,6 +150,53 @@ def _confirmed_state():
     return state
 
 
+# --------------------------------------------------------------------------- #
+# カテゴリ軸拡張 (open-world): 既存確定を保持したまま新カテゴリ行のみ追加       #
+# --------------------------------------------------------------------------- #
+def test_add_category_appends_row_without_touching_confirmed():
+    state = _confirmed_state()
+    before = copy.deepcopy(state["matrix"])
+    mod.add_category(state, {"id": "dev-workflow", "label": "開発フロー"})
+    for cat, row in before.items():
+        assert state["matrix"][cat] == row  # 既存行は 1 セルも変わらない
+    assert set(state["matrix"]["dev-workflow"]) == set(mod.CANONICAL_PLATFORMS)
+    assert all(c["state"] == "未収集" for c in state["matrix"]["dev-workflow"].values())
+    assert state["category_aggregate"]["dev-workflow"] == "未着手"
+    assert {"id": "dev-workflow", "label": "開発フロー"} in state["categories"]
+
+
+def test_add_category_existing_id_rejected_no_rollback():
+    # 既存カテゴリへの再適用が通ると matrix 行が作り直され確定が reopen 非経由で巻き戻る
+    state = _confirmed_state()
+    with pytest.raises(mod.TransitionError):
+        mod.add_category(state, {"id": "database", "label": "上書き試行"})
+    assert state["matrix"]["database"]["web"]["state"] == "確定"
+
+
+@pytest.mark.parametrize(
+    "category",
+    [
+        {"id": "Dev_Workflow", "label": "開発フロー"},  # kebab-case 違反
+        {"id": "dev-workflow"},  # label 欠落
+        {"id": "", "label": "開発フロー"},  # id 空
+        {"id": "dev-workflow", "label": "  "},  # label 空白のみ
+        ["dev-workflow"],  # object でない
+    ],
+)
+def test_add_category_invalid_input_rejected(category):
+    state = mod.init_state(_taxonomy())
+    with pytest.raises(mod.TransitionError):
+        mod.add_category(state, category)
+
+
+def test_add_category_state_passes_validator_loop(tmp_path):
+    state = mod.init_state(_taxonomy())
+    mod.add_category(state, {"id": "dev-workflow", "label": "開発フロー"})
+    out = tmp_path / "spec-state.json"
+    out.write_text(mod.dump_state(state), encoding="utf-8")
+    assert _run_validator(out) == 0  # 床カテゴリを満たす限り軸拡張は受理される
+
+
 def test_confirm_then_exclude_rollback_rejected():
     state = _confirmed_state()
     with pytest.raises(mod.TransitionError):

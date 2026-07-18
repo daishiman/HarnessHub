@@ -1,77 +1,109 @@
-# Project Instructions for AI Agents
+# AI エージェント向けプロジェクト指示
 
-This file provides instructions and context for AI coding agents working on this project.
+このファイルは、本プロジェクトで作業する AI コーディングエージェントに指示とコンテキストを提供します。
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:6cd5cc61 -->
-## Beads Issue Tracker
+## Beads 課題トラッカー
 
-This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
+このプロジェクトは課題管理に **bd（beads）** を使用します。ワークフローの全コンテキストとコマンドは `bd prime` で確認してください。
 
-### Quick Reference
+### クイックリファレンス
 
 ```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --claim  # Claim work
-bd close <id>         # Complete work
+bd ready              # 着手可能な作業を探す
+bd show <id>          # 課題の詳細を表示
+bd update <id> --claim  # 作業を引き受ける
+bd close <id>         # 作業を完了する
 ```
 
-### Rules
+### ルール
 
-- Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
-- Run `bd prime` for detailed command reference and session close protocol
-- Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
+- 全てのタスク管理に `bd` を使う — TodoWrite・TaskCreate・markdown の TODO リストは使わない
+- コマンドリファレンスとセッション終了プロトコルの詳細は `bd prime` を実行して確認する
+- 永続的な知見は `bd remember` を使う — MEMORY.md ファイルは使わない
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
+**アーキテクチャを一言で:** 課題はローカルの Dolt DB に格納され、同期は git リモートの `refs/dolt/data` を使い、`.beads/issues.jsonl` は受動的なエクスポートです。詳細とアンチパターンは https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md を参照してください。
 
-## Agent Context Profiles
+## エージェントのコンテキストプロファイル
 
-The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
+管理された Beads ブロックはタスク管理の指針であり、リポジトリ・ユーザー・オーケストレーターの指示を上書きする許可ではありません。
 
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
+- **保守的（既定）**: タスク管理に `bd` を使う。明示的に依頼されない限り、git commit・git push・Dolt リモート同期は実行しない。引き継ぎ時には、変更したファイル・検証内容・推奨する次のコマンドを報告する。
+- **最小**: ツール指示ファイルは `bd prime` へのポインタとして維持する。有効な指示が別途定めない限り、同じ保守的な git ポリシーに従う。
+- **チームメンテナ**: リポジトリが明示的にオプトインした場合に限り、エージェントはセッション終了の一環として beads のクローズ・品質ゲートの実行・commit・push を行える。現行の「commit するな」「push するな」という指示は依然として優先される。
 
-## Session Completion
+## セッション完了
 
-This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
+このプロトコルは Beads の実装ワークフローを終える際に適用されます。ユーザー・リポジトリ・オーケストレーターの明示的な指示に従属します。
 
-1. **File issues for remaining work** - Create beads for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **Handle git/sync by active profile**:
+1. **残作業を課題として起票** - フォローアップが必要なものは beads を作成する
+2. **品質ゲートを実行**（コードを変更した場合） - テスト・リンター・ビルド
+3. **課題ステータスを更新** - 完了した作業をクローズし、進行中の項目を更新する
+4. **有効なプロファイルに応じて git/同期を扱う**:
    ```bash
-   # Conservative/minimal/default: report status and proposed commands; wait for approval.
+   # 保守的/最小/既定: ステータスと提案コマンドを報告し、承認を待つ。
    git status
 
-   # Team-maintainer opt-in only, unless current instructions forbid it:
+   # チームメンテナのオプトイン時のみ、現行指示が禁じていなければ:
    git pull --rebase
    git push
    git status
    ```
-5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
+5. **引き継ぎ** - 変更・検証・課題ステータス・ブロックされた同期/commit/push の手順を要約する
 
-**Critical rules:**
-- Explicit user or orchestrator instructions override this Beads block.
-- Do not commit or push without clear authority from the active profile or the current user request.
-- If a required sync or push is blocked, stop and report the exact command and error.
+**重要なルール:**
+- ユーザーまたはオーケストレーターの明示的な指示は、この Beads ブロックを上書きする。
+- 有効なプロファイルまたは現行のユーザー要求による明確な権限なしに commit・push しない。
+- 必要な同期や push がブロックされた場合は、作業を止めて正確なコマンドとエラーを報告する。
 <!-- END BEADS INTEGRATION -->
 
 
-## Build & Test
+## 報告と出力のスタイル
 
-_Add your build and test commands here_
+このセクションは、Claude Code や Codex などの AI エージェントが、作業結果を報告したりユーザーへ質問したりするときの前提とフォーマットを定めます。
+
+**前提: ユーザーは多数のセッションを並行して扱うため、過去のやり取りを逐一は覚えていません。** どの報告も、前の文脈を思い出さなくても、それ単体で読めるようにしてください。
+
+### 報告の基本フォーマット
+
+通常の作業報告は次の順で書きます。
+
+1. **何を言われて・何をやったか**（1〜2文） — 依頼内容と実施内容を簡潔に。あわせて **目的（何のために）と背景（どういう経緯で）** も添える。
+2. **結論** — 最終的にどうなったか。
+3. **TL;DR**（Too Long; Didn't Read = 「要するに」の一言要約） — 忙しいときはここだけ読めば足りる、という短い要約。
+4. **詳細** — 具体的な変更内容・手順・判断の根拠。
+5. **まとめ** — 残タスクや次のアクションがあれば書く。
+
+### 簡単な作業のとき
+
+ごく簡単な作業は、上の全部を埋めなくても柔軟で構いません。最低限 **「何を言われて・何をやったか」** と **目的・背景** が伝われば OK です。
+
+### ユーザーへ質問（ヒアリング）するとき
+
+判断を仰ぐ質問をする場合は、**何のために聞いているのか（目的）** と **何を実現したいのか（ゴール）** を簡潔に添えてから質問します。ユーザーが背景を思い出さなくても答えられる状態にしてください。
+
+### 専門用語の書き方
+
+ユーザーはエンジニア歴 2〜3 年程度で、専門用語が続くと読みづらく感じることがあります。専門用語を使うときは、**括弧で初心者向けの言い換えを併記** してください。
+
+- 例: 「冪等（べきとう＝何回実行しても結果が同じになる性質）」
+- 例: 「マージ（複数の変更を 1 つに統合すること）」
+- 例: 「リモート（手元の PC ではなく、サーバー側に置かれたリポジトリ）」
+
+## ビルドとテスト
+
+_ビルドコマンドとテストコマンドをここに追記してください_
 
 ```bash
-# Example:
+# 例:
 # npm install
 # npm test
 ```
 
-## Architecture Overview
+## アーキテクチャ概要
 
-_Add a brief overview of your project architecture_
+_プロジェクトのアーキテクチャの概要をここに追記してください_
 
-## Conventions & Patterns
+## 規約とパターン
 
-_Add your project-specific conventions here_
+_プロジェクト固有の規約をここに追記してください_

@@ -1,0 +1,65 @@
+---
+artifact_kind: task
+artifact_subtypes: []
+beads_linkage: null
+classification_candidates: [{"artifact_kind": "task", "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p01.md", "confidence": 0.92}]
+classification_confidence: 0.92
+classification_reason: goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-user-org-admin.md の purpose/goal/scope/acceptance を要件ベースラインへ確定転記する P01 タスク
+completion_evidence: {"completed_at": null, "evidence_refs": [], "policy": "linked_pr_merged_all", "reconciled_at": null, "source": null, "status": "in_progress"}
+confirmation_evidence: {"evaluated_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2", "evaluator": "system-dev-plan-evaluator", "evidence_ref": ".dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json"}
+confirmation_status: confirmed
+created_at: 2026-07-17T11:22:15Z
+depends_on: []
+domain: documentation
+evaluation_status: pass
+execution_contexts: []
+feature_package_id: feature-package/feat-user-org-admin
+file_path: tasks/feat-user-org-admin/sys-user-org-admin-p01.md
+github_project_linkages: []
+github_publication: {"labels": [], "milestone": null, "mode": "local_only", "project_aliases": []}
+graph_node_id: SYS-USER-ORG-ADMIN-P01
+implementation_readiness: {"checked_at": "2026-07-17T00:00:00Z", "missing_sections": [], "status": "complete"}
+issue_linkage: null
+iteration: null
+owners: ["daishiman"]
+parent_feature: feat-user-org-admin
+phase_ref: P01
+priority: null
+project_id: feature-package-feat-user-org-admin
+pull_request_linkages: []
+related_nodes: ["feat-user-org-admin", "arch-harness-hub-security", "arch-harness-hub-backend", "arch-harness-hub-frontend"]
+resource_scope: ["docs/features/feat-user-org-admin/requirements-baseline.md"]
+source_lineage: {"imported_at": "2026-07-17T11:22:15Z", "origin_kind": "system-dev-planner", "source_digest": "66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2", "source_path": ".dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-01-requirements.md", "source_plugin": "system-dev-planner", "source_version": "0.1.0"}
+start_date: null
+status: active
+tags: ["feat-user-org-admin", "studio-extension", "security", "requirements-baseline"]
+target_date: null
+template_id: task
+template_version: 1.0.0
+title: ユーザー管理・アカウント設定 要件ベースライン確定
+tracker_binding: beads
+updated_at: 2026-07-17T11:22:15Z
+purpose: feat-user-org-admin の P01 を実行する: ユーザー管理・アカウント設定 要件ベースライン確定
+goal: feat-user-org-admin の受入可能な要件ベースラインを確定し、以降の P02 以降の全 task が同一の合意事項 (S17/S18 のスコープ・受入基準・8 件の quality_constraints) を参照できる状態にする。この task 完了時点で、goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints が machine-verifiable な baseline 文書として固定される。
+scope_in: ["docs/features/feat-user-org-admin/requirements-baseline.md"]
+scope_out: ["認証方式の変更 (D3 の IdP 委譲を維持する。goal-spec scope_out)", "role 体系の再設計 (qa-005 の 4 role を維持する。goal-spec scope_out)", "実装コードの作成 (本 task は要件確定のみ)", "Tenant/Workspace/Project/TargetChannel/Release 等の既存中核エンティティの要件定義 (feat-domain-model-db の scope)"]
+acceptance: ["docs/features/feat-user-org-admin/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 8 件が過不足なく転記されている"]
+architecture_refs: ["arch-harness-hub-security", "arch-harness-hub-backend", "arch-harness-hub-frontend"]
+---
+
+# ユーザー管理・アカウント設定 要件ベースライン確定
+
+> task projection (P01 / parent: feat-user-org-admin)。本文の正本は published task spec であり、ここには複製しない。
+
+## 正本仕様書
+
+- `.dev-graph/plans/feature-package-feat-user-org-admin/task-specs/phase-01-requirements.md`
+
+## 依存
+
+- なし (feature 内の先頭 phase)
+
+## 実行
+
+- claim: bd 側 issue を claim し、並行時は worktree lease を取得する
+- 完了: 正本仕様書の Verification and evidence を満たし bd close (SYS-USER-ORG-ADMIN-P01)

@@ -1,0 +1,45 @@
+{
+  "four_conditions": {
+    "C1": {
+      "verdict": "PASS",
+      "evidence": [
+        "publish 開始 = owner のみ、catalog.suspended/resumed = workspace-admin で auth/backend/security の三正本が一致 (独立検証者 反復2-3)",
+        "auth.md 認可マトリクスと backend.md endpoint 一覧の全 17 endpoint が 1:1 一致"
+      ],
+      "violation_count": 0
+    },
+    "C2": {
+      "verdict": "PASS",
+      "evidence": [
+        "全章の必須要素 (10 エンティティ・INV-1〜4・認可マトリクス・脅威モデル T1-T7・監査正本・分離テスト S1-S8・ASVS・無料枠予算表・Stage 0 gate・用語対訳表等) は網羅済み (独立検証者 反復1-2)",
+        "反復3の修正は監査 event 列の表記置換と security 正本への 1 行追補のみで、節の削除・漏れは生じていない (独立検証者 反復3)"
+      ],
+      "violation_count": 0
+    },
+    "C3": {
+      "verdict": "PASS",
+      "evidence": [
+        "security.md L127 に publish.requested が正本表の列構成を満たして追補され、補完仕様マーカー付き。発火契機は backend.md L31・L59 と一致 (独立検証者 反復3)",
+        "backend.md 監査 event 列の全 12 event_type を security 正本一覧と独立照合し、全て正本に存在し発火契機とも矛盾しないことを確認 (独立検証者 反復3、オーケストレーター grep 突合と同結果)",
+        "lifecycle 運用表の説明的文言は endpoint 一覧の正本表記経由で一意対応が自明なため違反に該当しない (独立検証者 反復3 判定)"
+      ],
+      "violation_count": 0
+    },
+    "C4": {
+      "verdict": "PASS",
+      "evidence": [
+        "外部参照レジスタは全章の §参照 12 種と HH-D07/D13/D14 を完全被覆 (grep 機械照合、独立検証者 反復2)",
+        "spec-state.json matrix は 48 セル全て確定/対象外。validate-coverage-matrix.py --require-complete --require-foundation → exit 0"
+      ],
+      "violation_count": 0
+    }
+  },
+  "residual_issues": [],
+  "approver_note": "独立検証者 (phase3-verifier) の最終判定 (2026-07-16): 『3 反復を通じて検証 4 条件の違反は全件解消し、実装・承認を誤らせる残存問題はない。最終検証担当として本仕様書の承認を支持する。』 proposer (phase3 改善ワーカー群) ≠ approver (phase3-verifier) を全反復で維持。",
+  "iteration_history": [
+    {"iteration": 1, "C1": "FAIL", "C2": "PASS", "C3": "FAIL", "C4": "PARTIAL", "issues_found": 8},
+    {"iteration": 2, "C1": "PASS", "C2": "PASS", "C3": "PARTIAL", "C4": "PASS", "issues_found": 2},
+    {"iteration": 3, "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "issues_found": 0}
+  ],
+  "note_addendum": "qa-017 (コード構造・アーキテクチャ規約、ユーザー追加要望 2026-07-17) の展開を追加パスとして実行し、独立検証者が追加分を検証: 全4条件 PASS・residual_issues ゼロ・承認 (package 名/依存方向の5章間一致、既存固有仕様との正本参照付き整合、index トレース実在、選定表の制約接地を確認)。"
+}

@@ -1,0 +1,28 @@
+{
+  "graph_node_id": "feat-domain-model-db",
+  "artifact_kind": "feature",
+  "purpose": "Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメインモデルを Drizzle スキーマとして確立し、D1 退避経路 (D2 ヘッジ) を保つ接続層を構築する",
+  "goal": "全エンティティの CRUD が接続層越しに動作し、R2 immutable PackageRegistry と日次 export が稼働する状態",
+  "scope_in": [
+    "Drizzle スキーマ (SQLite 方言互換)",
+    "接続層の隔離 (libSQL/D1 両対応)",
+    "R2 content-addressed registry",
+    "日次 export + restore drill 手順",
+    "マイグレーション運用"
+  ],
+  "scope_out": [
+    "検査 pipeline のビジネスロジック",
+    "UI"
+  ],
+  "acceptance": [
+    "スキーマが SQLite 方言互換で D1 接続テストが通る",
+    "Release が immutable として強制される",
+    "バックアップ export と復元手順が検証済み"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-data.md",
+    "architecture/harness-hub-backend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-17T22:42:02Z"
+}

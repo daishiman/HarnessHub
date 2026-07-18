@@ -1,0 +1,99 @@
+{
+  "schema": "run-dev-graph-decompose/macro-report/1.0.0",
+  "decomposed_at": "2026-07-17T10:44:09Z",
+  "source": "specs/harness-hub-system-specification.md (Studio 反映後・C05 PASS 2026-07-17)",
+  "features": [
+    {
+      "graph_node_id": "feat-user-org-admin",
+      "stage": "Studio 拡張",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-metrics-tracking",
+      "stage": "Studio 拡張",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-user-org-admin"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-frontend"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-hearing-intake",
+      "stage": "Studio 拡張",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-build-pipeline-board",
+      "stage": "Studio 拡張",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-publish-pipeline"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-feedback-loop",
+      "stage": "Studio 拡張",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-publish-pipeline"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "status": "draft"
+    },
+    {
+      "graph_node_id": "feat-docs-cms",
+      "stage": "Studio 拡張",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "status": "draft"
+    }
+  ],
+  "external_writes": 0,
+  "note": "Studio 拡張 6 feature を draft 登録。AI 処理キュー/試算エンジン等の共通層 owner は feat-hub-foundation (docs/shared-layers.md) — published plan への追補は plan --mode update の follow-up。"
+}

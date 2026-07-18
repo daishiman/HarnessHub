@@ -1,0 +1,28 @@
+{
+  "graph_node_id": "feat-hub-foundation",
+  "artifact_kind": "feature",
+  "purpose": "費用ゼロ制約 (C2) 下で Hub の実行基盤 (Cloudflare Workers 一体型 + OpenNext) と CI/CD・監視・SLO 運用の土台を確立する",
+  "goal": "pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 99.5% 計測が稼働し、Worker 3MiB 予算内で Next.js が動作する状態",
+  "scope_in": [
+    "Next.js + TypeScript + pnpm monorepo scaffold",
+    "@opennextjs/cloudflare デプロイ",
+    "GitHub Actions CI/CD (npm 混入 fail)",
+    "/health + 外部死活監視",
+    "SLO ダッシュボード + bundle サイズ予算 CI"
+  ],
+  "scope_out": [
+    "業務ドメインロジック",
+    "認証"
+  ],
+  "acceptance": [
+    "CI が test→deploy を完走する",
+    "Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する",
+    "SLO 99.5% の計測と /health が稼働する"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-infrastructure.md",
+    "architecture/harness-hub-frontend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-17T07:00:46Z"
+}

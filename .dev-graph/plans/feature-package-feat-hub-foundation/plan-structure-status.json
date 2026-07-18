@@ -1,0 +1,115 @@
+{
+  "_generated": "project-task-status.py (派生ビュー・手書き編集しない・再生成で上書き)",
+  "graph_hash": null,
+  "summary": {
+    "total": 13,
+    "by_state": {
+      "pending": 13,
+      "running": 0,
+      "done": 0,
+      "blocked": 0
+    },
+    "completion_rate": 0.0,
+    "blocked_tasks": [],
+    "route_report_count": 0,
+    "completion_gate": null,
+    "effective_status": "in_progress"
+  },
+  "nodes": [
+    {
+      "id": "SYS-HUB-FOUNDATION-P01",
+      "title": "Hub 基盤 要件ベースライン確定",
+      "phase_ref": "P01",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P02",
+      "title": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
+      "phase_ref": "P02",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P03",
+      "title": "Hub 基盤 独立設計レビュー",
+      "phase_ref": "P03",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P04",
+      "title": "Hub 基盤 テスト設計 (test-first 受入契約)",
+      "phase_ref": "P04",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P05",
+      "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
+      "phase_ref": "P05",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P06",
+      "title": "Hub 基盤 テスト実行",
+      "phase_ref": "P06",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P07",
+      "title": "Hub 基盤 feature 受入判定",
+      "phase_ref": "P07",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P08",
+      "title": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
+      "phase_ref": "P08",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P09",
+      "title": "Hub 基盤 品質・セキュリティ・運用保証",
+      "phase_ref": "P09",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P10",
+      "title": "Hub 基盤 最終独立レビュー",
+      "phase_ref": "P10",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P11",
+      "title": "Hub 基盤 証跡収集",
+      "phase_ref": "P11",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P12",
+      "title": "Hub 基盤 運用ドキュメント整備",
+      "phase_ref": "P12",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P13",
+      "title": "Hub 基盤 本番リリース・デプロイ",
+      "phase_ref": "P13",
+      "entity_ref": null,
+      "state": "pending"
+    }
+  ],
+  "discovered_pending": [],
+  "route_reports": [],
+  "build_summary": null,
+  "completion_evidence": null
+}

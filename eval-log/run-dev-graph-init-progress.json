@@ -1,0 +1,16 @@
+{
+  "skill": "run-dev-graph-init",
+  "updated_at": "2026-07-17T00:00:00Z",
+  "checklist": [
+    {"id": "receipt-match", "text": "resolve-repo-context.py receipt の repository_id/common-dir/content root が caller repo と一致する", "status": "pass", "evidence": "resolve-repo-context.py --mode write: repository_id=github:daishiman/HarnessHub, root_trust_evidence 3 項目 true, selected_by=explicit --repo-root"},
+    {"id": "roots-exist", "text": "issues/tasks/specs/architecture/features/docs と .dev-graph/{config.json,graph.json,state,cache,locks} が実在する", "status": "pass", "evidence": "6 content root + .dev-graph/{config.json,state/graph.json,cache,locks,templates} を作成済み。graph は local_state.graph=.dev-graph/state/graph.json (resolver 正本) に配置"},
+    {"id": "templates", "text": "template-contract.json 列挙資産が欠落0で、利用者編集済み template の digest が不変である", "status": "pass", "evidence": "plugin templates 21 件を cp -n で冪等コピー。既存編集ファイルなし (初回導入)"},
+    {"id": "hooks-single-path", "text": "effective hook は plugin または許可済み fallback の一経路だけで、既存 settings key/hash の変更が0件である", "status": "pass", "evidence": ".claude/settings.json に dev-graph plugin hook (from_plugin: dev-graph) が既配線のため追加変更 0 件。fallback 不使用。config.claude_hooks.source=plugin"},
+    {"id": "schema-idempotent", "text": "validate-graph-schema.py が exit0 で、同じ入力の二回目 init の planned changes が0件である", "status": "pass", "evidence": "validate-graph-schema.py exit0 (valid=true, violations=[]) / 2回目 scaffold 前後の file digest 一致 (IDEMPOTENT_OK)"}
+  ],
+  "notes": [
+    "config.json は dev-graph 基底 section に加え system-dev-planner (C10) の plan_roots {staging: .dev-graph/staging, published: .dev-graph/plans, state: .dev-graph/state} を default-project-config.json と同値で追記 (共有 config 契約)。",
+    "GitHub 連携は enabled:false で初期化。token/GitHub node ID は保存していない。",
+    "execution_tracker は beads (issue_prefix=harnesshub)。"
+  ]
+}

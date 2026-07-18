@@ -9,8 +9,8 @@ trigger: aggregate-evals (SessionEnd)
 
 ## 集計サマリ
 
-- 評価件数: 222
-- FAIL 率: 0.45%
+- 評価件数: 226
+- FAIL 率: 0.44%
 - 平均スコア: 91.714
 
 ## 検出された異常
@@ -29,6 +29,8 @@ trigger: aggregate-evals (SessionEnd)
 - **run-notion-intake-publish**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-02", "iterations": 2, "negative_feedback_count": 3, "findings_count": 0}, {"date": "2026-07-02", "iterations": 2, "negative_feedback_count": 2, "findings_count": 0}]}
 - **run-slide-report-generate**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-slide-report-modify**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 1, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
+- **run-rubric-sync**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-14", "iterations": 8, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-14", "iterations": 8, "negative_feedback_count": 0, "findings_count": 0}]}
+- **run-spec-drift-triage**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-14", "iterations": 7, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-14", "iterations": 7, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-ubm-consult**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 1, "findings_count": 0}]}
 - **run-ubm-goal-setting**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 1, "findings_count": 0}]}
 - **run-ubm-knowledge-sync**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 1, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 1, "findings_count": 0}]}

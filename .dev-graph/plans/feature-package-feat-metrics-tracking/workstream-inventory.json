@@ -1,0 +1,717 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-metrics-tracking",
+  "parent_feature": "feat-metrics-tracking",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/spec-state.json",
+      "docs/backend-spec.md",
+      "docs/shared-layers.md",
+      "architecture/harness-hub-backend.md",
+      "architecture/harness-hub-data.md",
+      "architecture/harness-hub-frontend.md",
+      "features/feat-metrics-tracking.md",
+      "features/feat-metrics-tracking.context.json",
+      ".dev-graph/staging/goal-spec.json"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-METRICS-TRACKING-P01",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "requirements-baseline"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": ["security", "data", "quality"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": ["docs/features/feat-metrics-tracking/requirements-baseline.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/spec-state.json",
+        "docs/backend-spec.md",
+        "docs/shared-layers.md",
+        "features/feat-metrics-tracking.md",
+        "features/feat-metrics-tracking.context.json",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-metrics-tracking.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.92, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p01.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-metrics-tracking/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 8 件が過不足なく転記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "goal-spec と features/feat-metrics-tracking.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P01",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p01.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P02",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "architecture-decision"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "data",
+      "secondary_workstreams": ["frontend", "backend", "api", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": ["SYS-METRICS-TRACKING-P01"],
+      "write_scope": ["docs/features/feat-metrics-tracking/architecture-decision-record.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/shared-layers.md",
+        "docs/backend-spec.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-frontend.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "MetricsEvent/MetricsRollup のスキーマ・API 契約・cron 設計に加え、試算エンジン実装 owner の食い違い (docs/shared-layers.md §2 vs 本 feature scope_in) を解消する P02 architecture decision タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.9, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p02.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に試算エンジン owner 確定の判断基準・影響範囲・訂正先が明記され、metrics_events/metrics_rollups カラム一覧・API 契約 3 件・cron 段構成・S09/S16 画面構成表が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "試算エンジン owner 判断の前提 (呼び出しフットプリント分析・feat-user-org-admin の確定事実) に誤りが判明した場合、architecture-decision-record.md の該当節を差し戻し、P01 の要件ベースラインへ再照会する",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P02",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p02.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P03",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "design-review"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "data", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": ["SYS-METRICS-TRACKING-P02"],
+      "write_scope": ["docs/features/feat-metrics-tracking/design-review-notes.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/shared-layers.md",
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P02 の architecture decision (試算エンジン owner 確定・スキーマ・API 契約) を P02 実行者から独立した視点で検証する P03 レビュータスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.88, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p03.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に試算エンジン owner 判断根拠の検証結果と quality_constraints 8 件との整合確認が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "試算エンジン owner 判断根拠または API/スキーマ設計に重大な指摘が見つかった場合、design-review-notes.md に指摘内容を記録し P02 へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P03",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p03.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P04",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "test-design"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["frontend", "backend", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": ["SYS-METRICS-TRACKING-P03"],
+      "write_scope": ["docs/features/feat-metrics-tracking/test-design.md", "apps/hub/src/features/metrics-tracking/__tests__/"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "quality_constraints 8 件 (ingest 冪等性・rollup 事前集計・試算エンジン単一実装・tenant 分離・dim=user 認可・bundle 予算・S17 境界・保持/異常検知) をテストケースへ写像する P04 テストファースト設計タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.87, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p04.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に quality_constraints 8 件全てに対応するテストケースが記載され、apps/hub/src/features/metrics-tracking/__tests__/ にスタブが作成されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "quality_constraints とテストケースの対応漏れが判明した場合、test-design.md の対応表を修正し不足カテゴリを追加する",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P04",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p04.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P05",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "implementation"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "backend",
+      "secondary_workstreams": ["frontend", "api", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": ["SYS-METRICS-TRACKING-P04"],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/metrics/",
+        "apps/hub/src/features/metrics-tracking/",
+        "packages/schemas/metrics-tracking/",
+        "packages/db/schema/metrics-tracking/",
+        "packages/estimation/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "system-spec/00-requirements-definition.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P02/P04 で確定した設計とテストスタブに基づき MetricsEvent/MetricsRollup スキーマ・API・cron・試算エンジン・S09/S16 画面を実装する P05 実装タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.85, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p05.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P04 で作成したテストスタブが実装コードに対して解決可能な状態 (import 解決・型整合) になっている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "実装が P02 の architecture decision と乖離した場合、該当コミットを revert し P02/P04 の成果物へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P05",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p05.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P06",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "test-run"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["frontend", "backend", "data", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": ["SYS-METRICS-TRACKING-P05"],
+      "write_scope": ["docs/features/feat-metrics-tracking/test-run-results.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P05 の実装に対して P04 のテストスタブを実行し quality_constraints 8 件の充足状況を機械的に確認する P06 テスト実行タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.86, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p06.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-results.md に quality_constraints 8 件全ての pass 結果が記録されている (fail が残る場合は差し戻し理由が明記されている)"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "いずれかのテストが fail した場合、test-run-results.md に原因を記録し P05 (実装) へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P06",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p06.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P07",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "acceptance"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": ["SYS-METRICS-TRACKING-P06"],
+      "write_scope": ["docs/features/feat-metrics-tracking/acceptance-record.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P06 で green 化したテスト結果を基に goal-spec acceptance 3 件の充足を確認する P07 受入タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.87, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p07.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-record.md に goal-spec acceptance 3 件全ての確認結果 (pass) と証跡が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "acceptance 3 件のいずれかが不充足の場合、acceptance-record.md に理由を記録し P05 (実装) または P02 (設計) へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P07",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p07.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P08",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "refactoring-migration"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-data"],
+      "workstream_kind": "data",
+      "secondary_workstreams": ["backend", "quality"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": ["SYS-METRICS-TRACKING-P07"],
+      "write_scope": ["docs/features/feat-metrics-tracking/refactoring-migration-note.md", "packages/db/schema/metrics-tracking/"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "system-spec/00-requirements-definition.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P05 で実装した metrics_events/metrics_rollups スキーマに対する DB マイグレーション生成と、実装確定後の重複コード整理を行う P08 リファクタリング/マイグレーションタスク (required-node、N/A 許容)",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.83, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p08.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md にマイグレーション内容と後方互換性確認結果 (既存テーブルへの破壊的変更なし) が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "マイグレーション適用後に既存テーブルとの非互換が判明した場合、生成したマイグレーションファイルを取り下げ P05 のスキーマ実装へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P08",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p08.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P09",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "quality-assurance"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "operations", "frontend"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": ["SYS-METRICS-TRACKING-P08"],
+      "write_scope": ["docs/features/feat-metrics-tracking/quality-assurance-report.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "system-spec/spec-state.json",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P08 のマイグレーション適用後、CI 品質ゲート (tenant 分離 CI 必須・認可マトリクス・bundle 予算・監査 event・cron 動作) を最終確認する P09 品質保証タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.85, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p09.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に CI 品質ゲート (tenant 分離・認可マトリクス・bundle 予算・監査 event・cron) の全項目 pass が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "いずれかの品質ゲート項目が fail した場合、quality-assurance-report.md に原因を記録し該当する P05/P08 へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P09",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p09.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P10",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "final-review"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": ["SYS-METRICS-TRACKING-P09"],
+      "write_scope": ["docs/features/feat-metrics-tracking/final-review-record.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "docs/shared-layers.md",
+        "system-spec/00-requirements-definition.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P09 の品質保証結果を基に quality_constraints 8 件全件の最終充足判定を実装者から独立した視点で行う P10 最終独立レビュータスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.86, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p10.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-record.md に quality_constraints 8 件全件の充足判定 (充足) が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "いずれかの quality_constraint が不充足と判定された場合、final-review-record.md に理由を記録し該当する P02/P05/P09 へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P10",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p10.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P11",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "evidence"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "quality",
+      "secondary_workstreams": ["security", "documentation"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": ["SYS-METRICS-TRACKING-P10"],
+      "write_scope": ["docs/features/feat-metrics-tracking/evidence-summary.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P01〜P10 の全成果物を証跡として一元集約し、リリース判断とドキュメント化 (P12/P13) に必要な evidence bundle を作成する P11 エビデンス収集タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.84, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p11.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-summary.md に P01〜P10 全 10 成果物への参照リンクと quality_constraints 8 件の最終充足サマリが記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "参照先成果物に欠落が見つかった場合、該当 phase へ差し戻し再生成を依頼する",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P11",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p11.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P12",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "documentation", "operations"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend"],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": ["operations", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": ["SYS-METRICS-TRACKING-P11"],
+      "write_scope": ["docs/features/feat-metrics-tracking/runbook.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "system-spec/spec-state.json",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P11 の evidence bundle を踏まえ、ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 の運用 runbook を作成する P12 ドキュメント/運用タスク",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.83, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p12.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に cron 運用手順・監視閾値・異常検知対応・rollup 再実行手順が過不足なく記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "運用手順に重大な欠落が見つかった場合、runbook.md を修正し P11 の evidence bundle との整合を再確認する",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P12",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p12.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P13",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "owners": ["daishiman"],
+      "tags": ["feat-metrics-tracking", "studio-extension", "metrics-tracking", "release"],
+      "related_nodes": ["feat-metrics-tracking", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-frontend"],
+      "workstream_kind": "operations",
+      "secondary_workstreams": ["infrastructure", "frontend", "security"],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": ["SYS-METRICS-TRACKING-P12"],
+      "write_scope": ["docs/features/feat-metrics-tracking/release-record.md"],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "system-spec/00-requirements-definition.md",
+        ".dev-graph/staging/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P12 の runbook を前提に、MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API・Workers cron・S09/S16 画面を本番 Cloudflare Workers 環境へ反映しスモークテストで疎通確認する P13 リリース/デプロイタスク (required-node、N/A 許容)",
+        "candidates": [
+          {"artifact_kind": "task", "confidence": 0.85, "candidate_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p13.md"}
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null},
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-record.md に本番反映内容とスモークテスト結果 (ingest 疎通・cron 初回実行・S09/S16 到達性・metrics.anomaly 通知疎通) が pass として記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging"
+      ],
+      "rollback": "スモークテストが fail した場合、直前の Worker デプロイへロールバックし、マイグレーションが可逆であれば取り消し、release-record.md に原因と対応を記録して P05/P08 へ差し戻す",
+      "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T00:00:00Z"},
+      "graph_node_registration": {
+        "graph_node_id": "SYS-METRICS-TRACKING-P13",
+        "file_path": "tasks/feat-metrics-tracking/sys-metrics-tracking-p13.md",
+        "parent_feature": "feat-metrics-tracking",
+        "feature_package_id": "feature-package/feat-metrics-tracking",
+        "phase_ref": "P13"
+      }
+    }
+  ]
+}

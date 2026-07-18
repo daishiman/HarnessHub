@@ -1,0 +1,1214 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+  "promotion_receipt": ".dev-graph/plans/feature-package-feat-docs-cms/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-docs-cms",
+  "parent_feature": "feat-docs-cms",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-DOCS-CMS-P01": "beads",
+    "SYS-DOCS-CMS-P02": "beads",
+    "SYS-DOCS-CMS-P03": "beads",
+    "SYS-DOCS-CMS-P04": "beads",
+    "SYS-DOCS-CMS-P05": "beads",
+    "SYS-DOCS-CMS-P06": "beads",
+    "SYS-DOCS-CMS-P07": "beads",
+    "SYS-DOCS-CMS-P08": "beads",
+    "SYS-DOCS-CMS-P09": "beads",
+    "SYS-DOCS-CMS-P10": "beads",
+    "SYS-DOCS-CMS-P11": "beads",
+    "SYS-DOCS-CMS-P12": "beads",
+    "SYS-DOCS-CMS-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメント CMS 要件ベースライン確定",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-docs-cms.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — Doc スキーマ・S15 画面構成・B7 API 契約・AI 下書きキュー契約の設計",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "architecture"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P01"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "qa-024 の指示 (カラム定義の詳細設計は各 feature の P02 で行う) に従い Doc エンティティ (scope=common/tenant) のスキーマと S15 画面構成・B7 REST 資源契約・AI 下書きキュー (doc kind) 契約を確定する P02 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — Doc スキーマ・S15 認可・AI キュー契約・Markdown sanitize の妥当性確認",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P02"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/design-review-notes.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P02 で確定した Doc スキーマ・S15 画面構成・B7 API 契約・AI キュー doc kind 契約を、設計担当から独立した視点でレビューする P03 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — tenant 分離/admin 限定編集/Markdown sanitize/AI キュー認可/監査記録のテストスタブ作成",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P03"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/test-design.md",
+        "apps/hub/src/features/docs-cms/__tests__/"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P03 で承認された設計に基づき P05 実装の受入契約となるテストスタブを作成する P04 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "frontend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P04"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/(dashboard)/docs/",
+        "apps/hub/src/features/docs-cms/",
+        "packages/schemas/docs-cms/",
+        "packages/db/schema/docs-cms/"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "P03 承認済み設計と P04 テストスタブに基づき S15 実装・Doc スキーマ・B7 API・AI 下書きキュー・監査 event を実装する P05 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 単体/結合/tenant 分離/認可/sanitize テストの実行と結果記録",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P05"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/test-run-report.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P04 のテストスタブ (tenant 分離/doc 編集 admin 限定/Markdown sanitize/doc 編集監査/AI キュー認可) を P05 実装に対して実行し結果を記録する P06 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P06"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/acceptance-report.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — Doc テーブルマイグレーション生成と後方互換性確認",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P07"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/refactoring-migration-note.md",
+        "packages/db/schema/docs-cms/"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P05 で追加した Doc スキーマ定義から migration ファイルを生成し既存スキーマへの後方互換性を確認する P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の確認",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P08"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/quality-assurance-report.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P06 テスト結果と P08 migration 結果を踏まえ CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の充足を確認する P09 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P09"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/final-review-notes.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P01-P09 の成果物を根拠に goal-spec の quality_constraints 8 件の充足を独立した視点で最終判定する P10 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P10"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/evidence/"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "documentation",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P11"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/runbook.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P11 のエビデンスを踏まえ S15 運用手順・AI キュー滞留監視・doc 編集監査運用を runbook 化する P12 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "project_id": "feature-package-feat-docs-cms",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-docs-cms",
+        "studio-extension",
+        "docs-cms",
+        "release"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T13:13:50Z",
+      "updated_at": "2026-07-17T13:13:50Z",
+      "depends_on": [
+        "SYS-DOCS-CMS-P12"
+      ],
+      "related_nodes": [
+        "feat-docs-cms",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/release-notes.md"
+      ],
+      "parent_feature": "feat-docs-cms",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-docs-cms/sys-docs-cms-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json",
+        "evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "imported_at": "2026-07-17T13:13:50Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P12 の runbook を踏まえ feat-hub-foundation の既存パイプラインで Cloudflare Workers 本番反映とスモークテストを行う P13 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    }
+  ]
+}

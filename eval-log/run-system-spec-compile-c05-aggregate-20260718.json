@@ -1,0 +1,50 @@
+{
+  "run": "spec-compile C05 aggregate (recompile after qa-035..042)",
+  "aggregated_at": "2026-07-17T15:25:26Z",
+  "verdict": "PASS_WITH_FINDINGS",
+  "fail_closed_policy": "監査 FAIL は是正完了 + 決定論ゲート exit0 の再確認をもって解消と判定",
+  "compile": {
+    "files_generated": 11,
+    "out1_tests": "42 passed",
+    "gates": {
+      "coverage_require_complete_require_foundation": "exit 0",
+      "source_citation": "exit 0"
+    }
+  },
+  "audits": {
+    "C06_hearing": {
+      "verdict": "PASS",
+      "summary": "54 セル終端・誘導質問なし・早期停止なし・qa-035〜042 の採番衝突修復は reopen_log どおり反映",
+      "findings_open": [
+        {"severity": "low", "issue": "多論点混在 qa エントリの分割余地 (将来検討)"}
+      ]
+    },
+    "C07_matrix": {
+      "verdict": "PASS",
+      "summary": "loop_pass/final_ready 両 PASS。真理値表整合・対象外理由 29 件妥当・qa 修復 (frontend.web→qa-040, auth/security desktop→qa-041, security.web→qa-042) 確認済み",
+      "findings_open": [
+        {"severity": "medium", "issue": "infrastructure.desktop-windows/macos の qa_ref=qa-003 は desktop 固有の裏付けが薄い。次回 reopen 時に専用質疑への差替を検討 (C01 責務)"},
+        {"severity": "medium", "issue": "maintenance-ops.desktop-windows/macos の qa_ref=qa-011 も同型。desktop 向け保守運用の専用質疑を検討 (C01 責務)"}
+      ]
+    },
+    "C08_freshness": {
+      "verdict": "FAIL -> REMEDIATED",
+      "remediation": [
+        "drizzle-orm: プレリリース系列を v1.0.0-rc.4 (2026-06-27) へ更新済み (並行 C02 が是正、npm dist-tags 一次照合で rc=1.0.0-rc.4 を再確認)",
+        "zod: 4.4.3 パッチ粒度化済み (並行 C02 が是正、npm dist-tags latest=4.4.3 を一次照合で再確認)",
+        "pnpm: 11.x -> 11.13.1 へ更新 (registry.npmjs.org dist-tags への一次 GET 2026-07-17T15:25:26Z。本セッションで是正)",
+        "authjs: official_publisher を Better Auth Inc. (Vercel 買収発表 2026-07-07) 表記へ追随",
+        "claude-code-plugins: v2.1.212 anchor 更新済み (並行 C02 が是正)"
+      ],
+      "findings_open": [
+        {"severity": "info", "issue": "WebFetch 不可環境由来の一次 GET 未照合 5 件 (typescript/drizzle-orm docs/authjs/claude-code-plugins/owasp-asvs/rehype-sanitize のうち registry 一次照合済みを除く)。WebFetch 可能環境での follow-up"},
+        {"severity": "info", "issue": "opennext-cloudflare: Next.js 16 Proxy アーキテクチャ互換 trap (workers-sdk#13755) を実装着手時に再確認"}
+      ]
+    }
+  },
+  "next_actions_suggested": [
+    "/dev-graph spec 再取込 (source_digest 更新の下流反映)",
+    "infrastructure/maintenance-ops の desktop 行の専用質疑追加 (R4-reopen 候補・C07 medium 対応)",
+    "backend-spec §4.6 への GET /api/v1/publish 一覧 API 追記 (frontend-spec §3.4 の追加要求。feat-publish-pipeline P02)"
+  ]
+}

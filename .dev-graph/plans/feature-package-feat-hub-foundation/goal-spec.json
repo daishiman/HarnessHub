@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-hub-foundation",
+  "feature_context_digest": "sha256:06c97e2ee833b6bb42f76d38f2f133eededd1dc5422a75153f4d3a7a1c42111a",
+  "purpose": "費用ゼロ制約 (C2) 下で Hub の実行基盤 (Cloudflare Workers 一体型 + OpenNext) と CI/CD・監視・SLO 運用の土台を確立する",
+  "goal": "pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 99.5% 計測が稼働し、Worker 3MiB 予算内で Next.js が動作する状態",
+  "scope_in": [
+    "Next.js + TypeScript + pnpm monorepo scaffold",
+    "@opennextjs/cloudflare デプロイ",
+    "GitHub Actions CI/CD (npm 混入 fail)",
+    "/health + 外部死活監視",
+    "SLO ダッシュボード + bundle サイズ予算 CI"
+  ],
+  "scope_out": [
+    "業務ドメインロジック",
+    "認証"
+  ],
+  "acceptance": [
+    "CI が test→deploy を完走する",
+    "Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する",
+    "SLO 99.5% の計測と /health が稼働する"
+  ],
+  "lineage": [
+    {
+      "path": "architecture/harness-hub-infrastructure.md",
+      "exists": true,
+      "sha256": "389577ecce5f38f4f4bf988fcfba6d35ddc853b132c6a31f3a019e902f30db5f",
+      "digest_status": "resolved",
+      "digest_note": "main-loop (C09 再計算) が sha256 を実計算して確定 (2026-07-17)"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "1f9291ef231e0413a55025f2ed6f4f8e2633931366ef64b13d5e1622eb233d34",
+      "digest_status": "resolved",
+      "digest_note": "main-loop (C09 再計算) が sha256 を実計算して確定 (2026-07-17)"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95",
+      "digest_status": "resolved",
+      "digest_note": "main-loop (C09 再計算) が sha256 を実計算して確定 (2026-07-17)"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "C2-zero-cost",
+      "summary": "費用ゼロ制約: 固定費を極小化し従量課金・無料枠を優先する。顧客 Workspace 数が増えても固定費が比例して増えないこと",
+      "source": "system-spec/00-requirements-definition.md U8 (C2)"
+    },
+    {
+      "id": "C1-solo-ops",
+      "summary": "個人運用制約: 実装・運用は提供者1名+AI (Claude Code / Codex) のみ。運用負荷の低さと保守性を技術選定の最優先基準とする",
+      "source": "system-spec/00-requirements-definition.md U8 (C1)"
+    },
+    {
+      "id": "worker-bundle-budget",
+      "summary": "Cloudflare Workers Free プランの Worker サイズ上限は 3MiB (gzip後)。CI で bundle サイズ計測を必須とし、超過時はコード分割・依存削減で対処する",
+      "source": "system-spec/00-requirements-definition.md D1 決定 (cf-workers-opennext採用時の注意事項); docs/shared-layers.md §3"
+    },
+    {
+      "id": "pnpm-only-no-npm",
+      "summary": "パッケージマネージャは pnpm のみ (npm 不使用、packageManager フィールドで pin)。CI で npm 混入検査を行う",
+      "source": "system-spec/frontend.md qa-007; docs/shared-layers.md §3"
+    },
+    {
+      "id": "slo-error-budget",
+      "summary": "可用性 SLO = 99.5%/月 (許容停止 約3.6時間/月)。月間エラーバジェット 0.5% を消費し切った場合は新規公開機能の変更を凍結し信頼性回復を優先する",
+      "source": "system-spec/infrastructure.md qa-019"
+    },
+    {
+      "id": "cwv-good",
+      "summary": "Core Web Vitals 全指標 good (LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1) を Worker 3MiB 制限下の bundle 予算管理・R2/edge 配信・不要 JS 削減で達成する",
+      "source": "system-spec/frontend.md qa-018"
+    },
+    {
+      "id": "wrangler-deploy",
+      "summary": "デプロイは wrangler CLI。Hub と WebApp 出口で同一ツール系統を用いる",
+      "source": "system-spec/infrastructure.md qa-003; docs/shared-layers.md §3"
+    },
+    {
+      "id": "github-actions-ci",
+      "summary": "GitHub Actions による CI 品質ゲート (pnpm混入検査 / axe a11y違反ゼロ / bundle予算 Worker 3MiB / Tenant分離テスト / 検査pipeline挙動同値テスト) を備える",
+      "source": "docs/shared-layers.md §3"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": "unresolved (no exec tool available)",
+    "notes_ja": "graph_node_id は features/feat-hub-foundation.context.json と features/feat-hub-foundation.md frontmatter で一致 (feat-hub-foundation)。purpose/goal/scope_in/scope_out/acceptance は両者で文言完全一致を確認。specs/harness-hub-system-specification.md の sha256 (37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95) は4系統の既存記録間で一致を確認したが、この agent の許可ツール (Read/Write/Glob/Grep) では python3 hashlib による当該時点の直接再計算ができないため、真の独立再計算ではない。architecture/harness-hub-infrastructure.md と architecture/harness-hub-frontend.md (wrapper ファイル自体) の sha256 はリポジトリ内のどこにも記録されておらず、実在確認のみで digest 未解決。",
+    "digest_recomputed_by": "main-loop python3 hashlib (elicitor の記録突合 + 本再計算の二重検証)",
+    "digest_match": true,
+    "status": "complete"
+  },
+  "extracted_at": "2026-07-17T09:30:00Z"
+}

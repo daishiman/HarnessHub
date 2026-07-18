@@ -1,0 +1,4 @@
+{
+  "original_goal": "依存・完了状態・active lease から次に着手すべき ready-set と resource_scope 非競合の並列バッチを read-only で算出し、feature ready と task ready を分離して提示する (C17 独立検証付き)",
+  "recorded_at": "2026-07-18T08:30:00Z"
+}

@@ -1,0 +1,29 @@
+{
+  "op": "confirm",
+  "graph_node_id": "feat-hub-foundation",
+  "transition": {
+    "confirmation_status": [
+      "draft",
+      "confirmed"
+    ]
+  },
+  "confirmed_at": "2026-07-17T07:00:28Z",
+  "source_digest_pinned": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95",
+  "review_basis": [
+    "scope_in/scope_out/acceptance を system-spec 確定内容 (qa-003 hosting / qa-019 SLO / qa-018 性能予算 / D1 Workers 一体型) と突合し矛盾なし",
+    "docs/shared-layers.md の共通層実装 owner = 本 feature と整合",
+    "ユーザー指示: 設計ファースト運用の続行指示 (2026-07-17 「つづけて」)"
+  ],
+  "validator": {
+    "schema": "validate-graph-schema.py",
+    "valid": true
+  },
+  "reconfirmations": [
+    {
+      "at": "2026-07-17T10:42:36Z",
+      "old_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95",
+      "new_digest": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+      "basis": "Studio mockup 反映 (qa-021〜030, appr-004/005, D5/D6, C05 PASS 2026-07-17)。既存 feature スコープ維持はユーザー指示由来 (analysis §6.5) につき confirmed を維持し digest pin のみ追従"
+    }
+  ]
+}
