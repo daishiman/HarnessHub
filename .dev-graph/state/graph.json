@@ -1,5 +1,5 @@
 {
-  "graph_revision": 11,
+  "graph_revision": 12,
   "nodes": [
     {
       "acceptance": [
@@ -7132,7 +7132,18 @@
       ],
       "domain": "data",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-BUILD-PIPELINE-BOARD-P02",
+          "head_sha": "088b67440bc8a45c324d6c88cb884104edab1104",
+          "last_seen_at": "2026-07-18T02:27:36.137818Z",
+          "lease_acquired_at": "2026-07-18T02:27:36.129697Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_1f9dd2ea66b5630c"
+        }
+      ],
       "feature_package_id": "feature-package/feat-build-pipeline-board",
       "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p02.md",
       "github_project_linkages": [],
@@ -7187,7 +7198,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-17T13:54:30Z"
+      "updated_at": "2026-07-18T02:27:36.137818Z"
     },
     {
       "artifact_kind": "task",
