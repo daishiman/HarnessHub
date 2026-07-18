@@ -1,5 +1,5 @@
 {
-  "graph_revision": 12,
+  "graph_revision": 13,
   "nodes": [
     {
       "acceptance": [
@@ -7233,7 +7233,18 @@
       ],
       "domain": "quality",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-BUILD-PIPELINE-BOARD-P03",
+          "head_sha": "9ac7805a80b40220cdbc57d45dbac802c656e365",
+          "last_seen_at": "2026-07-18T10:18:09.166495Z",
+          "lease_acquired_at": "2026-07-18T10:18:09.164275Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_1f9dd2ea66b5630c"
+        }
+      ],
       "feature_package_id": "feature-package/feat-build-pipeline-board",
       "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p03.md",
       "github_project_linkages": [],
@@ -7288,7 +7299,7 @@
       "template_version": "1.0.0",
       "title": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-17T13:54:30Z"
+      "updated_at": "2026-07-18T10:18:09.166495Z"
     },
     {
       "artifact_kind": "task",

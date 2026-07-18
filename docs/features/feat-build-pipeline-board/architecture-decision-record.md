@@ -44,6 +44,7 @@ architecture_refs: [arch-harness-hub-backend, arch-harness-hub-frontend]
 | created_at | integer | epoch ms |
 
 - UPDATE/DELETE 関数を提供しない (append-only)。正式監査は別途 AuditRepo (AD-6)。
+- **D4 例外の明示 (F-1 是正)**: build_stage_events は §2.1 の tenant_id 必須則に対する明示的な例外 (FK 継承方式。documents.scope='common' と並ぶ例外) である。読取は builds との JOIN 強制でのみ提供し、CI 分離テストに「他テナントの build_id を持つ build_stage_event の読取が JOIN 強制により空を返す」ケースを追加する。
 
 ## AD-2. S13 画面構成 (受入基準となる構成表)
 
@@ -53,6 +54,7 @@ architecture_refs: [arch-harness-hub-backend, arch-harness-hub-frontend]
 | S13 カード詳細 | 詳細フィールド編集 (title/risk/eta/assignee/note)・stage 履歴 (build_stage_events)・工程遷移ボタン (隣接のみ活性)・publish 工程は PublishRequest 状態表示 | 閲覧 member / 編集・遷移 workspace-admin |
 
 - ステージボードは design system 共通部品を消費するのみ (qa-021/qa-022)。stage 別グルーピングはクライアント側 (backend-spec §4.4)。
+- **A3 検証責務 (F-4 是正)**: axe 違反 0・CWV good の担保は、共通部品側の a11y/CWV ゲートへの依存に加え、S13 固有構成 (カード・stage 集計ヘッダ・遷移ボタン) を対象とした本 feature の axe/CWV CI 検査で受け入れる。
 
 ## AD-3. builds API 契約 (5 endpoint・B1 zod 単一ソース)
 
@@ -64,7 +66,7 @@ zod は `packages/schemas/build-pipeline-board/` に配置。認可単一ミド�
 | `GET /api/v1/builds/:id` | member 以上 | 詳細 + stage 履歴 |
 | `POST /api/v1/builds` | workspace-admin | sheet_id 紐付け起票 (feat-hearing-intake §5.2 との連携点) |
 | `PATCH /api/v1/builds/:id` | workspace-admin | title/risk/eta/assignee/note のみ (stage は不可 = 専用 endpoint 経由) |
-| `POST /api/v1/builds/:id/stage` | workspace-admin | 工程遷移 (AD-4 の状態機械検証 + AD-5 の publish ゲート)。監査 event (AD-6) |
+| `POST /api/v1/builds/:id/stage` | workspace-admin | 工程遷移 (AD-4 の状態機械検証 + AD-5 の publish ゲート)。**publish 遷移時は request body で `publish_request_id` を受理し、検証のうえ同一トランザクションで builds.publish_request_id へ設定する (F-2 是正: 設定経路の write owner は本 endpoint = 本 feature)**。監査 event (AD-6) |
 
 ## AD-4. 工程遷移状態機械 (隣接遷移のみ)
 
@@ -77,13 +79,14 @@ hearing ⇄ requirements ⇄ design ⇄ build ⇄ test ⇄ review ⇄ publish
 
 ## AD-5. publish 遷移の PublishRequest 接続契約 (二重実装禁止・B4)
 
-- `stage → publish` 遷移の前提条件: `builds.publish_request_id` が設定済みで、参照先 PublishRequest の status が **Published** であること (I2/I3 の既存状態機械の照会のみ・build 側に publish 独自状態を持たない)。
-- 未接続 (publish_request_id NULL) または未 Published での publish 遷移は 422。publish フロー自体は feat-publish-pipeline の資源をそのまま使う (S13 からは publish 画面への導線のみ)。
+- `stage → publish` 遷移の契約 (F-2 是正済み): `POST /builds/:id/stage` の request body で `publish_request_id` を受理し、リポジトリ層で「同一 tenant・同一 project 配下・status=**Published**」を検証したうえで builds.publish_request_id への設定と stage 遷移を**同一トランザクションで atomic に完結**する (I2/I3 の既存状態機械の照会のみ・build 側に publish 独自状態を持たない)。設定経路の write owner は本 feature 所有の stage endpoint であり、feat-publish-pipeline は builds テーブルへ書き込まない (リポジトリ境界維持)。
+- 検証不合格 (publish_request_id 未指定・別 tenant/project・未 Published) での publish 遷移は 422。publish フロー自体は feat-publish-pipeline の資源をそのまま使う (S13 からは publish 画面への導線のみ)。
+- **P05 引き継ぎ (spec back-reference)**: 原典 backend-spec §4.4 は POST stage の「接続を要求」とのみ記し設定経路を明示していない。本契約 (body 受理 + atomic 設定) を §4.4 へ反映するかは R4-reopen 判断として spec 側へ申し送る。
 
 ## AD-6. build.stage_change 監査 event 契約と B9 共有認可表構造
 
 - 監査: 工程遷移は feat-domain-model-db 所有の AuditRepo.append() で `build.stage_change` (summary_json = {from, to, build_id, sheet_id}) を記録する (SEC6)。build_stage_events はボード表示用の非正式履歴、AuditRepo が正式監査 (二層の役割分担)。
-- **B9 共有認可表構造**: 工程操作の admin 判定は独自ロジックを新設せず、認可単一ミドルウェアの role×操作許可表に `builds.stage_transition` 操作を 1 行追加する形で実装する。Yellow review (I8) の承認 queue と同じ許可表テーブル (操作 id → 最小 role) を共有し、判定コードパスも共通化する (qa-023 B9)。
+- **B9 共有認可表構造 (F-3 是正済み)**: 工程操作の admin 判定は独自ロジックを新設せず、認可単一ミドルウェアの role×操作許可表で扱う。本 feature の write 操作は operation id **`builds.create` / `builds.update` / `builds.stage_transition`** (いずれも最小 role = workspace-admin) の 3 エントリとして許可表へ列挙する — これは §3.3 の既存「builds 工程操作」「builds 起票/編集」行への operation id 割当 (具体化) であり、新規権限の追加ではない。Yellow review (I8) の承認 queue と同じ許可表テーブル (操作 id → 最小 role) を共有し、判定コードパスも共通化する (qa-023 B9)。
 
 ## 検証 (P02 required evidence)
 
