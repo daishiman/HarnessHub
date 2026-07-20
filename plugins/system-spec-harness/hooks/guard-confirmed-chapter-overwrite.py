@@ -631,6 +631,12 @@ def bash_decision(cmd: str, root: Path) -> tuple[int, str]:
             f"保護領域内の書込先を静的に確定できない動的書換 ('{dynamic_hits[0]}') を安全側で遮断"
         )
 
+    # find/xargs 経由の間接 mutation は書込先を静的トークンとして抽出できない (ファイルは
+    # find の列挙結果として渡る) が、保護領域 (system-spec/) を走査対象にするなら確定章を
+    # 一括改変しうる。書込先確定不能として安全側で遮断する (find ... | xargs sed -i 等)。
+    if mutation and _refs_protected_area(cmd) and re.search(r"\bxargs\b|\bfind\b[^|]*-exec\b", cmd):
+        return 2, "保護領域を find/xargs 経由で一括書換する動的コマンドを書込先確定不能として遮断"
+
     # inline python 書込で書込先を静的抽出できない (write_text/複雑式) 場合の保護参照
     # フォールバック。CLI script 起動 (python3 x.py ...) は _PY_WRITE 非該当ゆえ発火しない。
     if py_write and not _py_write_targets(cmd):
