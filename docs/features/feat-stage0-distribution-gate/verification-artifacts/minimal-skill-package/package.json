@@ -1,0 +1,13 @@
+{
+  "name": "h7-probe",
+  "version": "0.1.0",
+  "description": "Stage 0 technical gate (H7) の配布経路検証専用の最小 plugin。marketplace.json の source.type=npm 経路 (T-A1-07) を検証するための tarball 化対象。",
+  "license": "UNLICENSED",
+  "private": false,
+  "packageManager": "pnpm@10.19.0",
+  "files": [
+    ".claude-plugin",
+    "skills"
+  ],
+  "author": "daishiman"
+}
