@@ -1,0 +1,22 @@
+{
+  "name": "harness-hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Harness Hub monorepo root (SYS-HUB-FOUNDATION-P02 で構成確定)",
+  "packageManager": "pnpm@10.9.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0",
+    "npm": "please-use-pnpm"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "check:pnpm": "node scripts/ci/check-pnpm-only.mjs",
+    "check:duplicates": "node scripts/ci/check-shared-layer-duplicates.mjs",
+    "check:bundle": "pnpm --filter @harness-hub/hub run check:bundle",
+    "preinstall": "npx --yes only-allow pnpm"
+  }
+}

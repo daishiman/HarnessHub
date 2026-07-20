@@ -1,0 +1,14 @@
+# pnpm workspace 構成 (SYS-HUB-FOUNDATION-P02 で確定)
+# 正本: docs/features/feat-hub-foundation/architecture-decision-record.md §2
+#
+# 案 (b) 「apps/hub + packages 分割」を採用。共通層を package 境界で物理的に強制し、
+# 第 4 acceptance (共通層の単一実装 owner) の duplicate detector を判定可能にする。
+packages:
+  # Hub 本体 (Next.js on Workers)。UI + API + 認可 MW を同居させる単一 deploy unit
+  - "apps/hub"
+  # docs/shared-layers.md §1〜§2 の共通層。実装 owner は feat-hub-foundation
+  - "packages/ui"
+  - "packages/schemas"
+  - "packages/inspection"
+  - "packages/estimation"
+  - "packages/db"
