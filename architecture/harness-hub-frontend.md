@@ -17,12 +17,12 @@ template_id: architecture
 template_version: 1.0.0
 confirmation_status: confirmed
 evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "6cdeda974957f4d281171c3a339bbd5ca063bda2e667836f5c5dd1e96daa608e", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
-source_lineage: {"imported_at": "2026-07-17T22:44:43Z", "origin_kind": "system-spec-harness", "source_digest": "6cdeda974957f4d281171c3a339bbd5ca063bda2e667836f5c5dd1e96daa608e", "source_path": "system-spec/frontend.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
+confirmation_evidence: {"evaluated_digest": "2031ebf4f2b8f5b86beba0f41942235be2c40403c31c3c569a6dde5341806f96", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
+source_lineage: {"imported_at": "2026-07-18T15:01:04Z", "origin_kind": "system-spec-harness", "source_digest": "2031ebf4f2b8f5b86beba0f41942235be2c40403c31c3c569a6dde5341806f96", "source_path": "system-spec/frontend.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
 created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-17T22:44:43Z
+updated_at: 2026-07-18T15:01:04Z
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure"]
+related_nodes: ["arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow"]
 resource_scope: ["architecture/harness-hub-frontend.md"]
 purpose: Hub Web の frontend 構成 (Next.js App Router) と UI/UX 品質要件 (WCAG 2.2 AA / Core Web Vitals good / HIG 快適性原則) の正本参照
 goal: qa-018 の品質要件と qa-007 の技術構成に適合する frontend 実装の指針を提供する
@@ -53,11 +53,11 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 
 ## 正本 (source of truth)
 
-- [system-spec/frontend.md](../system-spec/frontend.md) (sha256: `6cdeda974957f4d2…`)
-- [system-spec/ui-ux.md](../system-spec/ui-ux.md) (sha256: `ecc94a2d507b752f…`)
+- [system-spec/frontend.md](../system-spec/frontend.md) (sha256: `2031ebf4f2b8f5b8…`)
+- [system-spec/ui-ux.md](../system-spec/ui-ux.md) (sha256: `d6d58903cbefc22a…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 取込日時: 2026-07-17T22:44:43Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-07-18T15:01:04Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -98,4 +98,3 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 ## Risks and verification
 
 正本章 (system-spec/frontend.md, system-spec/ui-ux.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
-

@@ -1,50 +1,50 @@
 ---
-acceptance: ["補正内容を裏付ける qa_ref への再確定", "fetched-references.json の一次照合更新", "C01 SSOT の意味論明記"]
-architecture_refs: []
-artifact_kind: issue
+graph_node_id: "issue-audit-followups-20260717"
+artifact_kind: "issue"
 artifact_subtypes: []
-beads_linkage: null
-classification_candidates: [{"artifact_kind": "issue", "candidate_path": "issues/sys-audit-followups-20260717.md", "confidence": 0.95}]
-classification_confidence: 0.95
-classification_reason: C06/C07/C08 監査 (2026-07-17) の残 findings 4 件を追跡する issue (聞き取り/マトリクス/鮮度の低〜中優先是正)
-completion_evidence: {"completed_at": null, "evidence_refs": [], "policy": "linked_pr_merged_all", "reconciled_at": null, "source": null, "status": "open"}
-confirmation_evidence: {"evaluated_digest": null, "evaluator": null, "evidence_ref": null}
-confirmation_status: draft
-created_at: 2026-07-17T09:30:00Z
-depends_on: []
-domain: documentation
-evaluation_status: pending
-execution_contexts: []
-feature_package_id: null
-file_path: issues/sys-audit-followups-20260717.md
-github_project_linkages: []
-github_publication: {"labels": [], "milestone": null, "mode": "local_only", "project_aliases": []}
-goal: auth.web / infrastructure.desktop-* の qa_ref 裏付け強化、claude-code-plugins / authjs の一次照合、hearing_progress 意味論の SSOT 明記が完了している
-graph_node_id: issue-audit-followups-20260717
-implementation_readiness: {"checked_at": "2026-07-17T09:30:00Z", "missing_sections": [], "status": "complete"}
-issue_linkage: null
-iteration: null
-owners: ["daishiman"]
-parent_feature: null
-phase_ref: null
-priority: medium
-project_id: harness-hub
-pull_request_linkages: []
-purpose: C06/C07/C08 監査 (2026-07-17) で残った低〜中優先 findings 4 件を追跡し、次回 spec 改訂時に是正する
-related_nodes: ["spec-harness-hub-requirements"]
-resource_scope: ["system-spec/spec-state.json", "system-spec/fetched-references.json"]
-scope_in: ["auth.web qa_ref 再確定", "infrastructure.desktop-* qa_ref 差替", "C02 一次照合 (claude-code-plugins / authjs)", "C01 SSOT へ hearing_progress 意味論を明記"]
-scope_out: ["Studio mockup 反映本体 (是正済み)", "C05 完了ゲートの再評価"]
-source_lineage: {"imported_at": "2026-07-17T09:30:00Z", "origin_kind": "manual", "source_digest": null, "source_path": null, "source_plugin": null, "source_version": null}
+project_id: "harness-hub"
+domain: "documentation"
+tags: ["audit","system-spec","follow-up"]
+priority: "medium"
 start_date: null
-status: draft
-tags: ["audit", "system-spec", "follow-up"]
 target_date: null
-template_id: issue
-template_version: 1.0.0
-title: Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正
-tracker_binding: beads
-updated_at: 2026-07-17T09:30:00Z
+iteration: null
+title: "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正"
+owners: ["daishiman"]
+created_at: "2026-07-17T09:30:00Z"
+updated_at: "2026-07-17T09:30:00Z"
+status: "draft"
+depends_on: []
+related_nodes: ["spec-harness-hub-requirements"]
+resource_scope: ["system-spec/spec-state.json","system-spec/fetched-references.json"]
+purpose: "C06/C07/C08 監査 (2026-07-17) で残った低〜中優先 findings 4 件を追跡し、次回 spec 改訂時に是正する"
+goal: "auth.web / infrastructure.desktop-* の qa_ref 裏付け強化、claude-code-plugins / authjs の一次照合、hearing_progress 意味論の SSOT 明記が完了している"
+scope_in: ["auth.web qa_ref 再確定","infrastructure.desktop-* qa_ref 差替","C02 一次照合 (claude-code-plugins / authjs)","C01 SSOT へ hearing_progress 意味論を明記"]
+scope_out: ["Studio mockup 反映本体 (是正済み)","C05 完了ゲートの再評価"]
+acceptance: ["補正内容を裏付ける qa_ref への再確定","fetched-references.json の一次照合更新","C01 SSOT の意味論明記"]
+architecture_refs: []
+parent_feature: null
+feature_package_id: null
+phase_ref: null
+file_path: "issues/sys-audit-followups-20260717.md"
+template_id: "issue"
+template_version: "1.0.0"
+confirmation_status: "draft"
+evaluation_status: "pending"
+confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
+source_lineage: {"imported_at":"2026-07-17T09:30:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
+classification_confidence: 0.95
+classification_reason: "C06/C07/C08 監査 (2026-07-17) の残 findings 4 件を追跡する issue (聞き取り/マトリクス/鮮度の低〜中優先是正)"
+classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-audit-followups-20260717.md","confidence":0.95}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: {"bd_issue_id":"HarnessHub-xon","linked_at":"2026-07-17T10:34:46Z","sync_state":"linked"}
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+implementation_readiness: {"checked_at":"2026-07-17T09:30:00Z","missing_sections":[],"status":"complete"}
 ---
 
 # 概要

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-docs-cms",
+  "generation_id": "a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+  "published_path": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+  "published_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/atomic-promotion-receipt.json",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-docs-cms",
+    "published_digest": "sha256:e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+    "receipt": ".dev-graph/plans/feature-package-feat-docs-cms/atomic-promotion-receipt.json"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "run-dev-graph-system-spec/reimport-report/1.0.0",
+  "reimported_at": "2026-07-18T15:40:17Z",
+  "reason": "docs/ 全件被覆監査で不足していた J0〜J6 と features README/11 requirements-baseline の参照型トレースを qa-065/qa-066 で確定し、pnpm の公式現行版を 11.15.0 へ更新した最終 system-spec 断面を再取込した",
+  "evaluator_verdict": "PASS",
+  "evidence_ref": "system-spec/completeness-report.json",
+  "gates": {
+    "coverage_require_complete_require_foundation": "exit 0 (54/54)",
+    "source_citation": "exit 0 (17/17)",
+    "compile_determinism": "11 files byte-identical",
+    "compile_out1_tests": "42 passed",
+    "knowledge_graph_4_profiles": "all exit 0",
+    "prompt_validators": "18/18 x 2 validators",
+    "graph_schema": "valid:true before and after atomic replace"
+  },
+  "audits": {
+    "C07_matrix": "PASS (confirmed 25 / excluded 29 / missing 0 / qa_ref defect 0)",
+    "C06_hearing": "strict history FAIL: legacy leading questions 6; current decisions PASS/RECOVERED by qa-047/qa-049/appr-007; qa-065/qa-066 new leading questions 0",
+    "C08_freshness": "PASS (targets 17 / stale 0 / unofficial host 0 / missing 0)"
+  },
+  "graph": {
+    "revision_before": 15,
+    "revision_after": 16,
+    "node_count": 165,
+    "updated_nodes": [
+      {
+        "graph_node_id": "arch-harness-hub-dev-workflow",
+        "old_digest": "907ce35e5940db7bcd0207492810af03374029d2e28bb1ecb65fd2eeff48377d",
+        "new_digest": "c8f21b091cfc28b29992454908c3281ff519dce8535f3629c6fddc156ccd543f",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      {
+        "graph_node_id": "spec-harness-hub-requirements",
+        "source_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15",
+        "note": "source digest unchanged; related_nodes に dev-workflow を追加"
+      }
+    ],
+    "unchanged_primary_source_nodes": [
+      "arch-harness-hub-frontend",
+      "arch-harness-hub-backend",
+      "arch-harness-hub-data",
+      "arch-harness-hub-security",
+      "arch-harness-hub-infrastructure"
+    ],
+    "projection": "architecture/graph.json regenerated from 7 canonical system-spec-harness nodes"
+  },
+  "wrappers": {
+    "count": 7,
+    "digest_labels_current": true,
+    "frontmatter_graph_parity": true,
+    "template_required_sections_missing": 0,
+    "related_nodes_synchronized": true
+  }
+}
+

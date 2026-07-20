@@ -17,12 +17,12 @@ template_id: architecture
 template_version: 1.0.0
 confirmation_status: confirmed
 evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "c3a50c796ae50903f5f6e514873412190fd2e4db3be92f0c7a99de129d52a418", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
-source_lineage: {"imported_at": "2026-07-18T08:10:00Z", "origin_kind": "system-spec-harness", "source_digest": "c3a50c796ae50903f5f6e514873412190fd2e4db3be92f0c7a99de129d52a418", "source_path": "system-spec/database.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
+confirmation_evidence: {"evaluated_digest": "0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
+source_lineage: {"imported_at": "2026-07-18T15:01:04Z", "origin_kind": "system-spec-harness", "source_digest": "0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1", "source_path": "system-spec/database.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
 created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-18T08:10:00Z
+updated_at: 2026-07-18T15:01:04Z
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-security", "arch-harness-hub-infrastructure"]
+related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-security", "arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow"]
 resource_scope: ["architecture/harness-hub-data.md"]
 purpose: Turso Free (libSQL) + Drizzle ORM control-plane DB と D1 退避経路 (D2 ヘッジ)・SRE バックアップ検証の正本参照
 goal: qa-004/qa-019 の確定要件 (SQLite 方言互換・日次 export・restore drill) に適合する data 層の指針を提供する
@@ -53,10 +53,10 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 
 ## 正本 (source of truth)
 
-- [system-spec/database.md](../system-spec/database.md) (sha256: `c3a50c796ae50903…`)
+- [system-spec/database.md](../system-spec/database.md) (sha256: `0cc8dee51613b54e…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 取込日時: 2026-07-18T08:10:00Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-07-18T15:01:04Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -97,4 +97,3 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 ## Risks and verification
 
 正本章 (system-spec/database.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
-

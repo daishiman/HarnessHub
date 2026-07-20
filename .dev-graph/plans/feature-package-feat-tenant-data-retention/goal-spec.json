@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-tenant-data-retention",
+  "feature_context_digest": "sha256:69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327",
+  "purpose": "C4 改訂 (qa-045-048, appr-007) で保持可能となった顧客業務ナレッジ・harness 実行入出力データを、R2 + テナント別封筒暗号化で保管し、即時完全削除を保証する独立した価値提供単位",
+  "goal": "テナント業務データの upload / 取得 / 即時完全削除 API と R2 使用量監視を提供し、C4 の非保持境界 (顧客業務システム接続 credential と WebApp runtime) を維持したまま業務データのみを安全に扱える状態",
+  "scope_in": [
+    "tenant_data_objects テーブルの CRUD API 設計・実装",
+    "R2 への content-addressed 業務データ保管 (テナント別 DEK 封筒暗号化)",
+    "即時完全削除 (R2 blob・DB row・backup 断面の同時削除)",
+    "R2 使用量監視・上限アラート",
+    "S15 添付 / S12 実行入出力閲覧向けの任意統合 API 契約・extension point (host UI は各 feature が所有)"
+  ],
+  "scope_out": [
+    "顧客業務システム接続 credential と WebApp runtime の保管 (C4 により恒久的に非保持)",
+    "業務データを入力とする AI ジョブ実行ロジック (feat-hearing-intake / feat-build-pipeline-board 側)",
+    "既存 users.salary / idp_connections.client_secret_enc の封筒暗号化 (feat-auth-tenancy / feat-domain-model-db 既管理)"
+  ],
+  "acceptance": [
+    "テナント A の業務データがテナント B のいかなる authz role からも取得不可であること (テナント分離テストが PASS)",
+    "削除 API 実行後、R2 blob・DB row・backup 断面のいずれにも当該データの平文/暗号文が残存しないこと (削除完全性テストが PASS)",
+    "保管された業務データが R2 上で平文として存在せず、テナント別 DEK で封筒暗号化されていること (暗号化検証テストが PASS)"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-tenant-data-retention.context.json",
+      "feature_id": "feat-tenant-data-retention",
+      "exists": true,
+      "sha256": "69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327",
+      "digest_status": "resolved",
+      "digest_note": "caller (C09 resolve-project-context.py 検証済みと明示) 提供値 sha256:69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327 と、.dev-graph/locks/system-dev-plan-lock.json の feature_digest フィールドが完全一致することを Read で確認した (2 つの独立出典によるクロス検証)。同ロックファイルの feature_id (feat-tenant-data-retention)・run_id (run-tenant-data-retention-20260719)・session_owner (claude-session-f15eaa46) も C13 起動時の宣言値と一致する。features/feat-tenant-data-retention.context.json の graph_node_id、features/feat-tenant-data-retention.md frontmatter の graph_node_id も feat-tenant-data-retention で一致し --feature-id 引数と整合する。本 agent (system-dev-plan-elicitor 相当、fork context) は Read/Write/Glob/Grep のみ保有し sha256 を計算する exec ツールを持たないため、ファイル内容からの独立再計算は行っていない。上記 sha256 は main loop が shasum -a 256 で実測済みと明示された値をそのまま記録した。"
+    },
+    {
+      "path": "architecture/harness-hub-data.md",
+      "exists": true,
+      "sha256": "be578235037d18ee5fb16aa44cf51160511e9e403b6873bfeac29c6f1313233d",
+      "digest_status": "resolved",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-data、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json (evaluated_digest=0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1)、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/database.md, source_digest: 同上}。system-spec/completeness-report.json を Read し verdict=PASS (全 aspect PASS) を直接確認した。正本 system-spec/database.md の qa-060 (qa-045 の C4 改訂・tenant_data_objects 確定スキーマを全面維持しつつ builds/feedbacks/projects delta を追加確定) を Read し、tenant_id スコープが P0 の最初の migration から必須である確定内容を直接確認した。上記 sha256 はラッパーファイル (architecture/harness-hub-data.md) 自体の実測 digest であり、main loop が shasum -a 256 で独立計測済みと明示された値をそのまま記録した (本 agent は exec ツールを持たないため独立再計算はしていない)。tenant_data_objects テーブル設計・R2 content-addressed 保管の根拠として参照。"
+    },
+    {
+      "path": "architecture/harness-hub-security.md",
+      "exists": true,
+      "sha256": "5af5237572ae6fe9d661ad09ee074377967c6f9d276779e2105645cd89d51605",
+      "digest_status": "resolved",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-security、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json (evaluated_digest=cf1d1fbb63146f77a1885fbba762035ddadad6638cc405790274b7b5161beb07)、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/security.md, source_digest: 同上} (正本には system-spec/auth.md [sha256: 8735c8860019ecb8...] も含まれる)。system-spec/completeness-report.json を Read し verdict=PASS を直接確認した。正本 system-spec/security.md の qa-061 (qa-050 の脅威モデル基盤+業務データ保持 delta 統合確定を全面維持) を Read し、docs/security-spec.md §1.2 保護資産 (顧客業務ナレッジ/ドキュメント・ハーネス実行入出力データ=最高機密区分)・§1.3 脅威 T14/T15・§1.4 N2 撤回・§4.1 封筒暗号化 KEK/DEK 数値契約を直接確認した。上記 sha256 はラッパーファイル自体の実測 digest であり、main loop が shasum -a 256 で独立計測済みと明示された値をそのまま記録した (本 agent は exec ツールを持たないため独立再計算はしていない)。テナント別封筒暗号化・即時完全削除・テナント越境読取防止の直接根拠として参照。"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b",
+      "digest_status": "resolved",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-backend、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json (evaluated_digest=f6ba21931374775143fb656c55c7689e8490662b56a19b170902c6ab565dd465)、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/backend.md, source_digest: 同上}。system-spec/completeness-report.json を Read し verdict=PASS を直接確認した。正本 system-spec/backend.md の qa-059 (qa-048 の AiJob pull 権限開放・業務データ保持 API 方針を全面維持) を Read し、業務データ保持 API (multipart アップロード→テナント別封筒暗号化のうえ R2 保存+DB 参照登録/取得=認可 MW 通過後にのみ復号/削除=R2 実体+DB 行の即時完全削除+監査 event) のエンドポイント詳細設計は feature P02 で行うと明示的に据え置かれている点を直接確認した。上記 sha256 はラッパーファイル自体の実測 digest であり、main loop が shasum -a 256 で独立計測済みと明示された値をそのまま記録した (本 agent は exec ツールを持たないため独立再計算はしていない)。この値は .dev-graph/plans/feature-package-feat-dual-catalog-web/goal-spec.json lineage の同ファイル sha256 (bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b) と完全一致し、別 run によるクロス検証にもなっている。"
+    },
+    {
+      "path": "architecture/harness-hub-infrastructure.md",
+      "exists": true,
+      "sha256": "8b94603bb994538e5875e537783c63bfd22923ac89e0be37c7d2959df0fffe87",
+      "digest_status": "resolved",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-infrastructure、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json (evaluated_digest=15a91e7e243c3558f92c4cb8c82756a2b9e375eb7c6044369764b28f9b454e9d)、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/infrastructure.md, source_digest: 同上} (正本には system-spec/maintenance-ops.md [sha256: 0329c87bf2e5be42...] も含まれる)。system-spec/completeness-report.json を Read し verdict=PASS を直接確認した。正本 system-spec/infrastructure.md の qa-064 を Read し、docs/infrastructure-spec.md §3 (R2 バケット設計・無料枠 10GB / Class A 100万 ops/月 / Class B 1,000万 ops/月)・§4 (Turso 使用量監視 cron が閾値 70% で admin 通知・90% で R4-reopen 起票を促す既存機構へ R2 使用量監視を追加する設計方針) を直接確認した。上記 sha256 はラッパーファイル自体の実測 digest であり、main loop が shasum -a 256 で独立計測済みと明示された値をそのまま記録した (本 agent は exec ツールを持たないため独立再計算はしていない)。"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+      "digest_status": "resolved",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json (evaluated_digest=6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15)、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/00-requirements-definition.md, source_digest: 同上} (正本には system-spec/index.md も含まれる)。system-spec/completeness-report.json を Read し verdict=PASS (全 aspect PASS) を直接確認した。正本 system-spec/spec-state.json の qa-045・qa-046・qa-047・qa-048・qa-049 (C4 改訂の 3 段階 AskUserQuestion 経緯: 保持対象=業務ナレッジ/ドキュメント+ハーネス実行入出力、credential は選択せず、保存=R2+テナント別封筒暗号化、削除=即時完全削除) と approval_log の appr-007 (foundation 改訂承認) を直接 Read で確認した。この値は features/feat-dual-catalog-web.md frontmatter の source_lineage.source_digest および .dev-graph/plans/feature-package-feat-dual-catalog-web/goal-spec.json lineage の同ファイル sha256 と完全一致し、複数の独立出典によるクロス検証となっている。上記 sha256 は main loop が shasum -a 256 で独立計測済みと明示された値をそのまま記録した (本 agent は exec ツールを持たないため独立再計算はしていない)。"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "c4-revision-tenant-data-retention-qa045-048-appr007",
+      "summary": "C4 改訂 (2026-07-18・appr-007) により、顧客業務システム接続 credential と WebApp runtime は恒久的に非保持のまま、顧客業務ナレッジ/ドキュメントとハーネス実行入出力データ (tenant_data) のみ保持可能となった。保持先は新テーブル tenant_data_objects (id, tenant_id, workspace_id, kind[knowledge_doc/run_input/run_output], title, r2_key, size_bytes, content_hash[sha256], enc_key_version, uploaded_by, created_at) で、実体は DB に保存せず R2 参照とメタデータのみを保持し、Turso 無料枠 5GB を業務データで消費しない。D4 row-level scope 必須・分離テスト CI 対象。",
+      "source": "system-spec/spec-state.json qa-045 (database delta の tenant_data_objects テーブル定義)・qa-046 (security delta)・qa-047 (中立再確認の経緯・変更2: 非保持境界を保持前提へ改訂)・qa-048 (backend delta)・approval_log appr-007 (foundation 改訂承認); features/feat-tenant-data-retention.context.json purpose/goal"
+    },
+    {
+      "id": "tenant-data-envelope-encryption-numeric-contract",
+      "summary": "tenant_data の封筒暗号化は既存 salary/idp_secret と同一機構 (KEK/DEK、AES-256-GCM) を用いる。KEK は Workers Secret 1 本 (ENCRYPTION_KEK)、DEK は encryption_keys テーブルに KEK で wrap して保存 (用途別・key_version 付き、UNIQUE(purpose, key_version)、active は purpose ごとに 1 件)。IV はレコードごとにランダム 96bit で再利用禁止、AAD は table:column:row_id を付加する。復号は認可ミドルウェア通過後のリポジトリ層のみで行う。ローテーションは KEK が年 1 回 (DEK re-wrap のみ・全行再暗号化不要)、DEK は年 1 回または侵害疑い時 (対象 purpose の行のみ再暗号化)。ただし docs/security-spec.md §4.1.1 の encryption_keys.purpose enum は現時点で salary/idp_secret の 2 値のみが記載されており、qa-045 で確定した purpose=tenant_data の追加は、qa-046 が次回 security 深掘り (feature P02 前) で全面展開すると明示的に据え置いた未反映事項である。P02 設計時にこの enum 拡張と AAD/IV 運用の tenant_data への適用を明示的に反映する必要がある。",
+      "source": "docs/security-spec.md §4.1 (封筒暗号化 KEK/DEK 確定)・§4.1.1 (encryption_keys テーブル定義)・§4.1.2 (ローテーション手順); system-spec/spec-state.json qa-045 (暗号化: encryption_keys の purpose に tenant_data を追加し、テナント別 DEK による封筒暗号化で R2 実体を暗号化保存する。KEK/DEK 運用は qa-042 の S-D8 と同一機構)・qa-046 (本 delta の DDL・検証手順・docs/security-spec.md への展開は次回 security 深掘り [feature P02 前] で行い、それまでは本 qa が delta の正本)"
+    },
+    {
+      "id": "immediate-full-deletion-r2-db-backup-contract",
+      "summary": "削除操作 (ユーザー削除操作・テナント解約時) は R2 実体と DB 行を即時完全削除し、監査 event (audit_events) のみを残す。soft delete 列は設けない。日次 DB export に平文は含まれない (実体は暗号化済み R2 のみ)。四半期 restore drill に削除済み業務データが復元されないことの確認項目を追加する (qa-019 拡張)。脅威 T15 (削除不完全による R2 実体・DB 行・バックアップ断面への残存) への対策として削除完全性テスト (R2 実体・DB 行・キャッシュ) が security 検証計画へ追加されるが、専用の T 番号付き単体テスト ID はまだ採番されておらず (docs/security-spec.md §8.3 の一覧は T-14 までで、tenant_data 専用の削除完全性テストは番号未採番)、具体的なテストケース定義は feature P02 で確定する。",
+      "source": "system-spec/spec-state.json qa-045 (削除ポリシー: ユーザー削除操作・テナント解約時に R2 実体と DB 行を即時完全削除し、audit_events のみ残す。soft delete 列は設けない。日次 DB export に平文は含まれない。四半期 restore drill に削除済み業務データが復元されないことの確認項目を追加する); docs/security-spec.md §1.3 T15 (削除不完全により、削除操作後も業務データが R2 実体・DB 行・バックアップ断面に残存する。対策=即時完全削除+削除監査 event+restore drill での非復元確認。検証=§8.3 削除完全性テスト[R2実体・DB行・キャッシュ])・§8.3 (T-14 までの単体テスト一覧); features/feat-tenant-data-retention.context.json acceptance (削除 API 実行後、R2 blob・DB row・backup 断面のいずれにも当該データの平文/暗号文が残存しないこと)"
+    },
+    {
+      "id": "tenant-cross-boundary-read-prevention-t14-r2-prefix",
+      "summary": "テナント A/B 間の業務データ越境読取を防ぐため、purpose=tenant_data の封筒暗号化 + D4 row-level scope + R2 tenant prefix 分離 (業務データ用 prefix をテナント別に分離し、PackageRegistry [immutable] とはバケットまたは prefix を分ける) を適用し、認可ミドルウェア通過後にのみ復号する。テナント分離テスト CI (§8.4) へ業務データ越境読取ケースを追加する。",
+      "source": "docs/security-spec.md §1.3 T14 (テナント A の利用者/管理者が保持業務データ[tenant_data]をテナント越境で読む。対策=purpose=tenant_data の封筒暗号化[§4]+D4 row-level+R2 tenant prefix 分離。認可 MW 通過後のみ復号。検証=§8.4 分離テスト[業務データ越境読取ケース])・§1.2 保護資産 (顧客業務ナレッジ/ドキュメント・ハーネス実行入出力データ=最高機密区分); system-spec/spec-state.json qa-045 (R2 バケット: 業務データ用 prefix をテナント別に分離し、PackageRegistry とはバケットまたは prefix を分ける); features/feat-tenant-data-retention.context.json acceptance (テナント分離テストが PASS)"
+    },
+    {
+      "id": "r2-usage-monitoring-alert-cron-extension",
+      "summary": "R2 使用量監視・上限アラートは、既存の Turso 使用量監視 cron (日次、閾値 70% でアプリ内 admin 通知・90% で保持期間導入の R4-reopen 起票を促す) へ R2 使用量を追加する形で実装する設計方針が確定している。R2 専用の別閾値は現時点で confirmed されておらず、qa-045 は既存 cron への R2 使用量追加という設計方針の確定に留まる。R2 無料枠は 10GB / Class A 100万 ops/月 / Class B 1,000万 ops/月。",
+      "source": "system-spec/spec-state.json qa-045 (無料枠 10GB の使用量は Turso 使用量監視 cron [qa-031 論点4 の帰結] に R2 使用量を追加して監視する); docs/infrastructure-spec.md §3 (R2 バケット設計・無料枠 10GB / Class A 100万 ops/月 / Class B 1,000万 ops/月)・§4 (使用量監視 [qa-031 の帰結]: 日次 cron が Turso Platform API から usage を取得し、閾値 70% で admin 通知[アプリ内]・90% で保持期間導入の R4-reopen 起票を促す); features/feat-tenant-data-retention.context.json scope_in (R2 使用量監視・上限アラート)"
+    },
+    {
+      "id": "tenant-data-api-endpoint-detail-deferred-to-p02",
+      "summary": "tenant_data 保管 API (multipart アップロード→テナント別封筒暗号化のうえ R2 保存+DB 参照登録 / 取得=認可 MW 通過後にのみ復号 / 削除=R2 実体+DB 行の即時完全削除+監査 event) のエンドポイント詳細設計 (パス・スキーマ・rate limit) は feature P02 で確定するとqa-048 で明示的に据え置かれている。本 goal-spec の範囲ではこの契約方針のみを確定事項として扱い、具体的な API パス・zod スキーマ・rate limit 数値を P02 より前に確定済みと誤認しない。",
+      "source": "system-spec/spec-state.json qa-048 (C4 改訂に伴う業務データ保持 API の追加方針。エンドポイント詳細設計[パス・スキーマ・rate limit]は feature P02 で行い、認可は既存 deny-by-default マトリクスへ行を追加する); docs/backend-spec.md 1 行目付近 (顧客業務データ[C4 改訂 2026-07-18・appr-007/qa-048]: 業務ナレッジ/ドキュメントとハーネス実行入出力データは保持可能。保管 API の詳細設計は feature P02)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "id_match_note": "features/feat-tenant-data-retention.context.json の graph_node_id、features/feat-tenant-data-retention.md frontmatter の graph_node_id、.dev-graph/locks/system-dev-plan-lock.json の feature_id が全て feat-tenant-data-retention で一致する。--feature-id 引数 (feat-tenant-data-retention) とも一致する。",
+    "context_match": true,
+    "context_match_note": "features/feat-tenant-data-retention.md frontmatter の purpose / goal / scope_in / scope_out / acceptance と features/feat-tenant-data-retention.context.json の同フィールドを逐語比較し完全一致を確認した (本文の目的/到達状態/スコープ/受入セクションも同一)。frontmatter の architecture_refs は graph_node_id 形式 (4 件: arch-harness-hub-data, arch-harness-hub-security, arch-harness-hub-backend, arch-harness-hub-infrastructure) で、context.json の repo-relative path 形式 (5 件: 上記 4 architecture に加え specs/harness-hub-system-specification.md を含む) と同一の 4 architecture + 1 specification を指しており矛盾しない。",
+    "feature_context_digest_verified": true,
+    "feature_context_digest_verified_note": "caller 提供の feature_context_digest (sha256:69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327、C09 resolve-project-context.py 検証済みと明示) と .dev-graph/locks/system-dev-plan-lock.json の feature_digest フィールドが完全一致 (2 つの独立出典によるクロス検証)。本 agent は exec ツールを持たないため独立再計算はしていない。",
+    "system_spec_source_status": "confirmed + evaluator PASS (architecture/harness-hub-data.md・architecture/harness-hub-security.md・architecture/harness-hub-backend.md・architecture/harness-hub-infrastructure.md・specs/harness-hub-system-specification.md の frontmatter confirmation_status=confirmed / evaluation_status=pass。system-spec/completeness-report.json verdict=PASS を Read で直接確認、全 aspect PASS。正本 system-spec/database.md・security.md・backend.md・infrastructure.md・maintenance-ops.md・00-requirements-definition.md の C4 改訂該当箇所 [qa-045〜049, appr-007] を system-spec/spec-state.json で直接確認した)",
+    "architecture_refs_resolved": true,
+    "architecture_refs_resolved_note": "features/feat-tenant-data-retention.context.json の architecture_refs (architecture/harness-hub-data.md, architecture/harness-hub-security.md, architecture/harness-hub-backend.md, architecture/harness-hub-infrastructure.md, specs/harness-hub-system-specification.md) は全て caller repository 内に実在し Read で内容確認済み (5 ファイルとも confirmation_status=confirmed / evaluation_status=pass)。絶対 path・traversal は含まれない。",
+    "digest_recomputation_capability": false,
+    "digest_recomputation_capability_note": "本 agent (system-dev-plan-elicitor 相当、fork context) は Read/Write/Glob/Grep のみ保有し sha256 を計算する exec ツールを持たないため、ファイル内容からの独立再計算は行っていない。feature_context_digest は caller 提供値 (C09 検証済み) と .dev-graph/locks/system-dev-plan-lock.json の feature_digest の一致によりクロス検証した。architecture_refs 5 ファイルの sha256 は main loop が shasum -a 256 で実測済みと明示された値であり、うち architecture/harness-hub-backend.md と specs/harness-hub-system-specification.md の 2 件は .dev-graph/plans/feature-package-feat-dual-catalog-web/goal-spec.json lineage の既存 sha256 とも完全一致することを Read で確認した (別 run によるクロス検証)。digest gap なし (main-loop 実測値をそのまま resolved として記録)。",
+    "notes_ja": true,
+    "status": "complete",
+    "feature_split_or_task_generation_performed": false
+  },
+  "extracted_at": "2026-07-19T01:15:00Z"
+}

@@ -24,6 +24,8 @@ bd close <id>         # 作業を完了する
 
 **アーキテクチャを一言で:** 課題はローカルの Dolt DB に格納され、同期は git リモートの `refs/dolt/data` を使い、`.beads/issues.jsonl` は受動的なエクスポートです。詳細とアンチパターンは https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md を参照してください。
 
+- すべて成果物は、日本語で出力する
+
 ## エージェントのコンテキストプロファイル
 
 管理された Beads ブロックはタスク管理の指針であり、リポジトリ・ユーザー・オーケストレーターの指示を上書きする許可ではありません。

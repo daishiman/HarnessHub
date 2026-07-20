@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-publish-pipeline",
+  "parent_feature": "feat-publish-pipeline",
+  "nodes": [
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P01",
+      "graph_node_id": "sys-publish-pipeline-p01",
+      "title": "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P02",
+      "graph_node_id": "sys-publish-pipeline-p02",
+      "title": "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P01"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P03",
+      "graph_node_id": "sys-publish-pipeline-p03",
+      "title": "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P02"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P04",
+      "graph_node_id": "sys-publish-pipeline-p04",
+      "title": "テストファースト設計 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テスト設計",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P03"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P05",
+      "graph_node_id": "sys-publish-pipeline-p05",
+      "title": "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P04"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P06",
+      "graph_node_id": "sys-publish-pipeline-p06",
+      "title": "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P05"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P07",
+      "graph_node_id": "sys-publish-pipeline-p07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P06"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P08",
+      "graph_node_id": "sys-publish-pipeline-p08",
+      "title": "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P07"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P09",
+      "graph_node_id": "sys-publish-pipeline-p09",
+      "title": "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P08"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P10",
+      "graph_node_id": "sys-publish-pipeline-p10",
+      "title": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P09"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P11",
+      "graph_node_id": "sys-publish-pipeline-p11",
+      "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P10"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P12",
+      "graph_node_id": "sys-publish-pipeline-p12",
+      "title": "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P11"]
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P13",
+      "graph_node_id": "sys-publish-pipeline-p13",
+      "title": "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "depends_on": ["SYS-PUBLISH-PIPELINE-P12"]
+    }
+  ]
+}

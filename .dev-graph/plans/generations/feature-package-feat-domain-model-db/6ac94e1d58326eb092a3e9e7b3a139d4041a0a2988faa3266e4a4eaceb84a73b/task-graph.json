@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-domain-model-db",
+  "parent_feature": "feat-domain-model-db",
+  "nodes": [
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P01",
+      "graph_node_id": "sys-domain-model-db-p01",
+      "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P02",
+      "graph_node_id": "sys-domain-model-db-p02",
+      "title": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P01"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P03",
+      "graph_node_id": "sys-domain-model-db-p03",
+      "title": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P02"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P04",
+      "graph_node_id": "sys-domain-model-db-p04",
+      "title": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P03"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P05",
+      "graph_node_id": "sys-domain-model-db-p05",
+      "title": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P04"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P06",
+      "graph_node_id": "sys-domain-model-db-p06",
+      "title": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P05"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P07",
+      "graph_node_id": "sys-domain-model-db-p07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P06"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P08",
+      "graph_node_id": "sys-domain-model-db-p08",
+      "title": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P07"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P09",
+      "graph_node_id": "sys-domain-model-db-p09",
+      "title": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P08"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P10",
+      "graph_node_id": "sys-domain-model-db-p10",
+      "title": "最終独立レビュー — quality_constraints 9 件の充足判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P09"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P11",
+      "graph_node_id": "sys-domain-model-db-p11",
+      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P10"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P12",
+      "graph_node_id": "sys-domain-model-db-p12",
+      "title": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P11"
+      ]
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P13",
+      "graph_node_id": "sys-domain-model-db-p13",
+      "title": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P12"
+      ]
+    }
+  ]
+}

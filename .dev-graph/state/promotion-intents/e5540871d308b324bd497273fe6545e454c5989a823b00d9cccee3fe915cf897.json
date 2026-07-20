@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/feature-package-feat-publisher-plugin",
+  "destination": ".dev-graph/plans/feature-package-feat-publisher-plugin",
+  "digest": "sha256:8fd4221cbc7fa8d2278014888d1d55be3db8401066964dd46d17bb2d75231199",
+  "feature_package_id": "feature-package/feat-publisher-plugin",
+  "receipt": ".dev-graph/plans/feature-package-feat-publisher-plugin/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-18T23:56:13Z"
+}

@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-workspace-governance",
+  "feature_context_digest": "sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1",
+  "purpose": "顧客管理者が統制と安全性 (G2) を自律運用できるよう、承認キュー・RBAC 拡張・監査ログ閲覧を提供する",
+  "goal": "workspace-admin が承認/差し戻し/監査を Hub Web で完結でき、統制作業の提供者依存が解消された状態",
+  "scope_in": [
+    "approval queue (Approval Pending 状態の有効化)",
+    "RBAC の細分化と管理 UI",
+    "監査 event の閲覧・検索 UI",
+    "統制ポリシー設定"
+  ],
+  "scope_out": [
+    "課金",
+    "Stage 3 以降の拡張"
+  ],
+  "acceptance": [
+    "承認フローを経ない publish が policy で遮断される",
+    "監査ログが Tenant スコープで検索できる",
+    "RBAC 変更が監査 event に記録される"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-workspace-governance.context.json",
+      "exists": true,
+      "sha256": "66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation.",
+      "feature_id": "feat-workspace-governance"
+    },
+    {
+      "path": "architecture/harness-hub-security.md",
+      "exists": true,
+      "sha256": "5af5237572ae6fe9d661ad09ee074377967c6f9d276779e2105645cd89d51605",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "74b1fc4aaa055285c35af8e7c1657272ccb2ab271cd55e4482f902a4de00248d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "governance-goal-g4-not-g2-numbering-discrepancy",
+      "summary": "本 feature (承認キュー・RBAC 拡張・監査ログ閲覧・統制ポリシー設定) が確定 system-spec 上で資するゴールは G4 (「Workspace 管理者が承認・監査・公開停止を行え、shadow IT 化せず統制点が一元化される」) であり、feature-context の purpose 文言に verbatim で含まれる『統制と安全性 (G2)』という括弧書きの G2 ラベルは、確定ゴール表 (U3) の最終確定後の一貫参照とは異なる。確定章 (system-spec/security.md・backend.md・frontend.md の frontmatter serves_goals) と U9 I8 (Stage 2 Governance: 管理者 approval queue・granular RBAC・formal audit log・export → G4) はいずれも『統制』を G4 として一貫して参照しており、G2 は『公開された業務ツールを owner 以外の同僚が見つけて追加・利用し、業務での再利用が成立する (North Star)』という別のゴールに確定している。system-spec/spec-state.json qa-012 (R0-foundation ヒアリング初期段階) にのみ『G2 統制と安全性の担保』という暫定ラベルが記録されているが、これは U3 確定ゴール表の確定より前の初期選択肢ラベルであり、後続の全確定章はこれを G4 として上書き確定している。feature-context の purpose フィールドは写像規則により verbatim 転記対象のため本 goal-spec の purpose 値は変更していないが、後続工程 (R2 以降) が『G2』表記を確定ゴールの参照として扱わないよう、本制約で正しい確定対応 (統制=G4) を明示する。",
+      "source": "system-spec/00-requirements-definition.md U3 (ゴール表: G4=統制点の一元化, G2=North Star再利用)・U9 (I8: Stage 2 Governance → G4); system-spec/security.md frontmatter serves_goals=[G4, G5, G1]; system-spec/backend.md frontmatter serves_goals=[G1, G2, G3, G4, G5]; system-spec/frontend.md frontmatter serves_goals=[G1, G2, G3, G5]; system-spec/spec-state.json qa-012 (初期暫定ラベル、U3 確定表で G4 として確定済み); features/feat-workspace-governance.context.json purpose (verbatim、G2 括弧書きの出典)"
+    },
+    {
+      "id": "approval-queue-stage2-activation-contract",
+      "summary": "承認キュー (approval queue) は PublishRequest 状態機械の Approval Pending 状態を有効化する Stage 2 拡張であり、新規の別状態機械を作るものではない。MVP (Stage 1) では Ready → Approved (policy 自動承認 = Green) または Needs Fix 差戻しのみで、Approval Pending へは到達しない確定仕様になっている。本 feature が有効化対象とする Approval Pending → Approved (管理者承認) 遷移、S05 承認キュー画面 (GET /api/v1/publish の status=approval_pending フィルタで一覧取得・30秒ポーリング・簡易詳細レベル)、workspace-admin 権限の POST /api/v1/publish/:id/approve (Yellow 承認と共有する既存確定エンドポイント・監査 event 必須) は既に契約として存在するが、これは Stage 2 承認フローの入口であり、granular RBAC・formal audit log export の具体設計 (エンドポイント・スキーマ・権限粒度) は I8 の concrete-intent レベルの確定に留まり、feature 設計時 (P02 相当) に確定する必要がある事項であって、既に確定済みと誤認してはならない。",
+      "source": "docs/backend-spec.md §5.1 (PublishRequest 状態機械、Approval Pending ← Stage 2 で有効化)・§4.6 (POST /api/v1/publish/:id/approve = session/workspace-admin、Yellow 承認 Stage 2 approval queue、監査 event)・§4.6 GET /api/v1/publish (S05 承認キューの供給元、status=approval_pending); docs/frontend-spec.md S05 (承認キュー、§3.4 追加 API、30s、簡易) 及び画面実装順 P5; system-spec/00-requirements-definition.md U9 I8; system-spec/backend.md qa-059 (publish 系エンドポイントの session/Bearer 2 経路拡張、状態機械・直列化 qa-009 は不変)"
+    },
+    {
+      "id": "granular-rbac-baseline-and-extension-boundary",
+      "summary": "RBAC は既に base 4-role (provider-admin / workspace-admin / owner[Project owner_user_id による合成関係] / member) + 単調な許可表 (role の全順序 member < owner < workspace-admin < provider-admin、単調性は T-1b で CI 検査) として確定済みである。『RBAC の細分化と管理 UI』(granular RBAC、I8) は、この既存確定基盤を破壊せず拡張する Stage 2 項目であり、追加ロール・権限粒度・管理 UI の具体契約はまだ確定していない。既存許可表には users.write / users.role_change = workspace-admin が既に存在し (S17 ユーザー管理画面の一部)、本 feature の RBAC 拡張はこの基盤の上に積む。workspace-admin の実効範囲は現状 tenant 単位 (workspace_memberships テーブルが存在しないため) であり、部門ごとの管理者分離は将来拡張・R4-reopen 対象として明示的に据え置かれている。本 feature でこの残余リスクの解消 (workspace 単位の権限分離) まで行う場合は、新テーブル追加を伴う設計変更として扱い、既存確定の役割モデル (qa-005) をそのまま維持する範囲を超えないことを feature 設計時に判断する必要がある。",
+      "source": "docs/security-spec.md §3.1 (role モデル・role の全順序・単調性・workspace-admin 実効範囲=tenant 単位・将来拡張は R4-reopen 対象)・§3.3 (許可表: users.write/users.role_change=workspace-admin 等)・§8.3 (T-1 全 action×全 role 網羅、T-1b 許可表単調性検査); system-spec/spec-state.json qa-005 (4 role 確定); system-spec/00-requirements-definition.md U9 I8"
+    },
+    {
+      "id": "audit-log-view-baseline-append-only-hash-chain",
+      "summary": "監査ログ閲覧は既に GET /api/v1/audit-events (workspace-admin・自テナントのみ・append-only・filter: action/entity/actor/期間+cursor) として確定済みの契約が存在する。監査 event は summary_json に値そのもの (salary 金額・client_secret・token) を記録せず変更の事実のみを記録し、テナント単位の hash chain (seq/prev_hash/event_hash、SHA-256) で改竄検知する。閲覧時は表示範囲の chain 再計算 (不一致は画面へ警告表示)、日次 cron でテナントごとの全体検証を行う。provider-admin の全操作も監査対象であり、越境アクセス (provider.cross_tenant_access) は顧客管理者 (workspace-admin) からも自テナント監査で確認できる (透明性による統制、T11 対策)。本 feature の『監査 event の閲覧・検索 UI』スコープは、この既存確定契約 (S06 監査ログ画面) を Stage 2 として有効化・UI 実装するものであり、『formal audit log・export』の具体的な export 形式・API は I8 レベルの確定に留まり未確定である。",
+      "source": "docs/backend-spec.md §4.12 (GET /api/v1/audit-events)・§2.2 (audit_events テーブル定義: seq/prev_hash/event_hash 含む); docs/security-spec.md §5.1 (append-only の強制)・§5.2 (監査対象 action・記録する/しない原則)・§5.3 (provider-admin の透明性)・§5.4 (hash chain 計算式・検証頻度)・§8.3 T-6 (監査 chain 改竄検出テスト); docs/frontend-spec.md S06 (監査ログ画面、Stage 2、admin のみ) 及び実装順 P5"
+    },
+    {
+      "id": "deny-by-default-authz-already-active-only-admin-screens-deferred",
+      "summary": "deny-by-default 認可・role 4 種・admin 出し分けは P0 から全画面に効いている既存確定事項であり、本 feature が新設するのは『後回しにされた管理画面そのもの』(S05 承認キュー・S06 監査ログ・S17 相当の RBAC 管理拡張画面) であって、認可制御の仕組みそのものの新設ではない。本 feature の設計・実装スコープを検討する際、既に確定済みの単一認可ミドルウェア・tenant scope 強制注入・許可表を本 feature の対象として再設計してはならず、既存契約への追加・画面実装・Stage 2 状態遷移の有効化に限定する。",
+      "source": "docs/frontend-spec.md §末尾 role 分離の扱い (認可は P0 から全画面に効く。後回しは S17/S05/S06 という管理画面そのもの); docs/security-spec.md §3.2 判定原則 (deny-by-default 等 5 原則)"
+    },
+    {
+      "id": "asvs-l2-access-control-logging-acceptance-target",
+      "summary": "ASVS 到達目標 (S-D2 確定) において『アクセス制御 (Access Control)』『ログと監査 (Logging)』の 2 領域は L2 相当が目標として確定しており、その理由はいずれも『G4 (統制点の一元化) の成立条件』と明示されている。本 feature の受入テスト設計は、既存確定の T-1 (全 action × 全 role × 自テナント/他テナント/owner/非 owner の組合せ網羅)・T-1b (許可表の単調性検査)・T-1c (越境の監査強制)・T-6 (監査 chain 改竄検出) を満たす必要があり、これらのテスト契約自体は既に確定済みであるため、本 feature で新規のテスト方針を別途定義するのではなく既存契約への適合を確認する。",
+      "source": "docs/security-spec.md §8.1 (ASVS 到達目標: アクセス制御=L2 相当・ログと監査=L2 相当、理由=G4 統制点の一元化)・§8.3 (T-1/T-1b/T-1c/T-6)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + completeness evaluator PASS",
+    "notes_ja": "現行 feature context と全 architecture/spec lineage を repository bytes から SHA-256 再計算し、P01..P13 の current canonical baseline に固定した。",
+    "digest_recomputed_by": "run-system-dev-plan immutable-replan remediation 2026-07-19",
+    "status": "complete"
+  },
+  "extracted_at": "2026-07-19T12:00:00Z"
+}

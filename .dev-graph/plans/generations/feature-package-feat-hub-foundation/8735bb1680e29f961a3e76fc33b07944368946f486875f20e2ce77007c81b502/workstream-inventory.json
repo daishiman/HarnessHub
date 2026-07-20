@@ -1,0 +1,1367 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-hub-foundation",
+  "parent_feature": "feat-hub-foundation",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/infrastructure.md",
+      "system-spec/frontend.md",
+      "docs/shared-layers.md",
+      "docs/system-design-overview.md",
+      "architecture/harness-hub-infrastructure.md",
+      "architecture/harness-hub-frontend.md",
+      "features/feat-hub-foundation.md",
+      "features/feat-hub-foundation.context.json",
+      "goal-spec.json",
+      "architecture/harness-hub-backend.md",
+      "architecture/harness-hub-data.md",
+      "architecture/harness-hub-security.md",
+      "architecture/harness-hub-dev-workflow.md",
+      "specs/harness-hub-system-specification.md"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-HUB-FOUNDATION-P01",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 要件ベースライン確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p01"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "infrastructure",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-hub-foundation/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/infrastructure.md",
+        "system-spec/frontend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec (goal-spec.json) と features/feat-hub-foundation.md の purpose/goal/scope/acceptance を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/requirements-baseline.md に goal-spec acceptance 4 件と quality_constraints 9 件が過不足なく転記されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP01責務として追跡し、未割当0件である",
+        "docs/shared-layers.md §1〜§3 と第4 acceptanceを要件ベースラインへ含める。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "goal-spec と features/feat-hub-foundation.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P01",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p01.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P02",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p02"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "infrastructure",
+      "secondary_workstreams": [
+        "frontend",
+        "backend",
+        "api",
+        "security",
+        "quality",
+        "documentation",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P01"
+      ],
+      "write_scope": [
+        "apps/hub/src/middleware/",
+        "apps/hub/src/shared/",
+        "docs/features/feat-hub-foundation/architecture-decision-record.md",
+        "package.json",
+        "packages/inspection/",
+        "packages/schemas/",
+        "packages/ui/",
+        "pnpm-workspace.yaml"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/infrastructure.md",
+        "system-spec/frontend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "docs/shared-layers.md",
+        "docs/system-design-overview.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "pnpm workspace 構成 (apps/hub + packages/ui,schemas,inspection,db) と Cloudflare Workers デプロイ単位を比較検討し確定する P02 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/architecture-decision-record.md に pnpm workspace 構成の比較表と (b) 採用理由、apps/hub と packages/* の責務境界が記載されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
+        "packages/ui、packages/schemas、packages/inspection、認可middleware/auth adapter、audit/AI queue/通知/PIIの共通境界と消費featureを決定する。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "P03 レビューで構成案が却下された場合、architecture-decision-record.md へ却下理由を追記し、本 task を再実行して代替構成を再評価する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P02",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p02.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P03",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 独立設計レビュー",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p03"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "infrastructure",
+        "security",
+        "documentation",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-hub-foundation/design-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/infrastructure.md",
+        "system-spec/frontend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "docs/shared-layers.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P02 で確定した pnpm workspace 構成・デプロイ単位を P02 の設計担当から独立した視点でレビューする P03 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/design-review-notes.md に承認可否と qa-003/qa-019/qa-007/qa-018 適合確認結果が明記されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP03責務として追跡し、未割当0件である",
+        "共通層の単一owner、package公開contract、ドメイン固有ロジックを基盤へ集約しない境界を独立レビューする。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "差し戻しと判定された場合、design-review-notes.md に指摘事項を記録し、sys-hub-foundation-p02 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P03",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p03.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P04",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 テスト設計 (test-first 受入契約)",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p04"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend",
+        "backend",
+        "api",
+        "infrastructure",
+        "security",
+        "documentation",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P03"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/middleware/",
+        "apps/hub/src/shared/",
+        "apps/hub/tests/",
+        "docs/features/feat-hub-foundation/test-design.md",
+        "packages/estimation/",
+        "packages/inspection/",
+        "packages/schemas/",
+        "packages/ui/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/frontend.md",
+        "system-spec/infrastructure.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "docs/shared-layers.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "承認済み設計を根拠に P05 実装前の test-first 受入契約を定義する P04 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/test-design.md に goal-spec acceptance 4 件それぞれの test種別と合否基準が明記されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP04責務として追跡し、未割当0件である",
+        "共通package単体テストと複数consumerが同一実装を参照するcontract testを設計する。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "P05 着手後に受入契約と実装可能性の乖離が判明した場合、test-design.md を修正し P04 を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P04",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p04.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P05",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p05"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "infrastructure",
+      "secondary_workstreams": [
+        "frontend",
+        "backend",
+        "api",
+        "security",
+        "quality",
+        "documentation",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P04"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "README.md",
+        "apps/hub/",
+        "apps/hub/src/middleware/",
+        "apps/hub/src/shared/",
+        "open-next.config.ts",
+        "package.json",
+        "packages/db/",
+        "packages/estimation/",
+        "packages/inspection/",
+        "packages/schemas/",
+        "packages/ui/",
+        "pnpm-workspace.yaml",
+        "wrangler.jsonc"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/infrastructure.md",
+        "system-spec/frontend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "P02 承認構成と P04 テスト設計に基づき pnpm monorepo scaffold・CI/CD・監視・SLO を実装する P05 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        ".github/workflows/ci.yml が pnpm install から build/test/bundle チェックまでを実行し、/health route handler が実装され開発環境で 200 応答を返す",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP05責務として追跡し、未割当0件である",
+        "docs/shared-layers.md登録済み共通UI/backend/CI・運用層のpackage/adapter実体を単一ownerとして実装する。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "bundle サイズが 3MiB を恒常的に超過する場合はコード分割・依存削減で対処し、解消しない場合は Workers Paid ($5/月) への移行を dev-graph へ差し戻す。CI が壊れた場合は直前のコミットへ revert する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P05",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p05.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P06",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 テスト実行",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p06"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend",
+        "backend",
+        "api",
+        "infrastructure",
+        "security",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P05"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/middleware/",
+        "apps/hub/src/shared/",
+        "apps/hub/tests/",
+        "packages/estimation/",
+        "packages/inspection/",
+        "packages/schemas/",
+        "packages/ui/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/frontend.md",
+        "system-spec/infrastructure.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P04 test-design.md の受入契約に従って P05 実装物を実行検証する P06 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "CI run が green で完走したログ、bundle サイズ計測結果が 3MiB 以内であるレポート、/health 応答ログが揃っている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP06責務として追跡し、未割当0件である",
+        "共通package単体・consumer contract・CI品質gateを実行し、二重実装がないことを検査する。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "CI が red の場合、失敗ステップのログを記録し sys-hub-foundation-p05 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P06",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p06.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P07",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 feature 受入判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p07"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "infrastructure",
+        "documentation",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-hub-foundation/acceptance-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/infrastructure.md",
+        "system-spec/frontend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P06 のテスト実行結果を goal-spec acceptance と突合し feature 受入可否を判定する P07 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/acceptance-report.md に goal-spec acceptance 4 件それぞれの合否と根拠が明記されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP07責務として追跡し、未割当0件である",
+        "CI、3MiB、SLO/healthに加え、共通層が単一package/境界で全consumerから参照される第4 acceptanceを判定する。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "1 件でも不合格の場合、不合格項目の根本原因が P05 か P06 のどちらにあるかを記録し、該当 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P07",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p07.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P08",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p08"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P07"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/middleware/",
+        "apps/hub/src/shared/",
+        "docs/features/feat-hub-foundation/refactoring-migration-note.md",
+        "packages/estimation/",
+        "packages/inspection/",
+        "packages/schemas/",
+        "packages/ui/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "新規 scaffold feature のため refactor/migration の適用要否を判定し N/A 理由を機械可読に残す P08 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/refactoring-migration-note.md に 9 workstream すべての N/A 判定理由が記録されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP08責務として追跡し、未割当0件である",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "該当なし (N/A 判定のため対象物への変更が発生せず、ロールバック対象が存在しない)",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P08",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p08.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P09",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 品質・セキュリティ・運用保証",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p09"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend",
+        "infrastructure",
+        "security",
+        "documentation",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P08"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/middleware/",
+        "apps/hub/src/shared/",
+        "docs/features/feat-hub-foundation/quality-assurance-report.md",
+        "packages/estimation/",
+        "packages/inspection/",
+        "packages/schemas/",
+        "packages/ui/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/infrastructure.md",
+        "system-spec/frontend.md",
+        "system-spec/00-requirements-definition.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "CI 品質ゲート・セキュリティ・運用readinessを横断的に確認する P09 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/quality-assurance-report.md に CI 品質ゲートの実効性確認結果とエラーバジェット運用・restore drill readiness が記録されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP09責務として追跡し、未割当0件である",
+        "pnpm/axe/bundle/tenant/inspection parity と shared-layer duplicate detector をCI gateとして保証する。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "品質ゲートの実効性不備が見つかった場合、.github/workflows/ci.yml を是正し、是正内容を quality-assurance-report.md に記録した上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P09",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p09.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P10",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 最終独立レビュー",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p10"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-hub-foundation/final-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/infrastructure.md",
+        "system-spec/frontend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P01〜P09 の成果物一式を goal-spec と付随制約に対して独立して再点検する P10 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/final-review-notes.md に quality_constraints 9 件の充足状況が記録されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP10責務として追跡し、未割当0件である",
+        "4 acceptance と shared-layers全登録行のowner/consumer evidenceを最終レビューする。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "1 件でも不足の場合、不足箇所が生じた原因 task を final-review-notes.md に記録し、該当 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P10",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p10.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P11",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 証跡収集",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p11"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "infrastructure",
+        "security",
+        "documentation",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-hub-foundation/evidence/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/infrastructure.md",
+        "system-spec/00-requirements-definition.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P06〜P10 の実行結果・判定記録を再現可能な証跡として収集・保存する P11 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/evidence/index.md に P06/P07/P09/P10 の一次証跡への参照が明記されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP11責務として追跡し、未割当0件である",
+        "4 acceptance、共通package一覧、consumer contract test、duplicate 0 の証跡を集約する。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "証跡不足で判定根拠が再現できない場合、不足している証跡の生成元 task を evidence/index.md に記録し、該当 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P11",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p11.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P12",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 運用ドキュメント整備",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p12"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "infrastructure",
+        "quality",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-hub-foundation/runbook.md",
+        "README.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/infrastructure.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P13 の本番デプロイに先立ち運用 runbook と利用者向けドキュメントを整備する P12 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/runbook.md にデプロイ・ロールバック・障害対応・エラーバジェット運用・restore drill の 5 手順が記載されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP12責務として追跡し、未割当0件である",
+        "共通層の変更管理、consumer再テスト、owner境界をrunbook/handoverへ含める。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "runbook.md の記載内容が P09 の readiness 確認結果と矛盾する場合、矛盾箇所を記録した上で sys-hub-foundation-p09 を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P12",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p12.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P13",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "title": "Hub 基盤 本番リリース・デプロイ",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p13"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "infrastructure",
+      "secondary_workstreams": [
+        "frontend",
+        "backend",
+        "security",
+        "quality",
+        "documentation",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P12"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/middleware/",
+        "apps/hub/src/shared/",
+        "docs/features/feat-hub-foundation/release-notes.md",
+        "packages/estimation/",
+        "packages/inspection/",
+        "packages/schemas/",
+        "packages/ui/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/infrastructure.md",
+        "system-spec/frontend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "P12 の runbook に従い wrangler CLI で Hub を Cloudflare Workers 本番環境へデプロイする P13 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-hub-foundation/sys-hub-foundation-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-hub-foundation/release-notes.md にデプロイ日時・Worker バージョン・本番 URL・/health 初回応答・bundle サイズ最終値が記録されている",
+        "現行feature context sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062dのscope_in/acceptance全件をP13責務として追跡し、未割当0件である",
+        "Hub本体と共通packageを同一release closureで公開し、consumer参照のsmoke evidenceを残す。",
+        "Normative closure: acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 Evidence: 全登録共通層のowner/public API/consumer一覧、consumer contract tests、duplicate implementation scan=0、CI/bundle/SLO/healthの4 acceptance証跡を必須とする。"
+      ],
+      "verification": [
+        "wrangler deploy 相当のコマンド (runbook.md 記載)",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "本番デプロイ後に /health が異常応答を返す場合、runbook.md 記載のロールバック手順 (直前バージョンへの wrangler rollback) を実行し、実行結果を release-notes.md に記録する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-HUB-FOUNDATION-P13",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
+        "parent_feature": "feat-hub-foundation",
+        "feature_package_id": "feature-package/feat-hub-foundation",
+        "phase_ref": "P13"
+      }
+    }
+  ],
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  }
+}

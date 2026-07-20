@@ -1,0 +1,28 @@
+{
+  "graph_node_id": "feat-publisher-plugin",
+  "artifact_kind": "feature",
+  "purpose": "作者が Claude Code / Codex から自己完結で publish できる操作面 (slash command + skill + スクリプト) を TypeScript で提供し、既存 Python 資産を挙動同値で移植する",
+  "goal": "作者環境 (macOS/Windows) から初回 publish が 15 分以内 (O4/H8) に完了する状態",
+  "scope_in": [
+    "package 収集 + manifest 補完",
+    "ローカル pre-check (Hub と検査ロジック共有)",
+    "Device Flow 認証 + OS 資格情報域保存",
+    "web_app 経路の wrangler スクリプト実行",
+    "Python 資産の挙動同値移植テスト"
+  ],
+  "scope_out": [
+    "Hub 側 API 実装",
+    "専用 desktop GUI (作らない: qa-007)"
+  ],
+  "acceptance": [
+    "macOS/Windows 両実機で publish E2E が成功する",
+    "pre-check と Hub 検査の判定が同値",
+    "初回 publish 15 分以内の実測記録"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-security.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-18T22:35:48Z"
+}

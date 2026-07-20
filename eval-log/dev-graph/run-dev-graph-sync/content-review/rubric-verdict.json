@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-sync",
-    "skill_md_sha256": "7c0ffd26130cf92707c02f5152e3349e135525d44b8f45ea0f78cbd228a4b246"
+    "skill_md_sha256": "e21ba72e1027459544a9dc81bd2084fa76494472c4804ca99c0bbac707157fd6"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "audit-sync-render-20260720",
+  "reviewed_at": "2026-07-20",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -24,5 +24,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "ref-skill-design-rubric v1.3.0 の kind=skill rule で genuine 採点した。FM-001(prefix+kebab len<=60)/FM-002(2 trigger '〜たいとき'句点終端)/FM-003(trigger 数=2)/FM-004(内部動詞なし)/BD-001(Purpose & Output Contract)/BD-002(Gotchas)/BD-003(frontmatter 除く body 約93行<=300)/NM-001(basename==name)/PD-001(body<=100 かつ references/ 存在)/PD-002(冒頭30行に Purpose 見出し+『混ぜない/逆流させない/拒否する』禁則) が全 PASS。KL-001..005 は knowledge/ ディレクトリ・frontmatter.knowledge_loop 不在で skip=PASS。9 個の OUT criteria を持つ複雑 skill だが単一責務(sync)に凝集し high severity 違反 0 件のため PASS。body 全文 (sha256 7c0ffd26130cf92707c02f5152e3349e135525d44b8f45ea0f78cbd228a4b246) を単一責務・命名・境界・出力契約・SSOT 観点で確認済み。"
+  "notes": "独立監査で現SKILL.md (sha256 e21ba72e...) をrubric観点で再確認。同期という単一責務、authority分離、CLI/出力契約、OUT1..OUT9の受入節、参照SSOTに重大違反0件。PASS。"
 }

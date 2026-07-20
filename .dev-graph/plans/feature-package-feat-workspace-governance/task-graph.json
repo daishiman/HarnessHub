@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-workspace-governance",
+  "parent_feature": "feat-workspace-governance",
+  "nodes": [
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "graph_node_id": "sys-workspace-governance-p01",
+      "title": "要件ベースライン確定 — 承認キュー・RBAC細分化・監査ログ閲覧・統制ポリシー設定の要件確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P02",
+      "graph_node_id": "sys-workspace-governance-p02",
+      "title": "アーキテクチャ設計 — governance_policies拡張ポイント・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの決定",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P01"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P03",
+      "graph_node_id": "sys-workspace-governance-p03",
+      "title": "独立設計レビュー — governance_policies拡張点・reject契約・RBAC/監査UI・feature境界遵守の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P02"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P04",
+      "graph_node_id": "sys-workspace-governance-p04",
+      "title": "テストファースト設計 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6適用のテスト設計",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P03"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P05",
+      "graph_node_id": "sys-workspace-governance-p05",
+      "title": "実装 — governance_policiesテーブル・publish/:id/reject API・RBAC権限マトリクスUI(S04拡張)・承認キューUI(S05)・監査ログUI(S06)の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P04"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P06",
+      "graph_node_id": "sys-workspace-governance-p06",
+      "title": "テスト実行 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6テストの実行",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P05"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P07",
+      "graph_node_id": "sys-workspace-governance-p07",
+      "title": "受入 — 承認フローpolicy遮断・監査ログテナントスコープ検索・RBAC変更監査記録の3件受入判定",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P06"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P08",
+      "graph_node_id": "sys-workspace-governance-p08",
+      "title": "リファクタリング/マイグレーション — governance_policies新設テーブル・audit_events追加action(governance.policy_change)の既存基盤互換移行",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P07"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P09",
+      "graph_node_id": "sys-workspace-governance-p09",
+      "title": "品質保証 — ASVS L2アクセス制御/ログ到達目標・T-1/T-1b/T-1c/T-6・deny-by-default認可の横断確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P08"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P10",
+      "graph_node_id": "sys-workspace-governance-p10",
+      "title": "最終レビュー — goal-spec 6件quality_constraints・3件acceptanceの全件最終合否判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P09"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P11",
+      "graph_node_id": "sys-workspace-governance-p11",
+      "title": "エビデンス集約 — P04〜P10成果物の証跡パッケージ化",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P10"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P12",
+      "graph_node_id": "sys-workspace-governance-p12",
+      "title": "ドキュメント/運用 — workspace-admin向け承認/監査/RBAC設定 運用手順書の整備",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P11"
+      ]
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P13",
+      "graph_node_id": "sys-workspace-governance-p13",
+      "title": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P12"
+      ]
+    }
+  ]
+}

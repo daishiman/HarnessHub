@@ -8,15 +8,16 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 
 > 複数 feature が使うものはここに登録し、実装 owner を **feat-hub-foundation** (基盤) に一元化する。各 feature の P02 設計は共通層を「使う」設計に徹し、共通層そのものを再発明しない。
 > 過剰な層分割は C1 (個人開発の認知負荷) に反するため採らない (qa-020) — **共通化するのは「2 つ以上の feature が使う」ものだけ**。
+> ここでいう owner は、共通 package の境界・公開 contract・横断品質ゲートを一元管理する責任を指す。認証 policy、DB schema、publish 判定、試算式などのドメイン固有ロジックは担当 feature が同じ共通境界へ提供し、`feat-hub-foundation` に業務ロジックを集約しない。
 
 ## 1. 共通 UI (design system)
 
 | 共通部品 | 一括担保するもの | 消費する feature | 根拠 |
 |---|---|---|---|
 | design tokens (色・余白・タイポ) | コントラスト比 4.5:1 以上を token 段階で保証 | 全画面 | qa-018 |
-| フォーム部品 (input / select / button) | キーボード操作・フォーカス管理・ラベル/代替テキスト | S02, S04, S05, S07 | qa-018 |
-| テーブル / 一覧部品 | ソート・スクリーンリーダー対応・レイアウトシフト防止 | S01, S04, S06 | qa-018 |
-| 進捗・状態表示部品 | PublishRequest 等のポーリング表示・スケルトン (CLS 抑制) | S03, S05 | qa-018 |
+| フォーム部品 (input / select / button) | キーボード操作・フォーカス管理・ラベル/代替テキスト | S01 公開、S04, S05, S07, S10 | qa-018 |
+| テーブル / 一覧部品 | ソート・スクリーンリーダー対応・レイアウトシフト防止 | S01, S04, S06, S11, S14, S15, S17 | qa-018 |
+| 進捗・状態表示部品 | PublishRequest / AiJob 等のポーリング表示・スケルトン (CLS 抑制) | S01, S03, S05, S10-S12 | qa-018 |
 | 確認ダイアログ | 破壊的操作の確認 + 可逆性明示の統一パターン | S02, S04, S05 | qa-018 |
 | 通知・エラー表示 | 平易な日本語 + 次の一手の統一フォーマット (§5.4) | 全画面 | qa-018 |
 
@@ -27,11 +28,13 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 | 共通部品 | 一括担保するもの | 消費する feature |
 |---|---|---|
 | KPI カード / チャート (折れ線・バー・ドーナツ) | **bundle 3MiB 予算内の軽量実装** (重量チャート lib 不可)・配色のコントラスト | metrics-tracking, hearing-intake, user-org-admin |
-| ステップウィザード | 進捗表示・戻る/次へ・キーボード操作 | hearing-intake, publisher-plugin (公開ウィザード) |
+| ステップウィザード | 進捗表示・戻る/次へ・キーボード操作 | hearing-intake (S10), publisher-plugin (S01 公開ウィザード) |
 | ステージボード (かんばん風) | 工程チップ・риスク表示 | build-pipeline-board |
 | Markdown レンダラ + エディタ | **XSS sanitize (SEC7)**・プレビュー | docs-cms, feedback-loop, hearing-intake |
 | 状態チップ / スコープチップ / トースト / タブ / インライン編集テーブル | 状態語彙の統一 (下書き/生成中/レビュー待ち/完了 等) | 全 Studio 画面 |
 | テーマ・表示密度・言語 (ja/en) | design tokens に組込み (ライト/ダーク/自動) | 全画面 |
+
+**部品の実装順** (構築優先順位の帰結。正本: [system-design-overview.md](system-design-overview.md) §3「構築優先順位」): 基本部品 (フォーム/テーブル/ダイアログ/トースト/状態チップ) とテーマは P0 の共通シェルと同時。ステップウィザードと Markdown レンダラ (閲覧) は P1 (S10 ウィザード・S12 の生成ドキュメント表示)。ステージボードと公開ウィザードは P2。Markdown エディタは P3 (S15 編集)。インライン編集テーブルは P4 (S17)。**KPI カード/チャートは P4 の S16 まで不要** — S12 の試算は数値表示で足り、チャート部品の完成を待たない。S09 (P5) でチャートを完成させる。
 
 ## 2. 共通バックエンド層
 
@@ -50,7 +53,7 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 |---|---|---|
 | 試算エンジン (純関数) | 時給/削減時間/削減額/シート試算の単一実装。係数 (annualHours・分/回・削減率) はテナント設定 | B3, SEC5 (クライアント申告値を信じない) |
 | 実行ログ ingest + rollup | 短命 token 認証・冪等キー・サーバ時刻。週次/部門別/ユーザー別の事前集計 (Workers cron) | B2/B3 |
-| AI 処理キュー (pull 型) | シート生成・FB 対応・doc 下書きの job queue。Claude Code セッションが pull して処理・書戻し (サーバ側 AI 課金なし = D5 候補) | B5/B6 |
+| AI 処理キュー (pull 型) | シート生成・FB 対応・doc 下書きの job queue。Claude Code セッションが pull して処理・書戻し (サーバ側 AI 課金なし = **D5 確定**) | B5/B6 |
 | 通知ディスパッチ | アプリ内 + メール (生成完了/レビュー結果/週次)。送信手段は D6 候補 | B8 |
 | PII ガード | salary 等の要保護属性: admin 限定表示・API 非公開・監査・export マスク | SEC4 |
 

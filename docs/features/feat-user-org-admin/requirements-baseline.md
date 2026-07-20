@@ -13,6 +13,8 @@ architecture_refs: [arch-harness-hub-security, arch-harness-hub-backend, arch-ha
 
 > **位置づけ**: P01 (要件ベースライン確定) の成果物。promoted goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を**確定転記**した baseline であり、P02 以降の全 task はこの文書を唯一の合意事項として参照する。転記元との相違が判明した場合は本文書を修正せず goal-spec 側の再確定を dev-graph へ差し戻す (rollback 規約)。
 
+> **構築順オーバーレイ (baseline 外)**: **P4**。S17/S18 の管理 UI は低めの優先度。ただし role/deny-by-default の認可基盤は feat-auth-tenancy が P0 で先に実装する。正本: [system-design-overview.md](../../system-design-overview.md) §3 / [README.md](../README.md)。
+
 ## 1. 目的 (purpose)
 
 ユーザー管理 (S17) とアカウント設定 (S18) を提供し、role 管理 (qa-005 の 4 role と統合)・年収→時給換算の係数設定 (PII: admin 限定・API 非公開・export マスク = SEC4)・通知設定 (D6 Resend) を確立する (I14)

@@ -1,0 +1,1354 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-user-org-admin",
+  "parent_feature": "feat-user-org-admin",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/auth.md",
+      "system-spec/backend.md",
+      "system-spec/database.md",
+      "system-spec/security.md",
+      "docs/shared-layers.md",
+      "docs/screen-inventory.md",
+      "architecture/harness-hub-security.md",
+      "architecture/harness-hub-backend.md",
+      "architecture/harness-hub-frontend.md",
+      "features/feat-user-org-admin.md",
+      "features/feat-user-org-admin.context.json",
+      "goal-spec.json",
+      "specs/harness-hub-system-specification.md"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-USER-ORG-ADMIN-P01",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "ユーザー管理・アカウント設定 要件ベースライン確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "security",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-user-org-admin/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec (goal-spec.json) と features/feat-user-org-admin.md の purpose/goal/scope/acceptance を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 9 件が過不足なく転記されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP01責務として追跡し、未割当0件である",
+        "S18配下の /legal 規約・ポリシー静的ページと全利用者閲覧条件を要件ベースラインへ含める。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "goal-spec と features/feat-user-org-admin.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P01",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p01.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P02",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "architecture"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "data",
+      "secondary_workstreams": [
+        "frontend",
+        "backend",
+        "api",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P01"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/legal/",
+        "apps/hub/src/app/legal/__tests__/",
+        "docs/features/feat-user-org-admin/architecture-decision-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "qa-024 の指示 (カラム定義の詳細設計は各 feature の P02 で行う) に従い TenantCoefficient/User 拡張のスキーマと共通層接続点を確定する P02 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/architecture-decision-record.md に TenantCoefficient/User 拡張カラム設計とPIIガード/通知ディスパッチ接続点が記載されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
+        "/legal を認証済み全roleから閲覧可能な静的routeとして設計し、salary/PII policyとの境界を明示する。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "P03 レビューで設計案が却下された場合、architecture-decision-record.md へ却下理由を追記し、本 task を再実行して代替設計を再評価する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P02",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p02.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P03",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "data",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-user-org-admin/design-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P02 で確定した TenantCoefficient/User 拡張スキーマと PII ガード/通知ディスパッチ接続点を、設計担当から独立した視点でレビューする P03 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/design-review-notes.md に承認可否と SEC2/SEC4/SEC6/SEC9 適合確認結果が明記されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP03責務として追跡し、未割当0件である",
+        "/legal の公開範囲、内容owner、PII非露出、a11yを独立レビューする。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "差し戻しと判定された場合、design-review-notes.md に指摘事項を記録し、sys-user-org-admin-p02 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P03",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p03.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P04",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend",
+        "backend",
+        "data",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P03"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/legal/",
+        "apps/hub/src/app/legal/__tests__/",
+        "apps/hub/src/features/user-org-admin/__tests__/",
+        "docs/features/feat-user-org-admin/test-design.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "承認済み設計を根拠に P05 実装前の salary 非露出・監査記録・axe a11y の test-first 受入契約を定義する P04 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/test-design.md に goal-spec acceptance 3件それぞれのtest種別と合否基準が明記されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP04責務として追跡し、未割当0件である",
+        "/legal の全role access、非ログイン方針、静的内容、axe 0、salary非露出をテストへ含める。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "P05 着手後に受入契約と実装可能性の乖離が判明した場合、test-design.md を修正し P04 を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P04",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p04.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P05",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "frontend",
+      "secondary_workstreams": [
+        "backend",
+        "api",
+        "data",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P04"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/account/",
+        "apps/hub/src/app/(dashboard)/users/",
+        "apps/hub/src/app/legal/",
+        "apps/hub/src/app/legal/__tests__/",
+        "apps/hub/src/features/user-org-admin/",
+        "packages/db/schema/user-org-admin/",
+        "packages/schemas/user-org-admin/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "P02 承認設計と P04 テスト設計に基づき S17/S18・User拡張/TenantCoefficient・PIIガード・通知ディスパッチ接続を実装する P05 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "S17/S18 の画面とAPI, User拡張/TenantCoefficientスキーマ, PIIガード適用, 通知ディスパッチ接続が実装され P04 のテストスタブと接続されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP05責務として追跡し、未割当0件である",
+        "S17/S18とともに /legal 規約・ポリシー静的ページを実装し、salary/係数情報を含めない。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "実装が P02 設計と乖離した場合、乖離箇所を記録し P02 または P05 のどちらを修正するかを判断した上で dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P05",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p05.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P06",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend",
+        "backend",
+        "data",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P05"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/legal/",
+        "apps/hub/src/app/legal/__tests__/",
+        "apps/hub/src/features/user-org-admin/__tests__/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P04 test-design.md の受入契約に従って P05 実装物を実行検証する P06 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "CI run が green で完走し、salary非露出分離テスト・監査記録テスト・axe a11yテストの結果が記録されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP06責務として追跡し、未割当0件である",
+        "/legal のrole別閲覧、静的route、axe、PII非露出テストを実行する。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter hub build",
+        "pnpm --filter hub test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "CI が red の場合、失敗ステップのログを記録し sys-user-org-admin-p05 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P06",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p06.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P07",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "受入 — goal-spec acceptance 3項目の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P06"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/legal/",
+        "apps/hub/src/app/legal/__tests__/",
+        "docs/features/feat-user-org-admin/acceptance-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P06 のテスト実行結果を goal-spec acceptance と突合し feature 受入可否を判定する P07 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/acceptance-report.md に goal-spec acceptance 3件それぞれの合否と根拠が明記されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP07責務として追跡し、未割当0件である",
+        "S17/S18と /legal がaxe 0で動作し、/legalを全利用者が閲覧できる現行第3 acceptanceを判定する。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "1 件でも不合格の場合、不合格項目の根本原因が P05 か P06 のどちらにあるかを記録し、該当 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P07",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p07.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P08",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "refactoring-migration"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "data",
+      "secondary_workstreams": [
+        "security",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P07"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/legal/",
+        "apps/hub/src/app/legal/__tests__/",
+        "docs/features/feat-user-org-admin/refactoring-migration-note.md",
+        "packages/db/schema/user-org-admin/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "User テーブルへの department/salary 列追加と TenantCoefficient 新規テーブルの migration 適用・後方互換性確認を行う P08 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/refactoring-migration-note.md にmigration適用結果と既存User行への後方互換性確認結果が記録されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP08責務として追跡し、未割当0件である",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "migration 適用後に既存 User 機能へ回帰が確認された場合、追加した列とテーブルを migration のロールバック手順で戻し、原因を refactoring-migration-note.md に記録した上で sys-user-org-admin-p02 を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P08",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p08.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P09",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "operations",
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P08"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/legal/",
+        "apps/hub/src/app/legal/__tests__/",
+        "docs/features/feat-user-org-admin/quality-assurance-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "S17/S18と関連APIが既存の共有CI品質ゲートとTenant分離要件に適合していることを横断的に確認するP09タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/quality-assurance-report.md に共有CI品質ゲート適合確認結果とPIIガード運用readinessが記録されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP09責務として追跡し、未割当0件である",
+        "/legal accessibility、public/read policy、security header、PII非露出を品質gateに含める。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "品質ゲート不適合が見つかった場合、不適合箇所を quality-assurance-report.md に記録し、原因が本 feature 側にあれば該当 task (P05/P08) を、共有ゲート側にあれば feat-hub-foundation を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P09",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p09.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P10",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "最終独立レビュー — feature全体のconfirmation前最終点検",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-user-org-admin/final-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P01〜P09の成果物一式をgoal-specと8件のquality_constraintsに対して独立して再点検するP10タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/final-review-notes.md に quality_constraints 9 件の充足状況が記録されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP10責務として追跡し、未割当0件である",
+        "/legalを含む現行 acceptance 全3件を独立最終レビューする。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "1 件でも不足の場合、不足箇所が生じた原因 task を final-review-notes.md に記録し、該当 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P10",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p10.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P11",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-user-org-admin/evidence/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P06〜P10の実行結果・判定記録を再現可能な証跡として収集・保存するP11タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/evidence/index.md にP06/P07/P09/P10の一次証跡への参照が明記されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP11責務として追跡し、未割当0件である",
+        "/legal role matrix、axe結果、PII非露出をevidence bundleへ含める。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "証跡不足で判定根拠が再現できない場合、不足している証跡の生成元 task を evidence/index.md に記録し、該当 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P11",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p11.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P12",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "documentation-operations"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-user-org-admin/runbook.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P13の本番反映に先立ちS17/S18のPIIガード運用・通知ディスパッチ運用のrunbookを整備するP12タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/runbook.md にPIIガード運用・監査ログ確認・通知ディスパッチ監視・障害対応・ロールバックの5手順が記載されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP12責務として追跡し、未割当0件である",
+        "規約・ポリシー更新ownerと /legal 内容更新手順をrunbook/handoverへ含める。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "runbook.md の記載内容が P09 の readiness 確認結果と矛盾する場合、矛盾箇所を記録した上で sys-user-org-admin-p09 を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P12",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p12.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P13",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "title": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-user-org-admin",
+        "studio-extension",
+        "security",
+        "release-deploy"
+      ],
+      "related_nodes": [
+        "feat-user-org-admin",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "infrastructure",
+        "frontend",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P12"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/legal/",
+        "apps/hub/src/app/legal/__tests__/",
+        "docs/features/feat-user-org-admin/release-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "docs/shared-layers.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-user-org-admin.md",
+        "features/feat-user-org-admin.context.json",
+        "goal-spec.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "P12のrunbookに従いS17/S18を既存Workerへ本番反映しロールアウト後スモークチェックを行うP13タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-user-org-admin/sys-user-org-admin-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-user-org-admin/release-notes.md にデプロイ日時・S17/S18本番URL・salary非露出スモークチェック結果が記録されている",
+        "現行feature context sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265のscope_in/acceptance全件をP13責務として追跡し、未割当0件である",
+        "/legal routeを含むrelease smoke testとrollback記録を残す。",
+        "Normative closure: 現行 quality_constraints は legal-static-page-all-users を含む9件である。P01で9 IDをexact-set転記し、P04/P06は/legalの全role access・非ログイン方針・静的内容・axe=0・salary/PII非露出を検証する。P07/P09/P10/P11は第3 acceptanceと第9制約を同じevidence IDで追跡し、P05で実装、P12で内容更新owner、P13でroute smokeを確認する。 Evidence: quality constraint 9 ID exact-set、current context digest、/legal role matrix、axe report、PII non-exposure、release smokeを必須とする。"
+      ],
+      "verification": [
+        "wrangler deploy 相当のコマンド (runbook.md 記載、feat-hub-foundation の既存パイプライン経由)",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "本番反映後に salary 露出または監査記録の異常が確認された場合、runbook.md 記載のロールバック手順 (直前バージョンへの wrangler rollback) を実行し、実行結果を release-notes.md に記録する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P13",
+        "file_path": "tasks/feat-user-org-admin/sys-user-org-admin-p13.md",
+        "parent_feature": "feat-user-org-admin",
+        "feature_package_id": "feature-package/feat-user-org-admin",
+        "phase_ref": "P13"
+      }
+    }
+  ],
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  }
+}

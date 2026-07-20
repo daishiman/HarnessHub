@@ -1,0 +1,1235 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-publish-pipeline",
+  "parent_feature": "feat-publish-pipeline",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/spec-state.json",
+      "docs/backend-spec.md",
+      "architecture/harness-hub-backend.md",
+      "architecture/harness-hub-data.md",
+      "architecture/harness-hub-security.md",
+      "features/feat-publish-pipeline.md",
+      "features/feat-publish-pipeline.context.json",
+      "goal-spec.json",
+      "specs/harness-hub-system-specification.md"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P01",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "backend",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "security",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-publish-pipeline/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/spec-state.json",
+        "docs/backend-spec.md",
+        "features/feat-publish-pipeline.md",
+        "features/feat-publish-pipeline.context.json",
+        "goal-spec.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.91,
+        "reason": "goal-spec (goal-spec.json) と features/feat-publish-pipeline.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.91,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-publish-pipeline/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 8 件が過不足なく転記されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP01責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "goal-spec と features/feat-publish-pipeline.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P01",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p01.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P02",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "backend",
+        "architecture-decision"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "security",
+        "data",
+        "api"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-publish-pipeline/architecture-decision-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "goal-spec.json",
+        ".dev-graph/plans/feature-package-feat-domain-model-db/task-specs/phase-02-architecture.md",
+        ".dev-graph/plans/feature-package-feat-auth-tenancy/task-specs/phase-05-implementation.md",
+        "features/feat-publish-pipeline.context.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "PublishRequest 状態機械の実装方式・検査 pipeline 共有パッケージ設計・REST endpoint 設計に加え、publish_requests 等のスキーマ owner (feat-domain-model-db) と単一認可ミドルウェア owner (feat-auth-tenancy) の cross-feature 境界確定を行う P02 architecture decision タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に publish_requests 等のスキーマ owner 確定・単一認可ミドルウェア owner 確定・検査 pipeline owner/消費境界確定の 3 系統 architecture decision と、状態機械実装方式・REST API 12 経路設計・TargetChannel 直列化実装方式が記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "feat-domain-model-db または feat-auth-tenancy 側の write_scope・公開 API が今後変更され本 architecture decision の前提が崩れた場合、本 task の architecture decision を re-open し P02 を再実行する。再実行までは P03 以降の着手を保留する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P02",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p02.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P03",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-publish-pipeline/design-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P02 の architecture decision (スキーマ owner 境界・単一認可ミドルウェア owner・検査 pipeline owner・状態機械実装方式) を P02 実行者から独立した視点で検証する P03 レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に 3 系統の cross-feature 境界判断根拠の検証結果と、状態機械・検査 pipeline・単一認可ミドルウェア消費・TargetChannel 直列化の各設計の妥当性確認結果が記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP03責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "cross-feature 境界判断根拠または状態機械/検査 pipeline 設計に重大な指摘が見つかった場合、design-review-notes.md に指摘内容を記録し P02 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P03",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p03.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P04",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "テストファースト設計 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テスト設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P03"
+      ],
+      "write_scope": [
+        "apps/hub/src/__tests__/publish-pipeline/",
+        "apps/hub/src/app/api/v1/publish/",
+        "apps/hub/src/lib/publish/auth-principal.ts",
+        "docs/features/feat-publish-pipeline/test-design.md",
+        "packages/inspection/src/__tests__/",
+        "packages/schemas/publish-pipeline/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "quality_constraints 8 件 (状態機械 property test・検査 pipeline 挙動同値・Green/Yellow/Red 判定・immutable Release/atomic rollback・R2 consumer・append-only 監査・REST zod/認可・TargetChannel 直列化) をテストケースへ写像する P04 テストファースト設計タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に quality_constraints 8 件と acceptance 3 件全てに対応するテストケースが記載され、apps/hub/src/__tests__/publish-pipeline/ と packages/inspection/src/__tests__/ にスタブが作成されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP04責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "quality_constraints とテストケースの対応漏れが判明した場合、test-design.md の対応表を修正し不足カテゴリを追加する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P04",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p04.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P05",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "backend",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "api",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P04"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/api/v1/channels/",
+        "apps/hub/src/app/api/v1/projects/[id]/deployment/",
+        "apps/hub/src/app/api/v1/projects/[id]/releases/",
+        "apps/hub/src/app/api/v1/publish/",
+        "apps/hub/src/app/api/v1/releases/[id]/suspend/",
+        "apps/hub/src/lib/publish/",
+        "apps/hub/src/lib/publish/auth-principal.ts",
+        "packages/inspection/",
+        "packages/schemas/publish-pipeline/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P02/P04 で確定した設計とテストスタブに基づき apps/hub の publish REST endpoint・状態機械・packages/inspection・promote/rollback・監査 event 記録を実装する P05 実装タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "apps/hub/src/lib/publish/, apps/hub/src/app/api/v1/publish/ 他 REST endpoint 12 経路, packages/inspection/, packages/schemas/publish-pipeline/ が実装され、P04 の test-design.md に列挙された全テストケースに対応する実装対象が揃っている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP05責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "実装が P02 の architecture decision と矛盾する場合、該当コードを削除し P02 の設計に沿って再実装する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P05",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p05.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P06",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security",
+        "api"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P05"
+      ],
+      "write_scope": [
+        "apps/hub/src/__tests__/publish-pipeline/",
+        "apps/hub/src/app/api/v1/publish/",
+        "apps/hub/src/lib/publish/auth-principal.ts",
+        "docs/features/feat-publish-pipeline/test-run-results.md",
+        "packages/schemas/publish-pipeline/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P05 の実装に対して P04 のテストスタブを実行し quality_constraints 8 件の充足状況を機械的に確認する P06 テスト実行タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-results.md に quality_constraints 8 件全ての pass 結果が記録されている (fail が残る場合は差し戻し理由が明記されている)",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP06責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかのテストが fail した場合、test-run-results.md に原因を記録し P05 (実装) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P06",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p06.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P07",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-publish-pipeline/acceptance-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "features/feat-publish-pipeline.context.json",
+        "goal-spec.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P06 で green 化したテスト結果を基に goal-spec acceptance 3 件の充足を確認する P07 受入タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-record.md に goal-spec acceptance 3 件全ての確認結果 (pass) と証跡が記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP07責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "acceptance 3 件のいずれかが不充足の場合、acceptance-record.md に理由を記録し P05 (実装) または P02 (設計) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P07",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p07.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P08",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "backend",
+        "refactor-migration"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "security",
+      "secondary_workstreams": [
+        "backend",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P07"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/api/v1/publish/",
+        "apps/hub/src/lib/publish/auth-principal.ts",
+        "docs/features/feat-publish-pipeline/refactoring-migration-note.md",
+        "packages/inspection/",
+        "packages/schemas/publish-pipeline/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "本 feature は packages/db/schema/ を write_scope に持たないため DB migration 生成を伴わない。P08 は harness-creator Python 資産の TypeScript 移植最終整理と検査ロジック二重実装防止の CI 恒久検査確立に読み替える required-node タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に Python 資産移植の最終差分整理記録・検査ロジック二重実装防止 CI 検査設定・packages/db/schema/ 直接アクセス禁止 CI 検査設定の 3 点が記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP08責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "CI 検査導入により既存の正当な import が誤検知される場合、検査ルールを是正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P08",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p08.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P09",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "security",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "security",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P08"
+      ],
+      "write_scope": [
+        "apps/hub/scripts/",
+        "apps/hub/src/app/api/v1/publish/",
+        "apps/hub/src/lib/publish/auth-principal.ts",
+        "docs/features/feat-publish-pipeline/quality-assurance-report.md",
+        "packages/schemas/publish-pipeline/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "qa-037 のレート制限・Idempotency-Key TTL・tenant 分離・secret scan の非機能要件を機械的に保証する P09 品質保証タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md にレート制限 (10 回/分)・Idempotency-Key (TTL 24 時間、payload 不一致時 422)・tenant 分離・secret scan CI ゲート・monotonic authz マトリクス参照確認の全結果が記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP09責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "レート制限や Idempotency-Key の挙動が qa-037 の確定仕様と一致しない場合、apps/hub/src/app/api/v1/publish/ の該当実装を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P09",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p09.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P10",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-publish-pipeline/final-review-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P03 の設計時レビューとは独立して、実装完了後の quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断を最終確認する P10 独立最終レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-record.md に quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断 3 件全ての最終確認結果 (問題なし) が記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP10責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "重大な指摘がある場合、final-review-record.md に理由を記録し該当する P02/P05/P08/P09 のいずれかへ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P10",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p10.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P11",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-publish-pipeline/evidence-summary.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P06/P07/P09/P10 で得られた証跡を集約し、第三者が再現可能な形で保存する P11 証跡タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-summary.md に quality_constraints 8 件それぞれの再現コマンド列と対応する結果が記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP11責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "集約対象の証跡に欠落・矛盾が見つかった場合、該当する P06/P07/P09/P10 へ差し戻し再取得を依頼する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P11",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p11.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P12",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "documentation",
+        "operations"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-publish-pipeline/runbook.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "運用時の rollback 手順・ポーリング監視・orphan_candidate 処理を runbook として確立する P12 文書化・運用タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に orphan_candidate 処理・rollback 手順・ポーリング監視・異常検知時対応手順の 4 項目全てが記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP12責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "runbook.md の手順が実装と矛盾することが判明した場合、該当箇所を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P12",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p12.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-PUBLISH-PIPELINE-P13",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "parent_feature": "feat-publish-pipeline",
+      "title": "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "infrastructure",
+        "backend",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P12"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/api/v1/publish/",
+        "apps/hub/src/lib/publish/auth-principal.ts",
+        "docs/features/feat-publish-pipeline/release-record.md",
+        "packages/schemas/publish-pipeline/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-publish-pipeline.context.json",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "apps/hub は cloudflare-workers/hub 上の実デプロイ単位であり、P13 は publish endpoint の本番デプロイと full smoke test を実施する release-deploy タスクとして literal に適用される",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-record.md に本番デプロイ完了記録と full smoke test 6 項目全ての pass 結果が記載されている",
+        "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP13責務として追跡し、未割当0件である",
+        "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "smoke test のいずれかが fail した場合、本番デプロイを直前の安定版へロールバックし、release-record.md に原因を記録した上で該当する P05/P09 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISH-PIPELINE-P13",
+        "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p13.md",
+        "parent_feature": "feat-publish-pipeline",
+        "feature_package_id": "feature-package/feat-publish-pipeline",
+        "phase_ref": "P13"
+      }
+    }
+  ],
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  }
+}

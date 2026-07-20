@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+  "feature": {
+    "graph_node_id": "feat-build-pipeline-board",
+    "title": "Studio: 構築パイプライン可視化 (7 工程ボード)",
+    "description": "ヒアリング→要件定義→設計→構築→テスト→レビュー→公開の 7 工程を S13 のボードで進行管理し (工程操作は admin)、公開工程を既存 PublishRequest 状態機械 (B4/I2/I3) へ接続する\n\n各ハーネスの構築進捗が 7 工程ボードで可視化され、工程操作が admin 限定 + 監査記録付きで行え、公開工程が publish パイプラインと二重実装なしに連動する状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P01",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P01",
+      "title": "構築パイプラインボード要件ベースライン確定",
+      "description": "構築パイプラインボード要件ベースライン確定 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P02",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P02",
+      "title": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計",
+      "description": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P03",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P03",
+      "title": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認",
+      "description": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P04",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P04",
+      "title": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成",
+      "description": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P05",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P05",
+      "title": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装",
+      "description": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P06",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P06",
+      "title": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録",
+      "description": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P07",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P08",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P08",
+      "title": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認",
+      "description": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P09",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P09",
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認",
+      "description": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P10",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P10",
+      "title": "最終独立レビュー — quality_constraints 6 件の充足判定",
+      "description": "最終独立レビュー — quality_constraints 6 件の充足判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P11",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P11",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "description": "エビデンス収集 — 再現可能な検証証跡の集約 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P12",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P12",
+      "title": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成",
+      "description": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P13",
+      "parent_feature": "feat-build-pipeline-board",
+      "phase_ref": "P13",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "description": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P12"
+      ]
+    }
+  ]
+}

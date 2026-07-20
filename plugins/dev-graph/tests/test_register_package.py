@@ -31,12 +31,12 @@ NOW = "2026-07-13T00:00:00Z"
 def feature_node() -> dict:
     return {
         "graph_node_id": "feature-1", "artifact_kind": "feature", "artifact_subtypes": [],
-        "title": "Feature", "project_id": "project", "domain": "system", "status": "active",
+        "title": "Feature", "project_id": "project", "domain": "system", "status": "draft",
         "owners": ["team"], "tags": [], "priority": None, "start_date": None, "target_date": None,
         "iteration": None, "created_at": NOW, "updated_at": NOW, "depends_on": [], "related_nodes": [],
         "resource_scope": [], "parent_feature": None, "feature_package_id": None, "phase_ref": None,
         "file_path": "features/feature-1.md", "template_id": "feature", "template_version": "1.0.0",
-        "confirmation_status": "confirmed", "evaluation_status": "pass",
+        "confirmation_status": "draft", "evaluation_status": "pending",
         "confirmation_evidence": {"evaluator": "reviewer", "evidence_ref": "evidence/feature.json", "evaluated_digest": HEX_DIGEST},
         "source_lineage": {"origin_kind": "manual", "source_plugin": None, "source_path": None,
                            "source_version": None, "source_digest": None, "imported_at": None},
@@ -46,7 +46,9 @@ def feature_node() -> dict:
         "github_project_linkages": [], "pull_request_linkages": [], "execution_contexts": [],
         "completion_evidence": {"policy": "linked_pr_merged_all", "status": "in_progress", "source": None,
                                 "completed_at": None, "reconciled_at": None, "evidence_refs": []},
-        "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": NOW},
+        "implementation_readiness": {
+            "status": "incomplete", "missing_sections": ["13-task package missing"], "checked_at": NOW,
+        },
         "purpose": "Deliver the feature", "goal": "Complete it", "scope_in": ["system"],
         "scope_out": ["unrelated"], "acceptance": ["accepted"], "architecture_refs": ["architecture/system.md"],
     }
@@ -87,7 +89,7 @@ class RegisterPackageTest(unittest.TestCase):
         self.registration = self.root / "dev-graph-registration.json"
         self.promotion = self.root / "atomic-promotion-receipt.json"
         self.output = self.root / "graph.json"
-        self.receipt = self.root / "registration-receipt.json"
+        self.receipt = self.root / "dev-graph-registration-receipt.json"
         nodes = [task_node(i) for i in range(13)]
         self.write(self.package, {
             "schema_version": "1.0.0", "feature_package_id": "feature-package/demo",
@@ -144,6 +146,13 @@ class RegisterPackageTest(unittest.TestCase):
         self.assertEqual(len(graph["nodes"]), 14)
         self.assertEqual(graph["graph_revision"], 5)
         self.assertEqual({n["tracker_binding"] for n in graph["nodes"][1:]}, {"none"})
+        parent = graph["nodes"][0]
+        self.assertEqual(parent["status"], "active")
+        self.assertIsNone(parent["feature_package_id"])
+        self.assertEqual((parent["confirmation_status"], parent["evaluation_status"]), ("confirmed", "pass"))
+        self.assertEqual(parent["implementation_readiness"], {
+            "status": "complete", "missing_sections": [], "checked_at": NOW,
+        })
         receipt_before = self.receipt.read_bytes()
         second = self.invoke()
         self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
@@ -223,6 +232,65 @@ class RegisterPackageTest(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("digest mismatch", result.stdout)
         self.assertFalse(self.receipt.exists())
+
+    def test_rejects_noncanonical_receipt_path(self) -> None:
+        wrong_receipt = self.root / "registration-receipt.json"
+        result = subprocess.run([
+            sys.executable, str(SCRIPT), "register", "--repo-root", str(self.root),
+            "--package", self.package.name, "--graph", self.registration.name,
+            "--output", self.output.name, "--receipt", wrong_receipt.name,
+        ], text=True, capture_output=True, check=False)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("must match the system-build handoff contract", result.stdout)
+        self.assertFalse(wrong_receipt.exists())
+
+    def test_supersedes_exact_13_in_one_revision_and_preserves_old_receipt(self) -> None:
+        first = self.invoke()
+        self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
+        old_receipt = self.receipt.read_bytes()
+        generation = self.root / "generation-2"
+        generation.mkdir()
+        package = json.loads(self.package.read_text())
+        registration = json.loads(self.registration.read_text())
+        new_digest = "sha256:" + "b" * 64
+        registration["source_digest"] = new_digest
+        registration["promotion_receipt"] = "generation-2/atomic-promotion-receipt.json"
+        for node in registration["nodes"]:
+            node["source_lineage"]["source_digest"] = new_digest.removeprefix("sha256:")
+            node["source_lineage"]["source_path"] = f"generation-2/{node['phase_ref']}.md"
+            node["confirmation_evidence"]["evaluated_digest"] = new_digest.removeprefix("sha256:")
+        self.write(generation / "feature-package.json", package)
+        self.write(generation / "dev-graph-registration.json", registration)
+        self.write(generation / "atomic-promotion-receipt.json", {
+            "schema_version": "1.0.0", "status": "promoted",
+            "published_digest": new_digest,
+            "registration_manifest": "generation-2/dev-graph-registration.json",
+        })
+        command = [
+            sys.executable, str(SCRIPT), "register", "--repo-root", str(self.root),
+            "--package", "generation-2/feature-package.json",
+            "--graph", "generation-2/dev-graph-registration.json",
+            "--output", self.output.name,
+            "--receipt", "generation-2/dev-graph-registration-receipt.json",
+        ]
+        superseded = subprocess.run(command, text=True, capture_output=True, check=False)
+        self.assertEqual(superseded.returncode, 0, superseded.stdout + superseded.stderr)
+        receipt = json.loads(superseded.stdout)
+        self.assertEqual(receipt["operation"], "superseded")
+        self.assertEqual(receipt["supersedes_source_digest"], DIGEST)
+        self.assertEqual(receipt["graph_revision_before"], 5)
+        self.assertEqual(receipt["graph_revision_after"], 6)
+        graph = json.loads(self.output.read_text())
+        task_nodes = [node for node in graph["nodes"] if node.get("parent_feature") == "feature-1"]
+        self.assertEqual(len(task_nodes), 13)
+        self.assertEqual(
+            {node["source_lineage"]["source_digest"] for node in task_nodes},
+            {new_digest.removeprefix("sha256:")},
+        )
+        self.assertEqual(self.receipt.read_bytes(), old_receipt)
+        repeated = subprocess.run(command, text=True, capture_output=True, check=False)
+        self.assertEqual(repeated.returncode, 0, repeated.stdout + repeated.stderr)
+        self.assertTrue(json.loads(repeated.stdout)["idempotent"])
 
     def test_rejects_non_forward_dependency(self) -> None:
         registration = json.loads(self.registration.read_text())

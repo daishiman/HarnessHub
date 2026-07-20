@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/feature-package-feat-workspace-governance",
+  "destination": ".dev-graph/plans/feature-package-feat-workspace-governance",
+  "digest": "sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91",
+  "feature_package_id": "feature-package/feat-workspace-governance",
+  "receipt": ".dev-graph/plans/feature-package-feat-workspace-governance/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-19T01:58:50Z"
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-19T14:21:39Z",
+  "generation_id": "b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-workspace-governance",
+    "published_digest": "sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91",
+    "receipt": ".dev-graph/plans/feature-package-feat-workspace-governance/atomic-promotion-receipt.json"
+  },
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+  "evaluated_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+  "published_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/dev-graph-registration.json"
+}

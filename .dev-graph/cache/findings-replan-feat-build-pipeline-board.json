@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-build-pipeline-board",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r1-scope",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-build-pipeline-board"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9\",\n  \"feature_package_id\": \"feature-package/feat-build-pipeline-board\",\n  \"parent_feature\": \"feat-build-pipeline-board\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "a52e1bf7ee65402aca4296000226349b6e6bccf7f3c31b45a8ec09a8a2a134ce"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "441a038a999e7368535f77b9505f70ef55e152b0a4624a009fedcbf3b0391f25"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "5ea2972a9fcb08476d3b0d8757b0a8d991cd4bee90c13f32d7f28d222cae28a5"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "e187f0994c5ad5b35f01ec31f1c813805d6aa0047b8605f339c50e860dd787a3"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "b2a75e7c0b4d23a42a817bb7626b0d2abe203e5c9455c691d4e6198a3c09bc0f"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "c7bac9d06dc2d36ab72159cdade1e780bc2c6a7fac45bbbb9e15b963cccadf6d"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "c16e76379ae04e1f627d7c799929539e8bdd92f93711c1b76ab8d477b545a0d5"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "fa6c4bf7afbf06e49ab166d1c3efa72ac86b39ca3dd05c4bbfea95bde2d9521c"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "e32939208599c52f6149d75d336b2b6006d9eb61fc46835a31a704cb22c99123"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "98c5e5671a291c6029806ea6f966f36ea992f798da873f63a55956b976c3a060"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "4331c2cae1f1f2fc4075e622fa797643bbe1fa194ef8d10c9645a7e99106e40a"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "9431212a588f1bc52434ee66c0c2803e9ff8b13879389f5f31020be71d7e6ee6"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "8b81c1fd749f7473f0758c0533b582f571c0b45a4fde6099f1d0b1cc8bb9647a"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "0bb6f9b385bfadcdba9c6b735f6bf5264e4eca97d3e9fd8fba4d8842ac1d0832"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "9e6c1a5e6082f2a1bd92466c600c78c4ac05926e484a08d2da35c0ab245e1069"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "74653c8ae7878f0f8f687778dbd31ae8e464fbbda78c377ab3f7f1bbbfb53d9a"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "96f8a15093ce84fcf6ed2a5ec06ca77c6f665a375534c94747089382a0b31d7f"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "cee63af5015ccab8d2b20b7e6958816e19553dedca5ae83a22ecabc6bad480fd"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "更新後bytesを独立再評価。source lineage sha256:eeed295d50359e11ac8aee84800def3ad3399cee866ab5b4dc2712116c9a4441一致。正本5 endpoint（GET list/detail、POST manual recoveryのsheet_id xor feedback_id、PATCH detail、POST stage）をP02/P05へ固定し、P04/P06/P07/P09/P10/P11/P13がrole・tenant・validation、axe、CWV測定IDとCI証跡を追跡。exact-13、handoff source 16件、forward DAG、repository containmentも整合。",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

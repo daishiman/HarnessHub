@@ -177,13 +177,18 @@ def main() -> int:
         events = load_json(events_path) if events_path.exists() else {"schema_version": "1.0", "events": []}
         leases: list[dict[str, Any]] = ledger["leases"]
         now = datetime.now(timezone.utc)
+        expiring_states = {"reserving", "claimed", "in_progress", "claim_pending_local_repair"}
         for lease in leases:
             expiry = lease.get("expires_at")
-            if lease.get("state") in {"claimed", "in_progress"} and expiry:
+            if lease.get("state") in expiring_states and expiry:
                 try:
                     if datetime.fromisoformat(expiry.replace("Z", "+00:00")) < now: lease["state"] = "expired"
                 except ValueError: raise ContractError("invalid lease expiry")
         current = next((x for x in leases if x.get("graph_node_id") == a.graph_node_id and x.get("state") in ACTIVE), None)
+        reclaimable = next((
+            x for x in reversed(leases)
+            if x.get("graph_node_id") == a.graph_node_id and x.get("state") == "expired"
+        ), None)
         if a.op == "list": dump({**ctx, "workspace_identity": ledger.get("workspace_identity"), "leases": leases, "events": events["events"]}); return 0
         if not a.graph_node_id: raise ContractError("operation requires --graph-node-id")
         if a.op == "claim":
@@ -246,6 +251,16 @@ def main() -> int:
                 result["updated_at"] = utc_now()
                 _persist(ledger_path, events_path, ledger, events)
                 raise
+        elif a.op == "reclaim":
+            target = reclaimable
+            if target is None:
+                raise ContractError("no expired lease for graph node")
+            target["state"] = "released"
+            target["released_at"] = utc_now()
+            target["updated_at"] = utc_now()
+            target["reclaim_reason"] = "explicit"
+            result = target
+            writer_receipt = None
         elif not current: raise ContractError("no active lease for graph node")
         elif a.op in {"heartbeat", "park", "release"}:
             if current.get("session_id") != a.session_id: raise ContractError("lease owner session mismatch")
@@ -264,9 +279,6 @@ def main() -> int:
             if not event or event.get("type") != "completion" or event.get("repository_id") != ctx["repository_id"] or not event.get("merge_commit_sha") or not event.get("policy_digest"):
                 raise ContractError("matching unconsumed C26 completion event required")
             event["consumed_at"] = utc_now(); current["state"] = "released"; current["released_at"] = utc_now(); current["completion_event_key"] = a.completion_event_key; result = current; writer_receipt = None
-        else:
-            if current.get("state") not in {"claimed", "in_progress", "expired"}: raise ContractError("pending review/merge cannot be reclaimed")
-            current["state"] = "released"; current["released_at"] = utc_now(); current["reclaim_reason"] = "explicit"; result = current; writer_receipt = None
         if a.op != "claim" or result is current: _persist(ledger_path, events_path, ledger, events)
     dump({**ctx, "workspace_identity": ledger.get("workspace_identity"), "lease": result, "writer_receipt": writer_receipt, "conflicts": []}); return 0
 

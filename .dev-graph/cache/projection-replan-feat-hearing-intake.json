@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+  "feature": {
+    "graph_node_id": "feat-hearing-intake",
+    "title": "Studio: ヒアリング intake (ウィザード・シート管理・AI 生成キュー)",
+    "description": "業務課題から業務ツールが生まれる入口として、S10 の 4 ステップウィザード (削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理を提供する (I11, J4)\n\n非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) できる状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P01",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P01",
+      "title": "ヒアリング intake 要件ベースライン確定",
+      "description": "ヒアリング intake 要件ベースライン確定 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P02",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P02",
+      "title": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計",
+      "description": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P03",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P03",
+      "title": "独立設計レビュー — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer 設計・AI キュー認可・Markdown sanitize の妥当性確認",
+      "description": "独立設計レビュー — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer 設計・AI キュー認可・Markdown sanitize の妥当性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P04",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P04",
+      "title": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
+      "description": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P05",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P05",
+      "title": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
+      "description": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P06",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P06",
+      "title": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録",
+      "description": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P07",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P08",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P08",
+      "title": "リファクタリング/マイグレーション — HearingSheet/FormData新規テーブルのmigration（共通ai_jobsは既存schemaを消費） 生成と後方互換性確認",
+      "description": "リファクタリング/マイグレーション — HearingSheet/FormData新規テーブルのmigration（共通ai_jobsは既存schemaを消費） 生成と後方互換性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P09",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P09",
+      "title": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認",
+      "description": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P10",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P10",
+      "title": "最終独立レビュー — feature 全体の confirmation 前最終点検",
+      "description": "最終独立レビュー — feature 全体の confirmation 前最終点検 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P11",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P11",
+      "title": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約",
+      "description": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P12",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P12",
+      "title": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化",
+      "description": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P13",
+      "parent_feature": "feat-hearing-intake",
+      "phase_ref": "P13",
+      "title": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認",
+      "description": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P12"
+      ]
+    }
+  ]
+}

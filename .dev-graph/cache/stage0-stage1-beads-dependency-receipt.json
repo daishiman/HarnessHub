@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "stage0-stage1-beads-dependency-receipt",
+  "generated_at": "2026-07-19T14:23:37Z",
+  "graph": {
+    "path": ".dev-graph/state/graph.json",
+    "graph_revision": 40,
+    "sha256": "9e02767555c267342af9acbfc296772377125fd2d677fff7816ad54eb61b440b"
+  },
+  "depends_on": {
+    "feature_id": "feat-stage0-distribution-gate",
+    "beads_issue_id": "HarnessHub-j71",
+    "external_ref": "dev-graph:feat-stage0-distribution-gate",
+    "source_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+  },
+  "blocked_features": [
+    {
+      "feature_id": "feat-publisher-plugin",
+      "beads_issue_id": "HarnessHub-zdh",
+      "external_ref": "dev-graph:feat-publisher-plugin",
+      "source_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+      "dependency_type": "blocks",
+      "status": "verified"
+    },
+    {
+      "feature_id": "feat-dual-catalog-web",
+      "beads_issue_id": "HarnessHub-dhy",
+      "external_ref": "dev-graph:feat-dual-catalog-web",
+      "source_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+      "dependency_type": "blocks",
+      "status": "verified"
+    }
+  ],
+  "parity_status": "PASS"
+}

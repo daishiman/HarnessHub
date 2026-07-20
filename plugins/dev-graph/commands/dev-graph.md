@@ -1,65 +1,74 @@
 ---
 name: dev-graph
-description: dev-graph を操作したいとき、init/node/status/sync/spec/plan/requirements/render/decompose/next/worktree を正規 capability へ dispatch したいときに使う。
+description: dev-graph の運用ループを node/next/worktree/status/sync/render の6 verbで実行するときに使う。
 kind: command
-version: 0.1.0
+version: 0.2.0
 owner: harness maintainers
-source: plugin-plans/dev-graph/component-inventory.json#C09
-argument-hint: "<init|node|status|sync|spec|requirements|render|decompose|next|worktree> [args] | plan --feature-id ID --feature-context RELATIVE_JSON"
+source: plugins/dev-graph/commands/dev-graph.md
+argument-hint: "<node|next|worktree|status|sync|render> [args]"
 allowed-tools: [Read, Bash, Skill]
 disable-model-invocation: false
 ---
 
-# /dev-graph dispatcher
+# /dev-graph
 
-最初の token を verb として厳密に解釈する。未知 verb、依存 plugin/script 不在、root context 不正は候補一覧を返して停止し、近似実行しない。
+最初の token を verb として厳密に解釈し、次の6機能だけへ dispatch する。未知 verb、旧 verb、依存 Skill/script 不在、repository context 不正は候補一覧を表示して停止する。近似実行や shell 文字列の再評価は行わない。
 
-下表は verb ごとに「そこで何をするか（概要）」「成果物をどこに生成するか（出力先）」「どの capability へ振り分けるか（dispatch）」をまとめたもの。成果物の置き場所は大きく3系統ある。
-
-- **content root**（`issues/ tasks/ specs/ architecture/ features/ docs/ system-spec/` の7つ。呼出し元 repo 直下に置く Markdown ドキュメント群。config.json の `content_roots` が正本）。
-- **`.dev-graph/`**（グラフ状態・キャッシュ・描画結果などツール内部データ）。
-- **`eval-log/`**（各実行の記録ログ）。
-
-「副作用なし」＝ファイルを書き換えず結果を表示するだけ、の意味。
-
-| verb | 概要（そこで何をするか） | 成果物の出力先 | dispatch |
+| verb | 機能 | 正本・出力 | dispatch |
 |---|---|---|---|
-| init | dev-graph を初期化する（作業グラフ＝タスク依存関係図の土台を用意。冪等＝何度実行しても同じ状態） | content root **6個**（`issues/ tasks/ specs/ architecture/ features/ docs/`）＋ `.dev-graph/`（config.json・state/・cache/・locks/・templates/）。※7個目の `system-spec/` は init では作らず `spec` が用意する | Skill `run-dev-graph-init` |
-| node | グラフ上のノード（node＝1作業単位）を正規 path へ atomic（全部成功か全部失敗か）で追加・差分更新する | 種類別 content root（issue→`issues/`、task→`tasks/`、仕様→`specs/`、設計→`architecture/`、文書→`docs/`、feature→`features/`）＋ `.dev-graph/state/graph.json` | Skill `run-dev-graph-node` |
-| status | ノードを条件検索し、依存・完了状態を確認する（副作用なし＝表示のみ） | 出力なし（画面表示）＋ `eval-log/` に実行ログ | Skill `run-dev-graph-status` |
-| sync | dev-graph と Beads / GitHub Issues・PR を突き合わせて同期する（冪等収束） | `.dev-graph/state/graph.json` ＋ 外部（Beads DB・GitHub）＋ lifecycle 収束時は `tasks/` | Skill `run-dev-graph-sync` |
-| spec | システム仕様（作るものの仕様書）を作成し、確定仕様・設計を dev-graph へ取り込む | `system-spec/`（harness 生成）＋ `specs/`・`architecture/`（ノード登録）＋ `.dev-graph/state/graph.json` | Skill `run-dev-graph-system-spec` (system-spec-harness 引用) |
-| plan | 着手可能になった feature を実行タスクへ計画する（大きな未分解の構想は直接受けない） | `.dev-graph/staging/`→`.dev-graph/plans/`（feature package）。※実際に書くのは外部 skill 側で dev-graph 本体は書かない | external Skill `run-system-dev-plan`。`--feature-id` と repo-relative `--feature-context` 必須 |
-| requirements | 確定仕様と feature package から実装要件を導出し、準備完了時だけ次工程へ handoff（引き継ぎ）する | 要件定義書＋ `--handoff-target` で指定した引き継ぎ先（capability-build / task-graph）。※`architecture/`・`features/`・`docs/` は入力であり出力ではない | Skill `run-dev-graph-requirements` |
-| render | dev-graph を静的 HTML に可視化する（外部 CDN 不要の自己完結 SVG＋図） | `.dev-graph/render/index.html`（`--out` で指定）。グラフ自体は read-only | Skill `run-dev-graph-render` |
-| decompose | 大きな構想を feature・architecture・機能間依存へマクロ分解する | `features/`（feature ノード）＋ `architecture/` ＋ `.dev-graph/state/graph.json`。ready feature は外部 planner 経由で `.dev-graph/staging/`→`plans/` と `tasks/<feature>/` へ | Skill `run-dev-graph-decompose` (macro feature only) |
-| next | 依存・競合・lease を満たす、次に着手できる作業バッチを算出する（副作用なし＝提示のみ） | 出力なし（画面表示）＋ `eval-log/` に実行ログ | Skill `run-dev-graph-schedule` |
-| worktree | worktree（作業用に複製したディレクトリ）の占有権を管理する | **git 共通ディレクトリ配下の `dev-graph/`**（`leases.json`・`events.json`）。claim 時は `.dev-graph/state/graph.json` にも実行コンテキストを記録。※`.dev-graph/locks/` は使わない | `scripts/manage-worktree-lease.py` |
+| `node` | グラフ上のノード（1作業単位）を正規 path へ atomic（全部成功か全部失敗か）で追加・差分更新する | 種類別 content root（issue→`issues/`、task→`tasks/`、仕様→`specs/`、設計→`architecture/`、文書→`docs/`、feature→`features/`）＋`.dev-graph/state/graph.json` | Skill `run-dev-graph-node` |
+| `next` | 依存・競合・lease を満たす、次に着手できる作業バッチを算出する | 画面表示＋`eval-log/run-dev-graph-schedule-execution.json`。graph/tracker/leaseはread-only | Skill `run-dev-graph-schedule` |
+| `worktree` | worktree（作業用ディレクトリ）の占有権を管理する | git共通ディレクトリ配下の`dev-graph/leases.json`・`events.json`。claim時だけgraphへ実行contextを投影する。`.dev-graph/locks/`は使わない | `scripts/manage-worktree-lease.py` |
+| `status` | ノードを条件検索し、依存・完了状態を確認する | 画面表示＋`eval-log/run-dev-graph-status-execution.json`。graph/content/trackerはread-only | Skill `run-dev-graph-status` |
+| `sync` | dev-graphとBeads/GitHub Issues・PRを3-wayで突き合わせ、同じ入力の再実行で差分0へ収束させる | graph＋sync snapshot＋外部tracker。lifecycle収束時だけ`tasks/`をC02 writer経由で更新 | Skill `run-dev-graph-sync` |
+| `render` | dev-graphを外部CDN不要の自己完結HTMLへ可視化する | 既定`.dev-graph/render/index.html`（`--out`で変更）。graphはread-only | Skill `run-dev-graph-render` |
 
-> 補足: dev-graph 自身のスキル系 verb（init/node/status/sync/spec/requirements/render/decompose/next）は、実行のたびに `eval-log/run-dev-graph-<verb>-*.json(l)` へ進捗・評価ログを残す（status・next のような表示のみ系も含む）。`plan`（外部 skill）と `worktree`（純スクリプト）は dev-graph の eval-log 契約の対象外。
+運用ループは`node → next → worktree → status → sync`を状況に応じて繰り返し、`render`は任意の時点で実行する。
 
-`worktree` は `claim|heartbeat|park|release|list` だけを許可し、必ず `--repo-root "$CLAUDE_PROJECT_DIR"` を渡す。位置引数をscriptへそのまま渡さず、次の正準flagへ一度だけ変換する。
+## 共通 preflight
 
-各操作の役割は次のとおり。いずれもリース（lease＝worktree の一時的な占有権。複数セッションが同じ作業を奪い合わないための作業ロック）を扱い、記録は **git 共通ディレクトリ配下の `dev-graph/`**（`leases.json`・`events.json`。例: `.git/dev-graph/leases.json`）に残る。init が作る `.dev-graph/locks/` はこのリース管理では使われない点に注意。lease は既定 30 分で失効し（config の `lease_ttl_seconds=1800`）、`heartbeat` は既定 60 秒間隔で延長する。
+1. 呼出し元repository rootを`--repo-root`、`CLAUDE_PROJECT_DIR`、現在地の順で1回だけ確定する。
+2. `next/status/render/worktree list`は`resolve-repo-context.py --mode read`、`node/sync/worktree claim|heartbeat|park|release`は`--mode write`で実行する。
+3. configの`local_state.graph`を正規graph pathとして使い、以後cwdから再解決しない。
+4. write操作は`--dry-run`が指定されたらgraph/content/external writeを0件にする。
 
-| 操作 | そこで何をするか | 出力・効果 |
-|---|---|---|
-| `list` | 現在のリース割り当て状況を一覧表示する | 画面表示（副作用なし） |
-| `claim` | 指定ノードの作業権を自分の session に割り当てて確保する | `<git共通dir>/dev-graph/leases.json` にリース作成＋graph node へ実行コンテキスト記録＋`devgraph/<id>` ブランチ作成 |
-| `heartbeat` | 保持中のリースが生きていることを定期通知し、失効（timeout による自動解放）を防ぐ | リースの有効期限を延長 |
-| `park` | リースを一時退避（park＝中断して脇に置く）する | リースを保留状態へ |
-| `release` | 作業権を解放し、他 session が claim できる状態へ戻す | リース削除 |
+## verb契約
 
-下表は、ユーザーが打つ形（public form）を script が受け取る正準的な引数（script form）へどう変換するかの対応。
+### node
+
+`run-dev-graph-node`を呼び、preview後に`upsert-node.py`へ検証済みJSONを渡す。入力は完全な`node`または既存nodeへの`patch`と、frontmatterを含まない`body`を持つ。`graph_node_id`は不変で、`artifact_kind`からcontent rootを決める。2ファイル更新はWAL（先行書込みログ）で保護し、割込み後は次のnode起動時にrollbackする。pending中はread-only verbもfail-closedで停止する。
+
+### next
+
+`run-dev-graph-schedule`を呼ぶ。git共通ディレクトリの`dev-graph/leases.json`を必須snapshotとして渡し、graph/tracker/leaseの実行前後digestを確認する。Beads bindingでは`bd-bridge.py ready`のedge parity確認済み候補だけを採用し、GitHub/noneはlocal graphから計算する。`--scope`と`--max-parallel`をそのまま渡す。
+
+### worktree
+
+許可操作は`claim|heartbeat|park|release|reclaim|list`だけ。必ず`--repo-root <root>`を付け、public formを次の正準flagへ変換する。
 
 | public form | script form |
 |---|---|
-| `worktree list` | `manage-worktree-lease.py --op list` |
-| `worktree claim <id> --branch <name> --session-id <session>` | `manage-worktree-lease.py --op claim --graph-node-id <id> --branch <name> --session-id <session>` |
-| `worktree heartbeat <id> --session-id <session>` | `manage-worktree-lease.py --op heartbeat --graph-node-id <id> --session-id <session>` |
-| `worktree park <id> --session-id <session>` | `manage-worktree-lease.py --op park --graph-node-id <id> --session-id <session>` |
-| `worktree release <id> --session-id <session>` | `manage-worktree-lease.py --op release --graph-node-id <id> --session-id <session>` |
+| `worktree list` | `--op list` |
+| `worktree claim <id> --branch <name> --session-id <session>` | `--op claim --graph-node-id <id> --branch <name> --session-id <session>` |
+| `worktree heartbeat <id> --session-id <session>` | `--op heartbeat --graph-node-id <id> --session-id <session>` |
+| `worktree park <id> --session-id <session>` | `--op park --graph-node-id <id> --session-id <session>` |
+| `worktree release <id> --session-id <session>` | `--op release --graph-node-id <id> --session-id <session>` |
+| `worktree reclaim <id>` | `--op reclaim --graph-node-id <id>` |
 
-claim は graph node id、branch、session identity が必須。`plan` は大きな未分解構想を直接受けず、C14 が生成した ready feature を `--feature-id` と caller-repository 相対 JSON `--feature-context` で要求する。両者の id/digest が一致しなければ停止する。
+`claim`は`graph_node_id`、`session_id`、正準branch `devgraph/<graph_node_id>`を要求する。`reclaim`は期限切れleaseだけを明示的に`released`へ遷移させる。lease正本は`git rev-parse --git-common-dir`で得た共通dirの`dev-graph/`に限定する。listの実体呼出しは`manage-worktree-lease.py --op list --repo-root <root>`である。
 
-引数は選択した Skill/script にそのまま引き継ぐが shell 文字列として再評価しない。dispatch 前に `resolve-repo-context.py --mode read` を実行する。
+### status
+
+`run-dev-graph-status`を呼ぶ。filterは`id/kind/project/domain/status/tag/keyword`のAND条件とし、結果0件も成功とする。結果には依存・completion・tracker linkage・execution contextを含める。書込み先はrepository内の`eval-log/`配下だけを許可する。
+
+### sync
+
+`run-dev-graph-sync`を呼び、実行本体は`sync-graph.py`とする。bindingごとの単一authorityを守り、last-synced snapshotとの3-way差分を作る。close/deleteは物理削除せずclosed/tombstonedへ収束し、Projectsの部分失敗はalias単位`pending_retry`として残す。`--dry-run`→承認済み`--apply`→同じ入力の`--dry-run`を行い、`imports=[]`、`exports=[]`、`pending_retry=[]`、`changes=0`を完了条件にする。PR完了は`reconcile-github-lifecycle.py`でdefault branchへのmergeと`required_pull_requests=all|any`を検証した場合だけ採用する。
+
+### render
+
+`run-dev-graph-render`を呼ぶ。`render-graph-html.py`へ検証済みgraph、任意の`--scope`・registration receipt、repository内output pathを渡す。出力HTMLはSVG/CSS/JSをinline化し、外部`script/link`参照を0件にする。
+
+## 旧 verb
+
+`init`、`spec`、`requirements`、`decompose`、`plan`、`system-spec`はこのdispatcherの運用面から除外した。必要な上流設計・計画は専用plugin/Skillを直接呼び、確定成果だけを`/dev-graph node`で登録する。

@@ -26,3 +26,7 @@ C15 の registry と各章 anchor の整合も確認できました (dev-workflo
 ## observation (2026-07-18T07:51:04)
 
 - `aggregate-completeness.py --report` → 「OK: レポート形状と総合判定整合を満たす (verdict=PASS)」(fail-closed 再導出と一致)
+
+## observation (2026-07-18T23:42:19)
+
+C07/C06/C08 の監査結果が届き次第、fail-closed 集約でレポートを確定します。

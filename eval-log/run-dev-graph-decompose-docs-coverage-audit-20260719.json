@@ -1,0 +1,86 @@
+{
+  "schema": "run-dev-graph-decompose/docs-coverage-audit/1.0.0",
+  "audited_at": "2026-07-18T22:35:48Z",
+  "source_root": "docs/",
+  "source_file_count": 25,
+  "source_inventory_digest_algorithm": "sha256(canonical-json([{path,sha256}], sorted by path))",
+  "source_inventory_digest": "sha256:8c4ed97454a92c88b6ac7d0ebaab2eaa72f30af3ad019f84144c44aa59aa2deb",
+  "graph_revision": 20,
+  "graph_node_counts": {
+    "feature": 15,
+    "architecture": 6,
+    "task": 143,
+    "specification": 1,
+    "issue": 2
+  },
+  "source_files": [
+    {"path": "docs/backend-spec.md", "sha256": "eeb9bcca0237d386442632e1db30407e18c0810d3f0898b3a4cdc02423299db8", "role": "implementation-spec", "coverage": ["arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "feat-domain-model-db", "feat-auth-tenancy", "feat-publish-pipeline", "feat-dual-catalog-web", "feat-hearing-intake", "feat-build-pipeline-board", "feat-feedback-loop", "feat-docs-cms", "feat-metrics-tracking", "feat-user-org-admin", "feat-tenant-data-retention"]},
+    {"path": "docs/features/README.md", "sha256": "56ba86d68a80d80ac6e59387a88b5d02fbaf57d988cef6eb154473141531d597", "role": "derived-delivery-index", "coverage": ["arch-harness-hub-dev-workflow", "feature-dag"], "finding_refs": ["F1"]},
+    {"path": "docs/features/feat-auth-tenancy/requirements-baseline.md", "sha256": "2f7600e795d840fd2b3af55c0380ccab476705e9a3a7adf0a941b6bcfb06be2e", "role": "feature-baseline", "coverage": ["feat-auth-tenancy"]},
+    {"path": "docs/features/feat-build-pipeline-board/requirements-baseline.md", "sha256": "0e4722b270feae114dd490be31dc9eeeb5e17be748edbf160cb7016f124014b8", "role": "feature-baseline", "coverage": ["feat-build-pipeline-board"]},
+    {"path": "docs/features/feat-docs-cms/requirements-baseline.md", "sha256": "3f076787add378964e7743e8033ddcd4a7fe4e35672eef7db18150d09833203c", "role": "feature-baseline", "coverage": ["feat-docs-cms"]},
+    {"path": "docs/features/feat-domain-model-db/requirements-baseline.md", "sha256": "5b591475b2b95dc3cbdc76b1c9ab3bc585b1c70baad75311f2420884cf013214", "role": "feature-baseline-and-followup-source", "coverage": ["feat-domain-model-db", "feat-tenant-data-retention"], "finding_refs": ["F3"]},
+    {"path": "docs/features/feat-feedback-loop/requirements-baseline.md", "sha256": "5bc05913976aa1798329251e4b9b92d55894e9d5fd3e2bf8f6ea9f836144d1e4", "role": "feature-baseline", "coverage": ["feat-feedback-loop"]},
+    {"path": "docs/features/feat-hearing-intake/requirements-baseline.md", "sha256": "b902b80e2f11e5566e7baf42c0c4770e6418c6aea3fef0d6a4622559ed7eeb93", "role": "feature-baseline", "coverage": ["feat-hearing-intake"]},
+    {"path": "docs/features/feat-hub-foundation/requirements-baseline.md", "sha256": "f56457ad36880fa10eb9e8f6a7b8c9575eccfa3a1152397c2c9af93d0279c00c", "role": "feature-baseline", "coverage": ["feat-hub-foundation"]},
+    {"path": "docs/features/feat-metrics-tracking/requirements-baseline.md", "sha256": "b31e32b3ab667090379b6aaac3aa5fa3cbe5cde0a8d91aa95141c7ce7fbad2bf", "role": "feature-baseline", "coverage": ["feat-metrics-tracking"]},
+    {"path": "docs/features/feat-publish-pipeline/requirements-baseline.md", "sha256": "33f4b13806ddd4f76d305bb5e04d933dd6771debf06aee729b9357fa9c811589", "role": "feature-baseline", "coverage": ["feat-publish-pipeline"]},
+    {"path": "docs/features/feat-stage0-distribution-gate/requirements-baseline.md", "sha256": "5f9b22c902730746914344668789bad391385890cb32f2c793f72311846c70b1", "role": "feature-baseline", "coverage": ["feat-stage0-distribution-gate"]},
+    {"path": "docs/features/feat-user-org-admin/requirements-baseline.md", "sha256": "0eaf2dccbc39922da6b016c37e217932dbeb0a11709ac6cd6038822236aaff8e", "role": "feature-baseline", "coverage": ["feat-user-org-admin"]},
+    {"path": "docs/frontend-spec.md", "sha256": "8886c0453425dd7b607272686a98e79261c2dd40ded420df838fcfd6ad959e35", "role": "implementation-spec", "coverage": ["arch-harness-hub-frontend", "feat-dual-catalog-web", "feat-workspace-governance", "feat-metrics-tracking", "feat-hearing-intake", "feat-build-pipeline-board", "feat-feedback-loop", "feat-docs-cms", "feat-user-org-admin", "feat-tenant-data-retention"]},
+    {"path": "docs/infrastructure-spec.md", "sha256": "426dfc77388da50ae166e7a15dbd2409e01e0d0e732a3d297b988e14c09a2b70", "role": "implementation-spec", "coverage": ["arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow", "feat-stage0-distribution-gate", "feat-hub-foundation", "feat-domain-model-db", "feat-tenant-data-retention"]},
+    {"path": "docs/mockups/harness-studio-v2-analysis.md", "sha256": "b73746520e3f6ef68b10593807d61445f0a3c1b50aba5c7e2be58054a6c14893", "role": "canonical-mockup-analysis", "coverage": ["feat-metrics-tracking", "feat-hearing-intake", "feat-build-pipeline-board", "feat-feedback-loop", "feat-docs-cms", "feat-user-org-admin", "feat-dual-catalog-web", "feat-workspace-governance"]},
+    {"path": "docs/mockups/harness-studio-v2-extracted/08871f71.js", "sha256": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd", "role": "mockup-runtime-source", "coverage": ["docs/mockups/harness-studio-v2-analysis.md"]},
+    {"path": "docs/mockups/harness-studio-v2-extracted/7d7b94cc.js", "sha256": "ae4f0ac8449655e17cca1e3b179effcb6817a3b0d8dc47f112a9c39c25c39fd7", "role": "mockup-runtime-source", "coverage": ["docs/mockups/harness-studio-v2-analysis.md"]},
+    {"path": "docs/mockups/harness-studio-v2-extracted/template.html", "sha256": "a8781ff3c6065f2f989e332cdf193175360e00c8b535aeafc789597dce17d93a", "role": "mockup-extracted-source", "coverage": ["docs/mockups/harness-studio-v2-analysis.md"]},
+    {"path": "docs/mockups/harness-studio-v2.html", "sha256": "5de0227c91629152733a69cd05bbdef4f5eeb6912290246c9db59dc2b1f6d3da", "role": "mockup-original-source", "coverage": ["docs/mockups/harness-studio-v2-analysis.md"]},
+    {"path": "docs/screen-inventory.md", "sha256": "8c5ea16950998ecb1a196e2aa9ebaacd8244788ff3a8084e5c0919bf2639ac7b", "role": "screen-routing-index", "coverage": ["feat-auth-tenancy", "feat-dual-catalog-web", "feat-workspace-governance", "feat-metrics-tracking", "feat-hearing-intake", "feat-build-pipeline-board", "feat-feedback-loop", "feat-docs-cms", "feat-user-org-admin"]},
+    {"path": "docs/security-spec.md", "sha256": "735617fe97d073a742f93a9b711f0a8d758617b8038befbd3d90ea51af596445", "role": "implementation-spec", "coverage": ["arch-harness-hub-security", "feat-auth-tenancy", "feat-publish-pipeline", "feat-publisher-plugin", "feat-workspace-governance", "feat-user-org-admin", "feat-tenant-data-retention"], "finding_refs": ["F2"]},
+    {"path": "docs/shared-layers.md", "sha256": "b205054494bd9025e4b8edf7214282c8cd02aaf1b054473afc326ab39b4bbb8d", "role": "cross-cutting-layer-registry", "coverage": ["feat-hub-foundation", "arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow"], "finding_refs": ["F5"]},
+    {"path": "docs/system-design-overview.md", "sha256": "342d27c4c4387fbf103f1ebf23451b1f3f9c9fd4430faac8aecb98d162bcfc64", "role": "architecture-and-delivery-order-ssot", "coverage": ["feature-dag", "arch-harness-hub-dev-workflow", "feat-tenant-data-retention"], "finding_refs": ["F1", "F2"]},
+    {"path": "docs/user-journeys.md", "sha256": "aff25e0be886fe8366a6e0e98b7edd83bcd1e67b6223ea906e9b1083c74c6733", "role": "journey-to-feature-index", "coverage": ["feat-stage0-distribution-gate", "feat-publisher-plugin", "feat-publish-pipeline", "feat-dual-catalog-web", "feat-workspace-governance", "feat-hearing-intake", "feat-build-pipeline-board", "feat-feedback-loop", "feat-metrics-tracking"]}
+  ],
+  "structural_checks": {
+    "graph_schema_valid": true,
+    "graph_schema_violations": 0,
+    "feature_dag_cycles": 0,
+    "phase_task_mixing": 0,
+    "unresolved_architecture_refs": 0,
+    "exact_13_packages": "11/11",
+    "feature_markdown_graph_depends_on_parity": "15/15",
+    "feature_markdown_graph_macro_field_parity": "15/15 (priority/purpose/goal/scope/acceptance/architecture_refs/depends_on/source_lineage/updated_at)",
+    "feature_context_graph_macro_field_parity": "11/11 existing contexts",
+    "feature_source_lineage_digest_match": "15/15 (14 specification wrapper + 1 retention baseline)"
+  },
+  "independent_macro_review": {
+    "status": "PASS",
+    "reviewer": "run-dev-graph-decompose forked macro auditor",
+    "decisions": [
+      "feat-domain-model-db architecture_refs は data/backend/infrastructure の和集合",
+      "feat-hub-foundation は shared-layers の package boundary owner として全6 architectureを参照",
+      "feat-tenant-data-retention から docs-cms/hearing-intake/build-pipeline-board への必須 edge は追加しない",
+      "S12/S15 は retention の任意統合 API / extension point を消費し、host UI は各 feature が所有"
+    ]
+  },
+  "planner_staleness": {
+    "status": "recorded_not_executed",
+    "features": ["feat-hub-foundation", "feat-domain-model-db", "feat-user-org-admin"],
+    "reason": "macro context が既存 exact-13 package 生成後に変わったため、外部 system-dev-planner の package は次回 execution-ready gate 通過後に再生成する。macro skill は P01〜P13 を直接変更しない。",
+    "new_tracker_publications": 0
+  },
+  "findings": [
+    {"id": "F1", "severity": "high", "status": "resolved", "summary": "Dependency SSOT を docs/system-design-overview.md §3 に固定し、publisher-plugin と dual-catalog-web を publish-pipeline 後の並列へ統一した。README の dual-catalog 先行契約は publish-pipeline + Stage 0 distribution gate へ同期し、graph edge と一致。"},
+    {"id": "F2", "severity": "high", "status": "resolved", "summary": "C4 を業務データ保持可・tenant envelope encryption・即時完全削除へ統一し、非保持対象を顧客業務システム接続 credential と WebApp runtime に限定した。salary は保持例外ではなく要保護 PII として統一。"},
+    {"id": "F3", "severity": "medium", "status": "resolved", "summary": "feat-domain-model-db の現行 macro feature/context/graph を data/backend/infrastructure の3参照へ統一した。digest 固定の外部 planner P01 baseline は当時の data/infrastructure snapshot として保持し、package stale を planner_staleness に記録した。"},
+    {"id": "F4", "severity": "high", "status": "resolved", "summary": "14 feature の source_lineage を現行 specs/harness-hub-system-specification.md digest a4c26b6d... へ再評価し、null 4件を解消した。retention は抽出元 baseline digest 5b591475... と一致し、全15 feature が実ファイル digest と一致。"},
+    {"id": "F5", "severity": "medium", "status": "resolved", "summary": "/legal static page を feat-user-org-admin の scope/acceptance に固定し、shared-layers §1〜§3 の共通 package boundary owner を feat-hub-foundation に固定した。新 feature や phase task は追加していない。"},
+    {"id": "F6", "severity": "medium", "status": "resolved", "summary": "feat-build-pipeline-board depended on feat-hearing-intake in graph revision 19 but not in feature Markdown; the Markdown depends_on exact set was synchronized."},
+    {"id": "F7", "severity": "medium", "status": "resolved", "summary": "retention と docs-cms/hearing-intake/build-pipeline-board の関係を独立監査し、必須 dependency edge は追加しないと確定した。retention は任意統合 API / extension point を供給し、host UI ownership は consumer feature に残す。"}
+  ],
+  "verdict": {
+    "structure": "PASS",
+    "content_coverage_and_freshness": "PASS",
+    "overall": "COMPLETE",
+    "reason": "docs/ 全25ファイルを exact inventory/hash と heading-level role で被覆し、dependency/C4/ownership/architecture/lineage の authority drift を graph revision 20 へ同期した。循環0・phase-task混入0・全macro field parity・全source digest一致。既存 planner package の stale は macro 完了を偽装せず別欄で記録した。"
+  }
+}

@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-040 |
+| Web (web) | 確定 | 確定質疑: qa-062 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-040 (対応セル: web)
+### qa-062 (対応セル: web)
 
-**質問**: mockup (harness-studio-v2) を実装するための frontend 詳細仕様 (技術構成・画面×API・データ取得・フォーム) をどう確定するか? 未確定 8 論点: (1) モバイル対応範囲、(2) モバイルナビゲーション方式、(3) UI 基盤 (スタイリング+コンポーネント)、(4) サーバ状態管理、(5) チャート実装 (qa-022 の「SVG 自作か超軽量 lib」の二択)、(6) ボード/テーブルのモバイル表現、(7) フォーム実装、(8) i18n 方式 (※並行ヒアリング統合時の qa 採番衝突で旧 qa-034 の質疑録が失われたため qa-040 として再登録)
+**質問**: docs/frontend-spec.md の 2026-07-18 追記 (S01 公開ウィザード配置・S11/S12/S14/S15/S02 詳細契約・§10 実装順・redirect/ナビ段階運用) を frontend 仕様へ反映するか。 (訂正再登録: qa-055 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-062 として登録し直す)
 
-**回答**: qa-022 の確定方針 (Next.js 再実装・mockup は見た目と情報設計の正本・軽量チャート・サーバ計算値の表示専用) を実装可能粒度へ展開した詳細正本 docs/frontend-spec.md を確定する。ユーザーが AskUserQuestion (2026-07-17) で 8 論点を確定: (1) モバイル範囲 = 重点最適化+全画面動作保証 (閲覧・申請系はスマホ専用レイアウト、管理系は動作保証+デスクトップ推奨バナー)、(2) ナビ = ボトムタブ 4+その他シート (HIG タブバー原則)、(3) UI 基盤 = Tailwind CSS v4 + shadcn/ui ベースの packages/ui (Radix 由来 a11y を部品側担保 = qa-018 適合・コード取込方式で lock-in なし)、(4) サーバ状態 = TanStack Query v5 (ポーリング統一 qa-031 を refetchInterval で実装。publish 2 秒指数 backoff・ボード/通知 30 秒・refetchIntervalInBackground=false)、(5) チャート = SVG 自作 (折れ線/バー/ドーナツ/スパークライン 4 種のみ・SSR 可・代替テーブル切替で a11y 担保)、(6) ボード = 工程セグメント+縦リスト・テーブル = 主要フィールドのカード化、(7) フォーム = react-hook-form + zodResolver (packages/schemas の zod を step 単位 pick で再利用 = B1 単一ソース)、(8) i18n = 自作 typed 辞書 (ja 正本・en は同型制約で後追い・enum→表示ラベル写像 = backend-spec §2.1 と状態語彙統一 = qa-021 を同一 module に集約)。構成: App Router route 一覧 (S01-S18+通知+検索を 15 route へ写像・S03 は S02 の公開タブに統合)、コード構造規約 (API 呼出は packages/schemas + 型付き fetch wrapper に閉じる・金額のクライアント再計算禁止 = SEC5・グローバル状態 lib 不採用 = C1)、design tokens (mockup 実測 #1677ff 主色系を semantic token 化・コントラスト 4.5:1 を token 段階で保証・ダーク/密度/言語は user_settings 正本)、部品登録簿 (shadcn ベース+自作 12 分類を feat-hub-foundation が実装)、画面×API マップ (backend-spec §4 の endpoint へ全画面を接続)、mutation→invalidate マップと楽観更新 3 箇所限定、RFC 9457 エラー写像 (errors[]→RHF setError・401→signin・409→直列化案内)、ウィザード試算の SEC5 規則 (提出前は時間概算のみ・金額はサーバ snapshot のみ)、性能予算 (CWV good p75 + First Load JS ≤250KB gzip/route CI ゲート)、Playwright 2 viewport (1280×800/390×844)+axe CI。発見事項: S03/S05 が要する PublishRequest 一覧 API (GET /api/v1/publish, filter: project/channel/status) が backend-spec §4.6 に無く、additive evolution (§3.1) として追加要求を docs/frontend-spec.md §3.4 に記録 (feat-publish-pipeline P02 で確定)。
+**回答**: qa-040 の確定内容 (技術選定 8 論点。qa-035 スマホサイズ仕様の維持を含む) を全面維持しつつ、次の delta を確定する。mock 実測どおり公開ウィザードは S01「プラグインを公開」モーダル (S02 は既存 Project の詳細・管理・導入で新規取込の入口ではない)。S01/S02 のデータ取得へ install descriptor (GET /harnesses/:projectId/install) と publish 中 2s→backoff polling を追加。S11 一覧: status/HS コード・title/domain・department/people・hours/applicant/updated_at の 6 列 (モバイルはカード畳み)、status/department filter + 全文検索 + cursor ページング、権限外行のクライアント側除外実装は禁止 (API が範囲を返す)。S12 詳細: ヘッダ + 生成 4 section (概要/課題/機能タグ/削減効果) + 元入力/試算 snapshot + Build/PublishRequest 参照。received の表示は全画面共通「受付」。admin 操作は右側メタ領域で member には非表示かつ API でも拒否。P2 有効後のみ自動作成 Build への導線を表示。S12 PDF: 別データ生成せず認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化し window.print() (salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test)。S01 公開ウィザード: Step1 CLI 取込推奨/Web 手動 ZIP 代替 → Step2 target(skill/web_app)/category/visibility (Stage 1 は workspace まで)/説明 → Step3 検査結果と公開確認。新規 Project 作成→PublishRequest→upload/submit を 1 UI フローに束ねるが API status は隠さない。Green 自動/Yellow 承認待ち/Needs Fix は S03 findings へ。単一テナント/単一 Project を定数にしない。S14: status 件数 + FR コード/harness/type (改善要望/レビュー依頼/バグ報告)/priority/requester/date/status、sanitize 済み AI 応答、修正版 Build 導線で S13→publish→更新通知まで追跡。S15: common+自 tenant 合成一覧、sanitize 済み Markdown 閲覧、admin 編集 textarea+preview、member に編集 CTA を出さず common 編集は provider-admin のみ。S02: 全 Release と stable 版、install/download modal は backend descriptor 表示のみで R2 key/永続生 URL を組み立てず、promote/rollback/suspend は owner だけに表示。P6 ボトムシート対象へ公開ウィザード追加。§10 実装順: P0 共通シェル + S07/S08 → P1 S10/S11/S12 → P2 S01→S02/S03→S13 → P3 S14/S15 → P4 S16/S17/S18 → P5 S09 + S05/S06。/ redirect は S09 完成 (P5) まで /sheets へ。サイドバー/ボトムタブは未実装 phase 項目を非表示 (グレーアウト不可 = qa-018 整合)、ボトムタブ先頭 slot は S09 完成までシート (S11) 暫定。部品実装順は shared-layers §1 (StepWizard=P1、StageBoard=P2、MarkdownEditor=P3、InlineEditTable=P4、チャート/KPI=P4 の S16 から S09 で完成)。認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 

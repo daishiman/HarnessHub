@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-render",
-    "skill_md_sha256": "b99930a8bf5f559969defbb343daa26323c5821e95705d4b32e1b452cda216f2"
+    "skill_md_sha256": "da9113c9c03ede0ddcba41ac7046e73b312d7fb3b5e04964ac76d0c16a8bca6d"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "audit-sync-render-20260720",
+  "reviewed_at": "2026-07-20",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -24,5 +24,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "ref-skill-design-rubric 規範で現 SKILL.md (sha256 b99930a8...) を採点。FM: name/description/trigger 適合、allowed-tools 最小。BD: Output contract+Gotchas 具備、body<300行。NM: dir 名一致。PD: 本文簡潔。RG: goal_seek/feedback_contract 明示。責務は『dev-graph をゼロ依存静的 HTML へ可視化』へ単一収束し、レンダリング本体は render-graph-html.py へ委譲、graph は read-only で越境なし。high severity 0 件。PASS。"
+  "notes": "独立監査で現SKILL.md (sha256 da9113c9...) をrubric観点で再確認。静的可視化の単一責務、CLI/出力契約、自己完結性、scope/receipt/containment受入条件に重大違反0件。PASS。"
 }

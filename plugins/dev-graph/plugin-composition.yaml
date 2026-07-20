@@ -1,17 +1,20 @@
 name: dev-graph
-description: macro feature graph、tracker projection、worktree lifecycleを構成するときに使うlocal-first plugin bundle。
+description: node/next/worktree/status/sync/renderの運用ループでlocal graph、tracker projection、worktree lifecycleを管理するlocal-first plugin bundle。
 kind: plugin-composition
-version: 0.1.0
+version: 0.2.0
 owner: harness maintainers
 
 contract:
-  intent: 大きな構想をfeature/architecture/機能間依存へ分解し、external micro plannerのexact-13 packageを登録・実行収束する。
+  intent: 確定済みartifactを正規content rootとgraphへatomic登録し、ready計算・worktree lease・状態確認・tracker同期・静的可視化を収束させる。
   interface:
     inputs: [natural-language-want, graph-node, system-spec-import, feature-execution-package]
     outputs: [local-graph, markdown-artifacts, tracker-projections, ready-sets, build-handoff]
   invariant:
     - local graph/Markdownが正本で外部trackerはbinding別projectionである
     - C02だけがgraph/content writerでC12/C28だけが外部tracker writerである
+    - public commandはnode/next/worktree/status/sync/renderの6 verbだけを受理する
+    - next/statusはgraph/content/tracker/leaseを変更せずeval-logだけを書ける
+    - worktree lease正本はgit common dir配下dev-graphであり.dev-graph/locksは使わない
     - C14はmacro featureだけを所有しexact-13 task生成はexternal system-dev-plannerへ委譲する
     - C19はexternal system-spec-harnessを引用しcompilerを複製しない
     - caller repository外content accessとfeature branch上durable completionを拒否する
@@ -43,23 +46,25 @@ capabilities:
   - {kind: script, ref: scripts/reconcile-github-lifecycle.py, tier: core}
   - {kind: script, ref: scripts/render-graph-html.py, tier: core}
   - {kind: script, ref: scripts/schedule-graph.py, tier: core}
+  - {kind: script, ref: scripts/status-graph.py, tier: core}
+  - {kind: script, ref: scripts/sync-graph.py, tier: core}
+  - {kind: script, ref: scripts/upsert-node.py, tier: core}
   - {kind: script, ref: scripts/register-package.py, tier: core}
 
 internal_support:
   - ref: scripts/_common.py
     owners: [C11, C12, C13, C16, C24, C26, C27, C28, C29]
     purpose: top-level capability ではなく、plugin-root scripts が共有する内部 runtime helper
+  - ref: scripts/node_transaction.py
+    owners: [C02, C05, C11, C15]
+    purpose: nodeのWAL recoveryとread-only consumerのpending transaction fail-closed検査
 
 dependencies:
-  - {from: commands/dev-graph.md, to: skills/run-dev-graph-init, type: calls}
   - {from: commands/dev-graph.md, to: skills/run-dev-graph-node, type: calls}
   - {from: commands/dev-graph.md, to: skills/run-dev-graph-sync, type: calls}
-  - {from: commands/dev-graph.md, to: skills/run-dev-graph-requirements, type: calls}
   - {from: commands/dev-graph.md, to: skills/run-dev-graph-render, type: calls}
-  - {from: commands/dev-graph.md, to: skills/run-dev-graph-decompose, type: calls}
   - {from: commands/dev-graph.md, to: skills/run-dev-graph-schedule, type: calls}
   - {from: commands/dev-graph.md, to: skills/run-dev-graph-status, type: calls}
-  - {from: commands/dev-graph.md, to: skills/run-dev-graph-system-spec, type: calls}
   - {from: commands/dev-graph.md, to: scripts/manage-worktree-lease.py, type: calls}
   - {from: skills/run-dev-graph-decompose, to: skills/run-dev-graph-node, type: calls}
   - {from: skills/run-dev-graph-decompose, to: scripts/resolve-repo-context.py, type: calls}
@@ -78,7 +83,9 @@ dependencies:
   - {from: skills/run-dev-graph-schedule, to: scripts/bd-bridge.py, type: calls}
   - {from: skills/run-dev-graph-status, to: scripts/resolve-repo-context.py, type: calls}
   - {from: skills/run-dev-graph-status, to: scripts/validate-graph-schema.py, type: calls}
+  - {from: skills/run-dev-graph-status, to: scripts/status-graph.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/resolve-repo-context.py, type: calls}
+  - {from: skills/run-dev-graph-sync, to: scripts/sync-graph.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/gh-bridge.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/bd-bridge.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/reconcile-github-lifecycle.py, type: calls}
@@ -88,6 +95,7 @@ dependencies:
   - {from: skills/run-dev-graph-schedule, to: scripts/schedule-graph.py, type: calls}
   - {from: skills/run-dev-graph-init, to: scripts/resolve-repo-context.py, type: calls}
   - {from: skills/run-dev-graph-node, to: scripts/validate-graph-schema.py, type: calls}
+  - {from: skills/run-dev-graph-node, to: scripts/upsert-node.py, type: calls}
   - {from: skills/run-dev-graph-node, to: scripts/register-package.py, type: calls}
   - {from: skills/run-dev-graph-system-spec, to: scripts/resolve-repo-context.py, type: calls}
   - {from: skills/run-dev-graph-system-spec, to: scripts/validate-graph-schema.py, type: calls}

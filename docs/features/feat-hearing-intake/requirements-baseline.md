@@ -13,6 +13,8 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend, arch-ha
 
 > **位置づけ**: P01 (要件ベースライン確定) の成果物。promoted goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を**確定転記**した baseline であり、P02 以降の全 task はこの文書を唯一の合意事項として参照する。転記元との相違が判明した場合は本文書を修正せず goal-spec 側の再確定を dev-graph へ差し戻す (rollback 規約)。
 
+> **構築順オーバーレイ (baseline 外)**: **P1・最優先**。S10 作成→HS 採番/AI 生成→S11 一覧→S12 詳細/PDF/Build 導線までを一つの slice として完成させる。正本: [system-design-overview.md](../../system-design-overview.md) §3 / [screen-inventory.md](../../screen-inventory.md)「最優先画面の完了境界」。
+
 ## 1. 目的 (purpose)
 
 業務課題から業務ツールが生まれる入口として、S10 の 4 ステップウィザード (削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理を提供する (I11, J4)

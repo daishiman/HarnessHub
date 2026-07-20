@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-domain-model-db",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r1-scope",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-domain-model-db"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b\",\n  \"feature_package_id\": \"feature-package/feat-domain-model-db\",\n  \"parent_feature\": \"feat-domain-model-db\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "3fb7c5cc0c5d494e51104129f69371e36c4d643bf060d626c321bd8462711b2f"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "06d8c8e4194f3a1414eafb1cb67fafae799b3093a04106b75bb88534d4569a93"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "4d951645003ccefd593844b417aefdfca76ef9520828f47a2badbea4b2ec4cc6"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "3533744b02c987c5d0203e2b9d2136236d9fad75a3370275fe05410ff1d254e1"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "3ee76932e3b2ed379c8307320d1891ab357853315cd1b3f6de5924dfb88ad138"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "a79e81f1dcb7ad4de9f48b8cdbe5ec12052fbd827c7cdd6d228a8fc1c7d59ce5"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "2f951d9008f6a70a62258b6006a34e013fcba0713941191ff5475a9f4b672eb7"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "3e1d9555789d4991560f49ef1938809838f8131a7c26cb917eb7251a923824c7"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "8ac97ba43c3eefcab8e2e9ac09ae7e9f616d3f02d83fc73c333067531a1240a0"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "8ed77b4d46b31456942acb9e8327240b6340715f9ade41f6ce1f7faa22df70fc"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "a5187b6601f84f4f5035f1bed5158c45c4750390efae6e4fd1bbd9be205ef812"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "39258beff6b485af807b02931fe24aa9d8058924e5c7ae4b0a93e20c7957e933"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "0258879d486f7decb0cbc3ff563a8f424e9144ac50a6b20413dd79fc65dbcce0"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "505fcd9186c06df15e965a9af7a8e9bfa65ae0c1dc85d8faccc99a4c70de50cb"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "f4456f8c9b9d1151789275618a86423c7ef6932f50a68674d2743da16c58b808"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "5bb6a6313741d3198518fb6927a3acc7a5290856257cea4638f91d0e1419784f"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "b8ef78640d15ea9c149721948d2e055e3383e262d39bfea9ae765d81da9e5c79"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "539fffe4fb3ea4f9c35d76c3535a31081972fba6a0b6aa6428517eb0a2fd8a08"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "更新後bytesを独立再評価。source lineage sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffc一致。P05 export/restore実装、P06 schema harness＋2-tenant fixture（P08 migration非前提）、P08 single migration生成・適用、P09 .github/workflows/ci.yml gate、P10の10 constraint ID exact-setを確認。P05/P06/P09にP12逆依存なし。exact-13、handoff source 16件、forward DAG、repository containmentも整合。",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

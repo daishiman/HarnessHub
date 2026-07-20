@@ -1,0 +1,20 @@
+{
+  "applied": [],
+  "changes": 0,
+  "conflicts": [],
+  "converged": true,
+  "executed_at": "2026-07-20T02:14:38.314796Z",
+  "exports": [],
+  "graph_sha256_after": "e27016856c7205e8b6d6c8363b977cd75d8ae8a38686ac017fd0f554d587b525",
+  "graph_sha256_before": "e27016856c7205e8b6d6c8363b977cd75d8ae8a38686ac017fd0f554d587b525",
+  "imports": [],
+  "mode": "dry-run",
+  "ok": true,
+  "pending_retry": [],
+  "remote_sha256_after": null,
+  "remote_sha256_before": null,
+  "snapshot_sha256_after": null,
+  "snapshot_sha256_before": null,
+  "tombstones": [],
+  "write_count": 0
+}

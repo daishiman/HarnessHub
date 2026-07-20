@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-hub-foundation",
+  "generation_id": "8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+  "published_path": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+  "published_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/atomic-promotion-receipt.json",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-hub-foundation",
+    "published_digest": "sha256:d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+    "receipt": ".dev-graph/plans/feature-package-feat-hub-foundation/atomic-promotion-receipt.json"
+  }
+}

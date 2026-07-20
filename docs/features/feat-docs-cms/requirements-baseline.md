@@ -13,6 +13,8 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend]
 
 > **位置づけ**: P01 (要件ベースライン確定) の成果物。promoted goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を**確定転記**した baseline であり、P02 以降の全 task はこの文書を唯一の合意事項として参照する。転記元との相違が判明した場合は本文書を修正せず goal-spec 側の再確定を dev-graph へ差し戻す (rollback 規約)。
 
+> **構築順オーバーレイ (baseline 外)**: **P3**。改善ループと同じ段階で、S15 の閲覧→編集→AI 下書きを完成させる。正本: [system-design-overview.md](../../system-design-overview.md) §3 / [README.md](../README.md)。
+
 ## 1. 目的 (purpose)
 
 利用ガイド・FAQ 等のドキュメントを common (全テナント) / tenant (テナント限定) スコープで管理し (B7/I13)、S15 の閲覧/編集 UI と D5 pull 型 AI キューによる下書き生成を提供する

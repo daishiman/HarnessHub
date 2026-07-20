@@ -66,6 +66,12 @@ feedback_contract: # per-skill 評価基準(SSOT=plugins/harness-creator/scripts
 
 # System development planning
 
+## Purpose & Output Contract
+
+- 入力: dev-graph の ready feature (`--feature-id` と caller-repository 相対の `--feature-context` JSON。JSON の `graph_node_id` と `--feature-id`、feature digest の一致が必須)。
+- 出力: exact-13 task specs、13-entry inventory、13-node intra-feature DAG、`system-build-handoff.json`、plan-structure/task-specs HTML を含む staging→atomic promotion 済み feature package。
+- 完了条件: C12 deterministic validation と fork evaluator C1..C4 が同一 canonical digest で PASS し、C11 の atomic promotion receipt が発行され、二回目実行で構造が変化しない。
+
 ## Invariants
 
 - caller repository の解決と全 path 検査は `$CLAUDE_PLUGIN_ROOT/scripts/resolve-project-context.py` に一元化する。`$CLAUDE_PLUGIN_ROOT` は code/assets の位置決めだけに使い、caller の文書・状態の authority にはしない。
@@ -92,8 +98,8 @@ missing config keys/directories だけを作成し、既存値・docs/specs/task
 - elicitor の goal-spec と architect の exact-13 package が同じ feature digestを参照する。
 - C14 が exact-13 source の個別 SHA-256 と registration request/receipt owner 境界を持つ `system-build-handoff.json` を生成し、その bytes が `staging-manifest.json` の canonical digest に含まれている。handoff は receipt を自己発行しない。
 - C12 deterministic validation と fork evaluator C1..C4 が同一 canonical digestを PASSしている。
-- C11 が same-filesystem atomic promotion、immutable receipt、registration manifest、current pointerを生成している。
-- C11 が promotion receipt/registration request を所有し、dev-graph の all-or-none apply が発行する registration receipt と境界が一意である。C13 lock が解放され、published path/digest/receipt が dev-graphへ返されている。
+- C11 が canonical digestごとのsame-filesystem atomic promotion、immutable receipt、registration manifest、feature別current pointerを生成している。source drift時は旧generation/receiptを保存し、新generationの`supersedes`から直前世代を追跡できる。
+- C11 が promotion receipt/registration request を所有し、dev-graph の all-or-none apply/supersede が発行するgeneration別registration receipt と境界が一意である。C13 lock が解放され、published path/digest/receipt が dev-graphへ返されている。
 - **計画構造レポート (plan-structure) が生成されている**: promotion 済み `task-graph.json` から「この feature で何をやるか + exact-13 タスク・ノード・依存の関係性」を 1 枚の自己完結 HTML (`plan-structure-report.html`) へ投影する。目的/本質的課題/できることの価値セクション (goal-spec / `value-narrative.json` 由来・非エンジニア/技術者の dual audience) と依存関係表を携帯し、build 前に計画の全体像を確認できるようにする。**plugin-dev-planner と共通の完了ステップ**として、両プランナーとも同一の共有 reporter を best-effort で呼ぶ (harness-creator 未配備環境では skip・非ゲート):
   `python3 plugins/harness-creator/scripts/project-task-status.py --task-graph <PLAN_DIR>/task-graph.json --goal-spec <PLAN_DIR>/goal-spec.json --out-html <PLAN_DIR>/plan-structure-report.html --out-md <PLAN_DIR>/plan-structure.md --out-json <PLAN_DIR>/plan-structure-status.json`
   `--goal-spec` を渡さないと reporter の価値セクション (目的/本質的課題/できること) は fail-soft で沈黙欠落する。非エンジニア向け平易層 (`plain_intro` 等) を出すには curated `value-narrative.json` を PLAN_DIR に用意する (未用意なら平易層のみ省略)。
@@ -103,3 +109,10 @@ missing config keys/directories だけを作成し、既存値・docs/specs/task
 ## Failure handling
 
 `component-inventory.json` の `goal_seek.max_loops=5` に従い、5周で未達なら自動続行せず findings と staging path を報告する。途中失敗時も published/current は旧世代を維持する。発見した独立作業は package に追加せず follow-up feature candidate として返す。
+
+## Gotchas
+
+- 1 run は 1 `parent_feature` のみ。P01..P13 exact 13 以外 (12/14 件目・別の 13 phase 文書) を生成しない。
+- staging lock は C13 `manage-system-plan-lock.py` だけが生成・更新・解放する。lock JSON を他 component から直接作成・書換・削除しない。
+- 未分解の大きな構想を直接受けない。feature-context の `graph_node_id` と `--feature-id` の不一致、absolute path、`..`、root 外 symlink は staging 作成前に拒否する。
+- 途中失敗時も published/current の旧世代を維持し、handoff は receipt を自己発行しない。発見した独立作業は package へ追加せず follow-up feature candidate として返す。

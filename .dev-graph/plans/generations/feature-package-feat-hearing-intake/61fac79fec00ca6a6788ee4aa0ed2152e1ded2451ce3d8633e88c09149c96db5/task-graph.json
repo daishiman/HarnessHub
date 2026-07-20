@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-hearing-intake",
+  "parent_feature": "feat-hearing-intake",
+  "nodes": [
+    {
+      "id": "SYS-HEARING-INTAKE-P01",
+      "graph_node_id": "sys-hearing-intake-p01",
+      "title": "ヒアリング intake 要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P02",
+      "graph_node_id": "sys-hearing-intake-p02",
+      "title": "アーキテクチャ設計 — HearingSheet/FormData と既存共通ai_jobs consumer(sheet_generation kind) スキーマ・受付番号採番・AI キュー API 契約の設計",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P01"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P03",
+      "graph_node_id": "sys-hearing-intake-p03",
+      "title": "独立設計レビュー — HearingSheet/FormData と既存共通ai_jobs consumer(sheet_generation kind) 設計・AI キュー認可・Markdown sanitize の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P02"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P04",
+      "graph_node_id": "sys-hearing-intake-p04",
+      "title": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P03"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P05",
+      "graph_node_id": "sys-hearing-intake-p05",
+      "title": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P04"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P06",
+      "graph_node_id": "sys-hearing-intake-p06",
+      "title": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P05"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P07",
+      "graph_node_id": "sys-hearing-intake-p07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P06"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P08",
+      "graph_node_id": "sys-hearing-intake-p08",
+      "title": "リファクタリング/マイグレーション — HearingSheet/FormData と既存共通ai_jobs consumer(sheet_generation kind) 新規テーブルの migration 生成と後方互換性確認",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P07"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P09",
+      "graph_node_id": "sys-hearing-intake-p09",
+      "title": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P08"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P10",
+      "graph_node_id": "sys-hearing-intake-p10",
+      "title": "最終独立レビュー — feature 全体の confirmation 前最終点検",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P09"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P11",
+      "graph_node_id": "sys-hearing-intake-p11",
+      "title": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P10"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P12",
+      "graph_node_id": "sys-hearing-intake-p12",
+      "title": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P11"
+      ]
+    },
+    {
+      "id": "SYS-HEARING-INTAKE-P13",
+      "graph_node_id": "sys-hearing-intake-p13",
+      "title": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "parent_feature": "feat-hearing-intake",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P12"
+      ]
+    }
+  ]
+}

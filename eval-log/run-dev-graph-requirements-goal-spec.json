@@ -1,6 +1,14 @@
 {
-  "original_goal": "要件定義 (system-spec/ 配下、C05 完成度評価 PASS 済み) だけで作りたいものを実行できるかを確認したい。要件 handoff の readiness と lineage (specification/architecture/feature ノードの系譜・digest 整合) を検証し、実行に進むために不足しているものがあれば列挙する。",
-  "original_goal_hash": "ff5554873be512d0fd1a52163126ca16fad7fb3fa7b41d2948aa134e98b98a91",
-  "invoked_at": "2026-07-17T10:55:00+09:00",
-  "verb": "requirements"
+  "original_goal": "docs/ 配下の確定仕様と feature package (.dev-graph/plans/feature-package-*) から実装要件を漏れなく導出し、要件 handoff の readiness と lineage (specification/architecture/feature/task ノードの系譜・digest 整合) を検証する。readiness 完了時のみ capability-build/task-graph build へ handoff し、不足があれば missing_sections と remediation owner を全件列挙する。本 skill は実装コードを生成しない。",
+  "original_goal_hash": "56f454253eea6911a8141392a9cb6c11fc5be99b68313b6dc56067b8039171f6",
+  "invoked_at": "2026-07-19T11:03:11Z",
+  "last_invoked_at": "2026-07-19T14:43:16Z",
+  "verb": "requirements",
+  "directive": "@docs/ これを元に漏れなくすべての内容を引き継いで",
+  "handoff_target": "capability-build/task-graph",
+  "beads_issue": "HarnessHub-z1p",
+  "scope_receipt_ref": "eval-log/run-dev-graph-requirements-scope-receipt.json",
+  "snapshot_digest": "sha256:a32f1432e1db7ae4572efe244eb43e9f9434d1906dfa51f82404135d8b71147c",
+  "requirements_document_ref": "eval-log/run-dev-graph-requirements-document.md",
+  "handoff_ref": "eval-log/run-dev-graph-requirements-handoff.json"
 }

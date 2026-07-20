@@ -1,0 +1,27 @@
+{
+  "schema": "run-dev-graph-decompose/goal-spec/1.0.0",
+  "recorded_at": "2026-07-19T00:00:00Z",
+  "original_goal": "docs/ 配下の内容（system-design-overview.md, shared-layers.md, backend-spec.md, frontend-spec.md, infrastructure-spec.md, security-spec.md, screen-inventory.md, user-journeys.md, features/, mockups/）をすべてマクロ分解して feature・architecture・機能間依存へ展開する",
+  "arguments": {
+    "want": "docs/ 配下の確定ドキュメント全体を入力としたマクロ分解（feature・architecture・機能間 depends_on への展開）",
+    "granularity": "feature 単位（P01..P13 task 細分解は system-dev-planner へ委譲）",
+    "dependency_policy": "docs 記載の Stage 構成・依存記述と既存 graph の depends_on を突き合わせて冪等収束（graph_node_id+source_digest 冪等キー、二重登録 0）",
+    "dry_run": false,
+    "tracker_binding": "beads (execution_tracker.mode=beads, github.enabled=false)"
+  },
+  "repo_context": {
+    "repo_root": "resolved via C24 resolve-repo-context.py --mode write",
+    "head_sha": "8f490ef5f02676d77111b324e54d290d3704c64c",
+    "branch": "devgraph/SYS-HUB-FOUNDATION-P01",
+    "repository_id": "github:daishiman/HarnessHub",
+    "worktree_id": "wt_2a278c395bdc3152"
+  },
+  "checklist": [
+    {"id": "CL1", "text": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である"},
+    {"id": "CL2", "text": "draft/unconfirmed/evaluation非pass/readiness非complete の tracker publication が0件である"},
+    {"id": "CL3", "text": "各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす"},
+    {"id": "CL4", "text": "C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である"},
+    {"id": "CL5", "text": "beads/github/none の各 task が単一 projection authority と linkage を持つ"},
+    {"id": "CL6", "text": "--dry-run の local/Beads/GitHub/Projects write count が0である（本 run は dry-run 非指定のため既定 PASS 条件を維持）"}
+  ]
+}

@@ -1,0 +1,651 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:25.561955Z",
+          "created_by": "daishiman",
+          "description": "構築パイプラインボード要件ベースライン確定 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P01",
+          "id": "HarnessHub-9am.1",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "構築パイプラインボード要件ベースライン確定",
+          "updated_at": "2026-07-18T01:42:25.561955Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P01",
+        "id": "HarnessHub-9am.1",
+        "phase_ref": "P01"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:26.692141Z",
+          "created_by": "daishiman",
+          "description": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P02",
+          "id": "HarnessHub-9am.2",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計",
+          "updated_at": "2026-07-18T01:42:26.692141Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P02",
+        "id": "HarnessHub-9am.2",
+        "phase_ref": "P02"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:27.765885Z",
+          "created_by": "daishiman",
+          "description": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P03",
+          "id": "HarnessHub-9am.3",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認",
+          "updated_at": "2026-07-18T01:42:27.765885Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P03",
+        "id": "HarnessHub-9am.3",
+        "phase_ref": "P03"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:28.885299Z",
+          "created_by": "daishiman",
+          "description": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P04",
+          "id": "HarnessHub-9am.4",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成",
+          "updated_at": "2026-07-18T01:42:28.885299Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P04",
+        "id": "HarnessHub-9am.4",
+        "phase_ref": "P04"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:29.964004Z",
+          "created_by": "daishiman",
+          "description": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P05",
+          "id": "HarnessHub-9am.5",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装",
+          "updated_at": "2026-07-18T01:42:29.964004Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P05",
+        "id": "HarnessHub-9am.5",
+        "phase_ref": "P05"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:31.045877Z",
+          "created_by": "daishiman",
+          "description": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P06",
+          "id": "HarnessHub-9am.6",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録",
+          "updated_at": "2026-07-18T01:42:31.045877Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P06",
+        "id": "HarnessHub-9am.6",
+        "phase_ref": "P06"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:32.179755Z",
+          "created_by": "daishiman",
+          "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P07",
+          "id": "HarnessHub-9am.7",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "受入 — goal-spec acceptance 3 項目の確認",
+          "updated_at": "2026-07-18T01:42:32.179755Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P07",
+        "id": "HarnessHub-9am.7",
+        "phase_ref": "P07"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:33.327905Z",
+          "created_by": "daishiman",
+          "description": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P08",
+          "id": "HarnessHub-9am.8",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認",
+          "updated_at": "2026-07-18T01:42:33.327905Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P08",
+        "id": "HarnessHub-9am.8",
+        "phase_ref": "P08"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:34.630138Z",
+          "created_by": "daishiman",
+          "description": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P09",
+          "id": "HarnessHub-9am.9",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認",
+          "updated_at": "2026-07-18T01:42:34.630138Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P09",
+        "id": "HarnessHub-9am.9",
+        "phase_ref": "P09"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:35.799906Z",
+          "created_by": "daishiman",
+          "description": "最終独立レビュー — quality_constraints 6 件の充足判定 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P10",
+          "id": "HarnessHub-9am.10",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "最終独立レビュー — quality_constraints 6 件の充足判定",
+          "updated_at": "2026-07-18T01:42:35.799906Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P10",
+        "id": "HarnessHub-9am.10",
+        "phase_ref": "P10"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:36.887817Z",
+          "created_by": "daishiman",
+          "description": "エビデンス収集 — 再現可能な検証証跡の集約 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P11",
+          "id": "HarnessHub-9am.11",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+          "updated_at": "2026-07-18T01:42:36.887817Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P11",
+        "id": "HarnessHub-9am.11",
+        "phase_ref": "P11"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:37.980865Z",
+          "created_by": "daishiman",
+          "description": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P12",
+          "id": "HarnessHub-9am.12",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成",
+          "updated_at": "2026-07-18T01:42:37.980865Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P12",
+        "id": "HarnessHub-9am.12",
+        "phase_ref": "P12"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:42:39.131864Z",
+          "created_by": "daishiman",
+          "description": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-BUILD-PIPELINE-BOARD-P13",
+          "id": "HarnessHub-9am.13",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+          "updated_at": "2026-07-18T01:42:39.131864Z"
+        },
+        "external_ref": "SYS-BUILD-PIPELINE-BOARD-P13",
+        "id": "HarnessHub-9am.13",
+        "phase_ref": "P13"
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-9am.1",
+        "issue_id": "HarnessHub-9am.2",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.1",
+          "issue_id": "HarnessHub-9am.2",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.2",
+        "issue_id": "HarnessHub-9am.3",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.2",
+          "issue_id": "HarnessHub-9am.3",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.3",
+        "issue_id": "HarnessHub-9am.4",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.3",
+          "issue_id": "HarnessHub-9am.4",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.4",
+        "issue_id": "HarnessHub-9am.5",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.4",
+          "issue_id": "HarnessHub-9am.5",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.5",
+        "issue_id": "HarnessHub-9am.6",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.5",
+          "issue_id": "HarnessHub-9am.6",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.6",
+        "issue_id": "HarnessHub-9am.7",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.6",
+          "issue_id": "HarnessHub-9am.7",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.7",
+        "issue_id": "HarnessHub-9am.8",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.7",
+          "issue_id": "HarnessHub-9am.8",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.8",
+        "issue_id": "HarnessHub-9am.9",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.8",
+          "issue_id": "HarnessHub-9am.9",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.9",
+        "issue_id": "HarnessHub-9am.10",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.9",
+          "issue_id": "HarnessHub-9am.10",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.10",
+        "issue_id": "HarnessHub-9am.11",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.10",
+          "issue_id": "HarnessHub-9am.11",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.11",
+        "issue_id": "HarnessHub-9am.12",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.11",
+          "issue_id": "HarnessHub-9am.12",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-9am.12",
+        "issue_id": "HarnessHub-9am.13",
+        "result": {
+          "depends_on_id": "HarnessHub-9am.12",
+          "issue_id": "HarnessHub-9am.13",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "created": {
+        "created_at": "2026-07-18T01:42:24.613793Z",
+        "created_by": "daishiman",
+        "description": "ヒアリング→要件定義→設計→構築→テスト→レビュー→公開の 7 工程を S13 のボードで進行管理し (工程操作は admin)、公開工程を既存 PublishRequest 状態機械 (B4/I2/I3) へ接続する",
+        "external_ref": "dev-graph:feat-build-pipeline-board",
+        "id": "HarnessHub-9am",
+        "issue_type": "epic",
+        "owner": "daishimanju@gmail.com",
+        "priority": 2,
+        "schema_version": 1,
+        "status": "open",
+        "title": "Studio: 構築パイプライン可視化 (7 工程ボード)",
+        "updated_at": "2026-07-18T01:42:24.613793Z"
+      },
+      "external_ref": "feat-build-pipeline-board",
+      "id": "HarnessHub-9am"
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-9am.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-9am.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-9am.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-9am.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ]
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

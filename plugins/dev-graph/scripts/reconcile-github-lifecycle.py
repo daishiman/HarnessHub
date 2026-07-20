@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import os
@@ -284,7 +285,9 @@ def feature_rollup(
     }
 
 
-def _linkage_decision(node: dict[str, Any], repo: str, pr: dict[str, Any]) -> dict[str, Any]:
+def _linkage_decision(
+    node: dict[str, Any], repo: str, pr: dict[str, Any], *, gate_verified: bool = False,
+) -> dict[str, Any]:
     node_id = _node_id(node)
     markers = MARKER.findall(pr.get("body") or "")
     marker_verified = markers == [node_id]
@@ -302,12 +305,15 @@ def _linkage_decision(node: dict[str, Any], repo: str, pr: dict[str, Any]) -> di
         )
     else:
         closing_verified = True
+    linkage_verified = marker_verified or (node.get("tracker_binding") == "beads" and gate_verified)
     return {
         "marker_verified": marker_verified,
+        "gh_pr_gate_verified": gate_verified,
+        "linkage_verified": linkage_verified,
         "closing_reference_verified": closing_verified,
         "expected_marker": f"dev-graph: {node_id}",
         "observed_markers": markers,
-        "eligible": marker_verified and closing_verified,
+        "eligible": linkage_verified and closing_verified,
     }
 
 
@@ -358,7 +364,7 @@ def _writer_request(
             "artifact_sha256_before": task_artifact["sha256"],
             "set": {
                 "status": "done", "updated_at": now, "completion_evidence": completion,
-                "pull_request_linkages": _updated_linkages(node, repo, pr, linkage["closing_reference_verified"], now),
+                "pull_request_linkages": copy.deepcopy(node.get("pull_request_linkages") or []),
             },
         },
         "feature_patch": rollup.get("writer_patch") if rollup and rollup.get("eligible") else None,
@@ -367,19 +373,49 @@ def _writer_request(
     return request
 
 
-def _completion(node: dict[str, Any], pr: dict[str, Any]) -> dict[str, Any]:
+def _completion(node: dict[str, Any], prs: list[dict[str, Any]], policy: str) -> dict[str, Any]:
     current = node.get("completion_evidence") or {}
     references = [item for item in current.get("evidence_refs", []) if isinstance(item, str) and item]
-    if pr.get("url") not in references:
-        references.append(pr.get("url"))
+    for pr in prs:
+        if pr.get("url") and pr.get("url") not in references:
+            references.append(pr["url"])
+    completed = sorted(str(pr["mergedAt"]) for pr in prs if pr.get("mergedAt"))
     return {
         "status": "done",
-        "policy": current.get("policy") or "linked_pr_merged_all",
+        "policy": f"linked_pr_merged_{policy}",
         "source": "github_pr_merge",
-        "completed_at": pr["mergedAt"],
+        "completed_at": completed[-1],
         "reconciled_at": utc_now(),
         "evidence_refs": references,
     }
+
+
+def _completion_policy(root: Path) -> str:
+    config_path = root / ".dev-graph" / "config.json"
+    if not config_path.is_file():
+        return "all"
+    config = load_json(config_path)
+    policy = (((config.get("github") or {}).get("completion_policy") or {}).get("required_pull_requests")) if isinstance(config, dict) else None
+    if policy not in (None, "all", "any"):
+        raise ContractError("github completion_policy.required_pull_requests must be all or any")
+    return policy or "all"
+
+
+def _beads_gate_verified(
+    root: Path, bridge: Path, node: dict[str, Any], pr_number: int,
+) -> bool:
+    issue_id = (node.get("beads_linkage") or {}).get("bd_issue_id")
+    if not issue_id:
+        return False
+    receipt = _invoke_json(
+        [
+            sys.executable, str(bridge), "--repo-root", str(root), "--op", "gate-check",
+            "--bd-issue-id", str(issue_id), "--pr", str(pr_number),
+        ],
+        root,
+        "C28 gh:pr gate check",
+    )
+    return receipt.get("op") == "gate-check" and bool((receipt.get("result") or {}).get("gate"))
 
 
 def _feature_artifact(root: Path, node: dict[str, Any]) -> dict[str, Any]:
@@ -504,21 +540,93 @@ def main() -> int:
         raise ContractError("graph node not found")
     task_artifact = _validate_task_artifact(root, node)
     gh_bridge = Path(a.gh_bridge).resolve() if a.gh_bridge else Path(__file__).with_name("gh-bridge.py")
-    facts = c12_lifecycle_facts(root, gh_bridge, a.repo, a.pr)
-    default = facts.get("default_branch") or {}
-    pr = facts.get("pull_request") or {}
-    if facts.get("repository", "").casefold() != a.repo.casefold() or pr.get("number") != a.pr:
+    requested_facts = c12_lifecycle_facts(root, gh_bridge, a.repo, a.pr)
+    requested_pr = requested_facts.get("pull_request") or {}
+    if requested_facts.get("repository", "").casefold() != a.repo.casefold() or requested_pr.get("number") != a.pr:
         raise ContractError("C12 lifecycle facts do not match requested repository/PR")
+    required_keys = {
+        (str(item.get("repo")), int(item.get("pr_number")))
+        for item in (node.get("pull_request_linkages") or [])
+        if isinstance(item, dict) and item.get("repo") and item.get("pr_number")
+    }
+    required_keys.add((a.repo, a.pr))
+    fact_sets: dict[tuple[str, int], dict[str, Any]] = {(a.repo, a.pr): requested_facts}
+    for linked_repo, linked_number in sorted(required_keys):
+        if (linked_repo, linked_number) not in fact_sets:
+            fact_sets[(linked_repo, linked_number)] = c12_lifecycle_facts(
+                root, gh_bridge, linked_repo, linked_number
+            )
+    completion_policy = _completion_policy(root)
+    bd_bridge = Path(a.bd_bridge).resolve() if a.bd_bridge else Path(__file__).with_name("bd-bridge.py")
+    pr_decisions: list[dict[str, Any]] = []
+    node_for_writer = dict(node)
+    for (linked_repo, linked_number), remote in sorted(fact_sets.items()):
+        remote_default = remote.get("default_branch") or {}
+        linked_pr = remote.get("pull_request") or {}
+        if remote.get("repository", "").casefold() != linked_repo.casefold() or linked_pr.get("number") != linked_number:
+            raise ContractError("C12 lifecycle facts do not match a linked repository/PR")
+        merge = linked_pr.get("mergeCommit") or {}
+        linked_sha = merge.get("oid") if isinstance(merge, dict) else merge
+        merged_ok = (
+            linked_pr.get("state") == "MERGED"
+            and linked_pr.get("merged") is True
+            and bool(linked_pr.get("mergedAt"))
+            and bool(linked_sha)
+        )
+        ancestor_ok = bool(linked_sha) and run(
+            ["git", "-C", str(root), "merge-base", "--is-ancestor", linked_sha, "HEAD"],
+            check=False,
+        ).returncode == 0
+        linkage = _linkage_decision(node, linked_repo, linked_pr)
+        if node.get("tracker_binding") == "beads" and not linkage["marker_verified"]:
+            gate_verified = _beads_gate_verified(root, bd_bridge, node, linked_number)
+            linkage = _linkage_decision(node, linked_repo, linked_pr, gate_verified=gate_verified)
+        target_ok = linked_pr.get("baseRefName") == remote_default.get("name")
+        eligible = merged_ok and ancestor_ok and target_ok and linkage["eligible"]
+        pr_decisions.append({
+            "repo": linked_repo,
+            "pr_number": linked_number,
+            "facts": remote,
+            "pull_request": linked_pr,
+            "merge_commit_sha": linked_sha,
+            "merged": merged_ok,
+            "ancestor_verified": ancestor_ok,
+            "target_default_verified": target_ok,
+            "linkage": linkage,
+            "eligible": eligible,
+        })
+        if merged_ok:
+            node_for_writer["pull_request_linkages"] = _updated_linkages(
+                node_for_writer, linked_repo, linked_pr, linkage["closing_reference_verified"], utc_now()
+            )
+    requested_decision = next(
+        item for item in pr_decisions
+        if item["repo"].casefold() == a.repo.casefold() and item["pr_number"] == a.pr
+    )
+    facts = requested_facts
+    pr = requested_pr
+    linkage = requested_decision["linkage"]
+    default = facts.get("default_branch") or {}
     default_branch, remote_oid = default.get("name"), default.get("oid")
-    merge = pr.get("mergeCommit") or {}
-    merge_sha = merge.get("oid") if isinstance(merge, dict) else merge
-    merged = pr.get("state") == "MERGED" and pr.get("merged") is True and bool(pr.get("mergedAt")) and bool(merge_sha)
-    ancestor = bool(merge_sha) and run(["git", "-C", str(root), "merge-base", "--is-ancestor", merge_sha, "HEAD"], check=False).returncode == 0
-    linkage = _linkage_decision(node, a.repo, pr)
+    merge_sha = requested_decision["merge_commit_sha"]
+    merged = requested_decision["merged"]
+    ancestor = requested_decision["ancestor_verified"]
     synced_default = bool(remote_oid) and head_oid == remote_oid
-    decision = merged and pr.get("baseRefName") == default_branch and branch == default_branch and clean and synced_default and ancestor and linkage["eligible"]
-    policy_digest = hashlib.sha256(f"{a.graph_node_id}\0{a.pr}\0{default_branch}\0linked_pr_merged\0{linkage['eligible']}".encode()).hexdigest()
-    event_key = f"{a.repo}#pr:{a.pr}#{merge_sha or 'unmerged'}"
+    remote_policy_satisfied = (
+        all(item["eligible"] for item in pr_decisions)
+        if completion_policy == "all"
+        else any(item["eligible"] for item in pr_decisions)
+    )
+    decision = remote_policy_satisfied and branch == default_branch and clean and synced_default
+    policy_material = [
+        completion_policy,
+        *[
+            f"{item['repo']}#{item['pr_number']}#{item['merge_commit_sha'] or 'unmerged'}#{item['eligible']}"
+            for item in pr_decisions
+        ],
+    ]
+    policy_digest = hashlib.sha256("\0".join(policy_material).encode()).hexdigest()
+    event_key = f"{a.repo}#task:{a.graph_node_id}#policy:{policy_digest}"
     needs_release = _needs_system_release(node)
     ledger = {
         "event_key": event_key,
@@ -527,25 +635,29 @@ def main() -> int:
         "system_release": "pending" if needs_release else "not_applicable",
         "beads_close": "not_applicable" if node.get("tracker_binding") != "beads" else "pending",
     }
-    completion = _completion(node, pr) if merged else None
+    eligible_prs = [item["pull_request"] for item in pr_decisions if item["eligible"]]
+    completion = _completion(node, eligible_prs, completion_policy) if remote_policy_satisfied else None
     rollup = feature_rollup(root, nodes, node, a.registration_receipt, completion)
-    writer_request = _writer_request(event_key, graph_path, graph_revision, node, a.repo, pr, linkage, task_artifact, rollup, completion) if decision and completion else None
+    writer_request = _writer_request(event_key, graph_path, graph_revision, node_for_writer, a.repo, pr, linkage, task_artifact, rollup, completion) if decision and completion else None
     if writer_request is not None:
         writer_request["graph_path"] = graph_relative.as_posix()
         writer_request["request_digest"] = _json_digest({key: value for key, value in writer_request.items() if key != "request_digest"})
     worktree = {"branch": branch, "clean": clean, "head_oid": head_oid, "remote_default_oid": remote_oid, "synced_default": synced_default}
     conflicts = []
     if not decision:
-        if not merged: conflicts.append("PR is not merged")
-        if pr.get("baseRefName") != default_branch: conflicts.append("PR does not target remote default branch")
+        for item in pr_decisions:
+            if not item["merged"]: conflicts.append(f"PR {item['repo']}#{item['pr_number']} is not merged")
+            if not item["target_default_verified"]: conflicts.append(f"PR {item['repo']}#{item['pr_number']} does not target remote default branch")
+            if not item["ancestor_verified"]: conflicts.append(f"PR {item['repo']}#{item['pr_number']} merge commit is not an ancestor of HEAD")
+            if not item["linkage"]["linkage_verified"]: conflicts.append(f"PR {item['repo']}#{item['pr_number']} has no exact marker or gh:pr gate")
+            if not item["linkage"]["closing_reference_verified"]: conflicts.append(f"PR {item['repo']}#{item['pr_number']} closing reference does not match the bound GitHub Issue")
         if branch != default_branch or not clean or not synced_default: conflicts.append("worktree is not clean and synchronized on the remote default branch")
-        if not ancestor: conflicts.append("merge commit is not an ancestor of HEAD")
-        if not linkage["marker_verified"]: conflicts.append("PR has no exact unique dev-graph marker")
-        if not linkage["closing_reference_verified"]: conflicts.append("PR closing reference does not match the bound GitHub Issue")
     common_output = {
         "remote_default_oid": remote_oid,
         "ancestor_verified": ancestor,
         "remote_facts": facts,
+        "required_pull_requests": completion_policy,
+        "required_pr_decisions": pr_decisions,
         "linkage_decision": linkage,
         "worktree_decision": worktree,
         "feature_rollup": rollup,

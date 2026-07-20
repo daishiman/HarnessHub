@@ -29,6 +29,8 @@ system-dev-planner の 1 run は、dev-graph が管理する **1つの feature**
 - `workstream-inventory.json`: 13 task entry。配列順と`phase_ref`はP01…P13のexact order。
 - `task-graph.json`: 13 task nodeと機能内depends_on edgeのみ。
 - `system-build-handoff.json`、`atomic-promotion-receipt.json`、`dev-graph-registration.json`。後二者はC11所有、all-or-none apply後の`dev-graph-registration-receipt.json`はdev-graph C02所有とし、handoff producerはreceiptを自己発行しない。
+- task specの本文にruntime referenceとして`.dev-graph/staging`を保存しない。goal/manifest/validator/evidenceはpackage-relative pathまたはC11が決定的に生成するcanonical published pathを使い、atomic rename後も解決可能にする。
+- published packageはsource digestをgeneration IDとするcontent-addressed pathへ配置し、feature別`current` pointerだけを新世代へ進める。再計画では旧package/旧promotion receipt/旧registration receiptをbyte-for-byte不変で残し、新promotion receiptの`supersedes`と新registration receiptの`supersedes_source_digest`で直前世代を結ぶ。
 
 別の「13 lifecycle phase documents」は生成しない。13 task specs自体がlifecycleを実行する。各taskは同じ`feature_package_id`と`parent_feature`を持つ。
 
@@ -64,6 +66,7 @@ P08/P13もnode自体を省略しない。適用外判断を行う小タスクと
 - baselineはP01→P02→…→P13の前方依存。`task.depends_on`は同じ`parent_feature`かつ同じ`feature_package_id`内だけを参照する。
 - 並列化できる場合は直前phaseへの不要なedgeを減らしてよいが、edgeは常に小さいphase_refから大きいphase_refへ向く。循環、後方edge、別feature task参照は禁止する。
 - feature間依存はtaskへコピーしない。dev-graphのfeature A→feature Bを正本とし、B packageのP01 ready gateがA feature doneを参照する派生条件だけを持つ。
+- P01 ready gateは`selector=parent_feature.depends_on`、`operator=all`、`required_statuses=[done,closed]`の固定形でinventory/handoff/task specに保存する。schedulerはIDのコピーではなくcanonical parent featureの現行edgeを都度読み、未完了upstreamが1件でもあればP01をreadyから除外する。
 - 13件未満・14件以上、phase_ref重複/欠落、parent/package不一致はpromotion前にfail-closedする。
 
 ## 5. 発見タスクの扱い
@@ -77,6 +80,7 @@ P08/P13もnode自体を省略しない。適用外判断を行う小タスクと
 ## 6. Dev Graph・Beadsへの登録
 
 - C02は13 nodeをall-or-none登録し、`expected_count=applied_count=13`、P01..P13 exact-set、共通`parent_feature`/`feature_package_id`をreceiptで証明する。
+- 同じ`parent_feature`/`feature_package_id`/P01..P13 node ID exact-setを新しいsource digestで再登録する場合、C02は13 nodeを単一graph revisionでall-or-none置換する。旧receiptは変更せず、新世代receiptへ`operation=superseded`と直前digestを保存する。一部IDだけの一致、member exact-set変更、同一digestでbytes相違は拒否する。
 - Beads profileではfeatureをepic、13 phase taskをそのchild issueとして投影する。task dependencyはbd `blocks`へ写像する。
 - GitHub profileではfeatureをMilestoneまたはProject feature item、13 taskをIssueとして投影できる。外部表示は完了authorityではなく、feature完了は13 task全doneから機械導出する。
 

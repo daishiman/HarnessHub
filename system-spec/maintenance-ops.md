@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-027 |
+| Web (web) | 確定 | 確定質疑: qa-058 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-027 (対応セル: web)
+### qa-058 (対応セル: web)
 
-**質問**: Harness Studio mockup の反映で保守運用 (web) の確定内容はどう変わるか?
+**質問**: 構築優先順位 P0-P5 に伴う監視・運用の段階的有効化 (docs/infrastructure-spec.md §13・docs/shared-layers.md の 2026-07-18 追記) を保守運用仕様へ反映するか。
 
-**回答**: qa-011/qa-019 で確定した保守運用方針 (/health・Workers logs/analytics・外部死活監視・SLO ダッシュボード・エラーバジェットアラート・バックアップ + 四半期 restore drill) を全面維持し、Studio 反映で以下を追加確定する。(1) AI キュー (D5 pull 型) の滞留監視: pull されない job の滞留時間を運用指標として可視化し、閾値超過で提供者へ滞留アラート (アプリ内通知) を出す。(2) メール送信 (D6 Resend) の運用: 送信失敗のリトライと失敗ログ、日次 100 通制限到達時のバッチ分割。アプリ内通知を常に正本とし、メール不達でも情報が欠けない設計を維持する。(3) 実行ログ ingest の異常値検知: 急増・重複を週次 rollup 時に検出し運用レポートへ含める (SEC5 の信頼性を運用側からも担保)。(4) ユーザー棚卸し: 退職者アカウントの無効化・owner 再割当の確認を四半期棚卸しに追加する (S17 の管理操作と対応)。
+**回答**: 監視・運用ジョブは必要 phase で段階的に有効化する: P1 で AiJob キュー滞留監視 (qa-027 の監視対象) と生成完了通知、P2 で orphan 通知 (承認 queue UI は P5 でも監査記録は P2 から有効)、P4 で metrics rollup cron・Turso 使用量監視・週次通知、P5 で dashboard/承認/監査 UI 向け route の外形確認。P0 時点では metrics rollup・週次サマリー・dashboard monitor を有効化しない。AI 処理主体の表記は D5 確定 (pull 型 = Claude Code セッション消費・サーバ側 AI 課金なし) へ統一 (旧「D5 候補」表記の解消)。既確定の監視・バックアップ・運用手順 (qa-027 ほか) は不変で有効化タイミングだけを追加確定。
 
 ### qa-044 (対応セル: desktop-windows, desktop-macos)
 

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-19T01:06:07Z",
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+  "evaluated_digest": "sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+  "published_digest": "sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/feature-package-feat-tenant-data-retention/dev-graph-registration.json"
+}

@@ -1,0 +1,1245 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-hearing-intake",
+  "parent_feature": "feat-hearing-intake",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-HEARING-INTAKE-P01": "beads",
+    "SYS-HEARING-INTAKE-P02": "beads",
+    "SYS-HEARING-INTAKE-P03": "beads",
+    "SYS-HEARING-INTAKE-P04": "beads",
+    "SYS-HEARING-INTAKE-P05": "beads",
+    "SYS-HEARING-INTAKE-P06": "beads",
+    "SYS-HEARING-INTAKE-P07": "beads",
+    "SYS-HEARING-INTAKE-P08": "beads",
+    "SYS-HEARING-INTAKE-P09": "beads",
+    "SYS-HEARING-INTAKE-P10": "beads",
+    "SYS-HEARING-INTAKE-P11": "beads",
+    "SYS-HEARING-INTAKE-P12": "beads",
+    "SYS-HEARING-INTAKE-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ヒアリング intake 要件ベースライン確定",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hearing-intake/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec (goal-spec.json) と features/feat-hearing-intake.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "architecture"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P01"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hearing-intake/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "qa-024 の指示 (カラム定義の詳細設計は各 feature の P02 で行う) に従い HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約と受付番号採番・AI キュー API 契約を確定する P02 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer 設計・AI キュー認可・Markdown sanitize の妥当性確認",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P02"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hearing-intake/design-review-notes.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P02 で確定した HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer スキーマと AI キュー API 契約・Markdown sanitize 適用点を、設計担当から独立した視点でレビューする P03 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P03"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/features/hearing-intake/__tests__/",
+        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
+        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "docs/features/feat-hearing-intake/test-design.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P03 で承認された設計に基づき P05 実装の受入契約となるテストスタブを作成する P04 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "frontend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P04"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/(dashboard)/hearing-intake/",
+        "apps/hub/src/app/(dashboard)/hearing-sheets/",
+        "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/features/hearing-intake/",
+        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
+        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "packages/db/schema/hearing-intake/",
+        "packages/schemas/hearing-intake/"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "P03 承認済み設計と P04 テストスタブに基づき S10-S12 実装・受付番号採番・AI キュー API・Markdown sanitize を実装する P05 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P05"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
+        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "docs/features/feat-hearing-intake/test-run-report.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P04 のテストスタブ(受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y)を P05 実装に対して実行し結果を記録する P06 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P06"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hearing-intake/acceptance-report.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — HearingSheet/FormData新規テーブルのmigration（共通ai_jobsは既存schemaを消費） 生成と後方互換性確認",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "refactoring-migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P07"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
+        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "docs/features/feat-hearing-intake/refactoring-migration-note.md",
+        "packages/db/schema/hearing-intake/"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "HearingSheet/FormDataの新規テーブル（共通ai_jobsは既存schemaを消費）に対する migration ファイル生成と後方互換性確認を行う P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P08"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
+        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "docs/features/feat-hearing-intake/quality-assurance-report.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "feat-hub-foundation が確立した共有 CI 品質ゲート (axe/Tenant 分離/AI キュー認可) に対する本 feature の適合を確認する P09 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終独立レビュー — feature 全体の confirmation 前最終点検",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P09"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hearing-intake/final-review-notes.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "feature-execution-package-contract.md §7 が定める最終独立レビューゲートに従い、quality_constraints 10 件全件を P01-P09 の成果物に照らして最終点検する P10 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P10"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hearing-intake/evidence/"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "feature-execution-package-contract.md §7 が定める reproducible evidence 要件に従い P06/P07/P09/P10 の成果物を証跡として集約する P11 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "documentation-operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P11"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hearing-intake/runbook.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "S10-S12 の運用手順・AI キュー滞留監視・受付番号運用を P11 の証跡を根拠にドキュメント化する P12 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認",
+      "project_id": "feature-package-feat-hearing-intake",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hearing-intake",
+        "studio-extension",
+        "async-ai-queue",
+        "release-deploy"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:14:59Z",
+      "updated_at": "2026-07-19T14:14:59Z",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P12"
+      ],
+      "related_nodes": [
+        "feat-hearing-intake",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
+        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "docs/features/feat-hearing-intake/release-notes.md"
+      ],
+      "parent_feature": "feat-hearing-intake",
+      "feature_package_id": "feature-package/feat-hearing-intake",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-hearing-intake/sys-hearing-intake-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json",
+        "evaluated_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "imported_at": "2026-07-19T14:14:59Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P12 の runbook.md に基づき S10-S12 を feat-hub-foundation の既存 Cloudflare Workers パイプライン経由で本番反映し、feature 全体の完了を報告する P13 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-hearing-intake/sys-hearing-intake-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    }
+  ]
+}

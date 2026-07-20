@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-dual-catalog-web",
+  "parent_feature": "feat-dual-catalog-web",
+  "nodes": [
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P01",
+      "graph_node_id": "sys-dual-catalog-web-p01",
+      "title": "要件ベースライン確定 — dual catalog UI(Workspace Catalog)・publish状況表示ポーリング・marketplace.json出力・axe/CWV品質ゲートの要件確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P02",
+      "graph_node_id": "sys-dual-catalog-web-p02",
+      "title": "アーキテクチャ設計 — S01/S02/S03/S04画面構成・install descriptor取得・ポーリング契約・marketplace.json生成方式・CWVバンドル予算の決定",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P01"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P03",
+      "graph_node_id": "sys-dual-catalog-web-p03",
+      "title": "独立設計レビュー — S01-S04画面構成・install descriptor契約・ポーリング設計・marketplace.json生成方式の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P02"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P04",
+      "graph_node_id": "sys-dual-catalog-web-p04",
+      "title": "テストファースト設計 — axe自動検査・Playwright J1/J2ジャーニー×2 viewport・Lighthouse CWV予算・marketplace.jsonスキーマ検証・ポーリングbackoff契約のテスト設計",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P03"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P05",
+      "graph_node_id": "sys-dual-catalog-web-p05",
+      "title": "実装 — S01/S02/S03/S04画面実装・marketplace.json出力パイプライン・配布経路連携・axe CI組込・CWVバンドル最適化・ポーリング実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P04"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P06",
+      "graph_node_id": "sys-dual-catalog-web-p06",
+      "title": "テスト実行 — Vitest部品テスト・Playwright E2E・axe自動チェック・Lighthouse CWV計測の実行",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P05"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P07",
+      "graph_node_id": "sys-dual-catalog-web-p07",
+      "title": "受入 — axe検出可能違反0のCIゲート存在・CWV全指標good実測・Hub停止中の導入済みSkill動作継続の受入判定",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P06"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P08",
+      "graph_node_id": "sys-dual-catalog-web-p08",
+      "title": "リファクタリング/マイグレーション — mockup由来静的画面からshared-layers準拠の本番動的コンポーネント構成への移行",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P07"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P09",
+      "graph_node_id": "sys-dual-catalog-web-p09",
+      "title": "品質・セキュリティ・運用保証 — テナント分離(deny-by-default)・§6.1縮退設計運用確認・SLOダッシュボード・WCAG/CWV最終確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P08"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P10",
+      "graph_node_id": "sys-dual-catalog-web-p10",
+      "title": "独立最終レビュー — quality_constraints 7件・acceptance 3件の最終確認",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P09"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P11",
+      "graph_node_id": "sys-dual-catalog-web-p11",
+      "title": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P10"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P12",
+      "graph_node_id": "sys-dual-catalog-web-p12",
+      "title": "文書化・runbook・引き継ぎ — カタログ利用者/管理者向け手順・marketplace.json形式文書・障害時縮退runbook・更新通知導線の文書化",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P11"
+      ]
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P13",
+      "graph_node_id": "sys-dual-catalog-web-p13",
+      "title": "リリース/デプロイ — Cloudflare Workers(wrangler)へのロールアウト・rollback手順・Stage 1完了判定",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P12"
+      ]
+    }
+  ]
+}

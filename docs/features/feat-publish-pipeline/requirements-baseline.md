@@ -13,6 +13,8 @@ architecture_refs: [arch-harness-hub-backend, arch-harness-hub-data, arch-harnes
 
 > **位置づけ**: P01 (要件ベースライン確定) の成果物。promoted goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を**確定転記**した baseline であり、P02 以降の全 task はこの文書を唯一の合意事項として参照する。転記元との相違が判明した場合は本文書を修正せず goal-spec 側の再確定を dev-graph へ差し戻す (rollback 規約)。
 
+> **構築順オーバーレイ (baseline 外)**: **P2・最優先**。Project 作成→Web/CLI upload→検査/公開→stable 版までを先に供給し、Hub の管理・install/download と S13 がこれを消費する。正本: [system-design-overview.md](../../system-design-overview.md) §3 / [README.md](../README.md)。
+
 ## 1. 目的 (purpose)
 
 作者の自己完結 publish (G1) の中核として、PublishRequest 状態機械 (§7.2)・検査 pipeline (static validation/secret scan/policy)・stable pointer promote/rollback を実装する

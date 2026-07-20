@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-node",
-    "skill_md_sha256": "ec6f3f06fe128192819c23d4ef4f8a4379519386c3058ed1d1cfcec0e86f5289"
+    "skill_md_sha256": "8164be5b695d5e7685aedd31d1f66bcc9d0546276299783016592258f37ad9e2"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "audit-node-status-20260720",
+  "reviewed_at": "2026-07-20",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -24,5 +24,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "ref-skill-design-rubric 規範で現 SKILL.md (sha256 ec6f3f06...) を採点。FM: name/description/trigger 適合、allowed-tools 明示。BD: Output contract+Gotchas 具備、body<300行。NM: dir 名一致。PD: 本文簡潔で prompts/schemas へ分離。RG: goal_seek/feedback_contract 明示。責務は『単一 writer による typed node/exact-13 package の atomic 登録』へ単一収束し、13-task 生成ロジックは register-package.py/system-dev-planner に委譲され越境なし。high severity 0 件。PASS。"
+  "notes": "独立監査で現SKILL.md (sha256 8164be5b...) をrubric観点で再確認。命名・出力契約・単一writer責務・progressive disclosureに加え、WAL/共有lockの受入条件が実装と一致する。重大違反0件。PASS。"
 }

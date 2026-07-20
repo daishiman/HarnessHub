@@ -13,6 +13,8 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend]
 
 > **位置づけ**: P01 (要件ベースライン確定) の成果物。promoted goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を**確定転記**した baseline であり、P02 以降の全 task はこの文書を唯一の合意事項として参照する。転記元との相違が判明した場合は本文書を修正せず goal-spec 側の再確定を dev-graph へ差し戻す (rollback 規約)。
 
+> **構築順オーバーレイ (baseline 外)**: **P2・最優先**。P1 の HearingSheet と P2 の PublishRequest 契約を受け、S12→S13→S01/S02 の参照が切れない状態にする。正本: [system-design-overview.md](../../system-design-overview.md) §3 / [README.md](../README.md)。
+
 ## 1. 目的 (purpose)
 
 ヒアリング→要件定義→設計→構築→テスト→レビュー→公開の 7 工程を S13 のボードで進行管理し (工程操作は admin)、公開工程を既存 PublishRequest 状態機械 (B4/I2/I3) へ接続する

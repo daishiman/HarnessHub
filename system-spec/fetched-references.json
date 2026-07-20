@@ -22,13 +22,13 @@
     },
     {
       "target_id": "pnpm",
-      "retrieved_at": "2026-07-16T07:43:50Z",
-      "source_url": "https://pnpm.io/motivation",
+      "retrieved_at": "2026-07-18T15:29:49Z",
+      "source_url": "https://github.com/pnpm/pnpm/releases",
       "official_publisher": "pnpm maintainers",
-      "official_host": "pnpm.io",
-      "version": "11.x",
-      "latest_checked_at": "2026-07-16T07:43:50Z",
-      "summary": "pnpm (現行 11.x) は依存を content-addressable store に一元保存しハードリンク配置するためディスク・時間効率が高い。node_modules は symlink ベースの非フラット構造で、宣言外依存へのアクセス (phantom dependency) を防ぐ strict 設計。本プロジェクトの唯一のパッケージマネージャとし npm は使用しない (ユーザー指定)。"
+      "official_host": "github.com",
+      "version": "11.15.0",
+      "latest_checked_at": "2026-07-18T15:29:49Z",
+      "summary": "pnpm 公式 GitHub organization の Releases で現行安定版 11.15.0 を確認した。pnpm は依存を content-addressable store に一元保存してディスク・時間効率を高め、symlink ベースの非フラットな node_modules で宣言外依存へのアクセスを抑止する。本プロジェクトの唯一のパッケージマネージャとして pnpm を使用し npm は使用しない。"
     },
     {
       "target_id": "zod",
@@ -67,8 +67,8 @@
       "official_publisher": "Drizzle Team",
       "official_host": "github.com",
       "version": "v1.0.0-rc.4 (v1 プレリリース現行) / 安定版 0.45.2",
-      "latest_checked_at": "2026-07-16T14:09:13Z",
-      "summary": "Drizzle ORM は headless TypeScript ORM で serverless-ready を明記。SQLite 系ドキュメントに Turso 接続ガイド (connect-turso 系) と Cloudflare D1 接続ガイド (connect-cloudflare-d1) の両方が存在し、libSQL(Turso)/D1 両対応が公式に確認できる (D2 決定の退避経路の根拠)。バージョン系譜は publisher 直営 org (github.com/drizzle-team、正規 docs orm.drizzle.team からリンクされる公式 org) の releases で確認: 安定版 (v0系) は 0.45.2、v1 系は v1.0.0-rc.4 まで到達 (beta.22→rc.1〜rc.4)。docs の latest-releases 静的ページは v1.0.0-beta.2 告知が最新掲載で、リリース実態は GitHub releases が先行する。v1 は rc 段階のため、実装着手時に安定版 (0.45.x) 採用か v1 追随かを再判定し、バージョン固定と追随方針を運用に含める。"
+      "latest_checked_at": "2026-07-18T14:57:14Z",
+      "summary": "Drizzle ORM は headless TypeScript ORM で serverless-ready を明記。SQLite 系ドキュメントに Turso 接続ガイド (connect-turso 系) と Cloudflare D1 接続ガイド (connect-cloudflare-d1) の両方が存在し、libSQL(Turso)/D1 両対応が公式に確認できる (D2 決定の退避経路の根拠)。バージョン系譜は publisher 直営 org (github.com/drizzle-team、正規 docs orm.drizzle.team からリンクされる公式 org) の releases で確認: 安定版 (v0系) は 0.45.2、v1 系は v1.0.0-rc.4 まで到達 (beta.22→rc.1〜rc.4)。docs の latest-releases 静的ページは v1.0.0-beta.2 告知が最新掲載で、リリース実態は GitHub releases が先行する。v1 は rc 段階のため、実装着手時に安定版 (0.45.x) 採用か v1 追随かを再判定し、バージョン固定と追随方針を運用に含める。 鮮度再確認 (2026-07-18): v1.0.0-rc.4 の実在を GitHub releases (2026-06-27 公開) と npm dist-tags (rc4 タグ系列, latest=0.45.2) の複数ソースで裏取り済み。(C08 鮮度監査是正 2026-07-18: WebFetch 不可環境のため WebSearch 多源照合で再確認。一次 GET 照合は WebFetch 可能環境での follow-up 継続)"
     },
     {
       "target_id": "authjs",
@@ -77,8 +77,8 @@
       "official_publisher": "Auth.js (OSS)",
       "official_host": "authjs.dev",
       "version": "next-auth@5.0.0-beta 以降 (@auth/* namespace)",
-      "latest_checked_at": "2026-07-17T09:25:00Z",
-      "summary": "Auth.js は標準 Web API ベースのランタイム非依存な認証ライブラリで、Next.js 統合を公式サポート。provider 一覧に Microsoft Entra ID・Okta・Keycloak 等 OIDC 系 IdP を多数掲載。統治変更 (2026-07-17 再確認): Auth.js は Better Auth 傘下となり、さらに 2026-07-07 に Vercel が Better Auth を買収 (公式発表 https://vercel.com/blog/vercel-acquires-better-auth。ライブラリは MIT・名称維持・チーム継続と発表)。D3 決定 (Auth.js 採用) の帰趨リスクは高まっており、qa-020 の auth adapter 境界 (Better Auth 移行ヘッジ) を必須の緩和策として維持し、実装着手時に最新の統治状況を再確認する。DB 連携は Drizzle / D1 を含む adapter でオプション対応。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up)"
+      "latest_checked_at": "2026-07-18T14:57:14Z",
+      "summary": "Auth.js は標準 Web API ベースのランタイム非依存な認証ライブラリで、Next.js 統合を公式サポート。provider 一覧に Microsoft Entra ID・Okta・Keycloak 等 OIDC 系 IdP を多数掲載。統治変更 (2026-07-17 再確認): Auth.js は Better Auth 傘下となり、さらに 2026-07-07 に Vercel が Better Auth を買収 (公式発表 https://vercel.com/blog/vercel-acquires-better-auth。ライブラリは MIT・名称維持・チーム継続と発表)。D3 決定 (Auth.js 採用) の帰趨リスクは高まっており、qa-020 の auth adapter 境界 (Better Auth 移行ヘッジ) を必須の緩和策として維持し、実装着手時に最新の統治状況を再確認する。DB 連携は Drizzle / D1 を含む adapter でオプション対応。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up) 鮮度再確認 (2026-07-18): Vercel の Better Auth 買収 (2026-07-07 公式発表) を再照合一致。加えて Auth.js v5 は maintenance mode (security patch のみ・新機能開発なし) との 2026 年時点の複数ソース情報を確認 — D3 の auth adapter 境界 (qa-020 の Better Auth 移行ヘッジ) の重要度が上がっている。実装着手時の統治・保守状況再確認を必須とする。(C08 鮮度監査是正 2026-07-18: WebFetch 不可環境のため WebSearch 多源照合で再確認。一次 GET 照合は WebFetch 可能環境での follow-up 継続)"
     },
     {
       "target_id": "claude-code-plugins",
@@ -86,9 +86,9 @@
       "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
       "official_publisher": "Anthropic",
       "official_host": "code.claude.com",
-      "last_updated": "2026-07-17 (最新確認日。本文の記載anchor は v2.1.196 時点、CLI 本体は 2026-07 時点で v2.1.21x 系まで継続リリース)",
-      "latest_checked_at": "2026-07-17T09:25:00Z",
-      "summary": "marketplace は .claude-plugin/marketplace.json で定義し、GitHub owner/repo・git URL・marketplace.json への remote URL・ローカルパスで追加できる (URL はスキーム必須・https)。remote URL 型では marketplace.json しか取得されないため相対パス source の plugin は解決不能で、plugin 本体 source は外部 source が必要。source type は github・git URL・git-subdir に加え npm も許可されており、コンセプト文書 §8.1 の『npm 非対応』は現行仕様と不一致 (仕様書で事実修正済み)。Stage 0 technical gate (H7) の検証対象。鮮度注意 (2026-07-17 再確認): 記録の挙動 anchor は v2.1.196 時点だが CLI は高頻度リリースされており (2026-07 時点 v2.1.21x 系)、H7 検証と実装着手時に code.claude.com の changelog / 本ページを再照合する。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up)"
+      "last_updated": "2026-07-18 (最新確認日。本文の記載 anchor は v2.1.196 時点、CLI 本体は 2026-07 時点で v2.1.203+ 系まで継続リリース)",
+      "latest_checked_at": "2026-07-18T14:57:14Z",
+      "summary": "marketplace は .claude-plugin/marketplace.json で定義し、GitHub owner/repo・git URL・marketplace.json への remote URL・ローカルパスで追加できる (URL はスキーム必須・https)。remote URL 型では marketplace.json しか取得されないため相対パス source の plugin は解決不能で、plugin 本体 source は外部 source が必要。source type は github・git URL・git-subdir に加え npm も許可されており、コンセプト文書 §8.1 の『npm 非対応』は現行仕様と不一致 (仕様書で事実修正済み)。Stage 0 technical gate (H7) の検証対象。鮮度注意 (2026-07-17 再確認): 記録の挙動 anchor は v2.1.196 時点だが CLI は高頻度リリースされており (2026-07 時点 v2.1.21x 系)、H7 検証と実装着手時に code.claude.com の changelog / 本ページを再照合する。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up) 鮮度再確認 (2026-07-18): CLI 現行 2.1.20x 系 (2.1.203+ の存在を release tracker 複数ソースで確認)。plugin marketplace 仕様 (marketplace.json・source type に npm 含む) に変更の兆候なし。H7 検証時に changelog 再照合。(C08 鮮度監査是正 2026-07-18: WebFetch 不可環境のため WebSearch 多源照合で再確認。一次 GET 照合は WebFetch 可能環境での follow-up 継続)"
     },
     {
       "target_id": "cloudflare-workers",
@@ -136,9 +136,10 @@
       "source_url": "https://opennext.js.org/cloudflare",
       "official_publisher": "OpenNext (OSS)",
       "official_host": "opennext.js.org",
-      "last_updated": "2026-07-16 (取得日。ページに更新日・バージョン表記なし)",
-      "latest_checked_at": "2026-07-16T08:42:07Z",
-      "summary": "@opennextjs/cloudflare は Next.js の Node.js runtime を用いて Workers へデプロイする adapter。対応バージョンは Next.js 16 の全 minor/patch と 14/15 の最新 minor (14 は 2026Q1 でサポート終了予定)。App Router・Route Handlers・SSG/SSR・Middleware をサポート。重要な制約: Worker サイズ上限が Free プラン 3 MiB / Paid 10 MiB のため、費用ゼロ制約下では bundle サイズ管理が必須リスクとなる (D1 決定の caveat に追加)。"
+      "version": "1.20.1 (npm @opennextjs/cloudflare)",
+      "last_updated": "2026-06-26 (v1.20.1 GitHub release 公開日)",
+      "latest_checked_at": "2026-07-18T14:57:14Z",
+      "summary": "@opennextjs/cloudflare は Next.js の Node.js runtime を用いて Workers へデプロイする adapter。対応バージョンは Next.js 16 の全 minor/patch と 14/15 の最新 minor (14 は 2026Q1 でサポート終了予定)。App Router・Route Handlers・SSG/SSR・Middleware をサポート。重要な制約: Worker サイズ上限が Free プラン 3 MiB / Paid 10 MiB のため、費用ゼロ制約下では bundle サイズ管理が必須リスクとなる (D1 決定の caveat に追加)。 鮮度再確認 (2026-07-18): 旧記録の『バージョン表記なし』は docs ページのみの観察による記録漏れで、npm/GitHub releases 上に具体バージョン v1.20.1 (2026-06-26) が存在することを複数ソースで確認し version へ記録。(C08 鮮度監査是正 2026-07-18: WebFetch 不可環境のため WebSearch 多源照合で再確認。一次 GET 照合は WebFetch 可能環境での follow-up 継続)"
     },
     {
       "target_id": "resend",

@@ -17,15 +17,15 @@ template_id: architecture
 template_version: 1.0.0
 confirmation_status: confirmed
 evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "afae654e837de71247b60defbfc0321d472a6312fba5e04d9d61ce96019ff0ab", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "eval-log/run-system-spec-compile-c05-aggregate-20260718.json"}
-source_lineage: {"imported_at": "2026-07-18T08:10:00Z", "origin_kind": "system-spec-harness", "source_digest": "afae654e837de71247b60defbfc0321d472a6312fba5e04d9d61ce96019ff0ab", "source_path": "system-spec/dev-workflow.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
+confirmation_evidence: {"evaluated_digest": "c8f21b091cfc28b29992454908c3281ff519dce8535f3629c6fddc156ccd543f", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
+source_lineage: {"imported_at": "2026-07-18T15:40:17Z", "origin_kind": "system-spec-harness", "source_digest": "c8f21b091cfc28b29992454908c3281ff519dce8535f3629c6fddc156ccd543f", "source_path": "system-spec/dev-workflow.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
 created_at: 2026-07-18T08:10:00Z
-updated_at: 2026-07-18T08:10:00Z
+updated_at: 2026-07-18T15:40:17Z
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
-purpose: Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration) と作者ローカル環境規律 (macOS 主/Windows 従・CI と同一の pnpm verify・本番操作の CI 一本化) の正本参照
-goal: qa-038/qa-039 の確定内容 (C1/C2 制約下の開発・CI/CD・リリースフロー) に適合する開発運用の指針を提供する
+purpose: Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration)、作者ローカル環境規律、features README と 11 requirements-baseline の派生正本境界を参照する
+goal: qa-038/qa-039/qa-066 の確定内容に適合し、P0〜P5 の開発運用と feature baseline の source lineage を逆引きできる指針を提供する
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製", "未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS", "source_digest が正本と一致"]
@@ -53,14 +53,14 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 
 ## 正本 (source of truth)
 
-- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `afae654e837de712…`)
+- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `c8f21b091cfc28b2…`)
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS_WITH_FINDINGS** (`eval-log/run-system-spec-compile-c05-aggregate-20260718.json`)
-- 取込日時: 2026-07-18T08:10:00Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
+- 取込日時: 2026-07-18T15:40:17Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
-正本: system-spec/dev-workflow.md (qa-038: GitHub Flow + PR 必須・required status checks 8 種・PR preview + production・main merge 自動デプロイ・expand/contract migration 強制 / qa-039: 作者ローカル環境 macOS 主・Windows 従・CI と同一の pnpm verify・本番操作の CI 一本化)。
+正本: system-spec/dev-workflow.md (qa-038: GitHub Flow + PR 必須・required status checks 8 種・PR preview + production・main merge 自動デプロイ・expand/contract migration 強制 / qa-039: 作者ローカル環境 macOS 主・Windows 従・CI と同一の pnpm verify・本番操作の CI 一本化 / qa-066: features README と 11 requirements-baseline を P0〜P5 の派生投影として参照し、循環する二重正本を作らない)。
 
 ## Context and drivers
 

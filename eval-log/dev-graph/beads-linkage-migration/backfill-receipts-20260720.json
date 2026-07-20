@@ -1,0 +1,2794 @@
+{
+  "summary": {
+    "resume_applied": 173,
+    "failed": 1,
+    "transcribed_nodes": 158,
+    "elapsed_sec": 2746.4
+  },
+  "receipts": [
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P12",
+      "operation": "updated",
+      "revision_after": 79,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P13",
+      "operation": "updated",
+      "revision_after": 80,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01",
+      "operation": "updated",
+      "revision_after": 81,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02",
+      "operation": "updated",
+      "revision_after": 82,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03",
+      "operation": "updated",
+      "revision_after": 83,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04",
+      "operation": "updated",
+      "revision_after": 84,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05",
+      "operation": "updated",
+      "revision_after": 85,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06",
+      "operation": "updated",
+      "revision_after": 86,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07",
+      "operation": "updated",
+      "revision_after": 87,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08",
+      "operation": "updated",
+      "revision_after": 88,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09",
+      "operation": "updated",
+      "revision_after": 89,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10",
+      "operation": "updated",
+      "revision_after": 90,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11",
+      "operation": "updated",
+      "revision_after": 91,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12",
+      "operation": "updated",
+      "revision_after": 92,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P13",
+      "operation": "updated",
+      "revision_after": 93,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P01",
+      "operation": "updated",
+      "revision_after": 94,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P02",
+      "operation": "updated",
+      "revision_after": 95,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P03",
+      "operation": "updated",
+      "revision_after": 96,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P04",
+      "operation": "updated",
+      "revision_after": 97,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P05",
+      "operation": "updated",
+      "revision_after": 98,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P06",
+      "operation": "updated",
+      "revision_after": 99,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P07",
+      "operation": "updated",
+      "revision_after": 100,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P08",
+      "operation": "updated",
+      "revision_after": 101,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P09",
+      "operation": "updated",
+      "revision_after": 102,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P10",
+      "operation": "updated",
+      "revision_after": 103,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P11",
+      "operation": "updated",
+      "revision_after": 104,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P12",
+      "operation": "updated",
+      "revision_after": 105,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P13",
+      "operation": "updated",
+      "revision_after": 106,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P01",
+      "operation": "updated",
+      "revision_after": 107,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P02",
+      "operation": "updated",
+      "revision_after": 108,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P03",
+      "operation": "updated",
+      "revision_after": 109,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P04",
+      "operation": "updated",
+      "revision_after": 110,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P05",
+      "operation": "updated",
+      "revision_after": 111,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P06",
+      "operation": "updated",
+      "revision_after": 112,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P07",
+      "operation": "updated",
+      "revision_after": 113,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P08",
+      "operation": "updated",
+      "revision_after": 114,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P09",
+      "operation": "updated",
+      "revision_after": 115,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P10",
+      "operation": "updated",
+      "revision_after": 116,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P11",
+      "operation": "updated",
+      "revision_after": 117,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P12",
+      "operation": "updated",
+      "revision_after": 118,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P13",
+      "operation": "updated",
+      "revision_after": 119,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P01",
+      "operation": "updated",
+      "revision_after": 120,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P02",
+      "operation": "updated",
+      "revision_after": 121,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P03",
+      "operation": "updated",
+      "revision_after": 122,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P04",
+      "operation": "updated",
+      "revision_after": 123,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P05",
+      "operation": "updated",
+      "revision_after": 124,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P06",
+      "operation": "updated",
+      "revision_after": 125,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P07",
+      "operation": "updated",
+      "revision_after": 126,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P08",
+      "operation": "updated",
+      "revision_after": 127,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P09",
+      "operation": "updated",
+      "revision_after": 128,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P10",
+      "operation": "updated",
+      "revision_after": 129,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P11",
+      "operation": "updated",
+      "revision_after": 130,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P12",
+      "operation": "updated",
+      "revision_after": 131,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P13",
+      "operation": "updated",
+      "revision_after": 132,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P01",
+      "operation": "updated",
+      "revision_after": 133,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P02",
+      "operation": "updated",
+      "revision_after": 134,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P03",
+      "operation": "updated",
+      "revision_after": 135,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P04",
+      "operation": "updated",
+      "revision_after": 136,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P05",
+      "operation": "updated",
+      "revision_after": 137,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P06",
+      "operation": "updated",
+      "revision_after": 138,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P07",
+      "operation": "updated",
+      "revision_after": 139,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P08",
+      "operation": "updated",
+      "revision_after": 140,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P09",
+      "operation": "updated",
+      "revision_after": 141,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P10",
+      "operation": "updated",
+      "revision_after": 142,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P11",
+      "operation": "updated",
+      "revision_after": 143,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P12",
+      "operation": "updated",
+      "revision_after": 144,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P13",
+      "operation": "updated",
+      "revision_after": 145,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P01",
+      "operation": "updated",
+      "revision_after": 146,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P02",
+      "operation": "updated",
+      "revision_after": 147,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P03",
+      "operation": "updated",
+      "revision_after": 148,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P04",
+      "operation": "updated",
+      "revision_after": 149,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P05",
+      "operation": "updated",
+      "revision_after": 150,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P06",
+      "operation": "updated",
+      "revision_after": 151,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P07",
+      "operation": "updated",
+      "revision_after": 152,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P08",
+      "operation": "updated",
+      "revision_after": 153,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P09",
+      "operation": "updated",
+      "revision_after": 154,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P10",
+      "operation": "updated",
+      "revision_after": 155,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P11",
+      "operation": "updated",
+      "revision_after": 156,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P12",
+      "operation": "updated",
+      "revision_after": 157,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P13",
+      "operation": "updated",
+      "revision_after": 158,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P01",
+      "operation": "updated",
+      "revision_after": 159,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P02",
+      "operation": "updated",
+      "revision_after": 160,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P03",
+      "operation": "updated",
+      "revision_after": 161,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P04",
+      "operation": "updated",
+      "revision_after": 162,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P05",
+      "operation": "updated",
+      "revision_after": 163,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P06",
+      "operation": "updated",
+      "revision_after": 164,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P07",
+      "operation": "updated",
+      "revision_after": 165,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P08",
+      "operation": "updated",
+      "revision_after": 166,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P09",
+      "operation": "updated",
+      "revision_after": 167,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P10",
+      "operation": "updated",
+      "revision_after": 168,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P11",
+      "operation": "updated",
+      "revision_after": 169,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P12",
+      "operation": "updated",
+      "revision_after": 170,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P13",
+      "operation": "updated",
+      "revision_after": 171,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P01",
+      "operation": "updated",
+      "revision_after": 172,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P02",
+      "operation": "updated",
+      "revision_after": 173,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P03",
+      "operation": "updated",
+      "revision_after": 174,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P04",
+      "operation": "updated",
+      "revision_after": 175,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P05",
+      "operation": "updated",
+      "revision_after": 176,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P06",
+      "operation": "updated",
+      "revision_after": 177,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P07",
+      "operation": "updated",
+      "revision_after": 178,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P08",
+      "operation": "updated",
+      "revision_after": 179,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P09",
+      "operation": "updated",
+      "revision_after": 180,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P10",
+      "operation": "updated",
+      "revision_after": 181,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P11",
+      "operation": "updated",
+      "revision_after": 182,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P12",
+      "operation": "updated",
+      "revision_after": 183,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P13",
+      "operation": "updated",
+      "revision_after": 184,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "operation": "updated",
+      "revision_after": 185,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+      "operation": "updated",
+      "revision_after": 186,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+      "operation": "updated",
+      "revision_after": 187,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+      "operation": "updated",
+      "revision_after": 188,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+      "operation": "updated",
+      "revision_after": 189,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+      "operation": "updated",
+      "revision_after": 190,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+      "operation": "updated",
+      "revision_after": 191,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+      "operation": "updated",
+      "revision_after": 192,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+      "operation": "updated",
+      "revision_after": 193,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+      "operation": "updated",
+      "revision_after": 194,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+      "operation": "updated",
+      "revision_after": 195,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+      "operation": "updated",
+      "revision_after": 196,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+      "operation": "updated",
+      "revision_after": 197,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P01",
+      "operation": "updated",
+      "revision_after": 198,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P02",
+      "operation": "updated",
+      "revision_after": 199,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P03",
+      "operation": "updated",
+      "revision_after": 200,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P04",
+      "operation": "updated",
+      "revision_after": 201,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P05",
+      "operation": "updated",
+      "revision_after": 202,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P06",
+      "operation": "updated",
+      "revision_after": 203,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P07",
+      "operation": "updated",
+      "revision_after": 204,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P08",
+      "operation": "updated",
+      "revision_after": 205,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P09",
+      "operation": "updated",
+      "revision_after": 206,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P10",
+      "operation": "updated",
+      "revision_after": 207,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P11",
+      "operation": "updated",
+      "revision_after": 208,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P12",
+      "operation": "updated",
+      "revision_after": 209,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P13",
+      "operation": "updated",
+      "revision_after": 210,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P01",
+      "operation": "updated",
+      "revision_after": 211,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P02",
+      "operation": "updated",
+      "revision_after": 212,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P03",
+      "operation": "updated",
+      "revision_after": 213,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P04",
+      "operation": "updated",
+      "revision_after": 214,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P05",
+      "operation": "updated",
+      "revision_after": 215,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P06",
+      "operation": "updated",
+      "revision_after": 216,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P07",
+      "operation": "updated",
+      "revision_after": 217,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P08",
+      "operation": "updated",
+      "revision_after": 218,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P09",
+      "operation": "updated",
+      "revision_after": 219,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P10",
+      "operation": "updated",
+      "revision_after": 220,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P11",
+      "operation": "updated",
+      "revision_after": 221,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P12",
+      "operation": "updated",
+      "revision_after": 222,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P13",
+      "operation": "updated",
+      "revision_after": 223,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "operation": "updated",
+      "revision_after": 224,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P02",
+      "operation": "updated",
+      "revision_after": 225,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P03",
+      "operation": "updated",
+      "revision_after": 226,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P04",
+      "operation": "updated",
+      "revision_after": 227,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P05",
+      "operation": "updated",
+      "revision_after": 228,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P06",
+      "operation": "updated",
+      "revision_after": 229,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P07",
+      "operation": "updated",
+      "revision_after": 230,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P08",
+      "operation": "updated",
+      "revision_after": 231,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P09",
+      "operation": "updated",
+      "revision_after": 232,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P10",
+      "operation": "updated",
+      "revision_after": 233,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P11",
+      "operation": "updated",
+      "revision_after": 234,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P12",
+      "operation": "updated",
+      "revision_after": 235,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P13",
+      "operation": "updated",
+      "revision_after": 236,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-auth-tenancy",
+      "operation": "updated",
+      "revision_after": 237,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-build-pipeline-board",
+      "operation": "updated",
+      "revision_after": 238,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-docs-cms",
+      "operation": "updated",
+      "revision_after": 239,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-domain-model-db",
+      "operation": "updated",
+      "revision_after": 240,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-dual-catalog-web",
+      "operation": "updated",
+      "revision_after": 241,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-feedback-loop",
+      "operation": "updated",
+      "revision_after": 242,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-hearing-intake",
+      "operation": "updated",
+      "revision_after": 243,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-hub-foundation",
+      "operation": "updated",
+      "revision_after": 244,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-metrics-tracking",
+      "operation": "updated",
+      "revision_after": 245,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-publish-pipeline",
+      "operation": "updated",
+      "revision_after": 246,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-publisher-plugin",
+      "operation": "updated",
+      "revision_after": 247,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-stage0-distribution-gate",
+      "operation": "updated",
+      "revision_after": 248,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-tenant-data-retention",
+      "operation": "updated",
+      "revision_after": 249,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-user-org-admin",
+      "operation": "updated",
+      "revision_after": 250,
+      "write_count": 2
+    },
+    {
+      "graph_node_id": "feat-workspace-governance",
+      "operation": "updated",
+      "revision_after": 251,
+      "write_count": 2
+    }
+  ],
+  "failed": [
+    {
+      "graph_node_id": "issue-audit-followups-20260717",
+      "reason": "unparseable frontmatter value for goal"
+    }
+  ],
+  "transcribed": [
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HEARING-INTAKE-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P02",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P03",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P04",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P05",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P06",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P07",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P08",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P09",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P10",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P11",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P12",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P13",
+      "transcribed_keys": [
+        "acceptance",
+        "architecture_refs",
+        "goal",
+        "purpose",
+        "scope_in",
+        "scope_out"
+      ]
+    }
+  ]
+}

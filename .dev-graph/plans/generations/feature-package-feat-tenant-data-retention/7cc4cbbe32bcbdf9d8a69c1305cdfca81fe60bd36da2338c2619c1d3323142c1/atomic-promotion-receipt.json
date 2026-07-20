@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-19T14:19:56Z",
+  "generation_id": "7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention",
+    "published_digest": "sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+    "receipt": ".dev-graph/plans/feature-package-feat-tenant-data-retention/atomic-promotion-receipt.json"
+  },
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "evaluated_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "published_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/dev-graph-registration.json"
+}

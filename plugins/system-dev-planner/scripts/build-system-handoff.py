@@ -418,6 +418,7 @@ def _build_handoff(
             "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
             "self_reference_policy": "handoff omits its own digest and final manifest digest",
         },
+        "p01_entry_gate": inventory["p01_entry_gate"],
         "execution_tasks": [
             {
                 "task_id": task["id"],

@@ -13,6 +13,8 @@ architecture_refs: [arch-harness-hub-backend, arch-harness-hub-frontend]
 
 > **位置づけ**: P01 (要件ベースライン確定) の成果物。promoted goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を**確定転記**した baseline であり、P02 以降の全 task はこの文書を唯一の合意事項として参照する。転記元との相違が判明した場合は本文書を修正せず goal-spec 側の再確定を dev-graph へ差し戻す (rollback 規約)。
 
+> **構築順オーバーレイ (baseline 外)**: **P3**。P2 の公開済み Project/Release を参照し、改善要望→レビュー→再公開を閉じる。正本: [system-design-overview.md](../../system-design-overview.md) §3 / [README.md](../README.md)。
+
 ## 1. 目的 (purpose)
 
 利用者の改善要望/レビュー依頼/バグ報告を CLI + Web (S14) の 2 経路で受け付け (B6)、D5 pull 型 AI キューで解析・修正案生成し、修正版の publish → update 通知まで閉じる改善ループ (G5/I12, J5) を確立する

@@ -1,31 +1,11 @@
 {
-  "recorded_at": "2026-07-18T08:30:00Z",
-  "checklist": [
-    {
-      "item": "candidate 条件 (confirmed/pass/readiness complete・全依存 done・lease なし)",
-      "status": "PASS",
-      "evidence": "schedule-graph.py --ready-source self。leases.json 空 (manage-worktree-lease --op list)"
-    },
-    {
-      "item": "feature ready と task ready の分離",
-      "status": "PASS",
-      "evidence": "features: [] / tasks: 9 件 (混在なし)。draft 6 feature は未確定のため features ready に不在"
-    },
-    {
-      "item": "同一 batch の resource_scope 重複 0",
-      "status": "PASS",
-      "evidence": "conflicts: [] (C17 独立検証を並走)"
-    },
-    {
-      "item": "suggested_branch / claim command 形式",
-      "status": "PASS",
-      "evidence": "devgraph/<graph_node_id> + public CLI 形式 (assignment_hints 9 件)"
-    },
-    {
-      "item": "read-only (graph/tracker/lease digest 不変)",
-      "status": "PASS",
-      "evidence": "実行前 digest c51314063c291c22 を記録し実行後に照合"
-    }
-  ],
-  "notes": "spec-harness-hub-requirements (specification) が task ready へ混入 — C17 検証の指摘対象。実行推薦からは除外して提示する"
+  "checklist": {
+    "candidate_gates": "PASS (confirmed/pass/complete のみ、bd ready×parity 積集合)",
+    "feature_task_separation": "PASS (features/tasks 別 batch)",
+    "resource_conflict_pairs": "PASS (0件)",
+    "suggested_branch_claim_command": "PASS (devgraph/<id> + public CLI 形式)",
+    "digest_stability": "PASS (graph/lease/tracker 前後一致)",
+    "lease_authority": "PASS (git common-dir 正本)",
+    "c17_independent_verifier": "PASS (recomputed_ready が schedule 出力と完全一致・findings 8項目全て整合)"
+  }
 }

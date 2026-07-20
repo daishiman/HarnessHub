@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-19T01:58:50Z",
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91",
+  "evaluated_digest": "sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91",
+  "published_digest": "sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/feature-package-feat-workspace-governance/dev-graph-registration.json"
+}

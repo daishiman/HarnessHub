@@ -1,0 +1,1259 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-domain-model-db",
+  "parent_feature": "feat-domain-model-db",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/spec-state.json",
+      "docs/backend-spec.md",
+      "docs/security-spec.md",
+      "architecture/harness-hub-backend.md",
+      "architecture/harness-hub-data.md",
+      "features/feat-domain-model-db.md",
+      "features/feat-domain-model-db.context.json",
+      "goal-spec.json",
+      "architecture/harness-hub-infrastructure.md",
+      "specs/harness-hub-system-specification.md"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P01",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "data",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-domain-model-db/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/spec-state.json",
+        "docs/backend-spec.md",
+        "features/feat-domain-model-db.md",
+        "features/feat-domain-model-db.context.json",
+        "goal-spec.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec (goal-spec.json) と features/feat-domain-model-db.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-domain-model-db/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 10 件が過不足なく転記されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP01責務として追跡し、未割当0件である",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "goal-spec と features/feat-domain-model-db.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p01.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P02",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "architecture-decision"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "data",
+      "secondary_workstreams": [
+        "backend",
+        "security",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-domain-model-db/architecture-decision-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "docs/security-spec.md",
+        "system-spec/database.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "コアドメイン 18 テーブルの Drizzle スキーマ設計・libSQL/D1 接続層隔離設計・R2 content-addressed registry 設計に加え、User 基底テーブルの owner feature 未確定 (features/feat-domain-model-db.md 上流未解決節) を解消する P02 architecture decision タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に User 基底テーブル owner 確定の判断基準・証跡・影響範囲が明記され、18 テーブルの列定義表・接続層隔離設計・R2 registry 設計・qa-045 follow-up 記録が記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
+        "日次 export の保存形式・暗号化/マスク境界、restore の検証順序、単一 migration lineage、2-tenant fixture を設計成果物に含める。",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "User 基底テーブル owner 判断の前提 (feat-user-org-admin の write_scope 非重複) に誤りが判明した場合、architecture-decision-record.md の該当節を差し戻し、P01 の要件ベースラインへ再照会する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p02.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P03",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "data",
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-domain-model-db/design-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P02 の architecture decision (User 基底テーブル owner 確定・18 テーブル定義・接続層隔離) を P02 実行者から独立した視点で検証する P03 レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に User 基底テーブル owner 判断根拠の検証結果と qa-045 scope-out 判断の妥当性確認が記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP03責務として追跡し、未割当0件である",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "User 基底テーブル owner 判断根拠またはスキーマ設計に重大な指摘が見つかった場合、design-review-notes.md に指摘内容を記録し P02 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p03.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P04",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "data",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P03"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "docs/features/feat-domain-model-db/test-design.md",
+        "packages/db/__tests__/",
+        "packages/db/__tests__/backup-restore.test.ts",
+        "packages/db/__tests__/fixtures/two-tenants.ts",
+        "packages/db/backup/",
+        "packages/db/scripts/export-control-plane.ts",
+        "packages/db/scripts/restore-control-plane.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/security-spec.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "quality_constraints 10 件 (D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore・単一 migration 系統・接続層隔離・User 基底テーブル境界互換) をテストケースへ写像する P04 テストファースト設計タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に quality_constraints 10 件と acceptance 3 件全てに対応するテストケースが記載され、packages/db/__tests__/ にスタブが作成されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP04責務として追跡し、未割当0件である",
+        "Turso/D1 migration を適用した2テナント fixture、日次 export artifact の完全性、別DBへの restore round-trip を自動テストとして実装前に定義する。",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "quality_constraints とテストケースの対応漏れが判明した場合、test-design.md の対応表を修正し不足カテゴリを追加する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p04.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P05",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "data",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P04"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "packages/db/__tests__/backup-restore.test.ts",
+        "packages/db/__tests__/fixtures/two-tenants.ts",
+        "packages/db/backup/",
+        "packages/db/connection/",
+        "packages/db/registry/",
+        "packages/db/repository/",
+        "packages/db/schema/core/",
+        "packages/db/schema/index.ts",
+        "packages/db/scripts/export-control-plane.ts",
+        "packages/db/scripts/restore-control-plane.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "docs/security-spec.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P02/P04 で確定した設計とテストスタブに基づき packages/db のスキーマ・接続層・リポジトリ層・R2 registry を実装する P05 実装タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P04 で作成したテストスタブが実装コードに対して解決可能な状態 (import 解決・型整合) になっている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP05責務として追跡し、未割当0件である",
+        "packages/db に日次 export job と検証可能な restore command/library を実装する。P12 の runbook は消費物であり、P05 実装の前提にしない。",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "実装が P02 の architecture decision と乖離した場合、該当コミットを revert し P02/P04 の成果物へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p05.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P06",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "data",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P05"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "docs/features/feat-domain-model-db/test-run-results.md",
+        "packages/db/__tests__/",
+        "packages/db/__tests__/backup-restore.test.ts",
+        "packages/db/__tests__/fixtures/two-tenants.ts",
+        "packages/db/backup/",
+        "packages/db/scripts/export-control-plane.ts",
+        "packages/db/scripts/restore-control-plane.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/security-spec.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P05 の実装に対して P04 のテストスタブを実行し quality_constraints 10 件の充足状況を機械的に確認する P06 テスト実行タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-results.md に quality_constraints 10 件全ての pass 結果が記録されている (fail が残る場合は差し戻し理由が明記されている)",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP06責務として追跡し、未割当0件である",
+        "P05 の export/restore 実装をschema test harnessと2-tenant fixtureで直接実行する。P08で後から生成するcanonical migration artifactはP06の前提にせず、P12成果物への逆依存も禁止する。",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかのテストが fail した場合、test-run-results.md に原因を記録し P05 (実装) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p06.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P07",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "data",
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-domain-model-db/acceptance-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P06 で green 化したテスト結果を基に goal-spec acceptance 3 件の充足を確認する P07 受入タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-record.md に goal-spec acceptance 3 件全ての確認結果 (pass) と証跡が記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP07責務として追跡し、未割当0件である",
+        "P06 の executable export/restore round-trip と D1互換・immutable・tenant分離の証跡だけで3 acceptanceを判定し、P12を前提にしない。",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "acceptance 3 件のいずれかが不充足の場合、acceptance-record.md に理由を記録し P05 (実装) または P02 (設計) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p07.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P08",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "refactoring-migration"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data"
+      ],
+      "workstream_kind": "data",
+      "secondary_workstreams": [
+        "backend",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P07"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "docs/features/feat-domain-model-db/refactoring-migration-note.md",
+        "packages/db/__tests__/backup-restore.test.ts",
+        "packages/db/__tests__/fixtures/two-tenants.ts",
+        "packages/db/backup/",
+        "packages/db/drizzle.config.ts",
+        "packages/db/migrations/",
+        "packages/db/scripts/export-control-plane.ts",
+        "packages/db/scripts/restore-control-plane.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P05 で実装したコアドメイン 18 テーブルのスキーマに対する初回ベースライン migration 生成と、単一 migration 系統の確立を行う P08 リファクタリング/マイグレーションタスク (required-node)",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に初回ベースライン migration の生成内容と、Studio 拡張 feature 向け積み増しルールが記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP08責務として追跡し、未割当0件である",
+        "Turso/D1 の初回 migration を単一 lineage で生成し、apply/rollback と2テナント fixture初期化を検証する。",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "生成された migration が P02 の設計と乖離する場合、migration ファイルを削除し P05 のスキーマ定義を修正したうえで本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p08.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P09",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P08"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "docs/features/feat-domain-model-db/quality-assurance-report.md",
+        "packages/db/__tests__/backup-restore.test.ts",
+        "packages/db/__tests__/fixtures/two-tenants.ts",
+        "packages/db/backup/",
+        "packages/db/scripts/",
+        "packages/db/scripts/export-control-plane.ts",
+        "packages/db/scripts/restore-control-plane.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/security-spec.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P08 の migration 確立後、CI 品質ゲート (テナント分離 CI 必須・接続層隔離検査・secret scan・単一 migration 系統維持) を確認する P09 品質保証タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に CI 品質ゲート (テナント分離・接続層隔離・secret scan・単一 migration 系統維持) の全項目 pass が記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP09責務として追跡し、未割当0件である",
+        "CI に migration apply、2-tenant isolation fixture、export/restore round-trip、単一 migration lineage の gate を追加する。",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかの品質ゲート項目が fail した場合、quality-assurance-report.md に原因を記録し該当する P05/P08 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p09.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P10",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "最終独立レビュー — quality_constraints 10 件の充足判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "data",
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-domain-model-db/final-review-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P09 の品質保証結果を基に quality_constraints 10 件全件の最終充足判定を実装者から独立した視点で行う P10 最終独立レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-record.md に quality_constraints 10 件全件の充足判定 (充足) が記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP10責務として追跡し、未割当0件である",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかの quality_constraint が不充足と判定された場合、final-review-record.md に理由を記録し該当する P02/P05/P09 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p10.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P11",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-domain-model-db/evidence-summary.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P01〜P10 の全成果物を証跡として一元集約し、リリース判断とドキュメント化 (P12/P13) に必要な evidence bundle を作成する P11 エビデンス収集タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-summary.md に P06/P07/P09/P10 の 4 成果物への参照リンクと、User 基底テーブル owner 決定・qa-045 follow-up 記録への参照が記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP11責務として追跡し、未割当0件である",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "参照先成果物に欠落が見つかった場合、該当 phase へ差し戻し再生成を依頼する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p11.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P12",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "documentation",
+        "operations"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-domain-model-db/runbook.md",
+        "packages/db/cron/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "docs/security-spec.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P11 の evidence bundle を踏まえ、日次 export・四半期 restore drill・migration 積み増し・KEK/DEK ローテーション・audit chain 検証の運用 runbook を作成する P12 ドキュメント/運用タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に日次 export・四半期 restore drill・migration 積み増し・KEK/DEK ローテーション・audit chain 検証の 5 手順が過不足なく記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP12責務として追跡し、未割当0件である",
+        "P05-P11で実行済みの export/restore command と evidence を runbook 化する。未実装処理を文書で代替しない。",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "運用手順に重大な欠落が見つかった場合、runbook.md を修正し P11 の evidence bundle との整合を再確認する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p12.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-DOMAIN-MODEL-DB-P13",
+      "feature_package_id": "feature-package/feat-domain-model-db",
+      "parent_feature": "feat-domain-model-db",
+      "title": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-domain-model-db",
+        "macro-feature",
+        "data",
+        "release"
+      ],
+      "related_nodes": [
+        "feat-domain-model-db",
+        "arch-harness-hub-data",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "infrastructure",
+        "data",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P12"
+      ],
+      "write_scope": [
+        ".github/workflows/ci.yml",
+        "docs/features/feat-domain-model-db/release-record.md",
+        "packages/db/__tests__/backup-restore.test.ts",
+        "packages/db/__tests__/fixtures/two-tenants.ts",
+        "packages/db/backup/",
+        "packages/db/scripts/export-control-plane.ts",
+        "packages/db/scripts/restore-control-plane.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-domain-model-db.context.json",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P12 の runbook を前提に、初回ベースライン migration を本番 Turso/D1 へ反映し R2 registry を有効化してスモークテストで疎通確認する P13 リリース/デプロイタスク (required-node)",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-domain-model-db/sys-domain-model-db-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-record.md に本番反映内容とスモークテスト結果 (DB 接続・ULID PK 発行・releases immutable・R2 put/get・audit hash chain・export cron dry-run) が pass として記載されている",
+        "現行feature context sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffcのscope_in/acceptance全件をP13責務として追跡し、未割当0件である",
+        "Normative closure: 現行 quality_constraints は10件である。P05 は schema/repository/R2 registry に加え、日次 control-plane export job、暗号化/マスク保持、検証可能な restore command/library をコード成果物として実装する。P06 はP05実装をschema test harnessと2テナントfixtureで検証し、まだ生成されていないP08 migration artifactを前提にしない。P08 は単一 migration lineageを生成して2テナントfixtureへ適用する。P09 はmigration apply、tenant isolation、export artifact integrity、別DB restore round-tripを実行するCI gateを .github/workflows/ci.yml へ接続する。P05/P06/P09は後続P12 runbookへ逆依存しない。P10は10 constraint IDをexact-setで判定する。 Evidence: P05実装パス、P08 migration apply、2-tenant fixture、export→別DB restore round-trip、salary暗号化/マスク断面、単一lineage検査を証跡化する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "migration 適用またはスモークテストのいずれかが失敗した場合、適用済み migration をロールバックしテーブル未作成状態へ復帰したうえで、P08 または P05 へ差し戻して是正する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P13",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p13.md",
+        "parent_feature": "feat-domain-model-db",
+        "feature_package_id": "feature-package/feat-domain-model-db",
+        "phase_ref": "P13"
+      }
+    }
+  ],
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  }
+}

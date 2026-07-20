@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-user-org-admin",
+  "parent_feature": "feat-user-org-admin",
+  "nodes": [
+    {
+      "id": "SYS-USER-ORG-ADMIN-P01",
+      "graph_node_id": "sys-user-org-admin-p01",
+      "title": "ユーザー管理・アカウント設定 要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P02",
+      "graph_node_id": "sys-user-org-admin-p02",
+      "title": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P01"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P03",
+      "graph_node_id": "sys-user-org-admin-p03",
+      "title": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P02"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P04",
+      "graph_node_id": "sys-user-org-admin-p04",
+      "title": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P03"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P05",
+      "graph_node_id": "sys-user-org-admin-p05",
+      "title": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P04"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P06",
+      "graph_node_id": "sys-user-org-admin-p06",
+      "title": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P05"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P07",
+      "graph_node_id": "sys-user-org-admin-p07",
+      "title": "受入 — goal-spec acceptance 3項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P06"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P08",
+      "graph_node_id": "sys-user-org-admin-p08",
+      "title": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P07"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P09",
+      "graph_node_id": "sys-user-org-admin-p09",
+      "title": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P08"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P10",
+      "graph_node_id": "sys-user-org-admin-p10",
+      "title": "最終独立レビュー — feature全体のconfirmation前最終点検",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P09"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P11",
+      "graph_node_id": "sys-user-org-admin-p11",
+      "title": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P10"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P12",
+      "graph_node_id": "sys-user-org-admin-p12",
+      "title": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P11"
+      ]
+    },
+    {
+      "id": "SYS-USER-ORG-ADMIN-P13",
+      "graph_node_id": "sys-user-org-admin-p13",
+      "title": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-user-org-admin",
+      "parent_feature": "feat-user-org-admin",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P12"
+      ]
+    }
+  ]
+}

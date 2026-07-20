@@ -1,0 +1,154 @@
+{
+  "packages": [
+    {
+      "feature_id": "feat-auth-tenancy",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+      "generation_id": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+      "source_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+      "graph_revision_after": 26,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-auth-tenancy.json"
+    },
+    {
+      "feature_id": "feat-build-pipeline-board",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+      "generation_id": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+      "source_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+      "graph_revision_after": 27,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-build-pipeline-board.json"
+    },
+    {
+      "feature_id": "feat-docs-cms",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+      "generation_id": "a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+      "source_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+      "graph_revision_after": 28,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-docs-cms.json"
+    },
+    {
+      "feature_id": "feat-domain-model-db",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+      "generation_id": "6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+      "source_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+      "graph_revision_after": 29,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-domain-model-db.json"
+    },
+    {
+      "feature_id": "feat-dual-catalog-web",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+      "generation_id": "7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+      "source_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+      "graph_revision_after": 30,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-dual-catalog-web.json"
+    },
+    {
+      "feature_id": "feat-feedback-loop",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+      "generation_id": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+      "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+      "graph_revision_after": 31,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-feedback-loop.json"
+    },
+    {
+      "feature_id": "feat-hearing-intake",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+      "generation_id": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+      "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+      "graph_revision_after": 32,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-hearing-intake.json"
+    },
+    {
+      "feature_id": "feat-hub-foundation",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+      "generation_id": "8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+      "source_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+      "graph_revision_after": 33,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-hub-foundation.json"
+    },
+    {
+      "feature_id": "feat-metrics-tracking",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+      "generation_id": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+      "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+      "graph_revision_after": 34,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-metrics-tracking.json"
+    },
+    {
+      "feature_id": "feat-publish-pipeline",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+      "generation_id": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+      "source_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+      "graph_revision_after": 35,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-publish-pipeline.json"
+    },
+    {
+      "feature_id": "feat-publisher-plugin",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+      "generation_id": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+      "source_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+      "graph_revision_after": 36,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-publisher-plugin.json"
+    },
+    {
+      "feature_id": "feat-stage0-distribution-gate",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+      "generation_id": "30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+      "source_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+      "graph_revision_after": 37,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-stage0-distribution-gate.json"
+    },
+    {
+      "feature_id": "feat-tenant-data-retention",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+      "generation_id": "7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+      "source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+      "graph_revision_after": 38,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-tenant-data-retention.json"
+    },
+    {
+      "feature_id": "feat-user-org-admin",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+      "generation_id": "2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+      "source_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+      "graph_revision_after": 39,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-user-org-admin.json"
+    },
+    {
+      "feature_id": "feat-workspace-governance",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+      "generation_id": "b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+      "source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+      "graph_revision_after": 40,
+      "registration_operation": "superseded",
+      "projected_count": 13,
+      "projection_receipt": ".dev-graph/cache/projection-replan-receipt-feat-workspace-governance.json"
+    }
+  ]
+}

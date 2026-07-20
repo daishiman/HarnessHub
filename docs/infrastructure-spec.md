@@ -69,6 +69,8 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | `harness-hub-backups` | `db-export/<YYYY>/<YYYY-MM-DD>.sql.gz` | GitHub Actions 日次 export (§10) のみ | 非公開 |
 
 - packages は上書き・削除を行わない (content hash 一致 = 同一実体。suspend は DB 側 status で表現)。
+- S01 の Web upload と Publisher CLI upload は同じ staging prefix・検査 pipeline・content hash 確定処理へ収束させる。ブラウザから R2 への公開 write URL は発行しない。
+- install/download は Worker の `POST /api/v1/harnesses/:projectId/install` を必ず経由する。R2 bucket/object key を UI/API へ返さない。Stage 0 で raw ZIP を採用した場合だけ、安定版に固定した TTL 5 分以内・単回の短命 URL を発行する。
 - backups の保持: **直近 90 日 + 各月 1 日断面を 12 ヶ月** (R2 lifecycle rule で自動削除)。salary は暗号文のまま格納される (qa-032: バックアップ断面にも平文を残さない)。
 - 無料枠: 10GB / Class A 100万 ops/月 / Class B 1,000万 ops/月。使用量は月次レビュー (§11)。
 
@@ -168,3 +170,18 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | 2 | 独自ドメイン | **既存保有ドメインを流用** (AI 推奨に同意) | `hub.<domain>` + `mail.<domain>` のサブドメイン運用 (§8)。追加費用 0 円で C2 完全維持。Resend SPF/DKIM は qa-026 どおり初期構築 |
 | 3 | 外形監視 | **Better Stack Free** (AI 推奨に同意) | 10 monitors・3 分間隔・heartbeat・status page・商用利用可 (§9)。UptimeRobot Free は 2024-12 以降非商用限定のため棄却 (Vercel Hobby と同型の規約リスク回避) |
 | 4 | 本番デプロイ | **main merge で全自動** (AI 推奨に同意) | CI green → staging → smoke → production → post-deploy /health → 失敗時 wrangler rollback (§7) |
+
+## 13. 構築優先順位によるインフラ有効化順 (2026-07-18 追記)
+
+正本は [system-design-overview.md](system-design-overview.md) §3「構築優先順位」。共通リソースを先に作ることと、低優先機能を先に作ることを混同しない。単一 Worker/Turso/R2 は共有するが、route・cron・通知は必要な phase で段階的に有効化する。
+
+| phase | 有効化するもの | 後段へ送るもの |
+|---|---|---|
+| **P0 認証基盤** | production/staging、Worker/DB migration、tenant/workspace、OIDC callback、Auth secret、共通認可/監査、`/health`、CI の tenant 分離 test | metrics rollup、週次サマリー、dashboard monitor はまだ不要 |
+| **P1 ヒアリング** | HearingSheet/AiJob/notification の migration、pull job、生成完了通知、キュー滞留監視 | R2 package 配布は P2 |
+| **P2 Hub/パイプライン** | private R2 package bucket、Web/CLI upload、検査、content-addressed 保存、install/download Worker 導線、orphan 通知 | 承認 queue UI は P5 でも監査記録はこの時点から有効 |
+| **P3 改善/Docs** | feedback/doc AiJob kind、Feedback→修正版 Build の冪等作成、Markdown/添付保存が必要な場合の R2 prefix | — |
+| **P4 ユーザー/効果** | salary 鍵、metrics ingest/rollup cron、Turso 使用量監視、週次通知 | S09 dashboard 専用の可視化は P5 |
+| **P5 dashboard/統制** | dashboard/承認/監査 UI 用 route と外形確認 | — |
+
+各 phase の migration は `tenant_id` と必要な `workspace_id` を最初から必須にし、production 反映前に 2 tenant fixture の分離テストを通す。1 tenant/1 Project 固定の環境変数は作らない。

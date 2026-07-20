@@ -1,0 +1,1170 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+  "parent_feature": "feat-stage0-distribution-gate",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/spec-state.json",
+      "system-spec/fetched-references.json",
+      "architecture/harness-hub-infrastructure.md",
+      "specs/harness-hub-system-specification.md",
+      "features/feat-stage0-distribution-gate.md",
+      "features/feat-stage0-distribution-gate.context.json",
+      "goal-spec.json"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "documentation",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-stage0-distribution-gate/requirements-baseline.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.md",
+        "features/feat-stage0-distribution-gate.context.json",
+        "system-spec/00-requirements-definition.md",
+        "system-spec/spec-state.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec (goal-spec.json) と features/feat-stage0-distribution-gate.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-stage0-distribution-gate/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 8 件が過不足なく転記されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP01責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "goal-spec と features/feat-stage0-distribution-gate.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p01.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "アーキテクチャ設計 — 3 経路検証方式・最小 artifact 構成・実機 E2E 手順・decision record 登録経路の確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "infrastructure",
+        "architecture-decision"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "infrastructure",
+      "secondary_workstreams": [
+        "quality",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-stage0-distribution-gate/architecture-decision-record.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "docs/features/feat-stage0-distribution-gate/requirements-baseline.md",
+        "system-spec/spec-state.json",
+        "system-spec/fetched-references.json",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "URL 型 marketplace・npm source (URL 型 marketplace 内の source type として扱う)・Bootstrap Installer の 3 経路検証方式、最小 artifact 構成 (skill package/marketplace.json/Installer 試作)、macOS/Windows 実機 E2E 手順、採用経路の decision record 登録経路 (C01 writer 経由で spec-state.json decisions[] へ) を確定する P02 architecture decision タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に (1) URL 型 marketplace 検証方式 (2) npm source の URL 型 marketplace 内 source type としての検証方式 (3) Bootstrap Installer 試作方式 (4) macOS/Windows 実機 E2E 手順 (5) 採用経路の decision record 登録経路 (C01 writer 経由) の 5 件の architecture decision が記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "claude-code-plugins 公式ドキュメントの changelog 再照合で npm source の前提 (相対パス source では plugin 本体を解決できない制約) が変化したことが判明した場合、architecture-decision-record.md の該当箇所を修正し本 task を再実行する。再実行までは P03 以降の着手を保留する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p02.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "独立設計レビュー — 検証方式・artifact 構成・実機 E2E 手順の妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "infrastructure",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-stage0-distribution-gate/design-review-notes.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "docs/features/feat-stage0-distribution-gate/architecture-decision-record.md",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P02 の architecture decision (3 経路検証方式・artifact 構成・E2E 手順・decision record 登録経路) を P02 実行者から独立した視点で検証する P03 レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に P02 の 5 件の architecture decision 全ての妥当性検証結果 (作者環境 macOS+Windows 限定 [qa-001] との整合、C1/C2 制約適合を含む) が記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP03責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "3 経路検証方式または E2E 手順に重大な指摘が見つかった場合、design-review-notes.md に指摘内容を記録し P02 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p03.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "テストファースト設計 — quality_constraints 8 件・acceptance 3 件に対応する実機検証ケースの設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P03"
+      ],
+      "write_scope": [
+        ".dev-graph/cache/stage0-decision-registration-receipt.json",
+        ".dev-graph/cache/stage0-decision-registration-request.json",
+        ".dev-graph/cache/stage0-stage1-gate-receipt.json",
+        "docs/features/feat-stage0-distribution-gate/test-design.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "docs/features/feat-stage0-distribution-gate/design-review-notes.md",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "quality_constraints 8 件 (stage0-two-path-distribution-technical-gate-h7-qa003・stage0-technical-gate-h3-h6-h7-stage1-entry-condition-i9・author-environment-macos-windows-linux-out-of-scope-qa001・npm-source-official-support-changelog-recheck-claude-code-plugins・cost-zero-verification-within-free-tier-c2・solo-operator-ai-assisted-verification-c1・h7-unresolved-blocks-stage1-fail-closed-gate・adopted-path-decision-record-registration-spec-state-decisions) と acceptance 3 件を実機検証ケースへ写像する P04 テストファースト設計タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に quality_constraints 8 件と acceptance 3 件全てに対応する実機検証ケース (macOS/Windows 別チェックリストを含む) が記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP04責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "quality_constraints と検証ケースの対応漏れが判明した場合、test-design.md の対応表を修正し不足カテゴリを追加する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p04.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "infrastructure",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "infrastructure",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P04"
+      ],
+      "write_scope": [
+        ".dev-graph/cache/stage0-decision-registration-receipt.json",
+        ".dev-graph/cache/stage0-decision-registration-request.json",
+        ".dev-graph/cache/stage0-stage1-gate-receipt.json",
+        "docs/features/feat-stage0-distribution-gate/implementation-notes.md",
+        "docs/features/feat-stage0-distribution-gate/verification-artifacts/bootstrap-installer-prototype/",
+        "docs/features/feat-stage0-distribution-gate/verification-artifacts/marketplace.json",
+        "docs/features/feat-stage0-distribution-gate/verification-artifacts/minimal-skill-package/"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "docs/features/feat-stage0-distribution-gate/test-design.md",
+        "system-spec/fetched-references.json",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P02/P04 で確定した設計・検証ケースに基づき、最小 skill package・URL 型 marketplace 用 marketplace.json・Bootstrap Installer 試作を C2 (無料枠内) で作成する P05 実装タスク。本 feature は scope_out に Hub 本体実装を含むため apps/hub・packages 配下は変更しない",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-stage0-distribution-gate/verification-artifacts/ 配下に最小 skill package・marketplace.json・Bootstrap Installer 試作が作成され、implementation-notes.md に P04 の test-design.md に列挙された全検証ケースに対応する検証対象一式が揃っていることが記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP05責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "作成した artifact が P02 の architecture decision と矛盾する場合、該当 artifact を削除し P02 の設計に沿って再作成する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p05.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "テスト実行 — macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "infrastructure",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P05"
+      ],
+      "write_scope": [
+        ".dev-graph/cache/stage0-decision-registration-receipt.json",
+        ".dev-graph/cache/stage0-decision-registration-request.json",
+        ".dev-graph/cache/stage0-stage1-gate-receipt.json",
+        "docs/features/feat-stage0-distribution-gate/test-run-results.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "docs/features/feat-stage0-distribution-gate/test-design.md",
+        "docs/features/feat-stage0-distribution-gate/verification-artifacts/marketplace.json",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P05 で作成した artifact に対して P04 の実機検証ケースを macOS/Windows (qa-001 により desktop Linux は対象外) で実行し、quality_constraints 8 件の充足状況を記録する P06 テスト実行タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-results.md に macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 各経路の検証結果と Windows E2E の pass/fail 結果が記録されている (fail が残る場合は差し戻し理由が明記されている)",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP06責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかの経路検証または Windows E2E が fail した場合、test-run-results.md に原因を記録し P05 (実装) または P02 (設計) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p06.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-stage0-distribution-gate/acceptance-record.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "docs/features/feat-stage0-distribution-gate/test-run-results.md",
+        "features/feat-stage0-distribution-gate.context.json",
+        "goal-spec.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P06 で得られた実機検証結果を基に goal-spec acceptance 3 件 (2 経路以上の実機検証記録・decision record 登録・Windows E2E 成功) の充足を確認する P07 受入タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-record.md に「2 経路以上の実機検証記録が存在する」「採用経路が decision record として登録される (C01 writer登録は P13 で確定)」「Windows E2E が成功する」の 3 件の確認結果 (pass) と証跡へのリンクが記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP07責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "acceptance 3 件のいずれかが不充足の場合、acceptance-record.md に理由を記録し P06 (テスト実行) または P05 (実装) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p07.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "リファクタリング/マイグレーション — 検証 prototype 資産の整理 (N/A 判断を含む)",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "infrastructure",
+        "refactor-migration"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "infrastructure",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
+      ],
+      "write_scope": [
+        "docs/features/feat-stage0-distribution-gate/refactoring-migration-note.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "docs/features/feat-stage0-distribution-gate/acceptance-record.md",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "本 feature は packages/db/schema/ 等の恒久実装コードを持たないため DB migration やコード移植を伴わない。P08 は不採用経路の試作 artifact 整理と、採用経路 artifact を P12 runbook へ引き継ぐための最終整理に読み替える required-node タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に不採用経路の試作 artifact の削除/保留判断・採用経路 artifact の P12 runbook への引き継ぎ整理・恒久コード移植や DB migration が本 feature の scope_out であることの明記の 3 点が記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP08責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "整理により採用経路の検証再現性が損なわれることが判明した場合、削除した artifact を復元し refactoring-migration-note.md に理由を記録した上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p08.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "品質・セキュリティ・運用保証 — C1 (体制)・C2 (コストゼロ)・H7 fail-closed ゲートの充足確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P08"
+      ],
+      "write_scope": [
+        ".dev-graph/cache/stage0-decision-registration-receipt.json",
+        ".dev-graph/cache/stage0-decision-registration-request.json",
+        ".dev-graph/cache/stage0-stage1-gate-receipt.json",
+        "docs/features/feat-stage0-distribution-gate/quality-assurance-report.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "docs/features/feat-stage0-distribution-gate/refactoring-migration-note.md",
+        "system-spec/00-requirements-definition.md",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "solo-operator-ai-assisted-verification-c1・cost-zero-verification-within-free-tier-c2・h7-unresolved-blocks-stage1-fail-closed-gate の 3 件の非機能要件を機械的に保証する P09 品質保証タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に (1) 検証体制が提供者 1 名 + AI のみで完結した記録 (C1) (2) 検証にかかった費用が無料枠内でゼロ円であった記録 (C2) (3) H7 未成立時に Stage 1 着手を機械的に止める fail-closed ゲート条件の明記 の 3 件全ての結果が記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP09責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "検証費用が無料枠を超過した、または体制が提供者 1 名 + AI の範囲を超えたことが判明した場合、quality-assurance-report.md に原因を記録し P05/P06 の実施方法を是正した上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p09.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件の最終確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-stage0-distribution-gate/final-review-record.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P03 の設計時レビューとは独立して、実機検証完了後の quality_constraints 8 件・acceptance 3 件を最終確認する P10 独立最終レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-record.md に quality_constraints 8 件・acceptance 3 件全ての最終確認結果 (問題なし) が記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP10責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "重大な指摘がある場合、final-review-record.md に理由を記録し該当する P02/P05/P06/P09 のいずれかへ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p10.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-stage0-distribution-gate/evidence-summary.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P06/P07/P09/P10 で得られた実機検証証跡を集約し、第三者 (将来の Stage 1 着手判断者) が再現可能な形で保存する P11 証跡タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-summary.md に quality_constraints 8 件それぞれの再現手順 (実機検証手順・確認コマンド) と対応する結果が記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP11責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "集約対象の証跡に欠落・矛盾が見つかった場合、該当する P06/P07/P09/P10 へ差し戻し再取得を依頼する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p11.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "documentation",
+        "operations"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-stage0-distribution-gate/runbook.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "system-spec/spec-state.json",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "採用経路 (P07 の acceptance 結果に基づく) の作者向け onboarding 手順・更新導線 (marketplace / Bootstrap Installer の「更新あり」表示 + 手動 update)・障害時対応手順を runbook として確立する P12 文書化・運用タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に採用経路の作者向け onboarding 手順・更新導線 (手動 update)・障害時対応手順の 3 項目全てが記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP12責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "runbook.md の手順が P06/P07 の実機検証結果と矛盾することが判明した場合、該当箇所を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "parent_feature": "feat-stage0-distribution-gate",
+      "title": "リリース/デプロイ — 採用経路の decision record C01 writer登録 (C01 writer 経由) と Stage 1 開始条件判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "documentation",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P12"
+      ],
+      "write_scope": [
+        ".dev-graph/cache/stage0-decision-registration-receipt.json",
+        ".dev-graph/cache/stage0-decision-registration-request.json",
+        ".dev-graph/cache/stage0-stage1-gate-receipt.json",
+        "docs/features/feat-stage0-distribution-gate/release-record.md"
+      ],
+      "deploy_unit": "local-verification-only (no cloudflare-workers/hub production deploy in Stage 0 gate)",
+      "source_lineage": [
+        "system-spec/spec-state.json",
+        "features/feat-stage0-distribution-gate.md",
+        "goal-spec.json",
+        "features/feat-stage0-distribution-gate.context.json",
+        "architecture/harness-hub-infrastructure.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "本 feature は Hub 本体を持たないため実デプロイを行わない (N/A)。P13 は採用経路の decision record C01 writer登録 (system-spec/spec-state.json decisions[] へのwrite authorityはC01 writerが所有し、本taskはwriterを実行してapplied receiptとexact lookupを得る) と、H7 成立結果に基づく Stage 1 開始条件の判定を実施する release-deploy タスクとして適用される",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-record.md に N/A: 本 feature は Hub 本体の実デプロイを持たないため実デプロイなし、という close-out 判断、採用経路の decision record C01 writer登録要求・適用receipt (id/question/status/options/評価軸/確定根拠。system-spec/spec-state.json decisions[] への実書込は C01 writer 経由) 、および Stage 1 開始条件 (H7 成立) の判定結果の 3 点が記載されている",
+        "現行feature context sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0aのscope_in/acceptance全件をP13責務として追跡し、未割当0件である",
+        "Normative closure: P07は『P13で登録予定』をpass根拠にできない。採用経路decisionがC01単一writerへ登録され、writer receiptのstatus=applied、decision id/digest、spec-state after digestが確認されるまでP07/P10/P13とfeature完了をfail-closedにする。Stage1のPublisherとThin Dual Catalog双方のparent feature depends_onへ本featureを登録し、Beads edge parityまで確認する。 Evidence: 2経路実機記録、Windows/macOS E2E、C01 writer receipt、decision exact lookup、Publisher/Dual Catalog feature dependency、Beads edge parityを必須とする。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "Stage 1 開始条件 (H7 成立) が満たされないと判定された場合、release-record.md に不成立理由を記録し、fail-closed として Stage 1 系 feature の着手を保留する。decision record C01 writer登録が C01 writerがstatus=appliedを返さない場合は P07 (受入) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+        "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p13.md",
+        "parent_feature": "feat-stage0-distribution-gate",
+        "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+        "phase_ref": "P13"
+      }
+    }
+  ],
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  }
+}

@@ -2,7 +2,9 @@
   "target_skill": "dev-graph:run-dev-graph-decompose",
   "args": "認証付きTODO APIをarchitecture、認証feature、TODO featureへマクロ分解する。TODOは認証に依存。全nodeはtracker_binding=none。 --repo-root /Users/dm/dev/dev/個人開発/harness/.worktrees/task-20260712-134250-wt-7/eval-log/dev-graph/live-trial-fixtures/r3-decompose --dry-run",
   "requested_model": "claude-opus-4-6",
-  "actual_model": ["claude-opus-4-6"],
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
   "nudge_count": 0,
   "gate_response_count": 0,
   "goal_verdict": {
@@ -15,10 +17,9 @@
     "goal_fit": "PASS",
     "verdict": "PASS"
   },
-  "skill_dir_tree_sha": "046f7725e20f592a46b0e351981b83273f503bc808814f17079aec438e3b0944",
+  "skill_dir_tree_sha": "b39b88bd3d9d6c72c1d2fa5e107cfeea8d0909f8d1e94a478ec92872a045c0e4",
   "transcript_sha256": "52fbefc255eae02b97b7a7d9fd90fa30c89de41f179e602adf368334b87c6d06",
   "scenario_origin": "synthetic",
-  "scenario_id": "decompose-macro-positive-r3",
   "environment": {
     "claude_version": "2.1.62",
     "tmux": true,
@@ -31,5 +32,6 @@
     "boot_s": null,
     "poll_exit": "DONE",
     "wall_clock_s": 540.0
-  }
+  },
+  "scenario_id": "decompose-macro-positive-r3"
 }

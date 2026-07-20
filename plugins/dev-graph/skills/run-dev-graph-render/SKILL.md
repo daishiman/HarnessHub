@@ -8,7 +8,7 @@ kind: run
 prefix: run
 hierarchy: L1
 user-invocable: true
-argument-hint: "[--repo-root PATH] [--scope ID] [--output PATH]"
+argument-hint: "--graph PATH [--repo-root PATH] [--scope ID] [--registration-receipt PATH] [--out PATH]"
 allowed-tools: [Read, Bash, AskUserQuestion, Skill, Agent]
 script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/render-graph-html.py]
 schema_refs: [../../schemas/graph-node.schema.json]
@@ -64,6 +64,17 @@ feedback_contract:
 3. `render-graph-html.py` を呼び、SVG、CSS、JS を単一 HTML に inline 化する。外部 `script/link`, CDN, npm dependency は禁止。
 4. feature node は `parent_feature` の task を X/Y で集約し、feature 間 edge と task 内 edge を混同せず表示する。
 5. renderer receipt の node/edge/progress counts と input digest を照合して返す。
+
+```bash
+python3 ../../scripts/render-graph-html.py \
+  --repo-root "$DEV_GRAPH_ROOT" \
+  --graph "$DEV_GRAPH_ROOT/.dev-graph/state/graph.json" \
+  --scope <optional-graph-node-id> \
+  --registration-receipt <optional-receipt.json> \
+  --out "$DEV_GRAPH_ROOT/.dev-graph/render/index.html"
+```
+
+`--scope`は指定nodeと子孫・必要なdependencyだけを描画する。registration receipt指定時は`node_ids`、`applied_count/expected_count`、`source_digest`、graph digestを実graphと照合し、不一致ならHTMLを書かない。graphとoutputはrepository内realpathに限定し、pending node WALがあれば停止する。
 
 graph は read-only。HTML 以外の graph/content を変更しない。
 

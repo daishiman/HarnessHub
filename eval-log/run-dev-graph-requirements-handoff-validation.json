@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checks": {
+    "docs": 25,
+    "source_units": 300,
+    "features": 15,
+    "packages": 15,
+    "tasks": 195,
+    "task_source_refs": 1577,
+    "snapshot_artifacts": 5
+  },
+  "snapshot_digest": "sha256:a32f1432e1db7ae4572efe244eb43e9f9434d1906dfa51f82404135d8b71147c",
+  "failures": []
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-19T14:14:59Z",
+  "generation_id": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-hearing-intake",
+    "published_digest": "sha256:ee4bc2d03879b6b4a94328c582b3c45f0db43b6222cf83eeb3fe90ed2d8332cf",
+    "receipt": ".dev-graph/plans/feature-package-feat-hearing-intake/atomic-promotion-receipt.json"
+  },
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+  "evaluated_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+  "published_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/dev-graph-registration.json"
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-feedback-loop",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r2-trace",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-feedback-loop"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927\",\n  \"feature_package_id\": \"feature-package/feat-feedback-loop\",\n  \"parent_feature\": \"feat-feedback-loop\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "fdc8dbb5b978441837429a27bb15ad46dbbd3461407c49d3c8cd886213032adc"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "39802f07587c1479ee50e478d29b8ac3932995057bed873917b30d27e44014d1"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "89de6773c50c7ac1cdb1818b6db3e18455c1302c0475395ccfa1eb0a2ddc94bb"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "daca91ebe02eb82bd6b1b8696f06476e9cb00ae660b7bcd4bfd27bdd02e37cf0"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "d664c62accaf48c23ced2baf87c0b3f8e0a915becdd917163a2744f37d8422f6"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "d681eb0ffc1e39e73d9cecfecf55f81b1b0d5840f10644d7b51af07678500734"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "4e13533bb44452d5f8d54a0b2e3f7e8346ce1dfba3a5b782eb3ba9d4852155b4"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "2c12d63d25282a0608ea5c9bd8b0a9ebb46b4c825209792d5faad127a2f168c0"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "109484a351b227fad01a9b220529037a2214e95847c9e408cd7d546fe3e16698"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "4c7d05bfd4f7b928d49a0d067dbd9d3ae1420640b0eec23c7836a0fd0a6f298b"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "576538c9634b610b653e9fa0245ac04ca3a16330145e48f10ca5059aa9e7c044"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "2d5fcfaa18c297391ba3c3fcd3535d984ef5061ad80dcff4cf045069e31feb57"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "9f96cfb72d6fba1b4a5be92281c63c0e817da4e07624ab99c3f716a803fd750f"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "0a487eb83df4780e70914a6262eaccae2ef1f04787c180591b4d6384b2a2ec12"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "334ffb0222dea8cfb577199b75d89304676199d0adbb66f92ac66ad00991e0a7"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "13832708fa7f777c3bd05db68f8b3e3584a58bb8a636325f109eec698aa4c3d9"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "e78a6a9b8334abc82e2ad109c822f68c69281983d2588b7b45a6b9d50ae731d7"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a28ef264592e07a853ebbddf22c1d1fe0be693b2cc252f4fe542b197f8626151"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "Independent C1-C4 re-review on current bytes: priority high/medium/low is present in the architecture column contract and mandatory migration/round-trip evidence; AI pull roles are workspace-admin self-tenant and provider-admin all-tenant with cross-tenant audit throughout goal/task/inventory. Validator, current lineage, exact-13, DAG, manifest and handoff source digests all match.",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

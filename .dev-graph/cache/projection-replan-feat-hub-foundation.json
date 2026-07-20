@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+  "feature": {
+    "graph_node_id": "feat-hub-foundation",
+    "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
+    "description": "費用ゼロ制約 (C2) 下で Hub の実行基盤 (Cloudflare Workers 一体型 + OpenNext) と CI/CD・監視・SLO 運用の土台を確立する\n\npnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 99.5% 計測が稼働し、Worker 3MiB 予算内で Next.js と共通層の単一実装が動作する状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P01",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P01",
+      "title": "Hub 基盤 要件ベースライン確定",
+      "description": "Hub 基盤 要件ベースライン確定 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P02",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P02",
+      "title": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
+      "description": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定) (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P03",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P03",
+      "title": "Hub 基盤 独立設計レビュー",
+      "description": "Hub 基盤 独立設計レビュー (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P04",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P04",
+      "title": "Hub 基盤 テスト設計 (test-first 受入契約)",
+      "description": "Hub 基盤 テスト設計 (test-first 受入契約) (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P05",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P05",
+      "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
+      "description": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO) (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P06",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P06",
+      "title": "Hub 基盤 テスト実行",
+      "description": "Hub 基盤 テスト実行 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P07",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P07",
+      "title": "Hub 基盤 feature 受入判定",
+      "description": "Hub 基盤 feature 受入判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P08",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P08",
+      "title": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
+      "description": "Hub 基盤 リファクタリング・データ移行 (N/A 判定) (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P09",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P09",
+      "title": "Hub 基盤 品質・セキュリティ・運用保証",
+      "description": "Hub 基盤 品質・セキュリティ・運用保証 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P10",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P10",
+      "title": "Hub 基盤 最終独立レビュー",
+      "description": "Hub 基盤 最終独立レビュー (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P11",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P11",
+      "title": "Hub 基盤 証跡収集",
+      "description": "Hub 基盤 証跡収集 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P12",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P12",
+      "title": "Hub 基盤 運用ドキュメント整備",
+      "description": "Hub 基盤 運用ドキュメント整備 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P13",
+      "parent_feature": "feat-hub-foundation",
+      "phase_ref": "P13",
+      "title": "Hub 基盤 本番リリース・デプロイ",
+      "description": "Hub 基盤 本番リリース・デプロイ (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P12"
+      ]
+    }
+  ]
+}

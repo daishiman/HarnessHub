@@ -1,0 +1,33 @@
+{
+  "schema": "independent-verification-report/1.0.0",
+  "verified_at": "2026-07-18T08:55:00Z",
+  "verifier_session": "4329a187-36a1-437d-aba1-37104c7d2033",
+  "role": "検証レーン (P01 実行レーンは並行セッションが担当。worktree lease の claim 競合回避のため本セッションは read-only 検証に特化)",
+  "scope": [
+    "9 feature の P01 requirements-baseline.md × promoted goal-spec の逐語照合",
+    "9 feature package の exact-13 整合 (P01..P13 完全集合・package id 一意・依存の package 内閉包・前方 DAG)",
+    "orphan / dangling architecture_refs の全数検査 (139 ノード)"
+  ],
+  "method": "goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints/feature_context_digest の各値が baseline 文書に逐語出現することを機械照合 (要約・言い換えは不一致として検出される)",
+  "results": {
+    "baselines": {
+      "feat-auth-tenancy": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 7},
+      "feat-build-pipeline-board": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 6},
+      "feat-docs-cms": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 8},
+      "feat-domain-model-db": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 9},
+      "feat-feedback-loop": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 8},
+      "feat-hearing-intake": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 10},
+      "feat-hub-foundation": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 8},
+      "feat-metrics-tracking": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 8},
+      "feat-user-org-admin": {"verdict": "PASS", "acceptance": 3, "quality_constraints": 8}
+    },
+    "package_integrity": {"packages": 9, "violations": 0, "checks": ["exact-13", "P01..P13 完全集合", "feature_package_id 一意", "依存の package 内閉包", "前方 DAG (後方/同位依存なし)"]},
+    "graph_references": {"nodes": 139, "orphan_tasks": 0, "dangling_architecture_refs": 0}
+  },
+  "verdict": "ALL PASS",
+  "notes": [
+    "feat-auth-tenancy は feature ノードが eval:pending / status:draft のまま (evaluator promotion は並行セッションの進行中工程)。P01 baseline 自体は goal-spec と過不足なく一致",
+    "hub-foundation P01 は commit 088b674 として並行セッションがコミット済み。他 8 件の baseline は未コミット (作業ツリー上)",
+    "本 worktree は claim 副作用で devgraph/SYS-HUB-FOUNDATION-P01 ブランチ上にある (feat/wt-1 への復帰は並行セッションと要調整)"
+  ]
+}

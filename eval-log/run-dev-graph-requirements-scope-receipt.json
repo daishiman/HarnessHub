@@ -1,0 +1,208 @@
+{
+  "schema": "run-dev-graph-requirements/scope-receipt/1.0.0",
+  "generated_at": "2026-07-19T14:43:16Z",
+  "verdict": "SCOPE_FIXED_HANDOFF_READY",
+  "directive": "@docs/ これを元に漏れなくすべての内容を引き継いで",
+  "repository": {
+    "repository_id": "github:daishiman/HarnessHub",
+    "branch": "devgraph/SYS-HUB-FOUNDATION-P01",
+    "head_sha": "8f490ef5f02676d77111b324e54d290d3704c64c",
+    "repo_context_selected_by": "explicit --repo-root",
+    "repo_context_receipt": "plugins/dev-graph/scripts/resolve-repo-context.py --repo-root . --mode read"
+  },
+  "input_only_roots": [
+    "docs/",
+    "features/",
+    "architecture/",
+    "specs/",
+    "system-spec/",
+    ".dev-graph/plans/generations/feature-package-*"
+  ],
+  "forbidden_output_roots": [
+    "docs/",
+    "features/",
+    "architecture/"
+  ],
+  "docs_scope": {
+    "file_count": 25,
+    "inventory_digest": "sha256:8c4ed97454a92c88b6ac7d0ebaab2eaa72f30af3ad019f84144c44aa59aa2deb",
+    "inventory_and_coverage_ref": "eval-log/run-dev-graph-decompose-docs-coverage-audit-20260719.json",
+    "coverage_status": "COMPLETE",
+    "source_unit_count": 300
+  },
+  "selected_graph": {
+    "graph_revision": 40,
+    "graph_sha256": "sha256:9e02767555c267342af9acbfc296772377125fd2d677fff7816ad54eb61b440b",
+    "node_counts": {
+      "specification": 1,
+      "architecture": 6,
+      "feature": 15,
+      "task": 195,
+      "selected_total": 217
+    },
+    "feature_ids": [
+      "feat-auth-tenancy",
+      "feat-build-pipeline-board",
+      "feat-docs-cms",
+      "feat-domain-model-db",
+      "feat-dual-catalog-web",
+      "feat-feedback-loop",
+      "feat-hearing-intake",
+      "feat-hub-foundation",
+      "feat-metrics-tracking",
+      "feat-publish-pipeline",
+      "feat-publisher-plugin",
+      "feat-stage0-distribution-gate",
+      "feat-tenant-data-retention",
+      "feat-user-org-admin",
+      "feat-workspace-governance"
+    ],
+    "closure_status": "COMPLETE_CURRENT"
+  },
+  "package_scope": {
+    "published_packages": 15,
+    "package_to_feature_cardinality": "15:15",
+    "phase_contract": "P01..P13 exact set per package",
+    "task_nodes": 195
+  },
+  "snapshot": {
+    "digest_algorithm": "sha256(canonical-json(snapshot_payload))",
+    "payload": {
+      "docs_inventory_digest": "sha256:8c4ed97454a92c88b6ac7d0ebaab2eaa72f30af3ad019f84144c44aa59aa2deb",
+      "graph_revision": 40,
+      "graph_sha256": "sha256:9e02767555c267342af9acbfc296772377125fd2d677fff7816ad54eb61b440b",
+      "system_spec_readiness_source_digest": "sha256:333b6a639283304afcff18b60e683df1160f2fc372348e15fab50ff8b6da4638",
+      "packages": [
+        {
+          "feature_id": "feat-auth-tenancy",
+          "feature_package_id": "feature-package/feat-auth-tenancy",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+          "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+          "generation_id": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+          "feature_context_digest": "sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5"
+        },
+        {
+          "feature_id": "feat-build-pipeline-board",
+          "feature_package_id": "feature-package/feat-build-pipeline-board",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+          "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+          "generation_id": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+          "feature_context_digest": "sha256:eeed295d50359e11ac8aee84800def3ad3399cee866ab5b4dc2712116c9a4441"
+        },
+        {
+          "feature_id": "feat-docs-cms",
+          "feature_package_id": "feature-package/feat-docs-cms",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+          "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+          "generation_id": "a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+          "feature_context_digest": "sha256:6e8ea8a7a1042002d0bb0b3ff2a2b3464ea4a45ba77ddea709580cc3bed03d34"
+        },
+        {
+          "feature_id": "feat-domain-model-db",
+          "feature_package_id": "feature-package/feat-domain-model-db",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+          "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+          "generation_id": "6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+          "feature_context_digest": "sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffc"
+        },
+        {
+          "feature_id": "feat-dual-catalog-web",
+          "feature_package_id": "feature-package/feat-dual-catalog-web",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+          "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+          "generation_id": "7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+          "feature_context_digest": "sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3"
+        },
+        {
+          "feature_id": "feat-feedback-loop",
+          "feature_package_id": "feature-package/feat-feedback-loop",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+          "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+          "generation_id": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+          "feature_context_digest": "sha256:072f4574b7156af35459d941d9c0655fe9f50453e151420d6e98fcb7da5499c3"
+        },
+        {
+          "feature_id": "feat-hearing-intake",
+          "feature_package_id": "feature-package/feat-hearing-intake",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+          "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+          "generation_id": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+          "feature_context_digest": "sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507"
+        },
+        {
+          "feature_id": "feat-hub-foundation",
+          "feature_package_id": "feature-package/feat-hub-foundation",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+          "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+          "generation_id": "8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+          "feature_context_digest": "sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d"
+        },
+        {
+          "feature_id": "feat-metrics-tracking",
+          "feature_package_id": "feature-package/feat-metrics-tracking",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+          "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+          "generation_id": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+          "feature_context_digest": "sha256:64106cc96859b3755741efeb26321fd3746af1a823d0d7837d5b2147b41ee759"
+        },
+        {
+          "feature_id": "feat-publish-pipeline",
+          "feature_package_id": "feature-package/feat-publish-pipeline",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+          "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+          "generation_id": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+          "feature_context_digest": "sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41"
+        },
+        {
+          "feature_id": "feat-publisher-plugin",
+          "feature_package_id": "feature-package/feat-publisher-plugin",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+          "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+          "generation_id": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+          "feature_context_digest": "sha256:d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41"
+        },
+        {
+          "feature_id": "feat-stage0-distribution-gate",
+          "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+          "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+          "generation_id": "30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+          "feature_context_digest": "sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0a"
+        },
+        {
+          "feature_id": "feat-tenant-data-retention",
+          "feature_package_id": "feature-package/feat-tenant-data-retention",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "generation_id": "7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "feature_context_digest": "sha256:69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327"
+        },
+        {
+          "feature_id": "feat-user-org-admin",
+          "feature_package_id": "feature-package/feat-user-org-admin",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+          "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+          "generation_id": "2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+          "feature_context_digest": "sha256:4271086e4eacd8a7327ab3fc9b9e080b2d024ac66858b2a4965d0afbda33a265"
+        },
+        {
+          "feature_id": "feat-workspace-governance",
+          "feature_package_id": "feature-package/feat-workspace-governance",
+          "published_path": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "generation_id": "b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "feature_context_digest": "sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1"
+        }
+      ]
+    },
+    "digest": "sha256:a32f1432e1db7ae4572efe244eb43e9f9434d1906dfa51f82404135d8b71147c"
+  },
+  "handoff": {
+    "target": "capability-build/task-graph",
+    "entrypoint": "/capability-build --handoff eval-log/run-dev-graph-requirements-handoff.json",
+    "route_mode": "task_graph_ref present; no --route-id",
+    "status": "READY",
+    "handoff_ref": "eval-log/run-dev-graph-requirements-handoff.json"
+  },
+  "beads_issue": "HarnessHub-z1p"
+}

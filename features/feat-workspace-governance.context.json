@@ -1,0 +1,28 @@
+{
+  "graph_node_id": "feat-workspace-governance",
+  "artifact_kind": "feature",
+  "purpose": "顧客管理者が統制と安全性 (G2) を自律運用できるよう、承認キュー・RBAC 拡張・監査ログ閲覧を提供する",
+  "goal": "workspace-admin が承認/差し戻し/監査を Hub Web で完結でき、統制作業の提供者依存が解消された状態",
+  "scope_in": [
+    "approval queue (Approval Pending 状態の有効化)",
+    "RBAC の細分化と管理 UI",
+    "監査 event の閲覧・検索 UI",
+    "統制ポリシー設定"
+  ],
+  "scope_out": [
+    "課金",
+    "Stage 3 以降の拡張"
+  ],
+  "acceptance": [
+    "承認フローを経ない publish が policy で遮断される",
+    "監査ログが Tenant スコープで検索できる",
+    "RBAC 変更が監査 event に記録される"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-security.md",
+    "architecture/harness-hub-frontend.md",
+    "architecture/harness-hub-backend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-18T22:35:48Z"
+}

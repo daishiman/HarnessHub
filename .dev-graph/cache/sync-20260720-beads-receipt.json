@@ -1,0 +1,262 @@
+{
+ "schema_version": "1.0.0",
+ "kind": "beads-sync-receipt",
+ "generated_at": "2026-07-20T00:00:00Z",
+ "graph": {
+  "path": ".dev-graph/state/graph.json",
+  "graph_revision": 41,
+  "sha256": "d0e95a14eaac57225f048f89c961d43098333d4bc79378e3c9dfb1aa8c4ac969"
+ },
+ "workspace_id": "bdw_8c8e069eb72d81502a14ff72",
+ "three_way_plan": {
+  "identity_mapping": {
+   "graph_beads_bound": 212,
+   "bd_devgraph_ref": 212,
+   "duplicates": 0,
+   "orphans": 0,
+   "missing_exports": 0
+  },
+  "exports": {
+   "dep_add": 34,
+   "claim": 1
+  },
+  "imports": 0,
+  "tombstones": 0,
+  "pending_retry": 0,
+  "conflicts_manual": [
+   {
+    "graph_node_id": "issue-docs-recompose-followups-20260718",
+    "bd_issue_id": "HarnessHub-9ao",
+    "graph_status": "draft",
+    "bd_status": "in_progress",
+    "resolution": "unresolved — last-synced base なしの双方基準差。自動上書きせず手動確認待ち"
+   }
+  ]
+ },
+ "applied": {
+  "dep_add": [
+   {
+    "issue": "HarnessHub-15h",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-auth-tenancy",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-15h",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-auth-tenancy",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-9am",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-build-pipeline-board",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-9am",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-build-pipeline-board",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-9am",
+    "depends_on": "HarnessHub-dfm",
+    "graph_node_id": "feat-build-pipeline-board",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-9am",
+    "depends_on": "HarnessHub-o2i",
+    "graph_node_id": "feat-build-pipeline-board",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-9am",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-build-pipeline-board",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-9wb",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-docs-cms",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-9wb",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-docs-cms",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-9wb",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-docs-cms",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-u6q",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-domain-model-db",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-dhy",
+    "depends_on": "HarnessHub-dfm",
+    "graph_node_id": "feat-dual-catalog-web",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-1vb",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-feedback-loop",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-1vb",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-feedback-loop",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-1vb",
+    "depends_on": "HarnessHub-dfm",
+    "graph_node_id": "feat-feedback-loop",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-1vb",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-feedback-loop",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-o2i",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-hearing-intake",
+    "result": "idempotent"
+   },
+   {
+    "issue": "HarnessHub-o2i",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-hearing-intake",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-o2i",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-hearing-intake",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-lm7",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-metrics-tracking",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-lm7",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-metrics-tracking",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-lm7",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-metrics-tracking",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-lm7",
+    "depends_on": "HarnessHub-xwt",
+    "graph_node_id": "feat-metrics-tracking",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-dfm",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-publish-pipeline",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-dfm",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-publish-pipeline",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-zdh",
+    "depends_on": "HarnessHub-dfm",
+    "graph_node_id": "feat-publisher-plugin",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-47b",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-tenant-data-retention",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-47b",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-tenant-data-retention",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-47b",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-tenant-data-retention",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-xwt",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-user-org-admin",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-xwt",
+    "depends_on": "HarnessHub-37h",
+    "graph_node_id": "feat-user-org-admin",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-xwt",
+    "depends_on": "HarnessHub-u6q",
+    "graph_node_id": "feat-user-org-admin",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-5l3",
+    "depends_on": "HarnessHub-15h",
+    "graph_node_id": "feat-workspace-governance",
+    "result": "applied"
+   },
+   {
+    "issue": "HarnessHub-5l3",
+    "depends_on": "HarnessHub-dhy",
+    "graph_node_id": "feat-workspace-governance",
+    "result": "applied"
+   }
+  ],
+  "claim": [
+   {
+    "issue": "HarnessHub-37h.1",
+    "graph_node_id": "SYS-HUB-FOUNDATION-P01",
+    "result": "applied",
+    "bd_status_after": "in_progress"
+   }
+  ]
+ },
+ "idempotency_check": {
+  "second_pass_dep_diff": 0,
+  "second_pass_claim_diff": 0,
+  "changes": 0
+ },
+ "notes": [
+  "34 dep-add は 2026-07-19 epic 再投影で失われた feature 間 blocks 辺の復元 (graph 正本→bd 投影)",
+  "feature epic 15 件の bd metadata digest は現行 package digest と一致 (収束済み・graph source_lineage とは表現差のみ)",
+  "lease 記録の tracker_binding=github は stale。graph 正本は beads (authority 混在なし・graph 側変更不要)"
+ ]
+}

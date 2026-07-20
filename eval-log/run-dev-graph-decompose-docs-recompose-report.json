@@ -1,0 +1,73 @@
+{
+  "schema": "run-dev-graph-decompose/macro-report/1.0.0",
+  "decomposed_at": "2026-07-18T22:35:48Z",
+  "source": "docs/ 配下全25ファイル exact inventory (mockup 原本・展開物を含む。詳細は coverage audit)",
+  "mode": "idempotent-reconvergence",
+  "coverage_verdict": "15 feature + 6 architecture + feature DAG で docs/ 全25ファイルを macro 被覆。C4 改訂は feat-tenant-data-retention、legal は feat-user-org-admin、shared layers は feat-hub-foundation が所有。",
+  "current_revalidation": {
+    "audited_at": "2026-07-18T22:35:48Z",
+    "evidence_ref": "eval-log/run-dev-graph-decompose-docs-coverage-audit-20260719.json",
+    "source_file_count": 25,
+    "source_inventory_digest": "sha256:8c4ed97454a92c88b6ac7d0ebaab2eaa72f30af3ad019f84144c44aa59aa2deb",
+    "graph_revision": 20,
+    "structure": "PASS",
+    "content_coverage_and_freshness": "PASS",
+    "overall": "COMPLETE",
+    "reason": "dependency/C4/ownership/architecture/source-lineage の drift を解消し、schema・DAG・macro parity・全15 lineage digest を機械検証した。"
+  },
+  "features_added": [
+    {
+      "graph_node_id": "feat-tenant-data-retention",
+      "stage": "C4 改訂 (qa-045-048)",
+      "depends_on": ["feat-hub-foundation", "feat-domain-model-db", "feat-auth-tenancy"],
+      "architecture_refs": ["arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-backend", "arch-harness-hub-infrastructure"],
+      "status": "draft",
+      "evidence": ["docs/backend-spec.md §1/§9 row8 (tenant_data_objects)", "docs/frontend-spec.md §3.5", "docs/features/feat-domain-model-db/requirements-baseline.md §6.2"]
+    }
+  ],
+  "edges_added": [
+    {
+      "from": "feat-build-pipeline-board",
+      "to": "feat-hearing-intake",
+      "evidence": "docs/backend-spec.md §2.3 builds.sheet_id + §4.11 (sheet_generation 完了が Build を自動生成) / J4-#3。循環なし・phase 順 (P1 hearing → P2 build) 整合。"
+    }
+  ],
+  "features_unchanged": 10,
+  "features_reconciled": ["feat-hub-foundation", "feat-domain-model-db", "feat-user-org-admin", "feat-build-pipeline-board", "feat-tenant-data-retention"],
+  "boundary_cases_recorded": [
+    "feat-feedback-loop → feat-build-pipeline-board の辺 (builds.feedback_id): Build 自動生成 owner の P02 確定後に判断",
+    "users ベーステーブル所有権 (domain-model-db vs user-org-admin): P02 で確定",
+    "feat-docs-cms / feat-hearing-intake / feat-build-pipeline-board は retention の任意統合 API を必要時に消費し、現時点では必須 edge を追加しない"
+  ],
+  "beads_projection": {
+    "published_packages": [
+      {"feature": "feat-publish-pipeline", "epic": "HarnessHub-dfm", "tasks": 13, "edges": 12, "parity": "ok"},
+      {"feature": "feat-stage0-distribution-gate", "epic": "HarnessHub-j71", "tasks": 13, "edges": 12, "parity": "ok"}
+    ],
+    "followup_issue": {"graph_node_id": "issue-docs-recompose-followups-20260718", "bd_issue_id": "HarnessHub-9ao"},
+    "draft_features_not_published": ["feat-tenant-data-retention", "feat-publisher-plugin", "feat-dual-catalog-web", "feat-workspace-governance"],
+    "idempotency_verified": "同一 manifest 3回目実行で created=0 / children idempotent 26/26 / edges idempotent 24/24"
+  },
+  "incidents": [
+    {
+      "id": "INC-1",
+      "summary": "bd-bridge.py _find_external が bd 1.1.0 非対応の search --external-contains を使用し既存 issue を常に発見できず、再実行で 28 issue 二重起票 (既存 hub-foundation/auth-tenancy の closed 重複も同根)。",
+      "resolution": "同スクリプトを text query + list フォールバック + open 優先へ修正、_create_one は existing 発見時に bd show で parent/type 再取得。重複 28 件は reason 付き close。モック前提の 2 テストを実挙動に合わせて更新し、bd-bridge 関連 10 テスト全 PASS。恒久化 (commit・回帰テスト) は HarnessHub-9ao で追跡。"
+    }
+  ],
+  "graph_revision_after": 20,
+  "nodes_after": 167,
+  "external_writes": {"beads_creates": 30, "beads_dep_adds": 24, "beads_closes": 28, "github": 0},
+  "quality_gates": {
+    "schema_valid": true,
+    "feature_dag_cycles": 0,
+    "task_granularity_mixing": 0,
+    "duplicate_node_ids": 0,
+    "packages_exact13": "11/11",
+    "macro_field_parity": "feature Markdown 15/15・context 11/11",
+    "source_lineage_digest_match": "15/15",
+    "planner_stale_packages": ["feat-hub-foundation", "feat-domain-model-db", "feat-user-org-admin"],
+    "open_side_duplicate_external_ref": 0,
+    "tests": "plugins/dev-graph/tests: 170 passed / 7 failed (全て変更前から存在する skill criteria evidence の stale digest — 今回スコープ外)"
+  }
+}

@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-035 |
+| Web (web) | 確定 | 確定質疑: qa-065 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-035 (対応セル: web)
+### qa-065 (対応セル: web)
 
-**質問**: mockup (harness-studio-v2) には media query が 1 件も無い (デスクトップ専用設計) 中で、スマホサイズ (モバイルブラウザ) の画面仕様をどう確定するか? (frontend/ui-ux の mobile セルは native アプリ対象外・web 行のレスポンシブでカバーの整理のまま、web 行のレスポンシブ実仕様が未定義)
+**質問**: docs/user-journeys.md の全ジャーニー J0〜J6 を、既存 UI-UX 確定 qa-063 を維持しながら system-spec から識別子単位で逆引き可能にするため、どのように確定するか。
 
-**回答**: docs/frontend-spec.md §6 をスマホサイズ画面仕様の新規正本として確定する (native モバイル/タブレットアプリを作らない整理 = mobile/tablet セル対象外理由は不変。本仕様は web セルのレスポンシブ詳細)。(1) 適用条件: viewport < 768px (Tailwind md 未満。ブレークポイントは Tailwind 既定 sm640/md768/lg1024/xl1280、サイドバー常設は lg 以上)。(2) 原則: タップターゲット 44×44pt 以上 (HIG doctrine anchor)・100dvh + safe-area-inset 対応・入力フォント 16px 以上 (iOS ズーム防止)・許可箇所以外の水平オーバーフローは欠陥扱い。(3) ナビゲーション: ボトムタブ 5 slot 固定 (ダッシュボード/ハーネス/申請/通知[未読バッジ]/その他)。その他タブはボトムシートで残り項目を role 別出し分け (deny-by-default の画面表現)。サイドバーはモバイル非描画。(4) 変換パターン辞書 P1-P10 (サイドバー→ボトムタブ・KPI→2 列・テーブル→カードリスト・7 工程ボード→工程セグメント+縦カード・2 カラム→縦積み・モーダル→ボトムシート・チャート縦積み 200px・フィルタ→シート・インライン編集→編集シート・ウィザード→1 step 1 画面)。(5) 画面別区分: 重点最適化◎ = S01/S02/S03/S07/S08/S09/S10/S11/S12/S14/S16/S18/通知/検索/S13 閲覧/S15 閲覧、簡易対応△ (動作保証+dismissible なデスクトップ推奨バナー・機能は削らない) = S04/S05/S06/S17/S13 操作/S15 編集。(6) タッチ制約: スワイプ・ロングプレス・DnD を必須操作にしない (可視ボタン/メニューで代替 = キーボード同等性)・pull-to-refresh 不採用 (ポーリングで代替)・パイプラインの stage 操作はカードメニューの隣接遷移のみ。(7) 検証: Playwright を 1280×800 と 390×844 の 2 viewport で実行し axe を統合、モバイル断面を CI で常時検査する。
+**回答**: qa-063 の確定内容 (S01〜S18、P0〜P5、J1/J4 の詳細、レスポンシブ表示、mock 非採用事項) を全面維持し、docs/user-journeys.md の全ジャーニーを次の端から端の契約として明示的に確定する。J0 = 提供者の Stage 0 technical gate (URL 型 marketplace / Bootstrap Installer / 作者 local wrangler 経路を実機検証し、成立経路を J1/J2 に採用)。J1 = 作者が Claude Code/Codex で作成し、Device Flow 認証後に Publisher CLI または S01 Web 公開ウィザードから同一検査 pipeline へ投入し、S03 の Green/Yellow/Red、S02 の Release/stable/rollback まで自己完結する。J2 = 利用者が SSO でログインし、S01 で同一 Workspace の複数 Project/target を検索、S02 で stable release の install/download descriptor または健全性確認済み WebApp URL を使い、品質報告・更新通知へ進む。J3 = Workspace 管理者が S04 で IdP/role/token を管理し、S05 承認・S06 監査・公開停止/owner 再割当を行う。IdP 接続と role/deny-by-default は P0、承認/監査 UI は P5 でも認可・監査記録自体は前 phase から有効にする。J4 = S10 4 step 入力→受付番号→D5 pull 型生成→S11 一覧→S12 詳細/PDF→S13 7 工程→J1 publish のヒアリング起点。J5 = CLI または S14 Web から改善要望/レビュー依頼/バグ報告→D5 pull 型 AI 解析→Feedback status/aiResponse→人の確認→S13/J1 再公開→update 通知の改善ループ。J6 = 短命 token・冪等 key・回数のみの metrics ingest→サーバ側係数換算→週次 rollup→P4 の S16/S17、P5 の S09 へ反映する効果測定。起動順は P0=J0+共通 SSO/J3 IdP、P1=J4 前半、P2=J1/J2/J4 後半、P3=J5、P4=J6 S16/S17、P5=J6 S09+J3 S05/S06。J0〜J6 の詳細表・surface・裏側の仕組み・根拠の正本は docs/user-journeys.md、画面 ID の正本は docs/screen-inventory.md とし、system-spec はこの回答で全ジャーニーへの逆引きを保持する。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 

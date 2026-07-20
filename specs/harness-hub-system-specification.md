@@ -20,9 +20,9 @@ evaluation_status: pass
 confirmation_evidence: {"evaluated_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
 source_lineage: {"imported_at": "2026-07-18T08:10:00Z", "origin_kind": "system-spec-harness", "source_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15", "source_path": "system-spec/00-requirements-definition.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
 created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-18T08:10:00Z
+updated_at: 2026-07-18T15:40:17Z
 depends_on: []
-related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure"]
+related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow"]
 resource_scope: ["specs/harness-hub-system-specification.md"]
 purpose: 非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する
 goal: 全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する
@@ -54,7 +54,7 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 ## 正本 (source of truth)
 
 - [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `6b24a06e4116a966…`)
-- [system-spec/index.md](../system-spec/index.md) (sha256: `188ef12126add905…`)
+- [system-spec/index.md](../system-spec/index.md) (sha256: `491539b244ee2436…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
 - 取込日時: 2026-07-18T08:10:00Z / plugin: system-spec-harness v0.1.0
@@ -126,4 +126,3 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
-

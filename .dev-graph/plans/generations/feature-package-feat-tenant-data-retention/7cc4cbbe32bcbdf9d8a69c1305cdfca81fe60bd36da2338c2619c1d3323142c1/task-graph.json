@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-tenant-data-retention",
+  "parent_feature": "feat-tenant-data-retention",
+  "nodes": [
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P01",
+      "graph_node_id": "sys-tenant-data-retention-p01",
+      "title": "要件ベースライン確定 — tenant_data_objects CRUD API・R2封筒暗号化保管・即時完全削除・R2使用量監視の要件確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P02",
+      "graph_node_id": "sys-tenant-data-retention-p02",
+      "title": "アーキテクチャ設計 — encryption_keys.purpose拡張・R2 tenant prefix分離・API詳細設計・R2使用量監視cron拡張・削除完全性テスト採番の決定",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P01"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P03",
+      "graph_node_id": "sys-tenant-data-retention-p03",
+      "title": "独立設計レビュー — encryption_keys拡張・R2 prefix分離・API契約・削除完全性テスト採番の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P02"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P04",
+      "graph_node_id": "sys-tenant-data-retention-p04",
+      "title": "テストファースト設計 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートのテスト設計",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P03"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P05",
+      "graph_node_id": "sys-tenant-data-retention-p05",
+      "title": "実装 — tenant_data_objects API・R2封筒暗号化保管/取得/即時完全削除・R2使用量監視cron拡張の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P04"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P06",
+      "graph_node_id": "sys-tenant-data-retention-p06",
+      "title": "テスト実行 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートテストの実行",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P05"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P07",
+      "graph_node_id": "sys-tenant-data-retention-p07",
+      "title": "受入 — テナント分離・削除完全性・暗号化検証の3件受入判定",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P06"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P08",
+      "graph_node_id": "sys-tenant-data-retention-p08",
+      "title": "リファクタリング/マイグレーション — encryption_keys.purpose=tenant_data追加DEK seed・R2バケット/prefix新設の既存基盤互換移行",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P07"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P09",
+      "graph_node_id": "sys-tenant-data-retention-p09",
+      "title": "品質・セキュリティ・運用保証 — テナント越境読取防止(T14)・削除不完全対策(T15)・R2使用量監視運用確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P08"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P10",
+      "graph_node_id": "sys-tenant-data-retention-p10",
+      "title": "独立最終レビュー — quality_constraints 6件・acceptance 3件の最終確認",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P09"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P11",
+      "graph_node_id": "sys-tenant-data-retention-p11",
+      "title": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P10"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P12",
+      "graph_node_id": "sys-tenant-data-retention-p12",
+      "title": "文書化・runbook・引き継ぎ — 業務データ保管/取得/削除手順・R2使用量監視runbook・鍵ローテーションrunbook拡張の文書化",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P11"
+      ]
+    },
+    {
+      "id": "SYS-TENANT-DATA-RETENTION-P13",
+      "graph_node_id": "sys-tenant-data-retention-p13",
+      "title": "リリース/デプロイ — encryption_keys DEK seed migration適用順序・wranglerロールアウト・rollback手順",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "parent_feature": "feat-tenant-data-retention",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P12"
+      ]
+    }
+  ]
+}

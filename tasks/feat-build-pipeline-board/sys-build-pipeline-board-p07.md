@@ -1,65 +1,72 @@
 ---
-artifact_kind: task
+graph_node_id: "SYS-BUILD-PIPELINE-BOARD-P07"
+artifact_kind: "task"
 artifact_subtypes: []
-beads_linkage: null
-classification_candidates: [{"artifact_kind": "task", "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p07.md", "confidence": 0.87}]
-classification_confidence: 0.87
-classification_reason: P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク
-completion_evidence: {"completed_at": null, "evidence_refs": [], "policy": "linked_pr_merged_all", "reconciled_at": null, "source": null, "status": "in_progress"}
-confirmation_evidence: {"evaluated_digest": "c7e0d7e68a86d10ef5b70c55a4f881b174f3b503b5bc2d6285bcef4ebfe58d9c", "evaluator": "system-dev-plan-evaluator", "evidence_ref": ".dev-graph/plans/feature-package-feat-build-pipeline-board/plan-findings.json"}
-confirmation_status: confirmed
-created_at: 2026-07-17T13:54:30Z
-depends_on: ["SYS-BUILD-PIPELINE-BOARD-P06"]
-domain: quality
-evaluation_status: pass
-execution_contexts: []
-feature_package_id: feature-package/feat-build-pipeline-board
-file_path: tasks/feat-build-pipeline-board/sys-build-pipeline-board-p07.md
-github_project_linkages: []
-github_publication: {"labels": [], "milestone": null, "mode": "local_only", "project_aliases": []}
-graph_node_id: SYS-BUILD-PIPELINE-BOARD-P07
-implementation_readiness: {"checked_at": "2026-07-17T00:00:00Z", "missing_sections": [], "status": "complete"}
-issue_linkage: null
-iteration: null
-owners: ["daishiman"]
-parent_feature: feat-build-pipeline-board
-phase_ref: P07
+project_id: "feature-package-feat-build-pipeline-board"
+domain: "quality"
+tags: ["feat-build-pipeline-board","studio-extension","build-pipeline-board","acceptance"]
 priority: null
-project_id: feature-package-feat-build-pipeline-board
-pull_request_linkages: []
-related_nodes: ["feat-build-pipeline-board", "arch-harness-hub-frontend", "arch-harness-hub-backend"]
-resource_scope: ["docs/features/feat-build-pipeline-board/acceptance-report.md"]
-source_lineage: {"imported_at": "2026-07-17T13:54:30Z", "origin_kind": "system-dev-planner", "source_digest": "c7e0d7e68a86d10ef5b70c55a4f881b174f3b503b5bc2d6285bcef4ebfe58d9c", "source_path": ".dev-graph/plans/feature-package-feat-build-pipeline-board/task-specs/phase-07-acceptance.md", "source_plugin": "system-dev-planner", "source_version": "0.1.0"}
 start_date: null
-status: active
-tags: ["feat-build-pipeline-board", "studio-extension", "build-pipeline-board", "acceptance"]
 target_date: null
-template_id: task
-template_version: 1.0.0
-title: 受入 — goal-spec acceptance 3 項目の確認
-tracker_binding: beads
-updated_at: 2026-07-17T13:54:30Z
-purpose: feat-build-pipeline-board の P07 を実行する: 受入 — goal-spec acceptance 3 項目の確認
-goal: P06 のテスト結果を goal-spec の acceptance 3 項目 (工程遷移 admin 限定 + 監査記録、公開工程と PublishRequest の整合、axe 違反 0/CWV good) に照らして受入判定し、acceptance-report.md に記録する。
+iteration: null
+title: "受入 — goal-spec acceptance 3 項目の確認"
+owners: ["daishiman"]
+created_at: "2026-07-19T14:10:56Z"
+updated_at: "2026-07-19T14:10:56Z"
+status: "active"
+depends_on: ["SYS-BUILD-PIPELINE-BOARD-P06"]
+related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
+resource_scope: ["docs/features/feat-build-pipeline-board/acceptance-report.md"]
+purpose: "feat-build-pipeline-board の P07 を実行する: 受入 — goal-spec acceptance 3 項目の確認"
+goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
 scope_in: ["docs/features/feat-build-pipeline-board/acceptance-report.md"]
-scope_out: ["実装コードの修正 (未達の場合は原因 task へ差し戻す)", "quality_constraints 6 件全件の充足判定 (P10 最終独立レビューで行う)"]
-acceptance: ["acceptance-report.md に acceptance 3 項目それぞれの pass/fail 判定と test-run-report.md への参照が記載されている"]
-architecture_refs: ["arch-harness-hub-frontend", "arch-harness-hub-backend"]
+scope_out: ["published task spec の『スコープ外』節を正本とする"]
+acceptance: ["acceptance-report.md に acceptance 3 項目それぞれの pass/fail 判定と test-run-report.md への参照が記載されている","現行feature context sha256:eeed295d50359e11ac8aee84800def3ad3399cee866ab5b4dc2712116c9a4441のscope_in/acceptance全件をP07責務として追跡し、未割当0件である","Normative closure: P04 は既存5カテゴリに axe detectable violations=0 と CWV LCP/INP/CLS=good を追加する。P05 は S13 UI/Build schema に加え、GET /api/v1/builds、GET /api/v1/builds/:id、POST /api/v1/builds（sheet_id xor feedback_id の手動復旧）、PATCH /api/v1/builds/:id、POST /api/v1/builds/:id/stage の正本5 endpointを route handler、zod contract、単一 authz middleware接続として実装する。P04/P06/P07 は5 endpoint（manual recoveryを含む）とaxe/CWVを実測し、P09 CI gate、P10最終判定、P11 evidence、P13 production smokeまで同じ測定IDを追跡する。 Evidence: 正本5 endpoint（POST manual recoveryのsheet_id xor feedback_idを含む）のrole/tenant/validation tests、stage transition tests、axe report、CWV report（LCP/INP/CLS各good）、CI job URLまたは再実行可能ログを必須証跡とする。"]
+architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-backend"]
+parent_feature: "feat-build-pipeline-board"
+feature_package_id: "feature-package/feat-build-pipeline-board"
+phase_ref: "P07"
+file_path: "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p07.md"
+template_id: "task"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-19T14:10:56Z","origin_kind":"system-dev-planner","source_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-07-acceptance.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+classification_confidence: 0.87
+classification_reason: "P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク"
+classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-build-pipeline-board/sys-build-pipeline-board-p07.md","confidence":0.87}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: {"bd_issue_id":"HarnessHub-9am.7","linked_at":"2026-07-18T01:42:32Z","sync_state":"linked"}
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
 # 受入 — goal-spec acceptance 3 項目の確認
 
-> task projection (P07 / parent: feat-build-pipeline-board)。本文の正本は published task spec であり、ここには複製しない。
+> task projection (P07 / parent: feat-build-pipeline-board)。実装要件の正本は下記の content-addressed published task spec であり、このファイルは実行入口だけを保持する。
 
 ## 正本仕様書
 
-- `.dev-graph/plans/feature-package-feat-build-pipeline-board/task-specs/phase-07-acceptance.md`
+- package: `.dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9`
+- task spec: `.dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-07-acceptance.md`
+- package digest: `sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9`
+- task spec SHA-256: `sha256:4331c2cae1f1f2fc4075e622fa797643bbe1fa194ef8d10c9645a7e99106e40a`
+- registration receipt: `.dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/dev-graph-registration-receipt.json`
 
 ## 依存
 
-- SYS-BUILD-PIPELINE-BOARD-P06
+- `SYS-BUILD-PIPELINE-BOARD-P06`
 
-## 実行
+## 実行契約
 
-- claim: bd 側 issue を claim し、並行時は worktree lease を取得する
-- 完了: 正本仕様書の Verification and evidence を満たし bd close (SYS-BUILD-PIPELINE-BOARD-P07)
+- claim: Beads issueをatomic claimし、並行実行時はworktree leaseを取得する。
+- scope: frontmatter `resource_scope` と published task spec の Write scope/touches を両方守る。
+- verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
+- completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
+- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。

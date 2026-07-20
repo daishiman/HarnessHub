@@ -1,0 +1,1087 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-publisher-plugin",
+  "parent_feature": "feat-publisher-plugin",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json",
+      "features/feat-publisher-plugin.md",
+      "features/feat-publisher-plugin.context.json",
+      "docs/backend-spec.md",
+      "docs/security-spec.md",
+      "architecture/harness-hub-backend.md",
+      "architecture/harness-hub-security.md"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P01",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "要件ベースライン確定 — TypeScript統一Publisher・Device Flow認証・検査ロジック共有・wranglerスクリプト実行・初回publish15分以内",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "documentation",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality",
+        "security",
+        "backend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/requirements-baseline.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "goal-spec.json の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を要件ベースラインとして確定する P01 要件タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "requirements-baseline.md に purpose/goal/scope_in 5件/scope_out 2件/acceptance 3件/quality_constraints 8件 (id 単位) が .dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json と逐語一致で記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json との逐語一致に齟齬が見つかった場合、requirements-baseline.md を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P01",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p01.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P02",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "アーキテクチャ設計 — apps/publisher (TS/Node/pnpm) 構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の決定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "backend",
+        "architecture-decision"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "security",
+        "infrastructure",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/architecture-decision-record.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json",
+        "docs/backend-spec.md",
+        "docs/security-spec.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P01 の要件ベースラインに基づき apps/publisher の実装形態・packages/inspection 消費境界・Device Flow token 保存方式・wrangler 実行方式を確定する P02 アーキテクチャタスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に apps/publisher 構成・plugin 面配置・packages/inspection 消費境界・Device Flow token 保存方式・wrangler 実行方式の 5 点が設計判断として記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "設計判断が P01 の要件ベースラインまたは docs/backend-spec.md の確定事項と矛盾する場合、該当箇所を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P02",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p02.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P03",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "独立設計レビュー — apps/publisher構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/design-review-notes.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P02 の設計判断が P01 の要件ベースラインおよび goal-spec.json の quality_constraints と矛盾しないことを独立観点で確認する P03 設計レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に 4 観点 (inspection二重実装回避/token保存方式/wrangler実行方式限定/desktop GUI非作成) の確認結果と承認可否が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "レビューで矛盾が発見された場合、P02 に差し戻し architecture-decision-record.md を修正した上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P03",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p03.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P04",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "テストファースト設計 — quality_constraints 8件・acceptance 3件に対応する挙動同値性テスト・実機E2Eタイムボックス計測ケースの設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P03"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/test-design.md",
+        "apps/publisher/src/__tests__/"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P03 でレビュー済みの設計に基づき quality_constraints 8 件・acceptance 3 件に対応するテストケースを設計する P04 テストファーストタスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に quality_constraints 8 件 (id 単位)・acceptance 3 件それぞれに対応するテストケースが列挙され、apps/publisher/src/__tests__/ にスタブが存在すること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "quality_constraints/acceptance の対応漏れが発見された場合、test-design.md を修正し不足テストケースを追加した上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P04",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p04.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P05",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "実装 — apps/publisher (CLI + Claude Code/Codex plugin)・Device Flow認証クライアント・wrangler実行ラッパーの実装",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "backend",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "security",
+        "infrastructure",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P04"
+      ],
+      "write_scope": [
+        "apps/publisher/",
+        "packages/schemas/publisher-plugin/",
+        "docs/features/feat-publisher-plugin/implementation-notes.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json",
+        "docs/backend-spec.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P02/P04 で確定した設計とテストスタブに基づき apps/publisher の CLI core・auth・deploy・plugin 面を実装する P05 実装タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "apps/publisher/ に CLI core・auth・deploy・plugin 面が実装され、P04 の test-design.md に列挙された全テストケースに対応する実装対象が揃っていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "実装が P02 の architecture decision と矛盾する場合 (例: packages/inspection の検査ロジックが重複実装された場合、token が平文で保存された場合)、該当コードを削除し P02 の設計に沿って再実装する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P05",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p05.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P06",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "テスト実行 — 挙動同値性テスト・Device Flow単体テスト・macOS/Windows実機E2Eタイムボックス計測の実行",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P05"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/test-run-results.md",
+        "apps/publisher/src/__tests__/"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P04 で設計し P05 で実装対象を揃えたテストケースを実行し結果を記録する P06 テスト実行タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-results.md に全テストケースの pass/fail・macOS/Windows 実機 E2E の所要時間実測値・15 分以内達成可否が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "テスト失敗または 15 分超過が判明した場合、該当箇所を P05 へ差し戻し修正した上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P06",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p06.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P07",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "受入 — macOS/Windows実機E2E成功・pre-checkとHub検査の判定同値・初回publish15分以内の受入判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/acceptance-record.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "goal-spec.json の acceptance 3 件を P06 のテスト実行結果に基づき受入判定する P07 受入タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-record.md に acceptance 3 件それぞれの判定結果 (満たす/満たさない) と根拠 (test-run-results.md への参照) が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "acceptance 3 件のいずれかが満たされない場合、該当原因に応じて P04 または P05 へ差し戻し、修正後に P06 から再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P07",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p07.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P08",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "リファクタリング/マイグレーション — Python資産参照コメントの整理とpackages/inspection消費コードのクリーンアップ",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "backend",
+        "refactor-migration"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P07"
+      ],
+      "write_scope": [
+        "apps/publisher/src/",
+        "docs/features/feat-publisher-plugin/refactoring-migration-note.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.82,
+        "reason": "本 feature は永続 DB migration を持たないため、Python資産参照コメント整理とinspection消費コードのクリーンアップに読み替える required-node タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.82,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に Python 資産参照コメントの整理結果・inspection 呼び出しの重複排除確認・Python 資産本体への非改変の明記の 3 点が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "整理により実装が P02 の設計や P07 の受入結果と乖離した場合、変更を取り消し refactoring-migration-note.md に理由を記録した上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P08",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p08.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P09",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "品質・セキュリティ・運用保証 — Device Flow数値契約遵守・OS資格情報域保存・scope最小権限・secret非保存の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "security",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "security",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P08"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/quality-assurance-report.md",
+        "apps/publisher/scripts/"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "quality_constraints のうちセキュリティ関連制約 (Device Flow/OS資格情報域保存/scope最小権限) の遵守を機械的に確認する P09 品質保証タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に Device Flow 数値契約 (TTL/rotation/reuse検知)・OS資格情報域保存・scope最小権限・secret非平文保存・両OS pnpm script同一動作の全確認結果が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "token が平文保存されている、または scope が過剰要求である等の逸脱が発見された場合、apps/publisher の該当実装を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P09",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p09.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P10",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "独立最終レビュー — quality_constraints 8件・acceptance 3件の最終確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/final-review-record.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P01-P09 の全成果物を対象に quality_constraints 8 件・acceptance 3 件の充足を独立確認する P10 最終レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-record.md に quality_constraints 8 件 (id 単位)・acceptance 3 件それぞれの最終充足確認結果と参照した成果物一覧が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "未充足項目が発見された場合、該当 phase (P01-P09 のいずれか) へ差し戻し修正後に本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P10",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p10.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P11",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順の確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/evidence-summary.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P06/P07/P09/P10 の証跡を集約し第三者が再現できる手順として確立する P11 証跡タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-summary.md に P06/P07/P09/P10 各証跡への参照・再現に必要なコマンドと前提条件・macOS/Windows 実機 E2E タイムボックス実測値が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "証跡の再現手順に不備が発見された場合、該当証跡の生成元 phase (P06/P07/P09/P10) を確認し evidence-summary.md を修正した上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P11",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p11.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P12",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "文書化・runbook・引き継ぎ — 作者向けpublish手順・token失効導線・障害時対応手順の確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "documentation",
+        "operations"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/runbook.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json",
+        "docs/backend-spec.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "作者向け publish 操作手順・token失効導線・障害時対応手順を runbook として確立する P12 文書化タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に作者向け publish 手順・token 失効導線・pre-check失敗時/Device Flow タイムアウト時/wrangler失敗時の障害時対応手順の 3 系統が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "runbook.md の手順が実際の実装 (apps/publisher) と乖離することが判明した場合、実装または runbook.md のいずれかを修正し一致させた上で本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P12",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p12.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-PUBLISHER-PLUGIN-P13",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "parent_feature": "feat-publisher-plugin",
+      "title": "リリース/デプロイ — Claude Code/Codex marketplaceへのPublisher plugin配布登録依頼とStage1完了条件判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "documentation",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P12"
+      ],
+      "write_scope": [
+        "docs/features/feat-publisher-plugin/release-record.md"
+      ],
+      "deploy_unit": "author-local-session/harness-hub-publisher-plugin",
+      "source_lineage": [
+        ".dev-graph/staging/feature-package-feat-publisher-plugin/goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "marketplace.json への Publisher plugin 登録依頼内容の確定と acceptance 最終充足の close-out 判断を行う P13 リリースタスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-record.md に acceptance 3 件の最終充足確認結果・marketplace.json 登録依頼内容・feat-publish-pipeline 依存の利用可能性確認の 3 点が記載されていること"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-publisher-plugin"
+      ],
+      "rollback": "acceptance 3 件のいずれかが最終確認時点で満たされないと判明した場合、release-record.md に不成立理由を記録し、fail-closed として登録依頼の発行を保留する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T00:00:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-PUBLISHER-PLUGIN-P13",
+        "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p13.md",
+        "parent_feature": "feat-publisher-plugin",
+        "feature_package_id": "feature-package/feat-publisher-plugin",
+        "phase_ref": "P13"
+      }
+    }
+  ]
+}

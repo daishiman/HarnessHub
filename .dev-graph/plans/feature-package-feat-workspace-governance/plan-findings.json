@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-workspace-governance",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文 (task-specs/phase-01..13) を精読し、goal-spec (purpose/goal/scope_in 4件/scope_out 2件/acceptance 3件/quality_constraints 6件) との矛盾は検出されなかった。goal-spec の purpose フィールドには verbatim で「統制と安全性 (G2)」という括弧書きラベルが含まれているが、これは system-spec/spec-state.json qa-012 (R0-foundation ヒアリング初期段階) の暫定ラベルであり、system-spec/00-requirements-definition.md の確定ゴール表 (U3) および system-spec/security.md・backend.md・frontend.md frontmatter serves_goals はいずれも本feature の統制ゴールを G4 として確定している (G2は無関係な北極星指標=業務再利用ゴール)。P01 (task-specs/phase-01-requirements.md) はこの食い違いを『(G2)』を無批判に転記せず『system-spec/spec-state.json qa-012の暫定ラベルであり、後続の確定章はいずれも統制をG4として一貫して確定している』と明記し、以降の全task specがG4を正しい参照として用いる設計になっている (quality_constraints id: governance-goal-g4-not-g2-numbering-discrepancy)。scope_out 2件 (課金・Stage3以降の拡張) はP01からP13まで一貫して継承され、混入は確認されなかった。acceptance 3件はP04 (テスト設計)→P06 (テスト実行)→P07 (受入判定)→P10 (最終レビュー)→P11 (証跡集約)の経路で過不足なく写像されていた。quality_constraints 6件のうち、P02が確定すべき4つの据置事項 (publish/:id/reject契約・RBAC管理UI境界・監査ログUI仕様・統制ポリシーデータモデル) はP01で先取り確定されず『未確定・P02で確定』の据置事項として明記されるに留まり、P02はこれらの確定作業自体を自身の責務として境界づけていた。P02はさらに、既存監査action語彙にpublish.rejectは存在するがRESTエンドポイントとしては未収載であるという事実を正確に認識した上でPOST /api/v1/publish/:id/rejectを新規契約として設計しており、docs/backend-spec.mdとの矛盾は無くP02レベルのarchitecture決定として適正に処理されていた。RBAC細分化のworkspace_memberships新設 (quality_constraints id: granular-rbac-baseline-and-extension-boundary) はP01・P02の双方でR4-reopen対象として明示的に据え置かれ、本13-task package内には実装対象として混入していなかった。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#背景 (goal-specのpurpose内「(G2)」がqa-012暫定ラベルであり統制ゴールはG4であることを明記、quality_constraints id=governance-goal-g4-not-g2-numbering-discrepancyへの対応関係を確認)",
+        "task-specs/phase-01-requirements.md#スコープ外 (scope_out 2件[課金・Stage3以降の拡張]の継承、feature間依存はdev-graph正本として扱い実装・変更を行わない旨を確認)",
+        "task-specs/phase-02-architecture.md#背景 (publish.rejectが既存監査action語彙には存在するがRESTエンドポイント未収載であるという正確な事実認識のもとPOST /api/v1/publish/:id/rejectを新規契約として設計、workspace_membershipsをquality_constraints[granular-rbac-baseline-and-extension-boundary]によりR4-reopen対象として据え置くことを確認)",
+        "task-specs/phase-07-acceptance.md#目的 (acceptance 3件の受入判定手順)",
+        "task-specs/phase-10-final-review.md#背景 (acceptance 3件・quality_constraints 6件の全件最終合否判定、feature境界順守[feat-dual-catalog-web/feat-auth-tenancy非コピー・feat-user-org-admin S17非変更・feat-publish-pipeline状態機械非変更]の最終確認を行う設計であることを確認)"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "validate-system-plan.py を本agentが独立実行しexit0 (violations=[]) を確認した。validated_digest=sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91はstaging-manifest.jsonのcanonical_digestおよび依頼指定値と一致した。feature-package.json task_count=13・phase_refs=P01..P13 (順序一致)、task-graph.json 13 node、workstream-inventory.json 13 taskでexact-13が確認された。単一skillへの退化・水増しは無く、13 phase (要件ベースライン/アーキテクチャ設計/独立設計レビュー/テストファースト設計/実装/テスト実行/受入/リファクタリング・マイグレーション/品質保証/最終レビュー/証跡集約/文書・運用/リリース・デプロイ) はそれぞれ異なる責務・目的・背景・成果物 (requirements-baseline.md, architecture-decision-record.md, design-review-notes.md, test-design.md, 実コード, test-run-results.md, acceptance-record.md, refactoring-migration-note.md, quality-assurance-report.md, final-review-decision.md, evidence-summary.md, runbook.md, release-record.md) を持つことを全文読解で確認した。P03 (独立設計レビュー) はP02の6系統architecture decisionそれぞれについて妥当性確認結果を独立記録する具体的責務を持ち、P10 (最終レビュー) はP07受入・P09品質保証の結果を単純合算せず突き合わせて最終合否を判定する具体的責務を持つなど、空疎化は確認されなかった。13 task全てのVerification and evidence節は同一の決定論ゲートコマンド (validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-workspace-governance) を参照している。",
+      "evidence": [
+        "gate:deterministic-validation#exact-13/violations=0 (本agentによる独立実行、exit0)",
+        "feature-package.json#task_count (13、phase_refs P01..P13順序一致)",
+        "task-graph.json#nodes (13件)",
+        "workstream-inventory.json#tasks (13件)",
+        "task-specs/phase-03-design-review.md#目的 (P02の6系統architecture decisionそれぞれについて妥当性確認結果を独立記録する具体的責務を確認)",
+        "task-specs/phase-10-final-review.md#背景 (P07・P09の結果を単純合算せず突き合わせて最終合否を判定する具体的責務を確認)"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "feature_package_id=feature-package/feat-workspace-governance, parent_feature=feat-workspace-governance, repository_id=github:daishiman/HarnessHubがfeature-package.json/workstream-inventory.json/task-graph.json/system-build-handoff.json (identity)/.dev-graph/config.jsonの全箇所で一致することを確認した。source_feature_digest (sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1) がfeature-package.json/system-build-handoff.json (identity.source_feature_digest)/.dev-graph/locks/system-dev-plan-lock.json (feature_digest, feature_id=feat-workspace-governance, run_id=run-workspace-governance-20260719) の3箇所で一致し、本agentが独立shasum再計算で同値との完全一致も確認した。canonical digestは(1) validate-system-plan.py独立実行のvalidated_digest、(2) staging-manifest.json記載のcanonical_digest、(3) 本agent独自Python再実装 (rel path + content のsha256連結アルゴリズム) による再計算、(4) 依頼指定値、の4者がsha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91で完全一致しstalenessなし。system-build-handoff.json#source_manifest.canonical_digest_before_handoff (sha256:df0f7f291ce7e42ce0681c2aa309f660f9ef9a51685a7819c30504a342b5ba21) も本agent独自Python再計算 (BASE_DIGEST_FILESのみ対象の同アルゴリズム) で完全一致を確認した。staging-manifest.json#filesに列挙された17ファイル全件について本agentがhashlib.sha256で個別再計算し一致を確認し、キー集合が required set (feature-package.json/workstream-inventory.json/task-graph.json/13 task-specs/system-build-handoff.json) と過不足なく一致することも確認した。task id (workstream-inventory.json#tasks[].id) と graph node id (task-graph.json#nodes[].id) はSYS-WORKSPACE-GOVERNANCE-P01..P13で1対1一致し、graph_node_registration.file_pathは全13件がtasks/feat-workspace-governance/sys-workspace-governance-p0X.md形式 (parent_feature namespace配下) で統一されていた。workstream-inventory.json#repo_context.repo_identityもgithub:daishiman/HarnessHubで一致した。",
+      "evidence": [
+        "feature-package.json#source_feature_digest (system-build-handoff.json identity.source_feature_digest / .dev-graph/locks/system-dev-plan-lock.json feature_digestとの3箇所一致を本agentが独立再計算で確認)",
+        "gate:deterministic-validation#validated_digest (= staging-manifest.json canonical_digest = 依頼指定値 = 本agent独自再計算値の4者一致)",
+        "staging-manifest.json#files (17件、本agent hashlib.sha256独立再計算で全件一致、required exact set一致)",
+        "workstream-inventory.json#tasks (task-graph.json nodes[].idとの1対1一致、graph_node_registration.file_pathのtasks/feat-workspace-governance/ namespace統一、repo_context.repo_identity一致を確認)",
+        "system-build-handoff.json#identity (repository_id/feature_id/feature_package_id/parent_feature/source_feature_digestの一致、source_manifest.canonical_digest_before_handoffの本agent独立再計算一致を確認)"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json#nodesのdepends_onを全件確認した結果、P01: [] (起点)、P02: [P01]、P03: [P02]、P04: [P03]、P05: [P04]、P06: [P05]、P07: [P06]、P08: [P07]、P09: [P08]、P10: [P09]、P11: [P10]、P12: [P11]、P13: [P12]という単純な前方線形鎖であり、同一feature内の直前phaseのみを参照する前方edgeのみで構成されacyclicであることを確認した。validate-system-plan.pyのnon-forward-edge/cross-feature-or-missing-edge検査も違反0件だった。cross-feature依存の混入は無く、feat-dual-catalog-web/feat-auth-tenancyへの依存はfeatures/feat-workspace-governance.md frontmatter (depends_on: [feat-dual-catalog-web, feat-auth-tenancy]) としてdev-graph正本レベルでのみ表現され、task-graph.json#nodes[].depends_onには一切コピーされていないことを確認した。13 task spec本文の『スコープ外』節でもfeat-dual-catalog-web所有のS04本体・feat-user-org-admin所有のS17・feat-publish-pipeline所有のPublishRequest状態機械本体を『owner=他feature』として言及するのみで依存edgeとしては表現していない。goal-specのquality_constraints (granular-rbac-baseline-and-extension-boundary) が明示するworkspace_memberships新設によるworkspace単位RBAC拡張は、P01・P02双方で明示的にR4-reopen対象・スコープ外として据え置かれており、14件目のtaskとして本package内に混入していないことを確認した (task-graph.jsonのnode数は13件、workstream-inventory.jsonのtask数も13件で一致)。",
+      "evidence": [
+        "task-graph.json#nodes (P01→[]、P02..P13は直前1件のみを参照する線形鎖、13件全て確認・acyclic)",
+        "gate:deterministic-validation#non-forward-edge,cross-feature-or-missing-edge (違反0件、本agent独立実行)",
+        "task-specs/phase-01-requirements.md#スコープ外 (feat-dual-catalog-web/feat-auth-tenancyをdev-graph正本の依存として扱い実装・変更を行わない旨、依存edgeとして表現せず)",
+        "task-specs/phase-02-architecture.md#スコープ外 (workspace_membershipsテーブル新設をquality_constraints[granular-rbac-baseline-and-extension-boundary]によりR4-reopen対象として据え置き、14件目のtaskとして混入させないことを確認。feat-user-org-admin所有S17・feat-publish-pipeline所有PublishRequest状態機械本体もownerとして言及するのみで依存edge化せず)",
+        "task-graph.json#nodes (13件, workstream-inventory.json#tasksも13件で一致し14件目の混入がないことを確認)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-workspace-governance",
+        "--repo-root",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91\",\n  \"feature_package_id\": \"feature-package/feat-workspace-governance\",\n  \"parent_feature\": \"feat-workspace-governance\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "d158329eb38a261df1d37ffe31b72547ee69b41a2dc5229f15f22bd1364e22db"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "a45742d730da1dccfeb6bfdcaee1f49cf2a1b378bb36d779cb4b430b541c489d"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "fe7c8e9c97ce8f7795516527c21cc2605be50c4bfff9f7140762abeb815d8f51"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "89bb545287491498b221158f6a39a8037f6f7c83799e682889390aa2df7c4bbc"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "3dc1da73cead319dc693528f620a366b4782369f0d0340e2083e68c75eefb006"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "19c5f3519e933c5a091e1dba054c100b02a77f3a8e5c645309c81f3987be6993"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "b0a90eb37cc0685e4bf7ff83da414b005183c16d6d207c5092fc8fcadb64ae56"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "ca06a1dac6991a897057946cdad9289cbc4d1967b74e59d0a15af05a438445ac"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "9e5b77ef8f9365f5b5c26fb9fb73f270ba9c8973506fadc22dfa85e57a58e2c3"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "5d03a320388e23c234891563460dbc318072f11d6943aea7364dc069a1abd562"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "09513c80006cf2a347ddf5df7ba8c97ac3d2db67a3482262ad42bfd0e8d86210"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "b07d3001f84b9cf36d50c41a6056abd1b4737b9f6ee8ee459f920d7780f740d2"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "c3873b3fb85443225ee0d444933a19a54bea27b38afe1552f8753b67f05c2a38"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "e630c91877783b7105437bbeca3ede6726e7aeece3096e991dfc686a495f1244"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "950c13c64b39cfa205d9f0cf62a842f321953fc209f2190e9f69556af9c68c00"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "4dc52fc8d52ef9bf030d378936dfad9dd350b7da211f49c7d0e3faa5cbe8fe99"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "bdeeed6803b634cd1499b032f73c87173c7bc2613885c0edba665bfcef00428e"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a6b30818cf9b94c5a6edf5485532cc52cc4593f7cda9e42bada35549b685f5c3"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立fork contextで13 task spec全文読解・validate-system-plan.py独立実行 (exit0, violations=0)・staging-manifest.json#files 17件+staging-manifest.json自身のhashlib.sha256独立再計算全件一致・canonical digestの独立Python再実装による再計算一致 (validator値/manifest値/依頼指定値/本agent再計算値の4者一致)・pre-handoff base digest (system-build-handoff.json#source_manifest.canonical_digest_before_handoff) の独立再計算一致・goal-specのpurpose内「(G2)」ラベルがqa-012暫定ラベルでありP01が統制ゴールをG4として正しく訂正・参照していることの確認・task-graph.json depends_on 13件の前方線形鎖確認 (acyclic)・feat-dual-catalog-web/feat-auth-tenancy依存がdev-graph正本 (features/feat-workspace-governance.md frontmatter) にのみ存在しtask-graph.jsonへコピーされていないことの確認・workspace_memberships拡張がP01・P02双方でR4-reopen対象として据え置かれ14件目のtaskとして混入していないことの確認・quality_constraints 6件・acceptance 3件の全phase横断トレース確認を実施した。blocking findingsなし。",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json",
+        "task-graph.json",
+        "workstream-inventory.json",
+        "system-build-handoff.json"
+      ]
+    }
+  ]
+}

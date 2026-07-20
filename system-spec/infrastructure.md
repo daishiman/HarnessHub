@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-034 |
+| Web (web) | 確定 | 確定質疑: qa-064 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-034 (対応セル: web)
+### qa-064 (対応セル: web)
 
-**質問**: mockup 実装のための infrastructure 詳細仕様 (リソース構成・binding・cron・CI/CD・環境・監視・バックアップ) をどう確定するか? 未確定 4 論点: (1) 環境構成 = production+staging vs production のみ、(2) 独自ドメイン = 既存保有ドメイン流用 vs 新規取得 (~US$10/年) vs workers.dev+メール後ろ倒し、(3) 外形監視 = Better Stack Free vs UptimeRobot Free (2024-12 以降 free は非商用限定) vs GitHub Actions 自前 ping、(4) 本番デプロイ = main merge 全自動 vs 手動承認 gate。AI 推奨 = (1) production+staging (2) 既存流用 (3) Better Stack Free (4) 全自動。(AskUserQuestion 2026-07-17)
+**質問**: docs/infrastructure-spec.md の 2026-07-18 追記 (R2 配布境界・§13 構築優先順位によるインフラ有効化順) をインフラ仕様へ反映するか。 (訂正再登録: qa-057 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-064 として登録し直す)
 
-**回答**: qa-026 の確定内容を実装可能粒度へ展開した詳細正本 docs/infrastructure-spec.md を確定する (リソーストポロジ・wrangler binding/secret 台帳・R2 バケット/lifecycle・Turso 構成と使用量監視・cron 3 系統・環境構成・CI/CD 3 workflow・ドメイン/DNS/メール・監視/SLO 運用・バックアップ/DR/縮退マトリクス・無料枠予算表)。ユーザーが AskUserQuestion (2026-07-17) で 4 論点を確定: (1) production + staging の 2 環境 (推奨同意: Turso Free 100 DB 内で費用 0 円のまま migration 検証と restore drill の受け皿を持つ)、(2) 既存保有ドメインを流用 (推奨同意: hub.<domain> + mail.<domain> のサブドメイン運用で追加費用 0 円・C2 完全維持。Resend SPF/DKIM は qa-026 どおり初期構築)、(3) 外形監視は Better Stack Free (推奨同意: 10 monitors・3 分間隔・heartbeat・status page・商用利用可。UptimeRobot Free は 2024-12 以降非商用限定のため棄却 = Vercel Hobby と同型の規約リスク回避。heartbeat は qa-027 の cron 失敗監視に接続)、(4) 本番デプロイは main merge 全自動 (推奨同意: CI green → staging migrate+deploy → smoke → production → post-deploy /health → 失敗時 wrangler rollback)。既確定仕様 (D1-D6・qa-003/011/019/026/027/031-033) との矛盾なし。qa-026 の確定内容は全面維持し、本 qa は詳細化のみを追加する。
+**回答**: qa-034 の確定内容 (Cloudflare Workers + Turso + R2 のインフラ確定・意思決定 4 論点) を全面維持しつつ、次の delta を確定する。R2 配布境界: S01 の Web upload と Publisher CLI upload は同じ staging prefix・検査 pipeline・content hash 確定処理へ収束させ、ブラウザから R2 への公開 write URL は発行しない。install/download は Worker の POST /api/v1/harnesses/:projectId/install を必ず経由し R2 bucket/object key を UI/API へ返さない。Stage 0 で raw ZIP を採用した場合だけ安定版に固定した TTL 5 分以内・単回の短命 URL を発行。§13 有効化順 (P0-P5): 共通リソース先行と低優先機能先行を混同せず、単一 Worker/Turso/R2 は共有しつつ route・cron・通知を必要 phase で段階有効化 — P0: production/staging・Worker/DB migration・tenant/workspace・OIDC callback・Auth secret・共通認可/監査・/health・CI の tenant 分離 test (metrics rollup/週次サマリー/dashboard monitor は不要)。P1: HearingSheet/AiJob/notification migration・pull job・生成完了通知・キュー滞留監視。P2: private R2 package bucket・Web/CLI upload・検査・content-addressed 保存・install/download Worker 導線・orphan 通知 (承認 queue UI は P5 でも監査記録はこの時点から有効)。P3: feedback/doc AiJob kind・Feedback→修正版 Build 冪等作成・必要時の R2 prefix。P4: salary 鍵・metrics ingest/rollup cron・Turso 使用量監視・週次通知。P5: dashboard/承認/監査 UI 用 route と外形確認。各 phase の migration は tenant_id と必要な workspace_id を最初から必須にし、production 反映前に 2 tenant fixture の分離テストを通す。1 tenant/1 Project 固定の環境変数は作らない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

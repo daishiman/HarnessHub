@@ -1,0 +1,137 @@
+{
+ "feature": {
+  "graph_node_id": "feat-auth-tenancy",
+  "title": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)",
+  "description": "テナント別 OIDC (Auth.js) と role 4 種、全 API への Tenant/Workspace スコープ強制 (D4 row-level-scope)、Publisher 向け OAuth Device Flow を確立する"
+ },
+ "children": [
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P01",
+   "phase_ref": "P01",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [],
+   "title": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定",
+   "description": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P02",
+   "phase_ref": "P02",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P01"
+   ],
+   "title": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計",
+   "description": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P03",
+   "phase_ref": "P03",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P02"
+   ],
+   "title": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認",
+   "description": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P04",
+   "phase_ref": "P04",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P03"
+   ],
+   "title": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計",
+   "description": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P05",
+   "phase_ref": "P05",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P04"
+   ],
+   "title": "実装 — Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理の実装",
+   "description": "実装 — Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理の実装 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P06",
+   "phase_ref": "P06",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P05"
+   ],
+   "title": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録",
+   "description": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P07",
+   "phase_ref": "P07",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P06"
+   ],
+   "title": "受入 — goal-spec acceptance 3 項目の確認",
+   "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P08",
+   "phase_ref": "P08",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P07"
+   ],
+   "title": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立",
+   "description": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P09",
+   "phase_ref": "P09",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P08"
+   ],
+   "title": "品質保証 — CI 品質ゲート (tenant 分離・adapter 境界隔離・dev provider 非存在・認可判定単一集約) の確認",
+   "description": "品質保証 — CI 品質ゲート (tenant 分離・adapter 境界隔離・dev provider 非存在・認可判定単一集約) の確認 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P10",
+   "phase_ref": "P10",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P09"
+   ],
+   "title": "最終独立レビュー — quality_constraints 7 件の充足判定",
+   "description": "最終独立レビュー — quality_constraints 7 件の充足判定 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P11",
+   "phase_ref": "P11",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P10"
+   ],
+   "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+   "description": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P12",
+   "phase_ref": "P12",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P11"
+   ],
+   "title": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成",
+   "description": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-AUTH-TENANCY-P13",
+   "phase_ref": "P13",
+   "parent_feature": "feat-auth-tenancy",
+   "depends_on": [
+    "SYS-AUTH-TENANCY-P12"
+   ],
+   "title": "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト",
+   "description": "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト (dev-graph task projection)"
+  }
+ ]
+}

@@ -2,27 +2,33 @@
   "graph_node_id": "feat-hub-foundation",
   "artifact_kind": "feature",
   "purpose": "費用ゼロ制約 (C2) 下で Hub の実行基盤 (Cloudflare Workers 一体型 + OpenNext) と CI/CD・監視・SLO 運用の土台を確立する",
-  "goal": "pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 99.5% 計測が稼働し、Worker 3MiB 予算内で Next.js が動作する状態",
+  "goal": "pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 99.5% 計測が稼働し、Worker 3MiB 予算内で Next.js と共通層の単一実装が動作する状態",
   "scope_in": [
     "Next.js + TypeScript + pnpm monorepo scaffold",
     "@opennextjs/cloudflare デプロイ",
     "GitHub Actions CI/CD (npm 混入 fail)",
     "/health + 外部死活監視",
-    "SLO ダッシュボード + bundle サイズ予算 CI"
+    "SLO ダッシュボード + bundle サイズ予算 CI",
+    "docs/shared-layers.md §1〜§3 の共通 UI・backend・CI/CD/運用層の実装 owner と package 境界"
   ],
   "scope_out": [
     "業務ドメインロジック",
-    "認証"
+    "テナント固有の OIDC/role/Device Flow policy (共通 auth adapter・認可 MW の package 境界のみ対象)"
   ],
   "acceptance": [
     "CI が test→deploy を完走する",
     "Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する",
-    "SLO 99.5% の計測と /health が稼働する"
+    "SLO 99.5% の計測と /health が稼働する",
+    "shared-layers 登録済み共通層が単一 package/境界に実装され、消費 feature が同じ実装を参照する"
   ],
   "architecture_refs": [
     "architecture/harness-hub-infrastructure.md",
     "architecture/harness-hub-frontend.md",
+    "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-data.md",
+    "architecture/harness-hub-security.md",
+    "architecture/harness-hub-dev-workflow.md",
     "specs/harness-hub-system-specification.md"
   ],
-  "updated_at": "2026-07-17T07:00:46Z"
+  "updated_at": "2026-07-18T22:35:48Z"
 }

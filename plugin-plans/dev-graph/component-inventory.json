@@ -97,7 +97,7 @@
       "feedback_contract": {
         "criteria": [
           {"id": "IN1", "loop_scope": "inner", "text": "validate-graph-schema.py でノード書込み前検証しスキーマの必須キー欠落が 0 件", "verify_by": "script"},
-          {"id": "OUT1", "loop_scope": "outer", "text": "通常5 artifact混在入力は自動routingされ、featureはC14 macro contractだけからfeatures/へ入り、連続更新後もfrontmatter/path整合性が維持される", "verify_by": "live-trial"},
+          {"id": "OUT1", "loop_scope": "outer", "text": "通常5 artifact混在入力は自動routingされ、連続更新後もfrontmatter/path整合性が維持される。通常例外/KeyboardInterruptは即rollbackし、強制終了はdurable WALから次回nodeでrollbackされ、readerはtransaction全体の共有lockで部分状態を返さない", "verify_by": "live-trial"},
           {"id": "OUT2", "loop_scope": "outer", "text": "新規ノード作成時にartifact_kind (architectureは選択したsubtype全て、specificationはAPI変更有無に応じたapi-contract合成) に対応する本文必須セクション見出しが欠落0件で適用されることを受入テストが確認する (要件C18/C19)", "verify_by": "test"},
           {"id": "OUT3", "loop_scope": "outer", "text": "12/14 task、phase欠落/重複、mixed parent/package、cross-feature edgeを注入するとapplied_count=0。正常時はexpected_count=applied_count=13、P01..P13/node exact-set、graph_revision付きreceiptとなる", "verify_by": "test"}
         ]
@@ -571,7 +571,7 @@
       "goal_seek": {"engine": "inline", "fork": "subagent", "max_loops": 5},
       "feedback_contract": {
         "criteria": [
-          {"id": "IN1", "loop_scope": "inner", "text": "schedule-graph.py のready-setがblocked/draft/unconfirmed/evaluation非pass/readiness非completeを0件で含む", "verify_by": "script"},
+          {"id": "IN1", "loop_scope": "inner", "text": "schedule-graph.py のready-setがblocked/draft/unconfirmed/evaluation非pass/readiness非completeを0件で含み、Beads receiptのgraph_status/graph_depends_on exact-setが現在graphと一致する", "verify_by": "script"},
           {"id": "OUT1", "loop_scope": "outer", "text": "推薦タスクが全依存 (depends_on) 充足済み (ready) であることを受入テストが確認する", "verify_by": "live-trial"},
           {"id": "OUT2", "loop_scope": "outer", "text": "提示した並列バッチ内で resource_scope (touches) が重複するノードペアが 0 件 (conflict-free) であることを受入テストが確認する", "verify_by": "test"},
           {"id": "OUT3", "loop_scope": "outer", "text": "ready taskごとに一意なsuggested_branchとC09 worktree claim commandが返り、同一graph_node_idの二重claimはC27が0件に抑える", "verify_by": "test"}
@@ -660,7 +660,7 @@
       "responsibilities": [
         {"id": "R1-elicit", "summary": "検索条件 (id/種別/キーワード) と表示したい状態範囲をヒアリングして確定する", "prompt_required": true},
         {"id": "R2-plan", "summary": "グラフストア横断検索と状態表示の計画を組み立てる", "prompt_required": true},
-        {"id": "R3-status", "summary": "validate-graph-schema.py で読み取ったグラフストアから該当ノードを検索し、status/closed_at/依存関係を含む状態表示レポートを返す (書込みは行わない)", "prompt_required": true}
+        {"id": "R3-status", "summary": "validate-graph-schema.py で読み取ったグラフストアから該当ノードを検索し、status/closed_at/依存関係を含む状態表示レポートを返す (eval-log/以外へは書き込まない)", "prompt_required": true}
       ],
       "cli_tools": [],
       "mcp_tools": [],
@@ -675,7 +675,7 @@
         "criteria": [
           {"id": "IN1", "loop_scope": "inner", "text": "validate-graph-schema.py で読み取ったグラフストアの検索結果に必須キー欠落が0件で、検索/状態表示がグラフ実状態と一致する", "verify_by": "script"},
           {"id": "OUT1", "loop_scope": "outer", "text": "検索/状態表示の結果がグラフストアの実際の状態 (status/closed_at/依存関係) と一致することを受入テストが確認する", "verify_by": "live-trial"},
-          {"id": "OUT2", "loop_scope": "outer", "text": "本 skill 実行後もグラフストアと GitHub Issue 側に一切の変更が生じない (read-only で副作用なし) ことを受入テストが確認する", "verify_by": "test"}
+          {"id": "OUT2", "loop_scope": "outer", "text": "共有graph lockの全処理保持とpending WAL検査により部分状態を返さず、graph/config/content/GitHubを変更せず、eval-log root/targetのsymlink escapeを事前拒否することを受入テストが確認する", "verify_by": "test"}
         ]
       },
       "depends_on": ["C02", "C11", "C24"],

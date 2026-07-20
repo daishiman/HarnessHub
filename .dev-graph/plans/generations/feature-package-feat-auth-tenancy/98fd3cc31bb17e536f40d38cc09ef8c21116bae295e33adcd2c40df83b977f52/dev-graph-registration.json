@@ -1,0 +1,1235 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-auth-tenancy",
+  "parent_feature": "feat-auth-tenancy",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-AUTH-TENANCY-P01": "beads",
+    "SYS-AUTH-TENANCY-P02": "beads",
+    "SYS-AUTH-TENANCY-P03": "beads",
+    "SYS-AUTH-TENANCY-P04": "beads",
+    "SYS-AUTH-TENANCY-P05": "beads",
+    "SYS-AUTH-TENANCY-P06": "beads",
+    "SYS-AUTH-TENANCY-P07": "beads",
+    "SYS-AUTH-TENANCY-P08": "beads",
+    "SYS-AUTH-TENANCY-P09": "beads",
+    "SYS-AUTH-TENANCY-P10": "beads",
+    "SYS-AUTH-TENANCY-P11": "beads",
+    "SYS-AUTH-TENANCY-P12": "beads",
+    "SYS-AUTH-TENANCY-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec (goal-spec.json) と features/feat-auth-tenancy.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "security",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "architecture-decision"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P01"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "Auth.js adapter 境界設計・role 4 種の単一認可ミドルウェア設計・Device Flow 設計・session 管理設計に加え、session_revocations/users スキーマ owner (feat-domain-model-db) の cross-feature 境界確定と role 3 値/4 値分割線を解消する P02 architecture decision タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P02"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/design-review-notes.md"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P02 の architecture decision (スキーマ owner 境界・role 分割線・単一認可ミドルウェア・OIDC 検証契約) を P02 実行者から独立した視点で検証する P03 レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P03"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/__tests__/auth-tenancy/",
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "docs/features/feat-auth-tenancy/test-design.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "quality_constraints 7 件 (OIDC 動的解決・role 4 種認可・Device Flow・adapter 境界・tenant 分離・IdP 委譲・session 緊急失効) をテストケースへ写像する P04 テストファースト設計タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理の実装",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "backend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P04"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/[tenant_slug]/signin/",
+        "apps/hub/src/app/api/auth/",
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "apps/hub/src/app/api/v1/tokens/",
+        "apps/hub/src/lib/auth/",
+        "apps/hub/src/lib/authz/",
+        "apps/hub/src/middleware.ts",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P02/P04 で確定した設計とテストスタブに基づき Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理を実装する P05 実装タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P05"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/__tests__/auth-tenancy/",
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "docs/features/feat-auth-tenancy/test-run-results.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P05 の実装に対して P04 のテストスタブを実行し quality_constraints 7 件の充足状況を機械的に確認する P06 テスト実行タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P06"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/acceptance-record.md"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P06 で green 化したテスト結果を基に goal-spec acceptance 3 件の充足を確認する P07 受入タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "security",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "refactoring-migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P07"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "apps/hub/src/lib/auth/",
+        "docs/features/feat-auth-tenancy/refactoring-migration-note.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "本 feature は packages/db/schema/ を write_scope に持たず DB migration を伴わないため、Auth.js adapter 境界の最終リファクタリングと dev 専用 provider 非存在の CI 検査確立に読み替えた P08 タスク (required-node)",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — CI 品質ゲート (tenant 分離・adapter 境界隔離・dev provider 非存在・認可判定単一集約) の確認",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P08"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "apps/hub/scripts/",
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "docs/features/feat-auth-tenancy/quality-assurance-report.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P08 の adapter 境界整理後、CI 品質ゲート (テナント分離 CI 必須・adapter 境界隔離検査・dev provider 非存在検査・認可判定単一集約検査・secret scan) を確認する P09 品質保証タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終独立レビュー — quality_constraints 7 件の充足判定",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P09"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/final-review-record.md"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P09 の品質保証結果を基に quality_constraints 7 件全件の最終充足判定を実装者から独立した視点で行う P10 最終独立レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P10"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/evidence-summary.md"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P01〜P10 の全成果物を証跡として一元集約し、リリース判断とドキュメント化 (P12/P13) に必要な evidence bundle を作成する P11 エビデンス収集タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "documentation",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P11"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/runbook.md"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "P11 の evidence bundle を踏まえ、session 緊急失効・Device Flow token 棚卸し/失効・OIDC provider 登録・row-level-scope revisit 条件監視の運用 runbook を作成する P12 ドキュメント/運用タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-AUTH-TENANCY-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト",
+      "project_id": "feature-package-feat-auth-tenancy",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "release"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:09Z",
+      "updated_at": "2026-07-19T14:10:09Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P12"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "docs/features/feat-auth-tenancy/release-record.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "parent_feature": "feat-auth-tenancy",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json",
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "imported_at": "2026-07-19T14:10:09Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P12 の runbook を前提に、本番テナントの OIDC provider 設定を反映し apps/hub をデプロイして Device Flow E2E を含むスモークテストで疎通確認する P13 リリース/デプロイタスク (required-node)",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    }
+  ]
+}

@@ -1,50 +1,50 @@
 ---
-graph_node_id: feat-domain-model-db
-artifact_kind: feature
+graph_node_id: "feat-domain-model-db"
+artifact_kind: "feature"
 artifact_subtypes: []
-title: ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)
-project_id: harness-hub
-domain: data
-status: draft
-priority: high
+project_id: "harness-hub"
+domain: "data"
+tags: ["macro-feature","stage-1","data"]
+priority: "high"
 start_date: null
 target_date: null
-iteration: Stage 1
+iteration: "Stage 1"
+title: "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)"
 owners: ["daishiman"]
-tags: ["macro-feature", "stage-1", "data"]
-file_path: features/feat-domain-model-db.md
-template_id: feature
-template_version: 1.0.0
-confirmation_status: confirmed
-evaluation_status: pending
-confirmation_evidence: {"evaluator": "user-design-review (claude session 9ce54d7a)", "evidence_ref": "eval-log/run-dev-graph-node-confirm-feat-domain-model-db.json", "evaluated_digest": "3345481c33b226d3f4a16cfc9198cd95376f8862c149d0d8353123e880ba3751"}
-source_lineage: {"imported_at": "2026-07-17T00:38:30Z", "origin_kind": "generated", "source_digest": "3345481c33b226d3f4a16cfc9198cd95376f8862c149d0d8353123e880ba3751", "source_path": "specs/harness-hub-system-specification.md", "source_plugin": "dev-graph", "source_version": null}
-created_at: 2026-07-17T00:38:30Z
-updated_at: 2026-07-17T22:42:02Z
+created_at: "2026-07-17T00:38:30Z"
+updated_at: "2026-07-19T14:12:28Z"
+status: "active"
 depends_on: ["feat-hub-foundation"]
 related_nodes: []
 resource_scope: ["features/feat-domain-model-db.md"]
-purpose: Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメインモデルを Drizzle スキーマとして確立し、D1 退避経路 (D2 ヘッジ) を保つ接続層を構築する
-goal: 全エンティティの CRUD が接続層越しに動作し、R2 immutable PackageRegistry と日次 export が稼働する状態
-scope_in: ["Drizzle スキーマ (SQLite 方言互換)", "接続層の隔離 (libSQL/D1 両対応)", "R2 content-addressed registry", "日次 export + restore drill 手順", "マイグレーション運用"]
-scope_out: ["検査 pipeline のビジネスロジック", "UI"]
-acceptance: ["スキーマが SQLite 方言互換で D1 接続テストが通る", "Release が immutable として強制される", "バックアップ export と復元手順が検証済み"]
-architecture_refs: ["arch-harness-hub-data", "arch-harness-hub-backend"]
+purpose: "Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメインモデルを Drizzle スキーマとして確立し、D1 退避経路 (D2 ヘッジ) を保つ接続層を構築する"
+goal: "全エンティティの CRUD が接続層越しに動作し、R2 immutable PackageRegistry と日次 export が稼働する状態"
+scope_in: ["Drizzle スキーマ (SQLite 方言互換)","接続層の隔離 (libSQL/D1 両対応)","R2 content-addressed registry","日次 export + restore drill 手順","マイグレーション運用"]
+scope_out: ["検査 pipeline のビジネスロジック","UI"]
+acceptance: ["スキーマが SQLite 方言互換で D1 接続テストが通る","Release が immutable として強制される","バックアップ export と復元手順が検証済み"]
+architecture_refs: ["arch-harness-hub-data","arch-harness-hub-backend","arch-harness-hub-infrastructure"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
+file_path: "features/feat-domain-model-db.md"
+template_id: "feature"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
-classification_reason: C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)
-classification_candidates: [{"artifact_kind": "feature", "confidence": 0.9, "candidate_path": "features/feat-domain-model-db.md"}]
-tracker_binding: beads
-beads_linkage: null
-github_publication: {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null}
+classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
+classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-domain-model-db.md","confidence":0.9}]
 issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: {"bd_issue_id":"HarnessHub-u6q","linked_at":"2026-07-18T01:43:36Z","sync_state":"linked"}
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"policy": "manual", "status": "open", "source": null, "completed_at": null, "reconciled_at": null, "evidence_refs": []}
-implementation_readiness: {"status": "incomplete", "missing_sections": ["13-task package 未生成 (system-dev-planner 待ち)"], "checked_at": "2026-07-17T00:38:30Z"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
 # ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)
@@ -84,6 +84,7 @@ Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメイ�
 
 - [arch-harness-hub-data](../architecture/harness-hub-data.md)
 - [arch-harness-hub-backend](../architecture/harness-hub-backend.md)
+- [arch-harness-hub-infrastructure](../architecture/harness-hub-infrastructure.md)
 
 - 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)
 

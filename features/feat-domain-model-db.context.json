@@ -22,7 +22,8 @@
   "architecture_refs": [
     "architecture/harness-hub-data.md",
     "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-infrastructure.md",
     "specs/harness-hub-system-specification.md"
   ],
-  "updated_at": "2026-07-17T22:42:02Z"
+  "updated_at": "2026-07-18T22:35:48Z"
 }

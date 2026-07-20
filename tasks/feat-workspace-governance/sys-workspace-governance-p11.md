@@ -1,0 +1,72 @@
+---
+graph_node_id: "SYS-WORKSPACE-GOVERNANCE-P11"
+artifact_kind: "task"
+artifact_subtypes: []
+project_id: "feature-package-feat-workspace-governance"
+domain: "quality"
+tags: ["feat-workspace-governance","macro-feature","quality","evidence"]
+priority: null
+start_date: null
+target_date: null
+iteration: null
+title: "エビデンス集約 — P04〜P10成果物の証跡パッケージ化"
+owners: ["daishiman"]
+created_at: "2026-07-19T14:21:39Z"
+updated_at: "2026-07-19T14:21:39Z"
+status: "active"
+depends_on: ["SYS-WORKSPACE-GOVERNANCE-P10"]
+related_nodes: ["feat-workspace-governance"]
+resource_scope: ["docs/features/feat-workspace-governance/evidence-package.md"]
+purpose: "feat-workspace-governance の P11 を実行する: エビデンス集約 — P04〜P10成果物の証跡パッケージ化"
+goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
+scope_in: ["docs/features/feat-workspace-governance/evidence-package.md"]
+scope_out: ["published task spec の『スコープ外』節を正本とする"]
+acceptance: ["evidence-package.md に P04/P06/P07/P09/P10 の成果物への参照リンクと各成果物の pass 結論が漏れなく集約されている","現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP11責務として追跡し、未割当0件である","Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"]
+architecture_refs: []
+parent_feature: "feat-workspace-governance"
+feature_package_id: "feature-package/feat-workspace-governance"
+phase_ref: "P11"
+file_path: "tasks/feat-workspace-governance/sys-workspace-governance-p11.md"
+template_id: "task"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-19T14:21:39Z","origin_kind":"system-dev-planner","source_digest":"b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10","source_path":".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-11-evidence.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+classification_confidence: 0.82
+classification_reason: "P04(テスト設計)/P06(テスト実行)/P07(受入)/P09(品質保証)/P10(最終レビュー)の各成果物を参照リンクとして単一の証跡パッケージへ集約するP11タスク。新たな判定は行わず既存成果物の参照と結論転記のみを行う"
+classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-workspace-governance/sys-workspace-governance-p11.md","confidence":0.82}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: {"bd_issue_id":"HarnessHub-5l3.11","linked_at":"2026-07-19T14:22:07Z","sync_state":"linked"}
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
+---
+
+# エビデンス集約 — P04〜P10成果物の証跡パッケージ化
+
+> task projection (P11 / parent: feat-workspace-governance)。実装要件の正本は下記の content-addressed published task spec であり、このファイルは実行入口だけを保持する。
+
+## 正本仕様書
+
+- package: `.dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10`
+- task spec: `.dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-11-evidence.md`
+- package digest: `sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10`
+- task spec SHA-256: `sha256:bb0588afcb81e5b358a2333807b44c0f897d53537e61ea333ce7cde336011405`
+- registration receipt: `.dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/dev-graph-registration-receipt.json`
+
+## 依存
+
+- `SYS-WORKSPACE-GOVERNANCE-P10`
+
+## 実行契約
+
+- claim: Beads issueをatomic claimし、並行実行時はworktree leaseを取得する。
+- scope: frontmatter `resource_scope` と published task spec の Write scope/touches を両方守る。
+- verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
+- completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
+- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。

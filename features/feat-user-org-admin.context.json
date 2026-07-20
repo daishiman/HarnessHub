@@ -1,11 +1,12 @@
 {
   "graph_node_id": "feat-user-org-admin",
   "artifact_kind": "feature",
-  "purpose": "ユーザー管理 (S17) とアカウント設定 (S18) を提供し、role 管理 (qa-005 の 4 role と統合)・年収→時給換算の係数設定 (PII: admin 限定・API 非公開・export マスク = SEC4)・通知設定 (D6 Resend) を確立する (I14)",
-  "goal": "workspace-admin がユーザーの role・部門・年収係数を管理でき、salary が PII ガード (admin 限定表示・読取監査・export マスク) 下にあり、通知設定が通知ディスパッチ共通層と接続された状態",
+  "purpose": "ユーザー管理 (S17) とアカウント設定 (S18) を提供し、role 管理 (qa-005 の 4 role と統合)・年収→時給換算の係数設定 (PII: admin 限定・API 非公開・export マスク = SEC4)・通知設定 (D6 Resend)・規約公開を確立する (I14)",
+  "goal": "workspace-admin がユーザーの role・部門・年収係数を管理でき、salary が PII ガード (admin 限定表示・読取監査・export マスク) 下にあり、通知設定が通知ディスパッチ共通層と接続され、全利用者が規約・ポリシーを参照できる状態",
   "scope_in": [
     "S17 ユーザー管理 + 個別ダッシュボード",
     "S18 アカウント設定 (プロフィール/通知/表示)",
+    "S18 配下の /legal 規約・ポリシー静的ページ (全利用者が閲覧可能)",
     "User 拡張 (department/salary) + TenantCoefficient エンティティ",
     "PII ガード共通層 (salary の admin 限定・監査・export マスク)",
     "通知設定と D6 (Resend) 通知ディスパッチの接続"
@@ -17,7 +18,7 @@
   "acceptance": [
     "salary が admin 以外の API/画面/export に露出しない (分離テスト + 監査記録)",
     "係数変更が監査 event に記録される (SEC6)",
-    "S17/S18 が axe 違反 0 で動作する"
+    "S17/S18 と /legal が axe 違反 0 で動作し、/legal は全利用者が閲覧できる"
   ],
   "architecture_refs": [
     "architecture/harness-hub-security.md",
@@ -25,5 +26,5 @@
     "architecture/harness-hub-frontend.md",
     "specs/harness-hub-system-specification.md"
   ],
-  "updated_at": "2026-07-17T10:49:56Z"
+  "updated_at": "2026-07-18T22:35:48Z"
 }

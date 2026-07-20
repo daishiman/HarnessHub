@@ -17,12 +17,12 @@ template_id: architecture
 template_version: 1.0.0
 confirmation_status: confirmed
 evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "08a812982b0a8320315aeebbc9cf633f72a05f19d45833d415e414d34848a60d", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
-source_lineage: {"imported_at": "2026-07-17T22:44:43Z", "origin_kind": "system-spec-harness", "source_digest": "08a812982b0a8320315aeebbc9cf633f72a05f19d45833d415e414d34848a60d", "source_path": "system-spec/infrastructure.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
+confirmation_evidence: {"evaluated_digest": "15a91e7e243c3558f92c4cb8c82756a2b9e375eb7c6044369764b28f9b454e9d", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
+source_lineage: {"imported_at": "2026-07-18T15:01:04Z", "origin_kind": "system-spec-harness", "source_digest": "15a91e7e243c3558f92c4cb8c82756a2b9e375eb7c6044369764b28f9b454e9d", "source_path": "system-spec/infrastructure.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
 created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-17T22:44:43Z
+updated_at: 2026-07-18T15:01:04Z
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security"]
+related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-dev-workflow"]
 resource_scope: ["architecture/harness-hub-infrastructure.md"]
 purpose: Cloudflare Workers 一体型 (OpenNext) + 無料枠運用・SLO 99.5%・エラーバジェット・監視/ポストモーテム運用の正本参照
 goal: qa-003/qa-011/qa-019 の確定要件に適合する infrastructure/運用の指針を提供する
@@ -53,11 +53,11 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 
 ## 正本 (source of truth)
 
-- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `08a812982b0a8320…`)
-- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `44e4e4f4ed21421d…`)
+- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `15a91e7e243c3558…`)
+- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `0329c87bf2e5be42…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 取込日時: 2026-07-17T22:44:43Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-07-18T15:01:04Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -98,4 +98,3 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 ## Risks and verification
 
 正本章 (system-spec/infrastructure.md, system-spec/maintenance-ops.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
-

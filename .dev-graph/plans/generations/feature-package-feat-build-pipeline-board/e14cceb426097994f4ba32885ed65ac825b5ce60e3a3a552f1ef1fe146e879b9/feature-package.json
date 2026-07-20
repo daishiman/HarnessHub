@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-build-pipeline-board",
+  "parent_feature": "feat-build-pipeline-board",
+  "source_feature_digest": "sha256:eeed295d50359e11ac8aee84800def3ad3399cee866ab5b4dc2712116c9a4441",
+  "task_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "task_spec_paths": [
+    "task-specs/phase-01-requirements.md",
+    "task-specs/phase-02-architecture.md",
+    "task-specs/phase-03-design-review.md",
+    "task-specs/phase-04-test-design.md",
+    "task-specs/phase-05-implementation.md",
+    "task-specs/phase-06-test-run.md",
+    "task-specs/phase-07-acceptance.md",
+    "task-specs/phase-08-refactoring-migration.md",
+    "task-specs/phase-09-quality-assurance.md",
+    "task-specs/phase-10-final-review.md",
+    "task-specs/phase-11-evidence.md",
+    "task-specs/phase-12-documentation-operations.md",
+    "task-specs/phase-13-release-deploy.md"
+  ],
+  "task_node_ids": [
+    "SYS-BUILD-PIPELINE-BOARD-P01",
+    "SYS-BUILD-PIPELINE-BOARD-P02",
+    "SYS-BUILD-PIPELINE-BOARD-P03",
+    "SYS-BUILD-PIPELINE-BOARD-P04",
+    "SYS-BUILD-PIPELINE-BOARD-P05",
+    "SYS-BUILD-PIPELINE-BOARD-P06",
+    "SYS-BUILD-PIPELINE-BOARD-P07",
+    "SYS-BUILD-PIPELINE-BOARD-P08",
+    "SYS-BUILD-PIPELINE-BOARD-P09",
+    "SYS-BUILD-PIPELINE-BOARD-P10",
+    "SYS-BUILD-PIPELINE-BOARD-P11",
+    "SYS-BUILD-PIPELINE-BOARD-P12",
+    "SYS-BUILD-PIPELINE-BOARD-P13"
+  ]
+}

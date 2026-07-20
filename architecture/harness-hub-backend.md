@@ -17,12 +17,12 @@ template_id: architecture
 template_version: 1.0.0
 confirmation_status: confirmed
 evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "290f63d1276b36e971f6e79e874e5b118c9737449162bf5459c55f2f50551737", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
-source_lineage: {"imported_at": "2026-07-18T08:10:00Z", "origin_kind": "system-spec-harness", "source_digest": "290f63d1276b36e971f6e79e874e5b118c9737449162bf5459c55f2f50551737", "source_path": "system-spec/backend.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
+confirmation_evidence: {"evaluated_digest": "f6ba21931374775143fb656c55c7689e8490662b56a19b170902c6ab565dd465", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
+source_lineage: {"imported_at": "2026-07-18T15:01:04Z", "origin_kind": "system-spec-harness", "source_digest": "f6ba21931374775143fb656c55c7689e8490662b56a19b170902c6ab565dd465", "source_path": "system-spec/backend.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
 created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-18T08:10:00Z
+updated_at: 2026-07-18T15:01:04Z
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure"]
+related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow"]
 resource_scope: ["architecture/harness-hub-backend.md"]
 purpose: REST + OpenAPI + zod 単一ソース・PublishRequest 状態機械・コード構造規約 (接続層/認証アダプタ隔離) の正本参照
 goal: qa-009/qa-010/qa-020 の確定要件に適合する backend 実装の指針を提供する
@@ -53,10 +53,10 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 
 ## 正本 (source of truth)
 
-- [system-spec/backend.md](../system-spec/backend.md) (sha256: `290f63d1276b36e9…`)
+- [system-spec/backend.md](../system-spec/backend.md) (sha256: `f6ba219313747751…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 取込日時: 2026-07-18T08:10:00Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-07-18T15:01:04Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -97,4 +97,3 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 ## Risks and verification
 
 正本章 (system-spec/backend.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
-

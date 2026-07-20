@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-19T14:18:12Z",
+  "generation_id": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-publisher-plugin",
+    "published_digest": "sha256:8fd4221cbc7fa8d2278014888d1d55be3db8401066964dd46d17bb2d75231199",
+    "receipt": ".dev-graph/plans/feature-package-feat-publisher-plugin/atomic-promotion-receipt.json"
+  },
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+  "evaluated_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+  "published_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/dev-graph-registration.json"
+}

@@ -1,0 +1,33 @@
+{
+  "canonical_digest": "sha256:6c488a42d91f6d71efff948f6392be3b93f93a84ed449ec9b87f1baeefb73901",
+  "feature_package_id": "feature-package/feat-dual-catalog-web",
+  "files": {
+    "feature-package.json": "d406f8c958e2fdb0706249576b016c732ba4f67e6eea765755cfe1eb931ebcbd",
+    "system-build-handoff.json": "eefa90323c924c4e17817fac3f66ba94199127b52a9fd7fcdc25380777c8dfb5",
+    "task-graph.json": "2ef00820e31f9cb1122667a70618c6de9171f4c28d56176cba9bf199e585c8db",
+    "task-specs/phase-01-requirements.md": "79366dbb40e386bc647f4258b788a38d7ae3a2b35fc85ec7b8ddedc588cf915e",
+    "task-specs/phase-02-architecture.md": "0cd5023b96911cb3de2f1c276b6866873153b39bcdb477bdbc0c0f90d489cf4c",
+    "task-specs/phase-03-design-review.md": "f58cf007c6961496d3e70a825f47e2d4f98b01d126d062141b9867c4dd042672",
+    "task-specs/phase-04-test-design.md": "e7f54627aee7ee1524d7809bba420baf76c16b32f1519a61211805f5a5e5af54",
+    "task-specs/phase-05-implementation.md": "6fa132bb67bdeb3bff19e1955f8b1df85b6533852121d9d46c3bb6f1b6f8e8c0",
+    "task-specs/phase-06-test-run.md": "ae5f5e1b6ec9983994f6971cf60feb3ae63f373dc2be505f2860983156f350c7",
+    "task-specs/phase-07-acceptance.md": "ab00c04cbb10e24e6018b762da214b9c4f6e45128c7bc66134ca7c49ecc22bc3",
+    "task-specs/phase-08-refactoring-migration.md": "c51c631096ff1f6620b6c47e9ab3d3736a0f5350eaab12bdf5b8495ad2d95abe",
+    "task-specs/phase-09-quality-assurance.md": "a933380c928e4893df09d16c4f7b0974195bca24c658d843f477e16e546a2c99",
+    "task-specs/phase-10-final-review.md": "c6087aa8d6f9c97971bdeff0ba0ee45f12bf8bb153daed941bf123f34e6c3c3b",
+    "task-specs/phase-11-evidence.md": "a30ab3dbfa678daa20091b306c689ccad914fa3f31ca1ab651e4830d27313814",
+    "task-specs/phase-12-documentation-operations.md": "3e4dedac2cbb801b5b76c4a1a4e14e08c771f675e42a253d0cba8a50d695b386",
+    "task-specs/phase-13-release-deploy.md": "9d0f2ba9e104df469f182a4f3facf3ab75b0d50c677c09c229ad65d67ea29925",
+    "workstream-inventory.json": "4c4e71e820b93578aaf5ebd263a692b6251e59c2d60705c9d8dc153d38ae0f37"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "eefa90323c924c4e17817fac3f66ba94199127b52a9fd7fcdc25380777c8dfb5",
+    "source_canonical_digest": "sha256:1f8dd43ff1083621c57c1a1bef53f5dea442fb9ead5a424b1e8bfabc4ae19064"
+  },
+  "parent_feature": "feat-dual-catalog-web",
+  "schema_version": "1.0.0"
+}

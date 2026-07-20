@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-docs-cms",
+  "feature_context_digest": "sha256:6e8ea8a7a1042002d0bb0b3ff2a2b3464ea4a45ba77ddea709580cc3bed03d34",
+  "purpose": "利用ガイド・FAQ 等のドキュメントを common (全テナント) / tenant (テナント限定) スコープで管理し (B7/I13)、S15 の閲覧/編集 UI と D5 pull 型 AI キューによる下書き生成を提供する",
+  "goal": "ドキュメントがスコープ規則 (tenant 分離 + common 共有) 下で閲覧・編集でき、Markdown が sanitize 済みで描画され (SEC7)、AI 下書きがキュー経由で生成される状態",
+  "scope_in": [
+    "Doc エンティティ (scope=common/tenant・Markdown 本文)",
+    "S15 一覧/閲覧/編集 (編集は admin)",
+    "Markdown レンダラ + エディタ共通部品の消費 (XSS sanitize)",
+    "AI 下書き生成 (D5 キュー)",
+    "doc 編集の監査 event (SEC6)"
+  ],
+  "scope_out": [
+    "外部公開サイト生成",
+    "バージョン管理 (Git 連携)"
+  ],
+  "acceptance": [
+    "tenant スコープ doc が他テナントから参照できない (分離テスト)",
+    "Markdown 描画で XSS が sanitize される (テスト付き)",
+    "編集操作が監査 event に記録される"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-docs-cms.context.json",
+      "exists": true,
+      "sha256": "6e8ea8a7a1042002d0bb0b3ff2a2b3464ea4a45ba77ddea709580cc3bed03d34",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation.",
+      "feature_id": "feat-docs-cms"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "74b1fc4aaa055285c35af8e7c1657272ccb2ab271cd55e4482f902a4de00248d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "tenant-scope-d4-doc-entity",
+      "summary": "Doc を含む全新規テーブルに tenant_id/workspace_id スコープ列を必須とする (row-level tenant scope)。Doc は scope=common (全テナント共有) / tenant (テナント限定) の値を持ち、tenant スコープ doc は他テナントから参照できないようアプリ層で強制する",
+      "source": "system-spec/00-requirements-definition.md D4; system-spec/database.md qa-024"
+    },
+    {
+      "id": "markdown-sanitize-sec7-doc",
+      "summary": "doc 本文などの Markdown は共通レンダラの sanitize で一括担保し、XSS を防ぐ",
+      "source": "system-spec/security.md qa-025 (SEC7)"
+    },
+    {
+      "id": "markdown-common-component-qa021-qa022",
+      "summary": "Markdown レンダラ + エディタ (XSS sanitize) は design system の共通部品として組込み、doc 機能はこれを消費するのみで独自実装を行わない。frontend 側は共通レンダラの sanitize 済み HTML のみを描画する",
+      "source": "system-spec/ui-ux.md qa-021; system-spec/frontend.md qa-022 (5)"
+    },
+    {
+      "id": "doc-edit-audit-sec6",
+      "summary": "doc 編集操作は SEC6 で追加確定された監査対象 (工程操作・係数変更・doc 編集・フィードバック status 変更・ユーザー管理操作) に含まれ、監査 event に記録される",
+      "source": "system-spec/security.md qa-025 (SEC6)"
+    },
+    {
+      "id": "ai-queue-pull-type-d5-doc-draft",
+      "summary": "doc の AI 下書き生成 (I13) は D5 確定の pull 型キュー: ジョブ登録 → Claude Code セッションが pull → 結果書戻しで完結し、サーバ側 AI 課金は発生しない",
+      "source": "system-spec/00-requirements-definition.md D5, I13; system-spec/backend.md qa-023 (B5, B7)"
+    },
+    {
+      "id": "ai-queue-authz-payload-secret-ban",
+      "summary": "AiJob (AI キュー) の pull/書戻しの認可は Device Flow token 保有者に限定し、job payload に secret を含めない",
+      "source": "system-spec/security.md qa-025 (SEC8)"
+    },
+    {
+      "id": "doc-edit-admin-only-qa021-sec2",
+      "summary": "S15 ドキュメントの一覧/閲覧/編集のうち編集操作は admin 限定とする。新規 API 群は認可単一ミドルウェア (deny-by-default) 配下で role×操作の許可表に従う",
+      "source": "system-spec/ui-ux.md qa-021 (S15); system-spec/security.md qa-025 (SEC2)"
+    },
+    {
+      "id": "b7-zod-single-source-authz-mw",
+      "summary": "ドキュメント CMS を含む新規 REST 資源群 (B1) は zod スキーマ単一ソースへ追加し、全て認可単一ミドルウェア (deny-by-default) 配下に置く。B7 でドキュメント CMS の common/tenant スコープが確定している",
+      "source": "system-spec/backend.md qa-023 (B1, B7)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + completeness evaluator PASS",
+    "notes_ja": "現行 feature context と全 architecture/spec lineage を repository bytes から SHA-256 再計算し、P01..P13 の current canonical baseline に固定した。",
+    "digest_recomputed_by": "run-system-dev-plan immutable-replan remediation 2026-07-19",
+    "status": "complete"
+  },
+  "extracted_at": "2026-07-19T12:00:00Z"
+}

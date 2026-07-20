@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-auth-tenancy",
+  "feature_context_digest": "sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5",
+  "purpose": "テナント別 OIDC (Auth.js) と role 4 種、全 API への Tenant/Workspace スコープ強制 (D4 row-level-scope)、Publisher 向け OAuth Device Flow を確立する",
+  "goal": "2 テナント同時稼働で認可の越境が分離テストにより 0 件と証明され、Device Flow で token 取得・失効が動作する状態",
+  "scope_in": [
+    "Auth.js マルチテナント OIDC 動的解決",
+    "role: provider-admin/workspace-admin/owner/member",
+    "認可の単一ミドルウェア集約",
+    "OAuth Device Flow + token 失効導線",
+    "テナント分離テスト"
+  ],
+  "scope_out": [
+    "承認キュー (Stage 2)",
+    "監査 UI (Stage 2)"
+  ],
+  "acceptance": [
+    "テナント越境アクセスが分離テストで 0 件",
+    "Device Flow の E2E (承認→token→失効) が成功する",
+    "Auth.js 依存が adapter 境界に隔離されている (D3 caveat)"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-auth-tenancy.context.json",
+      "feature_id": "feat-auth-tenancy",
+      "exists": true,
+      "sha256": "8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5",
+      "digest_status": "verified",
+      "digest_note": "team-lead から digest 値 (sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5) として提供され、.dev-graph/locks/system-dev-plan-lock.json を Read して feature_digest フィールド (同一値) と feature_id フィールド (feat-auth-tenancy) が完全一致することを確認した。本 agent は Read/Write/Glob/Grep/SendMessage 系のみ保有し sha256 を計算する exec ツールを持たないため、ファイル内容からの独立再計算はしていない。features/feat-auth-tenancy.md frontmatter の source_lineage は {source_plugin: dev-graph, source_version: null, source_path: specs/harness-hub-system-specification.md, source_digest: 0b9abd017b626ed25dd76cb2860a8a25dacd3a3ea6b6e8a4633220f7cd8dfad1}(feature 生成時点の要件正本 digest 主張。.context.json 自体の digest ではない)。main-loop による独立再計算を要する。 [main-loop 再計算 2026-07-18T00:46:27Z: 一致]"
+    },
+    {
+      "path": "architecture/harness-hub-security.md",
+      "exists": true,
+      "sha256": "985dfbdc0f806244aff44938fead5d032a291c6066d7e3f312d9603d6d82066f",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-security、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/security.md, source_digest: 30c3035180c916f7745831b8b1dc1b690ebc528cb8ca054001cfd1805a6387e6}。本文『正本 (source of truth)』節も同じ system-spec/security.md に対し sha256: `30c3035180c916f7…` (frontmatter と同一プレフィクスで整合。内部不整合なし)。system-spec/completeness-report.json を Read し verdict=PASS を直接確認した。wrapper 自体 (architecture/harness-hub-security.md というファイル自体) の sha256 は repo 内に記録されておらず、本 agent には計算手段 (exec ツール) がないため null/unresolved とする (frontmatter の source_digest は system-spec/security.md 側の値であり wrapper 自体の値ではないため転記しない)。main-loop による独立再計算を要する。 [main-loop 時点記録 2026-07-18T00:46:27Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中のため wrapper は世代混在。収束後の一括 reimport (issues/sys-audit-followups-20260717.md 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md にあり、wrapper digest は canonical gate 対象外]"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "63c7aa7ed05ea2818abf035db1cb5c565c4927b7d010cc977fb2d9abd4997c41",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-backend、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/backend.md, source_digest: 290f63d1276b36e971f6e79e874e5b118c9737449162bf5459c55f2f50551737}。本文『正本』節も同じ system-spec/backend.md に対し sha256: `290f63d1276b36e9…` (frontmatter と同一プレフィクスで整合)。直前の兄弟 run (feature-package-feat-domain-model-db/goal-spec.json) が記録した値 (frontmatter d79b66c458bc2d16a6661af8b547fee7cb111ff15bcdcb183693e84f192c7664 / 本文 01f7e189fa6f6d1a という内部不整合) から本 run の値へ変化しており、system-spec 側の並行再描画がこの run 時点で収束し内部不整合が解消されたことを示す。wrapper 自体の sha256 は計算手段がなく null/unresolved (frontmatter の source_digest は転記しない)。main-loop による独立再計算を要する。 [main-loop 時点記録 2026-07-18T00:46:27Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中のため wrapper は世代混在。収束後の一括 reimport (issues/sys-audit-followups-20260717.md 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md にあり、wrapper digest は canonical gate 対象外]"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "0b9abd017b626ed25dd76cb2860a8a25dacd3a3ea6b6e8a4633220f7cd8dfad1",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、confirmation_status=confirmed、evaluation_status=pass、evidence_ref=system-spec/completeness-report.json (verdict=PASS。本 agent が Read で直接確認済み。7 aspect 全て PASS。findings は severity=low/info のみ)。source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/00-requirements-definition.md, source_digest: 6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15}。本文『正本』節も同じ system-spec/00-requirements-definition.md に対し sha256: `6b24a06e4116a966…` (frontmatter と一致、内部不整合なし)。I7/I8/D3/D4/G4 は本 wrapper が指す正本 system-spec/00-requirements-definition.md を team-lead 指示どおり直接 Read し、U9 具体的にやりたいこと表 (I7/I8)・意思決定支援表 (D3/D4)・ゴール表 (G4) から confirmed 状態で確認した (wrapper 本文は正本節への参照のみで内容複製なし)。wrapper 自体の sha256 は計算手段がなく null/unresolved (frontmatter の source_digest は正本章側の値であり転記しない)。main-loop による独立再計算を要する。 [main-loop 時点記録 2026-07-18T00:46:27Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中のため wrapper は世代混在。収束後の一括 reimport (issues/sys-audit-followups-20260717.md 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md にあり、wrapper digest は canonical gate 対象外]"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "tenant-oidc-dynamic-resolution-authjs-d3-qa005",
+      "summary": "Auth.js (旧 NextAuth) + テナント別 OIDC を採用し、Tenant ごとに顧客既存 IdP (Google Workspace / Microsoft Entra ID) の OIDC 設定を動的に解決する。ログイン URL /{tenant_slug}/signin で tenant を先に確定し当該テナントの idp_connections のみを候補にする。issuer/aud 厳密一致・nonce/state 検証・PKCE S256 併用・email_verified=true のみ受理・識別子は idp_subject (UNIQUE(tenant_id, idp_subject))・JIT provisioning は role=member/status=active で自動昇格しない。Hub 独自のアカウント基盤・パスワード保存は作らない。",
+      "source": "system-spec/spec-state.json qa-005 (Hub Web/API の認証・認可方式: Auth.js + テナント別 OIDC 採用。Tenant ごとに顧客既存 IdP の OIDC 設定を登録し、Hub 独自のアカウント基盤・パスワード保存は作らない §10.2); qa-036 (OIDC 検証契約 T1 対策の詳細: issuer/aud 厳密一致・nonce/state・PKCE S256・tenant 束縛・email_verified=true のみ受理・識別子は idp_subject・JIT provisioning は自動昇格しない); system-spec/00-requirements-definition.md D3 (confirmed。選択肢 authjs-oidc 採用理由: テナントごとに顧客既存 IdP を登録でき Hub 独自アカウント基盤を作らない要件と整合); docs/backend-spec.md §3.2 (Web セッション: Auth.js + テナント別 OIDC → 署名付き JWT cookie。mockup のパスワードログイン画面は採用しない SEC1・D3 維持、IdP redirect へ置換)"
+    },
+    {
+      "id": "role4-authorization-matrix-single-middleware-deny-by-default-sec2",
+      "summary": "role は provider-admin/workspace-admin/owner/member の 4 種とし、実効 role を全順序 member<owner<workspace-admin<provider-admin の単一値として扱う単調な認可マトリクス (左から右へ許可が増えるだけ) を単一ミドルウェアで判定する (deny-by-default, SEC2)。全 API で Tenant/Workspace スコープを強制する。",
+      "source": "system-spec/spec-state.json qa-005 (role は provider-admin/workspace-admin/owner/member の 4 種。認可は全 API で Tenant/Workspace スコープを強制する); qa-036; qa-020 (security: qa-006 の deny-by-default = 全 API で Tenant/Workspace スコープ強制 D4 row-level-scope と分離テスト必須を維持し、認可判定を単一ミドルウェア層に集約する = 散在させない); docs/backend-spec.md §3.3 認可マトリクス (deny-by-default, SEC2。単一ミドルウェアで判定。この表は単調でなければならず、非単調な行を追加するとテスト T-1b が fail する。判定契約の正本は security-spec §3.5) — 具体的な role×リソースの許可表本文を含む"
+    },
+    {
+      "id": "device-flow-os-credential-token-revocation-qa008",
+      "summary": "Publisher/CLI/AI worker は OAuth Device Authorization Flow (RFC 8628 準拠) で認証し、短命 access token (15 分) + refresh token (90 日 rotation + 再利用検知) を OS の資格情報域 (macOS Keychain / Windows Credential Manager) に保存する。token の失効は Hub Web (Workspace 設定) から本人・管理者が実行できる導線を持ち、監査 event を記録する。",
+      "source": "system-spec/spec-state.json qa-008 (Publisher local session から Hub API を呼ぶ認証方式: OAuth Device Authorization Flow。access token は短命+refresh token 自動更新とし OS の資格情報域 [macOS Keychain / Windows Credential Manager] に保存。長命 secret のコピペを非エンジニアに求めない G1 整合。token の失効は Hub Web [Workspace 設定] から管理者・本人が実行できる); docs/backend-spec.md §3.2 数値契約 (device_code TTL 10 分 / user_code 8 文字 Crockford Base32・5 回失敗で denied / polling interval 5 秒 / access token 15 分 / refresh 90 日 rotation + 再利用検知) および §4.1 認証・Device Flow エンドポイント一覧 (POST /api/v1/device/code, /device/token, /device/approve, /api/v1/token/refresh, GET /api/v1/tokens, DELETE /api/v1/tokens/:id — 失効 [本人 or admin]・監査 event) および §3.3 認可マトリクス最終行 (token 失効: 本人✓/本人✓/✓/✓)"
+    },
+    {
+      "id": "auth-adapter-boundary-better-auth-migration-hedge-d3-qa020",
+      "summary": "Auth.js への依存は adapter 境界に閉じ、Auth.js が Better Auth 傘下入りを公式告知していることへの移行に備える (D3 caveat)。Auth.js のセキュリティ修正停止を Better Auth への移行トリガーとして明記する。",
+      "source": "system-spec/00-requirements-definition.md D3 (confirmed。注意事項: 『Auth.js は Better Auth 傘下入りが公式告知済み。実装着手前に Better Auth の移行ガイド成熟度を再確認し、Auth.js のセキュリティ修正停止を Better Auth への移行トリガーとして明記する』); system-spec/spec-state.json qa-020 (backend のコード構造規約: 認証アダプタの隔離。Auth.js への依存を adapter 境界に閉じ、Better Auth 移行 [D3 caveat] に備える); docs/backend-spec.md §1 コード構造規約 (qa-020: 認証アダプタ隔離 — Auth.js 依存を adapter 境界に閉じる); features/feat-auth-tenancy.md 受入 (『Auth.js 依存が adapter 境界に隔離されている [D3 caveat]』)"
+    },
+    {
+      "id": "tenant-workspace-row-level-scope-isolation-test-ci-d4",
+      "summary": "単一 DB + tenant_id/workspace_id スコープ列 + アプリ層強制の row-level-scope 方式でマルチテナント論理分離を実装する (D4)。全 API で Tenant/Workspace スコープを強制し、分離テストを CI 必須とする。revisit 条件はテナント数が 10 を超える、または分離テストの失敗が頻発した場合の DB-per-tenant 再評価。",
+      "source": "system-spec/00-requirements-definition.md D4 (confirmed。row-level-scope 採用理由: 個人運用 C1・費用ゼロ C2 の下で実装・運用が最も単純。revisit 条件: テナント数が 10 を超える、または分離テストの失敗が頻発した場合は Turso DB-per-tenant を再評価); system-spec/spec-state.json qa-006 (セキュリティ基盤方針: テナント分離 = 全 API で Tenant/Workspace スコープ強制 + 分離テスト必須); qa-020 (security 適用形として D4 row-level-scope と分離テスト必須を維持); docs/backend-spec.md §3.3 (deny-by-default・単一ミドルウェアで Tenant/Workspace スコープ強制 = D4); features/feat-auth-tenancy.md 受入 (『テナント越境アクセスが分離テストで 0 件』)"
+    },
+    {
+      "id": "no-hub-native-account-idp-delegation-i7",
+      "summary": "Hub 独自のアカウント基盤・パスワード保存は作らず、マルチ Workspace 論理分離と顧客既存 IdP/SSO への認証委譲を行う (I7)。mockup のパスワードログイン画面は採用せず IdP redirect へ置換する。",
+      "source": "system-spec/00-requirements-definition.md U9 具体的にやりたいこと表 I7 (『マルチ Workspace 論理分離と顧客既存 IdP / SSO への認証委譲 [Hub 独自アカウント基盤を作らない]』資するゴール G4); system-spec/spec-state.json qa-005 (Hub 独自のアカウント基盤・パスワード保存は作らない §10.2); docs/backend-spec.md §3.2 (mockup のパスワードログイン画面は採用しない SEC1・D3 維持。IdP redirect へ置換)"
+    },
+    {
+      "id": "session-jwt-staleness-emergency-revocation-qa036",
+      "summary": "Web セッションは JWT (stateless) で maxAge 8 時間 / updateAge 15 分とし、role/status 変更の反映が最大 15 分遅延することを許容する。緊急失効 (退職・侵害) は session_revocations テーブル (テナント単位の最終失効時刻、KV/メモリキャッシュ TTL 60 秒) により即時とし、認可ミドルウェアが JWT.iat < revoked_at のトークンを拒否する。",
+      "source": "system-spec/spec-state.json qa-036 (session 数値: maxAge 8 時間・updateAge 15 分。失効の意味論: JWT は stateless のため role/status 変更の反映は最大 15 分遅延する。これを受容する代わりに Publisher/ingest token 失効は即時、緊急失効 [退職・侵害] は session_revocations テーブル [テナント単位の最終失効時刻・KV/メモリキャッシュ TTL 60 秒] により即時とし認可 MW が iat < revoked_at の JWT を拒否する); docs/backend-spec.md §2.2 session_revocations テーブル定義 (tenant_id PK, revoked_at。緊急失効のみ。認可 MW が JWT.iat < revoked_at を拒否する。KV/メモリキャッシュ [TTL 60 秒] 経由で参照し通常の DB 往復を発生させない security-spec §2.1) および §3.2 数値契約 (session maxAge 8h / updateAge 15 分 = role/status 変更の失効許容 15 分。緊急失効は session_revocations により即時 §2.2)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": false,
+    "digest_match_architecture_files": false,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + evaluator PASS (specs/harness-hub-system-specification.md frontmatter confirmation_status=confirmed / evaluation_status=pass。system-spec/completeness-report.json verdict=PASS を Read で直接確認、7 aspect 全て PASS で findings は severity=low/info のみ。正本 system-spec/00-requirements-definition.md は status=confirmed で I7/I8/D3/D4/G4 を直接確認。architecture/harness-hub-security.md と architecture/harness-hub-backend.md も frontmatter confirmation_status=confirmed / evaluation_status=pass。docs/backend-spec.md は frontmatter status=confirmed・qa_ref=[qa-031,qa-032,qa-033,qa-048] の詳細正本で【要確認】なしと明記)",
+    "architecture_refs_resolved": true,
+    "architecture_refs_resolved_note": "features/feat-auth-tenancy.context.json の architecture_refs (architecture/harness-hub-security.md, architecture/harness-hub-backend.md, specs/harness-hub-system-specification.md) は全て caller repository 内に実在し Read で内容確認済み (3 ファイルとも confirmation_status=confirmed / evaluation_status=pass)。",
+    "notes_ja": true,
+    "status": "complete",
+    "wrapper_self_digest_note": "architecture/harness-hub-{security,backend}.md および specs/harness-hub-system-specification.md はいずれも自身の sha256 を repo frontmatter に直接記録しておらず、本 agent (Read/Write/Glob/Grep/SendMessage のみ保有) には exec ツールがないため独立再計算していない。本 run では 3 ファイルとも frontmatter の source_digest と本文『正本』節の sha256 表記が一致しており内部不整合はない (直前の兄弟 run [feature-package-feat-domain-model-db] が backend/data wrapper に検出していた内部不整合は本 run 時点で解消している)。digest_match_specs_file / digest_match_architecture_files の false は『frontmatter の source_digest フィールド [正本章側の値] が wrapper 自体の sha256 と一致しない [構造的に別物]』ことを表し、内容不整合そのものを意味しない。全 3 wrapper とも main-loop による独立再計算・確認を要する。",
+    "spec_state_grounding_note": "team-lead 指示どおり system-spec/*.md 章本文への接地は行わず、system-spec/spec-state.json の qa_log (qa-005/qa-006/qa-008/qa-020/qa-036) + docs/backend-spec.md (§1/§2.2/§3.2/§3.3/§4.1) + system-spec/00-requirements-definition.md (D3/D4/I7/I8/G4) を quality_constraints の直接根拠として引用した。",
+    "feature_split_or_task_generation_performed": false,
+    "digest_recomputed_by": "main-loop (claude session 9ce54d7a, python3 hashlib, 2026-07-18T00:46:27Z)"
+  },
+  "extracted_at": "2026-07-18T08:30:00Z"
+}

@@ -1,0 +1,33 @@
+{
+  "canonical_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "feature_package_id": "feature-package/feat-tenant-data-retention",
+  "files": {
+    "feature-package.json": "c27459b3c13b0d25fb3df16557a2eb394baf36286166e6c21faaf314d9676ec5",
+    "system-build-handoff.json": "a8a4bbc5fed1048d920720da8ef8a00f4c644d863e299288b076936231aefb45",
+    "task-graph.json": "c26640f6d280c6178f48fcf2d378cc9075014741e7dbf79974294cec766e09c7",
+    "task-specs/phase-01-requirements.md": "0224ab7be54545442a74299d09f7b571e1d2466a211eaeac24d2d25cf349312c",
+    "task-specs/phase-02-architecture.md": "b44e12acd1d993aeb9b09ff7054d0d545130da11908fd9384dfc51c14d74789c",
+    "task-specs/phase-03-design-review.md": "3934f36a0c41bb57cbc9560f6ee24de48bd512fb2df5a089d3a8605919f13730",
+    "task-specs/phase-04-test-design.md": "72d8c554b3cf64f0319cdef1530129db1dd2e82a149aeff09c0b8c6475937653",
+    "task-specs/phase-05-implementation.md": "9a3abce9c5993ac3ed27350cd5a6d34850f2e307067f9b86ebcc6bc69b43d501",
+    "task-specs/phase-06-test-run.md": "c7d526b3ecd030500a50dd381fce0ce312981419ac54e1b706486e96ccc8c968",
+    "task-specs/phase-07-acceptance.md": "b9ac9622bf8053444efbe92abf87324648b5d5885237b3d50afce377f606a44a",
+    "task-specs/phase-08-refactoring-migration.md": "dbd74574bfa45bfe25b520caefa3180235e186ffffa604001932f09a03feec49",
+    "task-specs/phase-09-quality-assurance.md": "76c8571854676bdecfd33850507cca3e54dd8bf4f2e9547ee71f27fea2dac865",
+    "task-specs/phase-10-final-review.md": "9f8e7df2763a26d41fc08a5644f4fb32843834544f4202b78393c8c6bbb886ac",
+    "task-specs/phase-11-evidence.md": "55486aa6d1d01f1008104ae9922b345eca874f0991e96a6c69559f2497ed80f2",
+    "task-specs/phase-12-documentation-operations.md": "914207e0a83e2fee255374f4c9e659326c1c8a8874228a391b8e76ca1ab1bd36",
+    "task-specs/phase-13-release-deploy.md": "0ddc51d763ae089f35988ad5e53eb514f9eb366e9625905943e659b9ca10e8fc",
+    "workstream-inventory.json": "a28dfb5b358a37e8c2b2367b0fddb7d6648b4aaac8f7b7733eceadf48d44ee30"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "a8a4bbc5fed1048d920720da8ef8a00f4c644d863e299288b076936231aefb45",
+    "source_canonical_digest": "sha256:1d7e39f50d5d098a7bb080d7a7ae1ec172f38e0f685cecbf8d22482393cc65c2"
+  },
+  "parent_feature": "feat-tenant-data-retention",
+  "schema_version": "1.0.0"
+}

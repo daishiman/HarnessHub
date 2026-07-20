@@ -1,0 +1,174 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-tenant-data-retention",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文 (task-specs/phase-01..13) を精読し、goal-spec (purpose/goal/scope_in 5件/scope_out 3件/acceptance 3件/quality_constraints 6件) との矛盾は検出されなかった。P01 (task-specs/phase-01-requirements.md) は goal-spec の purpose/goal/scope_in 5件/scope_out 3件/acceptance 3件/quality_constraints 6件(id単位) を requirements-baseline.md へ確定転記する起点 task であると明記しており、P02-P13 は本ベースラインを踏襲する構成になっている。全 13 spec の『スコープ外』節を通読し、scope_out 3 件 (顧客業務システム接続 credential・WebApp runtime の保管/業務データを入力とする AI ジョブ実行ロジック/既存 users.salary・idp_connections.client_secret_enc の封筒暗号化) が一貫して継承され、他 feature 責務 (AI ジョブ実行ロジック=owner feat-hearing-intake/feat-build-pipeline-board、既存封筒暗号化=owner feat-auth-tenancy/feat-domain-model-db) を『owner=他feature』として明示的に除外しており、scope_in/scope_out への混入は確認されなかった。acceptance 3 件は P04 (テスト設計)→P06 (テスト実行)→P07 (受入判定・acceptance-record.md)→P10 (最終確認)→P11 (証跡集約) の経路で過不足なく写像され、quality_constraints 6 件 (c4-revision-tenant-data-retention-qa045-048-appr007等) は P01 (転記)→P02 (architecture decision確定)→P03 (レビュー)→P04 (テスト設計)→P05 (実装)→P06 (実行)→P08 (migration)→P09 (品質・セキュリティ保証)→P10 (最終レビューでid単位列挙)→P11 (証跡) まで一貫してトレース可能であった。goal-spec が『P02 で未確定・据置』と定めた 3 点 (encryption_keys.purpose enum 拡張/AAD-IV運用適用、tenant_data保管APIエンドポイント詳細設計、削除完全性テストID採番) について、P01 は『本 task はこれら3点を「未確定・P02で確定」の据置事項として明記するに留め、最終的な確定値を先取りして書かない』と明言しており、推測確定は行われていない。P02 は『これら5系統はいずれもP01が「未確定・P02で確定」として明記した事項であり、本taskはその確定作業自体を担う』と述べ、確定作業をP02自身の責務として明確に境界づけている。上流未解決事項が後続 phase で放置・先取りされるパターンは確認されなかった。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#前提条件 (Entry gate に goal-spec.json feature_context_digest 一致要求を明記。goal-spec の purpose/goal/scope_in 5件/scope_out 3件/acceptance 3件/quality_constraints 6件が本taskの成果物へ確定転記される対象であることを本文で確認)",
+        "task-specs/phase-01-requirements.md#背景 (P02で確定すべき3つの据置事項[encryption_keys.purpose enum拡張・API詳細設計・削除完全性テスト採番]を『未確定・P02で確定』の据置事項として明記するに留め、最終確定値を先取りしない旨を確認)",
+        "task-specs/phase-02-architecture.md#背景 (P01が引き継いだ3系統の据置事項の確定作業自体をP02が担うと明言し、確定値はP02成果物にのみ記載しP01を遡って書き換えないことを確認)",
+        "task-specs/phase-01-requirements.md#スコープ外 (全13 task spec の同節を通読し、scope_out 3件の一貫継承と他feature責務[feat-hearing-intake/feat-build-pipeline-board/feat-auth-tenancy/feat-domain-model-db]の owner明記のみ・混入0件を確認)",
+        "task-specs/phase-07-acceptance.md#目的 (acceptance 3件の受入判定手順とP04→P06→P07→P10→P11の経路)",
+        "task-specs/phase-10-final-review.md#背景 (quality_constraints 6件・acceptance 3件の最終突き合わせ、P02据置事項3点が実際に確定・実装・検証されたことの確認対象であることを明記)"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "validate-system-plan.py を本 agent が独立実行し exit0 (violations=[]) を確認した。validated_digest=sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92 は staging-manifest.json の canonical_digest および依頼指定値と一致した。feature-package.json task_count=13・phase_refs=P01..P13 (順序一致)・task_spec_paths正準13件一致、task-graph.json 13 node、workstream-inventory.json 13 task であり exact-13 が確認された。単一 skill への退化・水増しは無く、13 phase (要件/アーキテクチャ設計/独立設計レビュー/テストファースト設計/実装/テスト実行/受入/リファクタリング・マイグレーション/品質・セキュリティ・運用保証/独立最終レビュー/再現可能な証跡/文書化・runbook/リリース・デプロイ) はそれぞれ異なる責務・目的・背景・成果物 (requirements-baseline.md, architecture-decision-record.md, design-review-notes.md, test-design.md+テストスタブ, 実コード[schema/api/lib/cron], test-run-results.md, acceptance-record.md, migration+refactoring-migration-note.md, quality-assurance-report.md, final-review-record.md, evidence-summary.md, runbook.md, release-record.md) を持つことを全文読解で確認した。P08 (リファクタリング/マイグレーション) は『本feature は新規実装であり既存データのbackfillは発生しないが、既存共有インフラ(encryption_keysテーブル・R2バケット)への追加が既存のfeat-domain-model-db/feat-auth-tenancy/PackageRegistry運用と非互換にならないことの確認が本taskの中心的な責務』と具体的に読み替えられており空疎化は無い。P13 (リリース/デプロイ) は wrangler による Cloudflare Workers への実デプロイ・smoke test (upload/取得/削除API・R2使用量監視cron起動・テナント分離縮小確認)・encryption_keys DEK seed migration適用順序確認を伴う実質的なタスクであった。13 task 全ての Verification and evidence 節は同一の決定論ゲートコマンド (validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-tenant-data-retention) を参照している。",
+      "evidence": [
+        "gate:deterministic-validation#exact-13/violations=0 (本agentによる独立実行、exit0)",
+        "feature-package.json#task_count (13, phase_refs P01..P13順序一致, task_spec_paths正準13件一致, task_node_ids 13件一致)",
+        "task-graph.json#nodes (13件)",
+        "workstream-inventory.json#tasks (13件)",
+        "task-specs/phase-08-refactoring-migration.md#背景 (新規実装のため既存データbackfill非発生、既存共有インフラ[encryption_keysテーブル・R2バケット]への非破壊性確認という具体的な責務への読み替え理由を明記)",
+        "task-specs/phase-13-release-deploy.md#目的 (wranglerによる実デプロイ・smoke test・encryption_keys DEK seed migration適用順序確認を伴う実質タスクであることを確認)"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "feature_package_id=feature-package/feat-tenant-data-retention, parent_feature=feat-tenant-data-retention, repository_id=github:daishiman/HarnessHub が feature-package.json/workstream-inventory.json/task-graph.json/system-build-handoff.json (identity)/.dev-graph/config.json の全箇所で一致することを確認した。source_feature_digest (sha256:69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327) が feature-package.json/system-build-handoff.json (identity.source_feature_digest)/.dev-graph/locks/system-dev-plan-lock.json (feature_digest, feature_id=feat-tenant-data-retention, run_id=run-tenant-data-retention-20260719) の3箇所で一致し、本agentが features/feat-tenant-data-retention.context.json を shasum -a 256 で独立再計算し同値と完全一致することも確認した。canonical digest は (1) validate-system-plan.py 独立実行の validated_digest、(2) staging-manifest.json 記載の canonical_digest、(3) 本agent独自のPython再実装 (rel path + content の sha256 連結アルゴリズム) による再計算、(4) 依頼指定値、の4者が sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92 で完全一致し staleness なし。system-build-handoff.json#source_manifest.canonical_digest_before_handoff (sha256:0db43a7b1414c5300390923cc93c4b54929411dd6ab04a3c502bbfb1d31b5c2a) も本agent独自のPython再計算 (BASE_DIGEST_FILESのみを対象とする同アルゴリズム) で完全一致を確認した。staging-manifest.json#files に列挙された17ファイル全件について本agentがPythonのhashlib.sha256で個別再計算し一致を確認し、manifest files のキー集合が required set (feature-package.json/workstream-inventory.json/task-graph.json/13 task-specs/system-build-handoff.json) と過不足なく一致することも確認した。lineage 5件 (features/feat-tenant-data-retention.context.json, architecture/harness-hub-data.md, architecture/harness-hub-security.md, architecture/harness-hub-backend.md, architecture/harness-hub-infrastructure.md, specs/harness-hub-system-specification.md) のsha256も本agentがshasum -a 256で独立再計算し完全一致を確認した (うちarchitecture/harness-hub-backend.mdとspecs/harness-hub-system-specification.mdの2件は.dev-graph/plans/feature-package-feat-dual-catalog-web/goal-spec.json lineageの既存sha256とも一致し別runによるクロス検証にもなっている)。task id (workstream-inventory.json#tasks[].id) と graph node id (task-graph.json#nodes[].id) は SYS-TENANT-DATA-RETENTION-P01..P13 で1対1一致し、graph_node_registration.file_pathは全13件が tasks/feat-tenant-data-retention/sys-tenant-data-retention-p0X.md 形式 (parent_feature namespace配下) で統一されていた。workstream-inventory.json#repo_context.repo_identity も github:daishiman/HarnessHub で一致した。",
+      "evidence": [
+        "feature-package.json#source_feature_digest (system-build-handoff.json identity.source_feature_digest / .dev-graph/locks/system-dev-plan-lock.json feature_digest との3箇所一致を本agentが独立shasum再計算で確認)",
+        "gate:deterministic-validation#validated_digest (= staging-manifest.json canonical_digest = 依頼指定値 = 本agent独自再計算値の4者一致)",
+        "staging-manifest.json#files (17件、本agent hashlib.sha256独立再計算で全件一致、required exact set一致)",
+        "workstream-inventory.json#tasks (task-graph.json nodes[].id との1対1一致、graph_node_registration.file_pathのtasks/feat-tenant-data-retention/ namespace統一、repo_context.repo_identity一致を確認)",
+        "system-build-handoff.json#identity (repository_id/feature_id/feature_package_id/parent_feature/source_feature_digestの一致、source_manifest.canonical_digest_before_handoffの本agent独立再計算一致を確認)"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json#nodes の depends_on を全件確認した結果、P01: [] (起点)、P02: [P01]、P03: [P02]、P04: [P03]、P05: [P04]、P06: [P05]、P07: [P06]、P08: [P07]、P09: [P08]、P10: [P09]、P11: [P10]、P12: [P11]、P13: [P12] という単純な前方線形鎖であり、同一feature内の直前phaseのみを参照する前方edgeのみで構成され、後方参照・自己参照・分岐参照は無くacyclicであることを確認した。validate-system-plan.pyのnon-forward-edge/cross-feature-or-missing-edge検査も違反0件だった。cross-feature依存の混入は無く、feat-hub-foundation/feat-domain-model-db/feat-auth-tenancyへの依存はfeatures/feat-tenant-data-retention.md frontmatter (depends_on: [feat-hub-foundation, feat-domain-model-db, feat-auth-tenancy]) としてdev-graph正本レベルでのみ表現され、task-graph.json#nodes[].depends_onには一切コピーされていないことを確認した (13 task spec本文の『スコープ外』節でもfeat-hearing-intake/feat-build-pipeline-board/feat-auth-tenancy/feat-domain-model-db提供物・所有物を『owner=他feature』として言及するのみで、依存edgeとしては表現していない。特にP08[リファクタリング/マイグレーション]はencryption_keysテーブルがfeat-domain-model-db/feat-auth-tenancy所有の既存共有基盤であることを明記しつつも、これをtask-graph依存edgeではなく非破壊migrationという実装内容として扱っている)。",
+      "evidence": [
+        "task-graph.json#nodes (P01→[]、P02..P13は直前1件のみを参照する線形鎖、13件全て確認・acyclic)",
+        "gate:deterministic-validation#non-forward-edge,cross-feature-or-missing-edge (違反0件、本agent独立実行)",
+        "task-specs/phase-02-architecture.md#スコープ外 (feat-auth-tenancy/feat-domain-model-dbをownerとして言及するのみ、依存edgeとして表現せず)",
+        "task-specs/phase-08-refactoring-migration.md#背景 (encryption_keysテーブルがfeat-domain-model-db/feat-auth-tenancy所有の既存共有基盤であることを明記しつつ、task-graph依存edgeではなく非破壊migration実装として扱うことを確認)",
+        "task-specs/phase-13-release-deploy.md#スコープ外 (feat-hub-foundation/feat-domain-model-db/feat-auth-tenancy側の個別デプロイはそれぞれのfeature packageが所有すると明記、依存edgeとして表現せず)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-tenant-data-retention",
+        "--repo-root",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92\",\n  \"feature_package_id\": \"feature-package/feat-tenant-data-retention\",\n  \"parent_feature\": \"feat-tenant-data-retention\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "c27459b3c13b0d25fb3df16557a2eb394baf36286166e6c21faaf314d9676ec5"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "a68b48394fa980f4e80cf7be801d74148367d3b2a2f755d57e951b0416376c57"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "f0077c6683887b66ab8f2e6e36dd8b9c794f80faf2f89fe15211fc85966186fe"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "c26640f6d280c6178f48fcf2d378cc9075014741e7dbf79974294cec766e09c7"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "a5c23f86a9948ccc6fe69d0a303d51a44a2c369fa37bc3f1fd50ab3090aab21a"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "0188a2337e0cd548b910c36fb022fb6ad135bbf555d1bc04f346c59b76938d6d"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "5b7ddea07d0ea3825eefc4d3b013bbfecd7a748e42b3fdbb953de49deaa869d6"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "9acdae31e0e039f968b71a7ad0044e62f1f3a2fa9d7a252743d3d336d4fc6ed5"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "02abd403d4ca3a8ccbc59705cb897ef0823a41e701a644b9f17ed352183da914"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "1a4d46c88b5e5a964ef4adf93262b1f352d7f59d1ddf5b751cb354f9a4d8bc77"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "f2a8bcc0ec371b005bb70a5495fe2f200cddc23c52a90969766f1aa2506179cf"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "f480d580b2aa72d94e44d971512a7c61e82414879257097934a06045e91eb98d"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "90e9e79dfc0d879120a9a021edd1e480988678236b731d03a7005ce2d8d4911b"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "13a0c423ba4fd9dd3a4bf462baf928ae9ce50761c514def1ba16441eb07a4c4b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "a3fb251d7e69ba0c9ae8722c6ff2ae7df5fcf025796cbf9b8bc32f49e6530961"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "744edb59adc38c19aa1b22b403b7268346d204290eb28281b6d715194e16ca66"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "bb8112a0b03f3e3bf1d5042285344ebae873c52f57fb4882a52a4cd577bf3495"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "483dc1e266628bdd85b185ed02c97d6a0095e10053d2971270bb05cc1d1f9957"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 task spec 全文読解・validate-system-plan.py 独立実行 (exit0, violations=0)・staging-manifest.json#files 17件 + staging-manifest.json 自身の hashlib.sha256 独立再計算全件一致・canonical digest の独立 Python 再実装による再計算一致 (validator値/manifest値/依頼指定値/本agent再計算値の4者一致)・pre-handoff base digest (system-build-handoff.json#source_manifest.canonical_digest_before_handoff) の独立再計算一致・lineage digest 6件 (feature-context + architecture wrapper 4件 + spec wrapper1件) の独立 shasum -a 256 再計算一致・goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints が P01 requirements-baseline 起点タスクへ過不足なく転記される設計であることの確認・task-graph.json depends_on 13件の前方線形鎖確認 (acyclic)・feat-hub-foundation/feat-domain-model-db/feat-auth-tenancy/feat-hearing-intake/feat-build-pipeline-board 依存が dev-graph 正本 (features/feat-tenant-data-retention.md frontmatter) にのみ存在し task-graph.json へコピーされていないことの確認・quality_constraints 6件の全 phase 横断トレース・P02への据置事項3点(encryption_keys.purpose enum拡張、API詳細設計、削除完全性テスト採番)がP01で先取り確定されずP02自身の責務として境界づけられていることの確認・repository boundary (write_scope が docs/features/feat-tenant-data-retention/, packages/db/src/schema/tenant-data-objects.ts, packages/schemas/tenant-data/, apps/hub/src/app/api/v1/tenant-data/, apps/hub/src/lib/tenant-data/, apps/hub/src/lib/scheduled/r2-usage-monitor.ts, packages/db/src/__tests__/tenant-data/, packages/db/migrations/ に閉じ、他featureへの越境なし) の確認を実施した。blocking findings なし。",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json",
+        "task-graph.json",
+        "workstream-inventory.json",
+        "system-build-handoff.json"
+      ]
+    }
+  ]
+}

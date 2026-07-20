@@ -17,7 +17,7 @@
     "goal_fit": "PASS",
     "verdict": "PASS"
   },
-  "skill_dir_tree_sha": "65293f07b24ae7928f5397266f2f178825fc859e4c7471bf55fc26086ac4b865",
+  "skill_dir_tree_sha": "e0fd0749e69323d4b5c0f7238b822973ab9727069263ac5148f935cae7fc73a0",
   "transcript_sha256": "fd0546e954898adb2c3715d99fee79603bfad12a2fe66bea515822c5dedea8bf",
   "scenario_origin": "replay",
   "environment": {

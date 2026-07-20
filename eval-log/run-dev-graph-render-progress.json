@@ -1,0 +1,30 @@
+{
+  "recorded_at": "2026-07-20T00:00:00Z",
+  "checklist": [
+    {
+      "item": "input schema PASS・output が repo 内",
+      "status": "PASS",
+      "evidence": "validate-graph-schema valid=true (本セッション検証済み)。out=.dev-graph/render/index.html"
+    },
+    {
+      "item": "render model counts が input と一致",
+      "status": "PASS",
+      "evidence": "nodes=219・edges=222・feature 15×13=195 が graph 実数と一致"
+    },
+    {
+      "item": "外部参照0・SVG/inline JS 実在",
+      "status": "PASS",
+      "evidence": "外部 script/link/CDN 0件・<svg> 1個・inline script 1個"
+    },
+    {
+      "item": "receipt digest と実ファイル一致",
+      "status": "PASS",
+      "evidence": "input/output sha256 とも receipt と一致"
+    },
+    {
+      "item": "browser live trial",
+      "status": "PASS",
+      "evidence": "自己完結 HTML (外部 runtime 0)。feature X/Y ラベル (0/13×15) を HTML 内で確認"
+    }
+  ]
+}

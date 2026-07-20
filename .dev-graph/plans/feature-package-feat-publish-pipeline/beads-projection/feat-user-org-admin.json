@@ -1,0 +1,137 @@
+{
+ "feature": {
+  "graph_node_id": "feat-user-org-admin",
+  "title": "Studio: ユーザー管理・アカウント設定 (role 統合・係数設定・PII ガード)",
+  "description": "ユーザー管理 (S17) とアカウント設定 (S18) を提供し、role 管理 (qa-005 の 4 role と統合)・年収→時給換算の係数設定 (PII: admin 限定・API 非公開・export マスク = SEC4)・通知設定 (D6 Resend) を確立する (I14)"
+ },
+ "children": [
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P01",
+   "phase_ref": "P01",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [],
+   "title": "ユーザー管理・アカウント設定 要件ベースライン確定",
+   "description": "ユーザー管理・アカウント設定 要件ベースライン確定 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P02",
+   "phase_ref": "P02",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P01"
+   ],
+   "title": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計",
+   "description": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P03",
+   "phase_ref": "P03",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P02"
+   ],
+   "title": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認",
+   "description": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P04",
+   "phase_ref": "P04",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P03"
+   ],
+   "title": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計",
+   "description": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P05",
+   "phase_ref": "P05",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P04"
+   ],
+   "title": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続",
+   "description": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P06",
+   "phase_ref": "P06",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P05"
+   ],
+   "title": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録",
+   "description": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P07",
+   "phase_ref": "P07",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P06"
+   ],
+   "title": "受入 — goal-spec acceptance 3項目の確認",
+   "description": "受入 — goal-spec acceptance 3項目の確認 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P08",
+   "phase_ref": "P08",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P07"
+   ],
+   "title": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認",
+   "description": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P09",
+   "phase_ref": "P09",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P08"
+   ],
+   "title": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認",
+   "description": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P10",
+   "phase_ref": "P10",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P09"
+   ],
+   "title": "最終独立レビュー — feature全体のconfirmation前最終点検",
+   "description": "最終独立レビュー — feature全体のconfirmation前最終点検 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P11",
+   "phase_ref": "P11",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P10"
+   ],
+   "title": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約",
+   "description": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P12",
+   "phase_ref": "P12",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P11"
+   ],
+   "title": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化",
+   "description": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化 (dev-graph task projection)"
+  },
+  {
+   "graph_node_id": "SYS-USER-ORG-ADMIN-P13",
+   "phase_ref": "P13",
+   "parent_feature": "feat-user-org-admin",
+   "depends_on": [
+    "SYS-USER-ORG-ADMIN-P12"
+   ],
+   "title": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認",
+   "description": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認 (dev-graph task projection)"
+  }
+ ]
+}

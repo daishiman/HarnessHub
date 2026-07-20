@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-07-18T15:40:17Z",
+  "checklist": [
+    {
+      "item": "system_spec content root が caller repo 内で repository_id/common-dir と一致する",
+      "status": "PASS",
+      "evidence": "resolve-repo-context.py --mode write: repo_root と content_roots.repository が一致、repository_id=github:daishiman/HarnessHub、diagnostics 0"
+    },
+    {
+      "item": "system-spec-harness が version >=0.1.0 <1.0.0 と required 4 entry points を満たす",
+      "status": "PASS",
+      "evidence": "plugin version=0.1.0。run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator を確認"
+    },
+    {
+      "item": "elicit/条件付き doc-fetch/compile/evaluator が system-spec-harness Skill 経由だけで実行される",
+      "status": "PASS",
+      "evidence": "apply-spec-transition writer で qa-065/qa-066 を reopen→再確定、doc-fetch assembler で pnpm 11.15.0 を記録、compile-spec-doc.py で11章生成、fork evaluator 3監査で最終評価"
+    },
+    {
+      "item": "coverage/source-citation/evaluator gate が全て PASS である",
+      "status": "PASS",
+      "evidence": "coverage 54/54、source citation 17/17、knowledge graph 4 profile、compile 42 tests、prompt validators 18/18、canonical completeness report schema/aggregate が全て PASS"
+    },
+    {
+      "item": "C02 登録 node の source_lineage/confirmation/evaluator evidence/readiness が欠落0である",
+      "status": "PASS",
+      "evidence": "graph revision 16。system-spec-harness由来7ノードで source_digest==現ファイルsha256、confirmation_status=confirmed、evaluation_status=pass、evidence_ref=system-spec/completeness-report.json、readiness missing_sections=[]。7 wrapper と architecture projection を同期"
+    },
+    {
+      "item": "dev-graph 内に同等 elicitation/compile logic の複製が0件である",
+      "status": "PASS",
+      "evidence": "生成は system-spec-harness の正規 writer/compiler/evaluator、取込は run-dev-graph-node C02 だけを使用"
+    }
+  ]
+}
+

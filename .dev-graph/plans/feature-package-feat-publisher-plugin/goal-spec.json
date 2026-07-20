@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-publisher-plugin",
+  "feature_context_digest": "sha256:d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41",
+  "purpose": "作者が Claude Code / Codex から自己完結で publish できる操作面 (slash command + skill + スクリプト) を TypeScript で提供し、既存 Python 資産を挙動同値で移植する",
+  "goal": "作者環境 (macOS/Windows) から初回 publish が 15 分以内 (O4/H8) に完了する状態",
+  "scope_in": [
+    "package 収集 + manifest 補完",
+    "ローカル pre-check (Hub と検査ロジック共有)",
+    "Device Flow 認証 + OS 資格情報域保存",
+    "web_app 経路の wrangler スクリプト実行",
+    "Python 資産の挙動同値移植テスト"
+  ],
+  "scope_out": [
+    "Hub 側 API 実装",
+    "専用 desktop GUI (作らない: qa-007)"
+  ],
+  "acceptance": [
+    "macOS/Windows 両実機で publish E2E が成功する",
+    "pre-check と Hub 検査の判定が同値",
+    "初回 publish 15 分以内の実測記録"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-publisher-plugin.context.json",
+      "feature_id": "feat-publisher-plugin",
+      "exists": true,
+      "sha256": "d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41",
+      "digest_status": "verified",
+      "digest_note": "caller (team-lead) 提供値 sha256:d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41 (C09 resolve-project-context.py 検証済みと明示) と、.dev-graph/locks/system-dev-plan-lock.json の feature_digest フィールドが完全一致することを Read で確認した (2 つの独立出典によるクロス検証)。同ロックファイルの feature_id フィールドも feat-publisher-plugin で一致する。本 elicitor は Read/Write/Glob/Grep のみ保有し sha256 を計算する exec ツールを持たないため、ファイル内容からの独立再計算は行っていない (main-loop 等 exec 保有 agent による独立再計算を要する)。 [main-loop 追記 2026-07-19: shasum -a 256 で独立再計算し d75423be… と一致確認。]"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "f6ba21931374775143fb656c55c7689e8490662b56a19b170902c6ab565dd465",
+      "digest_status": "resolved",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-backend、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json (evaluated_digest=f6ba21931374775143fb656c55c7689e8490662b56a19b170902c6ab565dd465)、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/backend.md, source_digest: 同上}。system-spec/completeness-report.json を Read し verdict=PASS (foundation_trace/decision_guidance/matrix_coverage を含む全 aspect PASS) を直接確認した。上記 sha256 は正本 system-spec/backend.md 側の digest であり、wrapper ファイル (architecture/harness-hub-backend.md) 自体の sha256 は repo 内に記録がなく、本 agent には計算手段 (exec ツール) がないため wrapper 自体の値は unresolved とする。PublishRequest 状態機械共有・検査ロジック共有パッケージ (qa-010/qa-020) の根拠として参照。main-loop 等 exec 保有 agent による独立再計算を要する。 [main-loop 追記 2026-07-19: wrapper ファイル自体の sha256 を shasum -a 256 で独立再計算し wrapper_sha256 に記録。digest gap 解消。]",
+      "wrapper_sha256": "bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b"
+    },
+    {
+      "path": "architecture/harness-hub-security.md",
+      "exists": true,
+      "sha256": "cf1d1fbb63146f77a1885fbba762035ddadad6638cc405790274b7b5161beb07",
+      "digest_status": "resolved",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-security、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json (evaluated_digest=cf1d1fbb63146f77a1885fbba762035ddadad6638cc405790274b7b5161beb07)、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/security.md, source_digest: 同上} (併せて system-spec/auth.md も scope_in に含む、正本節に sha256 先頭が表示: 8735c8860019ecb8…)。system-spec/completeness-report.json を Read し verdict=PASS を直接確認した。上記 sha256 は正本 system-spec/security.md 側の digest であり、wrapper ファイル自体の sha256 は repo 内に記録がなく本 agent には計算手段がないため unresolved とする。Device Flow 認証 + OS 資格情報域保存 (qa-008/qa-041) の根拠として参照。main-loop 等 exec 保有 agent による独立再計算を要する。 [main-loop 追記 2026-07-19: wrapper ファイル自体の sha256 を shasum -a 256 で独立再計算し wrapper_sha256 に記録。digest gap 解消。]",
+      "wrapper_sha256": "5af5237572ae6fe9d661ad09ee074377967c6f9d276779e2105645cd89d51605"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15",
+      "digest_status": "resolved",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、frontmatter confirmation_status=confirmed、evaluation_status=pass、confirmation_evidence.evidence_ref=system-spec/completeness-report.json (evaluated_digest=6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15)、source_lineage={source_plugin: system-spec-harness, source_version: 0.1.0, source_path: system-spec/00-requirements-definition.md, source_digest: 同上}。system-spec/completeness-report.json を Read し verdict=PASS (foundation_trace: U1-U9 全確定・decision_guidance: D1-D6 全確定・matrix_coverage 両モード exit0) を直接確認した。正本 system-spec/00-requirements-definition.md (frontmatter status=confirmed) を直接 Read し、I5 (wrangler CLI スクリプト実行)・I9 (Stage 0 technical gate)・U7 スコープ・U8 制約 C1-C4 を confirmed 状態で確認した。system-spec/spec-state.json の qa-003/qa-007/qa-008/qa-010/qa-020/qa-039/qa-041/qa-043/qa-044 も Read で直接確認した。上記 sha256 は正本 system-spec/00-requirements-definition.md 側の digest であり wrapper 自体の sha256 は repo 内に記録がなく本 agent には計算手段がないため unresolved とする。main-loop 等 exec 保有 agent による独立再計算を要する。 [main-loop 追記 2026-07-19: wrapper ファイル自体の sha256 を shasum -a 256 で独立再計算し wrapper_sha256 に記録。digest gap 解消。]",
+      "wrapper_sha256": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "publisher-typescript-unification-python-parity-migration-qa010-c3",
+      "summary": "作者側 Publisher の実装形態は TypeScript 統一。Publisher core は TypeScript (Node + pnpm) で新規実装し、Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。責務は package 収集・manifest 補完・ローカル pre-check・Hub API 呼出 (Device Flow 認証)・target=web_app の wrangler CLI スクリプト実行と結果報告・URL 登録。既存 Python 資産 (harness-creator の package check / package contract / marketplace catalog) を仕様の正本 (移植元) として参照し、挙動同値性をテストで担保して TypeScript へ移植する (C3 整合)。",
+      "source": "system-spec/spec-state.json qa-010 (「作者側 Publisher の実装形態は? … 既存 Python 資産 [harness-creator の package check / package contract / marketplace catalog] は仕様の正本 [移植元] として参照し、挙動同値性をテストで担保して TypeScript へ移植する [C3整合]」); system-spec/00-requirements-definition.md U8 制約 C3 (「既存資産再利用: harness-creator / package contract / package check / marketplace catalog / version・cache 処理 / review workflow を Publisher 内部の quality engine として再利用する [§15]」); features/feat-publisher-plugin.context.json purpose および scope_in (「Python 資産の挙動同値移植テスト」)"
+    },
+    {
+      "id": "device-flow-auth-os-credential-storage-qa008-qa041",
+      "summary": "Publisher (作者 local session) から Hub API への認証は OAuth Device Authorization Flow (RFC 8628) を採用する。device_code TTL 10 分・SHA-256 ハッシュのみ DB 保存、access token 15 分 (短命 JWT・サーバ非保存)・refresh token 90 日 rotation 必須・再利用検知で同一 family 全失効 + 監査 event + 通知。token は OS の資格情報域 (macOS Keychain / Windows Credential Manager) にのみ保存し、平文ファイル・環境変数・リポジトリへの保存を禁止する (長命 secret のコピペを非エンジニアに求めない = G1 整合)。scope は publish:write / metrics:write / feedback:write / aijob:process の 4 種の最小権限とし、失効は Hub Web から本人・admin が即時実行できる。",
+      "source": "system-spec/spec-state.json qa-008 (「Publisher [作者 local session] から Hub API を呼ぶ認証方式は? … OAuth Device Authorization Flow を採用。… OS の資格情報域 [macOS Keychain / Windows Credential Manager] に保存する。長命 secret のコピペを非エンジニアに求めない [G1整合]」); qa-041 (Device Flow 数値契約: device_code TTL 10分・user_code 8文字・access token 15分・refresh token 90日 rotation・再利用検知で family 全失効・保存先=OS資格情報域のみ・scope最小権限4種・失効導線=Hub Web); features/feat-publisher-plugin.context.json scope_in (「Device Flow 認証 + OS 資格情報域保存」)"
+    },
+    {
+      "id": "inspection-pipeline-shared-no-duplicate-impl-qa010-qa020",
+      "summary": "検査ロジック (pre-check) は Hub 側 (Workers=JS) と共有し二重実装を回避する純関数の共有パッケージ (packages/inspection) として実装する。Publisher のローカル pre-check と Hub の公式検査は同一パッケージを参照し、判定 (Green/Yellow/Red) が同値になるようにテストで担保する。",
+      "source": "system-spec/spec-state.json qa-010 (「検査ロジックは Hub 側 [Workers=JS] と共有し二重実装を回避する」); qa-020 (「検査 pipeline の純関数化: Publisher と Hub で検査ロジックを共有パッケージ化、qa-010 の挙動同値移植をテストで担保」); features/feat-publisher-plugin.context.json scope_in (「ローカル pre-check [Hub と検査ロジック共有]」) および acceptance (「pre-check と Hub 検査の判定が同値」)"
+    },
+    {
+      "id": "web-app-egress-wrangler-cli-script-execution-i5-qa003-qa043",
+      "summary": "target=web_app の出口は作者 local session での wrangler CLI スクリプト実行とし、Hub は URL 登録・公開範囲検査・health 確認のみを担う。デプロイツールは wrangler CLI (Cloudflare Workers)。",
+      "source": "system-spec/00-requirements-definition.md I5 (「Web App 出口: 作者 local session で Publisher が wrangler CLI をスクリプト実行し、Hub は URL 登録・公開範囲検査・health 確認のみ担う」serves G3) および U7 スコープ in (「Web App 出口 [作者 local session での wrangler CLI スクリプト実行 + Hub への URL・release 登録]」); system-spec/spec-state.json qa-003 (デプロイは wrangler CLI); qa-043 (infrastructure.desktop 正本「target=web_app の出口は作者 local session での wrangler CLI スクリプト実行 [Hub は URL 登録・公開範囲検査・health 確認のみ]」); features/feat-publisher-plugin.context.json scope_in (「web_app 経路の wrangler スクリプト実行」)"
+    },
+    {
+      "id": "no-dedicated-desktop-gui-qa007",
+      "summary": "作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする。",
+      "source": "system-spec/spec-state.json qa-007 (「作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin [slash command + skill + スクリプト] を Publisher の操作面とする [§5.1: Web に会話型 Creator を作らない]」); features/feat-publisher-plugin.context.json scope_out (「専用 desktop GUI (作らない: qa-007)」)"
+    },
+    {
+      "id": "hub-api-implementation-out-of-scope-depends-on-feat-publish-pipeline",
+      "summary": "Hub 側 API 実装は本 feature のスコープ外とし、feat-publish-pipeline (PublishRequest 状態機械・検査 pipeline サーバ側実装・R2/Catalog pointer atomic 更新) の責務とする。本 feature は同 feature へ依存する。",
+      "source": "features/feat-publisher-plugin.context.json scope_out (「Hub 側 API 実装」); features/feat-publisher-plugin.md 機能間依存 (「feat-publish-pipeline」) および frontmatter depends_on: [\"feat-publish-pipeline\"]"
+    },
+    {
+      "id": "initial-publish-15min-target-o4-h8",
+      "summary": "作者環境 (macOS/Windows) から初回 publish が 15 分以内 (定量目標 O4、仮説 H8) に完了する状態を到達ゴールとする。",
+      "source": "system-spec/00-requirements-definition.md qa-013 (定量目標「O4: H8 初回 publish 15 分以内」を全て選択); features/feat-publisher-plugin.context.json goal (「作者環境 [macOS/Windows] から初回 publish が 15 分以内 [O4/H8] に完了する状態」) および acceptance (「初回 publish 15 分以内の実測記録」)"
+    },
+    {
+      "id": "author-toolchain-macos-primary-windows-secondary-same-pnpm-script-qa043",
+      "summary": "作者/提供者環境は macOS 主・Windows 従とし、Claude Code + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI を用いる。両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)。",
+      "source": "system-spec/spec-state.json qa-043 (infrastructure.desktop 正本、ツールチェーン節・qa-039 該当部分の集約確定: 「作者/提供者環境は macOS 主・Windows 従で、Claude Code + pnpm [corepack 経由・他パッケージマネージャ禁止] + git + wrangler CLI。両 OS で同一の pnpm script が動作すること」); features/feat-publisher-plugin.context.json acceptance (「macOS/Windows 両実機で publish E2E が成功する」)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "id_match_note": "features/feat-publisher-plugin.context.json の graph_node_id、features/feat-publisher-plugin.md frontmatter の graph_node_id、.dev-graph/locks/system-dev-plan-lock.json の feature_id が全て feat-publisher-plugin で一致する。--feature-id 引数 (feat-publisher-plugin) とも一致する。",
+    "context_match": true,
+    "context_match_note": "features/feat-publisher-plugin.md frontmatter の purpose / goal / scope_in / scope_out / acceptance と features/feat-publisher-plugin.context.json の同フィールドを逐語比較し完全一致を確認した。frontmatter の architecture_refs は graph_node_id 形式 ([\"arch-harness-hub-backend\", \"arch-harness-hub-security\"]) + 本文中『要件正本: [spec-harness-hub-requirements]』リンクで、context.json の repo-relative path 形式 (architecture/harness-hub-backend.md, architecture/harness-hub-security.md, specs/harness-hub-system-specification.md) と同一 3 ファイルを指しており矛盾しない。",
+    "feature_context_digest_verified": true,
+    "feature_context_digest_verified_note": "caller (team-lead) 提供の feature_context_digest (sha256:d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41) と .dev-graph/locks/system-dev-plan-lock.json の feature_digest フィールドが完全一致 (2 つの独立出典によるクロス検証)。本 agent は exec ツールを持たないため独立再計算はしていない。",
+    "system_spec_source_status": "confirmed + evaluator PASS (specs/harness-hub-system-specification.md frontmatter confirmation_status=confirmed / evaluation_status=pass。system-spec/completeness-report.json verdict=PASS を Read で直接確認、foundation_trace/decision_guidance/matrix_coverage を含む全 aspect PASS。正本 system-spec/00-requirements-definition.md は frontmatter status=confirmed で I5・I9・U7・U8[C1-C4]・qa-003・qa-007・qa-008・qa-010・qa-020・qa-039・qa-041・qa-043・qa-044 を直接確認。architecture/harness-hub-backend.md・architecture/harness-hub-security.md も frontmatter confirmation_status=confirmed / evaluation_status=pass)",
+    "architecture_refs_resolved": true,
+    "architecture_refs_resolved_note": "features/feat-publisher-plugin.context.json の architecture_refs (architecture/harness-hub-backend.md, architecture/harness-hub-security.md, specs/harness-hub-system-specification.md) は全て caller repository 内に実在し Read で内容確認済み (3 ファイルとも confirmation_status=confirmed / evaluation_status=pass)。絶対 path・traversal は含まれない。",
+    "digest_recomputation_capability": false,
+    "digest_recomputation_capability_note": "本 agent (system-dev-plan-elicitor 相当、fork context) は Read/Write/Glob/Grep のみ保有し sha256 を計算する exec ツールを持たない。feature_context_digest は caller 提供値と .dev-graph/locks/system-dev-plan-lock.json feature_digest の一致によりクロス検証したが、architecture_refs 3 ファイルの wrapper 自体の sha256 は repo 内に記録がなく本 agent には計算手段がないため digest_status=unresolved (wrapper 自体) のまま記録した。lineage に記録した sha256 は各 wrapper frontmatter が引用する正本 (system-spec/*.md) 側の digest である。digest_status=resolved (実計算値) が必須要件である場合、main-loop など exec/hashlib ツールを保有する agent による独立再計算が必要。 [main-loop 追記 2026-07-19: exec 保有の main loop が wrapper 3 ファイルと feature-context の sha256 を独立再計算し、lineage の wrapper_sha256 へ記録した。]",
+    "notes_ja": true,
+    "status": "complete",
+    "feature_split_or_task_generation_performed": false
+  },
+  "extracted_at": "2026-07-19T00:00:00Z"
+}

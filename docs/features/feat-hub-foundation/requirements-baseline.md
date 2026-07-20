@@ -1,5 +1,6 @@
 ---
 status: confirmed
+layer: feature-design
 task: SYS-HUB-FOUNDATION-P01
 parent_feature: feat-hub-foundation
 feature_package_id: feature-package/feat-hub-foundation
@@ -11,6 +12,8 @@ architecture_refs: [arch-harness-hub-infrastructure, arch-harness-hub-frontend]
 # feat-hub-foundation 要件ベースライン
 
 > **位置づけ**: P01 (Hub 基盤 要件ベースライン確定) の成果物。promoted goal-spec の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を**確定転記**した baseline であり、P02 以降の全 task はこの文書を唯一の合意事項として参照する。転記元との相違が判明した場合は本文書を修正せず goal-spec 側の再確定を dev-graph へ差し戻す (rollback 規約)。
+
+> **構築順オーバーレイ (baseline 外)**: **P0 技術基盤**。認証と P1/P2 を載せる最小 Worker/DB/CI/共通 shell だけを先行し、dashboard など低優先 UI は作らない。正本: [system-design-overview.md](../../system-design-overview.md) §3 / [README.md](../README.md)。
 
 ## 1. 目的 (purpose)
 

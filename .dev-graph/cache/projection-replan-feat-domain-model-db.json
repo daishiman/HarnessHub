@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+  "feature": {
+    "graph_node_id": "feat-domain-model-db",
+    "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
+    "description": "Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメインモデルを Drizzle スキーマとして確立し、D1 退避経路 (D2 ヘッジ) を保つ接続層を構築する\n\n全エンティティの CRUD が接続層越しに動作し、R2 immutable PackageRegistry と日次 export が稼働する状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P01",
+      "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
+      "description": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P02",
+      "title": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
+      "description": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P03",
+      "title": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
+      "description": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P04",
+      "title": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
+      "description": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P05",
+      "title": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
+      "description": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P06",
+      "title": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
+      "description": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P08",
+      "title": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
+      "description": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P09",
+      "title": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
+      "description": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P10",
+      "title": "最終独立レビュー — quality_constraints 10 件の充足判定",
+      "description": "最終独立レビュー — quality_constraints 10 件の充足判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P11",
+      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+      "description": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P12",
+      "title": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
+      "description": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P13",
+      "parent_feature": "feat-domain-model-db",
+      "phase_ref": "P13",
+      "title": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
+      "description": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOMAIN-MODEL-DB-P12"
+      ]
+    }
+  ]
+}

@@ -1,50 +1,50 @@
 ---
-graph_node_id: feat-publisher-plugin
-artifact_kind: feature
+graph_node_id: "feat-publisher-plugin"
+artifact_kind: "feature"
 artifact_subtypes: []
-title: Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)
-project_id: harness-hub
-domain: backend
-status: draft
-priority: high
+project_id: "harness-hub"
+domain: "backend"
+tags: ["macro-feature","stage-1","backend"]
+priority: "high"
 start_date: null
 target_date: null
-iteration: Stage 1
+iteration: "Stage 1"
+title: "Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)"
 owners: ["daishiman"]
-tags: ["macro-feature", "stage-1", "backend"]
-file_path: features/feat-publisher-plugin.md
-template_id: feature
-template_version: 1.0.0
-confirmation_status: draft
-evaluation_status: pending
-confirmation_evidence: {"evaluator": null, "evidence_ref": null, "evaluated_digest": null}
-source_lineage: {"origin_kind": "generated", "source_plugin": "dev-graph", "source_path": "specs/harness-hub-system-specification.md", "source_version": null, "source_digest": null, "imported_at": "2026-07-17T00:38:30Z"}
-created_at: 2026-07-17T00:38:30Z
-updated_at: 2026-07-17T00:38:30Z
-depends_on: ["feat-publish-pipeline"]
+created_at: "2026-07-17T00:38:30Z"
+updated_at: "2026-07-19T14:18:12Z"
+status: "active"
+depends_on: ["feat-publish-pipeline","feat-stage0-distribution-gate"]
 related_nodes: []
 resource_scope: ["features/feat-publisher-plugin.md"]
-purpose: 作者が Claude Code / Codex から自己完結で publish できる操作面 (slash command + skill + スクリプト) を TypeScript で提供し、既存 Python 資産を挙動同値で移植する
-goal: 作者環境 (macOS/Windows) から初回 publish が 15 分以内 (O4/H8) に完了する状態
-scope_in: ["package 収集 + manifest 補完", "ローカル pre-check (Hub と検査ロジック共有)", "Device Flow 認証 + OS 資格情報域保存", "web_app 経路の wrangler スクリプト実行", "Python 資産の挙動同値移植テスト"]
-scope_out: ["Hub 側 API 実装", "専用 desktop GUI (作らない: qa-007)"]
-acceptance: ["macOS/Windows 両実機で publish E2E が成功する", "pre-check と Hub 検査の判定が同値", "初回 publish 15 分以内の実測記録"]
-architecture_refs: ["arch-harness-hub-backend", "arch-harness-hub-security"]
+purpose: "作者が Claude Code / Codex から自己完結で publish できる操作面 (slash command + skill + スクリプト) を TypeScript で提供し、既存 Python 資産を挙動同値で移植する"
+goal: "作者環境 (macOS/Windows) から初回 publish が 15 分以内 (O4/H8) に完了する状態"
+scope_in: ["package 収集 + manifest 補完","ローカル pre-check (Hub と検査ロジック共有)","Device Flow 認証 + OS 資格情報域保存","web_app 経路の wrangler スクリプト実行","Python 資産の挙動同値移植テスト"]
+scope_out: ["Hub 側 API 実装","専用 desktop GUI (作らない: qa-007)"]
+acceptance: ["macOS/Windows 両実機で publish E2E が成功する","pre-check と Hub 検査の判定が同値","初回 publish 15 分以内の実測記録"]
+architecture_refs: ["arch-harness-hub-backend","arch-harness-hub-security"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
+file_path: "features/feat-publisher-plugin.md"
+template_id: "feature"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
-classification_reason: C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)
-classification_candidates: [{"artifact_kind": "feature", "confidence": 0.9, "candidate_path": "features/feat-publisher-plugin.md"}]
-tracker_binding: beads
-beads_linkage: null
-github_publication: {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null}
+classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
+classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-publisher-plugin.md","confidence":0.9}]
 issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: {"bd_issue_id":"HarnessHub-zdh","linked_at":"2026-07-19T14:18:16Z","sync_state":"linked"}
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"policy": "manual", "status": "open", "source": null, "completed_at": null, "reconciled_at": null, "evidence_refs": []}
-implementation_readiness: {"status": "incomplete", "missing_sections": ["13-task package 未生成 (system-dev-planner 待ち)"], "checked_at": "2026-07-17T00:38:30Z"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
 # Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)

@@ -213,7 +213,7 @@
       },
       {
         "event": "PreToolUse",
-        "matcher": "Write|Edit|Bash",
+        "matcher": "Write|Edit|MultiEdit|Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py\"",
         "from_plugin": "system-spec-harness"
       },
@@ -533,7 +533,7 @@
         ]
       },
       {
-        "matcher": "Write|Edit|Bash",
+        "matcher": "Write|Edit|MultiEdit|Bash",
         "hooks": [
           {
             "type": "command",

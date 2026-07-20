@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-status",
-    "skill_md_sha256": "553b58f43ebf0a15ed0f7dd1ff5225c16fee948f75a122382577717c708666fa"
+    "skill_md_sha256": "2cc7359b79195da6c920f25d56416c7b666a2a8b72fd1f2c7c30b3211a7697d7"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "audit-node-status-20260720",
+  "reviewed_at": "2026-07-20",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -24,5 +24,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "ref-skill-design-rubric v1.3.0 の kind=skill rule で genuine 採点した。FM-001(prefix+kebab len<=60)/FM-002(2 trigger '〜たいとき'句点終端)/FM-003(trigger 数=2)/FM-004(内部動詞なし)/FM-005(『検索』動詞相当で開始)/BD-001(Purpose & Output Contract)/BD-002(Gotchas)/BD-003(body 約75行<=300)/NM-001(basename==name)/PD-001(body<=100)/PD-002(冒頭30行に Purpose 見出し+『推測せず/緩めず/呼び出さない』禁則) が全 PASS。KL-001..005 は knowledge/ 不在で skip=PASS。high severity 違反 0 件のため PASS。body 全文 (sha256 553b58f43ebf0a15ed0f7dd1ff5225c16fee948f75a122382577717c708666fa) を単一責務・命名・境界・出力契約・SSOT 観点で確認済み。"
+  "notes": "独立監査で現SKILL.md (sha256 2cc7359b...) をrubric観点で再確認。命名、検索/表示の単一責務、eval-logだけを例外とする出力境界、共有lock/WAL/containment受入条件に重大違反0件。PASS。"
 }

@@ -1,0 +1,1207 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+  "promotion_receipt": ".dev-graph/plans/feature-package-feat-tenant-data-retention/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-tenant-data-retention",
+  "parent_feature": "feat-tenant-data-retention",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-TENANT-DATA-RETENTION-P01": "beads",
+    "SYS-TENANT-DATA-RETENTION-P02": "beads",
+    "SYS-TENANT-DATA-RETENTION-P03": "beads",
+    "SYS-TENANT-DATA-RETENTION-P04": "beads",
+    "SYS-TENANT-DATA-RETENTION-P05": "beads",
+    "SYS-TENANT-DATA-RETENTION-P06": "beads",
+    "SYS-TENANT-DATA-RETENTION-P07": "beads",
+    "SYS-TENANT-DATA-RETENTION-P08": "beads",
+    "SYS-TENANT-DATA-RETENTION-P09": "beads",
+    "SYS-TENANT-DATA-RETENTION-P10": "beads",
+    "SYS-TENANT-DATA-RETENTION-P11": "beads",
+    "SYS-TENANT-DATA-RETENTION-P12": "beads",
+    "SYS-TENANT-DATA-RETENTION-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "要件ベースライン確定 — tenant_data_objects CRUD API・R2封筒暗号化保管・即時完全削除・R2使用量監視の要件確定",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "documentation",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "goal-spec.json の purpose/goal/scope_in 5件/scope_out 3件/acceptance 3件/quality_constraints 6件(id単位)を要件ベースラインとして確定するP01要件タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — encryption_keys.purpose拡張・R2 tenant prefix分離・API詳細設計・R2使用量監視cron拡張・削除完全性テスト採番の決定",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "backend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "backend",
+        "architecture-decision"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P01"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "qa-046が次回security深掘り(feature P02前)へ据え置いたencryption_keys.purpose enum拡張(tenant_data追加)とAAD/IV運用適用、qa-048が据え置いたtenant_data保管APIのエンドポイント詳細設計(パス・zodスキーマ・rate limit)、R2 tenant prefix分離設計、qa-045のR2使用量監視cron拡張設計、削除完全性テスト(T番号未採番)の採番・ケース定義の5系統を確定するP02アーキテクチャ設計タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — encryption_keys拡張・R2 prefix分離・API契約・削除完全性テスト採番の妥当性確認",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P02"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/design-review-notes.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "P02で確定したencryption_keys.purpose拡張・R2 prefix分離・API詳細設計・削除完全性テスト採番の5系統architecture decisionを、実装着手前に独立観点で妥当性確認するP03設計レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートのテスト設計",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P03"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/test-design.md",
+        "packages/db/src/__tests__/tenant-data/"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "acceptance 3件(テナント分離・削除完全性・暗号化検証)とquality_constraints 6件に対応するテナント分離テスト・削除完全性テスト(R2実体/DB行/backup断面)・暗号化検証テスト(IV再利用なし・AAD不一致復号失敗を含む)・R2使用量監視アラートテストのテストケースを設計するP04タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — tenant_data_objects API・R2封筒暗号化保管/取得/即時完全削除・R2使用量監視cron拡張の実装",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "backend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "backend",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P04"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "packages/db/src/schema/tenant-data-objects.ts",
+        "packages/schemas/tenant-data/",
+        "apps/hub/src/app/api/v1/tenant-data/",
+        "apps/hub/src/lib/tenant-data/",
+        "apps/hub/src/lib/scheduled/r2-usage-monitor.ts",
+        "docs/features/feat-tenant-data-retention/implementation-notes.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "tenant_data_objectsテーブル定義・upload(multipart→テナント別封筒暗号化→R2保存+DB参照登録)/取得(認可MW通過後にのみ復号)/即時完全削除(R2実体+DB行+監査event)のAPI実装、R2使用量監視cron拡張実装を行うP05実装タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートテストの実行",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P05"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/test-run-results.md",
+        "packages/db/src/__tests__/tenant-data/"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P04で設計したテナント分離テスト・削除完全性テスト(R2実体/DB行/backup断面)・暗号化検証テスト・R2使用量監視アラートテストを実行し結果を記録するP06テスト実行タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — テナント分離・削除完全性・暗号化検証の3件受入判定",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P06"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/acceptance-record.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "goal-spec.json acceptance 3項目 (テナントA業務データのテナントB非取得・削除API実行後の非残存・R2上の非平文暗号化保管) を確認するP07受入タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — encryption_keys.purpose=tenant_data追加DEK seed・R2バケット/prefix新設の既存基盤互換移行",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "data",
+        "refactoring-migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P07"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "packages/db/migrations/",
+        "docs/features/feat-tenant-data-retention/refactoring-migration-note.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "既存encryption_keysテーブル(feat-domain-model-db/feat-auth-tenancy所有のsalary/idp_secret運用と共有するinfrastructure)へpurpose=tenant_data用のactive DEKを追加するseed migrationと、R2の新規バケットまたはprefix分離をPackageRegistry/backupsに影響を与えず適用するP08マイグレーションタスク。本featureは新規実装だが、encryption_keysは既存共有テーブルであるためbackward-compatible migrationが必須責務となる",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質・セキュリティ・運用保証 — テナント越境読取防止(T14)・削除不完全対策(T15)・R2使用量監視運用確認",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "security",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "security",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P08"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/hub/src/lib/tenant-data/",
+        "docs/features/feat-tenant-data-retention/quality-assurance-report.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "T14(テナント越境読取)対策(purpose=tenant_data封筒暗号化+D4 row-level+R2 tenant prefix分離+認可MW通過後復号)の一貫適用確認、T15(削除不完全)対策(即時完全削除+削除監査event+restore drill非復元確認)の運用確認、R2使用量監視アラート(閾値70%/90%)の運用確認を行うP09品質保証タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立最終レビュー — quality_constraints 6件・acceptance 3件の最終確認",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P09"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/final-review-record.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "quality_constraints 6件・acceptance 3件の最終確認を独立観点で行うP10最終レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P10"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/evidence-summary.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.82,
+      "classification_reason": "P06(テスト実行)/P07(受入)/P09(品質保証)/P10(最終レビュー)の証跡を集約し、再現コマンド列を確立するP11証跡タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.82,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "文書化・runbook・引き継ぎ — 業務データ保管/取得/削除手順・R2使用量監視runbook・鍵ローテーションrunbook拡張の文書化",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "documentation",
+        "runbook"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P11"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/runbook.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.82,
+      "classification_reason": "利用者/管理者向け業務データupload/取得/削除操作手順、R2使用量監視アラート対応runbook、encryption_keysローテーション手順のtenant_data purpose拡張分の文書化を確立するP12文書化タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.82,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — encryption_keys DEK seed migration適用順序・wranglerロールアウト・rollback手順",
+      "project_id": "feature-package-feat-tenant-data-retention",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-tenant-data-retention",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T01:06:07Z",
+      "updated_at": "2026-07-19T01:06:07Z",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P12"
+      ],
+      "related_nodes": [
+        "feat-tenant-data-retention"
+      ],
+      "resource_scope": [
+        "docs/features/feat-tenant-data-retention/release-record.md"
+      ],
+      "parent_feature": "feat-tenant-data-retention",
+      "feature_package_id": "feature-package/feat-tenant-data-retention",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-tenant-data-retention/plan-findings.json",
+        "evaluated_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "imported_at": "2026-07-19T01:06:07Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "encryption_keys DEK seed migrationの適用順序(API有効化前にmigration完了を確認)を含めてwranglerでCloudflare Workersへロールアウトし、rollback手順とpost-deploy smoke testを判定するP13リリースタスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T01:15:00Z"
+      }
+    }
+  ]
+}

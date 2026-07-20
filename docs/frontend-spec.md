@@ -34,7 +34,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 |---|---|---|
 | `/signin` / `/device` | S07 サインイン / S08 Device 承認 | 未認証 layout。S07 はテナント解決 → IdP redirect (D3。mockup の password login は不採用) |
 | `/dashboard` | S09 ダッシュボード | `/` は `/dashboard` へ redirect |
-| `/harnesses` / `/harnesses/[projectId]` | S01 一覧 / S02 詳細 | install modal・公開ウィザードは S02 内モーダル。S03 (公開状態) は S02 の「公開」タブに統合 |
+| `/harnesses` / `/harnesses/[projectId]` | S01 一覧 / S02 詳細 | mock 実測どおり公開ウィザードは **S01 の「プラグインを公開」モーダル**。install/download は S01/S02 から開く。S03 (公開状態) は S02 の「公開」タブにも統合 |
 | `/sheets` / `/sheets/new` / `/sheets/[id]` | S11 一覧 / S10 ウィザード / S12 詳細 | |
 | `/pipeline` | S13 構築パイプライン | |
 | `/feedback` / `/feedback/[id]` | S14 改善要望 | 起票フォームは一覧内シート/モーダル |
@@ -115,8 +115,8 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 | ID | 画面 | 主データ取得 (backend-spec §4) | ポーリング (§4.2) | モバイル区分 (§6.4) |
 |---|---|---|---|---|
-| S01 | ハーネス一覧 | `GET /harnesses` (filter: target/status/q) | なし (staleTime 60s) | 重点 |
-| S02 | ハーネス詳細 | `GET /harnesses/:projectId`・`GET /projects/:id/releases` | なし | 重点 |
+| S01 | プラグイン Hub 一覧 + 公開ウィザード | `GET /harnesses` (filter: target/status/q)・owner: `POST /projects` → `POST /publish` → package upload/submit・`GET /harnesses/:projectId/install` | publish 中 2s→backoff / 一覧 60s stale | 重点 |
+| S02 | ハーネス詳細・管理・導入 | `GET /harnesses/:projectId`・`GET /projects/:id/releases`・`GET /harnesses/:projectId/install` | 公開中だけ 2s→backoff | 重点 |
 | S03 | 公開状態 (S02 内タブ) | `GET /publish/:id`・**一覧は §3.4 の追加 API** | 非終端時 2s→backoff | 重点 |
 | S04 | Workspace 設定・Release 履歴 | `GET /tokens`・`GET /projects/:id/releases`・`GET/PATCH /tenant/coefficients` | なし | 簡易 |
 | S05 | 承認キュー | **§3.4 の追加 API** (status=approval_pending) → `POST /publish/:id/approve` | 30s | 簡易 |
@@ -141,9 +141,15 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 ### 3.2 複雑画面の詳細
 
 - **S09 ダッシュボード**: KPI 6 カード (総実行回数・削減時間・削減額・完了シート・稼働ハーネス・参加ユーザー) → `metrics/summary`。折れ線 (週次推移)・ドーナツ (完了率)・ランキング (ハーネス別/ユーザー別)・バー (部門別削減) → `metrics/rollups`。金額はすべてサーバ集計値の表示 (member へは集計値のみ = §3.3 認可マトリクス準拠)。
-- **S10 ヒアリングウィザード (FormData 12 項目 = backend-spec §4.3)**: Step1 基本 (`taskName, company, applicant, domain`) → Step2 現状 (`issue, tools, hours, people, salary`) → Step3 要望 (`features, output, priority`) → Step4 確認+試算。**試算表示規則 (SEC5 整合)**: ウィザード中は時間削減の概算のみ (「月 {hours}h × {people}人 × 35% (既定係数)」の参考表示。金額は出さない)。提出後はサーバ snapshot (`estimate_json`) だけを正として S12 に表示する。途中状態は sessionStorage 保持 (誤離脱ダイアログ付き)。提出成功 → HS コード表示 + 「生成中」状態の非同期 UI (受付番号+ステータス+完了通知 = qa-021 パターン)。
+- **S10 ヒアリングウィザード (FormData 12 項目 = backend-spec §4.3)**: Step1 基本 (`taskName, company, applicant, domain`) → Step2 現状 (`issue, tools, hours, people, salary`) → Step3 要望 (`features, output, priority`) → Step4 確認+試算。**試算表示規則 (SEC5 整合)**: ウィザード中は時間削減の概算のみ (「月 {hours}h × {people}人 × 35% (既定係数)」の参考表示。金額は出さない)。提出後はサーバ snapshot (`estimate_json`) だけを正として S12 に表示する。途中状態は sessionStorage 保持 (誤離脱ダイアログ付き)。提出成功 → mock と同じ完了パネルで HS コード・`生成中`・「シートを見る」「パイプラインを見る」「続けて作成」を表示する。生成完了までは受付番号+状態チップ+完了通知 (qa-021 パターン)。
+- **S11 ヒアリングシート一覧**: デスクトップは `status / HS コード・title / domain・department / people・hours / applicant / updated_at` の 6 列、モバイルは同じ情報をカードへ畳む。status filter・department filter・全文検索・cursor ページングを持つ。member の API は自分の作成分だけ、workspace-admin はテナント全件を返すため、クライアントで権限外行を除外する実装は禁止する。
+- **S12 ヒアリングシート詳細**: ヘッダに `display_code/status/title/applicant/department/created_at/AI 生成表示`、本文に「概要」「現在の課題」「推奨機能タグ」「想定削減効果」を表示し、元入力 snapshot・試算 snapshot・対応 Build/PublishRequest の参照を併記する。`received` の表示ラベルは mock の「下書き」でなく全画面共通の「受付」とする。admin の状態変更・再生成は右側メタ領域、member には非表示かつ API でも拒否。P2 有効後は AI 完了時に自動作成された対応 Build を「構築パイプラインへ」で表示し、P1 単独期間はこのボタンを表示しない。
+- **S12 PDF 出力**: 「PDF でダウンロード」は別データ生成を行わず、認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化して `window.print()` を呼ぶ (ブラウザの「PDF に保存」)。ボタン名は mock を維持する。salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test する。
+- **S01 公開ウィザード**: Step1 は CLI 取込を推奨し、Web 手動取込は ZIP 代替。Step2 は target (`skill/web_app`)、category、visibility (Stage 1 は workspace まで)、説明、Step3 は検査結果と公開確認。新規 Project 作成→PublishRequest 作成→package upload/submit を 1 UI フローに束ねるが、API の各 status は隠さない。Green は自動、Yellow は承認待ち、Needs Fix は S03 の findings へ移動する。単一テナント/単一 Project を定数にしない。
 - **S13 パイプライン**: デスクトップ = 7 工程カラムの横並びボード (工程ヘッダに件数)。カード = title・HS/FR 参照・assignee・eta・risk チップ。admin 操作 = カードメニューから「前の工程へ/次の工程へ」(隣接遷移のみ = §5.3)+確認 Dialog。**DnD は採用しない** (タッチ/キーボード同等性と隣接制約の UI 強制のため。qa-035)。`publish` 工程への遷移は接続済み PublishRequest が `Published` でない場合エラー表示 (B4)。
-- **S02 ハーネス詳細**: 概要/チャネル (skill: marketplace URL コピー+`claude plugin` コマンド表示、web_app: URL open)/利用統計/公開タブ (S03: PublishRequest 進捗・Needs Fix findings 表示・非終端時ポーリング)。install modal は I6 の URL 型 marketplace 契約を変更しない。
+- **S14 改善要望・レビュー**: 上部に status 件数、一覧に FR コード/harness/type (`改善要望/レビュー依頼/バグ報告`)/priority/requester/date/status、詳細に本文と sanitize 済み AI 応答を表示する。Web 起票と CLI 起票は source chip だけが異なり、同じ一覧へ入る。AI 完了後に作成された修正版 Build への導線を表示し、S13→publish→更新通知まで追跡できる。
+- **S15 ドキュメント**: common + 自 tenant を 1 一覧へ合成し、category/scope/q で絞込。閲覧は sanitize 済み Markdown、admin 編集は textarea+preview、AI 下書きは受付番号/生成中/完了通知を共通パターンで表示する。member に編集 CTA を出さず、common 編集は provider-admin だけに出す。
+- **S02 ハーネス詳細**: 概要/チャネル/全 Release と stable 版/利用統計/公開タブ (S03: PublishRequest 進捗・Needs Fix findings 表示・非終端時ポーリング)。install/download modal は backend の descriptor を表示し、`skill` は marketplace URL コピー+Stage 0 採用コマンド、`web_app` は URL open を行う。UI は R2 object key や永続的な生 URL を組み立てない。owner だけに promote/rollback/suspend を表示し、member の導入操作と混ぜない。
 - **S17 ユーザー管理**: 一覧 (name/department/role/status/利用集計。**salary 列は admin API レスポンスにのみ存在**し、表示は既定マスク+明示 toggle+監査対象の注意書き)。個別 = プロフィール+削減効果 rollup。作成 = 事前登録フォーム (role/department/salary。初回ログインは IdP JIT = §4.2)。
 
 ### 3.3 状態表示の共通規則
@@ -220,7 +226,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | P3 | データテーブル (6-8 列) | **主要 2-3 フィールドのカードリスト** + タップで詳細へ。状態はチップ表示 | S01/S11/S14/S15/一覧全般 |
 | P4 | 7 工程ボード (横並びカラム) | **工程セグメント (横スクロールチップ+件数バッジ) + 選択工程の縦カードリスト** | S13 |
 | P5 | 2 カラム詳細 (`1fr 300px`) | 縦積み (メインコンテンツ → メタ情報) | S02/S12/S17 個別 |
-| P6 | センターモーダル | **ボトムシート** (install modal・フィルタ・起票フォーム)。確認 Dialog のみセンター維持 | S02/S14 ほか |
+| P6 | センターモーダル | **ボトムシート** (install/download・公開ウィザード・フィルタ・起票フォーム)。確認 Dialog のみセンター維持 | S01/S02/S14 ほか |
 | P7 | チャート横並び | 縦積み 1 列・高さ 200px 固定 (スクロール量優先) | S09/S16 |
 | P8 | フィルタバー (インライン) | フィルタボタン → ボトムシート (適用件数表示) | 一覧全般 |
 | P9 | インライン編集テーブル | 行タップ → 編集シート | S17/S04 |
@@ -230,7 +236,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 | ID | 区分 | モバイル挙動の要点 |
 |---|---|---|
-| S01/S02 | ◎ | P3 カード一覧 (名前・target・状態チップ・DL 数)。詳細は P5 縦積み、install は P6 ボトムシート (コマンドはコピー導線中心) |
+| S01/S02 | ◎ | P3 カード一覧 (名前・target・状態チップ・DL 数)。S01 の公開ウィザードと install/download は P6 ボトムシート、詳細は P5 縦積み (コマンドはコピー導線中心) |
 | S03 | ◎ | 公開タブ: 進捗ステッパーを縦型表示。Needs Fix findings はアコーディオン |
 | S04 | △ | 設定フォームは縦積みで動作。IdP 設定・係数編集は横幅依存が強くバナー表示 |
 | S05/S06 | △ | 承認カード/監査行は P3 カード化で閲覧可。承認操作は可能だが一括操作なし。監査 filter は P8 |
@@ -281,3 +287,13 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | 6 | ボード/テーブルのモバイル表現 | **工程セグメント+縦リスト、テーブルはカード化** (AI 推奨に同意) | §6.3 P3/P4。DnD 不採用 |
 | 7 | フォーム実装 | **react-hook-form + zodResolver** (AI 推奨に同意) | packages/schemas 再利用 (B1)。step 分割 validation (§5) |
 | 8 | i18n | **自作 typed 辞書 (ja 先行)** (AI 推奨に同意) | 依存ゼロ・enum 写像と同一 module (§7)。next-intl 移行可能な構造 |
+
+## 10. 構築優先順位による実装順 (2026-07-18 追記。additive — 正本: [system-design-overview.md](system-design-overview.md) §3「構築優先順位」)
+
+ユーザー確定の構築優先順位 (P0 認証基盤 → P1 ヒアリング → P2 プラグイン Hub + パイプライン → P3 改善ループ・ドキュメント → P4 ユーザー・効果測定 → P5 ダッシュボード・統制) を画面実装へ展開する。**本書の既確定内容 (§1〜§9) を変更するものではなく、着手順だけを定める**。本節の P0〜P5 は構築 phase 番号であり、§6.3 のレスポンシブ変換パターン P1〜P10 とは無関係。
+
+- **画面の実装順**: P0 = 共通シェル (§3.0) + S07/S08 → P1 = S10/S11/S12 → P2 = S01 (公開ウィザード・一覧・install/download) → S02/S03 (管理・公開状態) → S13 (ヒアリング/公開との接続) → P3 = S14/S15 → P4 = S16/S17/S18 → P5 = S09 + S05/S06。
+- **`/` redirect の段階運用**: §1 の「`/` は `/dashboard` へ redirect」は S09 完成後 (P5) の最終形。**S09 完成までは `/` → `/sheets`** (最優先のヒアリング動線へ誘導。P2 以降も、ダッシュボード完成までこのまま)。
+- **ナビゲーションの段階表示**: サイドバー 9 項目 (§3.0)・ボトムタブ (§6.2) は未実装 phase の項目を**表示しない** (グレーアウトでなく非表示 — 「押せるのに動かない」を作らない qa-018 整合)。ボトムタブのダッシュボード slot は S09 完成まで「シート (S11)」を先頭 slot にする暫定とし、確定は feat-metrics-tracking の P02 で行う。
+- **部品の実装順**: [shared-layers.md](shared-layers.md) §1「部品の実装順」参照 (StepWizard = P1、StageBoard = P2、MarkdownEditor = P3、InlineEditTable = P4、チャート/KPI カード = P4 の S16 から・S09 で完成)。
+- **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。

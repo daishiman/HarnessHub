@@ -1,65 +1,72 @@
 ---
-artifact_kind: task
+graph_node_id: "SYS-DOCS-CMS-P11"
+artifact_kind: "task"
 artifact_subtypes: []
-beads_linkage: null
-classification_candidates: [{"artifact_kind": "task", "candidate_path": "tasks/feat-docs-cms/sys-docs-cms-p11.md", "confidence": 0.84}]
-classification_confidence: 0.84
-classification_reason: P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク
-completion_evidence: {"completed_at": null, "evidence_refs": [], "policy": "linked_pr_merged_all", "reconciled_at": null, "source": null, "status": "in_progress"}
-confirmation_evidence: {"evaluated_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f", "evaluator": "system-dev-plan-evaluator", "evidence_ref": ".dev-graph/plans/feature-package-feat-docs-cms/plan-findings.json"}
-confirmation_status: confirmed
-created_at: 2026-07-17T13:13:50Z
-depends_on: ["SYS-DOCS-CMS-P10"]
-domain: quality
-evaluation_status: pass
-execution_contexts: []
-feature_package_id: feature-package/feat-docs-cms
-file_path: tasks/feat-docs-cms/sys-docs-cms-p11.md
-github_project_linkages: []
-github_publication: {"labels": [], "milestone": null, "mode": "local_only", "project_aliases": []}
-graph_node_id: SYS-DOCS-CMS-P11
-implementation_readiness: {"checked_at": "2026-07-17T00:00:00Z", "missing_sections": [], "status": "complete"}
-issue_linkage: null
-iteration: null
-owners: ["daishiman"]
-parent_feature: feat-docs-cms
-phase_ref: P11
+project_id: "feature-package-feat-docs-cms"
+domain: "quality"
+tags: ["feat-docs-cms","studio-extension","docs-cms","evidence"]
 priority: null
-project_id: feature-package-feat-docs-cms
-pull_request_linkages: []
-related_nodes: ["feat-docs-cms", "arch-harness-hub-frontend", "arch-harness-hub-backend"]
-resource_scope: ["docs/features/feat-docs-cms/evidence/"]
-source_lineage: {"imported_at": "2026-07-17T13:13:50Z", "origin_kind": "system-dev-planner", "source_digest": "e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f", "source_path": ".dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-11-evidence.md", "source_plugin": "system-dev-planner", "source_version": "0.1.0"}
 start_date: null
-status: active
-tags: ["feat-docs-cms", "studio-extension", "docs-cms", "evidence"]
 target_date: null
-template_id: task
-template_version: 1.0.0
-title: エビデンス収集 — 再現可能な検証証跡の集約
-tracker_binding: beads
-updated_at: 2026-07-17T13:13:50Z
-purpose: feat-docs-cms の P11 を実行する: エビデンス収集 — 再現可能な検証証跡の集約
-goal: P06 (テスト実行)・P07 (受入)・P09 (品質保証)・P10 (最終レビュー) の検証結果を、第三者が再実行して同一結果を得られる再現可能な証跡として docs/features/feat-docs-cms/evidence/ に索引化する。
+iteration: null
+title: "エビデンス収集 — 再現可能な検証証跡の集約"
+owners: ["daishiman"]
+created_at: "2026-07-19T14:11:41Z"
+updated_at: "2026-07-19T14:11:41Z"
+status: "active"
+depends_on: ["SYS-DOCS-CMS-P10"]
+related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
+resource_scope: ["docs/features/feat-docs-cms/evidence/"]
+purpose: "feat-docs-cms の P11 を実行する: エビデンス収集 — 再現可能な検証証跡の集約"
+goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
 scope_in: ["docs/features/feat-docs-cms/evidence/"]
-scope_out: ["新規テストの追加実行 (P06/P09 で既に確定した結果の索引化のみ)", "実装コードの修正"]
-acceptance: ["evidence/index.md から P06/P07/P09/P10 の各成果物へのリンクと、それぞれの再実行コマンドが辿れる"]
-architecture_refs: ["arch-harness-hub-frontend", "arch-harness-hub-backend"]
+scope_out: ["published task spec の『スコープ外』節を正本とする"]
+acceptance: ["evidence/index.md から P06/P07/P09/P10 の各成果物へのリンクと、それぞれの再実行コマンドが辿れる","現行feature context sha256:6e8ea8a7a1042002d0bb0b3ff2a2b3464ea4a45ba77ddea709580cc3bed03d34のscope_in/acceptance全件をP11責務として追跡し、未割当0件である","Normative closure: B7 の5資源（GET /api/v1/docs、GET /api/v1/docs/:id、POST /api/v1/docs、PATCH /api/v1/docs/:id、POST /api/v1/docs/:id/draft）を route handler と zod single source で実装する。draft は共通 ai_jobs へ kind=doc_draft で投入し、共通 pull/complete 経路から documents へ結果を書き戻す consumer adapter を実装する。AiJob 共通層を複製せず、未解決として先送りもしない。 Evidence: 5 endpoint の role/tenant tests、doc_draft enqueue/complete round-trip、共通 queue consumer contract、XSS sanitize、監査 event を同一 evidence chain で追跡する。"]
+architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-backend"]
+parent_feature: "feat-docs-cms"
+feature_package_id: "feature-package/feat-docs-cms"
+phase_ref: "P11"
+file_path: "tasks/feat-docs-cms/sys-docs-cms-p11.md"
+template_id: "task"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-19T14:11:41Z","origin_kind":"system-dev-planner","source_digest":"a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85","source_path":".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-11-evidence.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+classification_confidence: 0.84
+classification_reason: "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク"
+classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-docs-cms/sys-docs-cms-p11.md","confidence":0.84}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: {"bd_issue_id":"HarnessHub-9wb.11","linked_at":"2026-07-18T01:43:12Z","sync_state":"linked"}
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
 # エビデンス収集 — 再現可能な検証証跡の集約
 
-> task projection (P11 / parent: feat-docs-cms)。本文の正本は published task spec であり、ここには複製しない。
+> task projection (P11 / parent: feat-docs-cms)。実装要件の正本は下記の content-addressed published task spec であり、このファイルは実行入口だけを保持する。
 
 ## 正本仕様書
 
-- `.dev-graph/plans/feature-package-feat-docs-cms/task-specs/phase-11-evidence.md`
+- package: `.dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85`
+- task spec: `.dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-11-evidence.md`
+- package digest: `sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85`
+- task spec SHA-256: `sha256:e6525007bd47b4b4d54fecd8b7a2238f309fa64c3573bea3532ccda74d3ca386`
+- registration receipt: `.dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/dev-graph-registration-receipt.json`
 
 ## 依存
 
-- SYS-DOCS-CMS-P10
+- `SYS-DOCS-CMS-P10`
 
-## 実行
+## 実行契約
 
-- claim: bd 側 issue を claim し、並行時は worktree lease を取得する
-- 完了: 正本仕様書の Verification and evidence を満たし bd close (SYS-DOCS-CMS-P11)
+- claim: Beads issueをatomic claimし、並行実行時はworktree leaseを取得する。
+- scope: frontmatter `resource_scope` と published task spec の Write scope/touches を両方守る。
+- verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
+- completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
+- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。

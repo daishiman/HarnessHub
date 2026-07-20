@@ -1,0 +1,1228 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-build-pipeline-board",
+  "parent_feature": "feat-build-pipeline-board",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-BUILD-PIPELINE-BOARD-P01": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P02": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P03": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P04": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P05": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P06": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P07": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P08": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P09": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P10": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P11": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P12": "beads",
+    "SYS-BUILD-PIPELINE-BOARD-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "構築パイプラインボード要件ベースライン確定",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-build-pipeline-board/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec (goal-spec.json) と features/feat-build-pipeline-board.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "architecture"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P01"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-build-pipeline-board/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "docs/backend-spec.md の Build/build_stage_events テーブル定義・工程操作 API・Build 状態機械に基づき Build エンティティのスキーマと S13 画面構成・工程操作 API 契約・PublishRequest 接続設計を確定する P02 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P02"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-build-pipeline-board/design-review-notes.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P02 で確定した Build スキーマ・S13 画面構成・工程操作 API 契約・PublishRequest 接続設計を、設計担当から独立した視点でレビューする P03 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P03"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/app/api/v1/builds/",
+        "apps/hub/src/features/build-pipeline-board/__tests__/",
+        "docs/features/feat-build-pipeline-board/test-design.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P03 で承認された設計に基づき P05 実装の受入契約となるテストスタブを作成する P04 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "frontend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P04"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/app/(dashboard)/builds/",
+        "apps/hub/src/app/api/v1/builds/",
+        "apps/hub/src/features/build-pipeline-board/",
+        "apps/hub/src/features/build-pipeline-board/__tests__/",
+        "packages/db/schema/build-pipeline/",
+        "packages/schemas/build-pipeline-board/"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "P03 承認済み設計と P04 テストスタブに基づき S13 実装・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event を実装する P05 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P05"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/app/api/v1/builds/",
+        "apps/hub/src/features/build-pipeline-board/__tests__/",
+        "docs/features/feat-build-pipeline-board/test-run-report.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P04 のテストスタブ (工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離/B9 共有認可表) を P05 実装に対して実行し結果を記録する P06 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P06"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-build-pipeline-board/acceptance-report.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P07"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-build-pipeline-board/refactoring-migration-note.md",
+        "packages/db/schema/build-pipeline/"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P05 で追加した Build スキーマ定義から migration ファイルを生成し既存 publish_requests テーブルへの FK 参照を含めて後方互換性を確認する P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P08"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/app/api/v1/builds/",
+        "apps/hub/src/features/build-pipeline-board/__tests__/",
+        "docs/features/feat-build-pipeline-board/quality-assurance-report.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P06 テスト結果と P08 migration 結果を踏まえ CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の充足を確認する P09 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終独立レビュー — quality_constraints 6 件の充足判定",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P09"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-build-pipeline-board/final-review-notes.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P01-P09 の成果物を根拠に goal-spec の quality_constraints 6 件の充足を独立した視点で最終判定する P10 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P10"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-build-pipeline-board/evidence/"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "documentation",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P11"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-build-pipeline-board/runbook.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P11 のエビデンスを踏まえ S13 運用手順・工程操作監査運用・PublishRequest 接続監視を runbook 化する P12 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "project_id": "feature-package-feat-build-pipeline-board",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-pipeline-board",
+        "studio-extension",
+        "build-pipeline-board",
+        "release"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:10:56Z",
+      "updated_at": "2026-07-19T14:10:56Z",
+      "depends_on": [
+        "SYS-BUILD-PIPELINE-BOARD-P12"
+      ],
+      "related_nodes": [
+        "feat-build-pipeline-board",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/src/app/api/v1/builds/",
+        "apps/hub/src/features/build-pipeline-board/__tests__/",
+        "docs/features/feat-build-pipeline-board/release-notes.md"
+      ],
+      "parent_feature": "feat-build-pipeline-board",
+      "feature_package_id": "feature-package/feat-build-pipeline-board",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json",
+        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "imported_at": "2026-07-19T14:10:56Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P12 の runbook を踏まえ feat-hub-foundation の既存パイプラインで Cloudflare Workers 本番反映とスモークテストを行う P13 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    }
+  ]
+}

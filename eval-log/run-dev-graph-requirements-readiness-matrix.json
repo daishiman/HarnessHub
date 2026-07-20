@@ -1,359 +1,254 @@
 {
-  "summary": {
-    "nodes_total": 14,
-    "by_kind": {
-      "specification": 1,
-      "architecture": 5,
-      "feature": 8
+  "schema": "run-dev-graph-requirements/readiness-matrix/1.0.0",
+  "generated_at": "2026-07-19T14:43:16Z",
+  "graph_revision": 40,
+  "graph_sha256": "sha256:9e02767555c267342af9acbfc296772377125fd2d677fff7816ad54eb61b440b",
+  "docs_inventory_digest": "sha256:8c4ed97454a92c88b6ac7d0ebaab2eaa72f30af3ad019f84144c44aa59aa2deb",
+  "snapshot_digest": "sha256:a32f1432e1db7ae4572efe244eb43e9f9434d1906dfa51f82404135d8b71147c",
+  "verdict": "HANDOFF_READY",
+  "handoff_target": "capability-build/task-graph",
+  "handoff_count": 1,
+  "gates": {
+    "snapshot_digest": "sha256:a32f1432e1db7ae4572efe244eb43e9f9434d1906dfa51f82404135d8b71147c",
+    "docs_exact_coverage": {
+      "status": "PASS",
+      "detail": "25/25 files and heading/file evidence units are hash-pinned"
     },
-    "lineage_mismatch": [
-      "feat-stage0-distribution-gate",
-      "feat-hub-foundation",
-      "feat-domain-model-db",
-      "feat-auth-tenancy",
-      "feat-publish-pipeline",
-      "feat-publisher-plugin",
-      "feat-dual-catalog-web",
-      "feat-workspace-governance"
-    ],
-    "artifact_missing": [],
-    "features_draft": [
-      "feat-stage0-distribution-gate",
-      "feat-hub-foundation",
-      "feat-domain-model-db",
-      "feat-auth-tenancy",
-      "feat-publish-pipeline",
-      "feat-publisher-plugin",
-      "feat-dual-catalog-web",
-      "feat-workspace-governance"
-    ],
-    "features_without_package": [
-      "feat-stage0-distribution-gate",
-      "feat-hub-foundation",
-      "feat-domain-model-db",
-      "feat-auth-tenancy",
-      "feat-publish-pipeline",
-      "feat-publisher-plugin",
-      "feat-dual-catalog-web",
-      "feat-workspace-governance"
-    ],
-    "task_nodes": 0,
-    "task_files": 0,
-    "plan_roots_exist": {
-      "published": false,
-      "staging": false
+    "system_spec_C08": {
+      "status": "PASS",
+      "source_digest": "sha256:333b6a639283304afcff18b60e683df1160f2fc372348e15fab50ff8b6da4638",
+      "missing_sections": []
+    },
+    "C11_validate_graph_schema": {
+      "status": "PASS",
+      "graph_revision": 40,
+      "graph_sha256": "sha256:9e02767555c267342af9acbfc296772377125fd2d677fff7816ad54eb61b440b",
+      "violations": 0
+    },
+    "C02_saved_state": {
+      "status": "PASS",
+      "features": "15/15 confirmed/pass/complete",
+      "tasks": "195/195 confirmed/pass/complete"
+    },
+    "validate_system_plan": {
+      "status": "PASS",
+      "packages": "15/15",
+      "exact_phase_set": "P01..P13",
+      "task_count": 195
+    },
+    "independent_C1_C4": {
+      "status": "PASS",
+      "packages": "15/15",
+      "findings": "current digest pinned"
+    },
+    "tracker_projection": {
+      "status": "PASS",
+      "tasks": "195/195 one-to-one",
+      "features": "15/15 one-to-one",
+      "active_duplicate": 0
+    },
+    "runtime_task_projection": {
+      "status": "PASS",
+      "tasks": "195/195 content-addressed source refs",
+      "receipt": ".dev-graph/cache/replan-20260719-task-projection-receipt.json"
+    },
+    "implementation_code_generated": {
+      "status": "PASS",
+      "count": 0
     }
   },
-  "matrix": [
+  "saved_graph_summary": {
+    "selected_nodes": 217,
+    "features_ready": "15/15",
+    "tasks_ready": "195/195",
+    "implementation_readiness": "210/210 complete",
+    "evaluation_status": "210/210 pass",
+    "confirmation_status": "210/210 confirmed"
+  },
+  "per_feature": [
     {
-      "node_id": "spec-harness-hub-requirements",
-      "artifact_kind": "specification",
-      "status": "active",
-      "confirmation_status": "confirmed",
-      "evaluation_status": "pass",
-      "implementation_readiness": {
-        "status": "complete",
-        "missing_sections": [],
-        "checked_at": "2026-07-17T00:35:59Z"
-      },
-      "file_path": "specs/harness-hub-system-specification.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "system-spec/00-requirements-definition.md",
-        "stored_digest": "92a26c18c08968d2f72f29c8ccf78e2d862abfb78805bdf354a1170aff0efe89",
-        "actual_digest": "92a26c18c08968d2f72f29c8ccf78e2d862abfb78805bdf354a1170aff0efe89"
-      },
-      "lineage_digest_match": true,
-      "package_found": null
+      "feature": "feat-auth-tenancy",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "arch-harness-hub-frontend",
-      "artifact_kind": "architecture",
-      "status": "active",
-      "confirmation_status": "confirmed",
-      "evaluation_status": "pass",
-      "implementation_readiness": {
-        "status": "complete",
-        "missing_sections": [],
-        "checked_at": "2026-07-17T00:35:59Z"
-      },
-      "file_path": "architecture/harness-hub-frontend.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "system-spec/frontend.md",
-        "stored_digest": "5157df8b8c1f3901412aaf4350600ce258f0329fde087a4bb0e61c3283ce08bc",
-        "actual_digest": "5157df8b8c1f3901412aaf4350600ce258f0329fde087a4bb0e61c3283ce08bc"
-      },
-      "lineage_digest_match": true,
-      "package_found": null
+      "feature": "feat-build-pipeline-board",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "arch-harness-hub-backend",
-      "artifact_kind": "architecture",
-      "status": "active",
-      "confirmation_status": "confirmed",
-      "evaluation_status": "pass",
-      "implementation_readiness": {
-        "status": "complete",
-        "missing_sections": [],
-        "checked_at": "2026-07-17T00:35:59Z"
-      },
-      "file_path": "architecture/harness-hub-backend.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "system-spec/backend.md",
-        "stored_digest": "06b4c0bd5b109b9a66b6433dfc349bfbf52910219981da8b679c264796001ed0",
-        "actual_digest": "06b4c0bd5b109b9a66b6433dfc349bfbf52910219981da8b679c264796001ed0"
-      },
-      "lineage_digest_match": true,
-      "package_found": null
+      "feature": "feat-docs-cms",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "arch-harness-hub-data",
-      "artifact_kind": "architecture",
-      "status": "active",
-      "confirmation_status": "confirmed",
-      "evaluation_status": "pass",
-      "implementation_readiness": {
-        "status": "complete",
-        "missing_sections": [],
-        "checked_at": "2026-07-17T00:35:59Z"
-      },
-      "file_path": "architecture/harness-hub-data.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "system-spec/database.md",
-        "stored_digest": "97c81921012a0ca5a05565ba8725c2a24571db15de6c1c17bf19b0ded811fd28",
-        "actual_digest": "97c81921012a0ca5a05565ba8725c2a24571db15de6c1c17bf19b0ded811fd28"
-      },
-      "lineage_digest_match": true,
-      "package_found": null
+      "feature": "feat-domain-model-db",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "arch-harness-hub-security",
-      "artifact_kind": "architecture",
-      "status": "active",
-      "confirmation_status": "confirmed",
-      "evaluation_status": "pass",
-      "implementation_readiness": {
-        "status": "complete",
-        "missing_sections": [],
-        "checked_at": "2026-07-17T00:35:59Z"
-      },
-      "file_path": "architecture/harness-hub-security.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "system-spec/security.md",
-        "stored_digest": "e448766fa13c0246e4a8b255709c100cf57ff0441d63cb670d19de45ebddd248",
-        "actual_digest": "e448766fa13c0246e4a8b255709c100cf57ff0441d63cb670d19de45ebddd248"
-      },
-      "lineage_digest_match": true,
-      "package_found": null
+      "feature": "feat-dual-catalog-web",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "arch-harness-hub-infrastructure",
-      "artifact_kind": "architecture",
-      "status": "active",
-      "confirmation_status": "confirmed",
-      "evaluation_status": "pass",
-      "implementation_readiness": {
-        "status": "complete",
-        "missing_sections": [],
-        "checked_at": "2026-07-17T00:35:59Z"
-      },
-      "file_path": "architecture/harness-hub-infrastructure.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "system-spec/infrastructure.md",
-        "stored_digest": "3a78a369622b7c92dcd643ebf0985b4e8fc5e6a8d97fbbda8d050bace11df336",
-        "actual_digest": "3a78a369622b7c92dcd643ebf0985b4e8fc5e6a8d97fbbda8d050bace11df336"
-      },
-      "lineage_digest_match": true,
-      "package_found": null
+      "feature": "feat-feedback-loop",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "feat-stage0-distribution-gate",
-      "artifact_kind": "feature",
-      "status": "draft",
-      "confirmation_status": "draft",
-      "evaluation_status": "pending",
-      "implementation_readiness": {
-        "status": "incomplete",
-        "missing_sections": [
-          "13-task package 未生成 (system-dev-planner 待ち)"
-        ],
-        "checked_at": "2026-07-17T00:38:30Z"
-      },
-      "file_path": "features/feat-stage0-distribution-gate.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "specs/harness-hub-system-specification.md",
-        "stored_digest": null,
-        "actual_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95"
-      },
-      "lineage_digest_match": false,
-      "package_found": []
+      "feature": "feat-hearing-intake",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "feat-hub-foundation",
-      "artifact_kind": "feature",
-      "status": "draft",
-      "confirmation_status": "draft",
-      "evaluation_status": "pending",
-      "implementation_readiness": {
-        "status": "incomplete",
-        "missing_sections": [
-          "13-task package 未生成 (system-dev-planner 待ち)"
-        ],
-        "checked_at": "2026-07-17T00:38:30Z"
-      },
-      "file_path": "features/feat-hub-foundation.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "specs/harness-hub-system-specification.md",
-        "stored_digest": null,
-        "actual_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95"
-      },
-      "lineage_digest_match": false,
-      "package_found": []
+      "feature": "feat-hub-foundation",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "feat-domain-model-db",
-      "artifact_kind": "feature",
-      "status": "draft",
-      "confirmation_status": "draft",
-      "evaluation_status": "pending",
-      "implementation_readiness": {
-        "status": "incomplete",
-        "missing_sections": [
-          "13-task package 未生成 (system-dev-planner 待ち)"
-        ],
-        "checked_at": "2026-07-17T00:38:30Z"
-      },
-      "file_path": "features/feat-domain-model-db.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "specs/harness-hub-system-specification.md",
-        "stored_digest": null,
-        "actual_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95"
-      },
-      "lineage_digest_match": false,
-      "package_found": []
+      "feature": "feat-metrics-tracking",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "feat-auth-tenancy",
-      "artifact_kind": "feature",
-      "status": "draft",
-      "confirmation_status": "draft",
-      "evaluation_status": "pending",
-      "implementation_readiness": {
-        "status": "incomplete",
-        "missing_sections": [
-          "13-task package 未生成 (system-dev-planner 待ち)"
-        ],
-        "checked_at": "2026-07-17T00:38:30Z"
-      },
-      "file_path": "features/feat-auth-tenancy.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "specs/harness-hub-system-specification.md",
-        "stored_digest": null,
-        "actual_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95"
-      },
-      "lineage_digest_match": false,
-      "package_found": []
+      "feature": "feat-publish-pipeline",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "feat-publish-pipeline",
-      "artifact_kind": "feature",
-      "status": "draft",
-      "confirmation_status": "draft",
-      "evaluation_status": "pending",
-      "implementation_readiness": {
-        "status": "incomplete",
-        "missing_sections": [
-          "13-task package 未生成 (system-dev-planner 待ち)"
-        ],
-        "checked_at": "2026-07-17T00:38:30Z"
-      },
-      "file_path": "features/feat-publish-pipeline.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "specs/harness-hub-system-specification.md",
-        "stored_digest": null,
-        "actual_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95"
-      },
-      "lineage_digest_match": false,
-      "package_found": []
+      "feature": "feat-publisher-plugin",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "feat-publisher-plugin",
-      "artifact_kind": "feature",
-      "status": "draft",
-      "confirmation_status": "draft",
-      "evaluation_status": "pending",
-      "implementation_readiness": {
-        "status": "incomplete",
-        "missing_sections": [
-          "13-task package 未生成 (system-dev-planner 待ち)"
-        ],
-        "checked_at": "2026-07-17T00:38:30Z"
-      },
-      "file_path": "features/feat-publisher-plugin.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "specs/harness-hub-system-specification.md",
-        "stored_digest": null,
-        "actual_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95"
-      },
-      "lineage_digest_match": false,
-      "package_found": []
+      "feature": "feat-stage0-distribution-gate",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "feat-dual-catalog-web",
-      "artifact_kind": "feature",
-      "status": "draft",
-      "confirmation_status": "draft",
-      "evaluation_status": "pending",
-      "implementation_readiness": {
-        "status": "incomplete",
-        "missing_sections": [
-          "13-task package 未生成 (system-dev-planner 待ち)"
-        ],
-        "checked_at": "2026-07-17T00:38:30Z"
-      },
-      "file_path": "features/feat-dual-catalog-web.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "specs/harness-hub-system-specification.md",
-        "stored_digest": null,
-        "actual_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95"
-      },
-      "lineage_digest_match": false,
-      "package_found": []
+      "feature": "feat-tenant-data-retention",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     },
     {
-      "node_id": "feat-workspace-governance",
-      "artifact_kind": "feature",
-      "status": "draft",
-      "confirmation_status": "draft",
-      "evaluation_status": "pending",
-      "implementation_readiness": {
-        "status": "incomplete",
-        "missing_sections": [
-          "13-task package 未生成 (system-dev-planner 待ち)"
-        ],
-        "checked_at": "2026-07-17T00:38:30Z"
-      },
-      "file_path": "features/feat-workspace-governance.md",
-      "artifact_exists": true,
-      "lineage": {
-        "source_path": "specs/harness-hub-system-specification.md",
-        "stored_digest": null,
-        "actual_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95"
-      },
-      "lineage_digest_match": false,
-      "package_found": []
+      "feature": "feat-user-org-admin",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
+    },
+    {
+      "feature": "feat-workspace-governance",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+      "validator": "PASS",
+      "independent_C1_C4": "PASS",
+      "feature_context": "MATCH",
+      "goal_lineage": "MATCH",
+      "feature_saved_state": "confirmed/pass/complete",
+      "task_saved_state": "13/13 confirmed/pass/complete",
+      "tracker_projection": "13/13 one-to-one",
+      "handoff_eligible": true
     }
-  ]
+  ],
+  "blockers": [],
+  "missing_sections": [],
+  "requirements_document": "eval-log/run-dev-graph-requirements-document.md",
+  "handoff_reference": "eval-log/run-dev-graph-requirements-handoff.json"
 }

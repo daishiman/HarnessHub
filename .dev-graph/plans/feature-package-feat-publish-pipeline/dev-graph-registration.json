@@ -1,0 +1,1230 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+  "promotion_receipt": ".dev-graph/plans/feature-package-feat-publish-pipeline/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-publish-pipeline",
+  "parent_feature": "feat-publish-pipeline",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-PUBLISH-PIPELINE-P01": "beads",
+    "SYS-PUBLISH-PIPELINE-P02": "beads",
+    "SYS-PUBLISH-PIPELINE-P03": "beads",
+    "SYS-PUBLISH-PIPELINE-P04": "beads",
+    "SYS-PUBLISH-PIPELINE-P05": "beads",
+    "SYS-PUBLISH-PIPELINE-P06": "beads",
+    "SYS-PUBLISH-PIPELINE-P07": "beads",
+    "SYS-PUBLISH-PIPELINE-P08": "beads",
+    "SYS-PUBLISH-PIPELINE-P09": "beads",
+    "SYS-PUBLISH-PIPELINE-P10": "beads",
+    "SYS-PUBLISH-PIPELINE-P11": "beads",
+    "SYS-PUBLISH-PIPELINE-P12": "beads",
+    "SYS-PUBLISH-PIPELINE-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "backend",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.91,
+      "classification_reason": "goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-publish-pipeline.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.91,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "backend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "backend",
+        "architecture-decision"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P01"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "PublishRequest 状態機械の実装方式・検査 pipeline 共有パッケージ設計・REST endpoint 設計に加え、publish_requests 等のスキーマ owner (feat-domain-model-db) と単一認可ミドルウェア owner (feat-auth-tenancy) の cross-feature 境界確定を行う P02 architecture decision タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P02"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/design-review-notes.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P02 の architecture decision (スキーマ owner 境界・単一認可ミドルウェア owner・検査 pipeline owner・状態機械実装方式) を P02 実行者から独立した視点で検証する P03 レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テスト設計",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P03"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/test-design.md",
+        "apps/hub/src/__tests__/publish-pipeline/",
+        "packages/inspection/src/__tests__/"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "quality_constraints 8 件 (状態機械 property test・検査 pipeline 挙動同値・Green/Yellow/Red 判定・immutable Release/atomic rollback・R2 consumer・append-only 監査・REST zod/認可・TargetChannel 直列化) をテストケースへ写像する P04 テストファースト設計タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "backend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "backend",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P04"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/hub/src/lib/publish/",
+        "apps/hub/src/app/api/v1/publish/",
+        "apps/hub/src/app/api/v1/projects/[id]/releases/",
+        "apps/hub/src/app/api/v1/projects/[id]/deployment/",
+        "apps/hub/src/app/api/v1/channels/",
+        "apps/hub/src/app/api/v1/releases/[id]/suspend/",
+        "packages/inspection/",
+        "packages/schemas/publish-pipeline/"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P02/P04 で確定した設計とテストスタブに基づき apps/hub の publish REST endpoint・状態機械・packages/inspection・promote/rollback・監査 event 記録を実装する P05 実装タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P05"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/test-run-results.md",
+        "apps/hub/src/__tests__/publish-pipeline/"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P05 の実装に対して P04 のテストスタブを実行し quality_constraints 8 件の充足状況を機械的に確認する P06 テスト実行タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P06"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/acceptance-record.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P06 で green 化したテスト結果を基に goal-spec acceptance 3 件の充足を確認する P07 受入タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "security",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "backend",
+        "refactor-migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P07"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "packages/inspection/",
+        "docs/features/feat-publish-pipeline/refactoring-migration-note.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "本 feature は packages/db/schema/ を write_scope に持たないため DB migration 生成を伴わない。P08 は harness-creator Python 資産の TypeScript 移植最終整理と検査ロジック二重実装防止の CI 恒久検査確立に読み替える required-node タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "security",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "security",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P08"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/publish/",
+        "apps/hub/scripts/",
+        "docs/features/feat-publish-pipeline/quality-assurance-report.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "qa-037 のレート制限・Idempotency-Key TTL・tenant 分離・secret scan の非機能要件を機械的に保証する P09 品質保証タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P09"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/final-review-record.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P03 の設計時レビューとは独立して、実装完了後の quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断を最終確認する P10 独立最終レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P10"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/evidence-summary.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P06/P07/P09/P10 で得られた証跡を集約し、第三者が再現可能な形で保存する P11 証跡タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "documentation",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P11"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/runbook.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "運用時の rollback 手順・ポーリング監視・orphan_candidate 処理を runbook として確立する P12 文書化・運用タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test",
+      "project_id": "feature-package-feat-publish-pipeline",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publish-pipeline",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T02:41:18Z",
+      "updated_at": "2026-07-18T02:41:18Z",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P12"
+      ],
+      "related_nodes": [
+        "feat-publish-pipeline",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publish-pipeline/release-record.md"
+      ],
+      "parent_feature": "feat-publish-pipeline",
+      "feature_package_id": "feature-package/feat-publish-pipeline",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-publish-pipeline/plan-findings.json",
+        "evaluated_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-publish-pipeline/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "imported_at": "2026-07-18T02:41:18Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "apps/hub は cloudflare-workers/hub 上の実デプロイ単位であり、P13 は publish endpoint の本番デプロイと full smoke test を実施する release-deploy タスクとして literal に適用される",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publish-pipeline/sys-publish-pipeline-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    }
+  ]
+}

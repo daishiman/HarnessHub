@@ -1,0 +1,23 @@
+{
+  "op": "confirm",
+  "graph_node_id": "feat-tenant-data-retention",
+  "transition": {
+    "confirmation_status": [
+      "draft",
+      "confirmed"
+    ]
+  },
+  "confirmed_at": "2026-07-18T16:20:35Z",
+  "source_digest_pinned": "5b591475b2b95dc3cbdc76b1c9ab3bc585b1c70baad75311f2420884cf013214",
+  "review_basis": [
+    "C4 改訂スコープ (保持対象 = 業務ナレッジ/ドキュメント + ハーネス実行入出力、credential 非保持、R2 + テナント別封筒暗号化、即時完全削除) は appr-007 でユーザー承認済み。3 段階 AskUserQuestion の証跡は system-spec/spec-state.json qa-047/qa-048",
+    "scope_in/scope_out/acceptance を C4 改訂確定内容 (system-spec/00-requirements-definition.md C4/U7・qa-050 §4 の purpose=tenant_data 封筒暗号化 + D4 row-level + R2 tenant prefix 分離・即時完全削除 + 削除監査 event + restore drill 非復元確認) と突合し矛盾なし",
+    "feature 切り出しの根拠 = docs/features/feat-domain-model-db/requirements-baseline.md §6.2 が qa-045 を『本 digest スコープ外・dev-graph への follow-up feature candidate として返す』と明示 (source digest を pin)",
+    "confirmation の前提だった docs/security-spec.md §1.4 N2 の C4 旧前提矛盾は、確定済み qa-050 内容の転記 (保護資産 2 種・T14/T15 追加・N2 撤回) により解消済み (2026-07-18・本セッション)",
+    "ユーザー指示: 継続指示 (2026-07-18 「1をつづけて」= confirmation プロセス続行)"
+  ],
+  "validator": {
+    "schema": "validate-graph-schema.py",
+    "valid": true
+  }
+}

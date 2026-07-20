@@ -43,7 +43,7 @@ Tenant(plan 付き) / User(**salary=年収 PII**, role, status, 利用集計) / 
 | B2 | 実行ログ収集 (ingest) | Claude Code 実行イベントの受信 endpoint。Device Flow token で認証、tenant/user/harness 紐付け、append-only | tracking/dashboard/users の供給元。改ざん対策 = 服务側タイムスタンプ + 冪等キー |
 | B3 | 集計 (rollup) | 週次/月次/ハーネス別/部門別/ユーザー別の事前集計 (Workers cron)。生イベントは保持期間を決めて R2 へ退避 | Turso 無料枠 (読取 5 億行/月) 内に収める設計 |
 | B4 | 公開 pipeline (既存) | 検査 (secret scan・skills-only)・Green/Yellow・immutable Release・stable pointer | feat-publish-pipeline と同一。visibility=public は当面非対象 |
-| B5 | **AI 処理キュー (pull 型)** | シート生成・フィードバック自動対応・doc 下書きは「サーバが AI を呼ぶ」のではなく、**提供者/作者側 Claude Code セッションがキューを pull して処理し結果を書き戻す** | C2 費用ゼロ制約とサーバ側 API 課金の衝突を回避する要 (要 decision D5) |
+| B5 | **AI 処理キュー (pull 型)** | シート生成・フィードバック自動対応・doc 下書きは「サーバが AI を呼ぶ」のではなく、**提供者/作者側 Claude Code セッションがキューを pull して処理し結果を書き戻す** | C2 費用ゼロ制約とサーバ側 API 課金の衝突を回避する要 (**D5 で確定済み**) |
 | B6 | フィードバック受付 | CLI 発 (`harness feedback`) + Web フォームの 2 経路 → 同一キュー。status 遷移 (未対応→対応中→対応済み) | B5 の消費対象 |
 | B7 | ドキュメント CMS | Markdown 保存・common/tenant scope 合成・AI 下書き (B5 経由) | Turso + 必要なら R2 |
 | B8 | 通知 | アプリ内通知 + メール (生成完了・レビュー結果・週次サマリー)。設定は Settings 準拠 | メール送信手段は無料枠内で要 decision (候補: Resend free 等) |
@@ -74,8 +74,8 @@ Tenant(plan 付き) / User(**salary=年収 PII**, role, status, 利用集計) / 
 ## 6. 確定仕様との差分 (要件層に反映すべき変更点)
 
 1. **スコープ拡張 (U7 改訂)**: 効果測定/ダッシュボード (旧 Stage 4 対象外) と Web ヒアリング intake・フィードバックループ・ドキュメント CMS・ユーザー管理をスコープ入り — 根拠: ユーザー指示 (2026-07-17 mockup 反映指示)
-2. **新規 decision 候補 D5**: AI 処理 (シート生成・FB 対応・doc 下書き) の実行主体 — pull 型 (Claude Code セッション消費・追加費用なし) vs server-side API (課金)。**推奨: pull 型** (C2 整合・mock の記述とも一致)
-3. **新規 decision 候補 D6**: メール通知の送信手段 (無料枠)
+2. **decision D5 反映済み**: AI 処理 (シート生成・FB 対応・doc 下書き) の実行主体は pull 型 (Claude Code セッション消費・追加費用なし)
+3. **decision D6 反映済み**: メール通知は Resend の無料枠内で補助送信し、アプリ内通知を正本とする
 4. **非採用 (矛盾解消)**: パスワードログイン/2FA 自前実装 (D3 維持)、visibility=public (Stage 5 のまま)、`plugin install ./zip` 手動配布 (代替経路としてのみ)
 5. **feature 分解への影響**: 新規 feature 候補 6 件 — feat-metrics-tracking (B2/B3/tracking/dashboard) / feat-hearing-intake (form/sheets/B5 の一部) / feat-build-pipeline-board (pipeline) / feat-feedback-loop (feedback/B6) / feat-docs-cms (docs/B7) / feat-user-org-admin (users/account/B10)。既存 8 feature は維持 (dual-catalog-web は S01-S04 のまま)
 
@@ -86,5 +86,22 @@ Tenant(plan 付き) / User(**salary=年収 PII**, role, status, 利用集計) / 
 - [x] docs/user-journeys.md へ J4-J6 追加
 - [x] docs/shared-layers.md へ共通部品/共通層追加
 - [x] docs/system-design-overview.md の全体タスクマップ拡張
-- [ ] 要件層 (spec-state) への反映: U7 改訂 + qa 追記 + D5/D6 決定 → `/spec-hearing-start` 経由 (次工程)
-- [ ] `/spec-compile` → C05 再評価 → `/dev-graph spec` 再取込 → `/dev-graph decompose` (feature 6 件追加) → 各 feature の `/dev-graph plan`
+- [x] 要件層 (spec-state) への反映: U7 改訂 + qa 追記 (qa-021〜qa-025 ほか) + D5/D6 決定 — 完了 (2026-07-17)
+- [x] `/spec-compile` → C05 再評価 → `/dev-graph spec` 再取込 → `/dev-graph decompose` (feature 6 件追加) — 完了。6 feature とも P01 要件ベースライン確定済み ([docs/features/](../features/) 配下、2026-07-18 現在)
+- [x] 構築優先順位のユーザー確定 (2026-07-18): P0 認証基盤 → P1 ヒアリング (form/sheets/sheet-detail) → P2 プラグイン Hub + パイプライン (harnesses/upload/install/pipeline) → P3 feedback/docs → P4 users/tracking → P5 dashboard/統制。**正本は [docs/system-design-overview.md](../system-design-overview.md) §3「構築優先順位」** (mock の画面価値の序列 = ヒアリングと Hub が中核、dashboard は後段、という理解と一致)
+
+## 8. 2026-07-18 横断再照合で解消した差分
+
+| mockup の表現/挙動 | 実装仕様への反映 | 解消理由・正本 |
+|---|---|---|
+| 一覧画面の「プラグインを公開」から upload-modal を開く | **S01 のモーダル**とする。S02 は既存 Project の詳細・管理・導入 | [screen-inventory.md](../screen-inventory.md) / [frontend-spec.md](../frontend-spec.md) |
+| upload は CLI 推奨 + 手動 ZIP、target=`skill/web_app`、visibility=`private/workspace/public` | CLI と Web ZIP を同じ PublishRequest/検査へ収束。target 2 種は採用、`public` は Stage 5 まで UI に出さない | U7/I1/I2 と security-spec §6.3 |
+| install modal は marketplace add/install、詳細説明にはローカル ZIP 例も残る | 利用者向け語彙は「追加/ダウンロード」。実体は Stage 0 採用の marketplace/installer descriptor、raw ZIP は採用時だけ短命 URL | backend-spec §4.5.1。古いローカル ZIP 例を既定導線にしない |
+| シート一覧/詳細と「PDF でダウンロード」 | S11 の全列、S12 の 4 生成 section・snapshot・Build 参照を API/UI 契約化。PDF は認可済み表示モデルの print 出力 | screen-inventory「最優先画面の完了境界」/ frontend-spec §3.2 |
+| 送信完了文の「構築パイプラインに登録」 | P2 有効後は `sheet_generation` 完了時に Build を冪等に自動作成。P1 で先に完成したシートは P2 migration で 1 回 backfill | backend-spec §4.11。P1→P2 の構築順と mock の自動登録を両立 |
+| Feedback 3 種と AI 応答文の「パイプラインに登録」 | type を `improvement/review/bug` とし、AI 完了時に FR 起点の修正版 Build を冪等作成 | backend-spec §2.3/§4.11。旧 `question` enum を mock の「レビュー依頼」へ修正 |
+| シート status の「下書き」 | backend `received` の表示は「受付」に統一 | backend-spec §5.2 の 4 値を正本にし、mock の表示だけを補正 |
+| role toggle の admin/一般、password login | admin/member の**認可枠組みは P0**、管理 UI は P4/P5。password login は SSO redirect へ置換 | D3/SEC1/SEC2。見た目の toggle を認証方式として採用しない |
+| 単一サンプル Workspace/ハーネス | 複数 tenant/workspace と、各 Workspace の複数 Project/target を API・画面の前提にする | system-design-overview §3「マルチシステム」定義 |
+
+この表により、mockup は見た目/情報設計、backend/frontend/security は実装方式という責務分担を保ったまま、最優先 P1/P2 の導線に未解決差分がない状態とする。

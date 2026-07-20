@@ -17,12 +17,12 @@ template_id: architecture
 template_version: 1.0.0
 confirmation_status: confirmed
 evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "30c3035180c916f7745831b8b1dc1b690ebc528cb8ca054001cfd1805a6387e6", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
-source_lineage: {"imported_at": "2026-07-18T08:10:00Z", "origin_kind": "system-spec-harness", "source_digest": "30c3035180c916f7745831b8b1dc1b690ebc528cb8ca054001cfd1805a6387e6", "source_path": "system-spec/security.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
+confirmation_evidence: {"evaluated_digest": "cf1d1fbb63146f77a1885fbba762035ddadad6638cc405790274b7b5161beb07", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
+source_lineage: {"imported_at": "2026-07-18T15:01:04Z", "origin_kind": "system-spec-harness", "source_digest": "cf1d1fbb63146f77a1885fbba762035ddadad6638cc405790274b7b5161beb07", "source_path": "system-spec/security.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
 created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-18T08:10:00Z
+updated_at: 2026-07-18T15:01:04Z
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-infrastructure"]
+related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow"]
 resource_scope: ["architecture/harness-hub-security.md"]
 purpose: deny-by-default (Tenant/Workspace スコープ強制 = D4 row-level-scope)・Auth.js マルチテナント OIDC・Device Flow の正本参照
 goal: qa-005/qa-006/qa-008/qa-020 の確定要件に適合する認証・認可・分離テストの指針を提供する
@@ -53,11 +53,11 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 
 ## 正本 (source of truth)
 
-- [system-spec/security.md](../system-spec/security.md) (sha256: `30c3035180c916f7…`)
+- [system-spec/security.md](../system-spec/security.md) (sha256: `cf1d1fbb63146f77…`)
 - [system-spec/auth.md](../system-spec/auth.md) (sha256: `8735c8860019ecb8…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 取込日時: 2026-07-18T08:10:00Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-07-18T15:01:04Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -98,4 +98,3 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 ## Risks and verification
 
 正本章 (system-spec/security.md, system-spec/auth.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
-

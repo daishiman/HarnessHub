@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-18T01:23:52Z",
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:a4a7cdd6df5cc2b9195fde7917093422df33c982adcd00e124749c89815add2b",
+  "evaluated_digest": "sha256:a4a7cdd6df5cc2b9195fde7917093422df33c982adcd00e124749c89815add2b",
+  "published_digest": "sha256:a4a7cdd6df5cc2b9195fde7917093422df33c982adcd00e124749c89815add2b",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/feature-package-feat-auth-tenancy/dev-graph-registration.json"
+}

@@ -1,0 +1,666 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P01",
+        "id": "HarnessHub-lm7.1",
+        "phase_ref": "P01",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:14Z",
+            "created_by": "daishiman",
+            "description": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P01",
+            "id": "HarnessHub-lm7.1",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定",
+            "updated_at": "2026-07-19T14:16:40Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P02",
+        "id": "HarnessHub-lm7.2",
+        "phase_ref": "P02",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "assignee": "daishiman",
+            "created_at": "2026-07-18T01:46:15Z",
+            "created_by": "daishiman",
+            "description": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P02",
+            "id": "HarnessHub-lm7.2",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "started_at": "2026-07-18T02:26:10Z",
+            "status": "open",
+            "title": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計",
+            "updated_at": "2026-07-19T14:16:42Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P03",
+        "id": "HarnessHub-lm7.3",
+        "phase_ref": "P03",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:16Z",
+            "created_by": "daishiman",
+            "description": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P03",
+            "id": "HarnessHub-lm7.3",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認",
+            "updated_at": "2026-07-19T14:16:45Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P04",
+        "id": "HarnessHub-lm7.4",
+        "phase_ref": "P04",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:18Z",
+            "created_by": "daishiman",
+            "description": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P04",
+            "id": "HarnessHub-lm7.4",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計",
+            "updated_at": "2026-07-19T14:16:47Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P05",
+        "id": "HarnessHub-lm7.5",
+        "phase_ref": "P05",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:19Z",
+            "created_by": "daishiman",
+            "description": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P05",
+            "id": "HarnessHub-lm7.5",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装",
+            "updated_at": "2026-07-19T14:16:49Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P06",
+        "id": "HarnessHub-lm7.6",
+        "phase_ref": "P06",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:20Z",
+            "created_by": "daishiman",
+            "description": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P06",
+            "id": "HarnessHub-lm7.6",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録",
+            "updated_at": "2026-07-19T14:16:51Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P07",
+        "id": "HarnessHub-lm7.7",
+        "phase_ref": "P07",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:21Z",
+            "created_by": "daishiman",
+            "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P07",
+            "id": "HarnessHub-lm7.7",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "受入 — goal-spec acceptance 3 項目の確認",
+            "updated_at": "2026-07-19T14:16:53Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P08",
+        "id": "HarnessHub-lm7.8",
+        "phase_ref": "P08",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:23Z",
+            "created_by": "daishiman",
+            "description": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P08",
+            "id": "HarnessHub-lm7.8",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認",
+            "updated_at": "2026-07-19T14:16:56Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P09",
+        "id": "HarnessHub-lm7.9",
+        "phase_ref": "P09",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:24Z",
+            "created_by": "daishiman",
+            "description": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P09",
+            "id": "HarnessHub-lm7.9",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認",
+            "updated_at": "2026-07-19T14:16:58Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P10",
+        "id": "HarnessHub-lm7.10",
+        "phase_ref": "P10",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:25Z",
+            "created_by": "daishiman",
+            "description": "最終独立レビュー — quality_constraints 8 件の充足判定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P10",
+            "id": "HarnessHub-lm7.10",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+            "updated_at": "2026-07-19T14:17:00Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P11",
+        "id": "HarnessHub-lm7.11",
+        "phase_ref": "P11",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:26Z",
+            "created_by": "daishiman",
+            "description": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P11",
+            "id": "HarnessHub-lm7.11",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+            "updated_at": "2026-07-19T14:17:02Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P12",
+        "id": "HarnessHub-lm7.12",
+        "phase_ref": "P12",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:27Z",
+            "created_by": "daishiman",
+            "description": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P12",
+            "id": "HarnessHub-lm7.12",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成",
+            "updated_at": "2026-07-19T14:17:04Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-METRICS-TRACKING-P13",
+        "id": "HarnessHub-lm7.13",
+        "phase_ref": "P13",
+        "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:46:28Z",
+            "created_by": "daishiman",
+            "description": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+            "external_ref": "dev-graph:SYS-METRICS-TRACKING-P13",
+            "id": "HarnessHub-lm7.13",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+            "updated_at": "2026-07-19T14:17:06Z"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-lm7.1",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.2"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.2",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.3"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.3",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.4"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.4",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.5"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.5",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.6"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.6",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.7"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.7",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.8"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.8",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.9"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.9",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.10"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.10",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.11"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.11",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.12"
+      },
+      {
+        "depends_on": "HarnessHub-lm7.12",
+        "idempotent": true,
+        "issue_id": "HarnessHub-lm7.13"
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "external_ref": "feat-metrics-tracking",
+      "id": "HarnessHub-lm7",
+      "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+      "superseded": true,
+      "updated": [
+        {
+          "created_at": "2026-07-18T01:46:12Z",
+          "created_by": "daishiman",
+          "description": "導入ハーネスの利用実態と削減効果 (G5) を可視化するため、実行ログ ingest (B2: 短命 token・冪等キー・回数のみ)・週次 rollup (B3: Workers cron)・試算エンジン共通層 (サーバ側係数換算) と S09/S16 ダッシュボードを提供する (I10)\n\n実行ログがサーバ側で信頼可能に集計され (SEC5)、S09 ダッシュボード・S16 利用/削減効果・S17 個別集計が週次 rollup から描画される状態\n\ndev_graph_source_digest: sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+          "external_ref": "dev-graph:feat-metrics-tracking",
+          "id": "HarnessHub-lm7",
+          "issue_type": "epic",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "status": "open",
+          "title": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)",
+          "updated_at": "2026-07-19T14:16:39Z"
+        }
+      ]
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-lm7.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-lm7.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-lm7.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-lm7.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-METRICS-TRACKING-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ],
+    "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

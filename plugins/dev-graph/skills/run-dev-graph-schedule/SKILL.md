@@ -43,7 +43,7 @@ feedback_contract:
   criteria:
     - id: IN1
       loop_scope: inner
-      text: "schedule-graph.py のready-setがblocked/draft/unconfirmed/evaluation非pass/readiness非completeを0件で含む"
+      text: "schedule-graph.py のready-setがblocked/draft/unconfirmed/evaluation非pass/readiness非completeを0件で含み、Beads receiptのgraph_status/graph_depends_on exact-setが現在graphと一致する"
       verify_by: script
     - id: OUT1
       loop_scope: outer
@@ -73,7 +73,18 @@ feedback_contract:
 4. feature ready は system-dev-planner 起動候補、task ready は実行候補として別 batch にする。両者を同じ batch に混ぜない。
 5. `schedule-graph.py` の resource_scope conflict と C27 lease snapshot を重ね、同じ resource を触る組を分離する。C17 独立 verifier が不一致を出したら推薦しない。
 
-出力は ready sets、parallel batches、conflict pairs、各 task の `devgraph/<graph_node_id>` branch と `dev-graph worktree claim <id>` command。read-only で graph/tracker/lease を変更しない。
+出力は ready sets、parallel batches、conflict pairs、各 task の `devgraph/<graph_node_id>` branch と `dev-graph worktree claim <id>` command。read-only で graph/tracker/lease を変更せず、実行receiptだけを`eval-log/run-dev-graph-schedule-execution.json`へ保存する。
+
+```bash
+python3 ../../scripts/schedule-graph.py \
+  --repo-root "$DEV_GRAPH_ROOT" \
+  --graph "$DEV_GRAPH_ROOT/.dev-graph/state/graph.json" \
+  --ready-json "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-beads-ready.json" \
+  --leases "<git-common-dir>/dev-graph/leases.json" \
+  --eval-log "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-execution.json"
+```
+
+`--leases`を明示したのにsnapshotが存在しない場合は空扱いせず停止する。binding混在時は、`beads`だけを`--ready-json`の`edge_parity.confirmed=true`との積集合にし、`github/none`はlocal gateから計算する。`--scope`は指定nodeのsubtree、`--max-parallel`は1 batchの上限として適用する。期限切れleaseはactive扱いせず、graph/tracker/leaseの実行前後digestが1つでも変われば結果を破棄する。`--eval-log`はrepositoryの`eval-log/`配下だけを許可する。
 
 ## ゴールシーク実行
 
@@ -92,6 +103,8 @@ feedback_contract:
 - [ ] 同一 parallel batch の resource_scope.touches 重複 pair が0件である
 - [ ] 各 task の suggested_branch が `devgraph/<graph_node_id>` で claim command が public CLI 形式である
 - [ ] 実行前後の graph/tracker/lease digest が同一である
+- [ ] lease pathがgit common-dirの正本と一致し、Beads receiptのstatus/depends_on exact-setが現在graphに一致する
+- [ ] C17独立verifierがready/batch/lease authorityを再計算してPASSしている
 
 ### ゴールシークループ
 
@@ -126,10 +139,10 @@ PY
 
 ## Criteria acceptance
 
-- `criteria:IN1`: `schedule-graph.py` の ready-set に blocked/draft/unconfirmed/evaluation非pass/readiness非complete の候補が 0件であることを script test で検証する。
+- `criteria:IN1`: `schedule-graph.py` の ready-set に blocked/draft/unconfirmed/evaluation非pass/readiness非complete または現在graphとstatus/depends_on exact-setが違うBeads候補が0件であることをscript testで検証する。
 - `criteria:OUT1`: 推薦 task は全 `depends_on` がdoneで、未充足依存を持つ候補が ready-set に0件であることを受入テストで検証する。
-- `criteria:OUT2`: 同一parallel batch内の `resource_scope.touches` 重複ペアが0件で、active leaseと衝突する候補を推薦しないことを受入テストで検証する。
-- `criteria:OUT3`: ready taskごとに一意な `suggested_branch=devgraph/<graph_node_id>` と `dev-graph worktree claim <id>` commandを返し、C27が同一graph_node_idの二重claimを0件に抑止することを受入テストで検証する。
+- `criteria:OUT2`: 同一parallel batch内の `resource_scope.touches` 重複ペアが0件で、git common-dir正本のactive leaseと衝突する候補を推薦せず、C17独立verifierが再計算PASSすることを受入テストで検証する。
+- `criteria:OUT3`: ready taskごとに一意な `suggested_branch=devgraph/<graph_node_id>` と `dev-graph worktree claim <id>` commandを返し、C27が同一graph_node_idの二重claimを0件に抑止することを受入テストで検証する。実行receiptは`eval-log/`だけへ書く。
 
 ## Gotchas
 

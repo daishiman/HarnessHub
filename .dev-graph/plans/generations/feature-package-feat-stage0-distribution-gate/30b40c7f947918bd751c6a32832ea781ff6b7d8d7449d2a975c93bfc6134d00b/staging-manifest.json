@@ -1,0 +1,33 @@
+{
+  "canonical_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+  "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+  "files": {
+    "feature-package.json": "7665e0407020effcf3aa0bdcbfa6a7529a06f7b9fc68d19a6ece6b8d45574a48",
+    "system-build-handoff.json": "8a445846106d99fad8db75b44b82214833e472288455978661abd803699f1650",
+    "task-graph.json": "7c5f5a76a9556383a80e00940b9c82ead11f54a720fcf86c1752aa78ca595a2f",
+    "task-specs/phase-01-requirements.md": "c09366ae9ac6faa02512ceffeee5849546272ea45f7d5a9c86709e6b10474e8e",
+    "task-specs/phase-02-architecture.md": "9cc2145735b9aa4e3f8ffa85b4c28432e412604398e89274ac8e92298f08379b",
+    "task-specs/phase-03-design-review.md": "5564b27660cb153fd9d36bfc8323ec9b9e91482d55ec71190560824b49ca350f",
+    "task-specs/phase-04-test-design.md": "c6e2c9ee304b21b29bdbe7098c10da107bdbca4c5f2f177117744a0d26bbbdc1",
+    "task-specs/phase-05-implementation.md": "9a04e800419b6f70721dcdb3fdcded925c86b78666d4b8ce1f8e1876441ae8e1",
+    "task-specs/phase-06-test-run.md": "80e55a7a470f26a3da96f1106ec8ada4bc4df6eb89898f7ff5d7e50954d9ae6b",
+    "task-specs/phase-07-acceptance.md": "6f2461fac0f9e48352b0f5a63996dc56f38fe73bfbeed3f8e5079ccac913dcd6",
+    "task-specs/phase-08-refactoring-migration.md": "770080252e78477d9e5b8cffa922ffb6f89721fe12064609db8ccc6931659f61",
+    "task-specs/phase-09-quality-assurance.md": "19a0d7796c709a1da5e8335df46084421415a4368d3996b596651ed55fb0b383",
+    "task-specs/phase-10-final-review.md": "5232ba18d2c430d98a796b5303b2f9687bab4910bedfc7635c181337bc76e19b",
+    "task-specs/phase-11-evidence.md": "e05e9ab90a459016ef2fc810562538a60059ff81bd242d576fc1c6808fbeb220",
+    "task-specs/phase-12-documentation-operations.md": "c2d26e12f2c9b067b12367ae4cfddaf7de4341890bcf6b634e4780fc33998ab5",
+    "task-specs/phase-13-release-deploy.md": "218c353ff330352827f2488cc5f1b853caf9667d526ddd177aee2d5bb75cab90",
+    "workstream-inventory.json": "1df1da528d04d2976748c2983f75337d2f681832a0cc23cfb88ca761d230d8d8"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "8a445846106d99fad8db75b44b82214833e472288455978661abd803699f1650",
+    "source_canonical_digest": "sha256:202e373c0bb5a3a9ac6c94110bda972b25d15896b56f37717de310414518c412"
+  },
+  "parent_feature": "feat-stage0-distribution-gate",
+  "schema_version": "1.0.0"
+}

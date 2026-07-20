@@ -71,9 +71,9 @@ packages/db         Drizzle スキーマ + リポジトリ層
 | テーブル | 主な列 | 制約・備考 |
 |---|---|---|
 | `hearing_sheets` | id, tenant_id, workspace_id, code(`HS-xxxx`), title, applicant_user_id, department, status(§5.2), form_json, estimate_json, ai_job_id, generated_doc_ids_json, build_id | code はテナント別連番。estimate_json は提出時のサーバ側試算 snapshot |
-| `builds` | id, tenant_id, workspace_id, sheet_id, project_id, title, stage(§5.3 の 7 値), risk(`ok/warn`), eta_date, assignee_user_id, publish_request_id, note | 公開工程は PublishRequest へ接続し二重実装しない (B4) |
+| `builds` | id, tenant_id, workspace_id, sheet_id NULL, feedback_id NULL, project_id, title, stage(§5.3 の 7 値), risk(`ok/warn`), eta_date, assignee_user_id, publish_request_id, note | 起点は Sheet/Feedback のどちらか一方 (`CHECK` + 非 NULL 値の partial UNIQUE。各起点 = 1 Build)。公開工程は PublishRequest へ接続し二重実装しない (B4) |
 | `build_stage_events` | id, build_id, from_stage, to_stage, actor_user_id, created_at | append-only (ボード履歴表示用。監査は audit_events にも記録) |
-| `feedbacks` | id, tenant_id, workspace_id, code(`FR-xxx`), project_id, type(`improvement/bug/question`), source(`harness/manual`), body, status(§5.4), ai_response, ai_job_id, created_by | CLI 発 (`harness feedback`) と Web フォームは同一テーブル・同一キュー (B6) |
+| `feedbacks` | id, tenant_id, workspace_id, code(`FR-xxx`), project_id, type(`improvement/review/bug`), priority(`high/medium/low`), source(`harness/manual`), body, status(§5.4), ai_response, ai_job_id, created_by | CLI 発 (`harness feedback`) と Web フォームは同一テーブル・同一キュー (B6)。mock の「改善要望/レビュー依頼/バグ報告」と優先度に対応 |
 | `documents` | id, code(`DOC-xx`), scope(`common/tenant`), tenant_id (common は NULL), category, title, body_md, status(`draft/published`), updated_by | common は provider-admin のみ書込・全テナント読取専用 (SEC3 例外)。category は自由文字列 + 推奨プリセット (使い方/FAQ/構想・戦略/セキュリティ/経理/CS 等 — mockup 実測) |
 | `notifications` | id, tenant_id, user_id, kind, title, body, link_path, read_at, created_at | アプリ内通知が正本、メールは補助 (D6) |
 | `metrics_events` | id, tenant_id, workspace_id, project_id, user_id, run_count, client_context_json, idempotency_key, server_received_at | **append-only**。UNIQUE(tenant_id, idempotency_key)。時間・金額の自己申告は受けない (SEC5)。**生データは無期限 DB 保持** (ユーザー決定 qa-031)。Turso 無料枠使用量を保守運用の監視対象とし、圧迫時は保持期間導入を R4-reopen で再検討 |
@@ -112,6 +112,8 @@ packages/db         Drizzle スキーマ + リポジトリ層
 | sheets status 変更・再生成 | — | — | ✓ | ✓ |
 | builds 閲覧 | ✓ | ✓ | ✓ | ✓ |
 | builds 工程操作 | — | — | ✓ | ✓ |
+| projects 作成 (作成者が owner) | ✓ | ✓ | ✓ | ✓ |
+| projects 情報変更 | — | ✓ | ✓ | ✓ |
 | harnesses 閲覧/install 導線 | ✓ | ✓ | ✓ | ✓ |
 | publish (自 Project) | — | ✓ | ✓ | ✓ |
 | Yellow 承認 / suspend | — | suspend のみ ✓ | ✓ | ✓ |
@@ -145,9 +147,9 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 ### 3.8 監査対象 action (SEC6 = 既存 I8 + Studio 追加)
 
-`publish.request / publish.approve / publish.reject / channel.promote / channel.rollback / release.suspend / sheet.status_change / build.stage_change / doc.create / doc.update / user.role_change / user.salary_change / coefficient.change / token.revoke / feedback.status_change / ai_job.complete`
+`project.create / project.update / publish.request / publish.approve / publish.reject / channel.promote / channel.rollback / release.suspend / sheet.status_change / build.stage_change / doc.create / doc.update / user.role_change / user.salary_change / coefficient.change / token.revoke / feedback.status_change / ai_job.complete`
 
-**security-spec で追加 (計 20)**: `user.salary_read` (PII 読取の記録) / `idp.connection_change` / `token.reuse_detected` / `provider.cross_tenant_access` (provider-admin の越境は読取も記録 — security-spec §3.1.3)。記録するのは変更の**事実**であり、値そのもの (salary 金額・secret・token) は書かない (security-spec §5.2)。
+**security-spec で追加**: `user.salary_read` (PII 読取の記録) / `idp.connection_change` / `token.reuse_detected` / `provider.cross_tenant_access` (provider-admin の越境は読取も記録 — security-spec §3.1.3)。記録するのは変更の**事実**であり、値そのもの (salary 金額・secret・token) は書かない (security-spec §5.2)。action 数は固定値として別管理せず、この列挙を正本にする。
 
 ## 4. API エンドポイント一覧
 
@@ -179,12 +181,16 @@ packages/db         Drizzle スキーマ + リポジトリ層
 | Method Path | 最小 role | 概要 |
 |---|---|---|
 | `POST /api/v1/sheets` | member | ウィザード 12 項目提出 → HS コード発行、status=`received`、試算 snapshot 保存、AiJob(`sheet_generation`) 投入、受付通知 |
-| `GET /api/v1/sheets` | member | 一覧 (filter: status/department/q, cursor) |
-| `GET /api/v1/sheets/:id` | member | 詳細 (form + estimate + 生成ドキュメント参照 + 対応 build) |
+| `GET /api/v1/sheets` | member | 一覧 (filter: status/department/q, cursor)。member/owner は `applicant_user_id = principal.user_id` の自分のシートだけ、workspace-admin は自テナント全件。item は `id, code, status, title, domain, department, people, hours, applicant{name}, updated_at` を返す |
+| `GET /api/v1/sheets/:id` | member | 詳細。自分のシートまたは admin のみ。`form_snapshot, estimate_snapshot, generated_sections{overview, issue, feature_tags, estimated_effect}, applicant, department, created_at, ai_job_status, build_ref, publish_request_ref` を返す。salary 原値は返さない |
 | `PATCH /api/v1/sheets/:id` | workspace-admin | status 遷移 (§5.2)。監査 event |
 | `POST /api/v1/sheets/:id/regenerate` | workspace-admin | AiJob 再投入 (status→`generating`) |
 
 **FormData 12 項目 (mockup 実測。ラベル和訳は表示層)**: `taskName, company, applicant, domain, issue, tools, hours, people, salary, features, output, priority`
+
+- `applicant` は表示用の自由入力を保存するが、認可の所有者判定は改ざん可能な form 値でなく session の `principal.user_id` を `applicant_user_id` へ固定して行う。
+- status の保存値は §5.2 の `received/generating/review/completed`。mock の「下書き」は `received` の旧表示とみなし、統一 UI ラベルは「受付」。
+- PDF は独立した非認可 API を作らず、認可済み詳細 DTO を frontend-spec §3.2 の印刷表示へ再利用する。
 
 ### 4.4 構築パイプライン (pipeline board)
 
@@ -192,7 +198,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 |---|---|---|
 | `GET /api/v1/builds` | member | 7 工程ボード一覧 (stage 別グルーピングはクライアント) |
 | `GET /api/v1/builds/:id` | member | 詳細 + stage 履歴 |
-| `POST /api/v1/builds` | workspace-admin | sheet からの起票 (sheet_id 紐付け) |
+| `POST /api/v1/builds` | workspace-admin | 手動復旧/例外用。`sheet_id` または `feedback_id` の一方だけを指定。通常経路は AiJob 完了時の自動作成 (§4.11) |
 | `PATCH /api/v1/builds/:id` | workspace-admin | title/risk/eta/assignee/note |
 | `POST /api/v1/builds/:id/stage` | workspace-admin | 工程遷移 (§5.3)。`publish` 工程は publish_request_id の接続を要求 (B4)。監査 event |
 
@@ -202,16 +208,37 @@ packages/db         Drizzle スキーマ + リポジトリ層
 |---|---|---|
 | `GET /api/v1/harnesses` | member | CatalogEntry 一覧 (filter: target/status/q) |
 | `GET /api/v1/harnesses/:projectId` | member | 詳細: channels + stable release + install 導線 (marketplace URL / web_app URL) + 利用統計 |
-| marketplace 配信 (catalog.json / package 取得) | — | 既存 feat (S01-S04 / I6 URL 型 marketplace) の契約を維持。本仕様で変更しない |
+| `POST /api/v1/harnesses/:projectId/install` | member | 利用者の「追加/ダウンロード」操作。安定版だけを解決し、target 別 descriptor を返す (§4.5.1)。`Idempotency-Key` で download count の重複加算を防ぐ |
+| marketplace 配信 (catalog.json / package 取得) | member | 既存 feat (S01-S04 / I6 URL 型 marketplace) の契約を維持。R2 key は公開せず Worker が tenant scope と安定版を再確認する |
+
+#### 4.5.1 install/download descriptor (target 判別 union)
+
+```json
+{ "target": "skill", "release_id": "...", "marketplace_url": "https://...", "install_commands": ["..."], "download_url": null }
+{ "target": "web_app", "release_id": "...", "launch_url": "https://..." }
+```
+
+- `skill`: Stage 0 の配布 Gate で採用した marketplace/Bootstrap Installer のコマンドを返す。raw ZIP 直接取得が Gate で採用された場合だけ `download_url` に 5 分以内の単回・短命 URL を返し、それまでは `null`。mock 内の `plugin install ./zip` は既定経路にしない。
+- `web_app`: 健全性確認済み deployment の `launch_url` を返す。Hub は WebApp 本体を代理 download しない。
+- suspended/非 stable/別 tenant の release は `404`。member が release id や R2 object key を指定して版をすり替える入力は受けない。
+
+#### 4.5.2 Project 管理 (S01 公開ウィザードの入口)
+
+| Method Path | 最小 role | 概要 |
+|---|---|---|
+| `POST /api/v1/projects` | member | 現在の tenant/workspace に draft Project を作成し、`owner_user_id = principal.user_id` に固定。slug/name は Workspace 内一意。`project.create` を監査 |
+| `PATCH /api/v1/projects/:id` | owner | name/description の変更。tenant/workspace/owner は body から変更不可。`project.update` を監査 |
+
+1 Workspace に Project を複数作れ、各 Project は `skill` / `web_app` の複数 TargetChannel を持てる。S01 の Web 公開ウィザードは Project 作成後に §4.6 を **session 認証**で呼ぶ。既存 Project の再公開は S02 から同じ §4.6 を呼び、Project を重複作成しない。
 
 ### 4.6 公開 (B4/B9: PublishRequest / Release / Channel — §7.2/qa-009)
 
 | Method Path | 認証/最小 role | 概要 |
 |---|---|---|
-| `POST /api/v1/publish` | Bearer / owner | PublishRequest 作成 (project, target, visibility)。Idempotency-Key 必須。直列化違反は 409 |
+| `POST /api/v1/publish` | session or Bearer / owner | PublishRequest 作成 (project, target, visibility)。Idempotency-Key 必須。直列化違反は 409。session は S01/S02 Web ウィザード、Bearer は Publisher CLI |
 | `GET /api/v1/publish` | session or Bearer | PublishRequest 一覧 (filter: project/channel/status, cursor)。owner = 自 Project のみ、workspace-admin = Workspace 全体。S03 (公開状態) の進行中 request 発見と S05 (承認キュー = status=approval_pending) の供給元 (frontend-spec §3.4 の additive 追加要求。qa-040。状態機械・直列化 (qa-009) は不変) |
-| `PUT /api/v1/publish/:id/package` | Bearer / owner | package upload (multipart) → R2 staging + content hash。サイズ/種別制限 (SEC7) |
-| `POST /api/v1/publish/:id/submit` | Bearer / owner | Draft→Validating。検査 pipeline を Worker 内同期実行 (skills-only 小サイズ前提) し結果を DB 記録 |
+| `PUT /api/v1/publish/:id/package` | session or Bearer / owner | package upload (multipart) → R2 staging + content hash。サイズ/種別制限 (SEC7)。session は CSRF token も必須 |
+| `POST /api/v1/publish/:id/submit` | session or Bearer / owner | Draft→Validating。検査 pipeline を Worker 内同期実行 (skills-only 小サイズ前提) し結果を DB 記録 |
 | `GET /api/v1/publish/:id` | Bearer or session | 状態 polling (Publisher/Hub Web 共用, qa-009) |
 | `POST /api/v1/publish/:id/approve` | session / workspace-admin | Yellow 承認 (Stage 2 approval queue)。監査 event |
 | `POST /api/v1/publish/:id/cancel` | Bearer / owner | 非終端のみ→Draft 差戻し |
@@ -225,7 +252,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 | Method Path | 認証/最小 role | 概要 |
 |---|---|---|
-| `POST /api/v1/feedback` | session=`manual` / Bearer=`harness` | source は principal 種別から導出。同一キューへ格納。type=`improvement/bug/question` |
+| `POST /api/v1/feedback` | session=`manual` / Bearer=`harness` | source は principal 種別から導出。同一キューへ格納。`project_id, type=improvement/review/bug, priority=high/medium/low, body` を受理 |
 | `GET /api/v1/feedback` | member | 一覧 (filter: status/type/project) |
 | `GET /api/v1/feedback/:id` | member | 詳細 (ai_response 含む) |
 | `PATCH /api/v1/feedback/:id` | workspace-admin | status 遷移 (§5.4)。監査 event。AI 対応は AiJob(`feedback_response`) 書戻しで `ai_response` 更新 + 起票者へ通知 |
@@ -261,11 +288,12 @@ packages/db         Drizzle スキーマ + リポジトリ層
 | Method Path | 認証 | 概要 |
 |---|---|---|
 | `POST /api/v1/ai-jobs/pull` | Bearer (**workspace-admin = 自テナントのみ / provider-admin = 全テナント**, qa-048 で改訂) | 最古の `queued` を lease 付き claim (`processing`, lease 10 分)。kind filter 可。空なら 204 |
-| `POST /api/v1/ai-jobs/:id/complete` | Bearer (claim 者のみ) | result 書戻し → 参照先 (sheet/feedback/doc) へ反映 + 通知。監査 event |
+| `POST /api/v1/ai-jobs/:id/complete` | Bearer (claim 者のみ) | result 書戻し → 参照先 (sheet/feedback/doc) へ反映 + 通知。`sheet_generation` は P2 有効後に `sheet_id` 一意で Build (`hearing`) を、`feedback_response` は P3 有効後に `feedback_id` 一意で修正版 Build (`improvement/review`=`design`, `bug`=`test`) を冪等に自動作成する。監査 event |
 | `POST /api/v1/ai-jobs/:id/fail` | Bearer (claim 者のみ) | attempt++。max_attempts 到達で `dead` + admin 通知 |
 | `GET /api/v1/ai-jobs` | workspace-admin | キュー監視 (滞留は保守運用 qa-027 の監視対象) |
 
 - **pull 権限 (qa-048 で改訂・2026-07-18 中立再確認)**: workspace-admin にも開放する。workspace-admin の pull は自テナントのジョブに限定 (D4 row-level scope 内で完結)。provider-admin の pull のみ cross-tenant で、audit_events へ tenant 明示で記録する (D4 の唯一の明示例外は従来どおり)。開放の目的は提供者単一障害点の解消。workspace-admin 側の Claude Code 契約が処理の前提となる点を運用ドキュメントへ明記する。
+- **phase 境界**: P1 の間は生成済み Sheet を完成扱いにでき、S12 の Build 導線は非表示。P2 有効化 migration で `build_id IS NULL AND status IN ('review','completed')` の既存 Sheet を 1 回だけ backfill し、以後は `complete` と同一トランザクションで Build を作る。これにより mock の「生成後に構築パイプラインへ登録」を満たしつつ P1→P2 の順序を守る。
 
 ### 4.12 監査・検索
 
@@ -303,6 +331,7 @@ hearing → requirements → design → build → test → review → publish
 ```
 
 - 遷移は隣接工程間 (前進/差戻し) のみ。`publish` 遷移時は接続済み PublishRequest の `Published` を確認する (B4)。
+- **初期配置は遷移ではない**: HearingSheet 起点は `hearing`、Feedback 起点は `improvement/review`=`design`・`bug`=`test` で作成する。作成後の移動だけが隣接遷移制約と `build.stage_change` 監査の対象。
 
 ### 5.4 Feedback
 
@@ -390,3 +419,16 @@ sheetEstimate   = 月間工数(hours) × 対象人数(people) × sheet_reduction
 | 14 | **provider-admin の越境** | **許可 + `provider.cross_tenant_access` の監査強制** (ベストプラクティス選定) | §3.8 に action 追加。**#3 (qa-031「cross-tenant は AiJob pull が監査付き唯一例外」) の一般化** — AiJob pull は唯一の**定常・自動**越境経路であり続けるが、IdP 設定登録・顧客サポート等の**例外的**越境も同じ監査を通す。break-glass 承認は承認者が提供者自身になり自己承認となるため採らない (security-spec §3.1.3) |
 | 15 | **workspace-admin の実効範囲** | **tenant 単位** (ベストプラクティス選定) | §2.2 `workspaces` の「共有・権限の境界」→「共有・カタログの境界」へ修正。`users` に workspace 所属列が無く認可判定で突合できないため。部門別の権限分離が要求された時点で `workspace_memberships` を追加し R4-reopen (security-spec §3.1.2) |
 | 16 | 許可表の単調性 | **仕様上の前提として明示**し T-1b が検査 (ベストプラクティス選定) | §3.3。実効 role を全順序の単一値として扱う根拠 |
+
+## 10. 構築優先順位による API 実装順 (2026-07-18 追記。additive — 正本: [system-design-overview.md](system-design-overview.md) §3「構築優先順位」)
+
+ユーザー確定の構築優先順位を API/バッチへ展開する。**本書の既確定内容 (§1〜§9) を変更するものではなく、着手順だけを定める**。認可ミドルウェア・テナント分離 (D4)・zod 単一ソースは P0 から全 endpoint に適用する (後付け不可)。
+
+| phase | 実装する API / 機構 | 備考 |
+|---|---|---|
+| **P0 (最初)** | §4.1 認証・Device Flow 全部 + 認可ミドルウェア (§3.3) + `GET /api/v1/me`・`PATCH /api/v1/me` の最小 + /health | **認証を最初に構築し、以降の全 API が同一の認可を通る**。全テーブルに tenant_id スコープ (D4) を最初から入れる |
+| **P1 (最優先)** | §4.3 sheets 全部 + §4.11 ai-jobs (pull/complete/fail) + §4.10 notifications の最小 (生成完了通知) | ヒアリングシート作成 → AI 生成 → 管理。display_code_counters (HS 採番) 含む |
+| **P2 (最優先)** | §4.5.2 projects → §4.6 publish/releases/channels 全部 → §4.5 harnesses/install → §4.4 builds | Web/CLI アップロード (publish)・管理 (catalog)・ダウンロード/導入 (target descriptor) + 7 工程ボード (publish 工程は B4 接続)。Project を tenant/workspace に固定しない |
+| **P3** | §4.7 feedback + §4.8 docs | AiJob の kind (`feedback_response`/`doc_draft`) を拡張し、feedback 完了から修正版 Build を冪等作成 |
+| **P4** | §4.2 users/coefficients (salary PII ガード = SEC4) + §4.9 metrics (ingest/summary/rollups) + §7 の rollup/使用量監視 cron | 年収・係数の投入と実行ログ集計。S16 向け |
+| **P5 (低)** | S09 向け summary の仕上げ + `POST /publish/:id/approve` の承認キュー UI 供給 (S05) + §4.12 audit-events 閲覧 UI 供給 (S06) | ダッシュボードと管理者向け統制画面。監査 event の**記録**自体は P0 から行っている (SEC6) |
