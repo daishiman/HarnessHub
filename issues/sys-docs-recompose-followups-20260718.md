@@ -12,8 +12,8 @@ iteration: null
 title: "docs/ 全体マクロ再分解 (2026-07-18) の残 findings 5 件の是正"
 owners: ["daishiman"]
 created_at: "2026-07-18T16:20:35Z"
-updated_at: "2026-07-18T16:20:35Z"
-status: "draft"
+updated_at: "2026-07-21T00:00:00Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-tenant-data-retention","feat-domain-model-db","feat-auth-tenancy"]
 resource_scope: ["docs/security-spec.md","features/feat-domain-model-db.md","plugins/dev-graph/scripts/bd-bridge.py"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-21T00:00:00Z","evidence_refs":["commit:89c47df","commit:2f1d015","beads:HarnessHub-9ao","plugins/dev-graph/tests/test_bd_bridge_external_ref_idempotency.py"],"policy":"linked_pr_merged_all","reconciled_at":null,"source":"bd-bridge --op close","status":"open"}
 implementation_readiness: {"checked_at":"2026-07-18T16:20:35Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -99,6 +99,12 @@ open+closed 併存の external_ref が 57 組 (今回復旧した y5y/5yp 系 28
 - 採用理由: 現行実装が既に fail-closed であること、本 issue の scope_in が「方針確定」であり `resource_scope` 外の挙動変更を含まないこと、dev-graph 全体が parity・digest 不一致でも止める fail-closed 設計で一貫していること。
 
 方針は文書だけでなく `test_bd_bridge_external_ref_idempotency.py::test_find_external_fails_closed_on_open_plus_closed_remnant` で機械強制しており、fail-open へ退行すると CI が落ちる。
+
+## 完了記録 (2026-07-21)
+
+findings 1〜6 すべて解消し、beads の HarnessHub-9ao は `bd-bridge --op close` でクローズ済み。証跡は commit `89c47df` (finding 4/5 のテストと方針)・`2f1d015` (派生 issue)。検証は `pytest plugins/dev-graph/tests -q` => 220 passed、`pytest tests/ -q` => 7113 passed / 4 skipped。
+
+ただし frontmatter の `completion_evidence.status` は **`open` のまま**である。本 issue の `policy` は `linked_pr_merged_all` であり、現時点で commit は作業ブランチ `feat/wt-4` 上にあるだけで main へ merge した PR が存在しないため。PR merge 後に `reconciled_at` と併せて `closed` へ遷移させること。
 
 ## 派生 issue (2026-07-21)
 
