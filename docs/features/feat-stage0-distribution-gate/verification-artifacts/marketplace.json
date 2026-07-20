@@ -13,7 +13,7 @@
       "source": {
         "source": "github",
         "repo": "daishiman/HarnessHub",
-        "path": "docs/features/feat-stage0-distribution-gate/verification-artifacts/minimal-skill-package"
+        "subdir": "docs/features/feat-stage0-distribution-gate/verification-artifacts/minimal-skill-package"
       }
     }
   ]
