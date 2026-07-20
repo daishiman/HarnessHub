@@ -1,5 +1,5 @@
 {
-  "graph_revision": 259,
+  "graph_revision": 260,
   "nodes": [
     {
       "acceptance": [
@@ -18199,7 +18199,18 @@
       ],
       "domain": "quality",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P06",
+          "head_sha": "e7afba909777ebac2e541bc79d7def74f23c7012",
+          "last_seen_at": "2026-07-20T22:51:33.885252Z",
+          "lease_acquired_at": "2026-07-20T22:51:30.714594Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p06.md",
       "github_project_linkages": [],
@@ -18267,7 +18278,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T22:51:33.885252Z"
     },
     {
       "acceptance": [
