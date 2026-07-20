@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
-    "skill_md_sha256": "c0c379b213229bff97ab4a0c9745e7a604de79e2b82bdf1c78d0b187f84548eb"
+    "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
   "reviewer": "run-elegant-review-subagent-team",
-  "reviewed_at": "2026-07-14",
+  "reviewed_at": "2026-07-20",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -16,7 +16,10 @@
     "positive_feedback": [
       "『本 skill は仕様生成ロジックを持たず system-spec-harness を起動し検証と C02 取込だけを担う』という委譲専任の責務境界が Purpose・Why・完了チェックリスト・Gotchas で一貫し、複製0 (MM-12) が矛盾なく貫かれている",
       "preflight の version 制約 (>=0.1.0 <1.0.0) と required 4 entry points (elicit/doc-fetch/compile/completeness-evaluator) が R1/step2/checklist で一致し、不在/不一致時は fallback を実装せず fail-closed 停止する規則が明記されている",
-      "取込 node の source_lineage(origin_kind/plugin/path/version/digest/imported_at)+confirmation+evaluator evidence の保持要件が R3・Purpose・OUT1・Gotchas で漏れなく整合"
+      "取込 node の source_lineage(origin_kind/plugin/path/version/digest/imported_at)+confirmation+evaluator evidence の保持要件が R3・Purpose・OUT1・Gotchas で漏れなく整合",
+      "[今回変更 C2 決定論] evidence_ref 実在ゲート (validate-evidence-refs.py) を ### ゴールシーク検証 の毎周回実行ブロックへ組込んだ変更は、R3 完了条件『本 run 登録 node の dangling 0 件』の根拠を散文 checklist の自己申告から script の exit code (exit 2=fail-closed) へ係留する。registered_this_run の append-only 記録が gate の決定論的入力となり、同一 graph/progress では常に同一判定へ収束する。script_refs へ validate-evidence-refs.py を追加し配線が frontmatter と一致する",
+      "[今回変更 C4 監査可能性] script が progress.json の registered_this_run を読み既存 dangling を evidence_ref_audit へ自動転記するため、『既存 dangling の報告を握り潰す』経路が LLM 転記でなく決定論転記で構造的に塞がれる。per-path source_digest 契約 (自 source_path の実 file sha256 と一致・他 file digest 流用0) が SKILL.md checklist と R3-import prompt の出力契約/受入条件/checklist で一致し、委譲専任 (生成ロジック非保有) の単一責務を崩さず lineage 完全性の検証面だけを強化している",
+      "[今回追加 C2/C4 二重ゲート係留] evidence_ref 実在ゲート (validate-evidence-refs.py) に加え source_digest 一致ゲート (validate-source-digest.py) を ### ゴールシーク検証 の毎周回実行ブロック (『各周回後に次の検査を実行し』) へ同時に係留した。source_digest ゲートは graph.json の registered_this_run 各 node について source_lineage.source_digest が自 source_path の実 file sha256 と一致するかを検査し、不一致/欠落/source_path 不在は exit 2 fail-closed とする。これは r8 の failure mode『index.md の digest を全 node へ流用』を機械検出する。C2: 完了判定を sha256(固定 file)+registered_this_run という決定論入力へ係留し、散文 checklist の『digest は正しい』自己申告を排除。C4: 他 file 流用を fail-closed で監査可能にし、evidence 実在ゲートと合わせ lineage の『参照先存在』と『内容一致』の2軸を毎周回で構造的に検証する。script_refs へ validate-source-digest.py を追加し frontmatter と配線が一致、生成ロジックは一切増やさず検証面だけを追加するため委譲専任の単一責務 (C1) を維持している"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -24,5 +27,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "現 SKILL.md (sha256 c0c379b213229bff97ab4a0c9745e7a604de79e2b82bdf1c78d0b187f84548eb) を全文 read し 4 条件で genuine 再評価した。①矛盾なし: 委譲専任 (生成ロジック非保有) と C02 取込 (--mode write) は、仕様生成を system-spec-harness に委ね登録のみ行う分担で非矛盾。feature へは architecture_refs 参照で本文複製しない規則が全層一致。②漏れなし: IN1(coverage/source-citation/schema gate exit0)/OUT1(source lineage 引用+複製0+C02 経由) の 2 criteria に Criteria acceptance があり、R0-R3 responsibility が Purpose 4 step と完了チェックリストに被覆。③整合性: description の 2 trigger (仕様を作りたい/取り込みたい) と Purpose が対応、allowed-tools に Skill(委譲用)を保有し script_refs(resolve-repo-context/validate-graph-schema)と整合。④依存整合: C24(root 固定)/C02(登録) と system-spec-harness plugin.json/package-contract.json 参照が Why・step2 に配線、goal_seek fork=subagent に Agent を保有。重大問題なしで PASS。"
+  "notes": "現 SKILL.md (sha256 e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a) と prompts/R2-R3、validate-evidence-refs.py/validate-source-digest.py を全文 read し 4 条件で genuine 再評価した。今回変更 (evidence_ref 実在ゲートに加え source_digest 一致ゲート validate-source-digest.py を ### ゴールシーク検証 の毎周回実行ブロックへ組込み、script_refs へ追加、R3-import 出力契約/使用資産/受入条件/checklist へ配線) を含めて評価: C1 単一責務=生成ロジックを増やさず import artifact の lineage/evidence 整合の検証面だけを追加し委譲専任を維持 (elicitation/compile 複製0)、C2 決定論=完了判定を script exit code (sha256 固定 file+registered_this_run の決定論入力) へ係留し『digest は正しい』自己申告を排除、C3 完全性=checklist/R3-import 出力契約/受入条件/script_refs が一致し registered_this_run→2 gate→exit code の閉ループ成立、C4 監査可能性=既存 dangling を script が evidence_ref_audit へ決定論転記し握り潰しを構造的に封鎖、加えて source_digest ゲートが他 file 流用 (r8 failure mode) を fail-closed で機械検出し lineage の参照先存在+内容一致の2軸を毎周回で検証する。以下は既存の genuine 評価根拠 (再確認済み):①矛盾なし: 委譲専任 (生成ロジック非保有) と C02 取込 (--mode write) は、仕様生成を system-spec-harness に委ね登録のみ行う分担で非矛盾。feature へは architecture_refs 参照で本文複製しない規則が全層一致。②漏れなし: IN1(coverage/source-citation/schema gate exit0)/OUT1(source lineage 引用+複製0+C02 経由) の 2 criteria に Criteria acceptance があり、R0-R3 responsibility が Purpose 4 step と完了チェックリストに被覆。③整合性: description の 2 trigger (仕様を作りたい/取り込みたい) と Purpose が対応、allowed-tools に Skill(委譲用)を保有し script_refs(resolve-repo-context/validate-graph-schema)と整合。④依存整合: C24(root 固定)/C02(登録) と system-spec-harness plugin.json/package-contract.json 参照が Why・step2 に配線、goal_seek fork=subagent に Agent を保有。重大問題なしで PASS。"
 }
