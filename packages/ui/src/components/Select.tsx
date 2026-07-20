@@ -16,12 +16,13 @@ export interface SelectProps
   extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'required' | 'children' | 'className'> {
   label: string;
   options: readonly SelectOption[];
-  hideLabel?: boolean;
-  description?: string;
-  error?: string;
-  required?: boolean;
+  // 省略可能な表示 prop は `| undefined` を明示する (理由は FormFieldProps のコメント)
+  hideLabel?: boolean | undefined;
+  description?: string | undefined;
+  error?: string | undefined;
+  required?: boolean | undefined;
   /** 未選択を表す先頭項目。必須項目で「未選択」を明示したいときに使う。 */
-  placeholder?: string;
+  placeholder?: string | undefined;
   ref?: Ref<HTMLSelectElement>;
 }
 

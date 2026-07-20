@@ -9,11 +9,9 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    // workspace package はビルドせず src を直接読むため、ここの設定が packages/* の型検査にも適用される。
-    // packages/schemas は false を明示、packages/ui は未設定 (= false) で、workspace 全体では未統一。
-    // hub 側だけ true にすると自分が所有しないコードを落とすため合わせる。
-    // 統一するなら packages 側の合意が先 (P05 で team-lead へ申し送り済み)
-    "exactOptionalPropertyTypes": false,
+    // workspace package はビルドせず src を直接読むため、ここの設定は packages/* の型検査にも波及する。
+    // 全 package が true に揃っているので hub も true を維持する (揃わない package が出たら typecheck が落ちる)
+    "exactOptionalPropertyTypes": true,
     "verbatimModuleSyntax": true,
     "allowJs": false,
     "esModuleInterop": true,

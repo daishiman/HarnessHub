@@ -67,10 +67,11 @@ function useSystemTheme(enabled: boolean): ThemeName {
 
 export interface UiProviderProps {
   children: ReactNode;
+  // 省略可能な prop は `| undefined` を明示する (理由は FormFieldProps のコメント)
   /** 初期表示設定。省略時は ja / comfortable / auto。 */
-  defaultPreferences?: Partial<UiPreferences>;
+  defaultPreferences?: Partial<UiPreferences> | undefined;
   /** 設定変更の通知先。サーバへの保存 (PATCH /me) は consumer 側の責務。 */
-  onPreferencesChange?: (preferences: UiPreferences) => void;
+  onPreferencesChange?: ((preferences: UiPreferences) => void) | undefined;
 }
 
 /**

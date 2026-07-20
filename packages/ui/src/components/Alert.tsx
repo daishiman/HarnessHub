@@ -11,15 +11,15 @@ export interface AlertProps {
   tone: StatusTone;
   title: string;
   /** 何が起きたかの説明。専門用語を避ける。 */
-  description?: string;
+  description?: string | undefined;
   /** 次の一手 (再試行ボタン・導線リンクなど)。 */
   action?: ReactNode;
   /**
    * 支援技術への割り込み方。
    * 操作を止める必要があるものだけ `assertive` にする。
    */
-  live?: 'polite' | 'assertive' | 'off';
-  style?: CSSProperties;
+  live?: 'polite' | 'assertive' | 'off' | undefined;
+  style?: CSSProperties | undefined;
 }
 
 /** 汎用の通知枠。 */
@@ -52,8 +52,8 @@ export function Alert({ tone, title, description, action, live = 'polite', style
 }
 
 export interface ErrorStateProps {
-  title?: string;
-  description?: string;
+  title?: string | undefined;
+  description?: string | undefined;
   /**
    * 次の一手。省略時は「時間をおいて、もう一度お試しください。」を出す。
    * 「エラーだけ出して終わり」の画面を作らせないための既定値。
@@ -77,8 +77,8 @@ export function ErrorState({ title, description, nextAction }: ErrorStateProps):
 }
 
 export interface EmptyStateProps {
-  title?: string;
-  description?: string;
+  title?: string | undefined;
+  description?: string | undefined;
   /** 最初の 1 件を作る導線など。 */
   action?: ReactNode;
 }
@@ -92,7 +92,7 @@ export function EmptyState({ title, description, action }: EmptyStateProps): Rea
 
 export interface DegradedBannerProps {
   /** 影響範囲の説明。 */
-  description?: string;
+  description?: string | undefined;
   action?: ReactNode;
 }
 

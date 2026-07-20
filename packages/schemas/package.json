@@ -15,7 +15,9 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "check:drift": "vitest run src/contract-drift.test.ts",
+    "openapi:update": "vitest run src/contract-drift.test.ts -u"
   },
   "dependencies": {
     "zod": "^4.0.0"

@@ -8,7 +8,8 @@ import { afterAll, describe, expect, it } from 'vitest';
 
 const APP_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SCRIPT = path.join(APP_ROOT, 'scripts/check-bundle.mjs');
-const WORKER_ARTIFACT = path.join(APP_ROOT, '.open-next');
+/** opennext build の成果物。これが無ければ wrangler も実 bundle を作れない */
+const WORKER_ENTRY = path.join(APP_ROOT, '.open-next/worker.js');
 
 /** quality_constraints: worker-bundle-budget (Cloudflare Workers Free の 3MiB / gzip 後) */
 const BUDGET_BYTES = 3 * 1024 * 1024;
@@ -48,24 +49,30 @@ afterAll(() => {
 });
 
 describe('bundle 予算ゲート', () => {
-  // HF-A2-BUNDLE-001。ビルド成果物が無い状態を pass にしないため、未ビルド時は skip として可視化する
-  it.skipIf(!existsSync(WORKER_ARTIFACT))(
+  // HF-A2-BUNDLE-001。ビルド成果物が無い状態を pass にしないため、未ビルド時は skip として可視化する。
+  // --artifact を渡さないのは意図的で、.open-next ディレクトリではなく
+  // wrangler が実際にアップロードする bundle を測らせるため (中間生成物を数えると 5 倍に膨らむ)
+  it.skipIf(!existsSync(WORKER_ENTRY))(
     'Worker bundle が gzip 後 3MiB 以内である',
     () => {
       const reportPath = path.join(mkdtempSync(path.join(tmpdir(), 'hub-report-')), 'report.json');
       workDirs.push(path.dirname(reportPath));
 
-      const result = runCheck(['--artifact', WORKER_ARTIFACT, '--report', reportPath]);
-      expect(result.stderr).toBe('');
+      const result = runCheck(['--report', reportPath]);
       expect(result.status).toBe(0);
 
       const report = JSON.parse(readFileSync(reportPath, 'utf8')) as {
         totalGzipBytes: number;
         withinBudget: boolean;
+        measurementMode: string;
       };
+      // 実デプロイと無関係な path を測って緑にしていないことを併せて固定する
+      expect(report.measurementMode).toBe('wrangler-dry-run');
       expect(report.withinBudget).toBe(true);
+      expect(report.totalGzipBytes).toBeGreaterThan(0);
       expect(report.totalGzipBytes).toBeLessThanOrEqual(BUDGET_BYTES);
     },
+    120_000,
   );
 
   // HF-A2-BUNDLE-002: ゲートが素通りしないことの証明

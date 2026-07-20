@@ -104,6 +104,10 @@ jobs:
         run: pnpm --filter @harness-hub/schemas run check:drift
       - name: G9 axe a11y (部品単体 + 画面結合の 2 段)
         run: pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/hub run test:a11y
+      # check:bundle は wrangler dry-run で実デプロイ bundle を測るため .open-next が前提。
+      # pnpm -r build は next build までしか行わないので、ここで Worker 成果物を生成する。
+      - name: Worker 成果物の生成 (bundle 計測の前提)
+        run: pnpm --filter @harness-hub/hub run build:worker
       - name: G5 bundle 予算 (Worker gzip 後 3MiB / A2)
         run: pnpm --filter @harness-hub/hub run check:bundle
       - uses: actions/upload-artifact@v4

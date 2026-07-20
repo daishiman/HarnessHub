@@ -54,3 +54,10 @@ export type {
   SchemaConverter,
   OpenApiDocument,
 } from './openapi.js';
+
+export {
+  contractSchemaNames,
+  createContractRegistry,
+  buildContractComponents,
+} from './contract-registry.js';
+export type { ContractSchemaName } from './contract-registry.js';

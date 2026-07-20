@@ -9,10 +9,11 @@ import { FormField } from './FormField.js';
 export interface TextInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'required' | 'className'> {
   label: string;
-  hideLabel?: boolean;
-  description?: string;
-  error?: string;
-  required?: boolean;
+  // 省略可能な表示 prop は `| undefined` を明示する (理由は FormFieldProps のコメント)
+  hideLabel?: boolean | undefined;
+  description?: string | undefined;
+  error?: string | undefined;
+  required?: boolean | undefined;
   ref?: Ref<HTMLInputElement>;
 }
 

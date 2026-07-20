@@ -14,16 +14,22 @@ export interface FieldControlProps {
   'aria-invalid': boolean | undefined;
 }
 
+/**
+ * 表示 prop の省略可能な項目には `| undefined` を明示する (`exactOptionalPropertyTypes: true` 前提)。
+ * これらの prop は「未指定」と「明示的な undefined」で意味が変わらない (どちらも「説明なし」) ため、
+ * 両方を受け取れることを型に書くのが正直な表現。consumer に conditional spread を強いない狙いもある。
+ * 逆に、未指定と undefined で意味が変わる契約 (PATCH の「項目を消す」等) では `?:` のままにする。
+ */
 export interface FormFieldProps {
   /** ラベルは必須。視覚的に隠す場合も `hideLabel` を使い、ラベル自体は必ず持たせる。 */
   label: string;
   /** ラベルを視覚的にのみ隠す (支援技術へは読ませる)。 */
-  hideLabel?: boolean;
+  hideLabel?: boolean | undefined;
   /** 入力の補足説明。 */
-  description?: string;
+  description?: string | undefined;
   /** エラー文言。平易な日本語 + 次の一手を書く。 */
-  error?: string;
-  required?: boolean;
+  error?: string | undefined;
+  required?: boolean | undefined;
   children: (control: FieldControlProps) => ReactNode;
 }
 

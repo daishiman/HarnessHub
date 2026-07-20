@@ -17,15 +17,24 @@ import { useUiText } from '../theme/UiProvider.js';
 
 export interface ToastOptions {
   title: string;
-  description?: string;
-  tone?: StatusTone;
+  // 省略可能な表示 prop は `| undefined` を明示する (理由は FormFieldProps のコメント)
+  description?: string | undefined;
+  tone?: StatusTone | undefined;
   /** 自動的に消えるまでの時間 (ms)。0 を指定すると消えない。 */
-  durationMs?: number;
+  durationMs?: number | undefined;
 }
 
-export interface ToastItem extends Required<Omit<ToastOptions, 'description'>> {
+/**
+ * 表示中のトースト 1 件。`Required<Omit<ToastOptions, ...>>` で導出しないのは、
+ * `exactOptionalPropertyTypes` 下では `Required<>` が `?` を外しても宣言型の `| undefined` を
+ * 残すため、`tone` が undefined を含んだまま index 参照に使われてしまうから。明示的に書く。
+ */
+export interface ToastItem {
   id: string;
-  description?: string;
+  title: string;
+  description?: string | undefined;
+  tone: StatusTone;
+  durationMs: number;
 }
 
 export interface ToastContextValue {
@@ -39,7 +48,7 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 export interface ToastProviderProps {
   children: ReactNode;
-  defaultDurationMs?: number;
+  defaultDurationMs?: number | undefined;
 }
 
 /** トーストの状態と表示領域を提供する。共通シェルの最上位に 1 つだけ置く。 */

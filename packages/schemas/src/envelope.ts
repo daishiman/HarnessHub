@@ -55,13 +55,18 @@ export const problemDetailsSchema = z.object({
 export type ProblemDetails = z.output<typeof problemDetailsSchema>;
 
 /** problem details を組み立てる。`type` の既定値を都度書かないための入口。 */
+/**
+ * 省略可能な項目に `| undefined` を明示するのは `exactOptionalPropertyTypes: true` 前提のため。
+ * ここでは「未指定」と「明示的な undefined」がどちらも「その項目なし」を意味するので、
+ * 呼び出し側に conditional spread を強いず両方受け取れる形にする。
+ */
 export function problemDetails(input: {
   title: string;
   status: number;
-  type?: string;
-  detail?: string;
-  instance?: string;
-  errors?: FieldError[];
+  type?: string | undefined;
+  detail?: string | undefined;
+  instance?: string | undefined;
+  errors?: FieldError[] | undefined;
 }): ProblemDetails {
   return problemDetailsSchema.parse(input);
 }
@@ -73,7 +78,13 @@ export function problemDetails(input: {
  */
 export function problemDetailsFromZodError(
   error: z.ZodError,
-  options?: { title?: string; status?: number; type?: string; detail?: string; instance?: string },
+  options?: {
+    title?: string | undefined;
+    status?: number | undefined;
+    type?: string | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+  },
 ): ProblemDetails {
   return problemDetails({
     type: options?.type ?? 'about:blank',
