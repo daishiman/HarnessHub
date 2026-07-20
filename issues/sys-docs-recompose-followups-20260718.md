@@ -99,3 +99,7 @@ open+closed 併存の external_ref が 57 組 (今回復旧した y5y/5yp 系 28
 - 採用理由: 現行実装が既に fail-closed であること、本 issue の scope_in が「方針確定」であり `resource_scope` 外の挙動変更を含まないこと、dev-graph 全体が parity・digest 不一致でも止める fail-closed 設計で一貫していること。
 
 方針は文書だけでなく `test_bd_bridge_external_ref_idempotency.py::test_find_external_fails_closed_on_open_plus_closed_remnant` で機械強制しており、fail-open へ退行すると CI が落ちる。
+
+## 派生 issue (2026-07-21)
+
+本 issue の実行中に、`guard-graph-schema` が beads mutation を `bd-bridge.py` の単一チョークポイントへ限定する一方で `bd-bridge.py --op update` が `--notes` / `--design` を、`--op create` が `--priority` を通せないことを観測した。notes 更新の正規経路が存在しないため、本 issue の進捗メモを beads 側へ残せなかった。`issues/sys-bd-bridge-notes-passthrough-20260721.md` (HarnessHub-8ql) として分離して追跡する。
