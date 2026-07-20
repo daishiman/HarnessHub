@@ -1,5 +1,5 @@
 {
-  "graph_revision": 260,
+  "graph_revision": 261,
   "nodes": [
     {
       "acceptance": [
@@ -18325,7 +18325,18 @@
       ],
       "domain": "quality",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P07",
+          "head_sha": "7d4a2c102cee74ae7508654c0e92eb2e4ede62b9",
+          "last_seen_at": "2026-07-20T23:06:49.117162Z",
+          "lease_acquired_at": "2026-07-20T23:06:39.427841Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p07.md",
       "github_project_linkages": [],
@@ -18387,7 +18398,7 @@
       "template_version": "1.0.0",
       "title": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T23:06:49.117162Z"
     },
     {
       "acceptance": [
