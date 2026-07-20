@@ -1,0 +1,40 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "--repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/eval-log/dev-graph/live-trial-fixtures/r3-system-spec",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "confirmation_evidence.evidence_ref (eval-log/completeness-report.json) が fixture repo に存在しない dangling reference。evaluator report は /tmp にのみ書かれ repo に永続化されず、evaluated_digest を repo 内成果物から再現できない",
+      "SKILL.md が求める eval-log/run-dev-graph-system-spec-progress.json (checklist status/evidence 記録) が未生成"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "9d10bf2582f7ebfda671af12a07f4bd7813170b976017a964e9a286f5e407fb6",
+  "transcript_sha256": "88275d3b64e3209fef13a52e799b66d177876bb7ec18a17c2fc52105143783f4",
+  "scenario_origin": "replay",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 4.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 915.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}
