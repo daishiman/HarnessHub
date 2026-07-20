@@ -1,5 +1,5 @@
 {
-  "graph_revision": 253,
+  "graph_revision": 254,
   "nodes": [
     {
       "acceptance": [
@@ -17568,7 +17568,18 @@
       "depends_on": [],
       "domain": "documentation",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01",
+          "head_sha": "5f313162029df3fdc3a51df00e25d9c57e7402e1",
+          "last_seen_at": "2026-07-20T11:48:41.006853Z",
+          "lease_acquired_at": "2026-07-20T11:48:38.892319Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p01.md",
       "github_project_linkages": [],
@@ -17630,7 +17641,7 @@
       "template_version": "1.0.0",
       "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T11:48:41.006853Z"
     },
     {
       "acceptance": [
