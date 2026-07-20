@@ -1,5 +1,5 @@
 {
-  "graph_revision": 258,
+  "graph_revision": 259,
   "nodes": [
     {
       "acceptance": [
@@ -18067,7 +18067,18 @@
       ],
       "domain": "infrastructure",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P05",
+          "head_sha": "fe7042881c4e76f0a21f1902177134921d496abb",
+          "last_seen_at": "2026-07-20T22:46:37.559620Z",
+          "lease_acquired_at": "2026-07-20T22:46:32.471252Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p05.md",
       "github_project_linkages": [],
@@ -18141,7 +18152,7 @@
       "template_version": "1.0.0",
       "title": "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T22:46:37.559620Z"
     },
     {
       "acceptance": [

@@ -1,0 +1,70 @@
+{
+  "schema_note": "C01 単一 writer (plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/apply-spec-transition.py set-decision) への入力ペイロード。P05 が writer の必須制約 (ADR D5 表 1-8) を満たす骨格を用意し、P13 が P06 の実測結果と作者確認で値を確定させる。",
+  "owner": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+  "prepared_by": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+  "writer_contract_refs": {
+    "script": "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/apply-spec-transition.py",
+    "function": "set_decision",
+    "constraints": "docs/features/feat-stage0-distribution-gate/architecture-decision-record.md D5 表 #1-#8"
+  },
+  "fail_closed_precondition": "baseline §7.2 により A1-A3 がすべて pass するまで本ペイロードで writer を実行してはならない。A1/A3 が blocked の間は登録しない。",
+  "decision": {
+    "id": "D7",
+    "question": "Publisher / Skill を作者環境へ配布する経路として、URL 型 marketplace と Bootstrap Installer のどちらを採用するか (Stage 0 technical gate H7)",
+    "status": "PENDING__P13_SETS_confirmed_AFTER_USER_DECISION",
+    "serves_goals": ["G1", "G2"],
+    "options": [
+      {
+        "id": "url-marketplace",
+        "label": "URL 型 marketplace (marketplace.json を https 配信し plugin 本体は外部 source で解決)",
+        "cost_model": "free",
+        "free_tier_limits": "PENDING__P13: raw.githubusercontent.com の配信は public リポジトリで無料。GitHub の帯域・レート制限の実測値を P06 の記録から転記する",
+        "goal_fit": "PENDING__P13: G1 (非エンジニア作者が代理作業なしで公開) への適合を P06 実測から記述",
+        "security_fit": "PENDING__P13: https 取得のみで権限昇格を伴わない点、および source が外部リポジトリを指すことの信頼境界を記述",
+        "pros": ["PENDING__P13: P06 の実測に基づく利点を列挙"],
+        "cons": ["PENDING__P13: remote URL 型は marketplace.json しか取得しないため相対パス source が解決不能 (F2) ほか"],
+        "risks": ["PENDING__P13: CLI 高頻度リリースによる仕様変更リスクほか"],
+        "lock_in": "PENDING__P13",
+        "ops_burden": "PENDING__P13: 手順数と OS 分岐数を T-Q6 の記録から転記する (ADR D5 順位 1 の入力)",
+        "evidence_refs": [
+          "https://code.claude.com/docs/en/plugin-marketplaces"
+        ]
+      },
+      {
+        "id": "bootstrap-installer",
+        "label": "Bootstrap Installer (github 型 owner/repo を add する最小スクリプトを配布)",
+        "cost_model": "free",
+        "free_tier_limits": "PENDING__P13: public リポジトリからの取得は無料。スクリプト配布自体に費用は発生しない",
+        "goal_fit": "PENDING__P13",
+        "security_fit": "PENDING__P13: スクリプト実行を作者に求めることの信頼前提を記述",
+        "pros": ["PENDING__P13"],
+        "cons": ["PENDING__P13: OS ごとに sh / PowerShell の 2 本を保守する必要があるほか"],
+        "risks": ["PENDING__P13"],
+        "lock_in": "PENDING__P13",
+        "ops_burden": "PENDING__P13",
+        "evidence_refs": [
+          "https://code.claude.com/docs/en/plugin-marketplaces"
+        ]
+      }
+    ],
+    "recommendation": {
+      "option_id": "PENDING__P13: ADR D5 の gate (両 OS 再現性) を通過した option から C1 → C2 の順で選ぶ",
+      "rationale": "PENDING__P13: 実機検証記録 (docs/features/feat-stage0-distribution-gate/test-run-results.md) の参照はここに書く。option.evidence_refs は公式 https URL 必須のためローカルパスを入れられない (ADR D5 表 #5)",
+      "caveats": ["PENDING__P13"],
+      "confidence": "PENDING__P13",
+      "latest_checked_at": "PENDING__P13: RFC3339 形式で writer 実行時刻を実測して埋める",
+      "comparison_basis": {
+        "goal_fit": "PENDING__P13",
+        "tco": "PENDING__P13",
+        "security": "PENDING__P13",
+        "operations": "PENDING__P13",
+        "lock_in": "PENDING__P13"
+      }
+    },
+    "user_decision": {
+      "_note": "status=confirmed には必須。AI 推奨だけで confirmed にすると writer が明示的に拒否する (ADR D5 表 #8)。P13 は作者本人の確認を取る対話ステップを含めること。",
+      "option_id": "PENDING__P13_USER_CONFIRMATION",
+      "confirmed_at": "PENDING__P13_RFC3339"
+    }
+  }
+}
