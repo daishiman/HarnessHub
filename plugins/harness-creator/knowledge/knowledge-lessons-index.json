@@ -97,6 +97,8 @@
     {
       "id": "lessons-index_005",
       "title": "[auto] PostToolUse:Skill 失敗 — API Error: Unable to connect to API (ENOTFOUND)",
+      "intent": "評価失敗パターンを知見ストアへ蓄積し、human triage と再発防止の入力として保持すること",
+      "background": "PostToolUse:Skill フックが評価失敗を自動検知して記録した未 triage エントリ。検知内容: PostToolUse:Skill 失敗 — API Error: Unable to connect to API (ENOTFOUND)。根本原因は human triage 待ち。",
       "keywords": [
         "PostToolUse",
         "Skill",
@@ -113,6 +115,8 @@
     {
       "id": "lessons-index_006",
       "title": "[auto] PostToolUse:Skill 失敗 — # 完成度評価レポート — 総合判定: **FAIL**",
+      "intent": "評価失敗パターンを知見ストアへ蓄積し、human triage と再発防止の入力として保持すること",
+      "background": "PostToolUse:Skill フックが評価失敗を自動検知して記録した未 triage エントリ。検知内容: PostToolUse:Skill 失敗 — # 完成度評価レポート — 総合判定: **FAIL**。根本原因は human triage 待ち。",
       "keywords": [
         "PostToolUse",
         "Skill",
@@ -129,6 +133,8 @@
     {
       "id": "lessons-index_007",
       "title": "[auto] PostToolUse:Skill 失敗 — 前回評価 (eval-log/run-system-spec-completeness-report.json, verdict=FAIL, 22:52 断面)",
+      "intent": "評価失敗パターンを知見ストアへ蓄積し、human triage と再発防止の入力として保持すること",
+      "background": "PostToolUse:Skill フックが評価失敗を自動検知して記録した未 triage エントリ。検知内容: PostToolUse:Skill 失敗 — 前回評価 (eval-log/run-system-spec-completeness-report.json, 。根本原因は human triage 待ち。",
       "keywords": [
         "PostToolUse",
         "Skill",
@@ -145,6 +151,8 @@
     {
       "id": "lessons-index_008",
       "title": "[auto] PostToolUse:Skill 失敗 — - **採点根拠の目視確認**: 対象 SKILL.md の本文セクションは `## Invariants` / `## init` / `## plan` /",
+      "intent": "評価失敗パターンを知見ストアへ蓄積し、human triage と再発防止の入力として保持すること",
+      "background": "PostToolUse:Skill フックが評価失敗を自動検知して記録した未 triage エントリ。検知内容: PostToolUse:Skill 失敗 — - **採点根拠の目視確認**: 対象 SKILL.md の本文セクションは `## Invariants` / 。根本原因は human triage 待ち。",
       "keywords": [
         "PostToolUse",
         "Skill",
