@@ -102,6 +102,29 @@ dev-graph 自身の Skill を使う `init / spec / decompose / requirements / no
 /dev-graph render
 ```
 
+## 11 verb を1つのプロンプトで一括実行する
+
+11 verb は前工程の出力を次工程が使う一方向パイプラインのため、文字どおりの同時（並列）実行はできません。代わりに次のプロンプトを Claude Code へ1回入力すると、`init` から `render` までを順番に自動実行させられます。`<...>` を実際の内容へ置き換えてから貼り付けてください。
+
+```text
+/dev-graph の11 verb を init → spec → decompose → plan → requirements → node → next → worktree → status → sync → render の順に一括実行してください。
+
+対象の新機能: <実現したい新機能と、既存機能との関係を2〜3文で>
+
+実行ルール:
+1. 各 verb は必ず /dev-graph <verb> の正規 dispatch で実行し、同等の処理を自作・省略しない。
+2. 各 verb の完了条件（spec の確定章と完成度 evaluator PASS、plan の exact-13 一括登録、requirements の readiness 充足など）を満たしてから次へ進む。満たせない場合はその verb で停止し、原因と不足を報告して以降の verb を実行しない。
+3. spec のヒアリングにはまず上記「対象の新機能」の内容で回答し、それでも不足する情報だけ私に質問する。
+4. decompose が生成した feature-id を控え、feature 文書から features/<feature-id>.context.json を作成して、plan と requirements に同じ feature-id を使う。
+5. requirements は --handoff-target task-graph で実行する。
+6. node は、上位 command が自動登録しなかった成果物がある場合だけ --dry-run → 本実行の順で使う。対象が無ければ「skip」と報告する。
+7. next で着手候補 batch を算出し、worktree は list で lease（占有権）の状況確認まで行う。claim は実装開始時に行うため、ここでは実行しない。
+8. status で今回作成した feature と task の登録状態を確認し、sync で Beads と冪等（何度実行しても同じ結果）に収束させ、render で全体 DAG を可視化する。
+9. 最後に、11 verb それぞれの結果（PASS / 停止 / skip と主な生成物の path）を一覧で報告する。
+```
+
+途中の verb で停止した場合は、Part 4「迷ったときの戻り先」に従って上流を直し、止まった verb から続きだけを再実行します（完了済みの verb は冪等なので再実行しても安全です）。
+
 ## `worktree` の5操作
 
 `worktree` が受け付ける操作は `list / claim / heartbeat / park / release` だけです。lease（リース＝複数セッションが同じ作業を奪い合わないための一時的な占有権）は、既定30分で失効します。
