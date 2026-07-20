@@ -10,7 +10,7 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--resume]"
 allowed-tools: [Read, Bash, Skill, Agent, AskUserQuestion]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-evidence-refs.py]
 schema_refs: [../../schemas/graph-node.schema.json]
 responsibility_refs:
   - prompts/R0-context.md

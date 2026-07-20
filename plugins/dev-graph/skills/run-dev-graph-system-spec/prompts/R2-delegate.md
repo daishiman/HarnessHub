@@ -18,6 +18,7 @@
 ### 出力契約
 
 - elicit/条件付きdoc-fetch/compile/evaluator receiptsとconfirmed artifacts。
+- evaluatorのcompleteness report/findingsは対象repositoryの`system-spec/completeness-report.json`/`system-spec/completeness-findings.json`へ永続化する。repository外(`/tmp`等)だけに置くreceiptは出力契約違反とする。
 
 ### 責務境界
 
@@ -26,6 +27,7 @@
 ### 受入条件
 
 - 正規Skill呼出しだけでcoverage/source/evaluator gate全PASSになる。
+- completeness reportが対象repository内に実在する。
 
 ## Layer 3: インフラ層
 
@@ -56,6 +58,7 @@
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
 - [ ] 正規Skill呼出しだけでcoverage/source/evaluator gate全PASSになる
+- [ ] completeness report/findingsが対象repositoryの`system-spec/`配下に実在する
 
 ### 5.4 実行方式
 

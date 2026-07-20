@@ -84,3 +84,7 @@ python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/upsert-node.py" \
 python3 -m pytest plugins/dev-graph/tests -q
 claude plugin validate plugins/dev-graph
 ```
+
+## 改善要望
+
+本 plugin への改善要望は `/run-skill-feedback dev-graph` で投入できます (SSOT: harness-creator/skills/run-skill-feedback、symlink 配備)。

@@ -18,6 +18,10 @@
 ### 出力契約
 
 - C02 receiptとlineage/confirmation/evidence付きimport report。
+- `confirmation_evidence.evidence_ref`は登録時点で対象repository内に実在するpath(正準: `system-spec/completeness-report.json`)を指す。dangling referenceを登録しない。
+- `source_lineage.source_digest`は各nodeの`source_path`の実fileからsha256を計算して記録する。他fileのdigest流用0件。登録後に`source_path`の実sha256と再計算一致を検証する。
+- 本runが登録・更新していない既存nodeにdangling evidence_refを検出した場合は、修正も無視もせずblockerとしてimport reportへ報告する(自己申告の「dangling 0件」は本runの登録・更新分に限る)。
+- 元のゴールを`$DEV_GRAPH_ROOT/eval-log/run-dev-graph-system-spec-goal-spec.json`へ、checklistのstatus/evidenceを`$DEV_GRAPH_ROOT/eval-log/run-dev-graph-system-spec-progress.json`へ書き出す(SKILL.md eval-log契約)。
 
 ### 責務境界
 
@@ -26,10 +30,11 @@
 ### 受入条件
 
 - 全node正規kind、lineage全field/evidence/readiness欠落0になる。
+- 本runが登録・更新した全nodeの`evidence_ref`の指すfileが対象repository内に実在し、`source_digest`が各`source_path`の実sha256と一致し、progress.jsonが書き出されている。既存nodeのdangling検出は報告済みである。
 
 ## Layer 3: インフラ層
 
-- 使用資産: Skill run-dev-graph-nodeとvalidate-graph-schema。
+- 使用資産: Skill run-dev-graph-nodeとvalidate-graph-schemaとvalidate-evidence-refs。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
@@ -56,6 +61,10 @@
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
 - [ ] 全node正規kind、lineage全field/evidence/readiness欠落0になる
+- [ ] `validate-evidence-refs.py --repo-root <root> --registered <本runの登録・更新id(カンマ区切り)>`を実際に実行しexit 0である(本run分dangling 0件はこのscriptのexit codeのみを根拠とする。散文の自己申告は根拠にならない)
+- [ ] 同scriptの出力`existing_dangling`をimport reportとprogress.jsonへblockerとして転記した(0件ならその旨を記録)
+- [ ] 本runが登録・更新した全nodeの`source_digest`が各`source_path`の実fileのsha256と一致する(他fileのdigest流用0件)
+- [ ] `$DEV_GRAPH_ROOT/eval-log/run-dev-graph-system-spec-goal-spec.json`と`$DEV_GRAPH_ROOT/eval-log/run-dev-graph-system-spec-progress.json`を書き出した
 
 ### 5.4 実行方式
 
