@@ -88,6 +88,17 @@ def test_find_external_recovers_via_list_when_search_is_blind(module, monkeypatc
     assert calls[0][:2] == ["search", NODE]
 
 
+def test_find_external_short_circuits_when_search_hits(module, monkeypatch, tmp_path):
+    """search が当たれば list --limit 10000 を引かない。
+
+    フォールバックだけを検査すると、search 呼び出しを消して常に全件 list する実装へ
+    退化しても全テストが緑のまま通る。高速経路が生きていることを別途固定する。
+    """
+    calls = wire(module, monkeypatch, search=[LIST_ROW], listed=[])
+    assert module._find_external(tmp_path, NODE)["id"] == LIST_ROW["id"]
+    assert [args[0] for args in calls] == ["search"]
+
+
 def test_find_external_requires_exact_external_ref_match(module, monkeypatch, tmp_path):
     """部分一致 (前方/後方) を既存扱いすると別ノードへ誤って冪等化するため、完全一致のみ採る。"""
     near = [
@@ -122,11 +133,11 @@ def test_create_one_reuses_list_discovered_issue_instead_of_double_creating(modu
 
 def test_create_one_refetches_detail_because_list_rows_omit_type_and_parent(module, monkeypatch, tmp_path):
     """list 行は issue_type/parent を持たないため show 再取得が必須。省くと不整合が素通りする。"""
-    def run(detail, *, issue_type="task", parent="HarnessHub-EPIC"):
+    def run(detail):
         wire(module, monkeypatch, search=BD_110_SEARCH_HELP, listed=[LIST_ROW], detail=detail)
         return module._create_one(
             tmp_path, graph_node_id=NODE, title="projected", description="body",
-            issue_type=issue_type, parent=parent, source_digest=DIGEST,
+            issue_type="task", parent="HarnessHub-EPIC", source_digest=DIGEST,
         )
 
     with pytest.raises(module.ContractError, match="has type epic, expected task"):
