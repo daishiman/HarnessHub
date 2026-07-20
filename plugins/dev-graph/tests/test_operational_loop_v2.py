@@ -415,16 +415,23 @@ def test_next_rejects_noncanonical_lease_in_git_repository(tmp_path, monkeypatch
         schedule.main()
 
 
-def test_public_dispatcher_exposes_exact_operational_six():
+def test_public_dispatcher_exposes_full_lifecycle_eleven():
     path = PLUGIN / "commands" / "dev-graph.md"
     text = path.read_text(encoding="utf-8")
     frontmatter = yaml.safe_load(text.split("\n---\n", 1)[0][4:])
-    assert frontmatter["argument-hint"] == "<node|next|worktree|status|sync|render> [args]"
+    assert frontmatter["argument-hint"] == (
+        "<init|spec|decompose|plan|requirements|node|next|worktree|status|sync|render> [args]"
+    )
     rows = {
-        line.split("|")[1].strip().strip("`")
+        line.split("|")[2].strip().strip("`")
         for line in text.splitlines()
-        if line.startswith("| `") and line.count("|") == 5
+        if line.startswith("| ")
+        and line.count("|") == 6
+        and line.split("|")[1].strip().isdigit()
     }
-    assert rows == {"node", "next", "worktree", "status", "sync", "render"}
-    assert "旧 verb" in text
+    assert rows == {
+        "init", "spec", "decompose", "plan", "requirements",
+        "node", "next", "worktree", "status", "sync", "render",
+    }
+    assert "運用ループ" in text
     assert "`.dev-graph/locks/`は使わない" in text
