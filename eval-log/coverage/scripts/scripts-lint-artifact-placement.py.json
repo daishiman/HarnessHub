@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/lint-artifact-placement.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 84,
+    "notes": "genuine code-review + py_compile OK。保存先配置規約 (README Part 3『保存先の正規表』) を機械強制する stdlib-only lint。soundness: 4 規約を検査 — (1) graph 管理下 root (specs/architecture/features/tasks) の *.md は graph.json 登録必須 (orphan artifact 遮断)、(2) docs/*.md は frontmatter に status:/layer: 必須、(3) system-spec/ 直下は *.md と正本 JSON allowlist のみ (サブディレクトリ・異物遮断)、(4) リポジトリ直下は ROOT_FILE_ALLOWLIST 制。config_roots を尊重し決定的 sort で列挙、frontmatter は先頭 40 行以内の --- ブロックのみ解釈。responsibility: 単一 (配置規約の lint のみ)。error-handling: .dev-graph/config.json 不在なら『検査対象なし』で exit 0 (未初期化 repo を誤検出しない)、config が JSON 不正なら SystemExit で設定エラー exit 2、違反検出は exit 1、適合は exit 0 と exit code を明快に分離 (fail-closed)。side-effect-safety: 完全 read-only (書込命令なし)、network 非依存 (json/sys/tempfile/pathlib のみ、tempfile は self-test 用の隔離 dir)。FINDING(frontmatter): 本 script は `# /// script` PEP723 frontmatter block を持たず、docstring に usage/exit code/『CONVENTIONS: stdlib only』を記すのみ。他 6 対象や sibling scripts が持つ機械可読な network/write-scope 宣言が欠けるため frontmatter block 追加を推奨 (実行時挙動は健全)。FINDING(test): 専用 pytest file が無く、`--self-test` (self_test()) が唯一の自動検証。ただし self_test は tempfile 上で 未初期化 skip / クリーン 0 違反 / 4 種違反 (orphan-artifact/docs-frontmatter/system-spec-stray/root-stray) の同時検出、を genuine な assert で被覆しており、coordinator によれば CI で --self-test が実行される (`python3 scripts/lint-artifact-placement.py --self-test` → exit 0 を確認済み)。pytest fixture 化されていない点はリスクとして明記するが、self-test が中核ロジックを実質被覆するため機能的健全性は担保。この 2 gap を減点 (7 script 中最低 score)。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

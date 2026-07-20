@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/guard-spec-reflection.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 90,
+    "notes": "genuine code-review + py_compile OK / `# /// script` frontmatter 完備 (network:false, write-scope: none, dependencies: build-spec-reflection-receipt.py)。`gh pr create` を PreToolUse hook で検査し有効な仕様反映受領書が無ければ拒否する gate。soundness: GH_PR_CREATE 正規表現がコマンド開始位置 (行頭 / ;&| 後 / $() 内) 限定 match (re.M|re.I) で、commit message や引用文中の文字列 'gh pr create' では発火しない (false trigger 回避)。マッチ時のみ受領書を検査し、branch 不一致 / head_sha stale (記録後 commit) / reflected 主張だが現 diff が仕様 path を含まない、のいずれかで deny。build-spec-reflection-receipt.py を importlib で module import し _git/receipt_path/diff_spec_files を再利用 (recorder と検査ロジックの単一情報源化)。responsibility: 単一 (PR 作成の可否判定のみ、記録は recorder 側)。error-handling: payload() は stdin JSON 失敗を {} に握って安全に非発火、repository 状態確認や受領書読取りの例外は全て deny() へ集約し exit 2 で fail-closed (BLOCK 理由と復旧コマンドを stderr へ提示)。非該当コマンドは exit 0 で素通し。side-effect-safety: write-scope: none を厳守 (受領書・graph を一切書かず read + 判定のみ)、network:false は git subprocess のみで裏付け。TESTS: tests/scripts-root/test_root__spec_reflection_gate.py::test_guard_ignores_non_pr_commands / test_guard_ignores_pr_create_phrase_inside_message_text / test_guard_blocks_pr_create_without_receipt / test_guard_allows_pr_create_with_valid_receipt / test_guard_blocks_stale_receipt_after_new_commit が 非発火・message 内文字列の非発火・受領書無し BLOCK・正当受領書 allow・stale 受領書 BLOCK を exercise (9 passed)。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

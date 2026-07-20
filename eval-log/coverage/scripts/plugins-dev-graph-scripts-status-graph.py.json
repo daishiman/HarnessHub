@@ -1,0 +1,12 @@
+{
+  "artifact": "plugins/dev-graph/scripts/status-graph.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 91,
+    "notes": "genuine code-review + py_compile OK / `# /// script` frontmatter 完備 (network:false, write-scope: optional eval-log receipt only)。canonical dev-graph の read-only status query。soundness: shared lock (graph_operation_lock exclusive=False) 下で ensure_no_pending_transaction を先行させ、未回復 transaction がある間は読ませない。canonical validator (validate-graph-schema.py) を importlib で動的 load し nodes を検証、違反あれば ContractError。フィルタ (_matches: id/kind/project/domain/status/tag(all|any)/keyword casefold) は純関数、dependents を depends_on から逆引きし決定的 sort。responsibility: 単一 (問い合わせのみ、mutation なし)。read-only の自己検証が優秀: 実行前後で graph の sha256 (before==after) と _authority_digest (config+graph+全 file_path の内容 hash) の双方を比較し、query が graph/config/content authority を 1 byte でも変えたら ContractError で叩き落とす (Goodhart 的な副作用混入を検出)。error-handling: ContractError/OSError/JSONDecodeError/TypeError/ValueError を捕捉し {ok:false} を dump して exit 2 (fail-closed)。side-effect-safety: 唯一の書込は --eval-log 指定時の atomic_json で、target を repository_eval_root 配下へ contained 制約 (symlink escape 遮断)。frontmatter network:false は subprocess/socket 非使用で裏付け。TESTS: test_operational_loop_v2.py::test_status_and_next_only_write_eval_logs / test_readers_reject_eval_log_symlink_escape_before_writing が read-only 性と eval-log symlink escape 拒否を exercise (21 passed)。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

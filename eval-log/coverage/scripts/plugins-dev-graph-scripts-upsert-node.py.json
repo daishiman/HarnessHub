@@ -1,0 +1,12 @@
+{
+  "artifact": "plugins/dev-graph/scripts/upsert-node.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 91,
+    "notes": "genuine code-review + py_compile OK / `# /// script` frontmatter 完備 (network:false, write-scope: 1 canonical content artifact + .dev-graph/state/graph.json)。単一 canonical Markdown artifact + graph node の原子 add/patch。soundness: graph_operation_lock(exclusive) + .register.lock の flock で writer を直列化し、冒頭で recover_pending_transaction を呼んで前回 crash を先に回収。node/patch/bare の 3 入力形態を _request_node で正規化 (両指定は拒否)、graph_node_id は immutable 検証、_canonical_path で kind→root parity と .md/相対/非移動を強制。冪等性設計が丁寧: updated_at 自動更新の前に preliminary bytes で changed 判定し、無変更なら operation:noop で write_count 0 を返す (自動 timestamp による偽差分を防ぐ)。responsibility: 単一 (1 node の upsert)。validate-graph-schema.py を validator として proposed graph に pre-validate、書込後に artifact_findings で post-validate の二段ゲート。error-handling: ContractError/OSError/JSONDecodeError/KeyError/TypeError/ValueError を捕捉し {valid:false, write_count:0} exit 2 (fail-closed)。commit は node_transaction 経由: prepare_transaction→(artifact 書込→graph atomic_json→finalize)、途中の BaseException で recover_pending_transaction による rollback を保証 (DEV_GRAPH_TEST_INTERRUPT_AFTER_ARTIFACT で crash 注入 test 可能)。side-effect-safety: 全 path contained(root)、artifact/graph 以外の書込は transaction staging と lock のみで write-scope 宣言と整合。TESTS: test_operational_loop_v2.py::test_node_upsert_is_atomic_idempotent_and_patchable / test_node_rolls_artifact_back_when_graph_commit_fails / test_node_recovers_crash_before_exposing_graph_to_readers と test_sync_render_schedule_v2.py 経由の統合が原子性・冪等・patch・rollback・crash-recovery を exercise (計 21+12 passed)。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

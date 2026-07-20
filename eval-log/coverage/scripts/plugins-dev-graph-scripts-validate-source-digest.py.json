@@ -1,0 +1,12 @@
+{
+  "artifact": "plugins/dev-graph/scripts/validate-source-digest.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 90,
+    "notes": "genuine code-review + py_compile OK。R3-import 完了ゲート: 本 run 登録 node のみ対象に source_lineage.source_digest を、その node 固有 source_path の実 file sha256 と per-path 照合。r8 の failure mode『index.md の digest を全 node へ流用』を決定論検出する設計で、単一 digest 流用は他 path の実 sha と不一致し検知される。責務単一かつ純検査 (write-scope: none で副作用ゼロ、read_bytes/read_text のみ)。fail-closed が全経路で徹底: graph 読取り例外→exit 2、source_path/source_digest 欠落→mismatch (欠落 reason)→exit 2、source_path 実 file 不在→exit 2、sha256 不一致→exit 2 (recorded/actual を diff 出力)。registered 外 node と source_lineage 非 dict は責務外として skip (isinstance ガード)。registered = --registered CSV ∪ progress.registered_this_run。frontmatter 完備 (network:false は hashlib/json/sys/pathlib のみで裏付け、write-scope: none は書込み命令皆無で厳密一致)。NOTE(minor): _registered_from_progress は progress 破損時に空 set へ握るため progress 単独源では checked 0→exit 0 になりうるが、--registered 冗長経路あり・graph 読取りは fail-closed で許容範囲。TESTS(5, 全 PASS): test_validate_source_digest.py::test_matching_per_path_digest_passes / test_reused_digest_fails_closed / test_missing_source_file_fails_closed / test_unregistered_node_is_not_checked / test_progress_supplies_registered。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

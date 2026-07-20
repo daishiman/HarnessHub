@@ -1,0 +1,12 @@
+{
+  "artifact": "plugins/dev-graph/scripts/validate-evidence-refs.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 88,
+    "notes": "genuine code-review + py_compile OK。R3-import 完了ゲート: graph 全 node の confirmation_evidence.evidence_ref を root 相対で is_file() 走査し dangling を判定。責務単一 (evidence_ref 実在検査 + 監査転記)。fail-closed 設計が正確: graph 読取り例外→exit 2、本 run 登録分 (registered=--registered CSV ∪ progress.registered_this_run) に dangling 有→exit 2、既存 node の dangling は existing_dangling として報告のみ exit 0 と責務分離。robust: node/confirmation_evidence を isinstance(dict) でガードし ref 空を skip。既存 dangling の握り潰し経路を塞ぐため audit を LLM でなく本 script が progress.json へ決定論転記 (write は --progress かつ is_file() 時のみ、失敗は WARN で非致命 = ゲート判定を汚さない)。frontmatter 完備 (network:false は argparse/json/sys/pathlib のみで裏付け、write-scope: caller-repo/eval-log (--progress 指定時のみ) と実装一致)。NOTE(minor): _registered_from_progress は progress 読取り例外を空 set に握るため、progress が唯一の registered 源かつ破損時は fatal 対象 0→exit 0 になりうる。ただし --registered CSV が冗長経路として存在し、本体の graph 読取りは fail-closed のため許容範囲の設計トレードオフ。TESTS(5, 全 PASS): test_validate_evidence_refs.py::test_registered_dangling_fails_closed / test_existing_dangling_is_reported_but_not_fatal / test_all_resolvable_is_clean / test_progress_supplies_registered_and_fails_closed / test_progress_autotranscribes_existing_dangling。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}
