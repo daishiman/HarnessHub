@@ -370,8 +370,22 @@ make test
 変更と検証結果を確認した後、Claude Code へ次を入力します。この依頼は commit、push、PR作成を明示的に許可するものです。
 
 ```text
-タスク <beads-id> の変更を最終レビューしてください。git status と diff を確認し、task 仕様書の品質ゲートを再実行してください。問題がなければ対象ファイルだけを commit し、branch devgraph/<graph-node-id> を origin へ push して、repository の正しい base branch 向けに draft PR を作成してください。PR 本文には目的、変更内容、検証結果、Beads ID、dev-graph node ID、残課題を記載してください。無関係な既存差分は commit しないでください。
+タスク <beads-id> の変更を最終レビューしてください。git status と diff を確認し、task 仕様書の品質ゲートを再実行してください。本変更分に仕様・設計への影響が無いかを確認し、影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映してから、仕様反映の受領書を記録してください（影響が無い場合は判断理由を添えて記録してください）。問題がなければ対象ファイルだけを commit し、branch devgraph/<graph-node-id> を origin へ push して、repository の正しい base branch 向けに draft PR を作成してください。PR 本文には目的、変更内容、検証結果、仕様反映の有無、Beads ID、dev-graph node ID、残課題を記載してください。無関係な既存差分は commit しないでください。
 ```
+
+### 仕様反映の受領書（PR 前の必須ゲート）
+
+「実装で得た知見を仕様へ戻す」工程は、受領書（receipt＝確認した事実を HEAD の commit に紐付けて記録したファイル）と hook で強制されます。**有効な受領書が無い状態で `gh pr create` を実行すると、hook が自動で BLOCK します。** 全変更を commit した後（＝PR に入る内容が確定した後）に記録します。
+
+```bash
+# 仕様・設計へ反映した場合（diff が仕様ファイルを実際に含むことを機械検証して記録）
+python3 scripts/build-spec-reflection-receipt.py --repo-root . --spec-impact reflected
+
+# 仕様・設計への影響が無い場合（判断理由が必須）
+python3 scripts/build-spec-reflection-receipt.py --repo-root . --spec-impact none --reason "<なぜ仕様影響が無いか>"
+```
+
+受領書は記録時の HEAD に束縛されます。記録後にさらに commit を積むと自動で無効（stale）になり、追加分の仕様影響を再確認して再記録するまで PR は作成できません。
 
 手動で実行する場合は、対象 file を明示して stage します。
 

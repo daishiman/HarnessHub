@@ -402,6 +402,15 @@
         "hooks": [
           {
             "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/scripts/guard-spec-reflection.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
             "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/company-master/hooks/hook-guard-secret.py"
           }
         ]
