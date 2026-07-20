@@ -479,4 +479,5 @@ python3 scripts/lint-artifact-placement.py
 - Beads の全運用 context: `bd prime`
 - Beads 同期の概要とアンチパターン: <https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md>
 - Harness Hub の要件正本: `system-spec/index.md`
+- harness からの plugin 同期 (MK-004): `distributable: false` を宣言した plugin (社内専用・開発メタ系) は実体コピーのみ行い、marketplace.json には登録しない。このため plugin 数と marketplace 登録数の不一致は正常で、3点整合検査 (plugin ディレクトリ ↔ marketplace.json ↔ version) も distributable フラグに準拠する
 - 配布境界: `CONVENTIONS.md`
