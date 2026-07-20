@@ -17,6 +17,7 @@
     "check:pnpm": "node scripts/ci/check-pnpm-only.mjs",
     "check:duplicates": "node scripts/ci/check-shared-layer-duplicates.mjs",
     "check:bundle": "pnpm --filter @harness-hub/hub run check:bundle",
+    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm typecheck && pnpm test && pnpm check:bundle",
     "preinstall": "npx --yes only-allow pnpm"
   }
 }

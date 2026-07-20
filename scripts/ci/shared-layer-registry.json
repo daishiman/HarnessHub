@@ -1,0 +1,86 @@
+{
+  "$comment": "共通層の登録簿。docs/shared-layers.md §1〜§3 の登録内容を機械可読化したもの。duplicate detector はこの登録簿に載っている層のみを検出対象とする (requirements-baseline.md §4.2 A4-2)。未登録の重複は検出対象外 = shared-layers §5『第3の利用者が現れて初めて共通化する』原則との両立措置。",
+  "owner_feature": "feat-hub-foundation",
+  "layers": [
+    {
+      "id": "ui-design-system",
+      "shared_layers_ref": "§1",
+      "owner_package": "packages/ui",
+      "package_name": "@harness-hub/ui",
+      "consumers": ["apps/hub", "apps/hub/tests/fixtures/consumer-a"]
+    },
+    {
+      "id": "zod-schemas-single-source",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/schemas",
+      "package_name": "@harness-hub/schemas",
+      "consumers": ["apps/hub", "apps/hub/tests/fixtures/consumer-a"]
+    },
+    {
+      "id": "inspection-pipeline",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/inspection",
+      "package_name": "@harness-hub/inspection",
+      "consumers": ["apps/hub", "apps/hub/tests/fixtures/consumer-a"]
+    },
+    {
+      "id": "estimation-engine",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/estimation",
+      "package_name": "@harness-hub/estimation",
+      "consumers": ["apps/hub", "apps/hub/tests/fixtures/consumer-a"]
+    },
+    {
+      "id": "repository-layer",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/db",
+      "package_name": "@harness-hub/db",
+      "consumers": ["apps/hub"],
+      "boundary_only": true,
+      "boundary_note": "スキーマ実体は feat-domain-model-db の責務。本 feature は境界と型のみ所有する"
+    },
+    {
+      "id": "authz-middleware",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/middleware",
+      "consumers": ["apps/hub"],
+      "boundary_note": "認可判定はこの単一層以外に書かない (deny-by-default)。テナント固有 policy は feat-auth-tenancy"
+    },
+    {
+      "id": "auth-adapter",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/auth",
+      "consumers": ["apps/hub"]
+    },
+    {
+      "id": "audit-event-logger",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/audit",
+      "consumers": ["apps/hub"]
+    },
+    {
+      "id": "aijob-queue",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/aijob",
+      "consumers": ["apps/hub"]
+    },
+    {
+      "id": "notification-dispatch",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/notification",
+      "consumers": ["apps/hub"]
+    },
+    {
+      "id": "pii-guard",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/pii",
+      "consumers": ["apps/hub"]
+    },
+    {
+      "id": "telemetry-ingest-rollup",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/telemetry",
+      "consumers": ["apps/hub"]
+    }
+  ]
+}

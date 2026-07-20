@@ -97,15 +97,22 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 | CI 品質ゲート (§3) | `.github/workflows/ci.yml` | feat-hub-foundation | 実装する |
 | デプロイ (wrangler) (§3) | `.github/workflows/ci.yml` + `wrangler.jsonc` | feat-hub-foundation | 実装する |
 | 監視 (§3) | `apps/hub/src/app/health/` + 外部監視設定 | feat-hub-foundation | /health を実装。外形監視は外部サービス設定 |
-| バックアップ (§3) | 運用手順（P12） | feat-hub-foundation | 手順のみ |
+| バックアップ (§3) | **`.github/workflows/backup.yml`**（実装物）+ 手順は P12 | feat-hub-foundation | **実装する**（R-08 是正。infrastructure-spec §7 が cron workflow を確定済みであり、文書だけでは requirements-baseline §9.5 に抵触する） |
 
 ## 4. deploy unit とデプロイ経路
 
-- **deploy unit**: `cloudflare-workers/hub` の**単一 Worker**。UI (Next.js App Router SSR) と API を同居させる。
+> **改訂 2 (P03 差し戻し是正)**: 環境戦略を qa-038 準拠へ変更し、scheduled handler と binding 正本参照を追加した。詳細は §11 (R-01 / R-09 / R-10)。
+
+- **deploy unit**: `cloudflare-workers/hub` の**単一 Worker**。UI (Next.js App Router SSR) + API + **scheduled handler (cron)** を同居させる。
 - **分割しない理由**: D1 決定（`@opennextjs/cloudflare` 一体型）と C1（個人運用で複数 Worker の運用負荷を負わない）。docs/system-design-overview.md §1 と同一。
-- **環境**: production + staging の 2 環境（qa-034）。既存保有ドメインを流用。
-- **デプロイ経路**: GitHub Actions → `wrangler deploy`。main merge で production へ全自動（qa-034）。
-- **bundle 予算**: gzip 後 3 MiB。`packages/*` 側で重量依存を持たないことを設計制約とする（特に `packages/ui` のチャート実装）。
+- **scheduled handler (R-09)**: `docs/infrastructure-spec.md` §5 が確定した cron 2 系統（日次 `0 15 * * *` / 週次 `0 0 * * 1`）を同一 Worker の scheduled handler として実装する。`@opennextjs/cloudflare` は fetch handler を出力するため、**custom entry で fetch handler を包み `scheduled` を併せて export する**構成を採る。各ジョブは冪等とし、失敗はジョブ単位で記録して後続を止めない。日次完了時に **cron heartbeat** へ ping する（qa-027 の cron 失敗検知）。
+- **環境（qa-038 を正とする / R-01）**: **常設 staging は持たない**。`production` のみを常設し、検証は **PR ごとの使い捨て preview（PR close で破棄）** で行う。
+  - 採用理由: qa-038 は qa-034 より後に確定しており、「Worker / Turso DB / R2 バケット / secret を 2 組常時維持すると無料枠消費と運用導線が二重化し C1・C2 と衝突する」と明示的に理由を述べている。ユーザー確認により qa-038 を正と確定（2026-07-21）。
+  - 波及: `docs/infrastructure-spec.md` §6（環境構成）・§7（deploy.yml の staging 経由）・§2（`harness-hub-staging` 命名）・§4（`harness-hub-staging` DB）は qa-034 前提のため、**system-spec 側の追随更新が必要**（本 feature の write scope 外のため §11 に申し送り）。
+  - migration は qa-038【5】に従い **deploy 前に CI が production Turso へ自動適用**する（staging 経由を採らない）。破壊的 DDL は expand/contract 3 段階を強制する。
+- **binding / secret の内容正本 (R-10)**: `apps/hub/wrangler.jsonc` の**内容正本は `docs/infrastructure-spec.md` §2**（binding 台帳 5 件・secret 台帳 5 件・`nodejs_compat`・Worker 命名・CPU 10ms 予算）。本 ADR は owner を宣言するのみで内容を二重定義しない。R2 は native binding（`PACKAGES_BUCKET` / `BACKUPS_BUCKET`）、静的アセットは `ASSETS` binding で edge 配信する（qa-003・R-05 の CWV 手段）。
+- **デプロイ経路**: GitHub Actions の**単一 workflow `ci.yml`** 内で 静的ゲート → test → bundle → deploy を連鎖させる（R-02。ユーザー確認により `deploy.yml` 分離を採らない）。main merge で production へ全自動、post-deploy `/health` 確認、失敗時 `wrangler rollback`（qa-034 / infrastructure-spec §7）。
+- **bundle 予算**: gzip 後 3 MiB。`packages/*` 側で重量依存を持たないことを設計制約とする（特に `packages/ui` のチャート実装）。**CPU 予算 10ms/呼出**（Free）も設計制約とし、cron の集計は chunk 処理で収める。
 
 ## 5. workstream 別の設計確定
 
@@ -120,28 +127,45 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 | Quality | §6 の CI 品質ゲート |
 | Operations | §7 の監視構成 |
 
-## 6. CI 品質ゲートの設計（shared-layers §3）
+## 6. CI 品質ゲートの設計（shared-layers §3 + qa-038【2】required status checks）
 
-| ゲート | 設計 | fail 条件 | 対応 acceptance |
-|---|---|---|---|
-| pnpm 混入検査 | `package-lock.json` / `npm-shrinkwrap.json` の存在検出 + `packageManager` pin 検証 | 検出時に非ゼロ終了 | A1 |
-| bundle 予算 | `wrangler deploy --dry-run` 相当の出力から gzip 後サイズを算出 | 3 MiB 超過で非ゼロ終了 | A2 |
-| axe a11y | `packages/ui` 部品単体 + `apps/hub` 画面結合の 2 段 | 違反 1 件以上で fail | qa-018 |
-| Tenant 分離テスト | 認可 MW のスコープ強制テスト枠 | 越境アクセスが通ったら fail | qa-006 |
-| 検査 pipeline 挙動同値 | Hub と Publisher が同一 `packages/inspection` を参照することの contract test | 判定不一致で fail | A4 |
-| duplicate implementation detector | 登録共通層の owner package 外の同名 export / 境界迂回 import を検出 | 1 件以上で fail | A4 |
+> **改訂 2 (P03 差し戻し是正 / R-03)**: qa-038【2】が確定した required status checks 8 項目のうち 5 項目（lint・format / typecheck / secret scan / 破壊的 DDL 検査 / OpenAPI・zod drift 検査）が欠落していたため追加した。shared-layers §3 の 5 ゲートのみを写経していたことが原因。
 
-- ゲートの実行順は「静的検査（pnpm/duplicate）→ build → test（axe/tenant/contract）→ bundle 予算 → deploy」とし、**deploy は全ゲート通過後にのみ実行**する（A1 の "test→deploy 完走" の定義）。
+| # | ゲート | 設計 | fail 条件 | 対応 |
+|---|---|---|---|---|
+| G1 | pnpm 強制 | **corepack で pin**（正本機構）+ `packageManager` 検証 + `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` / `bun.lockb` の混入検出 | 検出時に非ゼロ終了 | A1, qa-039 |
+| G2 | lint / format | リポジトリ規約に沿った静的整形検査 | 違反で fail | qa-038【2】 |
+| G3 | typecheck | `pnpm -r typecheck`（TypeScript strict） | 型エラーで fail | qa-038【2】 |
+| G4 | unit / integration test | `pnpm -r test`（Tenant 分離・検査 pipeline 挙動同値・contract を含む） | 失敗で fail | A1, A4, qa-006, qa-010 |
+| G5 | bundle 予算 | OpenNext build 出力の gzip 後サイズを算出 | 3 MiB 超過で非ゼロ終了 | A2 |
+| G6 | secret scan | `packages/inspection` の secret scan を **CI からも呼ぶ**（qa-038【2】。publish pipeline と同一実装） | 検出で fail | A4, SEC |
+| G7 | 破壊的 DDL 検査 | drizzle migration の expand/contract 3 段階違反を検出 | 違反で fail | qa-038【5】 |
+| G8 | OpenAPI / zod drift 検査 | `packages/schemas` から生成した OpenAPI と実装の乖離を検出 | 乖離で fail | qa-009, qa-038【2】 |
+| G9 | axe a11y | `packages/ui` 部品単体 + `apps/hub` 画面結合の 2 段 | 違反 1 件以上で fail | qa-018 |
+| G10 | duplicate implementation detector | 登録共通層の owner package 外の同名 export / 境界迂回 import を検出 | 1 件以上で fail | A4 |
+| G11 | Core Web Vitals 計測 | **main 反映後の定期計測**（Lighthouse）で LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1 を確認 | good を外れたら是正起票 | qa-018, R-05 |
 
-## 7. 監視・SLO 構成（qa-019）
+- **G11 を PR 単位に置かない理由 (R-05)**: PR ごとの Lighthouse 実行は GitHub Actions 無料枠 2,000 分/月（infrastructure-spec §11）を圧迫し C2 に反する。CWV は bundle 予算（代理指標）とは別に**実測経路を持つ**必要があるため、main 反映後の定期計測として確保する。R2/edge 配信（`ASSETS` binding）と不要 JS 削減が達成手段（qa-018(2) の 3 手段に対応）。
+- **G6 の consumer 構成 (R-07)**: `packages/inspection` の第 2 consumer は **CI 自身**とする。Publisher（feat-publisher-plugin）は未実装で workspace member でもないため、A4-1「実在する consumer のみを対象にする」規則により Publisher を待つと判定不能になる。qa-038【2】が「CI からも呼ぶ」と確定しているため、CI が実在 consumer として成立する。
+- ゲートの実行順は「静的ゲート（G1・G10）→ install → G2・G3 → build → G4・G6・G7・G8・G9 → G5 → deploy」とし、**deploy は全ゲート通過後にのみ、同一 workflow run 内で実行**する（R-02。A1 の "test→deploy 完走" の定義）。
+- **local 再現 (R-18)**: required status checks と同一コマンドを root の `pnpm verify` で実行できるようにする（qa-039【2】）。
+
+## 7. 監視・SLO 構成（qa-019 / qa-027）
+
+> **改訂 2 (P03 差し戻し是正)**: SLO 算定式を正本（infrastructure-spec §9）へ一致させ（R-11）、エラーバジェットの警告段と凍結段を分離し（R-12）、cron heartbeat とバックアップを追加した（R-08 / R-09）。
 
 | 構成要素 | 配置 | 備考 |
 |---|---|---|
-| `/health` | `apps/hub/src/app/health/route.ts` | 200 応答。依存先の疎通状態を含める |
-| Workers logs / analytics | Cloudflare 標準機能 | 追加費用なし（C2） |
-| 外部死活監視 | Better Stack Free（qa-034） | 3 分間隔。**外部アカウント設定が必要** |
-| SLO ダッシュボード | 外形監視サービスの可用性レポートを正とする | 99.5%/月 |
-| エラーバジェットアラート | 0.5% 消費でアラート → 新規公開機能の変更凍結 | qa-019 |
+| `/health` | `apps/hub/src/app/health/route.ts` | 認証なし・rate limit 対象外。**Turso `SELECT 1` + R2 head** を検査し `{status, db, r2, version}` を返す。失敗時 503（infrastructure-spec §9） |
+| Workers logs / analytics | Cloudflare observability logs + analytics | p95 レイテンシ・エラー率。追加費用なし（C2） |
+| 外部死活監視 | Better Stack Free | production `/health` を **3 分間隔** + cron heartbeat。**外部アカウント設定が必要** |
+| cron heartbeat | 日次バッチ完了時に heartbeat URL へ ping | 「cron が動かなかった」ことを検知（qa-027） |
+| SLO 算定 | **外形監視の downtime + Workers analytics の 5xx 率**の合成 | 99.5%/月。外形監視単独を正としない（応答は返るが機能不全の障害を落とさないため） |
+| エラーバジェット | **消費 70% で警告通知 → 消費 100% で新機能の変更を凍結** | 警告段と凍結段を分離（正本の凍結条件は 100%） |
+| SLO ダッシュボード | Cloudflare dashboard + 外形監視 status page | 追加サービスを増やさない（C2） |
+| バックアップ | `.github/workflows/backup.yml`（日次 cron `0 17 * * *`） | Turso dump → gzip → R2 `harness-hub-backups`。成功を heartbeat 通知。**復元できないバックアップを成功と数えない**（四半期 restore drill、RPO ≤ 24h / RTO ≤ 4h） |
+
+- **既知リスク (R-26)**: `/health` が Turso と R2 の疎通を検査するため、SLO 99.5% の計測対象に第三者 free tier の可用性が全量乗る。縮退マトリクス（infrastructure-spec §10）で影響範囲を限定し、ポストモーテムで再評価する。
 
 ## 8. Rollback
 
@@ -157,7 +181,69 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 
 ## 10. 転記元と検証
 
-- 上位入力: `docs/features/feat-hub-foundation/requirements-baseline.md`（P01）, `docs/shared-layers.md` §1〜§5, `docs/system-design-overview.md`
+- 上位入力: `docs/features/feat-hub-foundation/requirements-baseline.md`（P01）, `docs/shared-layers.md` §1〜§5, `docs/system-design-overview.md`, **`docs/infrastructure-spec.md`（改訂 2 で追加。初版が未接地だった確定仕様正本）**
 - published task spec: `.dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-02-architecture.md`
 - 検証コマンド: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging <promoted package>`
 - P02 acceptance: (a)(b)(c) の比較表（§2.1）と (b) 採用理由（§2.2）、`apps/hub` と `packages/{ui,schemas,inspection,estimation,db}` の各責務境界（§2.4・§3）が記載されていること
+
+## 11. P03 差し戻し是正記録（改訂 2 / 2026-07-21）
+
+P03 独立設計レビュー（`design-review-notes.md`、判定: 差し戻し、指摘 27 件 / 是正要 25 件）への対応。
+初版の根本原因は **`docs/infrastructure-spec.md`（確定仕様正本）への未接地**であり、`docs/shared-layers.md` §3 のみを写経していたことによる。
+
+### 11.1 ユーザー判断を仰いだもの（2026-07-21 確定）
+
+| ID | 論点 | 確定 |
+|---|---|---|
+| R-01 | qa-034（常設 staging）と qa-038（常設 staging なし）の矛盾 | **qa-038 を正とする**。§4 に反映。system-spec 側（infrastructure-spec §2/§4/§6/§7/§12）の追随更新は本 feature の write scope 外のため §11.4 へ申し送り |
+| R-02 | A1「単一 workflow run」と infrastructure-spec §7 の 2 workflow 分離の矛盾 | **`ci.yml` に deploy job を統合**（A1 判定条件は維持、P01 改訂なし）。§4・§6 に反映 |
+
+### 11.2 本 ADR 内で是正したもの
+
+| ID | 是正内容 | 反映先 |
+|---|---|---|
+| R-03 | required status checks 8 項目の欠落 5 件（lint/format・typecheck・secret scan・破壊的 DDL 検査・OpenAPI drift 検査）を追加し、ゲートを G1〜G11 へ再構成 | §6 |
+| R-04 | `packages/estimation` の責務分界を明文化: **本 package は「計算の骨格」（単位換算・丸め・入力検証・純関数）のみを持ち、業務的な算出定義（係数・削減率の意味づけ）は consumer feature が引数で供給する**。試算式そのものの owner は consumer（feat-metrics-tracking）であり、基盤へ業務ロジックを集約しない | §11.3・§3 |
+| R-05 | CWV の計測経路を G11（main 反映後の Lighthouse 定期計測）として新設。達成手段として `ASSETS` binding による R2/edge 配信と不要 JS 削減を明記 | §6 |
+| R-06 | package 化と `apps/hub/src/shared/` 配置の**振り分け基準**を確定（§11.3-1）。後者は detector の検出単位 2 が構造的に効かないため、**代替として「公開 contract を `index.ts` に集約し、それ以外からの import を禁止する静的検査」を G10 に含める** | §11.3 |
+| R-07 | `packages/inspection` の第 2 consumer を **CI 自身**とする（qa-038【2】「CI からも呼ぶ」に接地）。Publisher 未実装でも A4 判定が成立する | §6 |
+| R-08 | バックアップを文書から**実装物**へ戻し、`.github/workflows/backup.yml` の owner を本 feature と宣言 | §3・§7 |
+| R-09 | scheduled handler（cron 2 系統）を deploy unit 定義に追加。custom entry で fetch handler を包む設計を明記 | §4 |
+| R-10 | `wrangler.jsonc` の内容正本が infrastructure-spec §2 であることを明記し二重正本を回避。R2 native binding と `ASSETS` を明示 | §4 |
+| R-11 | SLO 算定式を「外形監視 downtime + Workers analytics 5xx 率」へ訂正 | §7 |
+| R-12 | エラーバジェットを「70% 警告 / 100% 凍結」の 2 段へ分離 | §7 |
+| R-13 | shared-layers §5 の閾値を「2 feature 以上」と誤記していた点を訂正（**正しくは「第 3 の利用者」**）。構成変更は不要 | §11.3 |
+| R-14 | `packages/db` の A4 発効条件を確定（§11.3-7） | §11.3 |
+| R-15 | package 命名・`exports`・import path 規約を確定（§11.3-2）。これが A4-2 検出単位 2 の判定基準になる | §11.3 |
+| R-16 | migration の分担を確定（§11.3-5） | §11.3・§6 |
+| R-17 | rate limiting の分担を確定（§11.3-6） | §11.3 |
+| R-19 | 認可 deny-by-default の**強制メカニズム**を設計（§11.3-3）。規約だけに頼らない | §11.3・§6 |
+| R-20 | pnpm 強制機構を **corepack を正**とし、`only-allow` は補助と位置づける | §6・root package.json |
+| R-22 | pnpm 混入検査の対象に `yarn.lock` / `bun.lockb` を追加 | §6 |
+| R-24 | `plugins/publisher/` の予約が既存の開発用 plugin 群（22 個）と名前空間衝突するため、**ディレクトリ予約を本 ADR から取り下げ feat-publisher-plugin の P02 に委ねる** | §11.3 |
+| R-25 | 正本タスク仕様の member 集合と ADR の 5 package（estimation 追加）の差分について、Normative implementation closure を優先した調停理由を脚注から本節へ格上げ | §11.3 |
+| R-27 | `wrangler-deploy` の「WebApp 出口でも同一ツール系統」は**本 feature の scope 外**と明記 | §11.3 |
+| R-21 / R-23 / R-26 | R-21（pnpm 10 の `onlyBuiltDependencies`）は P05 実装時に対処。R-23（`engines.npm` は engine-strict なしでは無効）は意図表明として保持。R-26（第三者 free tier の可用性が SLO に乗るリスク）は §7 にリスクとして記録 | §7・P05 |
+
+### 11.3 改訂 2 で新たに確定した設計事項
+
+1. **配置の振り分け基準**（R-06）: **Worker 外部（Publisher / CI / 別 app）から参照されうるもの → package 化。Worker 内部からのみ使うもの → `apps/hub/src/shared/`**。この基準により inspection（CI から呼ぶ）・schemas・ui・estimation は package、audit / aijob / notification / pii / telemetry / auth は Worker 内部で確定する。
+2. **package 公開 contract 規約**（R-15）: 名前空間は `@harness-hub/<name>`、`exports` は `"."` の**単一入口のみ**（subpath exports を作らない）、consumer は **package 名でのみ** import する。
+3. **認可の fail-open 対策**（R-19）: Next.js middleware の `matcher` 漏れは fail-open になるため、**全 route handler を `withAuthz()` wrapper factory 経由で定義することを規約とし、未 wrap の route handler を検出する静的検査**を G10 に含める。
+4. **estimation の責務分界**（R-04）: 計算の骨格は基盤、業務的な算出定義は consumer。
+5. **migration の分担**（R-16）: SQL 生成とスキーマ実体は feat-domain-model-db、**CI での自動適用（deploy 前）と破壊的 DDL 検査ゲート（G7）は本 feature**。
+6. **rate limiting の分担**（R-17）: エッジ側（Cloudflare Rate Limiting Rule）は infrastructure-spec §2 の確定どおり。アプリ層（認可 MW 前段）の境界は本 feature が持ち、**具体的な数値は feat-auth-tenancy が確定**（本 feature は既定値のみ）。
+7. **db の A4 発効条件**（R-14）: P05 時点では境界と型のみのため、**A4 の判定対象は「境界型が consumer から参照可能であること」に限定**し、実装 consumer 2 系統の要求は feat-domain-model-db 完了後に発効する（登録簿に `boundary_only: true` として明記済み）。
+8. **scope 外の明示**（R-24 / R-27）: Publisher のディレクトリ予約と WebApp 出口のツール系統は他 feature の責務。
+
+### 11.4 本 feature の write scope 外へ申し送るもの（要 follow-up 起票）
+
+| # | 内容 | 差し戻し先 |
+|---|---|---|
+| F-1 | `docs/infrastructure-spec.md` §2/§4/§6/§7/§12 が qa-034 前提（常設 staging・deploy.yml 分離）のまま。qa-038 採用と ci.yml 統合に追随させる必要がある | system-spec（C01 writer 経由） |
+| F-2 | `docs/shared-layers.md` §3 の CI 品質ゲート登録簿が 5 項目。qa-038【2】の 8 項目 + G9〜G11 へ更新が必要 | shared-layers 保守 |
+| F-3 | P03 の未検証事項 L-2（bundle 3MiB の実現可能性）・L-3（Better Stack Free のデータ保持期間）・L-4（`@opennextjs/cloudflare` の scheduled / middleware サポート範囲）は P05/P06 の実測で確定する | P05/P06 |
+
+### 11.5 P03 が「維持すべき」と判定した設計（改訂 2 でも変更しない）
+
+案 (b) の採用と (a)(c) の棄却理由 / 単一 Worker の deploy unit / detector を決定的判定に限定した設計 / axe の 2 段構え / bundle 予算を package 設計の入力制約へ変換した点 / ドメイン固有ロジックの境界宣言書式。
