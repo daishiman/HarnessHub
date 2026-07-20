@@ -12,3 +12,11 @@ packages:
   - "packages/inspection"
   - "packages/estimation"
   - "packages/db"
+
+# pnpm 10 は依存パッケージの lifecycle script を既定でブロックするため、
+# ビルドに必要なものだけを明示的に許可する (P03 指摘 R-21。実測で警告を確認)。
+# ここに列挙しないと esbuild/workerd のバイナリが配置されず build が失敗する。
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - workerd

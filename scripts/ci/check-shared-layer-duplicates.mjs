@@ -14,7 +14,7 @@
 //   node scripts/ci/check-shared-layer-duplicates.mjs --no-fail      # 終了コードを常に 0 にする (レポート生成のみ)
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSync } from "node:fs";
-import { join, dirname, relative, resolve, sep } from "node:path";
+import { join, dirname, relative, resolve, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -106,7 +106,8 @@ function collectPublicApi(ownerDir, seen = new Set()) {
 
 function isInside(file, dirPath) {
   const rel = relative(dirPath, file);
-  return rel !== "" && !rel.startsWith("..") && !resolve(rel).startsWith(sep);
+  // rel が空 = 同一 path、".." 始まり = 外側、絶対 path = 別ドライブ/無関係
+  return rel !== "" && !rel.startsWith("..") && !isAbsolute(rel);
 }
 
 function main() {

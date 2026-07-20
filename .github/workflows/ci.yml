@@ -54,10 +54,10 @@ jobs:
       - name: detector 実効性の検証 (HF-A4-DUP-002 / 意図的違反を検出できること)
         run: |
           set +e
-          node scripts/ci/check-shared-layer-duplicates.mjs --include-fixtures --root apps/hub/tests/fixtures/duplicate-violation-root > /dev/null 2>&1
+          node scripts/ci/check-shared-layer-duplicates.mjs --include-fixtures --root apps/hub/tests/fixtures/duplicate-violation > /dev/null 2>&1
           code=$?
           set -e
-          if [ -d apps/hub/tests/fixtures/duplicate-violation-root ] && [ "$code" -eq 0 ]; then
+          if [ -d apps/hub/tests/fixtures/duplicate-violation ] && [ "$code" -eq 0 ]; then
             echo "detector が意図的違反を検出できていません (ゲートの故障)"; exit 1
           fi
           echo "detector 実効性チェック完了 (exit=$code)"

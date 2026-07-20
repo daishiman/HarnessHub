@@ -1,0 +1,33 @@
+{
+  "name": "@harness-hub/db",
+  "version": "0.1.0",
+  "private": true,
+  "description": "repository 層の境界と型のみ (docs/shared-layers.md §2)。DB スキーマ実体は feat-domain-model-db の責務",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "drizzle-orm": ">=0.36.0"
+  },
+  "peerDependenciesMeta": {
+    "drizzle-orm": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "drizzle-orm": ">=0.36.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0"
+  }
+}

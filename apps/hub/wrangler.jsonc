@@ -1,0 +1,36 @@
+// Cloudflare Workers デプロイ定義。monorepo のため repo 直下ではなく apps/hub 直下に置く
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // ADR §4: deploy unit は cloudflare-workers/hub の単一 Worker
+  "name": "harness-hub",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-09-23",
+  // OpenNext の Next.js ランタイムが Node.js API を要求するため必須
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    // Workers 標準の logs / analytics のみを使う (C2: 追加費用なし)
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "HUB_ENV": "development"
+  },
+  // qa-034: production + staging の 2 環境。既存保有ドメインを流用する
+  "env": {
+    "production": {
+      "name": "harness-hub-production",
+      "vars": {
+        "HUB_ENV": "production"
+      }
+    },
+    "staging": {
+      "name": "harness-hub-staging",
+      "vars": {
+        "HUB_ENV": "staging"
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  // apps/hub の TypeScript 設定。strict + ESM + bundler 解決を前提とする
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    // workspace package はビルドせず src を直接読むため、ここの設定が packages/* の型検査にも適用される。
+    // packages/schemas は false を明示、packages/ui は未設定 (= false) で、workspace 全体では未統一。
+    // hub 側だけ true にすると自分が所有しないコードを落とすため合わせる。
+    // 統一するなら packages 側の合意が先 (P05 で team-lead へ申し送り済み)
+    "exactOptionalPropertyTypes": false,
+    "verbatimModuleSyntax": true,
+    "allowJs": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "incremental": true,
+    "types": ["node"],
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  // duplicate-violation は detector の実効性検証用の意図的違反 (HF-A4-DUP-002)。型検査対象にしない
+  "exclude": ["node_modules", ".next", ".open-next", "artifacts", "tests/fixtures/duplicate-violation"]
+}
