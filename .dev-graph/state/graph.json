@@ -1,5 +1,5 @@
 {
-  "graph_revision": 254,
+  "graph_revision": 255,
   "nodes": [
     {
       "acceptance": [
@@ -17605,7 +17605,20 @@
       "phase_ref": "P01",
       "priority": null,
       "project_id": "feature-package-feat-stage0-distribution-gate",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01",
+          "linked_at": "2026-07-20T12:44:37Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 3,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/3"
+        }
+      ],
       "purpose": "feat-stage0-distribution-gate の P01 を実行する: 配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
       "related_nodes": [
         "feat-stage0-distribution-gate",
@@ -17641,7 +17654,7 @@
       "template_version": "1.0.0",
       "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T11:48:41.006853Z"
+      "updated_at": "2026-07-20T12:44:37.942819Z"
     },
     {
       "acceptance": [
