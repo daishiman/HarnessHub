@@ -12,7 +12,7 @@ iteration: null
 title: "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-19T14:19:08Z"
+updated_at: "2026-07-20T12:44:37.942819Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
@@ -41,8 +41,8 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-j71.1","linked_at":"2026-07-18T16:05:14Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
-execution_contexts: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01","linked_at":"2026-07-20T12:44:37Z","merge_commit_sha":null,"merged_at":null,"pr_number":3,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/3"}]
+execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01","head_sha":"5f313162029df3fdc3a51df00e25d9c57e7402e1","last_seen_at":"2026-07-20T11:48:41.006853Z","lease_acquired_at":"2026-07-20T11:48:38.892319Z","released_at":null,"state":"claimed","worktree_id":"wt_eed96293f3fd512f"}]
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
