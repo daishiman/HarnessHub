@@ -1,81 +1,81 @@
-# Beads - AI-Native Issue Tracking
+# Beads - AI ネイティブな課題管理
 
-Welcome to Beads! This repository uses **Beads** for issue tracking - a modern, AI-native tool designed to live directly in your codebase alongside your code.
+Beads へようこそ! このリポジトリは課題管理に **Beads** を使用します。Beads は、コードのすぐ隣、リポジトリの中に直接住まわせる、モダンで AI ネイティブなツールです。
 
-## What is Beads?
+## Beads とは?
 
-Beads is issue tracking that lives in your repo, making it perfect for AI coding agents and developers who want their issues close to their code. No web UI required - everything works through the CLI and integrates seamlessly with git.
+Beads はリポジトリ内で動く課題管理ツールで、AI コーディングエージェントや、課題をコードの近くに置きたい開発者に最適です。Web UI は不要で、すべて CLI から操作でき、git とシームレスに統合されます。
 
-**Learn more:** [github.com/steveyegge/beads](https://github.com/steveyegge/beads)
+**詳しく知る:** [github.com/steveyegge/beads](https://github.com/steveyegge/beads)
 
-## Quick Start
+## クイックスタート
 
-### Essential Commands
+### 基本コマンド
 
 ```bash
-# Create new issues
+# 新しい課題を作成する
 bd create "Add user authentication"
 
-# View all issues
+# 全課題を表示する
 bd list
 
-# View issue details
+# 課題の詳細を表示する
 bd show <issue-id>
 
-# Update issue status
+# 課題ステータスを更新する
 bd update <issue-id> --claim
 bd update <issue-id> --status done
 
-# Sync with Dolt remote
+# Dolt リモートと同期する
 bd dolt push
 ```
 
-### Working with Issues
+### 課題の取り扱い
 
-Issues in Beads are:
-- **Git-native**: Stored in Dolt database with version control and branching
-- **AI-friendly**: CLI-first design works perfectly with AI coding agents
-- **Branch-aware**: Issues can follow your branch workflow
-- **Sync-ready**: Uses Dolt remotes for backup and team sharing
+Beads における課題は次の特徴を持ちます:
+- **git ネイティブ**: バージョン管理とブランチ機能を備えた Dolt データベースに格納される
+- **AI フレンドリー**: CLI ファーストの設計で AI コーディングエージェントと相性が良い
+- **ブランチ対応**: 課題がブランチのワークフローに追従できる
+- **同期対応**: バックアップやチーム共有に Dolt リモートを利用する
 
-## Why Beads?
+## なぜ Beads か?
 
-✨ **AI-Native Design**
-- Built specifically for AI-assisted development workflows
-- CLI-first interface works seamlessly with AI coding agents
-- No context switching to web UIs
+✨ **AI ネイティブな設計**
+- AI 支援の開発ワークフロー向けに特化して構築
+- CLI ファーストのインターフェースが AI コーディングエージェントとシームレスに連携
+- Web UI へのコンテキストスイッチが不要
 
-🚀 **Developer Focused**
-- Issues live in your repo, right next to your code
-- Works offline, syncs when you push
-- Fast, lightweight, and stays out of your way
+🚀 **開発者志向**
+- 課題はコードのすぐ隣、リポジトリ内に置かれる
+- オフラインで動作し、push 時に同期する
+- 高速・軽量で、作業の邪魔をしない
 
-🔧 **Git Integration**
-- Dolt-native sync via bd dolt push / bd dolt pull
-- Branch-aware issue tracking
-- Dolt-native three-way merge resolution
+🔧 **git 統合**
+- bd dolt push / bd dolt pull による Dolt ネイティブな同期
+- ブランチ対応の課題管理
+- Dolt ネイティブな 3-way マージ解決
 
-## Get Started with Beads
+## Beads を使い始める
 
-Try Beads in your own projects:
+自分のプロジェクトで Beads を試すには:
 
 ```bash
-# Install Beads
+# Beads をインストールする
 curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
-# Initialize in your repo
+# リポジトリで初期化する
 bd init
 
-# Create your first issue
+# 最初の課題を作成する
 bd create "Try out Beads"
 ```
 
-## Learn More
+## さらに詳しく
 
-- **Documentation**: [github.com/steveyegge/beads/docs](https://github.com/steveyegge/beads/tree/main/docs)
-- **Quick Start Guide**: Run `bd quickstart`
-- **Examples**: [github.com/steveyegge/beads/examples](https://github.com/steveyegge/beads/tree/main/examples)
+- **ドキュメント**: [github.com/steveyegge/beads/docs](https://github.com/steveyegge/beads/tree/main/docs)
+- **クイックスタートガイド**: `bd quickstart` を実行
+- **サンプル**: [github.com/steveyegge/beads/examples](https://github.com/steveyegge/beads/tree/main/examples)
 
 ---
 
-*Beads: Issue tracking that moves at the speed of thought* ⚡
+*Beads: 思考の速度で動く課題管理* ⚡

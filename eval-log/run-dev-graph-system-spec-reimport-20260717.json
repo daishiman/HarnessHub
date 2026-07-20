@@ -1,0 +1,72 @@
+{
+  "schema": "run-dev-graph-system-spec/reimport-report/1.0.0",
+  "reimported_at": "2026-07-17T10:42:36Z",
+  "reason": "Studio mockup 反映 (U7 改訂 + G5 + D5/D6 + qa-021〜030) による正本再コンパイルへの digest 追従",
+  "evaluator_verdict": "PASS",
+  "evidence_ref": "system-spec/completeness-report.json",
+  "nodes": [
+    {
+      "graph_node_id": "spec-harness-hub-requirements",
+      "source_path": "system-spec/00-requirements-definition.md",
+      "old_digest": "92a26c18c08968d2f72f29c8ccf78e2d862abfb78805bdf354a1170aff0efe89",
+      "new_digest": "8fc7b5878eb3b18f959c3b2fddcab7a5adf69d9201b1be782923659f096e8bf9"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-frontend",
+      "source_path": "system-spec/frontend.md",
+      "old_digest": "5157df8b8c1f3901412aaf4350600ce258f0329fde087a4bb0e61c3283ce08bc",
+      "new_digest": "adf85021f88c7048cf02f1c2facb18cc3407e865b311ee881a684c8e7196ddd3"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-backend",
+      "source_path": "system-spec/backend.md",
+      "old_digest": "06b4c0bd5b109b9a66b6433dfc349bfbf52910219981da8b679c264796001ed0",
+      "new_digest": "2a76ddb666c9da93d596dd11617883994c6baebc3c45d61ffa7b37878d928752"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-data",
+      "source_path": "system-spec/database.md",
+      "old_digest": "97c81921012a0ca5a05565ba8725c2a24571db15de6c1c17bf19b0ded811fd28",
+      "new_digest": "c74fe6b4a1c50bf183e222726d9ace903c17ae64f117bc22c4a688470abc883c"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-security",
+      "source_path": "system-spec/security.md",
+      "old_digest": "e448766fa13c0246e4a8b255709c100cf57ff0441d63cb670d19de45ebddd248",
+      "new_digest": "cabdc46a2ddde69f766a5ea5a547c418e582fe459f271dd7bf818af9ea165830"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-infrastructure",
+      "source_path": "system-spec/infrastructure.md",
+      "old_digest": "3a78a369622b7c92dcd643ebf0985b4e8fc5e6a8d97fbbda8d050bace11df336",
+      "new_digest": "00c285af0f637766a650bd8e3e0a81125047fb7d1b26f6523302fe26f10641a3"
+    },
+    {
+      "graph_node_id": "feat-hub-foundation",
+      "source_path": "specs/harness-hub-system-specification.md",
+      "old_digest": "37ed6322452cc290af6ab9e4ecba4148407275ec243439c9497f8bbe31389e95",
+      "new_digest": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+      "note": "Studio 改訂は既存 8 feature のスコープを維持 (analysis §6.5)。published 13-task plan は不変。共通層追加 (AI キュー/試算エンジン等) は plan --mode update の follow-up"
+    }
+  ],
+  "incremental_updates": [
+    {
+      "at": "2026-07-17T13:22:46Z",
+      "reason": "並行セッションの詳細化 (qa-031〜033: docs/backend-spec.md 確定・backend/database 章再コンパイル) への digest 追従",
+      "nodes": [
+        {
+          "node": "arch-harness-hub-backend",
+          "source": "system-spec/backend.md",
+          "old": "2a76ddb666c9",
+          "new": "d79b66c458bc"
+        },
+        {
+          "node": "arch-harness-hub-data",
+          "source": "system-spec/database.md",
+          "old": "c74fe6b4a1c5",
+          "new": "ab5805b0ac7a"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+  "feature": {
+    "graph_node_id": "feat-docs-cms",
+    "title": "Studio: ドキュメント CMS (common/tenant スコープ・AI 下書き)",
+    "description": "利用ガイド・FAQ 等のドキュメントを common (全テナント) / tenant (テナント限定) スコープで管理し (B7/I13)、S15 の閲覧/編集 UI と D5 pull 型 AI キューによる下書き生成を提供する\n\nドキュメントがスコープ規則 (tenant 分離 + common 共有) 下で閲覧・編集でき、Markdown が sanitize 済みで描画され (SEC7)、AI 下書きがキュー経由で生成される状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P01",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P01",
+      "title": "ドキュメント CMS 要件ベースライン確定",
+      "description": "ドキュメント CMS 要件ベースライン確定 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P02",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P02",
+      "title": "アーキテクチャ設計 — Doc スキーマ・S15 画面構成・B7 API 契約・AI 下書きキュー契約の設計",
+      "description": "アーキテクチャ設計 — Doc スキーマ・S15 画面構成・B7 API 契約・AI 下書きキュー契約の設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P03",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P03",
+      "title": "独立設計レビュー — Doc スキーマ・S15 認可・AI キュー契約・Markdown sanitize の妥当性確認",
+      "description": "独立設計レビュー — Doc スキーマ・S15 認可・AI キュー契約・Markdown sanitize の妥当性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P04",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P04",
+      "title": "テストファースト設計 — tenant 分離/admin 限定編集/Markdown sanitize/AI キュー認可/監査記録のテストスタブ作成",
+      "description": "テストファースト設計 — tenant 分離/admin 限定編集/Markdown sanitize/AI キュー認可/監査記録のテストスタブ作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P05",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P05",
+      "title": "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装",
+      "description": "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P06",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P06",
+      "title": "テスト実行 — 単体/結合/tenant 分離/認可/sanitize テストの実行と結果記録",
+      "description": "テスト実行 — 単体/結合/tenant 分離/認可/sanitize テストの実行と結果記録 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P07",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P08",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P08",
+      "title": "リファクタリング/マイグレーション — Doc テーブルマイグレーション生成と後方互換性確認",
+      "description": "リファクタリング/マイグレーション — Doc テーブルマイグレーション生成と後方互換性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P09",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P09",
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の確認",
+      "description": "品質保証 — CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P10",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P10",
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "description": "最終独立レビュー — quality_constraints 8 件の充足判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P11",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P11",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "description": "エビデンス収集 — 再現可能な検証証跡の集約 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P12",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P12",
+      "title": "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成",
+      "description": "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-DOCS-CMS-P13",
+      "parent_feature": "feat-docs-cms",
+      "phase_ref": "P13",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "description": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-DOCS-CMS-P12"
+      ]
+    }
+  ]
+}

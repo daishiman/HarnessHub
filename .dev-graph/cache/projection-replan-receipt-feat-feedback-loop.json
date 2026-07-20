@@ -1,0 +1,666 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P01",
+        "id": "HarnessHub-1vb.1",
+        "phase_ref": "P01",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:16Z",
+            "created_by": "daishiman",
+            "description": "改善要望フィードバックループ要件ベースライン確定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P01",
+            "id": "HarnessHub-1vb.1",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "改善要望フィードバックループ要件ベースライン確定",
+            "updated_at": "2026-07-19T14:14:16Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P02",
+        "id": "HarnessHub-1vb.2",
+        "phase_ref": "P02",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "assignee": "daishiman",
+            "created_at": "2026-07-18T01:44:18Z",
+            "created_by": "daishiman",
+            "description": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P02",
+            "id": "HarnessHub-1vb.2",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "started_at": "2026-07-18T02:24:59Z",
+            "status": "open",
+            "title": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計",
+            "updated_at": "2026-07-19T14:14:19Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P03",
+        "id": "HarnessHub-1vb.3",
+        "phase_ref": "P03",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:19Z",
+            "created_by": "daishiman",
+            "description": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P03",
+            "id": "HarnessHub-1vb.3",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認",
+            "updated_at": "2026-07-19T14:14:21Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P04",
+        "id": "HarnessHub-1vb.4",
+        "phase_ref": "P04",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:20Z",
+            "created_by": "daishiman",
+            "description": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P04",
+            "id": "HarnessHub-1vb.4",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成",
+            "updated_at": "2026-07-19T14:14:23Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P05",
+        "id": "HarnessHub-1vb.5",
+        "phase_ref": "P05",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:21Z",
+            "created_by": "daishiman",
+            "description": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P05",
+            "id": "HarnessHub-1vb.5",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装",
+            "updated_at": "2026-07-19T14:14:25Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P06",
+        "id": "HarnessHub-1vb.6",
+        "phase_ref": "P06",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:23Z",
+            "created_by": "daishiman",
+            "description": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P06",
+            "id": "HarnessHub-1vb.6",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録",
+            "updated_at": "2026-07-19T14:14:27Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P07",
+        "id": "HarnessHub-1vb.7",
+        "phase_ref": "P07",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:24Z",
+            "created_by": "daishiman",
+            "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P07",
+            "id": "HarnessHub-1vb.7",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "受入 — goal-spec acceptance 3 項目の確認",
+            "updated_at": "2026-07-19T14:14:30Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P08",
+        "id": "HarnessHub-1vb.8",
+        "phase_ref": "P08",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:26Z",
+            "created_by": "daishiman",
+            "description": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P08",
+            "id": "HarnessHub-1vb.8",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認",
+            "updated_at": "2026-07-19T14:14:32Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P09",
+        "id": "HarnessHub-1vb.9",
+        "phase_ref": "P09",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:27Z",
+            "created_by": "daishiman",
+            "description": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P09",
+            "id": "HarnessHub-1vb.9",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認",
+            "updated_at": "2026-07-19T14:14:34Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P10",
+        "id": "HarnessHub-1vb.10",
+        "phase_ref": "P10",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:29Z",
+            "created_by": "daishiman",
+            "description": "最終独立レビュー — quality_constraints 8 件の充足判定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P10",
+            "id": "HarnessHub-1vb.10",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+            "updated_at": "2026-07-19T14:14:36Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P11",
+        "id": "HarnessHub-1vb.11",
+        "phase_ref": "P11",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:30Z",
+            "created_by": "daishiman",
+            "description": "エビデンス収集 — 再現可能な検証証跡の集約 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P11",
+            "id": "HarnessHub-1vb.11",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+            "updated_at": "2026-07-19T14:14:38Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P12",
+        "id": "HarnessHub-1vb.12",
+        "phase_ref": "P12",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:31Z",
+            "created_by": "daishiman",
+            "description": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P12",
+            "id": "HarnessHub-1vb.12",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成",
+            "updated_at": "2026-07-19T14:14:40Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-FEEDBACK-LOOP-P13",
+        "id": "HarnessHub-1vb.13",
+        "phase_ref": "P13",
+        "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:33Z",
+            "created_by": "daishiman",
+            "description": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+            "external_ref": "dev-graph:SYS-FEEDBACK-LOOP-P13",
+            "id": "HarnessHub-1vb.13",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+            "updated_at": "2026-07-19T14:14:43Z"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-1vb.1",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.2"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.2",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.3"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.3",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.4"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.4",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.5"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.5",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.6"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.6",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.7"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.7",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.8"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.8",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.9"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.9",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.10"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.10",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.11"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.11",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.12"
+      },
+      {
+        "depends_on": "HarnessHub-1vb.12",
+        "idempotent": true,
+        "issue_id": "HarnessHub-1vb.13"
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "external_ref": "feat-feedback-loop",
+      "id": "HarnessHub-1vb",
+      "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+      "superseded": true,
+      "updated": [
+        {
+          "created_at": "2026-07-18T01:44:15Z",
+          "created_by": "daishiman",
+          "description": "利用者の改善要望/レビュー依頼/バグ報告を CLI + Web (S14) の 2 経路で受け付け (B6)、D5 pull 型 AI キューで解析・修正案生成し、修正版の publish → update 通知まで閉じる改善ループ (G5/I12, J5) を確立する\n\nフィードバックが status 遷移 (未対応→対応中→対応済み) で管理され、AI 対応結果 (aiResponse) が S14 に反映され、修正版が publish パイプライン経由で利用者へ届く状態\n\ndev_graph_source_digest: sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+          "external_ref": "dev-graph:feat-feedback-loop",
+          "id": "HarnessHub-1vb",
+          "issue_type": "epic",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "status": "open",
+          "title": "Studio: 改善要望フィードバックループ (2 経路受付・AI 対応・再公開)",
+          "updated_at": "2026-07-19T14:14:15Z"
+        }
+      ]
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-1vb.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-1vb.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-1vb.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-1vb.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-FEEDBACK-LOOP-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ],
+    "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

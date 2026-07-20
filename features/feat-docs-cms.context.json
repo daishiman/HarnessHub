@@ -1,0 +1,28 @@
+{
+  "graph_node_id": "feat-docs-cms",
+  "artifact_kind": "feature",
+  "purpose": "利用ガイド・FAQ 等のドキュメントを common (全テナント) / tenant (テナント限定) スコープで管理し (B7/I13)、S15 の閲覧/編集 UI と D5 pull 型 AI キューによる下書き生成を提供する",
+  "goal": "ドキュメントがスコープ規則 (tenant 分離 + common 共有) 下で閲覧・編集でき、Markdown が sanitize 済みで描画され (SEC7)、AI 下書きがキュー経由で生成される状態",
+  "scope_in": [
+    "Doc エンティティ (scope=common/tenant・Markdown 本文)",
+    "S15 一覧/閲覧/編集 (編集は admin)",
+    "Markdown レンダラ + エディタ共通部品の消費 (XSS sanitize)",
+    "AI 下書き生成 (D5 キュー)",
+    "doc 編集の監査 event (SEC6)"
+  ],
+  "scope_out": [
+    "外部公開サイト生成",
+    "バージョン管理 (Git 連携)"
+  ],
+  "acceptance": [
+    "tenant スコープ doc が他テナントから参照できない (分離テスト)",
+    "Markdown 描画で XSS が sanitize される (テスト付き)",
+    "編集操作が監査 event に記録される"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-frontend.md",
+    "architecture/harness-hub-backend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-17T12:35:28Z"
+}

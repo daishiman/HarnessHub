@@ -1,0 +1,29 @@
+{
+  "graph_node_id": "feat-hearing-intake",
+  "artifact_kind": "feature",
+  "purpose": "業務課題から業務ツールが生まれる入口として、S10 の 4 ステップウィザード (削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理を提供する (I11, J4)",
+  "goal": "非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) できる状態",
+  "scope_in": [
+    "S10 ヒアリングウィザード (4 ステップ・自動試算表示)",
+    "HearingSheet/FormData エンティティ + 受付番号採番",
+    "AI 処理キュー (D5 pull 型) のジョブ投入・生成結果の書戻し受領",
+    "S11 シート一覧 / S12 シート詳細 (status 変更は admin)",
+    "ステップウィザード共通部品の消費"
+  ],
+  "scope_out": [
+    "AI 実行基盤のサーバ側実装 (D5 で不採用)",
+    "構築工程の進行管理 (feat-build-pipeline-board)"
+  ],
+  "acceptance": [
+    "ウィザード完了で受付番号が発番され「生成中」状態が表示される (非同期 UI パターン)",
+    "AI キューのジョブが pull→書戻しで完結しサーバ側 AI 課金が発生しない",
+    "シート本文の Markdown が sanitize 済みで描画される (SEC7)"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-frontend.md",
+    "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-data.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-17T11:48:24Z"
+}

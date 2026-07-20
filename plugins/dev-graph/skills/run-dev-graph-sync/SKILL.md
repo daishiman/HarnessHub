@@ -8,9 +8,9 @@ kind: run
 prefix: run
 hierarchy: L1
 user-invocable: true
-argument-hint: "[--repo-root PATH] [--dry-run] [--resolve-conflicts PATH]"
+argument-hint: "[--repo-root PATH] (--dry-run|--apply) [--confirm NODE:FIELD=local|remote]"
 allowed-tools: [Read, Write, Edit, Bash, AskUserQuestion, Skill, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/gh-bridge.py, ../../scripts/bd-bridge.py, ../../scripts/reconcile-github-lifecycle.py, ../../scripts/manage-worktree-lease.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/sync-graph.py, ../../scripts/gh-bridge.py, ../../scripts/bd-bridge.py, ../../scripts/reconcile-github-lifecycle.py, ../../scripts/manage-worktree-lease.py]
 schema_refs: [../../schemas/graph-node.schema.json, ../../schemas/repo-config.schema.json]
 reference_refs: [../../references/execution-tracker-contract.md, ../../references/github-lifecycle-contract.md]
 responsibility_refs:
@@ -127,7 +127,17 @@ local graph が正本。`tracker_binding=beads` は C28 の status/depends_on ex
 4. close/delete は node 物理削除でなく tombstone/status transition。部分的な Project failure は local promotion を戻さず alias 単位 `pending_retry`。
 5. C26 で default-branch merge evidence と C27 pending event を reconcile する。closed-unmerged、dirty/feature worktree、policy/evidence 不足は done にしない。
 
-同一 state の二回目は changes=0。`--dry-run` は外部 write 0。report は imports/exports/conflicts/tombstones/pending_retry/project snapshots を返す。
+同一 state の二回目は changes=0。`--dry-run` はlocal/external write 0。apply後は同じ入力でもう一度dry-runし、`imports=exports=pending_retry=0`まで繰り返す。report は imports/exports/conflicts/tombstones/pending_retry/project snapshots を返す。
+
+実行可能な同期本体は`../../scripts/sync-graph.py`である。通常はbridgeからremote stateを収集し、決定論的試験ではrepository内の`--remote-state` fixture adapterを使う。dry-run/apply/検証dry-runを同じgraph・snapshot・remote入力で行う。
+
+```bash
+python3 ../../scripts/sync-graph.py --repo-root "$DEV_GRAPH_ROOT" --dry-run
+python3 ../../scripts/sync-graph.py --repo-root "$DEV_GRAPH_ROOT" --apply
+python3 ../../scripts/sync-graph.py --repo-root "$DEV_GRAPH_ROOT" --dry-run
+```
+
+Beads dependencyは`dep-add`/`dep-remove`でexact-setへ収束する。GitHub Projectsはfield valueの`updatedAt`とlast-synced snapshotで3-way判定し、aliasごとにitemを1件だけ保持する。permission/rate-limit/field削除/option renameはlocal nodeをrollbackせず、該当linkageを`pending_retry`にする。PR lifecycleは全linked PRを列挙し、configの`required_pull_requests=all|any`を満たすまでdone requestを作らない。Beads linkageはexact markerまたは同番号`gh:pr` gateのどちらかを要求する。
 
 ## ゴールシーク実行
 

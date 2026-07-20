@@ -1,0 +1,12 @@
+{
+  "artifact": "plugins/dev-graph/scripts/sync-graph.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 90,
+    "notes": "genuine code-review + py_compile OK / `# /// script` frontmatter 完備。7 script 中唯一の network:true (bd-bridge/gh-bridge subprocess 経由の Beads/GitHub 投影) で、これは正しく宣言済み。soundness: dev-graph↔Beads/GitHub の 3-way convergence を plan/apply 分離で実装。_choose が 3-way merge の核: local==remote→equal、base 有りで片側のみ変化→その側、両側変化かつ confirmation 無し→timestamp 比較 (tz-aware 強制)、決着不能→conflict。_status_from_remote/_status_to_remote で状態語彙を双方向写像、tombstone (deleted) は remote 優先。responsibility: 単一 (収束の計画と適用)。graph 直接書換はせず C02 upsert-node へ patch を委譲 (write-scope: C02 node patches, approved external bridges, snapshot, eval-log と整合)。冪等性: apply 後 conflicts/pending_retry/failed が無い時のみ next_snapshot を確定し、2 巡目で changes=0 に収束。error-handling: unresolved tracker_binding / remote object 不正 / duplicate Project item / fixture node 欠落 等で ContractError。__main__ で ContractError/OSError/JSONDecodeError/KeyError/TypeError/ValueError を捕捉し {ok:false} exit 2 (fail-closed)。external export 失敗は個別 catch し pending_retry へ退避 (linkage を pending_retry state で durable 記録し健全化を次巡へ)、部分失敗でも snapshot を汚さない fail-safe。side-effect-safety: ensure_no_pending_transaction 先行、dry-run では graph/remote/snapshot の before==after を byte 比較し変化あれば ContractError (dry-run write-zero を機械保証)。全 path は contained(root)。TESTS: test_sync_render_schedule_v2.py::test_sync_three_way_apply_second_pass_zero_and_tombstone / test_sync_manual_conflict_confirmation_and_dry_run_write_zero / test_sync_project_item_is_stable_and_alias_failure_is_pending_retry / test_sync_project_unset_field_and_stale_item_identity_fail_safe が 3-way 収束・conflict 確認・dry-run write-zero・pending_retry・stale item fail-safe を exercise (12 passed)。894 行だが 3-way sync の本質的複雑性で、関数分割 (_collect_remote/_plan/_apply_patch/_fixture_apply/_live_apply/_project_linkage_patch) は責務明快。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

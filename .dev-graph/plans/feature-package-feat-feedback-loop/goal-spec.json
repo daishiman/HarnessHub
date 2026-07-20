@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-feedback-loop",
+  "feature_context_digest": "sha256:072f4574b7156af35459d941d9c0655fe9f50453e151420d6e98fcb7da5499c3",
+  "purpose": "利用者の改善要望/レビュー依頼/バグ報告を CLI + Web (S14) の 2 経路で受け付け (B6)、D5 pull 型 AI キューで解析・修正案生成し、修正版の publish → update 通知まで閉じる改善ループ (G5/I12, J5) を確立する",
+  "goal": "フィードバックが status 遷移 (未対応→対応中→対応済み) で管理され、AI 対応結果 (aiResponse) が S14 に反映され、修正版が publish パイプライン経由で利用者へ届く状態",
+  "scope_in": [
+    "Feedback エンティティ (種別・経路・aiResponse・status)",
+    "CLI 受付 (claude harness feedback) + S14 Web フォームの 2 経路",
+    "AI キュー (D5) でのフィードバック解析・修正案生成",
+    "修正版 publish (既存パイプライン) と update 通知 (D6) の接続",
+    "Markdown 共通部品の消費 (sanitize)"
+  ],
+  "scope_out": [
+    "publish パイプラインの変更",
+    "自動マージ (修正案は人の確認を経て publish)"
+  ],
+  "acceptance": [
+    "2 経路の受付が同一 Feedback 資源に正規化される",
+    "AI 対応が pull 型で処理され status 遷移が監査記録される",
+    "対応済み通知がアプリ内 (正本) + メール (D6) で届く"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-feedback-loop.context.json",
+      "feature_id": "feat-feedback-loop",
+      "exists": true,
+      "sha256": "072f4574b7156af35459d941d9c0655fe9f50453e151420d6e98fcb7da5499c3",
+      "digest_status": "verified",
+      "digest_note": "呼び出し元 (team-lead) から digest 値 (sha256:072f4574b7156af35459d941d9c0655fe9f50453e151420d6e98fcb7da5499c3) として提供された。.dev-graph/locks/system-dev-plan-lock.json を Read し、feature_digest フィールド (同一値) と feature_id フィールド (feat-feedback-loop) が完全一致することを確認した。本 agent は Read/Write/Glob/Grep/SendMessage/Task のみ保有し sha256 を計算する exec ツールを持たないため、ファイル内容からの独立再計算はしていない。features/feat-feedback-loop.md frontmatter および Read した context.json ファイル自体にも本 context.json の digest 記録は存在しない (frontmatter の source_lineage.source_digest は specs/harness-hub-system-specification.md 側の値であり別物)。main-loop による独立再計算を要する。 [main-loop 再計算 2026-07-17T14:00:53Z: 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "7859696b5d258a53c2540a6981213f9140cf45138b70c10fb0af5bd61944b3d4",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-backend、confirmation_status=confirmed、evaluation_status=pass (system-spec/backend.md からの R3-import wrapper)。frontmatter に記録されている source_digest (d79b66c458bc2d16a6661af8b547fee7cb111ff15bcdcb183693e84f192c7664) は正本 system-spec/backend.md 側の digest であり wrapper ファイル自体の sha256 ではないため転記しない。wrapper 自体の digest は repo 内のどこにも記録されておらず、本 agent には計算手段 (exec ツール) がないため null/unresolved とする。【drift 検知】直近の兄弟 run (feature-package-feat-docs-cms: 2026-07-17T12:40:35Z 時点、feature-package-feat-build-pipeline-board: 2026-07-17T13:23:02Z 時点) では本ファイルの created_at/updated_at が 2026-07-17T00:35:59Z/10:42:36Z、frontmatter source_digest が 2a76ddb666c9da93d596dd11617883994c6baebc3c45d61ffa7b37878d928752 と記録され、main-loop が wrapper 自体の sha256 として 67560d941eeee012eb73aa49837e000963ae2a350d50d8b702d3c8c0badc2f17 を独立再計算していた。しかし本 run の Read では updated_at=2026-07-17T13:22:46Z・source_digest=d79b66c458bc2d16a6661af8b547fee7cb111ff15bcdcb183693e84f192c7664 に変化しており、qa-033 確定 (docs/backend-spec.md の API/DB 詳細正本化) に伴い本 wrapper が再取込されたと推定される。旧 run の wrapper 自体 sha256 参考値 (67560d941eeee012…) は本ファイルの旧内容に対するものであり現行内容には対応しないため参照しない。main-loop による現行内容に対する独立再計算を要する。 [main-loop 再計算 2026-07-17T14:00:53Z: 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "27ec1b93168d2b00e6664b248aff3a45f4e807ce024035612d57fce7b1c1fc22",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-frontend、confirmation_status=confirmed、evaluation_status=pass (system-spec/frontend.md + system-spec/ui-ux.md からの R3-import wrapper)。frontmatter に記録されている source_digest (adf85021f88c7048cf02f1c2facb18cc3407e865b311ee881a684c8e7196ddd3) は正本 system-spec/frontend.md 側の digest であり wrapper ファイル自体の sha256 ではないため転記しない。wrapper 自体の digest は repo 内のどこにも記録されておらず、本 agent には計算手段 (exec ツール) がないため null/unresolved とする。参考情報 (未検証の手がかり): 本 Read 結果の created_at/updated_at (2026-07-17T00:35:59Z/10:42:36Z) は、直近の兄弟 run (feature-package-feat-docs-cms 2026-07-17T12:40:35Z 時点、feature-package-feat-build-pipeline-board 2026-07-17T13:23:02Z 時点) が観測した値と一致しており、両 run で main-loop が独立再計算した wrapper 自体の sha256 = 27ec1b93168d2b00e6664b248aff3a45f4e807ce024035612d57fce7b1c1fc22 が記録されている。ファイル内容は不変と推定されるが本 run では独立確認していないため、この値をそのまま採用せず main-loop による再計算・確認を要する。 [main-loop 再計算 2026-07-17T14:00:53Z: 一致/補完]"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、confirmation_status=confirmed、evaluation_status=pass、evidence_ref=system-spec/completeness-report.json (verdict=PASS。本 agent が Read で直接確認済み)。正本は system-spec/00-requirements-definition.md (frontmatter に source_digest=8fc7b5878eb3b18f959c3b2fddcab7a5adf69d9201b1be782923659f096e8bf9 と記録)。本 wrapper ファイル自体の frontmatter source_digest (同じ 8fc7b5878e…) は正本章側の値であり wrapper 自体の sha256 ではないため転記しない。wrapper 自体の digest は repo 内に直接記録されておらず、本 agent には計算手段 (exec ツール) がないため null/unresolved とする。参考情報 (未検証の手がかり): 本 Read 結果の created_at/updated_at (2026-07-17T00:35:59Z/10:42:36Z) は features/feat-feedback-loop.md frontmatter の source_lineage (source_path=specs/harness-hub-system-specification.md, source_digest=8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6) および直近の兄弟 run (feature-package-feat-docs-cms 12:40:35Z 時点、feature-package-feat-build-pipeline-board 13:23:02Z 時点) が観測した値と一致しており、両 run で main-loop が独立再計算した wrapper 自体の sha256 も同じ 8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6 であった。ファイル内容は不変と推定されるが本 run では独立確認していないため、この値をそのまま採用せず main-loop による再計算・確認を要する。 [main-loop 再計算 2026-07-17T14:00:53Z: 一致/補完]"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "feedback-two-route-single-resource-b6-i12",
+      "summary": "フィードバックは CLI (`claude harness feedback`, Bearer=harness) と S14 Web フォーム (session=manual) の 2 経路とも `POST /api/v1/feedback` を通じて同一 feedbacks テーブル・同一 AI キューへ格納される。source (harness/manual) は principal 種別から自動導出し、経路差を理由に別資源へ分岐させない (B6)",
+      "source": "system-spec/00-requirements-definition.md I12 (フィードバックループ: CLI + Web フォームの 2 経路受付 → AI 対応 → 修正版 publish → update 通知); system-spec/spec-state.json qa-023 (B6: フィードバック受付は CLI + Web の 2 経路、status 遷移); system-spec/backend.md qa-033 (endpoint 一覧 §4.7: feedback は session=manual/Bearer=harness の 2 経路同一キュー = B6); docs/backend-spec.md §2.3 (`feedbacks` テーブル: CLI 発と Web フォームは同一テーブル・同一キュー)、§4.7 (`POST /api/v1/feedback`)"
+    },
+    {
+      "id": "feedback-status-transition-audit-sec6",
+      "summary": "Feedback の status は open (未対応) → in_progress (対応中) → resolved (対応済み) の状態機械で管理する。`PATCH /api/v1/feedback/:id` による status 遷移は workspace-admin 限定とし、SEC6 で Studio 反映時に新規確定した監査対象 (工程操作・係数変更・doc 編集・フィードバック status 変更・ユーザー管理操作) の一つとして `feedback.status_change` を監査 event に記録する",
+      "source": "docs/backend-spec.md §5.4 (Feedback: open→in_progress→resolved)、§4.7 (`PATCH /api/v1/feedback/:id` は workspace-admin、監査 event)、§3.8 (監査対象 action に `feedback.status_change` を含む); system-spec/security.md qa-025 (SEC6 監査対象の追加); system-spec/backend.md qa-033 (状態機械 5 種に Feedback を含む)"
+    },
+    {
+      "id": "ai-response-pull-queue-d5-sec8",
+      "summary": "フィードバックの AI 対応は D5 確定の pull 型 AiJob キュー (kind=`feedback_response`) で処理する。pull/書戻しの実行主体は provider-admin の Device Flow token 保有者に限定し (qa-031)、job payload に secret を含めない (SEC8)。`POST /api/v1/ai-jobs/:id/complete` の結果書戻しで `feedbacks.ai_response` を更新し、起票者へ通知する",
+      "source": "system-spec/00-requirements-definition.md D5 (AI 処理の実行主体: pull 型キュー、フィードバック自動対応を含む); docs/backend-spec.md §2.3 (`ai_jobs` テーブル: kind=`feedback_response`)、§4.7 (AI 対応は AiJob(`feedback_response`) 書戻しで `ai_response` 更新 + 起票者へ通知)、§4.11 (pull は provider-admin のみ・lease 10 分・attempt 3 で dead)、§5.5 (AiJob 状態機械); system-spec/security.md qa-025 (SEC8: AI キューの pull/書戻しは Device Flow token 保有者に限定、payload に secret を含めない); system-spec/backend.md qa-033 (B5/D5/qa-031)"
+    },
+    {
+      "id": "resolved-notification-inapp-primary-resend-supplementary-d6-b8-sec9",
+      "summary": "対応済み (resolved) 通知はアプリ内通知 (notifications テーブル) を正本とし、Resend メール (D6) を補助チャネルとして届ける。メール不達でもアプリ内通知で情報が欠けない設計とし、送信は NotificationDispatcher 共通層を経由する (Resend API を feature 実装から直接呼ばない)。SEC9: Resend API key は環境 binding のみ、宛先はテナント内ユーザー限定、PII をメール本文に含めない",
+      "source": "system-spec/00-requirements-definition.md D6 (メール通知の送信手段: resend-free。決定注記に『アプリ内通知を常に正本とし、メールは補助チャネル』); docs/backend-spec.md §2.3 (`notifications` テーブル: アプリ内通知が正本、メールは補助)、§4.10 (通知 B8/D6: NotificationDispatcher 純関数層でアプリ内 + Resend); system-spec/security.md qa-025 (SEC9: メール API key は環境 binding のみ、宛先はテナント内ユーザー限定、PII をメール本文に含めない); system-spec/spec-state.json qa-023 (B8 通知ディスパッチ: アプリ内通知を正本、メールは D6 確定の Resend Free)"
+    },
+    {
+      "id": "feedback-markdown-sanitize-sec7",
+      "summary": "フィードバック本文 (body) の Markdown は doc・シート本文と同様に design system の共通レンダラ (XSS sanitize) を消費するのみとし、独自の Markdown 処理を実装しない",
+      "source": "system-spec/security.md qa-025 (SEC7 XSS: Markdown (doc/フィードバック/シート本文) は共通レンダラの sanitize で一括担保); system-spec/ui-ux.md qa-021 (共通部品の拡張: Markdown レンダラ + エディタ (XSS sanitize) を design system に組込む); system-spec/frontend.md qa-022 (Markdown は共通レンダラの sanitize 済み HTML のみ描画)"
+    },
+    {
+      "id": "feedback-entity-tenant-scope-d4",
+      "summary": "Feedback エンティティ (Studio 拡張の新規テーブル `feedbacks`) は D4 (row-level tenant scope: 単一 DB + tenant_id/workspace_id スコープ列 + アプリ層強制) に従い tenant_id/workspace_id スコープ列を必須とし、リポジトリ層で WHERE 句へ強制注入する。分離テストを CI 必須とする",
+      "source": "system-spec/00-requirements-definition.md D4 (マルチテナント論理分離、row-level-scope 確定); system-spec/database.md qa-032 (documents.scope='common' を除く全テーブルに tenant_id 必須、D4 row-level scope); docs/backend-spec.md §2.1 (テナント分離規約)、§2.3 (`feedbacks` テーブル定義)"
+    },
+    {
+      "id": "feedback-fix-publish-existing-pipeline-no-automerge",
+      "summary": "フィードバックへの修正版 publish は既存の PublishRequest 状態機械 (I2 static validation/secret scan/policy 判定、I3 immutable Release + TargetChannel 別 stable pointer による atomic な公開/更新/rollback) へ接続し、新たな状態機械を作らない。修正案 (ai_response) は人の確認を経てから publish するものとし、自動マージは行わない (feature scope_out)",
+      "source": "system-spec/00-requirements-definition.md I2, I3; features/feat-feedback-loop.md scope_out (自動マージ不採用); docs/backend-spec.md §5.1 (PublishRequest 状態機械、§7.2 準拠)"
+    },
+    {
+      "id": "feedback-rest-zod-single-source-authz-mw-b1-sec2",
+      "summary": "feedback の REST 資源群 (`POST/GET /api/v1/feedback`, `GET/PATCH /api/v1/feedback/:id`) は B1 新規 REST 資源群の一部として zod スキーマ単一ソースへ追加し、全て認可単一ミドルウェア (deny-by-default) 配下の role×操作許可表に従う (feedback 起票/閲覧は member 以上、status 変更は workspace-admin 以上)",
+      "source": "system-spec/spec-state.json qa-023 (B1: ヒアリング/シート/パイプライン/フィードバック/ドキュメント/ユーザー管理を含む新規 REST 資源群を zod スキーマ単一ソースへ追加し全て認可 MW 配下); system-spec/backend.md qa-033 (認可単一ミドルウェア deny-by-default の role×リソースマトリクス §3.3); docs/backend-spec.md §3.3 (認可マトリクス: feedback 起票/閲覧・status 変更の role 別許可)、§4.7; system-spec/security.md qa-025 (SEC2)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": false,
+    "digest_match_architecture_files": false,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + evaluator PASS (specs/harness-hub-system-specification.md; system-spec/completeness-report.json verdict=PASS を Read で直接確認; 正本 system-spec/00-requirements-definition.md status=confirmed; docs/backend-spec.md は qa-031/qa-032/qa-033 確定済みの詳細正本)",
+    "notes_ja": true,
+    "status": "complete",
+    "wrapper_self_digest_note": "specs/harness-hub-system-specification.md および architecture/harness-hub-{frontend,backend}.md の 3 wrapper ファイルはいずれも自身の sha256 を repo frontmatter に直接記録しておらず、本 agent (Read/Write/Glob/Grep/SendMessage/Task のみ保有) には exec ツールがないため独立再計算していない。digest_match_specs_file / digest_match_architecture_files は『frontmatter の source_digest フィールド (正本章側の値) が wrapper 自体の sha256 と一致しない (構造的に別物)』ことを表す false であり、内容不整合を意味しない。architecture/harness-hub-backend.md は qa-033 確定 (docs/backend-spec.md 詳細正本化) に伴い直近の兄弟 run 観測時点から updated_at/source_digest が変化しており (drift 詳細は lineage 参照)、旧 run のキャッシュ済み wrapper 自体 sha256 参考値は現行内容に対応しない可能性が高いため採用していない。specs/harness-hub-system-specification.md および architecture/harness-hub-frontend.md は兄弟 run 観測時点と created_at/updated_at が一致しており内容不変と推定されるが、本 run では独立確認していない。3 ファイルとも main-loop による独立再計算・確認を要する",
+    "digest_recomputed_by": "main-loop (claude session 9ce54d7a, python3 hashlib, 2026-07-17T14:00:53Z)"
+  },
+  "extracted_at": "2026-07-17T14:05:00Z"
+}

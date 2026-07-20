@@ -1,0 +1,1198 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+  "promotion_receipt": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+  "parent_feature": "feat-stage0-distribution-gate",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-STAGE0-DISTRIBUTION-GATE-P01": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P02": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P03": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P04": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P05": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P06": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P07": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P08": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P09": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P10": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P11": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P12": "beads",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "documentation",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-stage0-distribution-gate.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — 3 経路検証方式・最小 artifact 構成・実機 E2E 手順・decision record 登録経路の確定",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "infrastructure",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "infrastructure",
+        "architecture-decision"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P01"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "URL 型 marketplace・npm source (URL 型 marketplace 内の source type として扱う)・Bootstrap Installer の 3 経路検証方式、最小 artifact 構成 (skill package/marketplace.json/Installer 試作)、macOS/Windows 実機 E2E 手順、採用経路の decision record 登録経路 (C01 writer 経由で spec-state.json decisions[] へ) を確定する P02 architecture decision タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — 検証方式・artifact 構成・実機 E2E 手順の妥当性確認",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P02"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/design-review-notes.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P02 の architecture decision (3 経路検証方式・artifact 構成・E2E 手順・decision record 登録経路) を P02 実行者から独立した視点で検証する P03 レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — quality_constraints 8 件・acceptance 3 件に対応する実機検証ケースの設計",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P03"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/test-design.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "quality_constraints 8 件 (stage0-two-path-distribution-technical-gate-h7-qa003・stage0-technical-gate-h3-h6-h7-stage1-entry-condition-i9・author-environment-macos-windows-linux-out-of-scope-qa001・npm-source-official-support-changelog-recheck-claude-code-plugins・cost-zero-verification-within-free-tier-c2・solo-operator-ai-assisted-verification-c1・h7-unresolved-blocks-stage1-fail-closed-gate・adopted-path-decision-record-registration-spec-state-decisions) と acceptance 3 件を実機検証ケースへ写像する P04 テストファースト設計タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "infrastructure",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "infrastructure",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P04"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/verification-artifacts/minimal-skill-package/",
+        "docs/features/feat-stage0-distribution-gate/verification-artifacts/marketplace.json",
+        "docs/features/feat-stage0-distribution-gate/verification-artifacts/bootstrap-installer-prototype/",
+        "docs/features/feat-stage0-distribution-gate/implementation-notes.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P02/P04 で確定した設計・検証ケースに基づき、最小 skill package・URL 型 marketplace 用 marketplace.json・Bootstrap Installer 試作を C2 (無料枠内) で作成する P05 実装タスク。本 feature は scope_out に Hub 本体実装を含むため apps/hub・packages 配下は変更しない",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P05"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/test-run-results.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P05 で作成した artifact に対して P04 の実機検証ケースを macOS/Windows (qa-001 により desktop Linux は対象外) で実行し、quality_constraints 8 件の充足状況を記録する P06 テスト実行タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P06"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/acceptance-record.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P06 で得られた実機検証結果を基に goal-spec acceptance 3 件 (2 経路以上の実機検証記録・decision record 登録・Windows E2E 成功) の充足を確認する P07 受入タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — 検証 prototype 資産の整理 (N/A 判断を含む)",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "infrastructure",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "infrastructure",
+        "refactor-migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/refactoring-migration-note.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "本 feature は packages/db/schema/ 等の恒久実装コードを持たないため DB migration やコード移植を伴わない。P08 は不採用経路の試作 artifact 整理と、採用経路 artifact を P12 runbook へ引き継ぐための最終整理に読み替える required-node タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質・セキュリティ・運用保証 — C1 (体制)・C2 (コストゼロ)・H7 fail-closed ゲートの充足確認",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P08"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/quality-assurance-report.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "solo-operator-ai-assisted-verification-c1・cost-zero-verification-within-free-tier-c2・h7-unresolved-blocks-stage1-fail-closed-gate の 3 件の非機能要件を機械的に保証する P09 品質保証タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件の最終確認",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P09"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/final-review-record.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P03 の設計時レビューとは独立して、実機検証完了後の quality_constraints 8 件・acceptance 3 件を最終確認する P10 独立最終レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P10"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/evidence-summary.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P06/P07/P09/P10 で得られた実機検証証跡を集約し、第三者 (将来の Stage 1 着手判断者) が再現可能な形で保存する P11 証跡タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "documentation",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P11"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/runbook.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "採用経路 (P07 の acceptance 結果に基づく) の作者向け onboarding 手順・更新導線 (marketplace / Bootstrap Installer の「更新あり」表示 + 手動 update)・障害時対応手順を runbook として確立する P12 文書化・運用タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — 採用経路の decision record 登録依頼 (C01 writer 経由) と Stage 1 開始条件判定",
+      "project_id": "feature-package-feat-stage0-distribution-gate",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-stage0-distribution-gate",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-18T12:32:59Z",
+      "updated_at": "2026-07-18T12:32:59Z",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P12"
+      ],
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/release-record.md"
+      ],
+      "parent_feature": "feat-stage0-distribution-gate",
+      "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/plan-findings.json",
+        "evaluated_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "imported_at": "2026-07-18T12:32:59Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "本 feature は Hub 本体を持たないため実デプロイを行わない (N/A)。P13 は採用経路の decision record 登録依頼 (system-spec/spec-state.json decisions[] への実書込は C01 writer が所有し本 task は依頼内容の確定・引き渡しのみを行う) と、H7 成立結果に基づく Stage 1 開始条件の判定を実施する release-deploy タスクとして適用される",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-18T00:00:00Z"
+      }
+    }
+  ]
+}

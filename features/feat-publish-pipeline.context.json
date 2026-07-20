@@ -1,0 +1,29 @@
+{
+  "graph_node_id": "feat-publish-pipeline",
+  "artifact_kind": "feature",
+  "purpose": "作者の自己完結 publish (G1) の中核として、PublishRequest 状態機械 (§7.2)・検査 pipeline (static validation/secret scan/policy)・stable pointer promote/rollback を実装する",
+  "goal": "publish → 検査 → Ready → Publishing → Published が atomic に完走し、失敗時は旧 stable が無傷で残る状態",
+  "scope_in": [
+    "REST API (zod 単一ソース → OpenAPI)",
+    "状態機械 + TargetChannel 直列化",
+    "検査 pipeline (共有パッケージ化)",
+    "R2 保存 + Catalog pointer の atomic 更新",
+    "promote/rollback + 監査 event"
+  ],
+  "scope_out": [
+    "Publisher クライアント側",
+    "カタログ UI"
+  ],
+  "acceptance": [
+    "状態遷移が §7.2 準拠で property test を通る",
+    "検査 FAIL 時に Needs Fix へ差し戻り旧 stable が維持される",
+    "全操作が append-only 監査 event に記録される"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-data.md",
+    "architecture/harness-hub-security.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-18T01:41:36Z"
+}

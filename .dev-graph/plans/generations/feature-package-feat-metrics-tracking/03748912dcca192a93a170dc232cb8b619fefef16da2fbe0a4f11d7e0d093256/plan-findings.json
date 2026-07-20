@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-metrics-tracking",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r2-trace",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-metrics-tracking"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256\",\n  \"feature_package_id\": \"feature-package/feat-metrics-tracking\",\n  \"parent_feature\": \"feat-metrics-tracking\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "8362712f2c4f5a4ebe0de262a52cdcb1085f9008125acc401b765f4c4f564cde"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "2a1d2472fc6378dad3a16cd048e5cf1d677f5dee390d14a75810906c4d693aae"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "9c13d883603bff122f590f2e684045c6f6562d2a5c4b13999d90bfff927ba876"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "502715dd53fe139bae03f8a62028987fea4a0e4abb0c6fb65724bc89830c9f40"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "94d24227120b368ac08d5f1c6bee9873f653c8620cc29a8b4a62c4106b20b3ad"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "16a23a111211e256a32ee2e46b043f94c8a68452852ed9b75ea21b72121ba7ba"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "1021630964650974412f92778e86ebcd64efc46edc203e1c9e252c86df25e852"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "6e2eb457e7e0125c8a0aac60b63e662f2dd9b1cf4e4dbd85f69dbdca38539667"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "3dc8551cdb903a011a0f35878a90fb4be20d0a197f7ae73031c15d1a867e1644"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "1cd4b6776f55d65365c0762858daf5b7a877915774dcdbc9b7aefd02013caa54"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "fc74a8ab0e840dc41eac4a36ff16b88d8256c16d374c7de0f55eb35d97339dff"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "12bf5412eaa77c6590848cc1a5d6ffbd60733f37b51ecdabdf758b06b0cc17a8"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "b264772746dfce8beec8e0aab9297e595e988a1a924bd4d893f94ad6236d8bc7"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "b88058b05944686304e9d618dc4de299130ee26d2fcd26bd46fc1fc93cac5309"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "18412943f1a19ef8251b587d71ddc2f03a2bf299a349d88ff27f4ae122b715b0"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "823045c2952a94fa3387b63ef6ca50673653349588ed064e183e15869833c120"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "72791a59719bbff368e942b1324d6349b6ae613abe632db246018f7e5612454b"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "7a28cf8d5b4fe865968c80e93f572f0acb28491c43c24fa128114d382e290850"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "Independent C1-C4 re-review on current bytes: packages/estimation boundary, public primitives and cross-consumer quality gates are hub-owned; metrics provides formula/rollup domain logic and hearing consumes sheetEstimate, with duplicate implementation forbidden and server-only calculation evidence mapped. Validator, current lineage, exact-13, DAG, manifest and handoff source digests all match.",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

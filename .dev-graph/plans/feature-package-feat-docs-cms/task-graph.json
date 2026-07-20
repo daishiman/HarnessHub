@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-docs-cms",
+  "parent_feature": "feat-docs-cms",
+  "nodes": [
+    {
+      "id": "SYS-DOCS-CMS-P01",
+      "graph_node_id": "sys-docs-cms-p01",
+      "title": "ドキュメント CMS 要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-DOCS-CMS-P02",
+      "graph_node_id": "sys-docs-cms-p02",
+      "title": "アーキテクチャ設計 — Doc スキーマ・S15 画面構成・B7 API 契約・AI 下書きキュー契約の設計",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P01"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P03",
+      "graph_node_id": "sys-docs-cms-p03",
+      "title": "独立設計レビュー — Doc スキーマ・S15 認可・AI キュー契約・Markdown sanitize の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P02"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P04",
+      "graph_node_id": "sys-docs-cms-p04",
+      "title": "テストファースト設計 — tenant 分離/admin 限定編集/Markdown sanitize/AI キュー認可/監査記録のテストスタブ作成",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P03"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P05",
+      "graph_node_id": "sys-docs-cms-p05",
+      "title": "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P04"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P06",
+      "graph_node_id": "sys-docs-cms-p06",
+      "title": "テスト実行 — 単体/結合/tenant 分離/認可/sanitize テストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P05"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P07",
+      "graph_node_id": "sys-docs-cms-p07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P06"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P08",
+      "graph_node_id": "sys-docs-cms-p08",
+      "title": "リファクタリング/マイグレーション — Doc テーブルマイグレーション生成と後方互換性確認",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P07"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P09",
+      "graph_node_id": "sys-docs-cms-p09",
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P08"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P10",
+      "graph_node_id": "sys-docs-cms-p10",
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P09"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P11",
+      "graph_node_id": "sys-docs-cms-p11",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P10"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P12",
+      "graph_node_id": "sys-docs-cms-p12",
+      "title": "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P11"]
+    },
+    {
+      "id": "SYS-DOCS-CMS-P13",
+      "graph_node_id": "sys-docs-cms-p13",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-docs-cms",
+      "parent_feature": "feat-docs-cms",
+      "depends_on": ["SYS-DOCS-CMS-P12"]
+    }
+  ]
+}

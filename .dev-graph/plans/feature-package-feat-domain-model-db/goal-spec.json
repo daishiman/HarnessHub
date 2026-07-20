@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-domain-model-db",
+  "feature_context_digest": "sha256:ed9bbe22a2887731c84470adb8e4f8df41fd7eec46efc58b4dc8e5095b5b5fd5",
+  "purpose": "Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメインモデルを Drizzle スキーマとして確立し、D1 退避経路 (D2 ヘッジ) を保つ接続層を構築する",
+  "goal": "全エンティティの CRUD が接続層越しに動作し、R2 immutable PackageRegistry と日次 export が稼働する状態",
+  "scope_in": [
+    "Drizzle スキーマ (SQLite 方言互換)",
+    "接続層の隔離 (libSQL/D1 両対応)",
+    "R2 content-addressed registry",
+    "日次 export + restore drill 手順",
+    "マイグレーション運用"
+  ],
+  "scope_out": [
+    "検査 pipeline のビジネスロジック",
+    "UI"
+  ],
+  "acceptance": [
+    "スキーマが SQLite 方言互換で D1 接続テストが通る",
+    "Release が immutable として強制される",
+    "バックアップ export と復元手順が検証済み"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-domain-model-db.context.json",
+      "feature_id": "feat-domain-model-db",
+      "exists": true,
+      "sha256": "ed9bbe22a2887731c84470adb8e4f8df41fd7eec46efc58b4dc8e5095b5b5fd5",
+      "digest_status": "verified",
+      "digest_note": "呼び出し元 (team-lead) から digest 値 (sha256:ed9bbe22a2887731c84470adb8e4f8df41fd7eec46efc58b4dc8e5095b5b5fd5) として提供された。.dev-graph/locks/system-dev-plan-lock.json を Read し、feature_digest フィールド (同一値) と feature_id フィールド (feat-domain-model-db) が完全一致することを確認した。本 agent は Read/Write/Glob/Grep/SendMessage/Task 系のみ保有し sha256 を計算する exec ツールを持たないため、ファイル内容からの独立再計算はしていない。main-loop による独立再計算を要する。 [main-loop 再計算 2026-07-17T22:49:50Z: 一致]"
+    },
+    {
+      "path": "architecture/harness-hub-data.md",
+      "exists": true,
+      "sha256": "20f50ace6afe9ed643f95995c98fd2fb59afea2b8283b3fc36882de8a424c946",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-data、frontmatter confirmation_status=confirmed、evaluation_status=pass、source_lineage.source_digest=ab5805b0ac7a55560a70e210defb4fe89e9b98a2556214f15103d3f81edbf52e (system-spec/database.md の digest 主張であり wrapper 自体の sha256 ではない)。本文『正本 (source of truth)』節は同じ system-spec/database.md に対し異なる sha256: `9df6075964095181…` を記載しており frontmatter と本文が食い違う (wrapper 内部の不整合。直近の兄弟 run の記録値 `c74fe6b4a1c50bf1…` とも異なり、system-spec/database.md が継続的に再描画されていることを示唆)。system-spec/database.md 自体を Read したところ、直近の兄弟 run 時点 (status: draft・aggregate: 収集中) から進行し、本 run 時点では status: confirmed・aggregate: 確定・qa-037 (対応セル: web) の確定内容 (idp_connections.client_secret_enc・audit_events の seq/prev_hash/event_hash・encryption_keys・session_revocations・publisher_tokens.family_id・workspaces の権限境界=tenant 等) を本文に含み、docs/backend-spec.md の記述と整合していることを確認した (前回記録された『本文が確定 qa を未描画』というドリフトは本 run 時点で解消方向にある)。team-lead 指示により本 goal-spec の quality_constraints は wrapper 本文ではなく system-spec/spec-state.json の qa_log (qa-004/qa-019/qa-024/qa-032) と docs/backend-spec.md を直接の根拠として引用した。wrapper 自体の sha256 は repo 内に記録されておらず本 agent には計算手段 (exec ツール) がないため null/unresolved とする (frontmatter の source_digest は wrapper 自体の値ではないため転記しない)。main-loop による独立再計算を要する。 [main-loop 時点記録 2026-07-17T22:49:50Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中のため wrapper は世代混在。収束後の一括 reimport (issues/sys-audit-followups-20260717.md 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md にあり、wrapper digest は canonical gate 対象外]"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "0820e1e5b5ff1afee2129f31a4de9b3b20f005629770e0640473184139f54f42",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-backend、frontmatter confirmation_status=confirmed、evaluation_status=pass、source_lineage.source_digest=d79b66c458bc2d16a6661af8b547fee7cb111ff15bcdcb183693e84f192c7664 (system-spec/backend.md の digest 主張であり wrapper 自体の sha256 ではない)。本文『正本』節は同じ system-spec/backend.md に対し異なる sha256: `01f7e189fa6f6d1a…` を記載しており frontmatter と本文が食い違う (直近の兄弟 run の記録値 `2a76ddb666c9da93…` とも異なり system-spec/backend.md が継続的に再描画されていることを示唆)。system-spec/backend.md 自体を Read したところ、本 run 時点では status: confirmed・aggregate: 確定・qa-037 (対応セル: web) + qa-010 (対応セル: desktop-windows/macos) の確定内容を本文に含み docs/backend-spec.md と整合していることを確認した。team-lead 指示により quality_constraints は wrapper 本文ではなく system-spec/spec-state.json の qa_log (qa-004/qa-019/qa-020/qa-032) と docs/backend-spec.md を直接の根拠として引用した。wrapper 自体の sha256 は計算手段がなく null/unresolved (frontmatter の source_digest は転記しない)。main-loop による独立再計算を要する。 [main-loop 時点記録 2026-07-17T22:49:50Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中のため wrapper は世代混在。収束後の一括 reimport (issues/sys-audit-followups-20260717.md 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md にあり、wrapper digest は canonical gate 対象外]"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "3345481c33b226d3f4a16cfc9198cd95376f8862c149d0d8353123e880ba3751",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、confirmation_status=confirmed、evaluation_status=pass、evidence_ref=system-spec/completeness-report.json (verdict=PASS。本 agent が Read で直接確認済み。foundation_trace/decision_guidance/matrix_coverage/design_knowledge_reflection の 4 aspect 全て PASS。design_knowledge_reflection の findings に low severity で『database.md 本文は qa-024 を描画するが qa-002 を未描画』の既知未是正が残るが verdict 非影響)。正本は system-spec/00-requirements-definition.md (frontmatter に source_digest=8fc7b5878eb3b18f959c3b2fddcab7a5adf69d9201b1be782923659f096e8bf9 と記録、本文中の sha256 表記 `8fc7b5878eb3b18f…` とも一致。backend/data wrapper で見られた内部不整合はここには無い)。I3/D2/D4/G1/G4 は本 wrapper が指す正本 system-spec/00-requirements-definition.md を直接 Read し、U3 ゴール表 (G1/G4)・U9 具体的にやりたいこと表 (I3)・意思決定支援表 (D2/D4) から確認した (wrapper 本文は正本節への参照のみで内容複製なし)。wrapper 自体の sha256 は本 agent には計算手段がなく null/unresolved とする (frontmatter の source_digest は正本章側の値であり wrapper 自体の値ではないため転記しない)。main-loop による独立再計算を要する。 [main-loop 時点記録 2026-07-17T22:49:50Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中のため wrapper は世代混在。収束後の一括 reimport (issues/sys-audit-followups-20260717.md 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md にあり、wrapper digest は canonical gate 対象外]"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "sqlite-dialect-compat-d1-fallback-connection-layer-d2",
+      "summary": "Turso Free (libSQL) を Drizzle ORM (SQLite dialect) 経由で採用しつつ、SQLite 方言互換を維持して Cloudflare D1 への退避経路を温存する (D2 ヘッジ)。DB アクセスは Drizzle リポジトリ層に閉じ、Turso→D1 移行をアプリ層へ波及させない。",
+      "source": "system-spec/00-requirements-definition.md D2 (Hub control-plane DB の決定: turso-free 採用。d1-drizzle との SQLite 互換性を退避経路のヘッジ根拠として明記。注意事項: 『D1 の同時書込特性と read replica の成熟度を実装着手時に再確認する』); system-spec/spec-state.json qa-004 (Turso Free 採用、Drizzle ORM の SQLite dialect でスキーマ・マイグレーション管理、スキーマ・クエリを SQLite 方言互換に保ち D1 への移行経路を温存); system-spec/spec-state.json qa-019 (database/infrastructure には qa-017 のコード構造規約 = 接続層隔離による D2 Turso→D1 退避経路の維持を適用); docs/backend-spec.md §1 (DB: Turso Free (libSQL)。Drizzle ORM (SQLite dialect)、@libsql/client (HTTP)。D1 退避経路を温存するため SQLite 方言互換を維持する (D2 ヘッジ)。コード構造規約 qa-020: DB アクセスは Drizzle リポジトリ層に閉じる)"
+    },
+    {
+      "id": "release-immutable-atomic-stable-pointer-i3",
+      "summary": "releases テーブルは immutable とし更新は status 列 (available/suspended/deprecated) のみに限定する。version は差分+content hash から自動採番し、target_channels.stable_release_id の切替により TargetChannel ごとの atomic な公開・更新・rollback を実現する。",
+      "source": "system-spec/00-requirements-definition.md I3 (immutable Release + TargetChannel 別 stable pointer による atomic な公開・更新・rollback。資するゴール G1, G4); docs/backend-spec.md §2.2 releases テーブル定義 (immutable。更新は status のみ。version は差分+content hash から自動採番 §7.1) および target_channels テーブル定義 (stable pointer の正本); features/feat-domain-model-db.md 受入 (『Release が immutable として強制される』)"
+    },
+    {
+      "id": "tenant-workspace-scope-row-level-d4",
+      "summary": "documents.scope='common' を除く全テーブルに tenant_id (必要に応じ workspace_id) スコープ列を必須とし、リポジトリ層で常時 WHERE 句へ強制注入する row-level-scope 方式でテナント論理分離を実装する。分離テストを CI 必須とする。",
+      "source": "system-spec/00-requirements-definition.md D4 (マルチテナント論理分離の決定: row-level-scope 確定。単一 DB + tenant_id/workspace_id スコープ列 + アプリ層強制。revisit 条件: テナント数が 10 を超える、または分離テストの失敗が頻発した場合は DB-per-tenant を再評価); system-spec/spec-state.json qa-024 (Studio 追加エンティティを含め全新規テーブルへ tenant_id/workspace_id スコープ列必須 = D4); docs/backend-spec.md §2.1 共通規約 (テナント分離 D4/SEC3: documents.scope='common' を除く全テーブルに tenant_id を必須とし、リポジトリ層で常時 WHERE 句へ強制注入。分離テストを CI 必須とする)"
+    },
+    {
+      "id": "ulid-pk-display-code-epoch-server-time-qa032",
+      "summary": "全テーブルの PK は ULID 文字列とし、表示用コード (HS-xxxx/FR-xxx/DOC-xx 等) は display_code_counters によるテナント別連番の別列とする。時刻列は INTEGER (epoch ms) でサーバ時刻のみを採用し、クライアント申告時刻は保存しない。",
+      "source": "system-spec/spec-state.json qa-032 (共通規約: PK は ULID 文字列 (時系列ソート可・衝突なし) + 表示用コード列。時刻は INTEGER epoch ms でサーバ時刻のみ採用。ID 形式は UUIDv7 案との比較のうえ ULID 維持を再確認); docs/backend-spec.md §2.1 共通規約 (PK: id TEXT — ULID。表示用コードは別列。時刻: INTEGER epoch ms、サーバ時刻のみ採用 SEC5) および §2.3 display_code_counters テーブル定義 (tenant_id, kind(HS/FR/DOC), next_value。表示用コード採番はトランザクション内 increment)"
+    },
+    {
+      "id": "r2-content-addressed-package-registry-c4",
+      "summary": "SkillPackage 実体は Cloudflare R2 上に content hash (sha256) を key とする immutable PackageRegistry として保持する。control-plane DB (packages テーブル) には content_hash / r2_key / size_bytes / kind のみを保存し、顧客の業務データ・secret は保持しない。",
+      "source": "system-spec/spec-state.json qa-004 (SkillPackage 実体は Cloudflare R2 (無料枠 10GB) を immutable PackageRegistry とし、DB には package の content hash と reference のみ保存。顧客の業務データ・secret は保持しない = C4); docs/backend-spec.md §1 (パッケージ実体: Cloudflare R2 immutable PackageRegistry。DB は content hash と参照のみ保持 C4) および §2.2 packages テーブル定義 (content_hash PK(sha256), r2_key, size_bytes, kind。R2 実体への参照 = PackageRegistry)"
+    },
+    {
+      "id": "daily-export-quarterly-restore-drill-qa019",
+      "summary": "control-plane DB のバックアップは日次 export を R2 へ保存し、四半期ごとの restore drill で復元手順を検証する (復元できないバックアップを成功と数えない)。salary 列は暗号化状態を日次 export・R2 バックアップの断面でも維持し常にマスクする。",
+      "source": "system-spec/spec-state.json qa-019 (バックアップ検証: qa-011 の DB 日次 export (R2 保存) に復元手順の定期検証 = 四半期ごとの restore drill を追加し、復元できないバックアップを成功と数えない); docs/backend-spec.md §7 cron 表 (DB backup: 日次、export → R2 (qa-019 既定)。四半期 restore drill。salary は常にマスク security-spec §4.2) および §2.1 (salary の保存はアプリ層カラム暗号化とし、日次 export・R2 バックアップの断面にも平文を残さない qa-032 確定)"
+    },
+    {
+      "id": "single-migration-pipeline-drizzle-repository-package",
+      "summary": "スキーマ変更は Drizzle ORM の migration を単一系統で運用し、packages/db にスキーマ定義とリポジトリ層を集約する (monorepo 内で他パッケージからの直接 DB アクセスを行わない)。",
+      "source": "features/feat-domain-model-db.context.json / .md scope_in (『マイグレーション運用』); system-spec/spec-state.json qa-004 (Drizzle ORM の SQLite dialect でスキーマとマイグレーションを管理); docs/backend-spec.md §1 monorepo 構成 (packages/db: Drizzle スキーマ + リポジトリ層) および qa-020 コード構造規約"
+    },
+    {
+      "id": "repository-layer-db-access-isolation-qa020",
+      "summary": "DB アクセスは Drizzle リポジトリ層に閉じ、API ハンドラや純関数共有パッケージ (inspection/estimation/schemas) から DB へ直接アクセスしない。認可判定は単一ミドルウェアに集約し DB アクセス層とは責務分離する。",
+      "source": "system-spec/spec-state.json qa-020 (backend のコード構造規約: 接続層の隔離。Drizzle リポジトリ層に DB アクセスを閉じ、Turso→D1 退避 D2 ヘッジをアプリ層に波及させない。過剰な層分割は C1 に反するため採らない); docs/backend-spec.md §1 コード構造規約 (qa-020: DB アクセスは Drizzle リポジトリ層に閉じる。認可は単一ミドルウェアに集約 deny-by-default・全 API で Tenant/Workspace スコープ強制 = D4。検査 pipeline/試算エンジン/通知ディスパッチは純関数の共有パッケージ)"
+    },
+    {
+      "id": "user-base-table-schema-owner-unresolved-p02",
+      "summary": "**未解決 (P02 必須解消事項)**: User 基底テーブル (tenant_id, idp_subject, email, name, department, salary, role, status, last_login_at 等) の owner feature が未確定。feat-domain-model-db.md の上流未解決節は『既存不変エンティティ一覧にも User が無い』とするが、docs/backend-spec.md §2.2 の現行版は users を『コアドメイン (公開基盤 — §4.2 + qa-002。既存確定・不変)』テーブルに含めており、この記述との整合が P02 で未検証。feat-user-org-admin は安全側で write_scope を追加分 (packages/db/schema/user-org-admin/) に限定済みであり、本 feature が users 基底スキーマの owner であるか、feat-user-org-admin が別途 owner となるかを P02 で確定し、矛盾する記述 (feat-domain-model-db.md 上流未解決節か docs/backend-spec.md §2.2 のいずれか) を訂正する必要がある。",
+      "source": "features/feat-domain-model-db.md 上流未解決節 (『User 基底テーブルの owner feature が未明記 (qa-024 は User 拡張列 department/salary のみ確定、既存不変エンティティ一覧にも User が無い)。P02 で本 feature が User 基底スキーマの owner かを確定する。feat-user-org-admin は安全側で write_scope を追加分 (packages/db/schema/user-org-admin/) に限定済み』、出典: feat-user-org-admin plan 設計判断 2026-07-17); .dev-graph/plans/feature-package-feat-user-org-admin/plan-findings.json (独立 fork context での確認記録に architect 設計判断として『User 基底テーブル write_scope 限定』が含まれることを本 agent が Read で確認); system-spec/spec-state.json qa-024 (Studio 反映で追加確定するエンティティ一覧は『User 拡張 (department・salary)』のみを明記し、『既存エンティティ (Tenant/Workspace/Project/Release/TargetChannel/CatalogEntry/PublishRequest/監査 event) は不変』の対象に users を明記しない); docs/backend-spec.md §2.2 (users テーブルを『コアドメイン (公開基盤 — §4.2 + qa-002。既存確定・不変)』表に列挙 — 本 agent が Read で直接確認した現行記述であり、上記 feature md の上流未解決節の前提記述と食い違う可能性がある。本 goal-spec ではこの食い違いを解消せず P02 送りとして記録する)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": false,
+    "digest_match_architecture_files": false,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + evaluator PASS (specs/harness-hub-system-specification.md; system-spec/completeness-report.json verdict=PASS を Read で直接確認、4 aspect 全て PASS で findings は severity=low のみ; 正本 system-spec/00-requirements-definition.md は status=confirmed で I3/D2/D4/G1/G4 を直接確認; docs/backend-spec.md は frontmatter status=confirmed・qa_ref=[qa-031,qa-032,qa-033] の詳細正本)",
+    "notes_ja": true,
+    "status": "complete",
+    "category_confirmation_progress_note": "team-lead の指示は system-spec/{backend,database,security}.md がカテゴリ集約段階で並行再描画中の stub である可能性を前提としていたが、本 run で直接 Read したところ system-spec/database.md と system-spec/backend.md はいずれも status: confirmed・aggregate: 確定へ進行しており、qa-037 (security 深掘り波及差分) の内容が docs/backend-spec.md と整合する形で本文に反映されていることを確認した (直前の兄弟 run が記録した draft/未描画状態からの進展)。ただし本 goal-spec の quality_constraints は team-lead 指示どおり、wrapper/カテゴリ本文ではなく system-spec/spec-state.json の qa_log と docs/backend-spec.md を直接の根拠として引用した (指示への準拠を優先し、本文引用へは切り替えていない)。",
+    "wrapper_self_digest_note": "architecture/harness-hub-{backend,data}.md および specs/harness-hub-system-specification.md はいずれも自身の sha256 を repo frontmatter に直接記録しておらず、本 agent (Read/Write/Glob/Grep/SendMessage/Task のみ保有) には exec ツールがないため独立再計算していない。harness-backend.md/harness-data.md は frontmatter の source_digest と本文『正本』節の sha256 表記が食い違う内部不整合を保持しており (直前の兄弟 run で検出された値ともさらに異なる値へ変化しており、system-spec 側の継続的な再描画を示唆)、specs/harness-hub-system-specification.md は frontmatter と本文が一致し内部不整合はない。digest_match_specs_file / digest_match_architecture_files の false は『frontmatter の source_digest フィールド (正本章側の値) が wrapper 自体の sha256 と一致しない (構造的に別物)』ことを表し、内容不整合そのものを意味しない。全 3 wrapper とも main-loop による独立再計算・確認を要する。",
+    "upstream_unresolved_note": "point-in-time (要件層並行拡張中。収束後の一括 reimport で最終確定)",
+    "digest_recomputed_by": "main-loop (claude session 9ce54d7a, python3 hashlib, 2026-07-17T22:49:50Z)"
+  },
+  "extracted_at": "2026-07-18T00:20:00Z"
+}

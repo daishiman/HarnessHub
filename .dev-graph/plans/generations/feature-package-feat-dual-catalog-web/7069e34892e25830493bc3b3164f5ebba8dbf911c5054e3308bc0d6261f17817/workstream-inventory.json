@@ -1,0 +1,1155 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-dual-catalog-web",
+  "parent_feature": "feat-dual-catalog-web",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "goal-spec.json",
+      "features/feat-dual-catalog-web.md",
+      "features/feat-dual-catalog-web.context.json",
+      "docs/frontend-spec.md",
+      "docs/backend-spec.md",
+      "docs/screen-inventory.md",
+      "architecture/harness-hub-frontend.md",
+      "architecture/harness-hub-backend.md",
+      "specs/harness-hub-system-specification.md"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P01",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "要件ベースライン確定 — dual catalog UI(Workspace Catalog)・publish状況表示ポーリング・marketplace.json出力・axe/CWV品質ゲートの要件確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "documentation",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "frontend",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "goal-spec.json の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を要件ベースラインとして確定する P01 要件タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 5件/scope_out 2件/acceptance 3件/quality_constraints 7件(id単位)が逐語一致で転記されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP01責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "goal-spec.json との逐語一致に齟齬が見つかった場合、requirements-baseline.md を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P01",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p01.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P02",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "アーキテクチャ設計 — S01/S02/S03/S04画面構成・install descriptor取得・ポーリング契約・marketplace.json生成方式・CWVバンドル予算の決定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "frontend",
+        "architecture-decision"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "frontend",
+      "secondary_workstreams": [
+        "api",
+        "quality",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/architecture-decision-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/frontend-spec.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "S01(一覧)/S02(詳細)/S03(公開状態表示)/S04(Workspace設定・Release履歴の読取表示)の画面構成、install descriptor取得とポーリング契約、marketplace.json生成方式、CWVバンドル予算を確定するP02アーキテクチャ設計タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に S01-S04 画面構成・状態管理境界、install descriptor (GET /harnesses/:projectId/install) 消費方式とポーリング (2s→backoff) 実装方式、marketplace.json 生成パイプラインの方式決定、CWV バンドル予算 (dynamic import 分割方針) の4系統 architecture decision が記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP02責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "feat-publish-pipeline または feat-stage0-distribution-gate 側の API 契約・採用配布経路が本 task の前提と異なることが判明した場合、architecture decision を re-open し P02 を再実行する。再実行までは P03 以降の着手を保留する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P02",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p02.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P03",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "独立設計レビュー — S01-S04画面構成・install descriptor契約・ポーリング設計・marketplace.json生成方式の妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend",
+        "api"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/design-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P02 で確定した画面構成・install descriptor契約・ポーリング設計・marketplace.json生成方式を、実装着手前に独立観点で妥当性確認するP03設計レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に P02 の4系統 architecture decision それぞれについて妥当性確認結果 (問題なし、または是正指示) が記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP03責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "画面構成・install descriptor契約・ポーリング設計・marketplace.json生成方式のいずれかに重大な指摘が見つかった場合、design-review-notes.md に指摘内容を記録し P02 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P03",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p03.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P04",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "テストファースト設計 — axe自動検査・Playwright J1/J2ジャーニー×2 viewport・Lighthouse CWV予算・marketplace.jsonスキーマ検証・ポーリングbackoff契約のテスト設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P03"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/test-design.md",
+        "apps/hub/src/__tests__/dual-catalog-web/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/frontend-spec.md",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "quality_constraints 7件・acceptance 3件に対応するaxe自動検査・Playwright J1/J2ジャーニー(2 viewport)・Lighthouse CWV予算・marketplace.jsonスキーマ検証・ポーリングbackoff契約のテストケースを設計するP04タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に quality_constraints 7件と acceptance 3件全てに対応するテストケースが記載され、apps/hub/src/__tests__/dual-catalog-web/ にスタブが作成されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP04責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "quality_constraints とテストケースの対応漏れが判明した場合、test-design.md の対応表を修正し不足カテゴリを追加する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P04",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p04.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P05",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "実装 — S01/S02/S03/S04画面実装・marketplace.json出力パイプライン・配布経路連携・axe CI組込・CWVバンドル最適化・ポーリング実装",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "frontend",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "frontend",
+      "secondary_workstreams": [
+        "api",
+        "quality",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P04"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/(workspace)/catalog/",
+        "apps/hub/src/components/catalog/",
+        "apps/hub/src/lib/catalog/",
+        "apps/hub/src/app/marketplace.json/route.ts",
+        "packages/schemas/dual-catalog-web/",
+        ".github/workflows/hub-web-quality-gate.yml",
+        "docs/features/feat-dual-catalog-web/implementation-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/frontend-spec.md",
+        "docs/backend-spec.md",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "S01(一覧)/S02(詳細・導入)/S03(公開状態ポーリング表示)/S04(Workspace設定・Release履歴読取)の画面実装、marketplace.json出力パイプライン、採用配布経路連携、axe CI組込、CWVバンドル最適化、ポーリング(2s→backoff)実装を行うP05実装タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "apps/hub/src/app/(workspace)/catalog/, apps/hub/src/components/catalog/, apps/hub/src/lib/catalog/, apps/hub/src/app/marketplace.json/route.ts, packages/schemas/dual-catalog-web/, .github/workflows/hub-web-quality-gate.yml が実装され、P04 の test-design.md に列挙された全テストケースに対応する実装対象が揃っている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP05責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "実装が P02 の architecture decision と矛盾する場合、該当コードを削除し P02 の設計に沿って再実装する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P05",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p05.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P06",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "テスト実行 — Vitest部品テスト・Playwright E2E・axe自動チェック・Lighthouse CWV計測の実行",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P05"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/test-run-results.md",
+        "apps/hub/src/__tests__/dual-catalog-web/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P04 で設計したVitest部品テスト・Playwright J1/J2ジャーニー×2 viewport・axe自動チェック・Lighthouse CWV計測を実行し結果を記録するP06テスト実行タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-results.md に quality_constraints 7件全ての pass 結果 (axe違反0件・CWV全指標good実測値を含む) が記録されている (fail が残る場合は差し戻し理由が明記されている)",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP06責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかのテスト (axe違反検出・CWV budget超過を含む) が fail した場合、test-run-results.md に原因を記録し P05 (実装) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P06",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p06.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P07",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "受入 — axe検出可能違反0のCIゲート存在・CWV全指標good実測・Hub停止中の導入済みSkill動作継続の受入判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/acceptance-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "goal-spec.json acceptance 3項目 (axe検出可能違反0のCIゲート存在、CWV全指標good実測、Hub停止中の導入済みSkill動作継続) を確認するP07受入タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-record.md に goal-spec acceptance 3件全ての確認結果 (pass) と証跡 (axe CIログ・CWV実測値・§6.1縮退動作確認記録) が記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP07責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "acceptance 3件のいずれかが不充足の場合、acceptance-record.md に理由を記録し P05 (実装) または P02 (設計) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P07",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p07.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P08",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "リファクタリング/マイグレーション — mockup由来静的画面からshared-layers準拠の本番動的コンポーネント構成への移行",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "frontend",
+        "refactoring-migration"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "frontend",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P07"
+      ],
+      "write_scope": [
+        "apps/hub/src/components/catalog/",
+        "docs/features/feat-dual-catalog-web/refactoring-migration-note.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/mockups/harness-studio-v2-analysis.md",
+        "docs/shared-layers.md",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.82,
+        "reason": "docs/mockups/harness-studio-v2-analysis.md 由来の静的モック画面構造を、docs/shared-layers.md §1 の部品実装順 (StepWizard/StageBoard等) に準拠した本番 dynamic import 構成へ移行整理するP08タスク。本 feature は新規実装であり必須の legacy データ移行は無いため、コード構造移行に適用範囲を限定する",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.82,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に mockup静的構造から本番 dynamic import 構成への移行差分整理と、CWVバンドル予算への適合確認結果が記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP08責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "移行後の構成がCWVバンドル予算またはP02設計と矛盾する場合、該当コンポーネントを移行前構成へ戻し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P08",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p08.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P09",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "品質・セキュリティ・運用保証 — テナント分離(deny-by-default)・§6.1縮退設計運用確認・SLOダッシュボード・WCAG/CWV最終確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "security",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "security",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P08"
+      ],
+      "write_scope": [
+        "apps/hub/src/lib/catalog/",
+        "docs/features/feat-dual-catalog-web/quality-assurance-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/security-spec.md",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "テナント分離(deny-by-default)がcatalog閲覧・install descriptor消費経路に一貫適用されていること、§6.1縮退設計(Hub停止中もSkill/WebApp動作継続)の運用確認、SLOダッシュボード反映、WCAG 2.2 AA/CWV goodの最終確認を行うP09品質保証タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md にテナント分離(deny-by-default)確認結果・§6.1縮退設計の運用確認結果・SLOダッシュボードへのCWV反映確認・WCAG 2.2 AA/axe/CWV最終確認の4項目全てが記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP09責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "テナント分離または§6.1縮退設計の確認で不整合が見つかった場合、apps/hub/src/lib/catalog/ の該当実装を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P09",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p09.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P10",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "独立最終レビュー — quality_constraints 7件・acceptance 3件の最終確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/final-review-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "quality_constraints 7件・acceptance 3件の最終確認を独立観点で行うP10最終レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-record.md に quality_constraints 7件・acceptance 3件全ての最終確認結果 (問題なし) が記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP10責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "重大な指摘がある場合、final-review-record.md に理由を記録し該当する P02/P05/P08/P09 のいずれかへ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P10",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p10.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P11",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/evidence-summary.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.82,
+        "reason": "P06(テスト実行)/P07(受入)/P09(品質保証)/P10(最終レビュー)の証跡を集約し、再現コマンド列を確立するP11証跡タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.82,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-summary.md に quality_constraints 7件それぞれの再現コマンド列と対応する結果が記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP11責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "集約対象の証跡に欠落・矛盾が見つかった場合、該当する P06/P07/P09/P10 へ差し戻し再取得を依頼する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P11",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p11.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P12",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "文書化・runbook・引き継ぎ — カタログ利用者/管理者向け手順・marketplace.json形式文書・障害時縮退runbook・更新通知導線の文書化",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "documentation",
+        "runbook"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/runbook.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/infrastructure-spec.md",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.82,
+        "reason": "利用者/管理者向けカタログ操作手順、marketplace.json形式の文書化、Hub障害時の§6.1縮退運用runbook、plugin更新通知導線の運用手順を確立するP12文書化タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.82,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md にカタログ利用者/管理者向け操作手順・marketplace.json形式仕様・Hub障害時§6.1縮退runbook・plugin更新通知導線運用の4項目全てが記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP12責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "runbook.md の手順が実装と矛盾することが判明した場合、該当箇所を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P12",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p12.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-DUAL-CATALOG-WEB-P13",
+      "feature_package_id": "feature-package/feat-dual-catalog-web",
+      "parent_feature": "feat-dual-catalog-web",
+      "title": "リリース/デプロイ — Cloudflare Workers(wrangler)へのロールアウト・rollback手順・Stage 1完了判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dual-catalog-web",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "related_nodes": [
+        "feat-dual-catalog-web"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "infrastructure",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P12"
+      ],
+      "write_scope": [
+        "docs/features/feat-dual-catalog-web/release-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/infrastructure-spec.md",
+        "features/feat-dual-catalog-web.context.json",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "apps/hub の catalog UI・marketplace.json出力をwranglerでCloudflare Workersへロールアウトし、rollback手順とStage 1完了条件(U5: 2社同時稼働)を判定するP13リリースタスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-record.md に本番デプロイ完了記録とsmoke test (catalog一覧表示・詳細表示・publish状況ポーリング・marketplace.json配信・axe/CWVゲート通過を含む) 全項目のpass結果が記載されている",
+        "現行feature context sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3のscope_in/acceptance全件をP13責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "smoke test のいずれかが fail した場合、本番デプロイを直前の安定版へロールバックし、release-record.md に原因を記録した上で該当する P05/P09 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DUAL-CATALOG-WEB-P13",
+        "file_path": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p13.md",
+        "parent_feature": "feat-dual-catalog-web",
+        "feature_package_id": "feature-package/feat-dual-catalog-web",
+        "phase_ref": "P13"
+      }
+    }
+  ],
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-tenant-data-retention",
+  "feature_context_digest": "sha256:69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327",
+  "purpose": "C4 改訂 (qa-045-048, appr-007) で保持可能となった顧客業務ナレッジ・harness 実行入出力データを、R2 + テナント別封筒暗号化で保管し、即時完全削除を保証する独立した価値提供単位",
+  "goal": "テナント業務データの upload / 取得 / 即時完全削除 API と R2 使用量監視を提供し、C4 の非保持境界 (顧客業務システム接続 credential と WebApp runtime) を維持したまま業務データのみを安全に扱える状態",
+  "scope_in": [
+    "tenant_data_objects テーブルの CRUD API 設計・実装",
+    "R2 への content-addressed 業務データ保管 (テナント別 DEK 封筒暗号化)",
+    "即時完全削除 (R2 blob・DB row・backup 断面の同時削除)",
+    "R2 使用量監視・上限アラート",
+    "S15 添付 / S12 実行入出力閲覧向けの任意統合 API 契約・extension point (host UI は各 feature が所有)"
+  ],
+  "scope_out": [
+    "顧客業務システム接続 credential と WebApp runtime の保管 (C4 により恒久的に非保持)",
+    "業務データを入力とする AI ジョブ実行ロジック (feat-hearing-intake / feat-build-pipeline-board 側)",
+    "既存 users.salary / idp_connections.client_secret_enc の封筒暗号化 (feat-auth-tenancy / feat-domain-model-db 既管理)"
+  ],
+  "acceptance": [
+    "テナント A の業務データがテナント B のいかなる authz role からも取得不可であること (テナント分離テストが PASS)",
+    "削除 API 実行後、R2 blob・DB row・backup 断面のいずれにも当該データの平文/暗号文が残存しないこと (削除完全性テストが PASS)",
+    "保管された業務データが R2 上で平文として存在せず、テナント別 DEK で封筒暗号化されていること (暗号化検証テストが PASS)"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-tenant-data-retention.context.json",
+      "exists": true,
+      "sha256": "69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation.",
+      "feature_id": "feat-tenant-data-retention"
+    },
+    {
+      "path": "architecture/harness-hub-data.md",
+      "exists": true,
+      "sha256": "be578235037d18ee5fb16aa44cf51160511e9e403b6873bfeac29c6f1313233d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-security.md",
+      "exists": true,
+      "sha256": "5af5237572ae6fe9d661ad09ee074377967c6f9d276779e2105645cd89d51605",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-infrastructure.md",
+      "exists": true,
+      "sha256": "8b94603bb994538e5875e537783c63bfd22923ac89e0be37c7d2959df0fffe87",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "c4-revision-tenant-data-retention-qa045-048-appr007",
+      "summary": "C4 改訂 (2026-07-18・appr-007) により、顧客業務システム接続 credential と WebApp runtime は恒久的に非保持のまま、顧客業務ナレッジ/ドキュメントとハーネス実行入出力データ (tenant_data) のみ保持可能となった。保持先は新テーブル tenant_data_objects (id, tenant_id, workspace_id, kind[knowledge_doc/run_input/run_output], title, r2_key, size_bytes, content_hash[sha256], enc_key_version, uploaded_by, created_at) で、実体は DB に保存せず R2 参照とメタデータのみを保持し、Turso 無料枠 5GB を業務データで消費しない。D4 row-level scope 必須・分離テスト CI 対象。",
+      "source": "system-spec/spec-state.json qa-045 (database delta の tenant_data_objects テーブル定義)・qa-046 (security delta)・qa-047 (中立再確認の経緯・変更2: 非保持境界を保持前提へ改訂)・qa-048 (backend delta)・approval_log appr-007 (foundation 改訂承認); features/feat-tenant-data-retention.context.json purpose/goal"
+    },
+    {
+      "id": "tenant-data-envelope-encryption-numeric-contract",
+      "summary": "tenant_dataはtenant_id付きDEKを用い、UNIQUE(tenant_id,purpose,key_version)、tenant/purposeごとactive=1、KEK wrap、rotation/deletionを実装する。既存global用途はtenant_id=NULLで互換維持する。",
+      "source": "docs/security-spec.md §4.1 (封筒暗号化 KEK/DEK 確定)・§4.1.1 (encryption_keys テーブル定義)・§4.1.2 (ローテーション手順); system-spec/spec-state.json qa-045 (暗号化: encryption_keys の purpose に tenant_data を追加し、テナント別 DEK による封筒暗号化で R2 実体を暗号化保存する。KEK/DEK 運用は qa-042 の S-D8 と同一機構)・qa-046 (本 delta の DDL・検証手順・docs/security-spec.md への展開は次回 security 深掘り [feature P02 前] で行い、それまでは本 qa が delta の正本)"
+    },
+    {
+      "id": "immediate-full-deletion-r2-db-backup-contract",
+      "summary": "削除はR2 blob、live DB row、backup tombstone/indexを同一workflowで収束し、過去backup restore時もtombstone適用により暗号文を復元不能にする。監査eventだけを残しsoft deleteは作らない。",
+      "source": "system-spec/spec-state.json qa-045 (削除ポリシー: ユーザー削除操作・テナント解約時に R2 実体と DB 行を即時完全削除し、audit_events のみ残す。soft delete 列は設けない。日次 DB export に平文は含まれない。四半期 restore drill に削除済み業務データが復元されないことの確認項目を追加する); docs/security-spec.md §1.3 T15 (削除不完全により、削除操作後も業務データが R2 実体・DB 行・バックアップ断面に残存する。対策=即時完全削除+削除監査 event+restore drill での非復元確認。検証=§8.3 削除完全性テスト[R2実体・DB行・キャッシュ])・§8.3 (T-14 までの単体テスト一覧); features/feat-tenant-data-retention.context.json acceptance (削除 API 実行後、R2 blob・DB row・backup 断面のいずれにも当該データの平文/暗号文が残存しないこと)"
+    },
+    {
+      "id": "tenant-cross-boundary-read-prevention-t14-r2-prefix",
+      "summary": "テナント A/B 間の業務データ越境読取を防ぐため、purpose=tenant_data の封筒暗号化 + D4 row-level scope + R2 tenant prefix 分離 (業務データ用 prefix をテナント別に分離し、PackageRegistry [immutable] とはバケットまたは prefix を分ける) を適用し、認可ミドルウェア通過後にのみ復号する。テナント分離テスト CI (§8.4) へ業務データ越境読取ケースを追加する。",
+      "source": "docs/security-spec.md §1.3 T14 (テナント A の利用者/管理者が保持業務データ[tenant_data]をテナント越境で読む。対策=purpose=tenant_data の封筒暗号化[§4]+D4 row-level+R2 tenant prefix 分離。認可 MW 通過後のみ復号。検証=§8.4 分離テスト[業務データ越境読取ケース])・§1.2 保護資産 (顧客業務ナレッジ/ドキュメント・ハーネス実行入出力データ=最高機密区分); system-spec/spec-state.json qa-045 (R2 バケット: 業務データ用 prefix をテナント別に分離し、PackageRegistry とはバケットまたは prefix を分ける); features/feat-tenant-data-retention.context.json acceptance (テナント分離テストが PASS)"
+    },
+    {
+      "id": "r2-usage-monitoring-alert-cron-extension",
+      "summary": "R2 使用量監視・上限アラートは、既存の Turso 使用量監視 cron (日次、閾値 70% でアプリ内 admin 通知・90% で保持期間導入の R4-reopen 起票を促す) へ R2 使用量を追加する形で実装する設計方針が確定している。R2 専用の別閾値は現時点で confirmed されておらず、qa-045 は既存 cron への R2 使用量追加という設計方針の確定に留まる。R2 無料枠は 10GB / Class A 100万 ops/月 / Class B 1,000万 ops/月。",
+      "source": "system-spec/spec-state.json qa-045 (無料枠 10GB の使用量は Turso 使用量監視 cron [qa-031 論点4 の帰結] に R2 使用量を追加して監視する); docs/infrastructure-spec.md §3 (R2 バケット設計・無料枠 10GB / Class A 100万 ops/月 / Class B 1,000万 ops/月)・§4 (使用量監視 [qa-031 の帰結]: 日次 cron が Turso Platform API から usage を取得し、閾値 70% で admin 通知[アプリ内]・90% で保持期間導入の R4-reopen 起票を促す); features/feat-tenant-data-retention.context.json scope_in (R2 使用量監視・上限アラート)"
+    },
+    {
+      "id": "tenant-data-api-endpoint-detail-deferred-to-p02",
+      "summary": "tenant_data 保管 API (multipart アップロード→テナント別封筒暗号化のうえ R2 保存+DB 参照登録 / 取得=認可 MW 通過後にのみ復号 / 削除=R2 実体+DB 行の即時完全削除+監査 event) のエンドポイント詳細設計 (パス・スキーマ・rate limit) は feature P02 で確定するとqa-048 で明示的に据え置かれている。本 goal-spec の範囲ではこの契約方針のみを確定事項として扱い、具体的な API パス・zod スキーマ・rate limit 数値を P02 より前に確定済みと誤認しない。",
+      "source": "system-spec/spec-state.json qa-048 (C4 改訂に伴う業務データ保持 API の追加方針。エンドポイント詳細設計[パス・スキーマ・rate limit]は feature P02 で行い、認可は既存 deny-by-default マトリクスへ行を追加する); docs/backend-spec.md 1 行目付近 (顧客業務データ[C4 改訂 2026-07-18・appr-007/qa-048]: 業務ナレッジ/ドキュメントとハーネス実行入出力データは保持可能。保管 API の詳細設計は feature P02)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + completeness evaluator PASS",
+    "notes_ja": "現行 feature context と全 architecture/spec lineage を repository bytes から SHA-256 再計算し、P01..P13 の current canonical baseline に固定した。",
+    "digest_recomputed_by": "run-system-dev-plan immutable-replan remediation 2026-07-19",
+    "status": "complete"
+  },
+  "extracted_at": "2026-07-19T12:00:00Z"
+}

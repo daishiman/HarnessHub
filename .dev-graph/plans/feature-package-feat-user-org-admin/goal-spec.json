@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-user-org-admin",
+  "feature_context_digest": "sha256:e67d33e37c98456225d7391c7f47a71c19e2efe043a76607487a50897adfa84f",
+  "purpose": "ユーザー管理 (S17) とアカウント設定 (S18) を提供し、role 管理 (qa-005 の 4 role と統合)・年収→時給換算の係数設定 (PII: admin 限定・API 非公開・export マスク = SEC4)・通知設定 (D6 Resend) を確立する (I14)",
+  "goal": "workspace-admin がユーザーの role・部門・年収係数を管理でき、salary が PII ガード (admin 限定表示・読取監査・export マスク) 下にあり、通知設定が通知ディスパッチ共通層と接続された状態",
+  "scope_in": [
+    "S17 ユーザー管理 + 個別ダッシュボード",
+    "S18 アカウント設定 (プロフィール/通知/表示)",
+    "User 拡張 (department/salary) + TenantCoefficient エンティティ",
+    "PII ガード共通層 (salary の admin 限定・監査・export マスク)",
+    "通知設定と D6 (Resend) 通知ディスパッチの接続"
+  ],
+  "scope_out": [
+    "認証方式の変更 (D3 の IdP 委譲を維持。パスワード/2FA 自前実装は不採用)",
+    "role 体系の再設計 (qa-005 の 4 role を維持)"
+  ],
+  "acceptance": [
+    "salary が admin 以外の API/画面/export に露出しない (分離テスト + 監査記録)",
+    "係数変更が監査 event に記録される (SEC6)",
+    "S17/S18 が axe 違反 0 で動作する"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-user-org-admin.context.json",
+      "feature_id": "feat-user-org-admin",
+      "exists": true,
+      "sha256": "e67d33e37c98456225d7391c7f47a71c19e2efe043a76607487a50897adfa84f",
+      "digest_status": "verified",
+      "digest_note": "team-lead (呼び出し元) から digest 値として提供された。本 agent は Read/Write/Glob/Grep のみ保有し sha256 を計算する exec ツールを持たないため独立再計算はしていない。.dev-graph/state/graph.json および features/feat-user-org-admin.md frontmatter にも本ファイル自体の digest 記録は存在せず (記録されている digest はいずれも specs/harness-hub-system-specification.md 側の source_digest 8748deba…であり別物)、他記録との間接突合による検証もできなかった。捏造回避のため raw 値のまま記録している。 [main-loop 再計算 2026-07-17T10:56:12Z: sha256=e67d33e37c984562… 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-security.md",
+      "exists": true,
+      "sha256": "ef96910fd80570c5542db28ff95bce817ed7d7ca2d415314e0934187c94e936f",
+      "digest_status": "verified",
+      "digest_note": "Glob で実在確認済み。graph_node_id=arch-harness-hub-security、confirmation_status=confirmed、evaluation_status=pass (system-spec/security.md からの R3-import wrapper)。wrapper ファイル自体の sha256 は repo 内のどこにも記録されておらず、本 agent には計算手段がない。 [main-loop 再計算 2026-07-17T10:56:12Z: sha256=ef96910fd80570c5… 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "67560d941eeee012eb73aa49837e000963ae2a350d50d8b702d3c8c0badc2f17",
+      "digest_status": "verified",
+      "digest_note": "Glob で実在確認済み。graph_node_id=arch-harness-hub-backend、confirmation_status=confirmed、evaluation_status=pass (system-spec/backend.md からの R3-import wrapper)。wrapper ファイル自体の sha256 は repo 内のどこにも記録されておらず、本 agent には計算手段がない。 [main-loop 再計算 2026-07-17T10:56:12Z: sha256=67560d941eeee012… 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "27ec1b93168d2b00e6664b248aff3a45f4e807ce024035612d57fce7b1c1fc22",
+      "digest_status": "verified",
+      "digest_note": "Glob で実在確認済み。graph_node_id=arch-harness-hub-frontend、confirmation_status=confirmed、evaluation_status=pass (system-spec/frontend.md + system-spec/ui-ux.md からの R3-import wrapper)。wrapper ファイル自体の sha256 は repo 内のどこにも記録されておらず、本 agent には計算手段がない。 [main-loop 再計算 2026-07-17T10:56:12Z: sha256=27ec1b93168d2b00… 一致/補完]"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+      "digest_status": "verified",
+      "digest_note": "Glob/Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、confirmation_status=confirmed、evaluation_status=pass、evidence_ref=system-spec/completeness-report.json (verdict=PASS)。正本は system-spec/00-requirements-definition.md (status: confirmed, source_digest=8fc7b5878eb3b18f959c3b2fddcab7a5adf69d9201b1be782923659f096e8bf9 と frontmatter に記録済み)。wrapper ファイル自体 (specs/harness-hub-system-specification.md) の sha256 は本 agent には計算手段がなく未解決 (過去の feat-hub-foundation goal-spec には別 agent (main-loop, python3 hashlib) が算出した値 37ed6322…の記録があるが、本 agent はそれを再計算・再検証できていないため転記しない)。 [main-loop 再計算 2026-07-17T10:56:12Z: sha256=8748deba1f9a34c8… 一致/補完]"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "role-4-integration",
+      "summary": "role 管理は qa-005 で確定した 4 role (provider-admin / workspace-admin / owner / member) と統合し、S17 を含む新規 API 群も認可単一ミドルウェア配下で role × 操作の許可表に従う",
+      "source": "system-spec/auth.md qa-005; system-spec/security.md qa-025 (SEC2)"
+    },
+    {
+      "id": "salary-pii-guard",
+      "summary": "salary は PII 列として admin 限定表示・一般 API 非公開・export マスクで扱い、読取は監査記録の対象とする",
+      "source": "system-spec/security.md qa-025 (SEC4); system-spec/database.md qa-024"
+    },
+    {
+      "id": "audit-event-expansion",
+      "summary": "係数変更・ユーザー管理操作を含む新規操作は監査 event に記録される (append-only 監査の対象拡張)",
+      "source": "system-spec/security.md qa-025 (SEC6)"
+    },
+    {
+      "id": "notification-dispatch-common-layer",
+      "summary": "通知設定のメール送信は D6 (Resend Free) を採用し、必ず通知ディスパッチ共通層を経由する (feature 実装から Resend API を直接呼ばない)。API key は環境 binding のみ、宛先はテナント内ユーザー限定、PII をメール本文に含めない",
+      "source": "system-spec/00-requirements-definition.md D6; system-spec/security.md qa-025 (SEC9); system-spec/backend.md qa-023 (B8)"
+    },
+    {
+      "id": "backend-b10-user-management",
+      "summary": "ユーザー管理 (S17) の backend 実装は B10 として qa-023 で確定: role 4 種 (qa-005) と統合し、係数設定・PII ガードを備える",
+      "source": "system-spec/backend.md qa-023 (B10)"
+    },
+    {
+      "id": "coefficient-and-user-entities",
+      "summary": "TenantCoefficient (annualHours・分/回・削減率) と User 拡張 (department/salary) は qa-024 で確定したエンティティ。全新規テーブルは tenant_id/workspace_id スコープ列を必須とする (D4 row-level-scope)",
+      "source": "system-spec/database.md qa-024"
+    },
+    {
+      "id": "auth-delegation-unchanged",
+      "summary": "認証方式は D3 (顧客 IdP / SSO 委譲、Auth.js + テナント別 OIDC) を維持し、Studio mockup のパスワードログイン・2FA 自前実装は不採用",
+      "source": "system-spec/00-requirements-definition.md D3; system-spec/auth.md qa-005"
+    },
+    {
+      "id": "axe-a11y-zero",
+      "summary": "GitHub Actions CI 品質ゲートの一部として axe a11y 違反ゼロが全画面 (S17/S18 を含む) に適用される",
+      "source": "docs/shared-layers.md §3 (引用: .dev-graph/plans/feature-package-feat-hub-foundation/goal-spec.json quality_constraints.github-actions-ci)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + evaluator PASS (specs/harness-hub-system-specification.md; system-spec/completeness-report.json verdict=PASS; 正本 system-spec/00-requirements-definition.md status=confirmed)",
+    "notes_ja": "graph_node_id は features/feat-user-org-admin.context.json と features/feat-user-org-admin.md frontmatter で一致 (feat-user-org-admin)。purpose/goal/scope_in/scope_out/acceptance/architecture_refs は両ファイルで文言完全一致を Read による目視突合で確認した。feature_context_digest (sha256:e67d33e37c98456225d7391c7f47a71c19e2efe043a76607487a50897adfa84f) は依頼元 (team-lead) から提供された値をそのまま記録しており、本 agent は sha256 を計算する exec ツールを持たず独立再計算はできていない。graph.json / feature md frontmatter 側にも本ファイル自体の digest 記録がなく (記録済みの digest はいずれも specs/harness-hub-system-specification.md 側の source_digest 8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6 であり、features/feat-user-org-admin.context.json 自体の digest ではない)、間接突合による検証も不可能だった。architecture_refs 3 件 (harness-hub-security.md / harness-hub-backend.md / harness-hub-frontend.md) は Glob で repo 内に実在確認済みで、いずれも system-spec-harness の R3-import wrapper (confirmation_status=confirmed, evaluation_status=pass) である。specs/harness-hub-system-specification.md も同様に confirmed/pass で、system-spec/completeness-report.json の verdict=PASS を確認した。qa-005/qa-023(B10)/qa-024/qa-025(SEC2/SEC4/SEC6/SEC9)/D3/D6/I14 はいずれも system-spec 確定章の本文に実在する記述として引用しており、推測での要件追加は行っていない。",
+    "digest_recomputed_by": "main-loop (claude session 9ce54d7a, python3 hashlib, 2026-07-17T10:56:12Z)",
+    "status": "complete"
+  },
+  "extracted_at": "2026-07-17T11:20:00Z"
+}

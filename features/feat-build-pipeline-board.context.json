@@ -1,0 +1,27 @@
+{
+  "graph_node_id": "feat-build-pipeline-board",
+  "artifact_kind": "feature",
+  "purpose": "ヒアリング→要件定義→設計→構築→テスト→レビュー→公開の 7 工程を S13 のボードで進行管理し (工程操作は admin)、公開工程を既存 PublishRequest 状態機械 (B4/I2/I3) へ接続する",
+  "goal": "各ハーネスの構築進捗が 7 工程ボードで可視化され、工程操作が admin 限定 + 監査記録付きで行え、公開工程が publish パイプラインと二重実装なしに連動する状態",
+  "scope_in": [
+    "Build エンティティ (7 stage・リスク表示)",
+    "S13 パイプラインボード (ステージボード共通部品の消費)",
+    "工程操作の admin 権限 + 監査 event (SEC6)",
+    "公開工程の PublishRequest 接続 (B4)"
+  ],
+  "scope_out": [
+    "publish 状態機械の再実装 (既存 I2/I3 を使う)",
+    "工程の自動遷移 (手動運用から開始)"
+  ],
+  "acceptance": [
+    "7 工程の遷移が admin のみ操作でき監査 event に記録される",
+    "公開工程が PublishRequest の状態と整合する (二重状態を持たない)",
+    "ボードが axe 違反 0・CWV good で動作する"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-frontend.md",
+    "architecture/harness-hub-backend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-17T13:14:35Z"
+}

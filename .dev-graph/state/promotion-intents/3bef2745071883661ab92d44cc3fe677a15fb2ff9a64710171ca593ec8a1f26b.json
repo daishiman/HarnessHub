@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/feature-package-feat-dual-catalog-web",
+  "destination": ".dev-graph/plans/feature-package-feat-dual-catalog-web",
+  "digest": "sha256:6c488a42d91f6d71efff948f6392be3b93f93a84ed449ec9b87f1baeefb73901",
+  "feature_package_id": "feature-package/feat-dual-catalog-web",
+  "receipt": ".dev-graph/plans/feature-package-feat-dual-catalog-web/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-19T00:33:17Z"
+}

@@ -1,0 +1,22 @@
+{
+  "op": "confirm",
+  "graph_node_id": "feat-docs-cms",
+  "transition": {
+    "confirmation_status": [
+      "draft",
+      "confirmed"
+    ]
+  },
+  "confirmed_at": "2026-07-17T12:35:28Z",
+  "source_digest_pinned": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+  "review_basis": [
+    "scope_in/scope_out/acceptance を system-spec 確定内容 (qa-021 S15 / qa-023 B7 / qa-024 Doc エンティティ / qa-025 SEC6・SEC7 / D5 AI下書き / I13) と突合し矛盾なし",
+    "U7 改訂 (Studio 拡張) と I13 は appr-004/appr-005 + qa-030 でユーザー承認済み",
+    "docs/screen-inventory.md S15・docs/shared-layers.md (Markdown 部品/AI キューの消費側) と整合",
+    "ユーザー指示: S4 続行指示 (2026-07-17 「つづけて」)"
+  ],
+  "validator": {
+    "schema": "validate-graph-schema.py",
+    "valid": true
+  }
+}

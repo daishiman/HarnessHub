@@ -1,0 +1,70 @@
+{
+ "epic_bd_issue_id": "HarnessHub-5yp",
+ "children": [
+  {
+   "phase_ref": "P01",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.1"
+  },
+  {
+   "phase_ref": "P02",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.2"
+  },
+  {
+   "phase_ref": "P03",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.3"
+  },
+  {
+   "phase_ref": "P04",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.4"
+  },
+  {
+   "phase_ref": "P05",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.5"
+  },
+  {
+   "phase_ref": "P06",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.6"
+  },
+  {
+   "phase_ref": "P07",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.7"
+  },
+  {
+   "phase_ref": "P08",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.8"
+  },
+  {
+   "phase_ref": "P09",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.9"
+  },
+  {
+   "phase_ref": "P10",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.10"
+  },
+  {
+   "phase_ref": "P11",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.11"
+  },
+  {
+   "phase_ref": "P12",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.12"
+  },
+  {
+   "phase_ref": "P13",
+   "status": "closed",
+   "bd_issue_id": "HarnessHub-5yp.13"
+  }
+ ]
+}

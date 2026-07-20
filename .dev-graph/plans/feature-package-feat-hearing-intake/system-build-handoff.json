@@ -1,0 +1,224 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "system-build-handoff",
+  "identity": {
+    "repository_id": "github:daishiman/HarnessHub",
+    "feature_id": "feat-hearing-intake",
+    "feature_package_id": "feature-package/feat-hearing-intake",
+    "parent_feature": "feat-hearing-intake",
+    "source_feature_digest": "sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507"
+  },
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "c384f3f9aeeee0721fa6b30e1805ab70ce4f6a9fdcdae1b21ce61b5e92ba5bef"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "01da98c0ca13c53e5888566308d6b51a9949a1aec90f633df8249dcd6dcfaae8"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "bc3de4eb69a18a2b278f0220a73311de13e539ad1dc7c719cf0feed6ddee3087"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "071783ac79761157e6fc5bea41c89cd1c7be059e7d76c71f828401f99c9b65cf"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "b8b0d31ed1fb3ac3fcc37052f450d6e7ff411a0b6cbfd4f6a00dd69e89a8876b"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "3273fe2ced6acbf935c50a52ea8481f230a480fbf00acb967a13f4a1f8f7d669"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "f7b23f1572b16eb570992da1af990d1ed04845bc13a628c1a72f487a020550c4"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "303c585cbd3867b30452379cbd08b55b2211a1905c57a166e599c5918f58ff40"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "07c13d46befc87371a1a20dfdaff4b0520eca5246f9d24114c73b349c38fff3c"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "9e3f7ac948af701083ffa8bd1ebb6230eaae02078b6bbffa99a1641d86eb5fca"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "89167dc02083598657e507de0a90086fd5cfad98e63545371ef7898f8a36c272"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "2476f98e5535019f11bad3f890c5514ac9de4c570518ec6574afdf64fd0167d9"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "356a1f6c87fdb7ffb71aa5e78d5b686d40af039ca5b5f2bbc3c3d07c5f0d3d3f"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "2f5425ad342c0a7df9707714fe7295a297b92a4a7a0347a721f06119f41cbe1a"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "2df3d23f48f3e7b2f1c95c4b17d9563f6c420895d7a5e86ae09408cd373bccce"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "f1429988669998ee9209260fdb6418c0118292f41a45029c86df5abc301a8095"
+    }
+  ],
+  "source_manifest": {
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "adf01181830026f622d87405f6b9249ebe2a0c9602b0585a5af63a14fe11f239",
+    "canonical_digest_before_handoff": "sha256:03ab14b914bf6dcb75bedbcab7b51bd1b53390968aec19b57d180c35f905270c"
+  },
+  "digest_contract": {
+    "algorithm": "sha256",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest"
+  },
+  "execution_tasks": [
+    {
+      "task_id": "SYS-HEARING-INTAKE-P01",
+      "phase_ref": "P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md",
+      "build_target_kind": "application-code",
+      "depends_on": []
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P02",
+      "phase_ref": "P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P01"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P03",
+      "phase_ref": "P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P02"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P04",
+      "phase_ref": "P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P03"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P05",
+      "phase_ref": "P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P04"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P06",
+      "phase_ref": "P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P05"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P07",
+      "phase_ref": "P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P06"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P08",
+      "phase_ref": "P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P07"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P09",
+      "phase_ref": "P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P08"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P10",
+      "phase_ref": "P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P09"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P11",
+      "phase_ref": "P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P10"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P12",
+      "phase_ref": "P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P11"
+      ]
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P13",
+      "phase_ref": "P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md",
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P12"
+      ]
+    }
+  ],
+  "registration_request": {
+    "path": "dev-graph-registration.json",
+    "owner": "system-dev-planner/C11",
+    "consumer": "dev-graph/C02",
+    "status": "deferred-until-promotion",
+    "promotion_receipt": {
+      "path": "atomic-promotion-receipt.json",
+      "owner": "system-dev-planner/C11",
+      "status": "not-emitted",
+      "produced_by_this_component": false
+    },
+    "registration_receipt": {
+      "path": "dev-graph-registration-receipt.json",
+      "owner": "dev-graph/C02",
+      "status": "not-emitted",
+      "produced_by_this_component": false
+    }
+  }
+}

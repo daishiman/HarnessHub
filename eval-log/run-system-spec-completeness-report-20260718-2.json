@@ -1,0 +1,142 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork+parent-aggregate"
+  },
+  "spec_dir": "system-spec",
+  "evaluated_at": "2026-07-18T14:59:57Z",
+  "cycle": "qa-051〜qa-064 反映 (2026-07-18 構築優先順位 P0-P5 確定・docs/ 設計詳細化・継続句訂正) 後の再評価",
+  "verdict": "PASS_WITH_FINDINGS",
+  "fail_closed_policy": "監査 FAIL は是正完了 + 決定論ゲート exit0 の再確認をもって解消と判定 (前回 cycle と同一方針)",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "validate-coverage-matrix.py --require-complete --require-foundation exit0 (最終 compile 後に再実行)。requirements_foundation は本 cycle で不変 (confirmed=true / approval_ref=appr-007)。00-requirements-definition.md はバイト同一 (compile 再生成でも digest 不変)。C07 監査が serves_goals 全ユニーク値 {G1..G5} 閉集合・dangling 0 を独立再確認。",
+      "evidence": [
+        "gate: validate-coverage-matrix.py --require-complete --require-foundation → exit0 (最終 compile 後)",
+        "00-requirements-definition.md: compile 前後でバイト同一 (git status 変更なし)",
+        "C07 独立監査: serves_goals unique = [G1,G2,G3,G4,G5] / dangling 0"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "D1-D6 は本 cycle で不変 (据え置き)。docs/ 側の D5/D6 表記が『候補』から『確定済み』へ追随 (mockups analysis §6) したのみで、spec-state decisions に変更なし。authjs (D3) は C08 是正で maintenance mode 情報を出典記録へ追記し、qa-020 の auth adapter 境界ヘッジの重要度上昇を明示。",
+      "evidence": [
+        "spec-state.json decisions: D1-D6 全て status=confirmed で本 cycle 変更なし",
+        "fetched-references.json authjs: 2026-07-18 鮮度再確認 (v5 maintenance mode 注記追加)"
+      ]
+    },
+    "matrix_c07": {
+      "verdict": "PASS",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "54 セル (確定 25 / 対象外 29 / 未収集 0)。8 セルの qa_ref 期待値一致 (dev-workflow.web=qa-051, backend.web=qa-059, database.web=qa-060, security.web=qa-061, frontend.web=qa-062, ui-ux.web=qa-063, infrastructure.web=qa-064, maintenance-ops.web=qa-058)。qa_log 64 件に dangling 0。reopen_log 今回 cycle 14 件 (初回 8 + 訂正 6) 全て reason 付き。category_aggregate 真理値表整合・platform 欠落 0。findings_open 0。独立 2 系統 (fork 起動分 + 親起動分) の監査が同一結論。",
+      "evidence": [
+        "validate-coverage-matrix.py loop/--require-complete --require-foundation 両モード exit0",
+        "8 セル qa_ref 実測値 = 期待値 (完全一致)",
+        "reopen_log 直近 14 件: 再コンパイル理由 8 件 + 継続句訂正理由 6 件"
+      ]
+    },
+    "hearing_c06": {
+      "verdict": "PASS",
+      "auditor": "system-spec-hearing-auditor",
+      "component": "C06",
+      "summary": "4 軸 (聞き漏れ/誘導質問/早期停止/トレーサビリティ) 全 PASS。qa-051〜064 は docs/ 記録済みユーザー確定事項の転記確認質問で、新規誘導なし。qa-059〜064 の訂正再登録は質問文注記 + reopen_log + 回答内継続句の三重で追跡可能。findings: medium 1 (reopen_log 3 件の 'qa-043' 文字列引用が採番衝突後の現 qa-043 と不一致 — 正しくは qa-047。qa_ref 構造フィールドは全て正なので確定状態に実害なし)、low 2 (appr-007 note の記述精度 / D1-D4 の質疑証跡明示の遡及未適用)、info 1 (qa 採番の一元管理なし)。",
+      "evidence": [
+        "qa_log 64 件・approval_log 7 件・reopen_log 全件通読 (read-only)",
+        "hearing_progress: {loop_count:1, next_question:null, complete:true}",
+        "qa-031 論点 4 = ユーザーが AI 推奨と異なる選択をした実例 (推奨併記が決定を支配していない)"
+      ]
+    },
+    "doc_freshness_c08": {
+      "verdict": "FAIL -> REMEDIATED (残 findings は open)",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "形式層 (validate-source-citation) exit0・非公式 host 0・世代落ち 0。FAIL 指摘の是正: (1) drizzle-orm v1.0.0-rc.4 実在を GitHub releases (2026-06-27) + npm dist-tags で裏取り済み、(2) opennext-cloudflare の版記録漏れを v1.20.1 (2026-06-26) で是正、(3) pnpm を 11.13.1 へパッチ粒度化、(4) authjs / (5) claude-code-plugins は WebSearch 多源照合で内容一致を再確認し latest_checked_at を更新。是正後 validate-source-citation exit0 再確認。残 open: authjs/claude-code-plugins の一次 GET 照合 (WebFetch/curl とも本環境不可の環境制約。WebFetch 可能環境での follow-up 継続)、github-actions/turso の last_updated 取得日プレースホルダー (記録自体は取得日と明示しており透明)。",
+      "evidence": [
+        "是正後 gate: validate-source-citation.py --targets spec-state.json --references fetched-references.json → exit0",
+        "WebSearch 裏取り: drizzle rc.4 (github.com/drizzle-team releases)・opennext 1.20.1 (npm/GitHub)・pnpm 11.13.1 (2026-07-16)・authjs 統治 (vercel.com/blog 2026-07-07)・claude-code CLI 2.1.203+",
+        "curl 一次 GET は permission 拒否、監査 agent の WebFetch も不可 (環境制約として記録)"
+      ]
+    },
+    "deterministic_gates": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "最終成果物に対する全決定論ゲート: coverage (--require-complete --require-foundation) exit0 / source-citation exit0 / knowledge-graph 4 profile (knowledge=knowledge-catalog.json, doctrine, required-info, cross) 全 exit0 / OUT1 受入テスト 42 passed。compile は決定論で、非対象章 (auth.md, 00-requirements-definition.md) はバイト同一。",
+      "evidence": [
+        "compile-spec-doc.py: 11 ファイル生成 OK (2 回目 = 出典表追随)",
+        "pytest test_compile_spec_doc.py: 42 passed",
+        "validate-knowledge-graph 4 profile: 全 exit0"
+      ]
+    }
+  },
+  "findings_open": [
+    {
+      "severity": "medium",
+      "component": "C06",
+      "issue": "reopen_log 3 件 (backend/database/security.web の C4 改訂 reopen) の reason 文字列が 'qa-043' を引用するが、採番衝突修復後の現 qa-043 は別内容 (infrastructure desktop 質疑) を指す。正参照は qa-047 (qa-047 質問文冒頭の注記でのみ説明)。qa_ref 構造フィールドは全て正で確定状態に実害なし。是正は C01 の writer 拡張 (reopen_log 注記 op) を要するため follow-up",
+      "followup": "C01 (run-system-spec-elicit) に reopen_log 注記の単一 writer op を追加後、当該 3 件へ 'qa-043 は qa-047 を指す' 注記を付す"
+    },
+    {
+      "severity": "low",
+      "component": "C08",
+      "issue": "authjs / claude-code-plugins の一次 GET 照合が環境制約 (WebFetch 不可・curl 拒否) で未達。内容は WebSearch 多源照合で一致確認済み",
+      "followup": "WebFetch 可能環境での一次 GET 照合"
+    },
+    {
+      "severity": "low",
+      "component": "C08",
+      "issue": "github-actions / turso の last_updated が実ページ更新日でなく取得日プレースホルダー (記録上は取得日と明示済みで透明)",
+      "followup": "対象ページが更新日を明示した時点で差替"
+    },
+    {
+      "severity": "low",
+      "component": "C06",
+      "issue": "D1-D4 の user_decision.note に D5/D6 型の『質疑証跡: qa-XXX』明示引用が遡及適用されていない",
+      "followup": "次回 D1-D4 いずれかの reopen 時に注記を追加"
+    },
+    {
+      "severity": "info",
+      "component": "C06",
+      "issue": "並行セッション統合による qa 採番衝突が過去 3 回発生 (都度事後修復済み)。採番の一元管理がないプロセスリスク",
+      "followup": "C01 の採番 op 追加を将来検討"
+    },
+    {
+      "severity": "info",
+      "component": "C05",
+      "issue": "backend.md の設計知識カード順が resource-map 出現順のままで R2-render の topo_order 契約と相違 (前回から継続の既知事項・確定順自体は位相健全)",
+      "followup": "C03 R2-render の並び替え対応 (既知・スコープ外宣言済み)"
+    },
+    {
+      "severity": "low",
+      "component": "C06",
+      "issue": "qa-058 の質問文の出典表示 (shared-layers.md 言及) が回答実カバー範囲 (infrastructure-spec §13) と不一致。実質内容は qa-062 でカバー済みのため聞き漏れではない",
+      "followup": "次回 maintenance-ops セル reopen 時に質問文の出典を訂正"
+    }
+  ],
+  "second_pass_audits": {
+    "recorded_at": "2026-07-18T15:06:47Z",
+    "C08_freshness_2nd": {
+      "verdict": "PASS",
+      "summary": "親起動の二次 C08 監査 (是正後状態を独立検証): C13 形式検査 exit0・targets/references 17 件 1:1・非公式 host 0。qa-051〜064 全回答精読で新規外部技術の出現なし。nextjs/authjs/claude-code-plugins/rehype-sanitize/owasp-asvs を WebSearch spot 照合し記録値と一致。一次 GET 未達 (WebFetch 不可) は info として継続 — fork 起動の一次 C08 FAIL は是正+二次 PASS で解消と判定"
+    },
+    "C06_hearing_2nd": {
+      "verdict": "PASS",
+      "summary": "親起動の二次 C06 監査: qa-051〜064 全 14 件を docs/ 該当節と突合し実質網羅・誘導なし・継続句全件確認。新規 findings 2 件: (low) qa-058 の質問文が shared-layers.md を出典に挙げるが回答は infrastructure-spec §13 のみで、部品実装順は qa-062 回答内でカバー (聞き漏れではなく出典表示の精度問題)。(medium→FIXED) docs/security-spec.md §2.2/§3.4/§6.5 の aijob.pull/complete 認可が qa-048 改訂 (workspace-admin 開放) に未追随のまま provider-admin のみで残存 — 本セッションで 3 箇所を qa-048 引用付きで修正し、frontmatter qa_ref へ qa-048/qa-050/qa-061 を追加済み (qa-051〜064 が作った問題ではなく既存の docs 間矛盾)"
+    }
+  },
+  "findings_resolved": [
+    {
+      "severity": "medium",
+      "component": "C06",
+      "issue": "docs/security-spec.md の aijob.pull/aijob.complete 認可 3 箇所 (scope 表・許可表・§6.5) が qa-048 改訂に未追随",
+      "resolution": "本セッション (2026-07-18T15:06:47Z) で 3 箇所を qa-048 引用付きで backend-spec §4.11/§9 と同期し、frontmatter qa_ref へ qa-048/qa-050/qa-061 を追加"
+    }
+  ]
+}

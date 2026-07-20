@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-19T14:16:35Z",
+  "generation_id": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-metrics-tracking",
+    "published_digest": "sha256:178a96700782a721a2f448d53618709aff1c89250d73f17154bc7de273395ed1",
+    "receipt": ".dev-graph/plans/feature-package-feat-metrics-tracking/atomic-promotion-receipt.json"
+  },
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "evaluated_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "published_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/dev-graph-registration.json"
+}

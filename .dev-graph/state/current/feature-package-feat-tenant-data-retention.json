@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-tenant-data-retention",
+  "generation_id": "7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "published_path": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "published_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/atomic-promotion-receipt.json",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention",
+    "published_digest": "sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+    "receipt": ".dev-graph/plans/feature-package-feat-tenant-data-retention/atomic-promotion-receipt.json"
+  }
+}

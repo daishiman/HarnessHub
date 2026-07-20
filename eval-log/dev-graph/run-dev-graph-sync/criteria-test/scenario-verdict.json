@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-sync",
     "component_id": "C03",
-    "skill_md_sha256": "7c0ffd26130cf92707c02f5152e3349e135525d44b8f45ea0f78cbd228a4b246"
+    "skill_md_sha256": "e21ba72e1027459544a9dc81bd2084fa76494472c4804ca99c0bbac707157fd6"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r1",
+  "reviewer": "audit-sync-render-20260720",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -30,9 +30,10 @@
       "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260713T090000-r3/verdict.json",
       "test_refs": [
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260713T090000-r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260713T090000-r3/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260713T090000-r3/transcript.jsonl",
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_three_way_apply_second_pass_zero_and_tombstone"
       ],
-      "observed": "Regenerated the live-trial verdict from the real 253-line transcript.jsonl (actual_model=[claude-opus-4-6], transcript_sha256=ef436424...) via live-trial-verdict.py: VERDICT PASS (launch=PASS completion=PASS goal_fit=PASS nudge=0 gate=0, downgrade_reason=null, tier=live, transcript_layer=jsonl). The transcript for scenario sync-positive-two-pass-convergence contains 15 'changes=0' and 14 'convergence' observations (imports/exports each 19, '2回目' x8), showing the second sync of the same state reports imports changes=0 and exports changes=0 with stable IDs/snapshots. Recorded out/status.json is {\"status\":\"PASS\"}."
+      "observed": "Recorded live trial remains PASS for two-pass convergence. The 2026-07-20 independent audit and current integration test additionally confirmed the second apply reports changes=0/write_count=0, leaves the snapshot digest unchanged, and a following dry-run has imports/exports/pending_retry all empty."
     },
     "OUT2": {
       "status": "PASS",
@@ -52,9 +53,10 @@
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_gh_bridge_helpers_and_operations",
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_validate_graph_schema_and_main",
-        "independent: python3 scripts/gh-bridge.py --op issue-close --dry-run and validate-graph-schema tombstoned status support"
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_gh_bridge_not_found_tombstone_and_project_field_value_types",
+        "independent: live not-found deletion with Project linkage probe"
       ],
-      "observed": "gh-bridge exposes no delete op; issue-close is a status transition (dry-run preview op=issue-close, mutation_suppressed=true, no node removal), and validate-graph-schema.py accepts 'tombstoned'/'closed' as node statuses (status vocabulary draft/active/blocked/done/closed/tombstoned). execution-tracker-contract.md maps tombstoned to 'bd close --reason=tombstoned' and explicitly forbids destructive delete ops, so close/delete is stored as a tombstone/status transition (open->closed) preserving graph_node_id rather than physical deletion. pytest test_gh_bridge_helpers_and_operations covers issue-close."
+      "observed": "Close and fixture/live not-found delete all preserve graph_node_id and artifact bytes while transitioning to closed/tombstoned. A deleted Issue with Project linkages planned zero Project mutations, so tombstone convergence is not blocked by a null content ID."
     },
     "OUT4": {
       "status": "PASS",
@@ -62,9 +64,9 @@
       "evidence_kind": "hybrid",
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_gh_bridge_helpers_and_operations",
-        "independent: python3 scripts/gh-bridge.py --op issue-create/--op issue-close --dry-run"
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_manual_conflict_confirmation_and_dry_run_write_zero"
       ],
-      "observed": "Ran gh-bridge.py issue-create --dry-run and issue-close --dry-run: both returned mutation_suppressed=true with a preview payload only and exit=0, performing zero external writes (the dry-run branch short-circuits before any gh invocation for every op in MUTATIONS = issue-create/issue-update/issue-close/project-item-add/project-item-edit). pytest test_gh_bridge_helpers_and_operations asserts mutation_suppressed is True on the dry-run create."
+      "observed": "Independent audit confirmed sync --dry-run defaults to stdout only and changes neither graph, remote fixture, snapshot nor eval-log. Bridge mutation previews short-circuit before gh/bd writes and report write_count=0."
     },
     "OUT5": {
       "status": "PASS",
@@ -82,9 +84,9 @@
       "evidence_kind": "hybrid",
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_gh_bridge_helpers_and_operations",
-        "independent: gh-bridge project-item-find pagination/dedup and project-resolve unique-alias contract"
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_project_unset_field_and_stale_item_identity_fail_safe"
       ],
-      "observed": "pytest test_gh_bridge_helpers_and_operations drives project-item-find across a 2-page paginated response and asserts pages==2 with exactly one item matched for the content id, so a repeat sync of the same content resolves the existing stable item_id instead of adding a duplicate. project-resolve additionally fails closed unless the default project resolves exactly once and rejects non-unique field aliases, keeping one linked item per alias across multiple Project targets."
+      "observed": "Pagination/dedup tests and independent probes confirmed one item per alias. A stale durable item ID yields manual conflict and no add; a null durable ID with one remote item adopts that ID through C02 and uses the same ID for field update, preventing duplicate or permanent retry."
     },
     "OUT7": {
       "status": "PASS",
@@ -93,9 +95,9 @@
       "test_refs": [
         "plugins/dev-graph/references/github-lifecycle-contract.md",
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_gh_bridge_helpers_and_operations",
-        "plugins/dev-graph/skills/run-dev-graph-sync/prompts/R2-plan.md"
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_project_unset_field_and_stale_item_identity_fail_safe"
       ],
-      "observed": "github-lifecycle-contract.md defines the 3-way rule: Project field value updatedAt is the conflict hint, deletion/missing/option-rename resolve against the last-synced snapshot as canonical base, Status/done stays local->Project one-way, and only permitted fields go 3-way. Independent review of R2-plan and SKILL Protocol confirms both-sides changed => manual conflict with 0 auto-overwrite, one-side change => mapped sync with an updated snapshot. project-resolve (pytest-covered) supplies the unique field/option mapping the 3-way diff keys against."
+      "observed": "Current 3-way tests confirm both-sides change becomes manual conflict and one-side change updates the snapshot. A defined but unset Project field is distinguished from a removed/renamed definition and remains writable; all mapping directions retain the local-only Status authority rule."
     },
     "OUT8": {
       "status": "PASS",
@@ -103,9 +105,10 @@
       "evidence_kind": "hybrid",
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_gh_bridge_helpers_and_operations",
-        "independent: gh-bridge.retry_classification enumerated per op"
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_project_item_is_stable_and_alias_failure_is_pending_retry",
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_gh_bridge_not_found_tombstone_and_project_field_value_types"
       ],
-      "observed": "gh-bridge.retry_classification returns safe_read for reads (issue-fetch/lifecycle-facts/project-resolve/project-item-find), verify_before_retry for issue-create/project-item-add, and idempotent_with_same_arguments for issue-update/issue-close/project-item-edit. Combined with SKILL Protocol step 4 (partial Project failure does not roll back local promotion; only the uncompleted alias write becomes pending_retry), permission/rate-limit/field-deletion/option-rename/pagination/mid-failure fixtures keep the local task promotion and re-run only the pending_retry write. pytest test_gh_bridge_helpers_and_operations exercises these ops."
+      "observed": "Rate-limit failure preserved local promotion and set only the alias pending_retry; after the cause disappeared a follow-up apply cleared last_error and returned the linkage to synced. Bridge probes covered single_select/text/number/date/iteration write payloads and retry classification."
     },
     "OUT9": {
       "status": "PASS",
@@ -114,9 +117,10 @@
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_reconcile_lifecycle_modes",
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_worktree_lease_lifecycle",
-        "plugins/dev-graph/tests/test_semantic_c26_completion.py::test_c26_local_first_transaction_calls_c27_before_beads_and_is_idempotent"
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_lifecycle_all_policy_waits_for_every_linked_pr",
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_lifecycle_any_policy_does_not_fabricate_requested_pr_linkage"
       ],
-      "observed": "pytest test_reconcile_lifecycle_modes: a MERGED default-branch PR yields policy_decision 'complete' in check mode and 'writer_pending' when applied (node stays active until the durable writer runs), while a CLOSED unmerged PR returns policy_decision 'pending' with exit=1 and is never marked done. test_worktree_lease_lifecycle shows claim->heartbeat->park (pending_review) and system-release only after a completion event, so feature/dirty worktrees stay as pending events and durable task-spec/graph updates occur only on a clean default worktree. All 23 sync-related runtime/semantic tests passed."
+      "observed": "Lifecycle tests confirm all waits for every linked PR, any accepts at least one eligible PR, and the writer never fabricates the requested unmerged PR as merged. Completion policy is recorded as linked_pr_merged_all|any; closed-unmerged and unsafe worktrees remain pending, with exact marker or Beads gh:pr gate required."
     }
   }
 }

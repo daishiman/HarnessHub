@@ -1,0 +1,33 @@
+{
+  "canonical_digest": "sha256:c7e0d7e68a86d10ef5b70c55a4f881b174f3b503b5bc2d6285bcef4ebfe58d9c",
+  "feature_package_id": "feature-package/feat-build-pipeline-board",
+  "files": {
+    "feature-package.json": "a52e1bf7ee65402aca4296000226349b6e6bccf7f3c31b45a8ec09a8a2a134ce",
+    "system-build-handoff.json": "cf72dbc16ef70f1fb8895c517a9a467478073faef7b1feb4d93b46ec859c9b23",
+    "task-graph.json": "3ca73827426522a3ec6efec63cb7349104cb039a91809d3e3bde589375d8e19e",
+    "task-specs/phase-01-requirements.md": "1bf47baf6ff5724a759e43bbf77da9ac28f42b81e8f35a294bbfb24c873d069f",
+    "task-specs/phase-02-architecture.md": "0aa2c08fc3891fbdb0921fedf45d2426039139f5b3f2118abe256085584d7d18",
+    "task-specs/phase-03-design-review.md": "6563f91e4101e00555510165386aeb69b8e899cd9af1951a3edb438144f03c91",
+    "task-specs/phase-04-test-design.md": "a18b76f0b276d078c435d2de7e00cf088f40edcac5e24d9cd2adde5af584f854",
+    "task-specs/phase-05-implementation.md": "9dc499022ce6ca57846211cc85c3e686c757cae5a2d0fdd0dbdd0fdfdee2bc9d",
+    "task-specs/phase-06-test-run.md": "e97aa6b3f14376fb06b6092ffefdf224925d4ffe7d2a61017d95d9a2f8fd25aa",
+    "task-specs/phase-07-acceptance.md": "da4c0f4b81c78018081ac996031a1f61414669d05bbddbc338cb1372144bb927",
+    "task-specs/phase-08-refactoring-migration.md": "68a75854475d16adcff97f2fa31b37755f0af926dee1847356e632df3a389e6c",
+    "task-specs/phase-09-quality-assurance.md": "2253c000f365cd7005fef32ad6f5cfbc40d5064d91cbebd0bd8ca1618e907c02",
+    "task-specs/phase-10-final-review.md": "4b96f62709ee9acc009d46885d2bdb0885f0a189320b61fcdf2bf51fd6f387fa",
+    "task-specs/phase-11-evidence.md": "5c5a5078cfea381b1e8ee2c1f2f28520bb3367908bd1bbad8aaa69606ce62e87",
+    "task-specs/phase-12-documentation-operations.md": "a2b185299ea0f01e9c5734f53fe683f29037503ff5cfeb56b13cf64c617d7068",
+    "task-specs/phase-13-release-deploy.md": "cbf69c8955a9c366be5dc893c31d31eaab2dbd4078d1f5e2ab21e137ddec5ccd",
+    "workstream-inventory.json": "a8ea02d252884c21c36df963dbd31c59e01fec35d3ccff16e676c6180c6f2d71"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "cf72dbc16ef70f1fb8895c517a9a467478073faef7b1feb4d93b46ec859c9b23",
+    "source_canonical_digest": "sha256:e55ceadc5c8e512d014dd901f94b4a3716f9381c50d7dee05d9a011f6c33197e"
+  },
+  "parent_feature": "feat-build-pipeline-board",
+  "schema_version": "1.0.0"
+}

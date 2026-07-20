@@ -1,0 +1,33 @@
+{
+  "canonical_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+  "feature_package_id": "feature-package/feat-workspace-governance",
+  "files": {
+    "feature-package.json": "d158329eb38a261df1d37ffe31b72547ee69b41a2dc5229f15f22bd1364e22db",
+    "system-build-handoff.json": "905f2317b12f519040c7ef80a786f88ab6d7497c61dd11b9f0267e665cdb0807",
+    "task-graph.json": "89bb545287491498b221158f6a39a8037f6f7c83799e682889390aa2df7c4bbc",
+    "task-specs/phase-01-requirements.md": "d70f7216ae3ae934ff7feac917fcca87d12557ce64b745c59585884adf522cd0",
+    "task-specs/phase-02-architecture.md": "5fce587c8606ba586a5f7b2c167a1937ad248ace7f69c3fd58ab6edeb2b96aa3",
+    "task-specs/phase-03-design-review.md": "fed5d5d20ef0fdf292fdcc79b642e14aab0663fc007ec57dc2643e8f409908ef",
+    "task-specs/phase-04-test-design.md": "8b75a707af503a08a9a2e145b5c7931adb0c8d91355bc2564b7f5fd51fd0e129",
+    "task-specs/phase-05-implementation.md": "6045f20c23bf11264f89afb47e57edb2f3417087b7ed23dcaf35e15a6c4862af",
+    "task-specs/phase-06-test-run.md": "c4cfbe596fc7ee3577a53f55ab7453633d947e0d93cef510d79c240e2c79bed0",
+    "task-specs/phase-07-acceptance.md": "ea895c49c23d2bb3f4de4c1ab64dd7b7607ba13ff3ba858815db285dae9b00ca",
+    "task-specs/phase-08-refactoring-migration.md": "053f815a107290eadd69dba6270b445e1098e21668c790e75755b4a604fda831",
+    "task-specs/phase-09-quality-assurance.md": "456d47a009d3b3660c8d7effe04701b197021e0a4ec69d95d5b562a35dfaf406",
+    "task-specs/phase-10-final-review.md": "c5b0f7fb767e8a3e11e06f5f98a95c3c5330ec64711b4ad03943516e953c0140",
+    "task-specs/phase-11-evidence.md": "bb0588afcb81e5b358a2333807b44c0f897d53537e61ea333ce7cde336011405",
+    "task-specs/phase-12-documentation-operations.md": "3b2f0d8320f3a10a96d64a776225db24c5b5ceb8553a9f523a02929297434dd6",
+    "task-specs/phase-13-release-deploy.md": "c2b1689185fa8fec30032249d0eed748be77842025ab19621532e3abb00f3e2f",
+    "workstream-inventory.json": "1263ed28aa26c3bae6a4b56c772fdd2207b51320e4b79fb7e0b43457ed0d8036"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "905f2317b12f519040c7ef80a786f88ab6d7497c61dd11b9f0267e665cdb0807",
+    "source_canonical_digest": "sha256:470eedc027a7dcb8d0d58af31cee006d603e44f701c364040095e8bd0d3954c5"
+  },
+  "parent_feature": "feat-workspace-governance",
+  "schema_version": "1.0.0"
+}

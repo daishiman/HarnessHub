@@ -37,6 +37,8 @@ TASK_PATHS = [
 BASE_DIGEST_FILES = ["feature-package.json", "workstream-inventory.json", "task-graph.json", *TASK_PATHS]
 HANDOFF_PATH = "system-build-handoff.json"
 PLACEHOLDER = re.compile(r"\b(?:TODO|TBD)\b|__PLACEHOLDER__|<[^>]+>", re.I)
+STAGING_RUNTIME_REF = re.compile(r"(?:^|[^A-Za-z0-9_.-])\.dev-graph/staging(?:/|\b)")
+P01_ENTRY_GATE_MARKER = "parent_feature.depends_on all done|closed"
 SCHEMAS = HERE.parent / "schemas"
 TASK_SPEC_HEADING = re.compile(r"^##[ \t]+(.+?)[ \t]*#*[ \t]*$", re.MULTILINE)
 REQUIRED_TASK_SPEC_SECTIONS = (
@@ -287,6 +289,17 @@ def validate(staging: Path, repository_id: str) -> dict:
     if node_phases != PHASES: fail("graph-phase-exact-set", "task-graph.json", repr(node_phases))
     if inventory.get("feature_package_id") != package_id or inventory.get("parent_feature") != parent:
         fail("inventory-package-mismatch", "workstream-inventory.json", "common package/parent required")
+    expected_p01_entry_gate = {
+        "selector": "parent_feature.depends_on",
+        "operator": "all",
+        "required_statuses": ["done", "closed"],
+    }
+    if inventory.get("p01_entry_gate") != expected_p01_entry_gate:
+        fail(
+            "p01-entry-gate",
+            "workstream-inventory.json#p01_entry_gate",
+            "canonical parent feature dependencies must all be done|closed",
+        )
     handoff_identity = handoff.get("identity") if isinstance(handoff.get("identity"), dict) else {}
     expected_handoff_identity = {
         "repository_id": repository_id,
@@ -297,6 +310,12 @@ def validate(staging: Path, repository_id: str) -> dict:
     }
     if handoff_identity != expected_handoff_identity:
         fail("handoff-identity", HANDOFF_PATH, "repository/feature/package/source digest identity mismatch")
+    if handoff.get("p01_entry_gate") != expected_p01_entry_gate:
+        fail(
+            "p01-entry-gate",
+            f"{HANDOFF_PATH}#p01_entry_gate",
+            "handoff must preserve the inventory P01 entry gate",
+        )
     ids = [str(t.get("id", "")) for t in tasks]
     node_ids = [str(n.get("id", n.get("graph_node_id", ""))) for n in nodes]
     if len(set(ids)) != 13 or any(not x for x in ids): fail("task-id-set", "workstream-inventory.json", "13 unique ids required")
@@ -329,6 +348,19 @@ def validate(staging: Path, repository_id: str) -> dict:
             text = p.read_text(encoding="utf-8", errors="replace")
             if not text.strip(): fail("empty-task-spec", rel, "task spec is empty")
             if PLACEHOLDER.search(text): fail("placeholder", rel, "unresolved placeholder remains")
+            if STAGING_RUNTIME_REF.search(text):
+                fail(
+                    "staging-runtime-reference",
+                    rel,
+                    "task specs must use package-relative or canonical published paths; "
+                    ".dev-graph/staging is removed by atomic promotion",
+                )
+            if rel == TASK_PATHS[0] and P01_ENTRY_GATE_MARKER not in text:
+                fail(
+                    "p01-entry-gate",
+                    rel,
+                    f"P01 must declare machine-verifiable gate: {P01_ENTRY_GATE_MARKER}",
+                )
             for code, section in task_spec_violations(text):
                 fail(code, rel, section)
     for i, task in enumerate(tasks):
@@ -340,11 +372,13 @@ def validate(staging: Path, repository_id: str) -> dict:
         file_path = registration.get("file_path") if isinstance(registration, dict) else None
         if (
             not isinstance(file_path, str)
-            or re.fullmatch(r"tasks/[^/]+\.md", file_path) is None
+            or re.fullmatch(r"tasks/[A-Za-z0-9._-]+/[^/]+\.md", file_path) is None
             or ".." in Path(file_path).parts
+            or not file_path.startswith(f"tasks/{parent}/")
         ):
             fail("registration-file-path", f"tasks[{i}].graph_node_registration.file_path",
-                 "single-segment tasks/<node>.md repository-relative path required")
+                 "tasks/<parent_feature>/<node>.md repository-relative path required "
+                 "(feature 単位 namespace で並列 package 生成の衝突を防ぐ)")
     for i, node in enumerate(nodes):
         for field in ("phase_ref", "feature_package_id", "parent_feature", "depends_on"):
             if field not in node:

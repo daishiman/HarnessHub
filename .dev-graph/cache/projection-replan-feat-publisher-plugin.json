@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+  "feature": {
+    "graph_node_id": "feat-publisher-plugin",
+    "title": "Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)",
+    "description": "作者が Claude Code / Codex から自己完結で publish できる操作面 (slash command + skill + スクリプト) を TypeScript で提供し、既存 Python 資産を挙動同値で移植する\n\n作者環境 (macOS/Windows) から初回 publish が 15 分以内 (O4/H8) に完了する状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P01",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P01",
+      "title": "要件ベースライン確定 — TypeScript統一Publisher・Device Flow認証・検査ロジック共有・wranglerスクリプト実行・初回publish15分以内",
+      "description": "要件ベースライン確定 — TypeScript統一Publisher・Device Flow認証・検査ロジック共有・wranglerスクリプト実行・初回publish15分以内 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P02",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P02",
+      "title": "アーキテクチャ設計 — apps/publisher (TS/Node/pnpm) 構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の決定",
+      "description": "アーキテクチャ設計 — apps/publisher (TS/Node/pnpm) 構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の決定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P03",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P03",
+      "title": "独立設計レビュー — apps/publisher構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の妥当性確認",
+      "description": "独立設計レビュー — apps/publisher構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の妥当性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P04",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P04",
+      "title": "テストファースト設計 — quality_constraints 8件・acceptance 3件に対応する挙動同値性テスト・実機E2Eタイムボックス計測ケースの設計",
+      "description": "テストファースト設計 — quality_constraints 8件・acceptance 3件に対応する挙動同値性テスト・実機E2Eタイムボックス計測ケースの設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P05",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P05",
+      "title": "実装 — apps/publisher (CLI + Claude Code/Codex plugin)・Device Flow認証クライアント・wrangler実行ラッパーの実装",
+      "description": "実装 — apps/publisher (CLI + Claude Code/Codex plugin)・Device Flow認証クライアント・wrangler実行ラッパーの実装 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P06",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P06",
+      "title": "テスト実行 — 挙動同値性テスト・Device Flow単体テスト・macOS/Windows実機E2Eタイムボックス計測の実行",
+      "description": "テスト実行 — 挙動同値性テスト・Device Flow単体テスト・macOS/Windows実機E2Eタイムボックス計測の実行 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P07",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P07",
+      "title": "受入 — macOS/Windows実機E2E成功・pre-checkとHub検査の判定同値・初回publish15分以内の受入判定",
+      "description": "受入 — macOS/Windows実機E2E成功・pre-checkとHub検査の判定同値・初回publish15分以内の受入判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P08",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P08",
+      "title": "リファクタリング/マイグレーション — Python資産参照コメントの整理とpackages/inspection消費コードのクリーンアップ",
+      "description": "リファクタリング/マイグレーション — Python資産参照コメントの整理とpackages/inspection消費コードのクリーンアップ (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P09",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P09",
+      "title": "品質・セキュリティ・運用保証 — Device Flow数値契約遵守・OS資格情報域保存・scope最小権限・secret非保存の確認",
+      "description": "品質・セキュリティ・運用保証 — Device Flow数値契約遵守・OS資格情報域保存・scope最小権限・secret非保存の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P10",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P10",
+      "title": "独立最終レビュー — quality_constraints 8件・acceptance 3件の最終確認",
+      "description": "独立最終レビュー — quality_constraints 8件・acceptance 3件の最終確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P11",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P11",
+      "title": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順の確立",
+      "description": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順の確立 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P12",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P12",
+      "title": "文書化・runbook・引き継ぎ — 作者向けpublish手順・token失効導線・障害時対応手順の確立",
+      "description": "文書化・runbook・引き継ぎ — 作者向けpublish手順・token失効導線・障害時対応手順の確立 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P13",
+      "parent_feature": "feat-publisher-plugin",
+      "phase_ref": "P13",
+      "title": "リリース/デプロイ — Claude Code/Codex marketplaceへのPublisher plugin配布登録依頼とStage1完了条件判定",
+      "description": "リリース/デプロイ — Claude Code/Codex marketplaceへのPublisher plugin配布登録依頼とStage1完了条件判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P12"
+      ]
+    }
+  ]
+}

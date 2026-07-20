@@ -1,0 +1,1765 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "current-task-spec-projection-receipt",
+  "graph_revision": 40,
+  "projected_count": 195,
+  "task_ids_unique": 195,
+  "status": "PASS",
+  "rows": [
+    {
+      "task_id": "SYS-AUTH-TENANCY-P01",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p01.md",
+      "before_sha256": "sha256:7fb692c7f4fcb28161e2093ee2b658b7870f49de7e008dbfd04abb085f3483d3",
+      "after_sha256": "sha256:364e2fd41fc1aae5daeb7294ee03993dd4bfcb282a24dff28eb268ea4dba93bf",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:8900acbaaa16caa37beb48f956ceb7f563af8c71a856ba868684571005c28339",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P02",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p02.md",
+      "before_sha256": "sha256:cf58cfb03cf8629130ef76e130bc25e8ea273497450f31393375d2da55d3e68c",
+      "after_sha256": "sha256:b57f137636ec863736e0a30605c4a162a7211cf94b15a0a04f5028ca16526d97",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:b19d64609901085651d2a287ae3a692b058aa92d7e1d723f467b77b98785136e",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P03",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p03.md",
+      "before_sha256": "sha256:983f8ce142c0570e86d7e17f35d7f9e8ea36d8689c31209a58ab154b8cd9a4e0",
+      "after_sha256": "sha256:da775a93ae8677b1df71e8e76eb5bca08edad2ee109a65cdbbde286f6a565da9",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:c5d140bf7c3e02133f0588ebf7eb25e5bd2721b1634075fbe38f798fab74aee0",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P04",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p04.md",
+      "before_sha256": "sha256:578d3b2efb9849a00ee100ba77de8f240585b7e76c59842dc122821529364979",
+      "after_sha256": "sha256:030d93e4e1223f309f42633a96c6650847221ffee351f68634df9af1578fdc9f",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:dcf0693896eeb54dd81e39db923a9cced28a63da6e11ef6ab5ce415e4f503d43",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P05",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p05.md",
+      "before_sha256": "sha256:d970b4ee2ec35e5da73da420a42a5c670fd57064c3c20a206c5ee1611b70229f",
+      "after_sha256": "sha256:f70fcb351bf0d8827ad93d3109c92107d1bf74d9ba6def54fb3c3a2cc1e7ea39",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:9e1fc21ac2ef64236e423cea72d46c53f020809a475c14a28920275f7758324c",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P06",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p06.md",
+      "before_sha256": "sha256:73d77482b8b78ccd7a4e7e0d78156f61db2949c6271430a00149a8ad2a31bf7e",
+      "after_sha256": "sha256:777a17abb0d61aee462a9997a21bc3ba17c638a399de2a66f44432bbe706762a",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:30a1dd3f4f04d4b1e25e56ca0c34d8e9c530933d9a5bf8378ceb8131f82f57c0",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P07",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p07.md",
+      "before_sha256": "sha256:fa8157a0c717e9999acd7c92352c3cfeadb87f3d4a5d1261f84c09b5a8308e7e",
+      "after_sha256": "sha256:81b3483e58eecfe384baa4529462ab4ab525f42cb474cbb5d5596b44bd76214d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:7f1eb503e524cf92bb059e7af9acc6043066c0aa5aef19291d01f6768d3445a5",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P08",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p08.md",
+      "before_sha256": "sha256:8c9ab8cb5ed2898c858b555f11af30012d522156dd14a897bc1b5edc90d360d4",
+      "after_sha256": "sha256:5fee5c0d7a9d450620ed51e5fd80164e5c070deed19849997ce7363750abb5a0",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:981575b3bc9df1a04a621a6fe04ba823b890d6d310fb839f4c79d98f2a4e88a2",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P09",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p09.md",
+      "before_sha256": "sha256:d15a5b1d8a0f3e24cdb0b2f09599867c43438c5cb2824ee577e3049ff852912f",
+      "after_sha256": "sha256:4e835b990cca555427b63d3d76206df5444025778f46b9fcac1267cf5052deb0",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:4a373649107a1d6d5e1c89a1fb2da11d225a71bb998cf80fcf7db5152b34bb7b",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P10",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p10.md",
+      "before_sha256": "sha256:d5e97d872c7d862417f86da90f3599d8e98d108a84b284c49692d9179c46280c",
+      "after_sha256": "sha256:906ff87c5b97a600e2367cfe3bde82e2eea0e0bfafbf92dde50bcc165e4b8c9c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:584eecdb0cbdcc8db4d83433f6259a45ef86720a6605ec2a6b952c5f037c7224",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P11",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
+      "before_sha256": "sha256:f0c2e60098b40a73e3830b15cc26273614faaf4ca69541ae02b2d2975af405b0",
+      "after_sha256": "sha256:0565e1f66aa489151100cb46149191db03b9f102d7119bf9336caf17e46fa456",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:9c4b7f00457809c164fc58c83bc9210700b5abbab5b3eb0ad65efefeaf1865b1",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P12",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p12.md",
+      "before_sha256": "sha256:7d1f4e02c9830ea53e89f8dd10f87fccd0d74f7d7b0d17067f8646cca7d91216",
+      "after_sha256": "sha256:3e0c1d06c5a9a10651e1f7fc7611077e5f4ae0796570ad58a851ac19dacd421f",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:d003d14803530375540f881ccd187233bcb83ac6efec529c0be5d74048a02858",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-AUTH-TENANCY-P13",
+      "destination": "tasks/feat-auth-tenancy/sys-auth-tenancy-p13.md",
+      "before_sha256": "sha256:bb497ce6443b332f9d60eca6f49347e4c8976ac3a90fa9c04f620b49f19baaa7",
+      "after_sha256": "sha256:728482159a70ddacce0d5314d0797efee765175999868d4bf2e38a93a5ffb6b3",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:86e6749a1fabc4dd9fa166d347e51392d2c81327fc29d6013a3fa60a7fdb16ff",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P01",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p01.md",
+      "before_sha256": "sha256:6cd7751fc3cfe430df301f5b1688971ee792dc64d8e38f5654c768a73b3adc95",
+      "after_sha256": "sha256:706a89591624c1c7c1dd797c92bee8a43f82c5ffe351ea8984f57556e134b1a9",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:b2a75e7c0b4d23a42a817bb7626b0d2abe203e5c9455c691d4e6198a3c09bc0f",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P02",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p02.md",
+      "before_sha256": "sha256:0348116291f0c1d65835d9c44e178f4086dde7704be7163ed5825de8da8a44bb",
+      "after_sha256": "sha256:02dd35bf4b99fb486ae3c4461d6ce066afc56bf35d4f4c56ddb0385012545684",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:c7bac9d06dc2d36ab72159cdade1e780bc2c6a7fac45bbbb9e15b963cccadf6d",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P03",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p03.md",
+      "before_sha256": "sha256:516b8b08d6bf9b8c1de9246f76ea1ec9af04f5ba2504d06bf0dccc6ea9f28624",
+      "after_sha256": "sha256:ca0d595e69d8508a1de5506fa7fc72689caa0847e663856d642fe769836ecb8a",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:c16e76379ae04e1f627d7c799929539e8bdd92f93711c1b76ab8d477b545a0d5",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P04",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p04.md",
+      "before_sha256": "sha256:a7cb3dbd18fe3d89f0c3481c22be36fa141933ccdbc956812f361a7e496beb4a",
+      "after_sha256": "sha256:bca959f360b91963c89e8a317107d8d5ca1b52da924adbed552a8d511cb65e62",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:fa6c4bf7afbf06e49ab166d1c3efa72ac86b39ca3dd05c4bbfea95bde2d9521c",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P05",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p05.md",
+      "before_sha256": "sha256:ad5261aa56f511c4284c34e0feaf17cf7b1e567f8ba3244425afb75b4acbdd39",
+      "after_sha256": "sha256:4db9d45a08aa156024304fc54bef2b0297e4a3b99d4e780f68d161db00a747f8",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:e32939208599c52f6149d75d336b2b6006d9eb61fc46835a31a704cb22c99123",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P06",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p06.md",
+      "before_sha256": "sha256:cc674b6130bf56e1fefbbec750f5b3f670b8d172a0fe5a39ef35ece5c4d00c5c",
+      "after_sha256": "sha256:b3a6761681e7789cc92255c35cc7da4195ddb7a7f8873cb0bbee64560bdd7099",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:98c5e5671a291c6029806ea6f966f36ea992f798da873f63a55956b976c3a060",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P07",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p07.md",
+      "before_sha256": "sha256:51d4bf1d8e0e6825720666c04d413293be67259f1f3795d02ebf8d812f6a80df",
+      "after_sha256": "sha256:98a63636f42d3b0057260fca59517df5af6974528d4fbfa6352149a71783e8da",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:4331c2cae1f1f2fc4075e622fa797643bbe1fa194ef8d10c9645a7e99106e40a",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P08",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p08.md",
+      "before_sha256": "sha256:6ad2c635c3886a6c5d15411f2e000683401a9f2cb3d1434aea97014e1c006662",
+      "after_sha256": "sha256:787865a7f8e98a7e2803a6892d98f5dbc0b408d4f74ba44108853d80c9c60e2e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:9431212a588f1bc52434ee66c0c2803e9ff8b13879389f5f31020be71d7e6ee6",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P09",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p09.md",
+      "before_sha256": "sha256:4b71a1e089ec9bf86da761ce45e9366024aef996687fabec6674c36ccf7e7219",
+      "after_sha256": "sha256:eb3644dc876c3e3cc447827e6485e48c40d91d9f191a69f24a2ce706d6179ebc",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:8b81c1fd749f7473f0758c0533b582f571c0b45a4fde6099f1d0b1cc8bb9647a",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P10",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p10.md",
+      "before_sha256": "sha256:acd05c032eda10c704f7032d451b5313f1a18561a20acbae629d92f18bb32c36",
+      "after_sha256": "sha256:6c890dd181eeb23d779b772528f731a9466b6f403fb300d6f2e86a9670b2c5cc",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:0bb6f9b385bfadcdba9c6b735f6bf5264e4eca97d3e9fd8fba4d8842ac1d0832",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P11",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p11.md",
+      "before_sha256": "sha256:ee21a866343c3c5e92f2a301628e23fd6af731b5ddd2bf25826a1349254f1ccb",
+      "after_sha256": "sha256:9515fb22a9f8f8f908e85f145b3905df7c4a6e595230c4f39b9ee4cc82b3ab00",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:9e6c1a5e6082f2a1bd92466c600c78c4ac05926e484a08d2da35c0ab245e1069",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P12",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p12.md",
+      "before_sha256": "sha256:4e46b214d68793afe48f03bc519104661809b2a7b56b493ebad69eb5f39ac7ad",
+      "after_sha256": "sha256:4f939d2fdc4966adb625ff03a635492ec6484659398a7b6126c1a2451179f782",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:74653c8ae7878f0f8f687778dbd31ae8e464fbbda78c377ab3f7f1bbbfb53d9a",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-BUILD-PIPELINE-BOARD-P13",
+      "destination": "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p13.md",
+      "before_sha256": "sha256:ab135d295795e8ed5994d2aaf6dba91068c1ae17f6c1026d3d5ba03f600020c6",
+      "after_sha256": "sha256:64d92c3beed44491cb697382687ff4b5e1e91a0801a1c8b7baaef01f3125390c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:96f8a15093ce84fcf6ed2a5ec06ca77c6f665a375534c94747089382a0b31d7f",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P01",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p01.md",
+      "before_sha256": "sha256:31838850b6be353b664acf201cdd419428d5abf76304c87adce692bfcaac481e",
+      "after_sha256": "sha256:07290acc2a05164fec786114395c38a1523decb301e8d8a40a1f95157910e6e8",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:d5b34fc3450858f91760cb2f8595c19da6b1ff060eb443db174de42dd7115594",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P02",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p02.md",
+      "before_sha256": "sha256:e5c50cea632bd8f248945b36788086c7ee20f0a0ef973ffa2aac821b659f88d5",
+      "after_sha256": "sha256:0a8abd257ae13ab1f2951f07ae88cf69841be3726e25bcb96794bb0057ae1ba9",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:daa18ac1f4c4ab776905cabf8670ae8901f22001c00013009db06814d54a8511",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P03",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p03.md",
+      "before_sha256": "sha256:c1bc53c8a8fb5bc002804bce7d45a7a64afaafa17b507f70d2b4539f48522d85",
+      "after_sha256": "sha256:6fb8bf6e9d4d3adb02dcf226c8d0d4c010c26cacd8e2aebfbd3676e17e11bccc",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:a0aff4ac88c11cdf3e82d49cbe033484ece7f990f2ab1ae47dfd115b9519b8a2",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P04",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p04.md",
+      "before_sha256": "sha256:505f3e0ba1d84088fb9dcd70301914dd240c1970ef43039e8c479a64616e9069",
+      "after_sha256": "sha256:8ca97e4b7f0493e2094ceddf2ba93a0e52b894b220410cc128d27c700bd1c985",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:ebea11341d061cc1494a82797ed7b611cda363d8a68f2fc01c3486f5a87528ba",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P05",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p05.md",
+      "before_sha256": "sha256:e41952569e791300ed1dab282cb5e6af692fc0b1876de08e1490c5754631f81e",
+      "after_sha256": "sha256:0cd91934965486a5751fcaff7e8011f70847df0093dfbad96419f15c67e3a12d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:35cc0cd96898d993637bb7bfd6b0781a5646cdeaf84cb9a990b04eab12e12e51",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P06",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p06.md",
+      "before_sha256": "sha256:9a9ae33ee22e49de15fcc68d3e8c8ebe3af5224c5bc5053a3eb29e0cdee44c9d",
+      "after_sha256": "sha256:c2885d473b11bb1a927af78bc06690e4d8009d09736d6a210b497b97c15dbc16",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:97822f122f46ef60e4502402ee01b0b62fb59881bee1096d94b4e677bf61ceee",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P07",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p07.md",
+      "before_sha256": "sha256:5e71e8768b2609b27b7a74e78926c542765a6148ad290881b477745854b82eae",
+      "after_sha256": "sha256:750b8a44430b6f8425ab3da927b45a701bb51a4bf22ce3402c39d3de506f279d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:9a5f5d7e2004f7a1ffc63e8223e1d5bd39bc80a9ad091e11cb7c252d3f49fe06",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P08",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p08.md",
+      "before_sha256": "sha256:718cce2e53908267297968b14c3d2561e5db60c695c054cbbeac632adec4f7dc",
+      "after_sha256": "sha256:c215f585805e3d646f38a0640871d43dfe19d3d023dd43dac73cd917edde514a",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:ae06e0c3b8d05309bde98e57a7a9d8250317db57e2250c27478ffac6e44ed8cf",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P09",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p09.md",
+      "before_sha256": "sha256:44e5f257515aa13c9857d4b7c72e6555aaf3c13ceeba3a704d407863ee6a0d3c",
+      "after_sha256": "sha256:557148788f74896092225fc9360c2a152d01c05285ebf19fa31450b0029c1e31",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:5f79dcaac8030f701565938e3482435c9bb94983e525411de8c258991e4d7da2",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P10",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p10.md",
+      "before_sha256": "sha256:a540c0f16f45b7265b776420657a8fc175f3ae7d00115a68deba9df8d2313f6d",
+      "after_sha256": "sha256:8ed1108a239526566c0a68723c251aa83eb6dee2682d3d6e26e4eb4eba6580ec",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:56ca7e4ba2a9fcfb4c15664a7f4d735c73746d1eefff982f6f90853846acf368",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P11",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p11.md",
+      "before_sha256": "sha256:6fb66f780d0dca38eb0382ddf25448604ce55e9df637f1cdf285706f0afe85da",
+      "after_sha256": "sha256:773a7f8b2981da2c0af4f6a255e0ab6bf58e5d9ef8deb1a20a6d0b5cc46e6621",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:e6525007bd47b4b4d54fecd8b7a2238f309fa64c3573bea3532ccda74d3ca386",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P12",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p12.md",
+      "before_sha256": "sha256:3a32a7240afc7cc0560c54dfcff48f6a4ab6ad60a989ae893053967a084fcf54",
+      "after_sha256": "sha256:a2ba25b238ee662bb6d09c1d790ed001130d0f9fdee5e4c9b7b9c23411250f8f",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:c4b98176e2d5c5a365d4eb0ba2f6da759a614365ff48e7196b9de02851ae89fd",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOCS-CMS-P13",
+      "destination": "tasks/feat-docs-cms/sys-docs-cms-p13.md",
+      "before_sha256": "sha256:4c442927bf1690da9583a6336078613bda0c6c5d5765f06877ed8e7fe10198f8",
+      "after_sha256": "sha256:73f3b71996a1dc6a1f31a1dbd870cd105490ada1c818f125b16c39b445b78add",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:a54ccb499cf84c172bdc091c506256042af0db6b6f12504d907913c5200fb2be",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P01",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p01.md",
+      "before_sha256": "sha256:b0eae3c9ce44da216c1a97df70b70e9a4480a7cd81b0622ca83cfc11d3ecea0d",
+      "after_sha256": "sha256:15d730f5b9e154738f3223f8b9a333d6db2454e6cf75b5dfd2adbe56f2212eea",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:3ee76932e3b2ed379c8307320d1891ab357853315cd1b3f6de5924dfb88ad138",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P02",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p02.md",
+      "before_sha256": "sha256:b8018a8f448b441c66af5ddba574a1e2fc0fdb9ce2d1e6b168b122be365724d6",
+      "after_sha256": "sha256:8dd791c0ca17c34c469f3da1fd06b84abf43468c490cbc2023187cd7feffc98b",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:a79e81f1dcb7ad4de9f48b8cdbe5ec12052fbd827c7cdd6d228a8fc1c7d59ce5",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P03",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p03.md",
+      "before_sha256": "sha256:d89aeb85ad8775d31acc194b6b1ead071987f4a63c6d1bc2bfdbf27b5857315d",
+      "after_sha256": "sha256:29ea6d37a46a3e305b0b753982a235053fa9fca480525593928eb721f4c6835b",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:2f951d9008f6a70a62258b6006a34e013fcba0713941191ff5475a9f4b672eb7",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P04",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p04.md",
+      "before_sha256": "sha256:d687e6479c3e934302fa2bf5f52f26af6680259def147f45c5658fe109ba6412",
+      "after_sha256": "sha256:58fc5d2892c36b04e09d8b6eb79c3b714e0795d0512fed19d34a5267f749cba8",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:3e1d9555789d4991560f49ef1938809838f8131a7c26cb917eb7251a923824c7",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P05",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p05.md",
+      "before_sha256": "sha256:4767710dbfd705b9fff3257c14fd82c87508093afbdbc24e48da4a2ece9c688e",
+      "after_sha256": "sha256:2f75140415b87aa26b67c4e54efdd410659a29df4fbc9fc7860d665ac11762ff",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:8ac97ba43c3eefcab8e2e9ac09ae7e9f616d3f02d83fc73c333067531a1240a0",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P06",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p06.md",
+      "before_sha256": "sha256:9453efaff41502fa29b3703addd825d8da01aab9973ea7935debd84059202796",
+      "after_sha256": "sha256:f0d0e365c212dbb51c872971ce9145c035e8731b850b5144b141d413ac5ef191",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:8ed77b4d46b31456942acb9e8327240b6340715f9ade41f6ce1f7faa22df70fc",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P07",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p07.md",
+      "before_sha256": "sha256:3cd09fc4ceca4e434473f28a2fa51cc6f0f7f0c4598c20f4e226b63b395c4420",
+      "after_sha256": "sha256:a5f66c99e26d0ca22042bb3d653a36bf09c583d51fb9bebafc622a844e1cd246",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:a5187b6601f84f4f5035f1bed5158c45c4750390efae6e4fd1bbd9be205ef812",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P08",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p08.md",
+      "before_sha256": "sha256:7d8a1cbda9dbbb82fa568e5afff13f6b6a3ac8dd2d577689842ff7a3470fae84",
+      "after_sha256": "sha256:ed69506ec2e13db83041a9c36253a359db54cc2ae122b3de64351cc5cee6910c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:39258beff6b485af807b02931fe24aa9d8058924e5c7ae4b0a93e20c7957e933",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P09",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p09.md",
+      "before_sha256": "sha256:6bfaf043fd8d265f3434da657deeac3c366c6fefdd2947fc5765e3ad5f273d49",
+      "after_sha256": "sha256:22e0b737d295bba234745a1e917a61fad6fdb228a4b2e75a2568883c277652c0",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:0258879d486f7decb0cbc3ff563a8f424e9144ac50a6b20413dd79fc65dbcce0",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P10",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p10.md",
+      "before_sha256": "sha256:4c1315522b7255f1d3fd5065b6968b0a187b1370f77ee48fbbc25afae9c0bbbe",
+      "after_sha256": "sha256:62335117a871ea1fb4043a70499aab57f4869063c403036abc051dd652e61717",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:505fcd9186c06df15e965a9af7a8e9bfa65ae0c1dc85d8faccc99a4c70de50cb",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P11",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p11.md",
+      "before_sha256": "sha256:27a9fa1d39319596b0499e56215dfa4b59d003649c8f1d25ded3b2a339878f77",
+      "after_sha256": "sha256:793b9a382312c5338f433e920ed5af77444183f836da80974b683ec1c80966b3",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:f4456f8c9b9d1151789275618a86423c7ef6932f50a68674d2743da16c58b808",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P12",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p12.md",
+      "before_sha256": "sha256:fc2db583a581e9865d027f314a3126abfa1241c39dccacb5667713fb3ad23ad5",
+      "after_sha256": "sha256:c5d5f4505d81ae5d3e87598f7b9e2eaad55c46c27376f3725a652f2fb68495a6",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:5bb6a6313741d3198518fb6927a3acc7a5290856257cea4638f91d0e1419784f",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DOMAIN-MODEL-DB-P13",
+      "destination": "tasks/feat-domain-model-db/sys-domain-model-db-p13.md",
+      "before_sha256": "sha256:1bc2d4009f0d88c60c283013f9284c229235b511a1dbacdf0b577750873b106e",
+      "after_sha256": "sha256:50e6cad8f5eccc7d7e83548e745b0356a5361aae9a2df5e2670abaa7b2188e1a",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:b8ef78640d15ea9c149721948d2e055e3383e262d39bfea9ae765d81da9e5c79",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P01",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p01.md",
+      "before_sha256": "sha256:966b484d0c4c4b6317103881db80a05d075196acafa81ffe22d7503c6940e3e0",
+      "after_sha256": "sha256:43dfd84f1eb293a8604fcbca85ab861223b962a79c3e7749b4ff6cacab2661ae",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:3c87c06cd55ec3a3ff7fb37fcb63c0655acad2fad297e505383787ab1e8d8bfc",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P02",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p02.md",
+      "before_sha256": "sha256:9d557d38cbeb630fd145db95439bcfc19bea6f682fef77eedf60454e6a92a546",
+      "after_sha256": "sha256:e2e909c3a8f0211ba6e441c93ab32a9d4b22016b3ff9faf3a4472be10f6bbbef",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:73e8327883208cf0eb4b3bad1b7817e609b823cd1ffd02fe90a84807827c1509",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P03",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p03.md",
+      "before_sha256": "sha256:5ef6b6b08eb9a5d1feac09cfeaad6a5a3265c555f83b13860ecd607afa2d0b7f",
+      "after_sha256": "sha256:94b54b6d895d7557b6f12cc10f744e597733968d14f59f6c517085b2411f899e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:bb8660bb6d6265a13a0546bc610c244de1ca560fe2d072b1af99328f9be3fe61",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P04",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p04.md",
+      "before_sha256": "sha256:0cd90580c35a19906ed76cbc844861da50148cb0a8e5589ed94fd97d6465a4c0",
+      "after_sha256": "sha256:959b1b53ffda6337843405b90c213d39e34d64a1fd75ebde51943224c0833f7f",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:734275895330859004930e7fde7c08b22ec4da39b428aaee97d9924c216dd20b",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P05",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p05.md",
+      "before_sha256": "sha256:50b2948c8fb031ea086c5587e8ee1972ee5488469dd80ec98bbd209bb707e3e9",
+      "after_sha256": "sha256:11b20c05f52d3cf9c39a8c659212eb0591a84e7f1ab480910b643f0245d7b1f0",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:601b2bed1816f97b2570244876a672d941ab84d54aff936ca06d3adce0cbeecd",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P06",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p06.md",
+      "before_sha256": "sha256:dcc61369a45fb41a0f872f5fa71cb161dee69d5503d29f597a2d73edf3c0ecf6",
+      "after_sha256": "sha256:1546bf754c305a72c2a9111ea71b10443b2488a1d66e284fc4ae811635890550",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:a3ff844fd940aa7d92ea41eeab189a40db3a6a0f8252384f02e6a1c31c8f2950",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P07",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p07.md",
+      "before_sha256": "sha256:45b1088eeb5742fa797a7ff614a8354f3d0944a5edcfb0e756a4271cc1234798",
+      "after_sha256": "sha256:ae6eb641a3e77e185a6abd09a007b4310f3c112a355ee41a743e195baa9cae7a",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:4411e2a95f1e196b17111cbadea75bc53999c5dd02b446dc6d1ce18c53ed3d04",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P08",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p08.md",
+      "before_sha256": "sha256:6475f3229397544913a49ed8ec7cbea4dfce79455e43f82051afbacf601a1922",
+      "after_sha256": "sha256:6725120a4dc3d9d3fef0a56fa6ebd716f1f43f1fd43b8b2dedf388e50c564cb0",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:fc7d2550ebaf1ab6a72f873a3428bff9c7815160d8b76f92d03ac14ca43164b6",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P09",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p09.md",
+      "before_sha256": "sha256:e3be1a3a5b2214254671f34b5cdc9ab884145bf1cb2e20bd321d80648c208d4d",
+      "after_sha256": "sha256:f26d4f35f57d286baad85fcc76890bd072c5378db91e78abc3447712ee111e74",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:26c39dbdeacac45c0d68e762a44a990690b878fb1a7490df3728cc1709611663",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P10",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p10.md",
+      "before_sha256": "sha256:f99825de7aa9fefa495e8161eade2b4ca5e225769b96f03e9320b1495d2e6468",
+      "after_sha256": "sha256:20b306b49ac65d6f7e78908230b24135145d73d3a5e1af48ab1f47a2d62f4ff6",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:b6583d8c16c1b714ef9ae6f35189c8b4771e01398eb1c310e40391682994f042",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P11",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p11.md",
+      "before_sha256": "sha256:db29a0979ff04cc2aa3fd73d97c68b97c8af969c914e06767eff4f0292fc715c",
+      "after_sha256": "sha256:21a6bc866ada0e610acabc3fc7193ec394c9bdca6e764be93f2298fdf39370b9",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:b7a7abae9f65eceb33a5150efbe1cd8c877699b58b2f8a76063891f9abceb977",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P12",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p12.md",
+      "before_sha256": "sha256:6d0738de5510dedfbc231992f563dd7305d911afdba2c9fc0d0590c6c22e0bc5",
+      "after_sha256": "sha256:fb5aab147de8e8e209f2dbab662931af7422dc8aff679f0b3f26e160b9cfb156",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:a12a2f7123dfb131ef3a28c59b81a538866e927e439a2150fe781ecc970a0343",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-DUAL-CATALOG-WEB-P13",
+      "destination": "tasks/feat-dual-catalog-web/sys-dual-catalog-web-p13.md",
+      "before_sha256": "sha256:112f535ef5ba5d95f43c29d113f5afc6d8b2bbde3ffc444cac85c86807cbafaa",
+      "after_sha256": "sha256:a6511610018cc81dbd5b986423477e50923efd953cf02867b6ae8ea2f2195824",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:17c55886367d230c3424c4bda72aa7adb4e7b53efb604157e5d14f6cfe988bcb",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P01",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p01.md",
+      "before_sha256": "sha256:6ac4f6465127eabdb9dbbc5372f556b45a64cddb71006b3b8e362a4b9bbc2c21",
+      "after_sha256": "sha256:b055dfc9d510d5edf4a332a42234dcbcbf575446441596f88cb715b6976d87b6",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:d664c62accaf48c23ced2baf87c0b3f8e0a915becdd917163a2744f37d8422f6",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P02",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p02.md",
+      "before_sha256": "sha256:1ccfe31f590d033c5d20da1872e06a44a3d198299ffe29d28a41cec947bc2473",
+      "after_sha256": "sha256:9a8b214cc85634e0a37c4d387a0c4b729a8cd28d99b5fecc19c314fc0ffaecf6",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:d681eb0ffc1e39e73d9cecfecf55f81b1b0d5840f10644d7b51af07678500734",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P03",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p03.md",
+      "before_sha256": "sha256:9f02f0521523c3e469a999369645fddc355b97d017354778f76064e4dd04d8fc",
+      "after_sha256": "sha256:c61744a7e6bf19d537f1e4a48ffb311ff155f302bc5d525dac1279e20fe1e634",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:4e13533bb44452d5f8d54a0b2e3f7e8346ce1dfba3a5b782eb3ba9d4852155b4",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P04",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p04.md",
+      "before_sha256": "sha256:8e72ab4ab94f08ef95873cfbbd20d72c1d796f30ea497e5176eb6f281d966b05",
+      "after_sha256": "sha256:a1cc8e96b309b2880c867ed8ea6bafd7789d1013148bf0db2f874e68e62d7d7e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:2c12d63d25282a0608ea5c9bd8b0a9ebb46b4c825209792d5faad127a2f168c0",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P05",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p05.md",
+      "before_sha256": "sha256:4857e5eb14e1de3c0746ecf79bf8848f8b974b68d59e6ac588838957f6f53eed",
+      "after_sha256": "sha256:b0dda46afa4693bf3cb705262d38e1635a213461e677de2d032933b91cca68ff",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:109484a351b227fad01a9b220529037a2214e95847c9e408cd7d546fe3e16698",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P06",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p06.md",
+      "before_sha256": "sha256:e0902287fe3afd48ae9a60c24965703c0bd33ab66ce5c84c19f3413f00908c73",
+      "after_sha256": "sha256:622ad1a07e02423372daafa6531e8b3e6fb01fa6334a11959a4a2b74cb99dbb1",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:4c7d05bfd4f7b928d49a0d067dbd9d3ae1420640b0eec23c7836a0fd0a6f298b",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P07",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p07.md",
+      "before_sha256": "sha256:611ce41e54b9b5e9998933017462870a0480694f3b8bd71655727bff51e75ee2",
+      "after_sha256": "sha256:878ccaabfe78df12d17954465fcb44a3b3b2648a848e8bdbc20f0270e59859ff",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:576538c9634b610b653e9fa0245ac04ca3a16330145e48f10ca5059aa9e7c044",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P08",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p08.md",
+      "before_sha256": "sha256:a0f96431fab82212d974e3e6224a657fe2543c18beabc334c33d3768aaa6dd41",
+      "after_sha256": "sha256:c34cf649cc82fc3aadd0ad5855eafd64d7924774d62cfe6ac8307c00458e1f1d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:2d5fcfaa18c297391ba3c3fcd3535d984ef5061ad80dcff4cf045069e31feb57",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P09",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p09.md",
+      "before_sha256": "sha256:fb4ad862e2279c03b8cae68e2e827fd4ddc124de879f0e1fdaacd51907fa5c0a",
+      "after_sha256": "sha256:146bb70a1b3cded1822d3e1c8a6999d23eb54343b868d3842d3171a4e3c721d2",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:9f96cfb72d6fba1b4a5be92281c63c0e817da4e07624ab99c3f716a803fd750f",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P10",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p10.md",
+      "before_sha256": "sha256:e3f50acb12c5b1e4fad153d4bd99c88ec3c435c4168479bdcc41cc374cb67136",
+      "after_sha256": "sha256:691727308c7c0120eb02e5b90ac18c4ed34064fa1b36dab00c8a71cbab3dcddd",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:0a487eb83df4780e70914a6262eaccae2ef1f04787c180591b4d6384b2a2ec12",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P11",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p11.md",
+      "before_sha256": "sha256:2c67d9158e40bc61ef02fe015ebe89b0a27e905276ce45c9765a2770babbdccb",
+      "after_sha256": "sha256:8fb94059d70407d8ec0a7bb9077d75aada772e090eec81224b226c9d61767f6c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:334ffb0222dea8cfb577199b75d89304676199d0adbb66f92ac66ad00991e0a7",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P12",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p12.md",
+      "before_sha256": "sha256:fa1ea7bc35addd5d3d07ac5b4bf8c6dff2f447891ec27366399e23f03c203eb0",
+      "after_sha256": "sha256:5b2d3b0243558672e2999c941a75557e5568dcf02ada9859c0168d128eabb016",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:13832708fa7f777c3bd05db68f8b3e3584a58bb8a636325f109eec698aa4c3d9",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-FEEDBACK-LOOP-P13",
+      "destination": "tasks/feat-feedback-loop/sys-feedback-loop-p13.md",
+      "before_sha256": "sha256:9344a0fd4c713ad82359d61d1c16b6ba1adb53cb56004d358bd3809bb2b6becb",
+      "after_sha256": "sha256:ae510037139790112ff6e5f01a0bd4ccb4e3b681f35df77211a6b266d88712f0",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:e78a6a9b8334abc82e2ad109c822f68c69281983d2588b7b45a6b9d50ae731d7",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P01",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p01.md",
+      "before_sha256": "sha256:88ab43fa1264b51f63d27ffa15625593dddc2907bee3206275af02a7f43699b4",
+      "after_sha256": "sha256:79ec67088deb72003272a46d52f6a13d8e28a0a4db082c22c7fe00aab6a168fd",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:24899019c4291bc3a95405756c2882eac47624a73753f66fc40689b38b8cc40b",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P02",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p02.md",
+      "before_sha256": "sha256:d6973277fd6d512400b5e9d4f190ae2cfc98679bf240eca836453f9808a7eb27",
+      "after_sha256": "sha256:2085ac5ce82d4ea6ca7297a099b2711e66c9c5e9ec05f62cbcea3d7eb86b70c0",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:3b21270d9b72b6bfdb3ed1e765b5caf4263ac3f74bc19f19bc3526c5d5c8149f",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P03",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p03.md",
+      "before_sha256": "sha256:7c3bf858dd68248df6bc09369ca658dbeb7ddb154095a1520f00cbf7186f15a9",
+      "after_sha256": "sha256:c1c8242c9beea81d9cf756e11a3670d91154bd7c0d24d39d7b63ea357a9108ab",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:e705a5b5ce3b60b9cb699f8f9f520bac0e0cdc235e5457884a1adfc924288481",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P04",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p04.md",
+      "before_sha256": "sha256:b04fe02616f9bd7492b0c4ed233e4131bfd9ad15fcc7c206a074ce9abe5b89db",
+      "after_sha256": "sha256:1ca1dedb51199d96887b096b8b2998c175a5f1f5d920fd4311261313db59531d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:8f8552b3c4e602daafeafc3e2379feff5b153fc3434ad3ca3afc6e9dd203fceb",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P05",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p05.md",
+      "before_sha256": "sha256:b9d62976772343e740194db042af9f609988b3b814152841ca8babeb21258c8a",
+      "after_sha256": "sha256:29fd74b4322065fc6ab37db30d58afbe223841c8a34763aea65c5e935e0b666e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:4b6a8f052fe5cbdaff9b76cf6f41cb6460e7378910b0dd84c6ac936e16a3b9d5",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P06",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p06.md",
+      "before_sha256": "sha256:d1a36524da28a7e1175c5685f730be710e7244e18b15bf5196ab01bd9f44636f",
+      "after_sha256": "sha256:6404986ed224d69c42e45678ebcd847287d1be1dc1d98fde5c2095611aba7403",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:86255bb8d8cb9fd93a47a937cfe02bf5f5707cd956a5a2dcc7bfdb78a61d0eb6",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P07",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p07.md",
+      "before_sha256": "sha256:3e1125c0eecb674508b7b941e12811ef879e3a70678394ec7b99781fc332ed55",
+      "after_sha256": "sha256:f90adca53359c2cdc51d35ccad0ee2d51f89800c55ffc4e0bd78bcd97518800e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:beb0206b1fb39840489ea21d009f2254edec7e71ef48f022b31663c448603d84",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P08",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p08.md",
+      "before_sha256": "sha256:a8d884f31de2f73bd572fb0121c6a446417a7c82852bb07a42acb643b25bf6d8",
+      "after_sha256": "sha256:ce5f5215248c98c5d63ff2fb1a32bc76b972b7059f0b2b86bb6a09f5325224d1",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:897fdddcf279b785a9701b140b8a40771deb94c1ca7ad86d4b16c339ec84a7a1",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P09",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p09.md",
+      "before_sha256": "sha256:c9818b74c9aa26dabb1c6aea6c70adbf96940cc13a48bafdc176a42f610708c0",
+      "after_sha256": "sha256:11c35a58dd4d8fb90593151109133a0cf66413cbde7312cc585bd5308ca188a8",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:2f64b92208864e043ce73482837fb10055eb7f9eda42e56fc1a8d438a1d1bf13",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P10",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p10.md",
+      "before_sha256": "sha256:b92f6656d3dc4251f8f4acb72c6b754a979afc60ec2035602316a189b1bc8275",
+      "after_sha256": "sha256:5b10d44261f43796523c5092c65622a51c5cbc3291a593115f38a49bd34d47d3",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:eff05042cea82196d12a24aa9782e47590d64807a68250168ce7d722ec737cc7",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P11",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p11.md",
+      "before_sha256": "sha256:c46fc7bf7c86370f02863421fd0c11d9c956242ffa20fb721552d2c00e16944d",
+      "after_sha256": "sha256:f8740d0485383b13e35833ecc7724aca92b208a9d8c643c57490390bc91c3d7d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:551bb59aaafe35326b4fb4cd1f42bb69c54b7686129cbe9de92eb1673955797b",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P12",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p12.md",
+      "before_sha256": "sha256:c3a0456723a919da25ce65e4b7da6a738a5fe12a4357dc92b1f70a8421654656",
+      "after_sha256": "sha256:6539484a474661b6239c5ba2d721f0fa836f373d3873660a3d7d949b8d0d948f",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:6967ee2145bc16239060b67ffed725404ac44064022a6332dc83d96c278e76a6",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HEARING-INTAKE-P13",
+      "destination": "tasks/feat-hearing-intake/sys-hearing-intake-p13.md",
+      "before_sha256": "sha256:b6946c70610856aa30a08c13bac6e86398e4c55cfb5dc9f3cf236b82c09d851f",
+      "after_sha256": "sha256:f952474254d3af238409035247054bc1878b0d167ac275be5cb9536f74a91811",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:090425faac1c06e3dfe244bb99269e24f0d5ed9a16682f7ae3fe992e728b1e8f",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P01",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p01.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:2ecd2cfce67ab24c49ed355bc1040027cc2a21d7272002720aedbd3288cce4cf",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:8ce36d6134ac4774d31e30fa5da78dd9015f5ba66784f72f05a70c4ba157049c",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P02",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p02.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:fabe4d1205cfe2dc6b6d1d9b5efd796982345422f90a659dcdef9f8daa6fa98d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:b186eff9f58edd9e6ecee11c3d5f58db22f64f2b1bc6789772ebe2d239971098",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P03",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p03.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:4fa589b82b37242da02169522ea318f413112719deed08e9a9a821bc0e9cf140",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:fa5e232850a84a2647781792ed4842d451825555a017f306a1d842e1a39d5618",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P04",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p04.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:cd7ada6cb83a1a575ec6e602b6380b611537edd065d9cb47ffb2648559007cd1",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:897570dad3db62666db510cce8135f64fed7e619f243986566ebcb84618756d4",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P05",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p05.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:13986583f6803d26a1b17cd3d7ce3f3e0b8e298153f39069b9b2e8963cb57192",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:ec530f636ffa3cd7e4f00960654f53af1432b839e43dfe22bab1cd9de960294c",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P06",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p06.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:62034031c38edf6fa823de87f45f34bd9cf93e945de1cba62a5c0e4370bd57a4",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:0881fd709590ff59075bd11427bd1be5361b9f8b7ba8bc25c1d613bc02584bb2",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P07",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p07.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:c51941985c87536b5cde65b38af1d09318e646511767c95712e403b0d7d1ad33",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:123a1f7b7b5d741e4ac2b8d447b7ffe5895434adf245223a5e3e8af364e3a693",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P08",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p08.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:c6e1a0ad327156c17dc6d5f3901b8361d898f295c282b03f72405a7d46d49ea3",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:362af89eb7de7288411ce15019d1a5ea2842dc5cae2662dea9e5b6df185d4e4d",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P09",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p09.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:c81ff6f0f456d53433218fa24ff889254f400a78cbfb03d944cf386ef5bfb1b4",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:f0aada41c7778626ff30552f5396de5060188f2fba9d4ab722e663b146d06cf0",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P10",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p10.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:314142acbaa9963b48688db17f889aa3015fc79f8f06fcb224e68ce958793695",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:0a6e788f8e9553996de7da2518ab4419035f948861c5ee167bbcd712b36921c0",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P11",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p11.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:8589dc42267f7fcc628a084aef34e4fb93c87a39014499423279c27af717d33e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:0a2ff4849a2f4afac23cefe9b6950641e2dc9060ec1aebdb1f7a645d4eae308f",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P12",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p12.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:517c853b41598009209df75a570b2cf21c34d07de747faf613b3417863b9d179",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:68c1e1b4772d29c0ee1fbb8b58751a4eb6024560e1919b8bc0338beb0039c52f",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-HUB-FOUNDATION-P13",
+      "destination": "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
+      "before_sha256": null,
+      "after_sha256": "sha256:88bea607113fc8196e01637904424f3e73edcdd3093ee7a2dd0b56dfa2ea2daf",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:b9b9a5ef3944b77ddd2eb4324dd8030a71f1f5032f77cfa495f4abefd74de1ff",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P01",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p01.md",
+      "before_sha256": "sha256:df3333ec680ec801f90ab6a0da5ff9aa91c92d1c013f91495150a9054e20ff20",
+      "after_sha256": "sha256:4adf15b987c0e22f91341b78b64fdd39bb822118f8726332ac3ebe9d5e1105c4",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:94d24227120b368ac08d5f1c6bee9873f653c8620cc29a8b4a62c4106b20b3ad",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P02",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p02.md",
+      "before_sha256": "sha256:8064227ee0acf103ef97f039c6fb719e3da5fb05ff48c9d7605a19da30ddb397",
+      "after_sha256": "sha256:48df7dedab2f8ab073381895415a83ecad33dfdc177942f473b44c32f98560d1",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:16a23a111211e256a32ee2e46b043f94c8a68452852ed9b75ea21b72121ba7ba",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P03",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p03.md",
+      "before_sha256": "sha256:a89e438dea5986be8a6cca5eb71303060163e4cdbe08043e45f4c96819ec57a1",
+      "after_sha256": "sha256:cc3a693933fe2a7268a83efb9604078fdea4b75f6531ef8582c6f9b1ed00cee3",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:1021630964650974412f92778e86ebcd64efc46edc203e1c9e252c86df25e852",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P04",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p04.md",
+      "before_sha256": "sha256:de630f1635fb56c64924d2883852cb8cd12e586dc7e2e51419379c3baa6c6a62",
+      "after_sha256": "sha256:d3120601837c6650093b9232bc2031873c8438c0284fe2a07837fb4b59ab7e63",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:6e2eb457e7e0125c8a0aac60b63e662f2dd9b1cf4e4dbd85f69dbdca38539667",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P05",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p05.md",
+      "before_sha256": "sha256:8a764a6cc446918a7322eaee2d9ac91d570dbc3cdb053f21066a256513040f5e",
+      "after_sha256": "sha256:a0952304aa7f61f71d919564819b99bc373ff05a0997b7d573a206c1fd087c55",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:3dc8551cdb903a011a0f35878a90fb4be20d0a197f7ae73031c15d1a867e1644",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P06",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p06.md",
+      "before_sha256": "sha256:32c8b433df14cd03af5580bc0614960a3da6768e2f0a53529ca36ad3f0c7bb55",
+      "after_sha256": "sha256:472b0c910188ab4bee676c717efd40d0ab7475a1170e2dbf86cfd024b5752147",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:1cd4b6776f55d65365c0762858daf5b7a877915774dcdbc9b7aefd02013caa54",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P07",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p07.md",
+      "before_sha256": "sha256:e91f16860db3669af2b8cae27c8e60206b240eefa167651019918d34f61b2e8d",
+      "after_sha256": "sha256:e9a96cad3361683777ee679a9c3f503012826e559bc617d4d927a3128b6cffd4",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:fc74a8ab0e840dc41eac4a36ff16b88d8256c16d374c7de0f55eb35d97339dff",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P08",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p08.md",
+      "before_sha256": "sha256:881ccff1fdc5cb91797fe3196b67039d8a691e103498b164ec9723d9459758b5",
+      "after_sha256": "sha256:5e3b93137b6925a85e4bbdac1da3f1e1d57e9a6dd56a17bca8217ff2b597734a",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:12bf5412eaa77c6590848cc1a5d6ffbd60733f37b51ecdabdf758b06b0cc17a8",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P09",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p09.md",
+      "before_sha256": "sha256:c23a40055cae4780792cc673f5100fac8d784db73d85ac3924a01387c3d54381",
+      "after_sha256": "sha256:3f30e42baa9f0ad8edcb6b59328367f35e21ff0969aa283baeaaed728407539d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:b264772746dfce8beec8e0aab9297e595e988a1a924bd4d893f94ad6236d8bc7",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P10",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p10.md",
+      "before_sha256": "sha256:a359046620328663fc9b280249af5769852637a95b70683d7487aedbfb94050f",
+      "after_sha256": "sha256:c9325d87e187b3c96c51ba203165bf12c3c1d3adb9525dd6cd5d2f7fca9c8bd8",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:b88058b05944686304e9d618dc4de299130ee26d2fcd26bd46fc1fc93cac5309",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P11",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p11.md",
+      "before_sha256": "sha256:9eec4b4dfb85a93832d689f62cf6a2affea4f66b1067e88ba7c19dfc57fcac3e",
+      "after_sha256": "sha256:094fdc34c78d715e1dc75a65bb62ef984a4a6e4a99613b045c3164f0b2908cde",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:18412943f1a19ef8251b587d71ddc2f03a2bf299a349d88ff27f4ae122b715b0",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P12",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p12.md",
+      "before_sha256": "sha256:6b88ac9b558de2a25c3f0d5713a7cc42ef2e707c01005fff00c79a09b2ec96e6",
+      "after_sha256": "sha256:66337b8a1efc30df13c4a32fe3f337a32edabff0cb047b63b90813cd1c0144fd",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:823045c2952a94fa3387b63ef6ca50673653349588ed064e183e15869833c120",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-METRICS-TRACKING-P13",
+      "destination": "tasks/feat-metrics-tracking/sys-metrics-tracking-p13.md",
+      "before_sha256": "sha256:388b416ae180691446971e2457a8309d4da41c2eba02c259f8da32d7d5a12675",
+      "after_sha256": "sha256:8157c6a3b72eeeab7d30eb1b884df3111a3615f08a72b18471102bbdbb8c91cf",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:72791a59719bbff368e942b1324d6349b6ae613abe632db246018f7e5612454b",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P01",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p01.md",
+      "before_sha256": "sha256:c81c956237e8234ce83e713e8abd4010439a2e66098bcc9f7f2d7196785067d6",
+      "after_sha256": "sha256:7b7c5d8c6f26d36260c2f8e354d2fa07a44526c2db809ae940ec96b013a7264e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:ae81fccf2b3dded4fbefb0aa247ac7cd3515eed422aa6c7cef88a36b4c4ec9a7",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P02",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p02.md",
+      "before_sha256": "sha256:fe14e003fd847e781e007f47d78ccdd17dd110f85bbd103ad8e69e4814db93cf",
+      "after_sha256": "sha256:2a26bca08184d0176e7e92d2ed376427c4899516527fe7e643b11714483f4619",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:2a217a9ea3c85b254fb1891f243f5b028507468f3063a01f101e6184193a4ddd",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P03",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p03.md",
+      "before_sha256": "sha256:88b03a6b3da14e4e01907dad457b610379560c0a89cfcfe4b1fe4743a6fdc8b8",
+      "after_sha256": "sha256:bfacc167021b2bb4208685288612bdd67cd95f982818bee3671da7a2b59a1326",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:493a72eb63ce6e5e64019750cf47b8fea71b9bf040583aa358f11166ffafa2c7",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P04",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p04.md",
+      "before_sha256": "sha256:2d073ceda644068239219574e238f47b113c3860ed876e54eb52e79207a8bd49",
+      "after_sha256": "sha256:d2676c070014d2a2f2780be3acb9c795d029c3111feba51a7b39c365aee1764a",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:a55c62ae178e30ab79af005d843d1ee41dbd69b91a1d80092ee14a6acc97365e",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P05",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p05.md",
+      "before_sha256": "sha256:51a6a3138a5fd8d08fc96bdf12bea1cfdb0607317672800ba2e4cf62ceb708e7",
+      "after_sha256": "sha256:5156b8df79d77359bbcb861e63791d67da1d06a914535570dce65cc02dfb95dd",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:aef17c234ab2d9f2bd42c5589996529338c4f2dc3bbcf7b3a1d8ea1bafed62ad",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P06",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p06.md",
+      "before_sha256": "sha256:3ae38496b8f97de043cff71bc0aad79e9b4b788dfa97438fc8484752dfa89b19",
+      "after_sha256": "sha256:183f0c301d30206a6c25f054a432958d33002fcc0ddd00c1012daabc91ba1d25",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:6e43786736f4c542fa41700e04c4ee0a52ac83fc78815488f1fc9b269b9fb924",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P07",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p07.md",
+      "before_sha256": "sha256:b11f289e4909870f88523b18a4b079c21a0ee724b390246bef32ad274dc503ed",
+      "after_sha256": "sha256:04ed029837ac8af5af86b47c1d7cdb995dfdea1dea1712eaa7d12982db20e2ce",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:59aff6f4d9fab8cf16f6fc7788f93297020c1662d438ee66776b692726a0104c",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P08",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p08.md",
+      "before_sha256": "sha256:7c0df420185892b5ad981195e46ac207dd41f6be9f5879329bb60cd6f4a9b263",
+      "after_sha256": "sha256:0ffef54ce7155dcb0d6289b7b0e6b0a7125feb070859f53f9fe3377464960636",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:c4e20b30a2419d86214de6e47d57b946e16e98e8427d310fe89f37af473de0c3",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P09",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p09.md",
+      "before_sha256": "sha256:3e8ccc502f09695c1d53e568be8a5da28219425e51cf11065bd103c4641fda90",
+      "after_sha256": "sha256:98caac132dc16db9a8d8403d1f0225b06b66d89cb31b2e48f3c316cb0a58e622",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:2145124af0a78791bdcb1a031b2963fa9cd28a012ffcf4aac2b4bb595e391cf4",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P10",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p10.md",
+      "before_sha256": "sha256:6b623afc231dbf4211b8201489c069dee294a09960b5785b26a5a1c924ca402b",
+      "after_sha256": "sha256:6a2f20b575135c47cdea2d7b113993a82307460f31cc7e99c9f625971932905b",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:e772855e848e8b69039d45f88f33db8cee1ec2a00bc1b80f4645719bc3b6715d",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P11",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p11.md",
+      "before_sha256": "sha256:96b588c093386c254e5752af78006b0e18f87a64bc7895b2c1072d1f175867bc",
+      "after_sha256": "sha256:7e10bea620e4689f9ab3ce128f0e10c000206e5ff6348e7380ad453a04b86caf",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:bfa1671ef1e373060447f5385282f82ab1dc040fdd1f85a8eae5af3844aef67e",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P12",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p12.md",
+      "before_sha256": "sha256:0a4d8b403214ca0270f150af6a063e9c12238a1ad8d5495ff867949d3f4e04ef",
+      "after_sha256": "sha256:e1ac1cfb1d3bec11c80bc0a12e714bf87e3c931d870c55dbccb1919ba4193b9a",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:c189453ba946017577e298f3950343d840f36a11f1cf714abe1c3537a75861e6",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISH-PIPELINE-P13",
+      "destination": "tasks/feat-publish-pipeline/sys-publish-pipeline-p13.md",
+      "before_sha256": "sha256:bdd38474a34b85f3f158f2f48059328ba2c163a0ebb9e623c9f84a370ec96fd6",
+      "after_sha256": "sha256:99c2df4c1cc652a8965ec395888cce7430381834ac2e8632bbfdd85365d96a35",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:42d9673987de0f665a453baad74c45918f504207f605c7818e734c3aa5e4adc2",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P01",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p01.md",
+      "before_sha256": "sha256:f840c4cf0cf980697e346ca3439bd536fe2a76b1e4744b63c38204171b391b75",
+      "after_sha256": "sha256:3e062113fafa988219864868381b2497f76cb7fe3a1942b058a739aa8a698fe3",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:c350eaa1c381243594c909154727067c065f3ecb57d81611f855388e94340eac",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P02",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p02.md",
+      "before_sha256": "sha256:7847647754dfb7a5fb10296531cc5d75e649e4ba0ad3c9c055cb850fa2f7ecc2",
+      "after_sha256": "sha256:d70585105232ca94bac6eb69727e972e978d940a2ed242c9a4beced1c350c225",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:0d8fa7a04cacac497a6335bf6c4124438928f8394d1a6d7811b7126ad580bfdc",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P03",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p03.md",
+      "before_sha256": "sha256:f729de3173d2d95f2542dc6a358ed95a9d13c22f176462bf8f3ded5870971349",
+      "after_sha256": "sha256:90fa9404a4dd0f1d53c31a39bfa105421abcafc35b6e9e28d37ff8ecf6ae69f9",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:21c3acd12d4c7f82fab2890ecded85a7dd2ad77169fc01f5d735d0d46895278e",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P04",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p04.md",
+      "before_sha256": "sha256:dc647a450a09838c19fa3a1342fd5486373b3b5f0f51c68c184cadd34327d822",
+      "after_sha256": "sha256:12ac753eddd8bae4f60c65a500c92ac66436897a8bebdc0e079d1f804f84fee4",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:e9f258f5d3a4fd2051eb6802495c9700afa49900bcebb0f5b0efbd89e87c6868",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P05",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p05.md",
+      "before_sha256": "sha256:4106f237ca4d676405b5ede07167d0d1bcd7ccce41aa65284756a55d3ffffc10",
+      "after_sha256": "sha256:1c4d326b90b7d83ba441caf839afb7e4a7db9e0b0bd4046dd4ef9816b5b871dc",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:24255e5f51e288cbc230eb0ece24a0a8fa4ab905bffa1f0ed358365d93592a7a",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P06",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p06.md",
+      "before_sha256": "sha256:03d000b6a738b8f99e899a3ff8c6c782e383c02a8de1a7dfe94352797f8837bd",
+      "after_sha256": "sha256:a5d042f0706456b550d0bb16ae10b38b166af479c9d060f6e376c1b4822a3649",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:3023c59b9114528820d33a8d936d4c1aad28b9930bc79229b7ee49766a83a068",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P07",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p07.md",
+      "before_sha256": "sha256:aaa34e9efdb88de87b8ce496c4f64a40fa160a1c84dfde074e82cd6b4b2bcffb",
+      "after_sha256": "sha256:288494f294d5872cc7f27bd8f004eeb3c7fe849bc528796d2aab08a6448e84a3",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:c4e9f2bf315c3be607373ce48de61cb8b444182631534b5fe660edc054871c6d",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P08",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p08.md",
+      "before_sha256": "sha256:beb58163e65afcb8b3dcd6d354f427cf17ee6e4432a5c5b1e39a2165fbc0d07f",
+      "after_sha256": "sha256:049c9c920398642ce4e48b876a6d3e57f197d377dee642c465f16334d34f16ff",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:118a3cecfa2f6d10aab2189aed0d217acd7940bf8a2d42d8c70001af5b86d008",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P09",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p09.md",
+      "before_sha256": "sha256:0916759a65e3b28e46acc8993f418eedb7ea58bff6de0f1b7e15771a2dc7cb86",
+      "after_sha256": "sha256:ac51f0ba5d082c03b1c3f52dee69943e8265d227ece6dbf57805cb1b6776aa51",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:7a3f0b1cb6dd4957c8dce0f6c7ed6bd749e22d088effc95ada00d283b8921a4f",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P10",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p10.md",
+      "before_sha256": "sha256:857ca1e597a7283178cd1d3a5a449b90b84bd72211f57aeaecc6a98a8e4fbdac",
+      "after_sha256": "sha256:22aceaa14e1d278d64ec5b23dc03fe9939a02bb05d959185ae89d1cb65bb6d03",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:bb6cc710fc9cc8af68215868678024cd0f885d450b91b9f80305fb03fc1af512",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P11",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p11.md",
+      "before_sha256": "sha256:945076d86132870db5304fde6345abe4dadc7a45c2a2d5b745c660cc9fb890b3",
+      "after_sha256": "sha256:e01b9250a696b81d2ebe9d663bc232b6a35ee704c49b8c25ff35c073e700fee1",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:bfe277a42b9f1e2a1b9d2b9a68e74b62f2a4b60e39d28b03701f6f968452de4b",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P12",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p12.md",
+      "before_sha256": "sha256:00d9ecabb8ce4821d5c2b86668ea56664d9c2dff10cecca15fecf02f70c4d101",
+      "after_sha256": "sha256:1c396798d00057dfb3d7fbd1a1d57f50f5dc1e018e3491aca54930eae58a88ff",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:21a3eb3f8beb46158a220be07ffa8373254dee2b91d3eeddfb31181bdcbf3f99",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-PUBLISHER-PLUGIN-P13",
+      "destination": "tasks/feat-publisher-plugin/sys-publisher-plugin-p13.md",
+      "before_sha256": "sha256:1e6dbe6f1a7dada0d31dbfb23db06eb9c15610780dac7639c77fbc70f7094973",
+      "after_sha256": "sha256:23aa54917c8c9bfed30d7399e58d8e80292fec93e23a227ce3c5e7f53df57114",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:6f4244a0a7d582d71911fff89fd6ff17b3935955ecca6488503072bd877b42a3",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p01.md",
+      "before_sha256": "sha256:1e0bfb486c188b09e1248880442fb82991eab86c336d3c24c21f2dda365978db",
+      "after_sha256": "sha256:545448d03ccbdd907e1e99776eefa49a9452f23f9d44738fa5d0309c220ed6d5",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:c09366ae9ac6faa02512ceffeee5849546272ea45f7d5a9c86709e6b10474e8e",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p02.md",
+      "before_sha256": "sha256:93eca128b8a26b1eade3e6e8b1a22316603799612da2f8ec17a5cd388b648048",
+      "after_sha256": "sha256:f921a49473909c55378ee4560f8cea8e6bbd278de217b16aa3ad7e24ce26ce1e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:9cc2145735b9aa4e3f8ffa85b4c28432e412604398e89274ac8e92298f08379b",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p03.md",
+      "before_sha256": "sha256:c77ccb8007fa99ec1ea4ace0f00dcd53a4e7ab64708bf4c83a8988513e0ec402",
+      "after_sha256": "sha256:dfe6e672be922d90932ee596a6dd0018f59149b868b9d15cc7612c078536bb61",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:5564b27660cb153fd9d36bfc8323ec9b9e91482d55ec71190560824b49ca350f",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p04.md",
+      "before_sha256": "sha256:090409c5fd2d03a2a0acf7cf71d4fcd4cc8455a1d40f35e396310b0018f67005",
+      "after_sha256": "sha256:7174a0c00ac9912192109267bd35fc5c88124533ec3f85833764fac080e91eec",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:c6e2c9ee304b21b29bdbe7098c10da107bdbca4c5f2f177117744a0d26bbbdc1",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p05.md",
+      "before_sha256": "sha256:a1e50f31ad8033d974e051ca2e360e176d0d5131868caaaa7a49713c2c33afc6",
+      "after_sha256": "sha256:e4889aafbe14eb210258513637b225cb83e55a8171acf9fa5f0c0a99cf061874",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:9a04e800419b6f70721dcdb3fdcded925c86b78666d4b8ce1f8e1876441ae8e1",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p06.md",
+      "before_sha256": "sha256:6b449feb978c7c0e8bb37cd14edbd9f521920975adc7d29bc78d4afaed9604e4",
+      "after_sha256": "sha256:ec80c1a52a8c871e9aec31805f20100775f6f092795b3746c6440d2137be2827",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:80e55a7a470f26a3da96f1106ec8ada4bc4df6eb89898f7ff5d7e50954d9ae6b",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p07.md",
+      "before_sha256": "sha256:dfa0c99ecca9eeea748fd6bb7d3baf1b96787824632575e6eebbc88e355b158e",
+      "after_sha256": "sha256:1cd7182fed645ee68552a13cbe8227b6125afcea75bcef0d36b442bad27fe150",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:6f2461fac0f9e48352b0f5a63996dc56f38fe73bfbeed3f8e5079ccac913dcd6",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p08.md",
+      "before_sha256": "sha256:89cf9462d7cfc8c30991822620467d9176c2287ec446b776bcb76376e2315035",
+      "after_sha256": "sha256:45ef21a0c3b820c66efdfd5dd4dc854796887801ce61f02b2ef5b47c1a125275",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:770080252e78477d9e5b8cffa922ffb6f89721fe12064609db8ccc6931659f61",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p09.md",
+      "before_sha256": "sha256:0850cffde32322995534765e07bc2ca4932195c189eacad7a9b7ef16a339e345",
+      "after_sha256": "sha256:4f73c1c10bb8ad506d7c7ac66a4e7a809d9c1a0b3f95f710c9841215729757ae",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:19a0d7796c709a1da5e8335df46084421415a4368d3996b596651ed55fb0b383",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p10.md",
+      "before_sha256": "sha256:d46dbf06b41b1a3598fb4478b405f7b21de09478e027114d8098dd25e4ab179a",
+      "after_sha256": "sha256:33a55156343d881fbad87c8af208ea2191cf169ccfd2bb1823e5344a4d30cdd5",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:5232ba18d2c430d98a796b5303b2f9687bab4910bedfc7635c181337bc76e19b",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p11.md",
+      "before_sha256": "sha256:9007c05e7790ed7cf284b2dee6548016d2296f401cffbfb1e69ae318a0feb660",
+      "after_sha256": "sha256:243fe1ce2263f615e7bedc5656e597177a655c5e2ac22ce347e1ce6e09e2d14f",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:e05e9ab90a459016ef2fc810562538a60059ff81bd242d576fc1c6808fbeb220",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md",
+      "before_sha256": "sha256:9ec2a021a476485202ff8605abb4dc38a0eaa9e727e9cfd19e5e3c39fb2d2b46",
+      "after_sha256": "sha256:d4af4c5a0052a6d9c48d8365d80f59b3f66ac22bca549f21c8b1df2073979de7",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:c2d26e12f2c9b067b12367ae4cfddaf7de4341890bcf6b634e4780fc33998ab5",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+      "destination": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p13.md",
+      "before_sha256": "sha256:d206ef1899cdb25aae7fc6e40bfe7d162580c673eabe29139c32d9520f0a9928",
+      "after_sha256": "sha256:d5fc9954fc30995f1aa1847972744c6fe238d7f6cf381c2e3144b7f1e9ad891c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:218c353ff330352827f2488cc5f1b853caf9667d526ddd177aee2d5bb75cab90",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P01",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p01.md",
+      "before_sha256": "sha256:46d06bc42d06b00b4f9569978edef8fafbdfcf338859064f09aa278a701965a0",
+      "after_sha256": "sha256:d138e1aae4c2acb87d651037ba623fca1d78129d18b3656ac7c65d17965da904",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:0224ab7be54545442a74299d09f7b571e1d2466a211eaeac24d2d25cf349312c",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P02",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p02.md",
+      "before_sha256": "sha256:03470092fe6c6bfd33230cb7293fb163c8d7e39550efd422111594e6c0e52a06",
+      "after_sha256": "sha256:f97d0cef4d72f34b4a0bd76077fab551d2751572b9905598c5ee860a52c2aea0",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:b44e12acd1d993aeb9b09ff7054d0d545130da11908fd9384dfc51c14d74789c",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P03",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p03.md",
+      "before_sha256": "sha256:ce3e7dd1d7ef26c9182b1be8dd36e47d8f8889d3706e736c4da11944944ba2ce",
+      "after_sha256": "sha256:95da9015a9faf903ff0152f24586a7994a49f14254964ae3f4fe480f0cbb8f6e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:3934f36a0c41bb57cbc9560f6ee24de48bd512fb2df5a089d3a8605919f13730",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P04",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p04.md",
+      "before_sha256": "sha256:30d227dc079ff3efa5d3b1edc66ba3adf034d05a5db5cfb100941f81dcdf946b",
+      "after_sha256": "sha256:111e33807d9276ab188f4f93380f416c78ce0b7bc105edb8e9b61576fde3db73",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:72d8c554b3cf64f0319cdef1530129db1dd2e82a149aeff09c0b8c6475937653",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P05",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p05.md",
+      "before_sha256": "sha256:4eafbe64852b59df8d20a4b9907b3e70927ae0055fad3d03092741b75e2e6c60",
+      "after_sha256": "sha256:58f2ff9c1913c5f29c72fcf2c9cae2ec177be00321a570f79b051e7668182718",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:9a3abce9c5993ac3ed27350cd5a6d34850f2e307067f9b86ebcc6bc69b43d501",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P06",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p06.md",
+      "before_sha256": "sha256:7cb791caa653883d91a2a61f70ce0eb9b424369f06050e9eaa633f12f89d5034",
+      "after_sha256": "sha256:2daae0b165bce3789024feacadc9c4d03db9db9614e4f9facdc63d2039f7ee25",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:c7d526b3ecd030500a50dd381fce0ce312981419ac54e1b706486e96ccc8c968",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P07",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p07.md",
+      "before_sha256": "sha256:6f4f1a31ab0978b1afa4a9851df231dbda0e4ff0120d0f2ae42022850a70b4ee",
+      "after_sha256": "sha256:683a8f7a9e011f9960043e3903599d270513eaf5925baadc3be93c6c2d55ac07",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:b9ac9622bf8053444efbe92abf87324648b5d5885237b3d50afce377f606a44a",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P08",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p08.md",
+      "before_sha256": "sha256:e6c27a844581bf8cae015c829e9f41896ae8f9ba9752023186ccaa4b62c1ef05",
+      "after_sha256": "sha256:c16c06da3481e2fdfde48ecc530a9200fe3e230c57f0ce19b8b49b98ccfa6bc1",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:dbd74574bfa45bfe25b520caefa3180235e186ffffa604001932f09a03feec49",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P09",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p09.md",
+      "before_sha256": "sha256:5c95f13843bff01cb1f38a7b4cdf4023ec31d44e4404f2501f44a6c138375224",
+      "after_sha256": "sha256:296851188913429b21ec342b3bc29364c4a4b177660b2c9db9d545b69c8d2145",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:76c8571854676bdecfd33850507cca3e54dd8bf4f2e9547ee71f27fea2dac865",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P10",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p10.md",
+      "before_sha256": "sha256:d1a6e1f73fc4f666cace1d595bfff167af31d2e728dcd77cb393ba204b2c7da8",
+      "after_sha256": "sha256:941bfd9d1df76a12c140092d594a5e4ebf67fc8da0a7668fc95113f5448f8708",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:9f8e7df2763a26d41fc08a5644f4fb32843834544f4202b78393c8c6bbb886ac",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P11",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p11.md",
+      "before_sha256": "sha256:7ec189016d53af8a93e19f0d4b560a3cb122dae78691af5e0fcac37e2a5f5a6a",
+      "after_sha256": "sha256:bd0e963c428ccef10e0fa287db7cfc3c39004674d87b6b51c49cfbf0f2b84c64",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:55486aa6d1d01f1008104ae9922b345eca874f0991e96a6c69559f2497ed80f2",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P12",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p12.md",
+      "before_sha256": "sha256:a863604debf77ecde8409697b6b3a784ec431a9508ba6403cc7fefa81c8205ba",
+      "after_sha256": "sha256:a3825e58e0e08d0f5111f06912b8c0ae28faf7463d184565297f2fa6b5b24da7",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:914207e0a83e2fee255374f4c9e659326c1c8a8874228a391b8e76ca1ab1bd36",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-TENANT-DATA-RETENTION-P13",
+      "destination": "tasks/feat-tenant-data-retention/sys-tenant-data-retention-p13.md",
+      "before_sha256": "sha256:e3b2d721528bf8323634cffb21f4c3a12454d9a553d49b906bd352a35662c9a1",
+      "after_sha256": "sha256:fec457f1137241cb50bcc65904279a96febd2816614f1199dc3790952ce8487d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:0ddc51d763ae089f35988ad5e53eb514f9eb366e9625905943e659b9ca10e8fc",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P01",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p01.md",
+      "before_sha256": "sha256:ff8a6afbb9c01882f7fb644abc151198aa43b78cbef5353776b28d4740787b02",
+      "after_sha256": "sha256:ef82c4402185fbec60a1c618df9fe0c67ab2ba54cf4cbc179bcaca88712577ee",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:a8c23c25fc0cb1330b6bdf7cee577e69518421036450747ffb915b794c369191",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P02",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p02.md",
+      "before_sha256": "sha256:2c204f977afe2f210725b06fbbed54ded338b02cccb129750ecfaea25a03ab15",
+      "after_sha256": "sha256:5c2b7fd82eeffd3d3c4902fcf40496b15ea367ca7b1e3f62821fffe1beb9e8fb",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:7bb48776cdb0b31b58703d52218b260bfe5aaa7d515b130b2019f07ea0a52ef1",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P03",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p03.md",
+      "before_sha256": "sha256:3e9f1c0df4decc94f3b210d9c1a7b4e803cf10ccba00eed8eec4674d9cffa83a",
+      "after_sha256": "sha256:c26c103ae4bdcf9579337a875831166e2f4395c70efeeff09c704c1c74806a1e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:76140751557ccb6e014d4504b11b54f23f0059689e7dd5a3f66dc48867164d22",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P04",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p04.md",
+      "before_sha256": "sha256:14e86b6a0258f59362bdc7482f3836c23a80db8159884e9dd5de360ec852ca88",
+      "after_sha256": "sha256:f3b34e60ecb091004a8160bff732014d03a205ca4378cdf1ab654aa785fa461f",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:539d5c1d53e8270af34ff9e54dbb540644aea4eae1b4b5d51c9bda5d3ba011fa",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P05",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p05.md",
+      "before_sha256": "sha256:334f723c82a7549108f36c5ddd68c4387ebca615915d7031b25f56712a454ef2",
+      "after_sha256": "sha256:6bd7c70f9a056fba3a3abd2c802a15d967601f646adf7623562c4c0a29416e30",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:161f9aeb97098a224f368faadf3057520a9c129d4465bab2aad7aae8aedce24e",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P06",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p06.md",
+      "before_sha256": "sha256:3f5b556b23c764b136ec84dc2aaf053673430602642dc9c9b92fd8e1c7a2321c",
+      "after_sha256": "sha256:5470266562636b69e9254acfee551ebd635575c99c855b4c71e0502e6731b023",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:cb15972114f7aab9dbdc27b842e31a3f14be7fadb8310c1c3fc81982860ca226",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P07",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p07.md",
+      "before_sha256": "sha256:dfa25a36da1dd7513f11a3c90c3a31561fde97802ee81f9d9f493be59759d9fe",
+      "after_sha256": "sha256:088ca9929432b7edb53de98717045f5d18611a531cd039ba06c3ebe9a53e1a3b",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:926ebf00129720a2d3092007eb3a45d7a3b130e9d62bddbf1329d2b4d62cfb16",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P08",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p08.md",
+      "before_sha256": "sha256:574b18721ffeef7957286bdb6276bccd3b7a5588dace3ba0f695c5a6e0b156eb",
+      "after_sha256": "sha256:ccc1d96ae9f58d728e692ff125ec1a39e6c98ed1d24b327d212a7cc74682d16c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:16d11631895c7244ca3a3700e532a644a12e86b462c5d5aa0fa6e7f7cd938aba",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P09",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p09.md",
+      "before_sha256": "sha256:c884634be78c250ad30672ffaa438c24bdf067346d2afc6a138e54305d226880",
+      "after_sha256": "sha256:ad401ce3e663f82a1ca5db1398bb590869ebf86b5161734ffadafcedea1c77c9",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:edbb7c312d449da3720863734532cbee06b614c0cca789ffb569da35aa9814a9",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P10",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p10.md",
+      "before_sha256": "sha256:90db77744d183228817a88c3d995bddd674114cbdb5348a2c1ba04673fe14898",
+      "after_sha256": "sha256:3faf64824ef7784b3d62cd38b42b6b3462e05c111d83be221d6a4788946374bb",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:0e5038698e747408e3496e1c2af03c9fa11ca9db7c3854eda8599a92d1cd75d9",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P11",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p11.md",
+      "before_sha256": "sha256:9425c8c1b805b1e1e3ffa5fff8e9b7eb94ab6549889ae63473b571aacc6cc9ef",
+      "after_sha256": "sha256:76723a34a04858691c17c2e6915d3e10e81ff7dad40ebf9c59d6352629c313a4",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:b727b517ad127f74f5f469ce56cba911c253bc063be2ed21e71f4cfbf63addcf",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P12",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p12.md",
+      "before_sha256": "sha256:61e00765f8483d0e1d5f4cd7d24677516f2c5174e058bcb1a3f059a442b4b32e",
+      "after_sha256": "sha256:85e9bea580f098a17f397df1c18f79462bb236ab78e34f63535ea09d0130366e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:69816b0701f8f5718f574acf2e4c792a58d6af0f3e95f1550f513e063596ea61",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-USER-ORG-ADMIN-P13",
+      "destination": "tasks/feat-user-org-admin/sys-user-org-admin-p13.md",
+      "before_sha256": "sha256:c97880adf1827bba508e644f5312d8abdcb2c3bc075985efb31e3fd5b7e7f56d",
+      "after_sha256": "sha256:03987d226db52bd00c0627b97898fc2fd6b72fb1f0e5d045f5273ce76b985a8e",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:e7dfe5ce044b2d20b7fd1df23564c25bdc4a69652ac278af9beb3d63c388834b",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p01.md",
+      "before_sha256": "sha256:6eab5af63eeb61aa9e97aff8888a528d87da7396e4b28ca8e3f2265b7adbe60b",
+      "after_sha256": "sha256:387a7c1d1dce8e631427fbe14912808414d008581195baefc326dc1f5ff1bca3",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-01-requirements.md",
+      "published_task_spec_sha256": "sha256:d70f7216ae3ae934ff7feac917fcca87d12557ce64b745c59585884adf522cd0",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P02",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p02.md",
+      "before_sha256": "sha256:5908dae8779f78e810de9687afa0c52779a6e9ee30e38e24520217e30c4b64dd",
+      "after_sha256": "sha256:e8938351a12b940eb844d19dbadbf67ff24c7cbbe2e15567331ed89873362974",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-02-architecture.md",
+      "published_task_spec_sha256": "sha256:5fce587c8606ba586a5f7b2c167a1937ad248ace7f69c3fd58ab6edeb2b96aa3",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P03",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p03.md",
+      "before_sha256": "sha256:ab62857cfe95a564b5eca59765194c4b8bcce545ed80568f3872b0a8f6be6cc8",
+      "after_sha256": "sha256:263977f2df226260564eac24a852cc602c0c23a37927bbd01d8d81898bf866cf",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-03-design-review.md",
+      "published_task_spec_sha256": "sha256:fed5d5d20ef0fdf292fdcc79b642e14aab0663fc007ec57dc2643e8f409908ef",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P04",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p04.md",
+      "before_sha256": "sha256:dfbffbc6492ead3ed1a4f36da69f83ec1d9adcc0416815f36857c62f6b3f2580",
+      "after_sha256": "sha256:a150daabd78861eb8fba34db78c5be1af47fe8d9b5a8ac87f7a00825f976994c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-04-test-design.md",
+      "published_task_spec_sha256": "sha256:8b75a707af503a08a9a2e145b5c7931adb0c8d91355bc2564b7f5fd51fd0e129",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P05",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p05.md",
+      "before_sha256": "sha256:262fa7d6e29c5b5a7e32abe4fff6173fe712b48a6b83306a57ae1f7f044effa4",
+      "after_sha256": "sha256:b8f7dbb8da25a5d4a48a5c009f58523f90ed60f3edb7dca1e2412349a9f0d1fc",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-05-implementation.md",
+      "published_task_spec_sha256": "sha256:6045f20c23bf11264f89afb47e57edb2f3417087b7ed23dcaf35e15a6c4862af",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P06",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p06.md",
+      "before_sha256": "sha256:06e527d6101efd9ada91823b1be31cf3ab761ad96ff48750247be9bc5da3ed7b",
+      "after_sha256": "sha256:e15e50504d410cd630bc4fe6e0c4b28a88679863137744326be530bbdfbf1c5c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-06-test-run.md",
+      "published_task_spec_sha256": "sha256:c4cfbe596fc7ee3577a53f55ab7453633d947e0d93cef510d79c240e2c79bed0",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P07",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p07.md",
+      "before_sha256": "sha256:1f9d3ce058a952c3f8739262e03e9bd05fa0f7982aecf696ec74160683e2208c",
+      "after_sha256": "sha256:3a9dceb7dd175525a6d2f9602f73a9c0f6f5ef694e3ed9aa448b180b94366929",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-07-acceptance.md",
+      "published_task_spec_sha256": "sha256:ea895c49c23d2bb3f4de4c1ab64dd7b7607ba13ff3ba858815db285dae9b00ca",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P08",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p08.md",
+      "before_sha256": "sha256:490f304d5db54caea5171b22b98b6c309e950f10fbf629dab69f87086e9fb1a7",
+      "after_sha256": "sha256:c78f3d53eba8239fec6d0b0da42084dcd17f5f51c2deb3442f23bbd85d451679",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-08-refactoring-migration.md",
+      "published_task_spec_sha256": "sha256:053f815a107290eadd69dba6270b445e1098e21668c790e75755b4a604fda831",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P09",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p09.md",
+      "before_sha256": "sha256:1386a040a12eb9b9532f6cd10b759256c3a76fe1aee3b84ed6a3df204ccde3cf",
+      "after_sha256": "sha256:4a41381fe63c24a598a316cb38de401c82b33242d80cbf044c0782d34a0b4a5d",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-09-quality-assurance.md",
+      "published_task_spec_sha256": "sha256:456d47a009d3b3660c8d7effe04701b197021e0a4ec69d95d5b562a35dfaf406",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P10",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p10.md",
+      "before_sha256": "sha256:aaabce14e7d4211b84f54043c47c55249e5fcf9622948ffad06a5363ee331d0c",
+      "after_sha256": "sha256:9a246ab8dff0a45b6f145ce4505b4c9d2c5475880fd47856856370cad83b533c",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-10-final-review.md",
+      "published_task_spec_sha256": "sha256:c5b0f7fb767e8a3e11e06f5f98a95c3c5330ec64711b4ad03943516e953c0140",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P11",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p11.md",
+      "before_sha256": "sha256:d40b317faf9863785e2c607124561bae93b16fb1dd146dc39b6e3976a4c26d15",
+      "after_sha256": "sha256:2e6720681a7b947c0b74623abaeb0d9f14b8e0580b75acc424dbb15f86d8d6ea",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-11-evidence.md",
+      "published_task_spec_sha256": "sha256:bb0588afcb81e5b358a2333807b44c0f897d53537e61ea333ce7cde336011405",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P12",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p12.md",
+      "before_sha256": "sha256:335b609c5c107a253242774e40862377f2f147f1d42f961b8adc60e255feef65",
+      "after_sha256": "sha256:38adfcf3af233474aeeac36081cd6bf6e3642190e1fa7ab0936f7670b2355ddc",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-12-documentation-operations.md",
+      "published_task_spec_sha256": "sha256:3b2f0d8320f3a10a96d64a776225db24c5b5ceb8553a9f523a02929297434dd6",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    },
+    {
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P13",
+      "destination": "tasks/feat-workspace-governance/sys-workspace-governance-p13.md",
+      "before_sha256": "sha256:9dddf5a290da0dc347b96520c3540e92a4a063ae5f979a46abcca3f66211064c",
+      "after_sha256": "sha256:43a5bb2b4040a5df9f8a9f64a82d64565e75b5a16f11a80800b0192bc574e6ae",
+      "published_task_spec": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/task-specs/phase-13-release-deploy.md",
+      "published_task_spec_sha256": "sha256:c2b1689185fa8fec30032249d0eed748be77842025ab19621532e3abb00f3e2f",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    }
+  ]
+}

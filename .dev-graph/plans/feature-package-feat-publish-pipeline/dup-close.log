@@ -1,0 +1,113 @@
+command failed (1): bd close HarnessHub-0e9.13 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.13: blocked by open issues [HarnessHub-0e9.12] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.13
+command failed (1): bd close HarnessHub-0e9.12 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.12: blocked by open issues [HarnessHub-0e9.11] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.12
+command failed (1): bd close HarnessHub-0e9.11 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.11: blocked by open issues [HarnessHub-0e9.10] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.11
+command failed (1): bd close HarnessHub-0e9.10 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.10: blocked by open issues [HarnessHub-0e9.9] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.10
+command failed (1): bd close HarnessHub-0e9.9 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.9: blocked by open issues [HarnessHub-0e9.8] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.9
+command failed (1): bd close HarnessHub-0e9.8 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.8: blocked by open issues [HarnessHub-0e9.7] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.8
+command failed (1): bd close HarnessHub-0e9.7 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.7: blocked by open issues [HarnessHub-0e9.6] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.7
+command failed (1): bd close HarnessHub-0e9.6 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.6: blocked by open issues [HarnessHub-0e9.5] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.6
+command failed (1): bd close HarnessHub-0e9.5 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.5: blocked by open issues [HarnessHub-0e9.4] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.5
+command failed (1): bd close HarnessHub-0e9.4 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.4: blocked by open issues [HarnessHub-0e9.3] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.4
+command failed (1): bd close HarnessHub-0e9.3 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.3: blocked by open issues [HarnessHub-0e9.2] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.3
+command failed (1): bd close HarnessHub-0e9.2 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-0e9.2: blocked by open issues [HarnessHub-0e9.1] (use --force to override)
+[closed rc=1 ] HarnessHub-0e9.2
+{
+  "bd_version": "1.1.0",
+  "op": "close",
+  "result": [
+    {
+      "close_reason": "duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0)",
+      "closed_at": "2026-07-18T01:55:51Z",
+      "created_at": "2026-07-18T01:51:26Z",
+      "created_by": "daishiman",
+      "description": "Hub 基盤 要件ベースライン確定 (dev-graph task projection)",
+      "external_ref": "dev-graph:SYS-HUB-FOUNDATION-P01",
+      "id": "HarnessHub-0e9.1",
+      "issue_type": "task",
+      "owner": "daishimanju@gmail.com",
+      "priority": 2,
+      "status": "closed",
+      "title": "Hub 基盤 要件ベースライン確定",
+      "updated_at": "2026-07-18T01:55:51Z"
+    }
+  ],
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}
+[closed rc=0 ] HarnessHub-0e9.1
+command failed (1): bd close HarnessHub-p4q.13 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.13: blocked by open issues [HarnessHub-p4q.12] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.13
+command failed (1): bd close HarnessHub-p4q.12 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.12: blocked by open issues [HarnessHub-p4q.11] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.12
+command failed (1): bd close HarnessHub-p4q.11 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.11: blocked by open issues [HarnessHub-p4q.10] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.11
+command failed (1): bd close HarnessHub-p4q.10 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.10: blocked by open issues [HarnessHub-p4q.9] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.10
+command failed (1): bd close HarnessHub-p4q.9 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.9: blocked by open issues [HarnessHub-p4q.8] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.9
+command failed (1): bd close HarnessHub-p4q.8 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.8: blocked by open issues [HarnessHub-p4q.7] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.8
+command failed (1): bd close HarnessHub-p4q.7 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.7: blocked by open issues [HarnessHub-p4q.6] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.7
+command failed (1): bd close HarnessHub-p4q.6 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.6: blocked by open issues [HarnessHub-p4q.5] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.6
+command failed (1): bd close HarnessHub-p4q.5 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.5: blocked by open issues [HarnessHub-p4q.4] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.5
+command failed (1): bd close HarnessHub-p4q.4 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.4: blocked by open issues [HarnessHub-p4q.3] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.4
+command failed (1): bd close HarnessHub-p4q.3 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.3: blocked by open issues [HarnessHub-p4q.2] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.3
+command failed (1): bd close HarnessHub-p4q.2 --reason duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0) --json: cannot close HarnessHub-p4q.2: blocked by open issues [HarnessHub-p4q.1] (use --force to override)
+[closed rc=1 ] HarnessHub-p4q.2
+{
+  "bd_version": "1.1.0",
+  "op": "close",
+  "result": [
+    {
+      "close_reason": "duplicate projection cleanup (bd-bridge _find_external broken on bd 1.1.0)",
+      "closed_at": "2026-07-18T01:56:09Z",
+      "created_at": "2026-07-18T01:40:54Z",
+      "created_by": "daishiman",
+      "description": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定 (dev-graph task projection)",
+      "external_ref": "dev-graph:SYS-AUTH-TENANCY-P01",
+      "id": "HarnessHub-p4q.1",
+      "issue_type": "task",
+      "owner": "daishimanju@gmail.com",
+      "priority": 2,
+      "status": "closed",
+      "title": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定",
+      "updated_at": "2026-07-18T01:56:09Z"
+    }
+  ],
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}
+[closed rc=0 ] HarnessHub-p4q.1
+feature close requires --feature-rollup-manifest
+[closed rc=1 ] HarnessHub-0e9
+feature close requires --feature-rollup-manifest
+[closed rc=1 ] HarnessHub-p4q
+[ALL CLOSED]

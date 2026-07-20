@@ -1,0 +1,1215 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-workspace-governance",
+  "parent_feature": "feat-workspace-governance",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "goal-spec.json",
+      "features/feat-workspace-governance.md",
+      "features/feat-workspace-governance.context.json",
+      "docs/backend-spec.md",
+      "docs/security-spec.md",
+      "docs/frontend-spec.md",
+      "docs/screen-inventory.md",
+      "architecture/harness-hub-security.md",
+      "architecture/harness-hub-frontend.md",
+      "architecture/harness-hub-backend.md",
+      "specs/harness-hub-system-specification.md"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "要件ベースライン確定 — 承認キュー・RBAC細分化・監査ログ閲覧・統制ポリシー設定の要件確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "documentation",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance",
+        "arch-harness-hub-security",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "backend",
+        "security",
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-workspace-governance/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "goal-spec (goal-spec.json) の purpose/goal/scope_in 4件/scope_out 2件/acceptance 3件/quality_constraints 6件(id単位)を要件ベースラインへ確定転記し、P02 必須解消事項(governance_policies設計・publish/:id/reject契約・RBAC権限マトリクスUI設計・監査ログUI設計)を明記するP01タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 4件/scope_out 2件/acceptance 3件/quality_constraints 6件(id単位)が逐語一致で転記され、統制ゴールがG4である旨(governance-goal-g4-not-g2-numbering-discrepancy)とP02必須解消事項4点が明記されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP01責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "goal-spec.json との逐語一致に齟齬が見つかった場合、requirements-baseline.md を修正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P01",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p01.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P02",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "アーキテクチャ設計 — governance_policies拡張ポイント・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの決定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "backend",
+        "architecture-decision"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "frontend",
+        "api",
+        "security",
+        "data"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-workspace-governance/architecture-decision-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/backend-spec.md",
+        "docs/security-spec.md",
+        "docs/frontend-spec.md",
+        "docs/screen-inventory.md",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P01が据え置いた(1) governance_policiesテナントスコープテーブルとPublishRequest状態機械へのpolicy hook接続方式、(2) 既存publish.reject監査actionに対応するPOST /api/v1/publish/:id/rejectエンドポイント契約、(3) RBAC権限マトリクス読み取り専用UI(S04拡張、既存users.role_change配線)、(4) 監査event閲覧・検索UI(S06、既存GET /api/v1/audit-events)、(5) 統制ポリシー設定UI(S04拡張)、(6) 追加監査action governance.policy_change、の6系統を確定するP02アーキテクチャ設計タスク。GET /api/v1/publish詳細設計とPublishRequest状態機械本体はfeat-publish-pipeline所有として明示的にスコープ外にする",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に governance_policiesテーブル設計とpolicy hook接続方式、publish/:id/reject契約、RBAC権限マトリクスUI(S04拡張)設計、監査ログUI(S06)設計、統制ポリシー設定UI(S04拡張)設計、追加監査action governance.policy_changeの6系統すべてのarchitecture decisionと、GET /api/v1/publish詳細設計・PublishRequest状態機械本体をfeat-publish-pipeline所有として扱う明示的スコープ境界が記載されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "governance_policiesのpolicy hook接続方式がfeat-publish-pipeline所有のPublishRequest状態機械と非互換であることが判明した場合、architecture decisionをre-openしP02を再実行する。再実行まではP03以降の着手を保留する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P02",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p02.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P03",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "独立設計レビュー — governance_policies拡張点・reject契約・RBAC/監査UI・feature境界遵守の妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security",
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-workspace-governance/design-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P02で確定したgovernance_policies拡張・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの6系統architecture decisionを、実装着手前に独立観点(feat-publish-pipeline/feat-dual-catalog-web/feat-user-org-adminのfeature境界遵守を含む)で妥当性確認するP03設計レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に P02 の6系統 architecture decision それぞれについて妥当性確認結果(問題なし、または是正指示)と、feat-publish-pipeline/feat-dual-catalog-web所有領域への越境がないことの確認結果が記載されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP03責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "governance_policies拡張・reject契約・RBAC/監査UI設計のいずれか、またはfeature境界遵守に重大な指摘が見つかった場合、design-review-notes.md に指摘内容を記録しP02へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P03",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p03.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P04",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "テストファースト設計 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6適用のテスト設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P03"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/audit-log/",
+        "apps/hub/src/app/api/v1/audit-events/export/",
+        "apps/hub/src/lib/publish/policy-adapters/governance.ts",
+        "docs/features/feat-workspace-governance/test-design.md",
+        "packages/db/src/__tests__/workspace-governance/",
+        "packages/schemas/governance/audit-export.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/security-spec.md",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "acceptance 3件(policy遮断・監査テナントスコープ検索・RBAC変更監査記録)とquality_constraints 6件に対応するpolicy gateテスト・監査ログテナントスコープ検索テスト・RBAC変更→監査event記録テスト、および既存確定契約T-1(全action×全role網羅)・T-1b(許可表単調性)・T-1c(越境監査強制)・T-6(監査chain改竄検出)への適合確認テストを設計するP04タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に acceptance 3件と quality_constraints 6件全てに対応するテストケース(既存T-1/T-1b/T-1c/T-6適合確認を含む)が記載され、packages/db/src/__tests__/workspace-governance/ にスタブが作成されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP04責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "acceptance/quality_constraints とテストケースの対応漏れが判明した場合、test-design.md の対応表を修正し不足カテゴリを追加する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P04",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p04.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P05",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "実装 — governance_policiesテーブル・publish/:id/reject API・RBAC権限マトリクスUI(S04拡張)・承認キューUI(S05)・監査ログUI(S06)の実装",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "backend",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "frontend",
+        "api",
+        "data",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P04"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/approval-queue/",
+        "apps/hub/src/app/(dashboard)/audit-log/",
+        "apps/hub/src/app/(dashboard)/workspace-settings/",
+        "apps/hub/src/app/api/v1/audit-events/export/",
+        "apps/hub/src/app/api/v1/governance-policies/",
+        "apps/hub/src/app/api/v1/publish/[id]/reject/",
+        "apps/hub/src/lib/governance/",
+        "apps/hub/src/lib/publish/policy-adapters/governance.ts",
+        "docs/features/feat-workspace-governance/implementation-notes.md",
+        "packages/db/src/schema/governance-policies.ts",
+        "packages/schemas/governance/",
+        "packages/schemas/governance/audit-export.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/backend-spec.md",
+        "docs/security-spec.md",
+        "docs/frontend-spec.md",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "governance_policiesテーブル実装とPublishRequest状態機械へのpolicy hook配線、POST /api/v1/publish/:id/reject実装、S04拡張(RBAC権限マトリクス読み取り専用UI・統制ポリシー設定UI)、S05承認キューUI(既存GET /api/v1/publish status=approval_pending消費)、S06監査ログUI(既存GET /api/v1/audit-events消費・hash chain再検証表示)を行うP05実装タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "packages/db/src/schema/governance-policies.ts, packages/schemas/governance/, apps/hub/src/app/api/v1/publish/[id]/reject/, apps/hub/src/app/api/v1/governance-policies/, apps/hub/src/lib/governance/, apps/hub/src/app/(dashboard)/workspace-settings/, apps/hub/src/app/(dashboard)/approval-queue/, apps/hub/src/app/(dashboard)/audit-log/ が実装され、P04 の test-design.md に列挙された全テストケースに対応する実装対象が揃っている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP05責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "実装がP02のarchitecture decisionと矛盾する場合、該当コードを削除しP02の設計に沿って再実装する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P05",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p05.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P06",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "テスト実行 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6テストの実行",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P05"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/audit-log/",
+        "apps/hub/src/app/api/v1/audit-events/export/",
+        "apps/hub/src/lib/publish/policy-adapters/governance.ts",
+        "docs/features/feat-workspace-governance/test-run-results.md",
+        "packages/db/src/__tests__/workspace-governance/",
+        "packages/schemas/governance/audit-export.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P04で設計したpolicy遮断テスト・監査ログテナントスコープ検索テスト・RBAC変更監査記録テスト・T-1/T-1b/T-1c/T-6適合確認テストを実行し結果を記録するP06テスト実行タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-results.md に quality_constraints 6件全ての pass 結果(policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6の実測結果を含む)が記録されている(fail が残る場合は差し戻し理由が明記されている)",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP06責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかのテスト(policy未遮断・監査event欠落・許可表単調性違反を含む)が fail した場合、test-run-results.md に原因を記録しP05(実装)へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P06",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p06.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P07",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "受入 — 承認フローpolicy遮断・監査ログテナントスコープ検索・RBAC変更監査記録の3件受入判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-workspace-governance/acceptance-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "goal-spec.json acceptance 3項目(承認フローを経ない publish の policy 遮断・監査ログの Tenant スコープ検索・RBAC 変更の監査 event 記録)を確認するP07受入タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-record.md に goal-spec acceptance 3件全ての確認結果(pass)と証跡(policy遮断テストログ・監査ログテナントスコープ検索テストログ・RBAC変更監査記録テストログ)が記載されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP07責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "acceptance 3件のいずれかが不充足の場合、acceptance-record.md に理由を記録しP05(実装)またはP02(設計)へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P07",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p07.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P08",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "リファクタリング/マイグレーション — governance_policies新設テーブル・audit_events追加action(governance.policy_change)の既存基盤互換移行",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "data",
+        "refactoring-migration"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "data",
+      "secondary_workstreams": [
+        "security",
+        "backend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P07"
+      ],
+      "write_scope": [
+        "packages/db/migrations/",
+        "docs/features/feat-workspace-governance/refactoring-migration-note.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/security-spec.md",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "governance_policiesテナントスコープテーブルの新規additive migrationと、既存audit_eventsテーブル(feat-domain-model-db/feat-auth-tenancy所有のhash chain基盤を共有するinfrastructure)へgovernance.policy_change actionを追加するnon-destructive migrationを既存publish.approve/publish.reject/user.role_change actionの記録契約を壊さずに適用するP08マイグレーションタスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に governance_policiesテーブルのadditive migration適用手順と、既存audit_events hash chain(seq/prev_hash/event_hash)への governance.policy_change action追加が既存action記録契約を破壊しないことの確認結果が記載されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP08責務として追跡し、未割当0件である"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "migration後に既存audit_events hash chainまたは既存publish.approve/publish.reject/user.role_change actionの記録に悪影響が確認された場合、migrationをrollbackしrefactoring-migration-note.mdに原因を記録した上で本taskを再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P08",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p08.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P09",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "品質保証 — ASVS L2アクセス制御/ログ到達目標・T-1/T-1b/T-1c/T-6・deny-by-default認可の横断確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "quality",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "security",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P08"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/audit-log/",
+        "apps/hub/src/app/api/v1/audit-events/export/",
+        "apps/hub/src/lib/publish/policy-adapters/governance.ts",
+        "docs/features/feat-workspace-governance/quality-assurance-report.md",
+        "packages/schemas/governance/audit-export.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/security-spec.md",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "goal-spec quality_constraints の asvs-l2-access-control-logging-acceptance-target(ASVS L2 Access Control/Logging到達目標)と deny-by-default-authz-already-active-only-admin-screens-deferred(deny-by-default認可の継続維持)を、P02〜P08の既存成果物を横断的にレビューして最終確認するP09品質保証タスク。新規テストの設計・実行は行わずP04/P06の既存テスト契約(T-1/T-1b/T-1c/T-6)への一貫適合を再確認する",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に goal-spec quality_constraints 6件全件(governance-goal-g4-not-g2-numbering-discrepancy, approval-queue-stage2-activation-contract, granular-rbac-baseline-and-extension-boundary, audit-log-view-baseline-append-only-hash-chain, deny-by-default-authz-already-active-only-admin-screens-deferred, asvs-l2-access-control-logging-acceptance-target)の横断確認結果(pass)が記載されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP09責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "quality_constraints のいずれかに不備が判明した場合、quality-assurance-report.md に理由を記録し該当するphase(P05実装 または P08 migration)へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P09",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p09.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P10",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "最終レビュー — goal-spec 6件quality_constraints・3件acceptanceの全件最終合否判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-workspace-governance/final-review-decision.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P07受入・P09品質保証の結果を統合し、goal-spec quality_constraints 6件とacceptance 3件の全件最終合否をfeature全体として判定するP10タスク。feature境界順守(feat-dual-catalog-web/feat-auth-tenancy非コピー、feat-user-org-admin S17非変更、feat-publish-pipeline状態機械非変更)も併せて最終確認する",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-decision.md に acceptance 3件・quality_constraints 6件全件の最終合否(pass)と、feature境界順守(feat-dual-catalog-web/feat-auth-tenancy非コピー、feat-user-org-admin S17非変更、feat-publish-pipeline状態機械非変更)の確認結果が記載されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP10責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "acceptance/quality_constraints のいずれかが最終的に不充足と判定された場合、final-review-decision.md に理由と差し戻し先phaseを記録し当該phaseへ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P10",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p10.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P11",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "エビデンス集約 — P04〜P10成果物の証跡パッケージ化",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-workspace-governance/evidence-package.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.82,
+        "reason": "P04(テスト設計)/P06(テスト実行)/P07(受入)/P09(品質保証)/P10(最終レビュー)の各成果物を参照リンクとして単一の証跡パッケージへ集約するP11タスク。新たな判定は行わず既存成果物の参照と結論転記のみを行う",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.82,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-package.md に P04/P06/P07/P09/P10 の成果物への参照リンクと各成果物の pass 結論が漏れなく集約されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP11責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "参照先成果物に矛盾・欠落が判明した場合、evidence-package.md の集約内容を修正し不足参照を補う",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P11",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p11.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P12",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "ドキュメント/運用 — workspace-admin向け承認/監査/RBAC設定 運用手順書の整備",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "documentation",
+        "documentation-operations"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-workspace-governance/operations-runbook.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/security-spec.md",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.82,
+        "reason": "goal-spec goal(workspace-adminが承認/差し戻し/監査をHub Webで完結でき統制作業の提供者依存が解消された状態)を運用面で実現するため、承認キュー操作・監査ログ検索/export操作・RBAC権限マトリクス参照操作・統制ポリシー設定変更操作の運用手順書を整備するP12タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.82,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "operations-runbook.md に承認キュー操作・監査ログ検索/export操作・RBAC参照操作・統制ポリシー設定変更操作の4手順が具体的なUI操作手順として記載されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP12責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "運用手順書の内容が実装(P05)と不整合であることが判明した場合、operations-runbook.md を修正するかP05の実装確認へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P12",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p12.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-WORKSPACE-GOVERNANCE-P13",
+      "feature_package_id": "feature-package/feat-workspace-governance",
+      "parent_feature": "feat-workspace-governance",
+      "title": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-workspace-governance",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "related_nodes": [
+        "feat-workspace-governance"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "infrastructure",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P12"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/(dashboard)/audit-log/",
+        "apps/hub/src/app/api/v1/audit-events/export/",
+        "apps/hub/src/lib/publish/policy-adapters/governance.ts",
+        "docs/features/feat-workspace-governance/release-deploy-plan.md",
+        "packages/schemas/governance/audit-export.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "docs/infrastructure-spec.md",
+        "features/feat-workspace-governance.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P08で確認したgovernance_policies/audit_events migrationの適用順序を確定し、wranglerによるCloudflare Workersロールアウト手順とデプロイ後smoke test、rollback手順を確立してリリースするP13タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-workspace-governance/sys-workspace-governance-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-deploy-plan.md に migration 適用順序、wrangler デプロイ手順、デプロイ後 smoke test 3 件(承認キュー表示・監査ログテナントスコープ検索・統制ポリシー変更の監査記録)の結果(pass)、rollback 手順が記載されている",
+        "現行feature context sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1のscope_in/acceptance全件をP13責務として追跡し、未割当0件である",
+        "Normative closure: P02で監査exportをGET /api/v1/audit-events/export（workspace-admin、自tenant、filter共通、streaming CSV、salary/secret/token値禁止、hash-chain検証結果付き）として設計し、P05でroute/schema/UI export actionを実装する。governance policyは共通PublishRequest engineの注入可能なpolicy evaluator seamを通じてReady→Approval Pending/Approvedを決定し、feat-publish-pipeline本体を複製せず実consumer wiringを同feature write scopeに含める。 Evidence: tenant-scoped export、PII/secret redaction、hash-chain、policy block/approval route、共通state-machine consumer wiring、RBAC/audit testsをP04/P06/P07/P12/P13まで追跡する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "smoke testのいずれかがfailした場合、wranglerの前バージョンへロールバックし、governance_policiesテーブルをdrop(新規additiveのため既存データへの影響なし)してrelease-deploy-plan.mdに原因を記録する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P13",
+        "file_path": "tasks/feat-workspace-governance/sys-workspace-governance-p13.md",
+        "parent_feature": "feat-workspace-governance",
+        "feature_package_id": "feature-package/feat-workspace-governance",
+        "phase_ref": "P13"
+      }
+    }
+  ],
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  }
+}

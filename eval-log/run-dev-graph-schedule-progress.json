@@ -1,0 +1,11 @@
+{
+  "checklist": {
+    "candidate_gates": "PASS (confirmed/pass/complete のみ、bd ready×parity 積集合)",
+    "feature_task_separation": "PASS (features/tasks 別 batch)",
+    "resource_conflict_pairs": "PASS (0件)",
+    "suggested_branch_claim_command": "PASS (devgraph/<id> + public CLI 形式)",
+    "digest_stability": "PASS (graph/lease/tracker 前後一致)",
+    "lease_authority": "PASS (git common-dir 正本)",
+    "c17_independent_verifier": "PASS (recomputed_ready が schedule 出力と完全一致・findings 8項目全て整合)"
+  }
+}

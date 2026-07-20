@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/replan-20260719-feat-auth-tenancy",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+  "digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+  "feature_package_id": "feature-package/feat-auth-tenancy",
+  "package_slug": "feature-package-feat-auth-tenancy",
+  "generation_id": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-auth-tenancy",
+    "published_digest": "sha256:a4a7cdd6df5cc2b9195fde7917093422df33c982adcd00e124749c89815add2b",
+    "receipt": ".dev-graph/plans/feature-package-feat-auth-tenancy/atomic-promotion-receipt.json"
+  },
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-19T14:10:10Z"
+}

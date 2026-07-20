@@ -1,0 +1,117 @@
+{
+  "schema": "run-dev-graph-requirements/trace-plan/1.0.0",
+  "generated_at": "2026-07-19T14:43:16Z",
+  "status": "TRACE_COMPLETE_HANDOFF_READY",
+  "scope_receipt_ref": "eval-log/run-dev-graph-requirements-scope-receipt.json",
+  "docs_inventory_ref": "eval-log/run-dev-graph-decompose-docs-coverage-audit-20260719.json",
+  "requirements_document_status": "EMITTED_READY",
+  "requirements_document_ref": "eval-log/run-dev-graph-requirements-document.md",
+  "source_group_count": 3,
+  "source_file_count": 25,
+  "source_unit_count": 300,
+  "feature_to_package_trace": {
+    "feature_count": 15,
+    "package_count": 15,
+    "task_count": 195,
+    "cardinality": "one feature -> one immutable current package -> exactly 13 tasks"
+  },
+  "phase_mapping": [
+    {
+      "phase_ref": "P01",
+      "requirement_role": "requirements baseline"
+    },
+    {
+      "phase_ref": "P02",
+      "requirement_role": "architecture and workstream design"
+    },
+    {
+      "phase_ref": "P03",
+      "requirement_role": "independent design review"
+    },
+    {
+      "phase_ref": "P04",
+      "requirement_role": "test-first design"
+    },
+    {
+      "phase_ref": "P05",
+      "requirement_role": "implementation"
+    },
+    {
+      "phase_ref": "P06",
+      "requirement_role": "test execution"
+    },
+    {
+      "phase_ref": "P07",
+      "requirement_role": "feature acceptance"
+    },
+    {
+      "phase_ref": "P08",
+      "requirement_role": "refactoring or migration, including N/A evidence"
+    },
+    {
+      "phase_ref": "P09",
+      "requirement_role": "quality, security and operational assurance"
+    },
+    {
+      "phase_ref": "P10",
+      "requirement_role": "independent final review"
+    },
+    {
+      "phase_ref": "P11",
+      "requirement_role": "reproducible evidence"
+    },
+    {
+      "phase_ref": "P12",
+      "requirement_role": "documentation, runbook and handover"
+    },
+    {
+      "phase_ref": "P13",
+      "requirement_role": "release, deploy and close-out, including N/A evidence"
+    }
+  ],
+  "required_handoff_fields": [
+    "requirement_id",
+    "source_path",
+    "source_sha256",
+    "source_heading_or_evidence_ref",
+    "specification_node_id",
+    "architecture_node_ids",
+    "feature_id",
+    "feature_package_id",
+    "phase_ref",
+    "task_id",
+    "depends_on",
+    "resource_scope",
+    "acceptance",
+    "verification",
+    "package_digest",
+    "graph_snapshot_digest",
+    "handoff_target"
+  ],
+  "atomic_requirement_contract": {
+    "stable_id_format": "DOC::<path>#<anchor>::<semantic-key>",
+    "split_rules": [
+      "source headings/file evidence are independently identified",
+      "negative requirements and numeric limits remain in immutable task specs",
+      "every execution row has owner phase and verification/evidence"
+    ]
+  },
+  "coverage_gates": {
+    "docs_exact_coverage": "PASS",
+    "system_spec_C08": "PASS",
+    "C11_validate_graph_schema": "PASS",
+    "C02_saved_state": "PASS",
+    "validate_system_plan": "PASS",
+    "independent_C1_C4": "PASS",
+    "tracker_projection": "PASS",
+    "runtime_task_projection": "PASS",
+    "implementation_code_generated": "PASS"
+  },
+  "handoff_projection": {
+    "target": "capability-build/task-graph",
+    "requirements_document": "eval-log/run-dev-graph-requirements-document.md",
+    "handoff_reference": "eval-log/run-dev-graph-requirements-handoff.json",
+    "snapshot_digest": "sha256:a32f1432e1db7ae4572efe244eb43e9f9434d1906dfa51f82404135d8b71147c",
+    "decision": "READY"
+  }
+}

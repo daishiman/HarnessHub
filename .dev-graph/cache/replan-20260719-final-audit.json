@@ -1,0 +1,331 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "replan-final-audit",
+  "status": "PASS",
+  "graph": {
+    "revision": 40,
+    "sha256": "sha256:9e02767555c267342af9acbfc296772377125fd2d677fff7816ad54eb61b440b",
+    "schema_validation_exit_code": 0,
+    "feature_count": 15,
+    "task_count": 195,
+    "unique_task_node_count": 195
+  },
+  "packages": [
+    {
+      "feature_id": "feat-auth-tenancy",
+      "pointer": ".dev-graph/state/current/feature-package-feat-auth-tenancy.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+      "generation_id": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+      "package_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-auth-tenancy",
+        "published_digest": "sha256:a4a7cdd6df5cc2b9195fde7917093422df33c982adcd00e124749c89815add2b",
+        "receipt": ".dev-graph/plans/feature-package-feat-auth-tenancy/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-build-pipeline-board",
+      "pointer": ".dev-graph/state/current/feature-package-feat-build-pipeline-board.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+      "generation_id": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+      "package_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-build-pipeline-board",
+        "published_digest": "sha256:c7e0d7e68a86d10ef5b70c55a4f881b174f3b503b5bc2d6285bcef4ebfe58d9c",
+        "receipt": ".dev-graph/plans/feature-package-feat-build-pipeline-board/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-docs-cms",
+      "pointer": ".dev-graph/state/current/feature-package-feat-docs-cms.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+      "generation_id": "a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+      "package_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-docs-cms",
+        "published_digest": "sha256:e393b328fe1122ffb1616cbb39d17d15602908a597263868bd566f8a2af8da3f",
+        "receipt": ".dev-graph/plans/feature-package-feat-docs-cms/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-docs-cms/a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-domain-model-db",
+      "pointer": ".dev-graph/state/current/feature-package-feat-domain-model-db.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+      "generation_id": "6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+      "package_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-domain-model-db",
+        "published_digest": "sha256:4b6c2e59e5501c72192f4f4b6572f520dd9ed49cfcaaf532e3a83f0d84358199",
+        "receipt": ".dev-graph/plans/feature-package-feat-domain-model-db/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-dual-catalog-web",
+      "pointer": ".dev-graph/state/current/feature-package-feat-dual-catalog-web.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+      "generation_id": "7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+      "package_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-dual-catalog-web",
+        "published_digest": "sha256:6c488a42d91f6d71efff948f6392be3b93f93a84ed449ec9b87f1baeefb73901",
+        "receipt": ".dev-graph/plans/feature-package-feat-dual-catalog-web/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-feedback-loop",
+      "pointer": ".dev-graph/state/current/feature-package-feat-feedback-loop.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+      "generation_id": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+      "package_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-feedback-loop",
+        "published_digest": "sha256:906f1acf5e23697a98382601bea20c910a9e5599b319385a29c5d983e13f89db",
+        "receipt": ".dev-graph/plans/feature-package-feat-feedback-loop/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-hearing-intake",
+      "pointer": ".dev-graph/state/current/feature-package-feat-hearing-intake.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+      "generation_id": "61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+      "package_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-hearing-intake",
+        "published_digest": "sha256:ee4bc2d03879b6b4a94328c582b3c45f0db43b6222cf83eeb3fe90ed2d8332cf",
+        "receipt": ".dev-graph/plans/feature-package-feat-hearing-intake/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-hub-foundation",
+      "pointer": ".dev-graph/state/current/feature-package-feat-hub-foundation.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+      "generation_id": "8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+      "package_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-hub-foundation",
+        "published_digest": "sha256:d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "receipt": ".dev-graph/plans/feature-package-feat-hub-foundation/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-metrics-tracking",
+      "pointer": ".dev-graph/state/current/feature-package-feat-metrics-tracking.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+      "generation_id": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+      "package_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-metrics-tracking",
+        "published_digest": "sha256:178a96700782a721a2f448d53618709aff1c89250d73f17154bc7de273395ed1",
+        "receipt": ".dev-graph/plans/feature-package-feat-metrics-tracking/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-publish-pipeline",
+      "pointer": ".dev-graph/state/current/feature-package-feat-publish-pipeline.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+      "generation_id": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+      "package_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-publish-pipeline",
+        "published_digest": "sha256:916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+        "receipt": ".dev-graph/plans/feature-package-feat-publish-pipeline/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-publisher-plugin",
+      "pointer": ".dev-graph/state/current/feature-package-feat-publisher-plugin.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+      "generation_id": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+      "package_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-publisher-plugin",
+        "published_digest": "sha256:8fd4221cbc7fa8d2278014888d1d55be3db8401066964dd46d17bb2d75231199",
+        "receipt": ".dev-graph/plans/feature-package-feat-publisher-plugin/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-stage0-distribution-gate",
+      "pointer": ".dev-graph/state/current/feature-package-feat-stage0-distribution-gate.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+      "generation_id": "30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+      "package_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate",
+        "published_digest": "sha256:304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+        "receipt": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-tenant-data-retention",
+      "pointer": ".dev-graph/state/current/feature-package-feat-tenant-data-retention.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+      "generation_id": "7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+      "package_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-tenant-data-retention",
+        "published_digest": "sha256:e98e8162d3d213598ba96979b3e3465ede0fddc7b4211fec02496bfa020e0c92",
+        "receipt": ".dev-graph/plans/feature-package-feat-tenant-data-retention/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-user-org-admin",
+      "pointer": ".dev-graph/state/current/feature-package-feat-user-org-admin.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+      "generation_id": "2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+      "package_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-user-org-admin",
+        "published_digest": "sha256:66c53d61ff2b756728000d0e1328ba69931a158e19787d0b1059be702f7675b2",
+        "receipt": ".dev-graph/plans/feature-package-feat-user-org-admin/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-user-org-admin/2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14/atomic-promotion-receipt.json"
+    },
+    {
+      "feature_id": "feat-workspace-governance",
+      "pointer": ".dev-graph/state/current/feature-package-feat-workspace-governance.json",
+      "published_path": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+      "generation_id": "b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+      "package_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+      "supersedes": {
+        "published_path": ".dev-graph/plans/feature-package-feat-workspace-governance",
+        "published_digest": "sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91",
+        "receipt": ".dev-graph/plans/feature-package-feat-workspace-governance/atomic-promotion-receipt.json"
+      },
+      "task_count": 13,
+      "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/dev-graph-registration-receipt.json",
+      "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/atomic-promotion-receipt.json"
+    }
+  ],
+  "published_validators": [
+    {
+      "feature_id": "feat-auth-tenancy",
+      "status": "pass",
+      "validated_digest": "sha256:98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52"
+    },
+    {
+      "feature_id": "feat-build-pipeline-board",
+      "status": "pass",
+      "validated_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9"
+    },
+    {
+      "feature_id": "feat-docs-cms",
+      "status": "pass",
+      "validated_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85"
+    },
+    {
+      "feature_id": "feat-domain-model-db",
+      "status": "pass",
+      "validated_digest": "sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b"
+    },
+    {
+      "feature_id": "feat-dual-catalog-web",
+      "status": "pass",
+      "validated_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817"
+    },
+    {
+      "feature_id": "feat-feedback-loop",
+      "status": "pass",
+      "validated_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927"
+    },
+    {
+      "feature_id": "feat-hearing-intake",
+      "status": "pass",
+      "validated_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+    },
+    {
+      "feature_id": "feat-hub-foundation",
+      "status": "pass",
+      "validated_digest": "sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502"
+    },
+    {
+      "feature_id": "feat-metrics-tracking",
+      "status": "pass",
+      "validated_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256"
+    },
+    {
+      "feature_id": "feat-publish-pipeline",
+      "status": "pass",
+      "validated_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b"
+    },
+    {
+      "feature_id": "feat-publisher-plugin",
+      "status": "pass",
+      "validated_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+    },
+    {
+      "feature_id": "feat-stage0-distribution-gate",
+      "status": "pass",
+      "validated_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b"
+    },
+    {
+      "feature_id": "feat-tenant-data-retention",
+      "status": "pass",
+      "validated_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+    },
+    {
+      "feature_id": "feat-user-org-admin",
+      "status": "pass",
+      "validated_digest": "sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87046b14"
+    },
+    {
+      "feature_id": "feat-workspace-governance",
+      "status": "pass",
+      "validated_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+    }
+  ],
+  "beads_projection": {
+    "task_external_refs_expected": 195,
+    "task_external_refs_one_to_one": 195,
+    "feature_external_refs_expected": 15,
+    "feature_external_refs_one_to_one": 15,
+    "active_duplicate_refs": [],
+    "metadata_digest_mismatch": [],
+    "stage0_dependency_receipt": ".dev-graph/cache/stage0-stage1-beads-dependency-receipt.json"
+  },
+  "immutable_history": {
+    "all_current_pointers_have_supersedes": true,
+    "superseded_paths_still_exist": true
+  },
+  "violations": []
+}

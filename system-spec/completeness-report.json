@@ -1,0 +1,246 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec",
+  "verdict": "PASS",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "score": 100,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "requirements_foundation の U1〜U9 は appr-007 で確定し、G1〜G5、D1〜D6、I1〜I14、各 matrix cell、生成章への参照に dangling がない。foundation 必須ゲートも exit 0。",
+      "evidence": [
+        "spec-state.json: requirements_foundation.confirmed=true / approval_ref=appr-007",
+        "validate-coverage-matrix.py --require-complete --require-foundation: exit 0",
+        "00-requirements-definition.md: U1〜U9・G1〜G5・D1〜D6 のコンパイル結果"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "score": 100,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "D1〜D6 は全件 confirmed。費用、goal fit、security、operations、lock-in、代替案と採用理由を仕様へ保持し、appr-007 と qa-047/qa-049 の中立再確認に接地している。",
+      "evidence": [
+        "spec-state.json: decisions 6 件、status=confirmed 6 件",
+        "qa-047 / qa-049: 既存推奨の弱点と代替案を含む中立再確認",
+        "fetched-references.json: 17 target の公式一次情報"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "score": 100,
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "独立 C07 監査は 54/54 セルを PASS（確定25、理由付き対象外29、未収集0、qa_ref不備0）。C06 の全履歴監査は過去6件の誘導的質問を検出したが、現在有効な決定は qa-047/qa-049 と appr-007 で中立に再確認され、qa-065/qa-066 に新規誘導はなく、現行網羅性とトレースは回復済み。",
+      "evidence": [
+        "system-spec-matrix-auditor: verdict PASS / loop_pass PASS / final_ready PASS",
+        "validate-coverage-matrix.py --require-complete --require-foundation: exit 0",
+        "54 cells = confirmed 25 + excluded with reason 29; missing 0",
+        "qa_log 66 件は id 一意、確定25セルの qa_ref dangling 0",
+        "qa-065: J0〜J6 と S01〜S18/P0〜P5 の逆引き",
+        "qa-066: docs/features README と 11 requirements-baseline の参照型トレース"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "score": 96,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "knowledge/doctrine/required-info/cross の4 profile は全て exit 0。各章は設計知識カードを持つだけでなく、Clean Architecture の依存方向、DDD の境界、Secure by Design、SRE 運用原則を認可・永続化・公開・復旧契約へ具体化している。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph: 4 profiles exit 0",
+        "backend.md: Clean Architecture / API Design Patterns / DDD を API・domain・repository 境界へ適用",
+        "auth.md / security.md: Device Flow、最小 scope、token rotation、監査 hash chain へ Secure by Design を適用",
+        "maintenance-ops.md / dev-workflow.md: SLO、rollback、CI gate、expand/contract へ reliability/operations doctrine を適用"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "score": 100,
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "独立再監査で 17 target / 17 references が全件 PASS。欠落、非公式 host、旧版、確認時刻不足、鮮度未確認はいずれも0。pnpm は公式 releases の現行 11.15.0 へ是正済み。",
+      "evidence": [
+        "system-spec-doc-freshness-auditor: verdict PASS",
+        "validate-source-citation.py: exit 0",
+        "pnpm source_url=https://github.com/pnpm/pnpm/releases / version=11.15.0",
+        "missing=0 / unofficial_host=0 / stale=0 / unconfirmed=0"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "score": 100,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "system-spec-harness の全18 responsibility prompt は7層網羅性、L5 goal-seek 契約、構造 validator の双方を通過した。",
+      "evidence": [
+        "verify-completeness.py: 18/18 exit 0",
+        "validate-prompt.py: 18/18 exit 0",
+        "prompt_validators: total=18 failures=0"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "G-coverage",
+      "name": "validate-coverage-matrix",
+      "conditions": [
+        "foundation_trace",
+        "matrix_coverage"
+      ],
+      "command": [
+        "python",
+        "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "--matrix",
+        "system-spec/spec-state.json",
+        "--require-complete",
+        "--require-foundation"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)+foundation(上位概念トレース)) を満たす",
+      "stderr": ""
+    },
+    {
+      "id": "G-source",
+      "name": "validate-source-citation",
+      "conditions": [
+        "doc_freshness"
+      ],
+      "command": [
+        "python",
+        "plugins/system-spec-harness/scripts/validate-source-citation.py",
+        "--targets",
+        "system-spec/spec-state.json",
+        "--references",
+        "system-spec/fetched-references.json",
+        "--state",
+        "system-spec/spec-state.json"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす",
+      "stderr": ""
+    },
+    {
+      "id": "G-knowledge",
+      "name": "validate-knowledge-graph",
+      "conditions": [
+        "design_knowledge_reflection",
+        "matrix_coverage"
+      ],
+      "command": [
+        "python",
+        "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py",
+        "--matrix",
+        "system-spec/spec-state.json",
+        "--require-complete",
+        "--knowledge-graph"
+      ],
+      "exit_code": 0,
+      "stdout": "knowledge/doctrine/required-info/cross: all exit 0",
+      "stderr": ""
+    },
+    {
+      "id": "G-compile",
+      "name": "compile-spec-doc-determinism",
+      "conditions": [
+        "foundation_trace",
+        "decision_guidance",
+        "matrix_coverage",
+        "design_knowledge_reflection"
+      ],
+      "command": [
+        "python",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/scripts/compile-spec-doc.py",
+        "compile",
+        "--spec",
+        "system-spec/spec-state.json",
+        "--references",
+        "system-spec/fetched-references.json"
+      ],
+      "exit_code": 0,
+      "stdout": "11 Markdown files generated; independent output byte-identical",
+      "stderr": ""
+    },
+    {
+      "id": "G-compile-tests",
+      "name": "test-compile-spec-doc",
+      "conditions": [
+        "design_knowledge_reflection"
+      ],
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/tests/test_compile_spec_doc.py"
+      ],
+      "exit_code": 0,
+      "stdout": "42 passed",
+      "stderr": ""
+    },
+    {
+      "id": "G-prompts",
+      "name": "prompt-creator-validators",
+      "conditions": [
+        "prompt_quality"
+      ],
+      "command": [
+        "verify-completeness.py",
+        "+",
+        "validate-prompt.py",
+        "for",
+        "18",
+        "prompts"
+      ],
+      "exit_code": 0,
+      "stdout": "prompt_validators: total=18 failures=0",
+      "stderr": ""
+    }
+  ],
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "hearing-history",
+      "observation": "R6 の全履歴監査では qa-014/028/029/030/031/034 の6質問に、論点の束ね方または AI 推奨の先出しによる誘導性が残る。監査証跡は改変せず保持する。",
+      "suggested_fix": "新規仕様値は引き続き中立な自由回答または論点別質問で確認する。現在値は qa-047/qa-049 と appr-007 で回復済みのため章の再オープンは不要。",
+      "evidence": [
+        "system-spec-hearing-auditor: strict history verdict FAIL / current decisions PASS-RECOVERED",
+        "qa-065/qa-066: 新規誘導0、聞き漏れ0、早期停止0"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "knowledge-order",
+      "observation": "backend.md の設計知識カード表示順は resource-map 順（Clean Architecture → API Design Patterns → DDD）のままで、R2-render が示す topo order と表示順だけが一致しない。確定判断の依存順と具体適用は健全で、内容欠落はない。",
+      "suggested_fix": "将来の compiler 改修で render_design_refs を knowledge topo order に揃える。",
+      "evidence": [
+        "backend.md: design card headings",
+        "validate-knowledge-graph.py --profile knowledge --order: exit 0"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "docs-coverage",
+      "observation": "docs/ の要件、設計、画面、J0〜J6、P0〜P5、mockup、features README、11 requirements-baseline を参照型トレースへ統合し、循環する二重正本を作らず逆引き可能にした。",
+      "evidence": [
+        "qa-065 / system-spec/ui-ux.md",
+        "qa-066 / system-spec/dev-workflow.md"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "freshness",
+      "observation": "17件の外部技術資料を公式一次情報へ再照合し、唯一旧版だった pnpm を 11.15.0 へ更新した。",
+      "evidence": [
+        "system-spec/fetched-references.json",
+        "system-spec-doc-freshness-auditor: PASS"
+      ]
+    }
+  ],
+  "gaps": []
+}

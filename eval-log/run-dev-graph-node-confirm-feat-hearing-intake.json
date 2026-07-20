@@ -1,0 +1,22 @@
+{
+  "op": "confirm",
+  "graph_node_id": "feat-hearing-intake",
+  "transition": {
+    "confirmation_status": [
+      "draft",
+      "confirmed"
+    ]
+  },
+  "confirmed_at": "2026-07-17T11:48:24Z",
+  "source_digest_pinned": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+  "review_basis": [
+    "scope_in/scope_out/acceptance を system-spec 確定内容 (qa-021 S10-S12 / qa-023 B1・B5 / qa-024 HearingSheet・FormData・AiJob / qa-025 SEC7・SEC8 / D5 pull型キュー / I11) と突合し矛盾なし",
+    "U7 改訂 (Studio 拡張) と I11 は appr-004/appr-005 + qa-030 でユーザー承認済み",
+    "docs/screen-inventory.md S10-S12・docs/user-journeys.md J4・docs/shared-layers.md (AI キュー/ウィザード部品の消費側) と整合",
+    "ユーザー指示: S4 続行指示 (2026-07-17 「つづけて」)"
+  ],
+  "validator": {
+    "schema": "validate-graph-schema.py",
+    "valid": true
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:a4a7cdd6df5cc2b9195fde7917093422df33c982adcd00e124749c89815add2b",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で goal-spec (quality_constraints 7 件) との矛盾なし。owner=relational role (projects.owner_user_id から合成) の architecture decision は backend-spec §2.2 の verbatim 記載・§3.3 認可マトリクスの owner 列・単調性要求と一致 (証跡誤認なし)。数値契約 (Device Flow TTL/JWT maxAge/失効キャッシュ TTL) が §3.2/§4.1 と完全一致。スコープ外 4 事項の混入 0 件",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#owner合成規則",
+        "task-specs/phase-05-implementation.md#数値契約",
+        "task-specs/phase-01-requirements.md#スコープ外"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13・14 必須見出し全件・placeholder 0 (role 順序の不等号表記は日本語表現へ置換済みで誤検知なし)。根拠 id (qa-005/qa-006/qa-008/qa-020/qa-036/D3/D4/I7/I8/G4) を spec-state qa_log と 00-requirements-definition.md で実在確認、引用内容一致",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-10-final-review.md#7件充足確認"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "source_feature_digest が context の独立 sha256 再計算値 (sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5) と全箇所一致。canonical_digest は validator 独立実行値と manifest 宣言が一致。絶対パス grep 0 件・repo_identity 3 箇所一致",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json 13 node の厳密線形前方連鎖 (SYS-AUTH-TENANCY-P01→…→P13)。逆流・サイクル・cross-feature edge なし。validator 独立再実行 exit0",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:a4a7cdd6df5cc2b9195fde7917093422df33c982adcd00e124749c89815add2b\", \"feature_package_id\": \"feature-package/feat-auth-tenancy\", \"parent_feature\": \"feat-auth-tenancy\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "6304c6008247b4e63e5e785df3a086b0fe0e3f93c703d4413bac5f520a046bc3"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "fc5ef8dad7c7d415f1bd678818490746eb9edb1ca69112ce0a9cb23e5dcef644"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "d120fb7dfbb2fe8afb69a531f093f9606141179412f9fb9e263f612e9f0a4767"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "2294afce9dc817ca72ba62c72910555635c545bc14e452b8e024f01767362b6b"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "02565e75ee5c394bc31d6a0a465b100ab77bc8ee90b713fa7d3b8e229bd72609"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "5c8a37dfe12aa8b1577dcdf1a4b76a26178a22d224711fad96ac7c72bbfc0bdc"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "0bbffd3abd51714c74e40e2e43c2f2a845367852ab3cd9960d4f9d3957645e5c"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "ac52154784c7b3a2f4844637ba5a6ff809fb44c492fcb2adb29755ae23cfc57b"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "b84215849637da880f6147bb64c2fe4be7cbf27fc611bda21fe9bc316142b927"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "cea54c5067e1e8ead2340654c55e0b739d090ee8960ea96dacd55ca315a5527d"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "47fc31ba08ed1ddf06418586b8c73d1b592379caed248d12fa30615e343d2c4e"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "68917b9906eb1227270c85a41e9d440e93d68e5682426b09a004e7cd4b3b61d3"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "d13389eb8b5f442e0b3f37895045bee04ee48b7da7bce8fac7bce852ac6feec5"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "7ff976b631653a722159382f0989fe1caef55117cd9a2ca08f3db1554d0a705c"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "88cad5d862e7d17f9db963ad97473aceffdf34dc40bdb801718089e4c7bbc9e5"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "47cdd3c74043a03289a68ff65f7bf50bc98049b4a45bb635b9be162b83de163a"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "8fd83463c96780c65b2120f52d99e28fd0ea875e0a8a7c31499829633173f515"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "96f7105a3f44e2fb451c704a555a44c86ec4a826e68bd78321497c950660dbc0"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 spec 全文読解・validator 独立再実行 exit0・digest 2 系統の独立再計算一致・boundary 検査 0 件・設計判断 5 点 (owner=relational role 合成の verbatim 接地 / 4 テーブル schema owner 境界の双方向無矛盾 / P08・P13 の意味的読み替えの正当性 (sibling の実 P08 との非対称性確認込み) / feature-package.json の schema 準拠フィールド削除 / 共有 CI・wrapper・packages/db/schema/ 不可侵) の妥当性確認を実施。blocking findings なし",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "process/placeholder-regex-false-positive",
+      "observation": "architect 報告: role 全順序の不等号表記 (member<owner<…) が placeholder 検出 regex `<[^>]+>` に誤検知されるため日本語表現へ置換した。数式・比較式を含む task spec では既知の制約として planner ドキュメントへの注記を follow-up 推奨",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#表現規約"
+      ]
+    }
+  ]
+}

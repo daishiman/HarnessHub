@@ -1,0 +1,265 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork",
+    "run": "rerun-3 (C01 誘導質問差し戻し対応 + qa 採番衝突第 3 例修復後の静止断面評価)"
+  },
+  "spec_dir": "system-spec/",
+  "pinned_inputs": {
+    "spec_state": {
+      "path": "system-spec/spec-state.json",
+      "sha256": "d3339a4692a5b70b94fd9dc596b42d7c2ec5661d52a4a1d71b5897a2066854bc",
+      "note": "最終断面 (qa_log 49 件)。評価開始時 pin 7b9186f1… (07:56) に対する C05 差分監査で qa 採番衝突第 3 例 (backend.web qa_ref 内容不適合・中立再確認の逐語記録欠落・qa-043 参照ずれ) を検出 → C01 修復 (qa-047/qa-048 再登録 + 参照修正) = 9bc79344… (08:04) → C06-r2 の訂正要請への対応で qa-049 (C4 改訂 3 段階の逐語補記・セル状態変更なし) を追記した本断面で確定評価。--require-complete / --require-foundation exit0 を最終断面で再実行済み"
+    },
+    "fetched_references": {
+      "path": "system-spec/fetched-references.json",
+      "sha256": "7b41ef503ce5b55a88b037ab440ed158155441269e03c13dc1b3e6a6c1ecf2f8",
+      "note": "rerun-2 で C08-r2 が PASS 判定した凍結断面と同一 (C05 実測で sha 一致確認)。C08 判定は本 rerun でも有効"
+    }
+  },
+  "verdict": "PASS",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "requirements_foundation confirmed=true / approval_ref=appr-007 (approval_log 実在)。C4 制約の改訂 (非保持境界 → 業務ナレッジ/ドキュメント + ハーネス実行入出力の保持前提化。credential 非保持は維持) は qa-047 (中立再確認 3 ラウンドの逐語) + appr-007 で qa/approval 双方に遡及可能。U6 stakeholders から『顧客の情報システム/セキュリティ部門』を削除 (AI 代弁項目の解消)、G5 文言はユーザー個別追認 — 前回 low (G5/U6 遡及性) は解消 (C06-r2 も対話証跡での裏付けを独立確認)。00-requirements-definition.md は改訂後 rf と一致し、dangling 0 件 (10 章 serves_goals + D1-D6 + intents + matrix 全 qa_ref、qa-047/048 含む C05 実測)。validate-coverage-matrix --require-foundation exit0。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-foundation exit0 (9bc79344 断面 + 最終 d3339a46 断面で C05 実行)",
+        "rf.confirmed=true / approval_ref=appr-007 実在 / U6 削除を rf 実データで確認",
+        "dangling 検査 0 件 (C05 スクリプト実測)",
+        "qa-047: G5 文言の個別追認・C4 改訂・U6 削除の逐語記録 (採番注記付き)",
+        "qa-049: C4 改訂 3 段階 (見直し要否 → 水準 3 択 → 保持対象/保存/削除) の提示選択肢・AI 推奨・ユーザー選択の逐語補記 (C06-r2 訂正要請への対応。credential 非選択の multiSelect 逐語根拠)",
+        "00-requirements-definition.md L54/L55/L62: C4 改訂 + scope.in/out + qa-045〜048 参照 (採番衝突注記付き) を確認"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "D1-D6 全 6 決定が status=confirmed + user_decision 非空を維持 (3 案 + 無料/低コスト案 + comparison_basis 5 軸 + caveats + 公式 evidence_refs の構造不変)。中立再確認 (qa-047) で D5/D6 は現行決定の弱点明示 + 代替案等価提示のうえユーザーが再選択して維持され、AiJob pull 権限 (qa-031 論点 3) は provider-admin のみ → workspace-admin 開放へユーザー主体で変更 (qa-048 で backend へ展開) — AI 推奨追認でない実質的再検討の実証が D2 棄却実績に加わった。appr-006 は誘導質問下の既確定を承認したうえで今後の様式改善 (選択肢先行 → AI 推奨後段) を記録。",
+      "evidence": [
+        "spec-state.json decisions[] 6 件全て status=confirmed + user_decision=true (C05 実測)",
+        "qa-047: D5/D6/qa-031 論点 1/qa-034 論点 1-4/qa-030 rf 改訂の維持・変更の逐語",
+        "qa-048: AiJob pull 開放の backend 展開 (認可マトリクス・§4.11・§9 改訂)",
+        "qa-049: C4 改訂の段階 2 でユーザーが AI 推奨 (MVP 非保持 + 将来枠) に反し『今から保持前提で再設計』を選択した逐語 = 推奨追従でない実質判断の直接証跡",
+        "appr-006: 既確定承認 + 様式改善 + 反証記録 (qa-031 論点 4 の AI 推奨棄却)"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "primary 判定は coordinator 委任に基づく C05 差分監査 (C07 相当) + rerun-2 C07-r2 PASS の継承: 9 カテゴリ × 6 canonical platform = 54 セル全終端 (未収集 0)・対象外理由全件具体的・category_aggregate 真理値表整合。決定論ゲート loop / --require-complete / --require-foundation 全 exit0、C16 required-info profile exit0。再確定/差し替えセルの qa_ref 内容適合を C05 が原文照合: database.web=qa-045 (C4→DB delta: tenant_data_objects・purpose=tenant_data・即時完全削除)・security.web=qa-046 (旧 N2 撤回・T14/T15 追加)・backend.web=qa-048 (AiJob pull 開放 + 保持 API 方針)・infrastructure.desktop=qa-043 / maintenance-ops.desktop=qa-044 (旧 qa-003/qa-011 薄参照 low の解消)。評価開始断面 (7b9186f1) で検出した high 相当の取り違え (backend.web=qa-044 が maintenance-ops.desktop 質疑) は qa-048 再登録 + 参照修正で解消済みを実測確認。sub-input C06-r2 = PASS (現行 pin): 誘導質問 6 件は qa-047 の個別中立再確認 (弱点明示 + 維持/変更区別 + genuine な決定変更 2 件) で全件解消、聞き漏れ 0 / 早期停止 0 / dangling 0、採番衝突第 3 例の記録健全性も qa-047/048 の採番注記で追跡可能と判定。残存は low のみ (非ブロッキング)。",
+      "evidence": [
+        "validate-coverage-matrix.py loop / --require-complete / --require-foundation 全 exit0 (9bc79344 断面、C05 実行)",
+        "C05 差分監査 (C07 相当・coordinator 委任): qa-043/044/045/046/047/048 の全 qa_ref 内容適合を原文照合。7b9186f1 断面での取り違え検出 → 修復確認の全過程を記録",
+        "C06-r2 (fork 監査): verdict PASS — 最終 pin d3339a46 で確定。誘導質問 6 件解消 / 聞き漏れ 0 / 早期停止 0 / dangling 0。qa-049 原文検証で『訂正要請対応として十分・論点クローズ』(段階 1 推奨表示なし両論提示・段階 2 AI 推奨明示 + ユーザー拒否 = 誘導の逆証拠・段階 3 設問分解)。additive 変更のみ (approval_log 不変・matrix 影響なし) を差分確認。残存 low: reopen_log 一方向参照・qa-034 論点 2-4 一括開示。観察点: hearing_progress.loop_count 2→1 は writer の per-invocation chunk 仕様によるもので早期停止の証跡ではないと判定",
+        "rerun-2 C07-r2: loop_pass/final_ready PASS (54 セル構造は本断面と同一クラス。追加変化は qa_ref 差し替えのみで C05 が全件照合済み)",
+        "aggregate-completeness.py --knowledge-graph: required-info profile exit0",
+        "elicit transition テスト 81 passed + compile 受入 42 passed"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "機械層: validate-knowledge-graph 4 profile (knowledge/doctrine/required-info/cross) 全 exit0。全 10 章が『適用された設計知識』節を保持し resource-map read_when 写像どおり。意味層: C4 改訂の各章展開が設計原則へ接地 — database (qa-045): tenant_data_objects は実体を保存せず R2 参照 + メタデータのみ (Turso 無料枠保護)・D4 row-level scope・封筒暗号化 purpose 拡張 (S-D8 と同一機構への統合 = 機構の重複を作らない)・soft delete を設けない即時完全削除 / security (qa-046): 旧 N2 撤回を STRIDE へ T14 (越境読取)・T15 (削除不完全) として正式編入し対策・検証 (分離テスト CI・restore drill 非復元確認) まで接続 / backend (qa-048): 認可は既存 deny-by-default マトリクスへの行追加で拡張 (新機構を作らない)。dev-workflow の approved pending 例外接地は不変。継続 medium: backend.md のカード順が Clean Architecture → API Design Patterns → DDD (resource-map 出現順) のままで R2-render の topo_order 契約 (ddd → clean-architecture → api-design-patterns) と矛盾 (3 回連続指摘・今回スコープ外の既知事項として coordinator 宣言済み)。確定順自体は位相健全のため FAIL には寄せない。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph → 4 profile 全 exit0 (9bc79344 断面)",
+        "qa-045/046/048 の設計原則接地を C05 通読で確認",
+        "backend.md L50/L91/L134 カード順 (topo 順違反継続・C05 実測)",
+        "doctrine-anchor-registry.json pending_exceptions: dev-workflow approved (不変)"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "fetched-references.json は rerun-2 で C08-r2 が PASS 判定した凍結断面 (7b41ef50…) と同一 sha を維持 (C05 実測)。C08-r2 判定: 形式層 C13 exit0・4 軸 (欠落 0 / 非公式 host 0 / 世代落ち 0 / 確認時刻・出典欠落 0) 全クリア。C05 も本断面で citation gate (17 target 全件対応・公式 host 一致) exit0 を独立再実行。rerun-2 の low だった『章/index の出典表が凍結正本より古い』は 08:04 再コンパイルで解消 (index.md が drizzle-orm 0.45.2 + v1.0.0-rc.4 / orm.drizzle.team を反映)。制約注記継続: 監査環境で WebFetch 不可のため一次 GET 照合は未実施 (WebSearch 複数ソース照合・各 summary に明記)、opennext Adapter API 動向は『未確認』扱い。",
+      "evidence": [
+        "shasum: fetched-references.json = 7b41ef50… (C08-r2 PASS 断面と同一、C05 実測)",
+        "validate-source-citation.py exit0 (C05 独立再実行・17 target)",
+        "index.md L47: drizzle-orm 是正記録の章反映を確認 (rerun-2 low の解消)",
+        "C08-r2 制約注記: WebFetch 不可 → 一次 GET は C02/C08 follow-up"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "system-spec-harness の全 18 prompt は本評価サイクル中不変で、C05 実行の verify-completeness.py + validate-prompt.py (--input 形式) 18/18 双方 exit0 が有効。意味層 (L1-L7 役割・客観的停止条件・Self-Evaluation・監査 agent 非干渉境界) も high なし。既知の R2-render topo_order 条項 vs writer 実装の矛盾は design_knowledge_reflection の medium として計上済み。",
+      "evidence": [
+        "verify-completeness.py --input + validate-prompt.py --input: 18 prompt × 2 validator 全 exit0 (TOTAL pass=18 fail=0)",
+        "git status: prompts 配下に本評価サイクル中の変更なし"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "G-matrix-loop",
+      "name": "validate-coverage-matrix (loop)",
+      "conditions": ["matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop) を満たす"
+    },
+    {
+      "id": "G-matrix-complete",
+      "name": "validate-coverage-matrix (--require-complete)",
+      "conditions": ["matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-complete"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)) を満たす"
+    },
+    {
+      "id": "G-foundation",
+      "name": "validate-coverage-matrix (--require-foundation)",
+      "conditions": ["foundation_trace", "decision_guidance"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-foundation"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-kg-knowledge",
+      "name": "validate-knowledge-graph (--profile knowledge)",
+      "conditions": ["design_knowledge_reflection"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-kg-doctrine",
+      "name": "validate-knowledge-graph (--profile doctrine)",
+      "conditions": ["design_knowledge_reflection"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-kg-required-info",
+      "name": "validate-knowledge-graph (--profile required-info)",
+      "conditions": ["matrix_coverage"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-kg-cross",
+      "name": "validate-knowledge-graph (--profile cross)",
+      "conditions": ["design_knowledge_reflection", "matrix_coverage"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-citation-form",
+      "name": "validate-source-citation (C13。C08-r2 実行 + C05 独立再実行)",
+      "conditions": ["doc_freshness"],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす (7b41ef50 凍結断面・17 target)"
+    },
+    {
+      "id": "G-prompt-quality",
+      "name": "verify-completeness + validate-prompt (18 prompts)",
+      "conditions": ["prompt_quality"],
+      "exit_code": 0,
+      "stdout": "TOTAL pass=18 fail=0"
+    },
+    {
+      "id": "G-compile-tests",
+      "name": "compile 受入テスト (OUT1)",
+      "conditions": ["design_knowledge_reflection"],
+      "exit_code": 0,
+      "stdout": "42 passed"
+    },
+    {
+      "id": "G-transition-tests",
+      "name": "elicit transition テスト",
+      "conditions": ["matrix_coverage"],
+      "exit_code": 0,
+      "stdout": "81 passed (compile と合算 123 passed)"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "design_knowledge_reflection",
+      "observation": "backend.md の『適用された設計知識』カード順が Clean Architecture → API Design Patterns → DDD (resource-map 出現順) のままで、R2-render prompt (L22/L28/L55) の topo_order 契約 (ddd → clean-architecture → api-design-patterns) に違反。rerun-1/rerun-2 から 3 回連続の未解消 (writer render_design_refs/category_design_refs は並べ替え未実装・テストが出現順を固定)。coordinator が今回スコープ外の既知事項と宣言済み。確定順自体は位相健全のため verdict には影響させない。",
+      "suggested_fix": "C03 (compile) で render_design_refs に topo_order 並べ替えを実装して backend.md を再生成するか、R2-render の C14 条項を writer 仕様へ訂正する (単一情報源の回復)。",
+      "evidence": ["backend.md L50/L91/L134", "compile-spec-doc.py category_design_refs", "R2-render.md L22/L28/L55"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "evaluation_process",
+      "observation": "qa 採番衝突の構造的根本原因 (qa id 採番の排他制御欠如 + 並行 writer 2 本) が未解消のまま残存。本評価サイクル中に第 3 例が実際に発生し (backend.web qa_ref 内容不適合 = high 相当・中立再確認の逐語記録消失・参照ずれの伝播)、C05 差分監査での検出 → C01 修復 (qa-047/048 再登録) を要した。第 1 例 (qa-034→qa-040) と同一障害クラスの再発であり、決定論ゲートは内容一致を検査しないため素通りする。緩和策: ユーザーへ並行セッション停止を勧告済み (coordinator 報告)。",
+      "suggested_fix": "C01 writer (apply-spec-transition) に qa id 採番の排他制御 (単一 writer 化 or 採番ロック) を実装するか、qa_ref と qa 本文の内容整合を検査する決定論ゲートを validate-coverage-matrix へ追加する (確定セルの qa_ref が対応カテゴリ言及を含むかの弱い検査でも第 3 例は検出可能だった)。",
+      "evidence": ["7b9186f1 断面の C05 差分監査記録", "qa-040/qa-047/qa-048 の採番注記 (3 例の自己開示)", "coordinator の構造問題開示"]
+    },
+    {
+      "severity": "low",
+      "bucket": "matrix_coverage",
+      "observation": "C06-r2 残存所見 (非ブロッキング): (a) reopen_log 3 件の『qa-043』引用が qa-047 側の自己開示注記でのみ解決される一方向参照 (歴史ログ不改変の方針自体は妥当)、(b) qa-034 論点 2-4 (ドメイン流用・Better Stack・全自動デプロイ) が qa-047 で個別弱点開示なしの一括維持、(c) qa-031 論点 2 (cursor) の再確認状況が qa-047 に明示されていない (補足: 論点 2 は qa-032 ヒアリング前の AskUserQuestion 3 択比較で一度ユーザー選択済み。(c) は qa-049 追記後の最終判定では残存所見に含まれず a/b の 2 件に収束)。",
+      "suggested_fix": "次回 elicit 時に reopen_log 側へ前方参照注記を追加し、qa-034 論点 2-4 の個別開示を補う (verdict 影響なし)。",
+      "evidence": ["C06-r2 最終判定 (d3339a46 断面) の残存所見 a/b"]
+    },
+    {
+      "severity": "low",
+      "bucket": "matrix_coverage",
+      "observation": "ui-ux.desktop-windows / desktop-macos の qa_ref=qa-007 は desktop UI-UX の裏付けとしてやや薄い (rerun-2 C07-r2 low の継続。infrastructure/maintenance-ops の同種指摘は qa-043/qa-044 の専用質疑化で解消済みだが ui-ux は未対応)。",
+      "suggested_fix": "C01 で ui-ux.desktop の専用質疑化 (qa-043/044 方式) を検討 (verdict 影響なし)。",
+      "evidence": ["matrix.ui-ux.desktop-windows/desktop-macos qa_ref=qa-007 (C05 実測)"]
+    },
+    {
+      "severity": "low",
+      "bucket": "doc_freshness",
+      "observation": "監査環境で WebFetch 不可のため内容鮮度層の一次 GET 照合は未実施 (WebSearch 複数ソース照合で代替・制約は各 summary に明記済み)。opennext-cloudflare の Adapter API 動向記述は『未確認』扱い (反証ではない)。",
+      "suggested_fix": "WebFetch 可能な環境で C08 を再実行し一次 GET で現行版を確定する。",
+      "evidence": ["C08-r2 制約注記 (rerun-2)"]
+    },
+    {
+      "severity": "low",
+      "bucket": "evaluation_process",
+      "observation": "system-spec/ 配下に旧評価成果物 (completeness-findings.json 19:39 / completeness-report.json 19:37、PASS 表示) が残存し、eval-log/ の評価正本 (report / report-2 / report-3) との取り違えリスクが継続。",
+      "suggested_fix": "旧成果物を eval-log/ へ移設するか撤去する (C05 は read-only のため実施しない)。",
+      "evidence": ["system-spec/completeness-report.json (2026-07-17 19:37)"]
+    },
+    {
+      "severity": "info",
+      "bucket": "matrix_coverage",
+      "observation": "rerun-2 の総合 FAIL 唯一要因 (誘導質問 6 件 = qa-014/028/029/030/031/034) は解消: appr-006 (既確定の明示承認 + 様式改善) + qa-047 (弱点明示・代替案等価提示・AI 推奨前置きなしの個別中立再確認 3 ラウンド) + appr-007 (foundation 改訂承認)。中立再確認は追認に終わらず genuine な決定変更 2 件 (AiJob pull 開放・C4 保持前提化) と U6 削除を生んでおり、実質的再検討の証跡がある (C06-r2 独立判定と C05 原文照合の一致)。",
+      "evidence": ["qa-047/qa-048 原文", "appr-006/appr-007", "C06-r2 PASS 判定"]
+    },
+    {
+      "severity": "info",
+      "bucket": "evaluation_process",
+      "observation": "評価中の pin 遷移: spec-state 7b9186f1 (07:56) → [C05 差分監査で採番衝突第 3 例を検出・C01 修復 = qa-047/048] → 9bc79344 (08:04) → [C06-r2 の訂正要請対応 = qa-049 逐語補記・セル状態変更なし] → d3339a46… (最終)。fetched-references は 7b41ef50… (凍結) で不変。監査体制: C06-r2 = fork 再監査 (現行 pin で PASS・一部 coordinator 中継で受領)、C07 相当 = coordinator 委任に基づく C05 差分監査 + rerun-2 C07-r2 PASS の継承、C08 = 凍結断面同一性により rerun-2 C08-r2 PASS を継承。全中継情報は C05 のゲート実測・原文照合と矛盾なし。",
+      "evidence": ["C05 shasum 実測ログ (7b9186f1 / 9bc79344 / d3339a46)", "coordinator 中継 (C06-r2 最終判定)", "rerun-2 レポート (eval-log/run-system-spec-completeness-report-2.json)"]
+    },
+    {
+      "severity": "info",
+      "bucket": "evaluation_process",
+      "observation": "報告と実データの一致回復 (C06-r2 訂正要請): coordinator が C06-r2 への説明で『qa-047 に記載のとおり 3 択提示・推奨拒否』と参照した内容は、やりとり自体は実在するが qa-047 の逐語には含まれない不正確な参照だった。C06-r2 の推奨に従い qa-049 (C4 改訂 3 段階の逐語補記: 両論提示 → 水準 3 択で AI 推奨に反し保持前提を選択 → 保持対象 multiSelect で credential 非選択) が writer 経由で追記され、報告の根拠が qa_log 実データへ接地された。C05 は qa-049 原文と qa-045/046/047/appr-007 の整合を照合済み。",
+      "evidence": ["qa-049 原文 (d3339a46 断面)", "C06-r2 訂正要請と coordinator の訂正報告"]
+    },
+    {
+      "severity": "info",
+      "bucket": "foundation_trace",
+      "observation": "C4 改訂 (2026-07-18・appr-007) は foundation の constraints/scope.in/scope.out/stakeholders へ一貫反映され、qa-045 (database delta)・qa-046 (security delta: 旧 N2 撤回 + T14/T15)・qa-048 (backend delta) の 3 セル再確定で章まで展開済み。credential 非保持と Web App runtime 非保持 (§6.2/HH-D07) の境界は不変。",
+      "evidence": ["spec-state constraints C4", "00-requirements-definition.md L54/L55/L62", "database.md/security.md/backend.md 質疑録"]
+    },
+    {
+      "severity": "info",
+      "bucket": "prompt_quality",
+      "observation": "全 18 prompt が verify-completeness.py / validate-prompt.py 双方 exit0 (評価サイクル中 prompt 変更なし)。意味層 high なし。",
+      "evidence": ["G-prompt-quality: TOTAL pass=18 fail=0"]
+    },
+    {
+      "severity": "info",
+      "bucket": "decision_guidance",
+      "observation": "D1-D6 全件が 3 案 + 無料/低コスト案 + 5 軸比較 + caveats + user_decision を維持。AI 推奨と異なるユーザー選択の実績が 3 件に拡大 (D2 turso 選択・qa-031 論点 4 無期限保持・qa-047 での AiJob pull 開放/C4 改訂)。",
+      "evidence": ["decisions[] (9bc79344 断面)", "qa-047"]
+    }
+  ],
+  "gaps": [
+    "(非ブロッキング follow-up) C03: backend.md 設計知識カード順の topo_order 化 or R2-render C14 条項の訂正 (medium・3 回連続未解消)",
+    "(非ブロッキング follow-up) C01 writer: qa id 採番の排他制御または qa_ref 内容整合の決定論ゲート追加 (medium・採番衝突第 3 例の再発防止)",
+    "(非ブロッキング follow-up) C01: reopen_log 前方参照注記・qa-031 論点 2 の再確認明示・ui-ux.desktop 専用質疑化 (low)",
+    "(非ブロッキング follow-up) C02/C08: WebFetch 可能環境での一次 GET 照合 (low)",
+    "(非ブロッキング follow-up) housekeeping: system-spec/ 配下の旧評価成果物の撤去/移設 (low)",
+    "(非ブロッキング follow-up) 次回 security 深掘り: qa-046 delta の docs/security-spec.md への展開 (qa-046 が正本と明記済み・coordinator 宣言どおり)"
+  ]
+}

@@ -28,5 +28,13 @@
     "frontend": ["presentation", "application-architecture"],
     "maintenance-ops": ["operations"]
   },
-  "pending_exceptions": []
+  "pending_exceptions": [
+    {
+      "category": "dev-workflow",
+      "concerns": ["operations"],
+      "owner": "daishiman",
+      "reason": "CI/CD・GitHub フロー・リリース手順のプロジェクト発見カテゴリ (harness-hub)。上流指針は Google SRE の operations concern (release engineering・自動化・トイル削減) に帰属。全プロジェクト共通シード (categories) への昇格は見送り、本プロジェクト固有の確定として承認する。",
+      "approval_state": "approved"
+    }
+  ]
 }

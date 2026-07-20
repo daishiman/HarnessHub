@@ -1,0 +1,101 @@
+# System task overlay: 独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認
+
+## Machine-readable registration fields
+
+- feature_package_id: feature-package/feat-user-org-admin (13 task で共有)
+- owners: ["daishiman"]
+- tags: ["feat-user-org-admin", "studio-extension", "security", "design-review"]
+- related_nodes: ["feat-user-org-admin", "arch-harness-hub-security", "arch-harness-hub-backend", "arch-harness-hub-frontend"]
+- parent_feature: feat-user-org-admin
+- phase_ref: P03
+- classification: confidence=0.88, reason="P02 で確定した TenantCoefficient/User 拡張スキーマと PII ガード/通知ディスパッチ接続点を、設計担当から独立した視点でレビューする P03 タスク", candidates=[{artifact_kind: task, confidence: 0.88, candidate_path: tasks/feat-user-org-admin/sys-user-org-admin-p03.md}]
+- tracker_binding_intent: beads
+- github_publication: mode=local_only, project_aliases=[], labels=[], milestone=なし (.dev-graph/config.json の execution_tracker.mode=beads、github.enabled=false に従う)
+- pr_completion_policy: linked_pr_merged_all (.dev-graph/config.json github.completion_policy.required_pull_requests=all に従う)
+- branch_policy: one-task-one-branch + worktree lease required + default-branch reconciliation + assignment_owner=dev-graph-scheduler
+
+## 目的
+
+P02 で確定した設計 (TenantCoefficient/User 拡張スキーマ、PII ガード適用範囲、通知ディスパッチ接続点、role 認可設計) を P02 の設計担当から独立した視点でレビューし、SEC2/SEC4/SEC6/SEC9 と qa-005/qa-024 への適合を確認する。
+
+## 背景
+
+P02 の設計は本 feature の実装全体の前提になるため、単一担当者の見落としを防ぐ独立レビューを経る。特に salary の PII 露出経路 (SEC4) と 監査 event 記録範囲 (SEC6) は誤りが露見しにくく、実装後の手戻りコストが大きいため、実装着手前のレビューで妥当性を確認する。
+
+## 前提条件
+
+- Required spec/architecture/phase/task nodes: feat-user-org-admin, sys-user-org-admin-p02
+- Entry gate: docs/features/feat-user-org-admin/architecture-decision-record.md が P02 で作成済みであること
+- Source pin: system-spec-harness v0.1.0 / run-system-spec-compile / assign-system-spec-completeness-evaluator
+- Repository context: repo_identity=github:daishiman/HarnessHub、root_resolution_source=explicit-cli (validate-system-plan.py 実行時に --repo-root を明示指定する運用)、config=.dev-graph/config.json。全 path は repository 相対とし absolute path は使用しない
+
+## Workstream applicability
+
+- Frontend: N/A: 本 task は設計文書のレビューのみで frontend 実装物を変更しない
+- Backend: N/A: 本 task は設計文書のレビューのみで backend 実装物を変更しない
+- API: N/A: API 契約自体の変更は行わず、P02 の契約設計が qa-009 (zod 単一ソース) に適合しているかを確認するのみ
+- Data: applicable + change: TenantCoefficient/User 拡張のカラム設計が D4 (tenant_id/workspace_id スコープ列必須) と qa-024 に適合しているかをレビューする
+- Infrastructure: N/A: 本 feature はデプロイ単位を新設しない
+- Security: applicable + change: salary の PII 露出経路 (SEC4)・role 4 種認可設計 (SEC2)・監査 event 記録範囲 (SEC6)・通知ディスパッチの PII 非混入方針 (SEC9) の 4 点をレビューし承認可否を判定する
+- Quality: applicable + change: S17/S18 の axe a11y 検査対象範囲がレビュー観点として妥当かを確認する
+- Documentation: applicable + change: docs/features/feat-user-org-admin/design-review-notes.md を新規作成する
+- Operations: N/A: 運用手順のレビューは P12 に先立つものではなく本 task の対象外
+
+## Architecture and deploy unit
+
+- Architecture decisions: arch-harness-hub-security, arch-harness-hub-backend, arch-harness-hub-frontend
+- Deploy unit/environment: cloudflare-workers/hub (レビューのみでデプロイは行わない)
+- Compatibility/migration/backfill: N/A: 本 task はレビューのみで対象物への変更を行わない
+
+## 成果物
+
+- Produced artifacts: docs/features/feat-user-org-admin/design-review-notes.md (承認可否と SEC2/SEC4/SEC6/SEC9・qa-005/qa-024 適合確認結果)
+- Consumed artifacts: docs/features/feat-user-org-admin/architecture-decision-record.md, system-spec/security.md, system-spec/auth.md, system-spec/database.md
+- Write scope/touches: docs/features/feat-user-org-admin/design-review-notes.md
+
+## Tracker publication and completion
+
+> 本 spec は tracker_binding_intent と GitHub 公開 intent だけを宣言し、永続 binding の解決・起票・完了収束は dev-graph が所有する。
+
+- Tracker binding intent: beads (.dev-graph/config.json execution_tracker.mode=beads)
+- Publication mode: local_only
+- Project aliases / labels / milestone: N/A: github.enabled=false のため GitHub 公開を行わない (.dev-graph/config.json)
+- PR completion policy: linked_pr_merged_all
+- PR body contract: Closes に紐づく beads issue 番号 + dev-graph graph_node_id (sys-user-org-admin-p03) を本文に明記し、default branch を対象にする
+- Ownership boundary: system-dev-planner は intent の宣言のみを行い、dev-graph が実際の binding 解決・mutation・reconciliation を行う
+
+## Branch and worktree execution
+
+- Branch: dev-graph 登録後に C15 が devgraph/sys-user-org-admin-p03 として払い出す。system-dev-planner は事前に branch 名を確定しない
+- Worktree lease: 実装着手前に graph_node_id (sys-user-org-admin-p03) の worktree lease を claim し、heartbeat 送出と完了時 release を行う
+- Parallel safety: depends_on=[sys-user-org-admin-p02] が完了するまで着手しない
+- Completion projection: feature branch 上の完了は pending event として記録され、default branch (main) へのクリーンな reconciliation で durable done へ確定する
+
+## スコープ外
+
+- 設計そのものの修正実施 (却下時は P02 を再実行対象として差し戻す)
+- 実装コードの作成
+- feat-auth-tenancy/feat-domain-model-db が所有する既存設計のレビュー (本 feature の設計差分のみが対象)
+
+## Verification and evidence
+
+- Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging`
+- Required evidence: docs/features/feat-user-org-admin/design-review-notes.md に承認可否と SEC2/SEC4/SEC6/SEC9・qa-005/qa-024 適合確認結果が明記されている
+
+## Rollout and rollback
+
+- Rollout: design-review-notes.md で承認と判定された場合、P04 (test-design) へ引き継ぐ
+- Rollback trigger and steps: 差し戻しと判定された場合、design-review-notes.md に指摘事項を記録し、sys-user-org-admin-p02 を再実行対象として dev-graph へ差し戻す
+
+## Handoff
+
+- Executor: system build route (dev-graph 経由での実装 claim)
+- Ready when: confirmed かつ evaluation pass かつ readiness complete かつ promoted digest 確定かつ dev-graph registration complete の 4 条件が揃った時点
+
+## 参照情報
+
+- System specification: system-spec/security.md (qa-025 SEC2/SEC4/SEC6/SEC9), system-spec/auth.md (qa-005), system-spec/database.md (qa-024)
+- Architecture: arch-harness-hub-security (architecture/harness-hub-security.md), arch-harness-hub-backend (architecture/harness-hub-backend.md), arch-harness-hub-frontend (architecture/harness-hub-frontend.md)
+- Feature: feat-user-org-admin
+- Phase doc: N/A: feature-execution-package-contract.md §2 により本 run は個別 phase lifecycle 文書を生成せず、13 task specs 自体が lifecycle を実行するため phase doc node を持たない
+- Dependencies: sys-user-org-admin-p02

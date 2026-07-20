@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-07-19T14:43:16Z",
+  "verdict": "HANDOFF_READY",
+  "goal_loop": 3,
+  "checklist": [
+    {
+      "item": "scope内nodeのfeature/package/system-spec lineage closure欠落0",
+      "status": "pass",
+      "evidence": "docs 25/25、feature/package 15/15、task 195/195、current digest一致"
+    },
+    {
+      "item": "C11 reportとC02保存済みreadiness/evaluation/source digestの一致",
+      "status": "pass",
+      "evidence": "graph revision 40、C11 violations 0、feature 15/15、task 195/195 complete/pass/confirmed"
+    },
+    {
+      "item": "incomplete/pending/fail/stale のmissing_sectionsとremediation owner全件表示",
+      "status": "pass",
+      "evidence": "blocking missing_sections 0; blocker 0"
+    },
+    {
+      "item": "全gate PASSの場合だけrequirementsとcapability-build handoffを同一snapshot digestで生成",
+      "status": "pass",
+      "evidence": "requirements/handoff both pin sha256:a32f1432e1db7ae4572efe244eb43e9f9434d1906dfa51f82404135d8b71147c"
+    },
+    {
+      "item": "本skillが生成したimplementation code file 0件",
+      "status": "pass",
+      "evidence": "outputs are eval-log requirements/handoff/audit state only; architecture/features/docs unchanged"
+    }
+  ],
+  "criteria": {
+    "IN1": "PASS",
+    "OUT1": "PASS — requirements document + capability-build/task-graph handoff emitted",
+    "OUT2": "PASS — blockers 0, missing_sections 0"
+  },
+  "gate_summary": {
+    "docs_exact_coverage": "PASS",
+    "system_spec_C08": "PASS",
+    "C11_validate_graph_schema": "PASS",
+    "C02_saved_state": "PASS",
+    "validate_system_plan": "PASS",
+    "independent_C1_C4": "PASS",
+    "tracker_projection": "PASS",
+    "runtime_task_projection": "PASS",
+    "implementation_code_generated": "PASS"
+  },
+  "outputs": {
+    "scope_receipt": "eval-log/run-dev-graph-requirements-scope-receipt.json",
+    "trace_plan": "eval-log/run-dev-graph-requirements-trace-plan.json",
+    "readiness_matrix": "eval-log/run-dev-graph-requirements-readiness-matrix.json",
+    "requirements_document": "eval-log/run-dev-graph-requirements-document.md",
+    "capability_build_handoff": "eval-log/run-dev-graph-requirements-handoff.json"
+  },
+  "next_actions": [
+    "/capability-build --handoff eval-log/run-dev-graph-requirements-handoff.json"
+  ]
+}

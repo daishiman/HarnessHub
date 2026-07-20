@@ -1,0 +1,28 @@
+{
+  "graph_node_id": "feat-dual-catalog-web",
+  "artifact_kind": "feature",
+  "purpose": "利用者・管理者が Skill/WebApp を発見・導入できる dual catalog UI と配布出口 (marketplace 出力 / Bootstrap Installer 連携) を、WCAG 2.2 AA + CWV good (qa-018) の品質で提供する",
+  "goal": "2 社の顧客 Workspace が同時にカタログを閲覧・導入でき (U5)、a11y/速度の品質ゲートが CI で強制される状態",
+  "scope_in": [
+    "dual catalog 閲覧 UI (レスポンシブ)",
+    "publish 状況表示 (ポーリング)",
+    "marketplace.json 出力 + 採用配布経路連携",
+    "axe 自動チェック CI",
+    "CWV 計測 (LCP/INP/CLS)"
+  ],
+  "scope_out": [
+    "承認キュー UI (Stage 2)",
+    "native アプリ"
+  ],
+  "acceptance": [
+    "axe 検出可能違反 0 がリリース条件として CI に存在する",
+    "CWV 全指標 good を実測で満たす",
+    "導入済み Skill が Hub 停止中も動作継続する (§6.1 縮退)"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-frontend.md",
+    "architecture/harness-hub-backend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-18T22:35:48Z"
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-feedback-loop",
+  "generation_id": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+  "published_path": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+  "published_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-feedback-loop/aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927/atomic-promotion-receipt.json",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-feedback-loop",
+    "published_digest": "sha256:906f1acf5e23697a98382601bea20c910a9e5599b319385a29c5d983e13f89db",
+    "receipt": ".dev-graph/plans/feature-package-feat-feedback-loop/atomic-promotion-receipt.json"
+  }
+}

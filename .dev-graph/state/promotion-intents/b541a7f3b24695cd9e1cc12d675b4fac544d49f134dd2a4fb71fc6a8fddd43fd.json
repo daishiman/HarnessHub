@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/replan-20260719-feat-publish-pipeline",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+  "digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+  "feature_package_id": "feature-package/feat-publish-pipeline",
+  "package_slug": "feature-package-feat-publish-pipeline",
+  "generation_id": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-publish-pipeline",
+    "published_digest": "sha256:916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+    "receipt": ".dev-graph/plans/feature-package-feat-publish-pipeline/atomic-promotion-receipt.json"
+  },
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-19T14:17:23Z"
+}

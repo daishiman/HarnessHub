@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
+  "feature": {
+    "graph_node_id": "feat-feedback-loop",
+    "title": "Studio: 改善要望フィードバックループ (2 経路受付・AI 対応・再公開)",
+    "description": "利用者の改善要望/レビュー依頼/バグ報告を CLI + Web (S14) の 2 経路で受け付け (B6)、D5 pull 型 AI キューで解析・修正案生成し、修正版の publish → update 通知まで閉じる改善ループ (G5/I12, J5) を確立する\n\nフィードバックが status 遷移 (未対応→対応中→対応済み) で管理され、AI 対応結果 (aiResponse) が S14 に反映され、修正版が publish パイプライン経由で利用者へ届く状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P01",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P01",
+      "title": "改善要望フィードバックループ要件ベースライン確定",
+      "description": "改善要望フィードバックループ要件ベースライン確定 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P02",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P02",
+      "title": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計",
+      "description": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P03",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P03",
+      "title": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認",
+      "description": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P04",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P04",
+      "title": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成",
+      "description": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P05",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P05",
+      "title": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装",
+      "description": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P06",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P06",
+      "title": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録",
+      "description": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P07",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P08",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P08",
+      "title": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認",
+      "description": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P09",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P09",
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認",
+      "description": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P10",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P10",
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "description": "最終独立レビュー — quality_constraints 8 件の充足判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P11",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P11",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "description": "エビデンス収集 — 再現可能な検証証跡の集約 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P12",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P12",
+      "title": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成",
+      "description": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P13",
+      "parent_feature": "feat-feedback-loop",
+      "phase_ref": "P13",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "description": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P12"
+      ]
+    }
+  ]
+}

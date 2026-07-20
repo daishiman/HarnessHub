@@ -1,0 +1,33 @@
+{
+  "canonical_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+  "feature_package_id": "feature-package/feat-hearing-intake",
+  "files": {
+    "feature-package.json": "c384f3f9aeeee0721fa6b30e1805ab70ce4f6a9fdcdae1b21ce61b5e92ba5bef",
+    "system-build-handoff.json": "74e28e75969dc9b438073fe886745a0d76b2695326a3f84157d95dc0e89941ef",
+    "task-graph.json": "c669fab88f298bfae4eb335111ac3def49db05d4996e2a2a6e446588c5e4ab23",
+    "task-specs/phase-01-requirements.md": "24899019c4291bc3a95405756c2882eac47624a73753f66fc40689b38b8cc40b",
+    "task-specs/phase-02-architecture.md": "3b21270d9b72b6bfdb3ed1e765b5caf4263ac3f74bc19f19bc3526c5d5c8149f",
+    "task-specs/phase-03-design-review.md": "e705a5b5ce3b60b9cb699f8f9f520bac0e0cdc235e5457884a1adfc924288481",
+    "task-specs/phase-04-test-design.md": "8f8552b3c4e602daafeafc3e2379feff5b153fc3434ad3ca3afc6e9dd203fceb",
+    "task-specs/phase-05-implementation.md": "4b6a8f052fe5cbdaff9b76cf6f41cb6460e7378910b0dd84c6ac936e16a3b9d5",
+    "task-specs/phase-06-test-run.md": "86255bb8d8cb9fd93a47a937cfe02bf5f5707cd956a5a2dcc7bfdb78a61d0eb6",
+    "task-specs/phase-07-acceptance.md": "beb0206b1fb39840489ea21d009f2254edec7e71ef48f022b31663c448603d84",
+    "task-specs/phase-08-refactoring-migration.md": "897fdddcf279b785a9701b140b8a40771deb94c1ca7ad86d4b16c339ec84a7a1",
+    "task-specs/phase-09-quality-assurance.md": "2f64b92208864e043ce73482837fb10055eb7f9eda42e56fc1a8d438a1d1bf13",
+    "task-specs/phase-10-final-review.md": "eff05042cea82196d12a24aa9782e47590d64807a68250168ce7d722ec737cc7",
+    "task-specs/phase-11-evidence.md": "551bb59aaafe35326b4fb4cd1f42bb69c54b7686129cbe9de92eb1673955797b",
+    "task-specs/phase-12-documentation-operations.md": "6967ee2145bc16239060b67ffed725404ac44064022a6332dc83d96c278e76a6",
+    "task-specs/phase-13-release-deploy.md": "090425faac1c06e3dfe244bb99269e24f0d5ed9a16682f7ae3fe992e728b1e8f",
+    "workstream-inventory.json": "e0ee632f41b956e769b47cc058295cb311cba9b5978fc8a382885decd268c06a"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "74e28e75969dc9b438073fe886745a0d76b2695326a3f84157d95dc0e89941ef",
+    "source_canonical_digest": "sha256:63c00395c2627dae96b38b0ade7da6f54f4f145d974d4f63892a131f6c7a67c0"
+  },
+  "parent_feature": "feat-hearing-intake",
+  "schema_version": "1.0.0"
+}

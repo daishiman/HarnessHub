@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-hearing-intake",
+  "feature_context_digest": "sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507",
+  "purpose": "業務課題から業務ツールが生まれる入口として、S10 の 4 ステップウィザード (削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理を提供する (I11, J4)",
+  "goal": "非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) できる状態",
+  "scope_in": [
+    "S10 ヒアリングウィザード (4 ステップ・自動試算表示)",
+    "HearingSheet/FormData エンティティ + 受付番号採番",
+    "AI 処理キュー (D5 pull 型) のジョブ投入・生成結果の書戻し受領",
+    "S11 シート一覧 / S12 シート詳細 (status 変更は admin)",
+    "ステップウィザード共通部品の消費"
+  ],
+  "scope_out": [
+    "AI 実行基盤のサーバ側実装 (D5 で不採用)",
+    "構築工程の進行管理 (feat-build-pipeline-board)"
+  ],
+  "acceptance": [
+    "ウィザード完了で受付番号が発番され「生成中」状態が表示される (非同期 UI パターン)",
+    "AI キューのジョブが pull→書戻しで完結しサーバ側 AI 課金が発生しない",
+    "シート本文の Markdown が sanitize 済みで描画される (SEC7)"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-hearing-intake.context.json",
+      "feature_id": "feat-hearing-intake",
+      "exists": true,
+      "sha256": "d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507",
+      "digest_status": "verified",
+      "digest_note": "team-lead (呼び出し元) から digest 値として提供された。.dev-graph/locks/system-dev-plan-lock.json の feature_digest フィールド (sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507) と同一値であることを Grep で確認したが、本 agent は Read/Write/Glob/Grep のみ保有し sha256 を計算する exec ツールを持たないため独立再計算はしていない。features/feat-hearing-intake.md frontmatter および .dev-graph/state/graph.json にも本ファイル自体の digest 記録は存在せず (記録されている digest はいずれも specs/harness-hub-system-specification.md 側の source_digest 8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6 であり別物)。捏造回避のため raw 値のまま記録している。main-loop による再計算を要する。 [main-loop 再計算 2026-07-17T11:54:44Z: 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "27ec1b93168d2b00e6664b248aff3a45f4e807ce024035612d57fce7b1c1fc22",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-frontend、confirmation_status=confirmed、evaluation_status=pass (system-spec/frontend.md + system-spec/ui-ux.md からの R3-import wrapper)。frontmatter に記録されている source_digest (adf85021f88c7048cf02f1c2facb18cc3407e865b311ee881a684c8e7196ddd3) は正本 system-spec/frontend.md 側の digest であり、wrapper ファイル自体の sha256 ではない。wrapper 自体の digest は repo 内のどこにも記録されておらず、本 agent には計算手段がないため未解決。main-loop による再計算を要する。 [main-loop 再計算 2026-07-17T11:54:44Z: 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "67560d941eeee012eb73aa49837e000963ae2a350d50d8b702d3c8c0badc2f17",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-backend、confirmation_status=confirmed、evaluation_status=pass (system-spec/backend.md からの R3-import wrapper)。frontmatter に記録されている source_digest (2a76ddb666c9da93d596dd11617883994c6baebc3c45d61ffa7b37878d928752) は正本 system-spec/backend.md 側の digest であり、wrapper ファイル自体の sha256 ではない。wrapper 自体の digest は repo 内のどこにも記録されておらず、本 agent には計算手段がないため未解決。main-loop による再計算を要する。 [main-loop 再計算 2026-07-17T11:54:44Z: 一致/補完]"
+    },
+    {
+      "path": "architecture/harness-hub-data.md",
+      "exists": true,
+      "sha256": "d37b40783b11974ef50f8c627b2a2d7137ec4a92c5f09924fea14631f12b2b16",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-data、confirmation_status=confirmed、evaluation_status=pass (system-spec/database.md からの R3-import wrapper)。frontmatter に記録されている source_digest (c74fe6b4a1c50bf183e222726d9ace903c17ae64f117bc22c4a688470abc883c) は正本 system-spec/database.md 側の digest であり、wrapper ファイル自体の sha256 ではない。wrapper 自体の digest は repo 内のどこにも記録されておらず、本 agent には計算手段がないため未解決。main-loop による再計算を要する。 [main-loop 再計算 2026-07-17T11:54:44Z: 一致/補完]"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6",
+      "digest_status": "verified",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、confirmation_status=confirmed、evaluation_status=pass、evidence_ref=system-spec/completeness-report.json (verdict=PASS。本 agent が Read で直接確認済み)。正本は system-spec/00-requirements-definition.md (status: confirmed, source_digest=8fc7b5878eb3b18f959c3b2fddcab7a5adf69d9201b1be782923659f096e8bf9 と frontmatter に記録済み)。ここに記載した sha256 (8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6) は features/feat-hearing-intake.md frontmatter の source_lineage.source_digest (source_path=specs/harness-hub-system-specification.md と一致) として repo に記録されている値をそのまま転記したものであり、本 agent が独立に sha256 を計算したものではない (exec ツールを保有しないため)。main-loop による再計算・整合確認を要する。 [main-loop 再計算 2026-07-17T11:54:44Z: 一致/補完]"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "async-ui-pattern-hearing-wizard",
+      "summary": "ウィザード完了後の AI 生成待ちは「受付番号 + 生成中ステータス + 完了通知」の非同期 UI パターンで吸収する。処理遅延は数分〜セッション次第であることを前提に UI を設計する",
+      "source": "system-spec/ui-ux.md qa-021; system-spec/00-requirements-definition.md D5"
+    },
+    {
+      "id": "ai-queue-pull-type-d5",
+      "summary": "ヒアリングシート生成の AI 処理キューは D5 確定の pull 型: ジョブ登録 → Claude Code セッションが pull → 結果書戻しで完結し、サーバ側 AI 課金は発生しない",
+      "source": "system-spec/00-requirements-definition.md D5; system-spec/backend.md qa-023 (B5)"
+    },
+    {
+      "id": "ai-queue-authz-payload-secret-ban",
+      "summary": "AiJob (AI キュー) の pull/書戻しの認可は Device Flow token 保有者に限定し、job payload に secret を含めない",
+      "source": "system-spec/security.md qa-025 (SEC8)"
+    },
+    {
+      "id": "markdown-sanitize-sec7",
+      "summary": "ヒアリングシート本文などの Markdown は共通レンダラの sanitize で一括担保し、XSS を防ぐ",
+      "source": "system-spec/security.md qa-025 (SEC7)"
+    },
+    {
+      "id": "tenant-scope-d4-new-entities",
+      "summary": "HearingSheet/FormData/AiJob を含む全新規テーブルに tenant_id/workspace_id スコープ列を必須とする (row-level tenant scope)",
+      "source": "system-spec/00-requirements-definition.md D4; system-spec/database.md qa-024"
+    },
+    {
+      "id": "hearing-sheet-entities-and-receipt-number",
+      "summary": "HearingSheet (受付番号・status・生成物参照)・FormData (ウィザード入力)・AiJob (D5 pull 型キュー: kind/status/payload/result) は qa-024 で確定したエンティティ。受付番号の採番はこのエンティティ設計に属する",
+      "source": "system-spec/database.md qa-024"
+    },
+    {
+      "id": "wizard-common-component-qa022",
+      "summary": "ヒアリング 4 ステップウィザードの進捗表示・戻る/次へ・キーボード操作は共通部品 (packages/ui のステップウィザード) で担保し、独自実装しない",
+      "source": "system-spec/frontend.md qa-022"
+    },
+    {
+      "id": "estimate-server-computed-only",
+      "summary": "削減効果の自動試算表示 (時給換算・削減額) はサーバ計算値の表示専用とし、クライアント側での金額再計算・自己申告を行わない",
+      "source": "system-spec/frontend.md qa-022; system-spec/security.md qa-025 (SEC5)"
+    },
+    {
+      "id": "b1-zod-single-source-authz-mw",
+      "summary": "ヒアリング/シート関連の新規 REST 資源は zod スキーマ単一ソースへ追加し、全て認可単一ミドルウェア (deny-by-default) 配下に置く",
+      "source": "system-spec/backend.md qa-023 (B1)"
+    },
+    {
+      "id": "authz-single-mw-role-table",
+      "summary": "新規 API 群は認可単一ミドルウェア (deny-by-default) 配下で role×操作の許可表に従う。S11/S12 の status 変更を admin 限定とする feature 側の要件は、この許可表の枠組みで実装する",
+      "source": "system-spec/security.md qa-025 (SEC2)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": false,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + evaluator PASS (specs/harness-hub-system-specification.md; system-spec/completeness-report.json verdict=PASS を Read で直接確認; 正本 system-spec/00-requirements-definition.md status=confirmed)",
+    "notes_ja": true,
+    "status": "complete",
+    "digest_recomputed_by": "main-loop (claude session 9ce54d7a, python3 hashlib, 2026-07-17T11:54:44Z)"
+  },
+  "extracted_at": "2026-07-17T12:10:00Z"
+}

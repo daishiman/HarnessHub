@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:ee4bc2d03879b6b4a94328c582b3c45f0db43b6222cf83eeb3fe90ed2d8332cf",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で goal-spec (quality_constraints 10 件含む) との矛盾なし。スコープ外 4 事項 (AI 実行基盤サーバ側実装・構築パイプライン進行管理・試算エンジン本体・認証/role 体系) は P01/P02/P05/P13 のスコープ外節で繰り返し明記され混入 0 件",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#スコープ外",
+        "task-specs/phase-02-architecture.md#スコープ外",
+        "task-specs/phase-05-implementation.md#スコープ外"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13 (欠落 0・14 件目 0)・各 spec 14 必須見出し全件・placeholder (山括弧/TODO/TBD) 0 (独立 grep でも 0 件)。根拠 id (qa-021/qa-022/qa-023 B1・B5/qa-024/qa-025 SEC2・SEC5・SEC7・SEC8/D4/D5/I11) は 13 task の参照情報節の union で過不足なく網羅。P10 が quality_constraints 10 件全件を横断点検",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-10-final-review.md#10件横断点検"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "feature-package.json の source_feature_digest が feature context の独立 sha256 再計算値 (sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507) と一致。manifest 配下 17 ファイルの個別再計算も全一致 (mismatch 0)。絶対パス混入 grep 0 件・repo_identity 一致",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json は 13 node の単純線形前方依存 (SYS-HEARING-INTAKE-P01→…→P13)。後方 edge・循環・他 feature 参照なし。validator 独立再実行 exit0・validated_digest 一致",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:ee4bc2d03879b6b4a94328c582b3c45f0db43b6222cf83eeb3fe90ed2d8332cf\", \"feature_package_id\": \"feature-package/feat-hearing-intake\", \"parent_feature\": \"feat-hearing-intake\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "c384f3f9aeeee0721fa6b30e1805ab70ce4f6a9fdcdae1b21ce61b5e92ba5bef"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "0c712048d3f395de6eed54c4bc9d4038bea8318f6824d581ebb145c6473db012"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "ad738a634b290f257620cba72aa34c3ae59c53ee3d7783173ba9951a1538378a"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "bc3de4eb69a18a2b278f0220a73311de13e539ad1dc7c719cf0feed6ddee3087"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "071783ac79761157e6fc5bea41c89cd1c7be059e7d76c71f828401f99c9b65cf"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "b8b0d31ed1fb3ac3fcc37052f450d6e7ff411a0b6cbfd4f6a00dd69e89a8876b"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "3273fe2ced6acbf935c50a52ea8481f230a480fbf00acb967a13f4a1f8f7d669"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "f7b23f1572b16eb570992da1af990d1ed04845bc13a628c1a72f487a020550c4"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "303c585cbd3867b30452379cbd08b55b2211a1905c57a166e599c5918f58ff40"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "07c13d46befc87371a1a20dfdaff4b0520eca5246f9d24114c73b349c38fff3c"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "9e3f7ac948af701083ffa8bd1ebb6230eaae02078b6bbffa99a1641d86eb5fca"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "89167dc02083598657e507de0a90086fd5cfad98e63545371ef7898f8a36c272"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "2476f98e5535019f11bad3f890c5514ac9de4c570518ec6574afdf64fd0167d9"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "356a1f6c87fdb7ffb71aa5e78d5b686d40af039ca5b5f2bbc3c3d07c5f0d3d3f"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "2f5425ad342c0a7df9707714fe7295a297b92a4a7a0347a721f06119f41cbe1a"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "2df3d23f48f3e7b2f1c95c4b17d9563f6c420895d7a5e86ae09408cd373bccce"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "f1429988669998ee9209260fdb6418c0118292f41a45029c86df5abc301a8095"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "01da98c0ca13c53e5888566308d6b51a9949a1aec90f633df8249dcd6dcfaae8"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "low",
+      "bucket": "citation-precision/phase-10-reference",
+      "observation": "task-specs/phase-10-final-review.md の参照情報節が『feature-execution-package-contract.md §7 が定める最終独立レビューゲート』と記述するが、P10 責務定義の正本は §3 のマッピング表で §7 は roll-up 完了条件。内容 (quality_constraints 10 件の横断点検) は正確で、引用箇所の精度の問題のみ。promotion 非阻害。次回改訂時に §3/§7 併記へ修正推奨",
+      "evidence": [
+        "task-specs/phase-10-final-review.md#参照情報"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 spec 全文読解・validator 独立再実行 exit0・digest 2 系統 (context sha256:d186363b… / canonical sha256:ee4bc2d0…) と manifest 17 ファイル個別 sha256 の独立再計算一致・boundary 検査 0 件・architect 設計判断 4 点 (AiJob hearing kind 最小限定 / 試算エンジンは係数読取のみ / P08 常設 / 共有 CI 不可侵) の妥当性確認を実施",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    }
+  ]
+}

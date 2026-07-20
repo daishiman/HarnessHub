@@ -1,0 +1,224 @@
+{
+  "digest_contract": {
+    "algorithm": "sha256",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded"
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [],
+      "phase_ref": "P01",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P01"
+      ],
+      "phase_ref": "P02",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P02"
+      ],
+      "phase_ref": "P03",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P03"
+      ],
+      "phase_ref": "P04",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P04"
+      ],
+      "phase_ref": "P05",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P05"
+      ],
+      "phase_ref": "P06",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P06"
+      ],
+      "phase_ref": "P07",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P07"
+      ],
+      "phase_ref": "P08",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P08"
+      ],
+      "phase_ref": "P09",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P09"
+      ],
+      "phase_ref": "P10",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P10"
+      ],
+      "phase_ref": "P11",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P11"
+      ],
+      "phase_ref": "P12",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-TENANT-DATA-RETENTION-P12"
+      ],
+      "phase_ref": "P13",
+      "task_id": "SYS-TENANT-DATA-RETENTION-P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md"
+    }
+  ],
+  "identity": {
+    "feature_id": "feat-tenant-data-retention",
+    "feature_package_id": "feature-package/feat-tenant-data-retention",
+    "parent_feature": "feat-tenant-data-retention",
+    "repository_id": "github:daishiman/HarnessHub",
+    "source_feature_digest": "sha256:69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327"
+  },
+  "kind": "system-build-handoff",
+  "registration_request": {
+    "consumer": "dev-graph/C02",
+    "owner": "system-dev-planner/C11",
+    "path": "dev-graph-registration.json",
+    "promotion_receipt": {
+      "owner": "system-dev-planner/C11",
+      "path": "atomic-promotion-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "registration_receipt": {
+      "owner": "dev-graph/C02",
+      "path": "dev-graph-registration-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "status": "deferred-until-promotion"
+  },
+  "schema_version": "1.0.0",
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "c27459b3c13b0d25fb3df16557a2eb394baf36286166e6c21faaf314d9676ec5"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "483dc1e266628bdd85b185ed02c97d6a0095e10053d2971270bb05cc1d1f9957"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "c26640f6d280c6178f48fcf2d378cc9075014741e7dbf79974294cec766e09c7"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "a5c23f86a9948ccc6fe69d0a303d51a44a2c369fa37bc3f1fd50ab3090aab21a"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "0188a2337e0cd548b910c36fb022fb6ad135bbf555d1bc04f346c59b76938d6d"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "5b7ddea07d0ea3825eefc4d3b013bbfecd7a748e42b3fdbb953de49deaa869d6"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "9acdae31e0e039f968b71a7ad0044e62f1f3a2fa9d7a252743d3d336d4fc6ed5"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "02abd403d4ca3a8ccbc59705cb897ef0823a41e701a644b9f17ed352183da914"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "1a4d46c88b5e5a964ef4adf93262b1f352d7f59d1ddf5b751cb354f9a4d8bc77"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "f2a8bcc0ec371b005bb70a5495fe2f200cddc23c52a90969766f1aa2506179cf"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "f480d580b2aa72d94e44d971512a7c61e82414879257097934a06045e91eb98d"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "90e9e79dfc0d879120a9a021edd1e480988678236b731d03a7005ce2d8d4911b"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "13a0c423ba4fd9dd3a4bf462baf928ae9ce50761c514def1ba16441eb07a4c4b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "a3fb251d7e69ba0c9ae8722c6ff2ae7df5fcf025796cbf9b8bc32f49e6530961"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "744edb59adc38c19aa1b22b403b7268346d204290eb28281b6d715194e16ca66"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "bb8112a0b03f3e3bf1d5042285344ebae873c52f57fb4882a52a4cd577bf3495"
+    }
+  ],
+  "source_manifest": {
+    "canonical_digest_before_handoff": "sha256:0db43a7b1414c5300390923cc93c4b54929411dd6ab04a3c502bbfb1d31b5c2a",
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "5808e295bb1cee880eefaf15c83832b659b76a2447b361b95aa003bc76ba961b"
+  }
+}

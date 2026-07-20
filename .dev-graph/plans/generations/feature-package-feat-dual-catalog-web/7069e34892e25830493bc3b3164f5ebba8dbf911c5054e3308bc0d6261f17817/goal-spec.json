@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-dual-catalog-web",
+  "feature_context_digest": "sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3",
+  "purpose": "利用者・管理者が Skill/WebApp を発見・導入できる dual catalog UI と配布出口 (marketplace 出力 / Bootstrap Installer 連携) を、WCAG 2.2 AA + CWV good (qa-018) の品質で提供する",
+  "goal": "2 社の顧客 Workspace が同時にカタログを閲覧・導入でき (U5)、a11y/速度の品質ゲートが CI で強制される状態",
+  "scope_in": [
+    "dual catalog 閲覧 UI (レスポンシブ)",
+    "publish 状況表示 (ポーリング)",
+    "marketplace.json 出力 + 採用配布経路連携",
+    "axe 自動チェック CI",
+    "CWV 計測 (LCP/INP/CLS)"
+  ],
+  "scope_out": [
+    "承認キュー UI (Stage 2)",
+    "native アプリ"
+  ],
+  "acceptance": [
+    "axe 検出可能違反 0 がリリース条件として CI に存在する",
+    "CWV 全指標 good を実測で満たす",
+    "導入済み Skill が Hub 停止中も動作継続する (§6.1 縮退)"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-dual-catalog-web.context.json",
+      "exists": true,
+      "sha256": "a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation.",
+      "feature_id": "feat-dual-catalog-web"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "74b1fc4aaa055285c35af8e7c1657272ccb2ab271cd55e4482f902a4de00248d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "a11y-wcag22aa-cwv-good-axe-ci-qa018",
+      "summary": "Hub Web の dual catalog UI と公開 WebApp は WCAG 2.2 AA (コントラスト比 4.5:1 以上・全機能キーボード操作可・スクリーンリーダー対応・フォーカス管理・代替テキスト) に準拠し、CI に axe 等の自動アクセシビリティチェックを組み込み検出可能違反ゼロをリリース条件とする。速度は Core Web Vitals 全指標 good (LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1) を Worker bundle 3MiB 予算・R2/edge 配信・不要 JS 削減で達成する。破壊的操作は確認+可逆、待ち時間は進捗表示、失敗は平易な日本語+次の一手、レイアウトシフト/点滅回避を Apple HIG 由来の快適性原則として適用する。",
+      "source": "system-spec/spec-state.json qa-018 (「アクセシビリティ = WCAG 2.2 AA 準拠…CI に axe 等の自動チェックを組込み、検出可能違反ゼロをリリース条件にする」「速度 = Core Web Vitals 全指標 good (LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1)。Worker 3MiB 制限下の bundle 予算管理・R2/edge 配信・不要 JS 削減で達成する」); features/feat-dual-catalog-web.context.json purpose (「WCAG 2.2 AA + CWV good [qa-018] の品質で提供する」) および acceptance (「axe 検出可能違反 0 がリリース条件として CI に存在する」「CWV 全指標 good を実測で満たす」)"
+    },
+    {
+      "id": "hub-outage-degradation-continuity-section6-1-qa011",
+      "summary": "Hub 本体 (Workers) の障害・停止時にも、導入済み Skill と公開済み Web App は動作を継続する (新規公開・追加・更新のみ停止)。これを §6.1 として明文化された縮退設計とし、本 feature の acceptance「導入済み Skill が Hub 停止中も動作継続する」の直接根拠とする。復旧は提供者の Platform 運用責任。",
+      "source": "system-spec/spec-state.json qa-011 (「障害縮退 = §6.1 を明文化 (Hub 障害時も導入済み Skill・公開済み Web App は動作継続、新規公開・追加・更新のみ停止。復旧は提供者の Platform 運用責任)」); qa-019 (「§6.1 の縮退設計 (Hub 停止中も導入済み Skill・公開 WebApp は動作継続) が SLO の前提」); features/feat-dual-catalog-web.context.json acceptance (「導入済み Skill が Hub 停止中も動作継続する [§6.1 縮退]」)"
+    },
+    {
+      "id": "publish-status-polling-state-machine-qa009-qa062",
+      "summary": "publish 状況表示はポーリングで実装する。Hub API は PublishRequest 状態機械 (Draft→Validating→Needs Fix/Ready→Publishing→Failed/Published) の状態を DB に記録し、Publisher/Hub Web はポーリングで進捗を取得する。frontend 実装は S01/S02 のデータ取得へ install descriptor (GET /harnesses/:projectId/install) と publish 中 2s→backoff のポーリング契約を用いる。",
+      "source": "system-spec/spec-state.json qa-009 (「検査は MVP では Worker 内同期実行…状態を DB に記録し Publisher/Hub Web はポーリングで進捗取得」); system-spec/frontend.md qa-062 (「S01/S02 のデータ取得へ install descriptor [GET /harnesses/:projectId/install] と publish 中 2s→backoff polling を追加」); features/feat-dual-catalog-web.context.json scope_in (「publish 状況表示 [ポーリング]」)"
+    },
+    {
+      "id": "distribution-channel-url-marketplace-bootstrap-installer-qa003-i6-i9",
+      "summary": "配布・更新経路は URL 型 marketplace (native source) または Bootstrap Installer の 2 経路を Stage 0 technical gate (H3/H6/H7) で検証し、成立した経路を採用する。一般利用者に GitHub アカウントを要求しない Git レス配布・更新。本 feature の marketplace.json 出力・採用配布経路連携は、この Stage 0 判定結果 (feat-stage0-distribution-gate) に従属する。",
+      "source": "system-spec/00-requirements-definition.md I6 (「URL 型 marketplace [native source] または Bootstrap Installer による Git レス配布・更新 [一般利用者に GitHub アカウントを要求しない]」serves G1, G2)・I9 (「Stage 0 technical gate: URL 型 marketplace / Bootstrap Installer / wrangler 公開の成立検証 [H3/H6/H7] と Stage 1 開始条件の判定」serves G1, G3); system-spec/spec-state.json qa-003 (「Publisher / Skill の作者環境への配布は URL 型 marketplace [native source] または Bootstrap Installer の 2 経路を Stage 0 technical gate [H7] で検証し、成立した経路を採用する」); features/feat-dual-catalog-web.context.json scope_in (「marketplace.json 出力 + 採用配布経路連携」) および features/feat-dual-catalog-web.md 機能間依存・frontmatter depends_on (「feat-stage0-distribution-gate」)"
+    },
+    {
+      "id": "workspace-catalog-thin-dual-catalog-stage1-mvp-i4-u7",
+      "summary": "本 feature は U7 スコープの Stage 1: Publisher + Thin Dual Catalog MVP の一部 (Workspace Catalog) を担う。業務ツール一覧・詳細・「追加する」「Web アプリを開く」導線・低品質報告導線を提供し、承認キュー UI (Stage 2 Governance) と native アプリは対象外とする。",
+      "source": "system-spec/00-requirements-definition.md U7 スコープ in (「Stage 1: Publisher + Thin Dual Catalog MVP [skills-only package の Green 自動公開・Project / TargetChannel / Release / CatalogEntry・version 自動採番・stable pointer と rollback・Workspace Catalog]」)・I4 (「Workspace Catalog [業務ツール一覧・詳細・「追加する」「Web アプリを開く」導線・低品質報告導線]」serves G2, G3); features/feat-dual-catalog-web.context.json scope_out (「承認キュー UI [Stage 2]」「native アプリ」)"
+    },
+    {
+      "id": "multi-tenant-simultaneous-workspaces-success-criteria-u5",
+      "summary": "2 社以上の顧客 Workspace で Hub が同時稼働し、それぞれの Workspace で公開 (G1) と owner 以外の再利用 (G2) が成立していることを二値判定の成功基準とする。本 feature の goal「2 社の顧客 Workspace が同時にカタログを閲覧・導入でき (U5)」の直接根拠。",
+      "source": "system-spec/00-requirements-definition.md U5 成功基準 (「2 社以上の顧客 Workspace で Hub が同時稼働し、それぞれの Workspace で公開 [G1] と owner 以外の再利用 [G2] が成立していること [二値判定]。判定は提供者代表が行い、根拠を記録する」); features/feat-dual-catalog-web.context.json goal (「2 社の顧客 Workspace が同時にカタログを閲覧・導入でき [U5]」)"
+    },
+    {
+      "id": "publish-pipeline-server-side-out-of-scope-depends-on-feat-publish-pipeline",
+      "summary": "Hub 側 API の PublishRequest 状態機械・検査 pipeline サーバ側実装・Catalog pointer atomic 更新は本 feature のスコープ外とし、feat-publish-pipeline の責務とする。本 feature は同 feature の API/状態を消費する catalog 閲覧・publish 状況表示 (読み取り + ポーリング) 側に責務を限定する。",
+      "source": "features/feat-dual-catalog-web.md 機能間依存 (「feat-publish-pipeline」) および frontmatter depends_on: [\"feat-publish-pipeline\", \"feat-stage0-distribution-gate\"]; system-spec/spec-state.json qa-009 (PublishRequest 状態機械・検査 pipeline は Hub API 側の確定事項)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + completeness evaluator PASS",
+    "notes_ja": "現行 feature context と全 architecture/spec lineage を repository bytes から SHA-256 再計算し、P01..P13 の current canonical baseline に固定した。",
+    "digest_recomputed_by": "run-system-dev-plan immutable-replan remediation 2026-07-19",
+    "status": "complete"
+  },
+  "extracted_at": "2026-07-19T12:00:00Z"
+}

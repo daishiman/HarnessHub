@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # /// script
 # name: compile-spec-doc
-# version: 0.1.0
+# version: 0.2.0
 # purpose: run-system-spec-compile の決定論コンパイラ。収集済み spec-state.json と取得済み fetched-references.json・設計知識参照から、章別 Markdown 複数ファイル + index.md を組み立てる。各章 frontmatter に確定マーカー (status: confirmed/draft + spec_cells + category) を付与し (C11 hook の判定ソース)、カテゴリ別収集状態 (未着手/収集中/確定/対象外+理由) と最新ドキュメント出典を反映する。ヒアリング継続やドキュメント再取得はしない (入力を組み立てるのみ)。
 # inputs:
 #   - argv: compile --spec spec-state.json --references fetched-references.json [--out-dir system-spec]
@@ -31,8 +31,11 @@ C11 hook (guard-confirmed-chapter-overwrite) はこのマーカー + spec-state.
 出力形状 (C11 hook の判定ソース):
   各章 <category>.md の frontmatter に status(confirmed|draft) / category / aggregate /
   spec_cells([<cat>.<pf>, ...]) / serves_goals([G1, ...]) を付与し、本文にカテゴリ別収集状態表
-  (未収集/対象外+理由/確定+qa_ref)・設計知識参照ポインタ・最新ドキュメント出典表を含める。
-  index.md が全章と集約状態を相互参照する。
+  (未収集/対象外+理由/確定+qa_ref)・確定内容 (質疑録: 確定セルが参照する qa_log 本文の実体描画)・
+  上流指針 (doctrine anchor: category→concern→authority, goal-spec C15)・設計知識参照ポインタ・
+  最新ドキュメント出典表を含める。index.md が全章と集約状態を相互参照する。
+  章の意味層は全て正本 (spec-state.json / registry / C04 card) からの純関数導出であり、
+  再コンパイルで意味層が消えない (回帰しない) ことを受入テストが保証する。
 
 要件 C9 (上位概念 anchor): spec-state.json の requirements_foundation (U1-U9) を
 `00-requirements-definition.md` (要件定義書=憲法) として**最初の章**に生成し、各技術章 frontmatter
@@ -78,6 +81,26 @@ _DESIGN_KNOWLEDGE_DIR = (
     Path(__file__).resolve().parents[2] / "ref-system-design-knowledge" / "references"
 )
 _READ_WHEN_PAIRS: list[tuple[str, str]] | None = None
+_DOCTRINE_REGISTRY: dict | None = None
+
+
+def _doctrine_registry() -> dict:
+    """doctrine-anchor-registry.json (C15 SSOT) を読み込む (キャッシュ)。
+
+    不在/破損は空 dict (呼び出し側が未帰属注記へ倒す。写像全射の検証は
+    validate-knowledge-graph.py --profile doctrine が担い、本 writer は再検証しない)。
+    """
+    global _DOCTRINE_REGISTRY
+    if _DOCTRINE_REGISTRY is None:
+        try:
+            _DOCTRINE_REGISTRY = json.loads(
+                (_DESIGN_KNOWLEDGE_DIR / "doctrine-anchor-registry.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+        except (OSError, json.JSONDecodeError):
+            _DOCTRINE_REGISTRY = {}
+    return _DOCTRINE_REGISTRY
 
 
 def _resource_map_read_when() -> list[tuple[str, str]]:
@@ -351,6 +374,112 @@ def render_state_table(spec: dict, cat_id: str) -> str:
     return "\n".join(lines)
 
 
+def _qa_by_id(spec: dict) -> dict[str, dict]:
+    return {
+        q["id"]: q
+        for q in spec.get("qa_log", []) or []
+        if isinstance(q, dict) and q.get("id")
+    }
+
+
+def render_confirmed_qa(spec: dict, cat_id: str) -> str:
+    """確定セルが参照する質疑 (qa_log) の本文を章へ実体描画する。
+
+    章の意味層 (確定要件の中身) を正本 spec-state.json から完全導出することで、
+    再コンパイルしても確定内容が消えない (章 = 正本の純関数) を保証する。
+    canonical platform 順に qa_ref を初出順で重複除去し、各 qa の質問・回答と
+    対応セルを描画する。qa 本文が正本に無い参照は捏造せず欠落を明示する (fail-visible)。
+    """
+    row = _row(spec, cat_id)
+    qa_map = _qa_by_id(spec)
+    ordered_refs: list[str] = []
+    cells_by_ref: dict[str, list[str]] = {}
+    for pf in CANONICAL_PLATFORMS:
+        cell = row.get(pf)
+        if not isinstance(cell, dict) or cell.get("state") != "確定":
+            continue
+        ref = cell.get("qa_ref")
+        if not ref:
+            continue
+        if ref not in ordered_refs:
+            ordered_refs.append(ref)
+        cells_by_ref.setdefault(ref, []).append(pf)
+    lines = ["## 確定内容 (質疑録)", ""]
+    if not ordered_refs:
+        lines.append("- (確定セルなし。本章は対象外または収集中)")
+        return "\n".join(lines)
+    for ref in ordered_refs:
+        qa = qa_map.get(ref)
+        lines.append(f"### {ref} (対応セル: {', '.join(cells_by_ref[ref])})")
+        lines.append("")
+        if not qa:
+            lines.append(f"- (qa_log に {ref} の本文が見つからない — 正本の欠落を要確認)")
+            lines.append("")
+            continue
+        lines.append(f"**質問**: {qa.get('question', '(未記入)')}")
+        lines.append("")
+        lines.append(f"**回答**: {qa.get('answer', '(未記入)')}")
+        lines.append("")
+    return "\n".join(lines).rstrip()
+
+
+def render_doctrine_anchor(cat_id: str) -> str:
+    """doctrine anchor (concern authority) を上流指針として章へ描画する (goal-spec C15)。
+
+    正本 = doctrine-anchor-registry.json の category_concern_map / concerns。
+    具体技術は直書きせず、concern ごとの authority と導く上流原則のみを示す。
+    category_concern_map に未帰属でも、approved な pending 例外が concerns を解決していれば
+    その concern の authority を上流指針として描画する (プロジェクト固有の確定を全プロジェクト
+    共通シードへ昇格させずに反映する経路)。未解決の未帰属は pending 注記に留める (写像全射の
+    機械検証は validate-knowledge-graph.py --profile doctrine の責務)。
+    """
+    registry = _doctrine_registry()
+    concern_ids = (registry.get("category_concern_map") or {}).get(cat_id) or []
+    concerns = {
+        c.get("concern_id"): c
+        for c in registry.get("concerns", []) or []
+        if isinstance(c, dict)
+    }
+    lines = ["## 上流指針 (doctrine anchor)", ""]
+    exception_note = None
+    if not concern_ids:
+        pending = next(
+            (
+                p
+                for p in registry.get("pending_exceptions", []) or []
+                if isinstance(p, dict) and p.get("category") == cat_id
+            ),
+            None,
+        )
+        if pending and pending.get("approval_state") == "approved" and pending.get("concerns"):
+            concern_ids = pending["concerns"]
+            exception_note = (
+                "- 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、"
+                f"approved な pending 例外 (owner: {pending.get('owner', '-')}) として上流指針を確定している。"
+            )
+    if not concern_ids:
+        lines.append(
+            "- (doctrine-anchor-registry の category_concern_map に未帰属。"
+            "pending 例外の owner/reason/approval_state を registry 側で解決すること)"
+        )
+        return "\n".join(lines)
+    if exception_note:
+        lines += [exception_note, ""]
+    lines += ["| concern | authority (正本) | 導く上流原則 | 出典 |", "|---|---|---|---|"]
+    for cid in concern_ids:
+        c = concerns.get(cid) or {}
+        lines.append(
+            f"| {cid} | {c.get('authority', '-')} | {c.get('guides', '-')} | "
+            f"{c.get('source_ref', '-')} |"
+        )
+    lines += [
+        "",
+        "- 本章の確定内容 (質疑録) は上記 authority を上流指針として適用する。"
+        "具体技術の選定はこの指針に従属し、指針との乖離は再オープン (R4-reopen) の根拠になる。",
+    ]
+    return "\n".join(lines)
+
+
 _DEEP_CARD_SECTIONS = (
     ("目的", "目的"),
     ("解決する問題", "解決する問題"),
@@ -435,7 +564,9 @@ def render_design_refs(cat_id: str, spec: dict | None = None) -> str:
     if not refs:
         lines.append(
             f"- `{DESIGN_REF_BASE}/resource-map.yaml` "
-            "(resource-map 未定義。関連cardを選定・深化してから確定する)"
+            "(このカテゴリ専用の deep card は resource-map に未定義。"
+            "本章の設計判断は「上流指針 (doctrine anchor)」節の authority と"
+            "「確定内容 (質疑録)」を正本とする)"
         )
     else:
         for index, filename in enumerate(refs):
@@ -494,6 +625,10 @@ def render_chapter(spec: dict, cat_id: str, refs_by_cat: dict[str, list[dict]]) 
         f"- 章確定マーカー: `status: {chapter_status(agg)}`",
         "",
         render_state_table(spec, cat_id),
+        "",
+        render_confirmed_qa(spec, cat_id),
+        "",
+        render_doctrine_anchor(cat_id),
         "",
         render_design_refs(cat_id, spec),
         "",

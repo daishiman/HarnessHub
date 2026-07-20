@@ -1,0 +1,12 @@
+{
+  "artifact": "plugins/dev-graph/scripts/node_transaction.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 86,
+    "notes": "genuine code-review + py_compile OK。dev-graph 2-file node transaction の crash-recovery 基盤 (import 専用 module。upsert-node/status-graph/sync-graph が利用)。soundness: WAL 相当の journal (journal_path=.graph.json.node-transaction.json) を manifest として publish し、prepare→(interrupt 可)→finalize / recover の 3 相。_atomic_bytes は mkstemp→write→flush→fsync→os.replace→親 dir fsync で耐障害原子書込。before/after image は sha256 で束縛し、recover 時は staged rollback image の digest 照合 + rollback 後の収束 digest 再検証、finalize 時は after digest 照合と、二重に検算。responsibility: 単一 (atomicity/crash-recovery primitive + graph_operation_lock の flock による writer/whole-reader 直列化)。error-handling: pending transaction 検出 / journal 不読・schema 不一致 / staged manifest 相違 / graph identity 不一致 / digest 不一致 / 非収束 の全てで ContractError を raise (呼出側 exit 2 に写像、fail-closed)。unlink は FileNotFoundError のみ吸収。side-effect-safety: network 非依存 (fcntl/os/hashlib/tempfile/uuid のみ)、書込は .node-transactions/ staging と journal と rollback 対象の graph/artifact に限定し全て contained(root) で path escape 拒否。FINDING(frontmatter): 本 module は sibling の _common.py と異なり `# /// script` PEP723 frontmatter block を持たない (docstring のみ)。import 専用ゆえ CLI 契約記述の必要性は低いが、dev-graph script 群の規約 (network/write-scope 宣言) との一貫性のため frontmatter block 追加を推奨 (実行時挙動は健全、機能欠陥ではない)。この 1 点のみ減点。TESTS: test_operational_loop_v2.py::test_node_upsert_is_atomic_idempotent_and_patchable / test_node_rolls_artifact_back_when_graph_commit_fails / test_node_recovers_crash_before_exposing_graph_to_readers / test_node_writer_waits_for_whole_reader_operation_lock が原子性・graph commit 失敗時の artifact rollback・crash 後の recovery・operation lock 直列化を exercise (21 passed)。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

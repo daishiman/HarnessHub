@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-tenant-data-retention",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r2b-readiness",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-tenant-data-retention"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1\",\n  \"feature_package_id\": \"feature-package/feat-tenant-data-retention\",\n  \"parent_feature\": \"feat-tenant-data-retention\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "c27459b3c13b0d25fb3df16557a2eb394baf36286166e6c21faaf314d9676ec5"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "ea205262d4b28c77752c3fd8a1a60d31120a71c8d25961b916bdf0da40bf6b69"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "a8a4bbc5fed1048d920720da8ef8a00f4c644d863e299288b076936231aefb45"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "c26640f6d280c6178f48fcf2d378cc9075014741e7dbf79974294cec766e09c7"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "0224ab7be54545442a74299d09f7b571e1d2466a211eaeac24d2d25cf349312c"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "b44e12acd1d993aeb9b09ff7054d0d545130da11908fd9384dfc51c14d74789c"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "3934f36a0c41bb57cbc9560f6ee24de48bd512fb2df5a089d3a8605919f13730"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "72d8c554b3cf64f0319cdef1530129db1dd2e82a149aeff09c0b8c6475937653"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "9a3abce9c5993ac3ed27350cd5a6d34850f2e307067f9b86ebcc6bc69b43d501"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "c7d526b3ecd030500a50dd381fce0ce312981419ac54e1b706486e96ccc8c968"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "b9ac9622bf8053444efbe92abf87324648b5d5885237b3d50afce377f606a44a"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "dbd74574bfa45bfe25b520caefa3180235e186ffffa604001932f09a03feec49"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "76c8571854676bdecfd33850507cca3e54dd8bf4f2e9547ee71f27fea2dac865"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "9f8e7df2763a26d41fc08a5644f4fb32843834544f4202b78393c8c6bbb886ac"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "55486aa6d1d01f1008104ae9922b345eca874f0991e96a6c69559f2497ed80f2"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "914207e0a83e2fee255374f4c9e659326c1c8a8874228a391b8e76ca1ab1bd36"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "0ddc51d763ae089f35988ad5e53eb514f9eb366e9625905943e659b9ca10e8fc"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a28dfb5b358a37e8c2b2367b0fddb7d6648b4aaac8f7b7733eceadf48d44ee30"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "Canonical source digest and 13-phase lineage verified. The plan defines per-tenant tenant_data DEKs with tenant_id-aware uniqueness and active-key lookup/rotation, implements backup tombstones and restore non-restoration, and wires R2 usage monitoring into the existing scheduled dispatch; P04/P06/P09/P10/P11 require cross-tenant, rotation, backup restore and 70/90 percent alert evidence.",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

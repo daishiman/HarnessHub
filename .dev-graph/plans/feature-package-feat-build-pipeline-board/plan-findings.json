@@ -1,0 +1,168 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:c7e0d7e68a86d10ef5b70c55a4f881b174f3b503b5bc2d6285bcef4ebfe58d9c",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で goal-spec (quality_constraints 6 件) との矛盾なし。詳細正本 docs/backend-spec.md (qa-031〜033) の builds/build_stage_events 定義・§4.4 API・§5.3 状態機械と列単位まで一致。スコープ外 (PublishRequest 再実装・自動遷移・ステージボード部品実装・AI キュー・intake) 混入 0 件。admin 限定は backend-spec §3.3 認可マトリクスの用語法と一致",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#backend-spec整合",
+        "task-specs/phase-05-implementation.md#スコープ外",
+        "task-specs/phase-01-requirements.md#quality_constraints転記"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13・14 必須見出し全件 (目視 + validator)・placeholder 0 (スクリプト + 目視)。根拠 id (qa-021/qa-022/qa-032/qa-033/qa-025 SEC2・SEC6/B4/B9/I2/I3/D4) が背景/Workstream/成果物/参照情報節へ一貫接地。fabricated citation 0 件",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-10-final-review.md#6件充足確認"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "source_feature_digest が context の独立 sha256 再計算値 (sha256:eeed295d50359e11ac8aee84800def3ad3399cee866ab5b4dc2712116c9a4441) と一致。canonical_digest と base_digest (pre-handoff sha256:e55ceadc…) を自前実装で独立再計算し manifest/handoff 記載と一致。lineage の wrapper 3 ファイルも独立再計算一致。絶対パス・repo 外参照 grep 0 件",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json 13 node の単純線形前方依存 (SYS-BUILD-PIPELINE-BOARD-P01→…→P13) を手動精査。cross-feature/missing edge 0。validator 独立再実行 exit0",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:c7e0d7e68a86d10ef5b70c55a4f881b174f3b503b5bc2d6285bcef4ebfe58d9c\", \"feature_package_id\": \"feature-package/feat-build-pipeline-board\", \"parent_feature\": \"feat-build-pipeline-board\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "a52e1bf7ee65402aca4296000226349b6e6bccf7f3c31b45a8ec09a8a2a134ce"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "4b33dd2574791a2bb81333706817d0ca8793aae4aee724bff6f1ee826dd1b3f1"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "cf72dbc16ef70f1fb8895c517a9a467478073faef7b1feb4d93b46ec859c9b23"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "3ca73827426522a3ec6efec63cb7349104cb039a91809d3e3bde589375d8e19e"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "1bf47baf6ff5724a759e43bbf77da9ac28f42b81e8f35a294bbfb24c873d069f"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "0aa2c08fc3891fbdb0921fedf45d2426039139f5b3f2118abe256085584d7d18"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "6563f91e4101e00555510165386aeb69b8e899cd9af1951a3edb438144f03c91"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "a18b76f0b276d078c435d2de7e00cf088f40edcac5e24d9cd2adde5af584f854"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "9dc499022ce6ca57846211cc85c3e686c757cae5a2d0fdd0dbdd0fdfdee2bc9d"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "e97aa6b3f14376fb06b6092ffefdf224925d4ffe7d2a61017d95d9a2f8fd25aa"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "da4c0f4b81c78018081ac996031a1f61414669d05bbddbc338cb1372144bb927"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "68a75854475d16adcff97f2fa31b37755f0af926dee1847356e632df3a389e6c"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "2253c000f365cd7005fef32ad6f5cfbc40d5064d91cbebd0bd8ca1618e907c02"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "4b96f62709ee9acc009d46885d2bdb0885f0a189320b61fcdf2bf51fd6f387fa"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "5c5a5078cfea381b1e8ee2c1f2f28520bb3367908bd1bbad8aaa69606ce62e87"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "a2b185299ea0f01e9c5734f53fe683f29037503ff5cfeb56b13cf64c617d7068"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "cbf69c8955a9c366be5dc893c31d31eaab2dbd4078d1f5e2ab21e137ddec5ccd"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a8ea02d252884c21c36df963dbd31c59e01fec35d3ccff16e676c6180c6f2d71"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 spec 全文読解・validator 独立再実行 exit0・digest 3 系統 (context sha256:eeed295d… / canonical sha256:c7e0d7e6… / base sha256:e55ceadc…) の自前実装再計算一致・boundary 検査 0 件・設計判断 4 点 (P05 workstream=frontend / builds+build_stage_events の backend-spec 列単位一致 / PublishRequest 二重状態なし FK 参照のみ / 共有 CI・wrapper 不可侵) の妥当性確認を実施。blocking/non-blocking findings なし",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "process/c14-implicit-precondition",
+      "observation": "architect 報告: build-system-handoff.py は初期 staging-manifest.json (source 16 ファイルの sha256 + canonical_digest) の事前生成を要求する暗黙の契約がある (fail-closed exit2)。手順の明示化を planner ドキュメントの follow-up として記録",
+      "evidence": [
+        "system-build-handoff.json",
+        "staging-manifest.json"
+      ]
+    }
+  ]
+}

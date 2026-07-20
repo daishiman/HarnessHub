@@ -1,0 +1,224 @@
+{
+  "digest_contract": {
+    "algorithm": "sha256",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded"
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [],
+      "phase_ref": "P01",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P01"
+      ],
+      "phase_ref": "P02",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P02"
+      ],
+      "phase_ref": "P03",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P03"
+      ],
+      "phase_ref": "P04",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P04"
+      ],
+      "phase_ref": "P05",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P05"
+      ],
+      "phase_ref": "P06",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P06"
+      ],
+      "phase_ref": "P07",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P07"
+      ],
+      "phase_ref": "P08",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P08"
+      ],
+      "phase_ref": "P09",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P09"
+      ],
+      "phase_ref": "P10",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P10"
+      ],
+      "phase_ref": "P11",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P11"
+      ],
+      "phase_ref": "P12",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DUAL-CATALOG-WEB-P12"
+      ],
+      "phase_ref": "P13",
+      "task_id": "SYS-DUAL-CATALOG-WEB-P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md"
+    }
+  ],
+  "identity": {
+    "feature_id": "feat-dual-catalog-web",
+    "feature_package_id": "feature-package/feat-dual-catalog-web",
+    "parent_feature": "feat-dual-catalog-web",
+    "repository_id": "github:daishiman/HarnessHub",
+    "source_feature_digest": "sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3"
+  },
+  "kind": "system-build-handoff",
+  "registration_request": {
+    "consumer": "dev-graph/C02",
+    "owner": "system-dev-planner/C11",
+    "path": "dev-graph-registration.json",
+    "promotion_receipt": {
+      "owner": "system-dev-planner/C11",
+      "path": "atomic-promotion-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "registration_receipt": {
+      "owner": "dev-graph/C02",
+      "path": "dev-graph-registration-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "status": "deferred-until-promotion"
+  },
+  "schema_version": "1.0.0",
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "d406f8c958e2fdb0706249576b016c732ba4f67e6eea765755cfe1eb931ebcbd"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "4c4e71e820b93578aaf5ebd263a692b6251e59c2d60705c9d8dc153d38ae0f37"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "2ef00820e31f9cb1122667a70618c6de9171f4c28d56176cba9bf199e585c8db"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "79366dbb40e386bc647f4258b788a38d7ae3a2b35fc85ec7b8ddedc588cf915e"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "0cd5023b96911cb3de2f1c276b6866873153b39bcdb477bdbc0c0f90d489cf4c"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "f58cf007c6961496d3e70a825f47e2d4f98b01d126d062141b9867c4dd042672"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "e7f54627aee7ee1524d7809bba420baf76c16b32f1519a61211805f5a5e5af54"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "6fa132bb67bdeb3bff19e1955f8b1df85b6533852121d9d46c3bb6f1b6f8e8c0"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "ae5f5e1b6ec9983994f6971cf60feb3ae63f373dc2be505f2860983156f350c7"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "ab00c04cbb10e24e6018b762da214b9c4f6e45128c7bc66134ca7c49ecc22bc3"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "c51c631096ff1f6620b6c47e9ab3d3736a0f5350eaab12bdf5b8495ad2d95abe"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "a933380c928e4893df09d16c4f7b0974195bca24c658d843f477e16e546a2c99"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "c6087aa8d6f9c97971bdeff0ba0ee45f12bf8bb153daed941bf123f34e6c3c3b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "a30ab3dbfa678daa20091b306c689ccad914fa3f31ca1ab651e4830d27313814"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "3e4dedac2cbb801b5b76c4a1a4e14e08c771f675e42a253d0cba8a50d695b386"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "9d0f2ba9e104df469f182a4f3facf3ab75b0d50c677c09c229ad65d67ea29925"
+    }
+  ],
+  "source_manifest": {
+    "canonical_digest_before_handoff": "sha256:1f8dd43ff1083621c57c1a1bef53f5dea442fb9ead5a424b1e8bfabc4ae19064",
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "0fc310585b32288779fe30ce99724a42aafd5b08176a09837e1dddf762568589"
+  }
+}

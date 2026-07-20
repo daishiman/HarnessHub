@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
-    "skill_md_sha256": "563212e822853591b1db0358af61490216864d23fdc6caf312c5d1047668414b"
+    "skill_md_sha256": "b8e43d9b95cc305f7523552c4030291ba8c2cd6f073213cb60fb78b8c143d5ee"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "audit-next-worktree-20260720",
+  "reviewed_at": "2026-07-20",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -24,5 +24,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "ref-skill-design-rubric v1.3.0 (threshold 80) の kind=skill 適用 rule で genuine 採点した。FM-001(name prefix+kebab)/FM-002(2 trigger '〜たいとき'で句点終端)/FM-003(trigger 数=2 で 2..3 範囲内)/FM-004(採点する等の内部動詞なし)/BD-001(Purpose & Output Contract 見出し)/BD-002(Gotchas 見出し)/BD-003(frontmatter 除く body 約80行 <=300)/NM-001(basename==name)/PD-001(body<=100)/PD-002(冒頭30行に Purpose 見出し+『変更しない/混ぜない』禁則) が全て PASS。KL-001..005 は knowledge/ ディレクトリも frontmatter.knowledge_loop も無いため存在ゲートで skip=PASS。high severity 違反 0 件のため PASS。body 全文 (sha256 563212e822853591b1db0358af61490216864d23fdc6caf312c5d1047668414b) を単一責務・命名・境界・出力契約・SSOT (source_refs/schema_refs) の観点で確認済み。"
+  "notes": "独立監査で現SKILL.md (sha256 b8e43d9b...) をrubric観点で再確認。命名、read-only出力契約、scheduler単一責務、参照SSOT、必須lease/Beads exact parity/C17受入条件に重大違反0件。PASS。"
 }

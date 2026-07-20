@@ -2,22 +2,26 @@
 # /// script
 # name: schedule-graph
 # purpose: Compute deterministic feature/task ready sets and non-conflicting worktree batches.
-# inputs: ["argv: --graph FILE --ready-source self|bd-bridge --ready-json FILE? --leases FILE?"]
-# outputs: ["stdout: JSON schedule"]
+# inputs: ["argv: --graph FILE --leases FILE --ready-source self|bd-bridge --ready-json FILE? --eval-log FILE?"]
+# outputs: ["stdout: JSON schedule", "file: optional eval-log JSON receipt"]
 # requires-python = ">=3.10"
 # dependencies: []
 # contexts: [A, B, C, E]
 # network: false
-# write-scope: none
+# write-scope: optional eval-log receipt only
 # ///
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from _common import ContractError, dump, load_json
+from _common import ContractError, atomic_json, contained, dump, load_json, repository_eval_root, run, utc_now
+from node_transaction import ensure_no_pending_transaction, graph_operation_lock
 
 
 def touches(node: dict[str, Any]) -> set[str]:
@@ -47,66 +51,325 @@ def is_schedulable(node: dict[str, Any]) -> bool:
     )
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(); parser.add_argument("--graph", required=True)
-    parser.add_argument("--ready-source", choices=("self", "bd-bridge"), default="self")
-    parser.add_argument("--ready-json"); parser.add_argument("--leases")
-    args = parser.parse_args(); data = load_json(Path(args.graph)); nodes = data.get("nodes", []) if isinstance(data, dict) else data
-    if not isinstance(nodes, list): raise ContractError("graph nodes must be an array")
-    by_id = {(n.get("graph_node_id") or n.get("id")): n for n in nodes if isinstance(n, dict)}
-    done = {node_id for node_id, node in by_id.items() if node.get("status") in {"done", "closed"}}
-    ready_ids: set[str]
+def dependencies_satisfied(
+    node: dict[str, Any], by_id: dict[str, dict[str, Any]], done: set[str]
+) -> bool:
+    """Evaluate task dependencies without copying macro feature edges.
+
+    P01 is the package entry point. Its own ``depends_on`` remains an
+    intra-feature task edge list (normally empty), while the parent feature's
+    canonical macro dependencies are evaluated dynamically as an entry gate.
+    """
+    dependencies = node.get("depends_on", [])
+    if not isinstance(dependencies, list) or any(dep not in done for dep in dependencies):
+        return False
+    if node.get("artifact_kind", node.get("kind")) != "task" or node.get("phase_ref") != "P01":
+        return True
+    parent_id = node.get("parent_feature")
+    if not isinstance(parent_id, str) or parent_id not in by_id:
+        return False
+    upstream = by_id[parent_id].get("depends_on", [])
+    return isinstance(upstream, list) and all(dep in done for dep in upstream)
+
+
+ACTIVE_LEASE_STATES = {
+    "reserving", "claimed", "in_progress", "pending_review", "pending_merge",
+    "claim_pending_local_repair",
+}
+
+
+def _sha(value: bytes | None) -> str | None:
+    return hashlib.sha256(value).hexdigest() if value is not None else None
+
+
+def _read_optional(path: Path | None) -> bytes | None:
+    return path.read_bytes() if path is not None and path.exists() else None
+
+
+def _lease_path(args: argparse.Namespace, root: Path | None) -> tuple[Path | None, str]:
+    if args.leases:
+        requested = Path(args.leases)
+        requested = requested if requested.is_absolute() else (root or Path.cwd()) / requested
+        if not requested.is_file():
+            raise ContractError(f"explicit lease snapshot does not exist: {requested}")
+        resolved = requested.resolve(strict=True)
+        if root is not None:
+            cp = run(["git", "-C", str(root), "rev-parse", "--git-common-dir"], check=False)
+            if cp.returncode == 0:
+                common = Path(cp.stdout.strip())
+                common = common if common.is_absolute() else root / common
+                canonical = (common.resolve(strict=True) / "dev-graph" / "leases.json").resolve(strict=True)
+                if resolved != canonical:
+                    raise ContractError(f"lease snapshot is not the git-common authority: {resolved}")
+                return resolved, "git_common_dir"
+            contained(resolved, root, must_exist=True)
+        return resolved, "explicit_non_git_fixture"
+    if root is None:
+        # Compatibility for direct library callers. The public command always supplies --repo-root.
+        return None, "legacy_unset"
+    cp = run(["git", "-C", str(root), "rev-parse", "--git-common-dir"], check=False)
+    if cp.returncode:
+        raise ContractError("--repo-root requires a Git repository or an explicit --leases snapshot")
+    common = Path(cp.stdout.strip())
+    common = common if common.is_absolute() else root / common
+    return common.resolve(strict=True) / "dev-graph" / "leases.json", "git_common_dir"
+
+
+def _active(lease: dict[str, Any], now: datetime) -> bool:
+    if lease.get("state") not in ACTIVE_LEASE_STATES:
+        return False
+    expires = lease.get("expires_at")
+    if expires is None:
+        return True
+    try:
+        expiry = datetime.fromisoformat(str(expires).replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ContractError("lease snapshot contains an invalid expires_at") from exc
+    if expiry.tzinfo is None:
+        raise ContractError("lease expires_at must be timezone-aware")
+    return expiry > now
+
+
+def _scope_ids(scope: str | None, by_id: dict[str, dict[str, Any]]) -> set[str]:
+    if scope is None:
+        return set(by_id)
+    if scope not in by_id:
+        raise ContractError(f"unknown --scope graph node: {scope}")
+    selected = {scope}
+    changed = True
+    while changed:
+        changed = False
+        for node_id, node in by_id.items():
+            if node_id not in selected and node.get("parent_feature") in selected:
+                selected.add(node_id)
+                changed = True
+    return selected
+
+
+def _ready_entries(path: Path | None) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], bytes | None]:
+    if path is None:
+        return {}, [], None
+    before = path.read_bytes()
+    value = json.loads(before.decode("utf-8"))
+    raw = value.get("ready_set", value) if isinstance(value, dict) else value
+    if not isinstance(raw, list):
+        raise ContractError("bd ready payload must contain ready_set[]")
+    mapped: dict[str, dict[str, Any]] = {}
     unmapped: list[dict[str, Any]] = []
-    if args.ready_source == "bd-bridge":
-        if not args.ready_json: raise ContractError("--ready-source bd-bridge requires --ready-json")
-        ready_data = load_json(Path(args.ready_json)); raw_ready = ready_data.get("ready_set", ready_data)
-        if not isinstance(raw_ready, list): raise ContractError("bd ready payload must contain ready_set[]")
-        ready_ids = set()
-        for item in raw_ready:
-            external = item.get("external_ref") if isinstance(item, dict) else None
-            if external and external in by_id:
-                if is_schedulable(by_id[external]) and all(
-                    dep in done for dep in by_id[external].get("depends_on", [])
-                ):
-                    ready_ids.add(external)
-            else: unmapped.append(item if isinstance(item, dict) else {"value": item})
-    else:
-        ready_ids = {node_id for node_id, node in by_id.items() if is_schedulable(node)
-                     and all(dep in done for dep in node.get("depends_on", []))}
+    for item in raw:
+        if not isinstance(item, dict):
+            unmapped.append({"value": item, "reason": "not_an_object"})
+            continue
+        external = item.get("external_ref")
+        if not isinstance(external, str) or not external:
+            unmapped.append({**item, "reason": "missing_external_ref"})
+            continue
+        if external in mapped:
+            raise ContractError(f"duplicate external_ref in Beads ready payload: {external}")
+        mapped[external] = item
+    return mapped, unmapped, before
+
+
+def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> int:
+    ensure_no_pending_transaction(graph_path)
+    graph_before = graph_path.read_bytes()
+    data = json.loads(graph_before.decode("utf-8"))
+    nodes = data.get("nodes", []) if isinstance(data, dict) else data
+    if not isinstance(nodes, list) or not all(isinstance(node, dict) for node in nodes):
+        raise ContractError("graph nodes must be an array of objects")
+    by_id = {(node.get("graph_node_id") or node.get("id")): node for node in nodes}
+    if None in by_id or len(by_id) != len(nodes):
+        raise ContractError("graph nodes require unique IDs")
+    selected = _scope_ids(args.scope, by_id)
+    done = {node_id for node_id, node in by_id.items() if node.get("status") in {"done", "closed"}}
+
+    ready_path: Path | None = None
+    if args.ready_json:
+        candidate = Path(args.ready_json)
+        candidate = candidate if candidate.is_absolute() else (root or Path.cwd()) / candidate
+        ready_path = candidate.resolve(strict=True)
+        if root is not None:
+            contained(ready_path, root, must_exist=True)
+    ready_by_id, unmapped, tracker_before = _ready_entries(ready_path)
+    beads_present = any(
+        node.get("tracker_binding") == "beads" and is_schedulable(node)
+        for node_id, node in by_id.items() if node_id in selected
+    )
+    if beads_present and ready_path is None:
+        raise ContractError("schedulable beads nodes require --ready-json from bd-bridge ready parity output")
+
+    ready_ids: set[str] = set()
+    for node_id, node in by_id.items():
+        if node_id not in selected or not is_schedulable(node) or not dependencies_satisfied(node, by_id, done):
+            continue
+        binding = node.get("tracker_binding")
+        if binding == "beads":
+            entry = ready_by_id.get(node_id)
+            parity = entry.get("edge_parity") if entry else None
+            status_matches = entry is not None and entry.get("graph_status") == node.get("status")
+            dependency_matches = entry is not None and entry.get("graph_depends_on") == node.get("depends_on", [])
+            if entry and isinstance(parity, dict) and parity.get("confirmed") is True and status_matches and dependency_matches:
+                ready_ids.add(node_id)
+            elif entry:
+                unmapped.append({
+                    "external_ref": node_id,
+                    "reason": "beads_parity_stale_or_unconfirmed",
+                    "expected_status": node.get("status"),
+                    "observed_status": entry.get("graph_status"),
+                    "expected_depends_on": node.get("depends_on", []),
+                    "observed_depends_on": entry.get("graph_depends_on"),
+                })
+        elif binding in {"github", "none"}:
+            ready_ids.add(node_id)
+        elif binding is None and args.ready_source == "bd-bridge":
+            # Compatibility with pre-binding fixtures; not used by the public command.
+            if node_id in ready_by_id:
+                ready_ids.add(node_id)
+        elif binding is None:
+            ready_ids.add(node_id)
+        else:
+            raise ContractError(f"{node_id}: unresolved tracker_binding {binding!r}")
+    for external, item in ready_by_id.items():
+        if external not in by_id:
+            unmapped.append({**item, "reason": "graph_node_missing"})
+
+    lease_path, lease_source = _lease_path(args, root)
+    lease_before = _read_optional(lease_path)
     active_leases: list[dict[str, Any]] = []
-    if args.leases and Path(args.leases).exists():
-        lease_data = load_json(Path(args.leases)); active_leases = lease_data.get("leases", lease_data if isinstance(lease_data, list) else [])
-    leased_ids = {x.get("graph_node_id") for x in active_leases if x.get("state") not in {"released", "expired"}}
-    leased_touches = {str(v) for x in active_leases if x.get("state") not in {"released", "expired"} for v in x.get("resource_scope", [])}
-    candidates = [by_id[x] for x in sorted(ready_ids) if x in by_id and is_schedulable(by_id[x])
-                  and x not in leased_ids and not (touches(by_id[x]) & leased_touches)]
-    features = [n for n in candidates if n.get("artifact_kind", n.get("kind")) == "feature"]
-    tasks = [n for n in candidates if n not in features]
+    if lease_before is not None:
+        lease_data = json.loads(lease_before.decode("utf-8"))
+        raw_leases = lease_data.get("leases", lease_data) if isinstance(lease_data, (dict, list)) else None
+        if not isinstance(raw_leases, list) or not all(isinstance(item, dict) for item in raw_leases):
+            raise ContractError("lease snapshot must contain leases[] objects")
+        now = datetime.now(timezone.utc)
+        active_leases = [item for item in raw_leases if _active(item, now)]
+    leased_ids = {item.get("graph_node_id") for item in active_leases}
+    leased_touches = {
+        str(value) for item in active_leases for value in item.get("resource_scope", [])
+    }
+    lease_conflicts = {
+        node_id for node_id in ready_ids
+        if node_id in leased_ids or touches(by_id[node_id]) & leased_touches
+    }
+    candidates = [by_id[node_id] for node_id in sorted(ready_ids - lease_conflicts)]
+    features = [node for node in candidates if node.get("artifact_kind", node.get("kind")) == "feature"]
+    tasks = [node for node in candidates if node not in features]
+
+    conflict_pairs: list[dict[str, Any]] = []
+    sorted_ready = sorted(ready_ids)
+    for index, left in enumerate(sorted_ready):
+        for right in sorted_ready[index + 1:]:
+            overlap = sorted(touches(by_id[left]) & touches(by_id[right]))
+            if overlap:
+                conflict_pairs.append({"left": left, "right": right, "resources": overlap, "kind": "ready_pair"})
+    for node_id in sorted(lease_conflicts):
+        conflict_pairs.append({
+            "left": node_id,
+            "right": "active-lease",
+            "resources": sorted(touches(by_id[node_id]) & leased_touches),
+            "kind": "lease",
+        })
+
     def batches(items: list[dict[str, Any]]) -> list[list[str]]:
         result: list[list[str]] = []
         for node in items:
-            node_id = node.get("graph_node_id") or node.get("id"); scope = touches(node)
+            node_id = node.get("graph_node_id") or node.get("id")
+            scope = touches(node)
             placed = False
             for batch in result:
-                occupied = set().union(*(touches(by_id[x]) for x in batch))
-                if not scope & occupied: batch.append(node_id); placed = True; break
-            if not placed: result.append([node_id])
+                if args.max_parallel is not None and len(batch) >= args.max_parallel:
+                    continue
+                occupied = set().union(*(touches(by_id[member]) for member in batch))
+                if not scope & occupied:
+                    batch.append(node_id)
+                    placed = True
+                    break
+            if not placed:
+                result.append([node_id])
         return result
+
     feature_batches, task_batches = batches(features), batches(tasks)
-    conflicts = sorted((ready_ids & leased_ids) | {x for x in ready_ids if x in by_id and touches(by_id[x]) & leased_touches})
     hints = []
     for node in tasks:
         node_id = node.get("graph_node_id") or node.get("id")
         branch = f"devgraph/{node_id}"
-        hints.append({"graph_node_id": node_id, "suggested_branch": branch,
-                      "claim_command": f"/dev-graph worktree claim {node_id} --branch {branch} --session-id <session>"})
-    dump({"ready_set": {"features": [n.get("graph_node_id") or n.get("id") for n in features],
-                         "tasks": [n.get("graph_node_id") or n.get("id") for n in tasks]},
-          "batches": {"features": feature_batches, "tasks": task_batches}, "conflicts": conflicts,
-          "assignment_hints": hints, "unmapped": unmapped, "ready_source": args.ready_source})
+        hints.append({
+            "graph_node_id": node_id,
+            "suggested_branch": branch,
+            "claim_command": f"/dev-graph worktree claim {node_id} --branch {branch} --session-id <session>",
+        })
+
+    graph_after = graph_path.read_bytes()
+    tracker_after = _read_optional(ready_path)
+    lease_after = _read_optional(lease_path)
+    if graph_before != graph_after:
+        raise ContractError("schedule calculation changed the canonical graph")
+    if tracker_before != tracker_after:
+        raise ContractError("schedule calculation observed a changing tracker parity snapshot")
+    if lease_before != lease_after:
+        raise ContractError("schedule calculation observed a changing lease snapshot")
+    plan = {
+        "ready_set": {
+            "features": [node.get("graph_node_id") or node.get("id") for node in features],
+            "tasks": [node.get("graph_node_id") or node.get("id") for node in tasks],
+        },
+        "batches": {"features": feature_batches, "tasks": task_batches},
+        "conflicts": sorted(lease_conflicts),
+        "conflict_pairs": conflict_pairs,
+        "assignment_hints": hints,
+        "unmapped": unmapped,
+        "ready_source": "binding-aware" if args.ready_source == "auto" else args.ready_source,
+        "scope": args.scope,
+        "max_parallel": args.max_parallel,
+        "lease_source": lease_source,
+        "read_only": True,
+        "graph_sha256_before": _sha(graph_before),
+        "graph_sha256_after": _sha(graph_after),
+        "tracker_sha256_before": _sha(tracker_before),
+        "tracker_sha256_after": _sha(tracker_after),
+        "lease_sha256_before": _sha(lease_before),
+        "lease_sha256_after": _sha(lease_after),
+        "executed_at": utc_now(),
+    }
+    if args.eval_log:
+        if root is None:
+            raise ContractError("--eval-log requires --repo-root")
+        eval_root = repository_eval_root(root)
+        target = Path(args.eval_log)
+        target = target if target.is_absolute() else root / target
+        target = contained(target, eval_root, must_exist=False)
+        atomic_json(target, plan)
+        plan["eval_log"] = target.relative_to(root).as_posix()
+    dump(plan)
     return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--graph", required=True)
+    parser.add_argument("--ready-source", choices=("auto", "self", "bd-bridge"), default="auto")
+    parser.add_argument("--ready-json")
+    parser.add_argument("--leases", required=True)
+    parser.add_argument("--repo-root")
+    parser.add_argument("--scope")
+    parser.add_argument("--max-parallel", type=int)
+    parser.add_argument("--eval-log")
+    args = parser.parse_args()
+    if args.max_parallel is not None and args.max_parallel < 1:
+        raise ContractError("--max-parallel must be at least 1")
+
+    root = Path(args.repo_root).resolve(strict=True) if args.repo_root else None
+    graph_path = Path(args.graph)
+    graph_path = graph_path if graph_path.is_absolute() else (root or Path.cwd()) / graph_path
+    graph_path = graph_path.resolve(strict=True)
+    if root is not None:
+        contained(graph_path, root, must_exist=True)
+    with graph_operation_lock(graph_path, exclusive=False):
+        return _schedule(args, root, graph_path)
 
 
 if __name__ == "__main__":
     try: raise SystemExit(main())
-    except ContractError as exc: print(str(exc), file=sys.stderr); raise SystemExit(2)
+    except (ContractError, OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        print(str(exc), file=sys.stderr)
+        raise SystemExit(2)

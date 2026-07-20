@@ -23,8 +23,9 @@ from typing import Any
 
 from _common import ContractError, dump, run
 
-MUTATIONS = {"create", "update", "dep-add", "close", "claim", "github-push", "gate-add"}
+MUTATIONS = {"create", "update", "dep-add", "dep-remove", "close", "claim", "github-push", "gate-add"}
 PHASES = [f"P{i:02d}" for i in range(1, 14)]
+SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
 
 
 def bd(args: list[str], *, cwd: Path, check: bool = True) -> Any:
@@ -137,9 +138,13 @@ def _external_ref(row: dict[str, Any]) -> str | None:
 
 
 def _find_external(root: Path, graph_node_id: str) -> dict[str, Any] | None:
-    marker = f"dev-graph:{graph_node_id}"
-    rows = _rows(bd(["search", "--external-contains", marker, "--status", "all", "--json"], cwd=root, check=False))
+    # bd 1.1.0 の search は --external-contains を解さずヘルプ文を返すため、
+    # 素の text query (external_ref にもマッチ) → list --status all の順で引き完全一致で絞る。
+    rows = _rows(bd(["search", graph_node_id, "--status", "all", "--json"], cwd=root, check=False))
     exact = [row for row in rows if _external_ref(row) == graph_node_id]
+    if not exact:
+        rows = _rows(bd(["list", "--status", "all", "--limit", "10000", "--json"], cwd=root, check=False))
+        exact = [row for row in rows if _external_ref(row) == graph_node_id]
     if len(exact) > 1:
         raise ContractError(f"duplicate beads external_ref for {graph_node_id}")
     return exact[0] if exact else None
@@ -153,22 +158,54 @@ def _create_one(
     description: str,
     issue_type: str,
     parent: str | None = None,
+    source_digest: str | None = None,
 ) -> dict[str, Any]:
+    if source_digest is not None and SHA256.fullmatch(source_digest) is None:
+        raise ContractError("projection source_digest must be sha256:<64 lowercase hex>")
+    projected_description = description
+    if source_digest is not None:
+        projected_description = f"{description.rstrip()}\n\ndev_graph_source_digest: {source_digest}"
     existing = _find_external(root, graph_node_id)
     if existing:
-        actual_type = existing.get("issue_type") or existing.get("type")
+        # search/list の row は parent と issue_type を持たないため show で詳細を取り直す。
+        existing_id = str(existing.get("id"))
+        detail = _issue(bd(["show", existing_id, "--json"], cwd=root), existing_id)
+        actual_type = detail.get("issue_type") or detail.get("type")
         if actual_type and actual_type != issue_type:
             raise ContractError(f"existing {graph_node_id} has type {actual_type}, expected {issue_type}")
-        actual_parent = existing.get("parent") or existing.get("parent_id")
+        actual_parent = detail.get("parent") or detail.get("parent_id")
         if parent and str(actual_parent) != parent:
             raise ContractError(f"existing {graph_node_id} belongs to a different epic")
-        return {"id": existing.get("id"), "external_ref": graph_node_id, "idempotent": True}
+        metadata = detail.get("metadata") if isinstance(detail.get("metadata"), dict) else {}
+        current_digest = metadata.get("dev_graph_source_digest")
+        if not current_digest:
+            match = re.search(r"dev_graph_source_digest:\s*(sha256:[0-9a-f]{64})", str(detail.get("description", "")))
+            current_digest = match.group(1) if match else None
+        if source_digest is not None and current_digest != source_digest:
+            argv = [
+                "update", existing_id, "--title", title,
+                "--description", projected_description,
+                "--set-metadata", f"dev_graph_source_digest={source_digest}",
+            ]
+            if parent:
+                argv += ["--parent", parent]
+            if str(detail.get("status")) == "closed":
+                argv += ["--status", "open"]
+            argv += ["--json"]
+            updated = bd(argv, cwd=root)
+            return {
+                "id": existing_id, "external_ref": graph_node_id,
+                "superseded": True, "source_digest": source_digest, "updated": updated,
+            }
+        return {"id": existing_id, "external_ref": graph_node_id, "idempotent": True}
     argv = [
-        "create", "--title", title, "--description", description,
+        "create", "--title", title, "--description", projected_description,
         "--external-ref", f"dev-graph:{graph_node_id}", "--type", issue_type,
     ]
     if parent:
         argv += ["--parent", parent]
+    if source_digest is not None:
+        argv += ["--metadata", json.dumps({"dev_graph_source_digest": source_digest}, sort_keys=True)]
     argv += ["--json"]
     created = bd(argv, cwd=root)
     rows = _rows(created)
@@ -178,11 +215,14 @@ def _create_one(
     return {"id": issue_id, "external_ref": graph_node_id, "created": created}
 
 
-def _validate_projection(manifest: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+def _validate_projection(manifest: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]], str]:
     feature = manifest.get("feature")
     children = manifest.get("children")
     if not isinstance(feature, dict) or not isinstance(children, list) or not all(isinstance(row, dict) for row in children):
         raise ContractError("projection manifest requires feature object and children array")
+    source_digest = manifest.get("source_digest")
+    if not isinstance(source_digest, str) or SHA256.fullmatch(source_digest) is None:
+        raise ContractError("projection manifest requires source_digest=sha256:<64 lowercase hex>")
     feature_id = feature.get("graph_node_id")
     if not isinstance(feature_id, str) or not feature_id:
         raise ContractError("projection feature requires graph_node_id")
@@ -197,11 +237,11 @@ def _validate_projection(manifest: dict[str, Any]) -> tuple[dict[str, Any], list
         dependencies = row.get("depends_on", [])
         if not isinstance(dependencies, list) or any(dep not in id_set for dep in dependencies):
             raise ContractError("projection child dependency escapes the exact-13 package")
-    return feature, children
+    return feature, children, source_digest
 
 
 def _package_projection(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
-    feature, children = _validate_projection(manifest)
+    feature, children, source_digest = _validate_projection(manifest)
     feature_id = feature["graph_node_id"]
 
     epic = _create_one(
@@ -210,6 +250,7 @@ def _package_projection(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
         title=str(feature.get("title") or feature_id),
         description=str(feature.get("description") or "dev-graph feature projection"),
         issue_type="epic",
+        source_digest=source_digest,
     )
     projected: list[dict[str, Any]] = []
     issue_ids: dict[str, str] = {}
@@ -221,6 +262,7 @@ def _package_projection(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
             description=str(row.get("description") or f"dev-graph {row['phase_ref']} projection"),
             issue_type="task",
             parent=str(epic["id"]),
+            source_digest=source_digest,
         )
         projected_row["phase_ref"] = row["phase_ref"]
         projected.append(projected_row)
@@ -228,14 +270,18 @@ def _package_projection(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
     edges: list[dict[str, Any]] = []
     for row in children:
         issue_id = issue_ids[row["graph_node_id"]]
-        for dependency in row.get("depends_on", []):
-            dependency_id = issue_ids[dependency]
-            current = _issue(bd(["show", issue_id, "--json"], cwd=root), issue_id)
-            if dependency_id in _dependency_ids(current):
-                edges.append({"issue_id": issue_id, "depends_on": dependency_id, "idempotent": True})
-            else:
-                result = bd(["dep", "add", issue_id, dependency_id, "--type", "blocks", "--json"], cwd=root)
-                edges.append({"issue_id": issue_id, "depends_on": dependency_id, "result": result})
+        expected_dependencies = {issue_ids[dependency] for dependency in row.get("depends_on", [])}
+        current = _issue(bd(["show", issue_id, "--json"], cwd=root), issue_id)
+        actual_dependencies = _dependency_ids(current)
+        package_issue_ids = set(issue_ids.values())
+        for dependency_id in sorted((actual_dependencies & package_issue_ids) - expected_dependencies):
+            result = bd(["dep", "remove", issue_id, dependency_id, "--json"], cwd=root)
+            edges.append({"issue_id": issue_id, "depends_on": dependency_id, "operation": "removed", "result": result})
+        for dependency_id in sorted(expected_dependencies - actual_dependencies):
+            result = bd(["dep", "add", issue_id, dependency_id, "--type", "blocks", "--json"], cwd=root)
+            edges.append({"issue_id": issue_id, "depends_on": dependency_id, "operation": "added", "result": result})
+        for dependency_id in sorted(expected_dependencies & actual_dependencies):
+            edges.append({"issue_id": issue_id, "depends_on": dependency_id, "idempotent": True})
     parity: list[dict[str, Any]] = []
     for row in children:
         issue_id = issue_ids[row["graph_node_id"]]
@@ -254,6 +300,7 @@ def _package_projection(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
         "phase_refs": PHASES,
         "expected_count": 13,
         "applied_count": len(projected),
+        "source_digest": source_digest,
     }
 
 
@@ -313,7 +360,7 @@ def _verify_feature_rollup(manifest: dict[str, Any], issue_id: str) -> dict[str,
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(); p.add_argument("--op", required=True, choices=("create", "update", "dep-add", "close", "ready", "show", "claim", "github-push", "gate-add", "gate-check"))
+    p = argparse.ArgumentParser(); p.add_argument("--op", required=True, choices=("create", "update", "dep-add", "dep-remove", "close", "ready", "show", "claim", "github-push", "gate-add", "gate-check"))
     p.add_argument("--repo-root", default="."); p.add_argument("--graph-node-id"); p.add_argument("--bd-issue-id"); p.add_argument("--depends-on"); p.add_argument("--expected-depends-on", action="append", default=[]); p.add_argument("--expected-status"); p.add_argument("--expected-workspace-id"); p.add_argument("--verify-parity", action="store_true"); p.add_argument("--title"); p.add_argument("--description"); p.add_argument("--status"); p.add_argument("--reason"); p.add_argument("--pr", type=int); p.add_argument("--dry-run", action="store_true")
     p.add_argument("--parity-manifest"); p.add_argument("--projection-manifest"); p.add_argument("--feature-rollup-manifest"); p.add_argument("--artifact-kind", choices=("feature", "task"))
     a = p.parse_args(); root = Path(a.repo_root).resolve(strict=True)
@@ -321,12 +368,13 @@ def main() -> int:
     if a.dry_run and a.op in MUTATIONS:
         preview: dict[str, Any] = {k: v for k, v in vars(a).items() if v is not None and k != "dry_run"}
         if a.op == "create" and a.projection_manifest:
-            feature, children = _validate_projection(_load_manifest(a.projection_manifest, root, label="projection") or {})
+            feature, children, source_digest = _validate_projection(_load_manifest(a.projection_manifest, root, label="projection") or {})
             preview["projection"] = {
                 "feature": feature["graph_node_id"],
                 "issue_type": "epic",
                 "children": [{"graph_node_id": row["graph_node_id"], "phase_ref": row["phase_ref"], "issue_type": "task"} for row in children],
                 "dependency_type": "blocks",
+                "source_digest": source_digest,
                 "write_count": 0,
             }
         if a.op == "close" and a.artifact_kind == "feature":
@@ -365,12 +413,15 @@ def main() -> int:
             result = {"id": issue, "idempotent": True, "status": "in_progress"} if current.get("status") == "in_progress" else bd(["update", issue, "--claim", "--json"], cwd=root)
         else: result = current
         if edge_parity is not None: result = {"issue": result, "edge_parity": edge_parity}
-    elif a.op == "dep-add":
-        if not issue or not a.depends_on: raise ContractError("dep-add requires issue and depends-on")
+    elif a.op in {"dep-add", "dep-remove"}:
+        if not issue or not a.depends_on: raise ContractError(f"{a.op} requires issue and depends-on")
         existing = _issue(bd(["show", issue, "--json"], cwd=root), issue)
         deps = existing.get("dependencies", [])
-        if any((x.get("id") if isinstance(x, dict) else x) == a.depends_on for x in deps): result = {"idempotent": True}
-        else: result = bd(["dep", "add", issue, a.depends_on, "--json"], cwd=root)
+        present = any((x.get("id") if isinstance(x, dict) else x) == a.depends_on for x in deps)
+        if a.op == "dep-add":
+            result = {"idempotent": True} if present else bd(["dep", "add", issue, a.depends_on, "--json"], cwd=root)
+        else:
+            result = bd(["dep", "remove", issue, a.depends_on, "--json"], cwd=root) if present else {"idempotent": True}
     elif a.op == "ready":
         manifest = _load_manifest(a.parity_manifest, root, label="parity")
         result = _ready_with_parity(root, bd(["ready", "--json"], cwd=root), manifest)

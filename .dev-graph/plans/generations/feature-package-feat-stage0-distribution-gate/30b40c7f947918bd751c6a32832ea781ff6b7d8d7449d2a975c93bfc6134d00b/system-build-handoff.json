@@ -1,0 +1,232 @@
+{
+  "digest_contract": {
+    "algorithm": "sha256",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded"
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [],
+      "phase_ref": "P01",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P01"
+      ],
+      "phase_ref": "P02",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P02"
+      ],
+      "phase_ref": "P03",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P03"
+      ],
+      "phase_ref": "P04",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P04"
+      ],
+      "phase_ref": "P05",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P05"
+      ],
+      "phase_ref": "P06",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P06"
+      ],
+      "phase_ref": "P07",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
+      ],
+      "phase_ref": "P08",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P08"
+      ],
+      "phase_ref": "P09",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P09"
+      ],
+      "phase_ref": "P10",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P10"
+      ],
+      "phase_ref": "P11",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P11"
+      ],
+      "phase_ref": "P12",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P12"
+      ],
+      "phase_ref": "P13",
+      "task_id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md"
+    }
+  ],
+  "identity": {
+    "feature_id": "feat-stage0-distribution-gate",
+    "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+    "parent_feature": "feat-stage0-distribution-gate",
+    "repository_id": "github:daishiman/HarnessHub",
+    "source_feature_digest": "sha256:6b7340ade5290ee9e3c5bb63d22d3381684b28817303152c6240906ff050fb0a"
+  },
+  "kind": "system-build-handoff",
+  "p01_entry_gate": {
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ],
+    "selector": "parent_feature.depends_on"
+  },
+  "registration_request": {
+    "consumer": "dev-graph/C02",
+    "owner": "system-dev-planner/C11",
+    "path": "dev-graph-registration.json",
+    "promotion_receipt": {
+      "owner": "system-dev-planner/C11",
+      "path": "atomic-promotion-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "registration_receipt": {
+      "owner": "dev-graph/C02",
+      "path": "dev-graph-registration-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "status": "deferred-until-promotion"
+  },
+  "schema_version": "1.0.0",
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "7665e0407020effcf3aa0bdcbfa6a7529a06f7b9fc68d19a6ece6b8d45574a48"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "1df1da528d04d2976748c2983f75337d2f681832a0cc23cfb88ca761d230d8d8"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "7c5f5a76a9556383a80e00940b9c82ead11f54a720fcf86c1752aa78ca595a2f"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "c09366ae9ac6faa02512ceffeee5849546272ea45f7d5a9c86709e6b10474e8e"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "9cc2145735b9aa4e3f8ffa85b4c28432e412604398e89274ac8e92298f08379b"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "5564b27660cb153fd9d36bfc8323ec9b9e91482d55ec71190560824b49ca350f"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "c6e2c9ee304b21b29bdbe7098c10da107bdbca4c5f2f177117744a0d26bbbdc1"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "9a04e800419b6f70721dcdb3fdcded925c86b78666d4b8ce1f8e1876441ae8e1"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "80e55a7a470f26a3da96f1106ec8ada4bc4df6eb89898f7ff5d7e50954d9ae6b"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "6f2461fac0f9e48352b0f5a63996dc56f38fe73bfbeed3f8e5079ccac913dcd6"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "770080252e78477d9e5b8cffa922ffb6f89721fe12064609db8ccc6931659f61"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "19a0d7796c709a1da5e8335df46084421415a4368d3996b596651ed55fb0b383"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "5232ba18d2c430d98a796b5303b2f9687bab4910bedfc7635c181337bc76e19b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e05e9ab90a459016ef2fc810562538a60059ff81bd242d576fc1c6808fbeb220"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "c2d26e12f2c9b067b12367ae4cfddaf7de4341890bcf6b634e4780fc33998ab5"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "218c353ff330352827f2488cc5f1b853caf9667d526ddd177aee2d5bb75cab90"
+    }
+  ],
+  "source_manifest": {
+    "canonical_digest_before_handoff": "sha256:202e373c0bb5a3a9ac6c94110bda972b25d15896b56f37717de310414518c412",
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "33d33490900c9b2c1a8acd7081b3ac3310861755a8a76c1fadc6fdb978766130"
+  }
+}

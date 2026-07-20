@@ -22,6 +22,18 @@ serves_goals: []
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: 保守運用は外部委託のため本仕様の対象外 |
 | デスクトップ (macOS) (desktop-macos) | 対象外 | 理由: 保守運用は外部委託のため本仕様の対象外 |
 
+## 確定内容 (質疑録)
+
+- (確定セルなし。本章は対象外または収集中)
+
+## 上流指針 (doctrine anchor)
+
+| concern | authority (正本) | 導く上流原則 | 出典 |
+|---|---|---|---|
+| operations | Google SRE | 運用手順・障害対応・トイル削減・ポストモーテムの上流指針 | https://sre.google/workbook/ |
+
+- 本章の確定内容 (質疑録) は上記 authority を上流指針として適用する。具体技術の選定はこの指針に従属し、指針との乖離は再オープン (R4-reopen) の根拠になる。
+
 ## 適用された設計知識
 
 ### Clean Code — deep knowledge card

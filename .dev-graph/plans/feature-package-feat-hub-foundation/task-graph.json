@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-hub-foundation",
+  "parent_feature": "feat-hub-foundation",
+  "nodes": [
+    {
+      "id": "SYS-HUB-FOUNDATION-P01",
+      "graph_node_id": "sys-hub-foundation-p01",
+      "title": "Hub 基盤 要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P02",
+      "graph_node_id": "sys-hub-foundation-p02",
+      "title": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P01"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P03",
+      "graph_node_id": "sys-hub-foundation-p03",
+      "title": "Hub 基盤 独立設計レビュー",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P02"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P04",
+      "graph_node_id": "sys-hub-foundation-p04",
+      "title": "Hub 基盤 テスト設計 (test-first 受入契約)",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P03"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P05",
+      "graph_node_id": "sys-hub-foundation-p05",
+      "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P04"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P06",
+      "graph_node_id": "sys-hub-foundation-p06",
+      "title": "Hub 基盤 テスト実行",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P05"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P07",
+      "graph_node_id": "sys-hub-foundation-p07",
+      "title": "Hub 基盤 feature 受入判定",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P06"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P08",
+      "graph_node_id": "sys-hub-foundation-p08",
+      "title": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P07"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P09",
+      "graph_node_id": "sys-hub-foundation-p09",
+      "title": "Hub 基盤 品質・セキュリティ・運用保証",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P08"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P10",
+      "graph_node_id": "sys-hub-foundation-p10",
+      "title": "Hub 基盤 最終独立レビュー",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P09"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P11",
+      "graph_node_id": "sys-hub-foundation-p11",
+      "title": "Hub 基盤 証跡収集",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P10"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P12",
+      "graph_node_id": "sys-hub-foundation-p12",
+      "title": "Hub 基盤 運用ドキュメント整備",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P11"
+      ]
+    },
+    {
+      "id": "SYS-HUB-FOUNDATION-P13",
+      "graph_node_id": "sys-hub-foundation-p13",
+      "title": "Hub 基盤 本番リリース・デプロイ",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "parent_feature": "feat-hub-foundation",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P12"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "owner": "C02-compatible requirements dependency convergence",
+  "operation": "add_feature_dependency",
+  "status": "applied",
+  "graph_node_id": "feat-publisher-plugin",
+  "depends_on_added": "feat-stage0-distribution-gate",
+  "depends_on_before": [
+    "feat-publish-pipeline"
+  ],
+  "depends_on_after": [
+    "feat-publish-pipeline",
+    "feat-stage0-distribution-gate"
+  ],
+  "graph_revision_before": 24,
+  "graph_revision_after": 25,
+  "graph_digest_after": "ee660c46dc8685bf32d978ae9ed4f8e598a8a19b261cedc3bfd3c8229505ce6e"
+}

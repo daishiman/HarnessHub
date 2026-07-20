@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-publisher-plugin",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r2b-readiness",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-publisher-plugin"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df\",\n  \"feature_package_id\": \"feature-package/feat-publisher-plugin\",\n  \"parent_feature\": \"feat-publisher-plugin\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "74c1f3384f0ed36a6cd2e1b1dfc6053c23ca70ab9f2db8acb98f18f5fdf7cf63"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "3401f09d5cea308bc0710f0ee10240e5ff6e6bc2afd808030f9d759086baf826"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "8f33b8707e1b6e89c4bd3b84315696f75f2fee23586c6da52aac9a01a79a3b15"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "21d734c5fe4f105ed8326a6f66235850360c6dce8e8c87231ed5a1771239ef23"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "c350eaa1c381243594c909154727067c065f3ecb57d81611f855388e94340eac"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "0d8fa7a04cacac497a6335bf6c4124438928f8394d1a6d7811b7126ad580bfdc"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "21c3acd12d4c7f82fab2890ecded85a7dd2ad77169fc01f5d735d0d46895278e"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "e9f258f5d3a4fd2051eb6802495c9700afa49900bcebb0f5b0efbd89e87c6868"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "24255e5f51e288cbc230eb0ece24a0a8fa4ab905bffa1f0ed358365d93592a7a"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "3023c59b9114528820d33a8d936d4c1aad28b9930bc79229b7ee49766a83a068"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "c4e9f2bf315c3be607373ce48de61cb8b444182631534b5fe660edc054871c6d"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "118a3cecfa2f6d10aab2189aed0d217acd7940bf8a2d42d8c70001af5b86d008"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "7a3f0b1cb6dd4957c8dce0f6c7ed6bd749e22d088effc95ada00d283b8921a4f"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "bb6cc710fc9cc8af68215868678024cd0f885d450b91b9f80305fb03fc1af512"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "bfe277a42b9f1e2a1b9d2b9a68e74b62f2a4b60e39d28b03701f6f968452de4b"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "21a3eb3f8beb46158a220be07ffa8373254dee2b91d3eeddfb31181bdcbf3f99"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "6f4244a0a7d582d71911fff89fd6ff17b3935955ecca6488503072bd877b42a3"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "18fac0fdb4d63613a85cb351ba5b395b40c748d0d9e4d6712562d7ef084dd886"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "Canonical source digest and 13-phase lineage verified. The plugin surface is explicitly implemented under plugins/harness-hub-publisher/ with manifest, slash command, skill and scripts, wired to the single apps/publisher core; P04/P06 cover macOS and Windows E2E, OS credential stores and the 15-minute target, and P13 is constrained to the tested content-hashed marketplace artifact.",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

@@ -375,10 +375,57 @@ def test_category_label_fallback():
 
 def test_render_design_refs_non_canonical_not_empty():
     # 非正準カテゴリでも空落ちせず、SSOT (resource-map) への汎用ポインタを必ず添える (A-1)。
+    # 専用 card 不在時も「選定してから確定する」型の自己矛盾文言を出さず、
+    # doctrine anchor 節と質疑録を正本として案内する (C05 medium finding 対応)。
     out = mod.render_design_refs("no-such-category")
     assert "割り当てた設計知識参照なし" not in out
     assert "resource-map.yaml" in out
-    assert "resource-map 未定義" in out
+    assert "resource-map に未定義" in out
+    assert "上流指針 (doctrine anchor)" in out
+    assert "選定・深化してから確定する" not in out
+
+
+def test_confirmed_qa_answers_rendered_into_chapter():
+    # 確定セルが参照する qa_log の質問・回答本文が章へ実体描画される (意味層の正本導出)。
+    # ポインタ (qa_ref) だけでは C05 意味層評価が成立しないため、本文描画を受入条件にする。
+    docset = mod.compile_docset(_spec(), _refs())
+    spec = _spec()
+    qa = {q["id"]: q for q in spec["qa_log"]}
+    chapter = docset["database.md"]
+    assert "## 確定内容 (質疑録)" in chapter
+    assert qa["qa-database"]["question"] in chapter
+    assert qa["qa-database"]["answer"] in chapter
+    # 全対象外カテゴリは確定質疑を持たず、空落ちせず明示する。
+    assert "確定セルなし" in docset["maintenance-ops.md"]
+
+
+def test_doctrine_anchor_section_rendered_per_category():
+    # 各カテゴリ章に doctrine anchor (concern authority) が上流指針として反映される (C15)。
+    docset = mod.compile_docset(_spec(), _refs())
+    expectations = {
+        "ui-ux.md": "Apple Human Interface Guidelines",
+        "database.md": "Google SRE",
+        "backend.md": "Clean Architecture",
+        "security.md": "OWASP ASVS",
+        "infrastructure.md": "Google SRE",
+        "maintenance-ops.md": "Google SRE",
+    }
+    for name, authority in expectations.items():
+        assert "## 上流指針 (doctrine anchor)" in docset[name], name
+        assert authority in docset[name], f"{name} に {authority} が未反映"
+
+
+def test_recompile_is_pure_and_preserves_semantic_sections():
+    # 回帰防止 (C05 gap #3): 再コンパイルは純関数で、意味層セクション
+    # (質疑録・doctrine anchor・設計知識深度項目) が消えないことを保証する。
+    first = mod.compile_docset(_spec(), _refs())
+    second = mod.compile_docset(_spec(), _refs())
+    assert first == second
+    for name, text in second.items():
+        if name in ("index.md", "00-requirements-definition.md"):
+            continue
+        assert "## 確定内容 (質疑録)" in text, name
+        assert "## 上流指針 (doctrine anchor)" in text, name
 
 
 def test_render_design_knowledge_contains_deep_meaning_not_only_pointer():

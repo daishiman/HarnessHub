@@ -22,6 +22,22 @@ serves_goals: [G1]
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: 本システムはデスクトップ配信対象外のためセキュリティ要件も対象外 |
 | デスクトップ (macOS) (desktop-macos) | 対象外 | 理由: 本システムはデスクトップ配信対象外のためセキュリティ要件も対象外 |
 
+## 確定内容 (質疑録)
+
+### qa-security (対応セル: web, mobile, tablet)
+
+**質問**: 脅威モデルは?
+
+**回答**: OWASP Top 10 準拠、Web/モバイル/タブレットのみ
+
+## 上流指針 (doctrine anchor)
+
+| concern | authority (正本) | 導く上流原則 | 出典 |
+|---|---|---|---|
+| security | OWASP ASVS + Secrets Management Cheat Sheet | 脅威モデル・入力検証・暗号化・監査ログの上流指針 | https://owasp.org/www-project-application-security-verification-standard/ |
+
+- 本章の確定内容 (質疑録) は上記 authority を上流指針として適用する。具体技術の選定はこの指針に従属し、指針との乖離は再オープン (R4-reopen) の根拠になる。
+
 ## 適用された設計知識
 
 ### Secure by Design — deep knowledge card

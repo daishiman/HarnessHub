@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-stage0-distribution-gate",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r2b-readiness",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-stage0-distribution-gate"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b\",\n  \"feature_package_id\": \"feature-package/feat-stage0-distribution-gate\",\n  \"parent_feature\": \"feat-stage0-distribution-gate\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "7665e0407020effcf3aa0bdcbfa6a7529a06f7b9fc68d19a6ece6b8d45574a48"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "2a200a8142fa47574b6579b03581e46b37a3f5905a0bdf43bdc06b667f1cd51c"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "8a445846106d99fad8db75b44b82214833e472288455978661abd803699f1650"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "7c5f5a76a9556383a80e00940b9c82ead11f54a720fcf86c1752aa78ca595a2f"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "c09366ae9ac6faa02512ceffeee5849546272ea45f7d5a9c86709e6b10474e8e"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "9cc2145735b9aa4e3f8ffa85b4c28432e412604398e89274ac8e92298f08379b"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "5564b27660cb153fd9d36bfc8323ec9b9e91482d55ec71190560824b49ca350f"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "c6e2c9ee304b21b29bdbe7098c10da107bdbca4c5f2f177117744a0d26bbbdc1"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "9a04e800419b6f70721dcdb3fdcded925c86b78666d4b8ce1f8e1876441ae8e1"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "80e55a7a470f26a3da96f1106ec8ada4bc4df6eb89898f7ff5d7e50954d9ae6b"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "6f2461fac0f9e48352b0f5a63996dc56f38fe73bfbeed3f8e5079ccac913dcd6"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "770080252e78477d9e5b8cffa922ffb6f89721fe12064609db8ccc6931659f61"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "19a0d7796c709a1da5e8335df46084421415a4368d3996b596651ed55fb0b383"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "5232ba18d2c430d98a796b5303b2f9687bab4910bedfc7635c181337bc76e19b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e05e9ab90a459016ef2fc810562538a60059ff81bd242d576fc1c6808fbeb220"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "c2d26e12f2c9b067b12367ae4cfddaf7de4341890bcf6b634e4780fc33998ab5"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "218c353ff330352827f2488cc5f1b853caf9667d526ddd177aee2d5bb75cab90"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "1df1da528d04d2976748c2983f75337d2f681832a0cc23cfb88ca761d230d8d8"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "Canonical source digest and 13-phase lineage verified. Acceptance is fail-closed on an applied C01 writer receipt with exact decision lookup and after-digest, P07 cannot defer registration to P13, and both Publisher and Thin Dual Catalog feature dependencies plus tracker parity are mandatory. Current graph revision 25 contains both dependencies; stage0-publisher-feature-dependency-receipt.json records the applied Publisher edge.",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

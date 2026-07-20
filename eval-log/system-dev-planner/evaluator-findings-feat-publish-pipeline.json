@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "初回評価で packages/inspection の cross-feature owner 衝突 (hub-foundation published plan との正面矛盾・sibling 未引用) を high FAIL として検出。architect 是正 (owner を scaffold=hub-foundation / 検査ロジック実装=publish-pipeline へ分割解決、逐語引用 7 箇所 + 判断根拠 3 系統) 後の再検証で、引用の全一致・write_scope 衝突解消・両立性を確認し PASS。backend-spec §4.6 (12 endpoint)・§5.1 (状態機械 9 値)・§3.6/§3.7 数値契約は初回から逐語一致",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#owner分割解決",
+        "task-specs/phase-05-implementation.md#audit-action対応表",
+        "task-specs/phase-01-requirements.md#quality_constraints転記"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13・14 必須見出し全件・placeholder 0。根拠 id (qa-002/qa-004/qa-006/qa-009/qa-010/qa-011/qa-020/qa-033/qa-037/I1/I2/I3/D4) は spec-state に全実在・引用一致",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-10-final-review.md#8件充足確認"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "source_feature_digest が context の独立 sha256 再計算値 (sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41) と一致。是正の変更範囲が phase-02/phase-05/manifest/handoff の 4 ファイルのみで他 13 ファイルは sha256 不変 (独立再計算で確認)。絶対パス 0 件・repository_id 一致",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json 13 node の厳密線形前方連鎖 (SYS-PUBLISH-PIPELINE-P01→…→P13)。validator 独立再実行 exit0",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360\", \"feature_package_id\": \"feature-package/feat-publish-pipeline\", \"parent_feature\": \"feat-publish-pipeline\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "83155a1ce33cd288eebdd0cd9a1b740f894e78f8c05768de3a9ea5606f3f32f8"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "f240458f009d977dcbeb7fee88baa033cd3716c39bb0e7c19b2cb3ba70663091"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "383c7e563f162b5b8c132213599bcebf502abdf0cb1626b9b35e66f0744e0bf1"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "c27a5ea7817b7cf483aca0cd46d1d4d667c5c2adaed244e4ac2d6403f4139d23"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "61b18d2d38d53d07d0112737690fafe44eff59c7799e6f931fb03c6e77903852"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "30fb1a5420a882a10be68487eb36bf76027237a5922818b26de04187733f8934"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "4620c9481b62001b577797e4353ebf8e6530e630aa435b6abdb62adc085299c0"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "353c9a5810456e09a78db2aff138e34c47881752a24d11a8e6ef5f95a23aa2db"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "cf594565e405141da08c9f10d39abd244fa0f5ada27c80202f69a61923d31d77"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "d0548416713f3f552a3983659b5a01e9417a09e2a149a2a81dbd9c93b243efa5"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "8b4fe4350e0a554410abe8314104b11cfae5ad44aad9a307c3643bfbef23eb48"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "2afdc0acd27fc6631db62b847f20a657c4a1795e6a20a61d595afa8eaaa5665a"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "6bfa1d840b1f591366cf1c7bf14db2b646fce090057b28dedc51c965d7f0b3b3"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "c5c2f90beab69136dcb0e6e9ecf80b25dbd7afe66e90843d4e02f764a48b786c"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "4c3b3b0fe94a3a9a7258fd06e9420275e7150e1a0727eb0631a9d52e345c53c4"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "557d4c18af49806ab03950956ef938e73574ea194921bc4fa8983b6cb4f5ef86"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "dc7d94cbe6bac40ceab305f802f79762063835c17d9af306d60b0bc467302ff7"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "81851dc141e20e97c56f73a5f59e85c9c0cc57e3ed2bd17414465c4c2bb9e401"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "low",
+      "bucket": "cross-feature/hub-foundation-runtime-alignment-pending",
+      "observation": "owner 分割解決 (scaffold=hub-foundation / 検査ロジック=publish-pipeline) は本 feature 側の解釈確定であり、published 済み feat-hub-foundation の P02/P05 実行時に「scaffold のみ担当・検査ロジック非実装」の前提が守られるかは未検証。phase-02 follow-up (b) で dev-graph 追跡事項として記録済み",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#follow-up"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "upstream/shared-layers-inspection-owner-row",
+      "observation": "docs/shared-layers.md §2 の検査 pipeline owner 行が単一表記 (hub-foundation 一元化) のまま。phase-02 follow-up (a) が 2 段表記 (scaffold/logic) への訂正を dev-graph follow-up として引き継ぎ (越権編集を回避)。試算エンジン・NotificationDispatcher に続く共通層 owner 表記の 3 例目",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#follow-up"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "spec-drift/audit-action-vocabulary",
+      "observation": "backend-spec §3.8 の action 語彙 6 種に submit 遷移・cancel・deployment 登録の action 名が無い。P05 で実装時対応表の明記 + §3.8 追記 follow-up を記録済み (実装フェーズで解消可能)",
+      "evidence": [
+        "task-specs/phase-05-implementation.md#audit-action対応表"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork-with-remediation-loop",
+      "observation": "確認記録: 初回評価 FAIL (high 1 件: sibling published plan との owner 衝突・未引用) → architect 是正 (2 spec ファイル + manifest/handoff) → 再検証 PASS の goal-seek 2 周で完了。再検証では逐語引用 7 箇所の実読照合・write_scope 両立性・未変更 13 ファイルの sha256 不変・digest 独立再計算一致を確認。指揮側 (main-loop) の当初契約に owner 単独所有の指示が含まれていた点も衝突要因として記録する",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    }
+  ]
+}

@@ -57,7 +57,7 @@ def task(index: int, package_id: str, parent: str) -> dict:
         "phase_ref": phase, "depends_on": previous, "write_scope": [f"src/{phase.lower()}"],
         "deploy_unit": "application", "source_lineage": ["system-spec/index.md"],
         "classification": {"confidence": 1, "reason": "phase mapping", "candidates": [
-            {"artifact_kind": "task", "confidence": 1, "candidate_path": f"tasks/{task_id}.md"}
+            {"artifact_kind": "task", "confidence": 1, "candidate_path": f"tasks/{parent}/{task_id}.md"}
         ]},
         "tracker_binding_intent": "none",
         "github_publication": {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": None},
@@ -69,7 +69,7 @@ def task(index: int, package_id: str, parent: str) -> dict:
         "rollback": f"revert {phase}",
         "implementation_readiness": {"status": "complete", "missing_sections": [],
                                      "checked_at": "2026-07-13T00:00:00Z"},
-        "graph_node_registration": {"graph_node_id": task_id, "file_path": f"tasks/{task_id}.md",
+        "graph_node_registration": {"graph_node_id": task_id, "file_path": f"tasks/{parent}/{task_id}.md",
                                     "parent_feature": parent, "feature_package_id": package_id,
                                     "phase_ref": phase},
     }
@@ -80,7 +80,11 @@ def task_spec_text(phase: str) -> str:
         "Machine-readable registration fields": f"- phase_ref: {phase}\n- feature_package_id: feature-package/feat",
         "目的": f"Complete the single responsibility assigned to {phase}.",
         "背景": "The confirmed system specification requires this phase output.",
-        "前提条件": "- Required node: FEATURE-1\n- Entry gate: dependencies complete",
+        "前提条件": (
+            "- Required node: FEATURE-1\n"
+            + ("- P01 upstream entry gate: parent_feature.depends_on all done|closed"
+               if phase == "P01" else "- Entry gate: intra-feature dependencies complete")
+        ),
         "Workstream applicability": "- Quality: applicable; verify the phase\n- Frontend: N/A: no UI change",
         "Architecture and deploy unit": "- Architecture decisions: FEATURE-1\n- Deploy unit: application",
         "成果物": f"- Produced artifacts: evidence/{phase}.json\n- Write scope: src/{phase.lower()}",
@@ -101,17 +105,20 @@ def task_spec_text(phase: str) -> str:
 def make_fixture(
     root: Path,
     repository_id: str,
-    relative: str = ".dev-graph/staging/run-1",
+    relative: str | None = None,
     *,
     include_handoff: bool = True,
+    run_id: str = "run-1",
+    feature_goal: str = "goal",
 ) -> tuple[Path, str]:
+    relative = relative or f".dev-graph/staging/{run_id}"
     staging = root / relative
     package_id, parent = "feature-package/feat", "FEATURE-1"
     tasks = [task(i, package_id, parent) for i in range(1, 14)]
     node_ids = [item["id"] for item in tasks]
     (root / "features").mkdir(parents=True, exist_ok=True)
     feature_context = {
-        "graph_node_id": parent, "artifact_kind": "feature", "purpose": "purpose", "goal": "goal",
+        "graph_node_id": parent, "artifact_kind": "feature", "purpose": "purpose", "goal": feature_goal,
         "scope_in": ["in"], "scope_out": ["out"], "acceptance": ["accepted"],
         "architecture_refs": ["architecture/graph.json"], "updated_at": "2026-07-13T00:00:00Z",
     }
@@ -128,7 +135,7 @@ def make_fixture(
     }
     dump(root / LOCK.LOCK_ROOT_REL / LOCK.LOCK_NAME, {
         "repository_id": repository_id,
-        "run_id": "run-1",
+        "run_id": run_id,
         "session_owner": "session-1",
         "feature_id": parent,
         "feature_digest": source_feature_digest,
@@ -138,6 +145,10 @@ def make_fixture(
     })
     inventory = {
         "schema_version": "1.0.0", "feature_package_id": package_id, "parent_feature": parent,
+        "p01_entry_gate": {
+            "selector": "parent_feature.depends_on", "operator": "all",
+            "required_statuses": ["done", "closed"],
+        },
         "repo_context": {"config_path": ".dev-graph/config.json", "repo_identity": repository_id,
                          "root_resolution_source": "explicit-cli"},
         "source_lineage": {"source_plugin": "system-spec-harness", "source_version": "0.1.0",
@@ -183,8 +194,9 @@ def refresh_manifest(staging: Path) -> str:
 def valid_findings(staging: Path, digest: str) -> dict:
     manifest = json.loads((staging / "staging-manifest.json").read_text(encoding="utf-8"))
     evaluated_paths = sorted(set(manifest["files"]) | {"staging-manifest.json"})
+    plan_dir = staging.relative_to(staging.parents[2]).as_posix()
     return {
-        "plan_dir": ".dev-graph/staging/run-1",
+        "plan_dir": plan_dir,
         "evaluator": {"name": "assign-system-dev-plan-evaluator", "version": "1.0.0", "context": "fork"},
         "evaluated_digest": digest,
         "verdict": "PASS",
@@ -194,7 +206,7 @@ def valid_findings(staging: Path, digest: str) -> dict:
         },
         "gate_results": [{
             "id": "deterministic-validation", "name": "validate-system-plan",
-            "command": ["python3", "validate-system-plan.py", "--repo-root", "/caller", "--staging", ".dev-graph/staging/run-1"],
+            "command": ["python3", "validate-system-plan.py", "--repo-root", "/caller", "--staging", plan_dir],
             "exit_code": 0,
             "conditions": ["C1", "C2", "C3", "C4"],
             "stdout": json.dumps({"status": "pass", "validated_digest": digest, "violations": []}),
@@ -327,6 +339,21 @@ class SchemaValidationTests(unittest.TestCase):
             self.assertIn("handoff-schema", codes)
             self.assertIn("handoff-identity", codes)
 
+    def test_missing_p01_entry_gate_fails_closed(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td); repository_id = make_repo(root)
+            staging, _ = make_fixture(root, repository_id)
+            inventory_path = staging / "workstream-inventory.json"
+            inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+            inventory.pop("p01_entry_gate")
+            dump(inventory_path, inventory)
+            refresh_manifest(staging)
+            report = VALIDATOR.validate(staging, repository_id)
+            codes = {item["code"] for item in report["violations"]}
+            self.assertEqual(report["status"], "fail")
+            self.assertIn("inventory-schema", codes)
+            self.assertIn("p01-entry-gate", codes)
+
     def test_thin_duplicate_empty_and_placeholder_task_specs_fail(self):
         cases = {
             "thin": "# P01\n\nExecutable task specification.\n",
@@ -350,6 +377,24 @@ class SchemaValidationTests(unittest.TestCase):
                 report = VALIDATOR.validate(staging, repository_id)
                 self.assertEqual(report["status"], "fail")
                 self.assertIn(expected_codes[name], {item["code"] for item in report["violations"]})
+
+    def test_staging_runtime_reference_fails_before_promotion(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td); repository_id = make_repo(root)
+            staging, _ = make_fixture(root, repository_id)
+            task_path = staging / VALIDATOR.TASK_PATHS[0]
+            task_path.write_text(
+                task_path.read_text(encoding="utf-8")
+                + "\n- Required evidence: .dev-graph/staging/run-1/goal-spec.json\n",
+                encoding="utf-8",
+            )
+            refresh_manifest(staging)
+            report = VALIDATOR.validate(staging, repository_id)
+            self.assertEqual(report["status"], "fail")
+            self.assertIn(
+                "staging-runtime-reference",
+                {item["code"] for item in report["violations"]},
+            )
 
     def test_registration_path_traversal_fails(self):
         with tempfile.TemporaryDirectory() as td:
@@ -475,6 +520,7 @@ class PromotionTests(unittest.TestCase):
             }
             receipt = {
                 "schema_version": "1.0.0", "status": "promoted", "promoted_at": "2026-07-13T00:00:00Z",
+                "generation_id": digest.removeprefix("sha256:"), "supersedes": None,
                 "repo_identity": repository_id, "staging_digest": digest, "evaluated_digest": digest,
                 "published_digest": digest, "implementation_readiness": "complete",
                 "quality_conditions": {key: "PASS" for key in (
@@ -523,7 +569,10 @@ class PromotionTests(unittest.TestCase):
             with mock.patch.dict(os.environ, env, clear=True), mock.patch.object(PROMOTER, "_atomic_json", fail_current), \
                     contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(stderr):
                 self.assertEqual(PROMOTER.main(args), 1, stderr.getvalue())
-            destination = root / ".dev-graph/plans/feature-package-feat"
+            destination = (
+                root / ".dev-graph/plans/generations/feature-package-feat"
+                / digest.removeprefix("sha256:")
+            )
             self.assertTrue((destination / "atomic-promotion-receipt.json").is_file())
             self.assertTrue((destination / "dev-graph-registration.json").is_file())
             self.assertTrue((destination / "plan-findings.json").is_file())
@@ -550,6 +599,67 @@ class PromotionTests(unittest.TestCase):
                 self.assertEqual(PROMOTER.main(args), 0)
             current = json.loads((root / ".dev-graph/state/current.json").read_text(encoding="utf-8"))
             self.assertEqual(current["published_digest"], digest)
+
+    def test_feature_context_drift_promotes_new_immutable_generation_and_advances_feature_pointer(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td); repository_id = make_repo(root)
+            env = {**os.environ, "CLAUDE_PROJECT_DIR": str(root)}
+
+            def promote(run_id: str, staging: Path, digest: str) -> Path:
+                state = root / ".dev-graph/state"
+                findings = state / f"findings-{run_id}.json"
+                readiness = state / f"readiness-{run_id}.json"
+                validation = state / f"validation-{run_id}.json"
+                dump(findings, valid_findings(staging, digest))
+                dump(readiness, valid_readiness(root, repository_id))
+                dump(validation, {"status": "pass", "validated_digest": digest})
+                args = [
+                    "--repo-root", str(root), "--feature-id", "FEATURE-1",
+                    "--feature-context", "features/feature.json",
+                    "--run-id", run_id, "--session-owner", "session-1",
+                    "--staging", f".dev-graph/staging/{run_id}",
+                    "--findings", findings.relative_to(root).as_posix(),
+                    "--readiness", readiness.relative_to(root).as_posix(),
+                    "--validation", validation.relative_to(root).as_posix(),
+                ]
+                with mock.patch.dict(os.environ, env, clear=True), \
+                        contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    self.assertEqual(PROMOTER.main(args), 0)
+                return (
+                    root / ".dev-graph/plans/generations/feature-package-feat"
+                    / digest.removeprefix("sha256:")
+                )
+
+            first_staging, first_digest = make_fixture(
+                root, repository_id, run_id="run-1", feature_goal="first goal"
+            )
+            first_generation = promote("run-1", first_staging, first_digest)
+            first_snapshot = {
+                path.relative_to(first_generation).as_posix(): path.read_bytes()
+                for path in first_generation.rglob("*") if path.is_file()
+            }
+
+            second_staging, second_digest = make_fixture(
+                root, repository_id, run_id="run-2", feature_goal="updated goal"
+            )
+            self.assertNotEqual(second_digest, first_digest)
+            second_generation = promote("run-2", second_staging, second_digest)
+            self.assertNotEqual(first_generation, second_generation)
+            self.assertTrue(first_generation.is_dir())
+            self.assertEqual(first_snapshot, {
+                path.relative_to(first_generation).as_posix(): path.read_bytes()
+                for path in first_generation.rglob("*") if path.is_file()
+            })
+            second_receipt = json.loads(
+                (second_generation / "atomic-promotion-receipt.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(second_receipt["published_digest"], second_digest)
+            self.assertEqual(second_receipt["supersedes"]["published_digest"], first_digest)
+            scoped_pointer = json.loads(
+                (root / ".dev-graph/state/current/feature-package-feat.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(scoped_pointer["published_path"], second_generation.relative_to(root).as_posix())
+            self.assertEqual(scoped_pointer["published_digest"], second_digest)
 
     def test_invalid_findings_and_readiness_fail_before_any_promotion_write(self):
         with tempfile.TemporaryDirectory() as td:

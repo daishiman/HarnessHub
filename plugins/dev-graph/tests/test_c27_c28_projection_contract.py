@@ -33,6 +33,7 @@ def call_main(module, monkeypatch, capsys, *argv):
 
 def package_manifest() -> dict:
     return {
+        "source_digest": "sha256:" + "a" * 64,
         "feature": {"graph_node_id": "F", "title": "Feature F"},
         "children": [
             {
@@ -59,8 +60,10 @@ def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_p
         nonlocal next_id
         calls.append(args)
         if args[0] == "search":
-            marker = args[args.index("--external-contains") + 1].removeprefix("dev-graph:")
+            marker = args[1].removeprefix("dev-graph:")
             return [row for row in issues.values() if row.get("external_ref") == f"dev-graph:{marker}"]
+        if args[0] == "list":
+            return list(issues.values())
         if args[0] == "create":
             next_id += 1
             issue_id = f"B{next_id:02d}"
@@ -71,6 +74,8 @@ def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_p
                 "issue_type": args[args.index("--type") + 1],
                 "external_ref": args[args.index("--external-ref") + 1],
                 "dependencies": [],
+                "description": args[args.index("--description") + 1],
+                "metadata": json.loads(args[args.index("--metadata") + 1]) if "--metadata" in args else {},
             }
             if "--parent" in args:
                 row["parent"] = args[args.index("--parent") + 1]
@@ -78,8 +83,28 @@ def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_p
             return row
         if args[0] == "show":
             return issues[args[1]]
+        if args[0] == "update":
+            row = issues[args[1]]
+            if "--title" in args:
+                row["title"] = args[args.index("--title") + 1]
+            if "--description" in args:
+                row["description"] = args[args.index("--description") + 1]
+            if "--parent" in args:
+                row["parent"] = args[args.index("--parent") + 1]
+            if "--status" in args:
+                row["status"] = args[args.index("--status") + 1]
+            if "--set-metadata" in args:
+                key, value = args[args.index("--set-metadata") + 1].split("=", 1)
+                row.setdefault("metadata", {})[key] = value
+            return row
         if args[:2] == ["dep", "add"]:
             issues[args[2]]["dependencies"].append({"id": args[3]})
+            return {"ok": True}
+        if args[:2] == ["dep", "remove"]:
+            issues[args[2]]["dependencies"] = [
+                dependency for dependency in issues[args[2]]["dependencies"]
+                if dependency.get("id") != args[3]
+            ]
             return {"ok": True}
         if args[0] == "ready":
             return [row for row in issues.values() if row["issue_type"] == "task"]
@@ -104,7 +129,25 @@ def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_p
     assert sum(args[0] == "create" for args in calls) == create_count
     assert any(args[:2] == ["dep", "add"] and args[-3:] == ["--type", "blocks", "--json"] for args in calls)
 
-    children = package_manifest()["children"]
+    superseding = package_manifest()
+    superseding["source_digest"] = "sha256:" + "b" * 64
+    superseding["children"][1]["depends_on"] = []
+    projection.write_text(json.dumps(superseding))
+    before_supersede_creates = sum(args[0] == "create" for args in calls)
+    _, superseded = call_main(
+        module, monkeypatch, capsys,
+        "--op", "create", "--repo-root", tmp_path, "--projection-manifest", projection,
+    )
+    assert sum(args[0] == "create" for args in calls) == before_supersede_creates
+    assert superseded["result"]["source_digest"] == superseding["source_digest"]
+    assert all(
+        issue["metadata"]["dev_graph_source_digest"] == superseding["source_digest"]
+        for issue in issues.values()
+    )
+    assert issues["B03"]["dependencies"] == []
+    assert any(args[:2] == ["dep", "remove"] for args in calls)
+
+    children = superseding["children"]
     by_graph = {issues[f"B{i + 1:02d}"]["external_ref"].removeprefix("dev-graph:"): f"B{i + 1:02d}" for i in range(1, 14)}
     parity = {
         "nodes": [
@@ -129,6 +172,12 @@ def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_p
     rollup.write_text(json.dumps({"epic_bd_issue_id": "B01", "children": [{"phase_ref": f"P{i:02d}", "status": "closed"} for i in range(1, 14)]}))
     _, closed = call_main(module, monkeypatch, capsys, "--op", "close", "--repo-root", tmp_path, "--bd-issue-id", "B01", "--artifact-kind", "feature", "--feature-rollup-manifest", rollup)
     assert closed["result"]["feature_rollup"]["closed_count"] == 13
+
+    issues["DUPLICATE"] = {
+        **issues["B02"], "id": "DUPLICATE", "status": "closed",
+    }
+    with pytest.raises(module.ContractError, match="duplicate beads external_ref"):
+        module._find_external(tmp_path, "T01")
 
 
 def test_c27_creates_only_canonical_claim_branch_and_fails_dirty(tmp_path):

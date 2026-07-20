@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+  "feature": {
+    "graph_node_id": "feat-workspace-governance",
+    "title": "Stage 2: Workspace ガバナンス (approval queue / RBAC / audit log)",
+    "description": "顧客管理者が統制と安全性 (G2) を自律運用できるよう、承認キュー・RBAC 拡張・監査ログ閲覧を提供する\n\nworkspace-admin が承認/差し戻し/監査を Hub Web で完結でき、統制作業の提供者依存が解消された状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P01",
+      "title": "要件ベースライン確定 — 承認キュー・RBAC細分化・監査ログ閲覧・統制ポリシー設定の要件確定",
+      "description": "要件ベースライン確定 — 承認キュー・RBAC細分化・監査ログ閲覧・統制ポリシー設定の要件確定 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P02",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P02",
+      "title": "アーキテクチャ設計 — governance_policies拡張ポイント・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの決定",
+      "description": "アーキテクチャ設計 — governance_policies拡張ポイント・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの決定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P03",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P03",
+      "title": "独立設計レビュー — governance_policies拡張点・reject契約・RBAC/監査UI・feature境界遵守の妥当性確認",
+      "description": "独立設計レビュー — governance_policies拡張点・reject契約・RBAC/監査UI・feature境界遵守の妥当性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P04",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P04",
+      "title": "テストファースト設計 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6適用のテスト設計",
+      "description": "テストファースト設計 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6適用のテスト設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P05",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P05",
+      "title": "実装 — governance_policiesテーブル・publish/:id/reject API・RBAC権限マトリクスUI(S04拡張)・承認キューUI(S05)・監査ログUI(S06)の実装",
+      "description": "実装 — governance_policiesテーブル・publish/:id/reject API・RBAC権限マトリクスUI(S04拡張)・承認キューUI(S05)・監査ログUI(S06)の実装 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P06",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P06",
+      "title": "テスト実行 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6テストの実行",
+      "description": "テスト実行 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6テストの実行 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P07",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P07",
+      "title": "受入 — 承認フローpolicy遮断・監査ログテナントスコープ検索・RBAC変更監査記録の3件受入判定",
+      "description": "受入 — 承認フローpolicy遮断・監査ログテナントスコープ検索・RBAC変更監査記録の3件受入判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P08",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P08",
+      "title": "リファクタリング/マイグレーション — governance_policies新設テーブル・audit_events追加action(governance.policy_change)の既存基盤互換移行",
+      "description": "リファクタリング/マイグレーション — governance_policies新設テーブル・audit_events追加action(governance.policy_change)の既存基盤互換移行 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P09",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P09",
+      "title": "品質保証 — ASVS L2アクセス制御/ログ到達目標・T-1/T-1b/T-1c/T-6・deny-by-default認可の横断確認",
+      "description": "品質保証 — ASVS L2アクセス制御/ログ到達目標・T-1/T-1b/T-1c/T-6・deny-by-default認可の横断確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P10",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P10",
+      "title": "最終レビュー — goal-spec 6件quality_constraints・3件acceptanceの全件最終合否判定",
+      "description": "最終レビュー — goal-spec 6件quality_constraints・3件acceptanceの全件最終合否判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P11",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P11",
+      "title": "エビデンス集約 — P04〜P10成果物の証跡パッケージ化",
+      "description": "エビデンス集約 — P04〜P10成果物の証跡パッケージ化 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P12",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P12",
+      "title": "ドキュメント/運用 — workspace-admin向け承認/監査/RBAC設定 運用手順書の整備",
+      "description": "ドキュメント/運用 — workspace-admin向け承認/監査/RBAC設定 運用手順書の整備 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P13",
+      "parent_feature": "feat-workspace-governance",
+      "phase_ref": "P13",
+      "title": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順",
+      "description": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P12"
+      ]
+    }
+  ]
+}

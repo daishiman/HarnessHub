@@ -1,0 +1,205 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec/",
+  "verdict": "FAIL",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "FAIL",
+      "score": 55,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "00-requirements-definition.md の U1-U9 自体 (confirmed=true, approval_ref=appr-005) と decreed goal/serves_goals トレースは健全 (validate-coverage-matrix.py --require-foundation は exit0)。しかし index.md および auth.md/security.md/database.md/backend.md の frontmatter・集約状態表示が、正本 spec-state.json の現在の category_aggregate (database/auth/security/backend が収集中) と矛盾しており、コンパイル済み章からspec-state正本への下向きトレースが破綻している。",
+      "evidence": [
+        "system-spec/index.md 集約状態サマリ: 「確定: database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops」「収集中: —」(全8カテゴリ確定と宣言)",
+        "system-spec/spec-state.json category_aggregate (pinned snapshot sha256=d8d4b017eab54525926490ba21b5b7b561252b978264de75da1886034f543582, 2026-07-17T13:56:24Z): {\"database\":\"収集中\",\"auth\":\"収集中\",\"ui-ux\":\"確定\",\"security\":\"収集中\",\"infrastructure\":\"確定\",\"backend\":\"収集中\",\"frontend\":\"確定\",\"maintenance-ops\":\"確定\"}",
+        "system-spec/auth.md frontmatter: status: confirmed / aggregate: 確定、章内表は web/desktop-windows/desktop-macos を全て「確定」と記載 (qa-005/qa-008) だが、正本では同3セルが reopened_from:確定 で state:未収集",
+        "system-spec/security.md も同型の矛盾 (qa-025/qa-008 を確定として記載、正本は未収集)",
+        "system-spec/database.md, backend.md も qa-032/qa-033 を確定として記載しているが、正本ではこの2セルも reopen_reason 付きで未収集へ巻き戻り済み (security深掘りヒアリングによる envelope暗号化・audit hash chain・rate limit/TTL確定の要求)"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "score": 82,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "spec-state.json decisions[] (D1-D6) は規定フォーマット (options 2-3案・cost_model・free_tier_limits・goal_fit/security_fit・pros/cons/risks・lock_in/ops_burden・evidence_refs・recommendation(comparison_basis 5軸+caveats+confidence+latest_checked_at)・user_decision) を満たしており、AI推奨のみでconfirmedにしていない (user_decision.option_id/confirmed_at/note が明記されている)。",
+      "evidence": [
+        "decisions[] 件数=6 (D1-D6)、いずれも options/cost_model/recommendation/user_decision の必須キーを保持",
+        "qa-031 (ULID vs UUIDv7)・qa-032 (metrics保持方針・users.salary暗号化)・qa-033 (cursorページネーション) はいずれも代替案との比較文言を伴う qa_log prose で解決されており、D1-D6 の戦略的意思決定を再確認・詳細化する性質 (実装細部の確定) であるため、新規 decisions[] エントリを必須とする既存 pass_criteria には抵触しない"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "FAIL",
+      "score": 30,
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "決定論ゲート validate-coverage-matrix.py --require-complete は exit1 (未収集セル8件残存)。spec-state.json は本評価中もヒアリング進行中でリアルタイムに変化しており (qa_log 33→35件、reopen_log 40→51件)、C07 (matrix-auditor) の当初監査 (48セル/確定22/未収集0/PASS) は監査後に発生した database/backend/auth/security の連鎖的 R4-reopen で既に陳腐化している。C06 (hearing-auditor) が再監査し、C05 (本評価者) が直接ゲート再実行と手動クロスチェックで再確認した最新snapshot (pinned: sha256=d8d4b017eab5..., 2026-07-17T13:56:24Z) を一次根拠として FAIL と判定する。",
+      "evidence": [
+        "validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-complete --require-foundation → exit1, stderr: 'VIOLATION: 未収集セルが 8 件残存 (最終時は未収集 0 が必須)'",
+        "未収集セル: database.web, auth.web, auth.desktop-windows, auth.desktop-macos, security.web, security.desktop-windows, security.desktop-macos, backend.web",
+        "hearing_progress: {\"loop_count\":2,\"next_question\":\"認証(ログイン)（auth）× Web（web）は対象ですか? 対象なら要件を、非対象なら理由を教えてください。\",\"complete\":false}",
+        "dangling/誤参照 qa_ref: matrix.frontend.web.qa_ref=\"qa-034\" だが qa-034 の質問内容は infrastructure 詳細仕様 (リソース構成・binding・cron・CI/CD) でありfrontendと無関係。matrix.infrastructure.web も同じ qa-034 を参照しており infrastructure 側が正当。frontend.web は qa-035 (frontend/ui-uxモバイルレスポンシブ、docs/frontend-spec.md §6) を参照すべきと推定される。C06/C07双方が独立に同一の誤参照を検出",
+        "C06 (hearing-auditor) 検出: qa-034 を含む往復質問6件が『AI推奨=...』を断定的に埋め込む誘導質問パターンの疑いで増加",
+        "C07 (matrix-auditor) の当初監査 (現在は一部陳腐化): 対象外セルの理由妥当性・category_aggregate真理値表整合・canonical platform行の全存在・qa_refトレーサビリティの5軸検証手法自体は有効。infrastructure.desktop-windows/desktop-macos の qa_ref (qa-003) が薄い、という指摘も独立に有効"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "score": 70,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "validate-knowledge-graph.py の4 profile (knowledge/doctrine/required-info/cross) は全て exit0。database/backend/frontend/auth/security/maintenance-ops の6章は具体的 deep knowledge card (DDD/Clean Architecture/API Design Patterns/Secure by Design/Clean Code) を保持し、doctrine anchor から確定内容への具体適用が本文に記述されている。ただし ui-ux.md と infrastructure.md の2章は resource-map.yaml への汎用ポインタのみで専用 deep card を持たない。",
+      "evidence": [
+        "validate-knowledge-graph.py --profile knowledge/doctrine/required-info/cross 全て exit0",
+        "system-spec/ui-ux.md:47-49, system-spec/infrastructure.md:48-50: 「このカテゴリ専用の deep card は resource-map に未定義。本章の設計判断は「上流指針 (doctrine anchor)」節の authority と「確定内容 (質疑録)」を正本とする」という同一の汎用文言のみ",
+        "aspect-criteria.md のGoodhart防止基準: 「汎用ポインタ (resource-map索引) のみで具体原則の適用が無い章は medium 以上で拾う」に該当するため findings に medium として計上 (aspect全体はPASS。両章とも doctrine anchor 表と qa_log 由来の具体的確定内容は保持しているため全体PASSと判断)"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "INDETERMINATE",
+      "score": null,
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "独立監査 C08 (system-spec-doc-freshness-auditor) を isolation:fork で起動したが、評価時間内 (約30分以上) に結果が返らなかった。決定論ゲート validate-source-citation.py は exit0 (対象15件全件・必須フィールド・host一致は機械的に充足) だが、外部公式サイトへのライブ再照合 (WebFetch/WebSearch による世代落ちチェック) はC08の専任領域であり、C05による代替のセルフレビューでは確定的な判定ができない。fail-closedの原則に従いINDETERMINATEとする。",
+      "evidence": [
+        "validate-source-citation.py --targets <spec-state.targetsから抽出> --references system-spec/fetched-references.json --state system-spec/spec-state.json → exit0, 'OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす'",
+        "system-spec/fetched-references.json のセルフレビュー: 15件全てofficial_hostが公式ドメインと整合 (nextjs.org/typescriptlang.org/pnpm.io/zod.dev/docs.github.com/turso.tech/github.com(drizzle-team)/authjs.dev/code.claude.com/developers.cloudflare.com×4/opennext.js.org/resend.com)。authjs, claude-code-plugins の2件は自己申告で鮮度懸念 (Better Auth買収によるガバナンス変化、CLIバージョンdrift) を明記し latest_checked_at=2026-07-17T09:25:00Z と再確認済みだが、これはC02のWebSearchベースの再確認でありWebFetchによる一次GET照合は本評価時点でも未完了と自己申告されている",
+        "C08 (system-spec-doc-freshness-auditor) への進捗確認メッセージ2回送信、応答なし (agent非応答により一次根拠が得られず)"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "score": 95,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "plugins/system-spec-harness/**/prompts/*.md 全18ファイルに対し verify-completeness.py (--input) と validate-prompt.py (--input) を本評価内で直接再実行し、全18件が両方exit0 (PASS) であることを確認した。独立 design findings に high は無い。",
+      "evidence": [
+        "対象: R1-score.md, R2-delegate.md, R1-system-design-knowledge.md, R1-assemble.md, R2-render.md, R3-crosslink.md, R1-identify.md, R2-fetch.md, R3-record.md, R4-audit-doc-freshness.md, R0-foundation.md, R1-init.md, R2-interview.md, R3-reask.md, R4-reopen.md, R5-decision-guide.md, R6-audit-hearing.md, R7-audit-matrix.md (計18件)",
+        "verify-completeness.py --input <file> と validate-prompt.py --input <file> の実行結果: pass=18 fail=0"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "G-matrix-require-complete",
+      "name": "validate-coverage-matrix (--require-complete --require-foundation)",
+      "conditions": ["matrix_coverage", "foundation_trace"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-complete", "--require-foundation"],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "VIOLATION: 未収集セルが 8 件残存 (最終時は未収集 0 が必須)\nFAIL: 1 件の網羅性違反"
+    },
+    {
+      "id": "G-matrix-loop-foundation",
+      "name": "validate-coverage-matrix (--require-foundation, loop mode)",
+      "conditions": ["foundation_trace"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-foundation"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす",
+      "stderr": ""
+    },
+    {
+      "id": "G-knowledge-graph",
+      "name": "validate-knowledge-graph (4 profiles: knowledge/doctrine/required-info/cross)",
+      "conditions": ["design_knowledge_reflection", "matrix_coverage"],
+      "command": ["python3", ".claude/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py", "--knowledge-graph"],
+      "exit_code": 0,
+      "stdout": "knowledge=0, doctrine=0, required-info=0, cross=0",
+      "stderr": ""
+    },
+    {
+      "id": "G-source-citation",
+      "name": "validate-source-citation",
+      "conditions": ["doc_freshness"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-source-citation.py", "--targets", "<spec-state.targets extract>", "--references", "system-spec/fetched-references.json", "--state", "system-spec/spec-state.json"],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす",
+      "stderr": ""
+    },
+    {
+      "id": "G-prompt-quality",
+      "name": "verify-completeness.py + validate-prompt.py (18 prompts)",
+      "conditions": ["prompt_quality"],
+      "command": ["python3", "plugins/prompt-creator/skills/run-prompt-creator-7layer/scripts/verify-completeness.py", "--input", "<each of 18 prompt files>"],
+      "exit_code": 0,
+      "stdout": "pass=18 fail=0",
+      "stderr": ""
+    }
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "matrix_coverage",
+      "observation": "決定論ゲート validate-coverage-matrix.py --require-complete が exit1。48セル中8セル (database.web, auth.web, auth.desktop-windows, auth.desktop-macos, security.web, security.desktop-windows, security.desktop-macos, backend.web) が未収集で、4/8カテゴリ (database/auth/security/backend) の category_aggregate が『収集中』。hearing_progress.complete=false でアクティブな次質問 (auth.web対象確認) が存在し、評価対象は現在進行形のヒアリングサイクルの途中にある。",
+      "suggested_fix": "run-system-spec-elicit (R2-interview/R3-reask/R4-reopen) を継続し、対象8セルの再ヒアリングを完了させ qa_log へ確定内容を記録した上で、hearing_progress.complete=true に到達してから再評価すること。",
+      "evidence": ["gate_results[0] (G-matrix-require-complete) exit_code=1"]
+    },
+    {
+      "severity": "high",
+      "bucket": "foundation_trace",
+      "observation": "system-spec/index.md の集約状態サマリと auth.md/security.md/database.md/backend.md の frontmatter (status:confirmed, aggregate:確定) が、正本 spec-state.json の現在状態 (4カテゴリ収集中、該当8セル未収集) と矛盾している。表面上は『全8カテゴリ確定』に見えるが、実体は途中経過であり、Goodhart的な虚偽の完成度シグナルを生んでいる。",
+      "suggested_fix": "全カテゴリの再ヒアリング完了後、run-system-spec-compile (R1-assemble/R2-render/R3-crosslink) を再実行し、index.md および該当7章 (database/auth/security/backend に加え qa_ref drift のある frontend/ui-ux/infrastructure) を最新 spec-state.json から再コンパイルすること。",
+      "evidence": ["system-spec/index.md 集約状態サマリ (全8カテゴリ確定と宣言)", "spec-state.json category_aggregate (pinned snapshot)"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "matrix_coverage",
+      "observation": "matrix.frontend.web.qa_ref = \"qa-034\" だが qa-034 の質問内容は infrastructure 向け (リソース構成・binding・cron・CI/CD) であり frontend と無関係。infrastructure.web も同一の qa-034 を参照しており infrastructure 側が正当な対応。frontend.web は qa-035 (frontend/ui-uxモバイルレスポンシブ仕様) を参照すべきと推定される。C06 (hearing-auditor) と C07 (matrix-auditor) が独立に同一の誤参照を検出しており再現性が高い。",
+      "suggested_fix": "spec-state.json の frontend.web セルの qa_ref を R4-reopen 経由で qa-035 (または新規qa) へ訂正し、run-system-spec-compile で frontend.md を再コンパイルすること。",
+      "evidence": ["matrix.frontend.web.qa_ref=qa-034", "qa-034 質問文 (infrastructure詳細仕様)", "matrix.infrastructure.web.qa_ref=qa-034 (正当な対応)"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "matrix_coverage",
+      "observation": "C06 (hearing-auditor) の検出: 直近追加された qa-034 を含め、質問文に『AI推奨=...』を断定的に埋め込む誘導質問パターンに該当する往復質問が6件に増加している。ユーザーの独立判断より先にAI推奨が提示されることで、回答が推奨追認に偏る早期アンカリングのリスクがある。",
+      "suggested_fix": "run-system-spec-elicit の設問テンプレート (R2-interview) を、選択肢を先に提示しAI推奨は分離した補足として後置する形式へ改めること。既存確定分についても推奨バイアスの影響有無を再確認すること。",
+      "evidence": ["C06 (system-spec-hearing-auditor) 監査報告 (誘導質問6件検出)"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "design_knowledge_reflection",
+      "observation": "ui-ux.md と infrastructure.md の『適用された設計知識』節が resource-map.yaml への汎用ポインタ (「このカテゴリ専用の deep card は resource-map に未定義」) のみで、他6章 (database/backend/frontend/auth/security/maintenance-ops) のような具体的 deep knowledge card の適用がない。",
+      "suggested_fix": "ref-system-design-knowledge の resource-map.yaml に ui-ux/infrastructure カテゴリ向けの read_when エントリと該当 deep knowledge card (例: infrastructure→Google SRE運用原則の具体カード、ui-ux→Apple HIGの具体カード) を追加するか、既存 doctrine anchor の適用箇所を本文でより具体的に展開すること。",
+      "evidence": ["system-spec/ui-ux.md:47-49", "system-spec/infrastructure.md:48-50"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "doc_freshness",
+      "observation": "独立監査 C08 (system-spec-doc-freshness-auditor) を isolation:fork で起動し進捗確認メッセージを2回送信したが、評価締切までに結果が返らなかった。決定論ゲート (validate-source-citation.py) は exit0 だが、これは構造的整合性 (host一致・必須フィールド) のみを確認するものであり、外部公式サイトへのライブ再照合による世代落ちチェックは未完了。fetched-references.json の authjs / claude-code-plugins エントリは自己申告で鮮度懸念 (Better Auth買収によるガバナンス変化、CLIバージョンdrift) を明記しているが、一次GET照合はまだ完了していない旨も自己申告されている。",
+      "suggested_fix": "C08 (system-spec-doc-freshness-auditor) を改めて独立実行し、特に authjs と claude-code-plugins の2エントリについて WebFetch による一次GET照合を完了させること。",
+      "evidence": ["gate_results[3] (G-source-citation) exit_code=0", "system-spec/fetched-references.json authjs/claude-code-plugins エントリの自己申告注記"]
+    },
+    {
+      "severity": "low",
+      "bucket": "decision_guidance",
+      "observation": "直近のsecurity深掘りヒアリング(進行中)で新たに浮上した envelope暗号化 (KEK/DEK)・audit hash chain・rate limit/TTL確定などは、実質的にトレードオフを伴う新規アーキテクチャ選択だが、正式な decisions[] エントリ (options/cost_model/recommendation形式) ではなく qa_log prose 上で解決されようとしている。",
+      "suggested_fix": "これらの選択が実装粒度の詳細化に留まらず新たな戦略的トレードオフを伴う場合は、D7以降として decisions[] への正式な昇格を検討すること。",
+      "evidence": ["reopen_log の database.web/backend.web reopen_reason (envelope暗号化・hash chain・TTL確定への言及)"]
+    },
+    {
+      "severity": "info",
+      "bucket": "prompt_quality",
+      "observation": "plugins/system-spec-harness 配下の全18プロンプトファイルについて verify-completeness.py と validate-prompt.py を本評価内で再実行し、全件PASSを確認した。この観点に不足事項はない。",
+      "evidence": ["gate_results[4] (G-prompt-quality) pass=18 fail=0"]
+    },
+    {
+      "severity": "info",
+      "bucket": "evaluation-process",
+      "observation": "評価対象の system-spec/spec-state.json は本評価の実施中もヒアリング進行中でリアルタイムに変化し続けた (qa_log 33→35件、reopen_log 40→51件、category_aggregate の 収集中カテゴリが 2→4 に増加)。本レポートは sha256=d8d4b017eab54525926490ba21b5b7b561252b978264de75da1886034f543582 (2026-07-17T13:56:24Z 取得) のスナップショットに固定 (pin) して判定している。",
+      "evidence": ["snapshot sha256とタイムスタンプ (本レポート内の各evidenceに記載)"]
+    }
+  ],
+  "gaps": [
+    "auth.web / auth.desktop-windows / auth.desktop-macos: 認証(ログイン)カテゴリの実装可能粒度の再ヒアリングが未完了 (hearing_progress.next_question提示中)。run-system-spec-elicit (R2-interview/R3-reask) へ差し戻し、qa_log追記後にR4確定へ進めること。",
+    "security.web / security.desktop-windows / security.desktop-macos: セキュリティカテゴリの実装可能粒度の再ヒアリング (envelope暗号化・audit hash chain・PII保護詳細等) が進行中で未確定。同上、run-system-spec-elicitへ差し戻し。",
+    "database.web / backend.web: qa-032/qa-033で一度確定した内容が、security深掘りヒアリングの帰結 (docs/backend-spec.md §2.2の暗号化方式・§3.7のレート制限値等の先送り解消) によりR4-reopenされ再び未収集。当該箇所を新たな確定値で更新し、run-system-spec-elicitで再確定した上でdocs/backend-spec.mdとdatabase.md/backend.mdを再コンパイルすること。",
+    "frontend.web: qa_refがqa-034 (infrastructure向け質疑) を誤参照している。qa-035 (または新規qa) へ訂正し、run-system-spec-compileでfrontend.mdを再コンパイルすること。",
+    "index.md / auth.md / security.md / database.md / backend.md / frontend.md / ui-ux.md / infrastructure.md: 正本spec-state.jsonの現在状態 (4カテゴリ収集中、qa_ref誤参照含む) を反映していない。全カテゴリの再ヒアリング完了後、run-system-spec-compileで全章とindex.mdを再コンパイルすること。",
+    "ui-ux / infrastructure: カテゴリ専用のdeep knowledge cardがresource-map.yamlに未定義。ref-system-design-knowledgeの拡充をrun-system-spec-elicitまたは設計知識メンテナンス側へ差し戻すこと (blocking要件ではないがmedium是正)。",
+    "doc_freshness: 独立監査(C08 system-spec-doc-freshness-auditor)による外部公式サイトへのライブ再照合(WebFetch)が本評価では未完了。特にauthjs (Better Auth買収) とclaude-code-plugins (バージョンdrift) の一次GET照合を完了させ、C08の正式なverdictを得ること。"
+  ]
+}

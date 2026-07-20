@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-dual-catalog-web",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:6c488a42d91f6d71efff948f6392be3b93f93a84ed449ec9b87f1baeefb73901",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文 (task-specs/phase-01..13) を精読し、goal-spec (feature_context_digest=sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3, purpose/goal/scope_in 5件/scope_out 2件/acceptance 3件/quality_constraints 7件) との矛盾は検出されなかった。本 agent は goal-spec.json の purpose/goal/scope_in/scope_out/acceptance と features/feat-dual-catalog-web.context.json の同フィールドを Python で逐語比較し、5 フィールド全てで完全一致 (差分0) を確認した。P01 (task-specs/phase-01-requirements.md) は goal-spec の purpose/goal/scope_in 5件/scope_out 2件/acceptance 3件/quality_constraints 7件を requirements-baseline.md へ確定転記する起点 task であり、P02-P13 は本ベースラインを踏襲する構成になっている。全 13 spec の『スコープ外』節を通読し、scope_out 2 件 (承認キューUI[Stage 2]・native アプリ) が一貫して継承され、他 feature 責務 (PublishRequest 状態機械・検査 pipeline サーバ側実装・Catalog pointer atomic 更新=owner feat-publish-pipeline、URL型marketplace/Bootstrap Installerの技術的成立判定=owner feat-stage0-distribution-gate、単一認可ミドルウェア実装=owner feat-auth-tenancy) を『消費のみ・scope外』として明示的に除外しており、scope_out/scope_in への混入は確認されなかった。acceptance 3 件は P06 (テスト実行・axe/CWV実測)→P07 (受入判定・acceptance-record.md)→P10 (最終確認)→P11 (証跡集約) の経路で過不足なく写像され、quality_constraints 7 件 (a11y-wcag22aa-cwv-good-axe-ci-qa018 等) は P01 (転記)→P02/P03 (設計・レビュー)→P04 (テスト設計)→P05 (実装)→P06 (実行)→P09 (品質・セキュリティ保証)→P10 (最終レビューでid単位列挙)→P11 (証跡) まで一貫してトレース可能であった。P01 は cross-feature 境界の未確定事項を P02 の必須解消事項として明記し、P02 の目的節が『P01 が引き継いだ cross-feature 境界が解消され P05 実装着手可能な設計状態になる』と明言しており、上流未解決事項が後続 phase で放置されるパターンは確認されなかった。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#前提条件 (Entry gate に goal-spec.json feature_context_digest 一致要求を明記。goal-spec.json の purpose/goal/scope_in/scope_out/acceptance を本agentが features/feat-dual-catalog-web.context.json とPythonで独立diffし完全一致[差分0]を確認)",
+        "task-specs/phase-01-requirements.md#スコープ外 (全13 task spec の同節を通読し、scope_out 2件の一貫継承と他feature責務[feat-publish-pipeline/feat-stage0-distribution-gate/feat-auth-tenancy]の消費のみ明記・混入0件を確認)",
+        "task-specs/phase-07-acceptance.md#目的 (acceptance 3件の受入判定手順とP06→P07→P10→P11の経路)",
+        "task-specs/phase-10-final-review.md#目的 (quality_constraints 7件・acceptance 3件の最終突き合わせ)",
+        "workstream-inventory.json#tasks (tasks[].acceptance/source_lineage が goal-spec.json を直接参照し、quality_constraints 7件のid単位トレースがP01からP11まで一貫することを確認)"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "validate-system-plan.py を本 agent が独立実行し exit0 (violations=[]) を確認した。validated_digest=sha256:6c488a42d91f6d71efff948f6392be3b93f93a84ed449ec9b87f1baeefb73901 は staging-manifest.json の canonical_digest および依頼指定値と一致した。feature-package.json task_count=13・phase_refs=P01..P13 (順序一致)・task_spec_paths正準13件一致、task-graph.json 13 node、workstream-inventory.json 13 task であり exact-13 が確認された。単一 skill への退化・水増しは無く、13 phase (要件/設計/レビュー/テスト設計/実装/実行/受入/リファクタリング/品質保証/最終レビュー/証跡/文書化/リリース) はそれぞれ異なる責務・目的・背景・成果物を持つことを全文読解で確認した。P08 (リファクタリング/マイグレーション) は『本feature は新規実装であり必須のlegacyデータ移行は無い』ため『mockup由来静的画面からshared-layers準拠の本番動的コンポーネント構成への移行』へ、具体的な代替タスクとして読み替えられており空疎化は無い。P13 (リリース/デプロイ) は wrangler による Cloudflare Workers への実デプロイ・smoke test・U5 Stage1完了判定を伴う実質的なタスクであった。13 task 全ての Verification and evidence 節は同一の決定論ゲートコマンド (validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-dual-catalog-web) を参照している。",
+      "evidence": [
+        "gate:deterministic-validation#exact-13/violations=0 (本agentによる独立実行、exit0)",
+        "feature-package.json#task_count (13, phase_refs P01..P13順序一致, task_spec_paths正準13件一致)",
+        "task-graph.json#nodes (13件)",
+        "workstream-inventory.json#tasks (13件)",
+        "task-specs/phase-08-refactoring-migration.md#背景 (新規実装のためlegacyデータ移行非保有、mockup→本番dynamic import構成移行への具体的読み替え理由を明記)",
+        "task-specs/phase-13-release-deploy.md#目的 (wranglerによる実デプロイ・smoke test・U5 Stage1完了判定を伴う実質タスクであることを確認)"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "feature_package_id=feature-package/feat-dual-catalog-web, parent_feature=feat-dual-catalog-web, repository_id=github:daishiman/HarnessHub が feature-package.json/workstream-inventory.json/task-graph.json/system-build-handoff.json (identity)/.dev-graph/config.json の全箇所で一致することを確認した。source_feature_digest (sha256:a0c5f78ef31fc345184884f4f48f60b0c9b2e5beaae7d9a83c0f789d13a6e9d3) が feature-package.json/system-build-handoff.json (identity.source_feature_digest)/.dev-graph/locks/system-dev-plan-lock.json (feature_digest, feature_id=feat-dual-catalog-web, run_id=run-dual-catalog-web-20260718)の3箇所で一致し、本agentが features/feat-dual-catalog-web.context.json を shasum -a 256 で独立再計算し同値と完全一致することも確認した。canonical digest は (1) validate-system-plan.py 独立実行の validated_digest、(2) staging-manifest.json 記載の canonical_digest、(3) 本agent独自のPython再実装 (rel path + content の sha256 連結アルゴリズム) による再計算、(4) 依頼指定値、の4者が sha256:6c488a42d91f6d71efff948f6392be3b93f93a84ed449ec9b87f1baeefb73901 で完全一致し staleness なし。staging-manifest.json#files に列挙された17ファイル全件について本agentがshasum -a 256で個別再計算し一致を確認した。lineage 4件 (features/feat-dual-catalog-web.context.json, architecture/harness-hub-frontend.md, architecture/harness-hub-backend.md, specs/harness-hub-system-specification.md) のwrapper sha256も本agentが独立shasum再計算し完全一致を確認した。task id (workstream-inventory.json#tasks[].id) と graph node id (task-graph.json#nodes[].id) は SYS-DUAL-CATALOG-WEB-P01..P13 で1対1一致し、graph_node_registration.file_pathは全13件が tasks/feat-dual-catalog-web/sys-dual-catalog-web-p0X.md 形式 (parent_feature namespace配下) で統一されていた。",
+      "evidence": [
+        "feature-package.json#source_feature_digest (system-build-handoff.json identity.source_feature_digest / .dev-graph/locks/system-dev-plan-lock.json feature_digest との3箇所一致を本agentが独立shasum再計算で確認)",
+        "gate:deterministic-validation#validated_digest (= staging-manifest.json canonical_digest = 依頼指定値 = 本agent独自再計算値の4者一致)",
+        "staging-manifest.json#files (17件、本agent shasum -a 256独立再計算で全件一致)",
+        "workstream-inventory.json#tasks (task-graph.json nodes[].id との1対1一致、graph_node_registration.file_pathのtasks/feat-dual-catalog-web/ namespace統一を確認)",
+        "system-build-handoff.json#identity (repository_id/feature_id/feature_package_id/parent_feature/source_feature_digestの一致を確認)"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json#nodes の depends_on を全件確認した結果、P01: [] (起点)、P02: [P01]、P03: [P02]、P04: [P03]、P05: [P04]、P06: [P05]、P07: [P06]、P08: [P07]、P09: [P08]、P10: [P09]、P11: [P10]、P12: [P11]、P13: [P12] という単純な前方線形鎖であり、同一feature内の直前phaseのみを参照する前方edgeのみで構成され、後方参照・自己参照・分岐参照は無くacyclicであることを確認した。validate-system-plan.pyのnon-forward-edge/cross-feature-or-missing-edge検査も違反0件だった。cross-feature依存の混入は無く、feat-publish-pipeline/feat-stage0-distribution-gate/feat-auth-tenancyへの依存はfeatures/feat-dual-catalog-web.md frontmatter (depends_on: [feat-publish-pipeline, feat-stage0-distribution-gate]) としてdev-graph正本レベルでのみ表現され、task-graph.json#nodes[].depends_onには一切コピーされていないことを確認した (13 task spec本文の『前提条件』『スコープ外』節でもfeat-publish-pipeline/feat-stage0-distribution-gate/feat-auth-tenancy提供物を『owner=他feature、本featureは消費のみ』として言及するのみで、依存edgeとしては表現していない)。",
+      "evidence": [
+        "task-graph.json#nodes (P01→[]、P02..P13は直前1件のみを参照する線形鎖、13件全て確認・acyclic)",
+        "gate:deterministic-validation#non-forward-edge,cross-feature-or-missing-edge (違反0件、本agent独立実行)",
+        "task-specs/phase-02-architecture.md#スコープ外 (feat-publish-pipeline/feat-stage0-distribution-gateをownerとして言及するのみ、依存edgeとして表現せず)",
+        "task-specs/phase-05-implementation.md#スコープ外 (feat-publish-pipeline/feat-auth-tenancy/feat-stage0-distribution-gateをownerとして言及するのみ、依存edgeとして表現せず)",
+        "task-specs/phase-09-quality-assurance.md#スコープ外 (feat-auth-tenancyの単一認可ミドルウェアを消費側の適用確認のみと明記、依存edgeとして表現せず)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-dual-catalog-web",
+        "--repo-root",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:6c488a42d91f6d71efff948f6392be3b93f93a84ed449ec9b87f1baeefb73901\", \"feature_package_id\": \"feature-package/feat-dual-catalog-web\", \"parent_feature\": \"feat-dual-catalog-web\", \"phase_refs\": [\"P01\", \"P02\", \"P03\", \"P04\", \"P05\", \"P06\", \"P07\", \"P08\", \"P09\", \"P10\", \"P11\", \"P12\", \"P13\"], \"violations\": []}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "d406f8c958e2fdb0706249576b016c732ba4f67e6eea765755cfe1eb931ebcbd"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "1c0d281642c34f1483b141403944f3628daa8b35361fefb26e2042203f4d8c13"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "eefa90323c924c4e17817fac3f66ba94199127b52a9fd7fcdc25380777c8dfb5"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "2ef00820e31f9cb1122667a70618c6de9171f4c28d56176cba9bf199e585c8db"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "79366dbb40e386bc647f4258b788a38d7ae3a2b35fc85ec7b8ddedc588cf915e"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "0cd5023b96911cb3de2f1c276b6866873153b39bcdb477bdbc0c0f90d489cf4c"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "f58cf007c6961496d3e70a825f47e2d4f98b01d126d062141b9867c4dd042672"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "e7f54627aee7ee1524d7809bba420baf76c16b32f1519a61211805f5a5e5af54"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "6fa132bb67bdeb3bff19e1955f8b1df85b6533852121d9d46c3bb6f1b6f8e8c0"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "ae5f5e1b6ec9983994f6971cf60feb3ae63f373dc2be505f2860983156f350c7"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "ab00c04cbb10e24e6018b762da214b9c4f6e45128c7bc66134ca7c49ecc22bc3"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "c51c631096ff1f6620b6c47e9ab3d3736a0f5350eaab12bdf5b8495ad2d95abe"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "a933380c928e4893df09d16c4f7b0974195bca24c658d843f477e16e546a2c99"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "c6087aa8d6f9c97971bdeff0ba0ee45f12bf8bb153daed941bf123f34e6c3c3b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "a30ab3dbfa678daa20091b306c689ccad914fa3f31ca1ab651e4830d27313814"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "3e4dedac2cbb801b5b76c4a1a4e14e08c771f675e42a253d0cba8a50d695b386"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "9d0f2ba9e104df469f182a4f3facf3ab75b0d50c677c09c229ad65d67ea29925"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "4c4e71e820b93578aaf5ebd263a692b6251e59c2d60705c9d8dc153d38ae0f37"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 task spec 全文読解・validate-system-plan.py 独立実行 (exit0, violations=0)・staging-manifest.json#files 17件 + staging-manifest.json 自身の shasum -a 256 独立再計算全件一致・canonical digest の独立 Python 再実装による再計算一致 (validator値/manifest値/依頼指定値/本agent再計算値の4者一致)・lineage digest 4件 (feature-context + architecture wrapper 2件 + spec wrapper1件) の独立 shasum 再計算一致・goal-spec.json の purpose/goal/scope_in/scope_out/acceptance と features/feat-dual-catalog-web.context.json の Python diff による完全一致確認・task-graph.json depends_on 13件の前方線形鎖確認 (acyclic)・feat-publish-pipeline/feat-stage0-distribution-gate/feat-auth-tenancy 依存が dev-graph 正本 (features/feat-dual-catalog-web.md frontmatter) にのみ存在し task-graph.json へコピーされていないことの確認・quality_constraints 7件の全 phase 横断トレース・repository boundary (write_scope が docs/features/feat-dual-catalog-web/, apps/hub/src/(app|components|lib)/..., apps/hub/src/app/marketplace.json/route.ts, packages/schemas/dual-catalog-web/, .github/workflows/hub-web-quality-gate.yml に閉じ、他featureへの越境なし) の確認を実施した。blocking findings なし。",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json",
+        "task-graph.json",
+        "workstream-inventory.json"
+      ]
+    }
+  ]
+}

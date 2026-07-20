@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-workspace-governance",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r2b-readiness",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-workspace-governance"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10\",\n  \"feature_package_id\": \"feature-package/feat-workspace-governance\",\n  \"parent_feature\": \"feat-workspace-governance\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "d158329eb38a261df1d37ffe31b72547ee69b41a2dc5229f15f22bd1364e22db"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "867ed4068831e27a194ae75c5714bc1b5767064abc64e968bbe208ca513036fc"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "905f2317b12f519040c7ef80a786f88ab6d7497c61dd11b9f0267e665cdb0807"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "89bb545287491498b221158f6a39a8037f6f7c83799e682889390aa2df7c4bbc"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "d70f7216ae3ae934ff7feac917fcca87d12557ce64b745c59585884adf522cd0"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "5fce587c8606ba586a5f7b2c167a1937ad248ace7f69c3fd58ab6edeb2b96aa3"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "fed5d5d20ef0fdf292fdcc79b642e14aab0663fc007ec57dc2643e8f409908ef"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "8b75a707af503a08a9a2e145b5c7931adb0c8d91355bc2564b7f5fd51fd0e129"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "6045f20c23bf11264f89afb47e57edb2f3417087b7ed23dcaf35e15a6c4862af"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "c4cfbe596fc7ee3577a53f55ab7453633d947e0d93cef510d79c240e2c79bed0"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "ea895c49c23d2bb3f4de4c1ab64dd7b7607ba13ff3ba858815db285dae9b00ca"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "053f815a107290eadd69dba6270b445e1098e21668c790e75755b4a604fda831"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "456d47a009d3b3660c8d7effe04701b197021e0a4ec69d95d5b562a35dfaf406"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "c5b0f7fb767e8a3e11e06f5f98a95c3c5330ec64711b4ad03943516e953c0140"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "bb0588afcb81e5b358a2333807b44c0f897d53537e61ea333ce7cde336011405"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "3b2f0d8320f3a10a96d64a776225db24c5b5ceb8553a9f523a02929297434dd6"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "c2b1689185fa8fec30032249d0eed748be77842025ab19621532e3abb00f3e2f"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "1263ed28aa26c3bae6a4b56c772fdd2207b51320e4b79fb7e0b43457ed0d8036"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "Canonical source digest and 13-phase lineage verified. Audit export is concretely designed and implemented as tenant-scoped streaming CSV with redaction and hash-chain evidence, and governance policy is wired through an injectable evaluator adapter into the shared PublishRequest engine without duplicating its core; implementation, tests, acceptance, operations and release all carry the required evidence.",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

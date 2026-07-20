@@ -18,6 +18,9 @@
 ### 出力契約
 
 - C02 receiptとlineage/confirmation/evidence付きimport report。
+- 登録・更新した node id を progress.json の `registered_this_run` へ追記する。
+- 各 node の `source_digest` は自 `source_path` の実 file から sha256 計算 (他 file の digest 流用禁止。`validate-source-digest.py` の exit code で担保)。
+- `confirmation_evidence.evidence_ref` は登録時点で対象 repository 内に実在する path を指す (正準: `system-spec/completeness-report.json`)。
 
 ### 責務境界
 
@@ -26,10 +29,11 @@
 ### 受入条件
 
 - 全node正規kind、lineage全field/evidence/readiness欠落0になる。
+- `validate-evidence-refs.py --progress <progress.json>` が exit 0 (本 run 登録 node の dangling 0件を script の exit code で担保。既存 node の dangling は同 script が `evidence_ref_audit` へ自動転記)。
 
 ## Layer 3: インフラ層
 
-- 使用資産: Skill run-dev-graph-nodeとvalidate-graph-schema。
+- 使用資産: Skill run-dev-graph-nodeとvalidate-graph-schemaとvalidate-evidence-refsとvalidate-source-digest。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
@@ -56,6 +60,9 @@
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
 - [ ] 全node正規kind、lineage全field/evidence/readiness欠落0になる
+- [ ] 登録 node id を progress.json の `registered_this_run` へ追記した
+- [ ] `validate-source-digest.py --progress <progress.json>` を実行し exit 0 である (source_digest 流用0件)
+- [ ] `validate-evidence-refs.py --progress <progress.json>` を実行し exit 0 である
 
 ### 5.4 実行方式
 

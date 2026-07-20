@@ -1,0 +1,178 @@
+{
+  "bd_version": "1.1.0",
+  "candidate_count": 9,
+  "conflicts": [
+    {
+      "bd_issue_id": "HarnessHub-xon",
+      "graph_node_id": "issue-audit-followups-20260717",
+      "reason": "unsupported graph status in parity manifest: draft"
+    }
+  ],
+  "op": "ready",
+  "ready_set": [
+    {
+      "bd_issue_id": "HarnessHub-j71.1",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "graph_depends_on": [],
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "feat-stage0-distribution-gate",
+      "graph_depends_on": [],
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "feat-hub-foundation",
+      "graph_depends_on": [],
+      "graph_status": "active"
+    }
+  ],
+  "result": {
+    "candidate_count": 9,
+    "conflicts": [
+      {
+        "bd_issue_id": "HarnessHub-xon",
+        "graph_node_id": "issue-audit-followups-20260717",
+        "reason": "unsupported graph status in parity manifest: draft"
+      }
+    ],
+    "ready_set": [
+      {
+        "bd_issue_id": "HarnessHub-j71.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+        "graph_depends_on": [],
+        "graph_status": "active"
+      },
+      {
+        "bd_issue_id": "HarnessHub-j71",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "feat-stage0-distribution-gate",
+        "graph_depends_on": [],
+        "graph_status": "active"
+      },
+      {
+        "bd_issue_id": "HarnessHub-37h",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "feat-hub-foundation",
+        "graph_depends_on": [],
+        "graph_status": "active"
+      }
+    ],
+    "unmapped": [
+      {
+        "bd_issue_id": "HarnessHub-bxz",
+        "external_ref": null,
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a5w.2",
+        "external_ref": null,
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a5w.1",
+        "external_ref": null,
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-j24",
+        "external_ref": null,
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-7j7",
+        "external_ref": null,
+        "reason": "parity_manifest_missing"
+      }
+    ]
+  },
+  "unmapped": [
+    {
+      "bd_issue_id": "HarnessHub-bxz",
+      "external_ref": null,
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-a5w.2",
+      "external_ref": null,
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-a5w.1",
+      "external_ref": null,
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j24",
+      "external_ref": null,
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-7j7",
+      "external_ref": null,
+      "reason": "parity_manifest_missing"
+    }
+  ],
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

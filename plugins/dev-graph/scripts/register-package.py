@@ -41,8 +41,10 @@ REGISTRATION_KEYS = {
 RECEIPT_STABLE_KEYS = {
     "schema_version", "status", "feature_package_id", "parent_feature", "source_digest",
     "expected_count", "applied_count", "phase_refs", "node_ids", "graph_revision_before",
-    "graph_revision_after", "graph_digest_after", "output_path",
+    "graph_revision_after", "graph_digest_after", "output_path", "operation",
+    "supersedes_source_digest",
 }
+CANONICAL_REGISTRATION_RECEIPT = "dev-graph-registration-receipt.json"
 
 
 def _schema_error(path: str, detail: str) -> ContractError:
@@ -246,6 +248,14 @@ def _validate_registration(registration: dict[str, Any], package: dict[str, Any]
             raise ContractError(f"nodes[{index}] source lineage digest mismatch")
         if not str(node.get("file_path", "")).startswith("tasks/"):
             raise ContractError(f"nodes[{index}] file_path is not under tasks/")
+        parent_feature = node.get("parent_feature")
+        if isinstance(parent_feature, str) and parent_feature:
+            # feature 単位 namespace: 並列 package 登録・worktree 並列実行時の
+            # tasks/ 直下衝突を防ぐ (parent_feature 無しの fast-path task は対象外)
+            if not str(node.get("file_path", "")).startswith(f"tasks/{parent_feature}/"):
+                raise ContractError(
+                    f"nodes[{index}] file_path must be under tasks/{parent_feature}/ (per-feature namespace)"
+                )
         for dependency in node.get("depends_on", []):
             if dependency not in phase_number: raise ContractError(f"cross-package dependency rejected: {dependency}")
             if phase_number[dependency] >= index + 1: raise ContractError(f"non-forward phase dependency rejected: {dependency}")
@@ -298,6 +308,28 @@ def _find_node(nodes: list[dict[str, Any]], node_id: str) -> dict[str, Any] | No
     return next((node for node in nodes if (node.get("graph_node_id") or node.get("id")) == node_id), None)
 
 
+def _project_parent_feature(parent: dict[str, Any], package: dict[str, Any],
+                            resolved: list[dict[str, Any]]) -> dict[str, Any]:
+    """Converge the macro feature in the same revision as its exact-13 package.
+
+    The parent feature is not a package member, but package readiness is part of
+    its saved state.  Keeping this update inside C02's single graph write avoids
+    a window where 13 executable children are current while the feature still
+    advertises "package missing".
+    """
+    if not resolved:
+        raise ContractError("resolved exact-13 package is empty")
+    projected = copy.deepcopy(parent)
+    first = resolved[0]
+    projected["status"] = "active"
+    projected["confirmation_status"] = "confirmed"
+    projected["evaluation_status"] = "pass"
+    projected["confirmation_evidence"] = copy.deepcopy(first["confirmation_evidence"])
+    projected["implementation_readiness"] = copy.deepcopy(first["implementation_readiness"])
+    projected["updated_at"] = first["updated_at"]
+    return projected
+
+
 def _stable_receipt(value: dict[str, Any]) -> dict[str, Any]:
     return {key: value.get(key) for key in RECEIPT_STABLE_KEYS}
 
@@ -331,6 +363,12 @@ def _register(args: argparse.Namespace) -> dict[str, Any]:
     registration_path = _path(root, args.graph, must_exist=True)
     output_path = _path(root, args.output, must_exist=True)
     receipt_path = _path(root, args.receipt, must_exist=False)
+    expected_receipt_path = package_path.parent / CANONICAL_REGISTRATION_RECEIPT
+    if receipt_path != expected_receipt_path:
+        raise ContractError(
+            "registration receipt must match the system-build handoff contract: "
+            f"{expected_receipt_path.relative_to(root).as_posix()}"
+        )
     system_root = Path(args.system_planner_root).resolve(strict=True)
     preflight_contract(system_root, args.required_version, args.required_schema_version)
     package_schema = _json_object(system_root / "schemas" / "feature-execution-package.schema.json")
@@ -359,37 +397,65 @@ def _register(args: argparse.Namespace) -> dict[str, Any]:
             raise ContractError(f"parent feature does not exist: {package['parent_feature']}")
         incoming_ids = [node["graph_node_id"] for node in resolved]
         present = {node_id for node_id in incoming_ids if _find_node(existing, node_id)}
-        package_members = [node for node in existing if node.get("feature_package_id") == package["feature_package_id"]]
+        package_members = [
+            node for node in existing
+            if node.get("artifact_kind") == "task"
+            and node.get("feature_package_id") == package["feature_package_id"]
+        ]
         if present and len(present) != 13: raise ContractError(f"partial registration detected: {len(present)}/13 nodes")
         if package_members and {node.get("graph_node_id") for node in package_members} != set(incoming_ids):
             raise ContractError("conflicting or partial feature_package_id already exists")
         revision_before = current.get("graph_revision", 0)
         if not isinstance(revision_before, int) or revision_before < 0: raise ContractError("invalid graph_revision")
+        supersedes_source_digest: str | None = None
+        operation = "registered"
         if len(present) == 13:
             actual = [_find_node(existing, node_id) for node_id in incoming_ids]
-            if actual != resolved: raise ContractError("duplicate node ids exist with different content")
-            if not receipt_path.is_file(): raise ContractError("registered nodes exist without immutable receipt")
-            receipt = _json_object(receipt_path)
-            _validate_schema(receipt, receipt_schema, receipt_schema, "registration-receipt")
-            expected_receipt_identity = {
-                "schema_version": "1.0.0", "status": "registered",
-                "feature_package_id": package["feature_package_id"],
-                "parent_feature": package["parent_feature"],
-                "source_digest": registration["source_digest"],
-                "expected_count": 13, "applied_count": 13,
-                "phase_refs": PHASES, "node_ids": incoming_ids,
-                "output_path": output_path.relative_to(root).as_posix(),
+            if actual == resolved:
+                if not receipt_path.is_file(): raise ContractError("registered nodes exist without immutable receipt")
+                receipt = _json_object(receipt_path)
+                _validate_schema(receipt, receipt_schema, receipt_schema, "registration-receipt")
+                expected_receipt_identity = {
+                    "schema_version": "1.0.0", "status": "registered",
+                    "feature_package_id": package["feature_package_id"],
+                    "parent_feature": package["parent_feature"],
+                    "source_digest": registration["source_digest"],
+                    "expected_count": 13, "applied_count": 13,
+                    "phase_refs": PHASES, "node_ids": incoming_ids,
+                    "output_path": output_path.relative_to(root).as_posix(),
+                }
+                if any(receipt.get(key) != value for key, value in expected_receipt_identity.items()):
+                    raise ContractError("immutable receipt conflicts with registered package")
+                before = receipt.get("graph_revision_before")
+                after = receipt.get("graph_revision_after")
+                if not isinstance(before, int) or not isinstance(after, int) or after != before + 1 or after > revision_before:
+                    raise ContractError("immutable receipt graph revision conflicts with registered package")
+                return {**receipt, "idempotent": True, "dry_run": bool(args.dry_run)}
+            old_digests = {
+                str((node or {}).get("source_lineage", {}).get("source_digest", ""))
+                for node in actual
             }
-            if any(receipt.get(key) != value for key, value in expected_receipt_identity.items()):
-                raise ContractError("immutable receipt conflicts with registered package")
-            before = receipt.get("graph_revision_before")
-            after = receipt.get("graph_revision_after")
-            if not isinstance(before, int) or not isinstance(after, int) or after != before + 1 or after > revision_before:
-                raise ContractError("immutable receipt graph revision conflicts with registered package")
-            return {**receipt, "idempotent": True, "dry_run": bool(args.dry_run)}
+            if len(old_digests) != 1 or not HEX_SHA256.fullmatch(next(iter(old_digests))):
+                raise ContractError("existing exact-13 package has mixed or invalid source digests")
+            old_digest = "sha256:" + next(iter(old_digests))
+            if old_digest == registration["source_digest"]:
+                raise ContractError("duplicate node ids have different content for the same source digest")
+            if receipt_path.exists():
+                raise ContractError("new generation receipt exists before package supersede")
+            supersedes_source_digest = old_digest
+            operation = "superseded"
         if receipt_path.exists(): raise ContractError("immutable receipt exists before graph registration")
         proposed = copy.deepcopy(current)
-        proposed["nodes"] = [*existing, *resolved]
+        replacements = {node["graph_node_id"]: node for node in resolved}
+        projected_parent = _project_parent_feature(parent, package, resolved)
+        _validate_schema(projected_parent, node_schema, node_schema, "projected_parent_feature")
+        replacements[package["parent_feature"]] = projected_parent
+        proposed["nodes"] = [
+            replacements.get(str(node.get("graph_node_id") or node.get("id")), node)
+            for node in existing
+        ]
+        if not present:
+            proposed["nodes"] = [*proposed["nodes"], *resolved]
         proposed["graph_revision"] = revision_before + 1
         graph_digest = _canonical_digest(proposed)
         receipt = {
@@ -399,6 +465,7 @@ def _register(args: argparse.Namespace) -> dict[str, Any]:
             "phase_refs": PHASES, "node_ids": incoming_ids, "graph_revision_before": revision_before,
             "graph_revision_after": revision_before + 1, "graph_digest_after": graph_digest,
             "output_path": output_path.relative_to(root).as_posix(),
+            "operation": operation, "supersedes_source_digest": supersedes_source_digest,
         }
         _validate_schema(receipt, receipt_schema, receipt_schema, "registration-receipt")
         if args.dry_run:

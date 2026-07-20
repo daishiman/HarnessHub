@@ -1,0 +1,651 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "created": {
+          "created_at": "2026-07-18T01:46:50.472257Z",
+          "created_by": "daishiman",
+          "description": "ユーザー管理・アカウント設定 要件ベースライン確定 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P01",
+          "id": "HarnessHub-xwt.1",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "ユーザー管理・アカウント設定 要件ベースライン確定",
+          "updated_at": "2026-07-18T01:46:50.472257Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P01",
+        "id": "HarnessHub-xwt.1",
+        "phase_ref": "P01"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:46:51.690535Z",
+          "created_by": "daishiman",
+          "description": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P02",
+          "id": "HarnessHub-xwt.2",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計",
+          "updated_at": "2026-07-18T01:46:51.690535Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P02",
+        "id": "HarnessHub-xwt.2",
+        "phase_ref": "P02"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:46:53.11405Z",
+          "created_by": "daishiman",
+          "description": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P03",
+          "id": "HarnessHub-xwt.3",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認",
+          "updated_at": "2026-07-18T01:46:53.11405Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P03",
+        "id": "HarnessHub-xwt.3",
+        "phase_ref": "P03"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:46:54.226431Z",
+          "created_by": "daishiman",
+          "description": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P04",
+          "id": "HarnessHub-xwt.4",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計",
+          "updated_at": "2026-07-18T01:46:54.226431Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P04",
+        "id": "HarnessHub-xwt.4",
+        "phase_ref": "P04"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:46:55.356966Z",
+          "created_by": "daishiman",
+          "description": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P05",
+          "id": "HarnessHub-xwt.5",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続",
+          "updated_at": "2026-07-18T01:46:55.356966Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P05",
+        "id": "HarnessHub-xwt.5",
+        "phase_ref": "P05"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:46:56.57825Z",
+          "created_by": "daishiman",
+          "description": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P06",
+          "id": "HarnessHub-xwt.6",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録",
+          "updated_at": "2026-07-18T01:46:56.57825Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P06",
+        "id": "HarnessHub-xwt.6",
+        "phase_ref": "P06"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:46:58.05825Z",
+          "created_by": "daishiman",
+          "description": "受入 — goal-spec acceptance 3項目の確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P07",
+          "id": "HarnessHub-xwt.7",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "受入 — goal-spec acceptance 3項目の確認",
+          "updated_at": "2026-07-18T01:46:58.05825Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P07",
+        "id": "HarnessHub-xwt.7",
+        "phase_ref": "P07"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:46:59.213517Z",
+          "created_by": "daishiman",
+          "description": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P08",
+          "id": "HarnessHub-xwt.8",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認",
+          "updated_at": "2026-07-18T01:46:59.213517Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P08",
+        "id": "HarnessHub-xwt.8",
+        "phase_ref": "P08"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:47:00.333955Z",
+          "created_by": "daishiman",
+          "description": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P09",
+          "id": "HarnessHub-xwt.9",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認",
+          "updated_at": "2026-07-18T01:47:00.333955Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P09",
+        "id": "HarnessHub-xwt.9",
+        "phase_ref": "P09"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:47:01.452361Z",
+          "created_by": "daishiman",
+          "description": "最終独立レビュー — feature全体のconfirmation前最終点検 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P10",
+          "id": "HarnessHub-xwt.10",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "最終独立レビュー — feature全体のconfirmation前最終点検",
+          "updated_at": "2026-07-18T01:47:01.452361Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P10",
+        "id": "HarnessHub-xwt.10",
+        "phase_ref": "P10"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:47:02.699626Z",
+          "created_by": "daishiman",
+          "description": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P11",
+          "id": "HarnessHub-xwt.11",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約",
+          "updated_at": "2026-07-18T01:47:02.699626Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P11",
+        "id": "HarnessHub-xwt.11",
+        "phase_ref": "P11"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:47:03.791552Z",
+          "created_by": "daishiman",
+          "description": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P12",
+          "id": "HarnessHub-xwt.12",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化",
+          "updated_at": "2026-07-18T01:47:03.791552Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P12",
+        "id": "HarnessHub-xwt.12",
+        "phase_ref": "P12"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:47:04.947054Z",
+          "created_by": "daishiman",
+          "description": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-USER-ORG-ADMIN-P13",
+          "id": "HarnessHub-xwt.13",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認",
+          "updated_at": "2026-07-18T01:47:04.947054Z"
+        },
+        "external_ref": "SYS-USER-ORG-ADMIN-P13",
+        "id": "HarnessHub-xwt.13",
+        "phase_ref": "P13"
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-xwt.1",
+        "issue_id": "HarnessHub-xwt.2",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.1",
+          "issue_id": "HarnessHub-xwt.2",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.2",
+        "issue_id": "HarnessHub-xwt.3",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.2",
+          "issue_id": "HarnessHub-xwt.3",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.3",
+        "issue_id": "HarnessHub-xwt.4",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.3",
+          "issue_id": "HarnessHub-xwt.4",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.4",
+        "issue_id": "HarnessHub-xwt.5",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.4",
+          "issue_id": "HarnessHub-xwt.5",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.5",
+        "issue_id": "HarnessHub-xwt.6",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.5",
+          "issue_id": "HarnessHub-xwt.6",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.6",
+        "issue_id": "HarnessHub-xwt.7",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.6",
+          "issue_id": "HarnessHub-xwt.7",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.7",
+        "issue_id": "HarnessHub-xwt.8",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.7",
+          "issue_id": "HarnessHub-xwt.8",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.8",
+        "issue_id": "HarnessHub-xwt.9",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.8",
+          "issue_id": "HarnessHub-xwt.9",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.9",
+        "issue_id": "HarnessHub-xwt.10",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.9",
+          "issue_id": "HarnessHub-xwt.10",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.10",
+        "issue_id": "HarnessHub-xwt.11",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.10",
+          "issue_id": "HarnessHub-xwt.11",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.11",
+        "issue_id": "HarnessHub-xwt.12",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.11",
+          "issue_id": "HarnessHub-xwt.12",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-xwt.12",
+        "issue_id": "HarnessHub-xwt.13",
+        "result": {
+          "depends_on_id": "HarnessHub-xwt.12",
+          "issue_id": "HarnessHub-xwt.13",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "created": {
+        "created_at": "2026-07-18T01:46:49.502599Z",
+        "created_by": "daishiman",
+        "description": "ユーザー管理 (S17) とアカウント設定 (S18) を提供し、role 管理 (qa-005 の 4 role と統合)・年収→時給換算の係数設定 (PII: admin 限定・API 非公開・export マスク = SEC4)・通知設定 (D6 Resend) を確立する (I14)",
+        "external_ref": "dev-graph:feat-user-org-admin",
+        "id": "HarnessHub-xwt",
+        "issue_type": "epic",
+        "owner": "daishimanju@gmail.com",
+        "priority": 2,
+        "schema_version": 1,
+        "status": "open",
+        "title": "Studio: ユーザー管理・アカウント設定 (role 統合・係数設定・PII ガード)",
+        "updated_at": "2026-07-18T01:46:49.502599Z"
+      },
+      "external_ref": "feat-user-org-admin",
+      "id": "HarnessHub-xwt"
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-xwt.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xwt.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-xwt.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-xwt.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-USER-ORG-ADMIN-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ]
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

@@ -213,6 +213,40 @@ def init_state(taxonomy: dict, existing_state: dict | None = None) -> dict:
 
 
 # --------------------------------------------------------------------------- #
+# カテゴリ軸拡張 (open-world lifecycle)                                         #
+# --------------------------------------------------------------------------- #
+CATEGORY_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+
+def add_category(state: dict, category: dict) -> None:
+    """既存 matrix を保持したままカテゴリ軸を 1 件拡張する (taxonomy の open_world 契約)。
+
+    init_state が matrix を全セル 未収集 で作り直すのに対し、本 op は既存セルへ
+    一切触れず新カテゴリ行だけを追加する。確定セルの巻き戻しは構造的に起こらない。
+    """
+    if not isinstance(category, dict):
+        raise TransitionError("add-category: category は object 必須")
+    cat_id = category.get("id")
+    label = category.get("label")
+    if not isinstance(cat_id, str) or not cat_id.strip():
+        raise TransitionError("add-category: id が空")
+    if not isinstance(label, str) or not label.strip():
+        raise TransitionError("add-category: label が空")
+    cat_id, label = cat_id.strip(), label.strip()
+    if not CATEGORY_ID_RE.match(cat_id):
+        raise TransitionError(f"add-category: id は kebab-case 必須 ({cat_id})")
+    # 既存カテゴリへの再適用は matrix 行の作り直し = 確定セルの reopen 非経由な巻き戻しに直結する。
+    # upsert ではなく fail-closed で拒否し、既存カテゴリの変更は R4-reopen へ寄せる。
+    if cat_id in state["matrix"] or any(c.get("id") == cat_id for c in state["categories"]):
+        raise TransitionError(f"add-category: 既存カテゴリ ({cat_id}) の変更は R4-reopen 経由")
+
+    state["categories"].append({"id": cat_id, "label": label})
+    state["matrix"][cat_id] = {pf: {"state": "未収集"} for pf in CANONICAL_PLATFORMS}
+    recompute_aggregates(state)
+    state["hearing_progress"]["next_question"] = next_unresolved_question(state)
+
+
+# --------------------------------------------------------------------------- #
 # セル遷移 (単一 writer 防御の中核)                                            #
 # --------------------------------------------------------------------------- #
 def _cell(state: dict, cat: str, pf: str) -> dict:
@@ -925,6 +959,13 @@ def main(argv: list[str]) -> int:
     p_init.add_argument("--state", help="bootstrap済みstate (foundation/decisionsを保持)")
     p_init.add_argument("--out")
 
+    p_addcat = sub.add_parser(
+        "add-category", help="既存確定を保持したままカテゴリ軸を 1 件拡張 (open-world)"
+    )
+    p_addcat.add_argument("--state", required=True)
+    p_addcat.add_argument("--category", required=True, help="category JSON文字列またはファイル")
+    p_addcat.add_argument("--out")
+
     p_apply = sub.add_parser("apply", help="単一セル op を適用")
     p_apply.add_argument("--state", required=True)
     p_apply.add_argument("--op", required=True, help="JSON 文字列の cell op")
@@ -984,6 +1025,10 @@ def main(argv: list[str]) -> int:
             existing = load_json(args.state) if args.state else None
             state = init_state(load_json(args.taxonomy), existing)
             _emit(state, args.out)
+        elif args.cmd == "add-category":
+            state = load_json(args.state)
+            add_category(state, load_json_arg(args.category))
+            _emit(state, args.out or args.state)
         elif args.cmd == "apply":
             state = load_json(args.state)
             apply_turn(state, {"ops": [json.loads(args.op)]})

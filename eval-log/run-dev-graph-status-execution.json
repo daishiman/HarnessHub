@@ -1,0 +1,52 @@
+{
+  "authority_sha256_after": "d0e593c9524c4dd9f5264aa8413df208abb1f2fb401cee866a5253e03c637a4d",
+  "authority_sha256_before": "d0e593c9524c4dd9f5264aa8413df208abb1f2fb401cee866a5253e03c637a4d",
+  "count": 1,
+  "executed_at": "2026-07-20T00:47:22.691825Z",
+  "filters": {
+    "domain": null,
+    "id": "spec-harness-hub-requirements",
+    "keyword": null,
+    "kind": null,
+    "project": null,
+    "status": null,
+    "tag_match": "all",
+    "tags": []
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "d0e95a14eaac57225f048f89c961d43098333d4bc79378e3c9dfb1aa8c4ac969",
+  "graph_sha256_before": "d0e95a14eaac57225f048f89c961d43098333d4bc79378e3c9dfb1aa8c4ac969",
+  "ok": true,
+  "read_only": true,
+  "results": [
+    {
+      "artifact_kind": "specification",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-security"
+      ],
+      "depends_on": [],
+      "domain": "platform",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-system-specification.md",
+      "graph_node_id": "spec-harness-hub-requirements",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "harness-hub",
+      "status": "active",
+      "tags": [
+        "system-spec-import",
+        "platform"
+      ],
+      "title": "Harness Hub システム要件仕様 (system-spec 取込)",
+      "tracker_binding": "none"
+    }
+  ]
+}

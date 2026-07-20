@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
     "component_id": "C15",
-    "skill_md_sha256": "563212e822853591b1db0358af61490216864d23fdc6caf312c5d1047668414b"
+    "skill_md_sha256": "b8e43d9b95cc305f7523552c4030291ba8c2cd6f073213cb60fb78b8c143d5ee"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r1",
+  "reviewer": "audit-next-worktree-20260720",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -17,9 +17,10 @@
       "evidence_kind": "hybrid",
       "test_refs": [
         "plugins/dev-graph/tests/test_semantic_contract_cli_scheduler_20260713.py::test_scheduler_rejects_each_incomplete_gate_for_self_and_bd_ready",
-        "independent: schedule-graph.py on eval-log/dev-graph/live-trial-fixtures/r3-schedule graph"
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_schedule_mixed_binding_parity_expiry_scope_and_max_parallel",
+        "independent: schedule-graph.py current/stale Beads parity probes"
       ],
-      "observed": "pytest test_semantic_contract_cli_scheduler_20260713.py::test_scheduler_rejects_each_incomplete_gate_for_self_and_bd_ready passed (exit 0), confirming blocked/draft/unconfirmed/evaluation!=pass/readiness!=complete are 0 in ready_set for both self and bd-ready sources. Independently ran schedule-graph.py on the r3-schedule fixture → ready_set.tasks=[LT-TASK-001], unmapped=0; only the eligible confirmed/pass/readiness-complete active task was admitted."
+      "observed": "Independent 2026-07-20 audit confirmed incomplete gates admit 0 nodes. In mixed Beads/GitHub/none probes, Beads was admitted only when receipt graph_status/graph_depends_on exactly matched the current node; a stale dependency receipt was excluded with beads_parity_stale_or_unconfirmed."
     },
     "OUT1": {
       "status": "PASS",
@@ -40,9 +41,11 @@
       "evidence_kind": "hybrid",
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_render_and_schedule",
-        "independent: schedule-graph.py on eval-log/dev-graph/live-trial-fixtures/r3-schedule graph (conflict/batch inspection)"
+        "plugins/dev-graph/tests/test_operational_loop_v2.py::test_next_rejects_noncanonical_lease_in_git_repository",
+        "plugins/dev-graph/tests/test_operational_loop_v2.py::test_readers_reject_eval_log_symlink_escape_before_writing",
+        "independent: scope/max/expiry/digest/C17 batch recomputation probes"
       ],
-      "observed": "pytest test_runtime_coverage.py::test_render_and_schedule passed (exit 0). Independently ran schedule-graph.py on the r3-schedule fixture → conflicts=0 and batches.tasks=[[LT-TASK-001]], confirming no resource_scope.touches-overlapping node pair shares a parallel batch and lease-conflicting candidates are not recommended."
+      "observed": "Independent audit and focused tests confirmed conflict-free batches, scope/max limits, expired-lease exclusion, and graph/tracker/lease digest stability. A rogue lease path in a Git repository and an eval-log symlink root were rejected before output; only git-common-dir/dev-graph/leases.json was accepted as authority."
     },
     "OUT3": {
       "status": "PASS",

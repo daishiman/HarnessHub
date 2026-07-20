@@ -85,6 +85,13 @@ plugin-plans/*/run-plugin-dev-plan-intermediate.jsonl
 plugin-plans/*/.goal-seek/
 plugin-plans/*/task-graph-status.json
 plugin-plans/*/task-progress.md
+
+# dev-graph も同ポリシー: verb ごとの progress/intermediate は周回・buildごとの揮発投影ゆえ除外する。
+eval-log/run-dev-graph-*-progress.json
+eval-log/run-dev-graph-*-intermediate.jsonl
+# runtime 揮発状態 (期限切れ lock receipt / stderr capture の空残骸)。
+.dev-graph/locks/expired-lock-receipts/
+.dev-graph/cache/projections/*.err
 plugin-plans/*/task-execution-report.html
 plugin-plans/*/.gate/
 

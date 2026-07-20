@@ -1,6 +1,6 @@
 ---
 name: run-dev-graph-node
-description: dev-graph artifact を正規 path へ atomic 追加・差分更新したいとき、system-dev-planner の exact 13 phase task package を all-or-none 登録したいときに使う。
+description: dev-graph artifact を種類別content rootとgraph.jsonへatomic追加・差分更新したいとき、system-dev-planner の exact 13 phase task package を all-or-none 登録したいときに使う。
 version: 0.1.0
 owner: harness maintainers
 source: plugin-plans/dev-graph/component-inventory.json#C02
@@ -8,9 +8,9 @@ kind: run
 prefix: run
 hierarchy: L1
 user-invocable: true
-argument-hint: "<add|update|register-package> [--repo-root PATH] [--input PATH] [--dry-run]"
+argument-hint: "<upsert|register-package> [--repo-root PATH] --input PATH [--body-file PATH] [--dry-run]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Skill, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/register-package.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/upsert-node.py, ../../scripts/node_transaction.py, ../../scripts/register-package.py]
 schema_refs: [../../schemas/graph-node.schema.json, ../../schemas/package-registration-receipt.schema.json]
 reference_refs: [../../schemas/graph-node.schema.json, ../../templates/template-contract.json, ../../../system-dev-planner/references/feature-execution-package-contract.md]
 responsibility_refs:
@@ -58,7 +58,7 @@ feedback_contract:
       verify_by: script
     - id: OUT1
       loop_scope: outer
-      text: "通常5 artifact混在入力は自動routingされ、featureはC14 macro contractだけからfeatures/へ入り、連続更新後もfrontmatter/path整合性が維持される"
+      text: "通常5 artifact混在入力は自動routingされ、連続更新後もfrontmatter/path整合性が維持される。通常例外/KeyboardInterruptは即rollbackし、強制終了はdurable WALから次回nodeでrollbackされ、readerはtransaction全体の共有lockで部分状態を返さない"
       verify_by: live-trial
     - id: OUT2
       loop_scope: outer
@@ -85,7 +85,20 @@ feedback_contract:
 1. C24 resolver で全 read/write realpath の containment を検証する。
 2. 内容から `artifact_kind/domain/project_id`、候補 path、confidence/reason/second candidate を preview する。confidence>=0.80 かつ margin>=0.15 は自動確定し、それ以外だけユーザー確認する。保存先は質問しない。
 3. `template-contract.json` から kind template を選ぶ。architecture は subtype 全件、specification は API 変更時だけ api-contract overlay を合成する。
-4. frontmatter/body/path と graph node を一時領域で構成し `validate-graph-schema.py` を通してから atomic replace する。更新は既存本文を全置換せず不足 section/変更 field だけを更新する。物理削除は禁止。
+4. frontmatter/body/path と graph node を一時領域で構成し `validate-graph-schema.py` を通してから `upsert-node.py` で単一transactionとして反映する。更新は既存本文を全置換せず不足 section/変更 field だけを更新する。物理削除は禁止。
+
+## Deterministic upsert
+
+通常nodeのwrite本体は`../../scripts/upsert-node.py`とする。入力JSONは完全な`node`、またはtop-level `graph_node_id`と既存nodeへmergeする`patch`を持つ。任意の`body`/`--body-file`はYAML frontmatterを含めない。
+
+```bash
+python3 ../../scripts/upsert-node.py \
+  --repo-root "$DEV_GRAPH_ROOT" \
+  --input <repo-relative-node-input.json> \
+  --dry-run
+```
+
+dry-run receiptの`write_count=0`とschema/path判定を確認してから同じ入力でapplyする。writerは`artifact_kind`を`issues/tasks/specs/architecture/docs/features`へ決定論的に写像する。2ファイル更新前に`node_transaction.py`がbefore/after imageとWALをdurable化し、通常例外・割込みは即rollback、強制終了は次のnode起動時にrollbackしてから再実行する。WALが残る間、status/next/renderは部分状態を読まずfail-closedで停止する。同じ入力の再実行は`operation=noop`、`write_count=0`とする。
 
 ## Exact-13 package gate
 
@@ -116,6 +129,7 @@ C27 の claim saga は `register-package.py execution-context --graph <path> --g
 - [ ] 通常 artifact の frontmatter/body/path/template metadata が schema と一致する
 - [ ] package は P01..P13 exact 13、共通 parent/package、内部 DAG を満たし、違反時 applied_count が0である
 - [ ] 成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する
+- [ ] artifact/graph間の各中断位置でWALからbefore-imageへ収束し、pending中のstatus/next/renderは共有lock取得後にfail-closedとなる
 
 ### ゴールシークループ
 
@@ -151,13 +165,13 @@ PY
 ## Criteria acceptance
 
 - `criteria:IN1`: `validate-graph-schema.py` の書込み前検証で必須キー欠落が0件である。
-- `criteria:OUT1`: 通常5 artifactをroutingし、featureはC14 macro contractからのみ登録し、連続更新後もfrontmatter/path整合を保つ。
+- `criteria:OUT1`: 通常5 artifactをroutingし、featureはC14 macro contractからのみ登録する。例外/KeyboardInterrupt/強制終了後もWALからbefore-imageへ収束し、共有lockによりstatus/next/renderが部分状態を返さず、連続更新後もfrontmatter/path整合を保つ。
 - `criteria:OUT2`: architecture subtypeとspecificationの`api-contract`条件を含むkind別必須セクションを欠落0件で適用する。
 - `criteria:OUT3`: 12/14 task、phase欠落/重複、mixed package、cross-feature edgeは`applied_count=0`、正常時は`expected_count=applied_count=13`、P01..P13/node exact-set、`graph_revision`付きreceiptになる。
 
 ## Gotchas
 
-- graph/content を直接書かず、preview と apply のどちらも C02 単一 writer を通す。
+- graph/content を直接書かず、通常nodeは`upsert-node.py`、package/contextは`register-package.py`というC02単一writer入口を通す。
 - feature は C14 の macro contract から受け取り、通常 artifact routing で新規生成しない。
 - P01..P13 の欠落、重複、混在、cross-feature edge のいずれかがあれば部分登録しない。
 - execution context の repository/worktree identity 不一致を上書きで吸収しない。

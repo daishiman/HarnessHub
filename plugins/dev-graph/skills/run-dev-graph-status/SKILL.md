@@ -10,7 +10,7 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--id ID] [--kind KIND] [--project ID] [--domain NAME] [--status STATUS] [--tag TAG] [--keyword TEXT]"
 allowed-tools: [Read, Bash, AskUserQuestion, Skill, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/status-graph.py]
 schema_refs: [../../schemas/graph-node.schema.json]
 responsibility_refs:
   - prompts/R1-elicit.md
@@ -28,7 +28,7 @@ responsibilities:
   - id: R3-status
     name: status
     prompt_required: true
-    summary: "validate-graph-schema.py で読み取ったグラフストアから該当ノードを検索し、status/closed_at/依存関係を含む状態表示レポートを返す (書込みは行わない)"
+    summary: "validate-graph-schema.py で読み取ったグラフストアから該当ノードを検索し、status/closed_at/依存関係を含む状態表示レポートを返す (eval-log/以外へは書き込まない)"
 combinators:
   - with-goal-seek
   - with-feedback-contract
@@ -51,7 +51,7 @@ feedback_contract:
       verify_by: live-trial
     - id: OUT2
       loop_scope: outer
-      text: "本 skill 実行後もグラフストアと GitHub Issue 側に一切の変更が生じない (read-only で副作用なし) ことを受入テストが確認する"
+      text: "共有graph lockの全処理保持とpending WAL検査により部分状態を返さず、graph/config/content/GitHubを変更せず、eval-log root/targetのsymlink escapeを事前拒否することを受入テストが確認する"
       verify_by: test
 ---
 
@@ -65,7 +65,14 @@ feedback_contract:
 
 C24 で caller root を固定し、C11 の read-only validation 後に graph store を検索する。全 filter は AND、複数 tag は明示された match mode に従う。結果は `graph_node_id/artifact_kind/project_id/domain/tags/file_path/status/closed_at/depends_on/dependents/parent_feature/feature_package_id/tracker_binding/linkage` を返す。
 
-検索前後の graph/config/content digest を比較し、変化があれば失敗。GitHub/Beads command、writer、render、sync を呼ばない。該当なしは空 result の成功、schema 不正・root 外 file_path・dangling dependency は診断付き失敗。
+`status-graph.py`で検索前後のgraph/config/content authority digestを比較し、変化があれば失敗する。GitHub/Beads command、writer、render、syncを呼ばない。該当なしは空resultの成功、schema不正・root外file_path・dangling dependency・pending node WALは診断付き失敗。`--eval-log`はrealpathをrepositoryの`eval-log/`配下へ限定し、それ以外への書込みを拒否する。
+
+```bash
+python3 ../../scripts/status-graph.py \
+  --repo-root "$DEV_GRAPH_ROOT" \
+  --graph "$DEV_GRAPH_ROOT/.dev-graph/state/graph.json" \
+  <filters>
+```
 
 ## ゴールシーク実行
 
@@ -84,6 +91,7 @@ C24 で caller root を固定し、C11 の read-only validation 後に graph sto
 - [ ] report の status/closed_at/depends_on/dependents/linkage が graph snapshot と一致する
 - [ ] 該当なしが空 result の成功として返る
 - [ ] 実行前後の graph/config/content digest が同一で外部 write が0件である
+- [ ] 全読取り中の共有lock、pending WAL拒否、eval-log root/target realpath containmentが受入テストで確認される
 
 ### ゴールシークループ
 
@@ -120,7 +128,7 @@ PY
 
 - `criteria:IN1`: `validate-graph-schema.py`後の結果は必須キー欠落が0件である。
 - `criteria:OUT1`: reportの`status/closed_at/依存関係`はgraphの実状態と一致する。
-- `criteria:OUT2`: 実行前後のdigestを比較し、graph/content/GitHubの副作用0件を保証する。
+- `criteria:OUT2`: 全処理中の共有lockとpending WAL検査、実行前後のdigestを比較し、eval-log root/targetのrealpath containmentを確認して、`eval-log/`以外のgraph/content/GitHub副作用0件を保証する。
 
 ## Gotchas
 

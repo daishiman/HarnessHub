@@ -1,0 +1,1227 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-publisher-plugin",
+  "parent_feature": "feat-publisher-plugin",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-PUBLISHER-PLUGIN-P01": "beads",
+    "SYS-PUBLISHER-PLUGIN-P02": "beads",
+    "SYS-PUBLISHER-PLUGIN-P03": "beads",
+    "SYS-PUBLISHER-PLUGIN-P04": "beads",
+    "SYS-PUBLISHER-PLUGIN-P05": "beads",
+    "SYS-PUBLISHER-PLUGIN-P06": "beads",
+    "SYS-PUBLISHER-PLUGIN-P07": "beads",
+    "SYS-PUBLISHER-PLUGIN-P08": "beads",
+    "SYS-PUBLISHER-PLUGIN-P09": "beads",
+    "SYS-PUBLISHER-PLUGIN-P10": "beads",
+    "SYS-PUBLISHER-PLUGIN-P11": "beads",
+    "SYS-PUBLISHER-PLUGIN-P12": "beads",
+    "SYS-PUBLISHER-PLUGIN-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "要件ベースライン確定 — TypeScript統一Publisher・Device Flow認証・検査ロジック共有・wranglerスクリプト実行・初回publish15分以内",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "documentation",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publisher-plugin/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "goal-spec.json の purpose/goal/scope_in/scope_out/acceptance/quality_constraints を要件ベースラインとして確定する P01 要件タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — apps/publisher (TS/Node/pnpm) 構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の決定",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "backend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "backend",
+        "architecture-decision"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P01"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publisher-plugin/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P01 の要件ベースラインに基づき apps/publisher の実装形態・packages/inspection 消費境界・Device Flow token 保存方式・wrangler 実行方式を確定する P02 アーキテクチャタスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — apps/publisher構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の妥当性確認",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P02"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publisher-plugin/design-review-notes.md"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "P02 の設計判断が P01 の要件ベースラインおよび goal-spec.json の quality_constraints と矛盾しないことを独立観点で確認する P03 設計レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — quality_constraints 8件・acceptance 3件に対応する挙動同値性テスト・実機E2Eタイムボックス計測ケースの設計",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P03"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/publisher/",
+        "apps/publisher/src/__tests__/",
+        "docs/features/feat-publisher-plugin/test-design.md",
+        "packages/schemas/publisher-plugin/",
+        "plugins/harness-hub-publisher/"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P03 でレビュー済みの設計に基づき quality_constraints 8 件・acceptance 3 件に対応するテストケースを設計する P04 テストファーストタスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — apps/publisher (CLI + Claude Code/Codex plugin)・Device Flow認証クライアント・wrangler実行ラッパーの実装",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "backend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "backend",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P04"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/publisher/",
+        "docs/features/feat-publisher-plugin/implementation-notes.md",
+        "packages/schemas/publisher-plugin/",
+        "plugins/harness-hub-publisher/"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P02/P04 で確定した設計とテストスタブに基づき apps/publisher の CLI core・auth・deploy・plugin 面を実装する P05 実装タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 挙動同値性テスト・Device Flow単体テスト・macOS/Windows実機E2Eタイムボックス計測の実行",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P05"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/publisher/",
+        "apps/publisher/src/__tests__/",
+        "docs/features/feat-publisher-plugin/test-run-results.md",
+        "packages/schemas/publisher-plugin/",
+        "plugins/harness-hub-publisher/"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "P04 で設計し P05 で実装対象を揃えたテストケースを実行し結果を記録する P06 テスト実行タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — macOS/Windows実機E2E成功・pre-checkとHub検査の判定同値・初回publish15分以内の受入判定",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P06"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publisher-plugin/acceptance-record.md"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "goal-spec.json の acceptance 3 件を P06 のテスト実行結果に基づき受入判定する P07 受入タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — Python資産参照コメントの整理とpackages/inspection消費コードのクリーンアップ",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "backend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "backend",
+        "refactor-migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P07"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/publisher/src/",
+        "docs/features/feat-publisher-plugin/refactoring-migration-note.md"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.82,
+      "classification_reason": "本 feature は永続 DB migration を持たないため、Python資産参照コメント整理とinspection消費コードのクリーンアップに読み替える required-node タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.82,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質・セキュリティ・運用保証 — Device Flow数値契約遵守・OS資格情報域保存・scope最小権限・secret非保存の確認",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "security",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "security",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P08"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/publisher/",
+        "apps/publisher/scripts/",
+        "docs/features/feat-publisher-plugin/quality-assurance-report.md",
+        "packages/schemas/publisher-plugin/",
+        "plugins/harness-hub-publisher/"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "quality_constraints のうちセキュリティ関連制約 (Device Flow/OS資格情報域保存/scope最小権限) の遵守を機械的に確認する P09 品質保証タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立最終レビュー — quality_constraints 8件・acceptance 3件の最終確認",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P09"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publisher-plugin/final-review-record.md"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P01-P09 の全成果物を対象に quality_constraints 8 件・acceptance 3 件の充足を独立確認する P10 最終レビュータスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順の確立",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "quality",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P10"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publisher-plugin/evidence-summary.md"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "P06/P07/P09/P10 の証跡を集約し第三者が再現できる手順として確立する P11 証跡タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "文書化・runbook・引き継ぎ — 作者向けpublish手順・token失効導線・障害時対応手順の確立",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "documentation",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P11"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-publisher-plugin/runbook.md"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "作者向け publish 操作手順・token失効導線・障害時対応手順を runbook として確立する P12 文書化タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — Claude Code/Codex marketplaceへのPublisher plugin配布登録依頼とStage1完了条件判定",
+      "project_id": "feature-package-feat-publisher-plugin",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-publisher-plugin",
+        "macro-feature",
+        "operations",
+        "release-deploy"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-19T14:18:12Z",
+      "updated_at": "2026-07-19T14:18:12Z",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P12"
+      ],
+      "related_nodes": [
+        "feat-publisher-plugin",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/publisher/",
+        "docs/features/feat-publisher-plugin/release-record.md",
+        "packages/schemas/publisher-plugin/",
+        "plugins/harness-hub-publisher/"
+      ],
+      "parent_feature": "feat-publisher-plugin",
+      "feature_package_id": "feature-package/feat-publisher-plugin",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json",
+        "evaluated_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+        "imported_at": "2026-07-19T14:18:12Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "marketplace.json への Publisher plugin 登録依頼内容の確定と acceptance 最終充足の close-out 判断を行う P13 リリースタスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-publisher-plugin/sys-publisher-plugin-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      }
+    }
+  ]
+}

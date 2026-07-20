@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:4b6c2e59e5501c72192f4f4b6572f520dd9ed49cfcaaf532e3a83f0d84358199",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "初回評価で phase-02 の owner 決定証跡が backend-spec §2.2 実内容と食い違う high finding (FAIL) を検出。architect 是正 (証跡 3 系統の再構成・users 完全形所有への結論訂正・phase-03/04/05/08 の連鎖修正) 後の再検証で、訂正後証跡の一字一句一致・内部矛盾解消・phase-04 テスト (9) 置換の整合を確認し PASS。qa-045 (tenant_data_objects) のスコープ外化は digest 契約上正当",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#訂正後証跡",
+        "task-specs/phase-08-refactoring-migration.md#別ALTER不要",
+        "task-specs/phase-04-test-design.md#テスト9置換"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13・14 必須見出し・placeholder 0 (是正後再確認済み)。根拠 id (qa-004/qa-017/qa-019/qa-020/qa-024/qa-032/D2/D4/I3/G1/G4) 11 種が 13/13 ファイルに接地。{studio-feature} 波括弧表記はテンプレート変数でありプレースホルダーではない",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-10-final-review.md#9件充足確認"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "source_feature_digest が context の独立 sha256 再計算値 (sha256:ed9bbe22a2887731c84470adb8e4f8df41fd7eec46efc58b4dc8e5095b5b5fd5) と一致。是正後 manifest 17 ファイルの個別再計算全一致。是正の変更範囲が申告 6 ファイルと完全一致し未変更 11 ファイルは sha256 不変。2 段階 digest (pre-handoff sha256:3f07f7e8… → canonical) は契約どおり。絶対パス 0 件・repository_id 一致",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json 13 node の厳密線形前方依存 (SYS-DOMAIN-MODEL-DB-P01→…→P13)。循環・多重親なし。write_scope は task 間・feature 間 (schema/core/ vs schema/user-org-admin/) とも排他。validator 独立再実行 exit0",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:4b6c2e59e5501c72192f4f4b6572f520dd9ed49cfcaaf532e3a83f0d84358199\", \"feature_package_id\": \"feature-package/feat-domain-model-db\", \"parent_feature\": \"feat-domain-model-db\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "5d6f75e0491273cf476e4caee7f03d16992e04e8e94ab1d6c3001c65854b725a"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "a5f5a4026dbcd9e99c0521ad235deb8a91f881260844f40356ac8e336ba9b69d"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "d18b34a5034ba7b40bfc8eaa44d343050c8f9e0241bf82f8929f44a86266e57c"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "a6477154a657a1a67428039cd09f17a174229c16d4c9a8f8e5060d0d8058614c"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "ab449b1fca9a20b365f28cb1f496e1bb0d212c06b6bb8241ca0ef1fcb2b478e2"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "9bc3fada68b4eab4f194888e8961ae44b9585c44602701377de627a6af8d30f5"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "bdb750de4f8c209d0acf29a0cb62a57b10ba309ad7cff667c0844ec9ab591a52"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "7129f0996e8eac01149075f6f16f389b200485a933584b01a02496f88f700213"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "a0ad5c698bd0d6e46d3e62f3e5f8218a416fd720e54fb762cc939adb1e81c89b"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "eec0cd548bef9eb257cb41dc8b27a0e56b3e1234260280511a57aedca1e3208b"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "79d221979d8081faaaa7bd7d0c49e52e2a58b59ef84db05126d21ff258036222"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "69d34b13addbb795711f4a396cfa11df02feeafaa638e4d9fd3831a91b9c1861"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "7be9c4f42c3a590264740a0f6ff18bd231192d14720379c3e65a8cede01ce638"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "943291a708b3510455056805784ed52ea8abbdb8ee05628ca906df9c970bf5ca"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e7842b54a00636661ec25cfd781671455385cc85169a4d89322c874d3460e69b"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "39b72e1cc43dbb79a5aea67fe48b4536ce493dd2697fd19cd81a10bf91b56e6a"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "e8115ebfa5d4a39d380779256d0d7a7f1715b1035e7af907c36eb1bd479ddd4b"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "9b501256d4f60f81b6a3e5444d7b05a76e49d3a0291bdbc6c25821a579d401c2"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "cross-feature/user-org-admin-plan-premise-outdated",
+      "observation": "本 plan の P02 決定 (users 基底テーブルは department/salary 込みで feat-domain-model-db が完全所有・別 ALTER 不要) により、published 済み feat-user-org-admin plan の「User 拡張 (department/salary) のカラム設計・後方互換 ALTER」前提が旧前提化した (evaluator が同 plan の該当行を実読して確認)。feat-user-org-admin の P02 実行時に本決定へ整合させる (担当は PII ガード適用・API・監査 UI・tenant_coefficients のみ)。phase-02 の cross-feature follow-up 注記に記録済み",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#cross-feature注記",
+        "goal-spec.json"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "citation-precision/shared-layers-section",
+      "observation": "phase-02 の PII ガード共通層 owner=feat-hub-foundation の出典引用が §5 (変更管理) となっているが実際の記載は §2 (共通バックエンド層)。主張内容自体は同文書の方針・§2 表と整合し正確。section 番号のみの誤指定。次回改訂時に §2 へ訂正推奨 (shared-layers.md が status:draft である点も確度の注記として記録)",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#出典引用"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "spec-evolution/table-count-drift",
+      "observation": "qa-032 の「コアドメイン 16」と P02 の「18 テーブル」の差異は、qa-034〜037 (backend-spec §9.1) による encryption_keys/session_revocations 追加という正当な進化。対応不要・記録のみ",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#テーブル一覧"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork-with-remediation-loop",
+      "observation": "確認記録: 初回評価 FAIL (high 1 件: 証跡誤認 + 内部矛盾) → architect 是正 (6 ファイル) → 再検証 PASS の goal-seek 2 周で完了。再検証では訂正後証跡の一字一句一致・変更範囲の sha256 突合 (未変更 11 ファイル不変)・digest 2 系統の独立再計算一致・qa-045 スコープ外化の正当性・共有 CI/wrapper 不可侵を確認",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    }
+  ]
+}

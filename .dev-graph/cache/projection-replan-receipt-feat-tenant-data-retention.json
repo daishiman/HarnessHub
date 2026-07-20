@@ -1,0 +1,706 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:01.572638Z",
+          "created_by": "daishiman",
+          "description": "要件ベースライン確定 — tenant_data_objects CRUD API・R2封筒暗号化保管・即時完全削除・R2使用量監視の要件確定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P01",
+          "id": "HarnessHub-47b.1",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "要件ベースライン確定 — tenant_data_objects CRUD API・R2封筒暗号化保管・即時完全削除・R2使用量監視の要件確定",
+          "updated_at": "2026-07-19T14:20:01.572638Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P01",
+        "id": "HarnessHub-47b.1",
+        "phase_ref": "P01"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:03.735324Z",
+          "created_by": "daishiman",
+          "description": "アーキテクチャ設計 — encryption_keys.purpose拡張・R2 tenant prefix分離・API詳細設計・R2使用量監視cron拡張・削除完全性テスト採番の決定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P02",
+          "id": "HarnessHub-47b.2",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "アーキテクチャ設計 — encryption_keys.purpose拡張・R2 tenant prefix分離・API詳細設計・R2使用量監視cron拡張・削除完全性テスト採番の決定",
+          "updated_at": "2026-07-19T14:20:03.735324Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P02",
+        "id": "HarnessHub-47b.2",
+        "phase_ref": "P02"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:05.916617Z",
+          "created_by": "daishiman",
+          "description": "独立設計レビュー — encryption_keys拡張・R2 prefix分離・API契約・削除完全性テスト採番の妥当性確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P03",
+          "id": "HarnessHub-47b.3",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "独立設計レビュー — encryption_keys拡張・R2 prefix分離・API契約・削除完全性テスト採番の妥当性確認",
+          "updated_at": "2026-07-19T14:20:05.916617Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P03",
+        "id": "HarnessHub-47b.3",
+        "phase_ref": "P03"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:08.134107Z",
+          "created_by": "daishiman",
+          "description": "テストファースト設計 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートのテスト設計 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P04",
+          "id": "HarnessHub-47b.4",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テストファースト設計 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートのテスト設計",
+          "updated_at": "2026-07-19T14:20:08.134107Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P04",
+        "id": "HarnessHub-47b.4",
+        "phase_ref": "P04"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:10.280007Z",
+          "created_by": "daishiman",
+          "description": "実装 — tenant_data_objects API・R2封筒暗号化保管/取得/即時完全削除・R2使用量監視cron拡張の実装 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P05",
+          "id": "HarnessHub-47b.5",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "実装 — tenant_data_objects API・R2封筒暗号化保管/取得/即時完全削除・R2使用量監視cron拡張の実装",
+          "updated_at": "2026-07-19T14:20:10.280007Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P05",
+        "id": "HarnessHub-47b.5",
+        "phase_ref": "P05"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:12.401746Z",
+          "created_by": "daishiman",
+          "description": "テスト実行 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートテストの実行 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P06",
+          "id": "HarnessHub-47b.6",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テスト実行 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートテストの実行",
+          "updated_at": "2026-07-19T14:20:12.401746Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P06",
+        "id": "HarnessHub-47b.6",
+        "phase_ref": "P06"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:14.615896Z",
+          "created_by": "daishiman",
+          "description": "受入 — テナント分離・削除完全性・暗号化検証の3件受入判定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P07",
+          "id": "HarnessHub-47b.7",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "受入 — テナント分離・削除完全性・暗号化検証の3件受入判定",
+          "updated_at": "2026-07-19T14:20:14.615896Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P07",
+        "id": "HarnessHub-47b.7",
+        "phase_ref": "P07"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:16.783929Z",
+          "created_by": "daishiman",
+          "description": "リファクタリング/マイグレーション — encryption_keys.tenant_id/key uniqueness migration・per-tenant DEK provisioning・R2バケット/prefix新設の既存基盤互換移行 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P08",
+          "id": "HarnessHub-47b.8",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リファクタリング/マイグレーション — encryption_keys.tenant_id/key uniqueness migration・per-tenant DEK provisioning・R2バケット/prefix新設の既存基盤互換移行",
+          "updated_at": "2026-07-19T14:20:16.783929Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P08",
+        "id": "HarnessHub-47b.8",
+        "phase_ref": "P08"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:18.93363Z",
+          "created_by": "daishiman",
+          "description": "品質・セキュリティ・運用保証 — テナント越境読取防止(T14)・削除不完全対策(T15)・R2使用量監視運用確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P09",
+          "id": "HarnessHub-47b.9",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "品質・セキュリティ・運用保証 — テナント越境読取防止(T14)・削除不完全対策(T15)・R2使用量監視運用確認",
+          "updated_at": "2026-07-19T14:20:18.93363Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P09",
+        "id": "HarnessHub-47b.9",
+        "phase_ref": "P09"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:21.033087Z",
+          "created_by": "daishiman",
+          "description": "独立最終レビュー — quality_constraints 6件・acceptance 3件の最終確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P10",
+          "id": "HarnessHub-47b.10",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "独立最終レビュー — quality_constraints 6件・acceptance 3件の最終確認",
+          "updated_at": "2026-07-19T14:20:21.033087Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P10",
+        "id": "HarnessHub-47b.10",
+        "phase_ref": "P10"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:23.200114Z",
+          "created_by": "daishiman",
+          "description": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P11",
+          "id": "HarnessHub-47b.11",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立",
+          "updated_at": "2026-07-19T14:20:23.200114Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P11",
+        "id": "HarnessHub-47b.11",
+        "phase_ref": "P11"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:25.469151Z",
+          "created_by": "daishiman",
+          "description": "文書化・runbook・引き継ぎ — 業務データ保管/取得/削除手順・R2使用量監視runbook・鍵ローテーションrunbook拡張の文書化 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P12",
+          "id": "HarnessHub-47b.12",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "文書化・runbook・引き継ぎ — 業務データ保管/取得/削除手順・R2使用量監視runbook・鍵ローテーションrunbook拡張の文書化",
+          "updated_at": "2026-07-19T14:20:25.469151Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P12",
+        "id": "HarnessHub-47b.12",
+        "phase_ref": "P12"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:20:27.577288Z",
+          "created_by": "daishiman",
+          "description": "リリース/デプロイ — encryption_keys DEK seed migration適用順序・wranglerロールアウト・rollback手順 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+          "external_ref": "dev-graph:SYS-TENANT-DATA-RETENTION-P13",
+          "id": "HarnessHub-47b.13",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リリース/デプロイ — encryption_keys DEK seed migration適用順序・wranglerロールアウト・rollback手順",
+          "updated_at": "2026-07-19T14:20:27.577288Z"
+        },
+        "external_ref": "SYS-TENANT-DATA-RETENTION-P13",
+        "id": "HarnessHub-47b.13",
+        "phase_ref": "P13"
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-47b.1",
+        "issue_id": "HarnessHub-47b.2",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.1",
+          "issue_id": "HarnessHub-47b.2",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.2",
+        "issue_id": "HarnessHub-47b.3",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.2",
+          "issue_id": "HarnessHub-47b.3",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.3",
+        "issue_id": "HarnessHub-47b.4",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.3",
+          "issue_id": "HarnessHub-47b.4",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.4",
+        "issue_id": "HarnessHub-47b.5",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.4",
+          "issue_id": "HarnessHub-47b.5",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.5",
+        "issue_id": "HarnessHub-47b.6",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.5",
+          "issue_id": "HarnessHub-47b.6",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.6",
+        "issue_id": "HarnessHub-47b.7",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.6",
+          "issue_id": "HarnessHub-47b.7",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.7",
+        "issue_id": "HarnessHub-47b.8",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.7",
+          "issue_id": "HarnessHub-47b.8",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.8",
+        "issue_id": "HarnessHub-47b.9",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.8",
+          "issue_id": "HarnessHub-47b.9",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.9",
+        "issue_id": "HarnessHub-47b.10",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.9",
+          "issue_id": "HarnessHub-47b.10",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.10",
+        "issue_id": "HarnessHub-47b.11",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.10",
+          "issue_id": "HarnessHub-47b.11",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.11",
+        "issue_id": "HarnessHub-47b.12",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.11",
+          "issue_id": "HarnessHub-47b.12",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-47b.12",
+        "issue_id": "HarnessHub-47b.13",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-47b.12",
+          "issue_id": "HarnessHub-47b.13",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "created": {
+        "created_at": "2026-07-19T14:19:59.541541Z",
+        "created_by": "daishiman",
+        "description": "C4 改訂 (qa-045-048, appr-007) で保持可能となった顧客業務ナレッジ・harness 実行入出力データを、R2 + テナント別封筒暗号化で保管し、即時完全削除を保証する独立した価値提供単位\n\nテナント業務データの upload / 取得 / 即時完全削除 API と R2 使用量監視を提供し、C4 の非保持境界 (顧客業務システム接続 credential と WebApp runtime) を維持したまま業務データのみを安全に扱える状態\n\ndev_graph_source_digest: sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1",
+        "external_ref": "dev-graph:feat-tenant-data-retention",
+        "id": "HarnessHub-47b",
+        "issue_type": "epic",
+        "metadata": {
+          "dev_graph_source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+        },
+        "owner": "daishimanju@gmail.com",
+        "priority": 2,
+        "schema_version": 1,
+        "status": "open",
+        "title": "テナント業務データ保管 (C4 改訂: R2 封筒暗号化・即時完全削除)",
+        "updated_at": "2026-07-19T14:19:59.541541Z"
+      },
+      "external_ref": "feat-tenant-data-retention",
+      "id": "HarnessHub-47b"
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-47b.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-47b.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-47b.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-47b.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TENANT-DATA-RETENTION-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ],
+    "source_digest": "sha256:7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1"
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

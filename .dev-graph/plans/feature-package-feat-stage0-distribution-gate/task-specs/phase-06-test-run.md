@@ -1,0 +1,103 @@
+# System task overlay: macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行
+
+## Machine-readable registration fields
+
+- feature_package_id: feature-package/feat-stage0-distribution-gate (13 task で共有)
+- owners: ["daishiman"]
+- tags: ["feat-stage0-distribution-gate", "macro-feature", "quality", "test-run"]
+- related_nodes: ["feat-stage0-distribution-gate", "arch-harness-hub-infrastructure"]
+- parent_feature: feat-stage0-distribution-gate
+- phase_ref: P06
+- classification: confidence=0.86, reason="P05 で作成した artifact に対して P04 の実機検証ケースを macOS/Windows で実行し quality_constraints 8 件の充足状況を記録する P06 テスト実行タスク", candidates=[{artifact_kind: task, confidence: 0.86, candidate_path: tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p06.md}]
+- tracker_binding_intent: beads
+- github_publication: mode=local_only, project_aliases=[], labels=[], milestone=なし (.dev-graph/config.json の execution_tracker.mode=beads、github.enabled=false に従う)
+- pr_completion_policy: linked_pr_merged_all (.dev-graph/config.json github.completion_policy.required_pull_requests=all に従う)
+- branch_policy: one-task-one-branch + worktree lease required + default-branch reconciliation + assignment_owner=dev-graph-scheduler
+
+## 目的
+
+P05 で作成した最小 skill package・marketplace.json・Bootstrap Installer 試作を対象に、P04 の test-design.md に定義された実機検証ケースを macOS/Windows 実機で実行し、URL 型 marketplace・npm source・Bootstrap Installer の 3 経路それぞれの成立/不成立と Windows E2E の pass/fail を test-run-results.md に記録する。
+
+## 背景
+
+qa-001 により作者環境は macOS + Windows のみが対象であり (desktop Linux は非エンジニアの業務 PC に存在しないため対象外)、両 OS で少なくとも 1 回ずつ実機検証を行う。検証実行の直前には、Claude Code CLI が高頻度リリースされている (2026-07 時点 v2.1.21x 系) ことを踏まえ、code.claude.com の changelog を再照合し、npm source の前提 (相対パス source では plugin 本体を解決できない制約) に変化がないかを確認する。検証は提供者 1 名 + AI のみで完結させ (C1)、有償プラン契約を伴わない範囲で実施する (C2)。3 経路のうち 2 経路以上で成立が確認されない場合、または Windows E2E が失敗した場合は、goal-spec の acceptance 条件を満たさないため P05 (実装) または P02 (設計) への差し戻しを検討する。
+
+## 前提条件
+
+- Required spec/architecture/phase/task nodes: feat-stage0-distribution-gate, arch-harness-hub-infrastructure
+- Entry gate: docs/features/feat-stage0-distribution-gate/verification-artifacts/ 一式と implementation-notes.md が P05 完了時点で存在すること
+- Source pin: system-spec-harness v0.1.0 / run-system-spec-compile / assign-system-spec-completeness-evaluator
+- Repository context: repo_identity=github:daishiman/HarnessHub、root_resolution_source=explicit-cli、config=.dev-graph/config.json。全 path は repository 相対とし absolute path は使用しない
+
+## Workstream applicability
+
+- Frontend: N/A: 本 task は実機検証実行のみで frontend 実装物を変更しない
+- Backend: N/A: 本 feature は Hub backend の変更を伴わない
+- API: N/A: 本 feature は API 契約の新設を伴わない
+- Data: N/A: 永続データストアのスキーマ変更を伴わない
+- Infrastructure: applicable + change: macOS/Windows 実機での 3 経路検証実行そのものを本 task で行う
+- Security: N/A: セキュリティ観点の詳細検証は P09 で扱う
+- Quality: applicable + change: quality_constraints 8 件のうち実機検証で確認可能な項目 (2 経路以上の成立・Windows E2E 成功・npm source 前提の changelog 再照合結果を含む) を test-run-results.md に記録する
+- Documentation: applicable + change: docs/features/feat-stage0-distribution-gate/test-run-results.md を新規作成する
+- Operations: N/A: 運用手順の具体化は P12 で行う
+
+## Architecture and deploy unit
+
+- Architecture decisions: arch-harness-hub-infrastructure (P02 の architecture decision の正本参照)
+- Deploy unit/environment: local-verification-only (macOS/Windows 実機ローカル環境での検証実行。cloudflare-workers/hub へのデプロイは行わない)
+- Compatibility/migration/backfill: N/A: 本 task は検証実行のみで実コードへの変更を伴わない
+
+## 成果物
+
+- Produced artifacts: docs/features/feat-stage0-distribution-gate/test-run-results.md (macOS/Windows 実機での 3 経路検証結果と Windows E2E の pass/fail 記録)
+- Consumed artifacts: docs/features/feat-stage0-distribution-gate/test-design.md, docs/features/feat-stage0-distribution-gate/verification-artifacts/marketplace.json, docs/features/feat-stage0-distribution-gate/implementation-notes.md
+- Write scope/touches: docs/features/feat-stage0-distribution-gate/test-run-results.md
+
+## Tracker publication and completion
+
+> 本 spec は tracker_binding_intent と GitHub 公開 intent だけを宣言し、永続 binding の解決・起票・完了収束は dev-graph が所有する。
+
+- Tracker binding intent: beads (.dev-graph/config.json execution_tracker.mode=beads)
+- Publication mode: local_only
+- Project aliases / labels / milestone: N/A: github.enabled=false のため GitHub 公開を行わない (.dev-graph/config.json)
+- PR completion policy: linked_pr_merged_all
+- PR body contract: Closes に紐づく beads issue 番号 + dev-graph graph_node_id (sys-stage0-distribution-gate-p06) を本文に明記し、default branch を対象にする
+- Ownership boundary: system-dev-planner は intent の宣言のみを行い、dev-graph が実際の binding 解決・mutation・reconciliation を行う
+
+## Branch and worktree execution
+
+- Branch: dev-graph 登録後に C15 が devgraph/sys-stage0-distribution-gate-p06 として払い出す。system-dev-planner は事前に branch 名を確定しない
+- Worktree lease: 実装着手前に graph_node_id (sys-stage0-distribution-gate-p06) の worktree lease を claim し、heartbeat 送出と完了時 release を行う
+- Parallel safety: depends_on=[SYS-STAGE0-DISTRIBUTION-GATE-P05] のため P05 完了後に着手する。resource_scope (test-run-results.md) が他 task の active lease と重複しないことを確認する
+- Completion projection: feature branch 上の完了は pending event として記録され、default branch (main) へのクリーンな reconciliation で durable done へ確定する
+
+## スコープ外
+
+- Hub 本体の実装 (goal-spec scope_out)
+- 課金・商用配布 (goal-spec scope_out)
+- desktop Linux 環境での検証 (qa-001 により対象外)
+- 検証結果の受入判定そのもの (本 task は実行と記録のみ。判定は P07 で扱う)
+
+## Verification and evidence
+
+- Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging`
+- Required evidence: test-run-results.md に macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 各経路の検証結果と Windows E2E の pass/fail 結果が記録されていること (fail が残る場合は差し戻し理由が明記されていること)
+
+## Rollout and rollback
+
+- Rollout: test-run-results.md を作成し P07 の受入判定へ引き継ぐ
+- Rollback trigger and steps: いずれかの経路検証または Windows E2E が fail した場合、test-run-results.md に原因を記録し P05 (実装) または P02 (設計) へ差し戻す
+
+## Handoff
+
+- Executor: system build route (dev-graph 経由での実装 claim)
+- Ready when: confirmed かつ evaluation pass かつ readiness complete かつ promoted digest 確定かつ dev-graph registration complete の 4 条件が揃った時点
+
+## 参照情報
+
+- System specification: system-spec/spec-state.json qa_log (qa-001, qa-003), system-spec/fetched-references.json claude-code-plugins entry
+- Detailed authoritative source: docs/features/feat-stage0-distribution-gate/test-design.md
+- Architecture: arch-harness-hub-infrastructure (architecture/harness-hub-infrastructure.md)
+- Feature: feat-stage0-distribution-gate
+- Phase doc: N/A: feature-execution-package-contract.md §2 により本 run は個別 phase lifecycle 文書を生成せず、13 task specs 自体が lifecycle を実行するため phase doc node を持たない
+- Dependencies: SYS-STAGE0-DISTRIBUTION-GATE-P05

@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-node",
     "component_id": "C02",
-    "skill_md_sha256": "ec6f3f06fe128192819c23d4ef4f8a4379519386c3058ed1d1cfcec0e86f5289"
+    "skill_md_sha256": "8164be5b695d5e7685aedd31d1f66bcc9d0546276299783016592258f37ad9e2"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r1",
+  "reviewer": "audit-node-status-20260720",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -30,9 +30,11 @@
       "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260713T090000-r3/verdict.json",
       "test_refs": [
         "eval-log/dev-graph/run-dev-graph-node/live-trial/20260713T090000-r3/verdict.json",
-        "independent: eval-log/dev-graph/live-trial-fixtures/r3-node registered-artifact routing inspection"
+        "independent: eval-log/dev-graph/live-trial-fixtures/r3-node registered-artifact routing inspection",
+        "plugins/dev-graph/tests/test_operational_loop_v2.py::test_node_recovers_crash_before_exposing_graph_to_readers",
+        "plugins/dev-graph/tests/test_operational_loop_v2.py::test_node_writer_waits_for_whole_reader_operation_lock"
       ],
-      "observed": "Replay of the node-five-artifact-positive live trial (model claude-opus-4-6, poll gate_ticks=0, status.json PASS). The single mixed batch routed all five artifacts to canonical kind paths (issues/R3-ISSUE-001, tasks/R3-TASK-001, specs/R3-SPEC-001, architecture/R3-ARCH-001, docs/R3-DOC-001); each frontmatter artifact_kind agrees with its stored file_path after a consecutive issue-body update, and features/ holds 0 direct feature files (C14 macro-only). verdict.json reports overall+goal PASS, downgrade_reason null."
+      "observed": "Recorded mixed-artifact live trial remains PASS for canonical routing and consecutive update parity. Independent 2026-07-20 audit additionally reproduced KeyboardInterrupt rollback, os._exit(99) WAL recovery, pending-WAL fail-closed, and writer blocking behind the reader's whole-operation shared lock; no partial graph/artifact state was returned."
     },
     "OUT2": {
       "status": "PASS",

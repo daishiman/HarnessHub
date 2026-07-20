@@ -48,7 +48,7 @@ def ready_node(node_id: str, **overrides):
 def test_command_exposes_the_lease_parsers_canonical_list_operation():
     command = (PLUGIN / "commands" / "dev-graph.md").read_text(encoding="utf-8")
     lease = (SCRIPTS / "manage-worktree-lease.py").read_text(encoding="utf-8")
-    assert "`claim|heartbeat|park|release|list`" in command
+    assert "`claim|heartbeat|park|release|reclaim|list`" in command
     assert "manage-worktree-lease.py --op list" in command
     assert "--op claim --graph-node-id <id> --branch <name> --session-id <session>" in command
     assert '"list"' in lease
@@ -113,8 +113,10 @@ def test_scheduler_rejects_each_incomplete_gate_for_self_and_bd_ready(tmp_path, 
     ]
     graph = tmp_path / "graph.json"
     graph.write_text(json.dumps({"nodes": nodes}), encoding="utf-8")
+    leases = tmp_path / "leases.json"
+    leases.write_text(json.dumps({"leases": []}), encoding="utf-8")
 
-    code, self_plan = call_main(module, monkeypatch, capsys, "--graph", graph)
+    code, self_plan = call_main(module, monkeypatch, capsys, "--graph", graph, "--leases", leases)
     assert code == 0
     assert self_plan["ready_set"]["tasks"] == ["eligible", "eligible-2"]
     assert {item["suggested_branch"] for item in self_plan["assignment_hints"]} == {
@@ -129,11 +131,50 @@ def test_scheduler_rejects_each_incomplete_gate_for_self_and_bd_ready(tmp_path, 
     ready.write_text(json.dumps({"ready_set": [{"external_ref": node["id"]} for node in nodes]}), encoding="utf-8")
     code, bd_plan = call_main(
         module, monkeypatch, capsys,
-        "--graph", graph, "--ready-source", "bd-bridge", "--ready-json", ready,
+        "--graph", graph, "--leases", leases, "--ready-source", "bd-bridge", "--ready-json", ready,
     )
     assert code == 0
     assert bd_plan["ready_set"]["tasks"] == ["eligible", "eligible-2"]
     assert "waiting" not in bd_plan["ready_set"]["tasks"]
+
+
+def test_scheduler_gates_p01_on_canonical_parent_feature_dependencies_for_self_and_bd(
+    tmp_path, monkeypatch, capsys,
+):
+    module = load("schedule-graph.py", "schedule_graph_p01_macro_gate")
+    upstream = ready_node("upstream", artifact_kind="feature", status="active")
+    parent = ready_node(
+        "parent", artifact_kind="feature", status="active", depends_on=["upstream"]
+    )
+    p01 = ready_node(
+        "p01", phase_ref="P01", parent_feature="parent", depends_on=[]
+    )
+    graph = tmp_path / "graph.json"
+    graph.write_text(json.dumps({"nodes": [upstream, parent, p01]}), encoding="utf-8")
+    leases = tmp_path / "leases.json"
+    leases.write_text(json.dumps({"leases": []}), encoding="utf-8")
+    ready = tmp_path / "ready.json"
+    ready.write_text(json.dumps({"ready_set": [{"external_ref": "p01"}]}), encoding="utf-8")
+
+    _, self_blocked = call_main(module, monkeypatch, capsys, "--graph", graph, "--leases", leases)
+    _, bd_blocked = call_main(
+        module, monkeypatch, capsys,
+        "--graph", graph, "--leases", leases, "--ready-source", "bd-bridge", "--ready-json", ready,
+    )
+    assert "p01" not in self_blocked["ready_set"]["tasks"]
+    assert "p01" not in bd_blocked["ready_set"]["tasks"]
+    assert p01["depends_on"] == []
+
+    upstream["status"] = "done"
+    graph.write_text(json.dumps({"nodes": [upstream, parent, p01]}), encoding="utf-8")
+    _, self_ready = call_main(module, monkeypatch, capsys, "--graph", graph, "--leases", leases)
+    _, bd_ready = call_main(
+        module, monkeypatch, capsys,
+        "--graph", graph, "--leases", leases, "--ready-source", "bd-bridge", "--ready-json", ready,
+    )
+    assert "p01" in self_ready["ready_set"]["tasks"]
+    assert "p01" in bd_ready["ready_set"]["tasks"]
+    assert p01["depends_on"] == []
 
 
 def test_scheduler_uses_canonical_resource_scope_list_and_rejects_legacy_object(
@@ -141,13 +182,15 @@ def test_scheduler_uses_canonical_resource_scope_list_and_rejects_legacy_object(
 ):
     module = load("schedule-graph.py", "schedule_graph_resource_scope_contract")
     graph = tmp_path / "graph.json"
+    leases = tmp_path / "leases.json"
+    leases.write_text(json.dumps({"leases": []}), encoding="utf-8")
     graph.write_text(json.dumps({"nodes": [
         ready_node("one", resource_scope=["packages/api"]),
         ready_node("two", resource_scope=["packages/api"]),
         ready_node("three", resource_scope=["packages/web"]),
     ]}), encoding="utf-8")
 
-    code, plan = call_main(module, monkeypatch, capsys, "--graph", graph)
+    code, plan = call_main(module, monkeypatch, capsys, "--graph", graph, "--leases", leases)
     assert code == 0
     assert plan["batches"]["tasks"] == [["one", "three"], ["two"]]
 
@@ -155,7 +198,7 @@ def test_scheduler_uses_canonical_resource_scope_list_and_rejects_legacy_object(
         ready_node("legacy", resource_scope={"touches": ["packages/api"]}),
     ]}), encoding="utf-8")
     try:
-        call_main(module, monkeypatch, capsys, "--graph", graph)
+        call_main(module, monkeypatch, capsys, "--graph", graph, "--leases", leases)
     except Exception as exc:
         assert "resource_scope must be" in str(exc)
     else:

@@ -1,0 +1,1975 @@
+{
+ "merged_paradigm_findings": [
+  {
+   "paradigm_id": 1,
+   "paradigm_name": "批判的思考",
+   "category": "A-logical",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "spec-state.json:396 (qa-012) の G2-G4 定義が 00-requirements-definition.md:26-29 の正本と同一 ID で別内容",
+    "spec-state.json:401 (qa-013) の O2-O4 も 00-requirements-definition.md:36-38 と測定対象が別物"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "FAIL",
+     "evidence": [
+      "qa-012/013 の G/O 定義が正本 U3/U4 と矛盾 (spec-state.json:396,401)"
+     ]
+    },
+    "C2": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "『確定』の判定基準が index.md:8 に未定義"
+     ]
+    },
+    "C3": {
+     "verdict": "FAIL",
+     "evidence": [
+      "同一 ID が別内容を指し ID 参照の一意性が崩壊"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "serves_goals (auth.md:6) が G ID に依存し全章トレースが揺らぐ"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C1",
+     "severity": "critical",
+     "bucket": "doc",
+     "description": "qa-012 answer のゴール定義が正本 U3 (G2=再利用 North Star/G3=Web App 出口/G4=統制) と同一 ID で別内容。遡及承認 appr-002 の根拠が正本と矛盾し真の意図が判定不能",
+     "recommended_intervention": "spec-state.json の qa-012 answer を正本 U3 と一致する文言へ訂正するか、qa-012 の G ラベル→正本 G ID の対応表を追記し appr-002 に訂正参照を加える",
+     "condition_signal": "contradiction",
+     "location": {
+      "file": "system-spec/spec-state.json",
+      "section": "qa_log qa-012"
+     }
+    },
+    {
+     "condition": "C1",
+     "severity": "critical",
+     "bucket": "doc",
+     "description": "qa-013 の O2-O4 (代理作業比率/リードタイム/初回 publish 15 分) が正本 U4 と同一 ID で測定対象が異なり、Stage 1 卒業判定 KPI が二重定義",
+     "recommended_intervention": "仮説 ID (H1/H4/H5/H8) をキーに U4 と qa-013 を一本化し、qa-013 に『正本は U4、O ラベルは仮ラベル』と注記して対応をユーザーへ再確認する",
+     "condition_signal": "contradiction",
+     "location": {
+      "file": "system-spec/spec-state.json",
+      "section": "qa_log qa-013"
+     }
+    }
+   ],
+   "score": 0.15
+  },
+  {
+   "paradigm_id": 2,
+   "paradigm_name": "演繹思考",
+   "category": "A-logical",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "U9 の I1-I9 から章内要素への当てはめが全章で 0 件 (backend.md:6 は goal ID 列挙のみ)",
+    "制約 C3/C4 (00-requirements-definition.md:61-62) の章展開が backend.md/security.md に無い"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "serves_goals の和集合は index.md:20-27 と一致し矛盾なし"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "I1-I9→章対応と C3/C4 の章展開が欠落"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "goal ID 自体は章間で整合"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "intent→章→検証項目の依存連鎖が未構築"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "I1-I9 から各章への展開マトリクスが無く、I3 (immutable Release+stable pointer) 等をどの章のどの仕様が実現するか検証不能",
+     "recommended_intervention": "index.md に intent→章対応表を追加し、各章に対応 intent の実現仕様セクション (例: backend.md に I3 の Release/pointer API 仕様) を追記する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "章一覧と集約状態"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "制約 C3 (既存資産再利用) の移植対象一覧と挙動同値性テストの受け入れ基準が未仕様化 (qa-010 は方針のみ) で実装着手不能",
+     "recommended_intervention": "backend.md に移植対象 (package check/contract/catalog/version・cache) の機能一覧・移植先・同値性ゴールデンテスト計画を記述する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/backend.md",
+      "section": "既存資産移植仕様"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "G3 直結の Web App 出口仕様 (URL 登録・公開範囲検査・health 確認・orphan_candidate の入出力と失敗時挙動) がどの章にも未展開",
+     "recommended_intervention": "backend.md に Web App 出口 API 仕様 (endpoint・判定条件・タイムアウト・失敗時遷移) を追記し、security.md に公開範囲誤設定の脅威を対応付ける",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/backend.md",
+      "section": "Web App 出口"
+     }
+    }
+   ],
+   "score": 0.3
+  },
+  {
+   "paradigm_id": 3,
+   "paradigm_name": "帰納的思考",
+   "category": "A-logical",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "6 章が『収集状態表+汎用カード転記』の同一構造で章固有仕様ゼロ (database.md:27, backend.md:27 等)",
+    "全 8 章が『割当ドキュメントなし』(auth.md:70 等) で 14 参照が未割当のまま確定"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "FAIL",
+     "evidence": [
+      "ui-ux.md:27 は『選定・深化してから確定』と書きつつ status: confirmed"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "章固有仕様の系統的欠落パターンが全章で成立"
+     ]
+    },
+    "C3": {
+     "verdict": "FAIL",
+     "evidence": [
+      "authjs 等の取得済み参照が該当章へ未割当 (fetched-references.json:74-82)"
+     ]
+    },
+    "C4": {
+     "verdict": "PASS",
+     "evidence": [
+      "章間依存は現状無く破壊なし"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C1",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "ui-ux.md:27/infrastructure.md:27 は resource-map 未定義と自己申告しながら status: confirmed (frontmatter:2) で、確定条件を自ら破っている",
+     "recommended_intervention": "関連カードを選定・深化して本文を充足させ確定維持するか、status を収集中へ戻し index.md:22,24 と spec-state.json の category_aggregate を同期する",
+     "condition_signal": "contradiction",
+     "location": {
+      "file": "system-spec/ui-ux.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C3",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "fetched-references.json の 14 参照が全て index.md の未割当に留まり、8 章の『最新ドキュメント出典』が全て空でカテゴリ別出典トレースが機能していない",
+     "recommended_intervention": "authjs→auth、turso/drizzle/d1→database、zod/workers/opennext→backend、nextjs/ts/pnpm→frontend、wrangler/actions→maintenance-ops、r2/plugins→infra 等へ割当て各章へ転記する",
+     "condition_signal": "inconsistency",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "全体ドキュメント出典 (未割当参照)"
+     }
+    }
+   ],
+   "score": 0.25
+  },
+  {
+   "paradigm_id": 4,
+   "paradigm_name": "アブダクション",
+   "category": "A-logical",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "qa-006/qa-011 (spec-state.json:366,391) が『仕様書コンパイル時に展開』と未来形で宣言したまま全章確定",
+    "最尤仮説: qa_log→章展開のコンパイル工程が未実行で、ヒアリング完了マーカーが仕様確定に流用された"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "『コンパイル時に展開』(spec-state.json:366) と全章確定の共存が矛盾を示唆"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "コンパイル成果物 (章別具体仕様) が系統的に欠落"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "qa_log と章本文の情報量格差が全章一様で単一原因と整合"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "実装工程の入力が qa_log にしか存在しない"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "critical",
+     "bucket": "doc",
+     "description": "根本原因: qa_log 回答を各章の具体仕様へ展開する『仕様書コンパイル』工程が未実行のまま全章確定。脅威モデル・runbook 含め個別追記だけでは再発する",
+     "recommended_intervention": "qa-001〜011 を対応章 (qa-004→database, qa-005/008→auth, qa-006→security 等) へ展開し各章に仕様セクションを新設。『全 qa 回答が 1 章以上から参照』の完了判定を index.md に定義する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "章一覧と集約状態"
+     }
+    }
+   ],
+   "score": 0.2
+  },
+  {
+   "paradigm_id": 5,
+   "paradigm_name": "垂直思考",
+   "category": "A-logical",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "Why×5 の終点: 確定は matrix の qa_ref 存在で判定され章本文は検査対象外 (spec-state.json:45-336)",
+    "reopen_log (spec-state.json:424-436) は qa_ref 妥当性のみに発動し内容充足は一度も未検査"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "状態遷移自体は spec-state.json 内で一貫"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "章本文の充足性を定義・検査する仕組みが体系に不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "state/frontmatter/index は整合するが本文内容を反映しない"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "確定判定が qa_ref のみに依存し本文への依存が無い"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "schema",
+     "description": "章の必須セクション定義 (Definition of Done) が無く本文が空でも status: confirmed にできる構造的欠陥。スキーマを定めない限り追記後も再発する",
+     "recommended_intervention": "index.md に章共通の必須セクション (仕様/データ・契約定義/失敗時挙動/未決事項/出典 1 件以上か N/A 理由) を定義し、spec-state.json に sections_complete 判定を追加する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "章一覧と集約状態"
+     }
+    }
+   ],
+   "score": 0.3
+  },
+  {
+   "paradigm_id": 6,
+   "paradigm_name": "要素分解",
+   "category": "B-structural",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "database.md:25-70 は DDD カードのみで qa-002 の 10 概念・不変条件のスキーマ定義ゼロ",
+    "backend/auth/security/maintenance-ops も API 一覧・権限表・脅威モデル・runbook が全て不在 (backend.md:25-154 等)"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "要素がほぼ無いため要素間矛盾は未検出"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "全章で構成要素レベルの仕様が欠落 (auth.md:25-71 等)"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "収集状態表など既存要素の形式は章間で統一"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "backend API は database スキーマに依存するが両者未定義"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "critical",
+     "bucket": "schema",
+     "description": "database.md にテーブル定義が皆無。10 ドメイン概念と不変条件 (Release immutable/名称の Workspace 内一意/PublishRequest 直列化) のスキーマ・制約・索引が未定義",
+     "recommended_intervention": "database.md に control-plane スキーマ (主キー・FK・複合一意、immutable 担保方針、Drizzle マイグレーション運用、D1 退避互換の方言制約) を記述する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/database.md",
+      "section": "control-plane スキーマ"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "critical",
+     "bucket": "doc",
+     "description": "backend.md に API 契約の実体が無い。endpoint 一覧・PublishRequest 状態遷移表・エラー応答形式・同一 TargetChannel 直列化の実現方式が未記述",
+     "recommended_intervention": "backend.md に endpoint 一覧 (publish/promote/rollback/catalog/token 失効等)、遷移表 (条件・副作用・監査発火)、zod→OpenAPI 生成方式、直列化方式を記述する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/backend.md",
+      "section": "API 仕様"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "critical",
+     "bucket": "doc",
+     "description": "security.md に脅威モデル・監査イベント一覧・Green/Yellow/Red 判定基準が無く、qa-006 が必須としたテナント分離テストの検証項目も導出不能",
+     "recommended_intervention": "security.md に資産×脅威一覧、ASVS 対応表、監査イベントスキーマ、判定基準の具体規則 (secret 検出=Red 等)、分離テスト必須ケースを記述する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/security.md",
+      "section": "脅威モデル"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "auth.md に role 4 種×操作の認可マトリクスと Device Flow の token 寿命・失効反映許容時間 (D3 caveat が要求) が未定義",
+     "recommended_intervention": "auth.md に認可マトリクス (role×publish/承認/rollback/停止/再割当等) とトークンライフサイクル (寿命・保存先・失効遅延・JWT 失効戦略) を追加する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/auth.md",
+      "section": "認可マトリクス"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "maintenance-ops.md に runbook・監視項目と閾値・バックアップ復元手順が未記述で qa-011 の方針が実行可能な手順になっていない",
+     "recommended_intervention": "maintenance-ops.md に監視項目一覧 (エラー率/health/無料枠消費率)、障害種別 runbook (Turso→D1 退避判断含む)、復元試験、CI stage 定義を記述する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/maintenance-ops.md",
+      "section": "運用手順"
+     }
+    }
+   ],
+   "score": 0.15
+  },
+  {
+   "paradigm_id": 7,
+   "paradigm_name": "MECE",
+   "category": "B-structural",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "matrix 48 セルは漏れ重複なしだが、非機能要件 (性能/容量/SLO) とテスト戦略を担う章が体系に不在",
+    "無料枠上限 (fetched-references.json:101,61) と U5 の 2 社同時稼働の容量突合せがどこにも無い"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "セル状態は 4 値に収まり矛盾なし (spec-state.json:45-336)"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "非機能要件とテスト戦略がカテゴリ体系の外に漏れ"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "ui-ux/frontend の境界が未定義で qa-007 を両章が根拠に共有"
+     ]
+    },
+    "C4": {
+     "verdict": "PASS",
+     "evidence": [
+      "カテゴリ間依存は未定義で破壊なし"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "非機能要件の置き場が無く、無料枠上限 (Workers 10万req/日・Worker 3MiB・Turso 読取上限) と 2 社同時稼働の容量計画が未検証で費用ゼロ制約 C2 の成立可否が不明",
+     "recommended_intervention": "infrastructure.md に非機能・容量計画 (リクエスト/DB/R2 見積 vs 無料枠余裕率、bundle サイズ予算、Paid 移行条件) セクションを新設する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/infrastructure.md",
+      "section": "非機能要件・容量計画"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "テナント分離テスト (qa-006 必須)・移植同値性テスト (qa-010)・状態機械テストの戦略とカバレッジ基準を定義する章が不在",
+     "recommended_intervention": "maintenance-ops.md にテスト戦略 (種別・必須ケース出典 qa-006/010・CI stage・リリース前ゲート) を追加し index.md に帰属先を明記する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/maintenance-ops.md",
+      "section": "テスト戦略"
+     }
+    }
+   ],
+   "score": 0.35
+  },
+  {
+   "paradigm_id": 8,
+   "paradigm_name": "2軸思考",
+   "category": "B-structural",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "重要×緊急の第 1 象限 (スキーマ/API/認可/脅威モデル) が未着手で、reopen は第 4 象限の形式問題のみに発動",
+    "監査指摘 (C06/C07) が形式軸に集中し内容充足軸の検査実績が無い (spec-state.json:424-436)"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "優先度観点の直接矛盾は無い"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "重大欠落群への是正計画・優先順位付けが不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "是正投下先と欠落重大度の分布が逆転"
+     ]
+    },
+    "C4": {
+     "verdict": "PASS",
+     "evidence": [
+      "依存破壊は該当なし"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "欠落解消の優先順位計画が無く監査が形式整合に偏るため、確定表示のまま実装ブロッカー (第 1 象限) の解消が遅れる",
+     "recommended_intervention": "index.md に展開バックログ (P1=スキーマ/API/認可/脅威、P2=画面/runbook/容量、P3=カード選定/参照割当) を明記し reopen 基準に内容充足欠落を追加する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "集約状態サマリ"
+     }
+    }
+   ],
+   "score": 0.4
+  },
+  {
+   "paradigm_id": 9,
+   "paradigm_name": "プロセス思考",
+   "category": "B-structural",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "fetched-references.json:141 が『D1 caveat に追加』と宣言した Worker 3MiB 上限が spec-state.json:756-759 に未反映",
+    "Tenant/Workspace 初期セットアップ・作者オンボーディング・Stage 0 gate 検証の工程仕様が全章に無い"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "qa-005 の『loop 3 で別途決定』(spec-state.json:361) と complete=true が字面矛盾"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "セットアップ/オンボーディング/Stage 0 gate の工程が未定義"
+     ]
+    },
+    "C3": {
+     "verdict": "FAIL",
+     "evidence": [
+      "caveat 3 件 (3MiB/Better Auth/npm 修正) が決定・章へ未伝播"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "参照取得→決定反映のパイプラインが断絶 (fetched-references.json:141)"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C4",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "Worker 3MiB 上限 (D1)、Auth.js の Better Auth 移管告知 (D3)、npm source 許可の事実修正の 3 caveat が decisions・章に未伝播で既知リスクが決定記録から欠落",
+     "recommended_intervention": "spec-state.json の D1/D3 caveats に bundle 予算必須と Better Auth 再評価を追加し 00-requirements の D 表へ転記、infrastructure.md に npm 事実修正を記載する",
+     "condition_signal": "dependency_break",
+     "location": {
+      "file": "system-spec/spec-state.json",
+      "section": "decisions D1/D3 caveats"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "Tenant セットアップ (IdP 登録/初回 Cloudflare 接続)・作者オンボーディング (plugin 導入→Device Flow→初回 publish)・Stage 0 gate (H3/H6/H7) の検証手順と合否基準が未仕様化",
+     "recommended_intervention": "ui-ux.md にセットアップ/オンボーディングのフロー (step・担当 role・失敗導線)、infrastructure.md に gate 検証項目表と Stage 1 開始判定チェックリストを追加する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/infrastructure.md",
+      "section": "Stage 0 technical gate"
+     }
+    }
+   ],
+   "score": 0.25
+  },
+  {
+   "paradigm_id": 10,
+   "paradigm_name": "メタ思考",
+   "category": "C-meta",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "仕様書全体が「8カテゴリ×6プラットフォーム」の収集マトリクスを枠組みとするが、48セル中30セルが「対象外」であり、確定18セルの根拠も全て spec-state.json の qa_log 参照のみ",
+    "本プロダクトの実体は「Hub Web/API (単一 Worker)・Publisher plugin・Web App 出口・配布経路 (marketplace/Bootstrap Installer)」というコンポーネント構造であり、native アプリを一切作らないためプラットフォーム軸がほぼ判別力を持たない",
+    "実装に必要な成果物軸 (データモデル / API 契約 / 画面仕様 / 脅威モデル / runbook) はこのマトリクスのどのセルにも居場所がなく、結果としてどの章にも展開されていない"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "マトリクス内部の記述に直接矛盾はないが、軸と対象物の不適合が『対象外』セルの大量発生 (30/48) として現れている"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "DB スキーマ・API 一覧・画面仕様・脅威モデル・runbook という実装着手に必須の成果物がマトリクス上に定義位置を持たず全て未展開"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "serves_goals による G1-G4 へのトレース (anchor) 機構自体は一貫して運用されている"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "章 → qa_log の qa_ref 依存は張られているが、qa 回答変更時に章本文へ追随させる機構が存在しない"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "カテゴリ×プラットフォームという枠組みがプロダクト構造 (単一 Web SaaS + CLI plugin) と不一致のため、実装に必要な成果物 (エンティティ定義・API 契約・画面・脅威モデル・runbook) を書く場所が構造上存在せず、全章が汎用知識カードの転記で「確定」している",
+     "recommended_intervention": "index.md に「コンポーネント (Hub Web / Hub API / Publisher plugin / Web App 出口 / 配布経路) × 成果物 (データモデル / API / 画面 / 脅威モデル / 運用手順)」のトレース表を追加し、各技術章に『本システム固有仕様』節を必須化する。プラットフォーム軸は qa-001 の回答 (レスポンシブ + macOS/Windows 作者環境) の 1 節へ縮退させる",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "章一覧と集約状態"
+     }
+    }
+   ],
+   "score": 0.3,
+   "reusable_abstraction": "仕様収集マトリクスの軸がプロダクトのアーキテクチャ軸と一致しない場合、『対象外』セルが多数発生し、実装必須成果物に定義位置がなくなる。対象外セル率を軸適合性の指標とし、閾値超過で枠組み自体を再設計する検査を仕様テンプレートに組み込める",
+   "template_variables": [
+    "matrix_axes=カテゴリ×プラットフォーム",
+    "product_shape=単一 Web SaaS + CLI plugin (native アプリなし)",
+    "exclusion_rate=30/48 セル (62.5%) が対象外"
+   ],
+   "reuse_surface": "template",
+   "negative_cases": [
+    "真にマルチプラットフォームな native アプリ製品 (iOS/Android/desktop 並行開発) では現行マトリクスが適合し、再設計は不要"
+   ],
+   "re_audit_trigger": "収集マトリクスの対象外セル率が 50% を超えた時点、または成果物 (schema/API/画面) の記載先が決まらない事象が発生した時点"
+  },
+  {
+   "paradigm_id": 11,
+   "paradigm_name": "抽象化思考",
+   "category": "C-meta",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "技術章の本文は汎用カード (DDD / Clean Architecture / Secure by Design / API Design Patterns / Clean Code) の転記のみで、本システムの固有名詞 (Tenant / Workspace / Project / Release / stable pointer / CatalogEntry) が本文に一度も登場しない章が大半",
+    "抽象度の階段で見ると、最上位 (U1-U9 のゴール) と技術選定 (D1-D3、fetched-references) は存在するが、中間の設計層 (この製品の ER・invariant・API 資源・画面) が完全に欠落している",
+    "qa-002 には Release の immutable 性・stable pointer 切替・Workspace 内一意名・PublishRequest 直列化という具体的 invariant が確定済みなのに、database.md / backend.md へ転写されていない"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "知識カードの内容と qa_log の決定の間に直接の矛盾はない"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "database.md に DDD カードはあるが qa-002 で確定済みの 9 エンティティと 4 invariant の展開がゼロ",
+      "backend.md に API Design Patterns カードはあるが qa-009 の状態機械の資源設計・エンドポイント定義がゼロ"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "カードの抽象度が全章一律で、章ごとの適用判断が書かれていない"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "qa-002 (ドメインモデル確定) を参照する qa_ref がどの章の表にも現れず、最重要 qa が章へのトレースを持たない"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "schema",
+     "description": "qa-002 で確定済みのドメインモデル (Tenant / Workspace / Project / TargetChannel / Release / SkillPackage / DeploymentReference / CatalogEntry / PublishRequest / PackageRegistry) と不変条件 (Release immutable・stable pointer 切替・Workspace 内一意名・PublishRequest 直列化) が database.md に一切展開されておらず、テーブル設計・テナント分離キー方針・invariant の実装先が未定義",
+     "recommended_intervention": "database.md に『エンティティ定義』節を追加し、各エンティティの属性・関係・所有 (aggregate)・invariant・tenant_id/workspace_id スコープ列の方針を Drizzle スキーマ疑似コードレベルで記述する。R2 の content-addressed 保存 (qa-004) と DB の hash 参照の対応も明記する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/database.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C3",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "全章の知識カードが本システムへの適用文脈なしに同一抽象度で転記されており、抽象 (カード) と具体 (qa 回答) を橋渡しする中間層が存在しない。カードは「読んだ」証跡にはなるが「適用した」証跡になっていない",
+     "recommended_intervention": "各章の各カード末尾に『本システムへの適用』小節を追加し、カードの失敗モードのうち本システムで実際に該当するものと、その対処決定を 3-5 行で記述する",
+     "condition_signal": "inconsistency",
+     "location": {
+      "file": "system-spec/backend.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.25,
+   "reusable_abstraction": "知識カードの転記は『適用』ではない。章を confirmed にする条件として『本文にプロジェクト固有名詞 (エンティティ名・画面名・API 名) が N 回以上出現する』という機械検査可能な具体化条件を課すことで、抽象と具体の橋渡しを強制できる",
+   "template_variables": [
+    "generic_content=設計知識カード転記",
+    "missing_middle=ER 図・invariant・API 資源・画面仕様",
+    "lint_condition=固有名詞出現数 >= N"
+   ],
+   "reuse_surface": "rubric",
+   "negative_cases": [
+    "収集中 (未確定) 段階の章ではカード転記のみでも許容される。具体化条件は confirmed 遷移時にのみ課す"
+   ],
+   "re_audit_trigger": "章の status を confirmed へ遷移させる時に本文へプロジェクト固有語が含まれない場合"
+  },
+  {
+   "paradigm_id": 12,
+   "paradigm_name": "ダブル・ループ思考",
+   "category": "C-meta",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "「確定」の運用上の定義が『qa_log に回答が存在すること』になっており、『章単体で実装に着手できる詳細が存在すること』ではない。qa-006/qa-011 は将来作業を明示的に残したまま該当章が confirmed",
+    "infrastructure.md と ui-ux.md は本文に『resource-map 未定義。関連 card を選定・深化してから確定する』と未確定条件を自ら記述しながら frontmatter は status: confirmed という自己矛盾状態",
+    "遡及記録 qa-012/qa-013 のゴール・目標定義が正本 00-requirements-definition.md の U3/U4 と食い違う"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "FAIL",
+     "evidence": [
+      "infrastructure.md:27 / ui-ux.md:27 の『選定・深化してから確定する』と frontmatter status: confirmed の直接矛盾",
+      "qa-012/qa-013 の G1-G4・O1-O4 定義が 00-requirements-definition.md U3/U4 と不一致"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "『確定』の definition of done が index.md にもどこにも定義されていない"
+     ]
+    },
+    "C3": {
+     "verdict": "FAIL",
+     "evidence": [
+      "同じ『確定』マーカーが、qa 回答 1 件のみの章と decisions 3 件を持つ要件定義章で同じ意味として扱われている"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "appr-002 が qa-012〜015 を U 項目の遡及根拠として張っているが、遡及先の内容が正本とずれており根拠として機能していない"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C1",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "infrastructure.md と ui-ux.md が本文で resource-map 未定義 (=確定条件未充足) を自認しながら status: confirmed になっている。この 2 章は設計知識の適用すら未着手であり、確定という状態表明が虚偽になっている",
+     "recommended_intervention": "両章の status を『収集中』へ戻す (index.md の集約状態・spec-state.json の category_aggregate も同期)、または関連カードを選定・深化して確定条件を実際に満たしてから confirmed に戻す",
+     "condition_signal": "contradiction",
+     "location": {
+      "file": "system-spec/infrastructure.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C1",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "遡及記録 qa-012 (G1-G4) と qa-013 (O1-O4) の定義文言が正本 00-requirements-definition.md の U3/U4 と別内容になっており、承認 (appr-001/appr-002) が『どの文言のゴール・目標』に対して成立したのか検証不能。仮説番号のマッピングも食い違う",
+     "recommended_intervention": "spec-state.json の qa-012/qa-013 の answer を実際の承認時文言へ訂正するか、訂正不能なら『遡及記録時の要約誤り』と注記した上で U3/U4 の文言を唯一の正とする旨を approval_log に追記する。G/O と仮説 H の対応表を 00-requirements-definition.md に一本化する",
+     "condition_signal": "contradiction",
+     "location": {
+      "file": "system-spec/spec-state.json",
+      "section": "qa_log qa-012/qa-013"
+     }
+    },
+    {
+     "condition": "C3",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "『確定』の完了条件 (definition of done) が未定義のため、qa 回答の存在だけで confirmed に遷移でき、脅威モデル・runbook 等を「後で展開」と先送りしたまま全章確定という現状を許してしまう構造",
+     "recommended_intervention": "index.md に確定の DoD を明文化する (例: (1) 章本文単体で下流の実装計画が立てられる、(2) 本システム固有仕様節が存在する、(3) 出典割当済みまたは不要と明記、(4) 本文に未完了マーカー語が存在しない)。既存 8 章を DoD で再判定し状態を付け直す",
+     "condition_signal": "inconsistency",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "章一覧と集約状態"
+     }
+    }
+   ],
+   "score": 0.2,
+   "reusable_abstraction": "状態マーカー (confirmed 等) は検証可能な完了条件への参照を伴わない限り単なる宣言に退化する。frontmatter に confirmed の判定条件 (DoD) への参照を持たせ、本文の未完了マーカー語との共存を lint で禁止する契約にすると、宣言と実体の乖離を機械的に検出できる",
+   "template_variables": [
+    "status_marker=status: confirmed",
+    "dod_missing=確定の完了条件が全ドキュメントで未定義",
+    "self_contradiction_marker=resource-map 未定義。選定・深化してから確定する"
+   ],
+   "reuse_surface": "script-frontmatter",
+   "negative_cases": [
+    "00-requirements-definition.md は decisions・qa・承認ログを備え、確定表明と実体が一致しているためこの指摘の対象外"
+   ],
+   "re_audit_trigger": "本文に未完了マーカー語を含む章が confirmed 状態で検出された時、または qa_log と正本章の間で同一 ID 概念の文言差分が検出された時"
+  },
+  {
+   "paradigm_id": 13,
+   "paradigm_name": "ブレインストーミング",
+   "category": "D-divergent",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "D1-D3 (hosting / DB / 認証) は 3 択比較 + 費用・lock-in・退避経路つきで発散→収束が機能しており、意思決定の質が高い",
+    "一方で同等の重みを持つ他のアーキテクチャ論点 (テナント分離方式・検査 pipeline の実行形態・配布経路の選定・セッション失効設計・Publisher 配布形態) は qa 回答内の単一案で確定しており、代替案比較を経ていない",
+    "fetched-references.json には claude-code-plugins の npm source 対応という配布経路の新候補が記録済みだが、仕様章へ未反映"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "既存 decisions 間に矛盾はない"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "テナント分離方式 (row-level / DB-per-tenant / schema-per-tenant) の decision が存在しない",
+      "配布経路候補としての npm source が fetched-references.json にのみ存在し章に不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "『重要な選択は decisions で 3 択比較』という運用が D1-D3 以外へ適用されていない"
+     ]
+    },
+    "C4": {
+     "verdict": "PASS",
+     "evidence": [
+      "D1-D3 の依存関係 (Workers→R2 binding→wrangler 共通化) は明示されている"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "schema",
+     "description": "マルチテナント論理分離を Stage 1 から実装する (U7) と確定しているのに、その実現方式 (単一 DB + tenant_id 列によるアプリ層強制 / Turso の DB-per-tenant / schema 分離) が decisions として比較・確定されていない。分離テスト必須 (qa-006) の負担も方式で大きく変わる",
+     "recommended_intervention": "spec-state.json に D4『テナント分離方式』を追加し 3 案比較を行い、結論を database.md のテナント分離節へ展開する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/spec-state.json",
+      "section": "decisions"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "low",
+     "bucket": "doc",
+     "description": "配布経路 (Stage 0 gate H7) の候補が『URL 型 marketplace または Bootstrap Installer』の 2 択のままで、fetched-references.json で確認済みの npm source が候補として仕様に反映されていない",
+     "recommended_intervention": "infrastructure.md に配布経路の候補比較 (URL 型 / Bootstrap Installer / npm source) と Stage 0 検証項目のマッピングを 1 表で明記する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/infrastructure.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.5,
+   "reusable_abstraction": "アーキテクチャ上の分岐を持つ論点は qa 回答内の単一案で確定させず、decisions 配列へ 3 択以上の比較として昇格させる『論点の Decision 化』パターン。昇格の判定基準は『選択を誤った時の手戻りが 1 章を超えるか』",
+   "template_variables": [
+    "decided_via_comparison=D1-D3",
+    "decided_without_comparison=テナント分離方式・検査 pipeline 形態・セッション失効設計",
+    "promotion_criterion=手戻り影響が複数章に跨る論点"
+   ],
+   "reuse_surface": "config",
+   "negative_cases": [
+    "ユーザーが逐語指定した制約 (Next.js/TypeScript/pnpm/npm 禁止 = qa-015) は比較の余地がなく decision 化不要"
+   ],
+   "re_audit_trigger": "アーキテクチャ選択が qa_log 回答内にのみ存在し decisions に不在であることが検出された時"
+  },
+  {
+   "paradigm_id": 14,
+   "paradigm_name": "水平思考",
+   "category": "D-divergent",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "Green/Yellow/Red の policy 判定は App Store 審査モデルの移植として既に成立しているが、検査結果が利用者側 (Catalog 閲覧者) の信頼判断材料として提示される設計がない",
+    "IaC の plan/apply モデル (適用前に何が起きるかを見せる dry-run) が publish フローに存在せず、非エンジニア作者は publish 実行までの結果予見手段を持たない",
+    "G2 (North Star = 発見と再利用) を支える Catalog の情報構造 (タグ・業務カテゴリ・検索・並び順) が図書館目録的な観点で完全に未仕様"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "既存記述との矛盾はない"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "North Star (G2) の成立に直結する Catalog の発見性仕様 (メタデータ / 検索 / 分類) が ui-ux.md にゼロ",
+      "I4 の『低品質報告導線』はあるが報告受領後のワークフローが未定義"
+     ]
+    },
+    "C3": {
+     "verdict": "PASS",
+     "evidence": [
+      "移植済みパターン (審査モデル・stable pointer) は一貫している"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "O2 (30 日以内他者再利用 30%) の測定は Catalog の発見性仕様に依存するが、その依存が明示されていない"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "G2 (North Star) の達成は『同僚が見つけられる』ことに懸かっているのに、CatalogEntry のメタデータ設計・検索・並び順の仕様が存在しない。O2 の 30% 達成可否を左右する最重要 UI が空白",
+     "recommended_intervention": "ui-ux.md に『Catalog 情報構造』節を追加し、CatalogEntry の表示メタデータ schema・検索対象フィールド・既定並び順を定義する。メタデータの入力は publish 時に Publisher が manifest から補完する導線 (qa-010) と接続する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/ui-ux.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "low",
+     "bucket": "doc",
+     "description": "検査 (static validation / secret scan / policy 判定) の結果が利用者向けに表示されない。非エンジニア利用者は『追加しても安全か』の判断材料を持たず、G4 の統制が利用者の信頼形成へ還流しない",
+     "recommended_intervention": "ui-ux.md の詳細画面仕様に検査結果バッジを追加する。ただし形式検査のみの段階では過剰信頼を誘発しない文言を併記する",
+     "condition_signal": "smell",
+     "location": {
+      "file": "system-spec/ui-ux.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.4,
+   "reusable_abstraction": "内部品質ゲートの出力を保証範囲明示つきで消費者向け信頼ラベルへ変換する『食品表示』パターン。検査 pipeline を持つ配布系プロダクト全般で横展開できる",
+   "template_variables": [
+    "internal_gate=static validation + secret scan + Green/Yellow/Red",
+    "consumer_label=Catalog 詳細の検査バッジ",
+    "overclaim_guard=保証範囲の明示文言"
+   ],
+   "reuse_surface": "reference",
+   "negative_cases": [
+    "検査が形式検査のみで実質的な品質・安全性を保証しない段階では、バッジ表示が過剰な信頼を誘発する security theater になり得るため、保証範囲の明示なしには移植しない"
+   ],
+   "re_audit_trigger": "ui-ux.md の Catalog 詳細画面仕様を策定する時"
+  },
+  {
+   "paradigm_id": 15,
+   "paradigm_name": "逆説思考",
+   "category": "D-divergent",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "『8 つの技術章ファイルがなかったら実装に困るか』を試すと、困らない — 実装判断に使える情報は spec-state.json と 00-requirements-definition.md にほぼ全て存在し、技術章は情報を追加していない",
+    "逆に『spec-state.json がなかったら』実装は完全に不可能。正本と宣言されている章と、実際に情報を持つファイルが逆転している",
+    "『確定してから詳細化する』という現在の順序の逆が本来の依存方向であり、現状は確定マーカーが詳細化の完了を偽装する形になっている"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "章と qa_log の間に内容の矛盾はない (章に内容がほぼ無いための消極的 PASS)"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "技術章 8 件の固有情報量が実質ゼロで、章という正本器が空",
+      "qa_log の回答 (qa-003〜qa-011) が章本文へ正規化転記されていない"
+     ]
+    },
+    "C3": {
+     "verdict": "FAIL",
+     "evidence": [
+      "正本宣言 (章) と情報実体 (qa_log) の役割が逆転している"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "章は qa_ref で qa_log へ依存するが、qa_log 更新を章本文へ反映する保証機構がなく、依存が単方向で断絶している"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C3",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "仕様の実体が qa_log (会話記録形式) に閉じ込められ、正本と宣言された章が空洞という逆転状態。実装者は qa_log の全 15 件を読み解いて仕様を再構成する必要があり、読み違いによる実装ブレのリスクが高い",
+     "recommended_intervention": "qa-003〜qa-011 の各回答を対応章の『本システム固有仕様』節へ構造化して転記し、qa_log は監査証跡へ役割を戻す。転記時に qa 回答内の未展開宣言 (脅威モデル・runbook) を展開する",
+     "condition_signal": "inconsistency",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "章一覧と集約状態"
+     }
+    },
+    {
+     "condition": "C4",
+     "severity": "medium",
+     "bucket": "other",
+     "description": "章の確定根拠が qa_ref だけで成立しており、qa 回答が変更・追記された場合に章側の状態を再オープンする機構がない",
+     "recommended_intervention": "章と qa_log の整合を機械検査する lint (qa 回答のハッシュ/更新時刻を章 frontmatter に記録し、乖離で章を『収集中』へ自動降格) を仕様更新フローに追加する",
+     "condition_signal": "dependency_break",
+     "location": {
+      "file": "system-spec/spec-state.json",
+      "section": "qa_log"
+     }
+    }
+   ],
+   "score": 0.3,
+   "reusable_abstraction": "文書の権威 (正本マーカー) と情報量は独立に変動するため、『確定』を情報量の閾値条件として定義しない限り、権威が実体から逆転して剥離する。正本には情報を、ログには証跡を、という役割の固定と lint による相互整合検査が対策になる",
+   "template_variables": [
+    "declared_authority=技術章 8 件 (status: confirmed)",
+    "actual_substance=spec-state.json qa_log / decisions",
+    "inversion_signal=章の固有情報量ゼロ"
+   ],
+   "reuse_surface": "governance-log",
+   "negative_cases": [
+    "qa_log を意図的に正本と定める運用へ統一する選択肢もある。その場合は章群を index への薄い目次に縮退させる方が誠実で、本 finding の介入は不要になる"
+   ],
+   "re_audit_trigger": "章本文の固有情報量が参照先 qa 回答の要約以下しかない状態で status: confirmed が付与された時"
+  },
+  {
+   "paradigm_id": 16,
+   "paradigm_name": "類推思考",
+   "category": "D-divergent",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "本システムは『社内向けパッケージレジストリ + カタログ』であり、npm registry / VS Code Marketplace / Chrome Web Store / Artifactory / Backstage カタログと構造が同型",
+    "同型プロダクトが標準装備する lifecycle 仕様のうち、公開・更新・rollback は仕様化済みだが、公開停止/削除時の『既に追加済みの利用者側 copy』の扱い・改名・owner 変更手続き・報告対応フローが欠落",
+    "typosquatting / 紛らわしい名称は Workspace 内一意制約だけでは防げないが、社内少数テナントでは悪性度が公開レジストリより低い"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "既存 lifecycle 仕様 (immutable Release / stable pointer) は同型プロダクトの標準と整合"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "公開停止・削除の下流伝播が未仕様",
+      "owner 再割当は stakeholder 責務 (U6) として言及のみで手続き未定義",
+      "低品質報告 (I4) の受領後ワークフロー・対応期限が未定義"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "G4 (公開停止できる) と G2 (追加済み利用者の業務継続) の間の緊張関係が調停されていない"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "qa-011 の障害縮退は公開停止時にも同じ挙動でよいのか、意図的停止と障害の区別が未定義"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "Workspace 管理者による公開停止 (G4) 実行時に、既にツールを追加済みの利用者側で何が起きるかが未仕様。障害時縮退と意図的な公開停止では望ましい挙動が逆であり、区別なしでは G4 の統制が導入済み copy へ届かない",
+     "recommended_intervention": "backend.md に『公開停止・削除の伝播仕様』節を追加する: (1) 停止種別 (品質理由の非表示 / セキュリティ理由の失効) を定義、(2) CatalogEntry 非表示・stable pointer の無効化・marketplace 更新導線での通知/削除案内の各挙動を種別ごとに規定、(3) Web App 出口は顧客側 runtime のため Hub からは到達不能である旨と管理者への手動対応通知を明記",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/backend.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "作者退職・異動時の owner 再割当、業務ツールの改名、低品質報告受領後の処理フローが全て未仕様。運用開始後に必ず発生する lifecycle イベント群",
+     "recommended_intervention": "backend.md または maintenance-ops.md に『Project lifecycle 運用』節を追加し、owner 再割当・改名・報告対応の 3 フローを定義する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/backend.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.35,
+   "reusable_abstraction": "レジストリ型プロダクトの仕様網羅性は『配布物 lifecycle の標準チェックリスト』(公開 / 更新 / 停止 / 削除 / 改名 / owner 変更 / 受領者側 copy の残存挙動 / 報告対応) で機械的に検査できる",
+   "template_variables": [
+    "analogy_sources=npm registry / VS Code Marketplace / Artifactory / Backstage",
+    "covered=publish / update / rollback",
+    "missing=unpublish 伝播 / rename / owner 移管 / 報告対応 SLA"
+   ],
+   "reuse_surface": "template",
+   "negative_cases": [
+    "公開レジストリ固有の機構 (typosquatting 大規模検知・CDN スケール・検索ランキング) は社内少数テナントでは移植不要",
+    "収益分配・公開 marketplace はスコープ外 (U7 out) が確定済み"
+   ],
+   "re_audit_trigger": "Stage 2 Governance の仕様展開時、または最初の公開停止イベントが実運用で発生した時"
+  },
+  {
+   "paradigm_id": 17,
+   "paradigm_name": "if思考",
+   "category": "D-divergent",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "もしテナント数が 10 倍になったら: Workers 無料枠 10 万 req/日・Turso Free の読取/書込上限は Hub 全体で共有されるため、テナント間で無料枠の食い合いが発生する。noisy neighbor 問題が未仕様",
+    "もし悪意ある作者がいたら: secret scan と static validation を通過する悪性コンテンツ (prompt injection skill・悪性 URL の Web App 登録) は Green 自動公開をそのまま通過する。この最重要 abuse case が仕様上どこにも存在しない",
+    "もし無料枠が廃止されたら: Turso には D1 への退避経路が明記済みだが、Workers/R2/GitHub Actions には同種の exit plan がなく、Auth.js の Better Auth 移管も auth.md 本文に現れない"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "極端ケース下でも既存記述同士の矛盾はない"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "テナント別クォータ・rate limit・無料枠超過時の挙動が未仕様",
+      "悪意ある作者の abuse case が脅威モデルごと不在",
+      "Worker サイズ上限 3 MiB (Free) が infrastructure.md に不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "D2 のみ exit plan を持ち、他の依存と扱いが非対称"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "fetched-references.json の caveat が章本文へ伝播しておらず、参照集と章の依存が断絶"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "critical",
+     "bucket": "doc",
+     "description": "『悪意ある作者 / 乗っ取られた作者アカウント』の脅威モデルが存在しない。skills は同僚の Claude Code 内で指示として実行されるため、prompt injection・データ持ち出し誘導・フィッシング URL を含む skill が static validation + secret scan を通過して Green 自動公開される経路が現仕様で開いている。脅威モデルなしで実装に進むと検査 pipeline の要件自体が定まらない",
+     "recommended_intervention": "security.md に脅威モデル節を展開する: actor (悪意作者 / 侵害アカウント / 悪意利用者 / 好奇心の内部者)、asset (同僚の Claude Code 実行環境・顧客 IdP セッション・Catalog の信頼)、脅威 (prompt injection skill・悪性 URL 登録・テナント越境読取)、control (検査項目への instruction-risk パターン追加・Web App URL の登録時ドメイン検査・Yellow 判定基準の具体化・Stage 2 approval queue との対応)。qa-006 が予告した OWASP ASVS 展開をこの節で実施する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/security.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "共有無料枠のマルチテナント予算設計が未仕様。テナント別クォータ・Publisher ポーリング間隔の上限・無料枠到達時のアラートと縮退挙動が決まっていない。U5 (2 社以上同時稼働) の成立条件そのもの",
+     "recommended_intervention": "infrastructure.md に『無料枠予算表』を追加する: 資源 × 想定消費 × 超過時挙動 × 監視アラート閾値。qa-009 のポーリングに間隔下限と backoff を仕様として追加する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/infrastructure.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "依存サービスの exit plan が D2 のみ非対称に存在し、Workers/R2/GitHub Actions/Auth.js の無料枠改定・プロジェクト帰趨変化への再判定条件が章本文にない",
+     "recommended_intervention": "maintenance-ops.md に依存サービス一覧表 (サービス / 無料枠依存度 / 代替先 / 移行トリガー / 再確認時期) を追加し、fetched-references.json の caveat を対応章の本文リスク節へ転記する",
+     "condition_signal": "dependency_break",
+     "location": {
+      "file": "system-spec/maintenance-ops.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.35,
+   "reusable_abstraction": "共有無料枠×マルチテナント構成では『固定費が増えない』(コスト命題) と『各テナントの SLO が守られる』(隔離命題) は独立の命題であり、前者の確認だけでは後者を保証しない。無料枠予算表を無料枠依存アーキテクチャの必須成果物とするパターンは同種構成へ横展開できる",
+   "template_variables": [
+    "best=2 テナント・低トラフィックで全資源が無料枠内に収まり、現行仕様のままで成立する",
+    "worst=テナント 10 倍で共有無料枠が枯渇し、テナント別クォータ不在のため全テナントが同時劣化・新規公開不能になる",
+    "edge=static validation と secret scan を通過する prompt injection skill が Green 自動公開され、同僚の Claude Code 実行環境で悪性指示として実行される"
+   ],
+   "reuse_surface": "template",
+   "negative_cases": [
+    "テナントごとに Worker/DB を物理分離するアーキテクチャを採る場合は共有枠の食い合いが構造的に発生せず、予算表は簡略化できる"
+   ],
+   "re_audit_trigger": "3 テナント目の受け入れ判定時、または任意資源の日次消費が無料枠の 50% に到達した時"
+  },
+  {
+   "paradigm_id": 18,
+   "paradigm_name": "素人思考",
+   "category": "D-divergent",
+   "agent": "elegant-meta-divergent-analyst",
+   "observations": [
+    "本プロダクトの一次ユーザーは非エンジニアだが、仕様書は stable pointer / TargetChannel / orphan_candidate / Needs Fix / rollback / Device Flow などの専門概念を UI 表示語へ翻訳する対訳をどこにも持たない",
+    "O1 (公開自走率 80%) の成否は『Needs Fix 差戻しを受けた作者が独力で直せるか』に懸かっているのに、差戻し時に作者が見る画面・文言・修正手順の仕様がゼロ",
+    "00-requirements-definition.md 自体も shadow publish / technical gate / H0-H8 の仮説番号を無定義で使っており、仕様書内で自己完結しない"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "用語の使われ方自体に矛盾はない"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "用語集・UI 文言仕様・エラーメッセージ仕様が全ファイルに不在",
+      "初期 4 画面 (qa-007) の画面状態・遷移・文言が未定義"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "『非エンジニアが一次ユーザー』という前提 (U1) と、専門用語のみで書かれた UI 関連仕様の抽象度が整合していない"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "H0-H8 の定義が外部文書依存で、仕様書単体で O1-O4 の測定定義を解釈できない"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "非エンジニア作者向けの用語対訳 (ドメイン用語→UI 表示語) と、publish 主要フロー (成功 / Needs Fix 差戻し / rollback / Device Flow 承認) の画面状態・メッセージ・次アクション導線の仕様が欠落。O1 (自走率 80%) と G1 の達成可否を直接左右する",
+     "recommended_intervention": "ui-ux.md に (1) 用語対訳表、(2) 主要 4 フローの状態遷移ごとの画面・文言・次アクションを定義する。resource-map からユーザビリティ/情報設計系カードの選定と併せて行う",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/ui-ux.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "仮説 H0-H8 が仕様書内に定義表を持たず、O1-O4 の測定基準が外部コンセプト文書なしに解釈できない。加えて qa-012/qa-013 では同じ H 番号が別内容で使われており、初見の読者は仮説の正しい定義に到達できない",
+     "recommended_intervention": "00-requirements-definition.md の末尾に仮説定義表 (H0-H8: 仮説文・検証 Stage・対応する O/G) を追加し、仕様書を自己完結させる。qa-012/qa-013 との文言差はダブル・ループ指摘の訂正と同時に解消する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/00-requirements-definition.md",
+      "section": "U4 目標"
+     }
+    }
+   ],
+   "score": 0.3,
+   "reusable_abstraction": "一次ユーザーが非専門家であるプロダクトでは、『ドメイン用語→UI 表示語の対訳表』と『失敗系フローの文言仕様』を仕様書の一級成果物として必須化する。成功系だけ仕様化して失敗系文言を実装者の即興に委ねると、自走率系の KPI が実装品質の運任せになる",
+   "template_variables": [
+    "primary_user=非エンジニアの業務当事者",
+    "untranslated_terms=stable pointer / TargetChannel / Needs Fix / Device Flow / orphan_candidate",
+    "kpi_at_risk=O1 公開自走率 80%"
+   ],
+   "reuse_surface": "template",
+   "negative_cases": [
+    "workspace-admin / provider-admin 向けの管理画面は専門用語のままで良い場合があり、対訳の強制は member/owner 向け画面に限定する"
+   ],
+   "re_audit_trigger": "ui-ux.md の resource-map 選定・画面仕様展開に着手する時"
+  },
+  {
+   "paradigm_id": 19,
+   "paradigm_name": "システム思考",
+   "category": "E-system",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "実仕様はspec-state.jsonのqa_logに集中し、技術6章は汎用設計知識カード転記のみで固有仕様(スキーマ・API・画面・脅威モデル)がゼロ",
+    "ui-ux/infrastructureは本文に「resource-map未定義」と残したままstatus: confirmedで章内自己矛盾"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "FAIL",
+     "evidence": [
+      "ui-ux.md:27/infrastructure.md:27の未定義宣言とconfirmedが矛盾"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "qa-002確定のドメインモデル10種がdatabase.mdに未展開"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "「確定」の意味がqa存在と実装可能詳細度で不統一"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "qa_log→章本文への展開(コンパイル)工程が予告のみで断絶"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "critical",
+     "bucket": "doc",
+     "description": "技術6章が汎用カード転記のみで、qa_log確定済みの実仕様(ドメインモデル・API契約・認証・検査pipeline・運用baseline)が本文未展開。実装者はqa_log逆引きなしに仕様へ到達できない",
+     "recommended_intervention": "qa-002〜011を正本に各章へ展開: database.md=qa-002/004、auth.md=qa-005/008、backend.md=qa-009/010、security.md=qa-006、maintenance-ops.md=qa-011、frontend.md=qa-007を固有仕様節として追記",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/database.md",
+      "section": "適用された設計知識(全技術章共通)"
+     }
+    },
+    {
+     "condition": "C1",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "ui-ux.md/infrastructure.mdはresource-map未定義宣言のままstatus: confirmedで、確定マーカーの信頼性がシステム全体で毀損される",
+     "recommended_intervention": "関連カードを選定・深化して記載するか、statusを収集中へ戻しindex.md/spec-state.jsonと同期。確定条件に『本文展開済み』ゲートを追加する",
+     "condition_signal": "contradiction",
+     "location": {
+      "file": "system-spec/ui-ux.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.3
+  },
+  {
+   "paradigm_id": 20,
+   "paradigm_name": "因果関係分析",
+   "category": "E-system",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "根本因果: 確定条件がqa_ref存在のみ→本文展開を要求せず→全8章確定でも実装可能な章ゼロ",
+    "qa-012/013のG2-G4・O2-O4定義が正本U3/U4と別内容。appr-002の遡及記録が正本と突合されず矛盾"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "FAIL",
+     "evidence": [
+      "qa-012(spec-state.json:396)のG定義がU3(00章:27-29)と別内容"
+     ]
+    },
+    "C2": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "qa_logとrequirements_foundationの突合検査が不在"
+     ]
+    },
+    "C3": {
+     "verdict": "FAIL",
+     "evidence": [
+      "appr-002の遡及根拠自体が正本と不整合で承認追跡不成立"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "G番号の意味分裂が全章serves_goalsへ波及"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C1",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "qa-012/013(U3/U4の遡及根拠)のゴール・目標文言が正本U3/U4と別内容。全章がG番号でトレースするため『どのGが承認されたか』が曖昧になり承認の有効性まで揺らぐ",
+     "recommended_intervention": "qa-012/013のanswerに『短縮ラベルは仮表記、正本定義はrequirements_foundation(U3/U4)に従う』と注記するか、ユーザーへ差戻し片方へ統一。対応表を00章へ追記",
+     "condition_signal": "contradiction",
+     "location": {
+      "file": "system-spec/spec-state.json",
+      "section": "qa_log qa-012/qa-013"
+     }
+    }
+   ],
+   "score": 0.35
+  },
+  {
+   "paradigm_id": 21,
+   "paradigm_name": "因果ループ",
+   "category": "E-system",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "悪性ループ: 章空洞→qa_log直接参照→qa_log実質正本化→本文更新動機消失→空洞固定化",
+    "顧客増→無料枠(Turso/Workers)超過→C2衝突のバランスループに検知センサー(使用量監視)が欠落"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "ループ構造に矛盾記述なし"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "無料枠監視とD1移行発動条件がqa-011監視項目に不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "D2ヘッジは記録済みだが運用仕様と未接続"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "spec-state.json→章本文の依存が一方向に劣化する構造"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "Turso/Workers/R2の無料枠使用量監視・警告閾値・D1移行トリガーが未仕様。C2(費用ゼロ)とU5(2社同時稼働)は使用量増で必然的に緊張するのに検知手段がない",
+     "recommended_intervention": "maintenance-ops.mdの運用baselineに無料枠使用量の定期確認(Turso読取行/Workers req/R2容量)・警告閾値(枠70%)・D2ヘッジ発動条件を監視項目として追記",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/maintenance-ops.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.4
+  },
+  {
+   "paradigm_id": 22,
+   "paradigm_name": "トレードオン思考",
+   "category": "F-strategic",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "D2はTurso選択を『SQLite方言互換維持+D1退避経路温存』の第三案で止揚しており選定の質は高い(spec-state.json:893)",
+    "『確定速度vs詳細度』の第三案=qa-006/011が予告する仕様書コンパイルが既に存在し、実行だけが欠けている"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "トレードオフの扱いに矛盾なし"
+     ]
+    },
+    "C2": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "Stage1の公開停止導線が画面仕様に未割当"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "decisionsのヘッジと章本文の整合確認機構なし"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "D2の『仕様として明記』がdatabase.mdへ未伝播"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C4",
+     "severity": "medium",
+     "bucket": "schema",
+     "description": "D2ヘッジ条件(SQLite方言互換維持・D1移行経路温存)がdatabase.md未記載。スキーマ設計時に知らずにTurso固有機能へ依存すると退避経路が壊れる",
+     "recommended_intervention": "database.mdに設計制約節を追加: D1/libSQL両対応のDrizzle機能のみ使用、Turso固有機能非依存、D1移行の発動条件をD2ヘッジの展開として明記",
+     "condition_signal": "dependency_break",
+     "location": {
+      "file": "system-spec/database.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "Stage1でG4を支える唯一の統制手段『公開停止』の操作面(どの画面・どのroleが実行)がqa-007の初期4画面に不明。監査eventのみ定義され操作仕様が宙に浮く",
+     "recommended_intervention": "ui-ux.mdに公開停止・rollbackの操作導線を4画面のどれに載せるか明記し、実行可能role(workspace-admin/owner)をqa-005のroleモデルと対応付ける",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/ui-ux.md",
+      "section": "カテゴリ別収集状態"
+     }
+    }
+   ],
+   "score": 0.55
+  },
+  {
+   "paradigm_id": 23,
+   "paradigm_name": "プラスサム思考",
+   "category": "F-strategic",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "5者(作者・利用者・管理者・提供者・情シス)のwin-win構図はU6で明示され設計は健全",
+    "情シスのJTBD(導入審査)に必要な材料(脅威モデル・監査export)がStage1仕様に不在でU5の2社稼働をブロックし得る"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "ステークホルダー間の利害設計に矛盾なし"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "情シス向け審査材料(脅威モデル・データフロー)が全章に不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "監査exportがStage2で導入審査のタイミングと不整合"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "U5→導入審査→審査材料の依存chainの末端が欠落"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "顧客情シスがHub導入を審査する材料(脅威モデル・データフロー・Tenant/Workspace分離設計・C4非保持境界の技術的裏付け)が不在。企業導入の関門でありU5成立自体を止める",
+     "recommended_intervention": "security.mdにOWASP ASVSベース脅威モデル(信頼境界図: 作者local/Publisher/Workers/Turso/R2/顧客Cloudflare/IdP、資産・脅威・対策)とC4のデータフロー裏付けを展開し情シス転用可能な形式にする",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/security.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.5
+  },
+  {
+   "paradigm_id": 24,
+   "paradigm_name": "価値提案思考",
+   "category": "F-strategic",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "受益者が最も広いG3(Web App出口)の仕様が最薄で、価値の大きさと仕様詳細度が逆相関",
+    "『社内公開』されるWeb Appのアクセス制御が全文書未定義。public URLなら顧客業務データがWeb App側から漏れる"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "価値提案の記述自体に矛盾なし"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "Web App出口のアクセス制御・公開範囲検査の仕様が不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "U1『社内へ届ける』と制御未定義の出口の整合確認なし"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "I5『公開範囲検査』・U6『Cloudflare接続統制』の参照先仕様が不在"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "Web App出口(G3)のアクセス制御が未定義。誰が・何で・どの範囲に閲覧制限するか、I5『公開範囲検査』のPASS/FAIL基準がなく『社内公開』という価値提案の成立条件が欠落。脅威モデルとも直結",
+     "recommended_intervention": "infrastructure.mdにWeb App出口構成を追加: (1)顧客側Cloudflare前提とWorkspace管理者の初回接続設定項目、(2)アクセス制御方式の要件(非認証アクセス遮断をhealth確認で検査)、(3)公開範囲検査の検査項目と基準",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/infrastructure.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.45
+  },
+  {
+   "paradigm_id": 25,
+   "paradigm_name": "戦略的思考",
+   "category": "F-strategic",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "技術選定は退避経路つき(Turso→D1、OpenNext→Node hosting)で可逆性確保は良い",
+    "陳腐化シグナル3件が未反映: Worker 3MiB上限は『D1 caveatに追加』宣言のまま不在、Better Auth傘下入り告知とnpm source事実修正も未展開"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "FAIL",
+     "evidence": [
+      "fetched-references.json:141の宣言とD1 caveats実体が矛盾"
+     ]
+    },
+    "C2": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "Stage0 gate失敗時plan Bと実装前再確認リストが不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "参照調査の発見がdecisions・章本文と非同期"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "調査→caveat→章本文の伝播chainが3件とも断絶"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C1",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "Workerサイズ上限(Free 3MiB)がD1 caveats未追加。bundle超過で『無料枠運用』(C2)の前提が崩れWorkers Paid $5/月が必要になる既知リスクが決定記録から欠落",
+     "recommended_intervention": "spec-state.jsonのD1 recommendation.caveatsに3MiB上限・CIでのbundle計測・超過時の対応方針(Paid許容かC2再交渉)を追加し、maintenance-ops.mdのCI/CD項にも計測を追記",
+     "condition_signal": "contradiction",
+     "location": {
+      "file": "system-spec/spec-state.json",
+      "section": "decisions D1 caveats"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "実装着手時の再確認事項(Better Auth帰趨・Drizzle v1 rc・OpenNext互換・Turso無料枠改定)が散在しチェックリスト化されておらず、実装開始時に見落とされる構造",
+     "recommended_intervention": "index.mdに『実装着手前再確認リスト』を追加し4件+Stage0 gate失敗時plan B(npm source配布)を対象・確認内容・判断基準・fallback付きで一覧化する",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "全体ドキュメント出典"
+     }
+    }
+   ],
+   "score": 0.5
+  },
+  {
+   "paradigm_id": 26,
+   "paradigm_name": "why思考",
+   "category": "G-problem",
+   "agent": "elegant-logical-structural-analyst",
+   "observations": [
+    "§4.2/§6.2/HH-D07 等コンセプト文書の語彙に暗黙依存し system-spec 単体で読解不能 (00-requirements-definition.md:62)",
+    "根本原因連鎖の終点: 仕様書の読者定義と自己完結要件が完了条件に含まれていない"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "参照先はコンセプト文書に実在 (HH-D07 等 grep 14 件一致)"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "HH-D07/D13/D14 の内容が仕様書内で未定義のまま C4 の根拠"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "参照スタイルは統一だが解決手段 (リンク/転記) が無い"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "出典カード相対パス (auth.md:30) が system-spec/ から解決不能"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C4",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "コンセプト文書の決定 ID (HH-D07/D13/D14)・§ 参照に暗黙依存し、正本パスの明示も改版時の整合検査手段も無く仕様書が自己完結しない",
+     "recommended_intervention": "index.md か 00-requirements-definition.md に外部参照レジスタ (各決定 ID の要旨 1 行と正本パス doc/harness-hub-platform-concept.md) を追加する",
+     "condition_signal": "dependency_break",
+     "location": {
+      "file": "system-spec/00-requirements-definition.md",
+      "section": "U8 制約"
+     }
+    }
+   ],
+   "score": 0.3
+  },
+  {
+   "paradigm_id": 27,
+   "paradigm_name": "改善思考",
+   "category": "G-problem",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "監査C06/C07→appr-002/reopen_logの指摘→再オープン→修正プロセス自体は機能している",
+    "C07と同型の『根拠が実は未決の確定』が再発: qa-003の配布経路はStage0 gate待ち、脅威モデル・runbookは展開予告のみで確定"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "改善プロセスの記録に矛盾なし"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "後工程展開と約束した項目の未消化リストが不在"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "C07の検査基準が他セルへ水平展開されていない"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "Stage0 gate結果→infrastructure章への将来依存が未明示"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "doc",
+     "description": "『仕様書コンパイル時に展開』と先送りされた3項目(OWASP ASVS脅威モデル・運用runbook・Stage0 gate依存の配布経路)が未消化TODOとして管理されず確定の裏に埋没。実装時に仕様不足として顕在化する",
+     "recommended_intervention": "index.mdに『確定後の未展開事項(仕様負債)』一覧を追加し、各項目に展開先・期限・根拠qaを明記(脅威モデル→security.md、runbook→maintenance-ops.md、配布経路→infrastructure.md=Stage0 gate結果待ちと明示)",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "章一覧と集約状態"
+     }
+    }
+   ],
+   "score": 0.45
+  },
+  {
+   "paradigm_id": 28,
+   "paradigm_name": "仮説思考",
+   "category": "G-problem",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "中心仮説H0のStage0再検証は明文化済みだが、H0-H8が散在しH2欠番、仮説レジスタ不在",
+    "暗黙仮説『非エンジニアがDevice Flow・wrangler実行・Needs Fix対応を自力完遂できる』がO1の80%を左右するのに失敗時体験が未仕様"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "仮説間に矛盾なし"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "仮説レジスタ不在・H2欠番・O1-O4の計測手段未仕様"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "qa-013のH-O対応がU4と検証不能(文言分裂のため)"
+     ]
+    },
+    "C4": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "O1-O4測定→計測データ源への依存が未接続"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "medium",
+     "bucket": "doc",
+     "description": "H0-H8の一覧・検証Stage・棄却時方針がなくH2は欠番のまま。O1-O4の計測データ源も未仕様で、目標が測定不能のまま実装に入る",
+     "recommended_intervention": "00-requirements-definition.mdに仮説レジスタ(ID・内容・検証Stage・測定手段・棄却時アクション)を追加し、O1-O4を監査event/PublishRequest記録/CatalogEntry追加記録と対応付ける",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/00-requirements-definition.md",
+      "section": "U4 目標"
+     }
+    }
+   ],
+   "score": 0.4
+  },
+  {
+   "paradigm_id": 29,
+   "paradigm_name": "論点思考",
+   "category": "G-problem",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "本質論点=(a)qa-002の10エンティティ+4不変条件のER/スキーマ化と(b)4role認可マトリクス。決まれば下流(API・画面・監査・テスト)は従属的に決まる",
+    "下流の技術選定D1-D3のみ確定し最上流(a)(b)が未展開という論点順序の空白がある"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PASS",
+     "evidence": [
+      "論点設定に矛盾なし"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "ERスキーマ・認可マトリクスが全章未展開"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "qa-002不変条件とqa-009状態機械は整合するが検証形が未定義"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "database→backend→frontend→securityの導出起点が空"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C2",
+     "severity": "critical",
+     "bucket": "schema",
+     "description": "qa-002確定の10エンティティ(Tenant/Workspace/Project/TargetChannel/Release/SkillPackage/DeploymentReference/CatalogEntry/PublishRequest/PackageRegistry)と4不変条件がテーブル定義・関係・制約としてdatabase.md未展開。全下流章の導出起点で最優先の欠落",
+     "recommended_intervention": "database.mdにドメインモデル節を追加: 各エンティティの属性・キー・Workspaceスコープ列必須化、不変条件の実装(Release immutable=UPDATE禁止+content hash、(workspace_id,name) UNIQUE、TargetChannel単位の実行中1件制約)をDrizzle疑似コードで記述",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/database.md",
+      "section": "適用された設計知識"
+     }
+    },
+    {
+     "condition": "C2",
+     "severity": "high",
+     "bucket": "schema",
+     "description": "4role(provider-admin/workspace-admin/owner/member)×主要操作(publish/promote/rollback/公開停止/承認/token失効等)の認可マトリクス未定義。認可漏れ(D3明示リスク)を分離テストで検証する基準も作れない",
+     "recommended_intervention": "auth.mdに認可マトリクス(Stage1)を追加: 行=主要操作、列=4role、許可/禁止/条件付き(own projectのみ等)を記載。Stage2 granular RBACとの差分と分離テスト検証項目(他Tenant/Workspace操作は403/404)を対応付ける",
+     "condition_signal": "omission",
+     "location": {
+      "file": "system-spec/auth.md",
+      "section": "適用された設計知識"
+     }
+    }
+   ],
+   "score": 0.25
+  },
+  {
+   "paradigm_id": 30,
+   "paradigm_name": "KJ法",
+   "category": "G-problem",
+   "agent": "elegant-system-strategic-analyst",
+   "observations": [
+    "発見は5島に集約: A本文空洞化/B決定・調査結果の未伝播/C確定の意味論の歪み/D未決の確定化/Eトレーサビリティ断層",
+    "5島の根本は単一構造『仕様書コンパイル工程が予告のみで未実行、かつ確定ゲートがその実行を要求しない』に還元される"
+   ],
+   "condition_matrix": {
+    "C1": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "島E(qa-012/013 vs U3/U4)と島C(未定義でconfirmed)の矛盾"
+     ]
+    },
+    "C2": {
+     "verdict": "FAIL",
+     "evidence": [
+      "8章中6章が固有仕様ゼロ、2章がカード未選定"
+     ]
+    },
+    "C3": {
+     "verdict": "PARTIAL",
+     "evidence": [
+      "断層はqa_log→章本文の1箇所に集中(救いのある構造)"
+     ]
+    },
+    "C4": {
+     "verdict": "FAIL",
+     "evidence": [
+      "全島が展開工程不在という単一の依存断絶に還元される"
+     ]
+    }
+   },
+   "issues": [
+    {
+     "condition": "C4",
+     "severity": "critical",
+     "bucket": "doc",
+     "description": "5問題群は独立欠陥ではなく『qa_log/decisions/fetched-referencesから章本文への展開(仕様書コンパイル)工程の不実行』という単一根本原因の症状。個別修正では再発する",
+     "recommended_intervention": "改善パッチを3系統で構成: (1)qa-002〜011+decisions caveats+参照調査の発見を各章固有仕様節へ一括展開、(2)確定条件に展開済みゲートを追加しui-ux/infrastructureの状態を実態と同期、(3)qa-012/013と正本U3/U4の文言統一。この順で独立コミットに分離",
+     "condition_signal": "dependency_break",
+     "location": {
+      "file": "system-spec/index.md",
+      "section": "章一覧と集約状態"
+     }
+    }
+   ],
+   "score": 0.35
+  }
+ ],
+ "used_names": [
+  "批判的思考",
+  "演繹思考",
+  "帰納的思考",
+  "アブダクション",
+  "垂直思考",
+  "要素分解",
+  "MECE",
+  "2軸思考",
+  "プロセス思考",
+  "メタ思考",
+  "抽象化思考",
+  "ダブル・ループ思考",
+  "ブレインストーミング",
+  "水平思考",
+  "逆説思考",
+  "類推思考",
+  "if思考",
+  "素人思考",
+  "システム思考",
+  "因果関係分析",
+  "因果ループ",
+  "トレードオン思考",
+  "プラスサム思考",
+  "価値提案思考",
+  "戦略的思考",
+  "why思考",
+  "改善思考",
+  "仮説思考",
+  "論点思考",
+  "KJ法"
+ ],
+ "total_score": 0.337,
+ "issue_count": 54
+}

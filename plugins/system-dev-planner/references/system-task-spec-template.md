@@ -32,6 +32,7 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 
 - Required spec/architecture/phase/task nodes: <graph_node_id>
 - Entry gate: <machine-verifiable condition>
+- P01 upstream entry gate: <P01は `parent_feature.depends_on all done|closed`。P02..P13は `N/A: intra-feature depends_on gate`>
 - Source pin: system-spec-harness v0.1.0 / run-system-spec-compile / assign-system-spec-completeness-evaluator
 - Repository context: <repo_identity + root_resolution_source + .dev-graph/config.json; absolute path禁止>
 
@@ -111,4 +112,6 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 - 標準14 section (最低限 `Machine-readable registration fields`/`前提条件`/`成果物`/`Tracker publication and completion`/`Branch and worktree execution`/`Verification and evidence`/`Handoff` の7 sectionを含む) は必須充足とし、空・重複・TODO・未解決 `<...>` を禁止する。1件でも残る場合、`validate-system-plan.py` (system-dev-planner C12) が promotion 前に fail-closed で拒否する。C08 は upstream の confirmed system-spec と completeness evaluation を検査し、task spec 本文の検査は C12 が所有する。
 - `Workstream applicability` は該当しない workstream を `N/A: reason` で明示し、空欄のまま省略しない (適用外の理由を機械可読に残す)。
 - 全pathはcaller repository相対でC09 containment済みであること。`/absolute`、drive-letter、`..`、root外symlinkはincomplete。
+- task spec本文かruntime時に読むgoal/manifest/validator/evidenceはpackage-relative pathまたはcanonical published pathで参照する。C11のatomic rename後に消滅する`.dev-graph/staging`参照は禁止し、C12がpromotion前にfail-closedで拒否する。
+- P01は`parent_feature.depends_on all done|closed`を機械判定可能なentry gateとして明記する。upstream feature IDはtask `depends_on`へ複製せず、schedulerがcanonical parent featureの現行edgeを都度評価する。
 - staging/evaluator/published digestが一致しC11 promotion receiptが存在するまでL4 handoffを出さない。

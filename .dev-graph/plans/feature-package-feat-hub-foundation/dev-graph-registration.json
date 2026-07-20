@@ -1,0 +1,1225 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+  "promotion_receipt": ".dev-graph/plans/feature-package-feat-hub-foundation/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-hub-foundation",
+  "parent_feature": "feat-hub-foundation",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-HUB-FOUNDATION-P01": "beads",
+    "SYS-HUB-FOUNDATION-P02": "beads",
+    "SYS-HUB-FOUNDATION-P03": "beads",
+    "SYS-HUB-FOUNDATION-P04": "beads",
+    "SYS-HUB-FOUNDATION-P05": "beads",
+    "SYS-HUB-FOUNDATION-P06": "beads",
+    "SYS-HUB-FOUNDATION-P07": "beads",
+    "SYS-HUB-FOUNDATION-P08": "beads",
+    "SYS-HUB-FOUNDATION-P09": "beads",
+    "SYS-HUB-FOUNDATION-P10": "beads",
+    "SYS-HUB-FOUNDATION-P11": "beads",
+    "SYS-HUB-FOUNDATION-P12": "beads",
+    "SYS-HUB-FOUNDATION-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 要件ベースライン確定",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p01"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P01",
+      "file_path": "tasks/sys-hub-foundation-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec (.dev-graph/staging/goal-spec.json) と features/feat-hub-foundation.md の purpose/goal/scope/acceptance を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/sys-hub-foundation-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "infrastructure",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p02"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P01"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/architecture-decision-record.md",
+        "pnpm-workspace.yaml",
+        "package.json"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P02",
+      "file_path": "tasks/sys-hub-foundation-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "pnpm workspace 構成 (apps/hub + packages/ui,schemas,inspection,db) と Cloudflare Workers デプロイ単位を比較検討し確定する P02 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/sys-hub-foundation-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 独立設計レビュー",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p03"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P02"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/design-review-notes.md"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P03",
+      "file_path": "tasks/sys-hub-foundation-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P02 で確定した pnpm workspace 構成・デプロイ単位を P02 の設計担当から独立した視点でレビューする P03 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/sys-hub-foundation-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 テスト設計 (test-first 受入契約)",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p04"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P03"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/test-design.md",
+        "apps/hub/tests/"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P04",
+      "file_path": "tasks/sys-hub-foundation-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "承認済み設計を根拠に P05 実装前の test-first 受入契約を定義する P04 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/sys-hub-foundation-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "infrastructure",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p05"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P04"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "apps/hub/",
+        "packages/ui/",
+        "packages/schemas/",
+        "packages/inspection/",
+        "packages/db/",
+        "pnpm-workspace.yaml",
+        "package.json",
+        "wrangler.jsonc",
+        "open-next.config.ts",
+        ".github/workflows/ci.yml",
+        "README.md"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P05",
+      "file_path": "tasks/sys-hub-foundation-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "P02 承認構成と P04 テスト設計に基づき pnpm monorepo scaffold・CI/CD・監視・SLO を実装する P05 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/sys-hub-foundation-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 テスト実行",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p06"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P05"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "apps/hub/tests/",
+        ".github/workflows/ci.yml"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P06",
+      "file_path": "tasks/sys-hub-foundation-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P04 test-design.md の受入契約に従って P05 実装物を実行検証する P06 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/sys-hub-foundation-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 feature 受入判定",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p07"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P06"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/acceptance-report.md"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P07",
+      "file_path": "tasks/sys-hub-foundation-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "P06 のテスト実行結果を goal-spec acceptance と突合し feature 受入可否を判定する P07 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/sys-hub-foundation-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p08"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P07"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/refactoring-migration-note.md"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P08",
+      "file_path": "tasks/sys-hub-foundation-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "新規 scaffold feature のため refactor/migration の適用要否を判定し N/A 理由を機械可読に残す P08 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/sys-hub-foundation-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 品質・セキュリティ・運用保証",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p09"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P08"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/quality-assurance-report.md",
+        ".github/workflows/ci.yml"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P09",
+      "file_path": "tasks/sys-hub-foundation-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "CI 品質ゲート・セキュリティ・運用readinessを横断的に確認する P09 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/sys-hub-foundation-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 最終独立レビュー",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p10"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P09"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/final-review-notes.md"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P10",
+      "file_path": "tasks/sys-hub-foundation-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P01〜P09 の成果物一式を goal-spec と付随制約に対して独立して再点検する P10 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/sys-hub-foundation-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 証跡収集",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p11"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P10"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/evidence/"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P11",
+      "file_path": "tasks/sys-hub-foundation-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P06〜P10 の実行結果・判定記録を再現可能な証跡として収集・保存する P11 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/sys-hub-foundation-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 運用ドキュメント整備",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p12"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P11"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/runbook.md",
+        "README.md"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P12",
+      "file_path": "tasks/sys-hub-foundation-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P13 の本番デプロイに先立ち運用 runbook と利用者向けドキュメントを整備する P12 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/sys-hub-foundation-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-HUB-FOUNDATION-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "Hub 基盤 本番リリース・デプロイ",
+      "project_id": "feature-package-feat-hub-foundation",
+      "domain": "infrastructure",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-hub-foundation",
+        "stage-1",
+        "infrastructure",
+        "p13"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-17T08:03:32Z",
+      "updated_at": "2026-07-17T08:03:32Z",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P12"
+      ],
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "docs/features/feat-hub-foundation/release-notes.md"
+      ],
+      "parent_feature": "feat-hub-foundation",
+      "feature_package_id": "feature-package/feat-hub-foundation",
+      "phase_ref": "P13",
+      "file_path": "tasks/sys-hub-foundation-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/feature-package-feat-hub-foundation/plan-findings.json",
+        "evaluated_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/feature-package-feat-hub-foundation/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+        "imported_at": "2026-07-17T08:03:32Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "P12 の runbook に従い wrangler CLI で Hub を Cloudflare Workers 本番環境へデプロイする P13 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/sys-hub-foundation-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-17T00:00:00Z"
+      }
+    }
+  ]
+}

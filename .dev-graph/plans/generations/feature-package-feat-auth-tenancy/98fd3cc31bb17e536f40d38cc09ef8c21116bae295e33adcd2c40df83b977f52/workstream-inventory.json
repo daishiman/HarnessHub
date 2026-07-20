@@ -1,0 +1,1211 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-auth-tenancy",
+  "parent_feature": "feat-auth-tenancy",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/spec-state.json",
+      "docs/backend-spec.md",
+      "architecture/harness-hub-security.md",
+      "architecture/harness-hub-backend.md",
+      "features/feat-auth-tenancy.md",
+      "features/feat-auth-tenancy.context.json",
+      "goal-spec.json",
+      "specs/harness-hub-system-specification.md"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-AUTH-TENANCY-P01",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "security",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-auth-tenancy/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/spec-state.json",
+        "docs/backend-spec.md",
+        "features/feat-auth-tenancy.md",
+        "features/feat-auth-tenancy.context.json",
+        "goal-spec.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec (goal-spec.json) と features/feat-auth-tenancy.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-auth-tenancy/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 7 件が過不足なく転記されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP01責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "goal-spec と features/feat-auth-tenancy.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P01",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p01.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P02",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "architecture-decision"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "security",
+      "secondary_workstreams": [
+        "backend",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-auth-tenancy/architecture-decision-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "goal-spec.json",
+        ".dev-graph/plans/feature-package-feat-domain-model-db/task-specs/phase-02-architecture.md",
+        "features/feat-auth-tenancy.context.json",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "Auth.js adapter 境界設計・role 4 種の単一認可ミドルウェア設計・Device Flow 設計・session 管理設計に加え、session_revocations/users スキーマ owner (feat-domain-model-db) の cross-feature 境界確定と role 3 値/4 値分割線を解消する P02 architecture decision タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に session_revocations/users スキーマ owner 確定の判断基準・証跡・影響範囲と role 3 値/4 値分割線の architecture decision が明記され、adapter 境界・単一認可ミドルウェア・Device Flow・session 管理の各設計が記載されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "session_revocations/users スキーマ owner 判断の前提 (feat-domain-model-db の write_scope 非重複) に誤りが判明した場合、architecture-decision-record.md の該当節を差し戻し、P01 の要件ベースラインへ再照会する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P02",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p02.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P03",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-auth-tenancy/design-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "P02 の architecture decision (スキーマ owner 境界・role 分割線・単一認可ミドルウェア・OIDC 検証契約) を P02 実行者から独立した視点で検証する P03 レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md にスキーマ owner 境界判断根拠の検証結果と role 分割線・単一ミドルウェア deny-by-default 設計の妥当性確認が記載されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP03責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "スキーマ owner 境界判断根拠または認可設計に重大な指摘が見つかった場合、design-review-notes.md に指摘内容を記録し P02 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P03",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p03.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P04",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P03"
+      ],
+      "write_scope": [
+        "apps/hub/src/__tests__/auth-tenancy/",
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "docs/features/feat-auth-tenancy/test-design.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "quality_constraints 7 件 (OIDC 動的解決・role 4 種認可・Device Flow・adapter 境界・tenant 分離・IdP 委譲・session 緊急失効) をテストケースへ写像する P04 テストファースト設計タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に quality_constraints 7 件と acceptance 3 件全てに対応するテストケースが記載され、apps/hub/src/__tests__/auth-tenancy/ にスタブが作成されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP04責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "quality_constraints とテストケースの対応漏れが判明した場合、test-design.md の対応表を修正し不足カテゴリを追加する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P04",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p04.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P05",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "実装 — Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理の実装",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "frontend",
+        "api",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P04"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/[tenant_slug]/signin/",
+        "apps/hub/src/app/api/auth/",
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "apps/hub/src/app/api/v1/tokens/",
+        "apps/hub/src/lib/auth/",
+        "apps/hub/src/lib/authz/",
+        "apps/hub/src/middleware.ts",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P02/P04 で確定した設計とテストスタブに基づき Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理を実装する P05 実装タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P04 で作成したテストスタブが実装コードに対して解決可能な状態 (import 解決・型整合) になっている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP05責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "実装が P02 の architecture decision と乖離した場合、該当コミットを revert し P02/P04 の成果物へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P05",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p05.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P06",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "backend",
+        "security",
+        "api"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P05"
+      ],
+      "write_scope": [
+        "apps/hub/src/__tests__/auth-tenancy/",
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "docs/features/feat-auth-tenancy/test-run-results.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P05 の実装に対して P04 のテストスタブを実行し quality_constraints 7 件の充足状況を機械的に確認する P06 テスト実行タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-results.md に quality_constraints 7 件全ての pass 結果が記録されている (fail が残る場合は差し戻し理由が明記されている)",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP06責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかのテストが fail した場合、test-run-results.md に原因を記録し P05 (実装) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P06",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p06.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P07",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-auth-tenancy/acceptance-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "features/feat-auth-tenancy.context.json",
+        "goal-spec.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P06 で green 化したテスト結果を基に goal-spec acceptance 3 件の充足を確認する P07 受入タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-record.md に goal-spec acceptance 3 件全ての確認結果 (pass) と証跡が記載されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP07責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "acceptance 3 件のいずれかが不充足の場合、acceptance-record.md に理由を記録し P05 (実装) または P02 (設計) へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P07",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p07.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P08",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "refactoring-migration"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security"
+      ],
+      "workstream_kind": "security",
+      "secondary_workstreams": [
+        "backend",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P07"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "apps/hub/src/lib/auth/",
+        "docs/features/feat-auth-tenancy/refactoring-migration-note.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "本 feature は packages/db/schema/ を write_scope に持たず DB migration を伴わないため、Auth.js adapter 境界の最終リファクタリングと dev 専用 provider 非存在の CI 検査確立に読み替えた P08 タスク (required-node)",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に adapter 境界是正記録・dev 専用 provider 非存在 CI 検査の設定内容・Dev tenant OIDC 登録手順が記載されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP08責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "CI 検査導入により既存の正当な import が誤検知される場合、検査ルールを是正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P08",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p08.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P09",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "品質保証 — CI 品質ゲート (tenant 分離・adapter 境界隔離・dev provider 非存在・認可判定単一集約) の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P08"
+      ],
+      "write_scope": [
+        "apps/hub/scripts/",
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "docs/features/feat-auth-tenancy/quality-assurance-report.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P08 の adapter 境界整理後、CI 品質ゲート (テナント分離 CI 必須・adapter 境界隔離検査・dev provider 非存在検査・認可判定単一集約検査・secret scan) を確認する P09 品質保証タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に CI 品質ゲート (テナント分離・adapter 境界隔離・認可判定単一集約・dev provider 非存在・secret scan) の全項目 pass が記載されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP09責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかの品質ゲート項目が fail した場合、quality-assurance-report.md に原因を記録し該当する P05/P08 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P09",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p09.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P10",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "最終独立レビュー — quality_constraints 7 件の充足判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-auth-tenancy/final-review-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P09 の品質保証結果を基に quality_constraints 7 件全件の最終充足判定を実装者から独立した視点で行う P10 最終独立レビュータスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-record.md に quality_constraints 7 件全件の充足判定 (充足) が記載されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP10責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "いずれかの quality_constraint が不充足と判定された場合、final-review-record.md に理由を記録し該当する P02/P05/P09 へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P10",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p10.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P11",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-auth-tenancy/evidence-summary.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P01〜P10 の全成果物を証跡として一元集約し、リリース判断とドキュメント化 (P12/P13) に必要な evidence bundle を作成する P11 エビデンス収集タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-summary.md に P06/P07/P09/P10 の 4 成果物への参照リンクと、スキーマ owner 決定・role 分割線への参照が記載されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP11責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "参照先成果物に欠落が見つかった場合、該当 phase へ差し戻し再生成を依頼する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P11",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P12",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "documentation",
+        "operations"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-auth-tenancy/runbook.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "system-spec/00-requirements-definition.md",
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P11 の evidence bundle を踏まえ、session 緊急失効・Device Flow token 棚卸し/失効・OIDC provider 登録・row-level-scope revisit 条件監視の運用 runbook を作成する P12 ドキュメント/運用タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に session 緊急失効・Device Flow token 棚卸し/失効・OIDC provider 登録 (新規テナント/Dev tenant)・row-level-scope revisit 条件監視の 5 手順が過不足なく記載されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP12責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "運用手順が実装済みの API/ロジックと非整合と判明した場合、runbook.md を是正し本 task を再実行する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P12",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p12.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-AUTH-TENANCY-P13",
+      "feature_package_id": "feature-package/feat-auth-tenancy",
+      "parent_feature": "feat-auth-tenancy",
+      "title": "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-auth-tenancy",
+        "macro-feature",
+        "security",
+        "release"
+      ],
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "infrastructure",
+        "security",
+        "api"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P12"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/api/v1/device/",
+        "apps/hub/src/app/api/v1/token/",
+        "docs/features/feat-auth-tenancy/release-record.md",
+        "packages/schemas/auth-tenancy/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "docs/backend-spec.md",
+        "goal-spec.json",
+        "features/feat-auth-tenancy.context.json",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P12 の runbook を前提に、本番テナントの OIDC provider 設定を反映し apps/hub をデプロイして Device Flow E2E を含むスモークテストで疎通確認する P13 リリース/デプロイタスク (required-node)",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-record.md に本番反映内容とスモークテスト結果 (ログイン・role 4 種認可判定・Device Flow E2E・session 緊急失効・dev provider 非存在) が pass として記載され、acceptance 3 項目の本番再確認結果が記録されている",
+        "現行feature context sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5のscope_in/acceptance全件をP13責務として追跡し、未割当0件である",
+        "Normative closure: 本 package が所有するのは Hub 側 Device Authorization Flow（code/approve/token、短命 access token、refresh rotation/reuse detection、本人・管理者失効）である。OS 資格情報保存は feat-publisher-plugin が所有する consumer 実装であり、auth package は保存 API を実装したと偽らず、token response/rotation/revocation の公開 contract と downstream evidence key を提供する。Device Flow acceptance は Hub E2E（承認→発行→rotation→失効）で判定し、macOS Keychain/Windows Credential Manager は publisher package の E2E evidence を相互参照する。循環依存は作らない。 Evidence: P04/P06 は server-side Device Flow と downstream token contract を別 test ID に分け、P10/P11 は auth 自身の証跡と publisher consumer evidence reference を混同せず記録する。"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "rollback": "デプロイまたはスモークテストのいずれかが失敗した場合、直前の apps/hub デプロイをロールバックしたうえで、P05 または P09 へ差し戻して是正する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-19T13:26:55Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-AUTH-TENANCY-P13",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p13.md",
+        "parent_feature": "feat-auth-tenancy",
+        "feature_package_id": "feature-package/feat-auth-tenancy",
+        "phase_ref": "P13"
+      }
+    }
+  ],
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  }
+}

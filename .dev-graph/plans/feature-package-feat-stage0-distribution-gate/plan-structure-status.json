@@ -1,0 +1,115 @@
+{
+  "_generated": "project-task-status.py (派生ビュー・手書き編集しない・再生成で上書き)",
+  "graph_hash": null,
+  "summary": {
+    "total": 13,
+    "by_state": {
+      "pending": 13,
+      "running": 0,
+      "done": 0,
+      "blocked": 0
+    },
+    "completion_rate": 0.0,
+    "blocked_tasks": [],
+    "route_report_count": 0,
+    "completion_gate": null,
+    "effective_status": "in_progress"
+  },
+  "nodes": [
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
+      "phase_ref": "P01",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+      "title": "アーキテクチャ設計 — 3 経路検証方式・最小 artifact 構成・実機 E2E 手順・decision record 登録経路の確定",
+      "phase_ref": "P02",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+      "title": "独立設計レビュー — 検証方式・artifact 構成・実機 E2E 手順の妥当性確認",
+      "phase_ref": "P03",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+      "title": "テストファースト設計 — quality_constraints 8 件・acceptance 3 件に対応する実機検証ケースの設計",
+      "phase_ref": "P04",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+      "title": "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成",
+      "phase_ref": "P05",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+      "title": "テスト実行 — macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行",
+      "phase_ref": "P06",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+      "title": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認",
+      "phase_ref": "P07",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+      "title": "リファクタリング/マイグレーション — 検証 prototype 資産の整理 (N/A 判断を含む)",
+      "phase_ref": "P08",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+      "title": "品質・セキュリティ・運用保証 — C1 (体制)・C2 (コストゼロ)・H7 fail-closed ゲートの充足確認",
+      "phase_ref": "P09",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+      "title": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件の最終確認",
+      "phase_ref": "P10",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+      "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
+      "phase_ref": "P11",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+      "title": "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立",
+      "phase_ref": "P12",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+      "title": "リリース/デプロイ — 採用経路の decision record 登録依頼 (C01 writer 経由) と Stage 1 開始条件判定",
+      "phase_ref": "P13",
+      "entity_ref": null,
+      "state": "pending"
+    }
+  ],
+  "discovered_pending": [],
+  "route_reports": [],
+  "build_summary": null,
+  "completion_evidence": null
+}

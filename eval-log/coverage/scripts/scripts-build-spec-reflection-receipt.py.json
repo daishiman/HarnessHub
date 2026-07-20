@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/build-spec-reflection-receipt.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 89,
+    "notes": "genuine code-review + py_compile OK / `# /// script` frontmatter 完備 (network:false, write-scope: git-common-dir/dev-graph/spec-reflection)。PR 前の『仕様反映確認』受領書 recorder (guard-spec-reflection.py の入力)。soundness: `--spec-impact reflected` は diff_spec_files で base...HEAD の変更 file を列挙し SPEC_PATH_PREFIXES (system-spec/ specs/ architecture/) に実際に触れているかを機械検証、触れていなければ DENY (散文宣言の空手形を排除)。`--spec-impact none` は --reason 必須。受領書は head_sha に束縛し、記録後に commit を積むと guard 側で stale 判定される設計。responsibility: 単一 (受領書の生成・記録のみ、PR は作らない)。error-handling: branch が main/master や空なら DENY exit 2、未コミット変更 (status --porcelain) があれば DENY (HEAD 束縛の前提保護)、git 失敗は RuntimeError→DENY exit 2 (fail-closed)。side-effect-safety: subprocess は git のみ (network なし=network:false 裏付け)、書込は receipt_path (git-common-dir/dev-graph/spec-reflection/<branch slug>.json) の 1 file のみで PR diff を汚さない worktree 外配置、write-scope 宣言と整合。TESTS: tests/scripts-root/test_root__spec_reflection_gate.py::test_recorder_denies_dirty_tree / test_recorder_denies_none_without_reason / test_recorder_denies_reflected_claim_without_spec_diff / test_recorder_accepts_reflected_when_diff_touches_spec_path が dirty tree 拒否・reason 必須・reflected 空手形拒否・正当 reflected 受理を exercise (9 passed)。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

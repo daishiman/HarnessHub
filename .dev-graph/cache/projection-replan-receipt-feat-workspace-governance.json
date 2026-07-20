@@ -1,0 +1,706 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "created": {
+          "created_at": "2026-07-19T14:21:44.998185Z",
+          "created_by": "daishiman",
+          "description": "要件ベースライン確定 — 承認キュー・RBAC細分化・監査ログ閲覧・統制ポリシー設定の要件確定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P01",
+          "id": "HarnessHub-5l3.1",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "要件ベースライン確定 — 承認キュー・RBAC細分化・監査ログ閲覧・統制ポリシー設定の要件確定",
+          "updated_at": "2026-07-19T14:21:44.998185Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P01",
+        "id": "HarnessHub-5l3.1",
+        "phase_ref": "P01"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:21:47.190524Z",
+          "created_by": "daishiman",
+          "description": "アーキテクチャ設計 — governance_policies拡張ポイント・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの決定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P02",
+          "id": "HarnessHub-5l3.2",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "アーキテクチャ設計 — governance_policies拡張ポイント・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの決定",
+          "updated_at": "2026-07-19T14:21:47.190524Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P02",
+        "id": "HarnessHub-5l3.2",
+        "phase_ref": "P02"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:21:49.403922Z",
+          "created_by": "daishiman",
+          "description": "独立設計レビュー — governance_policies拡張点・reject契約・RBAC/監査UI・feature境界遵守の妥当性確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P03",
+          "id": "HarnessHub-5l3.3",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "独立設計レビュー — governance_policies拡張点・reject契約・RBAC/監査UI・feature境界遵守の妥当性確認",
+          "updated_at": "2026-07-19T14:21:49.403922Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P03",
+        "id": "HarnessHub-5l3.3",
+        "phase_ref": "P03"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:21:51.616556Z",
+          "created_by": "daishiman",
+          "description": "テストファースト設計 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6適用のテスト設計 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P04",
+          "id": "HarnessHub-5l3.4",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テストファースト設計 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6適用のテスト設計",
+          "updated_at": "2026-07-19T14:21:51.616556Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P04",
+        "id": "HarnessHub-5l3.4",
+        "phase_ref": "P04"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:21:53.763497Z",
+          "created_by": "daishiman",
+          "description": "実装 — governance_policiesテーブル・publish/:id/reject API・RBAC権限マトリクスUI(S04拡張)・承認キューUI(S05)・監査ログUI(S06)の実装 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P05",
+          "id": "HarnessHub-5l3.5",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "実装 — governance_policiesテーブル・publish/:id/reject API・RBAC権限マトリクスUI(S04拡張)・承認キューUI(S05)・監査ログUI(S06)の実装",
+          "updated_at": "2026-07-19T14:21:53.763497Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P05",
+        "id": "HarnessHub-5l3.5",
+        "phase_ref": "P05"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:21:56.04319Z",
+          "created_by": "daishiman",
+          "description": "テスト実行 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6テストの実行 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P06",
+          "id": "HarnessHub-5l3.6",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テスト実行 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6テストの実行",
+          "updated_at": "2026-07-19T14:21:56.04319Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P06",
+        "id": "HarnessHub-5l3.6",
+        "phase_ref": "P06"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:21:58.21065Z",
+          "created_by": "daishiman",
+          "description": "受入 — 承認フローpolicy遮断・監査ログテナントスコープ検索・RBAC変更監査記録の3件受入判定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P07",
+          "id": "HarnessHub-5l3.7",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "受入 — 承認フローpolicy遮断・監査ログテナントスコープ検索・RBAC変更監査記録の3件受入判定",
+          "updated_at": "2026-07-19T14:21:58.21065Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P07",
+        "id": "HarnessHub-5l3.7",
+        "phase_ref": "P07"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:22:00.503101Z",
+          "created_by": "daishiman",
+          "description": "リファクタリング/マイグレーション — governance_policies新設テーブル・audit_events追加action(governance.policy_change)の既存基盤互換移行 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P08",
+          "id": "HarnessHub-5l3.8",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リファクタリング/マイグレーション — governance_policies新設テーブル・audit_events追加action(governance.policy_change)の既存基盤互換移行",
+          "updated_at": "2026-07-19T14:22:00.503101Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P08",
+        "id": "HarnessHub-5l3.8",
+        "phase_ref": "P08"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:22:02.711368Z",
+          "created_by": "daishiman",
+          "description": "品質保証 — ASVS L2アクセス制御/ログ到達目標・T-1/T-1b/T-1c/T-6・deny-by-default認可の横断確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P09",
+          "id": "HarnessHub-5l3.9",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "品質保証 — ASVS L2アクセス制御/ログ到達目標・T-1/T-1b/T-1c/T-6・deny-by-default認可の横断確認",
+          "updated_at": "2026-07-19T14:22:02.711368Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P09",
+        "id": "HarnessHub-5l3.9",
+        "phase_ref": "P09"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:22:04.931448Z",
+          "created_by": "daishiman",
+          "description": "最終レビュー — goal-spec 6件quality_constraints・3件acceptanceの全件最終合否判定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P10",
+          "id": "HarnessHub-5l3.10",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "最終レビュー — goal-spec 6件quality_constraints・3件acceptanceの全件最終合否判定",
+          "updated_at": "2026-07-19T14:22:04.931448Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P10",
+        "id": "HarnessHub-5l3.10",
+        "phase_ref": "P10"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:22:07.143462Z",
+          "created_by": "daishiman",
+          "description": "エビデンス集約 — P04〜P10成果物の証跡パッケージ化 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P11",
+          "id": "HarnessHub-5l3.11",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "エビデンス集約 — P04〜P10成果物の証跡パッケージ化",
+          "updated_at": "2026-07-19T14:22:07.143462Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P11",
+        "id": "HarnessHub-5l3.11",
+        "phase_ref": "P11"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:22:09.3513Z",
+          "created_by": "daishiman",
+          "description": "ドキュメント/運用 — workspace-admin向け承認/監査/RBAC設定 運用手順書の整備 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P12",
+          "id": "HarnessHub-5l3.12",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "ドキュメント/運用 — workspace-admin向け承認/監査/RBAC設定 運用手順書の整備",
+          "updated_at": "2026-07-19T14:22:09.3513Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P12",
+        "id": "HarnessHub-5l3.12",
+        "phase_ref": "P12"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-19T14:22:11.58177Z",
+          "created_by": "daishiman",
+          "description": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+          "external_ref": "dev-graph:SYS-WORKSPACE-GOVERNANCE-P13",
+          "id": "HarnessHub-5l3.13",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順",
+          "updated_at": "2026-07-19T14:22:11.58177Z"
+        },
+        "external_ref": "SYS-WORKSPACE-GOVERNANCE-P13",
+        "id": "HarnessHub-5l3.13",
+        "phase_ref": "P13"
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-5l3.1",
+        "issue_id": "HarnessHub-5l3.2",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.1",
+          "issue_id": "HarnessHub-5l3.2",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.2",
+        "issue_id": "HarnessHub-5l3.3",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.2",
+          "issue_id": "HarnessHub-5l3.3",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.3",
+        "issue_id": "HarnessHub-5l3.4",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.3",
+          "issue_id": "HarnessHub-5l3.4",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.4",
+        "issue_id": "HarnessHub-5l3.5",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.4",
+          "issue_id": "HarnessHub-5l3.5",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.5",
+        "issue_id": "HarnessHub-5l3.6",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.5",
+          "issue_id": "HarnessHub-5l3.6",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.6",
+        "issue_id": "HarnessHub-5l3.7",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.6",
+          "issue_id": "HarnessHub-5l3.7",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.7",
+        "issue_id": "HarnessHub-5l3.8",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.7",
+          "issue_id": "HarnessHub-5l3.8",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.8",
+        "issue_id": "HarnessHub-5l3.9",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.8",
+          "issue_id": "HarnessHub-5l3.9",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.9",
+        "issue_id": "HarnessHub-5l3.10",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.9",
+          "issue_id": "HarnessHub-5l3.10",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.10",
+        "issue_id": "HarnessHub-5l3.11",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.10",
+          "issue_id": "HarnessHub-5l3.11",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.11",
+        "issue_id": "HarnessHub-5l3.12",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.11",
+          "issue_id": "HarnessHub-5l3.12",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-5l3.12",
+        "issue_id": "HarnessHub-5l3.13",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-5l3.12",
+          "issue_id": "HarnessHub-5l3.13",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "created": {
+        "created_at": "2026-07-19T14:21:42.932332Z",
+        "created_by": "daishiman",
+        "description": "顧客管理者が統制と安全性 (G2) を自律運用できるよう、承認キュー・RBAC 拡張・監査ログ閲覧を提供する\n\nworkspace-admin が承認/差し戻し/監査を Hub Web で完結でき、統制作業の提供者依存が解消された状態\n\ndev_graph_source_digest: sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+        "external_ref": "dev-graph:feat-workspace-governance",
+        "id": "HarnessHub-5l3",
+        "issue_type": "epic",
+        "metadata": {
+          "dev_graph_source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+        },
+        "owner": "daishimanju@gmail.com",
+        "priority": 2,
+        "schema_version": 1,
+        "status": "open",
+        "title": "Stage 2: Workspace ガバナンス (approval queue / RBAC / audit log)",
+        "updated_at": "2026-07-19T14:21:42.932332Z"
+      },
+      "external_ref": "feat-workspace-governance",
+      "id": "HarnessHub-5l3"
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-5l3.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5l3.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-5l3.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-5l3.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ],
+    "source_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10"
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

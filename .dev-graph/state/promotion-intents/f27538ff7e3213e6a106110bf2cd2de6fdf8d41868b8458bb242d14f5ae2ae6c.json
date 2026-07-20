@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/replan-20260719-feat-stage0-distribution-gate",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+  "digest": "sha256:30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+  "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+  "package_slug": "feature-package-feat-stage0-distribution-gate",
+  "generation_id": "30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate",
+    "published_digest": "sha256:304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+    "receipt": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/atomic-promotion-receipt.json"
+  },
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-19T14:19:09Z"
+}

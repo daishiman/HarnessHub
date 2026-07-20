@@ -1,0 +1,17 @@
+{
+  "cleaned_at": "2026-07-17T11:12:14Z",
+  "event": "expired-lock-cleanup",
+  "expired_lock": {
+    "acquired_at": "2026-07-17T10:51:08Z",
+    "expires_at": "2026-07-17T11:11:12Z",
+    "feature_digest": "sha256:e67d33e37c98456225d7391c7f47a71c19e2efe043a76607487a50897adfa84f",
+    "feature_id": "feat-user-org-admin",
+    "heartbeat_at": "2026-07-17T10:56:12Z",
+    "repository_id": "github:daishiman/HarnessHub",
+    "run_id": "run-user-org-admin-20260717",
+    "session_owner": "claude-session-9ce54d7a"
+  },
+  "expired_lock_sha256": "sha256:df6b5453a0eb1181c077eddb6917341a505f128dd53f68003058591b4e4f1dde",
+  "lock_path": ".dev-graph/locks/system-dev-plan-lock.json",
+  "schema_version": "1.0.0"
+}

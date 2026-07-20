@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging",
+  "destination": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate",
+  "digest": "sha256:304796a9f0dd030304377732863de18d343d50c0471bab00d6757486db3cbbb9",
+  "feature_package_id": "feature-package/feat-stage0-distribution-gate",
+  "receipt": ".dev-graph/plans/feature-package-feat-stage0-distribution-gate/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-18T12:32:59Z"
+}

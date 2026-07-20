@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-hearing-intake",
+  "feature_context_digest": "sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507",
+  "purpose": "業務課題から業務ツールが生まれる入口として、S10 の 4 ステップウィザード (削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理を提供する (I11, J4)",
+  "goal": "非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) できる状態",
+  "scope_in": [
+    "S10 ヒアリングウィザード (4 ステップ・自動試算表示)",
+    "HearingSheet/FormData エンティティ + 受付番号採番",
+    "AI 処理キュー (D5 pull 型) のジョブ投入・生成結果の書戻し受領",
+    "S11 シート一覧 / S12 シート詳細 (status 変更は admin)",
+    "ステップウィザード共通部品の消費"
+  ],
+  "scope_out": [
+    "AI 実行基盤のサーバ側実装 (D5 で不採用)",
+    "構築工程の進行管理 (feat-build-pipeline-board)"
+  ],
+  "acceptance": [
+    "ウィザード完了で受付番号が発番され「生成中」状態が表示される (非同期 UI パターン)",
+    "AI キューのジョブが pull→書戻しで完結しサーバ側 AI 課金が発生しない",
+    "シート本文の Markdown が sanitize 済みで描画される (SEC7)"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-hearing-intake.context.json",
+      "exists": true,
+      "sha256": "d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation.",
+      "feature_id": "feat-hearing-intake"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "74b1fc4aaa055285c35af8e7c1657272ccb2ab271cd55e4482f902a4de00248d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-data.md",
+      "exists": true,
+      "sha256": "be578235037d18ee5fb16aa44cf51160511e9e403b6873bfeac29c6f1313233d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "async-ui-pattern-hearing-wizard",
+      "summary": "ウィザード完了後の AI 生成待ちは「受付番号 + 生成中ステータス + 完了通知」の非同期 UI パターンで吸収する。処理遅延は数分〜セッション次第であることを前提に UI を設計する",
+      "source": "system-spec/ui-ux.md qa-021; system-spec/00-requirements-definition.md D5"
+    },
+    {
+      "id": "ai-queue-pull-type-d5",
+      "summary": "ヒアリングシート生成の AI 処理キューは D5 確定の pull 型: ジョブ登録 → Claude Code セッションが pull → 結果書戻しで完結し、サーバ側 AI 課金は発生しない",
+      "source": "system-spec/00-requirements-definition.md D5; system-spec/backend.md qa-023 (B5)"
+    },
+    {
+      "id": "ai-queue-authz-payload-secret-ban",
+      "summary": "AiJob (AI キュー) の pull/書戻しの認可は Device Flow token 保有者に限定し、job payload に secret を含めない",
+      "source": "system-spec/security.md qa-025 (SEC8)"
+    },
+    {
+      "id": "markdown-sanitize-sec7",
+      "summary": "ヒアリングシート本文などの Markdown は共通レンダラの sanitize で一括担保し、XSS を防ぐ",
+      "source": "system-spec/security.md qa-025 (SEC7)"
+    },
+    {
+      "id": "tenant-scope-d4-new-entities",
+      "summary": "HearingSheet/FormData と既存共通ai_jobs consumer を含む全新規テーブルに tenant_id/workspace_id スコープ列を必須とする (row-level tenant scope)",
+      "source": "system-spec/00-requirements-definition.md D4; system-spec/database.md qa-024"
+    },
+    {
+      "id": "hearing-sheet-entities-and-receipt-number",
+      "summary": "HearingSheet/FormDataは本featureが所有し、AI処理は共通ai_jobsのkind=sheet_generationを消費する。feature固有AiJob schema/kindを作らない。受付番号採番とserver-side sheetEstimate snapshot保存を同じsheet作成契約で行う。",
+      "source": "system-spec/database.md qa-024"
+    },
+    {
+      "id": "wizard-common-component-qa022",
+      "summary": "ヒアリング 4 ステップウィザードの進捗表示・戻る/次へ・キーボード操作は共通部品 (packages/ui のステップウィザード) で担保し、独自実装しない",
+      "source": "system-spec/frontend.md qa-022"
+    },
+    {
+      "id": "estimate-server-computed-only",
+      "summary": "削減効果の自動試算表示 (時給換算・削減額) はサーバ計算値の表示専用とし、クライアント側での金額再計算・自己申告を行わない",
+      "source": "system-spec/frontend.md qa-022; system-spec/security.md qa-025 (SEC5)"
+    },
+    {
+      "id": "b1-zod-single-source-authz-mw",
+      "summary": "ヒアリング/シート関連の新規 REST 資源は zod スキーマ単一ソースへ追加し、全て認可単一ミドルウェア (deny-by-default) 配下に置く",
+      "source": "system-spec/backend.md qa-023 (B1)"
+    },
+    {
+      "id": "authz-single-mw-role-table",
+      "summary": "新規 API 群は認可単一ミドルウェア (deny-by-default) 配下で role×操作の許可表に従う。S11/S12 の status 変更を admin 限定とする feature 側の要件は、この許可表の枠組みで実装する",
+      "source": "system-spec/security.md qa-025 (SEC2)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + completeness evaluator PASS",
+    "notes_ja": "現行 feature context と全 architecture/spec lineage を repository bytes から SHA-256 再計算し、P01..P13 の current canonical baseline に固定した。",
+    "digest_recomputed_by": "run-system-dev-plan immutable-replan remediation 2026-07-19",
+    "status": "complete"
+  },
+  "extracted_at": "2026-07-19T12:00:00Z"
+}

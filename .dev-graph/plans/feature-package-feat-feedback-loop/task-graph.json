@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-feedback-loop",
+  "parent_feature": "feat-feedback-loop",
+  "nodes": [
+    {
+      "id": "SYS-FEEDBACK-LOOP-P01",
+      "graph_node_id": "sys-feedback-loop-p01",
+      "title": "改善要望フィードバックループ要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P02",
+      "graph_node_id": "sys-feedback-loop-p02",
+      "title": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P01"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P03",
+      "graph_node_id": "sys-feedback-loop-p03",
+      "title": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P02"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P04",
+      "graph_node_id": "sys-feedback-loop-p04",
+      "title": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P03"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P05",
+      "graph_node_id": "sys-feedback-loop-p05",
+      "title": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P04"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P06",
+      "graph_node_id": "sys-feedback-loop-p06",
+      "title": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P05"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P07",
+      "graph_node_id": "sys-feedback-loop-p07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P06"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P08",
+      "graph_node_id": "sys-feedback-loop-p08",
+      "title": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P07"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P09",
+      "graph_node_id": "sys-feedback-loop-p09",
+      "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P08"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P10",
+      "graph_node_id": "sys-feedback-loop-p10",
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P09"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P11",
+      "graph_node_id": "sys-feedback-loop-p11",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P10"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P12",
+      "graph_node_id": "sys-feedback-loop-p12",
+      "title": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P11"]
+    },
+    {
+      "id": "SYS-FEEDBACK-LOOP-P13",
+      "graph_node_id": "sys-feedback-loop-p13",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-feedback-loop",
+      "parent_feature": "feat-feedback-loop",
+      "depends_on": ["SYS-FEEDBACK-LOOP-P12"]
+    }
+  ]
+}

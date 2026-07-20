@@ -166,7 +166,8 @@ def test_bd_helpers_and_all_operations(common, tmp_path, monkeypatch, capsys):
     code, out = call_main(mod, monkeypatch, capsys, "--op", "create", "--repo-root", tmp_path, "--dry-run")
     assert code == 0 and out["dry_run_preview"]["op"] == "create"
 
-    monkeypatch.setattr(mod, "bd", lambda args, cwd, check=True: [{"id": "B9", "description": "external_ref:G9"}] if args[0] == "search" else {})
+    existing_row = {"id": "B9", "description": "external_ref:G9", "issue_type": "task", "status": "open"}
+    monkeypatch.setattr(mod, "bd", lambda args, cwd, check=True: [existing_row] if args[0] in ("search", "list", "show") else {})
     _, out = call_main(mod, monkeypatch, capsys, "--op", "create", "--repo-root", tmp_path, "--graph-node-id", "G9", "--title", "T")
     assert out["result"]["idempotent"] is True
 
@@ -274,27 +275,29 @@ def test_render_and_schedule(common, tmp_path, monkeypatch, capsys):
         call_main(render, monkeypatch, capsys, "--graph", graph, "--out", out)
 
     sched = load(SCRIPTS / "schedule-graph.py", "schedule_graph_cov")
+    empty_leases = tmp_path / "empty-leases.json"
+    empty_leases.write_text(json.dumps({"leases": []}))
     graph.write_text(json.dumps({"nodes": [
         {"id": "done", "status": "done", "depends_on": []},
         {"id": "f", "artifact_kind": "feature", "status": "active", "confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": {"status": "complete"}, "depends_on": ["done"], "resource_scope": ["api"]},
         {"id": "t1", "artifact_kind": "task", "status": "active", "confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": {"status": "complete"}, "depends_on": ["done"], "resource_scope": ["web"]},
         {"id": "t2", "artifact_kind": "task", "status": "active", "confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": {"status": "complete"}, "depends_on": [], "resource_scope": ["web"]},
     ]}))
-    code, plan = call_main(sched, monkeypatch, capsys, "--graph", graph)
+    code, plan = call_main(sched, monkeypatch, capsys, "--graph", graph, "--leases", empty_leases)
     assert code == 0 and plan["ready_set"]["features"] == ["f"]
     assert plan["batches"]["tasks"] == [["t1"], ["t2"]]
     leases = tmp_path / "leases.json"; leases.write_text(json.dumps({"leases": [{"graph_node_id": "t1", "state": "claimed", "resource_scope": ["web"]}]}))
     _, plan = call_main(sched, monkeypatch, capsys, "--graph", graph, "--leases", leases)
     assert "t1" in plan["conflicts"] and "t2" in plan["conflicts"]
     ready = tmp_path / "ready.json"; ready.write_text(json.dumps({"ready_set": [{"external_ref": "t2"}, {"external_ref": "unknown"}]}))
-    _, plan = call_main(sched, monkeypatch, capsys, "--graph", graph, "--ready-source", "bd-bridge", "--ready-json", ready)
+    _, plan = call_main(sched, monkeypatch, capsys, "--graph", graph, "--leases", empty_leases, "--ready-source", "bd-bridge", "--ready-json", ready)
     assert plan["ready_source"] == "bd-bridge" and plan["unmapped"]
 
     graph.write_text(json.dumps({"nodes": [
         {"id": "legacy", "artifact_kind": "task", "status": "active", "confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": {"status": "complete"}, "depends_on": [], "resource_scope": {"touches": ["unsafe"]}},
     ]}))
     with pytest.raises(common.ContractError, match="resource_scope must be"):
-        call_main(sched, monkeypatch, capsys, "--graph", graph)
+        call_main(sched, monkeypatch, capsys, "--graph", graph, "--leases", empty_leases)
 
 
 def test_render_receipt_hashes_progress_and_rejects_invalid_input(

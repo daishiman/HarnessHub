@@ -59,7 +59,7 @@ def gh_text(argv: list[str]) -> str:
     return run([os.environ.get("DEV_GRAPH_GH", "gh"), *argv]).stdout.strip()
 
 
-def graphql(query: str, variables: dict[str, str]) -> Any:
+def graphql(query: str, variables: dict[str, Any]) -> Any:
     argv = ["api", "graphql", "-f", f"query={query}"]
     for key, value in sorted(variables.items()): argv += ["-F", f"{key}={value}"]
     return gh_json(argv)
@@ -121,7 +121,8 @@ def lifecycle_facts(repo: str, number: int) -> dict[str, Any]:
 def main() -> int:
     p = argparse.ArgumentParser(); p.add_argument("--op", required=True, choices=("issue-fetch", "issue-create", "issue-update", "issue-close", "lifecycle-facts", "project-resolve", "project-item-find", "project-item-add", "project-item-edit"))
     p.add_argument("--repo"); p.add_argument("--number", type=int); p.add_argument("--title"); p.add_argument("--body")
-    p.add_argument("--owner"); p.add_argument("--project-number", type=int); p.add_argument("--content-id"); p.add_argument("--project-id"); p.add_argument("--item-id"); p.add_argument("--field-id"); p.add_argument("--option-id"); p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--owner"); p.add_argument("--project-number", type=int); p.add_argument("--content-id"); p.add_argument("--project-id"); p.add_argument("--item-id"); p.add_argument("--field-id"); p.add_argument("--option-id")
+    p.add_argument("--value-type", choices=("single_select", "text", "number", "date", "iteration"), default="single_select"); p.add_argument("--value"); p.add_argument("--dry-run", action="store_true")
     a = p.parse_args(); op = a.op
     if (op.startswith("issue-") or op == "lifecycle-facts") and not a.repo: raise ContractError("--repo required")
     if a.dry_run and op in MUTATIONS:
@@ -129,7 +130,22 @@ def main() -> int:
               "preview": {k: v for k, v in vars(a).items() if v is not None and k != "dry_run"}}); return 0
     if op == "issue-fetch":
         if not a.number: raise ContractError("--number required")
-        result = normalize_issue(gh_json(["issue", "view", str(a.number), "--repo", a.repo, "--json", ISSUE_FIELDS]))
+        try:
+            result = normalize_issue(gh_json(["issue", "view", str(a.number), "--repo", a.repo, "--json", ISSUE_FIELDS]))
+        except ContractError as exc:
+            detail = str(exc).casefold()
+            not_found = (
+                "could not resolve to an issue with the number" in detail
+                or "issue was not found" in detail
+                or "no issue found" in detail
+            )
+            if not not_found:
+                raise
+            result = {
+                "id": None, "number": a.number, "repo": a.repo,
+                "title": "", "state": "deleted", "url": None,
+                "updated_at": None, "deleted": True,
+            }
     elif op == "lifecycle-facts":
         if not a.number: raise ContractError("--number required")
         result = lifecycle_facts(a.repo, a.number)
@@ -149,7 +165,7 @@ def main() -> int:
         run([os.environ.get("DEV_GRAPH_GH", "gh"), *argv]); result = {"number": a.number, "state": "closed" if op == "issue-close" else "updated"}
     elif op == "project-resolve":
         if not a.owner or not a.project_number: raise ContractError("--owner and --project-number required")
-        query = "query($login:String!,$number:Int!){user(login:$login){projectV2(number:$number){id title fields(first:100){nodes{... on ProjectV2FieldCommon{id name} ... on ProjectV2SingleSelectField{id name options{id name}}}}}} organization(login:$login){projectV2(number:$number){id title fields(first:100){nodes{... on ProjectV2FieldCommon{id name} ... on ProjectV2SingleSelectField{id name options{id name}}}}}}}"
+        query = "query($login:String!,$number:Int!){user(login:$login){projectV2(number:$number){id title fields(first:100){nodes{... on ProjectV2FieldCommon{id name} ... on ProjectV2SingleSelectField{id name options{id name}} ... on ProjectV2IterationField{id name configuration{iterations{id title}}}}}}} organization(login:$login){projectV2(number:$number){id title fields(first:100){nodes{... on ProjectV2FieldCommon{id name} ... on ProjectV2SingleSelectField{id name options{id name}} ... on ProjectV2IterationField{id name configuration{iterations{id title}}}}}}}}"
         data = graphql(query, {"login": a.owner, "number": str(a.project_number)}).get("data", {})
         candidates = [x.get("projectV2") for x in (data.get("user") or {}, data.get("organization") or {}) if x.get("projectV2")]
         if len(candidates) != 1: raise ContractError(f"default project must resolve exactly once, got {len(candidates)}")
@@ -158,7 +174,17 @@ def main() -> int:
         result = project
     elif op == "project-item-find":
         if not a.project_id or not a.content_id: raise ContractError("--project-id and --content-id required")
-        query = "query($id:ID!,$cursor:String){node(id:$id){... on ProjectV2{items(first:100,after:$cursor){nodes{id content{... on Issue{id number url}}} pageInfo{hasNextPage endCursor}}}}}"
+        query = (
+            "query($id:ID!,$cursor:String){node(id:$id){... on ProjectV2{"
+            "items(first:100,after:$cursor){nodes{id updatedAt content{... on Issue{id number url}} "
+            "fieldValues(first:100){nodes{"
+            "... on ProjectV2ItemFieldSingleSelectValue{name optionId updatedAt field{... on ProjectV2FieldCommon{id name}}} "
+            "... on ProjectV2ItemFieldTextValue{text updatedAt field{... on ProjectV2FieldCommon{id name}}} "
+            "... on ProjectV2ItemFieldNumberValue{number updatedAt field{... on ProjectV2FieldCommon{id name}}} "
+            "... on ProjectV2ItemFieldDateValue{date updatedAt field{... on ProjectV2FieldCommon{id name}}} "
+            "... on ProjectV2ItemFieldIterationValue{title iterationId updatedAt field{... on ProjectV2FieldCommon{id name}}}"
+            "}}} pageInfo{hasNextPage endCursor}}}}}"
+        )
         cursor = ""; found = []; pages = 0
         while True:
             page = graphql(query, {"id": a.project_id, "cursor": cursor}); pages += 1
@@ -172,9 +198,28 @@ def main() -> int:
         q = "mutation($project:ID!,$content:ID!){addProjectV2ItemById(input:{projectId:$project,contentId:$content}){item{id}}}"
         result = graphql(q, {"project": a.project_id, "content": a.content_id})
     else:
-        if not all((a.project_id, a.item_id, a.field_id, a.option_id)): raise ContractError("project/item/field/option ids required")
-        q = "mutation($project:ID!,$item:ID!,$field:ID!,$option:String!){updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{singleSelectOptionId:$option}}){projectV2Item{id}}}"
-        result = graphql(q, {"project": a.project_id, "item": a.item_id, "field": a.field_id, "option": a.option_id})
+        if not all((a.project_id, a.item_id, a.field_id)): raise ContractError("project/item/field ids required")
+        variables: dict[str, Any] = {"project": a.project_id, "item": a.item_id, "field": a.field_id}
+        if a.value_type == "single_select":
+            if not a.option_id: raise ContractError("single_select edit requires --option-id")
+            q = "mutation($project:ID!,$item:ID!,$field:ID!,$value:String!){updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{singleSelectOptionId:$value}}){projectV2Item{id}}}"
+            variables["value"] = a.option_id
+        elif a.value_type == "iteration":
+            if not a.option_id: raise ContractError("iteration edit requires --option-id")
+            q = "mutation($project:ID!,$item:ID!,$field:ID!,$value:String!){updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{iterationId:$value}}){projectV2Item{id}}}"
+            variables["value"] = a.option_id
+        elif a.value_type == "number":
+            try: variables["value"] = float(a.value) if a.value is not None else None
+            except ValueError as exc: raise ContractError("number edit requires a numeric --value") from exc
+            q = "mutation($project:ID!,$item:ID!,$field:ID!,$value:Float!){updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{number:$value}}){projectV2Item{id}}}"
+        elif a.value_type == "date":
+            if not a.value: raise ContractError("date edit requires --value")
+            q = "mutation($project:ID!,$item:ID!,$field:ID!,$value:Date!){updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{date:$value}}){projectV2Item{id}}}"
+            variables["value"] = a.value
+        else:
+            q = "mutation($project:ID!,$item:ID!,$field:ID!,$value:String!){updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{text:$value}}){projectV2Item{id}}}"
+            variables["value"] = a.value or ""
+        result = graphql(q, variables)
     dump({"op": op, "dry_run": False, "result": result, "retry_classification": retry_classification(op)})
     return 0
 

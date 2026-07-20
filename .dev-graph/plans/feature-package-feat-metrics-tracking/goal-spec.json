@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-metrics-tracking",
+  "feature_context_digest": "sha256:64106cc96859b3755741efeb26321fd3746af1a823d0d7837d5b2147b41ee759",
+  "purpose": "導入ハーネスの利用実態と削減効果 (G5) を可視化するため、実行ログ ingest (B2: 短命 token・冪等キー・回数のみ)・週次 rollup (B3: Workers cron)・試算エンジン共通層 (サーバ側係数換算) と S09/S16 ダッシュボードを提供する (I10)",
+  "goal": "実行ログがサーバ側で信頼可能に集計され (SEC5)、S09 ダッシュボード・S16 利用/削減効果・S17 個別集計が週次 rollup から描画される状態",
+  "scope_in": [
+    "MetricsEvent/MetricsRollup エンティティ + ingest API (B2)",
+    "Workers cron 週次 rollup (B3)",
+    "試算エンジン純関数 (時給=年収÷annualHours・分/回・削減率、単一実装)",
+    "S09 ダッシュボード (KPI/推移/完了率/ランキング/部門別)",
+    "S16 利用・削減効果 (ハーネス別・週次)",
+    "チャート共通部品の消費 (bundle 3MiB 予算内)"
+  ],
+  "scope_out": [
+    "クライアント側での金額換算・自己申告 (SEC5 で禁止)",
+    "外部 BI 連携"
+  ],
+  "acceptance": [
+    "ingest が短命 token + 冪等キーで保護され重複計上しない",
+    "金額換算がサーバ側のみで行われる (クライアント申告は回数のみ)",
+    "S09/S16 が rollup 由来のデータで描画され CWV good を維持する"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-metrics-tracking.context.json",
+      "feature_id": "feat-metrics-tracking",
+      "exists": true,
+      "sha256": "64106cc96859b3755741efeb26321fd3746af1a823d0d7837d5b2147b41ee759",
+      "digest_status": "verified",
+      "digest_note": "呼び出し元 (team-lead) から digest 値 (sha256:64106cc96859b3755741efeb26321fd3746af1a823d0d7837d5b2147b41ee759) として提供された。.dev-graph/locks/system-dev-plan-lock.json を Read し、feature_digest フィールド (同一値) と feature_id フィールド (feat-metrics-tracking) が完全一致することを確認した。本 agent は Read/Write/Glob/Grep/SendMessage/Task 系のみ保有し sha256 を計算する exec ツールを持たないため、ファイル内容からの独立再計算はしていない。features/feat-metrics-tracking.md frontmatter の source_lineage.source_digest (8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6) は specs/harness-hub-system-specification.md 側の値であり本 context.json の digest とは別物。main-loop による独立再計算を要する。 [main-loop 再計算 2026-07-17T14:49:31Z: 一致]"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "2aada07e244e91bca6dda8bcc075cdefbd880c02396c22a383363de80479efc9",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-backend、frontmatter confirmation_status=confirmed、evaluation_status=pass、source_lineage.source_digest=d79b66c458bc2d16a6661af8b547fee7cb111ff15bcdcb183693e84f192c7664 (system-spec/backend.md の digest 主張)。ただし本文『正本 (source of truth)』節はこれと異なる sha256: `2a76ddb666c9da93…` を同じ system-spec/backend.md の digest として記載しており、frontmatter と本文が食い違う (wrapper 内部の不整合)。加えて system-spec/backend.md 自体を Read したところ status: draft・aggregate: 収集中で『確定内容 (質疑録)』は qa-010 のみであり、frontmatter が主張する confirmed+PASS 状態や、本 goal-spec が引用する qa-023/qa-031〜033 相当の内容を本文に含んでいない。system-spec/spec-state.json の reopen_log には backend/web が複数回 確定 から再オープンされた記録があり、qa-037 (2026-07-17: security 深掘り qa-034〜036 の波及差分反映) の回答は database.web/backend.web への差分適用を明記しているため、本 run 時点で backend.md 本文が qa-037 起因の再オープン後・未再描画の状態にある可能性が高い (system-spec/completeness-report.json の verdict=PASS は spec-state.json の matrix/qa_log に対する検証であり、backend.md 本文の再描画完了を意味しない)。wrapper 自体の sha256 は repo 内に記録されておらず、本 agent には計算手段がないため null/unresolved とする。本 goal-spec の quality_constraints では system-spec/backend.md 本文ではなく system-spec/spec-state.json の qa_log (qa-023/qa-031/qa-032/qa-033) と frontmatter status=confirmed の docs/backend-spec.md (qa_ref: qa-031/032/033) を直接の根拠として引用した。main-loop による独立再計算、および system-spec-harness 側での backend.md 本文再生成要否の確認を要する。 [main-loop 時点記録 2026-07-17T14:49:31Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中 (qa-034〜037 確定・dev-workflow ヒアリング進行・章 stub 状態) のため wrapper は世代混在であり、収束後の一括 reimport (follow-up 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md (いずれも確定) にあり、wrapper digest は canonical gate 対象外]"
+    },
+    {
+      "path": "architecture/harness-hub-data.md",
+      "exists": true,
+      "sha256": "239389228c4cd2b87e0d891256b47e87e63b5cecc191ca041ef6101854772759",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-data、frontmatter confirmation_status=confirmed、evaluation_status=pass、source_lineage.source_digest=ab5805b0ac7a55560a70e210defb4fe89e9b98a2556214f15103d3f81edbf52e (system-spec/database.md の digest 主張)。本文『正本』節はこれと異なる sha256: `c74fe6b4a1c50bf1…` を記載しており frontmatter と本文が食い違う。system-spec/database.md 自体を Read したところ status: draft・aggregate: 収集中で『確定内容 (質疑録)』は『確定セルなし』であり、本 goal-spec が引用する qa-024 (MetricsEvent/MetricsRollup/TenantCoefficient エンティティ・tenant scope) 相当の内容を本文に含んでいない。architecture/harness-hub-backend.md と同根の drift (qa-037 波及に伴う再オープン後・未再描画の可能性) と判断する。本 goal-spec の quality_constraints では system-spec/database.md 本文ではなく system-spec/spec-state.json の qa_log (qa-024) と docs/backend-spec.md §2.3 テーブル定義 (frontmatter qa_ref: qa-031/032/033) を直接の根拠として引用した。wrapper 自体の sha256 は計算手段がなく null/unresolved。main-loop による独立再計算・再生成要否確認を要する。 [main-loop 時点記録 2026-07-17T14:49:31Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中 (qa-034〜037 確定・dev-workflow ヒアリング進行・章 stub 状態) のため wrapper は世代混在であり、収束後の一括 reimport (follow-up 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md (いずれも確定) にあり、wrapper digest は canonical gate 対象外]"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "b4f6edad6750f08ab1e16f816fce38ad5443c06e19871df9ebe6992d891fc2a0",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=arch-harness-hub-frontend、frontmatter confirmation_status=confirmed、evaluation_status=pass、source_lineage.source_digest=adf85021f88c7048cf02f1c2facb18cc3407e865b311ee881a684c8e7196ddd3 (system-spec/frontend.md の digest 主張)。本文『正本』節も同じ sha256: `adf85021f88c7048…` を記載しており frontmatter と本文は一致 (backend/data wrapper で見られた内部不整合はここには無い)。system-spec/frontend.md と system-spec/ui-ux.md を直接 Read したところ両方とも status: confirmed・aggregate: 確定であることを確認したが、両章の『確定内容 (質疑録)』節はいずれも qa-035 (モバイルレスポンシブ)・qa-007 (フロントエンド構成) のみを列挙し、本 goal-spec が引用する qa-021 (S09/S16 画面追加)・qa-022 (チャート bundle 予算・試算表示サーバ計算限定) を本文に含んでいない (system-spec/completeness-report.json の design_knowledge_reflection 節が database.md/maintenance-ops.md について記録する『本文が一部確定 qa を未描画』という既知パターンと同種)。本 goal-spec の quality_constraints では frontend.md/ui-ux.md 本文ではなく system-spec/spec-state.json の qa_log (qa-021/qa-022) を直接の根拠として引用した。wrapper 自体の sha256 は repo 内に記録されておらず計算手段もないため null/unresolved。main-loop による独立再計算を要する。 [main-loop 時点記録 2026-07-17T14:49:31Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中 (qa-034〜037 確定・dev-workflow ヒアリング進行・章 stub 状態) のため wrapper は世代混在であり、収束後の一括 reimport (follow-up 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md (いずれも確定) にあり、wrapper digest は canonical gate 対象外]"
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "3345481c33b226d3f4a16cfc9198cd95376f8862c149d0d8353123e880ba3751",
+      "digest_status": "verified-point-in-time",
+      "digest_note": "Read で実在・内容確認済み。graph_node_id=spec-harness-hub-requirements、confirmation_status=confirmed、evaluation_status=pass、evidence_ref=system-spec/completeness-report.json (verdict=PASS。本 agent が Read で直接確認済み。findings は severity=info/low/medium のみで gaps=[])。正本は system-spec/00-requirements-definition.md (frontmatter に source_digest=8fc7b5878eb3b18f959c3b2fddcab7a5adf69d9201b1be782923659f096e8bf9 と記録、本文中の sha256: `8fc7b5878eb3b18f…` とも一致)。本 wrapper ファイル自体の frontmatter source_digest は正本章側の値であり wrapper 自体の sha256 ではないため転記しない。features/feat-metrics-tracking.md frontmatter の source_lineage.source_digest (8748deba1f9a34c8c126eefac5c16b96833f4cd15acfce76a177476f2a0045c6) を wrapper 自体の digest として採用した (直近の兄弟 run feature-package-feat-feedback-loop でも同一値が同じ役割で記録されている)。I10/G4/G5/D4/D6 は本 wrapper が指す正本 system-spec/00-requirements-definition.md を直接 Read して確認した (wrapper 本文は正本節への参照のみで内容複製なし)。wrapper 自体の digest は本 agent には計算手段がなく厳密な独立再計算はしていない。main-loop による独立再計算・確認を要する。 [main-loop 時点記録 2026-07-17T14:49:31Z: 実ファイルの sha256 を記録。要件層は並行セッションが拡張中 (qa-034〜037 確定・dev-workflow ヒアリング進行・章 stub 状態) のため wrapper は世代混在であり、収束後の一括 reimport (follow-up 記録済み) で最終確定する。本 plan の実接地は spec-state qa_log と docs/backend-spec.md (いずれも確定) にあり、wrapper digest は canonical gate 対象外]"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "metrics-ingest-short-token-idempotency-count-only-b2-sec5",
+      "summary": "実行ログ ingest (`POST /api/v1/metrics/events`) は短命 Bearer token 認証 + `Idempotency-Key` ヘッダ必須 (scope=(tenant,endpoint)・TTL 24h) で保護し、クライアントは実行回数 (run_count) のみを送信する。時刻はサーバ採用とし、時間・金額の自己申告は受け付けない。重複 key は 200 (既存応答再生) で冪等応答し、重複計上しない。",
+      "source": "system-spec/00-requirements-definition.md I10 (実行ログ ingest: 短命 token・冪等キー・クライアントは回数のみ送信); system-spec/spec-state.json qa-025 (SEC5: クライアント申告は実行回数のみとし係数適用・金額換算はサーバ側で行う。ingest は短命 token + 冪等キー + サーバ時刻); system-spec/spec-state.json qa-023 (B2 実行ログ ingest: 短命 token 認証・冪等キー・クライアントは実行回数のみ送信・時刻はサーバ採用); docs/backend-spec.md §4.9 (`POST /api/v1/metrics/events`: 回数のみ受理・時刻はサーバ採用・Idempotency-Key 必須、207 なし、重複 key は 200)、§2.3 `metrics_events` テーブル (append-only、UNIQUE(tenant_id, idempotency_key)、時間・金額の自己申告は受けない)"
+    },
+    {
+      "id": "metrics-rollup-cron-server-conversion-b3",
+      "summary": "週次/部門別/ユーザー別/ハーネス別の rollup は Workers cron (日次 + 週次確定) で `metrics_events` → `metrics_rollups` へ事前集計する。金額換算はサーバ側のみで行い、ダッシュボード系 API は rollup 読取のみに限定して生イベントのオンライン集計を禁止する (Turso 読取予算対策)。",
+      "source": "system-spec/00-requirements-definition.md I10 (Workers cron の週次 rollup); system-spec/spec-state.json qa-023 (B3 集計 rollup: Workers cron で週次/部門別/ユーザー別の事前集計、金額換算はサーバ側のみ); docs/backend-spec.md §2.3 `metrics_rollups` テーブル (UNIQUE(tenant_id, period, period_start, dim, dim_key)、金額換算はサーバのみ)、§7 cron 表 (metrics rollup: 日次+週次確定)、§8 非機能 (Turso 読取予算: ダッシュボード系は rollup 読取のみに限定し生イベントのオンライン集計を禁止, B3)、§4.9 `GET /api/v1/metrics/summary` (rollup 読取のみ)"
+    },
+    {
+      "id": "estimation-engine-single-pure-function-owner-unresolved",
+      "summary": "試算エンジン (時給 = 年収 ÷ annualHours・削減分/回・削減率) は `packages/estimation` の純関数として Publisher/Hub 間で単一実装とし、係数は `tenant_coefficients` (annualHours 既定 2000・minutes_per_run 既定 15・sheet_reduction_rate 既定 0.35) から注入する。金額換算はサーバ側のみでクライアントへ salary を渡さない。**未解決 (P02 必須解消事項)**: 実装 owner の記述が docs/shared-layers.md §2 (feat-hub-foundation へ一元化と記載) と本 feature の scope_in (試算エンジン純関数を含む) で食い違っており、P02 設計時に owner を確定し、shared-layers.md か本 feature のいずれかを訂正する必要がある。",
+      "source": "features/feat-metrics-tracking.md 上流未解決節 (試算エンジン owner 食い違い、出典: feat-user-org-admin plan-findings.json 2026-07-17 evaluator finding); docs/shared-layers.md §2 (試算エンジン(純関数): 時給/削減時間/削減額/シート試算の単一実装。係数 (annualHours・分/回・削減率) はテナント設定); docs/backend-spec.md §1 コード構造規約 (検査 pipeline/試算エンジン/通知ディスパッチは純関数の共有パッケージ、Publisher と Hub で二重実装しない)、§6.2 `packages/estimation` (算出式・係数注入・金額換算はサーバ側のみ、SEC4/SEC5); system-spec/00-requirements-definition.md I10 (サーバ側係数換算)"
+    },
+    {
+      "id": "tenant-coefficients-scope-audit-d4",
+      "summary": "`tenant_coefficients` (annualHours・minutes_per_run・sheet_reduction_rate・updated_by) は D4 (row-level tenant scope: 単一 DB + tenant_id/workspace_id スコープ列 + アプリ層強制) に従いテナント別に管理し、係数変更は監査 event 必須とする (B10/SEC6)。`metrics_events`/`metrics_rollups` を含む Studio 拡張の新規テーブルは全て tenant_id スコープ列必須でリポジトリ層に WHERE 句を強制注入し、分離テストを CI 必須とする。",
+      "source": "system-spec/00-requirements-definition.md D4 (マルチテナント論理分離、row-level-scope confirmed); system-spec/spec-state.json qa-024 (Studio 追加エンティティに MetricsEvent/MetricsRollup/TenantCoefficient を含み、全新規テーブルへ tenant_id/workspace_id スコープ列必須 = D4); docs/backend-spec.md §2.3 `tenant_coefficients` テーブル定義 (係数変更は監査 event 必須, B10/SEC6)"
+    },
+    {
+      "id": "dashboard-s09-s16-rollup-read-only-authz-sec4",
+      "summary": "S09 ダッシュボード (KPI カード・推移・完了率・ランキング・部門別削減) と S16 利用・削減効果はいずれも `GET /api/v1/metrics/summary`・`GET /api/v1/metrics/rollups` の rollup 読取専用 API から描画する。dim=tenant/department/project の集計値は member 以上全員に開放するが、dim=user の金額換算は admin 限定とする (SEC4 の逆算対策: 個人の給与を rollup から逆算されないため)。",
+      "source": "system-spec/spec-state.json qa-021 (Studio mockup 反映: S09 ダッシュボード(KPIカード・推移・完了率・ランキング・部門別削減)、S16 利用・削減効果の画面追加確定); docs/backend-spec.md §4.9 (`GET /api/v1/metrics/summary` member、`GET /api/v1/metrics/rollups` member(集計値)/admin(user 次元の金額)、SEC4 逆算対策); system-spec/spec-state.json qa-025 (SEC4 PII ガード: salary は admin 限定表示・一般 API 非公開)"
+    },
+    {
+      "id": "frontend-chart-bundle-budget-server-estimate-display-only-qa022",
+      "summary": "S09/S16 のチャート (折れ線・バー・ドーナツ・KPI カード) は共通部品 (packages/ui) を消費し、Worker bundle 3MiB 予算内の軽量実装とする (重量チャートライブラリ不採用)。試算表示 (時給換算・削減額) はサーバ計算値の表示専用とし、クライアント側での金額再計算・自己申告は行わない。",
+      "source": "system-spec/spec-state.json qa-022 (Studio mockup 反映 frontend: チャート類は Worker bundle 3MiB 予算内の軽量実装、重量チャートライブラリを採用しない。試算表示はサーバ計算値の表示専用でクライアント側の金額再計算・自己申告を行わない、qa-025 SEC5 と対); system-spec/spec-state.json qa-018 (CWV good・Worker 3MiB 制限下の bundle 予算管理); docs/backend-spec.md §8 (Worker bundle ≤3MiB を CI ゲート化)"
+    },
+    {
+      "id": "s17-individual-metrics-supplied-to-user-org-admin-boundary",
+      "summary": "S17 (ユーザー管理 + 個別ダッシュボード) の個別集計は本 feature の週次 rollup から供給されるが、S17 の画面自体は feat-user-org-admin の管轄であり、本 feature のスコープは MetricsEvent/MetricsRollup の生成・rollup API 提供までとする (S17 の画面実装・role 管理・年収係数 PII ガードは feat-user-org-admin 側の責務)。",
+      "source": "features/feat-metrics-tracking.md 到達状態 (『S09 ダッシュボード・S16 利用/削減効果・S17 個別集計が週次 rollup から描画される状態』); features/feat-metrics-tracking.md 機能間依存 (feat-user-org-admin); system-spec/00-requirements-definition.md I10 (S09/S16/S17 のダッシュボードへ供給) および I14 (S17/S18: role 管理・年収係数 PII・通知設定)"
+    },
+    {
+      "id": "metrics-retention-indefinite-usage-monitoring-anomaly-detection",
+      "summary": "`metrics_events` の生データは無期限 DB 保持とする (2026-07-17 ユーザー決定、90 日 R2 退避案を不採用)。代償として Turso 使用量日次監視 cron (無料枠閾値超過で admin 通知) と、ユーザー別実行回数が過去 4 週中央値の 10 倍超で `metrics.anomaly` 通知を出す日次異常検知 cron (ブロックはしない) を運用に組み込む。無料枠圧迫時は保持期間導入を R4-reopen で再検討する。",
+      "source": "system-spec/spec-state.json qa-031 (metrics 生データ保持は無期限 DB 保持をユーザー選択、Turso 使用量日次監視 cron を追加); docs/backend-spec.md §2.3 `metrics_events` (生データは無期限 DB 保持、Turso 無料枠使用量を保守運用の監視対象とし圧迫時は保持期間導入を R4-reopen で再検討)、§7 cron 表 (Turso 使用量監視: 日次、metrics 異常検知: 日次・中央値10倍超で通知・ブロックしない)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": false,
+    "digest_match_architecture_files": false,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + evaluator PASS (specs/harness-hub-system-specification.md; system-spec/completeness-report.json verdict=PASS を Read で直接確認、findings は severity=info/low/medium のみで gaps=[]; 正本 system-spec/00-requirements-definition.md は status=confirmed で I10/G4/G5/D4/D6 を直接確認; docs/backend-spec.md は frontmatter status=confirmed・qa_ref=[qa-031,qa-032,qa-033] の詳細正本)",
+    "notes_ja": true,
+    "status": "complete",
+    "category_stub_drift_note": "system-spec/{backend,database,security}.md はカテゴリ集約状態が status: draft・aggregate: 収集中 (qa-037 [2026-07-17付、security 深掘り qa-034〜036 の波及差分反映] による再オープン後・未再描画の可能性が高い)。system-spec/{frontend,ui-ux}.md は status: confirmed・aggregate: 確定だが、本文の『確定内容 (質疑録)』節が qa-035/qa-007 のみを列挙し、Studio mockup 反映 qa (qa-021〜qa-025 等) を未描画。いずれの場合も system-spec/completeness-report.json の verdict=PASS は system-spec/spec-state.json の matrix/qa_log に対する検証であり、カテゴリ .md 本文の再描画完了を意味しない (同種の既知パターンが completeness-report.json 自身の design_knowledge_reflection finding にも記録: database.md/maintenance-ops.md が qa-002 相当を未描画)。このため本 goal-spec の quality_constraints は、依頼メッセージが指定した system-spec/{backend,database,security,frontend,ui-ux}.md への直接引用を避け、内容が実在し verdict=PASS で裏付けられる system-spec/spec-state.json の qa_log (qa-021/022/023/024/025/031/032/033/037) と、frontmatter status=confirmed の docs/backend-spec.md へ差し替えて引用した。",
+    "wrapper_self_digest_note": "architecture/harness-hub-{backend,data,frontend}.md および specs/harness-hub-system-specification.md はいずれも自身の sha256 を repo frontmatter に直接記録しておらず、本 agent (Read/Write/Glob/Grep/SendMessage/Task のみ保有) には exec ツールがないため独立再計算していない。加えて harness-backend.md/harness-data.md は frontmatter の source_digest と本文『正本』節の sha256 表記が食い違う内部不整合を新規に検出した (詳細は lineage 各 note 参照)。digest_match_specs_file / digest_match_architecture_files の false は『frontmatter の source_digest フィールド (正本章側の値) が wrapper 自体の sha256 と一致しない (構造的に別物)』ことを表し、内容不整合そのものを意味しない。全 4 wrapper とも main-loop による独立再計算・確認を要する。",
+    "digest_recomputed_by": "main-loop (claude session 9ce54d7a, python3 hashlib, 2026-07-17T14:49:31Z)"
+  },
+  "extracted_at": "2026-07-17T15:10:00Z"
+}

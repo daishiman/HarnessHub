@@ -1,0 +1,666 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P01",
+        "id": "HarnessHub-o2i.1",
+        "phase_ref": "P01",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:56Z",
+            "created_by": "daishiman",
+            "description": "ヒアリング intake 要件ベースライン確定 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P01",
+            "id": "HarnessHub-o2i.1",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "ヒアリング intake 要件ベースライン確定",
+            "updated_at": "2026-07-19T14:15:05Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P02",
+        "id": "HarnessHub-o2i.2",
+        "phase_ref": "P02",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "assignee": "daishiman",
+            "created_at": "2026-07-18T01:44:57Z",
+            "created_by": "daishiman",
+            "description": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P02",
+            "id": "HarnessHub-o2i.2",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "started_at": "2026-07-18T02:23:38Z",
+            "status": "open",
+            "title": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計",
+            "updated_at": "2026-07-19T14:15:07Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P03",
+        "id": "HarnessHub-o2i.3",
+        "phase_ref": "P03",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:44:59Z",
+            "created_by": "daishiman",
+            "description": "独立設計レビュー — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer 設計・AI キュー認可・Markdown sanitize の妥当性確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P03",
+            "id": "HarnessHub-o2i.3",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "独立設計レビュー — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer 設計・AI キュー認可・Markdown sanitize の妥当性確認",
+            "updated_at": "2026-07-19T14:15:09Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P04",
+        "id": "HarnessHub-o2i.4",
+        "phase_ref": "P04",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:00Z",
+            "created_by": "daishiman",
+            "description": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P04",
+            "id": "HarnessHub-o2i.4",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
+            "updated_at": "2026-07-19T14:15:11Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P05",
+        "id": "HarnessHub-o2i.5",
+        "phase_ref": "P05",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:01Z",
+            "created_by": "daishiman",
+            "description": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P05",
+            "id": "HarnessHub-o2i.5",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
+            "updated_at": "2026-07-19T14:15:13Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P06",
+        "id": "HarnessHub-o2i.6",
+        "phase_ref": "P06",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:02Z",
+            "created_by": "daishiman",
+            "description": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P06",
+            "id": "HarnessHub-o2i.6",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録",
+            "updated_at": "2026-07-19T14:15:15Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P07",
+        "id": "HarnessHub-o2i.7",
+        "phase_ref": "P07",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:03Z",
+            "created_by": "daishiman",
+            "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P07",
+            "id": "HarnessHub-o2i.7",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "受入 — goal-spec acceptance 3 項目の確認",
+            "updated_at": "2026-07-19T14:15:17Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P08",
+        "id": "HarnessHub-o2i.8",
+        "phase_ref": "P08",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:05Z",
+            "created_by": "daishiman",
+            "description": "リファクタリング/マイグレーション — HearingSheet/FormData新規テーブルのmigration（共通ai_jobsは既存schemaを消費） 生成と後方互換性確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P08",
+            "id": "HarnessHub-o2i.8",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "リファクタリング/マイグレーション — HearingSheet/FormData新規テーブルのmigration（共通ai_jobsは既存schemaを消費） 生成と後方互換性確認",
+            "updated_at": "2026-07-19T14:15:20Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P09",
+        "id": "HarnessHub-o2i.9",
+        "phase_ref": "P09",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:06Z",
+            "created_by": "daishiman",
+            "description": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P09",
+            "id": "HarnessHub-o2i.9",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認",
+            "updated_at": "2026-07-19T14:15:22Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P10",
+        "id": "HarnessHub-o2i.10",
+        "phase_ref": "P10",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:08Z",
+            "created_by": "daishiman",
+            "description": "最終独立レビュー — feature 全体の confirmation 前最終点検 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P10",
+            "id": "HarnessHub-o2i.10",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "最終独立レビュー — feature 全体の confirmation 前最終点検",
+            "updated_at": "2026-07-19T14:15:24Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P11",
+        "id": "HarnessHub-o2i.11",
+        "phase_ref": "P11",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:09Z",
+            "created_by": "daishiman",
+            "description": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P11",
+            "id": "HarnessHub-o2i.11",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約",
+            "updated_at": "2026-07-19T14:15:26Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P12",
+        "id": "HarnessHub-o2i.12",
+        "phase_ref": "P12",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:10Z",
+            "created_by": "daishiman",
+            "description": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P12",
+            "id": "HarnessHub-o2i.12",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化",
+            "updated_at": "2026-07-19T14:15:28Z"
+          }
+        ]
+      },
+      {
+        "external_ref": "SYS-HEARING-INTAKE-P13",
+        "id": "HarnessHub-o2i.13",
+        "phase_ref": "P13",
+        "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+        "superseded": true,
+        "updated": [
+          {
+            "created_at": "2026-07-18T01:45:11Z",
+            "created_by": "daishiman",
+            "description": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認 (dev-graph exact-13 task projection)\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+            "external_ref": "dev-graph:SYS-HEARING-INTAKE-P13",
+            "id": "HarnessHub-o2i.13",
+            "issue_type": "task",
+            "metadata": {
+              "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+            },
+            "owner": "daishimanju@gmail.com",
+            "priority": 2,
+            "status": "open",
+            "title": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認",
+            "updated_at": "2026-07-19T14:15:30Z"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-o2i.1",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.2"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.2",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.3"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.3",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.4"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.4",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.5"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.5",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.6"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.6",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.7"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.7",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.8"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.8",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.9"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.9",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.10"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.10",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.11"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.11",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.12"
+      },
+      {
+        "depends_on": "HarnessHub-o2i.12",
+        "idempotent": true,
+        "issue_id": "HarnessHub-o2i.13"
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "external_ref": "feat-hearing-intake",
+      "id": "HarnessHub-o2i",
+      "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+      "superseded": true,
+      "updated": [
+        {
+          "created_at": "2026-07-18T01:44:55Z",
+          "created_by": "daishiman",
+          "description": "業務課題から業務ツールが生まれる入口として、S10 の 4 ステップウィザード (削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理を提供する (I11, J4)\n\n非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) できる状態\n\ndev_graph_source_digest: sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5",
+          "external_ref": "dev-graph:feat-hearing-intake",
+          "id": "HarnessHub-o2i",
+          "issue_type": "epic",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "status": "open",
+          "title": "Studio: ヒアリング intake (ウィザード・シート管理・AI 生成キュー)",
+          "updated_at": "2026-07-19T14:15:03Z"
+        }
+      ]
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-o2i.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-o2i.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-o2i.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-o2i.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-HEARING-INTAKE-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ],
+    "source_digest": "sha256:61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5"
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

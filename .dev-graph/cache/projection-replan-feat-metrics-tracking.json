@@ -1,0 +1,138 @@
+{
+  "source_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "feature": {
+    "graph_node_id": "feat-metrics-tracking",
+    "title": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)",
+    "description": "導入ハーネスの利用実態と削減効果 (G5) を可視化するため、実行ログ ingest (B2: 短命 token・冪等キー・回数のみ)・週次 rollup (B3: Workers cron)・試算エンジン共通層 (サーバ側係数換算) と S09/S16 ダッシュボードを提供する (I10)\n\n実行ログがサーバ側で信頼可能に集計され (SEC5)、S09 ダッシュボード・S16 利用/削減効果・S17 個別集計が週次 rollup から描画される状態"
+  },
+  "children": [
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P01",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P01",
+      "title": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定",
+      "description": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定 (dev-graph exact-13 task projection)",
+      "depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P02",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P02",
+      "title": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計",
+      "description": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P01"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P03",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P03",
+      "title": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認",
+      "description": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P02"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P04",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P04",
+      "title": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計",
+      "description": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P03"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P05",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P05",
+      "title": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装",
+      "description": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P04"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P06",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P06",
+      "title": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録",
+      "description": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P05"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P07",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P06"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P08",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P08",
+      "title": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認",
+      "description": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P07"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P09",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P09",
+      "title": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認",
+      "description": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P08"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P10",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P10",
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "description": "最終独立レビュー — quality_constraints 8 件の充足判定 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P09"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P11",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P11",
+      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+      "description": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P10"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P12",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P12",
+      "title": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成",
+      "description": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成 (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P11"
+      ]
+    },
+    {
+      "graph_node_id": "SYS-METRICS-TRACKING-P13",
+      "parent_feature": "feat-metrics-tracking",
+      "phase_ref": "P13",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "description": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト (dev-graph exact-13 task projection)",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P12"
+      ]
+    }
+  ]
+}

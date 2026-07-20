@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-publisher-plugin",
+  "feature_context_digest": "sha256:d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41",
+  "purpose": "作者が Claude Code / Codex から自己完結で publish できる操作面 (slash command + skill + スクリプト) を TypeScript で提供し、既存 Python 資産を挙動同値で移植する",
+  "goal": "作者環境 (macOS/Windows) から初回 publish が 15 分以内 (O4/H8) に完了する状態",
+  "scope_in": [
+    "package 収集 + manifest 補完",
+    "ローカル pre-check (Hub と検査ロジック共有)",
+    "Device Flow 認証 + OS 資格情報域保存",
+    "web_app 経路の wrangler スクリプト実行",
+    "Python 資産の挙動同値移植テスト"
+  ],
+  "scope_out": [
+    "Hub 側 API 実装",
+    "専用 desktop GUI (作らない: qa-007)"
+  ],
+  "acceptance": [
+    "macOS/Windows 両実機で publish E2E が成功する",
+    "pre-check と Hub 検査の判定が同値",
+    "初回 publish 15 分以内の実測記録"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-publisher-plugin.context.json",
+      "exists": true,
+      "sha256": "d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation.",
+      "feature_id": "feat-publisher-plugin"
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-security.md",
+      "exists": true,
+      "sha256": "5af5237572ae6fe9d661ad09ee074377967c6f9d276779e2105645cd89d51605",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "publisher-typescript-unification-python-parity-migration-qa010-c3",
+      "summary": "作者側 Publisher の実装形態は TypeScript 統一。Publisher core は TypeScript (Node + pnpm) で新規実装し、Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。責務は package 収集・manifest 補完・ローカル pre-check・Hub API 呼出 (Device Flow 認証)・target=web_app の wrangler CLI スクリプト実行と結果報告・URL 登録。既存 Python 資産 (harness-creator の package check / package contract / marketplace catalog) を仕様の正本 (移植元) として参照し、挙動同値性をテストで担保して TypeScript へ移植する (C3 整合)。",
+      "source": "system-spec/spec-state.json qa-010 (「作者側 Publisher の実装形態は? … 既存 Python 資産 [harness-creator の package check / package contract / marketplace catalog] は仕様の正本 [移植元] として参照し、挙動同値性をテストで担保して TypeScript へ移植する [C3整合]」); system-spec/00-requirements-definition.md U8 制約 C3 (「既存資産再利用: harness-creator / package contract / package check / marketplace catalog / version・cache 処理 / review workflow を Publisher 内部の quality engine として再利用する [§15]」); features/feat-publisher-plugin.context.json purpose および scope_in (「Python 資産の挙動同値移植テスト」)"
+    },
+    {
+      "id": "device-flow-auth-os-credential-storage-qa008-qa041",
+      "summary": "Publisher (作者 local session) から Hub API への認証は OAuth Device Authorization Flow (RFC 8628) を採用する。device_code TTL 10 分・SHA-256 ハッシュのみ DB 保存、access token 15 分 (短命 JWT・サーバ非保存)・refresh token 90 日 rotation 必須・再利用検知で同一 family 全失効 + 監査 event + 通知。token は OS の資格情報域 (macOS Keychain / Windows Credential Manager) にのみ保存し、平文ファイル・環境変数・リポジトリへの保存を禁止する (長命 secret のコピペを非エンジニアに求めない = G1 整合)。scope は publish:write / metrics:write / feedback:write / aijob:process の 4 種の最小権限とし、失効は Hub Web から本人・admin が即時実行できる。",
+      "source": "system-spec/spec-state.json qa-008 (「Publisher [作者 local session] から Hub API を呼ぶ認証方式は? … OAuth Device Authorization Flow を採用。… OS の資格情報域 [macOS Keychain / Windows Credential Manager] に保存する。長命 secret のコピペを非エンジニアに求めない [G1整合]」); qa-041 (Device Flow 数値契約: device_code TTL 10分・user_code 8文字・access token 15分・refresh token 90日 rotation・再利用検知で family 全失効・保存先=OS資格情報域のみ・scope最小権限4種・失効導線=Hub Web); features/feat-publisher-plugin.context.json scope_in (「Device Flow 認証 + OS 資格情報域保存」)"
+    },
+    {
+      "id": "inspection-pipeline-shared-no-duplicate-impl-qa010-qa020",
+      "summary": "検査ロジック (pre-check) は Hub 側 (Workers=JS) と共有し二重実装を回避する純関数の共有パッケージ (packages/inspection) として実装する。Publisher のローカル pre-check と Hub の公式検査は同一パッケージを参照し、判定 (Green/Yellow/Red) が同値になるようにテストで担保する。",
+      "source": "system-spec/spec-state.json qa-010 (「検査ロジックは Hub 側 [Workers=JS] と共有し二重実装を回避する」); qa-020 (「検査 pipeline の純関数化: Publisher と Hub で検査ロジックを共有パッケージ化、qa-010 の挙動同値移植をテストで担保」); features/feat-publisher-plugin.context.json scope_in (「ローカル pre-check [Hub と検査ロジック共有]」) および acceptance (「pre-check と Hub 検査の判定が同値」)"
+    },
+    {
+      "id": "web-app-egress-wrangler-cli-script-execution-i5-qa003-qa043",
+      "summary": "target=web_app の出口は作者 local session での wrangler CLI スクリプト実行とし、Hub は URL 登録・公開範囲検査・health 確認のみを担う。デプロイツールは wrangler CLI (Cloudflare Workers)。",
+      "source": "system-spec/00-requirements-definition.md I5 (「Web App 出口: 作者 local session で Publisher が wrangler CLI をスクリプト実行し、Hub は URL 登録・公開範囲検査・health 確認のみ担う」serves G3) および U7 スコープ in (「Web App 出口 [作者 local session での wrangler CLI スクリプト実行 + Hub への URL・release 登録]」); system-spec/spec-state.json qa-003 (デプロイは wrangler CLI); qa-043 (infrastructure.desktop 正本「target=web_app の出口は作者 local session での wrangler CLI スクリプト実行 [Hub は URL 登録・公開範囲検査・health 確認のみ]」); features/feat-publisher-plugin.context.json scope_in (「web_app 経路の wrangler スクリプト実行」)"
+    },
+    {
+      "id": "no-dedicated-desktop-gui-qa007",
+      "summary": "作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする。",
+      "source": "system-spec/spec-state.json qa-007 (「作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin [slash command + skill + スクリプト] を Publisher の操作面とする [§5.1: Web に会話型 Creator を作らない]」); features/feat-publisher-plugin.context.json scope_out (「専用 desktop GUI (作らない: qa-007)」)"
+    },
+    {
+      "id": "hub-api-implementation-out-of-scope-depends-on-feat-publish-pipeline",
+      "summary": "Hub 側 API 実装は本 feature のスコープ外とし、feat-publish-pipeline (PublishRequest 状態機械・検査 pipeline サーバ側実装・R2/Catalog pointer atomic 更新) の責務とする。本 feature は同 feature へ依存する。",
+      "source": "features/feat-publisher-plugin.context.json scope_out (「Hub 側 API 実装」); features/feat-publisher-plugin.md 機能間依存 (「feat-publish-pipeline」) および frontmatter depends_on: [\"feat-publish-pipeline\"]"
+    },
+    {
+      "id": "initial-publish-15min-target-o4-h8",
+      "summary": "作者環境 (macOS/Windows) から初回 publish が 15 分以内 (定量目標 O4、仮説 H8) に完了する状態を到達ゴールとする。",
+      "source": "system-spec/00-requirements-definition.md qa-013 (定量目標「O4: H8 初回 publish 15 分以内」を全て選択); features/feat-publisher-plugin.context.json goal (「作者環境 [macOS/Windows] から初回 publish が 15 分以内 [O4/H8] に完了する状態」) および acceptance (「初回 publish 15 分以内の実測記録」)"
+    },
+    {
+      "id": "author-toolchain-macos-primary-windows-secondary-same-pnpm-script-qa043",
+      "summary": "作者/提供者環境は macOS 主・Windows 従とし、Claude Code + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI を用いる。両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)。",
+      "source": "system-spec/spec-state.json qa-043 (infrastructure.desktop 正本、ツールチェーン節・qa-039 該当部分の集約確定: 「作者/提供者環境は macOS 主・Windows 従で、Claude Code + pnpm [corepack 経由・他パッケージマネージャ禁止] + git + wrangler CLI。両 OS で同一の pnpm script が動作すること」); features/feat-publisher-plugin.context.json acceptance (「macOS/Windows 両実機で publish E2E が成功する」)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + completeness evaluator PASS",
+    "notes_ja": "現行 feature context と全 architecture/spec lineage を repository bytes から SHA-256 再計算し、P01..P13 の current canonical baseline に固定した。",
+    "digest_recomputed_by": "run-system-dev-plan immutable-replan remediation 2026-07-19",
+    "status": "complete"
+  },
+  "extracted_at": "2026-07-19T12:00:00Z"
+}

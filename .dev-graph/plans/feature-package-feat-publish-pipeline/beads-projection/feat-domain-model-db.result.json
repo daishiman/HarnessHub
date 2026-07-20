@@ -1,0 +1,651 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:37.217819Z",
+          "created_by": "daishiman",
+          "description": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P01",
+          "id": "HarnessHub-u6q.1",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
+          "updated_at": "2026-07-18T01:43:37.217819Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P01",
+        "id": "HarnessHub-u6q.1",
+        "phase_ref": "P01"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:38.550196Z",
+          "created_by": "daishiman",
+          "description": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P02",
+          "id": "HarnessHub-u6q.2",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
+          "updated_at": "2026-07-18T01:43:38.550196Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P02",
+        "id": "HarnessHub-u6q.2",
+        "phase_ref": "P02"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:39.847922Z",
+          "created_by": "daishiman",
+          "description": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P03",
+          "id": "HarnessHub-u6q.3",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
+          "updated_at": "2026-07-18T01:43:39.847922Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P03",
+        "id": "HarnessHub-u6q.3",
+        "phase_ref": "P03"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:41.021929Z",
+          "created_by": "daishiman",
+          "description": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P04",
+          "id": "HarnessHub-u6q.4",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
+          "updated_at": "2026-07-18T01:43:41.021929Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P04",
+        "id": "HarnessHub-u6q.4",
+        "phase_ref": "P04"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:42.183783Z",
+          "created_by": "daishiman",
+          "description": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P05",
+          "id": "HarnessHub-u6q.5",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
+          "updated_at": "2026-07-18T01:43:42.183783Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P05",
+        "id": "HarnessHub-u6q.5",
+        "phase_ref": "P05"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:43.361943Z",
+          "created_by": "daishiman",
+          "description": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P06",
+          "id": "HarnessHub-u6q.6",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
+          "updated_at": "2026-07-18T01:43:43.361943Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P06",
+        "id": "HarnessHub-u6q.6",
+        "phase_ref": "P06"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:44.471863Z",
+          "created_by": "daishiman",
+          "description": "受入 — goal-spec acceptance 3 項目の確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P07",
+          "id": "HarnessHub-u6q.7",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "受入 — goal-spec acceptance 3 項目の確認",
+          "updated_at": "2026-07-18T01:43:44.471863Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P07",
+        "id": "HarnessHub-u6q.7",
+        "phase_ref": "P07"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:45.62913Z",
+          "created_by": "daishiman",
+          "description": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P08",
+          "id": "HarnessHub-u6q.8",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
+          "updated_at": "2026-07-18T01:43:45.62913Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P08",
+        "id": "HarnessHub-u6q.8",
+        "phase_ref": "P08"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:46.7861Z",
+          "created_by": "daishiman",
+          "description": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P09",
+          "id": "HarnessHub-u6q.9",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
+          "updated_at": "2026-07-18T01:43:46.7861Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P09",
+        "id": "HarnessHub-u6q.9",
+        "phase_ref": "P09"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:48.539946Z",
+          "created_by": "daishiman",
+          "description": "最終独立レビュー — quality_constraints 9 件の充足判定 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P10",
+          "id": "HarnessHub-u6q.10",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "最終独立レビュー — quality_constraints 9 件の充足判定",
+          "updated_at": "2026-07-18T01:43:48.539946Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P10",
+        "id": "HarnessHub-u6q.10",
+        "phase_ref": "P10"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:49.836434Z",
+          "created_by": "daishiman",
+          "description": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P11",
+          "id": "HarnessHub-u6q.11",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+          "updated_at": "2026-07-18T01:43:49.836434Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P11",
+        "id": "HarnessHub-u6q.11",
+        "phase_ref": "P11"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:51.169045Z",
+          "created_by": "daishiman",
+          "description": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成 (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P12",
+          "id": "HarnessHub-u6q.12",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
+          "updated_at": "2026-07-18T01:43:51.169045Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P12",
+        "id": "HarnessHub-u6q.12",
+        "phase_ref": "P12"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-18T01:43:52.301794Z",
+          "created_by": "daishiman",
+          "description": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト (dev-graph task projection)",
+          "external_ref": "dev-graph:SYS-DOMAIN-MODEL-DB-P13",
+          "id": "HarnessHub-u6q.13",
+          "issue_type": "task",
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
+          "updated_at": "2026-07-18T01:43:52.301794Z"
+        },
+        "external_ref": "SYS-DOMAIN-MODEL-DB-P13",
+        "id": "HarnessHub-u6q.13",
+        "phase_ref": "P13"
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-u6q.1",
+        "issue_id": "HarnessHub-u6q.2",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.1",
+          "issue_id": "HarnessHub-u6q.2",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.2",
+        "issue_id": "HarnessHub-u6q.3",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.2",
+          "issue_id": "HarnessHub-u6q.3",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.3",
+        "issue_id": "HarnessHub-u6q.4",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.3",
+          "issue_id": "HarnessHub-u6q.4",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.4",
+        "issue_id": "HarnessHub-u6q.5",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.4",
+          "issue_id": "HarnessHub-u6q.5",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.5",
+        "issue_id": "HarnessHub-u6q.6",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.5",
+          "issue_id": "HarnessHub-u6q.6",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.6",
+        "issue_id": "HarnessHub-u6q.7",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.6",
+          "issue_id": "HarnessHub-u6q.7",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.7",
+        "issue_id": "HarnessHub-u6q.8",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.7",
+          "issue_id": "HarnessHub-u6q.8",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.8",
+        "issue_id": "HarnessHub-u6q.9",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.8",
+          "issue_id": "HarnessHub-u6q.9",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.9",
+        "issue_id": "HarnessHub-u6q.10",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.9",
+          "issue_id": "HarnessHub-u6q.10",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.10",
+        "issue_id": "HarnessHub-u6q.11",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.10",
+          "issue_id": "HarnessHub-u6q.11",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.11",
+        "issue_id": "HarnessHub-u6q.12",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.11",
+          "issue_id": "HarnessHub-u6q.12",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-u6q.12",
+        "issue_id": "HarnessHub-u6q.13",
+        "result": {
+          "depends_on_id": "HarnessHub-u6q.12",
+          "issue_id": "HarnessHub-u6q.13",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "created": {
+        "created_at": "2026-07-18T01:43:35.826098Z",
+        "created_by": "daishiman",
+        "description": "Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメインモデルを Drizzle スキーマとして確立し、D1 退避経路 (D2 ヘッジ) を保つ接続層を構築する",
+        "external_ref": "dev-graph:feat-domain-model-db",
+        "id": "HarnessHub-u6q",
+        "issue_type": "epic",
+        "owner": "daishimanju@gmail.com",
+        "priority": 2,
+        "schema_version": 1,
+        "status": "open",
+        "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
+        "updated_at": "2026-07-18T01:43:35.826098Z"
+      },
+      "external_ref": "feat-domain-model-db",
+      "id": "HarnessHub-u6q"
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-u6q.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-u6q.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-u6q.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-u6q.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ]
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

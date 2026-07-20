@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/replan-20260719-feat-metrics-tracking",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "feature_package_id": "feature-package/feat-metrics-tracking",
+  "package_slug": "feature-package-feat-metrics-tracking",
+  "generation_id": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/feature-package-feat-metrics-tracking",
+    "published_digest": "sha256:178a96700782a721a2f448d53618709aff1c89250d73f17154bc7de273395ed1",
+    "receipt": ".dev-graph/plans/feature-package-feat-metrics-tracking/atomic-promotion-receipt.json"
+  },
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-19T14:16:35Z"
+}

@@ -1,0 +1,224 @@
+{
+  "digest_contract": {
+    "algorithm": "sha256",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded"
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [],
+      "phase_ref": "P01",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P01"
+      ],
+      "phase_ref": "P02",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P02"
+      ],
+      "phase_ref": "P03",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P03"
+      ],
+      "phase_ref": "P04",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P04"
+      ],
+      "phase_ref": "P05",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P05"
+      ],
+      "phase_ref": "P06",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P06"
+      ],
+      "phase_ref": "P07",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P07"
+      ],
+      "phase_ref": "P08",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P08"
+      ],
+      "phase_ref": "P09",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P09"
+      ],
+      "phase_ref": "P10",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P10"
+      ],
+      "phase_ref": "P11",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P11"
+      ],
+      "phase_ref": "P12",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-WORKSPACE-GOVERNANCE-P12"
+      ],
+      "phase_ref": "P13",
+      "task_id": "SYS-WORKSPACE-GOVERNANCE-P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md"
+    }
+  ],
+  "identity": {
+    "feature_id": "feat-workspace-governance",
+    "feature_package_id": "feature-package/feat-workspace-governance",
+    "parent_feature": "feat-workspace-governance",
+    "repository_id": "github:daishiman/HarnessHub",
+    "source_feature_digest": "sha256:66ebc79498bfe05d63e1f9203250e575b87934b5d7a4bc6e5ad4fbd0d3ee72a1"
+  },
+  "kind": "system-build-handoff",
+  "registration_request": {
+    "consumer": "dev-graph/C02",
+    "owner": "system-dev-planner/C11",
+    "path": "dev-graph-registration.json",
+    "promotion_receipt": {
+      "owner": "system-dev-planner/C11",
+      "path": "atomic-promotion-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "registration_receipt": {
+      "owner": "dev-graph/C02",
+      "path": "dev-graph-registration-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "status": "deferred-until-promotion"
+  },
+  "schema_version": "1.0.0",
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "d158329eb38a261df1d37ffe31b72547ee69b41a2dc5229f15f22bd1364e22db"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a6b30818cf9b94c5a6edf5485532cc52cc4593f7cda9e42bada35549b685f5c3"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "89bb545287491498b221158f6a39a8037f6f7c83799e682889390aa2df7c4bbc"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "3dc1da73cead319dc693528f620a366b4782369f0d0340e2083e68c75eefb006"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "19c5f3519e933c5a091e1dba054c100b02a77f3a8e5c645309c81f3987be6993"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "b0a90eb37cc0685e4bf7ff83da414b005183c16d6d207c5092fc8fcadb64ae56"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "ca06a1dac6991a897057946cdad9289cbc4d1967b74e59d0a15af05a438445ac"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "9e5b77ef8f9365f5b5c26fb9fb73f270ba9c8973506fadc22dfa85e57a58e2c3"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "5d03a320388e23c234891563460dbc318072f11d6943aea7364dc069a1abd562"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "09513c80006cf2a347ddf5df7ba8c97ac3d2db67a3482262ad42bfd0e8d86210"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "b07d3001f84b9cf36d50c41a6056abd1b4737b9f6ee8ee459f920d7780f740d2"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "c3873b3fb85443225ee0d444933a19a54bea27b38afe1552f8753b67f05c2a38"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "e630c91877783b7105437bbeca3ede6726e7aeece3096e991dfc686a495f1244"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "950c13c64b39cfa205d9f0cf62a842f321953fc209f2190e9f69556af9c68c00"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "4dc52fc8d52ef9bf030d378936dfad9dd350b7da211f49c7d0e3faa5cbe8fe99"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "bdeeed6803b634cd1499b032f73c87173c7bc2613885c0edba665bfcef00428e"
+    }
+  ],
+  "source_manifest": {
+    "canonical_digest_before_handoff": "sha256:df0f7f291ce7e42ce0681c2aa309f660f9ef9a51685a7819c30504a342b5ba21",
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "e5ab26d6c1212b46bbe3202a49338f72c3df54aee5eee25714de7b8330d9f465"
+  }
+}

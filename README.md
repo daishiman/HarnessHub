@@ -1,425 +1,520 @@
-# skills
+# HarnessHub
 
-`skills` は、Claude Code を強化する **plugin 群** (機能拡張パッケージ) です。Claude Code に「スキルを作る」「品質を検査する」「非エンジニアからヒアリングする」といった能力を後から追加できます。
+Claude Code 用 plugin 群の配布ハブであり、Harness Hub 本体（Self-Service Publish Control Plane）の開発リポジトリです。plugin の正本は `plugins/`、設計資料は `doc/`、配布境界は `CONVENTIONS.md` にあります。
 
-> **plugin (プラグイン)**: Claude Code 本体を書き換えずに、後から機能を足すための小さな部品。スマートフォンアプリのようなものと考えてください。
+この README は、新機能を次の順で進めるための実行手順書です。
 
----
+1. `/dev-graph` で要件・設計・タスク仕様書を作る
+2. Beads（`bd`）と strandkanban（旧 beads-kanban）でタスクを見える化する
+3. Claude Code と相談して、次に実行するタスクを決める
+4. タスクを claim（担当として引き受けること）し、実装・検証・PR作成まで進める
 
-## このドキュメントの読み方
-
-- **このハブの成り立ちと harness との同期を知りたい方** → [Part 0: このリポジトリ (HarnessHub) と harness の関係](#part-0-このリポジトリ-harnesshub-と-harness-の関係)
-- **インストールしたい方** → [Part 1: インストール手順](#part-1-インストール手順) を順番に実行
-- **API キーを設定したい方** → [Part 2: API キーの安全な保存 (Keychain)](#part-2-api-キーの安全な保存-keychain)
-- **どの plugin を入れるか迷う方** → [Part 3: plugin 一覧と役割](#part-3-plugin-一覧と役割)
-- **plugin の中身を理解したい方** → [Part 4: plugin の仕組み](#part-4-plugin-の仕組み)
+`/dev-graph ...` は Claude Code のプロンプトへ入力するスラッシュコマンドです。`bd ...`、`git ...`、`gh ...` はターミナルで実行するコマンドです。
 
 ---
 
-# Part 0: このリポジトリ (HarnessHub) と harness の関係
+# Part 1: `/dev-graph` の11手順
 
-HarnessHub は、ローカルの開発リポジトリ **harness** で開発した plugin 群を共有するための**配布用ハブ**です。
+## dispatcher の基本ルール
 
-- **開発の正は harness 側**: plugin の開発・修正は harness で行い、HarnessHub へは同期スクリプトで反映します
-- `plugins/` 配下は harness からの**実体コピー**です (symlink ではないため、clone するだけでリンク切れなく利用できます)
-- `.claude-plugin/marketplace.json` は HarnessHub が**独自管理**します (HarnessHub 固有 plugin のエントリを追記できます)
-- HarnessHub 独自の plugin は `plugins/` に直接作成できます (同期で消されません)
+`/dev-graph` は最初の token を verb（動作を表す語）として厳密に解釈します。未知の verb、依存 plugin／script の不在、repository root の誤りを検出した場合は、候補一覧を返して停止します。似たコマンドを推測して実行することはありません。
 
-## harness からの同期手順
+成果物の保存先は、次の3系統です。
 
-```bash
-python3 scripts/build-plugins-from-harness.py --dry-run   # 差分確認だけ (何も変更しない)
-python3 scripts/build-plugins-from-harness.py             # 既存 plugin を同期
-python3 scripts/build-plugins-from-harness.py --adopt-new # harness 側の新規 plugin も取り込み
-```
+- **content root**: repository 直下の `issues/`、`tasks/`、`specs/`、`architecture/`、`features/`、`docs/`、`system-spec/`
+- **`.dev-graph/`**: グラフ状態、cache、lock、plan、描画結果などの内部データ
+- **`eval-log/`**: 各 command の実行記録・評価ログ
 
-同期スクリプトの挙動:
+「副作用なし」は、グラフや文書を書き換えず、結果を表示するだけという意味です。ただし `next` と `status` も評価記録として `eval-log/` は更新します。
 
-- **plugin 単位**の `rsync -a --delete` で更新するため、HarnessHub 独自 plugin には触れません
-- `--adopt-new` は新規 plugin をコピーし、marketplace.json へエントリを自動追記します。`.claude-plugin/plugin.json` が無い plugin は取り込み拒否されます。追記エントリの category は `uncategorized` になるので、後で手動で分類してください
-- `distributable: false` を宣言した plugin (社内専用・開発メタ系) は**実体コピーのみ行い、marketplace.json には登録しません** (MK-004)。このため plugin 数 (22) と marketplace 登録数 (14) は一致しないのが正常です
-- 実行の最後に「plugin ディレクトリ ↔ marketplace.json エントリ ↔ version」の3点整合を検査し、警告があると **exit code 1** を返します。検査も distributable フラグに準拠します
-- `--check-only` は同期せず整合検査だけを行います (harness が手元に無い CI 環境用。GitHub Actions の `marketplace-integrity` ワークフローが PR / push 時に自動実行します)
+## 11 verb の役割・出力先・dispatch 先
 
-同期後は通常の `git add / commit / push` で公開してください。
+| # | verb | そこで何をするか | 主な出力先 | dispatch |
+|---|---|---|---|---|
+| 1 | `init` | dev-graph を初期化し、作業グラフ（タスク依存関係図）の土台を用意する。冪等（べきとう＝何度実行しても同じ状態） | content root 6個（`issues/ tasks/ specs/ architecture/ features/ docs/`）＋ `.dev-graph/`。`system-spec/` は `spec` が用意する | Skill `run-dev-graph-init` |
+| 2 | `spec` | システム仕様（作るものの仕様書）を作成し、確定仕様・設計を dev-graph へ取り込む | `system-spec/` ＋ `specs/` ＋ `architecture/` ＋ `.dev-graph/state/graph.json` | Skill `run-dev-graph-system-spec`（system-spec-harness を引用） |
+| 3 | `decompose` | 大きな構想を feature、architecture、機能間依存へマクロ分解する | `features/` ＋ `architecture/` ＋ `.dev-graph/state/graph.json` | Skill `run-dev-graph-decompose` |
+| 4 | `plan` | 着手可能になった1 feature を実行可能なタスク仕様書へ分解する | `.dev-graph/staging/` → `.dev-graph/plans/`。昇格後は `tasks/<feature>/` | external Skill `run-system-dev-plan` |
+| 5 | `requirements` | 確定仕様と feature package から実装要件を導出し、準備完了時だけ次工程へ handoff（引き継ぎ）する | 要件定義書 ＋ `--handoff-target` で指定した capability-build／task-graph | Skill `run-dev-graph-requirements` |
+| 6 | `node` | 上位 command が自動登録しない node（1作業単位）を正規 path へ atomic（全部成功か全部失敗か）で追加・差分更新する | 種類別 content root ＋ `.dev-graph/state/graph.json` | Skill `run-dev-graph-node` |
+| 7 | `next` | 依存、resource 競合、lease を満たす、次に着手できる作業 batch を算出する | 画面表示 ＋ `eval-log/`。グラフへの副作用なし | Skill `run-dev-graph-schedule` |
+| 8 | `worktree` | worktree（作業用に複製したディレクトリ）の占有権を管理する | git 共通ディレクトリ配下の `dev-graph/leases.json` と `events.json`。claim 時は graph に実行 context も記録 | `scripts/manage-worktree-lease.py` |
+| 9 | `status` | node を条件検索し、依存・確定・完了状態を確認する | 画面表示 ＋ `eval-log/`。グラフへの副作用なし | Skill `run-dev-graph-status` |
+| 10 | `sync` | dev-graph と Beads／GitHub Issues／PR を突き合わせ、再実行で差分0へ収束させる | `.dev-graph/state/graph.json` ＋ Beads DB／GitHub。lifecycle 収束時は `tasks/` も更新 | Skill `run-dev-graph-sync` |
+| 11 | `render` | dev-graph を、外部 CDN 不要の静的 HTML と SVG へ可視化する | `.dev-graph/render/index.html`（`--out` で変更可能） | Skill `run-dev-graph-render` |
 
----
+dev-graph 自身の Skill を使う `init / spec / decompose / requirements / node / next / status / sync / render` は、実行ごとに `eval-log/run-dev-graph-<verb>-*.json(l)` へログを残します。外部 Skill の `plan` と純 script の `worktree` は、この eval-log 契約の対象外です。
 
-# Part 1: インストール手順
+## なぜこの順番なのか
 
-このリポジトリは **GitHub の marketplace から直接インストール**します。リポジトリを手元に clone する必要はありません。
-
-> **marketplace (マーケットプレイス)**: plugin が並んでいるお店のような場所。`skills` 自体が 1 つのお店で、その中に複数の plugin が並んでいます。
-
-## Step 0: 前提を確認する
-
-Claude Code CLI が動く環境が必要です。
-
-```bash
-claude --version
-# → claude code x.y.z が表示されれば OK
-```
-
-> ❌ 入っていなければ公式ガイド <https://docs.claude.com/claude-code/setup> を参照してください。
-
-## Step 1: marketplace を追加する
-
-Claude Code セッションを起動し、以下を打ちます。
-
-```text
-/plugin marketplace add manju/skills
-```
-
-これで「skills というお店」が Claude Code に登録されます。
-
-✅ **確認**:
-
-```text
-/plugin marketplace list
-```
-
-`skills` が表示されれば成功。
-
-## Step 2: plugin をインストールする
-
-用途に合わせて選んでください。**まずは最小構成から始めることをおすすめします。**
-
-### 2a. 最小構成 (Skill を作りたいだけ)
-
-```text
-/plugin install skill-creator@skills
-/plugin install prompt-creator@skills
-```
-
-### 2b. 標準構成 (品質検査も使う)
-
-最小構成 + governance (運用検査) を追加:
-
-```text
-/plugin install skill-governance-config@skills
-/plugin install skill-governance-lint@skills
-/plugin install skill-governance-hooks@skills
-```
-
-### 2c. フル構成 (全部入り)
-
-すべての plugin をまとめて入れる場合は **bundle (束)** を使います。
-
-```text
-/plugin install skills-full@skills
-```
-
-> **bundle (バンドル)**: 複数の plugin を 1 行でまとめて入れるためのセット。`skills-minimal` / `skills-intake` などもあります。
-
-✅ **確認**:
-
-```text
-/plugin list
-```
-
-入れた plugin が `installed` と表示されれば成功。
-
-## Step 3: 動作確認
-
-Claude Code セッション内で以下を打ち、補完候補に出ることを確認します。
-
-```text
-/skill-creator:run-skill-create
-```
-
-実行が始まれば成功。一旦キャンセル (`Ctrl-C` または「やめる」と返答) して構いません。
-
-## Step 4: アップデート / アンインストール
-
-```text
-# アップデート
-/plugin marketplace update skills
-/plugin update skill-creator@skills
-
-# アンインストール
-/plugin uninstall skill-creator@skills
-/plugin marketplace remove skills
-```
-
-## トラブルシュート
-
-| 症状 | 対処 |
-|---|---|
-| `/plugin` コマンドが効かない | Claude Code のバージョンが古い可能性。`claude --version` を確認し最新化 |
-| `marketplace add` で `not found` | リポジトリ名のスペルを確認。`manju/skills` が正しい |
-| `install` で `authentication failed` | private リポジトリの可能性。`gh auth login` でログイン |
-| Skill が補完に出ない | `/plugin list` で `installed` か確認、無ければ再 install |
-
----
-
-# Part 2: API キーの安全な保存 (Keychain)
-
-`skill-intake` plugin など、外部サービス (Notion 等) を呼ぶ plugin は **API キー (秘密の合言葉)** が必要です。
-
-skills では API キーを **コード・ファイル・環境変数に書かず、Mac の Keychain (キーチェーン) に保存**する方針を取っています。
-
-> **Keychain (キーチェーン)**: Mac に標準で入っている、パスワードや秘密情報を安全に保管してくれる金庫のような仕組み。Safari のパスワード保存にも使われています。
-
-## なぜ Keychain を使うのか?
-
-- `.env` ファイルや環境変数に書くと **間違って git に commit してしまう**事故が起きやすい
-- Keychain は OS レベルで暗号化されており、他人が覗けない
-- Mac ログイン中だけ取り出せるので、自動で守られる
-
-## Step 1: Keychain に API キーを登録する
-
-例として Notion の API キー (Internal Integration Token) を登録します。Mac のターミナルで実行:
-
-```bash
-security add-generic-password \
-  -s "notion-api-key.skills" \
-  -a "skills" \
-  -w "ntn_xxxxxxxxxxxxxxxxxxx" \
-  -U
-```
-
-- `-s` … サービス名 (=Keychain 内の項目名。plugin が読みに行く名前)
-- `-a` … アカウント名 (=どの用途で使うかの区別)
-- `-w` … 実際の API キー (この値だけは秘密に)
-- `-U` … 既にあれば更新
-
-> 💡 上のコマンドは履歴に API キーが残ります。`-w` を省略するとターミナルが対話的にキーを聞いてくれるので、その方が安全です。
-
-## Step 2: 登録できたか確認
-
-```bash
-security find-generic-password -s "notion-api-key.skills" -a "skills" >/dev/null
-```
-
-終了コードが `0` なら登録成功。API キー本体は表示しません。
-
-## Step 3: plugin が読みに行くサービス名
-
-各 plugin が期待する Keychain のサービス名は以下です。**この名前で登録してください。**
-
-| plugin | サービス名 (-s) | アカウント名 (-a) | 用途 |
-|---|---|---|---|
-| `skill-intake` | `notion-api-key.skills` | `skills` | Notion ページ作成 |
-
-このリポジトリでは `.notion-config.json` の `keychain_service` / `keychain_account` が正本です。
-
-## 環境変数で上書きしたい場合
-
-CI など Keychain が使えない環境では、以下の環境変数で上書きできます。
-
-```bash
-export NOTION_CONFIG_PATH="/path/to/.notion-config.json"
-```
-
-通常の利用では上書き不要です。
-
----
-
-# Part 3: plugin 一覧と役割
-
-`skills` には複数の plugin が入っており、それぞれ役割が分かれています。「料理に例えると」のイメージで読んでください。
-
-## 中核 plugin (まず入れる)
-
-| plugin | 役割 | 料理例 |
+| # | verb | 前工程との依存関係 |
 |---|---|---|
-| **skill-creator** | Skill (作業手順書) を作る・更新する・評価する司令塔 | レシピを設計するシェフ |
-| **prompt-creator** | Skill の中で使う「AI への指示文」を 7 層構造で作る | 調味料の配合表を作る人 |
-| **skill-intake** | 非エンジニアからヒアリングして Skill 要件を引き出す | お客様の好みを聞き取る接客係 |
+| 1 | `init` | content root と `.dev-graph/` が無ければ、後続の登録先が存在しない |
+| 2 | `spec` | 初期化済みの保存先へ確定仕様と設計を登録し、「何を作るか」を固める |
+| 3 | `decompose` | 確定仕様を入力に、大きな構想を feature と architecture へ分解する |
+| 4 | `plan` | `decompose` が生成した ready feature を実行タスクへ計画する。未分解の大構想は直接受けない |
+| 5 | `requirements` | `plan` が生成した feature package と確定仕様から実装要件を導出する |
+| 6 | `node` | 1〜5が自動登録しない成果物を、単一 writer（書き込み窓口）から追加・更新する |
+| 7 | `next` | 組み上がったグラフから、依存・競合・lease を考慮した着手候補を出す |
+| 8 | `worktree` | `next` が示した作業を claim し、実作業の占有権を確保する |
+| 9 | `status` | 着手中 node の依存・確定・完了状態を監視する |
+| 10 | `sync` | 実作業の結果を Beads／GitHub と同期し、状態を収束させる |
+| 11 | `render` | 任意の時点で、現在の依存グラフを静的 HTML にする |
 
-## 運用検査 plugin (品質を保つ)
+`init → spec → decompose → plan → requirements` は、前工程の出力を次工程が使う一方向パイプラインです。`node → next → worktree → status → sync` は開発中に繰り返す運用ループで、`render` は随時実行できます。
 
-`skill-governance-*` という名前の plugin は、Skill の **品質を機械的に検査する仕組み** を提供します。手作りの料理が衛生基準を満たしているか確認する保健所のような役割です。
+## Claude Code に入力する基本形
 
-| plugin | 役割 |
-|---|---|
-| **skill-governance-config** | 共通設定の置き場 (出力先 adapter / rubric 採点表 / routing ルール) |
-| **skill-governance-lint** | Skill の命名・依存方向・frontmatter (ヘッダ情報) を機械チェック |
-| **skill-governance-hooks** | Claude Code のイベント (ファイル変更時など) に反応する検査スクリプト |
-| **skill-governance-automation** | rubric (採点表) の合成、評価ログ管理、巻き戻し処理 |
-| **skill-governance-adapters** | Notion / Google Sheets / Slack など外部サービスへの出力口 |
-| **skill-governance-migration** | 古い形式の prompt や CLAUDE.md を Skill 形式へ移行 |
-| **skill-governance-secrets** | API キー取得と「うっかり漏洩」検査 |
+以下は Claude Code のプロンプトへ1行ずつ入力します。`<...>` は実際の値へ置き換えてください。
 
-> **rubric (ルーブリック)**: 採点表のこと。「ここまでできたら 80 点」のように、Skill が良いか悪いかを数値化する物差し。
->
-> **lint (リント)**: 自動チェックツールのこと。「ファイル名のルールが守られているか」「文字数が長すぎないか」を機械的に確認します。
->
-> **hook (フック)**: 特定のタイミング (ファイルを変更したとき・コミットしようとしたときなど) に自動で走るスクリプト。
-
-## どれを入れるべきか?
-
-- **試してみたいだけ** → `skill-creator` + `prompt-creator` の 2 つ
-- **チームで使う・品質を保ちたい** → 上記 + `skill-governance-config` / `lint` / `hooks` の 3 つ
-- **非エンジニアからヒアリングしたい** → `skill-intake` を追加
-- **全部試したい** → bundle `skills-full` で一括
-
----
-
-# Part 4: plugin の仕組み
-
-ここからは「plugin がどう動いているか」を知りたい方向けの解説です。インストールだけしたい方は読み飛ばして OK です。
-
-## 4.1 plugin に入っている 4 つの部品
-
-1 つの plugin の中には、以下の 4 種類の部品を入れることができます。Claude Code はそれぞれを別の方法で利用します。
-
-| 部品 | 役割 | 利用方法 |
-|---|---|---|
-| **Skill (スキル)** | 作業手順書 + 知識資料 | `/skill-creator:run-skill-create` のようにスラッシュコマンドで呼ぶ。または AI が自動で発火条件を見て呼ぶ |
-| **SubAgent (サブエージェント)** | 独立した別 AI として動く専門家 | Skill から呼ばれて、別の文脈で 1 つの仕事だけをこなす |
-| **Hook (フック)** | 特定タイミングで自動実行されるスクリプト | ユーザーが直接呼ばない。「保存したら走る」「コマンド前に走る」など |
-| **Slash Command (スラッシュコマンド)** | `/コマンド名` で呼べるショートカット | ユーザーが直接タイプする |
-
-> **SubAgent (サブエージェント)**: 親 AI とは別の文脈で動く子分 AI。先入観を避けたいとき (例: 自分が書いた文章を客観的にレビューするとき) に使います。
-
-### Skill とは具体的に何か?
-
-Skill は **1 つのフォルダ** で、中に以下のような構造を持ちます。
-
-```
-plugins/skill-creator/skills/run-skill-create/
-├── SKILL.md           ← 必須。何のスキルか、いつ呼ぶか、手順を書く
-├── references/        ← 補助資料 (長い仕様書や採点表)
-│   ├── resource-map.yaml  ← 補助資料の索引
-│   └── ...
-├── scripts/           ← Python スクリプト (機械的処理を担当)
-└── prompts/           ← AI に渡す指示文の雛形
+```text
+/dev-graph init
+/dev-graph spec
+/dev-graph decompose "<実現したい新機能と既存機能との関係>"
+/dev-graph plan --feature-id <feature-id> --feature-context features/<feature-id>.context.json
+/dev-graph requirements --feature-id <feature-id> --handoff-target <capability-build-or-task-graph>
 ```
 
-`SKILL.md` の冒頭には **frontmatter (フロントマター)** という設定欄があり、ここで「いつ Claude が自動でこのスキルを呼ぶか」を宣言します。
-
-```yaml
----
-name: run-skill-create
-description: 新規スキルを作りたいとき、既存スキルを更新したいときに使う。
-kind: run
----
-```
-
-### SubAgent とは?
-
-SubAgent は **plugin の `agents/` フォルダに `.md` ファイル 1 つ**として置かれます。
-
-```
-plugins/skill-intake/agents/skill-intake-purpose-excavator.md
-```
-
-呼ばれると **新しい AI 文脈** で起動し、親 Claude の会話履歴を引きずらない状態で 1 つの仕事をします。
-
-### Hook とは?
-
-Hook は **plugin の `hooks/` フォルダ**にスクリプトとして置かれ、`settings.json` で「いつ走らせるか」を設定します。
-
-```
-plugins/skill-intake/hooks/pre-publish-secret-scrub.sh
-```
-
-例: 「Notion に公開する直前に、API キーが文章に混じっていないか自動チェック」など。
-
-### Slash Command とは?
-
-`/intake` のように打つだけで Skill を起動するショートカット。**plugin の `commands/` フォルダ**に置かれます。
-
-```
-plugins/skill-intake/commands/intake.md
-```
-
-## 4.2 plugin の最小構造
-
-新しい plugin を作るなら、最低限以下があれば動きます。
-
-```
-plugins/my-plugin/
-├── .claude-plugin/
-│   └── plugin.json    ← この plugin の名前・バージョンなどの設定
-├── skills/            ← Skill 群を置く (任意)
-├── agents/            ← SubAgent を置く (任意)
-├── hooks/             ← Hook を置く (任意)
-└── commands/          ← Slash Command を置く (任意)
-```
-
-`plugin.json` の例:
+`plan` の `--feature-context` は repository 相対 path が必須です。JSON には次の9 field が必要で、`graph_node_id` は `--feature-id` と一致しなければなりません。
 
 ```json
 {
-  "name": "my-plugin",
-  "version": "1.0.0",
-  "description": "私の作業を自動化する plugin"
+  "graph_node_id": "feat-example",
+  "artifact_kind": "feature",
+  "purpose": "この機能が必要な理由",
+  "goal": "達成する状態",
+  "scope_in": ["含む範囲"],
+  "scope_out": ["含まない範囲"],
+  "acceptance": ["受け入れ条件"],
+  "architecture_refs": ["architecture/example.md"],
+  "updated_at": "2026-07-20T00:00:00Z"
 }
 ```
 
-## 4.3 marketplace にどう登録されているか
+通常の node を手動更新する場合は、完全な node または既存 node への `patch` を JSON で用意し、先に dry-run（試行のみ）します。上位 command が登録済みなら、同じ内容を重ねて登録する必要はありません。
 
-リポジトリ直下の `.claude-plugin/marketplace.json` が **plugin 一覧の目録**です。
-
-```json
-{
-  "name": "skills",
-  "plugins": [
-    {"name": "skill-creator", "source": "./plugins/skill-creator"},
-    {"name": "skill-intake",  "source": "./plugins/skill-intake"}
-  ]
-}
+```text
+/dev-graph node upsert --input .dev-graph/staging/<node-input>.json --dry-run
+/dev-graph node upsert --input .dev-graph/staging/<node-input>.json
+/dev-graph next
+/dev-graph status --id <graph-node-id>
+/dev-graph sync
+/dev-graph render
 ```
 
-Claude Code は `/plugin marketplace add manju/skills` を実行すると、この `marketplace.json` を読み、`plugins/` 配下から実体をキャッシュにコピーします。
+## 11 verb を1つのプロンプトで一括実行する
 
-## 4.4 `.claude/` と `~/.claude/` の役割
+11 verb は前工程の出力を次工程が使う一方向パイプラインのため、文字どおりの同時（並列）実行はできません。代わりに次のプロンプトを Claude Code へ1回入力すると、`init` から `render` までを順番に自動実行させられます。`<...>` を実際の内容へ置き換えてから貼り付けてください。
 
-インストール後、ファイルがどこに置かれるかを整理します。
+```text
+/dev-graph の11 verb を init → spec → decompose → plan → requirements → node → next → worktree → status → sync → render の順に一括実行してください。
 
-| 場所 | 中身 | 性質 |
-|---|---|---|
-| `plugins/<plugin>/` (リポジトリ内) | plugin の **正本** (オリジナル) | これが本物 |
-| `~/.claude/plugins/...` (ホームディレクトリ) | Claude Code が自動で保持するキャッシュ | 自動管理、編集しない |
-| `<repo>/.claude/skills/...` | 開発用の **派生 (symlink)** | `plugins/` の正本へのショートカット |
+対象の新機能: <実現したい新機能と、既存機能との関係を2〜3文で>
 
-> **symlink (シンボリックリンク)**: ファイルの近道。実体は別の場所にあり、symlink はその場所を指すだけ。Windows のショートカットや、Mac の Finder の「エイリアス」と似た仕組み。
+実行ルール:
+1. 各 verb は必ず /dev-graph <verb> の正規 dispatch で実行し、同等の処理を自作・省略しない。
+2. 各 verb の完了条件（spec の確定章と完成度 evaluator PASS、plan の exact-13 一括登録、requirements の readiness 充足など）を満たしてから次へ進む。満たせない場合はその verb で停止し、原因と不足を報告して以降の verb を実行しない。
+3. spec のヒアリングにはまず上記「対象の新機能」の内容で回答し、それでも不足する情報だけ私に質問する。
+4. decompose が生成した feature-id を控え、feature 文書から features/<feature-id>.context.json を作成して、plan と requirements に同じ feature-id を使う。
+5. requirements は --handoff-target task-graph で実行する。
+6. node は、上位 command が自動登録しなかった成果物がある場合だけ --dry-run → 本実行の順で使う。対象が無ければ「skip」と報告する。
+7. next で着手候補 batch を算出し、worktree は list で lease（占有権）の状況確認まで行う。claim は実装開始時に行うため、ここでは実行しない。
+8. status で今回作成した feature と task の登録状態を確認し、sync で Beads と冪等（何度実行しても同じ結果）に収束させ、render で全体 DAG を可視化する。
+9. 最後に、11 verb それぞれの結果（PASS / 停止 / skip と主な生成物の path）を一覧で報告する。
+```
 
-### なぜ symlink を使うのか?
+途中の verb で停止した場合は、Part 4「迷ったときの戻り先」に従って上流を直し、止まった verb から続きだけを再実行します（完了済みの verb は冪等なので再実行しても安全です）。
 
-リポジトリ内では `plugins/` が正本ですが、Claude Code は本来 `~/.claude/` 配下しか見ないため、**開発中の plugin を即座に試す**には `.claude/skills/` 等にコピーする必要があります。コピーだと差分管理が大変なので、symlink で「`.claude/skills/run-foo` は実は `plugins/.../run-foo` を指している」とすることで、片方を編集すれば両方反映される仕組みにしています。
+## `worktree` の5操作
 
-利用者として `/plugin install` で入れる場合、symlink の存在を意識する必要はありません。
+`worktree` が受け付ける操作は `list / claim / heartbeat / park / release` だけです。lease（リース＝複数セッションが同じ作業を奪い合わないための一時的な占有権）は、既定30分で失効します。
 
-## 4.5 scripts / references がホームディレクトリ配下にあるとき
+```text
+/dev-graph worktree list
+/dev-graph worktree claim <graph-node-id> --branch devgraph/<graph-node-id> --session-id <session-id>
+/dev-graph worktree heartbeat <graph-node-id> --session-id <session-id>
+/dev-graph worktree park <graph-node-id> --session-id <session-id>
+/dev-graph worktree release <graph-node-id> --session-id <session-id>
+```
 
-`/plugin install` で入れた plugin は、実体が `~/.claude/plugins/cache/.../` に展開されます。Skill が参照する scripts や references も同じ場所にコピーされるため、**ユーザーが直接触る必要はありません**。
+dispatcher は public form（ユーザーが入力する形）を次の正準 flag へ一度だけ変換し、必ず `--repo-root "$CLAUDE_PROJECT_DIR"` を script に渡します。位置引数を shell 文字列として再評価しません。
 
-カスタマイズしたい場合のみ、リポジトリを clone してローカルの `plugins/` を編集し、`/plugin marketplace add /path/to/skills` でローカル marketplace として登録します。
+| public form | script form |
+|---|---|
+| `worktree list` | `manage-worktree-lease.py --repo-root "$CLAUDE_PROJECT_DIR" --op list` |
+| `worktree claim <id> --branch <name> --session-id <session>` | `manage-worktree-lease.py --repo-root "$CLAUDE_PROJECT_DIR" --op claim --graph-node-id <id> --branch <name> --session-id <session>` |
+| `worktree heartbeat <id> --session-id <session>` | `manage-worktree-lease.py --repo-root "$CLAUDE_PROJECT_DIR" --op heartbeat --graph-node-id <id> --session-id <session>` |
+| `worktree park <id> --session-id <session>` | `manage-worktree-lease.py --repo-root "$CLAUDE_PROJECT_DIR" --op park --graph-node-id <id> --session-id <session>` |
+| `worktree release <id> --session-id <session>` | `manage-worktree-lease.py --repo-root "$CLAUDE_PROJECT_DIR" --op release --graph-node-id <id> --session-id <session>` |
 
-## 4.6 plugin が読み込む順番
-
-Claude Code セッション起動時:
-
-1. `~/.claude/settings.json` を読む
-2. 登録済 marketplace から `marketplace.json` を読む
-3. `installed` 状態の plugin の `plugin.json` を読む
-4. 各 plugin の `skills/` / `agents/` / `commands/` / `hooks/` を Claude Code に登録
-5. ユーザーが `/コマンド` を打つ、または会話の文脈が Skill の `description` (発火条件) に合致すると起動
-
----
-
-# Part 5: 参考リンク
-
-## Claude Code 公式
-
-- Plugin 作成: <https://code.claude.com/docs/en/plugins>
-- Plugin reference: <https://code.claude.com/docs/en/plugins-reference>
-- Marketplace 作成と配布: <https://code.claude.com/docs/en/plugin-marketplaces>
-- Plugin の発見とインストール: <https://code.claude.com/docs/en/discover-plugins>
-
-## このリポジトリの設計資料
-
-- 設計思想と詳細仕様: `doc/ClaudeCodeスキルの設計書/` (01〜35章)
-- 配布境界の取り決め: `CONVENTIONS.md`
+`.dev-graph/locks/` は plan などの内部 lock 用です。worktree lease の保存先ではありません。
 
 ---
 
-# 運用メモ (上級者向け)
+# Part 2: 新機能を要件定義からPRまで進める
 
-- `plugins/` は配布対象の **正本**。
-- `doc/`, `eval-log/`, `.claude/` は設計・評価・ローカル運用のためのディレクトリで、配布対象には含まれません。
-- plugin はインストール時にキャッシュへコピーされるため、plugin root の外側を `../` で参照しないでください。
-- 他 plugin と共有したい共通ファイルは、marketplace 内の sibling plugin として置くか、同一 plugin 内に取り込んでください。
+## 0. repository を開き、Claude Code を起動する
+
+ターミナルで実行します。
+
+```bash
+cd /path/to/HarnessHub
+bd prime
+claude
+```
+
+`bd prime` は Beads の運用ルールを表示します。Claude Code の session 中に context が圧縮された場合や、別 session から再開する場合も、最初に再実行します。
+
+## 1. 要件定義とシステム仕様を確定する
+
+Claude Code へ入力します。
+
+```text
+/dev-graph init
+/dev-graph spec
+```
+
+`spec` は system-spec-harness の正規フローを呼び出し、ヒアリング、必要な公式情報の取得、compile、独立完成度評価を進めます。質問が表示されたら、新機能の目的、利用者、範囲外、受け入れ条件、セキュリティ、データ、UI、運用条件を回答してください。
+
+完了条件は、確定章と完成度 evaluator が PASS し、`system-spec/`、`specs/`、`architecture/`、graph の source lineage（どの仕様から作られたかの記録）が一致していることです。
+
+## 2. 構想を feature へ分解する
+
+Claude Code へ、機能だけでなく既存 feature との関係も書いて入力します。
+
+```text
+/dev-graph decompose "通知設定機能を追加する。認証済みユーザーが通知種別を選べるようにし、既存の配信基盤を再利用する"
+```
+
+生成された `features/<feature-id>.md` の `scope_in`、`scope_out`、`acceptance`、`architecture_refs` をレビューします。要件そのものが不足していた場合は、feature 文書で補わず `/dev-graph spec` へ戻ります。
+
+```text
+/dev-graph status --kind feature
+/dev-graph render --scope <feature-id>
+```
+
+## 3. feature をタスク仕様書へ分解する
+
+`features/<feature-id>.context.json` を用意し、Claude Code へ入力します。
+
+```text
+/dev-graph plan --feature-id <feature-id> --feature-context features/<feature-id>.context.json
+```
+
+`plan` は1つの confirmed feature を P01〜P13 の exact-13 task package へ分解します。13件すべてが検証に通った場合だけ一括登録され、1件でも不正なら部分登録せず停止します。
+
+続けて、実装可能性を確認し、要件定義書を後段へ引き渡します。
+
+```text
+/dev-graph requirements --feature-id <feature-id> --handoff-target task-graph
+```
+
+readiness（実装準備状態）、source digest（入力内容の指紋）、P01〜P13 の整合に不備がある場合は handoff されません。表示された `missing_sections` を上流の仕様・feature・plan で直してから再実行します。
+
+## 4. dev-graph のタスクを Beads へ同期する
+
+Claude Code へ入力します。
+
+```text
+/dev-graph status --kind task
+/dev-graph sync
+/dev-graph render
+```
+
+`sync` は task node と Beads issue の対応を冪等に収束させます。同じ入力で再実行しても二重起票しません。
+
+## 5. Beads と strandkanban でタスクを見える化する
+
+### CLI で着手可能なタスクを確認する
+
+ターミナルで実行します。
+
+```bash
+bd ready
+bd blocked
+bd list --status=in_progress
+bd stats
+bd show <beads-id>
+bd graph <beads-id>
+```
+
+- `bd ready`: 依存ブロックの無い、今すぐ着手可能な issue
+- `bd blocked`: ブロック中の issue と依存先
+- `bd show`: 仕様、受け入れ条件、依存、外部参照を含む1件の詳細
+- `bd graph`: 親子・依存関係の表示
+
+### strandkanban（旧 beads-kanban）を起動する
+
+初回だけ install します。現行版は clone 後に依存を入れて起動します。
+
+```bash
+git clone https://github.com/doublej/strandkanban ~/tools/strandkanban
+cd ~/tools/strandkanban
+bun install
+```
+
+`bun` が無い場合は `npm install` を使えます。起動時は、Beads DB を持つ HarnessHub の repository root を渡します。
+
+```bash
+~/tools/strandkanban/bin/strand /path/to/HarnessHub
+```
+
+表示された URL をブラウザで開きます。CLI や Claude Code が issue を更新すると看板も live 更新されます。
+
+看板は「見て相談し、手動で整理する場所」です。完了の最終判定は看板の列ではなく、PR が merge 済みであるという GitHub の事実と、それを反映した Beads／dev-graph の状態です。
+
+## 6. Claude Code と「次にどれをやるか」を相談する
+
+新しい Claude Code session を開始して相談する場合は、ターミナルで次のように実行できます。
+
+```bash
+claude --name task-selection "次に着手するタスクを相談したい。bd ready、bd blocked、/dev-graph next、/dev-graph status を読み取り専用で確認し、依存関係、priority、resource競合、lease、タスク仕様書の準備状態を比較して、推奨する1件と理由を示してください。まだclaimやファイル変更はしないでください。"
+```
+
+すでに Claude Code を開いている場合は、引用符内の文章だけをプロンプトへ入力します。
+
+```bash
+次に着手するタスクを相談したい。bd ready、bd blocked、/dev-graph next、/dev-graph status を読み取り専用で確認し、依存関係、priority、resource競合、lease、タスク仕様書の準備状態を比較して、推奨する1件と理由を示してください。まだclaimやファイル変更はしないでください。
+
+```
+選定では次の順に確認します。
+
+1. `bd ready` に出ていること
+2. priority の高いものを優先すること（数値は0が最優先、4が backlog）
+3. 多くの下流タスクを解放する上流タスクを優先すること
+4. `/dev-graph next` で resource 競合や active lease が無いこと
+5. `bd show <beads-id>` の受け入れ条件と task 仕様書が実行可能な粒度であること
+
+Beads ID（例: `HarnessHub-abc`）と dev-graph node ID（例: `SYS-NOTIFICATION-P05`）は別の識別子です。着手前に両方を控えてください。
+
+```bash
+bd show <beads-id>
+```
+
+```text
+/dev-graph status --id <graph-node-id>
+/dev-graph next
+```
+
+## 7. 選んだタスクを claim する
+
+まずターミナルで Beads issue を claim します。
+
+```bash
+bd update <beads-id> --claim
+bd show <beads-id>
+```
+
+次に Claude Code で worktree lease を確保します。branch 名は `devgraph/<graph-node-id>` に固定します。`session-id` は同じ作業中に変えない一意な文字列を使います。
+
+```text
+/dev-graph worktree claim <graph-node-id> --branch devgraph/<graph-node-id> --session-id <session-id>
+```
+
+長時間作業では heartbeat を送ります。
+
+```text
+/dev-graph worktree heartbeat <graph-node-id> --session-id <session-id>
+```
+
+claim が衝突した場合は、他 session の lease を勝手に解放しません。`/dev-graph worktree list` で所有者を確認し、担当者と調整します。
+
+## 8. Claude Code にタスクを実行させる
+
+新しい session で実装を開始する場合の入力例です。
+
+```bash
+claude --name <beads-id> "Beads タスク <beads-id>（dev-graph node <graph-node-id>）を実行してください。最初に bd show と task 仕様書を読み、受け入れ条件、依存、変更範囲、必要な品質ゲートを確認してください。既存の未コミット変更を保持し、対象外ファイルを変更せず、実装と必要なテストまで進めてください。commit、push、PR作成はまだ行わず、変更内容と検証結果を報告してください。"
+```
+
+すでに対象 worktree で Claude Code を開いている場合は、引用符内の文章だけを入力します。
+
+```bash
+Beads タスク <beads-id>（dev-graph node <graph-node-id>）を実行してください。最初に bd show と task 仕様書を読み、受け入れ条件、依存、変更範囲、必要な品質ゲートを確認してください。既存の未コミット変更を保持し、対象外ファイルを変更せず、実装と必要なテストまで進めてください。commit、push、PR作成はまだ行わず、変更内容と検証結果を報告してください。
+```
+
+実装中に追加作業が見つかった場合は、現在の task へ無理に混ぜず Beads に follow-up issue を作り、必要なら依存を設定します。
+
+```bash
+bd create --title="<追加タスクの要約>" --description="<なぜ必要か・何をするか>" --type=task --priority=2
+bd dep add <追加beads-id> <先に完了すべきbeads-id>
+```
+
+## 9. 品質ゲートを実行する
+
+最優先は、task 仕様書に書かれた検証 command です。最低限、差分の構文不備と成果物の配置を確認します。
+
+```bash
+git status --short
+git diff --check
+python3 scripts/lint-artifact-placement.py
+```
+
+変更した plugin の test と package validation も実行します。たとえば dev-graph を変更した場合は次のとおりです。
+
+```bash
+python3 -m pytest plugins/dev-graph/tests -q
+claude plugin validate plugins/dev-graph
+```
+
+repository 全体への影響がある変更は、必要に応じて full gate を実行します。
+
+```bash
+make test
+```
+
+失敗した検証を「既存不具合」と決めつけて無視せず、今回差分との因果を確認します。解消できない場合は PR 本文と Beads notes に、失敗 command、error、影響、再現方法を残します。
+
+## 10. commit、push、PR作成を Claude Code に依頼する
+
+変更と検証結果を確認した後、Claude Code へ次を入力します。この依頼は commit、push、PR作成を明示的に許可するものです。
+
+```text
+タスク <beads-id> の変更を最終レビューしてください。git status と diff を確認し、task 仕様書の品質ゲートを再実行してください。本変更分に仕様・設計への影響が無いかを確認し、影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映してから、仕様反映の受領書を記録してください（影響が無い場合は判断理由を添えて記録してください）。問題がなければ対象ファイルだけを commit し、branch devgraph/<graph-node-id> を origin へ push して、repository の正しい base branch 向けに draft PR を作成してください。PR 本文には目的、変更内容、検証結果、仕様反映の有無、Beads ID、dev-graph node ID、残課題を記載してください。無関係な既存差分は commit しないでください。
+```
+
+### 仕様反映の受領書（PR 前の必須ゲート）
+
+「実装で得た知見を仕様へ戻す」工程は、受領書（receipt＝確認した事実を HEAD の commit に紐付けて記録したファイル）と hook で強制されます。**有効な受領書が無い状態で `gh pr create` を実行すると、hook が自動で BLOCK します。** 全変更を commit した後（＝PR に入る内容が確定した後）に記録します。
+
+```bash
+# 仕様・設計へ反映した場合（diff が仕様ファイルを実際に含むことを機械検証して記録）
+python3 scripts/build-spec-reflection-receipt.py --repo-root . --spec-impact reflected
+
+# 仕様・設計への影響が無い場合（判断理由が必須）
+python3 scripts/build-spec-reflection-receipt.py --repo-root . --spec-impact none --reason "<なぜ仕様影響が無いか>"
+```
+
+受領書は記録時の HEAD に束縛されます。記録後にさらに commit を積むと自動で無効（stale）になり、追加分の仕様影響を再確認して再記録するまで PR は作成できません。
+
+手動で実行する場合は、対象 file を明示して stage します。
+
+```bash
+git status --short
+git diff --check
+git add <対象file-1> <対象file-2>
+git commit -m "<変更内容を表すmessage>"
+git push -u origin devgraph/<graph-node-id>
+gh pr create --draft --base <base-branch> --head devgraph/<graph-node-id> --title "<PR title>" --body-file <PR本文file>
+```
+
+PR を作成しただけでは task 完了ではありません。review 対応中は Beads を `in_progress` のままにします。
+
+## 11. PR merge 後に状態を収束させる
+
+PR が default branch へ merge された後、Claude Code へ入力します。
+
+```text
+/dev-graph sync
+/dev-graph status --id <graph-node-id>
+/dev-graph worktree release <graph-node-id> --session-id <session-id>
+/dev-graph render
+```
+
+ターミナルで Beads の状態を確認します。
+
+```bash
+bd show <beads-id>
+```
+
+merge fact（PR が merge 済みという事実）から自動 close されなかった場合だけ、PR番号を理由に明示して閉じます。
+
+```bash
+bd close <beads-id> --reason="PR #<number> merged"
+bd close <beads-id> --suggest-next
+```
+
+チーム間で Beads DB をリモート同期する必要があり、その権限が明示されている場合だけ実行します。
+
+```bash
+bd dolt pull
+bd dolt push
+```
+
+`.beads/issues.jsonl` は受動的な export であり、通信の正本ではありません。通常運用で直接編集したり、`bd import` を使って同期したりしないでください。
+
+---
+
+# Part 3: Beads と strandkanban の役割
+
+## Beads が正本として持つもの
+
+Beads は、実行タスク、担当、priority、依存、blocker、進捗を保持する課題トラッカーです。issue はローカルの Dolt DB（`.beads/dolt/`）に保存され、マシン間同期は git remote の `refs/dolt/data` を使います。
+
+```bash
+bd prime
+bd ready
+bd list --status=open
+bd list --status=in_progress
+bd blocked
+bd show <id>
+bd update <id> --claim
+bd close <id> --reason="<完了理由>"
+bd stats
+bd doctor
+```
+
+AI エージェントは対話 editor を開く `bd edit` を使いません。field の更新は `bd update <id> --title ... --description ... --notes ...` のような非対話 command を使います。
+
+## strandkanban が見せるもの
+
+strandkanban は Beads issue をブラウザで見る live 看板です。タスクの作成・依存・完了状態の正本を別に持つものではありません。
+
+| 確認したいこと | 使うもの |
+|---|---|
+| 次に着手可能な1件 | `bd ready` |
+| ブロック理由・依存先 | `bd blocked` / `bd show <id>` |
+| 人が全 task を一覧し、状態を相談する | strandkanban |
+| resource 競合と lease を含む並行実行候補 | `/dev-graph next` |
+| 仕様 → feature → task の全体 DAG | `/dev-graph render` |
+| PR merge を含む完了の最終状態 | GitHub PR fact → `/dev-graph sync` → Beads |
+
+看板を起動していなくても、Beads CLI と dev-graph だけで開発・自動同期は成立します。
+
+---
+
+# Part 4: 迷ったときの戻り先
+
+| 状況 | 実行すること |
+|---|---|
+| 要件や技術決定が変わった | `/dev-graph spec` へ戻る |
+| feature の範囲・依存が変わった | `/dev-graph decompose` を再実行し、必要な node 差分を正規 writer で反映する |
+| feature context が変わった | `/dev-graph plan --feature-id ... --feature-context ...` を再実行する。生成済み task を個別手編集しない |
+| requirements が handoff されない | `missing_sections` と readiness を直し、`/dev-graph requirements` を再実行する |
+| Beads に task が見えない | `/dev-graph sync` 後に `bd ready` と `bd stats` を確認する |
+| 何を着手すべきか分からない | `bd ready`、`/dev-graph next`、strandkanban を比較し、Claude Code に読み取り専用で相談する |
+| lease が衝突した | `/dev-graph worktree list` で所有者を確認する。勝手に release しない |
+| 実装中に要件不足を発見した | 実装で推測して埋めず、`/dev-graph spec` または Beads follow-up へ戻す |
+| PR後に状態がずれる | `/dev-graph sync` を再実行し、`bd show` と `/dev-graph status` を確認する |
+
+## いつでも実行できる状態確認
+
+```bash
+bd ready
+bd blocked
+bd stats
+git status --short
+python3 scripts/lint-artifact-placement.py
+```
+
+```text
+/dev-graph status
+/dev-graph next
+/dev-graph worktree list
+/dev-graph render
+```
+
+---
+
+# 参考
+
+- `/dev-graph` dispatcher の正本: `plugins/dev-graph/commands/dev-graph.md`
+- dev-graph の実装契約: `plugins/dev-graph/skills/`
+- exact-13 task plan の正本: `plugins/system-dev-planner/skills/run-system-dev-plan/SKILL.md`
+- feature context schema: `plugins/system-dev-planner/schemas/feature-context.schema.json`
+- 実行 tracker／完了 authority の正本: `plugins/dev-graph/references/execution-tracker-contract.md`
+- Beads の全運用 context: `bd prime`
+- Beads 同期の概要とアンチパターン: <https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md>
+- Harness Hub の要件正本: `system-spec/index.md`
+- harness からの plugin 同期 (MK-004): `distributable: false` を宣言した plugin (社内専用・開発メタ系) は実体コピーのみ行い、marketplace.json には登録しない。このため plugin 数と marketplace 登録数の不一致は正常で、3点整合検査 (plugin ディレクトリ ↔ marketplace.json ↔ version) も distributable フラグに準拠する
+- 配布境界: `CONVENTIONS.md`

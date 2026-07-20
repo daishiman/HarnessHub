@@ -1,0 +1,92 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec",
+  "verdict": "PASS",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "U1〜U9 は appr-007 で確定し、G1〜G5・D1〜D6・I1〜I14・matrix・章への参照に欠落がない。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-complete --require-foundation: exit 0"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "D1〜D6 は全件 confirmed で、代替案・採用理由・弱点・運用境界を保持する。",
+      "evidence": [
+        "qa-047 / qa-049 / appr-007"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "54セルは確定25・理由付き対象外29・未収集0。qa_ref 欠落0で、J0〜J6 と11 baselineも qa-065/qa-066 から逆引きできる。",
+      "evidence": [
+        "system-spec-matrix-auditor: PASS",
+        "qa_log 66 / dangling qa_ref 0"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "4 knowledge profile が exit 0で、設計原則は認可・永続化・API・復旧・運用契約へ具体化されている。",
+      "evidence": [
+        "knowledge/doctrine/required-info/cross: all exit 0"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "17 target を公式一次情報へ再照合し、欠落・非公式host・旧版・鮮度未確認は0。",
+      "evidence": [
+        "pnpm 11.15.0",
+        "validate-source-citation.py: exit 0"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "全18 prompt が verify-completeness と validate-prompt を通過した。",
+      "evidence": [
+        "prompt_validators: total=18 failures=0"
+      ]
+    }
+  },
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "hearing-history",
+      "observation": "過去6質問に誘導性が残るが、現行決定は qa-047/qa-049 と appr-007 で中立再確認済み。",
+      "suggested_fix": "以後も中立な自由回答または論点別質問を使う。"
+    },
+    {
+      "severity": "medium",
+      "bucket": "knowledge-order",
+      "observation": "backend.md の設計知識カード表示順だけが knowledge topo order と一致しない。内容欠落や確定順の破綻はない。",
+      "suggested_fix": "将来の compiler 改修で表示順を topo order に揃える。"
+    },
+    {
+      "severity": "info",
+      "bucket": "docs-coverage",
+      "observation": "docs/ の設計書、画面、J0〜J6、mockup、features README、11 baseline を参照型トレースへ統合した。"
+    },
+    {
+      "severity": "info",
+      "bucket": "freshness",
+      "observation": "17件の公式参照を再監査し、pnpm を現行 11.15.0 へ更新した。"
+    }
+  ],
+  "gaps": []
+}

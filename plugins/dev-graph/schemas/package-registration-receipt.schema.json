@@ -22,6 +22,8 @@
     "graph_revision_before": {"type": "integer", "minimum": 0},
     "graph_revision_after": {"type": "integer", "minimum": 1},
     "graph_digest_after": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-    "output_path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"}
+    "output_path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "operation": {"enum": ["registered", "superseded"]},
+    "supersedes_source_digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}
   }
 }

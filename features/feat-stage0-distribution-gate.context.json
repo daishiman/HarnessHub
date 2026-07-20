@@ -1,0 +1,27 @@
+{
+  "graph_node_id": "feat-stage0-distribution-gate",
+  "artifact_kind": "feature",
+  "purpose": "Stage 1 へ投資する前に、Skill 配布の成立経路 (URL 型 marketplace / npm source / Bootstrap Installer) と Windows 実機 E2E を検証し、成立経路を確定する (仮説 H7)",
+  "goal": "最小 artifact で 2 経路以上の配布検証が完了し、採用経路が根拠付きで記録された状態",
+  "scope_in": [
+    "URL 型 marketplace 検証",
+    "npm source 検証 (公式サポート確認済み)",
+    "Bootstrap Installer 試作",
+    "Windows/macOS 実機 E2E",
+    "採用経路の決定記録"
+  ],
+  "scope_out": [
+    "Hub 本体の実装",
+    "課金・商用配布"
+  ],
+  "acceptance": [
+    "2 経路以上の実機検証記録が存在する",
+    "採用経路が decision record として登録される",
+    "Windows E2E が成功する"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-infrastructure.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-18T10:15:52Z"
+}

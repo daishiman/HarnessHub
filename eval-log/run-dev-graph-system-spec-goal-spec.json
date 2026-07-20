@@ -1,0 +1,4 @@
+{
+  "original_goal": "docs/ 配下のドキュメント (システム設計書群: system-design-overview/backend-spec/frontend-spec/infrastructure-spec/security-spec/shared-layers/screen-inventory/user-journeys/mockups/features baseline) の内容を、system-spec-harness の正規フロー (elicit reopen→必要時 doc-fetch→compile→completeness evaluator) で system-spec/ 仕様書章へもれなく反映し、確定章だけを source lineage (origin_kind/plugin/path/version/digest/imported_at) 付きで dev-graph specification/architecture ノードへ C02 経由で再取込する。特に未コミット additive 差分 (構築優先順位 §10、install/download descriptor、Feedback type/priority 改訂、Build 自動作成・起点二元化、project.create/update 監査等) の未反映を解消する",
+  "recorded_at": "2026-07-18T13:52:45Z"
+}

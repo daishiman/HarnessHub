@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/replan-20260719-feat-docs-cms",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0+r1-scope",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行feature contextとpackage内の目的・範囲・受入条件に矛盾なし。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13が現行scope/acceptanceをowner・verification・evidenceまで漏れなく保持。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "package/inventory/graph/handoffのidentity・digest・exact-setが一致。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 entry gateと機能内前方DAGがcanonical dependency contractに整合。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260716-154821-wt-1/plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/replan-20260719-feat-docs-cms"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85\",\n  \"feature_package_id\": \"feature-package/feat-docs-cms\",\n  \"parent_feature\": \"feat-docs-cms\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "567c57421cb7852a52c5dc0cb6cf9b113b2c76a11ca43b755d45d8a67089d8dd"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "b2e268905017b4294fa066de3867bf3677cb7ad2199908e93c22d2f178555d34"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "f5ec3eb680bdc79fca10bd79e9089b51b86e32d6ebd45b06be125e02fd38eb63"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "1c00bfdd51c06e53b718d6528cac7ddc1377dfc09c3ca9e6f5d93ecddabb797f"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "d5b34fc3450858f91760cb2f8595c19da6b1ff060eb443db174de42dd7115594"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "daa18ac1f4c4ab776905cabf8670ae8901f22001c00013009db06814d54a8511"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "a0aff4ac88c11cdf3e82d49cbe033484ece7f990f2ab1ae47dfd115b9519b8a2"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "ebea11341d061cc1494a82797ed7b611cda363d8a68f2fc01c3486f5a87528ba"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "35cc0cd96898d993637bb7bfd6b0781a5646cdeaf84cb9a990b04eab12e12e51"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "97822f122f46ef60e4502402ee01b0b62fb59881bee1096d94b4e677bf61ceee"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "9a5f5d7e2004f7a1ffc63e8223e1d5bd39bc80a9ad091e11cb7c252d3f49fe06"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "ae06e0c3b8d05309bde98e57a7a9d8250317db57e2250c27478ffac6e44ed8cf"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "5f79dcaac8030f701565938e3482435c9bb94983e525411de8c258991e4d7da2"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "56ca7e4ba2a9fcfb4c15664a7f4d735c73746d1eefff982f6f90853846acf368"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e6525007bd47b4b4d54fecd8b7a2238f309fa64c3573bea3532ccda74d3ca386"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "c4b98176e2d5c5a365d4eb0ba2f6da759a614365ff48e7196b9de02851ae89fd"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "a54ccb499cf84c172bdc091c506256042af0db6b6f12504d907913c5200fb2be"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "c0d0fa067faf8b0e290997b46d32f11796172613cea6f37384ea4395ff94ea23"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "independent-review",
+      "observation": "更新後bytesを独立再評価。source lineage sha256:6e8ea8a7a1042002d0bb0b3ff2a2b3464ea4a45ba77ddea709580cc3bed03d34一致。B7の5 endpointは正本どおりPATCH更新を含み、route・zod・authz、doc_draft enqueueから共通queue completeを経てdocumentsへwritebackするadapter、tenant・XSS・audit tests/evidenceへ追跡。exact-13、handoff source 16件、forward DAG、repository containmentも整合。",
+      "evidence": [
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-graph.json"
+      ]
+    }
+  ]
+}

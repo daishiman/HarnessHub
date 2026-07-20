@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-tenant-data-retention",
+  "parent_feature": "feat-tenant-data-retention",
+  "source_feature_digest": "sha256:69dfcdf921e77e21f88ca692b562cad0785381e22f00f1e446c512c0d87ea327",
+  "task_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "task_spec_paths": [
+    "task-specs/phase-01-requirements.md",
+    "task-specs/phase-02-architecture.md",
+    "task-specs/phase-03-design-review.md",
+    "task-specs/phase-04-test-design.md",
+    "task-specs/phase-05-implementation.md",
+    "task-specs/phase-06-test-run.md",
+    "task-specs/phase-07-acceptance.md",
+    "task-specs/phase-08-refactoring-migration.md",
+    "task-specs/phase-09-quality-assurance.md",
+    "task-specs/phase-10-final-review.md",
+    "task-specs/phase-11-evidence.md",
+    "task-specs/phase-12-documentation-operations.md",
+    "task-specs/phase-13-release-deploy.md"
+  ],
+  "task_node_ids": [
+    "SYS-TENANT-DATA-RETENTION-P01",
+    "SYS-TENANT-DATA-RETENTION-P02",
+    "SYS-TENANT-DATA-RETENTION-P03",
+    "SYS-TENANT-DATA-RETENTION-P04",
+    "SYS-TENANT-DATA-RETENTION-P05",
+    "SYS-TENANT-DATA-RETENTION-P06",
+    "SYS-TENANT-DATA-RETENTION-P07",
+    "SYS-TENANT-DATA-RETENTION-P08",
+    "SYS-TENANT-DATA-RETENTION-P09",
+    "SYS-TENANT-DATA-RETENTION-P10",
+    "SYS-TENANT-DATA-RETENTION-P11",
+    "SYS-TENANT-DATA-RETENTION-P12",
+    "SYS-TENANT-DATA-RETENTION-P13"
+  ]
+}

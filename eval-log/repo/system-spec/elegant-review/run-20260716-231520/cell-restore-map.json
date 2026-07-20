@@ -1,0 +1,13 @@
+{
+  "purpose": "Batch 2 で reopen する web セルの復元値 (reopen 前の原本)。re-confirm 時に qa_ref / serves_goals をこの値で復元する",
+  "cells": {
+    "auth":            {"platform": "web", "qa_ref": "qa-005", "serves_goals": ["G2", "G4"]},
+    "ui-ux":           {"platform": "web", "qa_ref": "qa-001", "serves_goals": ["G1", "G2", "G3"]},
+    "security":        {"platform": "web", "qa_ref": "qa-006", "serves_goals": ["G4"]},
+    "infrastructure":  {"platform": "web", "qa_ref": "qa-003", "serves_goals": ["G1", "G4"]},
+    "backend":         {"platform": "web", "qa_ref": "qa-009", "serves_goals": ["G1", "G2", "G4"]},
+    "frontend":        {"platform": "web", "qa_ref": "qa-007", "serves_goals": ["G2", "G3"]},
+    "maintenance-ops": {"platform": "web", "qa_ref": "qa-011", "serves_goals": ["G1", "G2"]}
+  },
+  "note": "database.web は phase3-database ワーカーが reopen→編集→re-confirm 済み (qa-004, [G1,G2,G4])"
+}

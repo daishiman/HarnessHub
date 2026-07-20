@@ -1,0 +1,2335 @@
+{
+  "schema_version": "1.0",
+  "categories": [
+    {
+      "id": "database",
+      "label": "データベース"
+    },
+    {
+      "id": "auth",
+      "label": "認証(ログイン)"
+    },
+    {
+      "id": "ui-ux",
+      "label": "UI-UX"
+    },
+    {
+      "id": "security",
+      "label": "セキュリティ"
+    },
+    {
+      "id": "infrastructure",
+      "label": "インフラ"
+    },
+    {
+      "id": "backend",
+      "label": "バックエンド"
+    },
+    {
+      "id": "frontend",
+      "label": "フロントエンド"
+    },
+    {
+      "id": "maintenance-ops",
+      "label": "保守運用管理"
+    },
+    {
+      "id": "dev-workflow",
+      "label": "開発フロー"
+    }
+  ],
+  "platforms": [
+    "web",
+    "mobile",
+    "tablet",
+    "desktop-windows",
+    "desktop-linux",
+    "desktop-macos"
+  ],
+  "matrix": {
+    "database": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-060",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G4",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルクライアントを作らないためモバイル固有の永続化なし"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットクライアントを作らないためタブレット固有の永続化なし"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ)"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop クライアントは対象外 (作者環境は macOS + Windows)"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ)"
+      }
+    },
+    "auth": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-036",
+        "serves_goals": [
+          "G2",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-041",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop クライアントは対象外 (作者環境は macOS + Windows)"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-041",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    },
+    "ui-ux": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-065",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-007",
+        "serves_goals": [
+          "G1"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "作者環境は macOS + Windows のみ。非エンジニアの業務 PC に Linux desktop が存在しないため対象外"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-007",
+        "serves_goals": [
+          "G1"
+        ]
+      }
+    },
+    "security": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-061",
+        "serves_goals": [
+          "G4",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-041",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop クライアントは対象外 (作者環境は macOS + Windows)"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-041",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    },
+    "infrastructure": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-064",
+        "serves_goals": [
+          "G1",
+          "G4",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイル向け配信基盤なし (ブラウザ経由提供)"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレット向け配信基盤なし (ブラウザ経由提供)"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-043",
+        "serves_goals": [
+          "G1",
+          "G2"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop 向け Publisher 配布は対象外 (作者環境は macOS + Windows)"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-043",
+        "serves_goals": [
+          "G1",
+          "G2"
+        ]
+      }
+    },
+    "backend": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-059",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー)"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー)"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-010",
+        "serves_goals": [
+          "G1",
+          "G3"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop クライアントは対象外 (作者環境は macOS + Windows)"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-010",
+        "serves_goals": [
+          "G1",
+          "G3"
+        ]
+      }
+    },
+    "frontend": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-062",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-007",
+        "serves_goals": [
+          "G1"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop クライアントは対象外 (作者環境は macOS + Windows)"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-007",
+        "serves_goals": [
+          "G1"
+        ]
+      }
+    },
+    "maintenance-ops": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-058",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-044",
+        "serves_goals": [
+          "G1"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop は対象外 (作者環境は macOS + Windows)"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-044",
+        "serves_goals": [
+          "G1"
+        ]
+      }
+    },
+    "dev-workflow": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-066",
+        "serves_goals": [
+          "G1",
+          "G4",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-039",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-039",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    }
+  },
+  "qa_log": [
+    {
+      "id": "qa-001",
+      "question": "対象プラットフォームの範囲: (1) Hub Web (管理面) の対応範囲、(2) 作者の作業環境 (Claude Code / Codex + Publisher が動く desktop OS)、(3) ユーザー作成 Web App (出口B) の対象ブラウザは?",
+      "answer": "(1) Hub Web は PC ブラウザ中心 + mobile/tablet ブラウザでの閲覧 (Catalog 閲覧・Web アプリを開く) をレスポンシブ対応。管理操作 (承認・rollback・設定) は PC 前提。(2) 作者環境は macOS + Windows。desktop Linux は対象外 (非エンジニアの業務 PC に存在しないため)。(3) Web App 出口は PC + モバイルブラウザを対象とするが、Hub の検査は HTTP health 確認までで、モバイル UI 品質は作者の owner acceptance 責任と明記する。native モバイル/タブレットアプリは全カテゴリで作らない (ブラウザ経由提供。web 行のレスポンシブでカバー)。"
+    },
+    {
+      "id": "qa-002",
+      "question": "中核ドメインモデルはコンセプト文書 §4.2 の用語体系を採用するか? マルチテナント化に伴い Workspace の上位に Tenant を追加するか? また実装技術の直接指定はあるか?",
+      "answer": "ドメインモデル: §4.2 の用語体系 (Project / TargetChannel / Release / SkillPackage / DeploymentReference / CatalogEntry / PublishRequest / Workspace / PackageRegistry) をそのまま採用し、最上位に Tenant (顧客企業・課金・IdP 設定の境界) → その下に Workspace (共有・権限の境界) の 2 層を追加する。不変条件: Release は immutable、TargetChannel ごとの stable pointer 切替で更新/rollback、業務ツール名は Workspace 内一意、同一 TargetChannel への PublishRequest は直列化。実装技術のユーザー直接指定: フロントエンドは Next.js + TypeScript。パッケージマネージャは pnpm を使用し npm は使わない。費用は掛けない (無料枠のみで構成する。制約 C2 を『固定費ゼロ・無料枠内』へ強化)。"
+    },
+    {
+      "id": "qa-003",
+      "question": "Hub 本体 (Next.js + TypeScript) の実行環境・hosting 構成は?",
+      "answer": "Cloudflare Workers 一体型を採用。@opennextjs/cloudflare で Next.js (Web UI + API Route Handlers) を 1 つの Worker として実行し、R2 (PackageRegistry) を native binding で参照する。無料枠 (10万 req/日) 内で運用し、固定費ゼロ制約 (C2 強化版) を満たす。デプロイは wrangler CLI。Vercel Hobby は商用利用不可のため棄却。Publisher / Skill の作者環境への配布は URL 型 marketplace (native source) または Bootstrap Installer の 2 経路を Stage 0 technical gate (H7) で検証し、成立した経路を採用する。"
+    },
+    {
+      "id": "qa-004",
+      "question": "Hub 自身の control-plane DB (Tenant / Workspace / Project / Release / Catalog / 監査 event の永続化) は?",
+      "answer": "Turso Free (libSQL) を採用 (ユーザー決定)。Drizzle ORM の SQLite dialect でスキーマとマイグレーションを管理し、Workers からは @libsql/client (HTTP) で接続する。注記: Turso はスタートアップ依存の無料枠改定リスクがあるため、スキーマ・クエリを SQLite 方言互換に保ち、Cloudflare D1 への移行経路 (Drizzle は両対応) を温存する。SkillPackage 実体は Cloudflare R2 (無料枠 10GB) を immutable PackageRegistry とし、DB には package の content hash と reference のみ保存する。顧客の業務データ・secret は保持しない (C4)。"
+    },
+    {
+      "id": "qa-005",
+      "question": "Hub Web / API の認証・認可方式は?",
+      "answer": "Auth.js (旧 NextAuth) + テナント別 OIDC を採用。Tenant ごとに顧客既存 IdP (Google Workspace / Microsoft Entra ID) の OIDC 設定を登録し、Hub 独自のアカウント基盤・パスワード保存は作らない (§10.2)。セッションは署名付き JWT cookie。role は provider-admin (提供者) / workspace-admin (Workspace 管理者) / owner (Project owner) / member (一般利用者) の 4 種。認可は全 API で Tenant/Workspace スコープを強制する。Publisher (作者 local session) から Hub API への認証方式は別途決定 (loop 3)。"
+    },
+    {
+      "id": "qa-006",
+      "question": "セキュリティ基盤方針 (脅威モデル・検査・監査・分離・暗号化) は?",
+      "answer": "baseline を採用: (1) 公開時検査 = static validation + secret scan + Green/Yellow/Red policy 判定 (§9。Yellow/Red は MVP では Needs Fix 差戻し)。(2) 監査 = 公開・承認・rollback・公開停止・orphan_candidate の append-only 監査 event (Stage 1 最小 → Stage 2 formal audit log + export)。(3) テナント分離 = 全 API で Tenant/Workspace スコープ強制 + 分離テスト必須。(4) 入力検証 = API 境界で zod による schema 検証。(5) 暗号化 = TLS (transit) + Cloudflare/Turso 側 at-rest、顧客 secret 非保持 (C4)。脅威モデル詳細は仕様書コンパイル時に OWASP ASVS に沿って展開する。"
+    },
+    {
+      "id": "qa-007",
+      "question": "フロントエンド構成 (クライアント構成・状態管理・レンダリング・ビルド) は?",
+      "answer": "ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。"
+    },
+    {
+      "id": "qa-008",
+      "question": "Publisher (作者 local session) から Hub API を呼ぶ認証方式は?",
+      "answer": "OAuth Device Authorization Flow を採用。初回 publish 時に Publisher が verification URL とコードを提示し、作者はブラウザ (SSO ログイン済み) で承認するだけ。access token は短命 + refresh token 自動更新とし、OS の資格情報域 (macOS Keychain / Windows Credential Manager) に保存する。長命 secret のコピペを非エンジニアに求めない (G1 整合)。token の失効は Hub Web (Workspace 設定) から管理者・本人が実行できる。"
+    },
+    {
+      "id": "qa-009",
+      "question": "Hub API の契約スタイルと PublishRequest 状態機械・検査 pipeline の実装方針は?",
+      "answer": "REST + OpenAPI + zod を採用。Next.js Route Handlers で REST API を実装し、zod schema を単一ソースとして OpenAPI 仕様を生成する (Publisher と将来の外部連携に言語中立な契約を提供)。PublishRequest 状態機械は §7.2 準拠 (Draft → Validating → Needs Fix/Ready → Publishing → Failed/Published。MVP では Yellow/Red 相当は Needs Fix 差戻し、Approval Pending は Stage 2 まで到達しない)。検査は MVP では Worker 内同期実行 (skills-only package は小サイズ) + 状態を DB に記録し Publisher/Hub Web はポーリングで進捗取得。同一 TargetChannel への PublishRequest は直列化。Promote/Rollback は stable pointer 操作 + 監査 event。Web App の orphan_candidate 記録も API で扱う。"
+    },
+    {
+      "id": "qa-010",
+      "question": "作者側 Publisher の実装形態は?",
+      "answer": "TypeScript 統一を採用。Publisher core は TypeScript (Node + pnpm) で新規実装し、Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。責務: package 収集・manifest 補完・ローカル pre-check・Hub API 呼出 (Device Flow 認証)・target=web_app の wrangler CLI スクリプト実行と結果報告・URL 登録。検査ロジックは Hub 側 (Workers=JS) と共有し二重実装を回避する。既存 Python 資産 (harness-creator の package check / package contract / marketplace catalog) は仕様の正本 (移植元) として参照し、挙動同値性をテストで担保して TypeScript へ移植する (C3 整合)。"
+    },
+    {
+      "id": "qa-011",
+      "question": "保守運用 (バックアップ・監視・障害対応・CI/CD・作者サポート) の方針は?",
+      "answer": "運用 baseline を採用: (1) バックアップ = control-plane DB の日次 export を R2 へ保存。R2 の SkillPackage は immutable content-addressed で自己版管理。(2) 監視 = Workers 標準 logs/analytics + /health endpoint + 外部死活監視 (無料枠)。(3) 障害縮退 = §6.1 を明文化 (Hub 障害時も導入済み Skill・公開済み Web App は動作継続、新規公開・追加・更新のみ停止。復旧は提供者の Platform 運用責任)。(4) CI/CD = GitHub Actions (無料枠) で test → wrangler deploy。pnpm を CI で強制 (npm 混入検出で fail)。(5) 作者サポート = plugin 更新は marketplace / Bootstrap Installer の更新導線 (「更新あり」表示 + 手動 update)、相談は予約制 office hour (供給上限あり §11.3)。詳細 runbook は仕様書コンパイルで展開。"
+    },
+    {
+      "id": "qa-012",
+      "question": "R0-foundation (1/3): U1 このシステムの本質的目的は? U2 その背景 (なぜ今作るのか) は? U3 到達したいゴールは (複数可)? U6 主要ステークホルダーと価値の届け先は? (AskUserQuestion で選択肢+自由記述にて確認)",
+      "answer": "U1=非エンジニアのAI自己解決の実現 (エンジニアを介さず作者自身が Skill/WebApp を公開・配布できる状態)。U2=代理作業の限界を実感した (提供者が publish 作業を代行するモデルはスケールしない)。U3=提示した 4 ゴールを全て選択 (G1 作者の自己完結 publish / G2 統制と安全性の担保 / G3 既存資産の再利用による最小工数 / G4 複数顧客への同時展開基盤)。U6=複数顧客へ同時展開 (顧客 Workspace の作者・利用者・管理者、および提供者 = Platform 運用者)。"
+    },
+    {
+      "id": "qa-013",
+      "question": "R0-foundation (2/3): U4 定量目標は? U5 成功基準 (何をもって成功とするか) は? U7 スコープ境界 (今回やる/やらない) は? U8 前提制約 (体制・費用・資産) は? (AskUserQuestion で選択肢+自由記述にて確認)",
+      "answer": "U4=提示した 4 定量目標を全て選択 (O1: H1 作者の自己完結 publish 成功率 80% / O2: H4 提供者の代理作業比率 30% 以下 / O3: H5 公開までのリードタイム短縮 / O4: H8 初回 publish 15 分以内)。U5=複数顧客での同時稼働 (2 社以上の顧客 Workspace で同時稼働している状態を成功とする)。U7=マルチテナントの論理分離を Stage 1 から実装 (Stage 0-2 を仕様化スコープ、Stage 3 以降は除外)。U8=個人+AI のみの開発体制 (C1)・インフラコスト最小化 (C2)・既存資産 (harness-creator 等) の再利用前提 (C3)。"
+    },
+    {
+      "id": "qa-014",
+      "question": "R0-foundation (3/3): 顧客データ・secret・runtime の非保持境界 (コンセプト文書 §6.2) を制約に含めるか? U1-U9 の確定要約を承認するか? (AskUserQuestion で確認)",
+      "answer": "非保持境界=制約に含める (C4: Hub は顧客データ・secret・顧客 runtime を保持しない)。U1-U9 承認=「承認する」を選択 (approval_log: appr-001)。承認時補足: マルチテナント論理分離を Stage 1 から含める判断はコンセプト文書の 1 Workspace 想定からの明示的変更点。"
+    },
+    {
+      "id": "qa-015",
+      "question": "実装技術と費用の制約指定 (ユーザー発言の逐語記録): 技術スタック・費用・パッケージマネージャの指定はあるか?",
+      "answer": "ユーザー指定 (逐語): 「next.js, typescriptで実行。後は、お金を掛けずに。pnpmがいい？？npmは使わないこと。」→ Next.js + TypeScript で実装、費用ゼロ (無料枠のみ = C2 の具体化)、パッケージマネージャは pnpm を使用し npm は使用禁止。U8 制約 C2 および D1-D3 意思決定の前提条件として反映。"
+    },
+    {
+      "id": "qa-016",
+      "question": "訂正記録 (正本整合レビュー 2026-07-17): qa-012/qa-013 の回答中の G/O ラベルが正本 U3/U4 と同一 ID で別内容になっている。どちらを正とするか?",
+      "answer": "requirements_foundation (00-requirements-definition.md U3/U4) を唯一の正本とする。qa-012 の G1-G4、qa-013 の O1-O4 (および括弧内の仮説文言) は遡及記録時の仮ラベルであり、正本の同一 ID とは対応しない。監査証跡保全のため qa-012/qa-013 の answer 本文は不変のまま保持し、本エントリを訂正記録 (correction record) とする。qa-013 の O への仮説割当 (O1=H1/O2=H4/O3=H5/O4=H8) は正本と一致するが仮説文言が異なるため、仮説の正式定義は 00-requirements-definition.md の仮説レジスタ (正本: doc/harness-hub-platform-concept.md §19) に従う。"
+    },
+    {
+      "id": "qa-017",
+      "question": "コードベースの構造規約: 保守性・汎用性・改善容易性を担保するアーキテクチャ原則をどう定めるか (frontend/backend/database/security/infrastructure の実装を拘束する規約として)",
+      "answer": "ユーザー指示 (2026-07-17): 汎用性が高く改善がしやすいコードを構築できるシステムにしたい。Clean Architecture・DDD・Clean Code はあくまで例示であり、このシステムに最適なベストプラクティスを選定して仕様化すること。選定基準は本仕様の制約に適合すること: C1 (個人開発の認知負荷・過剰設計の回避)・C2 (無料枠運用)・D2 ヘッジ (Turso→D1 退避のための接続層隔離)・D3 (Auth.js→Better Auth 移行可能性のためのアダプタ隔離)・qa-010 (既存資産移植の挙動同値性)。各技術章に『コード構造・アーキテクチャ規約』節として展開し、採用/不採用の判断根拠を明記する。"
+    },
+    {
+      "id": "qa-018",
+      "question": "UI/UX 品質要求 (アクセシビリティ・快適性・速度) の最優先事項と数値目標は? (ユーザー直接指示 2026-07-17 + AskUserQuestion で数値確認)",
+      "answer": "ユーザー指示 (逐語): 「アクセシビリティ、ユーザーが不快に思わないような、そういう設計が大事です。何よりもこれが大事です。UI、UXもそうです。速度、この辺が重要です。」— これを Hub Web と公開 WebApp の最優先 UI/UX 要件とする。数値確定 (AskUserQuestion): (1) アクセシビリティ = WCAG 2.2 AA 準拠 (コントラスト比 4.5:1 以上・全機能キーボード操作可・スクリーンリーダー対応・フォーカス管理・代替テキスト。CI に axe 等の自動チェックを組込み、検出可能違反ゼロをリリース条件にする)。(2) 速度 = Core Web Vitals 全指標 good (LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1)。Worker 3MiB 制限下の bundle 予算管理・R2/edge 配信・不要 JS 削減で達成する。(3) 不快にさせない設計 (Apple HIG の明確性・一貫性・フィードバック原則を上流指針として適用): 破壊的操作は確認+可逆 (Promote/Rollback は stable pointer 操作で常に復帰可能)、待ち時間は進捗表示 (PublishRequest 状態機械のポーリング表示)、失敗は平易な日本語+次の一手提示 (§5.4)、レイアウトシフトや点滅を避ける。ベース: qa-001 (PC ブラウザ中心+レスポンシブ閲覧)・qa-007 (フロントエンド構成)。frontend 実装は qa-007 の構成に qa-017 のコード構造規約と本エントリの性能予算 (CWV good / bundle 予算) を適用する。"
+    },
+    {
+      "id": "qa-019",
+      "question": "運用品質 (SRE 上流指針) の適用: SLO・エラーバジェット・監視・ポストモーテム・バックアップ検証をどう仕様化するか? (可用性目標は AskUserQuestion で確認)",
+      "answer": "ユーザー確定 (AskUserQuestion): 可用性 SLO = 99.5%/月 (許容停止 約3.6時間/月)。Google SRE を上流指針 (doctrine anchor) として次を適用する: (1) SLI/SLO = Hub API 可用性 99.5% と応答性 (p95 レイテンシを Workers analytics で計測、qa-018 の CWV good と整合)。§6.1 の縮退設計 (Hub 停止中も導入済み Skill・公開 WebApp は動作継続) が SLO の前提。(2) エラーバジェット運用 = 月間予算 0.5% を消費し切った場合は新規公開機能の変更を凍結し信頼性回復を優先する (個人+AI 体制向けに簡素化した運用)。(3) 監視 = qa-011 の baseline (Workers logs/analytics + /health + 外部死活監視) に SLO ダッシュボード (無料枠) とバジェット消費アラートを追加。(4) ポストモーテム = ユーザー影響のある障害は blame-free の振り返りを issue として記録し、再発防止を自動化候補 (§10.1) に接続する。(5) バックアップ検証 = qa-011 の DB 日次 export (R2 保存) に復元手順の定期検証 (四半期ごとの restore drill) を追加し、復元できないバックアップを成功と数えない。(6) database/infrastructure には qa-017 のコード構造規約 (接続層隔離による D2 Turso→D1 退避経路の維持) を適用する。ベース: qa-003 (hosting)・qa-004 (DB)・qa-011 (運用 baseline)。"
+    },
+    {
+      "id": "qa-020",
+      "question": "コード構造規約 (qa-017 / D4) の backend・security への適用形は?",
+      "answer": "qa-017 のユーザー指示 (汎用性が高く改善しやすいコード。Clean Architecture 等は例示であり本仕様の制約に最適なプラクティスを選定) を backend/security の確定内容へ適用する: (1) backend = qa-009 の REST + zod 単一ソース構成を維持しつつ、接続層の隔離 (Drizzle リポジトリ層に DB アクセスを閉じ、Turso→D1 退避 (D2 ヘッジ) をアプリ層に波及させない)・認証アダプタの隔離 (Auth.js への依存を adapter 境界に閉じ、Better Auth 移行 (D3 caveat) に備える)・検査 pipeline の純関数化 (Publisher と Hub で検査ロジックを共有パッケージ化、qa-010 の挙動同値移植をテストで担保) を規約とする。過剰な層分割は C1 (個人開発の認知負荷) に反するため採らない。(2) security = qa-006 の deny-by-default (全 API で Tenant/Workspace スコープ強制 = D4 row-level-scope) と分離テスト必須を維持し、qa-008 の Publisher 認証 (Device Flow + OS 資格情報域) を含めて認可判定を単一ミドルウェア層に集約する (散在させない)。secret は環境 binding のみに保持しコードへ持ち込まない。作者環境 (desktop) の security は qa-008 (macOS Keychain / Windows Credential Manager への token 保存・失効導線) を直接根拠とする。"
+    },
+    {
+      "id": "qa-021",
+      "question": "Harness Studio mockup の反映で UI-UX (web) の確定内容はどう変わるか?",
+      "answer": "qa-018 の確定内容 (WCAG 2.2 AA を共通部品で一括担保・CWV good・平易な日本語エラー + 次の一手・待ち時間の進捗表示・破壊的操作の確認ダイアログ + 可逆性明示・障害時の縮退バナー) を全面維持した上で、Studio mockup 由来の画面群を追加確定する。(1) 画面: S01-S08 に加え、S09 ダッシュボード (KPI カード・推移・完了率・ランキング・部門別削減)、S10 ヒアリングウィザード (4 ステップ・削減効果の自動試算表示)、S11/S12 ヒアリングシート一覧・詳細、S13 構築パイプライン (7 工程ボード。工程操作は admin)、S14 改善要望・レビュー (一覧 + Web フォーム)、S15 ドキュメント (一覧/閲覧/編集・AI 下書き)、S16 利用・削減効果、S17 ユーザー管理 + 個別ダッシュボード、S18 アカウント設定の 10 画面を追加 (画面表の正本: docs/screen-inventory.md、ジャーニー: docs/user-journeys.md J4-J6)。(2) 共通部品の拡張: KPI カード/チャート (折れ線・バー・ドーナツ。bundle 3MiB 予算内の軽量実装)・ステップウィザード・ステージボード・Markdown レンダラ + エディタ (XSS sanitize)・状態チップ/トースト/タブ/インライン編集テーブル・テーマ (ライト/ダーク/自動)/表示密度/言語 (ja/en) を design system (docs/shared-layers.md §1) に組込む。(3) mockup の login 画面 (パスワード + 2FA 自前実装) は不採用とし、S07 (テナント解決 → IdP redirect。D3) を維持する。利用規約等の静的ページは S18 配下に置く。(4) 状態語彙 (下書き/生成中/レビュー待ち/完了 等) を全画面で統一し、AI 処理 (D5 pull 型) の非同期性は「受付番号 + 生成中ステータス + 完了通知」の非同期 UI パターンで吸収する。"
+    },
+    {
+      "id": "qa-022",
+      "question": "Harness Studio mockup の反映で frontend (web) の確定内容はどう変わるか?",
+      "answer": "qa-018 で確定した frontend 方針 (Next.js App Router SSR・アクセシビリティと CWV を共通部品側で一括担保) を全面維持し、Studio 反映で以下を追加確定する。(1) mockup の独自 DSL・自己展開バンドル実装は移植せず、Next.js + 共通 design system で再実装する (mockup は到達目標の見た目と情報設計の正本、実装方式の正本ではない)。(2) チャート類は Worker bundle 3MiB 予算 (qa-018/D1) 内の軽量実装とし、重量チャートライブラリを採用しない。KPI カード・折れ線・バー・ドーナツを共通部品 (packages/ui) に置く。(3) ウィザード (ヒアリング 4 ステップ・公開ウィザード) は進捗表示・戻る/次へ・キーボード操作を共通部品で担保する。(4) 試算表示 (時給換算・削減額) はサーバ計算値の表示専用とし、クライアント側での金額再計算・自己申告を行わない (qa-025 SEC5 と対)。(5) Markdown は共通レンダラの sanitize 済み HTML のみ描画する。(6) 画面と担当 feature の対応は docs/screen-inventory.md、共通部品の登録簿は docs/shared-layers.md を正本とする。"
+    },
+    {
+      "id": "qa-023",
+      "question": "Harness Studio mockup の反映で backend (web) の確定内容はどう変わるか?",
+      "answer": "qa-009/qa-020 で確定した構成 (REST + zod 単一ソース・認可単一ミドルウェア deny-by-default・Drizzle リポジトリ層への DB 隔離・auth adapter 隔離・検査 pipeline の純関数共有・監査 event logger) を全面維持し、Studio 反映で以下の要素群を追加確定する (詳細正本: docs/mockups/harness-studio-v2-analysis.md §3)。B1 新規 REST 資源群: ヒアリング/シート/パイプライン/フィードバック/ドキュメント/ユーザー管理を zod スキーマ単一ソースへ追加し、全て認可 MW 配下に置く。B2 実行ログ ingest: 短命 token 認証・冪等キー・クライアントは実行回数のみ送信・時刻はサーバ採用。B3 集計 rollup: Workers cron で週次/部門別/ユーザー別の事前集計。時給 = 年収 ÷ annualHours・分/回・削減率の係数はテナント設定とし、金額換算はサーバ側のみで行う (試算エンジンは共通層の純関数単一実装)。B4 publish 連携: S13 パイプラインの公開工程は既存 PublishRequest 状態機械 (I2/I3) へ接続し二重実装しない。B5 AI 処理キュー: D5 確定の pull 型 (ジョブ登録 → Claude Code セッションが pull → 結果書戻し。サーバ側 AI 課金なし)。B6 フィードバック受付: CLI + Web の 2 経路、status 遷移 (未対応→対応中→対応済み)。B7 ドキュメント CMS: common/tenant スコープ。B8 通知ディスパッチ: アプリ内通知を正本、メールは D6 確定の Resend Free を共通層経由で送信。B9 承認 queue 統合: Yellow review (I8) と工程操作の admin 権限判定を共通の認可表で扱う。B10 ユーザー管理: role 4 種 (qa-005) と統合し、係数設定・PII ガードを備える。"
+    },
+    {
+      "id": "qa-024",
+      "question": "Harness Studio mockup の反映で database (web) の確定内容はどう変わるか?",
+      "answer": "qa-019 で確定した DB 方針 (Turso libSQL 単一 DB・Drizzle・row-level tenant scope = D4・日次 export → R2・四半期 restore drill) を全面維持し、Studio 反映でエンティティを追加確定する (詳細正本: docs/mockups/harness-studio-v2-analysis.md §2)。追加エンティティ: HearingSheet (受付番号・status・生成物参照)、FormData (ウィザード入力)、Build (7 工程 stage・リスク表示)、Feedback (種別・受付経路・aiResponse・status)、Doc (scope=common/tenant・Markdown 本文)、MetricsEvent (実行ログ: harness/user/実行回数・冪等キー・サーバ時刻)、MetricsRollup (週次/部門別/ユーザー別の事前集計)、AiJob (D5 pull 型キュー: kind/status/payload/result)、Notification (アプリ内通知)、TenantCoefficient (annualHours・分/回・削減率)、User 拡張 (department・salary)。規約: 全新規テーブルに tenant_id/workspace_id スコープ列を必須とし (D4)、salary は PII 列として admin 限定読取・一般 API 非公開・export マスクで扱う (qa-025 SEC4)。既存エンティティ (Tenant/Workspace/Project/Release/TargetChannel/CatalogEntry/PublishRequest/監査 event) は不変。カラム定義の詳細設計は各 feature の P02 で行う。"
+    },
+    {
+      "id": "qa-025",
+      "question": "Harness Studio mockup の反映で security (web) の確定内容はどう変わるか?",
+      "answer": "qa-006/qa-008/qa-020 で確定した security 方針 (deny-by-default の認可単一 MW・tenant 分離テスト CI 必須・Device Flow token の OS 資格情報域保存・secret は環境 binding のみ・監査 append-only) を全面維持し、Studio 反映で以下を追加確定する (詳細正本: docs/mockups/harness-studio-v2-analysis.md §5)。SEC1 認証: D3 (顧客 IdP / SSO 委譲) を維持し、mockup のパスワードログイン・2FA 自前実装は不採用。SEC2 認可: 新規 API 群 (B1-B10) も認可単一 MW 配下で role × 操作の許可表を定義し、工程操作・係数設定・ユーザー管理は admin 限定とする。SEC3 tenant 分離: 全新規テーブルへスコープ強制 + 分離テストを拡張する。SEC4 PII ガード: salary は admin 限定表示・一般 API 非公開・読取の監査記録・export マスク。SEC5 実行ログの信頼性: クライアント申告は実行回数のみとし、係数適用・金額換算はサーバ側で行う (KPI の操作・水増しを構造的に防ぐ)。ingest は短命 token + 冪等キー + サーバ時刻。SEC6 監査対象の追加: 工程操作・係数変更・doc 編集・フィードバック status 変更・ユーザー管理操作を監査 event に含める。SEC7 XSS: Markdown (doc/フィードバック/シート本文) は共通レンダラの sanitize で一括担保。SEC8 AI キュー (D5): pull/書戻しの認可は Device Flow token 保有者に限定し、job payload に secret を含めない。SEC9 メール (D6 Resend): API key は環境 binding のみ、宛先はテナント内ユーザー限定、PII をメール本文に含めない。"
+    },
+    {
+      "id": "qa-026",
+      "question": "Harness Studio mockup の反映で infrastructure (web) の確定内容はどう変わるか?",
+      "answer": "qa-003/qa-019 で確定したインフラ方針 (単一 Worker = D1・wrangler デプロイ・R2 immutable + バックアップ保存・Turso 日次 export・外部死活監視・SLO 99.5% とエラーバジェット) を全面維持し、Studio 反映で以下を追加確定する。(1) Workers cron trigger で週次 rollup (B3) と通知バッチを実行する (既存 Workers 無料枠内。追加サービスなし)。(2) メール送信は D6 確定の Resend Free (3,000 通/月・100 通/日・独自ドメイン 1 件。公式確認 2026-07-17)。API key は Workers の環境 binding に保持し、送信ドメインの SPF/DKIM 設定を初期構築に含める。(3) AI 処理 (D5 pull 型) はサーバ側に AI 実行基盤を持たないためインフラ追加なし (キューは Turso のテーブル + Hub REST で完結)。(4) Worker bundle 3MiB 予算の CI ゲートはチャート等の追加部品込みで維持する。(5) 固定費は引き続き 0 円 (Cloudflare Free + Turso Free + Resend Free の無料枠構成) で、C2 を満たす。"
+    },
+    {
+      "id": "qa-027",
+      "question": "Harness Studio mockup の反映で保守運用 (web) の確定内容はどう変わるか?",
+      "answer": "qa-011/qa-019 で確定した保守運用方針 (/health・Workers logs/analytics・外部死活監視・SLO ダッシュボード・エラーバジェットアラート・バックアップ + 四半期 restore drill) を全面維持し、Studio 反映で以下を追加確定する。(1) AI キュー (D5 pull 型) の滞留監視: pull されない job の滞留時間を運用指標として可視化し、閾値超過で提供者へ滞留アラート (アプリ内通知) を出す。(2) メール送信 (D6 Resend) の運用: 送信失敗のリトライと失敗ログ、日次 100 通制限到達時のバッチ分割。アプリ内通知を常に正本とし、メール不達でも情報が欠けない設計を維持する。(3) 実行ログ ingest の異常値検知: 急増・重複を週次 rollup 時に検出し運用レポートへ含める (SEC5 の信頼性を運用側からも担保)。(4) ユーザー棚卸し: 退職者アカウントの無効化・owner 再割当の確認を四半期棚卸しに追加する (S17 の管理操作と対応)。"
+    },
+    {
+      "id": "qa-028",
+      "question": "D5: AI 処理 (ヒアリングシート生成・フィードバック自動対応・ドキュメント下書き) の実行主体をどれにするか? 3 案比較: (1) pull 型キュー = Hub はジョブキュー API のみ提供し Claude Code セッションが pull して処理・書戻し (月額0円・非同期遅延あり)、(2) サーバ側 Anthropic API = Workers から直接呼出 (即時処理だがトークン従量課金が C2 と衝突)、(3) Cloudflare Workers AI = 無料枠 10,000 neurons/日 (費用ゼロだが OSS モデルの生成品質リスク)。AI 推奨 = pull 型 (品質と費用ゼロを唯一両立)。",
+      "answer": "ユーザーが AskUserQuestion (2026-07-17) で「pull 型キュー」を選択し確定。選択理由 (推奨根拠への同意): C2 (費用ゼロ) を満たしつつ生成品質を Claude 本体に委ねられ、mockup の「Claude Code が対応」という動線とも一致する。非同期遅延は「受付番号 + 生成中ステータス + 完了通知」の UI パターンで吸収し、キュー滞留監視を保守運用 (qa-027) に組み込む。decision record は D5 (user_decision.option_id=pull-queue, confirmed_at=2026-07-17T17:52:19+09:00)。本エントリは同往復の質疑証跡 (C06 監査指摘への対応で追記)。"
+    },
+    {
+      "id": "qa-029",
+      "question": "D6: メール通知 (生成完了・レビュー結果・週次サマリ) の送信手段をどれにするか? 3 案比較: (1) Resend Free = 3,000 通/月・100 通/日・独自ドメイン 1 件 (公式確認 2026-07-17)、(2) アプリ内通知のみで開始 = 費用/運用ゼロだが Hub 非訪問ユーザーへ届かない、(3) Amazon SES = 従量 $0.10/1,000 通だが AWS 運用負荷が C1 と不整合。AI 推奨 = Resend Free。",
+      "answer": "ユーザーが AskUserQuestion (2026-07-17) で「Resend Free」を選択し確定。選択理由 (推奨根拠への同意): 想定規模が無料枠に収まり、Workers から直接呼べて個人運用 (C1) の負荷が最小。注意事項として、送信は通知ディスパッチ共通層経由に限定 (差し替え可能性維持)・日次 100 通制限はバッチ分割 + リトライで運用 (qa-027)・アプリ内通知を常に正本としメールは補助チャネル。decision record は D6 (user_decision.option_id=resend-free, confirmed_at=2026-07-17T17:52:19+09:00)。本エントリは同往復の質疑証跡 (C06 監査指摘への対応で追記)。"
+    },
+    {
+      "id": "qa-030",
+      "question": "requirements_foundation の改訂要約を承認するか? 【G5 追加】導入されたハーネスの利用実態と削減効果 (時間・金額換算) が可視化され、フィードバック→AI 対応→再公開の改善ループが定着する。【U7 scope.in 追加 6 領域】効果測定ダッシュボード / Web ヒアリング intake / 構築パイプライン 7 工程ボード / フィードバックループ / ドキュメント CMS / ユーザー管理・アカウント設定。【U7 scope.out 追加 3 点 (非採用)】パスワードログイン・2FA 自前実装 (D3 の IdP 委譲を維持) / visibility=public (Stage 5 のまま) / zip 手動配布の正式経路化。【I10-I14 追加】効果測定 ingest+rollup / ヒアリング intake→AI シート生成 / FB ループ / docs CMS / ユーザー管理 (年収=PII 保護)。",
+      "answer": "ユーザーが AskUserQuestion (2026-07-17) で「承認する」を選択。この改訂は 2026-07-16〜17 の包括指示 (Harness Studio mockup を要件定義から設計・タスクまで全反映) を根拠に appr-004 で先行記録されており、本往復はその改訂要約に対する個別・明示のユーザー承認 (C06 監査の上位概念遡及性指摘への対応)。承認 id は appr-005 として approval_log に登録し、requirements_foundation.approval_ref を appr-005 へ更新する。"
+    },
+    {
+      "id": "qa-031",
+      "question": "mockup (harness-studio-v2) を実装するための backend 詳細仕様 (データ構造・API) をどう確定するか? 未確定 5 論点: (1) 進捗のリアルタイム反映 = ポーリング統一 vs SSE 併用、(2) ページネーション = cursor vs offset、(3) AiJob pull 権限 = provider-admin のみ vs workspace-admin にも許可、(4) metrics 生データ保持 = 90 日 R2 退避 vs 無期限 DB 保持、(5) ID 形式/ベースパス = ULID + /api/v1。AI 推奨 = (1) ポーリング統一 (2) cursor (3) provider-admin のみ (4) 90 日退避 (5) ULID + /api/v1。(AskUserQuestion 2026-07-17)",
+      "answer": "qa-023 の B1-B10 を実装可能粒度へ展開した詳細正本 docs/backend-spec.md を確定する (テーブル 26 種の列定義・API エンドポイント約 50 本・状態機械 5 種・認可マトリクス・共有純関数 3 パッケージ・cron 6 種・無料枠予算)。ユーザーが AskUserQuestion (2026-07-17) で 5 論点を確定: (1) ポーリング統一 (推奨同意: publish 2 秒 backoff・ボード/通知 30 秒。Workers 無料枠 CPU 温存)、(2) cursor 方式 (推奨既定値)、(3) AiJob pull は provider-admin のみ (推奨同意: cross-tenant 読取は監査 event 付きの D4 唯一例外)、(4) metrics_events は無期限 DB 保持 (推奨の 90 日 R2 退避を採らずユーザー選択。代償として Turso 使用量の日次監視 cron を追加し、無料枠圧迫時は保持期間導入を R4-reopen で再検討)、(5) ULID + /api/v1 (推奨既定値)。既確定仕様 (qa-009 REST+zod 単一ソース・§7.2 PublishRequest 状態機械・qa-020 コード構造規約・D1-D6) との矛盾なし。qa-023/qa-010 の確定内容は全面維持し、本 qa は詳細化のみを追加する。"
+    },
+    {
+      "id": "qa-032",
+      "question": "mockup (docs/mockups/harness-studio-v2) を使った実装のための DB データ構造 (テーブル/カラム/制約/索引) の詳細は? (qa-024 の「カラム定義の詳細設計は各 feature の P02 で行う」の前倒し確定)",
+      "answer": "docs/backend-spec.md §2 (データモデル) を詳細正本として確定する。共通規約: PK は ULID 文字列 + 表示用コード列 (HS-xxxx/FR-xxx/DOC-xx はテナント別連番、display_code_counters で採番)・時刻は INTEGER epoch ms でサーバ時刻のみ採用 (SEC5)・documents.scope='common' を除く全テーブルに tenant_id (必要に応じ workspace_id) 必須 (D4 row-level scope、リポジトリ層で WHERE 強制注入・分離テスト CI 必須)・enum 値は英語で UI 表示ラベルは表示層辞書。テーブル構成: コアドメイン 16 (tenants/idp_connections/workspaces/users/user_settings/projects/target_channels/releases/packages/deployment_references/catalog_entries/publish_requests/publisher_tokens/device_authorizations/audit_events/idempotency_ledger) + Studio 拡張 11 (hearing_sheets/builds/build_stage_events/feedbacks/documents/notifications/metrics_events/metrics_rollups/ai_jobs/tenant_coefficients/display_code_counters)。releases は immutable・audit_events/build_stage_events/metrics_events は append-only。新規確定 (本ヒアリング): users.salary はアプリ層カラム暗号化 (AES-GCM/Web Crypto、鍵は Workers Secret binding) とし、日次 export・R2 バックアップ断面にも平文を残さない。復号は認可ミドルウェア通過後のリポジトリ層のみ (qa-025 SEC4 の「保存時暗号化は要設計」の解消)。再確認 (qa-031 維持): ID 形式は UUIDv7 案との比較のうえ ULID 維持、metrics_events は 90 日 R2 退避案との比較のうえ無期限 DB 保持 + Turso 使用量日次監視を維持。基盤 (qa-004 Turso Free + Drizzle + D1 退避経路 = D2、qa-019 日次 export → R2 + 四半期 restore drill) は不変。"
+    },
+    {
+      "id": "qa-033",
+      "question": "mockup 実装のための API 契約 (endpoint/認証/認可/共通規約/状態機械) の詳細は? (qa-023 の B1 資源列挙の endpoint 単位詳細化)",
+      "answer": "docs/backend-spec.md §1・§3-§8 を詳細正本として確定する。ベースパス /api/v1、zod 単一ソース (packages/schemas → OpenAPI 生成、Publisher は生成型を利用)。認証 2 系統: Web セッション = Auth.js + テナント別 OIDC の署名付き JWT cookie (SameSite=Lax)、Publisher/CLI/AI worker = OAuth Device Flow の短命 Bearer + refresh rotation (qa-005/qa-008)。認可は単一ミドルウェア deny-by-default の role×リソースマトリクス (§3.3、owner は projects.owner_user_id による関係 role として合成)。共通契約: エラー = RFC 9457 application/problem+json (本ヒアリングで再確認)、ページネーション = cursor 方式 { items, next_cursor } (qa-031 維持)、POST /publish と POST /metrics/events は Idempotency-Key 必須 (scope=(tenant,endpoint)・TTL 24h・同一 key 異 payload は 422)、レート制限は Workers 層 (数値は feature P02)。監査対象 16 action (§3.8)。endpoint 一覧 = §4.1-§4.12: Device Flow (code/token/approve/refresh/tokens 失効)、users/me/coefficients (B10)、sheets (提出→HS 採番→試算 snapshot→AiJob 投入)、builds (7 工程ボード・publish 工程は PublishRequest 接続 = B4)、harnesses カタログ (S01-S04 契約は不変)、publish 一式 (package upload→検査→承認→promote/rollback/suspend/deployment 登録)、feedback (session=manual/Bearer=harness の 2 経路同一キュー = B6)、docs CMS (common/tenant スコープ合成 = B7)、metrics (ingest は回数のみ受理・summary/rollups は rollup 読取限定 = B2/B3)、notifications (アプリ内正本 + Resend = B8/D6)、ai-jobs pull 型キュー (pull は provider-admin のみ・lease 10 分・attempt 3 で dead = B5/D5/qa-031)、audit-events/search。状態機械 5 種 (§5): PublishRequest (§7.2 準拠 9 値)・HearingSheet (received→generating→review→completed)・Build (hearing→…→publish の隣接遷移のみ)・Feedback (open→in_progress→resolved)・AiJob (queued→processing→completed/failed/dead + lease 失効返却)。共有純関数 3 パッケージ (inspection/estimation/schemas — qa-010/qa-020 の二重実装禁止)。cron 6 種 (§7: rollup/Turso 使用量監視/週次サマリ/orphan 通知/日次 backup/掃除)。非機能 (§8): bundle ≤3MiB CI ゲート・生イベントのオンライン集計禁止・ポーリング統一 (publish 2 秒 backoff、ボード/通知 30 秒 = qa-031)。"
+    },
+    {
+      "id": "qa-034",
+      "question": "mockup 実装のための infrastructure 詳細仕様 (リソース構成・binding・cron・CI/CD・環境・監視・バックアップ) をどう確定するか? 未確定 4 論点: (1) 環境構成 = production+staging vs production のみ、(2) 独自ドメイン = 既存保有ドメイン流用 vs 新規取得 (~US$10/年) vs workers.dev+メール後ろ倒し、(3) 外形監視 = Better Stack Free vs UptimeRobot Free (2024-12 以降 free は非商用限定) vs GitHub Actions 自前 ping、(4) 本番デプロイ = main merge 全自動 vs 手動承認 gate。AI 推奨 = (1) production+staging (2) 既存流用 (3) Better Stack Free (4) 全自動。(AskUserQuestion 2026-07-17)",
+      "answer": "qa-026 の確定内容を実装可能粒度へ展開した詳細正本 docs/infrastructure-spec.md を確定する (リソーストポロジ・wrangler binding/secret 台帳・R2 バケット/lifecycle・Turso 構成と使用量監視・cron 3 系統・環境構成・CI/CD 3 workflow・ドメイン/DNS/メール・監視/SLO 運用・バックアップ/DR/縮退マトリクス・無料枠予算表)。ユーザーが AskUserQuestion (2026-07-17) で 4 論点を確定: (1) production + staging の 2 環境 (推奨同意: Turso Free 100 DB 内で費用 0 円のまま migration 検証と restore drill の受け皿を持つ)、(2) 既存保有ドメインを流用 (推奨同意: hub.<domain> + mail.<domain> のサブドメイン運用で追加費用 0 円・C2 完全維持。Resend SPF/DKIM は qa-026 どおり初期構築)、(3) 外形監視は Better Stack Free (推奨同意: 10 monitors・3 分間隔・heartbeat・status page・商用利用可。UptimeRobot Free は 2024-12 以降非商用限定のため棄却 = Vercel Hobby と同型の規約リスク回避。heartbeat は qa-027 の cron 失敗監視に接続)、(4) 本番デプロイは main merge 全自動 (推奨同意: CI green → staging migrate+deploy → smoke → production → post-deploy /health → 失敗時 wrangler rollback)。既確定仕様 (D1-D6・qa-003/011/019/026/027/031-033) との矛盾なし。qa-026 の確定内容は全面維持し、本 qa は詳細化のみを追加する。"
+    },
+    {
+      "id": "qa-035",
+      "question": "mockup (harness-studio-v2) には media query が 1 件も無い (デスクトップ専用設計) 中で、スマホサイズ (モバイルブラウザ) の画面仕様をどう確定するか? (frontend/ui-ux の mobile セルは native アプリ対象外・web 行のレスポンシブでカバーの整理のまま、web 行のレスポンシブ実仕様が未定義)",
+      "answer": "docs/frontend-spec.md §6 をスマホサイズ画面仕様の新規正本として確定する (native モバイル/タブレットアプリを作らない整理 = mobile/tablet セル対象外理由は不変。本仕様は web セルのレスポンシブ詳細)。(1) 適用条件: viewport < 768px (Tailwind md 未満。ブレークポイントは Tailwind 既定 sm640/md768/lg1024/xl1280、サイドバー常設は lg 以上)。(2) 原則: タップターゲット 44×44pt 以上 (HIG doctrine anchor)・100dvh + safe-area-inset 対応・入力フォント 16px 以上 (iOS ズーム防止)・許可箇所以外の水平オーバーフローは欠陥扱い。(3) ナビゲーション: ボトムタブ 5 slot 固定 (ダッシュボード/ハーネス/申請/通知[未読バッジ]/その他)。その他タブはボトムシートで残り項目を role 別出し分け (deny-by-default の画面表現)。サイドバーはモバイル非描画。(4) 変換パターン辞書 P1-P10 (サイドバー→ボトムタブ・KPI→2 列・テーブル→カードリスト・7 工程ボード→工程セグメント+縦カード・2 カラム→縦積み・モーダル→ボトムシート・チャート縦積み 200px・フィルタ→シート・インライン編集→編集シート・ウィザード→1 step 1 画面)。(5) 画面別区分: 重点最適化◎ = S01/S02/S03/S07/S08/S09/S10/S11/S12/S14/S16/S18/通知/検索/S13 閲覧/S15 閲覧、簡易対応△ (動作保証+dismissible なデスクトップ推奨バナー・機能は削らない) = S04/S05/S06/S17/S13 操作/S15 編集。(6) タッチ制約: スワイプ・ロングプレス・DnD を必須操作にしない (可視ボタン/メニューで代替 = キーボード同等性)・pull-to-refresh 不採用 (ポーリングで代替)・パイプラインの stage 操作はカードメニューの隣接遷移のみ。(7) 検証: Playwright を 1280×800 と 390×844 の 2 viewport で実行し axe を統合、モバイル断面を CI で常時検査する。"
+    },
+    {
+      "id": "qa-036",
+      "question": "Hub Web の認証 (auth.web) の実装可能粒度の詳細は? (qa-005 の Auth.js + テナント別 OIDC 方針の検証契約・session 数値・失効の意味論・開発環境の認証)",
+      "answer": "qa-005 の Auth.js + テナント別 OIDC (顧客既存 IdP 委譲・Hub 独自アカウント基盤なし・署名付き JWT cookie・role 4 種) を全面維持し、docs/security-spec.md §2.1/§2.3/§2.5 で確定する。session 数値: strategy=JWT、cookie は __Host-harness-hub.session (HttpOnly/Secure/SameSite=Lax/Path=/、Domain 設定なし)、maxAge 8 時間 (業務日 1 日)、updateAge 15 分、claims は sub/tenant_id/role/status/iat/exp (認可 MW が DB 往復なしで判定でき Turso 読取を節約する最小集合)、署名鍵は AUTH_SECRET (Workers Secret binding)。失効の意味論: JWT は stateless のため role/status 変更の反映は最大 15 分遅延する (updateAge ごとの再発行時に jwt callback で DB 再読込)。これを受容する代わりに、Publisher/ingest token 失効は即時 (publisher_tokens.revoked_at を毎リクエスト参照)、緊急失効 (退職・侵害) は session_revocations テーブル (テナント単位の最終失効時刻・KV/メモリキャッシュ TTL 60 秒) により即時とし認可 MW が iat < revoked_at の JWT を拒否する。OIDC 検証契約 (T1 対策): issuer は idp_connections.issuer_url と厳密一致 (discovery の issuer とも一致)、aud は当該テナントの client_id、nonce/state 検証、PKCE S256 を confidential client でも併用、tenant 束縛はログイン URL /{tenant_slug}/signin で tenant を先に確定し当該テナントの idp_connections のみを候補にする、email_verified=true のみ受理し email はテナント跨ぎの識別子に使わない (同一 email が複数テナントに存在しうるため識別子は idp_subject。UNIQUE(tenant_id, idp_subject) で束縛)、JIT provisioning は role=member/status=active で作成し自動昇格しない。パスワード/2FA/リセットは実装せず IdP 責務とする (D3 維持・scope out)。mockup の login 画面は IdP redirect へ、account 画面のセキュリティ節は IdP 設定への外部リンク + Publisher token 一覧・失効ボタンへ置換する。開発・デモ環境の認証 (ユーザー確認による確定 2026-07-17): 提供者の Google Workspace を dev tenant の OIDC provider として登録し本番と同一経路で認証する。dev 専用 provider (Credentials/mock login/SKIP_AUTH) をコードに存在させず CI で文字列出現を禁止検査する (認証経路を 1 本に保てば dev 専用コードの本番混入という事故クラスが構造的に発生しない)。ネット接続と dev tenant IdP 設定が開発の前提条件になることを受容する。CSRF は SameSite=Lax + 全 state-changing リクエストの Origin 検査 + Auth.js 既定の CSRF token、CORS は不許可。"
+    },
+    {
+      "id": "qa-037",
+      "question": "security 深掘り (qa-034〜qa-036) の確定に伴う database.web / backend.web への波及差分は? (backend-spec §2.2 の「暗号化方式は feature P02」・§3.7 の「数値は feature P02」の先送り解消と、認可判定に必要なデータモデルの矛盾解決)",
+      "answer": "docs/backend-spec.md を security-spec の確定に合わせて更新し、qa-032 (データモデル) / qa-033 (API 契約) の確定内容を以下の差分で置換する。既存の基盤 (Turso Free + Drizzle + D1 退避 = D2、ULID PK、epoch ms サーバ時刻、tenant_id 強制注入 = D4、cursor ページネーション、RFC 9457、Idempotency-Key、releases immutable、metrics 無期限保持) は全て不変。データモデル差分: (1) idp_connections を client_secret_ref (Workers Secret 参照名) から client_secret_enc (封筒暗号化保存) へ変更 — ユーザー確認による確定。テナント IdP secret は顧客ごとに動的に増えるため環境 binding では追加のたびに wrangler secret put + 再デプロイが必要になり C1 (提供者 1 名の運用負荷) と C2 (顧客数に固定費・手間が比例しない) に反し Workers の secret 数上限にも到達しうる。「secret は環境 binding のみ」原則 (qa-020/qa-025) は Hub 自身の静的 secret (AUTH_SECRET/ENCRYPTION_KEK/TURSO_AUTH_TOKEN/R2 key/RESEND_API_KEY の 5 種) を対象とし、テナント由来の動的 secret はこの原則の適用外として封筒暗号化 + 認可 + 監査で保護する。(2) audit_events へ seq/prev_hash/event_hash を追加し UNIQUE(tenant_id, seq) のテナント単位 hash chain とする — ユーザー確認による確定 (Turso/SQLite に DB レベルの append-only 強制機構がないため)。chain scope はテナント単位とし (グローバル 1 本は全テナントの監査書込が seq 採番で直列化し D4 の分離思想とも合わない)、append は BEGIN IMMEDIATE 内で最終 seq/hash 取得→insert を行い UNIQUE 制約で並行競合を検出する。(3) encryption_keys (purpose=salary/idp_secret, key_version, dek_wrapped, status) を追加 — 封筒暗号化 KEK/DEK のユーザー確認による確定。KEK ローテーションは DEK re-wrap のみで済み全行再暗号化が不要、DEK ローテーションは key_version により旧版の復号を常に維持する。定期は年 1 回。(4) session_revocations (tenant_id PK, revoked_at) を追加 — 緊急失効の即時反映用。(5) publisher_tokens へ family_id を追加し scopes_json の値域を 4 scope に確定。(6) workspaces の「共有・権限の境界」を「共有・カタログの境界 (権限の境界は tenant)」へ修正 — ベストプラクティス選定による矛盾解決。users に workspace 所属列がないため認可判定で ResourceRef.workspaceId を突合する対象が存在せず、workspace-admin は実際には tenant 単位の管理者として動作する。workspace 単位の権限分離には workspace_memberships (M:N) とその分離テストが必要で C1 に対し便益が見合わないため、権限の境界は tenant とし、部門別管理者の要求が出た時点で R4-reopen する (残余リスク: 1 テナント内の全 workspace が 1 人の workspace-admin から見える。顧客への明示事項)。API 契約差分: (7) §3.7 の「レート制限の数値は feature P02 で確定」を解消し 9 経路の閾値を確定 (device/code 10・device/token 20・approve 5・auth 20・metrics 60 burst 120・publish 10・feedback 20・一般 API 120・csp-report 30 / 分。超過は 429 + Retry-After)。実装は Workers Rate Limiting binding、feature P02 は実測に基づく調整のみとし方式・鍵の変更は R4-reopen を要する。(8) §3.2 に session/token の TTL 数値を接続 (security-spec §2)。(9) §3.8 の監査対象 action を 16 から 20 へ拡張: user.salary_read (PII 読取の記録 = SEC4 の実装)・idp.connection_change・token.reuse_detected・provider.cross_tenant_access。記録するのは変更の事実であり値そのもの (salary 金額・secret・token) は書かない (監査ログは workspace-admin が閲覧できるため、値を書くと監査ログ自体が PII の第 2 の保管場所になり暗号化・マスクを迂回する経路になる)。(10) §3.3 の認可マトリクスが単調である (上位 role が下位の許可を失う行を作らない) ことを仕様上の前提として明示し T-1b が検査する。(11) provider-admin のテナント越境を許可し provider.cross_tenant_access で監査強制する — ベストプラクティス選定。qa-031 の「cross-tenant は AiJob pull が監査付き唯一例外」を否定せず一般化するもので、aijob.pull は定常・自動の越境経路として唯一であり続けるが、IdP 設定登録・顧客サポート・障害調査の例外的越境も同一の監査を通す。break-glass (期限付き support session + 承認) は承認者が提供者自身になり自己承認となるため統制として機能せず採らない。越境の記録は withAuthz() ラッパー内で実行し呼び出し側の善意に依存しない (CI-9 が経路を強制)。(12) §7 cron へ監査 chain 日次検証と metrics 異常検知を追加。(13) 日次 backup の salary 常時マスクを明示。"
+    },
+    {
+      "id": "qa-038",
+      "question": "開発フロー（dev-workflow）× Web（web）は対象ですか? 対象なら要件を教えてください。具体的には (1) ブランチ戦略と PR フロー、(2) 環境戦略 (デプロイ先)、(3) 本番デプロイ (CD) の発火条件、(4) DB マイグレーション (Turso/Drizzle) の適用フローを、制約 C1 (実装・運用は提供者 1 名 + AI) と C2 (固定費極小化・無料枠優先) の下で確定してください。",
+      "answer": "対象。Hub 本体 (Next.js + OpenNext on Cloudflare Workers) の開発・CI/CD・リリースフローを以下で確定する (AskUserQuestion 4 問すべて推奨案を選択、2026-07-17)。\n\n【1. ブランチ戦略と PR フロー = GitHub Flow + PR 必須】\n- 単一 main + 短命 feature branch の GitHub Flow を採る。常設 develop / release branch は持たない (C1: branch 間同期の運用負荷を避ける)。\n- main は protected branch とし、直 push と force push を禁止する。変更は必ず PR を経由する。\n- branch 命名は feat/* / fix/* / docs/* / chore/*。merge は squash merge に統一し、main の履歴を 1 PR = 1 commit に保つ (rollback 単位と deploy 単位を一致させるため)。\n- PR は required status checks が全て green かつ review 承認済みでのみ merge 可能。実装者が提供者 1 名でも PR を必須とする理由は、(a) CI を merge 前ゲートにできること、(b) AI (Claude Code) レビューの投入点になること、(c) 変更の監査証跡が PR 単位で残り G4 (統制点の一元化) と整合すること。\n- レビューは AI (Claude Code) による PR レビューを必須の投入点とし、提供者が最終承認する。1 名運用のため人的な第二レビュアは要求しない。\n\n【2. PR の required status checks (CI ゲート)】GitHub Actions (qa-003 で確定済みの CI/CD 基盤) 上で以下を PR ごとに実行し、全て green を merge 条件とする。\n- pnpm 強制: packageManager フィールド + corepack で pnpm 以外のパッケージマネージャを拒否する (qa-003 の pnpm 強制方針を CI で機械強制)。\n- lint (ESLint) / format 検査\n- typecheck (tsc --noEmit)\n- unit / integration test (vitest)\n- Worker bundle size 予算: 3MiB 以下 (Workers Free の gzip 後 3MiB 制限。qa-003 / Studio 反映で追加したチャート等の部品込みで維持する)\n- secret scan: publish pipeline (I2) と同一の検査ロジック共有パッケージを CI からも呼び、Hub 本体のソースにも同じ基準を適用する\n- テナント分離テスト: D4 row-level-scope の分離テストを必須 CI とする (SEC3。全テーブルの tenant_id/workspace_id 必須と、scope 外行が読めないことを検証)\n- migration 破壊的 DDL 検査: 単一 PR での列削除・列 rename・NOT NULL 追加を検出したら CI を fail させる (下記 4 の expand/contract 強制)\n- OpenAPI / zod 契約の drift 検査: zod 単一ソース (qa-009) から生成した OpenAPI が commit 済み成果物と一致すること\n\n【3. 環境戦略 = PR ごと preview + production】\n- PR ごとに Cloudflare Workers の preview deployment (versions upload による preview URL) を発行し、merge 前に実画面で確認できるようにする。Studio mockup (docs/mockups/harness-studio-v2.html) を到達目標とする UI の突き合わせを preview 上で行う。\n- preview は使い捨て (PR close で破棄)。常設 staging は持たない。理由: Worker / Turso DB / R2 バケット / secret を 2 組常時維持すると無料枠消費と運用導線が二重化し、C1・C2 と衝突するため。\n- production は単一 Worker (qa-003 の D1 = 単一 Worker 一体型) を維持する。\n- preview の DB binding は production の Turso を指さない。preview 専用 Turso DB (seed 済み) を用い、preview から本番データへ到達不能にする (SEC3 のテナント分離とは別軸の環境分離)。\n- 固定費は 0 円のまま (Cloudflare Workers Free の preview 機能内。追加サービスなし)。\n\n【4. 本番デプロイ (CD) = main merge で自動デプロイ】\n- main への merge を唯一の発火条件とし、GitHub Actions が build → migration 適用 → wrangler deploy → production 反映まで自動実行する。\n- GitHub Environments の手動承認 protection rule は置かない。理由: PR 段階で CI green + レビューのゲートを既に通しており、1 名運用では自己承認の形式化とデプロイ滞留を生むだけで実効的な統制が増えないため。\n- deploy 失敗・本番異常時は rollback で復旧する (下記 5)。\n- secret は GitHub Actions secrets に保持し、deploy 時に Workers の環境 binding へ渡す。CI ログ・リポジトリに平文 secret を置かない (qa-008 / SEC の secret は環境 binding のみ の方針を CI 経路にも適用)。\n\n【5. DB マイグレーション = CI 自動適用 + expand/contract 強制】\n- deploy 前に CI が drizzle migrate を production Turso へ自動適用する (手動適用は採らない。適用忘れによる schema と deploy のずれを構造的に排除する)。\n- Workers の deploy は atomic に戻せるが DB 変更は戻せないため、単一 PR での破壊的変更 (列削除・rename・NOT NULL 追加) を CI が拒否し、expand/contract の 3 段階に強制分割する: PR-1 で additive 変更 (nullable 列追加等) → deploy し新旧コード両対応、PR-2 でコード移行 → deploy、PR-3 で旧列削除 → deploy。\n- この分割により各段階で「旧 Worker × 新 schema」が常に互換となり、いつ rollback しても本番が壊れない。\n- D2 ヘッジ (Turso → D1 退避経路) の維持のため、migration は SQLite 方言互換の範囲に限定し、Turso 固有拡張に依存する DDL を使わない (qa-004)。\n\n【6. rollback】\n- Hub 本体: Workers の直前 version へ再 deploy して復旧する (wrangler の version rollback)。DB は expand/contract により rollback 互換が保たれているため、コードのみ戻せば整合する。\n- harness package (顧客の業務ツール) の rollback は本フローの対象外で、既存の immutable Release + TargetChannel の stable pointer 切替 (I3) が担う別経路である。両者を混同しない。\n\n【7. リリース単位とバージョニング】\n- Hub 本体は semver tag によるリリースを持たず、main の 1 commit (= 1 squash merge PR) を deploy 単位とする continuous deployment とする。squash merge により rollback 単位と PR が 1:1 で対応する。\n- harness package の version 自動採番 (I3) は Publisher が持つ別軸であり、Hub 本体のリリースとは独立している。\n\n【8. 非対象 (このフローに含めないもの)】\n- 顧客/作者に GitHub アカウント・Git 操作を要求する経路は本フローに含まない。作者の公開体験は I1/I6 (publish 1 操作・URL 型 marketplace) が担い、Hub 本体の開発フローとは完全に分離する (G1 の Git 操作ゼロ を侵さない)。"
+    },
+    {
+      "id": "qa-039",
+      "question": "開発フロー（dev-workflow）× デスクトップ (Windows)（desktop-windows）/ デスクトップ (macOS)（desktop-macos）は対象ですか? 対象なら要件を教えてください。",
+      "answer": "対象。提供者/作者のローカル開発環境 (macOS 主・Windows 従。既存 auth/security の desktop-windows/desktop-macos 行と同じ作者環境の定義) における開発フローを以下で確定する。\n\n【1. ローカル環境の構成】\n- Claude Code (実装・AI レビュー) + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI。\n- 開発は macOS を主環境、Windows を従環境とし、両者で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存のコマンドを pnpm script に埋め込まない)。\n\n【2. CI と local の乖離防止】\n- PR の required status checks (qa-038 の 2) と同一のコマンドを pnpm script として local からも実行可能にする (例: pnpm verify が lint / typecheck / test / bundle size を CI と同じ実装で回す)。CI 専用の検査手順を CI 側だけに持たない。\n- これにより「local では通るが CI で落ちる」を構造的に減らし、1 名 + AI 運用 (C1) での往復回数を抑える。\n\n【3. commit 前のローカルゲート】\n- pre-commit hook で lint / format を任意実行 (fail-closed にはしない。merge 前ゲートの正本は CI であり、local hook は早期検知の補助に留める)。\n- secret の誤 commit 防止のため、secret scan は local hook でも実行できるようにする (正本の遮断は CI 側)。\n\n【4. ローカルからの本番操作の禁止】\n- production への wrangler deploy と production Turso への migration 適用を、提供者のローカル端末から日常的に行わない。両者の正本経路は CI (qa-038 の 4/5) に一本化する。ローカルからの本番 deploy は CI 障害時の緊急経路としてのみ位置付け、実施時は事後に PR/commit へ記録を残す。\n- ローカル開発では preview 用 Turso または local SQLite を binding し、production DB を指さない。\n\n【5. Web App 出口との区別】\n- 作者 local session で wrangler CLI をスクリプト実行して顧客の Web App を公開する経路 (I5) は、Hub 本体の開発フローとは別物である。I5 は作者の業務ツール公開の実行系であり、本カテゴリが定義するのは Hub 本体 (提供者が開発するプロダクト) の開発フローに限る。"
+    },
+    {
+      "id": "qa-040",
+      "question": "mockup (harness-studio-v2) を実装するための frontend 詳細仕様 (技術構成・画面×API・データ取得・フォーム) をどう確定するか? 未確定 8 論点: (1) モバイル対応範囲、(2) モバイルナビゲーション方式、(3) UI 基盤 (スタイリング+コンポーネント)、(4) サーバ状態管理、(5) チャート実装 (qa-022 の「SVG 自作か超軽量 lib」の二択)、(6) ボード/テーブルのモバイル表現、(7) フォーム実装、(8) i18n 方式 (※並行ヒアリング統合時の qa 採番衝突で旧 qa-034 の質疑録が失われたため qa-040 として再登録)",
+      "answer": "qa-022 の確定方針 (Next.js 再実装・mockup は見た目と情報設計の正本・軽量チャート・サーバ計算値の表示専用) を実装可能粒度へ展開した詳細正本 docs/frontend-spec.md を確定する。ユーザーが AskUserQuestion (2026-07-17) で 8 論点を確定: (1) モバイル範囲 = 重点最適化+全画面動作保証 (閲覧・申請系はスマホ専用レイアウト、管理系は動作保証+デスクトップ推奨バナー)、(2) ナビ = ボトムタブ 4+その他シート (HIG タブバー原則)、(3) UI 基盤 = Tailwind CSS v4 + shadcn/ui ベースの packages/ui (Radix 由来 a11y を部品側担保 = qa-018 適合・コード取込方式で lock-in なし)、(4) サーバ状態 = TanStack Query v5 (ポーリング統一 qa-031 を refetchInterval で実装。publish 2 秒指数 backoff・ボード/通知 30 秒・refetchIntervalInBackground=false)、(5) チャート = SVG 自作 (折れ線/バー/ドーナツ/スパークライン 4 種のみ・SSR 可・代替テーブル切替で a11y 担保)、(6) ボード = 工程セグメント+縦リスト・テーブル = 主要フィールドのカード化、(7) フォーム = react-hook-form + zodResolver (packages/schemas の zod を step 単位 pick で再利用 = B1 単一ソース)、(8) i18n = 自作 typed 辞書 (ja 正本・en は同型制約で後追い・enum→表示ラベル写像 = backend-spec §2.1 と状態語彙統一 = qa-021 を同一 module に集約)。構成: App Router route 一覧 (S01-S18+通知+検索を 15 route へ写像・S03 は S02 の公開タブに統合)、コード構造規約 (API 呼出は packages/schemas + 型付き fetch wrapper に閉じる・金額のクライアント再計算禁止 = SEC5・グローバル状態 lib 不採用 = C1)、design tokens (mockup 実測 #1677ff 主色系を semantic token 化・コントラスト 4.5:1 を token 段階で保証・ダーク/密度/言語は user_settings 正本)、部品登録簿 (shadcn ベース+自作 12 分類を feat-hub-foundation が実装)、画面×API マップ (backend-spec §4 の endpoint へ全画面を接続)、mutation→invalidate マップと楽観更新 3 箇所限定、RFC 9457 エラー写像 (errors[]→RHF setError・401→signin・409→直列化案内)、ウィザード試算の SEC5 規則 (提出前は時間概算のみ・金額はサーバ snapshot のみ)、性能予算 (CWV good p75 + First Load JS ≤250KB gzip/route CI ゲート)、Playwright 2 viewport (1280×800/390×844)+axe CI。発見事項: S03/S05 が要する PublishRequest 一覧 API (GET /api/v1/publish, filter: project/channel/status) が backend-spec §4.6 に無く、additive evolution (§3.1) として追加要求を docs/frontend-spec.md §3.4 に記録 (feat-publish-pipeline P02 で確定)。"
+    },
+    {
+      "id": "qa-041",
+      "question": "作者デスクトップ環境 (macOS / Windows) における認証資格情報とローカル秘密の保護 (auth / security の desktop-windows・desktop-macos セル) の実装可能粒度の詳細は? (qa-008 の Device Flow 方針の数値契約・保存先・失効・ローカル運用規律)",
+      "answer": "docs/security-spec.md §2.2 (Device Flow 数値契約)・§2.2.1 (scope)・§4.4・§8.6 と dev-workflow の qa-039 (ローカル運用規律) を desktop 実仕様として確定する。(1) Publisher / CLI / AI worker の認証 = OAuth Device Authorization Flow (RFC 8628、qa-008 維持): device_code TTL 10 分・SHA-256 ハッシュのみ DB 保存、user_code 8 文字 Crockford Base32 (I/L/O/U 除外)・5 回失敗で denied・照合後即失効、polling interval 5 秒 (slow_down +5 秒)。(2) token: access token 15 分 (短命 JWT・サーバ非保存)、refresh token 90 日・rotation 必須・SHA-256 ハッシュのみ保存・再利用検知で同一 family 全失効 + 監査 event token.reuse_detected + admin/本人通知。(3) 保存先 = OS 資格情報域のみ: macOS Keychain / Windows Credential Manager。平文ファイル・環境変数・リポジトリへの保存を禁止し、長命 secret のコピペを非エンジニアに求めない (G1 整合)。(4) scope 最小権限 = publish:write / metrics:write / feedback:write / aijob:process の 4 種。ハーネス実行環境へ渡る token は metrics:write + feedback:write のみで publish 権限を含めない。(5) 失効導線 = Hub Web (S04/S18) から本人・admin が即時失効 (publisher_tokens.revoked_at を毎リクエスト参照)。窃取疑い時は family 全失効 → 監査確認 (§8.6 インシデント最小手順)。(6) ローカル開発の秘密・本番境界 (qa-039 接続): production への wrangler deploy / migration をローカルから日常的に行わない (正本経路は CI。緊急時のみ + 事後記録)、ローカルは preview 用 Turso または local SQLite を binding し本番 DB を指さない、secret scan を local hook でも実行可能にする (正本の遮断は CI)。作者環境は macOS 主・Windows 従で同一 pnpm script が動作すること。"
+    },
+    {
+      "id": "qa-042",
+      "question": "security (脅威モデル・データ保護・監査完全性・入力検査・Web 基本防御・検証計画) の web 行を実装可能粒度でどう確定するか? 未確定だった具体値: ASVS 到達目標・CSP・rate limit 数値・PII (salary) の暗号化と読取統制・監査の改竄防止・ZIP/ingest/AI job の検査値。",
+      "answer": "docs/security-spec.md §1 (脅威モデル)・§4 (データ保護)・§5 (監査)・§6 (入力検査)・§7 (Web 基本防御)・§8 (検証) を詳細正本として確定する。(1) 脅威モデル = 信頼境界 7 本・保護資産 6 種・STRIDE×abuse case 13 脅威 (T1-T13) を各対策・検証テストへ接続。明示的非目標 N1-N4 (提供者の DB 直接アクセスによる改竄の完全防止・顧客業務データ保護・実行環境安全性・独自 MFA) を残余リスクとして受容。(2) ASVS 到達目標 = L1 全面 + 重点領域 (認証/セッション/アクセス制御/データ保護/ログ監査/暗号) L2 相当 (S-D2。2026-07-18 ユーザー再確認)。(3) データ保護 = 封筒暗号化 KEK/DEK (S-D8。encryption_keys テーブル・key_version 付き・KEK rotation は DEK re-wrap のみ・年 1 回 + 臨時)。users.salary は purpose=salary で AES-256-GCM 暗号化 (IV ランダム 96bit・AAD = table:column:row_id)・member 向け DTO 別型・読取も監査 (user.salary_read)・export 常時マスク・部門集計は k-匿名性 k=3 未満で金額非表示。refresh/device_code は SHA-256 ハッシュのみ保存。secret インベントリ 5 binding (AUTH_SECRET/ENCRYPTION_KEK/TURSO_AUTH_TOKEN/R2 key/RESEND_API_KEY) を確定し「表にないものを Workers Secret に置かない/表のものを DB・コード・ログに置かない」を規範化。テナント IdP client_secret は封筒暗号化で DB 保存 (S-D5 = qa-037 の backend 反映差分)。メールは PII 非送信・テナント内宛先限定。(4) 監査 = append-only (リポジトリ層に UPDATE/DELETE 関数を実装しない + CI-2 禁止検査) + テナント単位 hash chain (S-D6。seq/prev_hash/event_hash・canonical_json・BEGIN IMMEDIATE・日次 cron 全体検証 + 閲覧時区間検証。chain 全体再計算は N1 残余リスクとして明示)。provider-admin の透明性 = 全操作監査 + 顧客管理者が自テナント監査で越境 (provider.cross_tenant_access) を確認可能 (S-D9)。(5) 入力検査 = zod .strict() 全境界 (mass assignment 防止)・Markdown は共通レンダラ 1 箇所の rehype-sanitize allowlist (on* 全面禁止・href は http/https/mailto・class 不許可・dangerouslySetInnerHTML は当該 1 箇所のみ = CI-3)・ZIP 検査値確定 (圧縮 10MiB/展開 50MiB/圧縮比 100:1/エントリ 1,000/深さ 10・zip slip/シンボリックリンク拒否・header 検査→展開→内容検査の順序)・ingest は回数のみ受理 (run_count 1..100・サーバ時刻・冪等キー・token 由来の tenant/user 束縛・異常検知 = 過去 4 週中央値の 10 倍で通知)・AI job は payload の data 化 (prompt injection 対策の固定文脈) + 書戻し先を ref_type/ref_id の 1 リソースへ束縛。(6) Web 基本防御 = nonce ベース strict CSP (script-src 'self' 'nonce' 'strict-dynamic'・Report-Only 2 週間観測後に強制・csp-report endpoint 保持 30 日。2026-07-18 ユーザー再確認) + セキュリティヘッダ 6 種 (HSTS preload・nosniff・Referrer-Policy・Permissions-Policy・COOP/CORP) + rate limit 確定テーブル (S-D3。device/code 10/分/IP・polling 20/分/device_code・approve 5/分・auth 20/分/IP・ingest 60/分 burst 120・publish 10/分・feedback 20/分・一般 session API 120/分・csp-report 30/分。超過 429 + Retry-After。feature P02 は実測調整のみ。2026-07-18 ユーザー再確認) + CSRF (SameSite=Lax + Origin 検査 + CORS 不許可)。(7) 検証 = CI 禁止検査 9 種 (CI-1〜CI-9)・必須テスト (T-1〜T-12。認可全組合せ網羅・許可表単調性検査 T-1b・越境監査強制 T-1c・分離テストはスキーマ駆動で新テーブル追加時に自動 fail = 全 PR 必須)・運用監視 7 項目・インシデント最小手順 5 種。存在秘匿 = 他テナントリソースへの認可拒否は 404 (同一テナントは 403)。2026-07-18 の継続ヒアリング (AskUserQuestion) で ASVS 到達目標・失効反映 ≤15 分・rate limit テーブル・nonce strict CSP の 4 論点をユーザー再確認済み (いずれも本書の確定内容と一致)。"
+    },
+    {
+      "id": "qa-043",
+      "question": "作者デスクトップ環境 (macOS / Windows) の infrastructure (配布・実行基盤・ツールチェーン) は何を正本とするか? (C07 監査指摘への対応: infrastructure.desktop-windows/desktop-macos の qa_ref=qa-003 は Hub web hosting 中心の回答で desktop 固有の裏付けが薄い。既確定内容の集約による専用質疑化であり新規決定は含まない)",
+      "answer": "既確定の qa-003 / qa-010 / qa-034 / qa-039 / qa-041 の desktop 該当部分を infrastructure.desktop の専用正本として集約確定する。(1) 配布経路 (qa-003): Publisher / Skill の作者環境への配布は URL 型 marketplace (native source) または Bootstrap Installer の 2 経路を Stage 0 technical gate (H7) で検証し、成立した経路を採用する (一般利用者に GitHub アカウントを要求しない = I6)。(2) 実行形態 (qa-010): 専用 desktop GUI は作らず、Publisher core は TypeScript (Node + pnpm) で実装し Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。target=web_app の出口は作者 local session での wrangler CLI スクリプト実行 (I5。Hub は URL 登録・公開範囲検査・health 確認のみ)。(3) ツールチェーン (qa-039): 作者/提供者環境は macOS 主・Windows 従で、Claude Code + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI。両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)。ローカルは preview 用 Turso または local SQLite を binding し production DB を指さない。production への deploy/migration の正本経路は CI (緊急時のみローカル + 事後記録)。(4) 資格情報基盤 (qa-041): Device Flow token は OS 資格情報域 (macOS Keychain / Windows Credential Manager) のみに保存。(5) 環境・binding の詳細正本は docs/infrastructure-spec.md (qa-034)、desktop 側の運用規律は dev-workflow (qa-039) と security (qa-041) の各確定に従属し、本 qa は infrastructure.desktop 行への接地点を提供する。"
+    },
+    {
+      "id": "qa-044",
+      "question": "作者デスクトップ環境 (macOS / Windows) の保守運用 (更新導線・サポート・資格情報とローカル環境の維持) は何を正本とするか? (C07 監査指摘への対応: maintenance-ops.desktop-windows/desktop-macos の qa_ref=qa-011 は Hub web 側運用中心の回答で desktop 固有の裏付けが薄い。既確定内容の集約による専用質疑化であり新規決定は含まない)",
+      "answer": "既確定の qa-011 / qa-027 / qa-039 / qa-041 の desktop 該当部分を maintenance-ops.desktop の専用正本として集約確定する。(1) plugin 更新導線 (qa-011): 作者環境の Publisher / Skill 更新は marketplace / Bootstrap Installer の更新導線 (「更新あり」表示 + 手動 update) で提供し、自動強制更新はしない。(2) 作者サポート (qa-011): 相談は予約制 office hour (供給上限あり §11.3)。(3) 退職・棚卸し (qa-027): 四半期のユーザー棚卸し (退職者アカウント無効化・owner 再割当確認) は作者デスクトップの token 失効 (Hub Web からの即時失効 = qa-041) と対にして実施する。(4) ローカル環境の維持 (qa-039): CI と同一実装の pnpm verify (lint/typecheck/test/bundle size) を local から実行可能に保ち「local では通るが CI で落ちる」を構造的に減らす。pre-commit hook (lint/format/secret scan) は早期検知の補助で、正本の遮断は CI 側。(5) 資格情報のインシデント初動 (qa-041): token 窃取疑い時は Hub Web から失効 → family 全失効 → 監査確認 (docs/security-spec.md §8.6)。refresh token 再利用検知は provider-admin + 該当 workspace-admin へ即時通知。(6) 障害縮退 (qa-011 維持): Hub 障害時も作者環境の導入済み Skill・公開済み Web App は動作継続し、新規公開・追加・更新のみ停止する。本 qa は maintenance-ops.desktop 行への接地点を提供し、詳細 runbook は maintenance-ops (qa-011/qa-027) の web 行確定に従属する。"
+    },
+    {
+      "id": "qa-045",
+      "question": "C4 改訂 (業務データ保持) の database (web) への反映は?",
+      "answer": "qa-037 の確定内容 (27 テーブル・ULID・封筒暗号化・hash chain 等) を全面維持しつつ、次の delta を確定する。(1) 新テーブル tenant_data_objects: id, tenant_id, workspace_id, kind (`knowledge_doc` / `run_input` / `run_output`), title, r2_key, size_bytes, content_hash (sha256), enc_key_version, uploaded_by, created_at。実体は保存しない (R2 参照とメタデータのみ。Turso 5GB 無料枠を業務データで消費しない)。D4 row-level scope 必須・分離テスト CI 対象。(2) 暗号化: encryption_keys の purpose に `tenant_data` を追加し、テナント別 DEK による封筒暗号化で R2 実体を暗号化保存する (KEK/DEK 運用は qa-042 の S-D8 と同一機構)。(3) 削除ポリシー: ユーザー削除操作・テナント解約時に R2 実体と DB 行を即時完全削除し、audit_events のみ残す (soft delete 列は設けない)。日次 DB export に平文は含まれない (実体は暗号化済み R2 のみ)。四半期 restore drill に「削除済み業務データが復元されないこと」の確認項目を追加する (qa-019 拡張)。(4) R2 バケット: 業務データ用 prefix をテナント別に分離し (tenant_id prefix)、PackageRegistry (immutable) とはバケットまたは prefix を分ける。無料枠 10GB の使用量は Turso 使用量監視 cron (qa-031 論点 4 の帰結) に R2 使用量を追加して監視する。"
+    },
+    {
+      "id": "qa-046",
+      "question": "C4 改訂 (業務データ保持) の security (web) への反映は?",
+      "answer": "qa-042 の確定内容 (脅威モデル 7 信頼境界・T1-T13・ASVS L1 全面 + 重点領域 L2・封筒暗号化 S-D8・監査 hash chain 等) を基盤として全面維持しつつ、次の delta を確定する。(1) 保護資産の追加: 「顧客業務ナレッジ/ドキュメント」「ハーネス実行入出力データ」を最高機密区分 (salary と同等以上) として保護資産一覧へ追加する。業務システム接続 credential は保持しない (ユーザー選択により保持対象外 = 旧 C4 の当該部分は不変)。(2) 明示的非目標の改訂: 旧 N2「顧客業務データ保護は非目標 (非保持のため)」を撤回し、脅威 T14 (保持業務データのテナント越境読取)・T15 (削除不完全による残存・バックアップ経由の復元) を STRIDE×abuse case へ追加する。対策 = テナント別封筒暗号化 (purpose=tenant_data)・D4 row-level + R2 tenant prefix 分離・認可 MW 通過後のみ復号・即時完全削除 + 削除監査 event・restore drill での非復元確認。(3) ASVS 到達目標の拡張: データ保護章の L2 相当適用を保持業務データへ拡張する (S-D2 改訂)。(4) 検証計画: テナント分離テスト CI に業務データ越境読取の検査ケースを追加し、削除完全性 (R2 実体・DB 行・キャッシュ) の検証手順を security 検証計画へ追加する。(5) 残余リスク: 提供者の R2/DB 管理権限による暗号化済みデータへのアクセスは KEK 分離で緩和するが完全排除はしない (N1 の系として明示)。本 delta の DDL・検証手順・docs/security-spec.md への展開は次回 security 深掘り (feature P02 前) で行い、それまでは本 qa が delta の正本である。"
+    },
+    {
+      "id": "qa-047",
+      "question": "C06 監査指摘 (誘導質問 6 件 = qa-014/028/029/030/031/034、上位概念遡及性 2 件 = G5/U6) への対応として、各決定を中立形式 (現行決定の弱点を明示し代替案を等価提示・AI 推奨の前置きなし) で個別再確認した結果は? (採番注記: 本質疑は当初 qa-043 として登録されたが、並行セッションの qa 採番衝突 [第 3 例] で qa-043 が infrastructure desktop 質疑に置き換わり逐語記録が消失したため、qa-047 として再登録する。承認 appr-007 と reopen_log 3 件の「qa-043」引用は本質疑を指す)",
+      "answer": "AskUserQuestion 3 ラウンド (2026-07-18) で全論点を個別再確認した。【維持 (中立再提示のうえユーザーが再選択)】D5 = pull 型キュー (非同期遅延・pull 依存の弱点を明示のうえ維持) / D6 = Resend Free (無料枠改定リスクを明示のうえ維持) / qa-031 論点 1 = ポーリング統一 (表示遅延の弱点明示のうえ SSE 併用案を退け維持) / qa-034 論点 1 = production+staging 2 環境 (運用 2 式化の弱点明示のうえ維持) / qa-034 論点 2-4 = ドメイン既存流用・Better Stack Free・main merge 全自動デプロイ (全て維持) / qa-030 の rf 改訂 = scope.in 6 領域・scope.out 3 点・I10-I14 (個別見直し選択肢を提示のうえ全て維持)。【G5 遡及性解消】G5 文言「導入されたハーネスの利用実態と削減効果 (時間・金額換算) が可視化され、フィードバック→AI 対応→再公開の改善ループが定着する」をユーザーが「一致する (このまま確定)」と個別追認。【変更 1: AiJob pull 権限】qa-031 論点 3 を provider-admin のみ → workspace-admin にも開放へ変更 (提供者単一障害点の解消をユーザーが優先。詳細 = qa-048)。【変更 2: C4 改訂】非保持境界を「保持前提で再設計」へ変更。保持対象 = 業務ナレッジ/ドキュメント + ハーネス実行の入出力データ (業務システム接続 credential は引き続き保持しない・ユーザーが選択せず)。保存 = R2 + テナント別封筒暗号化。削除 = 即時完全削除 (詳細 = qa-045/qa-046)。【変更 3: U6】stakeholders から「顧客の情報システム/セキュリティ部門」を削除 (qa_log のユーザー発言に遡れない AI 代弁項目のため。監査 mirror 等の設計根拠は Workspace 管理者へ帰属)。foundation 改訂は appr-007 で承認。"
+    },
+    {
+      "id": "qa-048",
+      "question": "中立再確認による決定変更 (AiJob pull 権限開放・C4 保持前提化) の backend (web) への反映は? (採番注記: 本質疑は当初 qa-044 として登録されたが採番衝突で maintenance-ops desktop 質疑に置き換わったため qa-048 として再登録する)",
+      "answer": "qa-037 の確定内容を全面維持しつつ、次の delta を確定する。(1) AiJob pull 権限の開放: POST /api/v1/ai-jobs/pull の認可を「provider-admin のみ」から「workspace-admin (自テナントのジョブのみ・D4 row-level scope 内で完結) + provider-admin (全テナント・監査付き cross-tenant は従来どおり唯一の明示例外)」へ変更する。目的は提供者単一障害点の解消 (提供者不在時も顧客側 workspace-admin の Claude Code セッションがシート生成・FB 自動対応・doc 下書きを処理できる)。前提として workspace-admin 側の Claude Code 契約が必要である点を運用ドキュメントに明記する。docs/backend-spec.md §4.11・§3.3 認可マトリクス・§9 確定記録を本 qa で改訂する。(2) C4 改訂に伴う業務データ保持 API の追加方針: 業務ナレッジ/ドキュメントとハーネス実行入出力データの保管 API (Hub API 経由 multipart アップロード → テナント別封筒暗号化のうえ R2 保存 + DB 参照登録 / 取得 = 認可 MW 通過後にのみ復号 / 削除 = R2 実体 + DB 行の即時完全削除 + 監査 event) を B 系要素へ追加する。エンドポイント詳細設計 (パス・スキーマ・rate limit) は feature P02 で行い、認可は既存 deny-by-default マトリクスへ行を追加する。既存の publish pipeline・metrics・通知等は不変。"
+    },
+    {
+      "id": "qa-049",
+      "question": "C4 改訂 (非保持境界 → 保持前提) に至る中立再確認の質疑経緯の逐語補記 (C06-r2 監査の訂正要請 2026-07-18 への対応: qa-047 の【変更 2】要約に含まれない提示選択肢・AI 推奨・ユーザー選択の詳細を記録し、報告と実データの一致を回復する)",
+      "answer": "C4 改訂は次の 3 段階の AskUserQuestion で確定した (いずれも 2026-07-18)。【段階 1: 見直し要否 (中立再確認ラウンド 2)】質問 =「非保持境界 (qa-014 論点 1)。現行決定は『顧客の業務データ・secret を Hub に保持しない (C4)』です。現行の弱点: 将来、顧客業務データを活用する機能 (例: 業務データを読むハーネスの Hub 側実行) を作れない制約になります。どうしますか?」。選択肢 = (a) 非保持境界を維持 (セキュリティ責任範囲が最小・審査が通りやすい。弱点は将来の機能拡張余地の制約) / (b) 見直す (保持を許容) (拡張余地が広がるが security 章と C4 制約の全面再設計が必要)。推奨表示なし。ユーザー選択 = (b) 見直す。【段階 2: 水準の具体化 (ラウンド 3)】質問 =「C4 の『見直す』の具体化です。どの水準で保持を許容しますか?」。選択肢 = (1) MVP は非保持・将来枠を開ける (Recommended = AI 推奨。今回実装は非保持のまま制約文言のみ緩和) / (2) 今から保持前提で再設計 (security 章と DB 設計の全面再ヒアリングが必要になり実装着手が遅れる、と弱点を明示) / (3) やはり恒久維持に戻す。ユーザー選択 = (2) 今から保持前提で再設計 — **AI 推奨 (1) に反する選択であり、推奨追従でない実質判断の証跡**。【段階 3: 保持設計の確定】3 問を提示: (i) 保持対象 (複数選択可) = ハーネス実行の入出力データ / 業務システム接続 credential / 業務ナレッジ・ドキュメント の 3 択 → ユーザーは「業務ナレッジ/ドキュメント」と「ハーネス実行の入出力データ」の 2 つを選択し、**credential は選択しなかった** (qa-047 の「ユーザーが選択せず」の逐語根拠)。(ii) 保存場所と暗号化 = R2 + テナント別封筒暗号化 (Recommended) / Turso DB 直接保存 / 暗号化なし (at-rest のみ) の 3 択 → ユーザー選択 = R2 + テナント別封筒暗号化。(iii) 削除ポリシー = 即時完全削除 (Recommended) / 30 日猶予付き削除 の 2 択 → ユーザー選択 = 即時完全削除。以上の帰結が qa-045 (database delta)・qa-046 (security delta)・appr-007 (foundation 改訂) である。本 qa はセル状態を変更しない証跡補記であり、qa-047 の【変更 2】と合わせて読む。"
+    },
+    {
+      "id": "qa-050",
+      "question": "security (web) の確定内容を、脅威モデル基盤 (qa-042) と業務データ保持 delta (qa-046) を単一 qa へ統合し、C05 completeness 監査が検出した孤立 (認可 role 全順序・rate limit 数値表など詳細正本 docs/security-spec.md の値が compile 済み章本文へ現れない) を是正する形で再確定する。章本文が詳細正本の所在を明示引用し、認可 role 全順序を本文へインラインするようにする。",
+      "answer": "docs/security-spec.md を実装粒度の詳細正本とし、qa-042 (脅威モデル基盤) と qa-046 (C4改訂=業務データ保持 delta) を単一 qa へ統合確定する。章本文が詳細正本の所在を明示引用し、孤立 (qa-042 の確定値が章に現れない) を解消する。\n\n(1) 脅威モデル (詳細正本 docs/security-spec.md §1): 信頼境界 7・保護資産 6 + 業務データ 2 種 (顧客業務ナレッジ/ドキュメント・ハーネス実行入出力=最高機密区分)・STRIDE×abuse case T1-T15。明示的非目標は N1・N3・N4 を残余リスクとして受容し、旧 N2 (顧客業務データ保護は非目標) は qa-046 で撤回済 (T14 保持業務データのテナント越境読取・T15 削除不完全による残存を対策対象へ)。\n\n(2) 認可 (詳細正本 docs/security-spec.md §3): role 全順序 = member < owner < workspace-admin < provider-admin (全順序・§3.1.1)。workspace-admin はテナント境界内スコープ (§3.1.2)、cross-tenant アクセスは allow + 監査記録 (§3.1.3)。認可判定は decide() / resolveEffectiveRole() / withAuthz() を単一接点とする。\n\n(3) 認証・セッション (詳細正本 docs/security-spec.md §2): OAuth Device Flow・session TTL 8h・refresh/device_code は SHA-256 ハッシュのみ保存。ASVS 到達目標 = L1 全面 + 重点 6 領域 (認証/セッション/認可/データ保護/監査/暗号) L2 相当 (S-D2)。\n\n(4) データ保護 (詳細正本 docs/security-spec.md §4): 封筒暗号化 KEK/DEK (S-D8・encryption_keys テーブル・key_version 付き・KEK rotation は DEK re-wrap のみ・年1回+臨時)。users.salary = AES-256-GCM (purpose=salary・IV ランダム 96bit・AAD=table:column:row_id)・member 向け DTO 別型・読取も監査 (user.salary_read)・export 常時マスク・部門集計は k-匿名性 k=3 未満で金額非表示。業務データは purpose=tenant_data の封筒暗号化 + D4 row-level + R2 tenant prefix 分離・認可 MW 通過後のみ復号・即時完全削除 + 削除監査 event + restore drill 非復元確認。secret インベントリ 5 binding (AUTH_SECRET/ENCRYPTION_KEK/TURSO_AUTH_TOKEN/R2 key/RESEND_API_KEY)・テナント IdP client_secret は封筒暗号化で DB 保存 (S-D5)。\n\n(5) 監査完全性 (詳細正本 docs/security-spec.md §5): append-only (リポジトリ層に UPDATE/DELETE 関数を未実装 + CI-2 禁止検査) + テナント単位 hash chain (S-D6・seq/prev_hash/event_hash・canonical_json・BEGIN IMMEDIATE・日次 cron 全体検証 + 閲覧時区間検証)。provider-admin 透明性 = 全操作監査 + 顧客管理者が自テナント監査で越境 (provider.cross_tenant_access) を確認可能 (S-D9)。\n\n(6) 入力検査 (詳細正本 docs/security-spec.md §6): ZIP/ingest/AI job の検査値・Markdown (doc/フィードバック/シート本文) は rehype-sanitize の縮小 allowlist で XSS 対策。\n\n(7) Web 基本防御 (詳細正本 docs/security-spec.md §7): CSP (§7.1)・rate limit 数値表 = 9 route の上限 (§7.2・S-D3)。\n\n(8) 検証計画 (詳細正本 docs/security-spec.md §8): ASVS L1+L2・CI-1〜CI-9・T-1〜T-12。テナント分離テストに業務データ越境読取ケースと削除完全性 (R2 実体・DB 行・キャッシュ) 検証を追加する。\n\n業務データ delta の DDL・検証手順の docs 全面展開は feature P02 前の security 深掘りで実施する (qa-046 の据置事項を継承)。本 qa-050 が security(web) 確定の正本であり、qa-042 (基盤) と qa-046 (delta) はその構成根拠として qa_log に保持する。"
+    },
+    {
+      "id": "qa-051",
+      "question": "2026-07-18 にユーザー確定した構築優先順位 (P0-P5) を開発フロー仕様へどう反映するか (正本: docs/system-design-overview.md §3「構築優先順位」)。",
+      "answer": "P0 基盤 (feat-stage0-distribution-gate + hub-foundation/domain-model-db → feat-auth-tenancy。Auth Gate = SSO・tenant scope・deny-by-default・共通 route guard が通るまで P1 以降の保護画面へ着手しない。認証が最初の業務機能) → P1 ヒアリング (feat-hearing-intake: S10/S11/S12 を作成→一覧→詳細の 1 slice で閉じる。最優先) → P2 プラグイン Hub + 構築パイプライン (feat-publish-pipeline → feat-publisher-plugin / feat-dual-catalog-web → feat-build-pipeline-board。upload→検査/公開→管理→install/download を 1 slice で閉じる。最優先) → P3 改善ループ・ドキュメント (feat-feedback-loop / feat-docs-cms) → P4 ユーザー・効果測定 (feat-user-org-admin → feat-metrics-tracking S16 まで) → P5 ダッシュボード・統制 (S09 + feat-workspace-governance。低優先)。ユーザー指示逐語: 「認証を最初に構築して他の全ページで反映」「最優先 = ヒアリング (シート作成・一覧・詳細) と、ハーネスをアップロード/管理/ダウンロードできるプラグイン Hub + 構築パイプライン」「次 = 改善要望レビュー・ドキュメント管理」「その次 = ユーザー・利用削減効果」「ダッシュボードは低優先」「管理者/一般の分離 (画面) は低優先で OK」「マルチシステム前提」。補足: 管理者/一般分離の後回しは S17/S05/S06 という画面側であり、role 4 種 + deny-by-default 認可枠組みは P0 から全画面に効く。phase 内依存順は逆転しない。各 phase の完了判定は API/画面単体でなく端から端の slice + 認証・テナント分離テスト通過。マルチシステム = マルチテナント + 1 Workspace 内複数 Project/複数 target を Hub で扱い、特定 1 社・1 ハーネス・1 target をコードへ固定しない。既確定の工程・品質ゲート (qa-038/qa-039) は不変で着手順だけを追加確定。"
+    },
+    {
+      "id": "qa-052",
+      "question": "docs/backend-spec.md の 2026-07-18 additive 追記 (install/download descriptor・Project 管理 API・sheets/builds/feedbacks 契約詳細化・publish session 認証拡張・§10 API 実装順) を backend 仕様へ反映するか。",
+      "answer": "(1) §4.5.1 install/download: POST /api/v1/harnesses/:projectId/install (member) が安定版だけをサーバ解決し target 判別 union descriptor を返す — skill は Stage 0 採用の marketplace/Bootstrap Installer コマンド (raw ZIP は Gate 採用時のみ TTL 5 分以内・単回の短命 URL、それまで null)、web_app は健全性確認済み deployment の launch_url。suspended/非 stable/別 tenant は 404、member の release id/R2 key 指定は不受理。Idempotency-Key で download count 重複加算防止。(2) §4.5.2 Project 管理: POST /api/v1/projects (member。owner_user_id=principal 固定・slug/name は Workspace 内一意)・PATCH /api/v1/projects/:id (owner。tenant/workspace/owner は変更不可)。project.create/project.update を監査 action へ追加し、監査 action は固定数管理をやめ §3.8 の列挙を正本化。(3) sheets: GET 一覧は member/owner=自分のみ・admin=自テナント全件 + item DTO 契約、GET 詳細は form/estimate snapshot・generated_sections・build_ref 等の DTO 契約 (salary 原値は返さない)。所有者判定は改ざん可能な form の applicant でなく session principal.user_id を applicant_user_id へ固定。received の統一表示ラベルは「受付」。PDF は独立非認可 API を作らず認可済み詳細 DTO を print 表示へ再利用。(4) builds: sheet_id/feedback_id の起点二元化 (CHECK + 非 NULL 値の partial UNIQUE、各起点=1 Build)。POST /builds は手動復旧/例外用で、通常経路は AiJob complete 時の冪等自動作成 (sheet_generation→hearing、feedback improvement/review→design・bug→test。初期配置は遷移でなく stage_change 監査対象外)。P1 の間は Build 導線非表示、P2 有効化 migration で既存 Sheet を 1 回だけ backfill。(5) feedbacks: type=improvement/review/bug + priority=high/medium/low (mock の改善要望/レビュー依頼/バグ報告と優先度に対応)。(6) publish 系 (POST /publish・PUT package・POST submit) を session (S01/S02 Web ウィザード + CSRF) or Bearer (Publisher CLI) の 2 経路へ拡張 (状態機械・直列化 qa-009 は不変)。(7) §10 構築優先順位による API 実装順 P0-P5 (着手順のみ。認可 MW・テナント分離 D4・zod 単一ソースは P0 から全 endpoint 適用で後付け不可)。"
+    },
+    {
+      "id": "qa-053",
+      "question": "builds/feedbacks/projects のスキーマ改訂 (docs/backend-spec.md §2 の 2026-07-18 追記) を database 仕様へ反映するか。",
+      "answer": "builds へ sheet_id (NULL 可) と feedback_id (NULL 可) を持たせ、起点は Sheet/Feedback のどちらか一方 (CHECK 制約 + 非 NULL 値の partial UNIQUE で各起点=1 Build を保証)。feedbacks の type を improvement/review/bug の 3 値へ改訂し priority (high/medium/low) 列を追加。projects は owner_user_id を作成時の principal に固定し slug/name は Workspace 内一意。1 Workspace に複数 Project、各 Project は skill/web_app の複数 TargetChannel を持てる (マルチシステム前提)。全テーブルの tenant_id スコープ (D4) は P0 の最初の migration から必須で後付けしない。"
+    },
+    {
+      "id": "qa-054",
+      "question": "docs/security-spec.md の 2026-07-18 追記 (許可表拡張・§6.3.1 install/download 配布境界・T-13/T-14 テスト・§8.7 構築順 security gate) を security 仕様へ反映するか。",
+      "answer": "許可表へ projects.create (member。作成者を owner に固定)・projects.update (owner)・harnesses.install (member。安定版の導入/ダウンロード descriptor 発行) を追加 (install_hint から改称)。§6.3.1 配布境界: install は session 認証 + harnesses.install を要求し principal と同 tenant/workspace の stable かつ available release だけをサーバ側解決、クライアント指定 release/R2 key は不受理。skill の raw ZIP は Stage 0 採用時のみ Worker 署名の TTL 5 分以内・単回・対象 release 固定 URL とし、レスポンス/ログ/Referer に R2 credential/object key を露出しない。web_app は health 確認済み URL のみ返し外部遷移は noopener,noreferrer。suspended/他 tenant/非 stable は存在秘匿の 404。download count は (tenant, user, project, release) 範囲の Idempotency-Key 重複排除後に加算。upload は S01 Web=session+CSRF / Publisher CLI=Bearer+publish:write の 2 入口を同一検査・owner/tenant 判定へ収束させ、multipart の project_id/workspace_id/owner_user_id を信頼せず認証 principal と認可済み PublishRequest から解決、staging object key に元ファイル名を使わない。テスト追加: T-13 ヒアリング所有者境界 (member は自分の applicant_user_id のみ・form 改ざんで他人のシート取得不可・admin は自テナント全件のみ)、T-14 Project/配布境界 (作成者のみ owner・他 Project publish 拒否・install は stable/available のみ・他 tenant/任意 release/R2 key 指定 404・短命 URL の期限切れ/再利用拒否)。§8.7 構築順 security gate: P0 で SSO/session・Device Flow・単一認可 MW・tenant scope・deny-by-default・失効・監査 logger を dev bypass なしで完成 → P1 開始前に sheets 権限 + T-13 → P2 開始前に projects 権限・upload 2 経路・ZIP 検査・harnesses.install + T-14 → P3 以降は同一 MW/tenant repository 流用 + 新 action の許可表・全 role テスト同時追加。管理者 UI が P4/P5 でも admin/member 認可判定は P0 から有効で「後から role を付ける」移行は不許可。"
+    },
+    {
+      "id": "qa-055",
+      "question": "docs/frontend-spec.md の 2026-07-18 追記 (S01 公開ウィザード配置・S11/S12/S14/S15/S02 詳細契約・§10 実装順・redirect/ナビ段階運用) を frontend 仕様へ反映するか。",
+      "answer": "mock 実測どおり公開ウィザードは S01「プラグインを公開」モーダル (S02 は既存 Project の詳細・管理・導入で新規取込の入口ではない)。S01/S02 のデータ取得へ install descriptor (GET /harnesses/:projectId/install) と publish 中 2s→backoff polling を追加。S11 一覧: status/HS コード・title/domain・department/people・hours/applicant/updated_at の 6 列 (モバイルはカード畳み)、status/department filter + 全文検索 + cursor ページング、権限外行のクライアント側除外実装は禁止 (API が範囲を返す)。S12 詳細: ヘッダ + 生成 4 section (概要/課題/機能タグ/削減効果) + 元入力/試算 snapshot + Build/PublishRequest 参照。received の表示は全画面共通「受付」。admin 操作は右側メタ領域で member には非表示かつ API でも拒否。P2 有効後のみ自動作成 Build への導線を表示。S12 PDF: 別データ生成せず認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化し window.print() (salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test)。S01 公開ウィザード: Step1 CLI 取込推奨/Web 手動 ZIP 代替 → Step2 target(skill/web_app)/category/visibility (Stage 1 は workspace まで)/説明 → Step3 検査結果と公開確認。新規 Project 作成→PublishRequest→upload/submit を 1 UI フローに束ねるが API status は隠さない。Green 自動/Yellow 承認待ち/Needs Fix は S03 findings へ。単一テナント/単一 Project を定数にしない。S14: status 件数 + FR コード/harness/type (改善要望/レビュー依頼/バグ報告)/priority/requester/date/status、sanitize 済み AI 応答、修正版 Build 導線で S13→publish→更新通知まで追跡。S15: common+自 tenant 合成一覧、sanitize 済み Markdown 閲覧、admin 編集 textarea+preview、member に編集 CTA を出さず common 編集は provider-admin のみ。S02: 全 Release と stable 版、install/download modal は backend descriptor 表示のみで R2 key/永続生 URL を組み立てず、promote/rollback/suspend は owner だけに表示。P6 ボトムシート対象へ公開ウィザード追加。§10 実装順: P0 共通シェル + S07/S08 → P1 S10/S11/S12 → P2 S01→S02/S03→S13 → P3 S14/S15 → P4 S16/S17/S18 → P5 S09 + S05/S06。/ redirect は S09 完成 (P5) まで /sheets へ。サイドバー/ボトムタブは未実装 phase 項目を非表示 (グレーアウト不可 = qa-018 整合)、ボトムタブ先頭 slot は S09 完成までシート (S11) 暫定。部品実装順は shared-layers §1 (StepWizard=P1、StageBoard=P2、MarkdownEditor=P3、InlineEditTable=P4、チャート/KPI=P4 の S16 から S09 で完成)。認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面。"
+    },
+    {
+      "id": "qa-056",
+      "question": "docs/screen-inventory.md・docs/user-journeys.md・docs/mockups/harness-studio-v2-analysis.md の 2026-07-18 追記 (優先度列・S01/S02 位置づけ修正・最優先画面の完了境界・遷移図拡張・mock 横断再照合) を UI-UX 仕様へ反映するか。",
+      "answer": "画面一覧 S01-S18 へ構築優先順位の優先度列 (P0-P5。正本 system-design-overview §3) を追加。S01 をプラグイン Hub 一覧 + 公開ウィザード (「プラグインを公開」モーダル = 新規取込の入口)、S02 を詳細・管理・導入 (追加/ダウンロード) へ位置づけ修正。S04 のうち IdP 接続登録のみ P0 先行。S09-S18 は mockup 同様グローバルナビ (サイドバー/ボトムタブ) からの直遷移で、階層遷移は S11→S12・S12→S13・S15 の一覧→閲覧→編集のみ。遷移図へ S10→S11→S12→S13→S03 (公開系接続) と S01 公開ウィザード→S03 を追加。最優先画面の完了境界を確定: P1 ヒアリング slice (S10 4 step→受付番号→S11 6 項目一覧→S12 生成本文/snapshot/Build 参照。member 自分のみ・admin 全件・生成中は通知/ポーリング)、P2 Hub slice (S01 公開ウィザード→検査/公開→S02 管理→install/download または Web app 起動→S03。複数 Project/target・public は Stage 5 まで非表示)、P2 パイプライン slice (S12→S13 7 工程→publish 工程 PublishRequest 接続。参照が端から端で切れない)。mock 語彙統一: シート status「下書き」は保存値 received の旧表示で統一ラベル「受付」(保存値は 4 値から増やさない)、利用者向け導入語彙は「追加/ダウンロード」で実体は Stage 0 採用 descriptor (生 ZIP 直接配布を既定導線にしない)、PDF は認可済み表示データの印刷変換。J1 へ 3b (S01 Web 代替 upload = CLI 取込 or ZIP、3a と同じ検査へ収束) を追加し J4 を S11/S12 表示契約・HS コード参照維持で詳細化。モバイル/タブレットは S01-S18 のレスポンシブ表示でカバー (専用 native 画面なし)。password login 等の mock 表現は D3/SEC1 維持で不採用のまま。"
+    },
+    {
+      "id": "qa-057",
+      "question": "docs/infrastructure-spec.md の 2026-07-18 追記 (R2 配布境界・§13 構築優先順位によるインフラ有効化順) をインフラ仕様へ反映するか。",
+      "answer": "R2 配布境界: S01 の Web upload と Publisher CLI upload は同じ staging prefix・検査 pipeline・content hash 確定処理へ収束させ、ブラウザから R2 への公開 write URL は発行しない。install/download は Worker の POST /api/v1/harnesses/:projectId/install を必ず経由し R2 bucket/object key を UI/API へ返さない。Stage 0 で raw ZIP を採用した場合だけ安定版に固定した TTL 5 分以内・単回の短命 URL を発行。§13 有効化順 (P0-P5): 共通リソース先行と低優先機能先行を混同せず、単一 Worker/Turso/R2 は共有しつつ route・cron・通知を必要 phase で段階有効化 — P0: production/staging・Worker/DB migration・tenant/workspace・OIDC callback・Auth secret・共通認可/監査・/health・CI の tenant 分離 test (metrics rollup/週次サマリー/dashboard monitor は不要)。P1: HearingSheet/AiJob/notification migration・pull job・生成完了通知・キュー滞留監視。P2: private R2 package bucket・Web/CLI upload・検査・content-addressed 保存・install/download Worker 導線・orphan 通知 (承認 queue UI は P5 でも監査記録はこの時点から有効)。P3: feedback/doc AiJob kind・Feedback→修正版 Build 冪等作成・必要時の R2 prefix。P4: salary 鍵・metrics ingest/rollup cron・Turso 使用量監視・週次通知。P5: dashboard/承認/監査 UI 用 route と外形確認。各 phase の migration は tenant_id と必要な workspace_id を最初から必須にし、production 反映前に 2 tenant fixture の分離テストを通す。1 tenant/1 Project 固定の環境変数は作らない。"
+    },
+    {
+      "id": "qa-058",
+      "question": "構築優先順位 P0-P5 に伴う監視・運用の段階的有効化 (docs/infrastructure-spec.md §13・docs/shared-layers.md の 2026-07-18 追記) を保守運用仕様へ反映するか。",
+      "answer": "監視・運用ジョブは必要 phase で段階的に有効化する: P1 で AiJob キュー滞留監視 (qa-027 の監視対象) と生成完了通知、P2 で orphan 通知 (承認 queue UI は P5 でも監査記録は P2 から有効)、P4 で metrics rollup cron・Turso 使用量監視・週次通知、P5 で dashboard/承認/監査 UI 向け route の外形確認。P0 時点では metrics rollup・週次サマリー・dashboard monitor を有効化しない。AI 処理主体の表記は D5 確定 (pull 型 = Claude Code セッション消費・サーバ側 AI 課金なし) へ統一 (旧「D5 候補」表記の解消)。既確定の監視・バックアップ・運用手順 (qa-027 ほか) は不変で有効化タイミングだけを追加確定。"
+    },
+    {
+      "id": "qa-059",
+      "question": "docs/backend-spec.md の 2026-07-18 additive 追記 (install/download descriptor・Project 管理 API・sheets/builds/feedbacks 契約詳細化・publish session 認証拡張・§10 API 実装順) を backend 仕様へ反映するか。 (訂正再登録: qa-052 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-059 として登録し直す)",
+      "answer": "qa-048 の確定内容 (AiJob pull 権限開放・業務データ保持 API 方針。qa-048 が全面維持する qa-037 系譜を含む) を全面維持しつつ、次の delta を確定する。(1) §4.5.1 install/download: POST /api/v1/harnesses/:projectId/install (member) が安定版だけをサーバ解決し target 判別 union descriptor を返す — skill は Stage 0 採用の marketplace/Bootstrap Installer コマンド (raw ZIP は Gate 採用時のみ TTL 5 分以内・単回の短命 URL、それまで null)、web_app は健全性確認済み deployment の launch_url。suspended/非 stable/別 tenant は 404、member の release id/R2 key 指定は不受理。Idempotency-Key で download count 重複加算防止。(2) §4.5.2 Project 管理: POST /api/v1/projects (member。owner_user_id=principal 固定・slug/name は Workspace 内一意)・PATCH /api/v1/projects/:id (owner。tenant/workspace/owner は変更不可)。project.create/project.update を監査 action へ追加し、監査 action は固定数管理をやめ §3.8 の列挙を正本化。(3) sheets: GET 一覧は member/owner=自分のみ・admin=自テナント全件 + item DTO 契約、GET 詳細は form/estimate snapshot・generated_sections・build_ref 等の DTO 契約 (salary 原値は返さない)。所有者判定は改ざん可能な form の applicant でなく session principal.user_id を applicant_user_id へ固定。received の統一表示ラベルは「受付」。PDF は独立非認可 API を作らず認可済み詳細 DTO を print 表示へ再利用。(4) builds: sheet_id/feedback_id の起点二元化 (CHECK + 非 NULL 値の partial UNIQUE、各起点=1 Build)。POST /builds は手動復旧/例外用で、通常経路は AiJob complete 時の冪等自動作成 (sheet_generation→hearing、feedback improvement/review→design・bug→test。初期配置は遷移でなく stage_change 監査対象外)。P1 の間は Build 導線非表示、P2 有効化 migration で既存 Sheet を 1 回だけ backfill。(5) feedbacks: type=improvement/review/bug + priority=high/medium/low (mock の改善要望/レビュー依頼/バグ報告と優先度に対応)。(6) publish 系 (POST /publish・PUT package・POST submit) を session (S01/S02 Web ウィザード + CSRF) or Bearer (Publisher CLI) の 2 経路へ拡張 (状態機械・直列化 qa-009 は不変)。(7) §10 構築優先順位による API 実装順 P0-P5 (着手順のみ。認可 MW・テナント分離 D4・zod 単一ソースは P0 から全 endpoint 適用で後付け不可)。"
+    },
+    {
+      "id": "qa-060",
+      "question": "builds/feedbacks/projects のスキーマ改訂 (docs/backend-spec.md §2 の 2026-07-18 追記) を database 仕様へ反映するか。 (訂正再登録: qa-053 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-060 として登録し直す)",
+      "answer": "qa-045 の確定内容 (C4 改訂の業務データ保持 tenant_data_objects・封筒暗号化・即時完全削除を含む確定スキーマ) を全面維持しつつ、次の delta を確定する。builds へ sheet_id (NULL 可) と feedback_id (NULL 可) を持たせ、起点は Sheet/Feedback のどちらか一方 (CHECK 制約 + 非 NULL 値の partial UNIQUE で各起点=1 Build を保証)。feedbacks の type を improvement/review/bug の 3 値へ改訂し priority (high/medium/low) 列を追加。projects は owner_user_id を作成時の principal に固定し slug/name は Workspace 内一意。1 Workspace に複数 Project、各 Project は skill/web_app の複数 TargetChannel を持てる (マルチシステム前提)。全テーブルの tenant_id スコープ (D4) は P0 の最初の migration から必須で後付けしない。"
+    },
+    {
+      "id": "qa-061",
+      "question": "docs/security-spec.md の 2026-07-18 追記 (許可表拡張・§6.3.1 install/download 配布境界・T-13/T-14 テスト・§8.7 構築順 security gate) を security 仕様へ反映するか。 (訂正再登録: qa-054 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-061 として登録し直す)",
+      "answer": "qa-050 の確定内容 (脅威モデル基盤 qa-042 と業務データ保持 delta を統合した security (web) 確定) を全面維持しつつ、次の delta を確定する。許可表へ projects.create (member。作成者を owner に固定)・projects.update (owner)・harnesses.install (member。安定版の導入/ダウンロード descriptor 発行) を追加 (install_hint から改称)。§6.3.1 配布境界: install は session 認証 + harnesses.install を要求し principal と同 tenant/workspace の stable かつ available release だけをサーバ側解決、クライアント指定 release/R2 key は不受理。skill の raw ZIP は Stage 0 採用時のみ Worker 署名の TTL 5 分以内・単回・対象 release 固定 URL とし、レスポンス/ログ/Referer に R2 credential/object key を露出しない。web_app は health 確認済み URL のみ返し外部遷移は noopener,noreferrer。suspended/他 tenant/非 stable は存在秘匿の 404。download count は (tenant, user, project, release) 範囲の Idempotency-Key 重複排除後に加算。upload は S01 Web=session+CSRF / Publisher CLI=Bearer+publish:write の 2 入口を同一検査・owner/tenant 判定へ収束させ、multipart の project_id/workspace_id/owner_user_id を信頼せず認証 principal と認可済み PublishRequest から解決、staging object key に元ファイル名を使わない。テスト追加: T-13 ヒアリング所有者境界 (member は自分の applicant_user_id のみ・form 改ざんで他人のシート取得不可・admin は自テナント全件のみ)、T-14 Project/配布境界 (作成者のみ owner・他 Project publish 拒否・install は stable/available のみ・他 tenant/任意 release/R2 key 指定 404・短命 URL の期限切れ/再利用拒否)。§8.7 構築順 security gate: P0 で SSO/session・Device Flow・単一認可 MW・tenant scope・deny-by-default・失効・監査 logger を dev bypass なしで完成 → P1 開始前に sheets 権限 + T-13 → P2 開始前に projects 権限・upload 2 経路・ZIP 検査・harnesses.install + T-14 → P3 以降は同一 MW/tenant repository 流用 + 新 action の許可表・全 role テスト同時追加。管理者 UI が P4/P5 でも admin/member 認可判定は P0 から有効で「後から role を付ける」移行は不許可。"
+    },
+    {
+      "id": "qa-062",
+      "question": "docs/frontend-spec.md の 2026-07-18 追記 (S01 公開ウィザード配置・S11/S12/S14/S15/S02 詳細契約・§10 実装順・redirect/ナビ段階運用) を frontend 仕様へ反映するか。 (訂正再登録: qa-055 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-062 として登録し直す)",
+      "answer": "qa-040 の確定内容 (技術選定 8 論点。qa-035 スマホサイズ仕様の維持を含む) を全面維持しつつ、次の delta を確定する。mock 実測どおり公開ウィザードは S01「プラグインを公開」モーダル (S02 は既存 Project の詳細・管理・導入で新規取込の入口ではない)。S01/S02 のデータ取得へ install descriptor (GET /harnesses/:projectId/install) と publish 中 2s→backoff polling を追加。S11 一覧: status/HS コード・title/domain・department/people・hours/applicant/updated_at の 6 列 (モバイルはカード畳み)、status/department filter + 全文検索 + cursor ページング、権限外行のクライアント側除外実装は禁止 (API が範囲を返す)。S12 詳細: ヘッダ + 生成 4 section (概要/課題/機能タグ/削減効果) + 元入力/試算 snapshot + Build/PublishRequest 参照。received の表示は全画面共通「受付」。admin 操作は右側メタ領域で member には非表示かつ API でも拒否。P2 有効後のみ自動作成 Build への導線を表示。S12 PDF: 別データ生成せず認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化し window.print() (salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test)。S01 公開ウィザード: Step1 CLI 取込推奨/Web 手動 ZIP 代替 → Step2 target(skill/web_app)/category/visibility (Stage 1 は workspace まで)/説明 → Step3 検査結果と公開確認。新規 Project 作成→PublishRequest→upload/submit を 1 UI フローに束ねるが API status は隠さない。Green 自動/Yellow 承認待ち/Needs Fix は S03 findings へ。単一テナント/単一 Project を定数にしない。S14: status 件数 + FR コード/harness/type (改善要望/レビュー依頼/バグ報告)/priority/requester/date/status、sanitize 済み AI 応答、修正版 Build 導線で S13→publish→更新通知まで追跡。S15: common+自 tenant 合成一覧、sanitize 済み Markdown 閲覧、admin 編集 textarea+preview、member に編集 CTA を出さず common 編集は provider-admin のみ。S02: 全 Release と stable 版、install/download modal は backend descriptor 表示のみで R2 key/永続生 URL を組み立てず、promote/rollback/suspend は owner だけに表示。P6 ボトムシート対象へ公開ウィザード追加。§10 実装順: P0 共通シェル + S07/S08 → P1 S10/S11/S12 → P2 S01→S02/S03→S13 → P3 S14/S15 → P4 S16/S17/S18 → P5 S09 + S05/S06。/ redirect は S09 完成 (P5) まで /sheets へ。サイドバー/ボトムタブは未実装 phase 項目を非表示 (グレーアウト不可 = qa-018 整合)、ボトムタブ先頭 slot は S09 完成までシート (S11) 暫定。部品実装順は shared-layers §1 (StepWizard=P1、StageBoard=P2、MarkdownEditor=P3、InlineEditTable=P4、チャート/KPI=P4 の S16 から S09 で完成)。認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面。"
+    },
+    {
+      "id": "qa-063",
+      "question": "docs/screen-inventory.md・docs/user-journeys.md・docs/mockups/harness-studio-v2-analysis.md の 2026-07-18 追記 (優先度列・S01/S02 位置づけ修正・最優先画面の完了境界・遷移図拡張・mock 横断再照合) を UI-UX 仕様へ反映するか。 (訂正再登録: qa-056 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-063 として登録し直す)",
+      "answer": "qa-035 の確定内容 (スマホサイズ仕様・レスポンシブ変換パターン P1-P10・モバイル区分) を全面維持しつつ、次の delta を確定する。画面一覧 S01-S18 へ構築優先順位の優先度列 (P0-P5。正本 system-design-overview §3) を追加。S01 をプラグイン Hub 一覧 + 公開ウィザード (「プラグインを公開」モーダル = 新規取込の入口)、S02 を詳細・管理・導入 (追加/ダウンロード) へ位置づけ修正。S04 のうち IdP 接続登録のみ P0 先行。S09-S18 は mockup 同様グローバルナビ (サイドバー/ボトムタブ) からの直遷移で、階層遷移は S11→S12・S12→S13・S15 の一覧→閲覧→編集のみ。遷移図へ S10→S11→S12→S13→S03 (公開系接続) と S01 公開ウィザード→S03 を追加。最優先画面の完了境界を確定: P1 ヒアリング slice (S10 4 step→受付番号→S11 6 項目一覧→S12 生成本文/snapshot/Build 参照。member 自分のみ・admin 全件・生成中は通知/ポーリング)、P2 Hub slice (S01 公開ウィザード→検査/公開→S02 管理→install/download または Web app 起動→S03。複数 Project/target・public は Stage 5 まで非表示)、P2 パイプライン slice (S12→S13 7 工程→publish 工程 PublishRequest 接続。参照が端から端で切れない)。mock 語彙統一: シート status「下書き」は保存値 received の旧表示で統一ラベル「受付」(保存値は 4 値から増やさない)、利用者向け導入語彙は「追加/ダウンロード」で実体は Stage 0 採用 descriptor (生 ZIP 直接配布を既定導線にしない)、PDF は認可済み表示データの印刷変換。J1 へ 3b (S01 Web 代替 upload = CLI 取込 or ZIP、3a と同じ検査へ収束) を追加し J4 を S11/S12 表示契約・HS コード参照維持で詳細化。モバイル/タブレットは S01-S18 のレスポンシブ表示でカバー (専用 native 画面なし)。password login 等の mock 表現は D3/SEC1 維持で不採用のまま。"
+    },
+    {
+      "id": "qa-064",
+      "question": "docs/infrastructure-spec.md の 2026-07-18 追記 (R2 配布境界・§13 構築優先順位によるインフラ有効化順) をインフラ仕様へ反映するか。 (訂正再登録: qa-057 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-064 として登録し直す)",
+      "answer": "qa-034 の確定内容 (Cloudflare Workers + Turso + R2 のインフラ確定・意思決定 4 論点) を全面維持しつつ、次の delta を確定する。R2 配布境界: S01 の Web upload と Publisher CLI upload は同じ staging prefix・検査 pipeline・content hash 確定処理へ収束させ、ブラウザから R2 への公開 write URL は発行しない。install/download は Worker の POST /api/v1/harnesses/:projectId/install を必ず経由し R2 bucket/object key を UI/API へ返さない。Stage 0 で raw ZIP を採用した場合だけ安定版に固定した TTL 5 分以内・単回の短命 URL を発行。§13 有効化順 (P0-P5): 共通リソース先行と低優先機能先行を混同せず、単一 Worker/Turso/R2 は共有しつつ route・cron・通知を必要 phase で段階有効化 — P0: production/staging・Worker/DB migration・tenant/workspace・OIDC callback・Auth secret・共通認可/監査・/health・CI の tenant 分離 test (metrics rollup/週次サマリー/dashboard monitor は不要)。P1: HearingSheet/AiJob/notification migration・pull job・生成完了通知・キュー滞留監視。P2: private R2 package bucket・Web/CLI upload・検査・content-addressed 保存・install/download Worker 導線・orphan 通知 (承認 queue UI は P5 でも監査記録はこの時点から有効)。P3: feedback/doc AiJob kind・Feedback→修正版 Build 冪等作成・必要時の R2 prefix。P4: salary 鍵・metrics ingest/rollup cron・Turso 使用量監視・週次通知。P5: dashboard/承認/監査 UI 用 route と外形確認。各 phase の migration は tenant_id と必要な workspace_id を最初から必須にし、production 反映前に 2 tenant fixture の分離テストを通す。1 tenant/1 Project 固定の環境変数は作らない。"
+    },
+    {
+      "id": "qa-065",
+      "question": "docs/user-journeys.md の全ジャーニー J0〜J6 を、既存 UI-UX 確定 qa-063 を維持しながら system-spec から識別子単位で逆引き可能にするため、どのように確定するか。",
+      "answer": "qa-063 の確定内容 (S01〜S18、P0〜P5、J1/J4 の詳細、レスポンシブ表示、mock 非採用事項) を全面維持し、docs/user-journeys.md の全ジャーニーを次の端から端の契約として明示的に確定する。J0 = 提供者の Stage 0 technical gate (URL 型 marketplace / Bootstrap Installer / 作者 local wrangler 経路を実機検証し、成立経路を J1/J2 に採用)。J1 = 作者が Claude Code/Codex で作成し、Device Flow 認証後に Publisher CLI または S01 Web 公開ウィザードから同一検査 pipeline へ投入し、S03 の Green/Yellow/Red、S02 の Release/stable/rollback まで自己完結する。J2 = 利用者が SSO でログインし、S01 で同一 Workspace の複数 Project/target を検索、S02 で stable release の install/download descriptor または健全性確認済み WebApp URL を使い、品質報告・更新通知へ進む。J3 = Workspace 管理者が S04 で IdP/role/token を管理し、S05 承認・S06 監査・公開停止/owner 再割当を行う。IdP 接続と role/deny-by-default は P0、承認/監査 UI は P5 でも認可・監査記録自体は前 phase から有効にする。J4 = S10 4 step 入力→受付番号→D5 pull 型生成→S11 一覧→S12 詳細/PDF→S13 7 工程→J1 publish のヒアリング起点。J5 = CLI または S14 Web から改善要望/レビュー依頼/バグ報告→D5 pull 型 AI 解析→Feedback status/aiResponse→人の確認→S13/J1 再公開→update 通知の改善ループ。J6 = 短命 token・冪等 key・回数のみの metrics ingest→サーバ側係数換算→週次 rollup→P4 の S16/S17、P5 の S09 へ反映する効果測定。起動順は P0=J0+共通 SSO/J3 IdP、P1=J4 前半、P2=J1/J2/J4 後半、P3=J5、P4=J6 S16/S17、P5=J6 S09+J3 S05/S06。J0〜J6 の詳細表・surface・裏側の仕組み・根拠の正本は docs/user-journeys.md、画面 ID の正本は docs/screen-inventory.md とし、system-spec はこの回答で全ジャーニーへの逆引きを保持する。"
+    },
+    {
+      "id": "qa-066",
+      "question": "docs/features/README.md と docs/features/*/requirements-baseline.md 11 件を、既存 dev-workflow 確定 qa-051/qa-038 を維持しながら、循環複製せず system-spec へどう取り込むか。",
+      "answer": "qa-051 の P0〜P5 構築順と qa-038/qa-039 の開発・品質ゲートを全面維持する。docs/features/README.md は system-design-overview.md §3 の構築順を feature から逆引きする派生索引、11 件の requirements-baseline は promoted goal-spec の purpose/goal/scope/acceptance/quality_constraints を P01 で確定転記した delivery 層の派生正本である。このため feature 本文を system-spec へ重複コピーせず、次の参照型トレースとして取り込む。(P0) feat-stage0-distribution-gate = 2 経路以上+Windows/macOS 実機検証と採用 decision、feat-hub-foundation = pnpm CI→Workers deploy・/health・SLO 99.5%・3MiB、feat-domain-model-db = Tenant→Workspace→Project→TargetChannel→immutable Release・libSQL/D1 接続・R2 registry/restore、feat-auth-tenancy = tenant OIDC・role 4 種・単一認可 MW・Device Flow・2 tenant 分離。(P1) feat-hearing-intake = S10→受付番号/D5→S11/S12、sanitize と本人/admin 境界。(P2) feat-publish-pipeline = PublishRequest 検査・immutable Release/stable pointer・rollback/監査、feat-build-pipeline-board = S13 7 工程・admin 操作・PublishRequest 接続。この phase は baseline 未生成の feat-publisher-plugin/feat-dual-catalog-web も README と features/*.md を参照して CLI/Web upload→管理→install/download を閉じる。(P3) feat-feedback-loop = CLI/Web 同一 Feedback→D5→人確認後 publish→通知、feat-docs-cms = common/tenant doc・S15・sanitize・D5 下書き・編集監査。(P4/P5) feat-user-org-admin = S17/S18・role/PII salary/係数/通知、feat-metrics-tracking = 短命 token+冪等 ingest・サーバ換算・rollup・S16/S17、P5 S09。baseline 未生成の feat-workspace-governance は README と features/*.md を参照し S05/S06 を P5 で閉じる。各 baseline の acceptance と quality_constraints は system-spec の U/G/I/D/qa および architecture wrapper を source に持つ下流投影であり、system-spec へ逆輸入して二重正本にしない。上流未解決は派生 baseline 側で保持し、特に feat-domain-model-db の User 基底 table owner と qa-045 digest 外、feat-publish-pipeline の schema/authz/inspection owner-consumer 境界、feat-metrics-tracking の estimation engine owner を P02/follow-up で解消する。対象 11 path は feat-auth-tenancy / feat-build-pipeline-board / feat-docs-cms / feat-domain-model-db / feat-feedback-loop / feat-hearing-intake / feat-hub-foundation / feat-metrics-tracking / feat-publish-pipeline / feat-stage0-distribution-gate / feat-user-org-admin の各 docs/features/<id>/requirements-baseline.md。これにより全 baseline を source lineage で追跡しつつ、feature→system-spec の循環複製を 0 にする。"
+    }
+  ],
+  "approval_log": [
+    {
+      "id": "appr-001",
+      "note": "U1-U9 要約をユーザーへ提示し承認を取得 (2026-07-16、AskUserQuestion で「承認する」を選択)。承認時の補足: 非保持境界 (§6.2) を制約 C4 として追加する回答を反映。マルチテナント論理分離を Stage 1 からスコープに含める判断はコンセプト文書の 1 Workspace 想定からの明示的変更点"
+    },
+    {
+      "id": "appr-002",
+      "note": "監査 C06 の指摘 (U1-U9 が qa_log の個別質疑へ遡及できない) への対応: R0-foundation で実施済みの AskUserQuestion 往復を qa-012〜qa-015 として qa_log へ正式記録し、U 項目との対応を明示する。遡及対応表: U1/U2/U3/U6 → qa-012、U4/U5/U7/U8 → qa-013、制約 C4 (非保持境界) と U1-U9 一括承認 → qa-014 (承認実体は appr-001)、制約 C2 の具体化 (Next.js/TypeScript/費用ゼロ/pnpm・npm禁止のユーザー逐語指定) → qa-015。U9 (concrete_intents) は qa-012〜qa-015 および技術ヒアリング qa-001〜qa-011 の回答から構成。appr-001 (U1-U9 要約の一括承認) は引き続き有効で、本記録はその遡及根拠を補完する。"
+    },
+    {
+      "id": "appr-003",
+      "note": "appr-002 (qa-012〜015 の遡及記録) への訂正参照 (correction_ref): qa-012/qa-013 の answer 中の G/O ラベル文言は遡及記録時の仮ラベルであり、正本 requirements_foundation (U3/U4) の定義と対応しない (訂正記録 qa-016)。appr-002 の遡及対応表 (U 項目 → qa 対応) 自体は引き続き有効。正式な G/O 定義は requirements_foundation が唯一の正本"
+    },
+    {
+      "id": "appr-004",
+      "note": "Harness Studio mockup (docs/mockups/harness-studio-v2.html) の全反映指示 (2026-07-16〜17 のユーザー指示「要件定義から設計、タスクなど全ての内容に反映」「各ドキュメント仕様書等に反映」と、本日の反映続行承認)。U7 スコープ改訂 (Studio 拡張 6 領域の追加・非採用 3 点の明示) と G5 追加・I10-I14 追加をユーザー合意として記録"
+    },
+    {
+      "id": "appr-005",
+      "note": "U1-U9 改訂要約 (G5 追加・U7 scope.in の Studio 拡張 6 領域・scope.out の非採用 3 点・I10-I14 追加) への明示承認。AskUserQuestion 2026-07-17、質疑証跡 qa-030。appr-004 (包括指示に基づく記録) を個別承認で補強する"
+    },
+    {
+      "id": "appr-006",
+      "note": "C06 監査 (2026-07-17) の誘導質問指摘 (qa-028/029/031/034 が質問文中に『AI推奨=○○』を選択肢と併記) への対応をユーザーへ AskUserQuestion で確認し、「既確定は承認・今後の様式を改善」を選択 (2026-07-17)。(1) 既確定 4 QA とそれに基づく確定セル/decision (D5/D6 含む) は有効のまま承認する。反証記録: qa-031 論点4 (metrics 生データ保持) でユーザーは AI 推奨 (90 日 R2 退避) と異なる選択 (無期限 DB 保持) をしており、推奨併記が決定を支配していない。R5-decision-guide 契約自体が AI 推奨・理由・注意点の提示を要求しており推奨提示は by-design。(2) 今後のヒアリング様式は「選択肢を先に提示 → AI 推奨と理由を後段に明示」へ改善し、R5 契約 (推奨提示) と誘導低減を両立する。既存 qa_log の質問文は監査証跡として不変のまま保持する。"
+    },
+    {
+      "id": "appr-007",
+      "note": "中立再確認 (2026-07-18・AskUserQuestion 3 ラウンド) による requirements_foundation 改訂の承認: C4 を保持前提へ改訂・U6 stakeholders から「顧客の情報システム/セキュリティ部門」を削除・G5 文言をユーザー個別追認。C06 監査指摘 (誘導質問 6 件・上位概念遡及性 2 件) への対応。"
+    }
+  ],
+  "reopen_log": [
+    {
+      "category": "ui-ux",
+      "platform": "desktop-windows",
+      "reason": "監査 C07 指摘: qa-001 (プラットフォーム範囲) は desktop UI-UX の直接裏付けとして薄い。専用 desktop GUI を作らず plugin を操作面とする qa-007 へ qa_ref を差し替えるため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "desktop-macos",
+      "reason": "監査 C07 指摘: qa-001 (プラットフォーム範囲) は desktop UI-UX の直接裏付けとして薄い。専用 desktop GUI を作らず plugin を操作面とする qa-007 へ qa_ref を差し替えるため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "elegant-review Phase 3 改善: qa-002 (ドメインモデル・不変条件) / qa-004 (R2 content-addressed) / D2 ヘッジ / D4 テナント分離 の確定内容が database.md 本文に未展開 (critical finding)。本システム固有仕様として展開するため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520: 30思考法レビュー findings 反映のため auth 章本文へ固有仕様 (認可マトリクス・トークンライフサイクル) を展開",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520: 30思考法レビュー findings 反映のため backend 章本文へ固有仕様を展開",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520: 30思考法レビュー findings 反映のため security 章本文へ固有仕様を展開",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520: 30思考法レビュー findings 反映のため infrastructure 章本文へ固有仕様を展開",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520: 30思考法レビュー findings 反映のため ui-ux 章本文へ固有仕様を展開",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520: 30思考法レビュー findings 反映のため frontend 章本文へ固有仕様を展開",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520: 30思考法レビュー findings 反映のため maintenance-ops 章本文へ固有仕様を展開",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520 反復2: 独立検証で検出した正本間矛盾 (publish認可・suspend発火契機・監査event網羅・deny by default欠落操作) の修正",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520 反復2: 独立検証で検出した正本間矛盾 (publish認可・suspend発火契機・監査event網羅・deny by default欠落操作) の修正",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520 反復2: 独立検証で検出した正本間矛盾 (publish認可・suspend発火契機・監査event網羅・deny by default欠落操作) の修正",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520 反復2: 独立検証で検出した正本間矛盾 (publish認可・suspend発火契機・監査event網羅・deny by default欠落操作) の修正",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520 反復3: backend 章監査 event 列を security 正本の event_type 表記へ統一 (low 2件)",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "elegant-review run-20260716-231520 反復3: backend 章監査 event 列を security 正本の event_type 表記へ統一 (low 2件)",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "qa-017: コード構造・アーキテクチャ規約の展開",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "qa-017: コード構造・アーキテクチャ規約の展開",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "qa-017: コード構造・アーキテクチャ規約の展開",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "qa-017: コード構造・アーキテクチャ規約の展開",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "qa-017: コード構造・アーキテクチャ規約の展開",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "C05 FAIL 対応: ui-ux 章にアクセシビリティ要件が皆無 (Apple HIG doctrine anchor 未反映)。ユーザー最優先指示 (a11y/快適性/速度) と数値目標を反映するため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "C05 FAIL 対応: frontend 章に HIG 由来の品質要件と qa-017 コード構造規約が未反映。性能予算 (CWV good / bundle 3MiB) と規約適用を反映するため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "C05 FAIL 対応: infrastructure 章に Google SRE doctrine anchor (SLO/エラーバジェット) が未反映。SLO 99.5% と監視強化を反映するため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "C05 FAIL 対応: maintenance-ops 章に SRE 指針 (エラーバジェット/ポストモーテム/restore drill) が未反映のため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "C05 FAIL 対応: database 章に SRE 指針 (バックアップ復元検証) と qa-017 規約 (接続層隔離) が未反映のため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "C05/C07 指摘対応: qa-017 コード構造規約 (接続層隔離・アダプタ隔離・検査純関数化) の backend への適用が qa_ref 未反映のため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "C05/C07 指摘対応: qa-017 規約 (認可の単一ミドルウェア集約) と D4 の security への適用が qa_ref 未反映のため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-windows",
+      "reason": "C07 指摘対応: security.desktop-windows の qa_ref=qa-006 は web 中心の回答で薄い。作者環境の資格情報保護を直接扱う qa-008 へ差替のため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-macos",
+      "reason": "C07 指摘対応: security.desktop-macos の qa_ref=qa-006 は web 中心の回答で薄い。作者環境の資格情報保護を直接扱う qa-008 へ差替のため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "Harness Studio mockup (docs/mockups/harness-studio-v2.html) の全反映指示 (ユーザー指示 2026-07-17) による確定内容の追補",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "Harness Studio mockup (docs/mockups/harness-studio-v2.html) の全反映指示 (ユーザー指示 2026-07-17) による確定内容の追補",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "Harness Studio mockup (docs/mockups/harness-studio-v2.html) の全反映指示 (ユーザー指示 2026-07-17) による確定内容の追補",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "Harness Studio mockup (docs/mockups/harness-studio-v2.html) の全反映指示 (ユーザー指示 2026-07-17) による確定内容の追補",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "Harness Studio mockup (docs/mockups/harness-studio-v2.html) の全反映指示 (ユーザー指示 2026-07-17) による確定内容の追補",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "Harness Studio mockup (docs/mockups/harness-studio-v2.html) の全反映指示 (ユーザー指示 2026-07-17) による確定内容の追補",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "Harness Studio mockup (docs/mockups/harness-studio-v2.html) の全反映指示 (ユーザー指示 2026-07-17) による確定内容の追補",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "ユーザー指示 (2026-07-17): mockup を実装するための詳細仕様 (データ構造・API) を組み立てて確定反映する。qa-023 の確定内容は維持し、実装可能粒度の詳細正本 (docs/backend-spec.md) と未確定 5 論点のユーザー決定を追加確定するための deepening reopen",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "ユーザー指示 (2026-07-17 /spec-hearing-start): mockup (docs/mockups/harness-studio-v2) を使った実装のため、DB のデータ構造 (テーブル/カラム/制約/索引) を全記述する必要がある。qa-024 の「カラム定義の詳細設計は各 feature の P02 で行う」という先送りを前倒しし、スキーマ詳細を確定内容へ昇格する",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "ユーザー指示 (2026-07-17 /spec-hearing-start): mockup 実装のため必要な API をすべて記述する必要がある。qa-023 の B1 資源列挙を endpoint 単位の API 契約 (リソース/メソッド/認可/主要スキーマ) へ詳細化して再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "ユーザー指示 (2026-07-17 /spec-hearing-start): mockup 実装のためインフラ仕様 (リソース構成・binding・cron・CI/CD・環境・監視・バックアップ) をすべて記述する必要がある。qa-026 の確定内容を維持したまま、docs/backend-spec.md と対になる実装詳細正本 (docs/infrastructure-spec.md) へ詳細化して再確定する deepening reopen",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "ユーザー指示 (2026-07-17): security 仕様を実装可能粒度で全記述する要求。既存確定 (qa-025/qa-005/qa-008) は方針レベル (SEC1-SEC9/Auth.js+OIDC/Device Flow) に留まり、(1) security 関連データ構造 (audit_event/device_token/oidc tenant config/session/PII salary) の DDL・型、(2) API 契約 (endpoint 群 B1-B10 の role x 操作 許可表)、(3) Harness Studio mockup 17 画面接地の認可マッピング、(4) PII 保護方式・ASVS 到達目標・CSP/rate limit/JWT 失効許容時間の具体値 が未確定のため深掘り再ヒアリングする。",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-windows",
+      "reason": "ユーザー指示 (2026-07-17): security 仕様を実装可能粒度で全記述する要求。既存確定 (qa-025/qa-005/qa-008) は方針レベル (SEC1-SEC9/Auth.js+OIDC/Device Flow) に留まり、(1) security 関連データ構造 (audit_event/device_token/oidc tenant config/session/PII salary) の DDL・型、(2) API 契約 (endpoint 群 B1-B10 の role x 操作 許可表)、(3) Harness Studio mockup 17 画面接地の認可マッピング、(4) PII 保護方式・ASVS 到達目標・CSP/rate limit/JWT 失効許容時間の具体値 が未確定のため深掘り再ヒアリングする。",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-macos",
+      "reason": "ユーザー指示 (2026-07-17): security 仕様を実装可能粒度で全記述する要求。既存確定 (qa-025/qa-005/qa-008) は方針レベル (SEC1-SEC9/Auth.js+OIDC/Device Flow) に留まり、(1) security 関連データ構造 (audit_event/device_token/oidc tenant config/session/PII salary) の DDL・型、(2) API 契約 (endpoint 群 B1-B10 の role x 操作 許可表)、(3) Harness Studio mockup 17 画面接地の認可マッピング、(4) PII 保護方式・ASVS 到達目標・CSP/rate limit/JWT 失効許容時間の具体値 が未確定のため深掘り再ヒアリングする。",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "ユーザー指示 (2026-07-17): security 仕様を実装可能粒度で全記述する要求。既存確定 (qa-025/qa-005/qa-008) は方針レベル (SEC1-SEC9/Auth.js+OIDC/Device Flow) に留まり、(1) security 関連データ構造 (audit_event/device_token/oidc tenant config/session/PII salary) の DDL・型、(2) API 契約 (endpoint 群 B1-B10 の role x 操作 許可表)、(3) Harness Studio mockup 17 画面接地の認可マッピング、(4) PII 保護方式・ASVS 到達目標・CSP/rate limit/JWT 失効許容時間の具体値 が未確定のため深掘り再ヒアリングする。",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-windows",
+      "reason": "ユーザー指示 (2026-07-17): security 仕様を実装可能粒度で全記述する要求。既存確定 (qa-025/qa-005/qa-008) は方針レベル (SEC1-SEC9/Auth.js+OIDC/Device Flow) に留まり、(1) security 関連データ構造 (audit_event/device_token/oidc tenant config/session/PII salary) の DDL・型、(2) API 契約 (endpoint 群 B1-B10 の role x 操作 許可表)、(3) Harness Studio mockup 17 画面接地の認可マッピング、(4) PII 保護方式・ASVS 到達目標・CSP/rate limit/JWT 失効許容時間の具体値 が未確定のため深掘り再ヒアリングする。",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-macos",
+      "reason": "ユーザー指示 (2026-07-17): security 仕様を実装可能粒度で全記述する要求。既存確定 (qa-025/qa-005/qa-008) は方針レベル (SEC1-SEC9/Auth.js+OIDC/Device Flow) に留まり、(1) security 関連データ構造 (audit_event/device_token/oidc tenant config/session/PII salary) の DDL・型、(2) API 契約 (endpoint 群 B1-B10 の role x 操作 許可表)、(3) Harness Studio mockup 17 画面接地の認可マッピング、(4) PII 保護方式・ASVS 到達目標・CSP/rate limit/JWT 失効許容時間の具体値 が未確定のため深掘り再ヒアリングする。",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "ユーザー指示 (2026-07-17 /spec-hearing-start): mockup を使った実装のため frontend・UI/UX・スマホサイズ画面の仕様とデータ構造・API 対応をすべて記述する。qa-022 の確定内容は維持し、実装可能粒度の詳細正本 (docs/frontend-spec.md) と未確定 8 論点の確定を追補する",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "ユーザー指示 (2026-07-17 /spec-hearing-start): スマホサイズ画面の仕様をすべて記述する。mockup は media query の無いデスクトップ専用設計のため、qa-021 の確定内容 (画面群・共通部品・状態語彙) を維持した上で、モバイルレスポンシブの実仕様 (ナビ方式・変換パターン・画面別区分・タッチ制約) を新規確定する",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "security 深掘りヒアリング (2026-07-17) により backend-spec §2.2 の先送り事項を解消するため。(1) idp_connections.client_secret を「Workers Secret の参照名のみ・暗号化方式は feature P02」から「DB へ封筒暗号化 (KEK/DEK) 保存」へ変更 (ユーザー確認済み。テナント追加のたびの wrangler secret put + deploy を排し C1 運用負荷・C2 固定費非比例に適合)、(2) audit_events へ hash chain 列 (prev_hash/event_hash) を追加し改竄検知可能にする、(3) 封筒暗号化の DEK 保管構造を追加する。qa-032 が詳細正本として確定した §2 のテーブル定義が変わるため再オープンする。",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "security 深掘りヒアリング (2026-07-17) により backend-spec §3.7「レート制限の数値は feature P02 で確定」および §2.2「暗号化方式は feature P02」の先送りを解消するため。ユーザー確認済み方針: rate limit 閾値・Web session TTL と失効許容時間・Device Flow の各 TTL/interval/user_code エントロピー・access/refresh token TTL と rotation を確定値として定める。加えて ingest 認証を Device Flow token の scope 分離 (metrics:write) として明示する。qa-033 が詳細正本として確定した §3 の内容が変わるため再オープンする。",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "C06/C07 独立監査の一致指摘 (2026-07-17): qa_ref が qa-034 (infrastructure 詳細質疑) を誤参照している取り違えの修正。正しい根拠は qa-035 (frontend/ui-ux モバイルレスポンシブ仕様、docs/frontend-spec.md §6 正本)。確定内容自体の変更はなし",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "並行ヒアリング統合時の qa 採番衝突の修復: frontend.web の質疑録 (旧 qa-034 = 技術選定 8 論点) が infrastructure の qa-034 に置換され、セルはスマホ画面仕様の qa-035 を参照する意味不整合となった。確定内容自体は不変のまま、失われた質疑録を qa-040 として再登録し参照を修復する",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-windows",
+      "reason": "並行ヒアリング統合時の qa 採番衝突の修復: auth.desktop-windows の qa_ref がスマホ画面仕様の qa-035 を誤参照。desktop 実仕様 (Device Flow 資格情報保護) を qa-041 として登録し再接続する",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-macos",
+      "reason": "並行ヒアリング統合時の qa 採番衝突の修復: auth.desktop-macos の qa_ref がスマホ画面仕様の qa-035 を誤参照。desktop 実仕様を qa-041 として登録し再接続する",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-windows",
+      "reason": "並行ヒアリング統合時の qa 採番衝突の修復: security.desktop-windows の qa_ref がスマホ画面仕様の qa-035 を誤参照。desktop 実仕様 (資格情報保護・ローカル運用規律) を qa-041 として登録し再接続する",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-macos",
+      "reason": "並行ヒアリング統合時の qa 採番衝突の修復: security.desktop-macos の qa_ref がスマホ画面仕様の qa-035 を誤参照。desktop 実仕様を qa-041 として登録し再接続する",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "並行ヒアリング統合時の qa 採番衝突の修復: security.web の qa_ref が infrastructure の qa-034 を誤参照。security 本体の質疑録を qa-042 として登録し再接続する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "desktop-windows",
+      "reason": "C07 マトリクス監査 medium 指摘: qa_ref=qa-003 は Hub web hosting 中心で desktop 固有の裏付けが薄い (過去の qa-001→qa-007 / qa-006→qa-008 差替と同型)。既確定内容 (qa-003/010/034/039/041) の desktop 該当部分を集約した専用質疑 qa-043 へ差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "desktop-macos",
+      "reason": "C07 マトリクス監査 medium 指摘: qa_ref=qa-003 は Hub web hosting 中心で desktop 固有の裏付けが薄い。専用質疑 qa-043 へ差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "desktop-windows",
+      "reason": "C07 マトリクス監査 medium 指摘: qa_ref=qa-011 は Hub web 側運用中心で desktop 固有の裏付けが薄い。既確定内容 (qa-011/027/039/041) の desktop 該当部分を集約した専用質疑 qa-044 へ差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "desktop-macos",
+      "reason": "C07 マトリクス監査 medium 指摘: qa_ref=qa-011 は Hub web 側運用中心で desktop 固有の裏付けが薄い。専用質疑 qa-044 へ差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "中立再確認 (2026-07-18, qa-043) の決定変更反映: AiJob pull 権限の workspace-admin 開放と C4 改訂 (業務データ保持 API の追加方針) を確定内容へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "中立再確認 (2026-07-18, qa-043) の C4 改訂反映: 保持対象業務データ (ナレッジ/ドキュメント・実行入出力) の参照テーブルと封筒暗号化拡張・即時削除ポリシーを確定内容へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "中立再確認 (2026-07-18, qa-043) の C4 改訂反映: 旧 N2 (顧客業務データ保護は非目標) の撤回と保持前提の脅威モデル・保護設計 delta を確定内容へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "qa 採番衝突 (第 3 例) の修復: backend.web の qa_ref=qa-044 が maintenance-ops desktop 質疑を誤参照する状態になったため、正しい backend delta 質疑 (qa-048 = 旧 qa-044 の再登録) へ差し替える。確定内容自体は不変",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "C05 completeness 監査 (matrix_coverage/security-detail-orphaning, medium) の是正: security.web=qa-046 が基盤 qa-042 (認可 role 全順序 §3.1.1・rate limit 数値表 §7.2 等) を章本文へ引用せず孤立させていた。qa-042+qa-046 を統合し詳細正本を明示引用する qa-050 で再確定する。",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "2026-07-18 ユーザー確定の構築優先順位 P0-P5 と P01 要件ベースライン横断再照合の設計詳細化 (docs/ 正本の additive 追記) を仕様章へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "2026-07-18 ユーザー確定の構築優先順位 P0-P5 と P01 要件ベースライン横断再照合の設計詳細化 (docs/ 正本の additive 追記) を仕様章へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "2026-07-18 ユーザー確定の構築優先順位 P0-P5 と P01 要件ベースライン横断再照合の設計詳細化 (docs/ 正本の additive 追記) を仕様章へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "2026-07-18 ユーザー確定の構築優先順位 P0-P5 と P01 要件ベースライン横断再照合の設計詳細化 (docs/ 正本の additive 追記) を仕様章へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "2026-07-18 ユーザー確定の構築優先順位 P0-P5 と P01 要件ベースライン横断再照合の設計詳細化 (docs/ 正本の additive 追記) を仕様章へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "2026-07-18 ユーザー確定の構築優先順位 P0-P5 と P01 要件ベースライン横断再照合の設計詳細化 (docs/ 正本の additive 追記) を仕様章へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "2026-07-18 ユーザー確定の構築優先順位 P0-P5 と P01 要件ベースライン横断再照合の設計詳細化 (docs/ 正本の additive 追記) を仕様章へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "2026-07-18 ユーザー確定の構築優先順位 P0-P5 と P01 要件ベースライン横断再照合の設計詳細化 (docs/ 正本の additive 追記) を仕様章へ反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "qa-051〜qa-058 反映の章再コンパイル (C03) のための一時 reopen。compile 完了後に同 qa_ref で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "qa-051〜qa-058 反映の章再コンパイル (C03) のための一時 reopen。compile 完了後に同 qa_ref で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "qa-051〜qa-058 反映の章再コンパイル (C03) のための一時 reopen。compile 完了後に同 qa_ref で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "qa-051〜qa-058 反映の章再コンパイル (C03) のための一時 reopen。compile 完了後に同 qa_ref で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "qa-051〜qa-058 反映の章再コンパイル (C03) のための一時 reopen。compile 完了後に同 qa_ref で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "qa-051〜qa-058 反映の章再コンパイル (C03) のための一時 reopen。compile 完了後に同 qa_ref で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "qa-051〜qa-058 反映の章再コンパイル (C03) のための一時 reopen。compile 完了後に同 qa_ref で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "qa-051〜qa-058 反映の章再コンパイル (C03) のための一時 reopen。compile 完了後に同 qa_ref で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "qa-052 の回答に既確定系譜の全面維持句が欠落し、章の質疑録から旧確定内容が欠落するため、継続句付き qa-059 へ qa_ref を差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "qa-053 の回答に既確定系譜の全面維持句が欠落し、章の質疑録から旧確定内容が欠落するため、継続句付き qa-060 へ qa_ref を差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "qa-054 の回答に既確定系譜の全面維持句が欠落し、章の質疑録から旧確定内容が欠落するため、継続句付き qa-061 へ qa_ref を差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "qa-055 の回答に既確定系譜の全面維持句が欠落し、章の質疑録から旧確定内容が欠落するため、継続句付き qa-062 へ qa_ref を差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "qa-056 の回答に既確定系譜の全面維持句が欠落し、章の質疑録から旧確定内容が欠落するため、継続句付き qa-063 へ qa_ref を差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "qa-057 の回答に既確定系譜の全面維持句が欠落し、章の質疑録から旧確定内容が欠落するため、継続句付き qa-064 へ qa_ref を差し替える",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "docs/ 全件被覆監査で user-journeys.md の J2/J3/J5/J6 が現行 system-spec から識別子単位で逆引き不能と判明。既存 qa-063 を維持したまま J0〜J6 全体トレースを明示するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "docs/ 全件被覆監査で docs/features/README.md と 11 requirements-baseline の派生正本境界・feature acceptance への逆引きが system-spec 章に未明示と判明。既存 qa-051/qa-038 を維持して参照型トレースを追加するため",
+      "from": "確定"
+    }
+  ],
+  "category_aggregate": {
+    "database": "確定",
+    "auth": "確定",
+    "ui-ux": "確定",
+    "security": "確定",
+    "infrastructure": "確定",
+    "backend": "確定",
+    "frontend": "確定",
+    "maintenance-ops": "確定",
+    "dev-workflow": "確定"
+  },
+  "targets": [
+    {
+      "target_id": "nextjs"
+    },
+    {
+      "target_id": "typescript"
+    },
+    {
+      "target_id": "pnpm"
+    },
+    {
+      "target_id": "opennext-cloudflare"
+    },
+    {
+      "target_id": "cloudflare-workers"
+    },
+    {
+      "target_id": "wrangler"
+    },
+    {
+      "target_id": "cloudflare-r2"
+    },
+    {
+      "target_id": "cloudflare-d1"
+    },
+    {
+      "target_id": "turso"
+    },
+    {
+      "target_id": "drizzle-orm"
+    },
+    {
+      "target_id": "authjs"
+    },
+    {
+      "target_id": "zod"
+    },
+    {
+      "target_id": "claude-code-plugins"
+    },
+    {
+      "target_id": "github-actions"
+    },
+    {
+      "target_id": "resend"
+    },
+    {
+      "target_id": "owasp-asvs",
+      "category": "security"
+    },
+    {
+      "target_id": "rehype-sanitize",
+      "category": "security"
+    }
+  ],
+  "requirements_foundation": {
+    "essential_purpose": "非エンジニアの業務当事者が、自分の業務課題を AI (Claude Code / Codex) と自分で解決し、その解決物を Git や公開工程の複雑さを意識せずに自力で社内へ届けられる状態を実現する。提供者の手離れや事業収益はこの自己解決の帰結として位置付ける。",
+    "background": "提供者が shadow publish 的な代理作業で公開を肩代わりしており、公開数に比例して提供者の時間が消える構造に限界を実感した。ユーザーは解決物を「作れる」のに、Git・PR・CI を伴う公開・共有の基盤がないことがボトルネックになっている (doc/harness-hub-platform-concept.md §2.2 の障壁認識。同認識は仮説 H0 として Stage 0 で再検証する)。",
+    "goals": [
+      {
+        "id": "G1",
+        "text": "非エンジニアの作者が、提供者の代理作業なし・Git 操作ゼロで公開・更新・rollback を自走できる"
+      },
+      {
+        "id": "G2",
+        "text": "公開された業務ツールを owner 以外の同僚が見つけて追加・利用し、業務での再利用が成立する (North Star)"
+      },
+      {
+        "id": "G3",
+        "text": "Claude Code / Codex 契約のない社員にも Web App 出口でブラウザから成果が届く"
+      },
+      {
+        "id": "G4",
+        "text": "Workspace 管理者が承認・監査・公開停止を行え、shadow IT 化せず統制点が一元化される"
+      },
+      {
+        "id": "G5",
+        "text": "導入されたハーネスの利用実態と削減効果 (時間・金額換算) が可視化され、フィードバック→AI 対応→再公開の改善ループが定着する"
+      }
+    ],
+    "objectives": [
+      {
+        "id": "O1",
+        "text": "一般作者の公開自走率 80% (仮説 H1)",
+        "measure": "提供者の代理作業なし・Git 操作ゼロで公開完了した一般作者の割合 ≥ 80% (Stage 1 開始後の初回計測。数値は Stage 0 実測で更新)"
+      },
+      {
+        "id": "O2",
+        "text": "30 日以内の他者再利用 30% (仮説 H4)",
+        "measure": "公開 Project のうち 30 日以内に owner 以外の再利用が成立した割合 ≥ 30% (Stage 1 運用中)"
+      },
+      {
+        "id": "O3",
+        "text": "非 AI 利用者の実利用成立 (仮説 H5)",
+        "measure": "Web App 出口経由の非 Claude 利用者の実利用が各顧客 Workspace で 1 件以上 (Stage 1 運用中)"
+      },
+      {
+        "id": "O4",
+        "text": "1 公開当たり提供者支援時間 15 分未満 (仮説 H8)",
+        "measure": "卒業後の定常運用で 1 公開当たりの提供者介入時間 < 15 分 (Stage 1 卒業判定時。office hour 収入で支援時間を回収できること)"
+      }
+    ],
+    "success_criteria": [
+      "2 社以上の顧客 Workspace で Hub が同時稼働し、それぞれの Workspace で公開 (G1) と owner 以外の再利用 (G2) が成立していること (二値判定)。判定は提供者代表が行い、根拠を記録する"
+    ],
+    "stakeholders": [
+      "作者: 顧客企業の非エンジニア社員。JTBD: 自分の業務課題を AI と自分で解決し、解決物を同僚へ届けたい",
+      "利用者: 作者の同僚 (Claude Code / Codex 契約の有無を問わない)",
+      "Workspace 管理者: 公開範囲・承認・監査・owner 再割当・初回 Cloudflare 接続の統制を担う",
+      "提供者 (本リポジトリ owner): 教育・有料助言・Platform 運用。個別納品と受託保守は負わない"
+    ],
+    "scope": {
+      "in": [
+        "Stage 0: Discovery Pilot と technical gate 検証 (H3 / H6 / H7: wrangler CLI 公開・URL 型 marketplace・Bootstrap Installer)",
+        "Stage 1: Publisher + Thin Dual Catalog MVP (skills-only package の Green 自動公開・Project / TargetChannel / Release / CatalogEntry・version 自動採番・stable pointer と rollback・Workspace Catalog)",
+        "Stage 2: Workspace Governance (管理者 approval queue・granular RBAC・formal audit log・Yellow review・update 通知)",
+        "マルチテナント論理分離を Stage 1 から実装する (1 つの Hub に複数顧客 Workspace を同居させ、データ・権限・Catalog を Workspace 境界で分離する。コンセプト文書の 1 Workspace 想定からの変更点)",
+        "Web App 出口 (作者 local session での wrangler CLI スクリプト実行 + Hub への URL・release 登録)",
+        "Studio 拡張: 効果測定・ダッシュボード (実行ログ ingest / 週次 rollup / KPI・部門別・ユーザー別集計。旧 Stage 4 対象外の Result Dashboard 相当を前倒しでスコープ入り。根拠: ユーザー指示 2026-07-17 = Harness Studio mockup 全反映)",
+        "Studio 拡張: Web ヒアリング intake (4 ステップウィザード・削減効果の自動試算・受付番号採番) とヒアリングシート管理",
+        "Studio 拡張: 構築パイプライン可視化 (ヒアリング→要件定義→設計→構築→テスト→レビュー→公開の 7 工程ボード。工程操作は admin)",
+        "Studio 拡張: 改善要望・レビューのフィードバックループ (CLI + Web の 2 経路受付。AI 自動対応は D5 の pull 型キュー)",
+        "Studio 拡張: ドキュメント CMS (common/tenant スコープ・AI 下書き・XSS sanitize 付き Markdown)",
+        "Studio 拡張: ユーザー管理・アカウント設定 (role 管理は qa-005 の 4 role と統合。年収→時給換算の係数設定 = PII 保護対象。通知設定のメール送信は D6)",
+        "顧客業務データの保持 (C4 改訂 2026-07-18・appr-007): 業務ナレッジ/ドキュメントとハーネス実行の入出力データを R2 + テナント別封筒暗号化で保管し、即時完全削除ポリシーで管理する (qa-045/qa-046/qa-047/qa-048。qa-047/qa-048 は採番衝突により旧 qa-043/qa-044 から再登録)"
+      ],
+      "out": [
+        "独自 Web App runtime / Hosted Harness runtime (恒久非目標。§6.2)",
+        "共通 Runtime Connector (Stage 5 の条件付き拡張)",
+        "独自 Cloudflare deployment engine (Stage 3 の条件付き拡張)",
+        "Hook・script・binary の自動公開 (Stage 5 の review 経路)",
+        "公開 marketplace・SNS・ランキング・収益分配 (Stage 5 以降)",
+        "Web 会話型 Creator (非目標。Web 起点の作成需要が反復確認された場合のみ再検討)",
+        "パスワードログイン・2FA の自前実装 (Studio mockup の login 画面は不採用。D3 の顧客 IdP / SSO 委譲を維持)",
+        "visibility=public の公開範囲 (mockup の public は Stage 5 の公開 marketplace 相当。当面 private / workspace まで)",
+        "`plugin install ./zip` 手動配布の正式経路化 (障害時の代替経路として記載するのみ)",
+        "顧客業務システムの接続 credential の保管 (C4 改訂でも保持対象外。ユーザー選択 2026-07-18)"
+      ]
+    },
+    "constraints": [
+      "C1 開発体制: 実装・運用は提供者 1 名 + AI (Claude Code / Codex) のみ。運用負荷の低さと保守性を技術選定の最優先基準とする",
+      "C2 インフラコスト: 固定費を極小化する (従量課金・無料枠優先)。顧客 Workspace 数が増えても固定費が比例して増えないこと",
+      "C3 既存資産再利用: harness-creator / package contract / package check / marketplace catalog / version・cache 処理 / review workflow を Publisher 内部の quality engine として再利用する (§15)",
+      "C4 データ保持境界 (2026-07-18 改訂・appr-007): Hub は顧客の業務ナレッジ/ドキュメントとハーネス実行の入出力データを保持できる (保存 = R2 + テナント別封筒暗号化 [purpose=tenant_data]・削除 = ユーザー操作/解約時の即時完全削除・アクセスは認可 MW 通過後のみ復号・監査 event 必須)。顧客業務システムの接続 credential と Web App runtime は引き続き保持しない (§6.2 / HH-D07 の runtime 境界は不変。旧 N2 の撤回と脅威 T14/T15 の追加は qa-046)"
+    ],
+    "concrete_intents": [
+      {
+        "id": "I1",
+        "text": "公開を 1 操作にする (/harness-hub:publish または自然言語)。branch / commit / PR / CI / merge / version / cache を利用者から隠す",
+        "serves": [
+          "G1"
+        ]
+      },
+      {
+        "id": "I2",
+        "text": "static validation・secret scan・policy 判定 (Green 自動公開、Yellow / Red は Needs Fix 差し戻し)",
+        "serves": [
+          "G1",
+          "G4"
+        ]
+      },
+      {
+        "id": "I3",
+        "text": "immutable Release + TargetChannel 別 stable pointer による atomic な公開・更新・rollback",
+        "serves": [
+          "G1",
+          "G4"
+        ]
+      },
+      {
+        "id": "I4",
+        "text": "Workspace Catalog (業務ツール一覧・詳細・「追加する」「Web アプリを開く」導線・低品質報告導線)",
+        "serves": [
+          "G2",
+          "G3"
+        ]
+      },
+      {
+        "id": "I5",
+        "text": "Web App 出口: 作者 local session で Publisher が wrangler CLI をスクリプト実行し、Hub は URL 登録・公開範囲検査・health 確認のみ担う",
+        "serves": [
+          "G3"
+        ]
+      },
+      {
+        "id": "I6",
+        "text": "URL 型 marketplace (native source) または Bootstrap Installer による Git レス配布・更新 (一般利用者に GitHub アカウントを要求しない)",
+        "serves": [
+          "G1",
+          "G2"
+        ]
+      },
+      {
+        "id": "I7",
+        "text": "マルチ Workspace 論理分離と顧客既存 IdP / SSO への認証委譲 (Hub 独自アカウント基盤を作らない)",
+        "serves": [
+          "G4"
+        ]
+      },
+      {
+        "id": "I8",
+        "text": "Stage 2 Governance: 管理者 approval queue・granular RBAC・formal audit log・export",
+        "serves": [
+          "G4"
+        ]
+      },
+      {
+        "id": "I9",
+        "text": "Stage 0 technical gate: URL 型 marketplace / Bootstrap Installer / wrangler 公開の成立検証 (H3 / H6 / H7) と Stage 1 開始条件の判定",
+        "serves": [
+          "G1",
+          "G3"
+        ]
+      },
+      {
+        "id": "I10",
+        "text": "効果測定: 実行ログ ingest (短命 token・冪等キー・クライアントは回数のみ送信) + サーバ側係数換算 (時給 = 年収 ÷ annualHours・分/回・削減率はテナント設定) + Workers cron の週次 rollup で S09/S16/S17 のダッシュボードへ供給",
+        "serves": [
+          "G4",
+          "G5"
+        ]
+      },
+      {
+        "id": "I11",
+        "text": "ヒアリング intake: S10 の 4 ステップウィザード → 受付番号採番 → D5 pull 型 AI キューでヒアリングシート生成 (S11/S12) → S13 の 7 工程パイプラインで構築進行を可視化",
+        "serves": [
+          "G1",
+          "G5"
+        ]
+      },
+      {
+        "id": "I12",
+        "text": "フィードバックループ: CLI (claude harness feedback) + Web フォーム (S14) の 2 経路受付 → AI 対応 (D5) → 修正版 publish → update 通知",
+        "serves": [
+          "G2",
+          "G5"
+        ]
+      },
+      {
+        "id": "I13",
+        "text": "ドキュメント CMS (S15): common/tenant スコープの Markdown 文書 (共通レンダラで XSS sanitize)・AI 下書き (D5)",
+        "serves": [
+          "G2"
+        ]
+      },
+      {
+        "id": "I14",
+        "text": "ユーザー管理・アカウント設定 (S17/S18): role 管理 (qa-005 の 4 role と統合)・年収係数 (PII: admin 限定・一般 API 非公開・export マスク)・通知設定 (メールは D6 = Resend Free)",
+        "serves": [
+          "G4",
+          "G5"
+        ]
+      }
+    ],
+    "confirmed": true,
+    "approval_ref": "appr-007"
+  },
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Hub 本体 (Next.js + TypeScript) の実行環境・hosting をどれにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G4"
+      ],
+      "options": [
+        {
+          "id": "cf-workers-opennext",
+          "label": "Cloudflare Workers 一体型 (@opennextjs/cloudflare)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "無料枠 (10万req/日) 内は月額0円。超過時は Workers Paid $5/月〜の従量。構築は OpenNext adapter の学習コストのみ、撤退時は Node hosting へ移行可能"
+          },
+          "free_tier_limits": "100,000 リクエスト/日、CPU 時間制限あり (無料枠)",
+          "goal_fit": "Web App 出口が顧客側 Cloudflare (HH-D07) のため生態系が統一され、提供者の運用知見が 1 系統に集約される",
+          "security_fit": "R2 native binding で認証情報の外部露出なし。Cloudflare 側 at-rest 暗号化",
+          "pros": [
+            "デプロイ対象が 1 つ (C1 適合)",
+            "R2 native binding",
+            "固定費ゼロ",
+            "wrangler 運用が Web App 出口と共通"
+          ],
+          "cons": [
+            "OpenNext adapter 経由のため Next.js 全機能の互換確認が必要",
+            "Workers ランタイム制約 (Node API 一部非互換)"
+          ],
+          "risks": [
+            "OpenNext/Next.js のバージョン追随が遅れる可能性"
+          ],
+          "lock_in": "中",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://developers.cloudflare.com/workers/platform/pricing/",
+            "https://opennext.js.org/cloudflare"
+          ]
+        },
+        {
+          "id": "pages-plus-worker",
+          "label": "Cloudflare Pages (UI) + 専用 Worker API (Hono) 分離",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "両方無料枠内で月額0円。ただし 2 系統のビルド・デプロイ・認証連携の構築保守工数が加算"
+          },
+          "free_tier_limits": "Pages: ビルド 500 回/月、Workers: 10万 req/日",
+          "goal_fit": "API の独立進化には有利だが、個人運用 (C1) では管理対象が増える",
+          "security_fit": "UI/API 間で CORS・セッション連携の設計が追加で必要",
+          "pros": [
+            "API を独立してスケール・進化できる",
+            "関心の分離が明確"
+          ],
+          "cons": [
+            "デプロイ 2 系統",
+            "認証・セッションの連携設計が増える"
+          ],
+          "risks": [
+            "個人開発での保守負荷増"
+          ],
+          "lock_in": "中",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://developers.cloudflare.com/pages/"
+          ]
+        },
+        {
+          "id": "vercel-hobby",
+          "label": "Vercel Hobby",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "月額0円だが商用利用不可のため、顧客展開時は Pro ($20/月/席) が必須になり費用ゼロ制約と衝突"
+          },
+          "free_tier_limits": "Hobby は非商用利用限定",
+          "goal_fit": "Next.js 最適化は最強だが、商用マルチテナント SaaS は Hobby 規約違反",
+          "security_fit": "問題なし",
+          "pros": [
+            "Next.js 互換性が完全",
+            "DX が高い"
+          ],
+          "cons": [
+            "商用利用不可 (Hobby)",
+            "R2/Turso へ native binding 不可"
+          ],
+          "risks": [
+            "規約違反による停止リスク"
+          ],
+          "lock_in": "中",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://vercel.com/docs/plans/hobby"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "cf-workers-opennext",
+        "rationale": "費用ゼロ制約 (C2 強化) と個人運用制約 (C1) の下で、Web App 出口 (顧客側 Cloudflare) と運用知見を 1 系統に統一でき、デプロイ対象が 1 つで済む",
+        "comparison_basis": {
+          "goal_fit": "Cloudflare 生態系統一で提供者運用が最小",
+          "tco": "無料枠内で月額0円・商用可",
+          "security": "native binding で credential 露出なし",
+          "operations": "デプロイ 1 系統で C1 適合",
+          "lock_in": "OpenNext は OSS で Node hosting への退避可能"
+        },
+        "caveats": [
+          "OpenNext adapter の Next.js バージョン互換を実装着手時に公式ドキュメントで再確認する",
+          "Workers ランタイムの Node API 非互換 (一部ライブラリ) に注意",
+          "Cloudflare Workers Free プランの Worker サイズ上限は 3 MiB (gzip 後。Paid は 10 MiB)。CI で bundle サイズ計測を必須とし、超過時はコード分割・依存削減で対処する。恒常的に超過する場合は Workers Paid ($5/月) への移行と費用ゼロ制約 C2 の再交渉をユーザーへ差し戻す (fetched-references.json opennext-cloudflare の記録)"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-16T00:00:00+09:00"
+      },
+      "user_decision": {
+        "option_id": "cf-workers-opennext",
+        "confirmed_at": "2026-07-16T00:00:00+09:00",
+        "note": "AskUserQuestion で「Cloudflare Workers 一体型」を選択"
+      }
+    },
+    {
+      "id": "D2",
+      "question": "Hub control-plane DB (Tenant/Workspace/Project/Release/Catalog/監査event) の永続化をどれにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G2",
+        "G4"
+      ],
+      "options": [
+        {
+          "id": "d1-drizzle",
+          "label": "Cloudflare D1 + Drizzle ORM",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "無料枠 (5GB・読取500万行/日) 内は月額0円。Workers native binding で外部依存なし"
+          },
+          "free_tier_limits": "5GB ストレージ、読取 500万行/日、書込 10万行/日",
+          "goal_fit": "顧客 Web App の標準 DB (HH-D14) と同一技術で知見が共通化",
+          "security_fit": "Cloudflare 内で完結し外部通信なし。at-rest 暗号化",
+          "pros": [
+            "native binding でレイテンシ最小",
+            "外部サービス依存ゼロ",
+            "Drizzle で型安全"
+          ],
+          "cons": [
+            "SQLite 由来の同時書込制約",
+            "リージョン単一 (read replica はベータ)"
+          ],
+          "risks": [
+            "大規模化時のスループット上限"
+          ],
+          "lock_in": "中",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://developers.cloudflare.com/d1/platform/pricing/",
+            "https://orm.drizzle.team/docs/connect-cloudflare-d1"
+          ]
+        },
+        {
+          "id": "turso-free",
+          "label": "Turso Free (libSQL)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "無料枠内は月額0円。Workers からは @libsql/client (HTTP) 接続。無料枠改定時は D1 へ移行 (Drizzle 両対応で移行コスト小)"
+          },
+          "free_tier_limits": "無料プランに DB 数・ストレージ・行読取の上限あり (公式 pricing 参照)",
+          "goal_fit": "SQLite 方言で D1 と互換。ブランチ機能・組込みレプリカなど開発体験が良い",
+          "security_fit": "TLS + at-rest 暗号化。外部 SaaS のため通信経路が 1 つ増える",
+          "pros": [
+            "SQLite 互換で D1 退避経路を温存",
+            "DB ブランチなど開発機能",
+            "エッジレプリカ"
+          ],
+          "cons": [
+            "native binding ではなく HTTP 経由",
+            "外部サービス依存が 1 つ増える"
+          ],
+          "risks": [
+            "スタートアップ依存の無料枠改定・事業継続リスク"
+          ],
+          "lock_in": "低",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://docs.turso.tech/",
+            "https://turso.tech/pricing"
+          ]
+        },
+        {
+          "id": "supabase-free",
+          "label": "Supabase Free (Postgres)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "無料枠は月額0円だが 1 週間非アクセスで pause。商用継続なら Pro $25/月が現実的で費用ゼロ制約と衝突"
+          },
+          "free_tier_limits": "500MB DB、1 週間非アクティブで自動 pause、2 プロジェクトまで",
+          "goal_fit": "リレーショナル機能は最も充実するが、Workers からは HTTP 経由",
+          "security_fit": "RLS 等は強力だが、Hub の認可は アプリ層で行うため過剰",
+          "pros": [
+            "Postgres の表現力",
+            "管理 UI"
+          ],
+          "cons": [
+            "無料枠の pause 挙動が本番不適",
+            "SQLite 系と非互換で D1 との知見分断"
+          ],
+          "risks": [
+            "無料枠での本番運用は実質不可"
+          ],
+          "lock_in": "中",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://supabase.com/pricing"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "d1-drizzle",
+        "rationale": "native binding・外部依存ゼロ・顧客 Web App 標準 DB (HH-D14) との知見統一の 3 点で、個人運用と費用ゼロ制約に最も適合",
+        "comparison_basis": {
+          "goal_fit": "HH-D14 と同一技術で知見共通化",
+          "tco": "無料枠内 0 円・外部依存なし",
+          "security": "Cloudflare 内完結",
+          "operations": "運用対象が増えない",
+          "lock_in": "SQLite 方言で移行可能"
+        },
+        "caveats": [
+          "D1 の同時書込特性と read replica の成熟度を実装着手時に再確認する"
+        ],
+        "confidence": "medium",
+        "latest_checked_at": "2026-07-16T00:00:00+09:00"
+      },
+      "user_decision": {
+        "option_id": "turso-free",
+        "confirmed_at": "2026-07-16T00:00:00+09:00",
+        "note": "ユーザーは AI 推奨 (D1) ではなく Turso を選択。ヘッジ条件: スキーマ・クエリを SQLite 方言互換に保ち (Drizzle は D1/libSQL 両対応)、Turso の無料枠改定・事業継続リスクが顕在化した場合は D1 へ移行する退避経路を仕様として明記する"
+      }
+    },
+    {
+      "id": "D3",
+      "question": "Hub Web / API の認証・認可基盤をどれにするか (Hub 独自アカウント基盤は作らない前提)",
+      "status": "confirmed",
+      "serves_goals": [
+        "G2",
+        "G4"
+      ],
+      "options": [
+        {
+          "id": "authjs-oidc",
+          "label": "Auth.js (旧 NextAuth) + テナント別 OIDC",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS で月額0円。構築はテナント別 OIDC 設定の動的解決実装、運用は IdP 設定変更対応のみ"
+          },
+          "free_tier_limits": "制限なし (OSS)",
+          "goal_fit": "テナントごとに顧客既存 IdP (Google Workspace / Microsoft Entra ID) を登録でき、Hub 独自アカウント基盤を作らない §10.2 と整合",
+          "security_fit": "パスワード非保存・IdP 側 MFA を継承。JWT cookie は署名付き・短命化可能",
+          "pros": [
+            "完全無料",
+            "Next.js との統合が自然",
+            "テナント別 IdP を Hub のデータモデルで管理できる"
+          ],
+          "cons": [
+            "OIDC 設定の動的マルチテナント解決は自前実装",
+            "セッション失効管理を自分で設計"
+          ],
+          "risks": [
+            "実装ミスによる認可漏れ (分離テストで担保)"
+          ],
+          "lock_in": "低",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://authjs.dev/",
+            "https://authjs.dev/getting-started/providers/microsoft-entra-id"
+          ]
+        },
+        {
+          "id": "cloudflare-access",
+          "label": "Cloudflare Access (Zero Trust) 前段",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "50 ユーザーまで月額0円。超過で有料プラン。アプリ側は JWT 検証のみで構築工数最小"
+          },
+          "free_tier_limits": "無料は 50 ユーザーまで",
+          "goal_fit": "コード最小だが、顧客 IdP を提供者の Cloudflare アカウントへ登録する形になり Tenant 境界が Hub のデータモデル外に漏れる",
+          "security_fit": "Zero Trust 前段としては強力",
+          "pros": [
+            "実装コード最小",
+            "IdP 連携が設定だけで済む"
+          ],
+          "cons": [
+            "50 ユーザー上限が複数顧客展開 (U5) と早期に衝突",
+            "テナント境界の管理が Cloudflare ダッシュボード依存"
+          ],
+          "risks": [
+            "ユーザー数成長で即有償化"
+          ],
+          "lock_in": "高",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://developers.cloudflare.com/cloudflare-one/policies/access/",
+            "https://www.cloudflare.com/plans/zero-trust-services/"
+          ]
+        },
+        {
+          "id": "idaas-free",
+          "label": "IDaaS (Clerk / Auth0 無料枠)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "無料枠は月額0円だが MAU 上限・機能制限あり。マルチテナント SSO (SAML/OIDC per tenant) は多くの IDaaS で有償上位プラン"
+          },
+          "free_tier_limits": "MAU 上限・テナント別エンタープライズ SSO は有償プランが多い",
+          "goal_fit": "テナント別 IdP 連携がまさに有償機能に該当しやすく、費用ゼロ制約と衝突",
+          "security_fit": "managed で堅牢",
+          "pros": [
+            "実装最速",
+            "UI 込み"
+          ],
+          "cons": [
+            "テナント別 SSO が有償になりがち",
+            "価格改定・ロックイン"
+          ],
+          "risks": [
+            "無料枠縮小の前例が業界に多い"
+          ],
+          "lock_in": "高",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://clerk.com/pricing",
+            "https://auth0.com/pricing"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "authjs-oidc",
+        "rationale": "費用ゼロ・複数顧客同時展開 (U5)・テナント境界を Hub のデータモデルで管理する要件を同時に満たすのは Auth.js のみ",
+        "comparison_basis": {
+          "goal_fit": "テナント別 IdP を Tenant モデルで管理",
+          "tco": "OSS で恒久 0 円",
+          "security": "パスワード非保存・IdP MFA 継承",
+          "operations": "IdP 設定対応のみ",
+          "lock_in": "OSS で低"
+        },
+        "caveats": [
+          "マルチテナント OIDC の動的 provider 解決は Auth.js の標準外パターンのため設計レビューを行う",
+          "セッション失効・role 変更の反映遅延 (JWT) を許容時間として仕様化する",
+          "Auth.js は Better Auth 傘下入りが公式告知済み (fetched-references.json authjs の記録)。実装着手前に Better Auth の移行ガイド成熟度を再確認し、Auth.js のセキュリティ修正停止を Better Auth への移行トリガーとして明記する"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-16T00:00:00+09:00"
+      },
+      "user_decision": {
+        "option_id": "authjs-oidc",
+        "confirmed_at": "2026-07-16T00:00:00+09:00",
+        "note": "AskUserQuestion で「Auth.js + テナント別 OIDC」を選択"
+      }
+    },
+    {
+      "id": "D4",
+      "question": "マルチテナント論理分離 (U7) のテナント分離方式をどれにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G4"
+      ],
+      "options": [
+        {
+          "id": "row-level-scope",
+          "label": "単一 DB + tenant_id/workspace_id スコープ列 + アプリ層強制 (row-level 分離)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "無料枠の 1 DB 内で月額0円。構築はスコープ列とアプリ層ガードの実装、運用は分離テストの維持のみ"
+          },
+          "free_tier_limits": "Turso Free の 1 DB 内に全テナントを収容 (ストレージ 5GB を共有)",
+          "goal_fit": "実装が単純で個人運用 (C1) に適合。qa-006 の『全 API で Tenant/Workspace スコープ強制 + 分離テスト必須』と同一方式で U7 の論理分離を満たす",
+          "security_fit": "分離はアプリ層の強制に依存するため、Tenant/Workspace スコープの分離テストを CI 必須として担保する (qa-006)",
+          "pros": [
+            "実装が単純でスキーマ・migration が 1 系統",
+            "無料枠 1 DB で収まり費用ゼロ制約 (C2) に適合",
+            "D1 退避経路 (D2 ヘッジ) と対称で、単一 DB のまま移行できる"
+          ],
+          "cons": [
+            "分離保証が構造的でなくアプリ層実装とテストに依存する"
+          ],
+          "risks": [
+            "アプリ層ガードの実装漏れによるテナント間データ露出 (分離テストで検出する)"
+          ],
+          "lock_in": "低",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://docs.turso.tech/",
+            "https://developers.cloudflare.com/d1/platform/pricing/"
+          ]
+        },
+        {
+          "id": "db-per-tenant",
+          "label": "Turso DB-per-tenant (テナントごとに DB を分離)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "Turso Free は DB 100 個まで月額0円。ただし migration 一斉適用・接続管理の構築保守工数が加算"
+          },
+          "free_tier_limits": "Turso Free はデータベース 100 個・ストレージ計 5GB (fetched-references.json turso の記録)",
+          "goal_fit": "構造的分離の保証は最も強いが、個人運用 (C1) では migration の一斉適用と接続管理の複雑さが負担になる",
+          "security_fit": "DB 境界による構造的分離で、アプリ層の実装漏れがあってもテナント間データ露出に至らない",
+          "pros": [
+            "テナント分離を DB 境界で構造的に保証できる",
+            "テナント単位のバックアップ・削除・退去が容易"
+          ],
+          "cons": [
+            "migration の一斉適用と接続管理 (テナント→DB 解決) が複雑",
+            "D1 退避時に非対称 (単一 DB 前提の D1 退避経路と整合しない)"
+          ],
+          "risks": [
+            "テナント数増加時の migration 運用事故",
+            "D2 ヘッジ (D1 への退避) の移行コストが増大する"
+          ],
+          "lock_in": "中",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://docs.turso.tech/",
+            "https://turso.tech/pricing"
+          ]
+        },
+        {
+          "id": "schema-per-tenant",
+          "label": "schema 分離 (テナント別 schema/namespace)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "追加費用はないが、SQLite 系 (Turso/D1) には Postgres 的な schema 分離機構がなく実現手段を欠く"
+          },
+          "free_tier_limits": "該当なし (SQLite 方言では schema 分離を実現できない)",
+          "goal_fit": "Postgres 系の定石だが、採用済みの Turso/D1 (SQLite 方言) には schema 概念がなく U7 の実現方式として非現実的",
+          "security_fit": "SQLite 系では評価対象外 (実現手段がない)",
+          "pros": [
+            "(Postgres 系であれば) DB 数を増やさず論理分離を構造化できる"
+          ],
+          "cons": [
+            "SQLite に native な schema 分離がない (ATTACH は Turso/D1 で非現実的)",
+            "実現には DB を Postgres 系へ変更する必要があり D2 決定と衝突する"
+          ],
+          "risks": [
+            "D2 (Turso/SQLite 方言) の決定と両立せず、採用すると技術選定の再交渉が発生する"
+          ],
+          "lock_in": "高",
+          "ops_burden": "高",
+          "evidence_refs": [
+            "https://www.sqlite.org/lang_attach.html"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "row-level-scope",
+        "rationale": "個人運用 (C1)・費用ゼロ (C2) の下で実装・運用が最も単純で、qa-006 で承認済みの『全 API で Tenant/Workspace スコープ強制 + 分離テスト必須』と整合し、D1 退避経路 (D2 ヘッジ) とも対称のまま U7 の論理分離を満たす",
+        "comparison_basis": {
+          "goal_fit": "スコープ列 + アプリ層強制で U7 のマルチテナント論理分離を満たす",
+          "tco": "無料枠 1 DB で月額0円",
+          "security": "分離テスト CI 必須 (qa-006) で担保",
+          "operations": "スキーマ・migration 1 系統で C1 適合",
+          "lock_in": "単一 DB スキーマのまま D1 へ対称移行可能"
+        },
+        "caveats": [
+          "分離保証はアプリ層とテストに依存するため、Tenant/Workspace スコープの分離テストを CI 必須とする (qa-006)",
+          "revisit 条件: テナント数が 10 を超える、または分離テストの失敗が頻発した場合は Turso DB-per-tenant を再評価する"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-16T00:00:00+09:00"
+      },
+      "user_decision": {
+        "option_id": "row-level-scope",
+        "confirmed_at": "2026-07-16T00:00:00+09:00",
+        "note": "qa-006 で承認済みの回答 (テナント分離 = 全 API で Tenant/Workspace スコープ強制 + 分離テスト必須) を意思決定 record として遡及成文化。新規の AskUserQuestion 往復ではなく既存承認の構造化"
+      }
+    },
+    {
+      "id": "D5",
+      "question": "AI 処理 (ヒアリングシート生成・フィードバック自動対応・ドキュメント下書き) の実行主体をどれにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "pull-queue",
+          "label": "pull 型キュー (Claude Code セッションがキューを pull して処理・書戻し)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "追加サービスなしで月額0円。キューは既存 Turso のテーブル + Hub REST のみで構成し、AI 実行は提供者/作者の既存 Claude Code 契約内で行う"
+          },
+          "free_tier_limits": "追加の外部サービスを持たない (Hub の既存 Workers / Turso 無料枠内のジョブテーブルと pull/書戻し API のみ)",
+          "goal_fit": "C2 (費用ゼロ) と完全整合し、mockup の「Claude Code が対応」という記述とも一致。シート生成 (I11)・FB 対応 (I12)・doc 下書き (I13) を同一キューで扱える",
+          "security_fit": "pull/書戻しは認可 MW + Device Flow token 保有者に限定。Hub 側に AI 資格情報を保持せず、job payload に secret を含めない規約とする (SEC8)",
+          "pros": [
+            "サーバ側 AI 課金が発生せず固定費ゼロを維持できる",
+            "AI 品質は利用者側の Claude Code (Claude 本体) に等しく、生成品質の妥協がない",
+            "キューが疎結合のため、将来 server-side 実行へ差し替えても API 契約を変えずに移行できる"
+          ],
+          "cons": [
+            "処理はセッション稼働時のみ (完全非同期・数分〜の遅延を UI が許容する設計になる)",
+            "pull ワーカーの稼働は提供者/作者の運用習慣に依存する"
+          ],
+          "risks": [
+            "キュー滞留 (誰も pull しない期間) — 滞留監視と滞留アラートを保守運用に組み込んで検出する (qa-027)"
+          ],
+          "lock_in": "低",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://docs.claude.com/en/docs/claude-code/overview",
+            "https://developers.cloudflare.com/workers/platform/pricing/"
+          ]
+        },
+        {
+          "id": "server-anthropic-api",
+          "label": "サーバ側で Anthropic API を直接呼ぶ (Workers から従量課金)",
+          "cost_model": {
+            "category": "paid",
+            "amount": 1500,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "トークン従量課金で利用量に比例 (月間ジョブ数×平均トークン量に依存し固定上限がない)。概算最低でも月 1,500 円規模から利用増で線形に増加"
+          },
+          "free_tier_limits": "恒常的な無料枠なし (トークン従量課金)",
+          "goal_fit": "即時処理 (同期 UX) を実現できるが、利用が伸びるほど費用が増える構造が C2 (固定費極小化・無料枠優先) と衝突する",
+          "security_fit": "API key を Workers の環境 binding に保持する必要があり、Hub 側に AI 資格情報という新たな保護対象が増える",
+          "pros": [
+            "ジョブを即時処理でき、生成中の待ち時間が最短になる",
+            "処理が提供者のセッション稼働に依存しない"
+          ],
+          "cons": [
+            "従量課金が C2 と衝突する",
+            "Hub に AI 資格情報を保持する必要がある"
+          ],
+          "risks": [
+            "利用増による費用の青天井化 (テナント数×ジョブ数に比例)"
+          ],
+          "lock_in": "中",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://www.anthropic.com/pricing"
+          ]
+        },
+        {
+          "id": "workers-ai",
+          "label": "Cloudflare Workers AI (無料枠 10,000 neurons/日)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "無料枠 10,000 neurons/日以内なら月額0円 (超過は Free プランではハードリミットで失敗、00:00 UTC リセット)。公式確認 2026-07-17"
+          },
+          "free_tier_limits": "10,000 neurons/日 (Free プランは超過時ハードリミット)。neurons から unit-based 価格への改定が告知されており枠の再確認が必要",
+          "goal_fit": "費用ゼロは満たすが、Claude ではなく OSS モデルのため日本語の長文ヒアリングシート生成・コード修正案の品質が要件水準に届かないリスクがある",
+          "security_fit": "Cloudflare 内で完結し追加資格情報は不要だが、モデル出力品質の検収工程が別途必要になる",
+          "pros": [
+            "費用ゼロで即時処理できる",
+            "追加ベンダーが増えない (Cloudflare 内で完結)"
+          ],
+          "cons": [
+            "OSS モデルの生成品質が Claude に劣り、シート生成・修正案の品質保証が難しい",
+            "ハードリミット超過時は当日中の処理が失敗する"
+          ],
+          "risks": [
+            "価格モデル改定 (neurons → unit-based) が告知済みで、無料枠の条件が変わり得る"
+          ],
+          "lock_in": "中",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://developers.cloudflare.com/workers-ai/platform/pricing/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "pull-queue",
+        "rationale": "C2 (費用ゼロ) を満たす 2 案のうち、生成品質を Claude 本体に委ねられ、mockup の「Claude Code が対応」という動線とも一致する pull 型が唯一品質と費用を両立する。非同期遅延は UI の「生成中」ステータス (mockup 準拠) で吸収できる",
+        "comparison_basis": {
+          "goal_fit": "pull 型のみが品質 (Claude) と費用ゼロを両立。server-side は費用、Workers AI は品質が犠牲になる",
+          "tco": "pull 型 = 月額0円 (追加サービスなし)。server-side = 従量で青天井。Workers AI = 0円だが日次ハードリミット",
+          "security": "pull 型は Hub に AI 資格情報を持たず、既存の Device Flow 認可に相乗りできる",
+          "operations": "キュー滞留監視 (qa-027) の追加のみで、個人運用 (C1) の範囲に収まる",
+          "lock_in": "キューの API 契約を保てば実行主体は後から差し替え可能 (低 lock-in)"
+        },
+        "caveats": [
+          "処理遅延は数分〜セッション次第。UI は非同期前提 (受付番号 + 生成中ステータス + 完了通知) で設計する",
+          "キュー滞留の監視・アラートを保守運用 (qa-027) に必ず組み込む",
+          "revisit 条件: 即時性への要望が反復確認された場合、または提供者の pull 運用が回らない場合は Workers AI 併用 (下書きのみ) を再評価する"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-17T17:52:19+09:00"
+      },
+      "user_decision": {
+        "option_id": "pull-queue",
+        "confirmed_at": "2026-07-17T17:52:19+09:00",
+        "note": "AskUserQuestion で「pull 型キュー」を選択 (2026-07-17)。Studio mockup 反映に伴う新規決定。質疑証跡: qa-028"
+      }
+    },
+    {
+      "id": "D6",
+      "question": "メール通知 (生成完了・レビュー結果・週次サマリ) の送信手段をどれにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G2",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "resend-free",
+          "label": "Resend Free プラン (トランザクションメール API)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "無料枠 3,000 通/月・100 通/日・独自ドメイン 1 件の範囲で月額0円。想定規模 (数 Workspace × 週次サマリ + イベント通知) は枠内に収まる。公式確認 2026-07-17"
+          },
+          "free_tier_limits": "3,000 通/月・100 通/日・独自ドメイン 1 件 (送受信合算。To/CC/BCC の複数宛先は宛先数分カウント。無料プランは超過時に送信不可でオーバーエイジなし)",
+          "goal_fit": "Workers から直接 REST API を呼べて実装・運用が単純 (C1 適合)。update 通知 (G2) と週次サマリ (G5) を無料枠内で賄える",
+          "security_fit": "API key は Workers の環境 binding のみに保持 (SEC9)。宛先はテナント内ユーザーに限定し、PII (年収等) をメール本文に含めない規約とする",
+          "pros": [
+            "無料枠が要件規模に対して十分 (3,000 通/月)",
+            "SDK / REST が単純で Workers から直接送信できる",
+            "ドメイン認証 (SPF/DKIM) 手順が整備されており到達率を確保しやすい"
+          ],
+          "cons": [
+            "日次 100 通の上限があり一斉通知はバッチ分割が必要",
+            "独自ドメイン 1 件までのため送信ドメインは Hub 共通になる"
+          ],
+          "risks": [
+            "無料枠の条件変更 — 送信量が枠に近づいたら通知の要約化 (ダイジェスト) で吸収する"
+          ],
+          "lock_in": "低",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://resend.com/pricing",
+            "https://resend.com/docs/knowledge-base/account-quotas-and-limits"
+          ]
+        },
+        {
+          "id": "in-app-only",
+          "label": "アプリ内通知のみで開始 (メール送信なし)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "外部送信サービスを持たず月額0円。通知センターは既存 Workers/Turso 無料枠内で完結"
+          },
+          "free_tier_limits": "追加サービスなし (Hub 内の Notification テーブル + UI のみ)",
+          "goal_fit": "費用・運用ゼロで最も C1/C2 に忠実だが、Hub を開いていない利用者に更新 (G2) や週次サマリ (G5) が届かず、mockup のメール通知トグルが空機能になる",
+          "security_fit": "外部送信がないため送信経路のリスクはゼロ",
+          "pros": [
+            "費用・運用ともゼロ",
+            "到達率・ドメイン認証の考慮が不要"
+          ],
+          "cons": [
+            "Hub 非訪問ユーザーへ通知が届かない (update 通知の実効性が下がる)",
+            "mockup のメール通知設定と齟齬が出る"
+          ],
+          "risks": [
+            "更新に気づかれず再利用率 (O2) の計測が鈍る可能性"
+          ],
+          "lock_in": "低",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://developers.cloudflare.com/workers/platform/pricing/"
+          ]
+        },
+        {
+          "id": "amazon-ses",
+          "label": "Amazon SES (従量課金)",
+          "cost_model": {
+            "category": "low-cost",
+            "amount": 15,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "$0.10/1,000 通の従量で月 1,000 通なら約 15 円。ただし AWS アカウント・IAM・サンドボックス解除・評判管理の運用が加算される"
+          },
+          "free_tier_limits": "恒常無料枠は限定的 (送信条件依存)。従量 $0.10/1,000 通",
+          "goal_fit": "単価は最安級だが、Cloudflare 中心の構成に AWS 運用 (IAM・サンドボックス解除・バウンス管理) が加わり C1 (個人運用の認知負荷) と不整合",
+          "security_fit": "IAM 資格情報の管理対象が増える",
+          "pros": [
+            "送信単価が最安級",
+            "大規模化しても料金が線形"
+          ],
+          "cons": [
+            "AWS アカウント/IAM/サンドボックス解除の初期・運用負荷",
+            "ベンダーが 1 社増える"
+          ],
+          "risks": [
+            "サンドボックス解除審査や評判低下による送信停止"
+          ],
+          "lock_in": "中",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://aws.amazon.com/ses/pricing/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "resend-free",
+        "rationale": "想定規模が無料枠 (3,000 通/月・100 通/日) に収まり、Workers から直接呼べて個人運用 (C1) の負荷が最小。アプリ内通知のみでは G2 (更新に気づく) の実効性が下がり、SES は運用負荷が C1 と不整合",
+        "comparison_basis": {
+          "goal_fit": "Resend のみがメール到達 (G2/G5 の実効性) と C1/C2 を両立",
+          "tco": "Resend = 枠内0円。in-app のみ = 0円だが通知の実効性を犠牲。SES = 微少額 + AWS 運用コスト",
+          "security": "API key の環境 binding 保持のみで、PII 非含有規約 (SEC9) を併せて確定",
+          "operations": "ドメイン認証 (SPF/DKIM) の初期設定のみで定常運用はほぼゼロ",
+          "lock_in": "通知ディスパッチ層 (共通層) の背後に隠すため送信手段は差し替え可能"
+        },
+        "caveats": [
+          "送信は必ず通知ディスパッチ共通層を経由し、Resend API を feature 実装から直接呼ばない (差し替え可能性の維持)",
+          "日次 100 通制限があるため週次サマリはバッチ分割 + 失敗リトライで送る (qa-027)",
+          "アプリ内通知を常に正本とし、メールは補助チャネル (不達でも情報が欠けない設計)"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-17T17:52:19+09:00"
+      },
+      "user_decision": {
+        "option_id": "resend-free",
+        "confirmed_at": "2026-07-17T17:52:19+09:00",
+        "note": "AskUserQuestion で「Resend Free」を選択 (2026-07-17)。Studio mockup 反映に伴う新規決定。質疑証跡: qa-029"
+      }
+    }
+  ],
+  "knowledge_candidates": [],
+  "hearing_progress": {
+    "loop_count": 2,
+    "next_question": null,
+    "complete": true
+  }
+}

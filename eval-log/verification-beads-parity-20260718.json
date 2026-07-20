@@ -1,0 +1,34 @@
+{
+  "schema": "independent-verification-report/1.0.0",
+  "verified_at": "2026-07-18T11:20:00Z",
+  "verifier": "dev-graph-sync-conflict-verifier (独立 fork・read-only)",
+  "requested_by_session": "4329a187-36a1-437d-aba1-37104c7d2033",
+  "scope": "並行セッションによる Beads 投影 (task 117 件起票・重複 close) の parity 監査",
+  "verdict": "FAIL",
+  "results": {
+    "task_parity": {
+      "verdict": "PASS",
+      "detail": "graph task 117 件 ⇔ parity-manifest 117 件の 1:1 対応・depends_on exact-set 完全一致。task レベル重複 26 件は監査時点で全 close 済み"
+    },
+    "findings": [
+      {
+        "severity": "medium",
+        "id": "epic-duplicates-open",
+        "issue": "epic レベルの重複 bd issue 2 件が open 残存: HarnessHub-0e9 (正本 HarnessHub-37h の重複 = feat-hub-foundation) / HarnessHub-p4q (正本 HarnessHub-15h の重複 = feat-auth-tenancy)",
+        "cause": "feature close は bd-bridge の --feature-rollup-manifest 必須 (dup-close.log 記載の失敗理由) で未実施",
+        "remediation_owner": "C28 (beads) owner レーン — bd-bridge --op close + --feature-rollup-manifest"
+      },
+      {
+        "severity": "medium",
+        "id": "beads-linkage-backfill-pending",
+        "issue": "graph.json の beads_linkage が task 117 + feature 14 = 131 件すべて null。bd_issue_id 対応は parity-manifest.json のみに存在し graph 実体へ未書き戻し",
+        "remediation_owner": "C02 単一 writer 経由の backfill (parity-manifest → graph)"
+      }
+    ],
+    "observations": [
+      "監査中に bd 総数が 136→130→127 とリアルタイム減少 (HarnessHub-0e9.8/0e9.9/p4q.8 が監査中に close された)。並行クリーンアッププロセスが現在も稼働中",
+      "dup-close2.log の remaining=22 は pass2 中間値であり最終値ではない (ログは pass4 remaining=18 で途切れ)。実データ直接確認で task レベル重複は全 close 済みと判明 — ログのみで完了判断しないこと"
+    ]
+  },
+  "handoff_note": "並行クリーンアップが稼働中のため本セッションからの修復介入は行わない (二重 mutation 回避)。残 2 件 (epic close ×2・linkage backfill 131 件) はクリーンアップ完了後に本レポートを参照して実施すること"
+}

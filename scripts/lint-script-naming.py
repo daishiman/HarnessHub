@@ -458,6 +458,14 @@ PENDING_RENAME_PATHS = {
     "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
     "plugins/dev-graph/scripts/resolve-repo-context.py",
     "plugins/dev-graph/scripts/register-package.py",
+    # dev-graph 運用ループ v2 (node/sync/status verb 対応): domain 動詞 (sync/status/upsert) と
+    # WAL transaction モジュール node_transaction.py (§4.3 underscore) が ALLOWED_VERBS 外。
+    # 上記 dev-graph 群と同じく SKILL.md script_refs / README / test 参照を原子的に更新する
+    # 後続 Change Governance PR (許可動詞化 or 一括リネーム) まで PENDING。
+    "plugins/dev-graph/scripts/node_transaction.py",
+    "plugins/dev-graph/scripts/sync-graph.py",
+    "plugins/dev-graph/scripts/status-graph.py",
+    "plugins/dev-graph/scripts/upsert-node.py",
     "plugins/harness-creator/skills/run-build-skill/scripts/derive-route-build-obligations.py",
     "plugins/harness-creator/skills/run-build-skill/scripts/derive-verification-contract.py",
     "plugins/harness-creator/skills/run-build-skill/scripts/record-verification-evidence.py",

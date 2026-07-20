@@ -1,0 +1,30 @@
+{
+  "graph_node_id": "feat-metrics-tracking",
+  "artifact_kind": "feature",
+  "purpose": "導入ハーネスの利用実態と削減効果 (G5) を可視化するため、実行ログ ingest (B2: 短命 token・冪等キー・回数のみ)・週次 rollup (B3: Workers cron)・試算エンジン共通層 (サーバ側係数換算) と S09/S16 ダッシュボードを提供する (I10)",
+  "goal": "実行ログがサーバ側で信頼可能に集計され (SEC5)、S09 ダッシュボード・S16 利用/削減効果・S17 個別集計が週次 rollup から描画される状態",
+  "scope_in": [
+    "MetricsEvent/MetricsRollup エンティティ + ingest API (B2)",
+    "Workers cron 週次 rollup (B3)",
+    "試算エンジン純関数 (時給=年収÷annualHours・分/回・削減率、単一実装)",
+    "S09 ダッシュボード (KPI/推移/完了率/ランキング/部門別)",
+    "S16 利用・削減効果 (ハーネス別・週次)",
+    "チャート共通部品の消費 (bundle 3MiB 予算内)"
+  ],
+  "scope_out": [
+    "クライアント側での金額換算・自己申告 (SEC5 で禁止)",
+    "外部 BI 連携"
+  ],
+  "acceptance": [
+    "ingest が短命 token + 冪等キーで保護され重複計上しない",
+    "金額換算がサーバ側のみで行われる (クライアント申告は回数のみ)",
+    "S09/S16 が rollup 由来のデータで描画され CWV good を維持する"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-data.md",
+    "architecture/harness-hub-frontend.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-17T14:34:01Z"
+}

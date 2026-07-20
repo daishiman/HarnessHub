@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:178a96700782a721a2f448d53618709aff1c89250d73f17154bc7de273395ed1",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で goal-spec (quality_constraints 8 件) との矛盾なし。backend-spec §2.3/§4.9/§6.2/§7/§8 と列・endpoint 単位で照合し試算式・冪等性・cron 2 段構成・bundle 予算・Turso 読取予算が一致。scope_out 5 事項の混入 grep 0 件。dim=harness の認可未定義を medium finding として検出 (promotion 非阻害・P02 で解消)",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#backend-spec整合",
+        "task-specs/phase-05-implementation.md#スコープ外",
+        "task-specs/phase-01-requirements.md#quality_constraints転記"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13・14 必須見出し全件・placeholder 0。根拠 id (qa-021/qa-022/qa-031〜037/I10/G4/G5/D4/D6/SEC5) 全 task 接地。接地評価は並行再描画中の章 stub でなく spec-state.json qa_log + docs/backend-spec.md で実施",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-10-final-review.md#8件充足確認"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "source_feature_digest が context の独立 sha256 再計算値 (sha256:64106cc96859b3755741efeb26321fd3746af1a823d0d7837d5b2147b41ee759) と一致。canonical_digest は validator 独立再実行値と manifest 記載が一致。repository_id 一致・絶対パス/repo 外参照 grep 0 件",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json 13 node の完全線形前方依存 (SYS-METRICS-TRACKING-P01→…→P13)。handoff の execution_tasks・package の task_node_ids と 3 ファイル間一致。循環・後方・機能間依存なし。validator 独立再実行 exit0",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:178a96700782a721a2f448d53618709aff1c89250d73f17154bc7de273395ed1\", \"feature_package_id\": \"feature-package/feat-metrics-tracking\", \"parent_feature\": \"feat-metrics-tracking\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "8362712f2c4f5a4ebe0de262a52cdcb1085f9008125acc401b765f4c4f564cde"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "129fb55ba7ba165f274edec5eeeba5420811889b65b66124fa478642dcd9f244"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "f040c8a5c1e2839323690c1de4cbf61b416ce884cffff467a66af110e3f60ccf"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "1466010bde2010c4ea8dcd14e6ab02054503feb992478751972e18b346bd10f2"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "27426a3a7eabe471eb43dcc80cf6761d12fba5e2b7e0291985528502ecb31ca3"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "04ece43f224ffda753984aed6772d60a8729538b518794aa4b7ba104c29f5d6d"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "9373c09706bd09b5d47134200dfdaaa76944caa5c0b38fb417861b85dee80bfb"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "76b76f4299f1435748e65f2545f9a6351115e937969c1137c5c2d5a11097c413"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "9dfdac172a536dc82c6ff4be86d72df46ed25fa473ef59a6d2b8a208754d41d3"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "135ffaad799715476eab11dd6a53b7a7b34a9fae1c71f0bf6dbfc0d7071a70ab"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "263cae21fad83f6b00f8c367d9acd72a691ab303e75e34b9886b16abcd0d45c7"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "56f17216710550439c060b0ac47d203195e6df7667ebfb2410859296f4d5a48b"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "4c6dffce4d753cc94d704d443706ed015234ba564239f52493565ff82d5dbfee"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "ab576b539f0fb678e13d16b3953372f9b2f16dc28a1a0a9adc49960ff789ee77"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "677269eba4178a770f65267eff5657a3e935d5165f597a3759222dec35de8466"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "43250568da14a8cdac0982187e2bcc6a13cb39264a7b50eb3653bb3ec7843a53"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "69c2856e9bf84fe3dabbfdb17d6b907e23255576caeb36549340b521f01a3281"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "3b4fdf7175aeae6285f4633092fe2b9d70dd848205eacf370473b08386cf3c92"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "spec-consistency/rollup-dim-harness-authz-gap",
+      "observation": "P02 は metrics_rollups の dim を 5 値 (tenant/department/project/user/harness) で新設 (goal-spec の『ハーネス別』要件に正当接地) するが、認可 quality_constraint と backend-spec §2.3/§4.9 は旧 4 値のみ列挙し dim=harness の認可レベル (member 公開 か admin 限定か) が plan 全体で未定義。P02 実行時に認可記述を拡張 (harness は member 以上開放が推奨) し、P04 テスト項目へ dim=harness の認可結合テストを追加、backend-spec の dim 列挙追記を follow-up として記録する",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#dim設計",
+        "task-specs/phase-04-test-design.md#認可テスト"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "upstream/backend-spec-drift-metrics-events-harness-id",
+      "observation": "backend-spec §2.3 の metrics_events 定義に harness_id 列が無いが、spec-state qa-024 は『harness/user/実行回数』を確定済み。P02 の harness_id 列追加は qa-024 に正しく接地しており妥当。backend-spec 側の qa-024 未反映 (spec drift) を follow-up として記録",
+      "evidence": [
+        "task-specs/phase-02-architecture.md#metrics_events列",
+        "goal-spec.json"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 spec 全文読解・validator 独立再実行 exit0・digest 2 系統の独立再計算一致・boundary 検査 0 件・設計判断 4 点 (試算エンジン owner=feat-metrics-tracking 確定の判断基準 3 点の成立 / tenant_coefficients 読取専用境界 / shared-layers 訂正の越権回避 / 共有 CI・wrapper 不可侵) の妥当性確認を実施",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "process/premature-findings-relocated",
+      "observation": "evaluator fork が findings を promote 先ディレクトリへ先置きしたため、main-loop が eval-log/system-dev-planner/evaluator-findings-feat-metrics-tracking-raw.json へ退避し空ディレクトリを除去した (atomic rename の妨げ防止)。findings 内容は本ファイルへ写像済み",
+      "evidence": [
+        "staging-manifest.json"
+      ]
+    }
+  ]
+}

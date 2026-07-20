@@ -1,0 +1,278 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec/",
+  "verdict": "FAIL",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "U1-U9 は全て値で確定 (confirmed=true / approval_ref=appr-005 実在、変化なし)。決定論ゲート validate-coverage-matrix.py --require-foundation は新断面 (sha256=d8be8927...) でも exit0。goal-objective-intent-cell-chapter の serves_goals/qa 参照 dangling は 0 件 (9 章 + decisions 6 + intents 14、dev-workflow 追加分も含め再走査)。C06 再監査 (今回分) もトレーサビリティ軸 PASS を再確認。G5/U6 の一部要素の verbatim 遡及性が bulk 承認 (qa-030/appr-005) 依存な点は前回同様の低 finding として現状のまま維持 (今回は追加調査せず現状判定)。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-foundation exit0 (00:13 断面で再実測)",
+        "spec-state.json requirements_foundation.confirmed=true, approval_ref=appr-005 (approval_log 実在、変化なし)",
+        "C06 再監査: 軸4 (トレーサビリティ) PASS、G5/U6 は appr-005/appr-002 へ遡及可能・劣化なし",
+        "serves_goals/qa 参照 dangling 検査 0 件 (dev-workflow 追加後の 9 章で再確認)"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "D1-D6 全 6 決定が変化なく 3 案 + 無料/低コスト案 + cost_model(TCO)/free_tier_limits/goal_fit/security_fit/pros/cons/risks/lock_in/ops_burden/evidence_refs を保持し、全件 user_decision で確定。D2 の AI 推奨棄却実績も不変 (AI 推奨のみで confirmed にしていない実証)。qa-036/037/041/042 の security/backend 深掘り再ヒアリングは既存 D1-D6 (Turso/Drizzle 等) を全面維持したうえでの詳細化であり、決定の後退・矛盾はない。誘導質問疑い (qa-028/029/031) は D5/D6 の確定質疑であり matrix_coverage 側の C06 sub-input で FAIL 要因として計上 (本観点は AI 推奨棄却の実証がある限り pass 基準を満たすと判断)。",
+      "evidence": [
+        "spec-state.json decisions[] 全 6 件 status=confirmed + user_decision 非空 (変化なし)",
+        "D2 user_decision.note: AI 推奨でなく Turso を選択",
+        "validate-coverage-matrix.py --require-foundation exit0",
+        "qa-037: security 深掘りに伴う database/backend 差分が既存 D1-D6 の基盤 (Turso Free+Drizzle+D1退避・ULID PK・tenant_id 強制注入等) を全面維持したままの追補と明記"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "FAIL",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "C07 独立監査 (新断面 sha256=d8be8927...de029, mtime 00:13, 161480 bytes に対して再監査): loop_pass=PASS / final_ready=PASS (決定論ゲート exit0、未収集セル 0 件へ前回 FAIL から昇格)。前回 high finding だった frontend.web の qa_ref 取り違え (旧 qa-034→誤 qa-035) は qa-040 (専用質疑として再登録) へ完全修復し、C07/C06/C05 の三者独立照合で解消を確認。同様に auth/security の desktop-windows・desktop-macos の qa_ref も qa-035 (無関係) から qa-041 (デスクトップ資格情報保護の専用質疑) へ、security.web も qa-034 (infrastructure 取り違え) から qa-042 (security 深掘り専用質疑) へ修復済み。category_aggregate 真理値表整合、6 canonical platform 完備 (9 カテゴリ×6=54 セル、欠落 0)、対象外 29 セルの reason は全件具体的 (dev-workflow の 3 セル含む)。C16 required-info profile も exit0。しかし sub-input C06 (hearing 品質) が軸2 (誘導質問) で依然 FAIL: qa-014/028/029/030/031/034 の 6 件 (前回から不変・新規質疑 qa-036〜042 に誘導質問は検出されず) が中立設問での再確認・反証記録による解消をしていない。加えて infrastructure.desktop-windows/desktop-macos の qa_ref=qa-003 の薄い参照 (前回 low finding) も未補強のまま。matrix_coverage の pass_criteria は C06 4軸の健全性を明示的に要求するため、決定論ゲート PASS 化にもかかわらず本観点は FAIL のまま判定する (誘導質問問題はヒアリング所有者へ申し送り済み・今回は現状のまま判定)。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-complete → exit0 'OK: 収集マトリクス網羅性 (final(未収集0)) を満たす' (00:13 断面、C05/C07 双方で再現)",
+        "C07: 確定25/対象外29(理由要改善0)/未収集0・qa_ref要確認1 (infrastructure.desktop-windows/macosのqa-003薄い参照、低severity)・集約不一致0・platform欠落0",
+        "C05独立照合: frontend.web→qa-040 (専用質疑、内容適合)、auth.desktop-windows/macos→qa-041 (適合)、security.web→qa-042 (適合)、security.desktop-windows/macos→qa-041 (適合)",
+        "C06再監査 (4軸): 聞き漏れ=PASS(0件)、誘導質問=FAIL(qa-014/028/029/030/031/034の6件、新規0件)、早期停止=PASS(0件、hearing_progress.complete=true)、トレーサビリティ=PASS(0件、新規qa-040/041/042含め遡及性確認)",
+        "aggregate-completeness.py --knowledge-graph: required-info profile exit0"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "機械層: 9 章中 8 章 (database/auth/security/backend/frontend/ui-ux/infrastructure/maintenance-ops) が resource-map.yaml 由来カードまたは doctrine anchor 節を持つ。dev-workflow は resource-map に該当カード未定義であることを正直に開示 (虚偽注入なし)。意味層: backend の Idempotency-Key/cursor pagination/RFC 9457、database の releases immutable/tenant_idスコープ/暗号化、auth/security の IdP委譲/OS資格情報域/SEC1-SEC9、infrastructure/maintenance-ops の SLO/エラーバジェット、ui-ux/frontend の WCAG 2.2 AA/CWV 等、各原則が確定セル要件へ具体適用されている点は前回から変化なし。knowledge/doctrine/required-info/cross の 4 profile は全て exit0。【レポート検証中の二次ドリフトで判明】当初 (00:13断面) は dev-workflow が doctrine-anchor-registry.json の categories/category_concern_map/pending_exceptions のいずれにも未登録で medium finding としていたが、レポート検証段階 (00:27断面、fetched-references.json 含む全11章ファイルが再生成) で registry に pending_exceptions エントリ (category=dev-workflow, concerns=[operations], owner=daishiman, approval_state=approved) が追加され、dev-workflow.md 側の記述も『approved な pending 例外として上流指針を確定』へ更新されたことを確認。mapping_rule の手続き (owner/reason/approval_state 付き例外記録) が事後的に履行されたため、この finding は解消と判定する。system-category-taxonomy.json が 8 カテゴリのままなのは、当該 pending_exceptions の reason 欄に明記された『全プロジェクト共通シードへの昇格は見送り、プロジェクト固有として承認』という意図的な設計であり staleness ではないと再評価する。残る medium finding は 1 件 (backend.md のカード描画順が topo_order 通りでない、2 周連続未修正) のみで、high には至らないため verdict は PASS を維持する。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph → knowledge/doctrine/required-info/cross 全 profile exit0 (再実行済み)",
+        "validate-knowledge-graph.py --profile knowledge --order → [clean-code, ddd, design-patterns, clean-architecture, api-design-patterns, secure-by-design] (変化なし)",
+        "backend.md カード見出し順 (grep 実測、00:27断面でも不変): Clean Architecture(L50) → API Design Patterns(L91) → Domain-Driven Design(L134)。resource-map.yaml の backend read_when 出現順と一致し、topo 順とは不一致のまま",
+        "compile-spec-doc.py の category_design_refs()/render_design_refs() は resource-map 出現順を返すのみで topo_order 並べ替えロジックが実装されていない (ソース確認、変化なし)",
+        "【00:27断面で再確認】doctrine-anchor-registry.json pending_exceptions=[{category: dev-workflow, concerns: [operations], owner: daishiman, approval_state: approved, reason: 'CI/CD・GitHubフロー・リリース手順のプロジェクト発見カテゴリ...全プロジェクト共通シードへの昇格は見送り、本プロジェクト固有の確定として承認する'}]",
+        "dev-workflow.md 上流指針節 (00:27断面): '本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。' — 未解決開示から解決済み記述へ更新確認"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "C08 独立監査 verdict=PASS (前回 FAIL から改善)。形式層 (validate-source-citation.py) は exit0 (targets 17件全対応、C05でも独立再実行し一致)。内容鮮度層: 前回 FAIL の直接原因だった drizzle-orm (official_host を github.com→orm.drizzle.team へ是正) と typescript (7.0.2 が npm latest と一致) は確定的に解消。新規 target owasp-asvs 5.0.0 / rehype-sanitize 6.0.0 も host・version とも問題なし。【レポート検証中の二次ドリフトで判明】C08 の一次監査時点 (fetched-references.json sha256=fa91f15f..., 15557 bytes) では claude-code-plugins v2.1.212 が未確認 (v2.1.211までしか裏取りできず) の低 finding としていたが、レポート検証段階で C02 が同ファイルを再取得・全11章を再コンパイル (最終 sha256=f5d83498...935, mtime 00:27:07, 16603 bytes) しており、その新断面の記載では『鮮度更新 (2026-07-17再確認): CLI現行版はv2.1.212...公式changelogとGitHub releasesの一致を確認』と WebSearch 複数ソースでの裏取りが追記されている。これにより当該低 finding は解消と再評価する。同断面では drizzle-orm のバージョン系譜記述も更新され (前回監査で一次確認できず撤回したrc.4を今回の再照合で復元、という『撤回の撤回』の経緯が明記) ており、safe/prerelease両系列の追跡自体は継続していることが分かる。いずれも stable 0.45.2 は変わらず PASS 判定に影響なし。WebFetch 不可の環境制約(一次GET未実施)は残存する構造的な低finding。",
+      "evidence": [
+        "validate-source-citation.py exit0 (C05独立再実行、00:27断面でも再現し一致)",
+        "C08 一次監査: 欠落0/非公式host0/世代落ち0/確認時刻・出典欠落0/鮮度未確認1 (claude-code-plugins v2.1.212、当時)",
+        "C08 WebSearch: orm.drizzle.team が公式、npm drizzle-orm latest=0.45.2 確認",
+        "C08 WebSearch: typescript 7.0.2 がnpm latestと一致確認",
+        "【00:27断面で再確認】fetched-references.json claude-code-plugins summary: '鮮度更新 (2026-07-17再確認): CLI現行版はv2.1.212...公式changelogとGitHub releasesの一致を確認' — 未確認から確認済みへ更新",
+        "fetched-references.json は C08 一次監査時 sha256=fa91f15f...で安定していたが、レポート検証段階 (本評価の最終フェーズ) で二次ドリフト発生、最終安定断面 sha256=f5d83498...935 (mtime 00:27:07, 16603 bytes) へ再接地"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "決定論ゲート: system-spec-harness の全 18 prompt に対し verify-completeness.py と validate-prompt.py を C05 が独立再実行し 18/18 双方 exit0 (前回と変化なし、prompt ファイル自体も未変更)。意味層: L1-L7 役割分担・客観的停止条件・監査 agent の非干渉境界を再確認、独立 design findings に high なし。",
+      "evidence": [
+        "verify-completeness.py + validate-prompt.py (--input 形式で実行): 18 prompt × 2 validator 全て exit0",
+        "prompt ファイル mtime 未変更 (前回評価以降の編集なし)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "G-matrix-loop",
+      "name": "validate-coverage-matrix (loop)",
+      "conditions": ["matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop) を満たす"
+    },
+    {
+      "id": "G-matrix-complete",
+      "name": "validate-coverage-matrix (--require-complete)",
+      "conditions": ["matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-complete"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)) を満たす (00:13 断面。前回 22:52 断面の exit1 から改善)"
+    },
+    {
+      "id": "G-foundation",
+      "name": "validate-coverage-matrix (--require-foundation)",
+      "conditions": ["foundation_trace", "decision_guidance"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-foundation"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-kg-knowledge",
+      "name": "validate-knowledge-graph (--profile knowledge)",
+      "conditions": ["design_knowledge_reflection"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-kg-doctrine",
+      "name": "validate-knowledge-graph (--profile doctrine)",
+      "conditions": ["design_knowledge_reflection"],
+      "exit_code": 0,
+      "stderr": "dev-workflow は registry の in-scope categories に含まれず機械ゲートの直接検査対象外。ただし00:27断面の再確認で registry.pending_exceptions に dev-workflow (owner=daishiman, approval_state=approved) が追加登録済みであることを意味層レビューで確認 (findings参照、解消)"
+    },
+    {
+      "id": "G-kg-required-info",
+      "name": "validate-knowledge-graph (--profile required-info)",
+      "conditions": ["matrix_coverage"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-kg-cross",
+      "name": "validate-knowledge-graph (--profile cross)",
+      "conditions": ["design_knowledge_reflection", "matrix_coverage"],
+      "exit_code": 0
+    },
+    {
+      "id": "G-citation-form",
+      "name": "validate-source-citation (C13, C05独立再実行・C08実行と一致)",
+      "conditions": ["doc_freshness"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-source-citation.py", "--targets", "system-spec/spec-state.json", "--references", "system-spec/fetched-references.json", "--state", "system-spec/spec-state.json"],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす"
+    },
+    {
+      "id": "G-prompt-quality",
+      "name": "verify-completeness + validate-prompt (18 prompts)",
+      "conditions": ["prompt_quality"],
+      "exit_code": 0,
+      "stdout": "TOTAL pass=18 fail=0"
+    },
+    {
+      "id": "G-compile-tests",
+      "name": "pytest test_compile_spec_doc.py",
+      "conditions": ["design_knowledge_reflection", "matrix_coverage"],
+      "command": ["python3", "-m", "pytest", "plugins/system-spec-harness/skills/run-system-spec-compile/tests/test_compile_spec_doc.py", "-q"],
+      "exit_code": 0,
+      "stdout": "42 passed"
+    },
+    {
+      "id": "G-evaluator-selftest",
+      "name": "pytest test_aggregate_completeness.py",
+      "conditions": ["prompt_quality"],
+      "command": ["python3", "-m", "pytest", ".claude/skills/assign-system-spec-completeness-evaluator/tests/test_aggregate_completeness.py", "-q"],
+      "exit_code": 0,
+      "stdout": "28 passed"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "matrix_coverage",
+      "observation": "C06 (hearing sub-input) 軸2 (誘導質問) が依然 FAIL: qa-014/qa-028/qa-029/qa-030/qa-031/qa-034 の 6 件が前回評価時から文言変更・中立化・反証提示のいずれも無く未変更のまま残存 (新規 qa-036〜qa-042 に誘導質問パターンは検出されず)。qa-028/029/031/034 は質問文へ『AI 推奨 = …』の断定前提を埋め込み、qa-014/030 は複数独立承認判断を単一 yes/no に束ねている。2 回連続の評価サイクルで未解消。",
+      "suggested_fix": "C01 (run-system-spec-elicit) で該当確定 (D5/D6・backend/infrastructure 詳細・requirements_foundation 改訂) を中立設問で個別再確認するか、反証提示・選択肢等価提示の記録を qa_log に残して監査を解消する。ヒアリング所有者への申し送り事項として継続。",
+      "evidence": ["C06 再監査 (今回): 検出6件、新規0件", "qa-028/029/031/034 本文の『AI 推奨 = …』断定前提 (C05独立確認)", "前回レポート (22:52断面) から同一6件で変化なし"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "evaluation_process",
+      "observation": "評価中に spec-state.json が並行編集で再更新され (pin sha256=d256a77f...→d8be8927..., mtime 23:51→00:13:04, qa_log 39→42件)、その過程で『並行ヒアリング統合時の qa 採番衝突により旧 qa-034 (frontend 内容) の質疑録が別スレッドの qa-034 (infrastructure 内容) 上書きで消失し、frontend.web/auth.desktop-windows/auth.desktop-macos/security.desktop-windows/security.desktop-macos/security.web の計6セルが一時的に無関係な qa へ誤参照した』という reopen_log 記載の実事象が判明した。現状は qa-040/041/042 への再登録で修復済み (C05/C06/C07 三者で内容照合し整合確認)だが、qa-id 採番に排他制御が無いという構造的リスクが実際に顕在化した。",
+      "suggested_fix": "C01 (run-system-spec-elicit) の qa-id 採番ロジックに一意性検査/ロックを追加し、並行ヒアリングセッション間の id 衝突を構造的に防止する。過去の衝突は qa-040/041/042 で修復済みのため追加のデータ復旧は不要。",
+      "evidence": ["spec-state.json reopen_log: 『並行ヒアリング統合時のqa採番衝突』記載複数件", "frontend.md qa-040 質問文注記: 『旧qa-034の質疑録が失われたためqa-040として再登録』", "C06/C07/C05 独立照合: 修復後の6セル全て内容整合"]
+    },
+    {
+      "severity": "medium",
+      "bucket": "design_knowledge_reflection",
+      "observation": "backend.md の設計知識カード順が Clean Architecture → API Design Patterns → DDD (resource-map 出現順) のままで、知識グラフ topo_order (ddd→clean-architecture→api-design-patterns) と 2 回連続の評価サイクルで不一致。R2-render.md (L28) 自身の記述例も真の topo_order と矛盾したままであり、compile-spec-doc.py の category_design_refs()/render_design_refs() は topo 並べ替えロジックを実装していない (前回指摘から無修正)。",
+      "suggested_fix": "C03 (compile) で render_design_refs に topo_order 並べ替えを実装して backend.md を再生成するか、R2-render の C14 条項・記述例を実装仕様に合わせて訂正する。2 周連続未対応のため優先度を上げて対応を推奨。",
+      "evidence": ["validate-knowledge-graph --profile knowledge --order の topo_order (変化なし)", "backend.md カード見出し行番号 (grep実測): L50 Clean Architecture, L91 API Design Patterns, L134 DDD", "compile-spec-doc.py category_design_refs()/_resource_map_read_when() のソース確認 (topoソートなし)"]
+    },
+    {
+      "severity": "info",
+      "bucket": "design_knowledge_reflection",
+      "observation": "【当初 medium finding → 本評価内で解消確認】評価開始時点 (spec-state.json 00:13断面) では dev-workflow が doctrine-anchor-registry.json の categories/category_concern_map/pending_exceptions のいずれにも未登録のまま status=confirmed で出荷されており、registry 自身の mapping_rule (未帰属 category は owner/reason/approval_state 付き pending 例外として記録) の手続き未履行として medium finding 計上していた。レポート検証段階で発生した二次ドリフト (fetched-references.json 含む全11章の再生成、最終断面 00:27) を確認したところ、doctrine-anchor-registry.json の pending_exceptions に {category: dev-workflow, concerns: [operations], owner: daishiman, approval_state: approved, reason: 'CI/CD・GitHubフロー・リリース手順のプロジェクト発見カテゴリ...全プロジェクト共通シードへの昇格は見送り、本プロジェクト固有の確定として承認する'} が追加され、dev-workflow.md 側の記述も『approved な pending 例外として上流指針を確定』へ更新されていた。mapping_rule の手続きが事後的に正しく履行されたため finding は解消と判定する。system-category-taxonomy.json が8カテゴリのままなのは、この承認された例外が意図的に共通シードへ昇格させない設計であるためで staleness ではない。",
+      "suggested_fix": "対応不要 (解消確認)。今後同様のプロジェクト固有カテゴリ追加時も、compile前にpending_exceptions登録を先行させる運用を維持すること。",
+      "evidence": ["【00:27断面】doctrine-anchor-registry.json pending_exceptions に dev-workflow エントリ (approval_state=approved) を確認", "【00:27断面】dev-workflow.md 上流指針節が解決済み記述へ更新", "【00:13断面(旧)】当初は categories/category_concern_map/pending_exceptions いずれにも不在だったことをC05が独立確認済み"]
+    },
+    {
+      "severity": "low",
+      "bucket": "matrix_coverage",
+      "observation": "infrastructure.desktop-windows / desktop-macos の qa_ref=qa-003 は Hub web hosting 主体の質疑で、desktop 配布への言及が末尾一文 (Publisher/Skill配布のURL型marketplace/Bootstrap Installerの2経路をStage 0 technical gate (H7) で検証)のみの薄い裏付けのまま、2 回連続で未補強 (C07 継続指摘)。",
+      "suggested_fix": "C01 で desktop 配布を直接裏付ける qa への差し替えまたは補強質疑を行う。",
+      "evidence": ["C07 再監査 finding (c)", "qa-003 本文 (C05独立確認)"]
+    },
+    {
+      "severity": "info",
+      "bucket": "doc_freshness",
+      "observation": "【当初 low finding → 本評価内で解消確認】C08 の一次監査時点 (fetched-references.json sha256=fa91f15f...) では claude-code-plugins の anchor v2.1.212 は WebSearch で v2.1.211 までしか裏取りできず鮮度未確認としていた。レポート検証段階の二次ドリフト (最終断面 sha256=f5d83498...935, mtime 00:27:07) で該当エントリの summary が『鮮度更新 (2026-07-17再確認): CLI現行版はv2.1.212...公式changelogとGitHub releasesの一致を確認』へ更新されていることを確認し、finding は解消と判定する。リリース頻度が高いツールのため今後も定期的な再確認が望ましい構造的リスクは残る (別途 low finding として記録)。",
+      "suggested_fix": "対応不要 (解消確認)。リリース頻度の高さに鑑み、doc_freshness監査の定期再実行を推奨。",
+      "evidence": ["【00:27断面】fetched-references.json claude-code-plugins summary が『v2.1.212確認済み』へ更新", "【一次監査時点】C08: WebSearchでv2.1.211までのみ確認 (当時)"]
+    },
+    {
+      "severity": "low",
+      "bucket": "doc_freshness",
+      "observation": "リリース頻度が高い claude-code-plugins のようなツールは latest_checked_at から短時間で再び世代落ちしうる構造的リスクがある。今回の評価サイクル内でも v2.1.211→v2.1.212確認という追いつきが観測された。",
+      "suggested_fix": "高頻度リリースの target には再確認間隔のポリシー (例: N日以内の再照合) を doc-freshness-auditor の運用ルールとして明文化する。",
+      "evidence": ["fetched-references.json claude-code-plugins エントリの latest_checked_at 変遷"]
+    },
+    {
+      "severity": "low",
+      "bucket": "doc_freshness",
+      "observation": "C08 監査環境で WebFetch が今回も無効だったため、内容鮮度層の一次 GET 照合は未実施で WebSearch 裏取りのみ。typescript/drizzle-orm/claude-code-plugins/authjs/owasp-asvs/rehype-sanitize の6件で同一の環境制約文言が一貫して記録されている。",
+      "suggested_fix": "WebFetch 可能な環境で C08 (doc-freshness-auditor) を再実行し、一次 GET で現行版を確定する。",
+      "evidence": ["C08 報告の環境注記 (今回も同様)"]
+    },
+    {
+      "severity": "low",
+      "bucket": "foundation_trace",
+      "observation": "G5 と U6 の一部要素 (顧客の情報システム/セキュリティ部門) は個別 qa 由来の verbatim 記録がなく、AI 起草文の一括承認 (qa-030/appr-005) に遡及性を依存している (C06 5th 軸、変化なし)。U1-U9 の確定自体は明示承認済みで pass 基準は満たす。今回は現状のまま判定 (追加調査なし)。",
+      "suggested_fix": "C01 で G5/U6 追加要素の由来を qa_log へ遡及記録する (appr-002 方式の遡及エントリ追加)。",
+      "evidence": ["C06 再監査: 変化なし、appr-002/appr-005 へ遡及可能"]
+    },
+    {
+      "severity": "info",
+      "bucket": "evaluation_process",
+      "observation": "前回評価 (FAIL, 22:52断面) からの大幅な改善を確認: (1) 未収集8セルは全解消 (9カテゴリ×6platform=54セル、qa-036〜039 + dev-workflow新設)。(2) frontend.web の qa_ref 取り違え (前回 high finding) は qa-040 への修復で解消。(3) auth/security desktop の qa_ref 薄い参照も qa-041 へ修復。(4) security.web の qa_ref 取り違えも qa-042 へ修復。(5) doc_freshness は前回 FAIL (非公式host+世代落ち2件) から PASS へ改善 (drizzle-orm/typescript 解消、claude-code-plugins は大幅是正)。(6) 章ドキュメントと正本 spec-state の乖離 (前回medium finding) も解消 (全11ファイルが spec-state 確定後の単一パスで再コンパイル、mtime整合)。",
+      "evidence": ["前回レポート eval-log/run-system-spec-completeness-report.json との比較", "gate_results 全件 (G-matrix-complete等) の exit0 化"]
+    },
+    {
+      "severity": "info",
+      "bucket": "evaluation_process",
+      "observation": "本評価も実行中に spec-state.json が2回変化した (依頼時 pin sha256=d256a77f... mtime 23:51 148810bytes → 監査開始直後に sha256=d8be8927... mtime 00:13:04 161480bytes へ、その後00:15:38に全章ドキュメントが再コンパイル)。C05/C06/C07 は最終的に同一断面 (sha256=d8be8927...de029) へ独立に接地し直し、内容が一致することを相互確認した。本レポートはこの断面に接地する。C08 の入力 (fetched-references.json) は C08 監査時点で sha256=fa91f15f...(15557bytes)のまま安定していた。",
+      "evidence": ["spec-state.json sha256/mtime の時系列変化", "C06/C07 からの独立再取得報告と内容一致確認"]
+    },
+    {
+      "severity": "info",
+      "bucket": "evaluation_process",
+      "observation": "【第三のドリフト、レポート作成・検証フェーズ中に発生】3サブエージェントからの受領・レポート初稿作成・aggregate-completeness.pyによる自己整合性検証(exit0)まで完了した直後、read-only再確認のため各正本のsha256/mtimeを再取得したところ、spec-state.json は sha256=d8be8927...de029 (mtime 00:13:04, 161480bytes) のまま安定していたが、fetched-references.json は sha256=fa91f15f...(15557bytes, C08監査時点)から sha256=f5d83498...935 (mtime 00:27:07, 16603bytes) へ変化しており、全11章ファイルのmtimeも一斉に00:27へ更新されていた (C02の再取得+C03の再コンパイルが評価の最終段階で並行進行していたことを示す)。4秒間隔での複数回再取得により当該断面が安定していることを確認した上で、内容差分 (dev-workflow doctrine-anchor pending_exceptions登録、claude-code-plugins v2.1.212確認、drizzle-orm rc.4復元の経緯記述追加、backend.mdカード順は不変) を検証し、本レポートの該当箇所 (design_knowledge_reflection、doc_freshness) をこの最新安定断面に合わせて訂正した。spec-state.json自体(マトリクス・決定・ヒアリング進捗などの一次正本)は変化していないため、matrix_coverage/foundation_trace/decision_guidanceの判定根拠には影響しない。",
+      "evidence": ["spec-state.json: レポート検証時も sha256=d8be8927193386b17b4a427b46168a786777490a80ad09320ed54e1c7b5de029 で不変", "fetched-references.json: fa91f15ff82292843b5c9b7fa05d2fceba47050d3c229ccd3ddd43b9a2164806 (15557bytes) → f5d834988a73516ff54b36ca0454387c0e610bca2c28881a2a43a5d208106935 (mtime 00:27:07, 16603bytes)", "全11章.mdファイルのmtimeが一斉に00:27へ更新 (ls -la実測)", "4秒間隔×複数回のshasum再取得で最終断面の安定を確認"]
+    },
+    {
+      "severity": "info",
+      "bucket": "prompt_quality",
+      "observation": "全 18 prompt が verify-completeness.py (l5-contract v2.0) と validate-prompt.py の双方で exit0 (C05独立再実行)。L1-L7役割・客観的停止条件・監査agentの非干渉境界を意味層でも確認し high なし。",
+      "evidence": ["G-prompt-quality: TOTAL pass=18 fail=0"]
+    },
+    {
+      "severity": "info",
+      "bucket": "decision_guidance",
+      "observation": "D1-D6 全件が3案+無料/低コスト案+comparison_basis 5軸+caveats+公式evidence_refs+user_decisionを備え、D2でAI推奨棄却の実績あり。qa-037の security深掘りに伴うbackend/database差分も既存決定を全面維持したままの追補であることを確認。",
+      "evidence": ["spec-state.json decisions[] (変化なし)", "qa-037 本文の『既存基盤は全て不変』明記"]
+    },
+    {
+      "severity": "info",
+      "bucket": "foundation_trace",
+      "observation": "U1-U9 全項目が値で確定、goal-objective-intent-cell-chapter の参照 dangling 0件、--require-foundation exit0を再確認 (dev-workflow追加後も維持)。",
+      "evidence": ["G-foundation exit0", "dangling検査0件 (9章で再確認)"]
+    }
+  ],
+  "gaps": [
+    "C01 (run-system-spec-elicit) へ差し戻し: C06 検出の誘導質問疑い 6 件 (qa-014/028/029/030/031/034、2 回連続の評価サイクルで未変化) について、中立設問での個別再確認または反証提示記録により監査を解消する",
+    "C01 へ差し戻し: qa-id 採番の排他制御/衝突検出を追加し、並行ヒアリングセッションによる質疑録消失の再発を防止する (今回発生した qa-034 消失事象は qa-040/041/042 で修復済みだが根本原因は未対処)",
+    "C01 へ差し戻し: infrastructure.desktop-windows/desktop-macos の qa-003 薄い参照の補強 (2 回連続未対応)",
+    "C03 (run-system-spec-compile) へ差し戻し: backend.md の設計知識カード順を topo_order へ揃える (render_design_refs の並べ替え実装 or R2-render の C14 条項・記述例の訂正。2 回連続未対応のため優先度を上げる)",
+    "C02 (run-system-spec-doc-fetch) へ差し戻し (優先度低・構造的リスクのみ): 高頻度リリースツール (claude-code-plugins 等) の再確認間隔ポリシーを doc-freshness-auditor の運用ルールへ明文化する (個別のv2.1.212確認自体は本評価内で解消済み)",
+    "C01 へ差し戻し (優先度低・現状のまま申し送り): G5/U6 追加要素の qa_log 遡及記録の補完 (appr-002 方式)",
+    "監査再実行: パイプラインが依然として並行編集下にある (本評価中に spec-state.json 1回・fetched-references.json+全章ファイル1回の計2回のドリフトを検出) ため、静止断面 (直近の reopen_log 追記や章ファイルmtime更新が無いことで確認) で C05 を再実行し、matrix_coverage の誘導質問是正状況を再評価する"
+  ]
+}

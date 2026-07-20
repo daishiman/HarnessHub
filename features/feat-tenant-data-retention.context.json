@@ -1,0 +1,31 @@
+{
+  "graph_node_id": "feat-tenant-data-retention",
+  "artifact_kind": "feature",
+  "purpose": "C4 改訂 (qa-045-048, appr-007) で保持可能となった顧客業務ナレッジ・harness 実行入出力データを、R2 + テナント別封筒暗号化で保管し、即時完全削除を保証する独立した価値提供単位",
+  "goal": "テナント業務データの upload / 取得 / 即時完全削除 API と R2 使用量監視を提供し、C4 の非保持境界 (顧客業務システム接続 credential と WebApp runtime) を維持したまま業務データのみを安全に扱える状態",
+  "scope_in": [
+    "tenant_data_objects テーブルの CRUD API 設計・実装",
+    "R2 への content-addressed 業務データ保管 (テナント別 DEK 封筒暗号化)",
+    "即時完全削除 (R2 blob・DB row・backup 断面の同時削除)",
+    "R2 使用量監視・上限アラート",
+    "S15 添付 / S12 実行入出力閲覧向けの任意統合 API 契約・extension point (host UI は各 feature が所有)"
+  ],
+  "scope_out": [
+    "顧客業務システム接続 credential と WebApp runtime の保管 (C4 により恒久的に非保持)",
+    "業務データを入力とする AI ジョブ実行ロジック (feat-hearing-intake / feat-build-pipeline-board 側)",
+    "既存 users.salary / idp_connections.client_secret_enc の封筒暗号化 (feat-auth-tenancy / feat-domain-model-db 既管理)"
+  ],
+  "acceptance": [
+    "テナント A の業務データがテナント B のいかなる authz role からも取得不可であること (テナント分離テストが PASS)",
+    "削除 API 実行後、R2 blob・DB row・backup 断面のいずれにも当該データの平文/暗号文が残存しないこと (削除完全性テストが PASS)",
+    "保管された業務データが R2 上で平文として存在せず、テナント別 DEK で封筒暗号化されていること (暗号化検証テストが PASS)"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-data.md",
+    "architecture/harness-hub-security.md",
+    "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-infrastructure.md",
+    "specs/harness-hub-system-specification.md"
+  ],
+  "updated_at": "2026-07-18T22:35:48Z"
+}

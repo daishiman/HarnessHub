@@ -1,0 +1,181 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-publisher-plugin",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:8fd4221cbc7fa8d2278014888d1d55be3db8401066964dd46d17bb2d75231199",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で goal-spec.json (purpose/goal/scope_in 5件/scope_out 2件/acceptance 3件/quality_constraints 8件) との矛盾は検出されなかった。P01 requirements-baseline は goal-spec.json を逐語転記する起点 task と明記され、P02-P13 は『本ベースラインの確定内容にのみ従う』と宣言されている。全 13 spec の『スコープ外』節は scope_out 2件 (Hub側API実装=feat-publish-pipeline所有/専用desktop GUI非作成=qa-007) を一貫して継承し、他 feature 責務 (packages/inspectionの実装・Hub側device/publish/deployment endpoint実装・plugins/harness-creator本体への変更) を明示的に自 feature スコープ外として記載しており混入は確認されなかった。acceptance 3件は P06(テスト実行・実測)→P07(受入判定)→P10(最終確認)→P13(close-out確定) の経路で過不足なく写像され、quality_constraints 8件は P01(背景転記)→P02/P03(設計・レビュー)→P04(テスト設計)→P05(実装)→P09(セキュリティ/QA確認)→P10(最終レビューで8件id単位列挙)→P11(証跡)まで一貫してトレース可能。features/feat-publisher-plugin.md の frontmatter (purpose/goal/scope_in/scope_out/acceptance) と goal-spec.json を逐語比較し完全一致を確認した。なお features/feat-publisher-plugin.md 本文『上流未解決』節が言及する『feedback サブコマンドを scope に含めるかを P02 で確定する』という論点は goal-spec.json の scope_in/scope_out/quality_constraints いずれにも含まれておらず、P02 task spec (architecture-decision-record.md 対象) 本文にもこの論点への言及は無い。goal-spec.json 自体には矛盾がないため C1 の形式要件 (13 task と goal-spec の無矛盾) は満たすが、上流ソースとの整合という観点では低重大度の findings として別途記録する。",
+      "evidence": [
+        "feature-package.json#source_feature_digest (goal-spec.json の purpose/goal/scope_in(5)/scope_out(2)/acceptance(3)/quality_constraints(8) との無矛盾を確認)",
+        "task-specs/phase-01-requirements.md#目的 (goal-spec.json 逐語転記を起点 task として明記し、features/feat-publisher-plugin.md frontmatter の purpose/goal/scope_in/scope_out/acceptance との逐語一致を確認)",
+        "task-specs/phase-07-acceptance.md#受入 (acceptance 3件の判定手順)",
+        "task-specs/phase-10-final-review.md#背景 (quality_constraints 8件・acceptance 3件の最終突き合わせ)",
+        "task-specs/phase-01-requirements.md#スコープ外 (全 13 spec の同節で scope_out 2 件の一貫継承・混入 0 件を確認)"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "validate-system-plan.py を本 agent が独立実行し exit 0 (violations=[]) を確認、validated_digest=sha256:8fd4221cbc7fa8d2278014888d1d55be3db8401066964dd46d17bb2d75231199 は staging-manifest.json の canonical_digest と一致した。feature-package.json task_count=13・phase_refs=P01..P13 (順序一致)、task-graph.json 13 node、workstream-inventory.json 13 task であり exact-13 が確認された。単一 skill への退化・水増しは無く、13 phase はそれぞれ異なる責務 (要件/設計/レビュー/テスト設計/実装/実行/受入/リファクタリング/QA/最終レビュー/証跡/文書化/リリース) を持つ固有の目的・背景・成果物を記載していた。P08 (リファクタリング/マイグレーション) は『本feature は永続DB migrationを持たない』ため『Python資産参照コメント整理とpackages/inspection消費コードのクリーンアップ』へ、P13 (リリース/デプロイ) は『Hub本体の実デプロイを持たない』ため『marketplace.json登録依頼内容の確定とacceptance close-out判断』へ、それぞれ具体的な代替タスクとして読み替えられており、内容の空疎化は確認されなかった。13 task 全ての Verification and evidence 節は同一の決定論ゲートコマンドを参照している。",
+      "evidence": [
+        "gate:deterministic-validation#exact-13/violations=0 (本 agent による独立実行、exit0)",
+        "feature-package.json#task_count=13,phase_refs(P01..P13順序一致)",
+        "task-graph.json#nodes (13件)",
+        "workstream-inventory.json#tasks (13件)",
+        "task-specs/phase-08-refactoring-migration.md#背景 (DB migration非保有のための読み替え理由明記)",
+        "task-specs/phase-13-release-deploy.md#背景 (実デプロイ非保有のための読み替え理由明記)"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "feature_context_digest (sha256:d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41) が goal-spec.json / feature-package.json (source_feature_digest) / system-build-handoff.json (identity.source_feature_digest) / .dev-graph/locks/system-dev-plan-lock.json (feature_digest) の4箇所で一致することを確認した。本 agent が shasum -a 256 で features/feat-publisher-plugin.context.json を独立再計算し同値と完全一致することも確認した。lineage 3件 (architecture/harness-hub-backend.md, architecture/harness-hub-security.md, specs/harness-hub-system-specification.md) の wrapper_sha256 (bd5a3821…/5af52375…/a4c26b6d…) も本 agent が独立 shasum 再計算し goal-spec.json 記載値と完全一致を確認した。canonical digest は本 agent が (1) validate-system-plan.py 独立実行の validated_digest、(2) staging-manifest.json 記載の canonical_digest、(3) 本 agent 独自の Python 再実装 (canonical_digest アルゴリズム: sorted rel path + content の sha256 連結) による再計算、(4) 依頼指定値、の4者が sha256:8fd4221cbc7fa8d2278014888d1d55be3db8401066964dd46d17bb2d75231199 で完全一致することを確認し staleness なし。staging-manifest.json#files に列挙された17ファイル全件について本 agent が shasum -a 256 で個別再計算し、一致を確認した (feature-package.json/system-build-handoff.json/task-graph.json/task-specs 13件/workstream-inventory.json)。feature_package_id=feature-package/feat-publisher-plugin, parent_feature=feat-publisher-plugin, repository_id=github:daishiman/HarnessHub が feature-package.json/goal-spec.json/task-graph.json/workstream-inventory.json/system-build-handoff.json/.dev-graph/config.json/.dev-graph/locks/system-dev-plan-lock.json の全箇所で一致することを確認した。task id (workstream-inventory.json#tasks[].id) と graph node id (task-graph.json#nodes[].id) は SYS-PUBLISHER-PLUGIN-P01..P13 で1対1一致し、graph_node_registration.file_path は全13件が tasks/feat-publisher-plugin/sys-publisher-plugin-p0X.md 形式 (parent_feature namespace 配下) で統一されていた。",
+      "evidence": [
+        "feature-package.json#source_feature_digest (goal-spec.json#feature_context_digest / system-build-handoff.json#identity.source_feature_digest / .dev-graph/locks/system-dev-plan-lock.json#feature_digest との4箇所一致を本agentが独立shasum再計算で確認)",
+        "gate:deterministic-validation#validated_digest = staging-manifest.canonical_digest = 依頼指定値 = 本agent独自再計算値 (4者一致)",
+        "staging-manifest.json#files (17件、本agent shasum -a 256 独立再計算で全件一致)",
+        "workstream-inventory.json#tasks[].id (task-graph.json#nodes[].id との1対1一致、graph_node_registration.file_path の tasks/feat-publisher-plugin/ namespace統一を確認)"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json#nodes の depends_on を全件確認した結果、P01: [] (起点)、P02: [P01]、P03: [P02]、P04: [P03]、P05: [P04]、P06: [P05]、P07: [P06]、P08: [P07]、P09: [P08]、P10: [P09]、P11: [P10]、P12: [P11]、P13: [P12] という単純な前方線形鎖であり、同一 feature 内の直前 phase のみを参照する前方 edge のみで構成され、後方参照・自己参照・分岐参照は無く acyclic であることを確認した。validate-system-plan.py の non-forward-edge / cross-feature-or-missing-edge 検査も違反0件だった。cross-feature 依存の混入は無く、feat-publish-pipeline への依存は features/feat-publisher-plugin.md frontmatter (depends_on: [feat-publish-pipeline]) および goal-spec.json quality_constraint (hub-api-implementation-out-of-scope-depends-on-feat-publish-pipeline) として dev-graph 正本レベルでのみ表現され、task-graph.json#nodes[].depends_on には一切コピーされていないことを確認した (13 task spec 本文の『前提条件』『スコープ外』節でも feat-publish-pipeline 提供物 [packages/inspection, Hub側 device/publish/deployment endpoint] を『consumer』または『owner=feat-publish-pipeline』として言及するのみで、依存 edge としては表現していない)。",
+      "evidence": [
+        "task-graph.json#nodes[].depends_on (P01→[]、P02..P13 は直前1件のみを参照する線形鎖、13件全て確認)",
+        "gate:deterministic-validation#non-forward-edge,cross-feature-or-missing-edge 違反0件 (本agent独立実行)",
+        "task-graph.json#nodes[*].depends_on (features/feat-publisher-plugin.md frontmatter の feature 間依存 feat-publish-pipeline は dev-graph 正本のみに存在し task-graph への混入なしを確認)",
+        "task-specs/phase-02-architecture.md#スコープ外 (feat-publish-pipeline提供物をconsumerとして言及するのみ)",
+        "task-specs/phase-05-implementation.md#スコープ外 (同上、consumerとして言及するのみ)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-publisher-plugin",
+        "--repo-root",
+        "."
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:8fd4221cbc7fa8d2278014888d1d55be3db8401066964dd46d17bb2d75231199\", \"feature_package_id\": \"feature-package/feat-publisher-plugin\", \"parent_feature\": \"feat-publisher-plugin\", \"phase_refs\": [\"P01\", \"P02\", \"P03\", \"P04\", \"P05\", \"P06\", \"P07\", \"P08\", \"P09\", \"P10\", \"P11\", \"P12\", \"P13\"], \"violations\": []}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "74c1f3384f0ed36a6cd2e1b1dfc6053c23ca70ab9f2db8acb98f18f5fdf7cf63"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "87be6b9a94643a2776c69610ae883f61ae1f19becd0b3b6d7c263a51588ae248"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "377e48db87490c5bd3294ce33e60bc084ae761fcc57761304206318e45653c1c"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "21d734c5fe4f105ed8326a6f66235850360c6dce8e8c87231ed5a1771239ef23"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "4dc2c35a46bac0d4ade611afd85123667ec4797bd577610af26c1aa62c6d224d"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "ebf60606f58369bb09e10f528e9e8abf47120ab631dc8f05666afd6237cdbb49"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "d1227e01bde860826fd8930a239ce8e29b01607d0b5e64b06d160a7bf295348c"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "b0b8cc22af278627849fca5f9d65b71e3a477c12db0b8d1249d47c393936106c"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "f704112d0c68c7306acca1e51f1d3aa0707ab77a20a25d01e825711d0ae92c40"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "aefa5a65a4041bd018adbe3902bf002b11cecd386bd149aaa4cff4eebf794b49"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "185ff710320eb0863b887a97a7a1dd60fd27e61c396bed1fe9c68eabc9f3449e"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "c542647d1f741c1b031ee014397e5fe58ae8fbba875ea3e54bc136b9a678e0cb"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "57362a56f463d8bcc8e6b12bbcee3f92bde6a7036e394842438d03f5f019dd66"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "6bd78a06409cf39069790a196b4aad6a6003e4b0f99d7578311b671f082faa7b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "30d658270344feb00854c35733822e56a36df9fc30b6da66ce77dbd11b94ee9c"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "8bfdcafe958ca49c1a5aca49b216b3e6c569f1280df6865feaaa88cd8e4a683b"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "8b4a14db95d4e9fc8bd42d5caf371ca39a1dbad9d86d02c1cb66ce833bc2650b"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "b6772bd972503284ed05cc9f2bfda075491f0d519c9590fb851f9511d952c767"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 task spec 全文読解・validate-system-plan.py 独立実行 (exit0, violations=0)・staging-manifest.json#files 17件の shasum -a 256 独立再計算全件一致・canonical digest の独立 Python 再実装による再計算一致 (validator値/manifest値/依頼指定値/本agent再計算値の4者一致)・lineage digest 4件 (feature-context + architecture wrapper 3件) の独立 shasum 再計算一致・task-graph.json depends_on 13件の前方線形鎖確認 (acyclic)・feat-publish-pipeline 依存が dev-graph 正本 (features/feat-publisher-plugin.md frontmatter) にのみ存在し task-graph.json へコピーされていないことの確認・quality_constraints 8件の全 phase 横断トレース・repository boundary (write_scope が docs/features/feat-publisher-plugin/ および apps/publisher/, packages/schemas/publisher-plugin/ に閉じ、他featureへの越境なし) の確認を実施した。blocking findings なし。",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json",
+        "task-graph.json",
+        ".dev-graph/locks/system-dev-plan-lock.json"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "process/upstream-open-question-not-carried-forward",
+      "observation": "features/feat-publisher-plugin.md 本文の『上流未解決 (P02 設計時に解消)』節は『claude harness feedback CLI 受付コマンド (I12/J5 の CLI 経路) の実装 owner が未確定であり、本 feature が feedback サブコマンドを scope に含めるかを P02 で確定する』ことを明記している。しかし goal-spec.json の scope_in/scope_out/quality_constraints のいずれにもこの論点は含まれておらず、P01 task は『以降の P02-P13 は本ベースラインの確定内容にのみ従う』と宣言しているため、P02 (アーキテクチャ設計) task spec の目的/背景/成果物にも feedback サブコマンドの scope 判断への言及が無い。goal-spec.json 自体には矛盾がなく C1 の形式要件 (13 task と goal-spec の無矛盾) は満たすため blocking ではないが、上流ソース (features/feat-publisher-plugin.md) が明示的に P02 での確定を要求した論点が goal-spec 生成段階で goal-spec に転記されず、結果として P02 でも未解決のまま後続 phase へ引き継がれている。次回 goal-spec.json 更新時に本論点を quality_constraints またはスコープ外へ明示的に記録することを推奨する (blocking ではない)。",
+      "evidence": [
+        "features/feat-publisher-plugin.md#上流未解決 (P02 設計時に解消)",
+        "goal-spec.json#scope_in,scope_out,quality_constraints (feedback CLI 論点への言及なし)",
+        "task-specs/phase-02-architecture.md#目的,背景 (feedback サブコマンド scope 判断への言及なし)"
+      ]
+    }
+  ]
+}

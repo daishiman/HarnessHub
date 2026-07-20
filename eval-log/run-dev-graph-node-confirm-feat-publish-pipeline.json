@@ -1,0 +1,22 @@
+{
+  "op": "confirm",
+  "graph_node_id": "feat-publish-pipeline",
+  "transition": {
+    "confirmation_status": [
+      "draft",
+      "confirmed"
+    ]
+  },
+  "confirmed_at": "2026-07-18T01:41:36Z",
+  "source_digest_pinned": "0b9abd017b626ed25dd76cb2860a8a25dacd3a3ea6b6e8a4633220f7cd8dfad1",
+  "review_basis": [
+    "scope_in/scope_out/acceptance を system-spec 確定内容 (qa-009 REST+zod / qa-010 検査共有 package / qa-033 endpoint・状態機械詳細 / I2 Green自動公開・I3 immutable Release+stable pointer / docs/backend-spec.md §4-§5 の PublishRequest 状態機械・API 詳細正本) と突合し矛盾なし",
+    "S13 構築パイプライン (feat-build-pipeline-board) との接続境界は B4 で確定済み (published plan が consume-only を宣言)",
+    "docs/shared-layers.md (検査 pipeline 共有 package/監査 logger の owner 境界) と整合",
+    "ユーザー指示: S4 続行指示 (2026-07-18 「つづけて」)"
+  ],
+  "validator": {
+    "schema": "validate-graph-schema.py",
+    "valid": true
+  }
+}

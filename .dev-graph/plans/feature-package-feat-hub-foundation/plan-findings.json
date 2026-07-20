@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task 全文精読で仕様間矛盾なし。P08 (greenfield につき全 workstream N/A+理由記録) と P13 (acceptance にデプロイ明記のため実タスク) の判定が goal-spec と整合。スコープ外 (認証/DB スキーマ実体/ドメインロジック) は全 task で feat-auth-tenancy / feat-domain-model-db へ一貫委譲",
+      "evidence": [
+        "task-specs/phase-08-refactoring-migration.md#N/A理由記録",
+        "task-specs/phase-13-release-deploy.md#実タスク判定",
+        "task-specs/phase-02-architecture.md#スコープ外"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "exact-13 (欠落 0・14 件目 0)・各 spec 14 必須見出し全件・placeholder 0。goal-spec の purpose/goal/acceptance が qa-003/qa-019/qa-007/qa-018/D1/C1/C2 へ接地 (grep で実在確認)",
+      "evidence": [
+        "gate:deterministic-validation#task_count=13",
+        "task-specs/phase-01-requirements.md#qa接地"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "feature-package.json の source_feature_digest が feature context の独立 sha256 再計算値 (sha256:06c97e2ee833b6bb42f76d38f2f133eededd1dc5422a75153f4d3a7a1c42111a) と一致。staging-manifest.json の canonical_digest と validator の validated_digest が一致。boundary: staging 配下に絶対パス・symlink・repo 外参照なし",
+      "evidence": [
+        "feature-package.json#source_feature_digest",
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json は 13 node + 機能内前方依存のみ (逆向き・自己参照・機能間依存なし)。validator の DAG 検査 exit0",
+      "evidence": [
+        "task-graph.json#前方依存",
+        "gate:deterministic-validation#DAG検査"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:d6cce29a0f3ba6d5f3988e3d4310201fc8be0fee08688def59ad76399cb4b12a\", \"feature_package_id\": \"feature-package/feat-hub-foundation\", \"parent_feature\": \"feat-hub-foundation\"}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "cfc52533bcf8636895fefef7852d1683aa318f33f0f4b5210e2eb9d58a6b6e9a"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "6e56d9392cecb85973f2d7c8d2d6325b07d2c9b8f313633d43ace18c0778eb49"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "f215a87c25d5a7962cbed1578eb473875fd1b37024c82e2b683806fd072db85a"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "c680cf2ac7cd151bea02413695c681c93218df6c5bcd2113fdd6468af88c6721"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "3657e6cdd37cad9af63e27ee83b8fc937a1fa2dad06a279843dd0a20c8680698"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "424c5e25a03a72d48b366e6af4c12d2e6653e2d6346c8aa066e9f9f26fa1f75b"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "876935b3b9fa6ccc47b6571bc9acf34a91a65c30ec5aa69b8cc35b71b30c6e95"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "d8e9998612f13c225cd28dc26405eaf878ac18ecffb14c90af6ae6890a5dd316"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "24a0e8f6c4a952bf38acd88749ff8607ed92b2d693f68926e81d5f9ab469921f"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "7c7eb7e3bd7f868b621322d35e66c6a3194776914b57d4809415410fb20ca6e6"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "ec73d4aab5b86aeaa80aa86aea695e94c782586a9463e33b235e568f33a9763f"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "fab5805e2a6100dc4b76f6992208e6fb625a93e0dcd8ae57bce627c755c24f62"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "085996b174dea429438e31c3d16931a649c5f6fc96fe57549605f2a2b6c13fc2"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "def680d21f3dfbe006a660e26113cb1026167a2ddefce5b8c3f69883b4eb1042"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "ef101075db2b82408d37f53617f20368beba8dac0e3e1a101bec29118c4943cd"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "95b6a6d084f880b9811a7802e8714bbe02d9d16a93228eb5c1f9c9230e6990a3"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "e32119b3e0730a79459588b0c0b0ed4d1dc74f4e41493f874233fc04c622331b"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "bd7a2b91c28cc1cdf4f734616f2c920cb2578226438a0af1eeb9071290a568b0"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "low",
+      "bucket": "workstream-inventory/write-scope-parity",
+      "observation": "task-specs/phase-02-architecture.md の Infrastructure workstream 本文に『plugins/publisher/ はディレクトリ予約のみ行い実装しない』とあるが、workstream-inventory.json 側の P02 write_scope にこのディレクトリ予約に対応するエントリがない。scope 越境や write 実行の実害はなく promotion 非阻害 (記述粒度の不整合のみ)",
+      "evidence": [
+        "task-specs/phase-02-architecture.md",
+        "workstream-inventory.json"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context で 13 spec 全文読解・validator 独立再実行 exit0・digest 2 系統 (feature context / staging canonical) の独立再計算一致・repository boundary 検査 (絶対パス/symlink/../ 参照 0 件) を実施",
+      "evidence": [
+        "staging-manifest.json",
+        "feature-package.json"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "task-graph/id-casing-parity",
+      "observation": "task-graph.json の nodes[].graph_node_id (小文字 sys-hub-foundation-pNN) と workstream-inventory.json の graph_node_registration.graph_node_id (大文字 SYS-HUB-FOUNDATION-PNN = task.id) の casing が不一致。promote-system-plan.py は task-graph.json を読まないため promotion 実害なし (evaluator 再検証で確認)。dev-graph 登録後の表記統一は follow-up",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json"
+      ]
+    }
+  ]
+}
