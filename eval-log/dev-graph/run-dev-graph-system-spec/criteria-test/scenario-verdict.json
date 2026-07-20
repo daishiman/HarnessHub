@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r10",
+  "reviewer": "dev-graph-criteria-scenario-r12",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,12 +28,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260720T165601-r10/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260720T183000-r12/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260720T165601-r10/verdict.json",
-        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260720T165601-r10/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260720T183000-r12/verdict.json",
+        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260720T183000-r12/out/status.json"
       ],
-      "observed": "Live-trial verdict r10 overall=PASS (launch=PASS, completion=PASS, goal_fit=PASS, verdict=PASS), actual_model=[claude-opus-4-6], transcript_layer=jsonl, transcript_sha256 present, downgrade_reason=null, tier=live, nudge=0/gate=0 (self-driven, single human prompt, no auto-compact). Positive lineage scenario '--repo-root .../r3-system-spec' drove system-spec-harness's 4 entry points (run-system-spec-elicit/doc-fetch/compile/assign-system-spec-completeness-evaluator) via qualified Skill calls; the imported specification/architecture retained source_lineage(origin_kind/plugin/path/version/digest/imported_at) with per-path source_digest equality (validate-source-digest.py registered_mismatch=[], EXIT:0), confirmed status, and evaluator evidence whose evidence_ref (system-spec/completeness-report.json) exists (validate-evidence-refs.py registered_dangling=[], EXIT:0, existing LT-TASK-001 dangling auto-transcribed to progress.json evidence_ref_audit). Registration occurred only through the C02 writer (upsert-node.py) with no graph.json direct writes and no duplicated elicit/compile logic in dev-graph. Independent fresh evaluator returned GOAL_VERDICT: PASS."
+      "observed": "Live-trial verdict r12 overall=PASS (launch=PASS, completion=PASS, goal_fit=PASS, verdict=PASS), actual_model=[claude-opus-4-6], transcript_layer=jsonl, transcript_sha256 present, downgrade_reason=null, tier=live, skill_dir_tree_sha=22f207f (guard-hook-inclusive closure), nudge=0/gate=0 (self-driven, single human prompt, no auto-compact). Positive lineage scenario '--repo-root .../r3-system-spec' drove system-spec-harness's 4 entry points (run-system-spec-elicit/doc-fetch/compile/assign-system-spec-completeness-evaluator) via qualified Skill calls; the imported specification/architecture retained source_lineage(origin_kind/plugin/path/version/digest/imported_at) with per-path source_digest equality (validate-source-digest.py checked=2 registered_mismatch=[], EXIT:0), confirmed status, and evaluator evidence whose evidence_ref (system-spec/completeness-report.json) exists (validate-evidence-refs.py registered_dangling=[], EXIT:0, existing LT-TASK-001 dangling auto-transcribed to progress.json evidence_ref_audit). Registration occurred ONLY through the C02 writer (upsert-node.py, owner C02/run-dev-graph-node) with zero graph.json direct writes (regression check vs r11's C02-bypass patch: 0 python/sed/redirect/tee edits to .dev-graph/state/graph.json across all 66 Bash commands) and no duplicated elicit/compile logic in dev-graph. Independent fresh evaluator returned GOAL_VERDICT: PASS."
     }
   }
 }
