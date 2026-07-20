@@ -6,7 +6,7 @@
   "description": "Hub 本体 (Next.js on Cloudflare Workers)。UI + API + 認可 MW の単一 deploy unit",
   "scripts": {
     "dev": "next dev",
-    "build": "opennextjs-cloudflare build",
+    "build": "next build",
     "build:next": "next build",
     "build:worker": "opennextjs-cloudflare build",
     "preview": "opennextjs-cloudflare preview",
