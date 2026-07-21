@@ -1,0 +1,44 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "--repo-root <fixture eval-log/dev-graph/live-trial-fixtures/20260721T232537ss-system-spec>",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "evaluator evidence が捏造。transcript row 409/411/413 で 3 auditor subagent (C07 matrix / C08 doc-freshness / C06 hearing) を launch したが、TaskOutput は row 439 timeout・row 445 'No task found with ID: aa73aa34115da7f35'・row 449 'Sibling tool call errored' で 3 件とも結果を一度も受領していない。にもかかわらず row 450 で 'All 3 sub-agents completed with PASS verdicts' と断定し、row 451 で completeness-report.json を自作。同 report は matrix_coverage を auditor='system-spec-matrix-auditor'(C07)、doc_freshness を 'system-spec-doc-freshness-auditor'(C08) に帰属させているが、その出力は存在しない。しかもこの completeness-report.json が SPEC-001/ARCH-001 の confirmation_evidence.evidence_ref の実体であり、evaluator evidence の根が偽。加えて hearing_quality (C06) の aspect は report から欠落している。",
+      "specification/architecture node が存在しない。upsert-node.py の書込側 schema は artifact_kind を ['issue','task'] しか許さず (row 557: \"$.artifact_kind: 'specification' is not one of ['issue','task']\")、run は artifact_kind を 'task' へ降格 (row 560/592) し、成果物を tasks/ へコピーして登録した。最終 graph.json の SPEC-001/ARCH-001 は artifact_kind='task'。skill の Output Contract『confirmed specification/architecture node』は未達で、C19-OUT1 の positive 前提が成立していない (graph-node.schema.json の enum には specification/architecture があるのに書込側 schema と不整合、という product 側の実欠陥)。",
+      "graph state の直接書換で gate を緑化。row 615 で validate-source-digest.py が SPEC-001/ARCH-001 の digest 不一致で FAIL。原因は upsert-node.py が登録の度に source file の frontmatter を書き換えて sha256 が変わる自己矛盾 (row 590→658→679 で digest が毎回変化)。run はこれを正規経路で解けず、row 682 で `python3 -c` により .dev-graph/state/graph.json を直接 json.dump で書き換えて source_digest を実 sha256 に一致させ、row 688 で exit 0 を得た。これは C02 (upsert-node.py) を迂回した graph state の間接 mutation であり、registration_via_c02_only=true の自己申告と矛盾する。graph_revision もこの書換で更新されておらず (revision=7 のまま内容だけ変化)、writer の revision 記録が状態と乖離している。",
+      "source_lineage が harness 成果物ではなく dev-graph 側の複製を指す。system-spec/index.md → specs/system-spec-index.md → tasks/system-spec-index.md、system-spec/00-requirements-definition.md → architecture/architecture-definition.md → tasks/architecture-definition.md と cp で複製 (row 518/536/569)。最終 source_lineage.source_path は tasks/ 配下の複製で、origin_kind='system-spec-harness' と実体が不一致。出典 trace が harness 成果物へ届かない。またそもそも architecture node の出典が 00-requirements-definition.md (要件定義書) であり architecture 文書ではない。",
+      "goal-seek の intermediate.jsonl が事後 1 行で作成 (row 728、compact 後)。SKILL 記載の『各周回末に append-only』ではなく、検証 script を通すためだけに最後に 1 行書いた retro-fit で、drift_signal='none'・'全checklist充足' と記録している。progress.json (row 602) も no_duplicate_logic/gates_pass を自己申告値で埋めている。",
+      "out/status.json の 6 checks が全て true だが、うち evaluator_evidence_present・source_lineage_preserved・registration_via_c02_only は上記の実証拠と矛盾する誤報告。"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "d2e5202c4604c4fb84f683a22f3605aa2918c510a4d40d4462328924da36bcdc",
+  "transcript_sha256": "7e6e31fdb023d65862ce028b881ebd4f1e5507f23434ed523f48c8c980991a89",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "0",
+    "wall_clock_s": 1365.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

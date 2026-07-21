@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T120000-r7/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T230305-r8/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T120000-r7/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T120000-r7/transcript.jsonl",
-        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_three_way_apply_second_pass_zero_and_tombstone"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T230305-r8/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T230305-r8/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T230305-r8/out/status.json"
       ],
-      "observed": "The 2026-07-21 live trial invoked the target Skill, delegated R3-sync to an Agent, saved apply and verification-dry-run receipts, and passed a separate fresh evaluator. The second pass reports changes=0/write_count=0 with imports/exports/pending_retry empty; canonical sync-snapshot state matches the remote title and issue/project/item IDs remain stable."
+      "observed": "2026-07-21 再取得 (r8)。commit 済み生成手順 (live_trial_shapes/shape_sync.py) の adapter fixture を使い、実 GitHub API へ一切接続しないオフライン再生で sync を 2 回実行。Live-trial verdict overall=PASS, tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0。1 回目で import/export が適用され、2 回目は imports changes=0 / exports changes=0、stable ID と snapshot は不変、gh-bridge.py の起動 0 件、C11 exit0。独立 evaluator が transcript で外部 API 非接触と冪等を再確認し PASS。"
     },
     "OUT2": {
       "status": "PASS",

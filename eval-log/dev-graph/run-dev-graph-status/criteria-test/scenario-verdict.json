@@ -27,12 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C18-OUT1-positive-read-only-status",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T103834-r14/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T220738-r15/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T103834-r14/verdict.json",
-        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T103834-r14/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T220738-r15/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T220738-r15/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T220738-r15/out/status.json"
       ],
-      "observed": "2026-07-21 re-trial (r14). 旧証跡 r3 は前身 repository (harness/.worktrees/task-20260712-134250-wt-7) と、そこにしか存在しない fixture を参照しており worktree 破棄で再現不能だったため、本 repository 内で fixture を再生成 (plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py) して実走し直した。Live-trial verdict overall=PASS (launch=PASS, completion=PASS, goal_fit=PASS, verdict=PASS), actual_model=[claude-opus-4-6], transcript_layer=jsonl, transcript_sha256 present, downgrade_reason=null, tier=live. Positive read-only scenario '--repo-root .../r14-status --id LT-TASK-002' returned status/closed_at/depends_on identical to the graph node's stored values, with C24 exit0 (git_toplevel_verified / git_common_dir_ownership_verified true, root の手動固定なし) と C11 exit0, authority digest 不変, GitHub/Beads write 0 (out/status.json scenario=status-positive-read-only status=PASS). 独立 evaluator が transcript で skill 実呼び出し・値一致・副作用不在を再確認済み。"
+      "observed": "2026-07-21 再取得 (r15)。guard hook の write-target 化と main merge で behavior closure が動いたため、commit 済み生成手順 (plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py) から fixture を再生成して実走し直した。Live-trial verdict overall=PASS (launch/completion/goal_fit/verdict すべて PASS), tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0 (自走)。positive read-only scenario で status/closed_at/depends_on が graph 実値と一致し、C24/C11 exit0、authority digest 不変、GitHub/Beads write 0。独立 evaluator (orchestrator と別個体) が transcript の実 tool 呼び出しで Skill リテラル呼び出し・値一致・副作用不在を再確認し PASS。"
     },
     "OUT2": {
       "status": "PASS",
