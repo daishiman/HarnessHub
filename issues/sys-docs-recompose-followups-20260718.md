@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-21T00:00:00Z","evidence_refs":["commit:89c47df","commit:2f1d015","beads:HarnessHub-9ao","plugins/dev-graph/tests/test_bd_bridge_external_ref_idempotency.py"],"policy":"linked_pr_merged_all","reconciled_at":null,"source":"bd-bridge --op close","status":"open"}
+completion_evidence: {"completed_at":"2026-07-21T01:50:12Z","evidence_refs":["pr:daishiman/HarnessHub#11","commit:d9e0711","commit:89c47df","commit:2f1d015","commit:a34c1a9","commit:c002751","beads:HarnessHub-9ao","plugins/dev-graph/tests/test_bd_bridge_external_ref_idempotency.py"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-21T01:50:12Z","source":"manual (graph 未登録 node のため reconcile-github-lifecycle.py 対象外)","status":"closed"}
 implementation_readiness: {"checked_at":"2026-07-18T16:20:35Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -106,9 +106,11 @@ findings 1〜6 すべて解消し、beads の HarnessHub-9ao は `bd-bridge --op
 
 検証は `pytest plugins/dev-graph/tests -q` => 221 passed、`pytest tests/ -q` => 7113 passed / 4 skipped、`validate-graph-schema.py` => valid: True / findings 0。変異検査は 2 種実施し、list フォールバック削除で 5 ケース・search 高速経路削除で 3 ケースが fail することを確認済み (テストが実際に退行を捕捉する証明)。
 
-PR は canonical branch `devgraph/issue-docs-recompose-followups-20260718` から #11 を作成した。CI は `verify` / `check` が pass、`change-category-guard` のみ fail するが、これは main (`6035496`) 側に既存する `lint-artifact-placement` 違反 (`docs/features/feat-stage0-distribution-gate/.../h7-probe-echo/SKILL.md` の frontmatter 欠落、`409b52b` 由来) の巻き添えであり本 PR の diff とは無関係 (HarnessHub-5ph として分離起票)。
+PR は canonical branch `devgraph/issue-docs-recompose-followups-20260718` から #11 を作成し、**`d9e0711` で main へ merge 済み** (2026-07-21T01:50:12Z)。これで受入条件 4「bd-bridge 修正がテスト付きで main に反映」を満たし、受入条件 1〜5 がすべて充足した。
 
-`completion_evidence.status` は PR #11 の merge をもって `closed` へ遷移させる (`policy: linked_pr_merged_all`)。本 issue node は `.dev-graph/state/graph.json` に含まれないため `reconcile-github-lifecycle.py` の対象外で、遷移は手動更新となる。
+merge 前、CI の `change-category-guard` のみ fail していたが、これは main (`6035496`) 側に既存した `lint-artifact-placement` 違反 (`docs/features/feat-stage0-distribution-gate/.../h7-probe-echo/SKILL.md` の frontmatter 欠落、`409b52b` 由来) の巻き添えで本 PR の diff とは無関係だった。HarnessHub-5ph として分離起票し、PR #16 (`82b9311`) で linter 側に plugin package 実体の除外を入れて解消済み。その後 PR #11 の CI は `verify` / `check` / `change-category-guard` すべて pass。
+
+`completion_evidence` は PR #11 merge をもって `status: closed` / `reconciled_at` を記録した (`policy: linked_pr_merged_all` 充足)。本 issue node は `.dev-graph/state/graph.json` に含まれないため `reconcile-github-lifecycle.py` の対象外で、遷移は手動更新である。
 
 ## 派生 issue (2026-07-21)
 
