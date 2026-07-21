@@ -1,64 +1,209 @@
 #!/usr/bin/env python3
-"""live-trial 用の隔離 dev-graph fixture repo を決定論的に再生成する。
+# /// script
+# name: build-live-trial-fixture
+# purpose: Rebuild the isolated dev-graph live-trial fixture repositories deterministically from source.
+# inputs: ["argv: --kind sync|decompose [--out DIR] [--force]"]
+# outputs: ["directory: an initialized fixture git repository under eval-log/dev-graph/live-trial-fixtures/"]
+# requires-python = ">=3.10"
+# dependencies: []
+# contexts: [A, B, C, E]
+# network: false
+# write-scope: the --out fixture directory only
+# ///
+"""live-trial 用 fixture repo の生成器 (正本)。
 
-背景 (j24 の根本原因):
-  live-trial は被験 skill を本物の claude セッションで実走させるため、graph を変更する
-  skill (C02 node / C03 sync 等) を実 repo へ向けられない。過去の trial は
-  ``eval-log/dev-graph/live-trial-fixtures/<run>-<skill>`` に fixture repo を手で用意して
-  そこへ向けていたが、この path は .gitignore 対象 (揮発物) であり、生成手順も
-  どこにも残っていなかった。結果 worktree 破棄と同時に fixture が消滅し、
-  digest が stale 化しても証跡を再取得できない (= j24 が繰り返し再発する) 状態になった。
+fixture の実体は `eval-log/dev-graph/live-trial-fixtures/` にあり `.gitignore` 対象なので、
+worktree が prune されると消える。過去に「前回 trial と同じ条件で再実行できない」事故が
+起きたため、**fixture データではなく生成手順を commit する** 方針を採る。このファイルが
+その正本であり、trial のたびにここから作り直す。
 
-  本 script は「fixture データではなく fixture の生成手順」を正本として commit し、
-  同一入力から同一 fixture を何度でも再生成できるようにする。timestamp を固定値にして
-  いるのは、再生成のたびに fixture の digest が変わると trial の再現性が失われるため。
+決定論の要件:
 
-出力 (--out DIR):
-  DIR/.dev-graph-live-trial-fixture    --force 再生成を許可する ownership marker
-  DIR/.dev-graph/config.json          repo-config.schema.json 準拠
-  DIR/.dev-graph/state/graph.json     graph-node.schema.json 準拠 (task 2 件)
-  DIR/tasks/lt-task-001.md            LT-TASK-001 (depends_on なし)
-  DIR/tasks/lt-task-002.md            LT-TASK-002 (LT-TASK-001 に依存)
-  DIR/{issues,specs,architecture,features,docs,system-spec}/  空の content root
-
-frontmatter は validate-graph-schema.py の frontmatter_of (1 行 1 スカラの行指向
-パーサ) が読める形、すなわち ``key: <JSON スカラ>`` の 1 行表現で書く。
-
-Usage:
-  python3 plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py --out <dir> [--force]
-  python3 plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py --out <dir> --verify
+- 時刻・乱数を一切埋め込まない。全ての timestamp は下の定数から採る。
+- git commit も `GIT_AUTHOR_DATE` / `GIT_COMMITTER_DATE` を固定するので、同じ `--out` に
+  対して常に同じ commit SHA になる。repo 設定を汚さないよう identity は `-c` で渡す。
+- ただし `.dev-graph/config.json` の `repository_id` だけは出力先に依存する。C24
+  resolve-repo-context.py が git common dir の realpath から `local:sha256:<hex>` を導出し、
+  config 側の宣言と一致しなければ fail-closed で停止するため、ここで実測して書き込む。
+  (ハードコードすると「起動ゲートを迂回した偽 PASS」を生むので絶対にやらない)
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
-
-# 固定 timestamp: 再生成のたびに fixture digest が動くと trial の再現性が失われる。
-FIXED_TS = "2026-07-21T00:00:00Z"
-CONTENT_ROOTS = ("issues", "tasks", "specs", "architecture", "features", "docs", "system-spec")
-OWNERSHIP_MARKER = ".dev-graph-live-trial-fixture"
-OWNERSHIP_MARKER_CONTENT = "generated-by: build_live_trial_fixture.py\n"
+from typing import Any
 
 
-def config_document(repository_id: str) -> dict:
-    """repo-config.schema.json の required を満たす最小 config。"""
+PLUGIN_ROOT = Path(__file__).resolve().parents[2]
+REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
+SCHEMA_PATH = PLUGIN_ROOT / "schemas" / "graph-node.schema.json"
+
+# 固定 timestamp 群。冪等性のため utc_now() 相当を一切使わない。
+CREATED_AT = "2026-07-13T07:50:00Z"
+REMOTE_UPDATED_AT = "2026-07-21T02:22:22Z"
+SNAPSHOT_AT = "2026-07-13T07:55:00Z"
+COMMIT_DATE = "2026-07-13T07:50:00+00:00"
+
+COMMIT_IDENTITY = ("dev-graph-fixture@example.invalid", "dev-graph fixture builder")
+
+# 安定 ID。trial は「前後で issue/project/item ID が不変」を検査するので、
+# 生成のたびに変わる値 (uuid など) を使ってはならない。
+ISSUE_NODE_ID = "I_kwDOFixture001"
+PROJECT_ID = "PVT_kwDOFixture001"
+PROJECT_ITEM_ID = "PVTI_lADOFixture001"
+STATUS_FIELD_ID = "PVTF_Status001"
+PRIORITY_FIELD_ID = "PVTF_Priority001"
+
+CONTENT_ROOTS = {
+    "issues": "issues",
+    "tasks": "tasks",
+    "specifications": "specs",
+    "architecture": "architecture",
+    "features": "features",
+    "documents": "docs",
+    "system_spec": "system-spec",
+}
+
+TASK_BODY = """# 目的
+
+隔離された live-trial fixture が安全に検索・描画・schedule される。
+
+## 背景
+
+実リポジトリや外部 tracker に副作用を出さずに受け入れ挙動を確認する。
+
+## 入力と前提条件
+
+- 入力: `.dev-graph/state/graph.json`
+- 前提: `tracker_binding=github`
+
+## 出力と成果物
+
+- 生成物: trial ごとの検証出力
+- 更新対象: GitHub Issue/Project fields via adapter fixture
+
+## 依存関係
+
+- `depends_on`: N/A: 依存なし
+- ブロッカー: N/A: なし
+
+## 実装対象
+
+- Frontend: N/A: fixture
+- Backend/API: N/A: fixture
+- Database/Data: N/A: fixture
+- Infrastructure: N/A: fixture
+- Security/Privacy: 外部副作用を禁止する
+- Documentation: live-trial 証跡
+
+## Write scope と競合制約
+
+- `touches`: `docs/live-trial-output.md`
+- 排他資源: fixture repository
+- 並列実行条件: write trial と同時実行しない
+- branch: fixture branch only
+- worktree lease: N/A
+- completion projection: N/A: 完了更新を行わない
+
+## GitHub publication
+
+- Mode: issue_and_projects
+- Project aliases: planning
+- Issue labels/milestone: live-trial, safe
+- Publication gate: `status=active && confirmation_status=confirmed && evaluation_status=pass && implementation_readiness.status=complete`
+- Completion policy: manual
+- PR linkage requirement: linked_pr_merged
+- Closed without merge: keep_active
+- Local reconciliation: manual sync
+
+## 実行手順
+
+1. adapter fixture 経由で GitHub Issue/Project を同期する。
+
+## 受入条件
+
+- [ ] 同一状態の二回目 sync で changes=0 である。
+
+## 検証方法
+
+- 自動検証: adapter fixture による決定論的検証
+- 手動検証: live-trial transcript を確認する
+- 証跡: trial workdir
+
+## リスクとロールバック
+
+- リスク: fixture の誤用
+- ロールバック: fixture directory を再生成する
+
+## Handoff
+
+- 実装 route: human
+- 次に利用するノード: LT-TASK-001
+"""
+
+
+class BuildError(RuntimeError):
+    """生成を中断する契約違反。"""
+
+
+def _git(args: list[str], cwd: Path) -> str:
+    """fixture repo に対してのみ git を実行する。失敗は即座に中断する。"""
+    environment = {
+        **os.environ,
+        "GIT_AUTHOR_DATE": COMMIT_DATE,
+        "GIT_COMMITTER_DATE": COMMIT_DATE,
+    }
+    cp = subprocess.run(
+        ["git", "-C", str(cwd), *args], text=True, capture_output=True, check=False, env=environment
+    )
+    if cp.returncode:
+        raise BuildError(f"git {' '.join(args)} failed ({cp.returncode}): {(cp.stderr or cp.stdout).strip()}")
+    return cp.stdout.strip()
+
+
+def _write_json(path: Path, value: Any) -> None:
+    """dev-graph の atomic_json と同じ整形。以後の書き込みで無駄な差分を出さないため。"""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+    )
+
+
+def _artifact_bytes(node: dict[str, Any], body: str) -> bytes:
+    """C02 upsert-node.py が生成するのと同じ frontmatter 形式で artifact を書く。
+
+    sync の apply は既存 artifact の本文を再利用して frontmatter を書き直す。初期状態を
+    別形式で置くと初回 apply で本文以外の巨大 diff が出て、write_count の観測が濁る。
+    """
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    order = list(schema.get("properties") or {})
+    keys = [key for key in order if key in node] + sorted(set(node) - set(order))
+    lines = ["---"]
+    lines.extend(
+        f"{key}: {json.dumps(node[key], ensure_ascii=False, sort_keys=True, separators=(',', ':'))}"
+        for key in keys
+    )
+    lines.extend(["---", "", body.rstrip(), ""])
+    return "\n".join(lines).encode("utf-8")
+
+
+def _repo_config(repository_id: str, *, tracker_mode: str, projects: list[dict[str, Any]]) -> dict[str, Any]:
+    """repo-config.schema.json の必須 9 key だけを持つ最小 config。
+
+    本体 repo の config は plan_roots など追加 key を持つが、fixture は additionalProperties
+    違反を避けて必須集合ちょうどに絞る。beads を選ばないのは、schedulable な beads node が
+    あると C15 schedule が parity manifest の provenance を要求して停止するため。
+    """
     return {
         "schema_version": "1.0.0",
         "repository_id": repository_id,
-        "content_roots": {
-            "issues": "issues",
-            "tasks": "tasks",
-            "specifications": "specs",
-            "architecture": "architecture",
-            "features": "features",
-            "documents": "docs",
-            "system_spec": "system-spec",
-        },
+        "content_roots": dict(CONTENT_ROOTS),
         "local_state": {
             "graph": ".dev-graph/state/graph.json",
             "cache": ".dev-graph/cache",
@@ -66,8 +211,8 @@ def config_document(repository_id: str) -> dict:
         },
         "github": {
             "enabled": False,
-            "issue_repository": "example/live-trial-fixture",
-            "projects": [],
+            "issue_repository": "example/dev-graph-live-trial",
+            "projects": projects,
             "completion_policy": {
                 "trigger": "linked_pr_merged",
                 "required_pull_requests": "all",
@@ -79,25 +224,14 @@ def config_document(repository_id: str) -> dict:
                 "scheduled_reconciliation": {
                     "enabled": False,
                     "interval_minutes": 5,
-                    "owner": "host_scheduler",
+                    "owner": "claude_session_start",
                     "entry_point": "dev-graph sync --reconcile-lifecycle",
                 },
             },
         },
-        # repo config の mode enum は beads/github/both。fixture node 自体は tracker_binding=none
-        # かつ github local_only で外部投影を禁止し、fixture 内には .beads DB も作らない。
-        # したがって誤って repo default を使っても bd は fail-closed し、外部 write へ到達しない。
-        "execution_tracker": {
-            "mode": "beads",
-            "beads": {
-                "issue_prefix": "livetrial",
-                "server_mode": False,
-                "github_mirror": "none",
-                "board": "none",
-            },
-        },
+        "execution_tracker": {"mode": tracker_mode},
         "worktrees": {
-            "enabled": False,
+            "enabled": True,
             "lease_ttl_seconds": 1800,
             "heartbeat_seconds": 60,
             "coordination_store": "git_common_dir",
@@ -120,242 +254,373 @@ def config_document(repository_id: str) -> dict:
     }
 
 
-def task_node(node_id: str, title: str, slug: str, depends_on: list[str]) -> dict:
-    """graph-node.schema.json の required 40 キーを満たす task node。"""
-    file_path = f"tasks/{slug}.md"
+def _planning_project() -> dict[str, Any]:
+    """alias=planning の Projects v2 定義。
+
+    status は schema 上 local_to_project 固定なので、これが「local 側が正で export が
+    1 件出る」経路になる。priority は bidirectional にして「双方一致なら何も起きない」
+    経路を同時に踏ませる。
+    """
     return {
-        "graph_node_id": node_id,
+        "alias": "planning",
+        "owner_type": "user",
+        "owner_login": "example",
+        "project_number": 1,
+        "default": True,
+        "auto_add": {
+            "artifact_kinds": ["task"],
+            "confirmation_status": "confirmed",
+            "evaluation_status": "pass",
+            "implementation_readiness": "complete",
+        },
+        "field_mappings": [
+            {
+                "local_field": "status",
+                "project_field_name": "Status",
+                "value_type": "single_select",
+                "direction": "local_to_project",
+                "option_map": {"active": "In Progress", "blocked": "Blocked", "done": "Done"},
+            },
+            {
+                "local_field": "priority",
+                "project_field_name": "Priority",
+                "value_type": "single_select",
+                "direction": "bidirectional",
+                "option_map": {"high": "High", "medium": "Medium", "low": "Low"},
+            },
+        ],
+    }
+
+
+def _sync_task_node() -> dict[str, Any]:
+    """C15 schedule が ready と判定できる唯一の task node。
+
+    status=active / confirmed / pass / readiness complete / depends_on 空 /
+    resource_scope 非空、かつ tracker_binding=github。github binding なので schedule は
+    beads parity manifest を要求しない。
+    """
+    return {
+        "acceptance": [],
+        "architecture_refs": [],
         "artifact_kind": "task",
         "artifact_subtypes": [],
-        "title": title,
-        "project_id": "live-trial-fixture",
-        "domain": "documentation",
-        "status": "active",
-        "closed_at": None,
-        "owners": ["live-trial"],
-        "tags": ["live-trial", "fixture"],
-        "priority": None,
-        "start_date": None,
-        "target_date": None,
-        "iteration": None,
-        "created_at": FIXED_TS,
-        "updated_at": FIXED_TS,
-        "depends_on": depends_on,
-        "related_nodes": [],
-        "resource_scope": [],
-        "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
-        "goal": "graph 実値と skill 出力の一致を観測できる状態",
-        "scope_in": ["fixture 内の読み取り検証"],
-        "scope_out": ["実 repository の変更"],
-        "acceptance": ["skill 出力の status/depends_on が本 node の値と一致する"],
-        "architecture_refs": [],
-        "parent_feature": None,
-        "feature_package_id": None,
-        "phase_ref": None,
-        "file_path": file_path,
-        "template_id": "task",
-        "template_version": "1.0.0",
-        "confirmation_status": "confirmed",
-        "evaluation_status": "pass",
-        # status:active は schema の allOf 条件で confirmation/evaluation の確定と、
-        # confirmation_evidence の実体 (evaluator/evidence_ref/64hex digest) を要求する
-        # (確定と評価を同一 digest へ pin して stale PASS を拒否する設計)。
-        # digest は node_id から決定論導出し、再生成のたびに値が動かないようにする。
-        "confirmation_evidence": {
-            "evaluated_digest": hashlib.sha256(node_id.encode("utf-8")).hexdigest(),
-            "evaluator": "build_live_trial_fixture",
-            "evidence_ref": file_path,
-        },
-        "source_lineage": {
-            "imported_at": FIXED_TS,
-            "origin_kind": "manual",
-            "source_digest": None,
-            "source_path": None,
-            "source_plugin": None,
-            "source_version": None,
-        },
-        "classification_confidence": 1.0,
-        "classification_reason": "live-trial fixture として決定論生成された task node",
-        "classification_candidates": [
-            {"artifact_kind": "task", "candidate_path": file_path, "confidence": 1.0}
-        ],
-        "issue_linkage": None,
-        "tracker_binding": "none",
         "beads_linkage": None,
-        "github_publication": {"labels": [], "milestone": None, "mode": "local_only", "project_aliases": []},
-        "github_project_linkages": [],
-        "pull_request_linkages": [],
-        "execution_contexts": [],
+        "classification_candidates": [
+            {"artifact_kind": "task", "candidate_path": "tasks/LT-TASK-001.md", "confidence": 1.0}
+        ],
+        "classification_confidence": 1.0,
+        "classification_reason": "Deterministic acceptance fixture",
         "completion_evidence": {
             "completed_at": None,
             "evidence_refs": [],
-            "policy": "linked_pr_merged_all",
+            "policy": "manual",
             "reconciled_at": None,
             "source": None,
-            "status": "open",
+            "status": "in_progress",
         },
-        "implementation_readiness": {"checked_at": FIXED_TS, "missing_sections": [], "status": "complete"},
+        "confirmation_evidence": {
+            "evaluated_digest": "a" * 64,
+            "evaluator": "fixture-evaluator",
+            "evidence_ref": "evidence/LT-TASK-001.json",
+        },
+        "confirmation_status": "confirmed",
+        "created_at": CREATED_AT,
+        "depends_on": [],
+        "domain": "verification",
+        "evaluation_status": "pass",
+        "execution_contexts": [],
+        "feature_package_id": None,
+        "file_path": "tasks/LT-TASK-001.md",
+        "github_project_linkages": [
+            {
+                # item_id は remote fixture と一致させる。ズレていると sync が
+                # project-item-add を出し、二回目の収束検査が壊れる。
+                "field_snapshot": {"priority": "Medium", "status": "Backlog"},
+                "item_id": PROJECT_ITEM_ID,
+                "last_error_code": None,
+                "last_synced_at": SNAPSHOT_AT,
+                "linked_at": CREATED_AT,
+                "owner_login": "example",
+                "owner_type": "user",
+                "project_alias": "planning",
+                "project_id": PROJECT_ID,
+                "project_number": 1,
+                "sync_state": "synced",
+            }
+        ],
+        "github_publication": {
+            "labels": ["live-trial", "safe"],
+            "milestone": None,
+            "mode": "issue_and_projects",
+            "project_aliases": ["planning"],
+        },
+        "goal": None,
+        "graph_node_id": "LT-TASK-001",
+        "implementation_readiness": {
+            "checked_at": CREATED_AT,
+            "missing_sections": [],
+            "status": "complete",
+        },
+        "issue_linkage": {
+            "issue_number": 1,
+            "linked_at": CREATED_AT,
+            "repo": "example/dev-graph-live-trial",
+        },
+        "iteration": "R3",
+        "owners": ["harness-maintainers"],
+        "parent_feature": None,
+        "phase_ref": None,
+        "priority": "medium",
+        "project_id": "dev-graph-live-trial",
+        "pull_request_linkages": [],
+        "purpose": None,
+        "related_nodes": [],
+        "resource_scope": ["docs/live-trial-output.md"],
+        "scope_in": [],
+        "scope_out": [],
+        "source_lineage": {
+            "imported_at": CREATED_AT,
+            "origin_kind": "manual",
+            "source_digest": "b" * 64,
+            "source_path": "tasks/LT-TASK-001.md",
+            "source_plugin": None,
+            "source_version": "1.0.0",
+        },
+        "start_date": None,
+        "status": "active",
+        "tags": ["live-trial", "safe"],
+        "target_date": None,
+        "template_id": "task",
+        "template_version": "1.0.0",
+        "title": "Validate isolated live trial",
+        "tracker_binding": "github",
+        "updated_at": CREATED_AT,
     }
 
 
-def markdown_for(node: dict) -> str:
-    """frontmatter_of (行指向スカラパーサ) が読める 1 行 1 キーの frontmatter を組む。"""
-    lines = ["---"]
-    for key, value in node.items():
-        if key == "closed_at" and value is None:
-            continue
-        lines.append(f"{key}: {json.dumps(value, ensure_ascii=False)}")
-    lines.append("---")
-    lines.append("")
-    lines.append(f"# {node['title']}")
-    lines.append("")
-    lines.append("live-trial fixture の固定 artifact。実 repository の成果物ではない。")
-    lines.append("")
-    return "\n".join(lines)
+def _sync_remote_state() -> dict[str, Any]:
+    """決定論 adapter fixture。外部 GitHub へ一切接続せずに 3-way 収束を再現する。
+
+    title だけ remote 側が進んでおり (import 1 件)、Projects の Status だけ local 側が
+    正である (export 1 件)。priority は両者一致で「変化なし」を確認する対照になる。
+    """
+    return {
+        "beads": {},
+        "github": {
+            "LT-TASK-001": {
+                "id": ISSUE_NODE_ID,
+                "number": 1,
+                "projects": {
+                    "planning": {
+                        "definitions": {
+                            "Status": {
+                                "id": STATUS_FIELD_ID,
+                                "options": [
+                                    {"id": "OPT_InProgress001", "name": "In Progress"},
+                                    {"id": "OPT_Done001", "name": "Done"},
+                                    {"id": "OPT_Blocked001", "name": "Blocked"},
+                                    {"id": "OPT_Backlog001", "name": "Backlog"},
+                                ],
+                            },
+                            "Priority": {
+                                "id": PRIORITY_FIELD_ID,
+                                "options": [
+                                    {"id": "OPT_High001", "name": "High"},
+                                    {"id": "OPT_Medium001", "name": "Medium"},
+                                    {"id": "OPT_Low001", "name": "Low"},
+                                ],
+                            },
+                        },
+                        "fields": {
+                            "Status": {
+                                "field_id": STATUS_FIELD_ID,
+                                "option_id": "OPT_Backlog001",
+                                "updated_at": SNAPSHOT_AT,
+                                "value": "Backlog",
+                            },
+                            "Priority": {
+                                "field_id": PRIORITY_FIELD_ID,
+                                "option_id": "OPT_Medium001",
+                                "updated_at": SNAPSHOT_AT,
+                                "value": "Medium",
+                            },
+                        },
+                        "item_id": PROJECT_ITEM_ID,
+                    }
+                },
+                "repo": "example/dev-graph-live-trial",
+                "state": "open",
+                "title": "Validate isolated live trial (updated remotely r7)",
+                "updated_at": REMOTE_UPDATED_AT,
+            }
+        },
+        "schema_version": "1.0",
+    }
 
 
-def build(out: Path, repository_id: str) -> dict:
-    nodes = [
-        task_node("LT-TASK-001", "live-trial fixture の基点タスク", "lt-task-001", []),
-        task_node("LT-TASK-002", "LT-TASK-001 に依存する後続タスク", "lt-task-002", ["LT-TASK-001"]),
-    ]
-    for root in CONTENT_ROOTS:
-        (out / root).mkdir(parents=True, exist_ok=True)
-    # status/schedule 系 script は repo 内 eval-log/ を書込先の realpath 境界として解決するため、
-    # --no-eval-log でも root が存在しないと fail する。fixture repo にも実体を用意する。
+def _sync_snapshot() -> dict[str, Any]:
+    """3-way merge の base。graph 直下の legacy last_synced_snapshot ではなくこちらが正本。
+
+    title の base を local/remote とも旧値にしておくことで「local は変えていない・remote
+    だけ進んだ」= import と判定される。ここを remote 新値にすると差分が消えて trial が
+    何も検証しなくなる。
+    """
+    return {
+        "nodes": {
+            "LT-TASK-001": {
+                "binding": "github",
+                "issue": {
+                    "status": {"local": "open", "remote": "open"},
+                    "title": {
+                        "local": "Validate isolated live trial",
+                        "remote": "Validate isolated live trial",
+                    },
+                },
+                "projects": {
+                    "planning": {
+                        "priority": {"local": "Medium", "remote": "Medium"},
+                        "status": {"local": "Backlog", "remote": "Backlog"},
+                    }
+                },
+            }
+        },
+        "schema_version": "1.0",
+        "updated_at": SNAPSHOT_AT,
+    }
+
+
+def _init_repository(out: Path) -> Path:
+    """本物の git repo を作る。C24 が git common dir の所有権を実測で検証するため必須。
+
+    origin remote は付けない。付けると repository_id が github:owner/repo になり、
+    「隔離 fixture なのに実 repository を名乗る」ことになる。
+    """
+    out.mkdir(parents=True, exist_ok=True)
+    _git(["init", "-b", "main"], out)
+    common = Path(_git(["rev-parse", "--git-common-dir"], out))
+    return (common if common.is_absolute() else out / common).resolve(strict=True)
+
+
+def _repository_id(common: Path) -> str:
+    """resolve-repo-context.py の repository_id_for と同一式。"""
+    return "local:sha256:" + hashlib.sha256(str(common.resolve(strict=True)).encode("utf-8")).hexdigest()
+
+
+def _finalize(out: Path) -> None:
+    """content root を実体化し、初期 commit を打つ。
+
+    HEAD が無いと C24 の `git rev-parse HEAD` が失敗して起動ゲートを通れない。
+    """
+    for relative in sorted(set(CONTENT_ROOTS.values())):
+        directory = out / relative
+        directory.mkdir(parents=True, exist_ok=True)
+        keep = directory / ".gitkeep"
+        if not keep.exists():
+            keep.write_text("", encoding="utf-8")
     (out / "eval-log").mkdir(parents=True, exist_ok=True)
-    (out / ".dev-graph" / "state").mkdir(parents=True, exist_ok=True)
-    (out / ".dev-graph" / "cache").mkdir(parents=True, exist_ok=True)
-    (out / ".dev-graph" / "locks").mkdir(parents=True, exist_ok=True)
-
-    (out / ".dev-graph" / "config.json").write_text(
-        json.dumps(config_document(repository_id), ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
+    _git(["add", "-A"], out)
+    _git(
+        [
+            "-c", f"user.email={COMMIT_IDENTITY[0]}",
+            "-c", f"user.name={COMMIT_IDENTITY[1]}",
+            "commit", "--no-gpg-sign", "-m", "chore(fixture): initialize dev-graph live-trial fixture",
+        ],
+        out,
     )
-    graph = {
-        "schema_version": "1.0.0",
-        "repository_id": repository_id,
-        "graph_revision": 1,
-        "nodes": nodes,
-    }
-    (out / ".dev-graph" / "state" / "graph.json").write_text(
-        json.dumps(graph, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+
+
+def build_sync(out: Path) -> None:
+    """C03 run-dev-graph-sync と C15 run-dev-graph-schedule が共有する fixture。"""
+    common = _init_repository(out)
+    node = _sync_task_node()
+    _write_json(
+        out / ".dev-graph" / "config.json",
+        _repo_config(_repository_id(common), tracker_mode="github", projects=[_planning_project()]),
     )
-    for node in nodes:
-        (out / node["file_path"]).write_text(markdown_for(node), encoding="utf-8")
-    return graph
+    _write_json(
+        out / ".dev-graph" / "state" / "graph.json",
+        {"graph_revision": 1, "nodes": [node]},
+    )
+    _write_json(out / ".dev-graph" / "remote.json", _sync_remote_state())
+    _write_json(out / ".dev-graph" / "state" / "sync-snapshot.json", _sync_snapshot())
+    artifact = out / node["file_path"]
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_bytes(_artifact_bytes(node, TASK_BODY))
+    # lease 台帳の正本は worktree ではなく git common dir 側。C15 は他の場所を渡されると
+    # 「lease snapshot is not the git-common authority」で停止する。
+    _write_json(common / "dev-graph" / "leases.json", {"leases": []})
+    _finalize(out)
 
 
-def git_init(out: Path) -> None:
-    """fixture を git toplevel にする。
+def build_decompose(out: Path) -> None:
+    """C14 run-dev-graph-decompose の --dry-run マクロ分解用 fixture。
 
-    C24 (resolve-repo-context.py) は選択 root が `git rev-parse --show-toplevel` と
-    一致することを要求する。git 管理外のディレクトリを fixture にすると C24 が exit 1 になり、
-    trial 側が root を手動固定して続行する = 起動ゲートを迂回した不完全な実走になる
-    (r13 パイロットの独立 evaluator 指摘)。identity は fixture 内 config に閉じ、
-    利用者の global git config へ依存しない。
+    分解結果は draft preview として提示されるだけなので graph は空でよい。全 node が
+    tracker_binding=none 前提のため Projects 定義も持たせない。
     """
-    def run(*args: str) -> None:
-        subprocess.run(["git", *args], cwd=out, check=True, capture_output=True, text=True)
-
-    run("init", "-q")
-    run("config", "user.name", "live-trial-fixture")
-    run("config", "user.email", "live-trial-fixture@example.invalid")
-
-
-def git_commit(out: Path) -> None:
-    subprocess.run(["git", "add", "-A"], cwd=out, check=True, capture_output=True, text=True)
-    subprocess.run(
-        ["git", "commit", "-q", "-m", "live-trial fixture baseline"],
-        cwd=out, check=True, capture_output=True, text=True,
+    common = _init_repository(out)
+    _write_json(
+        out / ".dev-graph" / "config.json",
+        _repo_config(_repository_id(common), tracker_mode="github", projects=[]),
     )
+    _write_json(out / ".dev-graph" / "state" / "graph.json", {"graph_revision": 0, "nodes": []})
+    _write_json(common / "dev-graph" / "leases.json", {"leases": []})
+    _finalize(out)
 
 
-def derive_repository_id(out: Path) -> str:
-    """C24 と同じ規則で repository_id を導出する。
-
-    resolve-repo-context.py は remote が無い repository の identity を
-    ``local:sha256:<git common dir 実パスの sha256>`` として導出し、config の
-    repository_id と一致しない場合は fail-closed になる。fixture は生成先 path に
-    依存するため、config へ焼き込む値も生成時に導出する。
-    """
-    common = subprocess.run(
-        ["git", "rev-parse", "--git-common-dir"],
-        cwd=out, check=True, capture_output=True, text=True,
-    ).stdout.strip()
-    resolved = (out / common).resolve() if not Path(common).is_absolute() else Path(common).resolve()
-    return "local:sha256:" + hashlib.sha256(str(resolved).encode("utf-8")).hexdigest()
+BUILDERS = {"sync": build_sync, "decompose": build_decompose}
 
 
-def verify(out: Path) -> int:
-    """同梱 validator (C11) で fixture 自体の妥当性を確認する。"""
-    validator = Path(__file__).resolve().parents[2] / "scripts" / "validate-graph-schema.py"
-    proc = subprocess.run(
-        [sys.executable, str(validator), "--graph", str(out / ".dev-graph" / "state" / "graph.json"),
-         "--repo-root", str(out)],
-        capture_output=True, text=True, check=False,
+def _prepare_output(out: Path, force: bool) -> None:
+    """既存ディレクトリの扱い。取り違えた path を消さないよう素性を確認してから消す。"""
+    if not out.exists():
+        return
+    if not out.is_dir():
+        raise BuildError(f"--out exists and is not a directory: {out}")
+    if not force:
+        raise BuildError(f"--out already exists (pass --force to rebuild): {out}")
+    if any(out.iterdir()) and not (out / ".dev-graph" / "config.json").is_file():
+        raise BuildError(f"--force refuses to delete a directory that is not a dev-graph fixture: {out}")
+    shutil.rmtree(out)
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Build an isolated dev-graph live-trial fixture repository")
+    parser.add_argument("--kind", required=True, choices=sorted(BUILDERS))
+    parser.add_argument("--out", help="fixture output directory (default: eval-log/dev-graph/live-trial-fixtures/<kind>)")
+    parser.add_argument("--force", action="store_true", help="rebuild an existing fixture directory")
+    args = parser.parse_args(argv)
+
+    out = Path(args.out).expanduser() if args.out else (
+        REPOSITORY_ROOT / "eval-log" / "dev-graph" / "live-trial-fixtures" / args.kind
     )
-    sys.stdout.write(proc.stdout)
-    sys.stderr.write(proc.stderr)
-    return proc.returncode
-
-
-def owned_fixture(out: Path) -> bool:
-    """--force で置換してよい、本 script 生成済みの fixture か。"""
-    marker = out / OWNERSHIP_MARKER
-    try:
-        return marker.is_file() and marker.read_text(encoding="utf-8") == OWNERSHIP_MARKER_CONTENT
-    except OSError:
-        return False
-
-
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out", required=True, help="fixture repo の生成先")
-    parser.add_argument(
-        "--repository-id",
-        default=None,
-        help="既定は C24 と同じ規則で生成先から導出 (local:sha256:<git common dir>)",
+    out = out.resolve() if out.exists() else Path(os.path.abspath(out))
+    _prepare_output(out, args.force)
+    BUILDERS[args.kind](out)
+    out = out.resolve(strict=True)
+    common = Path(_git(["rev-parse", "--git-common-dir"], out))
+    common = (common if common.is_absolute() else out / common).resolve(strict=True)
+    print(
+        json.dumps(
+            {
+                "kind": args.kind,
+                "repo_root": str(out),
+                "git_common_dir": str(common),
+                "repository_id": _repository_id(common),
+                "leases": str(common / "dev-graph" / "leases.json"),
+                "head_sha": _git(["rev-parse", "HEAD"], out),
+            },
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        )
     )
-    parser.add_argument("--force", action="store_true", help="既存ディレクトリを削除して作り直す")
-    parser.add_argument("--verify", action="store_true", help="生成後に C11 validator で検証する")
-    parser.add_argument(
-        "--empty",
-        action="store_true",
-        help="dev-graph 未初期化の git repository だけを作る (C01 init の被験対象)",
-    )
-    args = parser.parse_args()
-
-    out = Path(args.out).expanduser().resolve()
-    if out.exists():
-        if not args.force:
-            print(f"already exists (use --force to rebuild): {out}", file=sys.stderr)
-            return 2
-        if not owned_fixture(out):
-            print(
-                f"refusing --force: ownership marker is missing or invalid: {out / OWNERSHIP_MARKER}",
-                file=sys.stderr,
-            )
-            return 2
-        shutil.rmtree(out)
-    out.mkdir(parents=True)
-    (out / OWNERSHIP_MARKER).write_text(OWNERSHIP_MARKER_CONTENT, encoding="utf-8")
-    # git init を先に済ませてから identity を導出する (C24 の導出規則が git common dir 依存)。
-    git_init(out)
-    if args.empty:
-        # C01 (init) の被験対象は「まだ dev-graph 化されていない repository」。
-        # content root も .dev-graph も置かず、git repository だけを用意する。
-        (out / ".gitkeep").write_text("", encoding="utf-8")
-    else:
-        build(out, args.repository_id or derive_repository_id(out))
-    git_commit(out)
-    print(f"fixture built: {out}")
-    if args.empty:
-        return 0
-    if args.verify:
-        return verify(out)
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (BuildError, OSError) as exc:
+        print(str(exc), file=sys.stderr)
+        raise SystemExit(1)

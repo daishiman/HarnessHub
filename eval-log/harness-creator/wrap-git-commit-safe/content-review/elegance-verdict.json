@@ -2,7 +2,7 @@
   "target": {
     "plugin": "harness-creator",
     "skill": "wrap-git-commit-safe",
-    "skill_md_sha256": "16e650cacac3a77ca4873a7c77e07719c7ed449be772faa6adcfae4213d029cc"
+    "skill_md_sha256": "f4c6b52f67ad1e1a42d0534308399cdd1ec0a4e7c9c52b0601b848ff336bf45a"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
@@ -11,24 +11,29 @@
     "omission": 0,
     "inconsistency": 0,
     "dependency_break": 0,
-    "smell": 0
+    "smell": 1
   },
-  "reviewer": "independent-rename-review-subagent-d",
-  "reviewed_at": "2026-07-02T22:00:00+09:00",
-  "iterations": 1,
+  "reviewer": "independent-closure-fix-review-subagent",
+  "reviewed_at": "2026-07-21",
+  "iterations": 2,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "IN2", "OUT1"],
     "positive_feedback": [
-      "force-push 防止を exit2 のスキャンではなく allowed-tools を git status/diff/add/commit に限定し push を非搭載とする構造保証で担保しており、決定論検査(pre-commit-secret-scan.py の機密検出・bypass flag 検出)と二系統で危険 commit/push を封じる設計が崩れていない。",
-      "base(run-build-skill)の commit 手順を上書きせず前後フックとして被せる wrap 責務と L1→L0 依存関係が Key Rules・Gotchas・ゴールシークループで一貫し、検査不合格を即 BLOCK し再試行で握り潰さない方針が明文化されている。"
+      "前回 FAIL の中核指摘 (宣言 closure ≠ 実際の挙動 closure) が解消された。reference_refs が本文で正本と明示される goal-seek-paradigm.md を指すようになり、behavior_closure_files の解決結果に当該ファイルが含まれ、無関係だった resource-map.yaml が外れたことを実測確認した (closure 8 files, digest=f6f2cb4bd599d86691a978cc962ae019e26601b25952455f7a32927bf0de2da5)。宣言と実依存が一致した。",
+      "digest 計算可能性という一次目的も維持されている。behavior_closure_files / skill_dir_tree_sha を直接 import して実行し例外を投げないことを再確認した。lint 3 種も全通過 (validate-frontmatter exit=0 / lint-skill-completeness exit=0 / lint-skill-dep-step7 exit=0)。",
+      "コメントの記述が実体と一致するようになった。(a)『旧宣言 references/resource-map.yaml は実体を持たず behavior closure が fail-closed で digest 計算不能になっていた』は前回 ValueError 再現で裏取り済み。(b) 設計書06 第13条の引用も原文 (244 行目『references/ に 3 ファイル以上ある場合、references/resource-map.yaml を置くことを推奨する』) と照合し正確であることを確認した。前回指摘した自己論駁 (第13条不該当を根拠にしながら別 skill の resource-map を指すという逆接続) は、根拠が『だから resource-map は持たない』という正しい向きに接続され解消されている。",
+      "closure 変動の意味論的妥当性も担保された。goal-seek-paradigm.md は本 skill が委譲する 6 ステップループの正本であるため、その改訂で digest が変わるのは検知すべき変更の正しい検知であり、前回問題視した偽陽性 (無関係な doc ルーティング表の編集での無効化) と偽陰性 (実行意味論の改訂を取りこぼす) の双方が解消されている。",
+      "同一是正キャンペーンの sibling である run-skill-feedback が既に宣言している同一ファイル・同一表記と揃い、harness-creator 内の cross-skill ref 記法が一貫した。"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "negative_feedback": [
+      "smell (軽微・非ブロッキング): コメント冒頭が『本文 L74 が正本と明示する』と書くが、コメントブロックが 4 行から 5 行に増えた結果、当該記述の実際の位置は L75 へずれている (grep 実測)。ファイル名を明示しているため参照先の一意性は保たれており実害はないが、frontmatter 内の自己参照行番号は編集で容易に陳腐化するため、行番号を落として『本文のゴールシーク実行節が正本と明示する』等の表現にする方が保守的である。次回 SKILL.md 編集時のついで修正で足りる。"
+    ],
+    "iteration": 2,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "plugin skill-creator→harness-creator 改名後の現 SKILL.md(sha256=16e650ca…)を全文 read し 4 条件で genuine 精査。(a) 旧固有名残存: 本スキル配下 grep 0 件、残存なし。(b) 改名追従漏れ: L96 plugins/harness-creator/skills/wrap-git-commit-safe/scripts/pre-commit-secret-scan.py、script_refs 2 件(pre-commit-secret-scan.py/preflight-git-commit.py)、schema_refs schemas/wrap-io.schema.json、templates/commit-template.md、base run-build-skill いずれも実在で参照切れなし。(c) 意味論境界: 単体スキルの commit ステップを wrap する操作=skill 表現維持が正当、plugin path のみ harness-creator へ更新済みで境界違反なし。C1 矛盾0/C2 漏れ0(機密検出→bypass 検出→base commit→不合格時 BLOCK 理由提示の責務鎖が入力/出力/完了条件とともに明示)/C3 整合0(決定論検査を script へ寄せる方針が Key Rules・ゴールシークループ・局面カタログで統一、force-push は allowed-tools 非搭載で構造封止し Key Rule 4/IN2 と矛盾せず)。C4 依存: reference_refs references/resource-map.yaml はスキル直下に実体を持たないが、base run-build-skill の集約 resource-map(plugins/harness-creator/skills/run-build-skill/references/resource-map.yaml, 9398B, 実在)への base 継承ポインタ慣行であり、frontmatter base:run-build-skill 宣言と整合する設計上の指し先で dependency_break と判定しない(独立検証: sibling で pointer 慣行を採るのは base 継承 wrap の本スキルのみ・base 集約ファイルは実在。旧 verdict の calibration とも一致)。重大問題なし=PASS。"
+  "notes": "ALT-A 適用後の SKILL.md (sha256=f4c6b52f67ad…) を再評価した。git diff で変更が frontmatter の reference_refs ブロック 1 hunk のみ (resource-map.yaml → goal-seek-paradigm.md + コメント書き直し) であり本文は無変更であることを確認したうえで、前回と同じ 4 条件 + criteria で精査した。判断は実測に基づく。[実測1] live-trial-verdict.py を import し _frontmatter_refs / behavior_closure_files / skill_dir_tree_sha を実行。parsed refs は 4 件 (schemas/wrap-io.schema.json, scripts/pre-commit-secret-scan.py, scripts/preflight-git-commit.py, plugins/harness-creator/skills/run-build-skill/references/goal-seek-paradigm.md) でコメント 5 行は ref として誤解釈されない。closure は 8 ファイルに解決し例外なく digest=f6f2cb4bd599d86691a978cc962ae019e26601b25952455f7a32927bf0de2da5 を算出。closure 一覧に goal-seek-paradigm.md が入り resource-map.yaml が消えたことを目視確認した。[実測2] lint 3 種を個別実行し全て exit=0。[実測3] 設計書06 を開き第13条原文 (244 行目) と照合、コメントの引用が正確であることを確認。[実測4] 本文の正本明示箇所の実行番号を grep で確認 (75 行目) し、コメントの L74 表記との 1 行ずれを検出 (唯一の残指摘、軽微)。[4条件] C1 矛盾 0: 前回検出した 2 件 (集約 SSOT の実在しない主張 / 第13条の逆接続) はいずれも解消。現コメントの主張は全て実体と照合して真。C2 漏れ 0: 本文が依存を明示する唯一の base 側 reference が宣言され、取りこぼしは無い。C3 規約整合 0: harness-creator 内の cross-skill ref は plugins/ 始まり repo-root 表記という closure 解決規則 (plugins/ 始まりのみ repo root、他は skill dir 相対) に沿い、sibling run-skill-feedback と表記が一致。resource-map は skill 私有という repo 慣行に反する唯一例外だった状態も解消された (本 skill は resource-map 自体を宣言しなくなった)。C4 依存 0: 宣言 refs 4 件全て実在を確認、参照切れなし。以上より重大問題は無いと判断し PASS とした。残る指摘は行番号 1 行ずれの smell のみで、参照先がファイル名で一意に定まるため再評価を要さない非ブロッキング事項として next_action=none とした。[criteria 個別] IN1=充足 (pre-commit-secret-scan.py の SECRET_NAME_PATTERNS が \\.env(\\..*)?$ / credentials\\.json$ / .*\\.pem$ を含み findings 非空で return 2、stdlib のみの決定論実装であることをコードで確認。本件変更の影響なし)。IN2=条件付き充足 (--no-verify / --no-gpg-sign は check_bypass_flags が exit 2 BLOCK で決定論的に成立。main/master への force-push は script では BLOCK されず preflight-git-commit.py の force 検出は WARN(exit 0) かつ main/master を区別しないため、実質は allowed-tools に Bash(git push *) を持たない構造封止で担保されている。この構造論は妥当だが verify_by:script の宣言とは厳密には乖離する。本件変更が触れていない既往事項であり前回同様 verdict の根拠には算入しない)。OUT1=充足 (wrap 責務・L1→L0 依存の本文記述は無変更で健全であり、前回不充足とした frontmatter↔本文の不一致が解消されて base 継承の宣言が本文と整合した)。"
 }

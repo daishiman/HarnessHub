@@ -30,15 +30,15 @@ class Shape(Protocol):
     def build(self, out: Path) -> None: ...
 
 
-# scenario_id と shape 名の対応は build_live_trial_shape.py の CLI help と
-# plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json が正本。
+# scenario_id と shape 名の対応は live-trial-positive-scenarios.json が正本。
+#
+# sync / schedule / decompose は本 package に置かない。build_live_trial_fixture.py の
+# BUILDERS が既に持っており (build_sync は C03 sync と C15 schedule を兼ねる)、
+# 二重実装になるため。CLI の正本は build_live_trial_fixture.py の --kind 一本に統一する。
 SHAPE_MODULES: dict[str, str] = {
     "node": "shape_node",
-    "sync": "shape_sync",
     "requirements": "shape_requirements",
     "render": "shape_render",
-    "decompose": "shape_decompose",
-    "schedule": "shape_schedule",
     "system-spec": "shape_system_spec",
 }
 

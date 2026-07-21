@@ -314,12 +314,21 @@ def _append_index_entry(index_path: Path, lesson_path: Path, entry: dict[str, st
             m = _INDEX_ID_RE.match(str(item.get("id", "")))
             if m:
                 max_seq = max(max_seq, int(m.group(1)))
+        # KL-002 の必須フィールド (id/title|content/intent|purpose/background/keywords|tags/source)
+        # を自動記録の時点で満たす。未 triage でも索引として成立させ、
+        # governance-check の lint-knowledge-loop --strict が auto 追記のたびに赤化するのを防ぐ。
+        detection = f"{entry['trigger_event']}:{entry['tool']} 失敗 — {entry['observation'][:60]}"
         items.append(
             {
                 "id": f"lessons-index_{max_seq + 1:03d}",
                 "title": (
                     f"[auto] {entry['trigger_event']}:{entry['tool']} 失敗 — "
                     f"{entry['observation'][:80]}"
+                ),
+                "intent": "評価失敗パターンを知見ストアへ蓄積し、human triage と再発防止の入力として保持すること",
+                "background": (
+                    f"{entry['trigger_event']}:{entry['tool']} フックが評価失敗を自動検知して記録した"
+                    f"未 triage エントリ。検知内容: {detection}。根本原因は human triage 待ち。"
                 ),
                 "keywords": [
                     entry["trigger_event"],
