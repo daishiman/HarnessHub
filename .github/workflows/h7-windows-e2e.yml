@@ -48,8 +48,8 @@ jobs:
           claude plugin marketplace list
           Write-Output "T-A3-00: exit=$LASTEXITCODE"
 
-      # --- T-A1-02 / T-A1-03: url-marketplace 経路 ----------------------------
-      - name: "T-A1-02 url-marketplace add / T-A1-03 install"
+      # --- T-A1-02: url-marketplace add ---------------------------------------
+      - name: "T-A1-02 url-marketplace add"
         shell: pwsh
         run: |
           $cfg = Join-Path $env:RUNNER_TEMP 'h7-config'
@@ -58,6 +58,45 @@ jobs:
           Write-Output "T-A1-02: exit=$LASTEXITCODE"
           if ($LASTEXITCODE -ne 0) { exit 1 }
           claude plugin marketplace list
+
+      # --- T-A1-08: SSH 鍵の無い素の環境で github 型 source が解決できるか -----
+      # 本 feature の想定利用者は「非エンジニアの作者」であり、その PC に GitHub の
+      # SSH 鍵が設定されている前提は置けない。CI ランナーはその条件を忠実に再現する。
+      # 失敗しても job は止めず、観測結果として記録する (continue-on-error)。
+      - name: "T-A1-08 SSH 鍵なしでの install (素の環境の再現)"
+        id: nossh
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $cfg = Join-Path $env:RUNNER_TEMP 'h7-config'
+          $env:CLAUDE_CONFIG_DIR = $cfg
+          $out = claude plugin install h7-probe@h7-url-marketplace 2>&1 | Out-String
+          Write-Output $out
+          if ($LASTEXITCODE -eq 0) {
+            Write-Output "T-A1-08: pass (SSH 鍵なしでも解決できた)"
+          } else {
+            Write-Output "T-A1-08: fail (SSH 鍵なしでは解決できない)"
+            if ($out -match 'git@github\.com') {
+              Write-Output "原因: CLI が github source を SSH でクローンしている"
+            }
+            exit 1
+          }
+
+      # --- git URL を https へ書き換えてから再試行 -----------------------------
+      # 上記が fail した場合の回避策が存在するかを確かめる。この書き換えを要する
+      # ことは、非エンジニア作者に追加設定を求めることを意味し C1 の評価に効く。
+      - name: "git URL を https へ書き換え"
+        shell: pwsh
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git config --global --get-regexp 'url\..*insteadof'
+
+      # --- T-A1-03: url-marketplace install (書き換え後) ----------------------
+      - name: "T-A1-03 url-marketplace install (https 書換後)"
+        shell: pwsh
+        run: |
+          $cfg = Join-Path $env:RUNNER_TEMP 'h7-config'
+          $env:CLAUDE_CONFIG_DIR = $cfg
           claude plugin install h7-probe@h7-url-marketplace
           Write-Output "T-A1-03: exit=$LASTEXITCODE"
           if ($LASTEXITCODE -ne 0) { exit 1 }
