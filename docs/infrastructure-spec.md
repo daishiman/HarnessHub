@@ -45,6 +45,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | `PACKAGES_BUCKET` | R2 | `harness-hub-packages` | PackageRegistry (immutable) |
 | `BACKUPS_BUCKET` | R2 | `harness-hub-backups` | DB export 保管 (§10) |
 | `ASSETS` | assets | `.open-next/assets` | 静的アセット (edge 配信) |
+| `CF_VERSION_METADATA` | version_metadata | Cloudflare 採番の version id | `/health` の `version` に載せ「いま配信されている版」を応答から特定可能にする (§9)。build 時注入と違い **rollback 後も実配信版と一致する**ため、障害時のロールバック判断の一次情報になる (2026-07-21 追加) |
 | `APP_BASE_URL` | var | 環境別 URL (§8) | 絶対 URL 生成・OIDC callback |
 | `ENVIRONMENT` | var | `production` / `preview` | 環境分岐 (ログ・通知の抑制)。常設 staging は持たない (§6) |
 
