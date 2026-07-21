@@ -1,0 +1,41 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "C02 単一writer違反: graph.json を Edit で直接書換 (transcript 124行目)。誘因は fixture の repository_id 誤設定 (orchestrator 起因)",
+      "completeness-report.json を被験対象が手書きし、独立 auditor (Task/Agent) 呼出し 0 件のまま confirmed の根拠にしている",
+      "run-system-spec-doc-fetch を qualified Skill で駆動せず fetched-references.json を手書き (targets=[] で citation gate が空振り)"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "96d80f636bb6505a6b819ac0bb2028a30c0e3c892919ecc7831c1ce6e46772e4",
+  "transcript_sha256": "d4e4b084a47ea84851d1df4ffe07c365c76ab876aa228a333d3ef51f80a6bcf0",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": null
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

@@ -1,0 +1,51 @@
+// Cloudflare Workers デプロイ定義。monorepo のため repo 直下ではなく apps/hub 直下に置く。
+// 内容の正本は docs/infrastructure-spec.md §2 (binding / secret 台帳)・§5 (cron)・§6 (環境構成)。
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // ADR §4: deploy unit は cloudflare-workers/hub の単一 Worker。
+  // qa-038 確定 (2026-07-21) により常設 staging を持たないため、
+  // **top-level 定義そのものが production**。`wrangler deploy` に --env を渡さない運用に揃える。
+  // env を分けると ci.yml の --env 指定漏れがそのまま「意図しない環境への deploy」になるため、単一定義にしている。
+  "name": "harness-hub",
+  // opennextjs-cloudflare が生成する fetch handler を包み、scheduled handler を併せて export する custom entry (ADR §4)
+  "main": "src/worker.ts",
+  "compatibility_date": "2025-09-23",
+  // OpenNext の Next.js ランタイムが Node.js API を要求するため必須
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    // Workers 標準の logs / analytics のみを使う (C2: 追加費用なし)
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // infrastructure-spec §5 の cron 2 系統。日次 JST 0:00 / 週次 JST 月 9:00 (式は UTC)
+  "triggers": {
+    "crons": ["0 15 * * *", "0 0 * * 1"]
+  },
+  // infrastructure-spec §2 binding 台帳。**バケットは初回 deploy より前に作成が必要** (未作成だと deploy 自体が失敗する)
+  "r2_buckets": [
+    {
+      "binding": "PACKAGES_BUCKET",
+      "bucket_name": "harness-hub-packages"
+    },
+    {
+      "binding": "BACKUPS_BUCKET",
+      "bucket_name": "harness-hub-backups"
+    }
+  ],
+  // デプロイのたびに Cloudflare が採番する version id を Worker から読めるようにする。
+  // /health の version フィールドに載せることで「いま配信されている版」を応答から特定でき、
+  // 障害時のロールバック判断の一次情報になる (H-01)。build 時注入と違い rollback 後も嘘をつかない。
+  "version_metadata": {
+    "binding": "CF_VERSION_METADATA"
+  },
+  "vars": {
+    "HUB_ENV": "production",
+    "ENVIRONMENT": "production"
+  }
+  // preview は PR ごとの使い捨て (infrastructure-spec §6)。常設しないため設定ファイルに環境定義を持たせず、
+  // PR workflow 側が `--name harness-hub-pr-<n>` などで払い出し PR close で破棄する。
+  // APP_BASE_URL (§2 台帳) はドメイン確定後に追加する。未確定値をここに書き込まない。
+}

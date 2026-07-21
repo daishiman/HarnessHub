@@ -108,3 +108,11 @@ google-cloud-cli-darwin-arm.tar.gz
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# Hub monorepo (feat-hub-foundation) の生成物。証跡は docs/features/*/evidence/ へ複製して残す
+node_modules/
+.next/
+.open-next/
+artifacts/
+*.tsbuildinfo
+apps/hub/.dev.vars
