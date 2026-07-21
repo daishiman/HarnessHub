@@ -25,20 +25,31 @@ deployed_at: "2026-07-21T03:46:26Z"
 | アップロード | **成功** |
 | cron トリガー登録 | **失敗**（§3） |
 
-### 事前に作成したリソース
+### 作成済みリソース
 
-| リソース | 名前 | 状態 |
+| リソース | 名前 / 値 | 状態 |
 |---|---|---|
 | R2 バケット | `harness-hub-packages` | 作成済み |
 | R2 バケット | `harness-hub-backups` | 作成済み |
+| Turso DB | `harness-hub-prod` (group: default / **aws-ap-northeast-1**) | 作成済み。infrastructure-spec §4「東京近接」に適合 |
+| Turso 接続 URL | `libsql://harness-hub-prod-manju.aws-ap-northeast-1.turso.io` | Worker secret へ投入済み |
+
+### 投入済み Worker secret
+
+| secret | 状態 | 再取得 |
+|---|---|---|
+| `TURSO_DATABASE_URL` | 投入済み | 上表の URL |
+| `TURSO_AUTH_TOKEN` | 投入済み | `turso db tokens create harness-hub-prod` で再発行可能 |
+| `AUTH_SECRET` | 投入済み | **再発行すると全セッションが失効**。生成値は `~/harness-hub-secrets.txt` (mode 600) に保存済み。パスワードマネージャへ移して当該ファイルは削除すること |
+| `CRON_HEARTBEAT_URL` | **未投入** | Better Stack の heartbeat 登録後 |
 
 ## 2. 未完了の項目（完了条件を満たしていないもの）
 
 | # | 項目 | 状態 | 影響 |
 |---|---|---|---|
-| 1 | Worker secret 4 件の投入 | **未実施** | `/health` は `db` probe が失敗し **503**（設計どおりの挙動）。SLO 計測を開始できない |
+| 1 | Worker secret | **3/4 投入済み**（`CRON_HEARTBEAT_URL` のみ未投入） | Turso 接続情報が入ったため `/health` は 200 になる想定（**未検証**） |
 | 2 | cron トリガー登録 | **失敗** | 日次・週次バッチが起動しない（§3） |
-| 3 | `/health` の 200 確認 | **未実施** | 外形監視を有効化してはいけない段階 |
+| 3 | `/health` の 200 確認 | **未実施**（実行環境から外部 URL への疎通が許可されていないため） | 確認できるまで外形監視を有効化しない |
 | 4 | 外部死活監視（Better Stack） | **未設定** | A3 が blocked のまま |
 | 5 | GitHub Secrets / Variables | **未設定** | CI の deploy job が動かない（A1 が blocked のまま） |
 | 6 | 独自ドメイン（`hub.<domain>`） | **未設定** | 現状は workers.dev サブドメイン |
