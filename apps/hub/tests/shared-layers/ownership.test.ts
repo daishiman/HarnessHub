@@ -21,15 +21,21 @@ interface LayerReport {
   boundary_only: boolean;
 }
 
+interface MechanismReport {
+  id: string;
+  owner_artifacts: { path: string; exists: boolean }[];
+  external_wiring: string;
+}
+
 const workDirs: string[] = [];
 
 /** detector の --report で E1 証跡 (owner / 公開 API / consumer 一覧) を生成して読む。 */
-function generateReport(): { layers: LayerReport[] } {
+function generateReport(): { layers: LayerReport[]; mechanisms: MechanismReport[] } {
   const dir = mkdtempSync(path.join(tmpdir(), 'hub-ownership-'));
   workDirs.push(dir);
   const reportPath = path.join(dir, 'shared-layer-ownership.json');
   execFileSync(process.execPath, [SCRIPT, '--report', reportPath, '--no-fail'], { encoding: 'utf8' });
-  return JSON.parse(readFileSync(reportPath, 'utf8')) as { layers: LayerReport[] };
+  return JSON.parse(readFileSync(reportPath, 'utf8')) as { layers: LayerReport[]; mechanisms: MechanismReport[] };
 }
 
 afterAll(() => {
@@ -38,10 +44,25 @@ afterAll(() => {
 
 describe('HF-A4-OWNER-001: 登録共通層の owner 一覧', () => {
   const report = generateReport();
-  const registry = JSON.parse(readFileSync(REGISTRY, 'utf8')) as { layers: unknown[] };
+  const registry = JSON.parse(readFileSync(REGISTRY, 'utf8')) as { layers: unknown[]; mechanisms: unknown[] };
 
   it('登録簿の全層が報告に含まれる', () => {
     expect(report.layers).toHaveLength(registry.layers.length);
+  });
+
+  it('shared-layers §3 の CI/CD・運用機構が全件登録され、owner artifact が存在する', () => {
+    expect(report.mechanisms).toHaveLength(registry.mechanisms.length);
+    expect(report.mechanisms.map((mechanism) => mechanism.id).sort()).toStrictEqual([
+      'backup',
+      'ci-quality-gates',
+      'monitoring',
+      'wrangler-deploy',
+    ]);
+    expect(
+      report.mechanisms.flatMap((mechanism) =>
+        mechanism.owner_artifacts.filter((artifact) => !artifact.exists).map((artifact) => artifact.path),
+      ),
+    ).toStrictEqual([]);
   });
 
   it('owner 未定義 (owner_package 不在) の層が 0 件である', () => {

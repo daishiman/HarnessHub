@@ -17,7 +17,7 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit",
+    "lint": "pnpm --workspace-root exec biome check packages/inspection",
     "scan:secrets": "node ./scripts/scan-secrets.mjs"
   },
   "devDependencies": {

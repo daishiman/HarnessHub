@@ -90,25 +90,30 @@ jobs:
         run: pnpm -r typecheck
       - name: build
         run: pnpm -r build
+      # bundle contract test も実 bundle を検査できるよう、G4 より前に Worker 成果物を生成する。
+      # 以前は G4 後の生成だったため HF-A2-BUNDLE-001 が CI で常時 skip されていた (P10 F-15)。
+      - name: Worker 成果物の生成 (bundle test / 計測の前提)
+        run: pnpm --filter @harness-hub/hub run build:worker
       - name: G4 unit / integration / contract test (Tenant 分離・検査 pipeline 挙動同値を含む)
         run: pnpm -r test
       - name: G6 secret scan (packages/inspection を CI からも呼ぶ / qa-038【2】)
-        run: pnpm --filter @harness-hub/inspection run scan:secrets
+        run: |
+          node scripts/ci/check-required-package-script.mjs packages/inspection/package.json scan:secrets
+          pnpm --filter @harness-hub/inspection run scan:secrets
       - name: G7 破壊的 DDL 検査 (expand/contract 3 段階 / qa-038【5】)
         run: |
           if [ -d packages/db/migrations ]; then
+            node scripts/ci/check-required-package-script.mjs packages/db/package.json check:ddl
             pnpm --filter @harness-hub/db run check:ddl
           else
             echo "migrations 未作成 (feat-domain-model-db 未着手) のため対象なし"
           fi
       - name: G8 OpenAPI / zod drift 検査
-        run: pnpm --filter @harness-hub/schemas run check:drift
+        run: |
+          node scripts/ci/check-required-package-script.mjs packages/schemas/package.json check:drift
+          pnpm --filter @harness-hub/schemas run check:drift
       - name: G9 axe a11y (部品単体 + 画面結合の 2 段)
         run: pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/hub run test:a11y
-      # check:bundle は wrangler dry-run で実デプロイ bundle を測るため .open-next が前提。
-      # pnpm -r build は next build までしか行わないので、ここで Worker 成果物を生成する。
-      - name: Worker 成果物の生成 (bundle 計測の前提)
-        run: pnpm --filter @harness-hub/hub run build:worker
       - name: G5 bundle 予算 (Worker gzip 後 3MiB / A2)
         run: pnpm --filter @harness-hub/hub run check:bundle
       - uses: actions/upload-artifact@v4

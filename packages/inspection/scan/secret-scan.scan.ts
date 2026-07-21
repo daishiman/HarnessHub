@@ -10,10 +10,10 @@ import { expect, it } from 'vitest';
 import { collectSecretScanFiles } from '../src/secret-scan-fs';
 import { scanFilesForSecrets, secretScanExitCode } from '../src/secret-scan-preset';
 
-const root = resolve(process.env['HARNESS_SECRET_SCAN_ROOT'] ?? process.cwd());
-const jsonPath = process.env['HARNESS_SECRET_SCAN_JSON'];
+const root = resolve(process.env.HARNESS_SECRET_SCAN_ROOT ?? process.cwd());
+const jsonPath = process.env.HARNESS_SECRET_SCAN_JSON;
 /** 空振り (0 ファイル) による偽の緑を防ぐ下限。--root で部分木を指す場合に備えて既定は緩めに取る。 */
-const minimumFiles = Number(process.env['HARNESS_SECRET_SCAN_MIN_FILES'] ?? '1');
+const minimumFiles = Number(process.env.HARNESS_SECRET_SCAN_MIN_FILES ?? '1');
 
 it('secret scan: 検出 0 件 (G6 / qa-038【2】)', () => {
   expect(existsSync(root), `走査対象が存在しません: ${root}`).toBe(true);

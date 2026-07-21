@@ -73,7 +73,10 @@ function extractExportNames(content) {
 /** `export * from './x'` / `export {..} from './x'` の再エクスポート先を解決する。 */
 function resolveModulePath(fromFile, spec) {
   const base = resolve(dirname(fromFile), spec);
-  const candidates = [...SOURCE_EXT.map((ext) => base + ext), ...SOURCE_EXT.map((ext) => join(base, 'index' + ext))];
+  const candidates = [
+    ...SOURCE_EXT.map((ext) => `${base}${ext}`),
+    ...SOURCE_EXT.map((ext) => join(base, `index${ext}`)),
+  ];
   return candidates.find((c) => existsSync(c)) ?? null;
 }
 
@@ -81,8 +84,8 @@ function resolveModulePath(fromFile, spec) {
 function collectPublicApi(ownerDir, seen = new Set()) {
   const names = new Set();
   const indexFile =
-    SOURCE_EXT.map((ext) => join(ownerDir, 'src', 'index' + ext)).find((p) => existsSync(p)) ??
-    SOURCE_EXT.map((ext) => join(ownerDir, 'index' + ext)).find((p) => existsSync(p));
+    SOURCE_EXT.map((ext) => join(ownerDir, 'src', `index${ext}`)).find((p) => existsSync(p)) ??
+    SOURCE_EXT.map((ext) => join(ownerDir, `index${ext}`)).find((p) => existsSync(p));
   if (!indexFile) return { names, indexFile: null };
 
   const visit = (file) => {
@@ -109,6 +112,33 @@ function isInside(file, dirPath) {
   return rel !== '' && !rel.startsWith('..') && !isAbsolute(rel);
 }
 
+/** route handler が認証 wrapper を迂回していないかを決定的に検査する (ADR R-19)。 */
+function inspectRouteHandlers(files, root, policy) {
+  if (!policy) return [];
+  const routeRoot = join(root, policy.root);
+  const exemptions = new Map((policy.exemptions ?? []).map((entry) => [entry.path, entry.reason]));
+  const httpMethodExport = /export\s+(?:async\s+function|const)\s+(?:GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD)\b/;
+  const wrapperCall = new RegExp(`\\b${policy.wrapper}\\s*\\(`);
+  const findings = [];
+
+  for (const file of files) {
+    if (!isInside(file, routeRoot) || !/^route\.(?:ts|tsx|js|jsx|mts|mjs)$/.test(file.split(/[/\\\\]/).at(-1)))
+      continue;
+    const relativePath = relative(root, file);
+    const content = readFileSync(file, 'utf8');
+    if (!httpMethodExport.test(content) || exemptions.has(relativePath)) continue;
+    if (!wrapperCall.test(content)) {
+      findings.push({
+        kind: 'unwrapped-route-handler',
+        layer: 'authz-middleware',
+        file: relativePath,
+        detail: `公開 exemption ではない route handler が ${policy.wrapper}() を経由していない`,
+      });
+    }
+  }
+  return findings;
+}
+
 function main() {
   const args = parseArgs(process.argv);
   const registry = JSON.parse(readFileSync(join(REPO_ROOT, 'scripts', 'ci', 'shared-layer-registry.json'), 'utf8'));
@@ -117,7 +147,11 @@ function main() {
   const files = scanRoots.flatMap((d) => walk(d, args.excludes));
 
   const findings = [];
-  const report = { generated_for: 'E1 (全登録共通層の owner / public API / consumer 一覧)', layers: [] };
+  const report = {
+    generated_for: 'E1 (全登録共通層の owner / public API / consumer 一覧)',
+    layers: [],
+    mechanisms: [],
+  };
 
   for (const layer of registry.layers) {
     const ownerDir = join(args.root, layer.owner_package);
@@ -197,26 +231,55 @@ function main() {
     }
   }
 
+  // shared-layers §3 の CI/CD・運用機構も同じ登録簿で owner artifact の存在を検査する。
+  // fixture 用の --root ではコード重複だけを検証したいため、実 repository root のときだけ適用する。
+  for (const mechanism of registry.mechanisms ?? []) {
+    const artifacts = (mechanism.owner_artifacts ?? []).map((artifact) => ({
+      path: artifact,
+      exists: existsSync(join(args.root, artifact)),
+    }));
+    report.mechanisms.push({
+      id: mechanism.id,
+      shared_layers_ref: mechanism.shared_layers_ref,
+      owner_artifacts: artifacts,
+      external_wiring: mechanism.external_wiring ?? 'not-required',
+      external_wiring_note: mechanism.external_wiring_note ?? null,
+    });
+    if (args.root === REPO_ROOT) {
+      for (const artifact of artifacts.filter((entry) => !entry.exists)) {
+        findings.push({
+          kind: 'missing-owner-artifact',
+          layer: mechanism.id,
+          file: artifact.path,
+          detail: `shared-layers ${mechanism.shared_layers_ref} の owner artifact が存在しない`,
+        });
+      }
+    }
+  }
+
+  findings.push(...inspectRouteHandlers(files, args.root, registry.route_handler_policy));
+
   const result = {
     scanned_root: args.root,
     scanned_files: files.length,
     registered_layers: registry.layers.length,
+    registered_mechanisms: (registry.mechanisms ?? []).length,
     duplicate_count: findings.length,
     findings,
   };
 
   if (args.json) {
     mkdirSync(dirname(args.json), { recursive: true });
-    writeFileSync(args.json, JSON.stringify(result, null, 2) + '\n');
+    writeFileSync(args.json, `${JSON.stringify(result, null, 2)}\n`);
   }
   if (args.report) {
     mkdirSync(dirname(args.report), { recursive: true });
-    writeFileSync(args.report, JSON.stringify(report, null, 2) + '\n');
+    writeFileSync(args.report, `${JSON.stringify(report, null, 2)}\n`);
   }
 
   if (findings.length === 0) {
     console.log(
-      `[duplicate-detector] OK: 登録共通層 ${registry.layers.length} 件 / 走査 ${files.length} ファイル / 重複 0 件`,
+      `[duplicate-detector] OK: 登録共通層 ${registry.layers.length} 件 + 運用機構 ${(registry.mechanisms ?? []).length} 件 / 走査 ${files.length} ファイル / 違反 0 件`,
     );
     process.exit(0);
   }

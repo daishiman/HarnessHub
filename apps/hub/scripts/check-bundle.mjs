@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { execFile } from 'node:child_process';
 // Worker bundle 予算ゲート (HF-A2-BUNDLE-001/002)。gzip 後サイズが閾値を超えたら非ゼロ終了する
 //
 // 計測対象は「実際に Cloudflare へアップロードされる Worker」であって .open-next ディレクトリ全体ではない。
@@ -6,18 +7,16 @@
 // worker.js へバンドルされる前の server-functions/ の入力が同居しており、
 // ディレクトリを丸ごと数えると実デプロイの 5 倍以上に膨らむ (実測 5.4 MiB 対 0.96 MiB)。
 // そのため既定では wrangler の dry-run に実 bundle を吐かせ、その出力だけを測る。
-import { createReadStream } from 'node:fs';
+import { createReadStream, existsSync } from 'node:fs';
 import { mkdir, mkdtemp, readdir, rm, stat, writeFile } from 'node:fs/promises';
-import { createGzip } from 'node:zlib';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
-import { pipeline } from 'node:stream/promises';
-import { Writable } from 'node:stream';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import process from 'node:process';
+import { Writable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
+import { createGzip } from 'node:zlib';
 
 const execFileAsync = promisify(execFile);
 

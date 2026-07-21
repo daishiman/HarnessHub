@@ -552,5 +552,75 @@
       ],
       "boundary_only": false
     }
+  ],
+  "mechanisms": [
+    {
+      "id": "ci-quality-gates",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "exists": true
+        },
+        {
+          "path": "scripts/ci/check-pnpm-only.mjs",
+          "exists": true
+        },
+        {
+          "path": "scripts/ci/check-shared-layer-duplicates.mjs",
+          "exists": true
+        }
+      ],
+      "external_wiring": "not-required",
+      "external_wiring_note": null
+    },
+    {
+      "id": "wrangler-deploy",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "exists": true
+        },
+        {
+          "path": "apps/hub/wrangler.jsonc",
+          "exists": true
+        },
+        {
+          "path": "apps/hub/open-next.config.ts",
+          "exists": true
+        }
+      ],
+      "external_wiring": "not-required",
+      "external_wiring_note": null
+    },
+    {
+      "id": "monitoring",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        {
+          "path": "apps/hub/src/app/health/route.ts",
+          "exists": true
+        },
+        {
+          "path": ".github/workflows/cwv.yml",
+          "exists": true
+        }
+      ],
+      "external_wiring": "pending",
+      "external_wiring_note": "Better Stack の外形監視と月次 SLO 時系列はユーザー管理の外部設定。ローカル実装だけで充足扱いにしない"
+    },
+    {
+      "id": "backup",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        {
+          "path": ".github/workflows/backup.yml",
+          "exists": true
+        }
+      ],
+      "external_wiring": "pending",
+      "external_wiring_note": "GitHub environment secrets と heartbeat は外部設定。workflow 実装の存在と運用開始を区別する"
+    }
   ]
 }

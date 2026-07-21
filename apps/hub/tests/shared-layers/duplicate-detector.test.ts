@@ -1,6 +1,6 @@
 // HF-A4-DUP-001/002: 共通層の重複実装が 0 件であること、および detector 自体が違反を検出できること
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,6 +13,7 @@ const VIOLATION_FIXTURE = path.join(REPO_ROOT, 'apps/hub/tests/fixtures/duplicat
 interface ScanResult {
   scanned_files: number;
   registered_layers: number;
+  registered_mechanisms: number;
   duplicate_count: number;
   findings: { kind: string; layer: string; file: string; symbol?: string }[];
 }
@@ -48,7 +49,36 @@ describe('HF-A4-DUP-001: 実リポジトリの重複実装が 0 件', () => {
   it('走査が空振りしていない (登録層と走査ファイルが存在する)', () => {
     // 走査 0 ファイルでも「重複 0 件」になるため、空振りによる偽の緑を排除する
     expect(result.registered_layers).toBeGreaterThan(0);
+    expect(result.registered_mechanisms).toBe(4);
     expect(result.scanned_files).toBeGreaterThan(0);
+  });
+});
+
+describe('認可 wrapper の静的検査 (ADR R-19)', () => {
+  function routeFixture(source: string): string {
+    const root = mkdtempSync(path.join(tmpdir(), 'hub-route-policy-'));
+    workDirs.push(root);
+    const routeDir = path.join(root, 'apps/hub/src/app/api/private');
+    mkdirSync(routeDir, { recursive: true });
+    writeFileSync(path.join(routeDir, 'route.ts'), source, 'utf8');
+    return root;
+  }
+
+  it('wrapper を通らない private route handler を検出する', () => {
+    const { status, result } = runDetector([
+      '--root',
+      routeFixture('export async function GET(): Promise<Response> { return new Response("ok"); }'),
+    ]);
+    expect(status).not.toBe(0);
+    expect(result.findings.some((finding) => finding.kind === 'unwrapped-route-handler')).toBe(true);
+  });
+
+  it('withAuthz() を通る route handler は違反にしない', () => {
+    const { result } = runDetector([
+      '--root',
+      routeFixture('const withAuthz = (fn: unknown) => fn; export const GET = withAuthz(() => new Response("ok"));'),
+    ]);
+    expect(result.findings.filter((finding) => finding.kind === 'unwrapped-route-handler')).toStrictEqual([]);
   });
 });
 

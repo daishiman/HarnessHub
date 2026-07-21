@@ -17,8 +17,10 @@
     "typecheck": "pnpm -r typecheck",
     "check:pnpm": "node scripts/ci/check-pnpm-only.mjs",
     "check:duplicates": "node scripts/ci/check-shared-layer-duplicates.mjs",
+    "check:secrets": "node scripts/ci/check-required-package-script.mjs packages/inspection/package.json scan:secrets && pnpm --filter @harness-hub/inspection run scan:secrets",
+    "check:drift": "node scripts/ci/check-required-package-script.mjs packages/schemas/package.json check:drift && pnpm --filter @harness-hub/schemas run check:drift",
     "check:bundle": "pnpm --filter @harness-hub/hub run check:bundle",
-    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm lint && pnpm typecheck && pnpm test && pnpm check:bundle",
+    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm lint && pnpm typecheck && pnpm build && pnpm --filter @harness-hub/hub run build:worker && pnpm test && pnpm check:secrets && pnpm check:drift && pnpm check:bundle",
     "preinstall": "npx --yes only-allow pnpm"
   },
   "devDependencies": {

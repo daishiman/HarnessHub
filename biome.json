@@ -6,6 +6,7 @@
       "apps/**/*.tsx",
       "packages/**/*.ts",
       "packages/**/*.tsx",
+      "apps/hub/scripts/**/*.mjs",
       "scripts/ci/**/*.mjs",
       "!**/node_modules",
       "!**/.next",
@@ -23,7 +24,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "preset": "recommended"
     }
   },
   "javascript": {

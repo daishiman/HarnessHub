@@ -17,12 +17,12 @@ measured_at: "2026-07-21"
 
 | # | acceptance | 判定 | 根拠 |
 |---|---|---|---|
-| A1 | CI が test→deploy を完走する | **blocked（deploy 未実行）** | CI run **29795236896 が success**（静的ゲート → build & test → bundle まで全通過、clean install の ubuntu-latest で再現）。ただし deploy job は main 限定で **skip**。skip は success ではないため未達（証跡: `evidence/ci-run.md`） |
+| A1 | CI が test→deploy を完走する | **blocked（deploy 未実行）** | CI run **29795485968 が success**（静的ゲート → build & test → bundle まで全通過、clean install の ubuntu-latest で再現）。ただし deploy job は main 限定で **skip**。今回の未コミット変更後はローカル `pnpm verify` のみ再検証済み |
 | A2 | Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する | **合格** | CI に G5 ゲートが存在し **CI 上でも success**。実測 **0.952 MiB / 3.000 MiB**（wrangler dry-run 実 bundle） |
 | A3 | SLO 99.5% の計測と /health が稼働する | **部分達成（blocked）** | **`/health` の稼働は本番実測で確認**（2026-07-21 / HTTP 200・db・r2 とも ok。証跡 `evidence/health-response.json`）。ただし SLO 99.5% の算定に必要な**外形監視の時系列が未取得**のため blocked |
 | A4 | shared-layers 登録済み共通層が単一 package/境界に実装され、消費 feature が同じ実装を参照する | **条件付き合格**（2026-07-21 再裁定） | duplicate scan 0 件・owner 未定義 0 件・contract test は全 12 層へ拡張済み。**ただし 5 層は実 consumer が fixture の 1 系統のみ**（下記 §2.1） |
 
-**総合: 条件付き合格。** A2・A4 は実測証跡をもって合格。A1・A3 は**外部要因（push 未実施 / Cloudflare・Better Stack 未設定）により判定不能**であり、pass ではなく blocked として記録する。
+**総合: 条件付き合格。** A2 は合格、A4 は実 consumer 未結線 5 層のため条件付き合格。A1・A3 は**外部要因（main deploy 未実行 / Better Stack 時系列未取得）により判定不能**であり、pass ではなく blocked として記録する。
 
 ## 2.1 A4 を「合格」から「条件付き合格」へ再裁定した理由（P10 指摘 F-06）
 
@@ -51,7 +51,7 @@ measured_at: "2026-07-21"
 | HF-A3-SLO-001 | 外形監視で 99.5% 算定 | **未実行（外部依存）** | — |
 | HF-A4-OWNER-001 | owner 未定義 0 件 | pass | `evidence/shared-layer-ownership.json` |
 | HF-A4-CONTRACT-001〜004 ほか | 全 12 層の consumer contract（§2.1 の 5 層は fixture 1 系統のため未達扱い） | pass（実行分は全件） | `evidence/test-run.log` |
-| HF-A4-DUP-001 | 重複 0 件 | pass（197 ファイル走査） | `evidence/duplicate-scan.json` |
+| HF-A4-DUP-001 | 重複・境界違反 0 件 | pass（200 ファイル走査、登録 12 層 + 4 運用機構） | `evidence/duplicate-scan.json` |
 | HF-A4-DUP-002 | 意図的違反を検出 | pass（2 種とも検出） | `evidence/test-run.log` |
 | HF-QA-A11Y-001/002 | axe 違反 0 件（部品・画面） | pass | `evidence/test-run.log` |
 | HF-QA-TENANT-001 | deny-by-default | pass（10 件） | `evidence/test-run.log` |
@@ -61,19 +61,19 @@ measured_at: "2026-07-21"
 
 | 検証 | 結果 |
 |---|---|
-| `pnpm -r test` | **44 test files / 578 tests 全 pass**（db 17 / estimation 39 / inspection 51 / schemas 86 / ui 265 / hub 120） |
+| `pnpm verify` | **46 test files / 592 tests 全 pass**（db 17 / estimation 39 / inspection 51 / schemas 86 / ui 266 / hub 133） |
 | `pnpm -r typecheck` | 全 6 package PASS |
 | `biome ci`（G2 lint/format の実体） | **exit 0**（P10 指摘 F-09 を受けて Biome を導入。導入時に実バグ 36 件を検出し是正済み） |
 | `next build` | 成功（First Load JS 102 kB / Middleware 34.9 kB） |
 | `opennextjs-cloudflare build` | 成功（`.open-next/worker.js` 生成） |
 | bundle 予算 | 0.952 MiB / 3.000 MiB |
-| duplicate detector | 197 ファイル走査・重複 0 件 |
+| duplicate / boundary detector | 200 ファイル走査・登録 12 層 + 4 運用機構・違反 0 件 |
 | pnpm 混入検査 | 違反 0 件 |
 
 ## 4. A1 / A3 を pass にしない理由（fail-closed の適用）
 
-- **A1**: `ci.yml` は実装済みで、ローカルでは全ゲート相当のコマンドが pass する。しかし acceptance の判定条件は「**GitHub Actions の単一 workflow run 内で** test job → deploy job が success 終了」であり、run が存在しない以上、条件を満たした証跡がない。「ローカルで通ったから CI も通るはず」は推測であり証跡ではない。
-- **A3**: `/health` の実装とテストは完了しているが、判定条件は「外形監視が 3 分間隔で計測し **月次可用性 99.5% を算定できる時系列**が取得できること」。Cloudflare へのデプロイと Better Stack の設定が未了のため、時系列が存在しない。
+- **A1**: feature branch の CI は test まで成功しているが、acceptance の判定条件は「**GitHub Actions の単一 workflow run 内で** test job → deploy job が success 終了」。deploy は main push 限定で skip のため、条件を満たした証跡がない。
+- **A3**: `/health` の production 稼働とテストは完了しているが、判定条件は「外形監視が 3 分間隔で計測し **月次可用性 99.5% を算定できる時系列**が取得できること」。Better Stack の時系列が存在しない。
 
 いずれも **P13（本番リリース）完了後に再判定が必要**。本報告は P13 前の中間裁定である。
 
@@ -81,7 +81,7 @@ measured_at: "2026-07-21"
 
 | # | 必要な作業 | 実施者 |
 |---|---|---|
-| 1 | ~~`feat/wt-2` を push し GitHub Actions を起動~~ → **完了**（run 29795236896 success） | 完了 |
+| 1 | ~~`feat/wt-2` を push し GitHub Actions を起動~~ → **完了**（最新確認済み run 29795485968 success） | 完了 |
 | 2 | GitHub Secrets: `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`、variable `HUB_HEALTH_URL` | **ユーザー** |
 | 3 | `wrangler login` と Cloudflare アカウント準備 | **ユーザー** |
 | 4 | Better Stack Free で production `/health` の 3 分間隔監視 + cron heartbeat を登録 | **ユーザー** |
@@ -89,6 +89,6 @@ measured_at: "2026-07-21"
 
 ## 6. 裁定の限界
 
-- CI 環境（ubuntu-latest / clean install）での再現は **run 29795236896 で確認済み**。残る未確認は実デプロイ環境（Cloudflare Workers 実行時）の挙動のみ。
+- CI 環境（ubuntu-latest / clean install）での再現は **run 29795485968 で確認済み**。今回の未コミット変更後の CI run と CI deploy job は未確認。
 - `HF-A3-SLO-001` は仕組み上、**1 ヶ月分の観測期間**を経ないと 99.5% を算定できない。デプロイ直後に A3 を「合格」とすることはできず、計測開始をもって blocked を解除し、初回の月次確定で最終判定とする。
 - P10（最終独立レビュー）は、本報告が「blocked を pass に読み替えていないか」を検証すること。

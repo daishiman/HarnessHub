@@ -65,7 +65,7 @@ describe('検出 0 件のとき', () => {
 
   it('環境変数参照は検出しない (誤検出でゲートを無効化させないため)', () => {
     const result = scanFilesForSecrets([
-      file('const token = process.env.CLOUDFLARE_API_TOKEN;\nconst k = `${secretRef}`;'),
+      file('const token = process.env.CLOUDFLARE_API_TOKEN;\nconst k = `' + '$' + '{secretRef}`;'),
       file('const apiKey = process.env.API_KEY;'),
     ]);
     expect(result.findings).toStrictEqual([]);

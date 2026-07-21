@@ -14,6 +14,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
+    setupFiles: ['./vitest.setup.ts'],
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx', 'tests/**/*.spec.ts', 'tests/**/*.spec.tsx'],
     // fixtures は「共通層の第 2 consumer 系統」であってテスト本体ではない
     exclude: ['node_modules/**', '.next/**', '.open-next/**', 'tests/fixtures/**'],

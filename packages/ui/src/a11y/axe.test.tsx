@@ -244,4 +244,19 @@ describe('HF-QA-A11Y-001: 部品単体の axe 違反が 0 件', () => {
 
     expect(violations).toEqual([]);
   });
+
+  it('意図的な a11y 違反を検出し、常時緑ではない', async () => {
+    const container = document.createElement('main');
+    const image = document.createElement('img');
+    image.src = '/missing-alt.png';
+    container.appendChild(image);
+    document.body.appendChild(container);
+
+    try {
+      const violations = await collectViolations(container);
+      expect(violations.some((violation) => violation.startsWith('image-alt:'))).toBe(true);
+    } finally {
+      container.remove();
+    }
+  });
 });

@@ -16,7 +16,7 @@
     "test": "vitest run",
     "test:a11y": "vitest run src/a11y",
     "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit"
+    "lint": "pnpm --workspace-root exec biome check packages/ui"
   },
   "dependencies": {
     "react-markdown": "^10.1.0",

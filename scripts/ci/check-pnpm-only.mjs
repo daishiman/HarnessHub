@@ -84,7 +84,7 @@ function main() {
   const result = { scanned_root: args.root, violation_count: violations.length, violations };
   if (args.json) {
     mkdirSync(dirname(args.json), { recursive: true });
-    writeFileSync(args.json, JSON.stringify(result, null, 2) + '\n');
+    writeFileSync(args.json, `${JSON.stringify(result, null, 2)}\n`);
   }
 
   if (violations.length === 0) {

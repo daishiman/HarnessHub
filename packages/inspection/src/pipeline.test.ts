@@ -22,7 +22,7 @@ const secretRule = defineSecretScanRule({
 
 const staticRule = defineStaticValidationRule({
   id: 'static/requires-name',
-  evaluate: (input) => (typeof input.metadata['name'] === 'string' ? [] : [{ message: 'name が必要です' }]),
+  evaluate: (input) => (typeof input.metadata.name === 'string' ? [] : [{ message: 'name が必要です' }]),
 });
 
 const policyRule = definePolicyRule({
@@ -78,7 +78,7 @@ describe('pipeline 骨格', () => {
   it('describePipeline が stage 別のルール ID を返す', () => {
     const descriptor = describePipeline(createInspectionPipeline(allRules));
     expect(descriptor.ruleIds).toStrictEqual(['static/requires-name', 'secret/token', 'policy/file-count']);
-    expect(descriptor.stages['policy']).toStrictEqual(['policy/file-count']);
+    expect(descriptor.stages.policy).toStrictEqual(['policy/file-count']);
     expect(Object.keys(descriptor.stages)).toStrictEqual([...INSPECTION_STAGES]);
   });
 
