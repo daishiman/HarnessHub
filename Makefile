@@ -132,6 +132,7 @@ contract-intake:
 ##   実検査器 (assign-plugin-package-evaluator/scripts/validate-plugin-package.py) は単一
 ##   plugin 用のため、全 plugin を回す advisory ラッパー経由で呼ぶ。PKG-002/004 は未採用の
 ##   将来標準のため現状は非ブロッキング (詳細は scripts/validate-plugin-packages.py)。
+##   references/package-contract.json ↔ 構文正本 schema の適合検査のみ fail-closed。
 plugin-package-check:
 	python3 scripts/validate-plugin-packages.py
 
