@@ -95,7 +95,7 @@ external Skill `run-system-dev-plan`へdispatchする。大きな未分解構想
 
 ### next
 
-`run-dev-graph-schedule`を呼ぶ。git共通ディレクトリの`dev-graph/leases.json`を必須snapshotとして渡し、graph/tracker/leaseの実行前後digestを確認する。Beads bindingでは`bd-bridge.py ready`のedge parity確認済み候補だけを採用し、GitHub/noneはlocal graphから計算する。`--scope`と`--max-parallel`をそのまま渡す。
+`run-dev-graph-schedule`を呼ぶ。git共通ディレクトリの`dev-graph/leases.json`を必須snapshotとして渡し、graph/tracker/leaseの実行前後digestを確認する。Beads bindingでは`bd-bridge.py ready`のedge parity確認済み候補だけを採用し、GitHub/noneはlocal graphから計算する。parity manifestは`generated_at`と`source_graph_digest`を必須とし、graphのcanonical digestと一致しないsnapshotではscheduleを停止する。`--scope`と`--max-parallel`をそのまま渡す。
 
 ### worktree
 

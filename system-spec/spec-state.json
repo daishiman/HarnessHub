@@ -2324,6 +2324,105 @@
         "confirmed_at": "2026-07-17T17:52:19+09:00",
         "note": "AskUserQuestion で「Resend Free」を選択 (2026-07-17)。Studio mockup 反映に伴う新規決定。質疑証跡: qa-029"
       }
+    },
+    {
+      "id": "D7",
+      "question": "環境構成: 常設 staging 環境を持つか、preview 使い捨てのみとするか (qa-034 と qa-038 の矛盾解消)",
+      "status": "confirmed",
+      "serves_goals": [
+        "G4",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "persistent-staging",
+          "label": "production + 常設 staging の 2 環境 (qa-034 の当初確定)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "Turso Free 100 DB / Workers Free の枠内で金銭コストは 0 円。ただし Worker・DB・R2 prefix・secret を 2 組維持するため無料枠の消費とローテーション対象が 2 倍になる"
+          },
+          "free_tier_limits": "Workers 10万 req/日・Turso 5GB/読取5億行/月 を 2 環境で分け合う",
+          "goal_fit": "migration 検証と restore drill の受け皿が常設される",
+          "security_fit": "secret 台帳が 2 組になり、ローテーション漏れの面が広がる",
+          "pros": [
+            "migration を本番前に常設環境で検証できる",
+            "restore drill の投入先が常に存在する"
+          ],
+          "cons": [
+            "無料枠を二重消費する",
+            "secret / binding / ドメインの管理対象が 2 倍になり C1 (提供者1名運用) の負荷が増える",
+            "staging 固有の drift が生じ本番と乖離しうる"
+          ],
+          "risks": [
+            "無料枠の逼迫が production 側の可用性に波及する"
+          ],
+          "lock_in": "低",
+          "ops_burden": "高 (2 組の secret・migration・監視を維持)",
+          "evidence_refs": [
+            "https://developers.cloudflare.com/workers/platform/limits/",
+            "https://turso.tech/pricing"
+          ]
+        },
+        {
+          "id": "ephemeral-preview-only",
+          "label": "常設 staging を持たず preview は PR ごとに使い捨て (qa-038【3】)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "常設リソースは production 1 組のみ。preview は PR close で破棄されるため無料枠の常時消費が増えない"
+          },
+          "free_tier_limits": "Workers 10万 req/日・Turso 5GB を production が専有",
+          "goal_fit": "C2 (固定費極小) と C1 (個人運用) を最優先しつつ、PR 単位の動作確認は preview で担保",
+          "security_fit": "常設 secret は 1 組のみでローテーション対象が最小",
+          "pros": [
+            "無料枠と運用導線が二重化しない",
+            "環境間 drift が生じない",
+            "secret 管理対象が最小"
+          ],
+          "cons": [
+            "常設の migration 検証先が無く、CI の破壊的 DDL 検査に依存する",
+            "restore drill は都度一時 DB を作成する手間がある"
+          ],
+          "risks": [
+            "migration 事故が production へ直接及ぶ — expand/contract 3 段階強制と CI の DDL 検査で緩和する"
+          ],
+          "lock_in": "低",
+          "ops_burden": "低 (production 1 組のみ)",
+          "evidence_refs": [
+            "https://developers.cloudflare.com/workers/configuration/versions-and-deployments/",
+            "https://developers.cloudflare.com/workers/platform/limits/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "ephemeral-preview-only",
+        "rationale": "qa-038 は qa-034 より後に確定しており、常設 staging を否定する理由 (Worker/DB/R2/secret を 2 組維持すると無料枠消費と運用導線が二重化し C1・C2 と衝突する) を明示している。feat-hub-foundation P03 の独立設計レビュー (指摘 R-01) が両者の矛盾を検出し、上位判断としてユーザーへエスカレーションした。",
+        "comparison_basis": {
+          "goal_fit": "両案とも PR 単位の動作確認は可能。常設 staging は検証先が常にある利点があるが、preview 使い捨てでも PR ごとの確認は成立する",
+          "tco": "金銭コストはどちらも 0 円。ただし常設 staging は Workers/Turso/R2 の無料枠を 2 環境で分け合うため、実効的な余裕が半減する",
+          "security": "常設 staging は secret 台帳が 2 組になりローテーション漏れの面が広がる。preview 使い捨ては常設 secret が 1 組",
+          "operations": "C1 (提供者1名+AI) では 2 組の secret・migration・監視の維持が主要な負荷になる。preview 使い捨ては維持対象が production のみ",
+          "lock_in": "どちらも低い。Cloudflare/Turso の標準機能の範囲であり移行障壁を増やさない"
+        },
+        "caveats": [
+          "常設の migration 検証先が無くなるため、CI の破壊的 DDL 検査 (expand/contract 3 段階強制) が事実上の唯一の防波堤になる。この検査を無効化・スキップしてはならない",
+          "restore drill は一時 DB を都度作成する運用になるため、手順が runbook に明文化されていないと四半期ごとの実施が形骸化しやすい",
+          "preview 環境の払い出しと破棄が自動化されない場合、リソースが残存して無料枠を消費する。PR close での破棄を確認する導線が必要",
+          "qa-034 を参照している既存記述 (docs/infrastructure-spec.md 等) が改訂前提のまま残ると二重正本になる。本決定の反映範囲を追跡すること"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-21T08:00:00+09:00"
+      },
+      "user_decision": {
+        "option_id": "ephemeral-preview-only",
+        "confirmed_at": "2026-07-21T08:00:00+09:00",
+        "note": "AskUserQuestion で「qa-038 を正とする (常設 staging なし)」を選択 (2026-07-21)。feat-hub-foundation P03 指摘 R-01 の上位エスカレーションに対する確定。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定した。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12"
+      }
     }
   ],
   "knowledge_candidates": [],

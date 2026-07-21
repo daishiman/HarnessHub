@@ -82,6 +82,17 @@ def _sha(value: bytes | None) -> str | None:
     return hashlib.sha256(value).hexdigest() if value is not None else None
 
 
+def _canonical_digest(value: Any) -> str:
+    """graph の意味的 digest。整形差 (空白・key 順) で stale 判定が揺れないようにする。
+
+    C05 render-graph-html が registration receipt の鮮度検査に使う式と同一。parity manifest
+    側も同じ式で `source_graph_digest` を作る契約にし、比較を単純な文字列一致へ落とす。
+    """
+    return "sha256:" + hashlib.sha256(
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
 def _read_optional(path: Path | None) -> bytes | None:
     return path.read_bytes() if path is not None and path.exists() else None
 
@@ -146,16 +157,36 @@ def _scope_ids(scope: str | None, by_id: dict[str, dict[str, Any]]) -> set[str]:
     return selected
 
 
-def _ready_entries(path: Path | None) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], bytes | None]:
+def _tracker_side_unmapped(value: Any) -> list[dict[str, Any]]:
+    """C28 側で ready から落ちた候補 (unmapped/conflicts) を schedule report へ引き継ぐ。
+
+    ここで捨てると「tracker では ready だが graph 管理から外れている課題」が
+    最終レポートに一切現れず、silent drop になる。判断はしないが必ず見せる。
+    """
+    if not isinstance(value, dict):
+        return []
+    carried: list[dict[str, Any]] = []
+    for key in ("unmapped", "conflicts"):
+        rows = value.get(key)
+        if not isinstance(rows, list):
+            continue
+        for row in rows:
+            if isinstance(row, dict):
+                carried.append({**row, "reason": row.get("reason") or f"tracker_{key}", "source": "bd-bridge"})
+    return carried
+
+
+def _ready_entries(path: Path | None) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], bytes | None, Any]:
     if path is None:
-        return {}, [], None
+        return {}, [], None, None
     before = path.read_bytes()
     value = json.loads(before.decode("utf-8"))
     raw = value.get("ready_set", value) if isinstance(value, dict) else value
     if not isinstance(raw, list):
         raise ContractError("bd ready payload must contain ready_set[]")
     mapped: dict[str, dict[str, Any]] = {}
-    unmapped: list[dict[str, Any]] = []
+    unmapped: list[dict[str, Any]] = _tracker_side_unmapped(value)
+    provenance = value.get("parity_provenance") if isinstance(value, dict) else None
     for item in raw:
         if not isinstance(item, dict):
             unmapped.append({"value": item, "reason": "not_an_object"})
@@ -167,7 +198,7 @@ def _ready_entries(path: Path | None) -> tuple[dict[str, dict[str, Any]], list[d
         if external in mapped:
             raise ContractError(f"duplicate external_ref in Beads ready payload: {external}")
         mapped[external] = item
-    return mapped, unmapped, before
+    return mapped, unmapped, before, provenance
 
 
 def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> int:
@@ -190,13 +221,26 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
         ready_path = candidate.resolve(strict=True)
         if root is not None:
             contained(ready_path, root, must_exist=True)
-    ready_by_id, unmapped, tracker_before = _ready_entries(ready_path)
+    ready_by_id, unmapped, tracker_before, parity_provenance = _ready_entries(ready_path)
     beads_present = any(
         node.get("tracker_binding") == "beads" and is_schedulable(node)
         for node_id, node in by_id.items() if node_id in selected
     )
     if beads_present and ready_path is None:
         raise ContractError("schedulable beads nodes require --ready-json from bd-bridge ready parity output")
+    if beads_present:
+        # node 単位の parity は下で再照合するが、それは manifest に載った node しか見ない。
+        # snapshot 生成後に追加/削除された node は node 単位検査では原理的に捕まらないため、
+        # graph 全体の digest 一致を停止条件にして stale snapshot での推薦を禁じる。
+        if not isinstance(parity_provenance, dict):
+            raise ContractError("beads ready payload requires parity_provenance (generated_at/source_graph_digest) from bd-bridge")
+        graph_digest = _canonical_digest(data)
+        observed = parity_provenance.get("source_graph_digest")
+        if observed != graph_digest:
+            raise ContractError(
+                "beads parity snapshot is stale: parity manifest source_graph_digest "
+                f"{observed} != current graph {graph_digest} (regenerate the parity manifest)"
+            )
 
     ready_ids: set[str] = set()
     for node_id, node in by_id.items():
@@ -318,6 +362,7 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
         "conflict_pairs": conflict_pairs,
         "assignment_hints": hints,
         "unmapped": unmapped,
+        "parity_provenance": parity_provenance,
         "ready_source": "binding-aware" if args.ready_source == "auto" else args.ready_source,
         "scope": args.scope,
         "max_parallel": args.max_parallel,

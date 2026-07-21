@@ -71,9 +71,21 @@ def _owned_skills(plugin_dir: Path) -> set[str]:
 
 @pytest.mark.parametrize("plugin_dir", _contract_dirs(), ids=lambda p: p.name)
 def test_entry_skills_resolves(plugin_dir: Path):
-    """plan-live-trials が entry_points を解決できる (btn の直接再現)。"""
+    """plan-live-trials が entry_points を解決できる (btn の直接再現)。
+
+    _entry_skills() が例外を出さないこと自体が btn の直接再現。空宣言は
+    所有実体 skill が 0 件 (skills/ が全て他 plugin への symlink) の場合に限り
+    正当とする。skill-governance-automation のように自前 skill を持たない plugin に
+    実体 skill を強制はしないが、所有物があるのに空なら被覆欠落として fail させる。
+    """
     skills = PLAN._entry_skills(plugin_dir)
-    assert skills, f"{plugin_dir.name}: entry_points.skills が空"
+    if not skills:
+        owned = _owned_skills(plugin_dir)
+        assert not owned, (
+            f"{plugin_dir.name}: entry_points.skills が空だが所有実体 skill が "
+            f"存在する (live-trial 対象から静かに外れる): {sorted(owned)}"
+        )
+
 
 
 @pytest.mark.parametrize("plugin_dir", _contract_dirs(), ids=lambda p: p.name)

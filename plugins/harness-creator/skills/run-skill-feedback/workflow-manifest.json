@@ -29,24 +29,16 @@
       "output_artifact": "(in-memory feedback record)"
     },
     {
-      "id": "verify-plugin",
-      "step": 4,
-      "title": "対象プラグインがスキル一覧 DB に存在することを確認",
-      "dependsOn": ["collect"],
-      "kind_filter": ["run"],
-      "output_artifact": "(stdout: plugin page id)"
-    },
-    {
       "id": "submit",
-      "step": 5,
-      "title": "scripts/notion-submit-improvement.py で 改善要望 DB に POST",
-      "dependsOn": ["verify-plugin"],
+      "step": 4,
+      "title": "scripts/notion-submit-improvement.py が find_plugin_page で登録を確認し、登録済みの場合だけ改善要望 DB に POST",
+      "dependsOn": ["collect"],
       "kind_filter": ["run"],
       "output_artifact": "Notion page URL"
     },
     {
       "id": "notify",
-      "step": 6,
+      "step": 5,
       "title": "完了通知 (Notion URL + 人手追加項目案内)",
       "dependsOn": ["submit"],
       "kind_filter": ["run"],

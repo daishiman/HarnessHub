@@ -264,8 +264,12 @@ def test_schedule_mixed_binding_parity_expiry_scope_and_max_parallel(tmp_path, m
         {**base, "graph_node_id": "github", "tracker_binding": "github", "resource_scope": ["b"]},
         {**base, "graph_node_id": "none", "tracker_binding": "none", "resource_scope": ["c"]},
     ]}), encoding="utf-8")
+    provenance = {
+        "generated_at": "2026-07-21T00:00:00Z",
+        "source_graph_digest": schedule._canonical_digest(json.loads(graph.read_text())),
+    }
     ready = tmp_path / "ready.json"
-    ready.write_text(json.dumps({"ready_set": [{
+    ready.write_text(json.dumps({"parity_provenance": provenance, "ready_set": [{
         "external_ref": "beads", "edge_parity": {"confirmed": True},
         "graph_status": "active", "graph_depends_on": [],
     }]}), encoding="utf-8")
@@ -284,7 +288,7 @@ def test_schedule_mixed_binding_parity_expiry_scope_and_max_parallel(tmp_path, m
     assert plan["tracker_sha256_before"] == plan["tracker_sha256_after"]
     assert plan["lease_sha256_before"] == plan["lease_sha256_after"]
 
-    ready.write_text(json.dumps({"ready_set": [{
+    ready.write_text(json.dumps({"parity_provenance": provenance, "ready_set": [{
         "external_ref": "beads", "edge_parity": {"confirmed": True},
         "graph_status": "active", "graph_depends_on": ["stale-dependency"],
     }]}), encoding="utf-8")

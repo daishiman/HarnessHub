@@ -4,7 +4,8 @@
   "plugin_name": "harness-creator",
   "entry_points": {
     "skills": [
-      "run-build-skill"
+      "run-build-skill",
+      "assign-skill-design-evaluator"
     ],
     "agents": [],
     "commands": [
@@ -22,7 +23,14 @@
       "quality-governance"
     ]
   },
-  "depends_on": [],
+  "depends_on": [
+    "skill-governance-automation"
+  ],
+  "skill_dependencies": {
+    "assign-skill-design-evaluator": [
+      "skill-governance-automation"
+    ]
+  },
   "requirements": {
     "external_clis": [
       {

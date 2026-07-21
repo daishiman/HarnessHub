@@ -431,6 +431,50 @@ def test_tree_sha_binds_declared_dependency_skill_behavior(tmp_path):
     assert verdict_mod.skill_dir_tree_sha(skill_dir) != before
 
 
+def test_tree_sha_resolves_declared_repo_root_relative_ref(tmp_path):
+    _plugin_dir, skill_dir = _behavior_closure_fixture(tmp_path)
+    repo_ref = tmp_path / "doc" / "notion-schema" / "contract.md"
+    repo_ref.parent.mkdir(parents=True)
+    repo_ref.write_text("repo-contract-v1\n", encoding="utf-8")
+    (skill_dir / "SKILL.md").write_text(
+        "---\n"
+        "name: run-behavior\n"
+        "reference_refs: [doc/notion-schema/contract.md]\n"
+        "---\nbody\n",
+        encoding="utf-8",
+    )
+
+    before = verdict_mod.skill_dir_tree_sha(skill_dir)
+    repo_ref.write_text("repo-contract-v2\n", encoding="utf-8")
+
+    assert verdict_mod.skill_dir_tree_sha(skill_dir) != before
+
+
+def test_tree_sha_prefers_skill_relative_ref_over_repo_root_ref(tmp_path):
+    _plugin_dir, skill_dir = _behavior_closure_fixture(tmp_path)
+    relative = Path("doc/notion-schema/contract.md")
+    repo_ref = tmp_path / relative
+    skill_ref = skill_dir / relative
+    repo_ref.parent.mkdir(parents=True)
+    skill_ref.parent.mkdir(parents=True)
+    repo_ref.write_text("repo-contract-v1\n", encoding="utf-8")
+    skill_ref.write_text("skill-contract-v1\n", encoding="utf-8")
+    (skill_dir / "SKILL.md").write_text(
+        "---\n"
+        "name: run-behavior\n"
+        "reference_refs: [doc/notion-schema/contract.md]\n"
+        "---\nbody\n",
+        encoding="utf-8",
+    )
+
+    before = verdict_mod.skill_dir_tree_sha(skill_dir)
+    repo_ref.write_text("repo-contract-v2\n", encoding="utf-8")
+    assert verdict_mod.skill_dir_tree_sha(skill_dir) == before
+
+    skill_ref.write_text("skill-contract-v2\n", encoding="utf-8")
+    assert verdict_mod.skill_dir_tree_sha(skill_dir) != before
+
+
 def test_tree_sha_ignores_dependency_outside_skill_scope(tmp_path):
     plugin_dir, skill_dir = _behavior_closure_fixture(tmp_path)
     _write_package_contract(

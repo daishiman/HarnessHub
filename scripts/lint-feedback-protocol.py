@@ -2,9 +2,9 @@
 """feedback_protocol SSOT 整合 lint (オフライン、NOTION_TOKEN 不要)。
 
 検証:
-  R1. skill-list.schema.json#feedback_protocol が必須キーを満たす
+  R1. skill-list.schema.json#feedback_protocol が必須キーと同定フロー構造を満たす
   R2. page_body_sections に id=feedback (renderer_ref=feedback_protocol) が含まれる
-  R3. run-skill-feedback/SKILL.md が schema を SSOT として参照している
+  R3. run-skill-feedback/SKILL.md が schema を SSOT として参照し、protocol hash・同定手順・対話項目が同期している
   R4. run-skill-feedback/SKILL.md の triggers が firing_conditions を包含する近似 (各 firing_condition の主要キーワードが triggers のいずれかに含まれる)
   R5. notion-upsert-plugin.py が _load_feedback_protocol() を経由している
   R6. 量産プラグイン (plugins/*/plugin.json 保持) の README/plugin.json/commands/agents に run-skill-feedback 発火経路が周知されている
@@ -15,7 +15,7 @@
 Usage:
   python3 scripts/lint-feedback-protocol.py [--strict]
 """
-import argparse, json, re, sys
+import argparse, hashlib, json, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -24,11 +24,34 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import feedback_contract_ssot as FC  # noqa: E402
 SCHEMA = ROOT / "doc" / "notion-schema" / "skill-list.schema.json"
 SKILL_MD = ROOT / "plugins" / "harness-creator" / "skills" / "run-skill-feedback" / "SKILL.md"
+COMMAND_PROMPT = ROOT / "plugins" / "harness-creator" / "references" / "command-usage-prompts" / "run-skill-feedback.md"
 UPSERT = ROOT / "scripts" / "notion-upsert-plugin.py"
 
 
 PLUGINS_DIR = ROOT / "plugins"
 FEEDBACK_KEYWORD = "run-skill-feedback"
+IDENTIFICATION_ACTIONS = [
+    "open_question",
+    "scan_skills",
+    "match_and_confirm",
+    "read_spec",
+]
+IDENTIFICATION_HEADINGS = [
+    "Step 1 — 目的を聞く",
+    "Step 2 — 全スキルを収集してマッチング",
+    "Step 3 — 候補を提示して確認",
+    "Step 4 — 対象スキルの現状仕様を提示",
+]
+
+
+def _protocol_hash(protocol):
+    canonical = json.dumps(
+        protocol,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(canonical.encode()).hexdigest()
 
 
 def _target_plugins():
@@ -109,13 +132,27 @@ def main():
     # R1
     fp = sc.get("feedback_protocol")
     required = {"command", "firing_conditions", "intake_fields", "status_lifecycle",
-                "open_statuses", "promise_to_reporter", "callout_summary"}
+                "open_statuses", "promise_to_reporter", "callout_summary",
+                "identification_step"}
     if not fp:
         violations.append("R1: skill-list.schema.json に feedback_protocol が無い")
     else:
         missing = required - set(fp.keys())
         if missing:
             violations.append(f"R1: feedback_protocol に必須キー欠落: {sorted(missing)}")
+        identification = fp.get("identification_step") or {}
+        actions = [step.get("action") for step in identification.get("steps", [])]
+        if actions != IDENTIFICATION_ACTIONS:
+            violations.append(
+                f"R1: identification_step actions 不一致: {actions} "
+                f"(expected {IDENTIFICATION_ACTIONS})"
+            )
+        fallback = str(identification.get("fallback") or "")
+        if "投入を中断" not in fallback or "plugin='不明'" in fallback:
+            violations.append("R1: identification_step fallback が未同定時の fail-closed 中断を定義していない")
+        intake_names = [field.get("name") for field in fp.get("intake_fields", [])]
+        if not intake_names or any(not name for name in intake_names):
+            violations.append("R1: intake_fields が空、または name 欠落")
 
     # R2
     sections = sc.get("page_body_sections", [])
@@ -129,6 +166,58 @@ def main():
     md = SKILL_MD.read_text() if SKILL_MD.exists() else ""
     if "feedback_protocol" not in md or "skill-list.schema.json" not in md:
         violations.append("R3: run-skill-feedback/SKILL.md が schema feedback_protocol を参照していない")
+    if fp:
+        marker = re.search(r"feedback_protocol_sha256:\s*([0-9a-f]{64})", md)
+        expected_hash = _protocol_hash(fp)
+        if not marker or marker.group(1) != expected_hash:
+            actual = marker.group(1) if marker else "missing"
+            violations.append(
+                f"R3: feedback_protocol hash 不一致: {actual} "
+                f"(expected {expected_hash})"
+            )
+        missing_headings = [heading for heading in IDENTIFICATION_HEADINGS if heading not in md]
+        if missing_headings:
+            violations.append(f"R3: SKILL.md 同定手順欠落: {missing_headings}")
+        intake_names = [field.get("name") for field in fp.get("intake_fields", [])]
+        missing_fields = [name for name in intake_names if name and name not in md]
+        if missing_fields:
+            violations.append(f"R3: SKILL.md 対話項目欠落: {missing_fields}")
+        prompt = COMMAND_PROMPT.read_text() if COMMAND_PROMPT.exists() else ""
+        prompt_marker = re.search(r"feedback_protocol_sha256:\s*([0-9a-f]{64})", prompt)
+        if not prompt_marker or prompt_marker.group(1) != expected_hash:
+            actual = prompt_marker.group(1) if prompt_marker else "missing"
+            violations.append(
+                f"R3: command usage prompt protocol hash 不一致: {actual} "
+                f"(expected {expected_hash})"
+            )
+        required_names = [
+            field.get("name")
+            for field in fp.get("intake_fields", [])
+            if field.get("required") is True
+        ]
+        optional_names = [
+            field.get("name")
+            for field in fp.get("intake_fields", [])
+            if field.get("required") is not True
+        ]
+        required_projection = "|".join(name for name in required_names if name)
+        optional_projection = "|".join(name for name in optional_names if name)
+        if f"required_intake_fields: {required_projection}" not in md:
+            violations.append("R3: SKILL.md の required intake field 投影が schema と不一致")
+        if f"optional_intake_fields: {optional_projection}" not in md:
+            violations.append("R3: SKILL.md の optional intake field 投影が schema と不一致")
+        if f"required_intake_fields: {required_projection}" not in prompt:
+            violations.append("R3: command usage prompt の required intake field 投影が schema と不一致")
+        if f"optional_intake_fields: {optional_projection}" not in prompt:
+            violations.append("R3: command usage prompt の optional intake field 投影が schema と不一致")
+        forbidden_mandatory_review = (
+            "30 種全使用・省略禁止",
+            "30 思考法は全種使用必須",
+            "30 件全て埋まるまで完了しない",
+        )
+        mandatory_hits = [token for token in forbidden_mandatory_review if token in prompt]
+        if mandatory_hits:
+            violations.append(f"R3: command usage prompt が exhaustive review を既定必須化: {mandatory_hits}")
 
     # R4: firing_conditions の主要語が triggers に存在
     if fp:

@@ -1,0 +1,626 @@
+{
+  "generated_for": "E1 (全登録共通層の owner / public API / consumer 一覧)",
+  "layers": [
+    {
+      "id": "ui-design-system",
+      "shared_layers_ref": "§1",
+      "owner_package": "packages/ui",
+      "package_name": "@harness-hub/ui",
+      "owner_exists": true,
+      "public_api": [
+        "AA_CONTRAST_LARGE_TEXT",
+        "AA_CONTRAST_NON_TEXT",
+        "AA_CONTRAST_TEXT",
+        "Alert",
+        "BarChart",
+        "Button",
+        "ConfirmDialog",
+        "DataTable",
+        "DegradedBanner",
+        "DonutChart",
+        "EmptyState",
+        "ErrorState",
+        "FormField",
+        "InlineEditTable",
+        "KpiCard",
+        "LineChart",
+        "MarkdownEditor",
+        "MarkdownView",
+        "ProgressBar",
+        "ScopeChip",
+        "Select",
+        "Skeleton",
+        "Sparkline",
+        "StageBoard",
+        "StatusChip",
+        "StepWizard",
+        "Tabs",
+        "TextInput",
+        "Textarea",
+        "ToastProvider",
+        "UiProvider",
+        "buildDonutSegments",
+        "buildPolylinePoints",
+        "buildThemeCss",
+        "chartSeriesTokens",
+        "checkContrastRequirements",
+        "colorTokens",
+        "colorVariableName",
+        "contrastRatio",
+        "contrastRequirements",
+        "defaultUiPreferences",
+        "densityNames",
+        "densityTokens",
+        "describeChart",
+        "enMessages",
+        "getStatusLabel",
+        "getStatusTone",
+        "jaMessages",
+        "markdownSanitizeSchema",
+        "meetsTextContrast",
+        "parseHexColor",
+        "radiusTokens",
+        "relativeLuminance",
+        "resolveValueDomain",
+        "scaleIndexToX",
+        "scaleValueToY",
+        "spacingTokens",
+        "statusToneColors",
+        "statusVocabulary",
+        "themeNames",
+        "translateUiMessage",
+        "typographyTokens",
+        "uiLocales",
+        "uiMessages",
+        "useToast",
+        "useUi",
+        "useUiText"
+      ],
+      "public_api_entry": "packages/ui/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "zod-schemas-single-source",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/schemas",
+      "package_name": "@harness-hub/schemas",
+      "owner_exists": true,
+      "public_api": [
+        "PROBLEM_JSON_MEDIA_TYPE",
+        "buildContractComponents",
+        "buildHealthResponse",
+        "contractSchemaNames",
+        "createContractRegistry",
+        "createOpenApiDocument",
+        "createSchemaRegistry",
+        "cursorSchema",
+        "defaultSchemaConverter",
+        "dependencyCheckSchema",
+        "deriveHealthStatus",
+        "emailSchema",
+        "fieldErrorSchema",
+        "healthHttpStatus",
+        "healthResponseSchema",
+        "healthStatusSchema",
+        "identifierSchema",
+        "isoDateTimeSchema",
+        "localeSchema",
+        "paginatedSchema",
+        "paginationQuerySchema",
+        "parseRequest",
+        "problemDetails",
+        "problemDetailsFromZodError",
+        "problemDetailsSchema",
+        "renderContractDocument",
+        "semVerSchema",
+        "tenantIdSchema",
+        "toIsoDateTime",
+        "userIdSchema",
+        "workspaceIdSchema"
+      ],
+      "public_api_entry": "packages/schemas/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "inspection-pipeline",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/inspection",
+      "package_name": "@harness-hub/inspection",
+      "owner_exists": true,
+      "public_api": [
+        "Finding",
+        "FindingLocation",
+        "FindingSeverity",
+        "INSPECTION_STAGES",
+        "InspectionFile",
+        "InspectionPipeline",
+        "InspectionResult",
+        "InspectionRule",
+        "InspectionRuleError",
+        "InspectionStage",
+        "InspectionTarget",
+        "InspectionVerdict",
+        "KNOWN_PUBLIC_EXAMPLE_SECRETS",
+        "PipelineDescriptor",
+        "RuleFinding",
+        "SECRET_SCAN_ALLOW_MARKER",
+        "SecretMatchContext",
+        "SecretScanRuleDefinition",
+        "createDefaultSecretScanRules",
+        "createInspectionPipeline",
+        "definePolicyRule",
+        "defineSecretScanRule",
+        "defineStaticValidationRule",
+        "describePipeline",
+        "inspect",
+        "isSuppressedSecretMatch",
+        "maskSecret",
+        "mergeVerdicts",
+        "resolveVerdict",
+        "runInspection",
+        "scanFilesForSecrets",
+        "secretScanExitCode",
+        "severityRank",
+        "verdictRank",
+        "withRules"
+      ],
+      "public_api_entry": "packages/inspection/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "estimation-engine",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/estimation",
+      "package_name": "@harness-hub/estimation",
+      "owner_exists": true,
+      "public_api": [
+        "ESTIMATION_LIMITS",
+        "EstimationErrorCode",
+        "EstimationField",
+        "EstimationInputError",
+        "HourlyRateInput",
+        "NumericRange",
+        "RoiResult",
+        "SavingsInput",
+        "SavingsResult",
+        "SeatPlanInput",
+        "SeatPlanResult",
+        "TimeSavingInput",
+        "TimeSavingResult",
+        "assertFiniteNumber",
+        "assertInRange",
+        "assertInteger",
+        "assertIntegerLimit",
+        "assertLimit",
+        "calcHourlyRateFromSalary",
+        "calcSavedAmount",
+        "calcTimeSaving",
+        "estimateRoi",
+        "estimateSavings",
+        "estimateSeatPlan",
+        "resolveHourlyRate",
+        "roundTo"
+      ],
+      "public_api_entry": "packages/estimation/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "repository-layer",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/db",
+      "package_name": "@harness-hub/db",
+      "owner_exists": true,
+      "public_api": [
+        "DATABASE_DRIVERS",
+        "DEFAULT_PAGE_SIZE",
+        "DatabaseAdapter",
+        "DatabaseDriver",
+        "DriverNotSupportedError",
+        "EntityNotFoundError",
+        "MAX_PAGE_SIZE",
+        "ReadOnlyRepository",
+        "Repository",
+        "RepositoryContextInput",
+        "RepositoryError",
+        "RepositoryErrorCode",
+        "RepositoryFactory",
+        "TransactionalAdapter",
+        "assertSupportedDriver",
+        "createRepositoryContext",
+        "defineRepositoryFactory",
+        "emptyPage",
+        "isDatabaseDriver",
+        "isTransactionalAdapter",
+        "normalizePageRequest"
+      ],
+      "public_api_entry": "packages/db/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": true
+    },
+    {
+      "id": "authz-middleware",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/middleware",
+      "package_name": null,
+      "owner_exists": true,
+      "public_api": [
+        "AuthzDecision",
+        "AuthzInput",
+        "DenyReason",
+        "PUBLIC_PATH_PREFIXES",
+        "RequestedScope",
+        "ScopeResolution",
+        "TENANT_HEADER",
+        "WORKSPACE_HEADER",
+        "authorize",
+        "isPublicPath",
+        "resolveRequestedScope",
+        "scopeFromHeaders",
+        "scopeFromPath"
+      ],
+      "public_api_entry": "apps/hub/src/middleware/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "auth-adapter",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/auth",
+      "package_name": null,
+      "owner_exists": true,
+      "public_api": [
+        "AuthAdapter",
+        "AuthProvider",
+        "AuthRequestContext",
+        "Principal",
+        "createAuthAdapter",
+        "denyAllAuthProvider",
+        "toAuthRequestContext"
+      ],
+      "public_api_entry": "apps/hub/src/shared/auth/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "audit-event-logger",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/audit",
+      "package_name": null,
+      "owner_exists": true,
+      "public_api": [
+        "AuditEvent",
+        "AuditEventDetail",
+        "AuditLogger",
+        "AuditLoggerOptions",
+        "AuditSink",
+        "RecordedAuditEvent",
+        "auditEventFromContext",
+        "createAuditLogger",
+        "createInMemoryAuditSink"
+      ],
+      "public_api_entry": "apps/hub/src/shared/audit/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "aijob-queue",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/aijob",
+      "package_name": null,
+      "owner_exists": true,
+      "public_api": [
+        "AiJob",
+        "AiJobQueue",
+        "AiJobQueueOptions",
+        "AiJobStatus",
+        "AiJobStore",
+        "CompleteAiJobInput",
+        "EnqueueAiJobInput",
+        "FailAiJobInput",
+        "LeaseAiJobInput",
+        "createAiJobQueue"
+      ],
+      "public_api_entry": "apps/hub/src/shared/aijob/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "notification-dispatch",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/notification",
+      "package_name": null,
+      "owner_exists": true,
+      "public_api": [
+        "NotificationChannel",
+        "NotificationDeliveryResult",
+        "NotificationDispatcher",
+        "NotificationDispatcherOptions",
+        "NotificationMessage",
+        "NotificationTransport",
+        "createNotificationDispatcher"
+      ],
+      "public_api_entry": "apps/hub/src/shared/notification/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "pii-guard",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/pii",
+      "package_name": null,
+      "owner_exists": true,
+      "public_api": [
+        "ADMIN_ROLE",
+        "PII_MASK",
+        "PiiFieldPolicy",
+        "PiiSensitivity",
+        "PiiViewer",
+        "canView",
+        "isAdminViewer",
+        "maskPii",
+        "maskPiiForExport"
+      ],
+      "public_api_entry": "apps/hub/src/shared/pii/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    },
+    {
+      "id": "telemetry-ingest-rollup",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/telemetry",
+      "package_name": null,
+      "owner_exists": true,
+      "public_api": [
+        "IngestedTelemetryEvent",
+        "TelemetryEvent",
+        "TelemetryIngest",
+        "TelemetryIngestOptions",
+        "TelemetryIngestResult",
+        "TelemetryRollup",
+        "TelemetryStore",
+        "createTelemetryIngest",
+        "rollupTelemetry"
+      ],
+      "public_api_entry": "apps/hub/src/shared/telemetry/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": false
+    }
+  ],
+  "mechanisms": [
+    {
+      "id": "ci-quality-gates",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "exists": true
+        },
+        {
+          "path": "scripts/ci/check-pnpm-only.mjs",
+          "exists": true
+        },
+        {
+          "path": "scripts/ci/check-shared-layer-duplicates.mjs",
+          "exists": true
+        }
+      ],
+      "external_wiring": "not-required",
+      "external_wiring_note": null
+    },
+    {
+      "id": "wrangler-deploy",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "exists": true
+        },
+        {
+          "path": "apps/hub/wrangler.jsonc",
+          "exists": true
+        },
+        {
+          "path": "apps/hub/open-next.config.ts",
+          "exists": true
+        }
+      ],
+      "external_wiring": "not-required",
+      "external_wiring_note": null
+    },
+    {
+      "id": "monitoring",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        {
+          "path": "apps/hub/src/app/health/route.ts",
+          "exists": true
+        },
+        {
+          "path": ".github/workflows/cwv.yml",
+          "exists": true
+        }
+      ],
+      "external_wiring": "pending",
+      "external_wiring_note": "Better Stack の外形監視と月次 SLO 時系列はユーザー管理の外部設定。ローカル実装だけで充足扱いにしない"
+    },
+    {
+      "id": "backup",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        {
+          "path": ".github/workflows/backup.yml",
+          "exists": true
+        }
+      ],
+      "external_wiring": "pending",
+      "external_wiring_note": "GitHub environment secrets と heartbeat は外部設定。workflow 実装の存在と運用開始を区別する"
+    }
+  ]
+}

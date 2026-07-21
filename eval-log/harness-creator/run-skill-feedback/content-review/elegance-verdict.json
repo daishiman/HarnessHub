@@ -1,25 +1,47 @@
 {
-  "target": {"plugin": "harness-creator", "skill": "run-skill-feedback", "skill_md_sha256": "721008d629e05a56023638586339c46e63a4a978f032d6d07458fbbf58fcbe0e"},
+  "target": {
+    "plugin": "harness-creator",
+    "skill": "run-skill-feedback",
+    "skill_md_sha256": "fe6d8fdb17f5effe8f102d583c11d63503fe36ed267a9e9bfd2f69c5f31aadd5"
+  },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
-  "reviewer": "independent-content-review-subagent",
-  "reviewed_at": "2026-07-05T09:51:42Z",
-  "iterations": 1,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 2
+  },
+  "reviewer": "incremental-focused-combined-content-review-agent",
+  "reviewed_at": "2026-07-21T10:35:40Z",
+  "iterations": 2,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "IN2", "IN3", "OUT1", "OUT2"],
-    "positive_feedback": [
-      "L77『rollup が自動更新され優先度判断シグナルになる』と新設L79/L248『rollup も改善着手を自動発火しない』は矛盾せず両立(Notion側件数集計の自動更新と、改善着手の自動発火は別レイヤ)。責務境界節がこの区別を genuine に明示している",
-      "新設責務境界(L79)と下流節(L248)の主張が一次証跡と整合: goal-spec.json:91『Notion への直接 read-back を避ける(制約6)』・runbook L111『/skill-improve は Notion / rollup を読まない』・runbook L4『Stage 2→3→6 の人間工程』を実読で確認し dependency_break=0",
-      "参照先 feedback-to-improvement-runbook.md は実在し、L79『Stage 2-3(繋ぐ工程)』とL248『Stage 2→3→6(全人間工程)』の差異は runbook L23『人間工程(2/3/6)』に照らし文脈依存で正当(smell化せず)"
+    "criteria_evaluated": [
+      "IN1",
+      "IN2",
+      "IN3",
+      "OUT1",
+      "OUT2"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "positive_feedback": [
+      "IN1: skill-list.schema.json#feedback_protocol を正本とし、同定手順・fallback・必須/任意 intake の投影を lint-feedback-protocol.py が SKILL.md、コマンドプロンプト、Notion ページ生成器まで検査する。strict lint と対応テストは現行 SHA で成功した。",
+      "IN2: notion-submit-improvement.py は notion_config の fail-closed 解決経路を使用し、improvement-request と skill-list の両 DB ID、token、設定の欠落を exit 2 に統一している。secret や DB ID を出力しない境界もテストで固定されている。",
+      "IN3: find_plugin_page() を改善要望 POST より先に必ず実行し、対象が存在しない場合は canonical な登録コマンドを案内して exit 2 するため、孤児 relation を作らない。",
+      "OUT1: 目的確認、候補走査、対象確認、現行仕様の提示を収集前に置き、必須 3 項目だけを最小対話で集める。任意項目は既入力なら聞き直さず、優先度・重要度は中へ既定化するため、利用者の負担と文脈ずれを同時に抑えている。",
+      "OUT2: improvement-request schema と投入 property、N:1 relation、初期ステータス、Notion ページ URL の返却、AI 重複除去を行わない時系列ログ方針が実装・manifest・SKILL.md で一致する。",
+      "依存関係: goal_seek は inline engine、最大 5 周、常時 subagent fork、分離した progress/intermediate artifact、drift 検査を明示し、goal-seek 正本・schema・governance lint と整合する。"
+    ],
+    "negative_feedback": [
+      "[low][rubric FM-005] frontmatter description の先頭句は正準 rubric が推奨する動詞型トークンではない。score への軽微な減点であり、発火条件や実行契約を曖昧にしないため blocking finding ではない。",
+      "[low][rubric PD-001] SKILL.md 本文は 100 行を超える一方で skill-local references/ は空である。現時点では正本参照先が明示され、依存 lint も通るため blocking dependency break ではない。"
+    ],
+    "iteration": 2,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual incremental focused combined content review",
     "next_action": "none"
   },
-  "notes": "現SHA(721008d6...)を実読したgenuine再評価。今回deltaの責務境界節(L79)と下流節更新(L248)は、本文発火条件/出力契約/Notion push と矛盾せず、goal-spec制約6(read-back回避)・runbook(Stage2→3→6・/skill-improve非read)とも一次証跡で整合。『自動発火しない』は rollup自動更新(件数集計)と別レイヤで矛盾なし。二段検証で参照先 runbook 実在と主張の逐条整合を確認。4条件すべて0件でPASS。"
+  "notes": "初回 FAIL 後の focused re-evaluation。以前の URL 出力欠落、skill-list DB ID 欠落時の exit 0、SSOT lint の検査不足、fallback 不整合に加え、最小対話、許可ツール、goal-seek 依存の途中指摘が現行実装で解消されたことを確認した。現行 SHA に対して focused pytest 27 件、behavior closure 10 PASS/2 skip、strict protocol lint、goal/governance lint、git diff check は成功し、正準 rubric は 94/100・high 0。これは incremental combined review の互換投影であり、30 思考法による exhaustive review や実走 acceptance を申告しない。"
 }

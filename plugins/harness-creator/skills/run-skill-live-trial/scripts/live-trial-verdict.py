@@ -286,6 +286,42 @@ def _dependency_behavior_contract(plugin_root: Path, expected: str) -> tuple[Pat
     return path.resolve(), entry_points
 
 
+def _resolve_behavior_ref(
+    ref: str, *, skill_dir: Path, repo_root: Path, plugin_root: Path
+) -> Path:
+    """Resolve one declared *_refs entry.  Containment/existence は呼び出し元が弾く。
+
+    SKILL.md の *_refs には 2 つの書式が混在している:
+      - skill dir 相対: `scripts/foo.py`, `../../references/bar.md`
+      - repo root 相対: `plugins/<name>/skills/...`, `doc/notion-schema/...`
+    解決順は近いスコープ優先で固定する (skill dir → 同一 plugin の skill 名 → repo root)。
+    同名が skill dir と repo root の双方にある場合は skill dir 側が shadow する。module
+    import と同じ規則にすることで、宣言を読んだだけで解決先が一意に決まる。`plugins/`
+    始まりだけは plugin 間参照の既存契約として常に repo root 起点。
+
+    repo root 相対を最後に試すのは互換のため: 従来 repo root として扱われたのは
+    `plugins/` 始まりだけで、`doc/notion-schema/...` 等は解決できず fail-closed
+    停止していた (plan-live-trials が dev-graph plugin 全体で停止する原因)。
+    """
+    if ref.startswith("plugins/"):
+        return repo_root / ref
+
+    skill_relative = skill_dir / ref
+    if skill_relative.exists():
+        return skill_relative
+
+    # 拡張子もスラッシュも無い ref は同一 plugin 内の skill 名として解決する (既存挙動)。
+    if "/" not in ref and "." not in ref:
+        return plugin_root / "skills" / ref / "SKILL.md"
+
+    repo_relative = repo_root / ref
+    if repo_relative.exists():
+        return repo_relative
+
+    # どこにも無ければ skill dir 相対を返し、呼び出し元の fail-closed 検査に委ねる。
+    return skill_relative
+
+
 def behavior_closure_files(skill_dir: Path) -> list[tuple[str, Path]]:
     """Resolve the declared behavior closure, fail-closed on missing/unsafe refs."""
     skill_dir = Path(skill_dir).resolve()
@@ -392,12 +428,9 @@ def behavior_closure_files(skill_dir: Path) -> list[tuple[str, Path]]:
         raw = Path(ref)
         if raw.is_absolute():
             raise ValueError(f"declared behavior dependency must be relative: {ref}")
-        if ref.startswith("plugins/"):
-            candidate = repo_root / ref
-        else:
-            candidate = skill_dir / ref
-        if not candidate.exists() and "/" not in ref and "." not in ref:
-            candidate = plugin_root / "skills" / ref / "SKILL.md"
+        candidate = _resolve_behavior_ref(
+            ref, skill_dir=skill_dir, repo_root=repo_root, plugin_root=plugin_root
+        )
         resolved = _contained(candidate, repo_root, ref)
         if context:
             try:
