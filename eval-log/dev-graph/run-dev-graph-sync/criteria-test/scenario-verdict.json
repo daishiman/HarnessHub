@@ -27,10 +27,10 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T192630-r9/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T043419/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T192630-r9/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T192630-r9/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T043419/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T043419/transcript.jsonl",
         "independent: fresh evaluator replay of transcript, receipts and recomputed digests"
       ],
       "observed": "bd-bridge.py 変更で closure digest が動いたため 2026-07-21 に再実走 (r9)。対象 Skill を最初の tool call で起動し、R3-sync を別 Agent へ分離。pass1 で import(title)/export(Status) を適用し pass2 は changes=0 / imports・exports・pending_retry 全空 / write_count 0 で収束。fresh evaluator が sub-agent の Bash stdout と Write された pass1/pass2 をJSON 比較して完全一致を確認し、graph・sync-snapshot・remote の sha256 を自ら再計算して receipt の *_after と厳密一致することを検証。正本 snapshot は現行 remote title と一致し issue/project/item ID も不変。"
