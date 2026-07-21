@@ -150,6 +150,8 @@ def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_p
     children = superseding["children"]
     by_graph = {issues[f"B{i + 1:02d}"]["external_ref"].removeprefix("dev-graph:"): f"B{i + 1:02d}" for i in range(1, 14)}
     parity = {
+        "generated_at": "2026-07-21T00:00:00Z",
+        "source_graph_digest": "sha256:" + "c" * 64,
         "nodes": [
             {
                 "graph_node_id": row["graph_node_id"],
@@ -158,12 +160,15 @@ def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_p
                 "depends_on": row["depends_on"],
             }
             for row in children
-        ]
+        ],
     }
     parity_path = tmp_path / "parity.json"; parity_path.write_text(json.dumps(parity))
     _, ready = call_main(module, monkeypatch, capsys, "--op", "ready", "--repo-root", tmp_path, "--parity-manifest", parity_path)
     assert len(ready["result"]["ready_set"]) == 13
     assert not ready["result"]["conflicts"] and not ready["result"]["unmapped"]
+    assert ready["parity_provenance"] == {
+        "generated_at": "2026-07-21T00:00:00Z", "source_graph_digest": "sha256:" + "c" * 64,
+    }
     issues["B02"]["dependencies"].append({"id": "unexpected"})
     _, ready = call_main(module, monkeypatch, capsys, "--op", "ready", "--repo-root", tmp_path, "--parity-manifest", parity_path)
     assert len(ready["result"]["ready_set"]) == 12 and ready["result"]["conflicts"]
