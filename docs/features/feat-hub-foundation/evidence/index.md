@@ -43,10 +43,10 @@ collected_at: "2026-07-21"
 
 | 項目 | 値 |
 |---|---|
-| テスト | 36 test files / **495 tests 全 pass** |
+| テスト | 44 test files / **578 tests 全 pass** |
 | 型検査 | 全 6 package PASS |
-| Worker bundle（gzip） | **0.951 MiB** / 予算 3.000 MiB |
-| duplicate scan | 174 ファイル走査 / **0 件** |
+| Worker bundle（gzip） | **0.952 MiB** / 予算 3.000 MiB |
+| duplicate scan | 197 ファイル走査 / **0 件** |
 | 登録共通層 | 12 件（owner 未定義 0 件） |
 | pnpm 混入 | 0 件 |
 

@@ -130,6 +130,18 @@ function main() {
       owner_exists: existsSync(ownerDir),
       public_api: [...publicApi].sort(),
       public_api_entry: indexFile ? relative(args.root, indexFile) : null,
+      // consumers は登録簿上の「宣言」でしかない。宣言だけを出すと、実際には
+      // apps/hub 本体に呼び出し元が無い層まで「2 系統あり」と読めてしまい、
+      // A4-1 の証跡が過大申告になる (P10 再レビュー指摘 G-01)。
+      // declared と effective を分けて出力し、未結線を証跡側でも明示する。
+      consumers_declared: layer.consumers ?? [],
+      app_wiring: layer.app_wiring ?? 'wired',
+      app_wiring_note: layer.app_wiring_note ?? null,
+      consumers_effective:
+        layer.app_wiring === 'pending'
+          ? (layer.consumers ?? []).filter((c) => c !== 'apps/hub')
+          : (layer.consumers ?? []),
+      a4_1_status: layer.app_wiring === 'pending' ? 'unmet-fixture-only' : 'met',
       consumers: layer.consumers ?? [],
       boundary_only: layer.boundary_only ?? false,
     });

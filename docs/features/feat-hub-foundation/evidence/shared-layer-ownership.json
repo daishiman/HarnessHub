@@ -77,6 +77,17 @@
         "useUiText"
       ],
       "public_api_entry": "packages/ui/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -123,6 +134,17 @@
         "workspaceIdSchema"
       ],
       "public_api_entry": "packages/schemas/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -173,6 +195,17 @@
         "withRules"
       ],
       "public_api_entry": "packages/inspection/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -214,6 +247,17 @@
         "roundTo"
       ],
       "public_api_entry": "packages/estimation/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -250,6 +294,17 @@
         "normalizePageRequest"
       ],
       "public_api_entry": "packages/db/src/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -278,6 +333,17 @@
         "scopeFromPath"
       ],
       "public_api_entry": "apps/hub/src/middleware/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -300,6 +366,17 @@
         "toAuthRequestContext"
       ],
       "public_api_entry": "apps/hub/src/shared/auth/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "wired",
+      "app_wiring_note": null,
+      "consumers_effective": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "met",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -324,6 +401,16 @@
         "createInMemoryAuditSink"
       ],
       "public_api_entry": "apps/hub/src/shared/audit/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -349,6 +436,16 @@
         "createAiJobQueue"
       ],
       "public_api_entry": "apps/hub/src/shared/aijob/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -371,6 +468,16 @@
         "createNotificationDispatcher"
       ],
       "public_api_entry": "apps/hub/src/shared/notification/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -395,6 +502,16 @@
         "maskPiiForExport"
       ],
       "public_api_entry": "apps/hub/src/shared/pii/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
@@ -419,6 +536,16 @@
         "rollupTelemetry"
       ],
       "public_api_entry": "apps/hub/src/shared/telemetry/index.ts",
+      "consumers_declared": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)",
+      "consumers_effective": [
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "a4_1_status": "unmet-fixture-only",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"

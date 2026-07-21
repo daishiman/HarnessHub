@@ -61,7 +61,7 @@ measured_at: "2026-07-21"
 
 | 検証 | 結果 |
 |---|---|
-| `pnpm -r test` | **37 test files / 578 tests 全 pass**（db 17 / estimation 39 / inspection 51 / schemas 86 / ui 265 / hub 120） |
+| `pnpm -r test` | **44 test files / 578 tests 全 pass**（db 17 / estimation 39 / inspection 51 / schemas 86 / ui 265 / hub 120） |
 | `pnpm -r typecheck` | 全 6 package PASS |
 | `biome ci`（G2 lint/format の実体） | **exit 0**（P10 指摘 F-09 を受けて Biome を導入。導入時に実バグ 36 件を検出し是正済み） |
 | `next build` | 成功（First Load JS 102 kB / Middleware 34.9 kB） |

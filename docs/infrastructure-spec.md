@@ -149,7 +149,8 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 ## 9. 監視・SLO 運用 (qa-019 / qa-027)
 
-- **/health endpoint**: `GET /health` (認証なし・rate limit 対象外)。Turso `SELECT 1` + R2 head を検査し `{ status, db, r2, version }` を返す。
+- **/health endpoint**: `GET /health` (認証なし・rate limit 対象外)。Turso `SELECT 1` + R2 head を検査する。
+  - **応答契約 (2026-07-21 調停)**: `{ status, version, checkedAt, dependencies[] }`。`dependencies[]` の各要素は `{ name, status, latencyMs, detail? }` で、`name` に `db` / `r2` / `runtime-config` が入る。本節は当初 `{ status, db, r2, version }` と書いていたが、`packages/schemas` の契約スキーマ・実装・test-design が `dependencies[]` 形を採っており二重正本になっていた (P10 指摘 F-11)。**依存を追加するたびにトップレベルのキーが増える形は契約が破壊的に変わる**ため、配列形を正本とする。
   - **critical の区分 (2026-07-21 確定)**: **Turso 失敗のみ down (HTTP 503)**、**R2 失敗は degraded (HTTP 200 + body で通知)** とする。本節は当初「失敗時 503」と一括していたが、§10 の縮退マトリクスが「R2 停止 → catalog 閲覧は継続。publish/install のみ停止」と定めており、応答できている時間まで 503 にすると SLO のエラーバジェットを過剰消費する (誤計測) ため区分する。§10 を正とした調停。
   - **未プロビジョニング時**: secret 未投入は `down` (503) とする。200 を返すと外形監視が可用性ありと誤計測し SLO 計測そのものが壊れるため。初回構築の順序制約は runbook §1 を参照。
 - **外形監視 (Better Stack Free, qa-034)**: production `/health` を 3 分間隔で監視 + cron heartbeat (§5) + status page (常設 staging monitor は不要 = §6)。無料枠 10 monitors・heartbeat 10 本・商用利用可 (公式確認 2026-07-17)。SLO 99.5%/月の一次計測源。
