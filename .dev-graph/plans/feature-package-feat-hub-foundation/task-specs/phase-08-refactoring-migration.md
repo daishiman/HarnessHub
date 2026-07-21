@@ -3,6 +3,9 @@
 ## Machine-readable registration fields
 
 - feature_package_id: feature-package/feat-hub-foundation (13 task で共有)
+- feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
+- feature_acceptance: 4 items (A1-A4)
+- quality_constraints: 9 items
 - owners: ["daishiman"]
 - tags: ["feat-hub-foundation", "stage-1", "infrastructure", "refactoring-migration", "not-applicable"]
 - related_nodes: ["feat-hub-foundation"]
@@ -25,7 +28,7 @@ feat-hub-foundation は既存実装を持たない新規 scaffold feature であ
 ## 前提条件
 
 - Required spec/architecture/phase/task nodes: feat-hub-foundation, sys-hub-foundation-p07
-- Entry gate: docs/features/feat-hub-foundation/acceptance-report.md で goal-spec acceptance 3 件が合格判定済みであること
+- Entry gate: docs/features/feat-hub-foundation/acceptance-report.md で goal-spec acceptance 4 件 (A1-A4) が判定済みであること
 - Source pin: system-spec-harness v0.1.0 / run-system-spec-compile / assign-system-spec-completeness-evaluator
 - Repository context: repo_identity=github:daishiman/HarnessHub、root_resolution_source=explicit-cli、config=.dev-graph/config.json。全 path は repository 相対
 
@@ -78,7 +81,7 @@ feat-hub-foundation は既存実装を持たない新規 scaffold feature であ
 ## Verification and evidence
 
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging`
-- Required evidence: docs/features/feat-hub-foundation/refactoring-migration-note.md に 9 workstream すべての N/A 判定理由が記録されていること
+- Required evidence: docs/features/feat-hub-foundation/refactoring-migration-note.md に 4 判定軸 (既存実装のリファクタリング / data migration / backfill / compatibility) それぞれの N/A 理由が記録されていること
 
 ## Rollout and rollback
 

@@ -3,12 +3,15 @@
 ## Machine-readable registration fields
 
 - feature_package_id: feature-package/feat-hub-foundation (13 task で共有)
+- feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
+- feature_acceptance: 4 items (A1-A4)
+- quality_constraints: 9 items
 - owners: ["daishiman"]
 - tags: ["feat-hub-foundation", "stage-1", "infrastructure", "architecture", "monorepo"]
 - related_nodes: ["feat-hub-foundation", "arch-harness-hub-infrastructure", "arch-harness-hub-frontend"]
 - parent_feature: feat-hub-foundation
 - phase_ref: P02
-- classification: confidence=0.9, reason="pnpm workspace 構成 (apps/hub + packages/ui,schemas,inspection,db) と Cloudflare Workers デプロイ単位を比較検討し確定する P02 タスク", candidates=[{artifact_kind: task, confidence: 0.9, candidate_path: tasks/sys-hub-foundation-p02.md}]
+- classification: confidence=0.9, reason="pnpm workspace 構成 (apps/hub + packages/ui,schemas,inspection,db,estimation) と Cloudflare Workers デプロイ単位を比較検討し確定する P02 タスク", candidates=[{artifact_kind: task, confidence: 0.9, candidate_path: tasks/sys-hub-foundation-p02.md}]
 - tracker_binding_intent: beads
 - github_publication: mode=local_only, project_aliases=[], labels=[], milestone=なし
 - pr_completion_policy: linked_pr_merged_all
@@ -16,7 +19,7 @@
 
 ## 目的
 
-feat-hub-foundation の frontend/backend/API/data/infrastructure/security workstream 設計を確定し、特に docs/shared-layers.md §4 が「要ユーザー確認」としていた pnpm workspace 構成 (apps/hub + packages/ui,schemas,inspection,db) を、本 task の設計判断として比較検討し確定する。この task 完了時点で、後続の P03 独立設計レビューが評価できる具体的なディレクトリ構成・デプロイ単位・共通層境界が揃っている状態にする。
+feat-hub-foundation の frontend/backend/API/data/infrastructure/security workstream 設計を確定し、pnpm workspace 構成 (apps/hub + packages/ui,schemas,inspection,db,estimation の 6 member) を、本 task の設計判断として比較検討し確定する。この task 完了時点で、後続の P03 独立設計レビューが評価できる具体的なディレクトリ構成・デプロイ単位・共通層境界が揃っている状態にする。
 
 ## 背景
 
@@ -35,7 +38,7 @@ docs/shared-layers.md は共通 UI (design system)・共通バックエンド層
 - Backend: applicable + change: /health route handler と API 基盤の配置を apps/hub 内に確定する (業務ドメイン backend は対象外)
 - API: applicable + change: zod schemas を単一ソースとする packages/schemas の置き場と、API 入出力検証・型・OpenAPI 生成の責務境界を確定する (契約内容自体は後続 feature)
 - Data: N/A: DB スキーマ実体は feat-domain-model-db の scope。本 task は packages/db (Drizzle schema + repository 層) のディレクトリ置き場のみを確定し、スキーマ内容は定義しない
-- Infrastructure: applicable + change: 【設計判断】pnpm workspace 構成の比較検討と確定。比較対象 (a) 単一 apps/hub のみでパッケージ分割なし (b) docs/shared-layers.md §4 提案の apps/hub + packages/ui,schemas,inspection,db の 5 パッケージ構成 (c) さらに機能ドメイン単位まで細分化した多パッケージ構成。判断: (b) を採用する。理由は docs/system-design-overview.md 全体タスクマップが design system・zod schemas・検査 pipeline・repository 層のそれぞれについて 2 feature 以上の消費者を示しており (例: 検査 pipeline は feat-publish-pipeline と feat-publisher-plugin の双方が消費、zod schemas は feat-domain-model-db と feat-auth-tenancy が消費)、docs/shared-layers.md §5 の「共通層に第 3 の利用者が現れたときに初めて共通化する」という早すぎる抽象化の禁止原則に照らしても既に共通化の閾値を満たしているため。(a) は共通層の境界をコードレベルで強制できず認可漏れ等の qa-020/qa-006 リスクを高める。(c) は C1 (個人開発の認知負荷) に反する過剰な層分割であり qa-020 で明示的に採らないとされている。plugins/publisher/ は feat-publisher-plugin の scope のためディレクトリ予約のみ行い実装しない
+- Infrastructure: applicable + change: 【設計判断】pnpm workspace 構成の比較検討と確定。比較対象 (a) 単一 apps/hub のみでパッケージ分割なし (b) apps/hub + packages/ui,schemas,inspection,db,estimation の 6 workspace member 構成 (c) さらに機能ドメイン単位まで細分化した多パッケージ構成。判断: (b) を採用する。理由は docs/system-design-overview.md 全体タスクマップが design system・zod schemas・検査 pipeline・repository 層・試算エンジンの複数 consumer を示しており、共通層を workspace 境界で強制できるため。(a) は共通層の境界をコードレベルで強制できず認可漏れ等の qa-020/qa-006 リスクを高める。(c) は C1 (個人開発の認知負荷) に反する過剰な層分割である。plugins/publisher/ は feat-publisher-plugin の scope のためディレクトリ予約も本 task では行わない
 - Security: applicable + change: 認可ミドルウェア (単一層、Tenant/Workspace スコープ強制 deny-by-default) の配置境界を apps/hub 内にアーキテクチャ上予約する。実装本体は feat-auth-tenancy
 - Quality: applicable + change: CI 品質ゲート (pnpm 混入検査 / axe a11y 導線枠 / bundle 予算 Worker 3MiB / Tenant 分離テスト枠 / 検査 pipeline 挙動同値テスト枠) の設計を docs/shared-layers.md §3 に沿って確定する
 - Documentation: applicable + change: docs/features/feat-hub-foundation/architecture-decision-record.md を新規作成する
@@ -49,7 +52,7 @@ docs/shared-layers.md は共通 UI (design system)・共通バックエンド層
 
 ## 成果物
 
-- Produced artifacts: docs/features/feat-hub-foundation/architecture-decision-record.md (pnpm workspace 構成の比較検討結果と確定構成を含む)、pnpm-workspace.yaml の設計内容 (apps/hub, packages/ui, packages/schemas, packages/inspection, packages/db を workspace member として列挙する設計)、package.json ルート定義の設計内容 (packageManager フィールドで pnpm を pin する設計)
+- Produced artifacts: docs/features/feat-hub-foundation/architecture-decision-record.md (pnpm workspace 構成の比較検討結果と確定構成を含む)、pnpm-workspace.yaml の設計内容 (apps/hub, packages/ui, packages/schemas, packages/inspection, packages/db, packages/estimation の 6 workspace member を列挙する設計)、package.json ルート定義の設計内容 (packageManager フィールドで pnpm を pin する設計)
 - Consumed artifacts: docs/features/feat-hub-foundation/requirements-baseline.md, docs/shared-layers.md, docs/system-design-overview.md, arch-harness-hub-infrastructure, arch-harness-hub-frontend
 - Write scope/touches: docs/features/feat-hub-foundation/architecture-decision-record.md, pnpm-workspace.yaml, package.json
 
@@ -79,7 +82,7 @@ docs/shared-layers.md は共通 UI (design system)・共通バックエンド層
 ## Verification and evidence
 
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging`
-- Required evidence: docs/features/feat-hub-foundation/architecture-decision-record.md に (a)(b)(c) の比較表と (b) 採用理由、apps/hub と packages/{ui,schemas,inspection,db} の各責務境界が記載されていること
+- Required evidence: docs/features/feat-hub-foundation/architecture-decision-record.md に (a)(b)(c) の比較表と (b) 採用理由、apps/hub と packages/{ui,schemas,inspection,db,estimation} の各責務境界が記載されていること
 
 ## Rollout and rollback
 

@@ -28,6 +28,9 @@
 - Scheduled repair: 長期offlineやhook未設定に備え、次回status/requirements/decompose実行前または設定周期でC03を走らせる。
 - scheduled ownerはrepo configで一意にする。`claude_session_start`はC25が最終実行時刻とintervalを見て期限到来時だけ起動し、`host_scheduler`はrepo rootで固定entry point `dev-graph sync --reconcile-lifecycle`を呼ぶ。両者の同時所有は禁止し、event ledgerで重複実行をno-opにする。
 - local task spec更新はcleanなdefault-branch worktreeだけで行う。default worktree不在またはdirty/diverged/rebase中はpendingのまま停止し、自動push/PR作成は利用者の明示設定・承認なしに行わない。
+- detached HEAD は C24 が返す正規な診断状態 (`branch: null`) であり、C26 の `check` / `drain-pending` は identity error にせず pending と worktree conflict を返す。`reconcile` の durable write 条件は従来どおり clean・同期済み default branch のままとし、detached worktree から graph/task/beads を更新しない。
+- PR 1件が task 1件だけを完了する場合は本文に exact 1行の `dev-graph: <graph_node_id>` marker を置く。Beads binding で1件のPRが複数taskを実装した場合、markerを複数列挙せず、完了が実体確認できた task ごとに C28 `bd-bridge.py --op gate-add --bd-issue-id <id> --pr <number>` を登録する。C26 は merged fact とその `gh:pr` gate の両方を照合する。
+- task Markdown が content-addressed published task spec への projection である場合、C26 は projection の `source_lineage.source_path` を repository 内へ限定して解決し、正本仕様書の `Verification and evidence` を検証する。正本 path・verification・digest のいずれかが不正なら fail-closed とし、projection だけを根拠に完了させない。
 
 ## Idempotencyとevent ledger
 
@@ -42,4 +45,3 @@
 - GitHub Docs: Using the built-in automations — https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-built-in-automations
 - GitHub Docs: Best practices for Projects — https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/best-practices-for-projects
 - GitHub Docs: Managing the automatic closing of issues — https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/managing-auto-closing-issues
-

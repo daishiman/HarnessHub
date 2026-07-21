@@ -505,7 +505,23 @@ def main() -> int:
     elif a.op in {"gate-add", "gate-check"}:
         if not issue or not a.pr: raise ContractError("gate operation requires issue and --pr")
         gates = _rows(bd(["gate", "list", "--all", "--json"], cwd=root, check=False))
-        matching = [gate for gate in gates if str(gate.get("await_id") or gate.get("awaitId")) == str(a.pr) and (gate.get("blocks") == issue or gate.get("blocked_issue_id") == issue) and (gate.get("gate_type") or gate.get("type")) == "gh:pr"]
+        blocked = _issue(bd(["show", issue, "--json"], cwd=root), issue)
+        dependency_gate_ids = {
+            str(dependency.get("id"))
+            for dependency in blocked.get("dependencies", [])
+            if isinstance(dependency, dict) and dependency.get("dependency_type") == "blocks"
+        }
+        matching = [
+            gate
+            for gate in gates
+            if str(gate.get("await_id") or gate.get("awaitId")) == str(a.pr)
+            and (
+                gate.get("blocks") == issue
+                or gate.get("blocked_issue_id") == issue
+                or str(gate.get("id")) in dependency_gate_ids
+            )
+            and (gate.get("gate_type") or gate.get("type") or gate.get("await_type")) == "gh:pr"
+        ]
         if len(matching) > 1: raise ContractError("duplicate gh:pr gates for issue and PR")
         if a.op == "gate-add":
             result = {"gate": matching[0], "idempotent": True} if matching else bd(["gate", "create", "--type", "gh:pr", "--blocks", issue, "--await-id", str(a.pr), "--reason", a.reason or f"PR #{a.pr} merge", "--json"], cwd=root)
