@@ -1,3 +1,14 @@
+---
+status: confirmed
+layer: feature-design
+task: SYS-HUB-FOUNDATION-P11
+parent_feature: feat-hub-foundation
+feature_package_id: feature-package/feat-hub-foundation
+feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
+package_digest: sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502
+collected_at: "2026-07-21"
+---
+
 # E4 CI run 証跡 (A1)
 
 ## 実行結果
