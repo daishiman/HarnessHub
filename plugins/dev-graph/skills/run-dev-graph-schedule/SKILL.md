@@ -84,7 +84,7 @@ python3 ../../scripts/schedule-graph.py \
   --eval-log "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-execution.json"
 ```
 
-`--leases`を明示したのにsnapshotが存在しない場合は空扱いせず停止する。binding混在時は、`beads`だけを`--ready-json`の`edge_parity.confirmed=true`との積集合にし、`github/none`はlocal gateから計算する。`--scope`は指定nodeのsubtree、`--max-parallel`は1 batchの上限として適用する。期限切れleaseはactive扱いせず、graph/tracker/leaseの実行前後digestが1つでも変われば結果を破棄する。`--eval-log`はrepositoryの`eval-log/`配下だけを許可する。
+`--leases`を明示したのにsnapshotが存在しない場合は空扱いせず停止する。binding混在時は、`beads`だけを`--ready-json`の`edge_parity.confirmed=true`との積集合にし、`github/none`はlocal gateから計算する。`--ready-json`のC28 receiptは`parity_provenance`(`generated_at`/`source_graph_digest`)を必須とし、`source_graph_digest`が現graphのcanonical digestと一致しない場合はstale snapshotとして停止する (execution-tracker-contract §10)。回復手順はparity manifestの再生成であり、digestの書き換えではない。C28の`unmapped`/`conflicts`は判定に使わず`source: "bd-bridge"`付きでreportへ引き継ぐ。`--scope`は指定nodeのsubtree、`--max-parallel`は1 batchの上限として適用する。期限切れleaseはactive扱いせず、graph/tracker/leaseの実行前後digestが1つでも変われば結果を破棄する。`--eval-log`はrepositoryの`eval-log/`配下だけを許可する。
 
 ## ゴールシーク実行
 
