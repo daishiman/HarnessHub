@@ -2,27 +2,39 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
-    "skill_md_sha256": "b8e43d9b95cc305f7523552c4030291ba8c2cd6f073213cb60fb78b8c143d5ee"
+    "skill_md_sha256": "ed6459967c45115aaefd728f145c62747ddc5c189ead5475cca1df71fd03af15"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "audit-next-worktree-20260720",
-  "reviewed_at": "2026-07-20",
+  "reviewer": "assign-skill-design-evaluator-20260721",
+  "reviewed_at": "2026-07-21",
   "iterations": 1,
   "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 1,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "feature ready と task ready の二層分離 (MM-10) が frontmatter R3 / Purpose step4 / 完了チェックリスト / Gotchas の全層で一貫し、両者を同一 batch に混ぜない禁則が矛盾なく反映されている",
-      "read-only 契約 (graph/tracker/lease を変更しない) が Purpose 末尾・goal-seek 配線 --mode read・digest 不変チェックと整合し、claim command は文字列返却に留めるという副作用境界が明確",
-      "binding 別の ready 算出 (beads=C28 bd ready かつ status/depends_on edge parity=confirmed の積集合、github/none=C16 自前算出) が R3・Why・step2/3 で一貫記述され、依存先 C-code の役割分担が漏れなく配線されている"
+      "(a) 矛盾なし: 追記した stale 停止条件が実装と逐語一致する。SKILL.md の `parity_provenance` 必須化は schedule-graph.py:235-236 の ContractError、`source_graph_digest` 不一致停止は同 237-243 の `_canonical_digest(data)` 比較に 1:1 対応し、余剰も不足もない",
+      "(d) 依存関係整合: 契約正本 §10 が主張する『canonical digest 式は C05 render-graph-html の graph_digest_after と同一』が実装で裏づけられている (render-graph-html.py:210 と schedule-graph.py:92 が同一式 json.dumps(ensure_ascii=False, sort_keys=True, separators=(',',':')) の sha256)。整形差で stale 判定が揺れる経路が閉じている",
+      "権限分割が契約どおり: 由来の形式検証 (generated_at=RFC3339 UTC / source_graph_digest=sha256:<64hex>) は C28 bd-bridge.py:341-347 が fail-closed で担い、C16 は graph 実体との digest 突合だけを担う。§10 の『C28 が拒否し C16 が突合する』owner 分担と一致し、二重実装による drift を作っていない",
+      "silent drop 禁止が実装に接地: 『C28 の unmapped/conflicts は判定に使わず source: \"bd-bridge\" 付きで report へ引き継ぐ』が _tracker_side_unmapped() (schedule-graph.py:160-177) と完全一致し、schedule 判定へ混入しないという責務境界も保たれている",
+      "(c) 規約整合: 回復手順を『parity manifest の再生成であり digest の書き換えではない』と明記し、実装のエラーメッセージ (regenerate the parity manifest) と §10 の禁則に一致。Goodhart 的な『digest を現在値へ合わせて検出を恒久無効化する』抜け道を文面で塞いでいる",
+      "層間一貫: commands/dev-graph.md:98 の CLI 面記述も同じ停止条件を宣言しており、SKILL.md / command / references / 実装の 4 層で表現が割れていない"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "(b) 漏れ (severity=low / 非ブロッキング): 新設した停止条件が『## ゴールシーク実行』の完了チェックリストと criteria IN1 のテキストへ写像されていない。IN1 は node 単位 exact-set parity のみを述べるが、§10 は『node 単位検査は snapshot 生成後に追加/削除された node を原理的に捕まえられない』と明言しており、graph 全体 digest 突合はその穴を埋める別条件である。既存 checklist の『実行前後の graph/tracker/lease digest が同一』は不変性チェックであって由来の鮮度チェックではない。ただし schedule-graph.py が beads_present 時に fail-closed で例外送出するため stale snapshot 由来の ready-set が出力される実行経路は存在せず、script 検証 (test_parity_manifest_provenance.py 4 件) も通っているため PASS を妨げない"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "独立監査で現SKILL.md (sha256 b8e43d9b...) と実装を再評価。必須lease正本、Beads status/depends_on exact bind、mixed binding、scope/max、expiry、3 authority digest、eval-log containment、C17 verifier条件が本文/checklist/criteriaと一致する。focused 47件PASS、重大問題0件。PASS。"
+  "notes": "incremental profile の focused combined review (30思考法は未使用)。評価 slice は今回変更された意味 obligation のみ: SKILL.md L87 / execution-tracker-contract.md §10 / schedule-graph.py / bd-bridge.py。現 SKILL.md を実測 (shasum -a 256) した sha256=ed645996... で再評価し、(a)矛盾0 (b)漏れ1(low) (c)規約整合 (d)依存関係整合 (e)high severity 0。裏づけ実行: pytest test_parity_manifest_provenance.py 4 passed / test_sync_render_schedule_v2.py + test_c27_c28_projection_contract.py 17 passed。\n\nslice 外の既知条件 (本 verdict の判定には未算入): scripts/validate-build-trace.py が eval-log/dev-graph/_plugin/build-evidence/20260713/build-trace.json に対し 'missing top-level key: doc_coverage' で exit 1。git log 上、初期構築 commit 6a46c39 以来の状態で本変更起因ではなく、ubm-goal-setting など他 plugin の build-trace も同様に落ちる repository 全体の schema 乖離。run-skill-rubric-governance へのエスカレーション対象。"
 }
