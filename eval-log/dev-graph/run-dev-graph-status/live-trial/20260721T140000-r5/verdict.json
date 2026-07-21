@@ -1,0 +1,39 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "args": "--repo-root <fixture>",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "skill の実行契約を飛ばして下位 script (status-graph.py) を直接実行した。SKILL.md がゴールシーク配線を実行契約と明記しているのに、C24 resolve-repo-context receipt 取得と DEV_GRAPH_ROOT 固定 / eval-log 配下への goal-spec・progress・intermediate.jsonl 記録 / R1-elicit・R2-plan・R3-status prompt の読込と Agent fork / ゴールシーク検証ブロック が全て未実行 (transcript の tool_use は ls と status-graph.py の 2 本のみ)。task.md の『skill の手順を省略しないこと』違反",
+      "(参考・FAIL 事由ではない) task.md の実体 3 要件 (前後 hash 一致による read-only 証明 / 実 summary 出力 / C11 exit 0) は独立検証で全て充足を確認済み。--no-eval-log の使用は status-graph.py の宣言 write-scope と SKILL.md 起動例に照らし手順省略にあたらない"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "21348b991b0fb2e78fbe320bca3d92d538c8f2805e0b4efb2e082431197b4416",
+  "transcript_sha256": "5f5d92c21da7e00347bfd4e39f260f626b97352ec2eb37a82a8eac6df4fd569b",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": null,
+    "wall_clock_s": null
+  }
+}
