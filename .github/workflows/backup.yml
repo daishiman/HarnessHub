@@ -1,0 +1,98 @@
+# 日次 DB バックアップ。docs/infrastructure-spec.md §7/§10 が確定した backup.yml の実装。
+# RPO ≤ 24h / RTO ≤ 4h。「復元できないバックアップを成功と数えない」(qa-019) ため、
+# export → upload → 検証 → heartbeat の順で、途中で失敗したら heartbeat を打たない。
+name: hub-backup
+
+on:
+  schedule:
+    # 0 17 * * * UTC = JST 2:00 (infrastructure-spec §5)
+    - cron: "0 17 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: hub-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    name: Turso dump → gzip → R2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 必要な secret が 1 つでも欠けていたら「成功」にしない (fail-closed)。
+      # 設定漏れのまま緑になると、バックアップが無いことに気づけないまま RPO を割る。
+      - name: 前提 secret の存在確認
+        run: |
+          missing=""
+          [ -n "${{ secrets.TURSO_AUTH_TOKEN }}" ] || missing="$missing TURSO_AUTH_TOKEN"
+          [ -n "${{ secrets.TURSO_DATABASE_NAME }}" ] || missing="$missing TURSO_DATABASE_NAME"
+          [ -n "${{ secrets.R2_ACCESS_KEY_ID }}" ] || missing="$missing R2_ACCESS_KEY_ID"
+          [ -n "${{ secrets.R2_SECRET_ACCESS_KEY }}" ] || missing="$missing R2_SECRET_ACCESS_KEY"
+          [ -n "${{ secrets.R2_ACCOUNT_ID }}" ] || missing="$missing R2_ACCOUNT_ID"
+          if [ -n "$missing" ]; then
+            echo "::error::backup に必要な secret が未設定です:$missing"
+            echo "docs/features/feat-hub-foundation/runbook.md §1 の手順で設定してください"
+            exit 1
+          fi
+
+      - name: Turso CLI の導入
+        run: |
+          curl -sSfL https://get.tur.so/install.sh | bash
+          echo "$HOME/.turso" >> "$GITHUB_PATH"
+
+      - name: DB dump → gzip
+        env:
+          TURSO_API_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+        run: |
+          set -euo pipefail
+          stamp="$(date -u +%Y-%m-%d)"
+          year="$(date -u +%Y)"
+          mkdir -p backup
+          turso db shell "${{ secrets.TURSO_DATABASE_NAME }}" ".dump" > "backup/${stamp}.sql"
+          # 空 dump を成功にしない (DB 接続だけ成功して中身が取れないケースを弾く)
+          bytes=$(wc -c < "backup/${stamp}.sql")
+          echo "dump size: ${bytes} bytes"
+          if [ "$bytes" -lt 100 ]; then
+            echo "::error::dump が異常に小さい (${bytes} bytes)。バックアップとして採用しない"
+            exit 1
+          fi
+          gzip -9 "backup/${stamp}.sql"
+          echo "OBJECT_KEY=db-export/${year}/${stamp}.sql.gz" >> "$GITHUB_ENV"
+          echo "LOCAL_PATH=backup/${stamp}.sql.gz" >> "$GITHUB_ENV"
+
+      - name: R2 へ upload (S3 互換 API)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          set -euo pipefail
+          endpoint="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+          aws s3 cp "$LOCAL_PATH" "s3://harness-hub-backups/$OBJECT_KEY" --endpoint-url "$endpoint"
+
+      # upload しただけでは「復元できる」ことの根拠にならないため、実体の存在とサイズを取り直す
+      - name: upload 結果の検証
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          set -euo pipefail
+          endpoint="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+          remote=$(aws s3api head-object --bucket harness-hub-backups --key "$OBJECT_KEY" \
+            --endpoint-url "$endpoint" --query ContentLength --output text)
+          local_size=$(wc -c < "$LOCAL_PATH")
+          echo "remote=${remote} local=${local_size}"
+          [ "$remote" = "$local_size" ]
+
+      # 全て成功したときだけ heartbeat を打つ。「cron が動かなかった」と
+      # 「動いたが失敗した」の両方を外形監視側で検知させる (qa-027)。
+      - name: heartbeat 通知
+        if: success()
+        run: |
+          if [ -z "${{ secrets.BACKUP_HEARTBEAT_URL }}" ]; then
+            echo "::warning::BACKUP_HEARTBEAT_URL 未設定のため heartbeat を送出していません (cron 失敗検知が効きません)"
+            exit 0
+          fi
+          curl -fsS -m 10 "${{ secrets.BACKUP_HEARTBEAT_URL }}"

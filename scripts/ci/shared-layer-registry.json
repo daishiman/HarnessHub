@@ -1,0 +1,181 @@
+{
+  "$comment": "共通層の登録簿。docs/shared-layers.md §1〜§3 の登録内容を機械可読化したもの。duplicate detector はこの登録簿に載っている層のみを検出対象とする (requirements-baseline.md §4.2 A4-2)。未登録の重複は検出対象外 = shared-layers §5『第3の利用者が現れて初めて共通化する』原則との両立措置。",
+  "owner_feature": "feat-hub-foundation",
+  "layers": [
+    {
+      "id": "ui-design-system",
+      "shared_layers_ref": "§1",
+      "owner_package": "packages/ui",
+      "package_name": "@harness-hub/ui",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ]
+    },
+    {
+      "id": "zod-schemas-single-source",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/schemas",
+      "package_name": "@harness-hub/schemas",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ]
+    },
+    {
+      "id": "inspection-pipeline",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/inspection",
+      "package_name": "@harness-hub/inspection",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ]
+    },
+    {
+      "id": "estimation-engine",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/estimation",
+      "package_name": "@harness-hub/estimation",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ]
+    },
+    {
+      "id": "repository-layer",
+      "shared_layers_ref": "§2",
+      "owner_package": "packages/db",
+      "package_name": "@harness-hub/db",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_only": true,
+      "boundary_note": "スキーマ実体は feat-domain-model-db の責務。本 feature は境界と型のみ所有する"
+    },
+    {
+      "id": "authz-middleware",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/middleware",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "boundary_note": "認可判定はこの単一層以外に書かない (deny-by-default)。テナント固有 policy は feat-auth-tenancy"
+    },
+    {
+      "id": "auth-adapter",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/auth",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ]
+    },
+    {
+      "id": "audit-event-logger",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/audit",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)"
+    },
+    {
+      "id": "aijob-queue",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/aijob",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)"
+    },
+    {
+      "id": "notification-dispatch",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/notification",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)"
+    },
+    {
+      "id": "pii-guard",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/pii",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)"
+    },
+    {
+      "id": "telemetry-ingest-rollup",
+      "shared_layers_ref": "§2",
+      "owner_package": "apps/hub/src/shared/telemetry",
+      "consumers": [
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
+      ],
+      "app_wiring": "pending",
+      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)"
+    }
+  ],
+  "mechanisms": [
+    {
+      "id": "ci-quality-gates",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        ".github/workflows/ci.yml",
+        "scripts/ci/check-pnpm-only.mjs",
+        "scripts/ci/check-shared-layer-duplicates.mjs"
+      ]
+    },
+    {
+      "id": "wrangler-deploy",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        ".github/workflows/ci.yml",
+        "apps/hub/wrangler.jsonc",
+        "apps/hub/open-next.config.ts"
+      ]
+    },
+    {
+      "id": "monitoring",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        "apps/hub/src/app/health/route.ts",
+        ".github/workflows/cwv.yml"
+      ],
+      "external_wiring": "pending",
+      "external_wiring_note": "Better Stack の外形監視と月次 SLO 時系列はユーザー管理の外部設定。ローカル実装だけで充足扱いにしない"
+    },
+    {
+      "id": "backup",
+      "shared_layers_ref": "§3",
+      "owner_artifacts": [
+        ".github/workflows/backup.yml"
+      ],
+      "external_wiring": "pending",
+      "external_wiring_note": "GitHub environment secrets と heartbeat は外部設定。workflow 実装の存在と運用開始を区別する"
+    }
+  ],
+  "route_handler_policy": {
+    "root": "apps/hub/src/app",
+    "wrapper": "withAuthz",
+    "exemptions": [
+      {
+        "path": "apps/hub/src/app/health/route.ts",
+        "reason": "外形監視用の公開 endpoint。認証不要で rate limit 対象外 (ADR §7)"
+      }
+    ]
+  }
+}

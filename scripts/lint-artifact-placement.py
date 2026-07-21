@@ -44,6 +44,14 @@ ROOT_FILE_ALLOWLIST = {
     "config-version-lock.json",
     "requirements-dev.txt",
     "sitecustomize.py",
+    # 以下は feat-hub-foundation の pnpm monorepo が repo 直下を要求するツールチェーン設定。
+    # 探索起点が repo root に固定されており移動できないため、名前を個別に列挙して許可する
+    # (pnpm-* 等の接頭辞パターンにすると意図しないファイルまで通るので採らない)。
+    "package.json",  # workspace root manifest。pnpm はここから packages を解決する
+    "pnpm-workspace.yaml",  # workspace 定義。root 以外に置く手段が無い
+    "pnpm-lock.yaml",  # lockfile。pnpm が root へ生成・更新する
+    # biome は --config-path で移動可能だが、editor/LSP の自動検出が root 前提のため直下に置く
+    "biome.json",
 }
 SYSTEM_SPEC_JSON_ALLOWLIST = {
     "spec-state.json",
