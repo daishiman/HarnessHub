@@ -12,8 +12,8 @@ iteration: null
 title: "docs/ 全体マクロ再分解 (2026-07-18) の残 findings 5 件の是正"
 owners: ["daishiman"]
 created_at: "2026-07-18T16:20:35Z"
-updated_at: "2026-07-18T16:20:35Z"
-status: "draft"
+updated_at: "2026-07-21T00:00:00Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-tenant-data-retention","feat-domain-model-db","feat-auth-tenancy"]
 resource_scope: ["docs/security-spec.md","features/feat-domain-model-db.md","plugins/dev-graph/scripts/bd-bridge.py"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-21T00:00:00Z","evidence_refs":["commit:89c47df","commit:2f1d015","beads:HarnessHub-9ao","plugins/dev-graph/tests/test_bd_bridge_external_ref_idempotency.py"],"policy":"linked_pr_merged_all","reconciled_at":null,"source":"bd-bridge --op close","status":"open"}
 implementation_readiness: {"checked_at":"2026-07-18T16:20:35Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,10 +71,49 @@ implementation_readiness: {"checked_at":"2026-07-18T16:20:35Z","missing_sections
 
 `eval-log/run-dev-graph-decompose-docs-coverage-audit-20260719.json` の再監査で検出した dependency SSOT、C4 非保持記述、legal owner、shared-layer owner、feature source lineage のずれを graph revision 20 へ同期した。retention から docs/hearing/build への必須 edge は追加せず、任意統合 API / extension point として境界を固定した。既存 P01〜P13 package のうち context が変わった feature は外部 planner 再実行まで stale として扱い、macro 操作から task を直接変更しない。
 
-### 4. bd-bridge.py 冪等検索修正の恒久化 (high)
+### 4. bd-bridge.py 冪等検索修正の恒久化 (high) — テスト追加済み (2026-07-20)
 
 bd 1.1.0 の `search --external-contains` 非対応により `_find_external` が常に「既存なし」と誤判定し、projection 再実行で二重起票が発生していた (2026-07-18 の実行で顕在化・修正済み・未 commit)。`_find_external` の text query + list フォールバック化、`_create_one` の show 再取得を、回帰テスト付きで commit する。過去の hub-foundation (0e9 系) / auth-tenancy (p4q 系) 二重投影も同根。
 
-### 5. beads closed 残骸 57 組の整理方針 (low)
+**恒久化**: `_find_external` / `_create_one` の修正本体は commit `184acbc` で既に main に入っていた (未 commit だったのは 2026-07-18 時点の記録) 一方、回帰テストが欠けていた。既存の `test_c27_c28_projection_contract.py` の fake は `search` が external_ref で一致する理想実装であり、実際の失敗機序 (bd がヘルプ文を返す) を構造的に再現できないことを確認したため、bd 1.1.0 の実挙動を模した専用テスト `plugins/dev-graph/tests/test_bd_bridge_external_ref_idempotency.py` (7 ケース) を追加した。
+
+実挙動の実測 (2026-07-20, bd 1.1.0 Homebrew):
+
+- `bd search --external-contains <ref> --json` は positional query を欠くと JSON 行ではなくヘルプ文を stdout へ出す → `bd()` が JSON として解せず `{"text":..., "returncode":...}` へ退避 → `_find_external` から「該当 0 件」に化ける。これが二重起票の直接機序。
+- `bd search` の text query は title/ID を引く (help 記載) ため、単独では取りこぼしうる。`list --status all --limit 10000` フォールバックが実質の正本経路。
+- `bd list --json` の行は `external_ref` を持つが `issue_type` / `parent` を持たない → `_create_one` の `show` 再取得は削れない構造的必然。
+
+固定した契約: search 盲目時の list フォールバック / external_ref 完全一致のみ採用 (部分一致で誤って冪等化しない) / list 経由で発見した既存を再 create しない / show 再取得による type・parent 不一致の fail-closed / digest 変更時の update supersede。変異検査 (修正を pre-fix 実装へ巻き戻して再実行) で 5 ケースが fail することを確認済み。
+
+### 5. beads closed 残骸の整理方針 (low) — 方針確定済み (2026-07-20)
 
 open+closed 併存の external_ref が 57 組 (今回復旧した y5y/5yp 系 28 組を含む)。open 側単一のため実害はないが、パリティ検査のノイズになる。keep (監査証跡として保持) / purge (external_ref 剥離) の方針を確定して記録する。
+
+**現況の再実測 (2026-07-20)**: `bd list --status all --limit 10000 --json` で issue 287 件 (open 214 / closed 70 / in_progress 3)、`external_ref` 保有 269 件、**同一 external_ref の重複 0 組**。2026-07-18 に観測した 57 組は既に解消しており、剥離作業の残件はない。
+
+**確定方針 — purge (fail-closed)**:
+
+- closed 残骸は `external_ref` を剥離して運用する。**closed issue 自体は監査証跡として残す** (剥離対象は external_ref フィールドのみ)。
+- 同一 external_ref の併存を検出したら `_find_external` が `ContractError("duplicate beads external_ref")` で projection を止める (現行実装のまま・挙動変更なし)。
+- keep (open 側を暗黙採用して closed を無視する fail-open) は採らない。重複検知を弱め、finding 4 の二重起票再発を隠すため。
+- 採用理由: 現行実装が既に fail-closed であること、本 issue の scope_in が「方針確定」であり `resource_scope` 外の挙動変更を含まないこと、dev-graph 全体が parity・digest 不一致でも止める fail-closed 設計で一貫していること。
+
+方針は文書だけでなく `test_bd_bridge_external_ref_idempotency.py::test_find_external_fails_closed_on_open_plus_closed_remnant` で機械強制しており、fail-open へ退行すると CI が落ちる。
+
+## 完了記録 (2026-07-21)
+
+findings 1〜6 すべて解消し、beads の HarnessHub-9ao は `bd-bridge --op close` でクローズ済み。証跡 commit は `89c47df` (finding 4/5 のテストと方針)・`2f1d015` (派生 issue)・`a34c1a9` (完了記録)・`c002751` (最終レビューでの追加ガード)。
+
+検証は `pytest plugins/dev-graph/tests -q` => 221 passed、`pytest tests/ -q` => 7113 passed / 4 skipped、`validate-graph-schema.py` => valid: True / findings 0。変異検査は 2 種実施し、list フォールバック削除で 5 ケース・search 高速経路削除で 3 ケースが fail することを確認済み (テストが実際に退行を捕捉する証明)。
+
+PR は canonical branch `devgraph/issue-docs-recompose-followups-20260718` から #11 を作成した。CI は `verify` / `check` が pass、`change-category-guard` のみ fail するが、これは main (`6035496`) 側に既存する `lint-artifact-placement` 違反 (`docs/features/feat-stage0-distribution-gate/.../h7-probe-echo/SKILL.md` の frontmatter 欠落、`409b52b` 由来) の巻き添えであり本 PR の diff とは無関係 (HarnessHub-5ph として分離起票)。
+
+`completion_evidence.status` は PR #11 の merge をもって `closed` へ遷移させる (`policy: linked_pr_merged_all`)。本 issue node は `.dev-graph/state/graph.json` に含まれないため `reconcile-github-lifecycle.py` の対象外で、遷移は手動更新となる。
+
+## 派生 issue (2026-07-21)
+
+本 issue の実行中に、`guard-graph-schema` が beads mutation を `bd-bridge.py` の単一チョークポイントへ限定する一方で `bd-bridge.py --op update` が `--notes` / `--design` を、`--op create` が `--priority` を通せないことを観測した。notes 更新の正規経路が存在しないため、本 issue の進捗メモを beads 側へ残せなかった。`issues/sys-bd-bridge-notes-passthrough-20260721.md` (HarnessHub-8ql) として分離して追跡する。
+
+- **HarnessHub-8ql**: 分離後に別セッションが実装し CLOSED (`--op update` へ notes / append-notes / design / description の転送を追加、契約テスト 13 件 PASS)。ただし `origin/main` の `bd-bridge.py` は未変更で、実装は別 branch にある。本 issue の PR は `bd-bridge.py` を変更しないため衝突しない。
+- **HarnessHub-82j** (OPEN): 上記 bd-bridge 変更に伴う 3 skill の live-trial 再検証 (closure stale)。8ql から派生。
+- **HarnessHub-5ph** (OPEN): main の `governance-check` が `lint-artifact-placement` 違反で赤く、無関係な PR が巻き添えで fail する問題。本 issue の PR #11 で顕在化したため起票。
