@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /// script
-# name: verify-goal-seek-evidence
+# name: validate-goal-seek-evidence
 # purpose: goal_seek を宣言する skill の live-trial で、実行契約の履行証跡が実在し整合するかを機械検査する。
 # inputs:
 #   - argv: --skill-dir --eval-root [--skill-name] [--require-declared]

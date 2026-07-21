@@ -17,8 +17,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = (ROOT / "plugins" / "harness-creator" / "skills" / "run-skill-live-trial"
-          / "scripts" / "verify-goal-seek-evidence.py")
-SPEC = importlib.util.spec_from_file_location("verify_goal_seek_evidence", SCRIPT)
+          / "scripts" / "validate-goal-seek-evidence.py")
+SPEC = importlib.util.spec_from_file_location("validate_goal_seek_evidence", SCRIPT)
 assert SPEC and SPEC.loader
 VG = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = VG
