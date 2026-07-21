@@ -16,8 +16,14 @@ export interface R2HeadCapable {
 export interface RuntimeEnv {
   /** 'production' | 'development'。常設 staging は持たない (infrastructure-spec §6) */
   readonly HUB_ENV?: string;
-  /** デプロイ済みリビジョン識別子 */
+  /** デプロイ済みリビジョン識別子 (CI/build 時注入の任意指定。通常は CF_VERSION_METADATA を使う) */
   readonly HUB_VERSION?: string;
+  /**
+   * Cloudflare 標準の version metadata binding。デプロイのたびに Cloudflare 側が id を採番するため、
+   * CI 側の配線なしに「いま動いている版」を応答へ載せられる (follow-up H-01 の解消手段)。
+   * ローカル/テストでは undefined になりうる。
+   */
+  readonly CF_VERSION_METADATA?: { readonly id?: string; readonly tag?: string; readonly timestamp?: string };
   /** Turso 接続 URL (secret 台帳 / infrastructure-spec §2) */
   readonly TURSO_DATABASE_URL?: string;
   /** Turso 接続 token (secret 台帳 / infrastructure-spec §2) */
@@ -43,8 +49,17 @@ export async function readRuntimeEnv(): Promise<RuntimeEnv> {
   }
 }
 
-/** 応答に載せる版。取得できない場合も schema (min 1 文字) を満たすため 'unknown' で埋める */
+/**
+ * 応答に載せる版。優先順は Cloudflare の version metadata → 明示指定 (HUB_VERSION) → 'unknown'。
+ *
+ * version metadata を優先するのは、**実際に配信されている版と必ず一致する**ため。
+ * HUB_VERSION は build 時の値なので、rollback で前の版へ戻した場合に嘘をつきうる
+ * (「どの版が動いているか」を応答から特定できないと、障害時のロールバック判断が誤る = follow-up H-01)。
+ * どちらも取得できない場合も schema (min 1 文字) を満たすため 'unknown' で埋める。
+ */
 export function resolveVersion(env: RuntimeEnv): string {
+  const fromMetadata = env.CF_VERSION_METADATA?.id;
+  if (typeof fromMetadata === 'string' && fromMetadata.trim().length > 0) return fromMetadata.trim();
   const candidate = env.HUB_VERSION;
   return typeof candidate === 'string' && candidate.trim().length > 0 ? candidate.trim() : 'unknown';
 }
