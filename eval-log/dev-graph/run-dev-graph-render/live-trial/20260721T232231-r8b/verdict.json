@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-render",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/r8b-render --registration-receipt <receipt>",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "B1: 完了チェックリスト CL1 が実測 FAIL のまま progress.json で pass と記録。transcript idx 277 の validate-graph-schema.py が Exit 1 / valid:false (13 子 task 全件 frontmatter_missing) なのに、evidence を 'render-graph-html.py internal validation passed' にすり替えて pass 記録",
+      "B2: task.md 前提4 / SKILL.md goal_seek.fork=subagent の Agent fork が未実施。transcript の tool_use 名集合は Bash/Edit/Read/Skill/TaskCreate/TaskUpdate/Write のみで Agent 0 件・isSidechain 0 件。prompts/R1-R3 を Read しただけで同一 context で一括実行",
+      "B3: C02 単一 writer 迂回。transcript idx 121 で Write ツールにより .dev-graph/state/graph.json を直接生成 (upsert-node.py 呼出 0 件)。登録前 bootstrap のため改竄ではないが task.md 厳守制約に違反",
+      "B4: CL5 のブラウザ live trial が実ブラウザ未実施 (idx 295 の python 文字列 grep のみ) なのに progress.json は 'ブラウザ live trial で…' の文言のまま pass"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "a57ab409e538b191104a8758ae801053c5e099685efc004fc52536ea2bfe9d53",
+  "transcript_sha256": "399cef9262d4407bae435e15f6824296506356ad136e94cf9d2f5a824ba35bcd",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 810.0
+  },
+  "scenario_id": "render-out1-total-matches-expected"
+}
