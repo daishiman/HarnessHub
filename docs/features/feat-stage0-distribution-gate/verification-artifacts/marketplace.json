@@ -1,0 +1,19 @@
+{
+  "name": "h7-url-marketplace",
+  "description": "Stage 0 technical gate (H7) の URL 型 marketplace 経路検証用。remote URL で取得されるため plugin 本体 source は外部 source を指す必要がある (相対パスは解決不能)。",
+  "version": "0.1.0",
+  "owner": {
+    "name": "daishiman"
+  },
+  "plugins": [
+    {
+      "name": "h7-probe",
+      "description": "H7 配布経路検証専用の最小 plugin。skill を 1 件だけ持ち install 後の列挙・実行可否を確かめる。",
+      "version": "0.1.0",
+      "source": {
+        "source": "github",
+        "repo": "daishiman/h7-probe"
+      }
+    }
+  ]
+}

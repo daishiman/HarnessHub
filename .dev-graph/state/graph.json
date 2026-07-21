@@ -1,5 +1,5 @@
 {
-  "graph_revision": 253,
+  "graph_revision": 262,
   "nodes": [
     {
       "acceptance": [
@@ -17568,7 +17568,18 @@
       "depends_on": [],
       "domain": "documentation",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01",
+          "head_sha": "5f313162029df3fdc3a51df00e25d9c57e7402e1",
+          "last_seen_at": "2026-07-20T11:48:41.006853Z",
+          "lease_acquired_at": "2026-07-20T11:48:38.892319Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p01.md",
       "github_project_linkages": [],
@@ -17594,7 +17605,20 @@
       "phase_ref": "P01",
       "priority": null,
       "project_id": "feature-package-feat-stage0-distribution-gate",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01",
+          "linked_at": "2026-07-20T12:44:37Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 3,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/3"
+        }
+      ],
       "purpose": "feat-stage0-distribution-gate の P01 を実行する: 配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
       "related_nodes": [
         "feat-stage0-distribution-gate",
@@ -17630,7 +17654,7 @@
       "template_version": "1.0.0",
       "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T12:44:37.942819Z"
     },
     {
       "acceptance": [
@@ -17677,7 +17701,18 @@
       ],
       "domain": "infrastructure",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P02",
+          "head_sha": "2ec0d78157b466b4af6b2693fcfc6864520160ad",
+          "last_seen_at": "2026-07-20T22:23:28.278360Z",
+          "lease_acquired_at": "2026-07-20T22:23:26.190833Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p02.md",
       "github_project_linkages": [],
@@ -17739,7 +17774,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — 3 経路検証方式・最小 artifact 構成・実機 E2E 手順・decision record 登録経路の確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T22:23:28.278360Z"
     },
     {
       "acceptance": [
@@ -17786,7 +17821,18 @@
       ],
       "domain": "quality",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P03",
+          "head_sha": "e2b033fb3e1debd057f4b624ce5e71ee9d526af2",
+          "last_seen_at": "2026-07-20T22:42:11.586106Z",
+          "lease_acquired_at": "2026-07-20T22:42:09.682527Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p03.md",
       "github_project_linkages": [],
@@ -17848,7 +17894,7 @@
       "template_version": "1.0.0",
       "title": "独立設計レビュー — 検証方式・artifact 構成・実機 E2E 手順の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T22:42:11.586106Z"
     },
     {
       "acceptance": [
@@ -17895,7 +17941,18 @@
       ],
       "domain": "quality",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P04",
+          "head_sha": "2ce4f473211d5afe5e41c610ecd2a22c32d1d436",
+          "last_seen_at": "2026-07-20T22:44:01.277341Z",
+          "lease_acquired_at": "2026-07-20T22:43:59.721888Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p04.md",
       "github_project_linkages": [],
@@ -17963,7 +18020,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — quality_constraints 8 件・acceptance 3 件に対応する実機検証ケースの設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T22:44:01.277341Z"
     },
     {
       "acceptance": [
@@ -18010,7 +18067,18 @@
       ],
       "domain": "infrastructure",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P05",
+          "head_sha": "fe7042881c4e76f0a21f1902177134921d496abb",
+          "last_seen_at": "2026-07-20T22:46:37.559620Z",
+          "lease_acquired_at": "2026-07-20T22:46:32.471252Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p05.md",
       "github_project_linkages": [],
@@ -18084,7 +18152,7 @@
       "template_version": "1.0.0",
       "title": "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T22:46:37.559620Z"
     },
     {
       "acceptance": [
@@ -18131,7 +18199,18 @@
       ],
       "domain": "quality",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P06",
+          "head_sha": "e7afba909777ebac2e541bc79d7def74f23c7012",
+          "last_seen_at": "2026-07-20T22:51:33.885252Z",
+          "lease_acquired_at": "2026-07-20T22:51:30.714594Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p06.md",
       "github_project_linkages": [],
@@ -18199,7 +18278,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-20T22:51:33.885252Z"
     },
     {
       "acceptance": [
@@ -18246,7 +18325,18 @@
       ],
       "domain": "quality",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P07",
+          "head_sha": "86d035e02886b64abefb2ffa43e54bd85dea3a09",
+          "last_seen_at": "2026-07-21T00:19:38.041436Z",
+          "lease_acquired_at": "2026-07-21T00:19:35.510053Z",
+          "released_at": null,
+          "state": "claimed",
+          "worktree_id": "wt_eed96293f3fd512f"
+        }
+      ],
       "feature_package_id": "feature-package/feat-stage0-distribution-gate",
       "file_path": "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p07.md",
       "github_project_linkages": [],
@@ -18308,7 +18398,7 @@
       "template_version": "1.0.0",
       "title": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-21T00:19:38.041436Z"
     },
     {
       "acceptance": [

@@ -1,0 +1,39 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "認証付きTODO APIをarchitecture、認証feature、TODO featureへマクロ分解する。TODOは認証に依存。全nodeはtracker_binding=none。 --repo-root <contained-fixture-repo> --dry-run",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "tmux session exited before completion marker; transcript ended after tool_result without turn_duration"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "NOT_EVALUATED",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "4fdda2a96cb5f6c33de86b7ad92458cac07062af2304913c3ec30ff0cdcfa46e",
+  "transcript_sha256": "15ae00ea2eaa71ee0a2cb6bb03d7701043cbc7f12fba65a456cb819b1ea8123e",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "STALL",
+    "wall_clock_s": 705.0
+  },
+  "scenario_id": "decompose-macro-positive-r3"
+}

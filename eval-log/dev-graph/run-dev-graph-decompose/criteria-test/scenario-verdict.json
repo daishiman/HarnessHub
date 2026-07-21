@@ -27,12 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "decompose-macro-positive-r3",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260713T090000-r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260721T143217/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260713T090000-r3/verdict.json",
-        "independent: r3 tmux live run transcript.jsonl (145 records, model claude-opus-4-6) + pane.txt + out/status.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260721T143217/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260721T143217/transcript.jsonl",
+        "independent: fresh evaluator replay of the r10 transcript, fixture canonical graph, and validate-graph-schema negative controls"
       ],
-      "observed": "The r3 live run (Claude Code v2.1.62, Opus 4.6, bypassPermissions, ~9m self-driven, 0 nudges/0 gate responses) invoked dev-graph:run-dev-graph-decompose with --dry-run on the macro-positive scenario. The transcript shows the skill genuinely executed resolve-repo-context.py, computed the pre-existing graph_digest e49f6b1f... with node_count=1, ran GOAL-SEEK VERIFICATION: PASS, and emitted only draft preview with no local/Beads/GitHub/Projects write; the source graph digest stayed unchanged (no direct C02 add). out/status.json recorded {\"status\":\"PASS\",\"scenario\":\"decompose-macro-positive\"} and the agent ended DONE: PASS. verdict.json overall=PASS, goal_verdict=PASS, tier=live, downgrade_reason=null, transcript_sha256 52fbefc2..., skill_dir_tree_sha 046f7725...."
+      "observed": "The 2026-07-21 live trial (345s self-driven, 0 nudges/0 gate responses, actual_model claude-opus-4-6) re-established this criterion after the bd-bridge change invalidated the behavior closure. Its first workflow tool call was the target Skill itself, and the run produced architecture arch-todo-api plus features feat-authentication and feat-todo with feat-todo depends_on feat-authentication: has_cycle=False, task_count=0, all_draft=True. A separate fresh evaluator re-ran validate-graph-schema on the same node set (0 findings) and added negative controls -- dropping purpose raised schema_violation and adding a reverse edge raised dependency_cycle -- proving the gate is not vacuous. Every Bash call in the transcript was read-only: no upsert-node/register-package/bd-bridge/gh-bridge/sync-graph invocation, no write-then-delete trace, canonical graph.json unchanged at sha256:591b96...e938cae before and after, nodes=[] with 0 Beads/GitHub/Projects publication. out/status.json recorded {\"status\":\"PASS\",\"scenario\":\"decompose-macro-positive\"} and the agent ended DONE: PASS. verdict.json overall=PASS, goal_verdict=PASS, tier=live, downgrade_reason=null."
     },
     "OUT2": {
       "status": "PASS",

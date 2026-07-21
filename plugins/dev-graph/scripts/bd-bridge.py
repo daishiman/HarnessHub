@@ -26,6 +26,24 @@ from _common import ContractError, dump, run
 MUTATIONS = {"create", "update", "dep-add", "dep-remove", "close", "claim", "github-push", "gate-add"}
 PHASES = [f"P{i:02d}" for i in range(1, 14)]
 SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
+# --op update が bd update へ転送してよい field の exact-set。
+# bridge が単一チョークポイントである以上、ここに無い field は運用上「存在しない」ため、
+# 受理する field は網羅的に宣言し、転送忘れ (silent drop) を構造的に起こせなくする。
+UPDATE_FIELDS: tuple[tuple[str, str], ...] = (
+    ("status", "--status"),
+    ("title", "--title"),
+    ("description", "--description"),
+    ("notes", "--notes"),
+    ("append_notes", "--append-notes"),
+    ("design", "--design"),
+)
+PRIORITY_ALIASES = {
+    "critical": "0",
+    "high": "1",
+    "medium": "2",
+    "low": "3",
+    "backlog": "4",
+}
 
 
 def bd(args: list[str], *, cwd: Path, check: bool = True) -> Any:
@@ -157,6 +175,7 @@ def _create_one(
     title: str,
     description: str,
     issue_type: str,
+    priority: str | None = None,
     parent: str | None = None,
     source_digest: str | None = None,
 ) -> dict[str, Any]:
@@ -202,6 +221,8 @@ def _create_one(
         "create", "--title", title, "--description", projected_description,
         "--external-ref", f"dev-graph:{graph_node_id}", "--type", issue_type,
     ]
+    if priority is not None:
+        argv += ["--priority", _normalize_priority(priority)]
     if parent:
         argv += ["--parent", parent]
     if source_digest is not None:
@@ -359,14 +380,67 @@ def _verify_feature_rollup(manifest: dict[str, Any], issue_id: str) -> dict[str,
     return {"eligible": True, "phase_refs": phases, "closed_count": 13}
 
 
+def _normalize_priority(value: str) -> str:
+    """dev-graph / Beads 双方の priority 語彙を Beads の数値表現へ正規化する。"""
+    normalized = value.strip().lower()
+    if normalized in PRIORITY_ALIASES:
+        return PRIORITY_ALIASES[normalized]
+    match = re.fullmatch(r"p?([0-4])", normalized)
+    if match:
+        return match.group(1)
+    raise ContractError("priority must be critical|high|medium|low|backlog or 0-4/P0-P4")
+
+
+def _requested_update_fields(args: Any) -> list[str]:
+    """明示指定された update field を argparse dest 名で順序どおり返す。
+
+    判定は truthiness ではなく ``is not None`` で行う。``--notes ""`` は argparse に
+    届いた時点で「消去の明示指定」であり、真偽値で落とすと指定が黙って消える
+    (本 issue で塞がっていた silent drop と同じ失敗形) ため。
+    """
+    return [dest for dest, _ in UPDATE_FIELDS if getattr(args, dest, None) is not None]
+
+
+def _validate_update_fields(requested: list[str]) -> None:
+    """update 要求の受理可否を判定し、不正なら ContractError を送出する。
+
+    field 皆無の update は bd 側では成功扱いの no-op になるため、呼び出し側から
+    「反映された」と「何も渡っていなかった」を区別できない。本 bridge の他の契約検証と
+    同じく fail-closed で落とす。notes の置換/追記同時指定も bd の適用順に依存させない。
+    """
+    if not requested:
+        raise ContractError(f"update requires at least one of: {', '.join(flag for _, flag in UPDATE_FIELDS)}")
+    if {"notes", "append_notes"} <= set(requested):
+        raise ContractError("update accepts --notes or --append-notes, not both")
+
+
+def _update_argv(args: Any) -> tuple[list[str], list[str]]:
+    """受理した update field を bd update のフラグ列へ写し、適用 field 名と併せて返す。"""
+    requested = _requested_update_fields(args)
+    _validate_update_fields(requested)
+    flags: list[str] = []
+    for dest, flag in UPDATE_FIELDS:
+        value = getattr(args, dest, None)
+        if value is not None:
+            flags += [flag, value]
+    return flags, requested
+
+
 def main() -> int:
     p = argparse.ArgumentParser(); p.add_argument("--op", required=True, choices=("create", "update", "dep-add", "dep-remove", "close", "ready", "show", "claim", "github-push", "gate-add", "gate-check"))
-    p.add_argument("--repo-root", default="."); p.add_argument("--graph-node-id"); p.add_argument("--bd-issue-id"); p.add_argument("--depends-on"); p.add_argument("--expected-depends-on", action="append", default=[]); p.add_argument("--expected-status"); p.add_argument("--expected-workspace-id"); p.add_argument("--verify-parity", action="store_true"); p.add_argument("--title"); p.add_argument("--description"); p.add_argument("--status"); p.add_argument("--reason"); p.add_argument("--pr", type=int); p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--repo-root", default="."); p.add_argument("--graph-node-id"); p.add_argument("--bd-issue-id"); p.add_argument("--depends-on"); p.add_argument("--expected-depends-on", action="append", default=[]); p.add_argument("--expected-status"); p.add_argument("--expected-workspace-id"); p.add_argument("--verify-parity", action="store_true"); p.add_argument("--title"); p.add_argument("--description"); p.add_argument("--notes"); p.add_argument("--append-notes"); p.add_argument("--design"); p.add_argument("--priority"); p.add_argument("--status"); p.add_argument("--reason"); p.add_argument("--pr", type=int); p.add_argument("--dry-run", action="store_true")
     p.add_argument("--parity-manifest"); p.add_argument("--projection-manifest"); p.add_argument("--feature-rollup-manifest"); p.add_argument("--artifact-kind", choices=("feature", "task"))
     a = p.parse_args(); root = Path(a.repo_root).resolve(strict=True)
     pf = preflight(root, a.expected_workspace_id) if a.expected_workspace_id else preflight(root)
+    create_priority: str | None = None
+    if a.op == "create" and a.priority is not None:
+        if a.projection_manifest:
+            raise ContractError("create --priority cannot be combined with --projection-manifest")
+        create_priority = _normalize_priority(a.priority)
     if a.dry_run and a.op in MUTATIONS:
         preview: dict[str, Any] = {k: v for k, v in vars(a).items() if v is not None and k != "dry_run"}
+        if create_priority is not None:
+            preview["priority"] = create_priority
         if a.op == "create" and a.projection_manifest:
             feature, children, source_digest = _validate_projection(_load_manifest(a.projection_manifest, root, label="projection") or {})
             preview["projection"] = {
@@ -377,29 +451,31 @@ def main() -> int:
                 "source_digest": source_digest,
                 "write_count": 0,
             }
+        if a.op == "update":
+            # preview でも同じ受理判定を通し、不正な update 要求を書込前に落とす。
+            _, preview["applied_fields"] = _update_argv(a)
         if a.op == "close" and a.artifact_kind == "feature":
             manifest = _load_manifest(a.feature_rollup_manifest, root, label="feature rollup")
             if not a.bd_issue_id or manifest is None: raise ContractError("feature close dry-run requires issue and rollup manifest")
             preview["feature_rollup"] = _verify_feature_rollup(manifest, a.bd_issue_id)
         dump({"op": a.op, "dry_run_preview": preview, **pf}); return 0
     issue = a.bd_issue_id
+    applied_fields: list[str] = []
     if a.op == "create":
         projection = _load_manifest(a.projection_manifest, root, label="projection")
         if projection:
             result = _package_projection(root, projection)
         else:
             if not a.graph_node_id or not a.title: raise ContractError("create requires --graph-node-id and --title")
-            result = _create_one(root, graph_node_id=a.graph_node_id, title=a.title, description=a.description or "", issue_type="epic" if a.artifact_kind == "feature" else "task")
+            result = _create_one(root, graph_node_id=a.graph_node_id, title=a.title, description=a.description or "", issue_type="epic" if a.artifact_kind == "feature" else "task", priority=create_priority)
     elif a.op in {"update", "close", "claim", "show"}:
         if not issue: raise ContractError(f"{a.op} requires --bd-issue-id")
         shown = bd(["show", issue, "--json"], cwd=root)
         current = _issue(shown, issue)
         edge_parity = verify_parity(current, a.expected_status, a.expected_depends_on) if a.verify_parity else None
         if a.op == "update":
-            argv = ["update", issue];
-            if a.status: argv += ["--status", a.status]
-            if a.title: argv += ["--title", a.title]
-            argv += ["--json"]; result = bd(argv, cwd=root)
+            flags, applied_fields = _update_argv(a)
+            result = bd(["update", issue, *flags, "--json"], cwd=root)
         elif a.op == "close":
             rollup = None
             current_type = current.get("issue_type") or current.get("type")
@@ -438,6 +514,9 @@ def main() -> int:
             checked = bd(["gate", "check", "--type", "gh:pr", "--json"], cwd=root)
             result = {"gate": matching[0], "checked": checked}
     payload = {"op": a.op, "result": result, "workspace_identity": pf["workspace_identity"], "bd_version": pf["version"]}
+    # 転送した field を receipt に載せ、「呼んだが反映されていない」を呼び出し側から検証可能にする。
+    if a.op == "update":
+        payload["applied_fields"] = applied_fields
     if a.op == "ready" and isinstance(result, dict):
         payload.update({key: result[key] for key in ("ready_set", "unmapped", "conflicts", "candidate_count")})
     dump(payload)

@@ -8,6 +8,9 @@
 - dev-graph 管理下 root (specs/architecture/features/tasks) の *.md は
   graph.json への登録必須 (orphan artifact 遮断。正規経路以外の直置きを検出)
 - docs/*.md は frontmatter に status: と layer: が必須 (無標識の草案を遮断)
+  ただし plugin package 実体 (.claude-plugin/plugin.json を持つツリー) 配下は除外する。
+  SKILL.md 等の frontmatter schema は Claude Code 側の仕様で決まっており、
+  status:/layer: を足すと仕様違反かつ検証対象の破壊になるため (HarnessHub-5ph)。
 - system-spec/ 直下はコンパイラ出力 (*.md) と正本 JSON 3 種のみ (混入遮断)
 - リポジトリ直下のファイルは allowlist 制 (置き場迷子の遮断)
 
@@ -41,6 +44,14 @@ ROOT_FILE_ALLOWLIST = {
     "config-version-lock.json",
     "requirements-dev.txt",
     "sitecustomize.py",
+    # 以下は feat-hub-foundation の pnpm monorepo が repo 直下を要求するツールチェーン設定。
+    # 探索起点が repo root に固定されており移動できないため、名前を個別に列挙して許可する
+    # (pnpm-* 等の接頭辞パターンにすると意図しないファイルまで通るので採らない)。
+    "package.json",  # workspace root manifest。pnpm はここから packages を解決する
+    "pnpm-workspace.yaml",  # workspace 定義。root 以外に置く手段が無い
+    "pnpm-lock.yaml",  # lockfile。pnpm が root へ生成・更新する
+    # biome は --config-path で移動可能だが、editor/LSP の自動検出が root 前提のため直下に置く
+    "biome.json",
 }
 SYSTEM_SPEC_JSON_ALLOWLIST = {
     "spec-state.json",
@@ -50,6 +61,31 @@ SYSTEM_SPEC_JSON_ALLOWLIST = {
 }
 GRAPH_GOVERNED_ROOT_KEYS = ("specifications", "architecture", "features", "tasks")
 DOCS_REQUIRED_FRONTMATTER_KEYS = ("status:", "layer:")
+
+
+PLUGIN_PACKAGE_MARKER = Path(".claude-plugin") / "plugin.json"
+
+
+def _in_plugin_package(md: Path, docs_root: Path) -> bool:
+    """md が plugin package 実体の内側にあるか判定する。
+
+    docs/ 配下には「配布経路の検証用に置いた plugin package そのもの」が入ることがある
+    (docs/features/feat-stage0-distribution-gate/verification-artifacts/minimal-skill-package)。
+    その中の SKILL.md は文書ではなくパッケージ実体で、frontmatter schema は
+    Claude Code 側の仕様 (name/description) が正本。docs-frontmatter 規則の
+    status:/layer: を課すと仕様違反になり、検証対象そのものを壊す。
+
+    docs_root は探索の打ち切り境界 (これを越えて上位を見に行かない)。
+    docs_root 自身は判定対象に含めない — docs/.claude-plugin/plugin.json 一つで
+    docs/ 全体が無検査になる穴を作らないため。
+    marker は「ディレクトリの存在」ではなく plugin.json の実在で判定する (誤除外を狭く保つ)。
+    """
+    for parent in md.parents:
+        if parent == docs_root or not parent.is_relative_to(docs_root):
+            return False
+        if (parent / PLUGIN_PACKAGE_MARKER).is_file():
+            return True
+    return False
 
 
 def _read_frontmatter_block(path: Path) -> list[str] | None:
@@ -108,6 +144,8 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
     if docs_root.is_dir():
         for md in sorted(docs_root.rglob("*.md")):
             rp = md.relative_to(repo_root).as_posix()
+            if _in_plugin_package(md, docs_root):
+                continue
             block = _read_frontmatter_block(md)
             if block is None:
                 violations.append(
@@ -182,6 +220,34 @@ def self_test() -> int:
         (root / "system-spec" / "spec-state.json").write_text("{}", encoding="utf-8")
         v, _ = lint(root)
         assert v == [], f"クリーン状態で違反を誤検出: {v}"
+
+        # plugin package 実体 (.claude-plugin/plugin.json を持つツリー) は
+        # docs-frontmatter の対象外。SKILL.md の frontmatter 正本は Claude Code 側の仕様。
+        pkg = root / "docs" / "verification-artifacts" / "minimal-skill-package"
+        (pkg / ".claude-plugin").mkdir(parents=True)
+        (pkg / ".claude-plugin" / "plugin.json").write_text("{}", encoding="utf-8")
+        (pkg / "skills" / "probe").mkdir(parents=True)
+        (pkg / "skills" / "probe" / "SKILL.md").write_text(
+            "---\nname: probe\ndescription: fixture\n---\nbody", encoding="utf-8")
+        v, _ = lint(root)
+        assert v == [], f"plugin package 実体を誤って docs-frontmatter 違反にした: {v}"
+
+        # 除外は package ツリーの内側だけ。marker を持たない兄弟ディレクトリは従来どおり検査する
+        # (「verification-artifacts 配下は全部素通り」まで穴を広げない)。
+        sibling = root / "docs" / "verification-artifacts" / "notes.md"
+        sibling.write_text("frontmatter なし", encoding="utf-8")
+        v, _ = lint(root)
+        assert any("notes.md" in line for line in v), "package 外の docs まで除外している"
+        sibling.unlink()
+
+        # docs_root 直下に marker を置いても docs/ 全体は無検査にならない
+        # (marker 1 つで規則ごと無効化できる穴を塞ぐ)。
+        (root / "docs" / ".claude-plugin").mkdir()
+        (root / "docs" / ".claude-plugin" / "plugin.json").write_text("{}", encoding="utf-8")
+        (root / "docs" / "unlabeled.md").write_text("frontmatter なし", encoding="utf-8")
+        v, _ = lint(root)
+        assert any("unlabeled.md" in line for line in v), "docs_root の marker で規則全体が無効化された"
+        (root / "docs" / "unlabeled.md").unlink()
 
         # 4 種の違反を 1 つずつ検出できるか
         (root / "specs" / "orphan.md").write_text("x", encoding="utf-8")

@@ -1,0 +1,37 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "sync --repo-root <contained-fixture-repo> --binding github --adapter-fixture <contained-fixture-repo>/.dev-graph/remote.json --repeat 2",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "fc5d594aacd77e69a945319a37d39ccdfa0a2b1fa674f9064c480ba79a4b7e96",
+  "transcript_sha256": "0389961dfc818a62b6df016f2d76cf67b8c697f1986cfad451e448b98eb4fee9",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 480.0
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero"
+}

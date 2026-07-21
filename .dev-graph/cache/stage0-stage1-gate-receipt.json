@@ -1,0 +1,50 @@
+{
+  "schema_note": "Stage 0 technical gate (H7) の Stage 1 開始条件判定 receipt。published task spec は本ファイルを P13 の produced artifact としているが、H7 が不成立で終結したため、判定結果を確定させる目的で feature 終結時に生成した。",
+  "generated_by": "SYS-STAGE0-DISTRIBUTION-GATE-P07 (feature 終結処理)",
+  "generated_at": "2026-07-21T09:40:00+09:00",
+  "hypothesis": "H7",
+  "hypothesis_statement": "Skill 配布の成立経路 (URL 型 marketplace / npm source / Bootstrap Installer) が存在し、macOS/Windows 実機で E2E が成立する",
+  "verdict": "NOT_ESTABLISHED",
+  "stage1_entry_condition": "NOT_MET",
+  "acceptance_results": {
+    "A1": {
+      "statement": "2 経路以上の実機検証記録が存在する",
+      "result": "pass",
+      "detail": "distinct passing canonical path = 2 (url-marketplace / bootstrap-installer)。ただし §caveats のとおり検証 artifact は事後に撤去されたため再現不能。",
+      "evidence_ref": "docs/features/feat-stage0-distribution-gate/acceptance-record.md#6.2"
+    },
+    "A2": {
+      "statement": "採用経路が decision record として登録される",
+      "result": "not_executed",
+      "detail": "baseline §7.2 の fail-closed 契約により A3 未充足のため C01 writer を実行していない。system-spec/spec-state.json の decisions[] に本 feature の decision (D7) は存在しない。",
+      "evidence_ref": "docs/features/feat-stage0-distribution-gate/acceptance-record.md#2"
+    },
+    "A3": {
+      "statement": "Windows E2E が成功する",
+      "result": "blocked",
+      "detail": "Windows 実機での install・skill 列挙・冪等性・実環境非汚染はすべて pass したが、T-A3-03 (配布された skill を実際に実行して検証トークンを得る) が認証情報の不在により実行できなかった。blocked を pass へ読み替えていない。",
+      "evidence_ref": "docs/features/feat-stage0-distribution-gate/acceptance-record.md#6.4"
+    }
+  },
+  "normative_evidence": {
+    "E1_two_path_record": "pass",
+    "E2_macos_windows_e2e": "blocked",
+    "E3_c01_writer_receipt": "absent",
+    "E4_decision_exact_lookup": "absent",
+    "E5_parent_feature_depends_on": "pass",
+    "E6_beads_edge_parity": "pass"
+  },
+  "stage1_blocked_features": [
+    "feat-publisher-plugin",
+    "feat-dual-catalog-web"
+  ],
+  "caveats": [
+    "検証用 public リポジトリ daishiman/h7-probe は作者判断により削除された。docs/features/feat-stage0-distribution-gate/verification-artifacts/marketplace.json の外部 source は解決不能な状態であり、A1 の検証は再現できない。記録された観測は実行済みの事実として有効だが、再実行には artifact の再構築が必要である。",
+    "Windows E2E 実行用の GitHub Actions workflow (.github/workflows/h7-windows-e2e.yml) も作者判断により削除された。復元は git 履歴 (PR #12/#13) から可能。"
+  ],
+  "carry_forward_to_stage1": [
+    "remote URL 型 marketplace は外部 github source を指定してもリポジトリのサブディレクトリへスコープできない (path/subdir とも実行時に無視され repo 全体がクローンされる)。plugin は専用リポジトリのルートに置くか npm パッケージである必要がある。Publisher のアーキテクチャ選択に直接影響する。",
+    "CLI は github 型 source を SSH (git@github.com:) でクローンする。SSH 鍵のない環境では public リポジトリでも install が失敗する。想定利用者が非エンジニアの作者である以上、github 型 source は実利用条件で成立しない可能性が高い。source.type=npm (SSH 不要) が有力な代替候補だが未検証。",
+    "配布成功の判定には claude plugin details の component inventory が必須。validate --strict 通過・marketplace add / plugin install の exit 0・plugin list の enabled 表示がすべて揃っても skill が読み込まれていない状態が実在する。Publisher の受入設計に組み込むこと。"
+  ]
+}
