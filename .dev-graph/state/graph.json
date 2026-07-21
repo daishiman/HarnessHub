@@ -1,5 +1,5 @@
 {
-  "graph_revision": 268,
+  "graph_revision": 269,
   "nodes": [
     {
       "acceptance": [
@@ -25425,6 +25425,99 @@
       "title": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる",
       "tracker_binding": "beads",
       "updated_at": "2026-07-21T18:30:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "criteria-test の scenario-verdict が書き換え済み verdict を受入根拠に参照している検査の穴を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T14:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "criteria-test の OUT1 受入根拠が、再 trial を経た正当な live-trial verdict を指す状態にする。あわせて『scenario-verdict が指す run が最新かつ digest 書き換えを経ていない』ことを機械検査する。",
+      "graph_node_id": "issue-scenario-verdict-stale-live-trial-ref-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T14:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "184acbc が skill_dir_tree_sha だけを書き換えた 9 件の r3 verdict のうち 5 件が、criteria-test の scenario-verdict から OUT1 の受入根拠として明示パスで参照され続けている。lint-live-trial-verdict は最新 run しか見ないため緑になり、この参照は検査の外に落ちる。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md"
+      ],
+      "scope_in": [
+        "issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-21T14:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-render/criteria-test/scenario-verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "provenance",
+        "anti-goodhart",
+        "criteria-test"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "criteria-test の scenario-verdict が digest 書き換え済みの旧 r3 verdict を受入根拠に参照し続けている",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T14:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
