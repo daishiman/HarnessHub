@@ -26,6 +26,11 @@ from _common import ContractError, dump, run
 MUTATIONS = {"create", "update", "dep-add", "dep-remove", "close", "claim", "github-push", "gate-add"}
 PHASES = [f"P{i:02d}" for i in range(1, 14)]
 SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
+RFC3339_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
+# ready 候補が parity manifest に載らなかった理由の exact-set。
+# 「graph 管理外の bd 課題」と「graph 管理下なのに manifest から落ちた課題」は
+# 対処 owner が違う (前者は放置可・後者は sync 必要) ため、同じ袋へ入れない。
+UNMAPPED_REASONS = ("external_ref_absent", "parity_manifest_missing")
 # --op update が bd update へ転送してよい field の exact-set。
 # bridge が単一チョークポイントである以上、ここに無い field は運用上「存在しない」ため、
 # 受理する field は網羅的に宣言し、転送忘れ (silent drop) を構造的に起こせなくする。
@@ -325,8 +330,31 @@ def _package_projection(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _manifest_provenance(manifest: dict[str, Any]) -> dict[str, Any]:
+    """parity manifest の由来 (生成時刻・source graph digest) を必須検証する。
+
+    manifest は graph の snapshot にすぎない。いつ・どの graph から作ったかを持たないと、
+    古い snapshot が「parity confirmed」を主張しても下流 (C16 schedule) が stale を
+    機械判定できず、消えた/増えた node を黙って無視した ready-set が出る。
+    由来欠落は fail-closed で落とし、素性のない snapshot を流通させない。
+    """
+    generated_at = manifest.get("generated_at")
+    if not isinstance(generated_at, str) or RFC3339_UTC.fullmatch(generated_at) is None:
+        raise ContractError("parity manifest requires generated_at as RFC3339 UTC (YYYY-MM-DDThh:mm:ssZ)")
+    source_graph_digest = manifest.get("source_graph_digest")
+    if not isinstance(source_graph_digest, str) or SHA256.fullmatch(source_graph_digest) is None:
+        raise ContractError("parity manifest requires source_graph_digest=sha256:<64 lowercase hex>")
+    return {"generated_at": generated_at, "source_graph_digest": source_graph_digest}
+
+
+def _unmapped_reason(external_ref: str | None) -> str:
+    """ready 候補が manifest に載らない理由を、対処 owner が分かる粒度で決める。"""
+    return "parity_manifest_missing" if external_ref else "external_ref_absent"
+
+
 def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) -> dict[str, Any]:
     candidates = _rows(raw)
+    provenance = _manifest_provenance(manifest) if manifest is not None else None
     entries = manifest.get("nodes", []) if manifest else []
     if not isinstance(entries, list) or not all(isinstance(row, dict) for row in entries):
         raise ContractError("parity manifest nodes must be an array of objects")
@@ -344,7 +372,8 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
         issue_id = str(candidate.get("id") or "")
         expected = by_issue.get(issue_id)
         if not expected:
-            unmapped.append({"bd_issue_id": issue_id or None, "external_ref": _external_ref(candidate), "reason": "parity_manifest_missing"})
+            external_ref = _external_ref(candidate)
+            unmapped.append({"bd_issue_id": issue_id or None, "external_ref": external_ref, "reason": _unmapped_reason(external_ref)})
             continue
         shown = _issue(bd(["show", issue_id, "--json"], cwd=root), issue_id)
         try:
@@ -365,7 +394,14 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
             "graph_status": graph_status,
             "graph_depends_on": graph_dependencies,
         })
-    return {"ready_set": ready_set, "unmapped": unmapped, "conflicts": conflicts, "candidate_count": len(candidates)}
+    # 理由別件数を receipt へ載せ、unmapped を数えるだけで「graph 管理外が何件・
+    # 管理下の取りこぼしが何件」を下流と人間の双方が見分けられるようにする。
+    summary = {reason: sum(1 for row in unmapped if row["reason"] == reason) for reason in UNMAPPED_REASONS}
+    return {
+        "ready_set": ready_set, "unmapped": unmapped, "unmapped_summary": summary,
+        "conflicts": conflicts, "candidate_count": len(candidates),
+        "parity_provenance": provenance,
+    }
 
 
 def _verify_feature_rollup(manifest: dict[str, Any], issue_id: str) -> dict[str, Any]:
@@ -534,7 +570,7 @@ def main() -> int:
     if a.op == "update":
         payload["applied_fields"] = applied_fields
     if a.op == "ready" and isinstance(result, dict):
-        payload.update({key: result[key] for key in ("ready_set", "unmapped", "conflicts", "candidate_count")})
+        payload.update({key: result[key] for key in ("ready_set", "unmapped", "unmapped_summary", "conflicts", "candidate_count", "parity_provenance")})
     dump(payload)
     return 0
 

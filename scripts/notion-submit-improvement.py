@@ -74,16 +74,32 @@ def main():
         print(json.dumps(vars(args), ensure_ascii=False, indent=2)); return
 
     cfg, token = notion_config.require_or_skip("improvement-request")
-    if not cfg:
-        return 0
+    if not cfg or not token:
+        print("[ERR] Notion config / token resolution failed", file=sys.stderr)
+        sys.exit(2)
     skill_list_db = notion_config.get_db_id("skill-list")
     req_db = notion_config.get_db_id("improvement-request")
     if not (skill_list_db and req_db):
-        print("[SKIP] skill-list / improvement-request db_id missing in .notion-config.json")
-        return 0
+        missing = [
+            key
+            for key, value in (
+                ("skill-list", skill_list_db),
+                ("improvement-request", req_db),
+            )
+            if not value
+        ]
+        print(
+            f"[ERR] required Notion db_id missing: {', '.join(missing)}",
+            file=sys.stderr,
+        )
+        sys.exit(2)
     plugin_page_id = find_plugin_page(skill_list_db, args.plugin, token)
     if not plugin_page_id:
-        print(f"[ERR] スキル一覧に '{args.plugin}' が存在しません。先に notion-upsert-plugin.py で登録してください")
+        print(
+            f"[ERR] スキル一覧に '{args.plugin}' が存在しません。"
+            f" 先に python3 scripts/notion-upsert-plugin.py --plugin '{args.plugin}'"
+            " で登録してください"
+        )
         sys.exit(2)
 
     props = {
@@ -104,8 +120,15 @@ def main():
                       {"parent":{"database_id":req_db},"properties":props})
     if code >= 300:
         print(f"[ERR] create: {code} {data}"); sys.exit(2)
-    print(f"[CREATED] 改善要望: '{args.title}' -> {data['id']}")
-    print(f"  対象プラグイン: {args.plugin} (page {plugin_page_id})")
+    page_id = data.get("id")
+    page_url = data.get("url")
+    if not page_url and page_id:
+        page_url = f"https://www.notion.so/{str(page_id).replace('-', '')}"
+    if not page_url:
+        print("[ERR] create response did not include a page URL or page ID", file=sys.stderr)
+        sys.exit(2)
+    print(f"[CREATED] 改善要望: '{args.title}' -> {page_url}")
+    print(f"  対象プラグイン: {args.plugin}")
 
 
 if __name__ == "__main__":
