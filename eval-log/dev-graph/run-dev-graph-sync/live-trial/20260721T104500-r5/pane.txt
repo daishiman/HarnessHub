@@ -1,0 +1,1 @@
+capture unavailable: tmux session exited before STALL recovery; transcript.jsonl is the primary crash evidence.
