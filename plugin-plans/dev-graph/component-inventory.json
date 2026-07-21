@@ -571,7 +571,7 @@
       "goal_seek": {"engine": "inline", "fork": "subagent", "max_loops": 5},
       "feedback_contract": {
         "criteria": [
-          {"id": "IN1", "loop_scope": "inner", "text": "schedule-graph.py のready-setがblocked/draft/unconfirmed/evaluation非pass/readiness非completeを0件で含み、Beads receiptのgraph_status/graph_depends_on exact-setが現在graphと一致する", "verify_by": "script"},
+          {"id": "IN1", "loop_scope": "inner", "text": "schedule-graph.py のready-setがblocked/draft/unconfirmed/evaluation非pass/readiness非completeを0件で含み、Beads receiptのgraph_status/graph_depends_on exact-setが現在graphと一致し、parity_provenance.source_graph_digestが現graphのcanonical digestと不一致なら停止する", "verify_by": "script"},
           {"id": "OUT1", "loop_scope": "outer", "text": "推薦タスクが全依存 (depends_on) 充足済み (ready) であることを受入テストが確認する", "verify_by": "live-trial"},
           {"id": "OUT2", "loop_scope": "outer", "text": "提示した並列バッチ内で resource_scope (touches) が重複するノードペアが 0 件 (conflict-free) であることを受入テストが確認する", "verify_by": "test"},
           {"id": "OUT3", "loop_scope": "outer", "text": "ready taskごとに一意なsuggested_branchとC09 worktree claim commandが返り、同一graph_node_idの二重claimはC27が0件に抑える", "verify_by": "test"}

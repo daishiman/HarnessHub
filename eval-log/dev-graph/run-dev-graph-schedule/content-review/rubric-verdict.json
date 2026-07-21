@@ -2,18 +2,18 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
-    "skill_md_sha256": "ed6459967c45115aaefd728f145c62747ddc5c189ead5475cca1df71fd03af15"
+    "skill_md_sha256": "2124bcd327bbd9a7e00ced1b6a0df2690e2487ccca9c35fab6e43ac490c33c0a"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "assign-skill-design-evaluator-20260721",
-  "reviewed_at": "2026-07-21",
+  "reviewer": "assign-skill-design-evaluator-20260722-r2",
+  "reviewed_at": "2026-07-22",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
-    "inconsistency": 0,
+    "inconsistency": 1,
     "dependency_break": 0,
     "smell": 1
   },
@@ -21,19 +21,24 @@
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "FM-001/NM-001 維持: name=run-dev-graph-schedule は run- prefix + kebab-case でディレクトリ basename と一致し、今回の変更で frontmatter の命名・kind・hierarchy に影響が出ていない",
-      "BD-003/PD-001 維持: 本文は 93 行 (上限 300 / セクション上限 100 内) で、停止条件の追記は既存の CLI 契約段落 1 箇所に集約され、章構成 (Purpose & Output Contract / ゴールシーク実行 / Criteria acceptance / Gotchas) を増殖させていない",
-      "PG-001 維持: responsibilities[] の R1-elicit / R2-plan / R3-schedule に対応する prompts/*.md が 3 件とも存在し、R3-schedule.md Layer 6 の『前段 receipt/digest と後段 input digest を一致させ stale handoff を拒否する』が今回の stale 停止条件と同方向で、責務プロンプトと SKILL.md が背反しない",
-      "単一責務の保持: 追記は schedule の入力受入 (fail-closed 条件) に限定され、manifest 生成・parity 修復といった C03 sync 側の責務を schedule へ持ち込んでいない。read-only 出力契約 (graph/tracker/lease を変更しない) も不変",
-      "SSOT 参照の明示: 追記文が (execution-tracker-contract §10) を本文中で名指ししており、契約正本と skill 記述の二重管理を避ける参照規約に沿う"
+      "機械採点 PASS: render-findings-score.py (rubric_refs = ref-skill-design-rubric/references/rubric.json → assign-skill-design-evaluator/references/rubric.json, rubric_version=1.3.0, rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d, composition_hash=sha256:9511f7343ff87ef390881aa80b0fa0e30069af14440a3e68559f18bfb3b2d9c1) で score=97 / threshold=80 / passed=true、required_fixes=0、pending_human=0、machine_checks=[]。減点は FM-005 (low) の 1 件のみ",
+      "P0 machine checks 全 PASS: scripts/validate-frontmatter.py → ok (exit 0)、scripts/lint-skill-name.py → ok (exit 0)、scripts/lint-skill-tree.py <skill-dir> → ok (exit 0)",
+      "FM-001/NM-001 維持: name=run-dev-graph-schedule は ^(run|ref|assign|wrap|delegate)-[a-z0-9][a-z0-9-]*$ に適合しディレクトリ basename と一致。今回の diff は name/kind/prefix/hierarchy に触れていない",
+      "BD-003/PD-001 維持: 本文は frontmatter を除き 92 行 (BD-003 上限 300 / PD-001 上限 100 の内側)。今回の追記は既存章 (Purpose & Output Contract の L87 段落、完了チェックリスト、Criteria acceptance) へ吸収され、章を増殖させていない。heading 構成は `## Purpose & Output Contract` / `## ゴールシーク実行` (+ 5 subsection) / `## Criteria acceptance` / `## Gotchas` の 11 本で前ラウンドから不変",
+      "BD-001 維持: `## Purpose & Output Contract` の厳格一致 heading が本文冒頭 (L64) に存在する",
+      "PG-001 手動検証 PASS: responsibilities[] の R1-elicit / R2-plan / R3-schedule に対応する prompts/R1-elicit.md / R2-plan.md / R3-schedule.md が 3 件とも実在し responsibility_refs と 1:1 対応する。今回の追記で責務定義と本文の背反は生じていない",
+      "単一責務の保持: 追記内容は schedule の入力受入 (fail-closed 停止条件) と、その停止からの出口手順の提示に限られ、parity manifest 生成そのものの責務を schedule skill へ移していない。read-only 出力契約 (graph/tracker/lease を変更せず receipt だけを eval-log/ へ書く) も不変",
+      "script_refs が dead ref になっていない: 追加済みの ../../scripts/build-parity-manifest.py は本文 L87 と L107 で実際に呼ばれる script であり、宣言だけで本文から参照されない状態にはなっていない。今回追記した bd-bridge.py も既存 script_refs に含まれる",
+      "携帯する評価基準の drift 無し: frontmatter feedback_contract IN1 と plugin-plans/dev-graph/component-inventory.json#C15 の IN1 が同一文字列で同期している"
     ],
     "negative_feedback": [
-      "smell (severity=low / 非ブロッキング): 追記により L87 の 1 段落が 7 つの独立した停止条件 (lease snapshot 欠落 / binding 別 ready 算出 / parity_provenance 必須 / stale digest / 回復手順 / unmapped 引き継ぎ / scope・max-parallel / lease expiry / eval-log containment) を 1 文塊で保持しており、条件の追加ごとに可読性が単調に劣化する。将来さらに停止条件が増える場合は箇条書きへの分解を推奨する。現時点では行数上限・章構成規約に違反せず、記述内容自体は実装と一致するため減点対象外"
+      "inconsistency (FM-005 / severity=low / 非ブロッキング / 本変更起因ではない): description が 'feature ready と task ready を分離したいとき、…' と英語名詞で始まるため FM-005 の check (英語動詞集合 or する/行う/実行/生成/採点/評価/構築/参照/読み取り/レビュー/管理 で終わる日本語動詞・名詞句で開始) を満たさず、機械採点の唯一の減点 (97/100) となる。description は本 diff で変更されておらず回帰ではない。採点器 render-findings-score.py の日本語動詞マーカーに『〜したい』形が含まれないための取りこぼしで、リポジトリ全体が同じ『〜したいときに使う。』trigger 形式を採用しているため、対象 skill の書き換えではなく採点器側の是正が筋 (plugins/harness-creator/lessons-learned/2026-07-22-posttooluse-skill-assign-skill-design-evaluator.md に同一原因が記録済み)",
+      "smell (severity=low / 非ブロッキング / 前ラウンドから悪化): L87 の 1 段落が 953 文字へ肥大した (前ラウンド 731 文字 → +222 文字 / +30%)。この 1 文塊が lease snapshot 欠落 / binding 別 ready 算出 / parity_provenance 必須 / stale digest 停止 / 2 段回復手順 (2 コマンドの実文字列を含む) / 2 段目を省くと再停止する理由 / unmapped 引き継ぎ / --scope / --max-parallel / lease expiry / 実行前後 digest 不変 / eval-log containment の 12 個の受入・停止条件を保持しており、可読性は前ラウンドからさらに単調悪化した。特に今回はコマンド行 2 本が散文の中に埋め込まれたため、コピーして実行する用途に対して視認性が悪い (§10 は同じ手順を fenced code block で持っている)。行数上限 (BD-003/PD-001) と章構成規約には違反せず記述内容も実装と一致するため機械減点の対象外だが、次に停止条件が増える場合は箇条書き分解ないし回復手順の code block 化を強く推奨する"
     ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "incremental profile の focused combined review (30思考法は未使用)。評価 slice は SKILL.md L87 / execution-tracker-contract.md §10 / schedule-graph.py / bd-bridge.py に限定。実測 sha256=ed645996... に対し rubric 観点 (命名 FM/NM、構造 BD/PD、責務プロンプト PG、単一責務、SSOT 参照) で high severity 0 件。\n\nslice 外の pending 事項 (本 verdict に未算入、報告のみ): (1) REG-001 相当 — scripts/validate-build-trace.py が dev-graph の build-trace.json に doc_coverage 欠落で exit 1。commit 6a46c39 以来の repository 全体の schema 乖離で本変更起因ではない。(2) 評価器自身の穴 — plugins/harness-creator/skills/assign-skill-design-evaluator/scripts/render-findings-score.py の check_rule() が未実装 rule に対し None (= 合格扱い) を返し、PD-002 / KL-001..005 / PG-001 / PG-002 / BND-001 / REG-001 の 10 rule が採点されない。本 verdict では該当 rule を手動判定で補完した。いずれも run-skill-rubric-governance へのエスカレーション対象。"
+  "notes": "前ラウンド (sha=d05cab10..) の elegance 指摘『回復手順が 1 段』への是正後の再評価。SKILL.md を実測した sha256=2124bcd3.. に対し skill 設計 rubric 準拠を評価した。合成は L0 + L2 のみ (plugins/skill-governance-config/config/rubric-registry.json に dev-graph ドメインの L1 登録が無いため L1 はスキップ)。\n\n機械採点 score=97 / threshold=80 / passed=true、findings は FM-005 (low) 1 件、required_fixes 0、pending_human 0、high severity 0。\n\n前ラウンドで記録した L87 段落の一文塊化 smell は解消されず、条件が 2 つ (2 段回復手順とその理由) 増えたぶん 731→953 文字へ悪化したため severity=low の smell として悪化を明記して据え置いた。elegance 側で前ラウンド指摘の omission (回復手順 1 段) は解消済みと判定しており、elegance-verdict.json に実行裏づけを記録している。\n\n手動補完した rule (採点器 render-findings-score.py の check_rule() が未実装で機械採点に載らないもの): PD-002 = 実質 PASS (冒頭 30 行内に `## Purpose & Output Contract` があり『混ぜない』『変更せず』『推薦しない』の禁則も存在。ただし rubric が例示する MUST/NEVER/禁止/必ず の字面は無い)、PG-001 = PASS (prompts/*.md 3 件が実在。rubric 記述は .yaml を要求しておりリポジトリ実態 (.md) と乖離)、PG-002 = N/A (対応する SubAgent.md が無く responsibility アンカーが 0 件)、REG-001 = 部分 PASS (validate-plugin-completeness.py 側は OK、validate-build-trace.py は対象 build-trace の doc_coverage 欠落で exit 1)。\n\nslice 外の pending 事項 (本 verdict に未算入、報告のみ): (1) 採点器の rule 網羅率 — rubric 41 rule (L0) に対し check_rule() の実装は FM-001..005 / BD-001..004 / NM-001..003 / PD-001 / RG-001 の 14 件のみで、残りは TODO(human) マーカーも無いため pending_human にも findings にも現れず無言で通過する。(2) FM-005 の日本語動詞マーカー不足。(3) scripts/validate-build-trace.py の doc_coverage 欠落による repository 全体の schema 乖離。いずれも run-skill-rubric-governance へのエスカレーション対象。"
 }

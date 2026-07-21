@@ -20,7 +20,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from _common import ContractError, atomic_json, contained, dump, load_json, repository_eval_root, run, utc_now
+from _common import (
+    ContractError, atomic_json, canonical_digest, contained, dump, load_json,
+    repository_eval_root, run, utc_now,
+)
 from node_transaction import ensure_no_pending_transaction, graph_operation_lock
 
 
@@ -83,14 +86,12 @@ def _sha(value: bytes | None) -> str | None:
 
 
 def _canonical_digest(value: Any) -> str:
-    """graph の意味的 digest。整形差 (空白・key 順) で stale 判定が揺れないようにする。
+    """graph の意味的 digest。式の正本は `_common.canonical_digest`。
 
     C05 render-graph-html が registration receipt の鮮度検査に使う式と同一。parity manifest
     側も同じ式で `source_graph_digest` を作る契約にし、比較を単純な文字列一致へ落とす。
     """
-    return "sha256:" + hashlib.sha256(
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    ).hexdigest()
+    return canonical_digest(value)
 
 
 def _read_optional(path: Path | None) -> bytes | None:

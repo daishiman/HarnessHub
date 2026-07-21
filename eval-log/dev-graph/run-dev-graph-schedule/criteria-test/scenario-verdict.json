@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
     "component_id": "C15",
-    "skill_md_sha256": "ed6459967c45115aaefd728f145c62747ddc5c189ead5475cca1df71fd03af15"
+    "skill_md_sha256": "2124bcd327bbd9a7e00ced1b6a0df2690e2487ccca9c35fab6e43ac490c33c0a"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-provenance-worktree-20260721",
+  "reviewer": "parity-manifest-regeneration-worktree-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -16,24 +16,26 @@
       "verify_by": "script",
       "evidence_kind": "hybrid",
       "test_refs": [
+        "independent: schedule-graph.py current/stale Beads parity probes",
+        "plugins/dev-graph/tests/test_parity_manifest_provenance.py::test_builder_output_satisfies_c28_provenance_and_c16_digest",
+        "plugins/dev-graph/tests/test_parity_manifest_provenance.py::test_c16_schedule_stops_on_missing_or_stale_parity_provenance",
         "plugins/dev-graph/tests/test_semantic_contract_cli_scheduler_20260713.py::test_scheduler_rejects_each_incomplete_gate_for_self_and_bd_ready",
-        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_schedule_mixed_binding_parity_expiry_scope_and_max_parallel",
-        "independent: schedule-graph.py current/stale Beads parity probes"
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_schedule_mixed_binding_parity_expiry_scope_and_max_parallel"
       ],
-      "observed": "Independent 2026-07-20 audit confirmed incomplete gates admit 0 nodes. In mixed Beads/GitHub/none probes, Beads was admitted only when receipt graph_status/graph_depends_on exactly matched the current node; a stale dependency receipt was excluded with beads_parity_stale_or_unconfirmed."
+      "observed": "Independent 2026-07-20 audit confirmed incomplete gates admit 0 nodes. In mixed Beads/GitHub/none probes, Beads was admitted only when receipt graph_status/graph_depends_on exactly matched the current node; a stale dependency receipt was excluded with beads_parity_stale_or_unconfirmed. 2026-07-22 追記 (IN1 本文へ graph 全体 digest 突合の停止条件を写像): parity_provenance 欠落と source_graph_digest 不一致がいずれも ContractError で schedule を停止させ、推薦を 1 件も出さないことを test_c16_schedule_stops_on_missing_or_stale_parity_provenance が固定。回復経路として build-parity-manifest.py の出力が C28 の由来検査と C16 の canonical digest 突合をそのまま通ることを test_builder_output_satisfies_c28_provenance_and_c16_digest が固定し、停止条件に出口があることを機械検証した。"
     },
     "OUT1": {
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "schedule-positive-ready-set",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T051500-r8/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T051500-r8/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T051500-r8/transcript.jsonl",
         "independent: fresh evaluator replay of r6 task, pane, execution receipt, graph, and canonical lease ledger"
       ],
-      "observed": "bd-bridge.py / schedule-graph.py の変更で closure digest が動いたため 2026-07-21 に再実走 (r6)。対象 Skill を最初の tool call で起動し、schedule 実行と C17 検証をそれぞれ別 Agent へ分離した。read-only receipt は LT-TASK-001 を唯一の ready task とし、未充足依存 0・lease/resource conflict 0・一意な branch/claim hint・graph/tracker/lease digest 不変。fresh evaluator が同一引数で schedule-graph.py を再実行し executed_at 以外が receipt と完全一致することを確認して PASS。"
+      "observed": "回復手順を 2 段 (build-parity-manifest.py での manifest 再生成 + bd-bridge.py --op ready での C28 receipt 取り直し) へ是正したことで宣言済み挙動閉包 digest が動いたため 2026-07-22 に再実走 (r8)。対象 Skill を Skill tool で起動し、R3-schedule と C17 verifier をそれぞれ別 Agent へ分離 (C17 は dev-graph-parallel-safety-verifier)。read-only receipt は LT-TASK-001 を唯一の ready task とし、未充足依存 0・lease/resource conflict 0・一意な branch/claim hint・graph/tracker/lease digest 不変。fresh evaluator が fixture の graph/lease へ shasum を自ら実行して receipt の before/after 双方と一致することを確認し、goal-seek の hash 検査スクリプトも 再実行して PASS。独立 verifier receipt は verified=true (13 checks)。"
     },
     "OUT2": {
       "status": "PASS",

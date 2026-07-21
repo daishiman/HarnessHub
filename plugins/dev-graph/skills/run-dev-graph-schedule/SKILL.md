@@ -10,7 +10,7 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--scope ID] [--max-parallel N]"
 allowed-tools: [Read, Bash, AskUserQuestion, Task, Skill, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/schedule-graph.py, ../../scripts/manage-worktree-lease.py, ../../scripts/bd-bridge.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/schedule-graph.py, ../../scripts/manage-worktree-lease.py, ../../scripts/bd-bridge.py, ../../scripts/build-parity-manifest.py]
 schema_refs: [../../schemas/graph-node.schema.json]
 responsibility_refs:
   - prompts/R1-elicit.md
@@ -43,7 +43,7 @@ feedback_contract:
   criteria:
     - id: IN1
       loop_scope: inner
-      text: "schedule-graph.py のready-setがblocked/draft/unconfirmed/evaluation非pass/readiness非completeを0件で含み、Beads receiptのgraph_status/graph_depends_on exact-setが現在graphと一致する"
+      text: "schedule-graph.py のready-setがblocked/draft/unconfirmed/evaluation非pass/readiness非completeを0件で含み、Beads receiptのgraph_status/graph_depends_on exact-setが現在graphと一致し、parity_provenance.source_graph_digestが現graphのcanonical digestと不一致なら停止する"
       verify_by: script
     - id: OUT1
       loop_scope: outer
@@ -84,7 +84,7 @@ python3 ../../scripts/schedule-graph.py \
   --eval-log "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-execution.json"
 ```
 
-`--leases`を明示したのにsnapshotが存在しない場合は空扱いせず停止する。binding混在時は、`beads`だけを`--ready-json`の`edge_parity.confirmed=true`との積集合にし、`github/none`はlocal gateから計算する。`--ready-json`のC28 receiptは`parity_provenance`(`generated_at`/`source_graph_digest`)を必須とし、`source_graph_digest`が現graphのcanonical digestと一致しない場合はstale snapshotとして停止する (execution-tracker-contract §10)。回復手順はparity manifestの再生成であり、digestの書き換えではない。C28の`unmapped`/`conflicts`は判定に使わず`source: "bd-bridge"`付きでreportへ引き継ぐ。`--scope`は指定nodeのsubtree、`--max-parallel`は1 batchの上限として適用する。期限切れleaseはactive扱いせず、graph/tracker/leaseの実行前後digestが1つでも変われば結果を破棄する。`--eval-log`はrepositoryの`eval-log/`配下だけを許可する。
+`--leases`を明示したのにsnapshotが存在しない場合は空扱いせず停止する。binding混在時は、`beads`だけを`--ready-json`の`edge_parity.confirmed=true`との積集合にし、`github/none`はlocal gateから計算する。`--ready-json`のC28 receiptは`parity_provenance`(`generated_at`/`source_graph_digest`)を必須とし、`source_graph_digest`が現graphのcanonical digestと一致しない場合はstale snapshotとして停止する (execution-tracker-contract §10)。回復手順は2段で、digestの書き換えではない: (1) `python3 ../../scripts/build-parity-manifest.py --repo-root "$DEV_GRAPH_ROOT" --out <manifest>` でmanifestを再生成し、(2) `python3 ../../scripts/bd-bridge.py --op ready --repo-root "$DEV_GRAPH_ROOT" --parity-manifest <manifest> > <ready json>` でC28 receiptを取り直す。C16が突合するのは`--ready-json`に載った`parity_provenance`なので、(2)を省くと古いdigestが残り同じ停止が再発する。C28の`unmapped`/`conflicts`は判定に使わず`source: "bd-bridge"`付きでreportへ引き継ぐ。`--scope`は指定nodeのsubtree、`--max-parallel`は1 batchの上限として適用する。期限切れleaseはactive扱いせず、graph/tracker/leaseの実行前後digestが1つでも変われば結果を破棄する。`--eval-log`はrepositoryの`eval-log/`配下だけを許可する。
 
 ## ゴールシーク実行
 
@@ -104,6 +104,7 @@ python3 ../../scripts/schedule-graph.py \
 - [ ] 各 task の suggested_branch が `devgraph/<graph_node_id>` で claim command が public CLI 形式である
 - [ ] 実行前後の graph/tracker/lease digest が同一である
 - [ ] lease pathがgit common-dirの正本と一致し、Beads receiptのstatus/depends_on exact-setが現在graphに一致する
+- [ ] Beads receiptの`parity_provenance.source_graph_digest`が現graphのcanonical digestと一致する (不一致ならstale snapshotとして停止する。回復は`build-parity-manifest.py`でのmanifest再生成と`bd-bridge.py --op ready`でのreceipt取り直しの2段であり、digestの書き換えではない)
 - [ ] C17独立verifierがready/batch/lease authorityを再計算してPASSしている
 
 ### ゴールシークループ
@@ -139,7 +140,7 @@ PY
 
 ## Criteria acceptance
 
-- `criteria:IN1`: `schedule-graph.py` の ready-set に blocked/draft/unconfirmed/evaluation非pass/readiness非complete または現在graphとstatus/depends_on exact-setが違うBeads候補が0件であることをscript testで検証する。
+- `criteria:IN1`: `schedule-graph.py` の ready-set に blocked/draft/unconfirmed/evaluation非pass/readiness非complete または現在graphとstatus/depends_on exact-setが違うBeads候補が0件であることと、`parity_provenance.source_graph_digest`が現graphのcanonical digestと不一致なら推薦を出さず停止することをscript testで検証する。node単位のexact-set照合はmanifestに載ったnodeしか見ないため、snapshot生成後に追加/削除されたnodeはgraph全体digestの突合でしか捕まらない (execution-tracker-contract §10)。
 - `criteria:OUT1`: 推薦 task は全 `depends_on` がdoneで、未充足依存を持つ候補が ready-set に0件であることを受入テストで検証する。
 - `criteria:OUT2`: 同一parallel batch内の `resource_scope.touches` 重複ペアが0件で、git common-dir正本のactive leaseと衝突する候補を推薦せず、C17独立verifierが再計算PASSすることを受入テストで検証する。
 - `criteria:OUT3`: ready taskごとに一意な `suggested_branch=devgraph/<graph_node_id>` と `dev-graph worktree claim <id>` commandを返し、C27が同一graph_node_idの二重claimを0件に抑止することを受入テストで検証する。実行receiptは`eval-log/`だけへ書く。

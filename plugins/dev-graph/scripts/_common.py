@@ -92,6 +92,18 @@ def repository_eval_root(root: Path) -> Path:
     return resolved
 
 
+def canonical_digest(value: Any) -> str:
+    """graph の意味的 digest。整形差 (空白・key 順) で stale 判定が揺れないようにする。
+
+    C05 render-graph-html の鮮度検査・C16 schedule-graph の stale 停止・parity manifest の
+    `source_graph_digest` (execution-tracker-contract §10) が同一値を突合する契約なので、
+    式はここ 1 箇所だけに置く。別々に書くと片方の整形を変えた瞬間に停止条件が壊れる。
+    """
+    return "sha256:" + hashlib.sha256(
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
 def stable_id(prefix: str, *parts: str, size: int = 16) -> str:
     digest = hashlib.sha256("\0".join(parts).encode()).hexdigest()[:size]
     return f"{prefix}{digest}"

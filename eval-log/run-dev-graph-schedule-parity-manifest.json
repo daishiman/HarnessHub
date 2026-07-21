@@ -1,1685 +1,1687 @@
 {
+  "generated_at": "2026-07-21T19:26:36Z",
   "nodes": [
     {
-      "graph_node_id": "feat-stage0-distribution-gate",
-      "bd_issue_id": "HarnessHub-j71",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "feat-hub-foundation",
-      "bd_issue_id": "HarnessHub-37h",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "feat-domain-model-db",
-      "bd_issue_id": "HarnessHub-u6q",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-hub-foundation"
-      ]
-    },
-    {
-      "graph_node_id": "feat-auth-tenancy",
-      "bd_issue_id": "HarnessHub-15h",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-domain-model-db",
-        "feat-hub-foundation"
-      ]
-    },
-    {
-      "graph_node_id": "feat-publish-pipeline",
-      "bd_issue_id": "HarnessHub-dfm",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-auth-tenancy",
-        "feat-domain-model-db"
-      ]
-    },
-    {
-      "graph_node_id": "feat-publisher-plugin",
-      "bd_issue_id": "HarnessHub-zdh",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-publish-pipeline",
-        "feat-stage0-distribution-gate"
-      ]
-    },
-    {
-      "graph_node_id": "feat-dual-catalog-web",
-      "bd_issue_id": "HarnessHub-dhy",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-publish-pipeline",
-        "feat-stage0-distribution-gate"
-      ]
-    },
-    {
-      "graph_node_id": "feat-workspace-governance",
-      "bd_issue_id": "HarnessHub-5l3",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-auth-tenancy",
-        "feat-dual-catalog-web"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P01",
-      "bd_issue_id": "HarnessHub-37h.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P02",
-      "bd_issue_id": "HarnessHub-37h.2",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P01"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P03",
-      "bd_issue_id": "HarnessHub-37h.3",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P02"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P04",
-      "bd_issue_id": "HarnessHub-37h.4",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P03"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P05",
-      "bd_issue_id": "HarnessHub-37h.5",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P04"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P06",
-      "bd_issue_id": "HarnessHub-37h.6",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P05"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P07",
-      "bd_issue_id": "HarnessHub-37h.7",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P06"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P08",
-      "bd_issue_id": "HarnessHub-37h.8",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P07"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P09",
-      "bd_issue_id": "HarnessHub-37h.9",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P08"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P10",
-      "bd_issue_id": "HarnessHub-37h.10",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P09"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P11",
-      "bd_issue_id": "HarnessHub-37h.11",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P10"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P12",
-      "bd_issue_id": "HarnessHub-37h.12",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P11"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HUB-FOUNDATION-P13",
-      "bd_issue_id": "HarnessHub-37h.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HUB-FOUNDATION-P12"
-      ]
-    },
-    {
-      "graph_node_id": "issue-audit-followups-20260717",
-      "bd_issue_id": "HarnessHub-xon",
-      "graph_status": "draft",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "feat-user-org-admin",
-      "bd_issue_id": "HarnessHub-xwt",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-auth-tenancy",
-        "feat-domain-model-db",
-        "feat-hub-foundation"
-      ]
-    },
-    {
-      "graph_node_id": "feat-metrics-tracking",
-      "bd_issue_id": "HarnessHub-lm7",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-auth-tenancy",
-        "feat-domain-model-db",
-        "feat-hub-foundation",
-        "feat-user-org-admin"
-      ]
-    },
-    {
-      "graph_node_id": "feat-hearing-intake",
-      "bd_issue_id": "HarnessHub-o2i",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-auth-tenancy",
-        "feat-domain-model-db",
-        "feat-hub-foundation"
-      ]
-    },
-    {
-      "graph_node_id": "feat-build-pipeline-board",
-      "bd_issue_id": "HarnessHub-9am",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-auth-tenancy",
-        "feat-domain-model-db",
-        "feat-hearing-intake",
-        "feat-hub-foundation",
-        "feat-publish-pipeline"
-      ]
-    },
-    {
-      "graph_node_id": "feat-feedback-loop",
-      "bd_issue_id": "HarnessHub-1vb",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-auth-tenancy",
-        "feat-domain-model-db",
-        "feat-hub-foundation",
-        "feat-publish-pipeline"
-      ]
-    },
-    {
-      "graph_node_id": "feat-docs-cms",
-      "bd_issue_id": "HarnessHub-9wb",
-      "graph_status": "active",
-      "depends_on": [
-        "feat-auth-tenancy",
-        "feat-domain-model-db",
-        "feat-hub-foundation"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P01",
-      "bd_issue_id": "HarnessHub-xwt.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P02",
-      "bd_issue_id": "HarnessHub-xwt.2",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P01"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P03",
-      "bd_issue_id": "HarnessHub-xwt.3",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P02"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P04",
-      "bd_issue_id": "HarnessHub-xwt.4",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P03"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P05",
-      "bd_issue_id": "HarnessHub-xwt.5",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P04"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P06",
-      "bd_issue_id": "HarnessHub-xwt.6",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P05"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P07",
-      "bd_issue_id": "HarnessHub-xwt.7",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P06"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P08",
-      "bd_issue_id": "HarnessHub-xwt.8",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P07"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P09",
-      "bd_issue_id": "HarnessHub-xwt.9",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P08"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P10",
-      "bd_issue_id": "HarnessHub-xwt.10",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P09"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P11",
-      "bd_issue_id": "HarnessHub-xwt.11",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P10"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P12",
-      "bd_issue_id": "HarnessHub-xwt.12",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P11"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-USER-ORG-ADMIN-P13",
-      "bd_issue_id": "HarnessHub-xwt.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-USER-ORG-ADMIN-P12"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P01",
-      "bd_issue_id": "HarnessHub-o2i.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P02",
-      "bd_issue_id": "HarnessHub-o2i.2",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P01"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P03",
-      "bd_issue_id": "HarnessHub-o2i.3",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P02"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P04",
-      "bd_issue_id": "HarnessHub-o2i.4",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P03"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P05",
-      "bd_issue_id": "HarnessHub-o2i.5",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P04"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P06",
-      "bd_issue_id": "HarnessHub-o2i.6",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P05"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P07",
-      "bd_issue_id": "HarnessHub-o2i.7",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P06"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P08",
-      "bd_issue_id": "HarnessHub-o2i.8",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P07"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P09",
-      "bd_issue_id": "HarnessHub-o2i.9",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P08"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P10",
-      "bd_issue_id": "HarnessHub-o2i.10",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P09"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P11",
-      "bd_issue_id": "HarnessHub-o2i.11",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P10"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P12",
-      "bd_issue_id": "HarnessHub-o2i.12",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P11"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-HEARING-INTAKE-P13",
-      "bd_issue_id": "HarnessHub-o2i.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-HEARING-INTAKE-P12"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P01",
-      "bd_issue_id": "HarnessHub-9wb.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P02",
-      "bd_issue_id": "HarnessHub-9wb.2",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P01"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P03",
-      "bd_issue_id": "HarnessHub-9wb.3",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P02"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P04",
-      "bd_issue_id": "HarnessHub-9wb.4",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P03"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P05",
-      "bd_issue_id": "HarnessHub-9wb.5",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P04"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P06",
-      "bd_issue_id": "HarnessHub-9wb.6",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P05"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P07",
-      "bd_issue_id": "HarnessHub-9wb.7",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P06"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P08",
-      "bd_issue_id": "HarnessHub-9wb.8",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P07"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P09",
-      "bd_issue_id": "HarnessHub-9wb.9",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P08"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P10",
-      "bd_issue_id": "HarnessHub-9wb.10",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P09"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P11",
-      "bd_issue_id": "HarnessHub-9wb.11",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P10"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P12",
-      "bd_issue_id": "HarnessHub-9wb.12",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P11"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOCS-CMS-P13",
-      "bd_issue_id": "HarnessHub-9wb.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOCS-CMS-P12"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P01",
-      "bd_issue_id": "HarnessHub-9am.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P02",
-      "bd_issue_id": "HarnessHub-9am.2",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P01"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P03",
-      "bd_issue_id": "HarnessHub-9am.3",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P02"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P04",
-      "bd_issue_id": "HarnessHub-9am.4",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P03"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P05",
-      "bd_issue_id": "HarnessHub-9am.5",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P04"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P06",
-      "bd_issue_id": "HarnessHub-9am.6",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P05"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P07",
-      "bd_issue_id": "HarnessHub-9am.7",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P06"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P08",
-      "bd_issue_id": "HarnessHub-9am.8",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P07"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P09",
-      "bd_issue_id": "HarnessHub-9am.9",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P08"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P10",
-      "bd_issue_id": "HarnessHub-9am.10",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P09"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P11",
-      "bd_issue_id": "HarnessHub-9am.11",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P10"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P12",
-      "bd_issue_id": "HarnessHub-9am.12",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P11"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P13",
-      "bd_issue_id": "HarnessHub-9am.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-BUILD-PIPELINE-BOARD-P12"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P01",
-      "bd_issue_id": "HarnessHub-1vb.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P02",
-      "bd_issue_id": "HarnessHub-1vb.2",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P01"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P03",
-      "bd_issue_id": "HarnessHub-1vb.3",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P02"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P04",
-      "bd_issue_id": "HarnessHub-1vb.4",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P03"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P05",
-      "bd_issue_id": "HarnessHub-1vb.5",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P04"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P06",
-      "bd_issue_id": "HarnessHub-1vb.6",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P05"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P07",
-      "bd_issue_id": "HarnessHub-1vb.7",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P06"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P08",
-      "bd_issue_id": "HarnessHub-1vb.8",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P07"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P09",
-      "bd_issue_id": "HarnessHub-1vb.9",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P08"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P10",
-      "bd_issue_id": "HarnessHub-1vb.10",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P09"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P11",
-      "bd_issue_id": "HarnessHub-1vb.11",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P10"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P12",
-      "bd_issue_id": "HarnessHub-1vb.12",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P11"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-FEEDBACK-LOOP-P13",
-      "bd_issue_id": "HarnessHub-1vb.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-FEEDBACK-LOOP-P12"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P01",
-      "bd_issue_id": "HarnessHub-lm7.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P02",
-      "bd_issue_id": "HarnessHub-lm7.2",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P01"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P03",
-      "bd_issue_id": "HarnessHub-lm7.3",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P02"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P04",
-      "bd_issue_id": "HarnessHub-lm7.4",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P03"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P05",
-      "bd_issue_id": "HarnessHub-lm7.5",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P04"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P06",
-      "bd_issue_id": "HarnessHub-lm7.6",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P05"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P07",
-      "bd_issue_id": "HarnessHub-lm7.7",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P06"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P08",
-      "bd_issue_id": "HarnessHub-lm7.8",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P07"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P09",
-      "bd_issue_id": "HarnessHub-lm7.9",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P08"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P10",
-      "bd_issue_id": "HarnessHub-lm7.10",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P09"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P11",
-      "bd_issue_id": "HarnessHub-lm7.11",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P10"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P12",
-      "bd_issue_id": "HarnessHub-lm7.12",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P11"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-METRICS-TRACKING-P13",
-      "bd_issue_id": "HarnessHub-lm7.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-METRICS-TRACKING-P12"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01",
-      "bd_issue_id": "HarnessHub-u6q.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02",
-      "bd_issue_id": "HarnessHub-u6q.2",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P01"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03",
-      "bd_issue_id": "HarnessHub-u6q.3",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P02"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04",
-      "bd_issue_id": "HarnessHub-u6q.4",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P03"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05",
-      "bd_issue_id": "HarnessHub-u6q.5",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P04"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06",
-      "bd_issue_id": "HarnessHub-u6q.6",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P05"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07",
-      "bd_issue_id": "HarnessHub-u6q.7",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P06"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08",
-      "bd_issue_id": "HarnessHub-u6q.8",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P07"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09",
-      "bd_issue_id": "HarnessHub-u6q.9",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P08"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10",
-      "bd_issue_id": "HarnessHub-u6q.10",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P09"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11",
-      "bd_issue_id": "HarnessHub-u6q.11",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P10"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12",
-      "bd_issue_id": "HarnessHub-u6q.12",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P11"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P13",
-      "bd_issue_id": "HarnessHub-u6q.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P12"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-AUTH-TENANCY-P01",
       "bd_issue_id": "HarnessHub-15h.1",
-      "graph_status": "active",
-      "depends_on": []
+      "depends_on": [],
+      "graph_node_id": "SYS-AUTH-TENANCY-P01",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P02",
       "bd_issue_id": "HarnessHub-15h.2",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P01"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P02",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P03",
       "bd_issue_id": "HarnessHub-15h.3",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P02"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P03",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P04",
       "bd_issue_id": "HarnessHub-15h.4",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P03"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P04",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P05",
       "bd_issue_id": "HarnessHub-15h.5",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P04"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P05",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P06",
       "bd_issue_id": "HarnessHub-15h.6",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P05"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P06",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P07",
       "bd_issue_id": "HarnessHub-15h.7",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P06"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P07",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P08",
       "bd_issue_id": "HarnessHub-15h.8",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P07"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P08",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P09",
       "bd_issue_id": "HarnessHub-15h.9",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P08"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P09",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P10",
       "bd_issue_id": "HarnessHub-15h.10",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P09"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P10",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P11",
       "bd_issue_id": "HarnessHub-15h.11",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P10"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P11",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P12",
       "bd_issue_id": "HarnessHub-15h.12",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P11"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P12",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-AUTH-TENANCY-P13",
       "bd_issue_id": "HarnessHub-15h.13",
-      "graph_status": "active",
       "depends_on": [
         "SYS-AUTH-TENANCY-P12"
-      ]
+      ],
+      "graph_node_id": "SYS-AUTH-TENANCY-P13",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P01",
-      "bd_issue_id": "HarnessHub-dfm.1",
-      "graph_status": "active",
-      "depends_on": []
+      "bd_issue_id": "HarnessHub-9am.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P01",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P02",
-      "bd_issue_id": "HarnessHub-dfm.2",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.2",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P01"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P01"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P02",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P03",
-      "bd_issue_id": "HarnessHub-dfm.3",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.3",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P02"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P02"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P03",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P04",
-      "bd_issue_id": "HarnessHub-dfm.4",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.4",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P03"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P03"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P04",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P05",
-      "bd_issue_id": "HarnessHub-dfm.5",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.5",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P04"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P04"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P05",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P06",
-      "bd_issue_id": "HarnessHub-dfm.6",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.6",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P05"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P05"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P06",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P07",
-      "bd_issue_id": "HarnessHub-dfm.7",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.7",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P06"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P06"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P07",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P08",
-      "bd_issue_id": "HarnessHub-dfm.8",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.8",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P07"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P07"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P08",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P09",
-      "bd_issue_id": "HarnessHub-dfm.9",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.9",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P08"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P08"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P09",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P10",
-      "bd_issue_id": "HarnessHub-dfm.10",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.10",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P09"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P09"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P10",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P11",
-      "bd_issue_id": "HarnessHub-dfm.11",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.11",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P10"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P10"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P11",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P12",
-      "bd_issue_id": "HarnessHub-dfm.12",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.12",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P11"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P11"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P12",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISH-PIPELINE-P13",
-      "bd_issue_id": "HarnessHub-dfm.13",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9am.13",
       "depends_on": [
-        "SYS-PUBLISH-PIPELINE-P12"
-      ]
+        "SYS-BUILD-PIPELINE-BOARD-P12"
+      ],
+      "graph_node_id": "SYS-BUILD-PIPELINE-BOARD-P13",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
-      "bd_issue_id": "HarnessHub-j71.1",
-      "graph_status": "active",
-      "depends_on": []
+      "bd_issue_id": "HarnessHub-9wb.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-DOCS-CMS-P01",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
-      "bd_issue_id": "HarnessHub-j71.2",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.2",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P01"
-      ]
+        "SYS-DOCS-CMS-P01"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P02",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
-      "bd_issue_id": "HarnessHub-j71.3",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.3",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P02"
-      ]
+        "SYS-DOCS-CMS-P02"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P03",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
-      "bd_issue_id": "HarnessHub-j71.4",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.4",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P03"
-      ]
+        "SYS-DOCS-CMS-P03"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P04",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
-      "bd_issue_id": "HarnessHub-j71.5",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.5",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P04"
-      ]
+        "SYS-DOCS-CMS-P04"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P05",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
-      "bd_issue_id": "HarnessHub-j71.6",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.6",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P05"
-      ]
+        "SYS-DOCS-CMS-P05"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P06",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
-      "bd_issue_id": "HarnessHub-j71.7",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.7",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P06"
-      ]
+        "SYS-DOCS-CMS-P06"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P07",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
-      "bd_issue_id": "HarnessHub-j71.8",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.8",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
-      ]
+        "SYS-DOCS-CMS-P07"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P08",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
-      "bd_issue_id": "HarnessHub-j71.9",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.9",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P08"
-      ]
+        "SYS-DOCS-CMS-P08"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P09",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
-      "bd_issue_id": "HarnessHub-j71.10",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.10",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P09"
-      ]
+        "SYS-DOCS-CMS-P09"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P10",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
-      "bd_issue_id": "HarnessHub-j71.11",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.11",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P10"
-      ]
+        "SYS-DOCS-CMS-P10"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P11",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
-      "bd_issue_id": "HarnessHub-j71.12",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.12",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P11"
-      ]
+        "SYS-DOCS-CMS-P11"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P12",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
-      "bd_issue_id": "HarnessHub-j71.13",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-9wb.13",
       "depends_on": [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P12"
-      ]
+        "SYS-DOCS-CMS-P12"
+      ],
+      "graph_node_id": "SYS-DOCS-CMS-P13",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "feat-tenant-data-retention",
-      "bd_issue_id": "HarnessHub-47b",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-u6q.2",
       "depends_on": [
-        "feat-auth-tenancy",
-        "feat-domain-model-db",
-        "feat-hub-foundation"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P01"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "issue-docs-recompose-followups-20260718",
-      "bd_issue_id": "HarnessHub-9ao",
-      "graph_status": "draft",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P01",
-      "bd_issue_id": "HarnessHub-zdh.1",
-      "graph_status": "active",
-      "depends_on": []
-    },
-    {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P02",
-      "bd_issue_id": "HarnessHub-zdh.2",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.3",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P01"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P02"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P03",
-      "bd_issue_id": "HarnessHub-zdh.3",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.4",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P02"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P03"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P04",
-      "bd_issue_id": "HarnessHub-zdh.4",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.5",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P03"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P04"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P05",
-      "bd_issue_id": "HarnessHub-zdh.5",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.6",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P04"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P05"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P06",
-      "bd_issue_id": "HarnessHub-zdh.6",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.7",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P05"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P06"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P07",
-      "bd_issue_id": "HarnessHub-zdh.7",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.8",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P06"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P07"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P08",
-      "bd_issue_id": "HarnessHub-zdh.8",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.9",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P07"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P08"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P09",
-      "bd_issue_id": "HarnessHub-zdh.9",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.10",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P08"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P09"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P10",
-      "bd_issue_id": "HarnessHub-zdh.10",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.11",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P09"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P10"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P11",
-      "bd_issue_id": "HarnessHub-zdh.11",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.12",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P10"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P11"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P12",
-      "bd_issue_id": "HarnessHub-zdh.12",
-      "graph_status": "active",
+      "bd_issue_id": "HarnessHub-u6q.13",
       "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P11"
-      ]
+        "SYS-DOMAIN-MODEL-DB-P12"
+      ],
+      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P13",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P13",
-      "bd_issue_id": "HarnessHub-zdh.13",
-      "graph_status": "active",
-      "depends_on": [
-        "SYS-PUBLISHER-PLUGIN-P12"
-      ]
-    },
-    {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P01",
       "bd_issue_id": "HarnessHub-dhy.1",
-      "graph_status": "active",
-      "depends_on": []
+      "depends_on": [],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P01",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P02",
       "bd_issue_id": "HarnessHub-dhy.2",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P01"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P02",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P03",
       "bd_issue_id": "HarnessHub-dhy.3",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P02"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P03",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P04",
       "bd_issue_id": "HarnessHub-dhy.4",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P03"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P04",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P05",
       "bd_issue_id": "HarnessHub-dhy.5",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P04"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P05",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P06",
       "bd_issue_id": "HarnessHub-dhy.6",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P05"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P06",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P07",
       "bd_issue_id": "HarnessHub-dhy.7",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P06"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P07",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P08",
       "bd_issue_id": "HarnessHub-dhy.8",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P07"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P08",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P09",
       "bd_issue_id": "HarnessHub-dhy.9",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P08"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P09",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P10",
       "bd_issue_id": "HarnessHub-dhy.10",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P09"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P10",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P11",
       "bd_issue_id": "HarnessHub-dhy.11",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P10"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P11",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P12",
       "bd_issue_id": "HarnessHub-dhy.12",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P11"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P12",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P13",
       "bd_issue_id": "HarnessHub-dhy.13",
-      "graph_status": "active",
       "depends_on": [
         "SYS-DUAL-CATALOG-WEB-P12"
-      ]
+      ],
+      "graph_node_id": "SYS-DUAL-CATALOG-WEB-P13",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P01",
+      "bd_issue_id": "HarnessHub-1vb.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.2",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P01"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P02",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.3",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P02"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P03",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.4",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P03"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P04",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.5",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P04"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P05",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.6",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P05"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P06",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.7",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P06"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P07",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.8",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P07"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P08",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.9",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P08"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P09",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.10",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P09"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P10",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.11",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P10"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P11",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.12",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P11"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P12",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb.13",
+      "depends_on": [
+        "SYS-FEEDBACK-LOOP-P12"
+      ],
+      "graph_node_id": "SYS-FEEDBACK-LOOP-P13",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-HEARING-INTAKE-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.2",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P01"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P02",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.3",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P02"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P03",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.4",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P03"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P04",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.5",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P04"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P05",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.6",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P05"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P06",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.7",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P06"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P07",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.8",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P07"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P08",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.9",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P08"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P09",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.10",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P09"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P10",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.11",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P10"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P11",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.12",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P11"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P12",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i.13",
+      "depends_on": [
+        "SYS-HEARING-INTAKE-P12"
+      ],
+      "graph_node_id": "SYS-HEARING-INTAKE-P13",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.2",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P01"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P02",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.3",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P02"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P03",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.4",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P03"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P04",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.5",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P04"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P05",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.6",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P05"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P06",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.7",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P06"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P07",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.8",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P07"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P08",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.9",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P08"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P09",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.10",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P09"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P10",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.11",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P10"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P11",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.12",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P11"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P12",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h.13",
+      "depends_on": [
+        "SYS-HUB-FOUNDATION-P12"
+      ],
+      "graph_node_id": "SYS-HUB-FOUNDATION-P13",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-METRICS-TRACKING-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.2",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P01"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P02",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.3",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P02"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P03",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.4",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P03"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P04",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.5",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P04"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P05",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.6",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P05"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P06",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.7",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P06"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P07",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.8",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P07"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P08",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.9",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P08"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P09",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.10",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P09"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P10",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.11",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P10"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P11",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.12",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P11"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P12",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7.13",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P12"
+      ],
+      "graph_node_id": "SYS-METRICS-TRACKING-P13",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.2",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P01"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P02",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.3",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P02"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P03",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.4",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P03"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P04",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.5",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P04"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P05",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.6",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P05"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P06",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.7",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P06"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P07",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.8",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P07"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P08",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.9",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P08"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P09",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.10",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P09"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P10",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.11",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P10"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P11",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.12",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P11"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P12",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm.13",
+      "depends_on": [
+        "SYS-PUBLISH-PIPELINE-P12"
+      ],
+      "graph_node_id": "SYS-PUBLISH-PIPELINE-P13",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.2",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P01"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P02",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.3",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P02"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P03",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.4",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P03"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P04",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.5",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P04"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P05",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.6",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P05"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P06",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.7",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P06"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P07",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.8",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P07"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P08",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.9",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P08"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P09",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.10",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P09"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P10",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.11",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P10"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P11",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.12",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P11"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P12",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh.13",
+      "depends_on": [
+        "SYS-PUBLISHER-PLUGIN-P12"
+      ],
+      "graph_node_id": "SYS-PUBLISHER-PLUGIN-P13",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.2",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P01"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.3",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P02"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.4",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P03"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.5",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P04"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.6",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P05"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.7",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P06"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.8",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.9",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P08"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.10",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P09"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.11",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P10"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.12",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P11"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71.13",
+      "depends_on": [
+        "SYS-STAGE0-DISTRIBUTION-GATE-P12"
+      ],
+      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P13",
+      "graph_status": "active"
+    },
+    {
       "bd_issue_id": "HarnessHub-47b.1",
-      "graph_status": "active",
-      "depends_on": []
+      "depends_on": [],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P01",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P02",
       "bd_issue_id": "HarnessHub-47b.2",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P01"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P02",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P03",
       "bd_issue_id": "HarnessHub-47b.3",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P02"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P03",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P04",
       "bd_issue_id": "HarnessHub-47b.4",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P03"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P04",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P05",
       "bd_issue_id": "HarnessHub-47b.5",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P04"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P05",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P06",
       "bd_issue_id": "HarnessHub-47b.6",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P05"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P06",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P07",
       "bd_issue_id": "HarnessHub-47b.7",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P06"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P07",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P08",
       "bd_issue_id": "HarnessHub-47b.8",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P07"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P08",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P09",
       "bd_issue_id": "HarnessHub-47b.9",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P08"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P09",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P10",
       "bd_issue_id": "HarnessHub-47b.10",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P09"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P10",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P11",
       "bd_issue_id": "HarnessHub-47b.11",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P10"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P11",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P12",
       "bd_issue_id": "HarnessHub-47b.12",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P11"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P12",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P13",
       "bd_issue_id": "HarnessHub-47b.13",
-      "graph_status": "active",
       "depends_on": [
         "SYS-TENANT-DATA-RETENTION-P12"
-      ]
+      ],
+      "graph_node_id": "SYS-TENANT-DATA-RETENTION-P13",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "bd_issue_id": "HarnessHub-xwt.1",
+      "depends_on": [],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P01",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.2",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P01"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P02",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.3",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P02"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P03",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.4",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P03"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P04",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.5",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P04"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P05",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.6",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P05"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P06",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.7",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P06"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P07",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.8",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P07"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P08",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.9",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P08"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P09",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.10",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P09"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P10",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.11",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P10"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P11",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.12",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P11"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P12",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt.13",
+      "depends_on": [
+        "SYS-USER-ORG-ADMIN-P12"
+      ],
+      "graph_node_id": "SYS-USER-ORG-ADMIN-P13",
+      "graph_status": "active"
+    },
+    {
       "bd_issue_id": "HarnessHub-5l3.1",
-      "graph_status": "active",
-      "depends_on": []
+      "depends_on": [],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P01",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P02",
       "bd_issue_id": "HarnessHub-5l3.2",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P01"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P02",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P03",
       "bd_issue_id": "HarnessHub-5l3.3",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P02"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P03",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P04",
       "bd_issue_id": "HarnessHub-5l3.4",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P03"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P04",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P05",
       "bd_issue_id": "HarnessHub-5l3.5",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P04"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P05",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P06",
       "bd_issue_id": "HarnessHub-5l3.6",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P05"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P06",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P07",
       "bd_issue_id": "HarnessHub-5l3.7",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P06"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P07",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P08",
       "bd_issue_id": "HarnessHub-5l3.8",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P07"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P08",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P09",
       "bd_issue_id": "HarnessHub-5l3.9",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P08"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P09",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P10",
       "bd_issue_id": "HarnessHub-5l3.10",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P09"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P10",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P11",
       "bd_issue_id": "HarnessHub-5l3.11",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P10"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P11",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P12",
       "bd_issue_id": "HarnessHub-5l3.12",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P11"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P12",
+      "graph_status": "active"
     },
     {
-      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P13",
       "bd_issue_id": "HarnessHub-5l3.13",
-      "graph_status": "active",
       "depends_on": [
         "SYS-WORKSPACE-GOVERNANCE-P12"
-      ]
+      ],
+      "graph_node_id": "SYS-WORKSPACE-GOVERNANCE-P13",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-15h",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db"
+      ],
+      "graph_node_id": "feat-auth-tenancy",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-9am",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-publish-pipeline",
+        "feat-hearing-intake"
+      ],
+      "graph_node_id": "feat-build-pipeline-board",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-9wb",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "graph_node_id": "feat-docs-cms",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-u6q",
+      "depends_on": [
+        "feat-hub-foundation"
+      ],
+      "graph_node_id": "feat-domain-model-db",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dhy",
+      "depends_on": [
+        "feat-publish-pipeline",
+        "feat-stage0-distribution-gate"
+      ],
+      "graph_node_id": "feat-dual-catalog-web",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-1vb",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-publish-pipeline"
+      ],
+      "graph_node_id": "feat-feedback-loop",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-o2i",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "graph_node_id": "feat-hearing-intake",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-37h",
+      "depends_on": [],
+      "graph_node_id": "feat-hub-foundation",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-lm7",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-user-org-admin"
+      ],
+      "graph_node_id": "feat-metrics-tracking",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-dfm",
+      "depends_on": [
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "graph_node_id": "feat-publish-pipeline",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-zdh",
+      "depends_on": [
+        "feat-publish-pipeline",
+        "feat-stage0-distribution-gate"
+      ],
+      "graph_node_id": "feat-publisher-plugin",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-j71",
+      "depends_on": [],
+      "graph_node_id": "feat-stage0-distribution-gate",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-47b",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "graph_node_id": "feat-tenant-data-retention",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xwt",
+      "depends_on": [
+        "feat-hub-foundation",
+        "feat-domain-model-db",
+        "feat-auth-tenancy"
+      ],
+      "graph_node_id": "feat-user-org-admin",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-5l3",
+      "depends_on": [
+        "feat-dual-catalog-web",
+        "feat-auth-tenancy"
+      ],
+      "graph_node_id": "feat-workspace-governance",
+      "graph_status": "active"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xon",
+      "depends_on": [],
+      "graph_node_id": "issue-audit-followups-20260717",
+      "graph_status": "draft"
+    },
+    {
+      "bd_issue_id": "HarnessHub-9ao",
+      "depends_on": [],
+      "graph_node_id": "issue-docs-recompose-followups-20260718",
+      "graph_status": "draft"
     }
-  ]
+  ],
+  "source_graph_digest": "sha256:96ab605424ed95c343a8a4daf01aae252c4be6970f23ffe5c98589d5bd7f4c70"
 }

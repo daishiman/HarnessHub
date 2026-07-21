@@ -1,10 +1,12 @@
 """C28 parity manifest の由来必須化と C16 stale 検出の回帰テスト。
 
-守る不変条件は 2 つ。
+守る不変条件は 3 つ。
 1. parity manifest は「いつ・どの graph から作った snapshot か」を必ず持ち、
    snapshot 生成後に graph が動いていれば schedule が停止する (silent な stale 推薦の禁止)。
 2. ready 候補が manifest に載らなかった理由は対処 owner が分かる粒度で分離され、
    C28 で落ちた候補が C16 の report からも消えない (silent drop の禁止)。
+3. 停止からの回復手順である「manifest の再生成」が決定論 script として存在し、
+   その出力が C28 の由来検査と C16 の digest 突合をそのまま通る (手書き manifest の禁止)。
 """
 
 from __future__ import annotations
@@ -166,3 +168,117 @@ def test_c16_schedule_accepts_fresh_snapshot_and_surfaces_tracker_drift(tmp_path
     assert set(carried) == {"B-native", "B-conflict"}
     assert carried["B-native"]["reason"] == "external_ref_absent"
     assert carried["B-conflict"]["reason"] == "Beads parity conflict"
+
+
+def _graph_node(node_id: str, issue_id: str, **overrides) -> dict:
+    node = {
+        "graph_node_id": node_id, "artifact_kind": "task", "status": "active",
+        "confirmation_status": "confirmed", "evaluation_status": "pass",
+        "implementation_readiness": {"status": "complete"}, "depends_on": [],
+        "tracker_binding": "beads", "resource_scope": [node_id],
+        "beads_linkage": {"bd_issue_id": issue_id, "sync_state": "linked"},
+    }
+    node.update(overrides)
+    return node
+
+
+def test_builder_output_satisfies_c28_provenance_and_c16_digest(tmp_path, monkeypatch, capsys):
+    """再生成器の出力が、そのまま C28 の由来検査と C16 の stale 突合を通る。
+
+    ここが切れると「回復手順を実行しても停止が解けない」= 運用者に出口が無い状態になる。
+    """
+    builder = load("build-parity-manifest.py", "build_parity_manifest_roundtrip")
+    bridge = load("bd-bridge.py", "c28_for_builder_roundtrip")
+    schedule = load("schedule-graph.py", "c16_for_builder_roundtrip")
+
+    graph_path = tmp_path / ".dev-graph" / "state" / "graph.json"
+    graph_path.parent.mkdir(parents=True)
+    graph = {"graph_revision": 3, "nodes": [
+        # depends_on は graph の並びのまま写す必要がある。sorted すると C16 の
+        # `graph_depends_on == depends_on` 等価比較が順序差だけで落ちる。
+        _graph_node("node-b", "B-2", depends_on=["node-a", "node-0"]),
+        _graph_node("node-a", "B-1"),
+        _graph_node("node-0", "B-0"),
+        {"graph_node_id": "arch-x", "tracker_binding": "none", "status": "active", "depends_on": []},
+    ]}
+    graph_path.write_text(json.dumps(graph), encoding="utf-8")
+    out = tmp_path / "parity.json"
+
+    code, receipt = call_main(
+        builder, monkeypatch, capsys, "--repo-root", tmp_path, "--out", out,
+        "--generated-at", "2026-07-22T00:00:00Z",
+    )
+    assert code == 0 and receipt["node_count"] == 3
+    manifest = json.loads(out.read_text(encoding="utf-8"))
+
+    # binding=beads 以外は載せない / graph_node_id 昇順 / depends_on は graph の順序のまま。
+    assert [row["graph_node_id"] for row in manifest["nodes"]] == ["node-0", "node-a", "node-b"]
+    assert manifest["nodes"][2]["depends_on"] == ["node-a", "node-0"]
+    assert bridge._manifest_provenance(manifest) == {
+        "generated_at": "2026-07-22T00:00:00Z",
+        "source_graph_digest": manifest["source_graph_digest"],
+    }
+    assert manifest["source_graph_digest"] == schedule._canonical_digest(graph)
+
+
+def test_builder_stops_on_beads_node_without_linkage(tmp_path, monkeypatch, capsys):
+    """binding=beads なのに linkage が無い node は graph 側の欠陥。黙って落とさない。
+
+    ここで除外すると、その node は C28 で `parity_manifest_missing` (= graph 管理下の
+    取りこぼし) に化け、原因が manifest 生成から遠い場所で初めて露見する。
+    """
+    builder = load("build-parity-manifest.py", "build_parity_manifest_linkage")
+    graph_path = tmp_path / "graph.json"
+    graph_path.write_text(json.dumps({"nodes": [
+        _graph_node("node-a", "B-1"), _graph_node("node-b", "B-2", beads_linkage=None),
+    ]}), encoding="utf-8")
+
+    with pytest.raises(builder.ContractError, match="beads_linkage.bd_issue_id"):
+        call_main(builder, monkeypatch, capsys, "--repo-root", tmp_path,
+                  "--graph", graph_path, "--out", tmp_path / "parity.json")
+    assert not (tmp_path / "parity.json").exists()
+
+
+def test_builder_check_reports_drift_without_writing(tmp_path, monkeypatch, capsys):
+    """--check は既存 manifest を書き換えない。digest だけ現在値へ合わせる回避を作らないため。"""
+    builder = load("build-parity-manifest.py", "build_parity_manifest_check")
+    graph_path = tmp_path / "graph.json"
+    graph_path.write_text(json.dumps({"nodes": [_graph_node("node-a", "B-1")]}), encoding="utf-8")
+    out = tmp_path / "parity.json"
+    call_main(builder, monkeypatch, capsys, "--repo-root", tmp_path,
+              "--graph", graph_path, "--out", out, "--generated-at", "2026-07-22T00:00:00Z")
+    fresh = out.read_bytes()
+
+    code, receipt = call_main(builder, monkeypatch, capsys, "--repo-root", tmp_path,
+                              "--graph", graph_path, "--out", out, "--check")
+    assert code == 0 and receipt["drift"] == []
+
+    graph_path.write_text(json.dumps({"nodes": [
+        _graph_node("node-a", "B-1"), _graph_node("node-c", "B-3"),
+    ]}), encoding="utf-8")
+    code, receipt = call_main(builder, monkeypatch, capsys, "--repo-root", tmp_path,
+                              "--graph", graph_path, "--out", out, "--check")
+    assert code == 1 and receipt["drift"] == ["nodes", "source_graph_digest"]
+    assert out.read_bytes() == fresh
+
+
+@pytest.mark.parametrize("relative_path", [
+    "eval-log/run-dev-graph-schedule-parity-manifest.json",
+    ".dev-graph/plans/feature-package-feat-publish-pipeline/parity-manifest.json",
+])
+def test_repository_parity_manifests_carry_provenance(relative_path: str):
+    """repository に commit 済みの manifest が由来を持つ (= 再生成済みである)。
+
+    内容が現 graph と一致するかは graph が動くたびに変わるので C16 と `--check` の役目。
+    ここで固定するのは「由来欠落の manifest を repository へ戻さない」ことだけ。
+    """
+    builder = load("build-parity-manifest.py", "build_parity_manifest_repo_state")
+    manifest = json.loads((PLUGIN.parents[1] / relative_path).read_text(encoding="utf-8"))
+    bridge = load("bd-bridge.py", "c28_for_repo_manifests")
+
+    provenance = bridge._manifest_provenance(manifest)
+    assert builder.RFC3339_UTC.fullmatch(provenance["generated_at"])
+    assert manifest["nodes"] and all(
+        set(row) == {"graph_node_id", "bd_issue_id", "graph_status", "depends_on"}
+        for row in manifest["nodes"]
+    )

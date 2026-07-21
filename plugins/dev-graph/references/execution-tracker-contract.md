@@ -209,6 +209,29 @@ C28 `bd-bridge.py --op ready --parity-manifest` が受け取る manifest は gra
 - C28 は検証した由来を receipt の `parity_provenance` に載せ、C16 schedule-graph が graph 実体の canonical digest と突合する。不一致は「stale snapshot」として schedule を停止する (node 単位の parity 再照合は manifest に載った node しか見ないため、snapshot 生成後に追加/削除された node は原理的に捕まらない)。
 - 停止時の回復手順は manifest の再生成であり、`source_graph_digest` の書き換えではない。digest だけを現在値へ合わせる修正は stale 検出を恒久的に無効化するため禁止する。
 
+**再生成手順 (正本・2 段)**
+
+```bash
+# 1. graph から manifest を作り直す (既定 graph は <repo-root>/.dev-graph/state/graph.json)
+python3 plugins/dev-graph/scripts/build-parity-manifest.py \
+  --repo-root "$DEV_GRAPH_ROOT" --out <manifest path>
+
+# 2. その manifest で C28 receipt を取り直す (C16 が読むのは receipt 側の parity_provenance)
+python3 plugins/dev-graph/scripts/bd-bridge.py --op ready \
+  --repo-root "$DEV_GRAPH_ROOT" --parity-manifest <manifest path> > <ready json path>
+
+# 任意: 書かずに manifest の再現一致だけ判定する
+python3 plugins/dev-graph/scripts/build-parity-manifest.py \
+  --repo-root "$DEV_GRAPH_ROOT" --out <manifest path> --check
+```
+
+- **2 段目を省略すると回復しない。** C16 が突合するのは `--ready-json` に載った `parity_provenance` であり (manifest ファイル自体は読まない)、manifest だけ作り直しても receipt には古い `source_graph_digest` が残るため同じ stale 停止が再発する。
+- 手で書いた manifest・過去の manifest を手編集した manifest は正本ではない。stale 停止・由来欠落はいずれもこの 2 段で回復する。
+- 生成器は `tracker_binding=beads` の node を **全件** 載せる。部分集合 manifest は、載らなかった node を C28 で `parity_manifest_missing` (= 取りこぼし) に化けさせるため作らない。`tracker_binding=beads` なのに `beads_linkage.bd_issue_id` が無い node は graph 側の欠陥として生成時に停止する。
+- `depends_on` は graph の値をそのまま写す (並べ替えない)。C16 は `graph_depends_on == node.depends_on` をリスト等価で突合するため、生成側で sort すると順序差だけで parity が unconfirmed へ落ちる。
+- `nodes[]` は `graph_node_id` 昇順。graph の nodes 配列順に依存させず、同じ graph からは常に同じ内容が出る。
+- 上表に無い `graph_status` (現 graph の `draft`) を持つ node も manifest には載せる。間引くと投影済みの node が snapshot から消えて `parity_manifest_missing` に化けるため。生成 receipt の `unmappable_status` に列挙し、C28 で `conflicts` になる件数を実行前に見せる。
+
 **unmapped 分類 (reason exact-set)**
 
 | reason | 意味 | 対処 owner |
