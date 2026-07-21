@@ -1,0 +1,41 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "認証付きTODO APIをarchitecture、認証feature、TODO featureへマクロ分解する。TODOは認証に依存。全nodeはtracker_binding=none。 --repo-root <contained-fixture-repo> --dry-run",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "preview nodes omit required created_at and updated_at; independent schema validation reports six violations",
+      "validation fields remain pending and required publication preview fields are absent",
+      "required Agent fork and independent macro auditor were not executed"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "4fdda2a96cb5f6c33de86b7ad92458cac07062af2304913c3ec30ff0cdcfa46e",
+  "transcript_sha256": "06c9d9bedf7a194e9114a54ab56734798781d3176c11a02db34d3362f17db804",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 300.0
+  },
+  "scenario_id": "decompose-macro-positive-r3"
+}
