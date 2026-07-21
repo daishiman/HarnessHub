@@ -12,7 +12,7 @@ iteration: null
 title: "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正"
 owners: ["daishiman"]
 created_at: "2026-07-17T09:30:00Z"
-updated_at: "2026-07-21T07:32:40Z"
+updated_at: "2026-07-21T09:57:21Z"
 status: "draft"
 depends_on: []
 related_nodes: ["spec-harness-hub-requirements"]
@@ -128,6 +128,20 @@ C02 の Key Rule 2 (捏造しない / fail-visible) と Key Rule 4 (決定論組
 - (b) C05 完成度評価の再実行: `system-spec/completeness-report.json` の `verdict=PASS`、6 aspect すべて PASS (foundation_trace / decision_guidance / matrix_coverage / design_knowledge_reflection / doc_freshness / prompt_quality)。
 - (c) wrapper 一括 reimport + pin 再確定: `specs/` `architecture/` の wrapper 7 件すべてで `source_lineage.source_digest` が実 source ファイルの SHA-256 と一致 (世代混在は解消)。`features/*.md` 15 件はすべて `confirmation_status=confirmed` かつ lineage digest 追従。
 
+## 最終レビューでの自己是正 (2026-07-21・PR 前)
+
+新設した SSOT 記述を writer 実装 (`apply-spec-transition.py`) へ独立に突き合わせた結果、**新規追記分に事実誤り 3 件**が見つかったため同 branch 内で是正した (実行して反証した挙動のみを根拠とする)。
+
+| # | 誤っていた記述 | 実挙動 (根拠) | 是正 |
+|---|---|---|---|
+| 1 | 「qa_log entry を追記できるのは `ops` 空 turn の経路**だけ**」 | `apply_turn` は `qa_id` があれば `ops` の有無に関係なく追記する。`apply --op` は turn に `qa_id` を載せないため追記不可 | 「追記経路は `chunk --turns` だけ。matrix を動かさない索引追記に `ops` 空 turn を使う」へ限定し直した |
+| 2 | 「`complete=true` かつ `loop_count=0` は `--max-loops 0` の 2 通り」 | `processed >= max_loops` が初回反復で真になるため**負値でも到達**する (argparse に下限検証なし) | 条件を `max_loops <= 0` に訂正 |
+| 3 | 「`reopen` すると stale になる」(無条件) | `chunk --turns` の turn 内 reopen は `run_chunk` 末尾で `complete`/`next_question` が再計算され stale にならない。stale 化は `apply` 単体経由に限る (R4-reopen は `apply` を使うので実運用では成立) | stale 経路 (a) を「`apply` 単体で reopen した場合」に限定 |
+
+あわせて、除外条件の**既知の限界**を SSOT と監査側 (R6-audit-hearing / system-spec-hearing-auditor) の両方へ明記した。(i) 除外 (a) が自己解消するのは再 `confirm`/`exclude` された場合だけで、放置された reopen セルは検出から外れ続ける。(ii) `未着手` は「add-category 直後」と同義ではなく、全セル reopen でも成立し、逆に `add-category` 後に `apply` で部分的に埋めると `収集中` へ移って除外が外れる。(iii) よって本除外は収集漏れ検出を保証せず、最終保証は C05 `--require-complete` と C07 が担う。監査側には「疑わしい場合は pass と断定せず『除外したが要再確認』として finding に残す」を追加した。
+
+残る構造的論点 (reopen が `qa_ref`/`serves_goals` を無言で破棄する・`init --state` が確定巻き戻し拒否を迂回する・早期停止 (b) が writer 出力に対し実質発火不能・`reopened_from` が形状定義に未記載・除外ルール自体の再設計) は本 issue のスコープ外のため **HarnessHub-d15 / `issue-spec-state-writer-implicit-contracts-20260721`** へ分離した。
+
 ## 検証証跡
 
 - コマンド/テスト:
@@ -135,5 +149,9 @@ C02 の Key Rule 2 (捏造しない / fail-visible) と Key Rule 4 (決定論組
   - `python3 plugins/system-spec-harness/scripts/validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-complete --require-foundation` → exit 0
   - `python3 plugins/system-spec-harness/scripts/validate-source-citation.py --targets system-spec/spec-state.json --references system-spec/fetched-references.json --state system-spec/spec-state.json` → exit 0
   - `python3 -m pytest plugins/system-spec-harness/skills/run-system-spec-doc-fetch/tests/test_build_fetched_references.py -q` → 29 passed
+  - `python3 -m pytest plugins/system-spec-harness -q` → 459 passed (最終レビュー時の再実行)
+  - `make lint` → exit 0 / `python3 scripts/lint-artifact-placement.py` → OK / `git diff --check` → exit 0
+  - `python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root .` → `valid: true` (violations 0)
+  - wrapper digest 突合 (`specs/` `architecture/` `features/` の 22 件) → `source_lineage.source_digest` が実 file の sha256 と全件一致。`system-spec/index.md` を包む wrapper は 0 件 (7 wrapper はいずれも章ファイル参照) のため index.md 再描画による追随は不要
 - 証跡 path: system-spec/spec-state.json (qa_log / reopen_log), system-spec/fetched-references.json, system-spec/completeness-report.json
 - SSOT 追記 path: plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md (「hearing_progress の意味論 (SSOT)」「qa_log の論点分離」), 同 SKILL.md (ゴールシーク実行 / Gotchas からの参照)
