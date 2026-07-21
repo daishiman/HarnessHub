@@ -48,11 +48,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-SHAPE = "system-spec"
+from .base_shape import FIXED_TS, finalize, scaffold
 
-# 固定日時。build_live_trial_fixture.FIXED_TS と同値を literal で持つ
-# (shape は base を import せず、生成物へ現在時刻を埋め込まない)。
-FIXED_TS = "2026-07-21T00:00:00Z"
+SHAPE = "system-spec"
 
 # brief の置き場所。`system-spec/` 配下に置くのは fixture_contract の
 # "contained system-spec workspace" に対応させるため。frontmatter を持たないので
@@ -205,11 +203,14 @@ serves_goals: D1 → G1, G3, G4 / D2 → G2, G4 / D3 → G2。
 
 
 def build(out: Path) -> None:
-    """base fixture 生成済みの ``out`` へ、C19 scenario 固有の artifact を追加する。
+    """C19 scenario 用の隔離 fixture repository を生成する。
 
-    base (build_live_trial_fixture.build) が ``system-spec/`` を含む content root を
-    既に作っているため、ここでは brief を 1 file 置くだけでよい。
+    graph は空 (revision 0 / nodes 0 件) にする。仕様書・章・node の登録は被験 skill が
+    system-spec-harness へ委譲して行う工程そのものなので、fixture 側は brief を
+    1 file 置くだけに留める。content root ``system-spec/`` は骨格側が実体化する。
     """
+    scaffold(out, kind=SHAPE)
     target = out / BRIEF_PATH
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(BRIEF, encoding="utf-8")
+    finalize(out)

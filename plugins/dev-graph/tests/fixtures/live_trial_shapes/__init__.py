@@ -13,9 +13,11 @@
 
 契約:
   各 module は ``SHAPE`` (str) と ``build(out: Path) -> None`` を公開する。
-  ``build`` は base fixture 生成済みの ``out`` を受け取り、scenario 固有の artifact だけを
-  追加する。決定論性のため、時刻・乱数・生成先 path に依存する値を埋め込んではならない
-  (path 依存が必要な repository_id は base 側が導出する)。
+  ``build`` は空 (または存在しない) ``out`` を受け取り、git init から初期 commit までを
+  含む完結した fixture repository を作る。repo 骨格の共通部分は ``base_shape`` へ
+  集約してあるので、shape module 本体は scenario 固有の形状だけを持つ。
+  決定論性のため、時刻・乱数・生成先 path に依存する値を埋め込んではならない
+  (path 依存が必要な repository_id は ``base_shape.scaffold`` が実測して導出する)。
 """
 from __future__ import annotations
 
@@ -40,6 +42,8 @@ SHAPE_MODULES: dict[str, str] = {
     "requirements": "shape_requirements",
     "render": "shape_render",
     "system-spec": "shape_system_spec",
+    "status": "shape_status",
+    "init": "shape_init",
 }
 
 

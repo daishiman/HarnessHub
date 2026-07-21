@@ -46,7 +46,7 @@ source digest の一致 (契約の核心) は次の一本の値で貫く。
              = 13 task node と feature node の confirmation_evidence.evaluated_digest
 digest は package 実ファイルの bytes から決定論計算するので、埋め込みではなく導出である。
 
-決定論性: 時刻は base の FIXED_TS のみ、乱数なし。path 依存値は base が導出済みの
+決定論性: 時刻は base_shape の FIXED_TS のみ、乱数なし。path 依存値は骨格層が導出済みの
 repository_id だけを config から読んで使う。
 """
 from __future__ import annotations
@@ -56,6 +56,7 @@ import hashlib
 import json
 from pathlib import Path
 
+from .base_shape import FIXED_TS, finalize, markdown_for, scaffold, task_node
 from .requirements_exact13_package import (
     ARCHITECTURE_ID,
     ARCHITECTURE_REL,
@@ -68,7 +69,6 @@ from .requirements_exact13_package import (
     SYSTEM_SPEC_INDEX_REL,
     SYSTEM_SPEC_REQUIREMENTS_REL,
     dump_json,
-    load_base,
     run_build_system_handoff,
     sha256_file,
     task_file_path,
@@ -129,13 +129,13 @@ def _write_system_spec(out: Path) -> None:
     )
 
 
-def _architecture_node(base) -> dict:
+def _architecture_node() -> dict:
     """feature.architecture_refs の参照先となる architecture node。
 
     C11 domain_findings は architecture_refs を graph node id として解決するため
     (validate-graph-schema.py:288-295)、参照先 node が graph に実在する必要がある。
     """
-    node = base.task_node(ARCHITECTURE_ID, "live-trial fixture のアーキテクチャ基準", "unused", [])
+    node = task_node(ARCHITECTURE_ID, "live-trial fixture のアーキテクチャ基準", "unused", [])
     node.update({
         "artifact_kind": "architecture",
         # architecture は artifact_subtypes minItems=1 (graph-node.schema.json allOf)。
@@ -165,7 +165,6 @@ def _write_feature_context(out: Path) -> str:
     architecture_refs は C09 側では「実在する repository 相対 path」を要求する
     (resolve-project-context.py:302-307) 点が graph node 側 (node id 配列) と異なる。
     """
-    base = load_base()
     path = out / PACKAGE_DIR_REL / "feature-context.json"
     dump_json(path, {
         "graph_node_id": FEATURE_ID,
@@ -176,7 +175,7 @@ def _write_feature_context(out: Path) -> str:
         "scope_out": ["実装コードの生成", "実 repository への書き込み"],
         "acceptance": ["13 task 全件が implementation_readiness=complete である"],
         "architecture_refs": [ARCHITECTURE_REL],
-        "updated_at": base.FIXED_TS,
+        "updated_at": FIXED_TS,
     })
     return sha256_file(path)
 
@@ -184,7 +183,7 @@ def _write_feature_context(out: Path) -> str:
 # --------------------------------------------------------------------------- #
 # graph 側 (C02 が登録し終えた状態)
 # --------------------------------------------------------------------------- #
-def _package_task_node(base, phase: str, responsibility: str, depends_on: list[str],
+def _package_task_node(phase: str, responsibility: str, depends_on: list[str],
                        package_digest_hex: str) -> dict:
     """C02 が exact-13 package から登録した後の task node 形状。
 
@@ -199,7 +198,7 @@ def _package_task_node(base, phase: str, responsibility: str, depends_on: list[s
     """
     node_id = task_id(phase)
     file_path = task_file_path(phase)
-    node = base.task_node(node_id, f"{responsibility} ({phase})", "unused", depends_on)
+    node = task_node(node_id, f"{responsibility} ({phase})", "unused", depends_on)
     node.update({
         "file_path": file_path,
         "domain": "development",
@@ -223,7 +222,7 @@ def _package_task_node(base, phase: str, responsibility: str, depends_on: list[s
             "evidence_ref": f"{PACKAGE_DIR_REL}/{MANIFEST_REL}",
         },
         "source_lineage": {
-            "imported_at": base.FIXED_TS,
+            "imported_at": FIXED_TS,
             "origin_kind": "system-dev-planner",
             "source_digest": package_digest_hex,
             "source_path": f"{PACKAGE_DIR_REL}/feature-package.json",
@@ -234,7 +233,7 @@ def _package_task_node(base, phase: str, responsibility: str, depends_on: list[s
     return node
 
 
-def _feature_node(base, package_digest_hex: str, spec_digest_hex: str) -> dict:
+def _feature_node(package_digest_hex: str, spec_digest_hex: str) -> dict:
     """package と同一 revision へ収束させた macro feature node。
 
     register-package.py の _project_parent_feature (:311-330) は登録時に
@@ -246,7 +245,7 @@ def _feature_node(base, package_digest_hex: str, spec_digest_hex: str) -> dict:
     lineage 4 field を非 null 文字列に固定する (graph-node.schema.json allOf[12]) ため、
     source_digest には引用元ファイル自身の sha256 を入れる。
     """
-    node = base.task_node(FEATURE_ID, "live-trial fixture の確定 feature", "unused", [])
+    node = task_node(FEATURE_ID, "live-trial fixture の確定 feature", "unused", [])
     node.update({
         "artifact_kind": "feature",
         "file_path": f"features/{FEATURE_ID.lower()}.md",
@@ -269,7 +268,7 @@ def _feature_node(base, package_digest_hex: str, spec_digest_hex: str) -> dict:
             "evidence_ref": f"{PACKAGE_DIR_REL}/{MANIFEST_REL}",
         },
         "source_lineage": {
-            "imported_at": base.FIXED_TS,
+            "imported_at": FIXED_TS,
             "origin_kind": "system-spec-harness",
             "source_digest": spec_digest_hex,
             "source_path": SYSTEM_SPEC_REQUIREMENTS_REL,
@@ -280,10 +279,10 @@ def _feature_node(base, package_digest_hex: str, spec_digest_hex: str) -> dict:
     return node
 
 
-def _write_node_markdown(base, out: Path, node: dict) -> None:
+def _write_node_markdown(out: Path, node: dict) -> None:
     path = out / node["file_path"]
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(base.markdown_for(node), encoding="utf-8")
+    path.write_text(markdown_for(node), encoding="utf-8")
 
 
 def _write_registration_artifacts(out: Path, repository_id: str, package_digest: str,
@@ -295,14 +294,13 @@ def _write_registration_artifacts(out: Path, repository_id: str, package_digest:
     (:415)。fixture を C02 の冪等 (べきとう = 何度実行しても同じ結果) 再登録で
     検証可能にするため、registration payload と 2 種 receipt も同時に置く。
     """
-    base = load_base()
     package_dir = out / PACKAGE_DIR_REL
     node_ids = [node["graph_node_id"] for node in task_nodes]
 
     dump_json(package_dir / "atomic-promotion-receipt.json", {
         "schema_version": "1.0.0",
         "status": "promoted",
-        "promoted_at": base.FIXED_TS,
+        "promoted_at": FIXED_TS,
         "generation_id": package_digest.removeprefix("sha256:"),
         "supersedes": None,
         "repo_identity": repository_id,
@@ -339,11 +337,11 @@ def _write_registration_artifacts(out: Path, repository_id: str, package_digest:
         "nodes": carried,
     })
 
-    # graph_revision の物語: 1=base 骨格、2=architecture/feature 追加、3=exact-13 登録。
+    # graph_revision の物語: 1=repo 骨格、2=architecture/feature 追加、3=exact-13 登録。
     dump_json(package_dir / "dev-graph-registration-receipt.json", {
         "schema_version": "1.0.0",
         "status": "registered",
-        "registered_at": base.FIXED_TS,
+        "registered_at": FIXED_TS,
         "feature_package_id": FEATURE_PACKAGE_ID,
         "parent_feature": FEATURE_ID,
         "source_digest": package_digest,
@@ -364,13 +362,15 @@ def _write_registration_artifacts(out: Path, repository_id: str, package_digest:
 # entry point
 # --------------------------------------------------------------------------- #
 def build(out: Path) -> None:
-    """base fixture 生成済みの out へ、C04 scenario 固有の artifact を追加する。"""
-    base = load_base()
+    """C04 scenario 用の隔離 fixture repository を生成する。"""
+    # 骨格 graph は revision 1 / node 0 件。以降 _add_plan_roots が config を、
+    # build 末尾が graph を revision 3 (exact-13 登録済み) まで進める。
+    scaffold(out, kind=SHAPE, graph={"graph_revision": 1, "nodes": []})
     repository_id = _add_plan_roots(out)
     _write_system_spec(out)
 
-    architecture = _architecture_node(base)
-    _write_node_markdown(base, out, architecture)
+    architecture = _architecture_node()
+    _write_node_markdown(out, architecture)
 
     source_feature_digest = _write_feature_context(out)
     write_package_sources(out, repository_id, source_feature_digest)
@@ -388,10 +388,10 @@ def build(out: Path) -> None:
     depends = {phase: ([] if index == 0 else [task_id(PHASES[index - 1])])
                for index, phase in enumerate(PHASES)}
     feature = _feature_node(
-        base, package_digest_hex, sha256_file(out / SYSTEM_SPEC_REQUIREMENTS_REL)
+        package_digest_hex, sha256_file(out / SYSTEM_SPEC_REQUIREMENTS_REL)
     )
     task_nodes = [
-        _package_task_node(base, phase, responsibility, depends[phase], package_digest_hex)
+        _package_task_node(phase, responsibility, depends[phase], package_digest_hex)
         for phase, responsibility, _kind in PHASE_META
     ]
 
@@ -402,10 +402,11 @@ def build(out: Path) -> None:
     graph["graph_revision"] = 3
     dump_json(graph_path, graph)
 
-    _write_node_markdown(base, out, feature)
+    _write_node_markdown(out, feature)
     for node in task_nodes:
-        _write_node_markdown(base, out, node)
+        _write_node_markdown(out, node)
 
     _write_registration_artifacts(
         out, repository_id, package_digest, task_nodes, _graph_document_digest(graph)
     )
+    finalize(out)

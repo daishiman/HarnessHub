@@ -44,6 +44,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from .base_shape import finalize, scaffold
+
 SHAPE = "node"
 
 # 入力バッチの置き場所。scenario の task_args_template
@@ -272,13 +274,16 @@ ARTIFACTS: list[dict[str, object]] = [
 
 
 def build(out: Path) -> None:
-    """base fixture 生成済みの out へ、C02 scenario 固有の artifact を追加する。
+    """C02 scenario 用の隔離 fixture repository を生成する。
 
-    content root (issues/tasks/specs/architecture/docs) へは何も置かない。scenario は
+    graph は空 (revision 0 / nodes 0 件) にする。content root
+    (issues/tasks/specs/architecture/docs) にも何も置かない。scenario は
     「skill が 5 種を分類して正規 path へ登録できるか」を観測するものなので、登録結果を
     先に置いてしまうと観測対象が消える。素材だけを repo 直下へ 1 本置く。
     """
+    scaffold(out, kind=SHAPE)
     (out / BATCH_FILENAME).write_text(
         json.dumps(ARTIFACTS, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    finalize(out)

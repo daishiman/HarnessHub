@@ -12,22 +12,22 @@ graph node 形状 (C02 register-package.py / C11 validate-graph-schema.py の契
 (直列化・digest・id 生成) も、下位層である本 module を正本とする。逆向きの import を
 足すと循環参照になるため、本 module から ``shape_requirements`` を参照してはならない。
 
-決定論性: 時刻は base の FIXED_TS のみ、乱数なし。path 依存値は base が導出済みの
+決定論性: 時刻は base_shape の FIXED_TS のみ、乱数なし。path 依存値は骨格層が導出済みの
 repository_id を引数で受け取るだけで、本 module では導出しない。
 """
 from __future__ import annotations
 
 import hashlib
-import importlib.util
 import json
 import os
 import subprocess
 import sys
 from pathlib import Path
 
+from .base_shape import FIXED_TS
+
 # plugins/dev-graph/tests/fixtures/live_trial_shapes/ から見た位置関係。
 _HERE = Path(__file__).resolve()
-FIXTURES_DIR = _HERE.parents[1]
 PLUGINS_DIR = _HERE.parents[4]
 SYSTEM_PLANNER_ROOT = PLUGINS_DIR / "system-dev-planner"
 
@@ -98,20 +98,6 @@ ARCHITECTURE_REL = "architecture/lt-arch-001.md"
 # --------------------------------------------------------------------------- #
 # 共通ユーティリティ (両層が共有する決定論 helper)
 # --------------------------------------------------------------------------- #
-def load_base():
-    """base generator を module として読む (FIXED_TS / markdown_for を共有するため)。"""
-    name = "build_live_trial_fixture"
-    cached = sys.modules.get(name)
-    if cached is not None:
-        return cached
-    spec = importlib.util.spec_from_file_location(name, FIXTURES_DIR / f"{name}.py")
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
 def dump_json(path: Path, value: dict) -> None:
     """C14 (_encoded) と同一の直列化。manifest の digest 検査が bytes 一致を要求する。"""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -158,7 +144,6 @@ def _task_spec_text(phase: str, responsibility: str, spec_task_id: str,
       - staging runtime path を本文へ残さない (promotion 後に解決不能になるため)
       - P01 だけは entry gate marker を literal で含む
     """
-    base = load_base()
     dependency_line = "なし (feature の entry point)" if not depends_on else ", ".join(depends_on)
     gate = (
         f"- 実行前 gate: {P01_ENTRY_GATE_MARKER}"
@@ -228,7 +213,7 @@ def _task_spec_text(phase: str, responsibility: str, spec_task_id: str,
     lines = [f"# {spec_task_id} {responsibility}", ""]
     for name, body in sections:
         lines.extend([f"## {name}", "", body, ""])
-    lines.append(f"生成元: live-trial fixture shape ({base.FIXED_TS} 固定)。")
+    lines.append(f"生成元: live-trial fixture shape ({FIXED_TS} 固定)。")
     lines.append("")
     return "\n".join(lines)
 
@@ -236,7 +221,6 @@ def _task_spec_text(phase: str, responsibility: str, spec_task_id: str,
 def _inventory_task(phase: str, responsibility: str, workstream: str, depends_on: list[str]) -> dict:
     inventory_task_id = task_id(phase)
     file_path = task_file_path(phase)
-    base = load_base()
     return {
         "id": inventory_task_id,
         "feature_package_id": FEATURE_PACKAGE_ID,
@@ -276,7 +260,7 @@ def _inventory_task(phase: str, responsibility: str, workstream: str, depends_on
         "implementation_readiness": {
             "status": "complete",
             "missing_sections": [],
-            "checked_at": base.FIXED_TS,
+            "checked_at": FIXED_TS,
         },
         "graph_node_registration": {
             "graph_node_id": inventory_task_id,
