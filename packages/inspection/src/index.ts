@@ -21,8 +21,18 @@ export {
   definePolicyRule,
   defineSecretScanRule,
   maskSecret,
+  type SecretMatchContext,
   type SecretScanRuleDefinition,
 } from './rules';
+
+export {
+  KNOWN_PUBLIC_EXAMPLE_SECRETS,
+  SECRET_SCAN_ALLOW_MARKER,
+  createDefaultSecretScanRules,
+  isSuppressedSecretMatch,
+  scanFilesForSecrets,
+  secretScanExitCode,
+} from './secret-scan-preset';
 
 export {
   createInspectionPipeline,

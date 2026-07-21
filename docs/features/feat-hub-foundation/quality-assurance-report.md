@@ -25,7 +25,9 @@ measured_at: "2026-07-21"
 | G5 bundle 予算 | 0.951 MiB / 3 MiB | 閾値 1 KiB で**非ゼロ終了**を実測。未ビルド時も**非ゼロ終了**（fail-closed） | ✅ 実効あり |
 | G9 axe a11y | 部品・画面とも違反 0 件 | — （違反注入は未実施。§4 の限界） | ⚠️ 片系のみ |
 | G10 duplicate detector | 174 ファイル走査・0 件 | 意図的違反 fixture で**2 種とも検出**（owner 外 export / deep import） | ✅ 実効あり |
-| G6 secret scan / G7 破壊的 DDL / G8 OpenAPI drift | — | — | ⬜ **未実行**（§3） |
+| G6 secret scan | 177 ファイル走査・検出 0 件 | private key / AWS key / GitHub token / 代入形 API key の 4 種で**検出を実測**。env 参照は誤検出しないことも確認 | ✅ 実効あり |
+| G8 OpenAPI / zod drift | snapshot 一致で exit 0 | snapshot を 1 文字ずらすと **exit 1** を実測 | ✅ 実効あり |
+| G7 破壊的 DDL | — | — | ⬜ **未実行**（対象 migrations 不在。§3） |
 | G11 CWV 定期計測 | — | — | ⬜ **未実行**（デプロイ後） |
 
 ## 2. 実効性検証で発見・是正した「常時緑/常時赤」故障 4 件
@@ -46,10 +48,10 @@ measured_at: "2026-07-21"
 
 | ゲート | 未実行の理由 | 解除条件 |
 |---|---|---|
-| G6 secret scan | `packages/inspection` の CI 起動口（`scan:secrets` script）が未配線 | script 追加 → CI で実行 |
 | G7 破壊的 DDL 検査 | `packages/db/migrations` が存在しない（スキーマ実体は feat-domain-model-db の責務） | 当該 feature 着手時。CI は「migrations 未作成なら対象なし」と明示スキップ |
-| G8 OpenAPI / zod drift | `packages/schemas` の `check:drift` script が未配線 | script 追加 → CI で実行 |
 | G11 CWV | デプロイ未実施 | P13 完了後 |
+
+> G6 / G8 は当初未配線だったが、**本 phase で配線し実効性まで実測した**（上表）。G6 は `packages/inspection` の公開 API（`defineSecretScanRule` / `runInspection`）を再利用しており、CLI 用の別実装を作っていない（作れば duplicate detector が検出する）。これにより **CI が `packages/inspection` の実在する第 2 consumer** になり、第 4 acceptance の contract 要件も満たす（ADR §6 / R-07）。
 
 **これらを「N/A」とはしない。** 未配線・未実行として記録し、CI が緑でも充足したことにしない（requirements-baseline §9.5）。
 

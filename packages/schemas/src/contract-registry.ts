@@ -46,3 +46,12 @@ export function buildContractComponents(info?: { title: string; version: string 
     registry: createContractRegistry(),
   });
 }
+
+/**
+ * drift 検査が突き合わせる正規化済みテキスト。
+ * commit する snapshot と生成物の比較を「同じ 1 つの関数の出力どうし」に揃えることで、
+ * 整形の違いを乖離と誤検出しないようにする。
+ */
+export function renderContractDocument(info?: { title: string; version: string }): string {
+  return JSON.stringify(buildContractComponents(info), null, 2) + '\n';
+}

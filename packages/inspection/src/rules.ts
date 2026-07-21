@@ -55,6 +55,23 @@ export interface SecretScanRuleDefinition {
   readonly pattern: RegExp;
   /** finding メッセージの組み立て。既定は「マスク済み一致文字列」を含む定型文。 */
   readonly message?: (maskedMatch: string) => string;
+  /**
+   * 一致を finding として報告するかの判定 (false positive 抑制の口)。
+   * 既定は常に報告。除外条件の中身 (公開済みサンプル値の許可・行コメントによる抑制など) は
+   * consumer の責務であり、この package は「抑制できる口」だけを提供する。
+   * 決定的な述語であること (同じ context に対し常に同じ結果を返すこと) が前提。
+   */
+  readonly shouldReport?: (context: SecretMatchContext) => boolean;
+}
+
+/** shouldReport に渡す一致の文脈。生の一致文字列を含むため、finding へそのまま載せてはならない。 */
+export interface SecretMatchContext {
+  readonly match: string;
+  readonly path: string;
+  /** 1 始まりの行番号。 */
+  readonly line: number;
+  /** 一致が属する行の全文。行コメントによる抑制判定に使う。 */
+  readonly lineText: string;
 }
 
 /**
@@ -77,6 +94,7 @@ export function defineSecretScanRule(definition: SecretScanRuleDefinition): Insp
     : `${definition.pattern.flags}g`;
   const source = definition.pattern.source;
   const buildMessage = definition.message ?? ((masked: string) => `秘密情報らしき値を検出しました: ${masked}`);
+  const shouldReport = definition.shouldReport ?? ((): boolean => true);
 
   return {
     id: definition.id,
@@ -92,10 +110,18 @@ export function defineSecretScanRule(definition: SecretScanRuleDefinition): Insp
           const matcher = new RegExp(source, flags);
           let match = matcher.exec(line);
           while (match !== null) {
-            findings.push({
-              message: buildMessage(maskSecret(match[0])),
-              location: { path: file.path, line: index + 1, column: match.index + 1 },
+            const reportable = shouldReport({
+              match: match[0],
+              path: file.path,
+              line: index + 1,
+              lineText: line,
             });
+            if (reportable) {
+              findings.push({
+                message: buildMessage(maskSecret(match[0])),
+                location: { path: file.path, line: index + 1, column: match.index + 1 },
+              });
+            }
             // 幅 0 一致による無限ループを避ける。
             if (match[0].length === 0) {
               matcher.lastIndex += 1;

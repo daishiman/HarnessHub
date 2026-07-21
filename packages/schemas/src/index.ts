@@ -59,5 +59,6 @@ export {
   contractSchemaNames,
   createContractRegistry,
   buildContractComponents,
+  renderContractDocument,
 } from './contract-registry.js';
 export type { ContractSchemaName } from './contract-registry.js';

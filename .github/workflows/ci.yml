@@ -91,8 +91,7 @@ jobs:
       - name: G4 unit / integration / contract test (Tenant 分離・検査 pipeline 挙動同値を含む)
         run: pnpm -r test
       - name: G6 secret scan (packages/inspection を CI からも呼ぶ / qa-038【2】)
-        run: pnpm --filter @harness-hub/inspection run scan:secrets -- --root .
-        continue-on-error: false
+        run: pnpm --filter @harness-hub/inspection run scan:secrets
       - name: G7 破壊的 DDL 検査 (expand/contract 3 段階 / qa-038【5】)
         run: |
           if [ -d packages/db/migrations ]; then
