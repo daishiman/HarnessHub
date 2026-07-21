@@ -1,0 +1,1 @@
+{"status": "PASS", "scenario": "schedule-positive-ready-set", "checks": {"ready_set_exact": true, "no_unmet_dependency": true, "no_resource_conflict_in_batch": true, "max_parallel_enforced": true, "digests_unchanged": true}}

@@ -1,28 +1,40 @@
 {
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-init",
-    "skill_md_sha256": "1db7dd6c2cde83fc50e02704fb3e3b725f66dd2209b08521c88a5fc52fc535f0"
-  },
-  "review_kind": "rubric",
-  "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
-  "iterations": 1,
-  "human_review_required": false,
-  "feedback_loop": {
-    "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3", "OUT4", "OUT5"],
-    "positive_feedback": [
-      "NM 命名: name=run-dev-graph-init が dir 名/prefix=run と一致、description は冪等初期化という発火条件を trigger 型で明示。",
-      "BD 出力契約: Purpose & Output Contract に入力/出力 (6 root+.dev-graph 配下)/完了条件を明記し、別に Input/output・Execution contract・Gotchas 節を具備。",
-      "RG/責務: init という単一責務に収束し、goal_seek/feedback_contract を frontmatter で明示。GitHub 設定は雛形生成に限定し token/node ID を保存しない境界が明確。"
-    ],
-    "negative_feedback": [],
-    "iteration": 1,
-    "iteration_limit": 3,
-    "hook_trigger": "manual",
-    "next_action": "none"
-  },
-  "notes": "ref-skill-design-rubric 規範で現 SKILL.md (sha256 1db7dd6c...) を採点。FM: name/description/trigger 適合、allowed-tools 明示。BD: Output contract+Gotchas 具備、body<300行。NM: dir 名一致。PD: 本文簡潔で prompts/templates/references へ分離。RG: goal_seek/feedback_contract 明示。責務は『caller repo 内への dev-graph 冪等初期化』に単一収束し、hook 配線も plugin 既定/fallback の非破壊 merge に限定され越境なし。high severity 0 件。PASS。"
+ "target": {
+  "plugin": "dev-graph",
+  "skill": "run-dev-graph-init",
+  "skill_md_sha256": "1663f8dce02d8c123f4fa0dd72af1ea176f41bc39e7ae7fa7fbe4d35b016d58b"
+ },
+ "review_kind": "rubric",
+ "verdict": "PASS",
+ "reviewer": "assign-skill-design-evaluator",
+ "reviewed_at": "2026-07-21",
+ "iterations": 2,
+ "human_review_required": false,
+ "feedback_loop": {
+  "loop_scope": "both",
+  "criteria_evaluated": [
+   "IN1",
+   "OUT1",
+   "OUT2",
+   "OUT3",
+   "OUT4",
+   "OUT5"
+  ],
+  "positive_feedback": [
+   "FM/NM 命名: name=run-dev-graph-init が dir 名/prefix=run と一致し、description は冪等初期化という発火条件を trigger 型で明示。allowed-tools も明示。",
+   "BD 出力契約: Purpose & Output Contract に入力/出力/完了条件を明記し、Input-output・Execution contract・Gotchas 節を具備。今回の改訂で出力記述の graph 正本位置が実装 (resolve-repo-context.py の既定 .dev-graph/state/graph.json) と一致した。",
+   "RG/責務: init という単一責務に収束し goal_seek/feedback_contract を frontmatter で明示。IN1 の拡張後も『初期化の送信前検証』という責務の内側に収まり、越境なし。",
+   "PD 分離: 本文は簡潔さを保ち、責務手順は prompts/R1-R5.md、正本資産は templates/・schemas/ へ分離されている。"
+  ],
+  "negative_feedback": [
+   "FM-005 (low, -3): description 冒頭が動詞でない (dev-graph 始まり)。ただし採点 script の jp_verb_markers が『〜したい』形の動詞を含まないための系統的誤検知で、dev-graph 配下 10 skill 中 9 skill が同じ減点を受ける。対象固有の欠陥ではない。",
+   "評価機構側の所見 (対象物の欠陥ではない): L2 rubric が宣言する PG-001/PG-002/BND-001/REG-001 が render-findings-score.py の check_rule() に未実装で、違反があっても findings に出ない。今回は手動で検証し、PG-001 (prompts の R-id 1:1) は prompts/R1-elicit.md..R5-hooks.md で実質充足を確認した。",
+   "REG-001 ゲート未達 (既存事象・本改訂に起因しない): eval-log/dev-graph/_plugin/build-evidence/20260713/build-trace.json に後から必須化された doc_coverage キーが無く validate-build-trace.py が exit 1。ubm-goal-setting も同一理由で落ちる横断的な積み残し。"
+  ],
+  "iteration": 2,
+  "iteration_limit": 3,
+  "hook_trigger": "manual",
+  "next_action": "none"
+ },
+ "notes": "ref-skill-design-rubric 規範で改訂後 SKILL.md (sha256 1663f8dc...) を採点。score 97 / threshold 80 → passed。rubric_version 1.3.0。high severity 0 件。machine_checks: validate-frontmatter / lint-skill-name / lint-skill-tree / validate-plugin-completeness.py はいずれも exit 0、validate-build-trace.py のみ exit 1 (既存の doc_coverage 未バックフィル)。初回採点は IN1 拡張前の版に対して実施し、独立 evaluator が検出した C2 high の修正後に同一 sha で再確認した (iterations=2)。"
 }
