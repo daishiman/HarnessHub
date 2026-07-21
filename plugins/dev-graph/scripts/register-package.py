@@ -544,78 +544,6 @@ def _project_execution_context(args: argparse.Namespace) -> dict[str, Any]:
         return perform()
 
 
-def validate_receipt(receipt_path: Path, graph_path: Path | None = None) -> dict[str, Any]:
-    """任意の registration receipt が本 script の発行物として整合するかを単独検証する。
-
-    schema だけでは表現できない構造不変条件を検査する。register 経路には既に同等の検査が
-    あるが (immutable receipt 再登録時)、**任意の receipt を外から検証する入口が無かった**
-    ため、手書き receipt が検出されずに下流 (render の --registration-receipt など) へ
-    流れ込む余地が残っていた。
-
-    実際に `eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T180000-r7/` の
-    live-trial で、`graph_revision_before=1 / after=15` という手書き receipt が使われ、
-    schema・stale-sha・transcript 束縛のいずれにも掛からずに通過した。fixture は
-    gitignore のため commit 差分ベースの provenance 検査も届かない。
-    """
-    receipt = _json_object(receipt_path)
-    schema = _json_object(PLUGIN_ROOT / "schemas" / "package-registration-receipt.schema.json")
-    violations: list[str] = []
-
-    try:
-        _validate_schema(receipt, schema, schema, "$")
-    except ContractError as exc:
-        violations.append(f"schema: {exc}")
-
-    before, after = receipt.get("graph_revision_before"), receipt.get("graph_revision_after")
-    if not isinstance(before, int) or not isinstance(after, int):
-        violations.append("graph_revision: before/after が整数でない")
-    elif after != before + 1:
-        # 登録は 1 回の atomic write なので revision は必ず +1 になる (L466 参照)。
-        # 差が 1 でない receipt は登録時点の発行物ではない。
-        violations.append(
-            f"graph_revision: after({after}) != before({before}) + 1 "
-            "— 登録は単一 atomic write のため必ず +1。手書き/事後改変の疑い"
-        )
-
-    counts = {
-        "expected_count": receipt.get("expected_count"),
-        "applied_count": receipt.get("applied_count"),
-        "node_ids": len(receipt.get("node_ids") or []),
-        "phase_refs": len(receipt.get("phase_refs") or []),
-    }
-    if set(counts.values()) != {13}:
-        violations.append(f"exact-13: 件数が 13 で揃っていない {counts}")
-    if receipt.get("phase_refs") != PHASES:
-        violations.append("phase_refs: P01..P13 の完全集合でない")
-    node_ids = receipt.get("node_ids") or []
-    if len(node_ids) != len(set(node_ids)):
-        violations.append("node_ids: 重複がある")
-
-    registered_at = receipt.get("registered_at")
-    if isinstance(registered_at, str) and not re.search(r"\.\d+", registered_at):
-        # utc_now() は datetime.now(timezone.utc).isoformat() で必ず小数秒を含む
-        # (microsecond がちょうど 0 になる確率は約 1e-6)。秒丸めは手書きの強い兆候。
-        violations.append(
-            f"registered_at: 小数秒が無い ({registered_at}) "
-            "— utc_now() は必ず小数秒を含むため手書きの疑い"
-        )
-
-    if graph_path is not None:
-        graph = _json_object(graph_path)
-        digest = _canonical_digest(graph)
-        if receipt.get("graph_digest_after") != digest:
-            violations.append(
-                f"graph_digest_after: receipt({receipt.get('graph_digest_after')}) != "
-                f"実測({digest}) — 登録後に graph が変わったか receipt が改変された"
-            )
-
-    return {
-        "valid": not violations,
-        "receipt": receipt_path.as_posix(),
-        "violations": violations,
-    }
-
-
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Register exact-13 packages or preflight system-dev-planner")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -640,9 +568,6 @@ def _parser() -> argparse.ArgumentParser:
     execution.add_argument("--graph-node-id", required=True)
     execution.add_argument("--context-json", required=True)
     execution.add_argument("--dry-run", action="store_true")
-    verify = sub.add_parser("validate-receipt", help="任意の registration receipt の真正性を単独検証する")
-    verify.add_argument("--receipt", required=True, help="検証する registration receipt JSON")
-    verify.add_argument("--graph", help="指定時は graph_digest_after を実測突合する")
     return parser
 
 
@@ -653,9 +578,6 @@ def main(argv: list[str] | None = None) -> int:
             report = preflight_contract(Path(args.system_planner_root), args.required_version, args.required_schema_version)
         elif args.command == "execution-context":
             report = _project_execution_context(args)
-        elif args.command == "validate-receipt":
-            report = validate_receipt(Path(args.receipt), Path(args.graph) if args.graph else None)
-            dump(report); return 0 if report["valid"] else 1
         else: report = _register(args)
         dump(report); return 0
     except (ContractError, OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:

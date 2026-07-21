@@ -4,6 +4,9 @@
 (HarnessHub-dst) が届かない。実際に render の live-trial (20260721T180000-r7) で手書き
 receipt が使われ、schema・stale-sha・transcript 束縛のいずれにも掛からず通過した。
 その手口を機械検出できることをここで固定する。
+
+検証ロジックは plugins/dev-graph/scripts/validate-receipt.py に独立させている
+(register-package.py に足すと run-dev-graph-node の behavior closure を失効させるため)。
 """
 from __future__ import annotations
 
@@ -16,9 +19,9 @@ import unittest
 from pathlib import Path
 
 PLUGIN = Path(__file__).resolve().parents[1]
-SCRIPT = PLUGIN / "scripts" / "register-package.py"
+SCRIPT = PLUGIN / "scripts" / "validate-receipt.py"
 sys.path.insert(0, str(SCRIPT.parent))
-SPEC = importlib.util.spec_from_file_location("dev_graph_register_package_vr", SCRIPT)
+SPEC = importlib.util.spec_from_file_location("dev_graph_validate_receipt", SCRIPT)
 assert SPEC and SPEC.loader
 RP = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = RP

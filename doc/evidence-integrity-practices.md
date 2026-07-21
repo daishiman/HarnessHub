@@ -45,7 +45,7 @@ digest 単独書き換えを「`skill_dir_tree_sha` が変わり `transcript_sha
 
 `m7d` で判明したとおり、SKILL.md には**ゴールシーク検証の python ブロックが最初から書かれていた**。しかし実行するのは trial 自身であり、実行しなければ何も起きなかった。
 
-同様に `aoe` の不変条件 (`graph_revision_after == before + 1`) も `register-package.py` に**既に実装されていた**が、「再登録時」の経路限定で、任意の receipt を外から検証する入口が無かった。
+同様に `aoe` の不変条件 (`graph_revision_after == before + 1`) も `register-package.py` の register 経路に**既に実装されていた**が、「再登録時」の経路限定で、任意の receipt を外から検証する入口が無かった。そこで検査ロジックの SSOT (schema 検証・digest 計算) は `register-package.py` に残したまま、外部入口だけを独立スクリプト `validate-receipt.py` として切り出した (register 経路を触ると `run-dev-graph-node` の behavior closure が失効するため。教訓 A の裏返し = 無関係な変更で証跡を巻き込まない)。
 
 > どちらも欠けていたのは**判定基準ではなく強制力 (到達可能性)** だった。検証は**外側**に置く。
 
@@ -53,7 +53,7 @@ digest 単独書き換えを「`skill_dir_tree_sha` が変わり `transcript_sha
 
 | 入口 | 対象 | 検出するもの |
 |---|---|---|
-| `register-package.py validate-receipt` | 任意の registration receipt | 手書き/事後改変 (revision 差が +1 でない、`registered_at` の秒丸め、exact-13 不成立、digest 不一致) |
+| `validate-receipt.py` (検査 SSOT は `register-package.py` を共有) | 任意の registration receipt | 手書き/事後改変 (revision 差が +1 でない、`registered_at` の秒丸め、exact-13 不成立、digest 不一致) |
 | `run-skill-live-trial/scripts/validate-goal-seek-evidence.py` | `goal_seek` 宣言 skill (24 件) | 実行契約の省略 (成果物不在、6 キー欠落、ゴールすり替え、hash 単独書き換え) |
 | `lint-live-trial-verdict.py --check-provenance` (`dst`) | git commit 差分 | digest 単独書き換え |
 
