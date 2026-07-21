@@ -1,0 +1,29 @@
+{
+  "name": "@harness-hub/schemas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "zod schemas 単一ソース (docs/shared-layers.md §2 の正本)。API 入出力の検証・型・OpenAPI 生成の責務境界を持つ",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "sideEffects": false,
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "pnpm --workspace-root exec biome check packages/schemas",
+    "check:drift": "vitest run src/contract-drift.test.ts",
+    "openapi:update": "vitest run src/contract-drift.test.ts -u"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.0"
+  }
+}

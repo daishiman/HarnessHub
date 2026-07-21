@@ -1,0 +1,7 @@
+# Next.js / OpenNext / wrangler のビルド成果物と計測結果
+.next/
+.open-next/
+.wrangler/
+next-env.d.ts
+tsconfig.tsbuildinfo
+artifacts/

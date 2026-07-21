@@ -1,0 +1,15 @@
+{
+  "artifact": "/var/folders/35/t3gvbkdd2w55yk8csmzskzrw0000gn/T/hub-bundle-dryrun-QgBySg",
+  "measurementMode": "wrangler-dry-run",
+  "budgetBytes": 3145728,
+  "totalGzipBytes": 998715,
+  "withinBudget": true,
+  "fileCount": 1,
+  "largestFiles": [
+    {
+      "path": "worker.js",
+      "gzipBytes": 998715
+    }
+  ],
+  "measuredAt": "2026-07-21T09:18:17.976Z"
+}

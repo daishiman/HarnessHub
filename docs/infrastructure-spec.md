@@ -1,6 +1,6 @@
 ---
 status: confirmed
-qa_ref: [qa-034]
+qa_ref: [qa-034, qa-038, qa-039]
 layer: implementation-spec
 sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-spec/security.md, system-spec/database.md, docs/backend-spec.md, docs/mockups/harness-studio-v2-analysis.md, system-spec/00-requirements-definition.md]
 ---
@@ -9,6 +9,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 
 > **位置づけ**: system-spec 確定章 (infrastructure / maintenance-ops) と docs/backend-spec.md を実装可能な粒度へ展開した詳細正本。確定 QA (qa-003/011/019/026/027/031/032/033) と decision (D1-D6) に反する記述はできない。矛盾を発見した場合は R4-reopen の根拠として扱う。
 > **確定状態**: §12 の 4 論点は 2026-07-17 のユーザー確認 (qa-034) で確定済み。本書に【要確認】は残っていない。
+> **2026-07-21 改訂**: 環境構成 (§2/§4/§6/§7/§10/§12) を **qa-038 準拠 (常設 staging なし・preview は PR ごとに使い捨て)** へ、CI/CD (§7) を **ci.yml 単一 workflow への deploy 統合**へ追随させた。feat-hub-foundation P03 の指摘 R-01/R-02 に対するユーザー確定 (2026-07-21) を反映したもの。
 
 ## 1. リソーストポロジ (C2: 固定費 0 円構成)
 
@@ -36,7 +37,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 ## 2. Cloudflare Workers 構成 (wrangler.jsonc 正本)
 
 - **エントリ**: `@opennextjs/cloudflare` の build 出力 (`.open-next/worker.js` + assets binding)。`compatibility_flags: ["nodejs_compat"]`。
-- **命名**: `harness-hub` (production) / `harness-hub-staging` (staging。qa-034 確定)。
+- **命名**: `harness-hub` (production)。**常設 staging worker は持たない** (qa-038 確定 / §6)。preview は PR ごとの使い捨て。
 - **binding 台帳 (非 secret)**:
 
 | binding | 種別 | 値 / 対象 | 用途 |
@@ -44,8 +45,9 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | `PACKAGES_BUCKET` | R2 | `harness-hub-packages` | PackageRegistry (immutable) |
 | `BACKUPS_BUCKET` | R2 | `harness-hub-backups` | DB export 保管 (§10) |
 | `ASSETS` | assets | `.open-next/assets` | 静的アセット (edge 配信) |
+| `CF_VERSION_METADATA` | version_metadata | Cloudflare 採番の version id | `/health` の `version` に載せ「いま配信されている版」を応答から特定可能にする (§9)。build 時注入と違い **rollback 後も実配信版と一致する**ため、障害時のロールバック判断の一次情報になる (2026-07-21 追加) |
 | `APP_BASE_URL` | var | 環境別 URL (§8) | 絶対 URL 生成・OIDC callback |
-| `ENVIRONMENT` | var | `production` / `staging` | 環境分岐 (ログ・通知の抑制) |
+| `ENVIRONMENT` | var | `production` / `preview` | 環境分岐 (ログ・通知の抑制)。常設 staging は持たない (§6) |
 
 - **secret 台帳 (`wrangler secret put`。コード・DB へ平文を持ち込まない = qa-020)**:
 
@@ -56,6 +58,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | `RESEND_API_KEY` | メール送信 (SEC9) | 年 1 回 |
 | `SALARY_ENC_KEY` | users.salary の AES-GCM 鍵 (qa-032) | 計画ローテーション時は再暗号化 migration を伴う (runbook 化) |
 | `IDP_SECRET_<tenant_slug>` | テナント別 OIDC client secret (`idp_connections.client_secret_ref` が参照) | テナント IdP 側の更新に追随 |
+| `CRON_HEARTBEAT_URL` | scheduled handler が日次ジョブ完走時に ping する外形監視の heartbeat URL (§5/§9)。URL 自体が事実上の秘匿情報のため wrangler.jsonc の var ではなく secret で投入する | 監視側で再発行したとき |
 
 - **サイズ予算**: Worker bundle ≤ 3 MiB (gzip, Free 上限) を CI ゲートで計測 (§7)。恒常超過は Workers Paid ($5/月) 移行と C2 再交渉をユーザーへ差し戻す (D1 caveat)。
 - **CPU 予算**: Workers Free は CPU 10ms/呼出。API はポーリング統一 (qa-031) で接続保持なし。cron の集計は chunk 処理 (§5) で 1 呼出の CPU を抑える。恒常超過時は D1 caveat と同じ経路で Paid 移行を再交渉。
@@ -76,9 +79,9 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 
 ## 4. Turso 構成 (D2)
 
-- DB: `harness-hub-prod` と `harness-hub-staging` (qa-034 確定)。リージョンは東京近接 (AWS ap-northeast-1 系) を選択。
+- DB: `harness-hub-prod` (常設はこの 1 つのみ。qa-038 確定 / §6)。preview・restore drill 用の DB は都度作成し使い捨てる。リージョンは東京近接 (AWS ap-northeast-1 系) を選択。
 - 接続: `@libsql/client` (HTTP) のみ。native binding はないため、接続情報は §2 の secret 台帳で管理。
-- migration: `drizzle-kit generate` で SQL を生成しリポジトリ管理 → CI の migrate job (§7) が staging → production の順に適用。**SQLite 方言互換を維持し、D1 退避経路を温存する** (D2 ヘッジ。Drizzle は libSQL/D1 両対応)。
+- migration: `drizzle-kit generate` で SQL を生成しリポジトリ管理 → CI の deploy job (§7) が **deploy 前に production へ直接適用** (qa-038【5】。常設 staging を経由しない)。破壊的 DDL は expand/contract 3 段階を強制 (§7 G7)。**SQLite 方言互換を維持し、D1 退避経路を温存する** (D2 ヘッジ。Drizzle は libSQL/D1 両対応)。
 - 無料枠 (公式確認 2026-07-17): ストレージ 5GB・読取 5 億行/月・書込 1,000 万行/月・100 DB。
 - 使用量監視 (qa-031 の帰結): 日次 cron (§5) が Turso Platform API から usage を取得し、**閾値 70% で admin 通知 (アプリ内)・90% で保持期間導入の R4-reopen 起票を促す**。metrics_events 無期限保持の代償措置。
 
@@ -96,24 +99,49 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - **cron heartbeat**: 日次バッチ完了時に外形監視の heartbeat URL へ ping し、「cron が動かなかった」ことを検知する (qa-027 の cron 失敗監視。Better Stack の heartbeat monitor を利用 = qa-034)。
 - rollup は `metrics_events` の未処理分のみを chunk 読取 (cursor) して集計し、1 呼出の CPU 10ms 予算に収める。生イベントのオンライン集計禁止 (B3) はここでも維持。
 
-## 6. 環境構成 (qa-034 確定: production + staging)
+## 6. 環境構成 (qa-038 確定: 常設 staging を持たない / 2026-07-21 改訂)
+
+> **改訂理由**: qa-034 は「production + staging の 2 環境」を確定していたが、**後発の qa-038【3】が常設 staging を明示的に否定**している（Worker / Turso DB / R2 バケット / secret を 2 組常時維持すると無料枠消費と運用導線が二重化し、C1・C2 と衝突するため）。2026-07-21 のユーザー確認により **qa-038 を正**と確定した。§12 の確定記録 #1 を上書きする。
 
 | 環境 | Worker | DB | 用途 |
 |---|---|---|---|
 | local | `wrangler dev` (ローカル) | ローカル libSQL ファイル | 開発。secret は `.dev.vars` (git 管理外) |
-| staging | `harness-hub-staging` (workers.dev) | `harness-hub-staging` | migration 検証・restore drill 先・smoke test |
+| preview | PR ごとに払い出し、**PR close で破棄** | production DB は使わない (検証用の一時 DB またはローカル fixture) | PR 単位の動作確認。常設しない |
 | production | `harness-hub` (§8 のドメイン) | `harness-hub-prod` | 本番 |
 
-- 環境ごとに R2 バケットは分離しない (packages は content-addressed で衝突しないが、staging は専用 prefix `staging/` を使用)。
+- **常設 staging は持たない**。migration の検証は preview と CI の破壊的 DDL 検査 (§7 G7) で行い、restore drill (§10) は一時 DB を都度作成して実施する。
+- 環境ごとに R2 バケットは分離しない (packages は content-addressed で衝突しない)。preview は専用 prefix `preview/` を使用する。
 
 ## 7. CI/CD (GitHub Actions, qa-011)
 
 | workflow | trigger | 内容 |
 |---|---|---|
-| `ci.yml` | PR / main push | pnpm install (corepack で pin) → **npm 混入検出 (package-lock.json 存在で fail)** → lint / typecheck / test (tenant 分離テスト = SEC3・純関数の挙動同値テスト = qa-010・axe a11y = qa-018 を含む) → OpenNext build → **bundle gzip サイズ計測 ≤ 3 MiB ゲート** |
-| `deploy.yml` | main merge (ci green 後) | staging へ drizzle migrate + deploy → smoke (`GET /health`) → production へ migrate + `wrangler deploy` → post-deploy `GET /health` 確認 → 失敗時 `wrangler rollback` (直前 version へ)。全自動 (qa-034) |
+| `ci.yml` | PR / push (main・feature branch) | **静的ゲート → install → test → bundle → deploy を単一 workflow 内で連鎖**（下記）。deploy job は main への push のみで実行され、全ゲート通過が前提 |
 | `backup.yml` | cron `0 17 * * *` | Turso CLI で dump → gzip → R2 へ S3 API で upload → 成功を heartbeat 通知 |
 
+**`ci.yml` の品質ゲート（qa-038【2】の required status checks に対応）**
+
+| # | ゲート | 内容 |
+|---|---|---|
+| G1 | pnpm 強制 | corepack で pin + `packageManager` 検証 + `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` / `bun.lockb` の混入検出 |
+| G2 | lint / format | 静的整形検査 |
+| G3 | typecheck | TypeScript strict |
+| G4 | unit / integration test | tenant 分離 (SEC3)・検査 pipeline 挙動同値 (qa-010)・共通層 contract を含む |
+| G5 | bundle 予算 | OpenNext build 出力の gzip サイズ ≤ 3 MiB |
+| G6 | secret scan | 検査ロジック共有 package を CI からも呼ぶ (qa-038【2】) |
+| G7 | 破壊的 DDL 検査 | drizzle migration の expand/contract 3 段階違反を検出 |
+| G8 | OpenAPI / zod drift 検査 | 生成物と実装の乖離を検出 (qa-009) |
+| G9 | axe a11y | 部品単体 + 画面結合の 2 段 (qa-018) |
+| G10 | 共通層 duplicate detector | owner package 外の同名 export / 境界迂回 import に加え、**運用機構 (§3) の owner artifact 実在**と**認可 wrapper を迂回した route handler** を検出 |
+| G11 | Core Web Vitals | main 反映後の定期計測 (PR 単位では Actions 無料枠を圧迫するため) |
+
+**ゲートが空振りしないための実行順序と前提検査 (2026-07-21 追記)**
+
+- **Worker 成果物の生成は G4 より前**に行う。`check:bundle` と bundle contract test は `.open-next` を前提とするため、G4 の後に生成していた旧構成では bundle 検査が CI で常時 skip されていた (P10 F-15)。
+- `pnpm --filter <pkg> run <script>` は **script 不在でも exit 0 になり得る**ため、G6 / G7 / G8 は実行前に `scripts/ci/check-required-package-script.mjs` で package.json 上の script 実在を fail-closed 検査する。ゲートの「緑」が「検査した結果の緑」であることを構造的に担保する。
+
+- **`deploy.yml` への分離は行わない (2026-07-21 改訂)**。理由: feat-hub-foundation の acceptance「CI が test→deploy を完走する」は**単一 workflow run 内での連鎖**を判定条件としており、2 workflow に分けると別 run になって構造的に判定不能になる。ユーザー確認により `ci.yml` への統合を確定した。
+- deploy job の内容: production へ drizzle migrate → `wrangler deploy` → post-deploy `GET /health` 確認 → 失敗時 `wrangler rollback` (直前 version へ)。**常設 staging を経由しない** (§6 / qa-038【5】)。
 - デプロイは main merge で全自動 (qa-034 確定)。手動 gate は置かず、post-deploy health + rollback を防波堤とする。
 - GitHub Secrets 台帳: `CLOUDFLARE_API_TOKEN` (Workers deploy + R2 write 権限を分離した 2 token 推奨)・`CLOUDFLARE_ACCOUNT_ID`・`TURSO_AUTH_TOKEN` (環境別)・R2 アクセスキー (backup 専用・backups バケット限定)。
 - GitHub Actions 無料枠 (private repo 2,000 分/月) は §11 の予算表で管理。
@@ -123,12 +151,15 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - Hub URL: 既存保有ドメインのサブドメイン `hub.<domain>` を Cloudflare DNS で Worker routes へ割当 (追加費用 0 円・C2 完全維持)。TLS は Universal SSL (自動)。
 - **Resend 送信ドメイン** (qa-026 で初期構築に含めると確定): 送信サブドメイン (例: `mail.<domain>`) に SPF (`TXT`)・DKIM (`TXT` ×3)・Return-Path (`CNAME`) を Cloudflare DNS へ登録。DMARC (`p=none` から開始) も併設。
 - OIDC callback URL はドメイン確定後に各テナント IdP へ登録するため、**ドメインは Stage 1 開始前に確定が必要** (後変更は全テナント設定変更を伴う)。
-- workers.dev サブドメインは staging 専用とし、production では無効化 (重複コンテンツ・混同防止)。
+- workers.dev サブドメインは preview 専用とし、production では無効化 (重複コンテンツ・混同防止)。
 
 ## 9. 監視・SLO 運用 (qa-019 / qa-027)
 
-- **/health endpoint**: `GET /health` (認証なし・rate limit 対象外)。Turso `SELECT 1` + R2 head を検査し `{ status, db, r2, version }` を返す。失敗時 503。
-- **外形監視 (Better Stack Free, qa-034)**: production `/health` を 3 分間隔で監視 + staging monitor + cron heartbeat (§5) + status page。無料枠 10 monitors・heartbeat 10 本・商用利用可 (公式確認 2026-07-17)。SLO 99.5%/月の一次計測源。
+- **/health endpoint**: `GET /health` (認証なし・rate limit 対象外)。Turso `SELECT 1` + R2 head を検査する。
+  - **応答契約 (2026-07-21 調停)**: `{ status, version, checkedAt, dependencies[] }`。`dependencies[]` の各要素は `{ name, status, latencyMs, detail? }` で、`name` に `db` / `r2` / `runtime-config` が入る。本節は当初 `{ status, db, r2, version }` と書いていたが、`packages/schemas` の契約スキーマ・実装・test-design が `dependencies[]` 形を採っており二重正本になっていた (P10 指摘 F-11)。**依存を追加するたびにトップレベルのキーが増える形は契約が破壊的に変わる**ため、配列形を正本とする。
+  - **critical の区分 (2026-07-21 確定)**: **Turso 失敗のみ down (HTTP 503)**、**R2 失敗は degraded (HTTP 200 + body で通知)** とする。本節は当初「失敗時 503」と一括していたが、§10 の縮退マトリクスが「R2 停止 → catalog 閲覧は継続。publish/install のみ停止」と定めており、応答できている時間まで 503 にすると SLO のエラーバジェットを過剰消費する (誤計測) ため区分する。§10 を正とした調停。
+  - **未プロビジョニング時**: secret 未投入は `down` (503) とする。200 を返すと外形監視が可用性ありと誤計測し SLO 計測そのものが壊れるため。初回構築の順序制約は runbook §1 を参照。
+- **外形監視 (Better Stack Free, qa-034)**: production `/health` を 3 分間隔で監視 + cron heartbeat (§5) + status page (常設 staging monitor は不要 = §6)。無料枠 10 monitors・heartbeat 10 本・商用利用可 (公式確認 2026-07-17)。SLO 99.5%/月の一次計測源。
 - **SLO 運用**: 可用性 99.5%/月 (許容停止 約 3.6 時間/月)。エラーバジェット消費は外形監視の downtime + Workers analytics の 5xx 率で算定し、**バジェット消費 100% で新機能の変更を凍結し信頼性回復を優先** (qa-019)。
 - **Workers 側**: observability logs 有効化 + Workers analytics (p95 レイテンシ・エラー率)。SLO ダッシュボードは Cloudflare dashboard + 外形監視の status page で代替 (追加サービスなし)。
 - **アプリ内運用通知 (インフラ追加なし、qa-027)**: AI キュー滞留・Resend 送信失敗・ingest 異常値・Turso 使用量閾値は notifications (アプリ内) で provider-admin へ通知。
@@ -138,7 +169,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 - **RPO ≤ 24h**: 日次 export (backup.yml)。export は Turso dump (SQL) を gzip し R2 へ。salary は暗号文のまま (qa-032)。
 - **RTO ≤ 4h (目標)**: runbook — (1) 新 Turso DB 作成 → (2) dump restore → (3) secret の URL/token 差替 → (4) `/health` 確認。SLO 99.5% の月間許容停止内に収める。
-- **restore drill**: 四半期ごとに staging (または一時 DB) へ実 restore し、行数・整合検査まで実施。**復元できないバックアップを成功と数えない** (qa-019)。
+- **restore drill**: 四半期ごとに**一時 DB** へ実 restore し、行数・整合検査まで実施 (常設 staging は持たない = §6)。**復元できないバックアップを成功と数えない** (qa-019)。
 - **縮退マトリクス (§6.1 の実装形)**:
 
 | 依存障害 | 影響 | 縮退動作 |
@@ -158,7 +189,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | Turso | 5GB・読取 5 億行/月・書込 1,000 万行/月 | **日次 cron 監視 (§5)。70% 警告 / 90% で R4-reopen** |
 | Resend | 3,000 通/月・100 通/日 | 送信キューのバッチ分割 (D6)。失敗ログ月次レビュー |
 | GitHub Actions | 2,000 分/月 (private) | 月次レビュー。CI 時間の恒常増は cache 改善で対処 |
-| Better Stack | 10 monitors・heartbeat 10・3 分間隔 (Free) | monitor 数を予算内に維持 (prod/staging + heartbeat 3 本で開始) |
+| Better Stack | 10 monitors・heartbeat 10・3 分間隔 (Free) | monitor 数を予算内に維持 (production + heartbeat 3 本で開始) |
 
 - 予算超過が恒常化した場合の第一エスカレーションは Workers Paid ($5/月) であり、C2 (固定費ゼロ) の再交渉としてユーザーへ差し戻す (D1 caveat と同経路)。
 
@@ -166,10 +197,10 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 | # | 項目 | 決定 | 備考 |
 |---|---|---|---|
-| 1 | 環境構成 | **production + staging の 2 環境** (AI 推奨に同意) | Worker/Turso DB を分離 (§6)。Turso Free 100 DB 内で費用 0 円のまま。migration 検証と restore drill の受け皿 |
+| 1 | 環境構成 | ~~production + staging の 2 環境~~ → **qa-038 により上書き (2026-07-21)**: 常設 staging を持たず preview は PR ごとに使い捨て | 上書き理由: 2 組常時維持は無料枠消費と運用導線を二重化し C1・C2 と衝突する (qa-038【3】)。migration 検証は CI の破壊的 DDL 検査、restore drill は一時 DB で代替 (§6/§7/§10) |
 | 2 | 独自ドメイン | **既存保有ドメインを流用** (AI 推奨に同意) | `hub.<domain>` + `mail.<domain>` のサブドメイン運用 (§8)。追加費用 0 円で C2 完全維持。Resend SPF/DKIM は qa-026 どおり初期構築 |
 | 3 | 外形監視 | **Better Stack Free** (AI 推奨に同意) | 10 monitors・3 分間隔・heartbeat・status page・商用利用可 (§9)。UptimeRobot Free は 2024-12 以降非商用限定のため棄却 (Vercel Hobby と同型の規約リスク回避) |
-| 4 | 本番デプロイ | **main merge で全自動** (AI 推奨に同意) | CI green → staging → smoke → production → post-deploy /health → 失敗時 wrangler rollback (§7) |
+| 4 | 本番デプロイ | **main merge で全自動** (AI 推奨に同意) | 単一 `ci.yml` 内で 全ゲート green → production migrate → deploy → post-deploy /health → 失敗時 wrangler rollback (§7)。**staging 経由と deploy.yml 分離は 2026-07-21 に取りやめ** (qa-038 / R-02) |
 
 ## 13. 構築優先順位によるインフラ有効化順 (2026-07-18 追記)
 
@@ -177,7 +208,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 | phase | 有効化するもの | 後段へ送るもの |
 |---|---|---|
-| **P0 認証基盤** | production/staging、Worker/DB migration、tenant/workspace、OIDC callback、Auth secret、共通認可/監査、`/health`、CI の tenant 分離 test | metrics rollup、週次サマリー、dashboard monitor はまだ不要 |
+| **P0 認証基盤** | production、Worker/DB migration、tenant/workspace、OIDC callback、Auth secret、共通認可/監査、`/health`、CI の tenant 分離 test | metrics rollup、週次サマリー、dashboard monitor はまだ不要 |
 | **P1 ヒアリング** | HearingSheet/AiJob/notification の migration、pull job、生成完了通知、キュー滞留監視 | R2 package 配布は P2 |
 | **P2 Hub/パイプライン** | private R2 package bucket、Web/CLI upload、検査、content-addressed 保存、install/download Worker 導線、orphan 通知 | 承認 queue UI は P5 でも監査記録はこの時点から有効 |
 | **P3 改善/Docs** | feedback/doc AiJob kind、Feedback→修正版 Build の冪等作成、Markdown/添付保存が必要な場合の R2 prefix | — |

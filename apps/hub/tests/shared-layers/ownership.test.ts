@@ -1,0 +1,107 @@
+// HF-A4-OWNER-001: shared-layers 登録層すべてに owner / 公開 API / consumer が定義され、owner 未定義が 0 件であること
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { afterAll, describe, expect, it } from 'vitest';
+import { CONSUMER_A, inAppEntryImports, publicApiImports } from './source-scan.js';
+
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
+const SCRIPT = path.join(REPO_ROOT, 'scripts/ci/check-shared-layer-duplicates.mjs');
+const REGISTRY = path.join(REPO_ROOT, 'scripts/ci/shared-layer-registry.json');
+
+interface LayerReport {
+  id: string;
+  owner_package: string;
+  package_name: string | null;
+  owner_exists: boolean;
+  public_api: string[];
+  consumers: string[];
+  boundary_only: boolean;
+}
+
+interface MechanismReport {
+  id: string;
+  owner_artifacts: { path: string; exists: boolean }[];
+  external_wiring: string;
+}
+
+const workDirs: string[] = [];
+
+/** detector の --report で E1 証跡 (owner / 公開 API / consumer 一覧) を生成して読む。 */
+function generateReport(): { layers: LayerReport[]; mechanisms: MechanismReport[] } {
+  const dir = mkdtempSync(path.join(tmpdir(), 'hub-ownership-'));
+  workDirs.push(dir);
+  const reportPath = path.join(dir, 'shared-layer-ownership.json');
+  execFileSync(process.execPath, [SCRIPT, '--report', reportPath, '--no-fail'], { encoding: 'utf8' });
+  return JSON.parse(readFileSync(reportPath, 'utf8')) as { layers: LayerReport[]; mechanisms: MechanismReport[] };
+}
+
+afterAll(() => {
+  for (const dir of workDirs) rmSync(dir, { recursive: true, force: true });
+});
+
+describe('HF-A4-OWNER-001: 登録共通層の owner 一覧', () => {
+  const report = generateReport();
+  const registry = JSON.parse(readFileSync(REGISTRY, 'utf8')) as { layers: unknown[]; mechanisms: unknown[] };
+
+  it('登録簿の全層が報告に含まれる', () => {
+    expect(report.layers).toHaveLength(registry.layers.length);
+  });
+
+  it('shared-layers §3 の CI/CD・運用機構が全件登録され、owner artifact が存在する', () => {
+    expect(report.mechanisms).toHaveLength(registry.mechanisms.length);
+    expect(report.mechanisms.map((mechanism) => mechanism.id).sort()).toStrictEqual([
+      'backup',
+      'ci-quality-gates',
+      'monitoring',
+      'wrangler-deploy',
+    ]);
+    expect(
+      report.mechanisms.flatMap((mechanism) =>
+        mechanism.owner_artifacts.filter((artifact) => !artifact.exists).map((artifact) => artifact.path),
+      ),
+    ).toStrictEqual([]);
+  });
+
+  it('owner 未定義 (owner_package 不在) の層が 0 件である', () => {
+    const missing = report.layers.filter((layer) => !layer.owner_exists);
+    expect(missing.map((l) => l.id)).toEqual([]);
+  });
+
+  it('全層に consumer が 1 系統以上定義されている', () => {
+    const noConsumer = report.layers.filter((layer) => layer.consumers.length === 0);
+    expect(noConsumer.map((l) => l.id)).toEqual([]);
+  });
+
+  it('boundary_only でない層は公開 API を 1 件以上持つ', () => {
+    // packages/db は feat-domain-model-db 完了まで境界と型のみ (ADR §11.3-7)
+    const empty = report.layers.filter((layer) => !layer.boundary_only && layer.public_api.length === 0);
+    expect(empty.map((l) => l.id)).toEqual([]);
+  });
+
+  it('全層が第 2 consumer 系統 (consumer-a fixture) から実際に参照されている', () => {
+    // 登録簿の consumers 欄は「宣言」でしかない。宣言だけを数えると、
+    // 実際には誰も使っていない層が 2 系統ありと見なされる (requirements-baseline §4.2 A4-1 の空洞化)。
+    // ここでは fixture のソースを走査して**実参照**を数える。
+    const unreferenced = report.layers.filter((layer) => {
+      if (layer.package_name !== null) {
+        return publicApiImports(CONSUMER_A, layer.package_name).length === 0;
+      }
+      // package 化されていない層 (apps/hub 内 owner) は index.ts が公開入口
+      const relativeToApp = layer.owner_package.replace(/^apps\/hub\//, '');
+      return inAppEntryImports(CONSUMER_A, relativeToApp).length === 0;
+    });
+
+    expect(unreferenced.map((layer) => layer.id)).toEqual([]);
+  });
+
+  it('package 化された層は @harness-hub/ 名前空間を持つ (ADR §11.3-2 の公開 contract 規約)', () => {
+    const packaged = report.layers.filter((layer) => layer.owner_package.startsWith('packages/'));
+    expect(packaged.length).toBeGreaterThan(0);
+    for (const layer of packaged) {
+      expect(layer.package_name).toMatch(/^@harness-hub\//);
+    }
+  });
+});
