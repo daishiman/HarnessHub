@@ -2,26 +2,31 @@
   "target": {
     "plugin": "harness-creator",
     "skill": "wrap-git-commit-safe",
-    "skill_md_sha256": "16e650cacac3a77ca4873a7c77e07719c7ed449be772faa6adcfae4213d029cc"
+    "skill_md_sha256": "f4c6b52f67ad1e1a42d0534308399cdd1ec0a4e7c9c52b0601b848ff336bf45a"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent-rename-review-subagent-d",
-  "reviewed_at": "2026-07-02T22:00:00+09:00",
-  "iterations": 1,
+  "reviewer": "independent-closure-fix-review-subagent",
+  "reviewed_at": "2026-07-21",
+  "iterations": 2,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "IN2", "OUT1"],
     "positive_feedback": [
-      "検証可能性: 完了チェックリストが pre-commit-secret-scan.py exit0(.env/credentials.json/*.pem)・--no-verify/--no-gpg-sign 不在・force-push 不発生という決定論的な二値判定で構成され、局面カタログに再現コマンド(--repo-root/--commit-args)を含む。",
-      "簡潔性: 本文 65 行で goal-seek 6 ステップを正本へ委譲し、wrap 固有の局面(機密検出/bypass 検出/base commit 実行)のみ記述している。"
+      "一貫性 (1→3 に回復): 前回 FAIL の直接原因だった frontmatter↔本文の不一致が解消された。本文が正本と名指す goal-seek-paradigm.md を reference_refs がそのまま宣言し、『正本へ委譲する』という本 skill の構造が frontmatter と本文の両方で同じファイルを指すようになった。Key Rules↔完了チェックリスト↔ゴールシークループ↔局面カタログの一致は本文無変更のため従来どおり維持されている。",
+      "完全性 (1→3 に回復): wrap kind 必須カテゴリ (scripts / schemas) の充足に加え、宣言された挙動 closure が本 skill の実行意味論を規定する実依存 (goal-seek-paradigm.md, 24052B) を取りこぼさなくなった。behavior_closure_files の解決結果 8 ファイルに当該ファイルが含まれることを実測確認済み。",
+      "検証可能性 (3): 完了チェックリストが pre-commit-secret-scan.py exit0 (.env / credentials.json / *.pem)・--no-verify / --no-gpg-sign 不在・force-push 不発生という決定論的二値判定で構成され、局面カタログに再現コマンド (--repo-root / --commit-args) を含む。script 実体を読み IN1 の exit 2 BLOCK 実装が宣言どおりであることを確認した。",
+      "簡潔性 (3): 本文は goal-seek 6 ステップを正本へ委譲し wrap 固有の局面 (機密検出 / bypass 検出 / base commit 実行) のみ記述、重複がない。今回も本文は無変更でこの美点が保たれている。",
+      "深度 (3 に改善): frontmatter コメントが『なぜこの書き方なのか』を、旧宣言が実体を持たず fail-closed で digest 計算不能だったという事実と、設計書06 第13条が本 skill に不該当である理由の両面から説明しており、記述内容が実体・原文と照合して正確であることを確認した。"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "negative_feedback": [
+      "軽微・非ブロッキング: コメント冒頭の『本文 L74』は、コメントブロックが 4→5 行に増えた結果、実際の位置 L75 と 1 行ずれている (grep 実測)。ファイル名が明示されているため参照は一意に定まり減点対象とはしないが、frontmatter 内の自己参照行番号は編集で陳腐化しやすいので、次回編集時に行番号を落とす表現へ寄せるとより堅牢になる。"
+    ],
+    "iteration": 2,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "共通 5 次元ルブリックで採点。完全性3: wrap kind 必須カテゴリ(scripts/schemas)を script_refs 2 件・schema_refs で充足、base 継承宣言あり。一貫性3: Key Rules↔完了チェックリスト↔ゴールシークループ↔局面カタログが一致、force-push 構造封止と決定論検査方針が統一。深度2: Why が base 非上書きの wrap 責務と『LLM の文字列マッチに頼らない決定論検査』の真因まで掘り下げ。検証可能性3: exit2 BLOCK・具体ファイル名(.env/credentials.json/*.pem)・再現コマンド。簡潔性3: 65 行、正本 goal-seek-paradigm.md へ委譲し重複なし。全次元>=2=PASS。"
+  "notes": "ALT-A 適用後の SKILL.md (sha256=f4c6b52f67ad…) を共通 5 次元ルブリックで再採点した。採点は実測に基づく。完全性3: wrap kind 必須カテゴリ (scripts / schemas) を script_refs 2 件・schema_refs 1 件で充足し、前回 1 と採点した根拠 (本文が正本と明示する goal-seek-paradigm.md が宣言 closure から欠落) が解消された。live-trial-verdict.py を import して behavior_closure_files を実行し、closure 8 ファイルに goal-seek-paradigm.md が含まれ resource-map.yaml が外れたこと、および skill_dir_tree_sha が例外なく digest=f6f2cb4bd599d86691a978cc962ae019e26601b25952455f7a32927bf0de2da5 を算出することを確認した。一貫性3: 前回 1 と採点した frontmatter↔本文の不一致が解消。加えて『resource-map は skill 私有』という repo 慣行 (既存 6 skill を実測抽出し全件 skill-local 実体を保有) に反する唯一例外だった状態も、本 skill が resource-map を宣言しなくなったことで消滅した。cross-skill ref の表記は sibling run-skill-feedback と一致する。深度3: コメントの説明が実体と一致することを二点で裏取りした (旧宣言の fail-closed は前回 ValueError 再現で確認済み / 設計書06 第13条は原文 244 行目と照合し引用が正確)。前回指摘した論拠と結論の逆接続も解消されている。検証可能性3: exit2 BLOCK・具体ファイル名・再現コマンドが揃い、pre-commit-secret-scan.py の実装 (SECRET_NAME_PATTERNS と return 2) を読んで IN1 の宣言どおりの成立を確認した。簡潔性3: 本文無変更で委譲構造が保たれ重複なし。全次元が閾値 2 以上のため PASS。lint 3 種 (validate-frontmatter / lint-skill-completeness / lint-skill-dep-step7) も個別実行で全て exit=0 であり機械ゲート上の問題もない。残る指摘はコメント内行番号の 1 行ずれのみで、参照先がファイル名で一意に定まるため次元スコアには反映せず next_action=none とした。[criteria 個別] IN1=充足。IN2=条件付き充足 (bypass flag は exit2 BLOCK で成立するが、main/master への force-push は script では BLOCK されず preflight-git-commit.py では WARN(exit 0) 止まりで main/master も区別しない。実質は allowed-tools に Bash(git push *) を持たない構造封止で担保。本件変更が触れていない既往事項のため verdict 根拠には算入しない)。OUT1=充足 (frontmatter と本文の一貫性が回復した)。"
 }
