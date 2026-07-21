@@ -68,12 +68,14 @@
   - 注: Write/Edit/MultiEdit 経路 (`decide()`) は realpath 一致 + 確定セル有無 + frontmatter + F3 fail-closed というより厳密な条件を持つため、レジストリの `scope="all"` 対象を「同等に保護する」形で残置し、完全な単一関数化はしていない (保護対象の宣言は共有・判定精度は経路別)。
 
 **実装済み (姉妹 hook への横展開)**:
-- **`plugins/dev-graph/hooks/guard-graph-schema.py` の間接一括書換 (bxz)**: 当初 follow-up として「同種の 参照↔書込 conflation (FP)」を記録していたが、再調査の結果、姉妹 hook は既に write-target モデル (`_mutating_operands` が `cp src dst` の dst だけを取る) を持ち FP は解消済みだった。実際に残っていたのは逆向きの **FN** で、`find tasks -name '*.md' | xargs sed -i` のように書換対象が find の列挙結果として渡る経路は宛先を静的抽出できず graph 権威 (`tasks/` `docs/` `specs/` `.dev-graph/`) を素通りで一括改変できた。本 hook の bxz 修正 (§2.2 の「書込先確定不能 + 保護領域走査なら安全側」) を `indirect_mutation_over_guarded_area()` として横展開し、判定を **pipeline 単位** (`|` は 1 単位、`&&`/`;` で分離) にスコープした。全コマンド文字列で見ると `find /tmp … | xargs rm -f && python3 x.py --graph .dev-graph/state/graph.json` の後段 (graph は read arg) を巻き込み、a5w.1 が潰した conflation を再導入するため。契約は `plugins/dev-graph/tests/test_guard_graph_schema_indirect_mutation.py` が固定する。
+- **`plugins/dev-graph/hooks/guard-graph-schema.py` の間接一括書換 (bxz)**: 当初 follow-up として「同種の 参照↔書込 conflation (FP)」を記録していたが、再調査の結果、姉妹 hook は既に write-target モデル (`_mutating_operands` が `cp src dst` の dst だけを取る) を持ち FP は解消済みだった。実際に残っていたのは逆向きの **FN** で、`find tasks -name '*.md' | xargs sed -i` のように書換対象が find の列挙結果として渡る経路は宛先を静的抽出できず graph 権威 (`tasks/` `docs/` `specs/` `.dev-graph/`) を素通りで一括改変できた。本 hook の bxz 修正 (§2.2 の「書込先確定不能 + 保護領域走査なら安全側」) を `indirect_mutation_over_guarded_area()` として横展開し、判定を **pipeline 単位** (`|` は 1 単位、`&&`/`;` で分離) にスコープした。加えて xargs/find -exec の列挙結果を動的 operand として consumer の tool 別 write-target 規則へ通し、`cp {列挙結果} /tmp` や read-only consumer の後段 `tee /tmp` を遮断しない。caller repo root で path を正規化するため、absolute path・`$PWD`・`find .` も相対 path と同じ保護境界になる。
+
+  判定を「文字列に `xargs` が現れるか」から「`xargs` トークンが consumer の位置にあるか」へ精密化した結果、tokenize の質がそのまま検知力になる。`shlex.split` は `|` を演算子として切り出さないため `find tasks |xargs rm` が `['find','tasks','|xargs','rm']` となり stage 境界と consumer 名を同時に取り違える (FN)。`shlex.shlex(..., punctuation_chars="|")` で `|` だけを独立トークン化し、`grep 'a|b'` のような quote 内の `|` は 1 トークンのまま保つ。契約は `plugins/dev-graph/tests/test_guard_graph_schema_indirect_mutation.py` が固定する (密着 `|` の 3 変種を MUST_BLOCK、quote 内 `|` を MUST_PASS の回帰アンカーとして保持)。
 
 ## 5. 検証
 
 - 回帰テスト `hooks/tests/test_guard_confirmed_chapter_overwrite.py` (73 件): MUST_BLOCK / MUST_PASS (2.1 の FP 群を含む) / KNOWN_GAP / PROTECTION_REGISTRY。
 - legacy 回帰テスト `tests/test_guard_hook.py` (61 件): write-target モデル導入前からの期待 (ambiguous glob 遮断・パス境界判定・frontmatter 解釈) を保持する。bxz でこの 2 系統の期待を統合した。
-- 姉妹 hook の横展開契約 `plugins/dev-graph/tests/test_guard_graph_schema_indirect_mutation.py` (16 件)。
+- 姉妹 hook の横展開契約 `plugins/dev-graph/tests/test_guard_graph_schema_indirect_mutation.py`。
 - 実行: `python3 -m unittest discover -s plugins/system-spec-harness/hooks/tests -p "test_*.py"` / `python3 -m pytest -q plugins/system-spec-harness plugins/dev-graph/tests`
 - e2e: 実 compile/validator コマンド → exit0、`echo x > spec-state.json` / `sed -i … security.md` → exit2 を確認済み。

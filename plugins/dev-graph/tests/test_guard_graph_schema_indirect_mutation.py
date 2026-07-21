@@ -52,6 +52,16 @@ MUST_BLOCK = [
     "git ls-files specs | xargs rm",
     # find 自身が mutation する経路 (pipeline 内に書換ツールのトークンが現れない)
     "find issues -name '*.md' -delete",
+    # -execdir も -exec と同じく列挙結果を動的 operand として渡す
+    "find tasks -name '*.md' -execdir sed -i 's/a/b/' {} +",
+    # xargs の列挙結果が cp の destination になる経路
+    "find tasks -name '*.md' | xargs -I{} cp /tmp/replacement {}",
+    "find tasks -name '*.md' -exec cp /tmp/replacement {} \\;",
+    # tokenize 回帰: `|` が前後どちらに密着しても stage 境界と consumer 名を取り違えない
+    # (shlex.split は `|xargs` を 1 トークンにするため、判定を token 一致へ精密化した際の FN 源)
+    "find tasks -name '*.md' |xargs rm",
+    "find tasks|xargs rm",
+    "find tasks -name '*.md'|xargs sed -i 's/a/b/'",
     # 既存の直接指定経路の遮断は維持する (回帰アンカー)
     "sed -i 's/a/b/' tasks/sys-x-p01.md",
 ]
@@ -62,9 +72,20 @@ MUST_PASS = [
     "find specs -type f | xargs grep -l TODO > /tmp/out.txt",
     # git の read サブコマンドを mutation と誤認しない
     "git ls-files tasks | xargs wc -l",
+    # xargs consumer は read-only。後段の tee は静的な /tmp だけへ書く
+    "find tasks | xargs wc -l | tee /tmp/count",
+    "find tasks | xargs sed 's/a/b/' > /tmp/rendered.txt",
+    # mutation tool 名が consumer の引数にあるだけなら mutation ではない
+    "find tasks | xargs echo rm",
+    "find tasks -exec echo rm {} +",
+    # quote 内の `|` は演算子ではない (tokenize 精密化で stage を割ってはならない)
+    "find tasks | xargs grep -lE 'rm|cp' > /tmp/hits.txt",
     # 保護領域外の一括削除は通す
     "find /tmp -name '*.tmp' | xargs rm -f",
     "find /tmp -name '*.tmp' -delete",
+    # 列挙結果が source で、書込先は保護領域外に静的確定する
+    "find tasks -name '*.md' -exec cp {} /tmp/backup/ \\;",
+    "find tasks -name '*.md' | xargs cp -t /tmp/backup/",
     # pipeline スコープ: 後段は graph を read arg に取るだけ (参照↔書込 conflation の再導入防止)
     "find /tmp -name '*.tmp' | xargs rm -f && python3 scripts/x.py --graph .dev-graph/state/graph.json",
     # 保護領域を source にした複製 (書込先は保護領域外)
@@ -95,3 +116,25 @@ def test_guarded_scan_root_matches_bare_authority_dirs(guard):
         assert guard.GUARDED_SCAN_ROOT.match(token), token
     for token in ("/tmp", "plugins", "taskschedule", "eval-log"):
         assert not guard.GUARDED_SCAN_ROOT.match(token), token
+
+
+@pytest.mark.parametrize(
+    "scan_root",
+    ["{root}", "{root}/tasks", "$PWD/tasks", "${PWD}/docs", "$(pwd)/specs"],
+)
+def test_repo_root_normalisation_blocks_absolute_and_pwd_scans(guard, tmp_path, scan_root):
+    """absolute path / PWD 表現でも caller repo の保護領域を同じ境界で扱う。"""
+    root = tmp_path / "caller"
+    root.mkdir()
+    command = f"find {scan_root.replace('{root}', str(root))} -name '*.md' | xargs sed -i 's/a/b/'"
+    assert guard.destructive_graph_or_schema_operation(command, root) is True, command
+
+
+def test_same_named_directory_outside_repo_is_not_guarded(guard, tmp_path):
+    """repo 外の /tmp/tasks 等は名前が同じでも graph 権威ではない。"""
+    root = tmp_path / "caller"
+    outside = tmp_path / "tasks"
+    root.mkdir()
+    outside.mkdir()
+    command = f"find {outside} -name '*.md' | xargs rm -f"
+    assert guard.destructive_graph_or_schema_operation(command, root) is False

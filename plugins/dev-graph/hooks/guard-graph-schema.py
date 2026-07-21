@@ -35,10 +35,6 @@ GRAPH_AUTHORITY_DIR = re.compile(r"(?:^|/)\.dev-graph/?$", re.I)
 # _mutating_operands では宛先を静的抽出できない (FN)。書込先確定不能かつ保護領域を走査対象に
 # するなら安全側で遮断する。境界定義:
 # ../../system-spec-harness/hooks/references/hook-guard-protection-scope.md §2/§4。
-INDIRECT_MUTATION = re.compile(r"\bxargs\b|\bfind\b[^|;&]*-exec\b", re.I)
-# find 自身が mutation を行う経路 (-delete)。xargs/-exec と違い pipeline 内に書換ツールの
-# トークンが現れないため、別枝で拾う。
-FIND_DELETE = re.compile(r"\bfind\b[^|;&]*-delete\b", re.I)
 # 間接 mutation の実行ツール。git は restore/checkout のみが mutation で ls-files 等の read 経路が
 # 多いため除外する (`git ls-files tasks | xargs wc -l` を誤遮断しない)。
 INDIRECT_MUTATION_TOOLS = frozenset(
@@ -48,6 +44,31 @@ INDIRECT_MUTATION_TOOLS = frozenset(
 # GRAPH_OR_SCHEMA_TARGET (…/ 前提) では拾えないため、走査起点専用の境界判定を持つ。
 GUARDED_SCAN_ROOT = re.compile(
     r"^(?:\./)?(?:issues|tasks|specs|architecture|features|docs|\.dev-graph)(?:/|$)", re.I
+)
+GUARDED_ROOT_NAMES = frozenset(
+    {"issues", "tasks", "specs", "architecture", "features", "docs", ".dev-graph"}
+)
+_DYNAMIC_OPERAND = "__DEV_GRAPH_DYNAMIC_OPERAND__"
+_COMMAND_WRAPPERS = frozenset({"command", "env", "nice", "nohup", "sudo", "time"})
+_XARGS_OPTIONS_WITH_VALUE = frozenset(
+    {
+        "-a",
+        "--arg-file",
+        "-d",
+        "--delimiter",
+        "-E",
+        "--eof",
+        "-I",
+        "--replace",
+        "-L",
+        "--max-lines",
+        "-n",
+        "--max-args",
+        "-P",
+        "--max-procs",
+        "-s",
+        "--max-chars",
+    }
 )
 
 
@@ -162,29 +183,221 @@ def _pipelines(command: str) -> list[list[str]]:
     """
     groups: list[list[str]] = []
     for group in re.split(r"&&|\|\||[;\n]", command):
-        try:
-            tokens = shlex.split(group, comments=False, posix=True)
-        except ValueError:
-            tokens = group.split()
+        tokens = _tokens(group)
         if tokens:
             groups.append(tokens)
     return groups
 
 
-def _indirect_mutation_tool(tokens: list[str]) -> bool:
-    """pipeline 内に間接 mutation の実行ツール (rm/sed -i/tee 等) が現れるか。"""
-    return any(Path(token).name.lower() in INDIRECT_MUTATION_TOOLS for token in tokens)
+def _tokens(group: str) -> list[str]:
+    """quote を尊重しつつ ``|`` を独立トークンへ分離する。
+
+    ``shlex.split`` は ``|`` を演算子として扱わないため ``find tasks |xargs rm`` が
+    ``['find','tasks','|xargs','rm']`` になり、consumer 名 (``xargs``) も stage 境界も
+    取り違える。``punctuation_chars`` で ``|`` だけを切り出すと、``grep 'a|b'`` のような
+    quote 内の ``|`` は 1 トークンのまま保たれる。
+    """
+    lexer = shlex.shlex(group, posix=True, punctuation_chars="|")
+    lexer.whitespace_split = True
+    try:
+        return list(lexer)
+    except ValueError:
+        return group.split()
 
 
-def _scans_guarded_area(tokens: list[str]) -> bool:
-    """pipeline のいずれかのトークンが保護領域 (graph 権威 dir / 成果物 dir) を指すか。"""
-    return any(
-        GUARDED_SCAN_ROOT.match(token.strip("\"'")) or _guarded_target(token)
-        for token in tokens
-    )
+def _operation(tokens: list[str]) -> tuple[int, str] | None:
+    """command 先頭 (許可 wrapper 後) が既知 mutation tool なら位置と basename を返す。"""
+    for index, token in enumerate(tokens):
+        if token in _COMMAND_WRAPPERS or re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", token):
+            continue
+        operation = Path(token).name.lower()
+        if operation in INDIRECT_MUTATION_TOOLS:
+            return index, operation
+        # 実行ファイル以降の token に現れる rm/cp 等は単なる引数であり、tool ではない。
+        return None
+    return None
 
 
-def indirect_mutation_over_guarded_area(command: str) -> bool:
+def _contains_dynamic_operand(token: str) -> bool:
+    return _DYNAMIC_OPERAND in token
+
+
+def _target_directory(args: list[str]) -> tuple[bool, bool]:
+    """cp/install の -t/--target-directory の有無と、宛先が動的かを返す。"""
+    for index, token in enumerate(args):
+        if token in {"-t", "--target-directory"}:
+            target = args[index + 1] if index + 1 < len(args) else ""
+            return True, _contains_dynamic_operand(target)
+        if token.startswith("--target-directory="):
+            return True, _contains_dynamic_operand(token.split("=", 1)[1])
+        if token.startswith("-t") and len(token) > 2:
+            return True, _contains_dynamic_operand(token[2:])
+    return False, False
+
+
+def _dynamic_operand_is_mutated(tokens: list[str]) -> bool:
+    """動的列挙結果が mutation tool の実書込先になるか。
+
+    xargs/find -exec の列挙結果を ``_DYNAMIC_OPERAND`` として埋め込み、tool 別の
+    write-target 規則で判定する。単に同じ pipeline 内へ mutation tool が現れただけでは
+    遮断しない。例えば ``find tasks | xargs wc -l | tee /tmp/count`` の tee 宛先は
+    静的な /tmp であり、保護領域の列挙結果は read input にすぎない。
+    """
+    found = _operation(tokens)
+    if found is None:
+        return False
+    operation_index, operation = found
+    args = tokens[operation_index + 1 :]
+    dynamic_args = [token for token in args if _contains_dynamic_operand(token)]
+    if not dynamic_args:
+        return False
+
+    if operation in {"rm", "mv", "truncate", "tee", "touch"}:
+        # mv は source を削除するため、source/destination のどちらでも mutation になる。
+        return True
+    if operation in {"cp", "install"}:
+        has_target_directory, dynamic_target_directory = _target_directory(args)
+        if has_target_directory:
+            # cp/install -t /tmp <dynamic-source> は保護領域を読むだけ。
+            return dynamic_target_directory
+        operands = [token for token in args if not token.startswith("-")]
+        return bool(operands and _contains_dynamic_operand(operands[-1]))
+    if operation in {"sed", "perl"}:
+        in_place = any(
+            token == "--in-place"
+            or token.startswith("--in-place=")
+            or re.fullmatch(r"-[A-Za-z]*i(?:\..*)?", token)
+            for token in args
+        )
+        return in_place
+    return False
+
+
+def _xargs_replacement(tokens: list[str], xargs_index: int, operation_index: int) -> str | None:
+    """xargs -I/--replace の placeholder を返す。既定 append mode なら None。"""
+    option_tokens = tokens[xargs_index + 1 : operation_index]
+    for index, token in enumerate(option_tokens):
+        if token in {"-I", "--replace"}:
+            return option_tokens[index + 1] if index + 1 < len(option_tokens) else None
+        if token.startswith("--replace="):
+            return token.split("=", 1)[1]
+        if token.startswith("-I") and len(token) > 2:
+            return token[2:]
+    return None
+
+
+def _xargs_command_index(tokens: list[str], xargs_index: int, stage_end: int) -> int | None:
+    """xargs option 群を越えた consumer executable の位置を返す。"""
+    index = xargs_index + 1
+    while index < stage_end:
+        token = tokens[index]
+        if token == "--":
+            return index + 1 if index + 1 < stage_end else None
+        if token in _XARGS_OPTIONS_WITH_VALUE:
+            index += 2
+            continue
+        if token.startswith("--") and "=" in token:
+            index += 1
+            continue
+        if token.startswith("-I") and len(token) > 2:
+            index += 1
+            continue
+        if token.startswith("-"):
+            index += 1
+            continue
+        return index
+    return None
+
+
+def _xargs_mutates_enumerated_paths(tokens: list[str]) -> bool:
+    """xargs の列挙結果が consumer の実書込先になるか。"""
+    try:
+        xargs_index = next(
+            index for index, token in enumerate(tokens) if Path(token).name.lower() == "xargs"
+        )
+    except StopIteration:
+        return False
+    try:
+        stage_end = tokens.index("|", xargs_index + 1)
+    except ValueError:
+        stage_end = len(tokens)
+    operation_index = _xargs_command_index(tokens, xargs_index, stage_end)
+    if operation_index is None:
+        return False
+    command = tokens[operation_index:stage_end]
+    found = _operation(command)
+    if found is None:
+        return False
+    replacement = _xargs_replacement(tokens, xargs_index, operation_index)
+    if replacement:
+        command = [token.replace(replacement, _DYNAMIC_OPERAND) for token in command]
+    else:
+        # xargs の既定動作は列挙結果を consumer の末尾へ追加する。
+        command = [*command, _DYNAMIC_OPERAND]
+    return _dynamic_operand_is_mutated(command)
+
+
+def _find_exec_mutates_enumerated_paths(tokens: list[str]) -> bool:
+    """find -exec/-execdir の {} が consumer の実書込先になるか。"""
+    try:
+        exec_index = next(index for index, token in enumerate(tokens) if token in {"-exec", "-execdir"})
+    except StopIteration:
+        return False
+    try:
+        stage_end = tokens.index("|", exec_index + 1)
+    except ValueError:
+        stage_end = len(tokens)
+    command = [
+        token.replace("{}", _DYNAMIC_OPERAND) for token in tokens[exec_index + 1 : stage_end]
+        if token not in {";", "\\;", "\\", "+"}
+    ]
+    return _dynamic_operand_is_mutated(command)
+
+
+def _pipeline_has_indirect_mutation(tokens: list[str]) -> bool:
+    """pipeline が列挙した path 自体を mutation するか。"""
+    has_find = any(Path(token).name.lower() == "find" for token in tokens)
+    if has_find and "-delete" in tokens:
+        return True
+    return _xargs_mutates_enumerated_paths(tokens) or _find_exec_mutates_enumerated_paths(tokens)
+
+
+def _scans_guarded_area(tokens: list[str], repo_root: Path | None = None) -> bool:
+    """pipeline のいずれかのトークンが保護領域を走査するか。
+
+    relative path だけでなく、hook が受け取る repo root を使って absolute path、``$PWD``、
+    ``$(pwd)``、repo root 自体 (``find .``) も同一境界へ正規化する。repo 外の同名 directory
+    (例: ``/tmp/tasks``) は保護対象にしない。
+    """
+    root = repo_root.resolve() if repo_root is not None else None
+    guarded_roots = [root / name for name in GUARDED_ROOT_NAMES] if root is not None else []
+    for token in tokens:
+        candidate = token.strip("\"'")
+        if not candidate or candidate == "|":
+            continue
+        if root is None:
+            if GUARDED_SCAN_ROOT.match(candidate) or _guarded_target(candidate):
+                return True
+            continue
+        candidate = candidate.replace("${PWD}", str(root)).replace("$PWD", str(root))
+        if candidate.startswith("$(pwd)"):
+            candidate = str(root) + candidate[len("$(pwd)") :]
+        if any(ch in candidate for ch in "*?[]{}"):
+            # glob の prefix が保護領域を指す場合は静的に判定できる部分だけ使う。
+            candidate = re.split(r"[*?\[\]{}]", candidate, maxsplit=1)[0].rstrip("/")
+        if not candidate or candidate.startswith("-"):
+            continue
+        path = Path(candidate)
+        resolved = (path if path.is_absolute() else root / path).resolve(strict=False)
+        # repo root/ancestor を走査すると保護領域を包含する。
+        if resolved == root or resolved in root.parents:
+            return True
+        if any(resolved == guarded or guarded in resolved.parents for guarded in guarded_roots):
+            return True
+    return False
+
+
+def indirect_mutation_over_guarded_area(command: str, repo_root: Path | None = None) -> bool:
     """find/xargs 経由の間接 mutation が保護領域を一括書換しうるか (pipeline 単位で判定)。
 
     書込先が静的トークンに現れない (find の列挙結果として渡る) ため、
@@ -198,16 +411,12 @@ def indirect_mutation_over_guarded_area(command: str) -> bool:
     find 自身を mutation とみなす別枝で拾う。
     """
     for tokens in _pipelines(command):
-        text = " ".join(tokens)
-        indirect_write = bool(FIND_DELETE.search(text)) or (
-            bool(INDIRECT_MUTATION.search(text)) and _indirect_mutation_tool(tokens)
-        )
-        if indirect_write and _scans_guarded_area(tokens):
+        if _pipeline_has_indirect_mutation(tokens) and _scans_guarded_area(tokens, repo_root):
             return True
     return False
 
 
-def destructive_graph_or_schema_operation(command: str) -> bool:
+def destructive_graph_or_schema_operation(command: str, repo_root: Path | None = None) -> bool:
     # A read may mention the graph and independently redirect stderr, e.g.
     # ``sha256sum graph.json 2>/dev/null``.  Only a redirect whose destination
     # is guarded is a graph/schema write; otherwise read-only verification
@@ -227,7 +436,7 @@ def destructive_graph_or_schema_operation(command: str) -> bool:
     ):
         return True
     # 静的に宛先を抽出できない間接一括書換 (find/xargs) を最後に安全側で判定する。
-    return indirect_mutation_over_guarded_area(command)
+    return indirect_mutation_over_guarded_area(command, repo_root)
 
 
 def schema_ok(root: Path, context_output: str) -> tuple[bool, str]:
@@ -256,7 +465,8 @@ def main() -> int:
     command = command_of(value)
     if not command:
         return 0
-    ok, detail = context_ok(Path(args.repo_root))
+    root = Path(args.repo_root).resolve()
+    ok, detail = context_ok(root)
     if not ok:
         sys.stderr.write(f"[guard-graph-schema] BLOCKED: repository context invalid: {detail}\n")
         return 2
@@ -265,8 +475,8 @@ def main() -> int:
         reason = "Beads mutation は scripts/bd-bridge.py の単一チョークポイント経由に限定"
     elif GH_MUTATION.search(command) and "gh-bridge.py" not in command:
         reason = "GitHub bulk/write は scripts/gh-bridge.py の dry-run/ledger 経由に限定"
-    elif destructive_graph_or_schema_operation(command):
-        valid, validation_detail = schema_ok(Path(args.repo_root), detail)
+    elif destructive_graph_or_schema_operation(command, root):
+        valid, validation_detail = schema_ok(root, detail)
         if not valid:
             reason = f"C11 schema validation failed before destructive operation: {validation_detail}"
         else:

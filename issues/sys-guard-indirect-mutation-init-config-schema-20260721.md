@@ -12,7 +12,7 @@ iteration: null
 title: "dev-graph: guard hook の間接一括書換 (find/xargs) 遮断と init 生成 config の schema 適合"
 owners: ["daishiman"]
 created_at: "2026-07-21T08:40:00Z"
-updated_at: "2026-07-21T08:40:00Z"
+updated_at: "2026-07-21T10:10:00Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -73,6 +73,9 @@ implementation_readiness: {"checked_at":"2026-07-21T08:40:00Z","missing_sections
 ## 期待する挙動
 
 - 間接構文 + mutation ツール + 保護領域の走査が共起するコマンドは、書込先確定不能として BLOCK される。read-only な列挙 (`find tasks | xargs wc -l`) は通る。
+- 判定は「pipeline 内に mutation ツール名が現れるか」ではなく「列挙結果がその consumer の実書込先になるか」で行う。`cp {列挙結果} /tmp/backup/` や `find tasks | xargs wc -l | tee /tmp/count` のように書込先が保護領域外へ静的確定する経路は通る。
+- 走査対象の判定は caller repo root で正規化する。相対 path・absolute path・`$PWD`・`find .` は同じ保護境界として扱い、repo 外の同名ディレクトリ (`/tmp/tasks`) は保護しない。
+- 上記の token 単位判定が成立する前提として、`|` は前後の空白有無によらず独立トークンへ分離する (`find tasks |xargs rm` を取りこぼさない)。quote 内の `|` (`grep 'a|b'`) は演算子として扱わない。
 - `repo-config.example.json` と実運用 `config.json` が `repo-config.schema.json` に適合し、それが pytest で固定される。
 
 ## 再現手順またはユースケース

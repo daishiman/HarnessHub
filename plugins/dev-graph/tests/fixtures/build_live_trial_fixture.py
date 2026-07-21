@@ -14,6 +14,7 @@
   いるのは、再生成のたびに fixture の digest が変わると trial の再現性が失われるため。
 
 出力 (--out DIR):
+  DIR/.dev-graph-live-trial-fixture    --force 再生成を許可する ownership marker
   DIR/.dev-graph/config.json          repo-config.schema.json 準拠
   DIR/.dev-graph/state/graph.json     graph-node.schema.json 準拠 (task 2 件)
   DIR/tasks/lt-task-001.md            LT-TASK-001 (depends_on なし)
@@ -40,6 +41,8 @@ from pathlib import Path
 # 固定 timestamp: 再生成のたびに fixture digest が動くと trial の再現性が失われる。
 FIXED_TS = "2026-07-21T00:00:00Z"
 CONTENT_ROOTS = ("issues", "tasks", "specs", "architecture", "features", "docs", "system-spec")
+OWNERSHIP_MARKER = ".dev-graph-live-trial-fixture"
+OWNERSHIP_MARKER_CONTENT = "generated-by: build_live_trial_fixture.py\n"
 
 
 def config_document(repository_id: str) -> dict:
@@ -71,10 +74,28 @@ def config_document(repository_id: str) -> dict:
                 "target_branch": "default",
                 "closed_unmerged": "keep_active",
                 "issue_reopened": "reopen_task",
+                "revert": "create_follow_up_unless_issue_reopened",
+                "local_reconciliation": ["manual_sync"],
+                "scheduled_reconciliation": {
+                    "enabled": False,
+                    "interval_minutes": 5,
+                    "owner": "host_scheduler",
+                    "entry_point": "dev-graph sync --reconcile-lifecycle",
+                },
             },
         },
-        # tracker mode=none: fixture 内の trial が実 Beads / GitHub を触らないことを構造保証する。
-        "execution_tracker": {"mode": "none"},
+        # repo config の mode enum は beads/github/both。fixture node 自体は tracker_binding=none
+        # かつ github local_only で外部投影を禁止し、fixture 内には .beads DB も作らない。
+        # したがって誤って repo default を使っても bd は fail-closed し、外部 write へ到達しない。
+        "execution_tracker": {
+            "mode": "beads",
+            "beads": {
+                "issue_prefix": "livetrial",
+                "server_mode": False,
+                "github_mirror": "none",
+                "board": "none",
+            },
+        },
         "worktrees": {
             "enabled": False,
             "lease_ttl_seconds": 1800,
@@ -279,6 +300,15 @@ def verify(out: Path) -> int:
     return proc.returncode
 
 
+def owned_fixture(out: Path) -> bool:
+    """--force で置換してよい、本 script 生成済みの fixture か。"""
+    marker = out / OWNERSHIP_MARKER
+    try:
+        return marker.is_file() and marker.read_text(encoding="utf-8") == OWNERSHIP_MARKER_CONTENT
+    except OSError:
+        return False
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", required=True, help="fixture repo の生成先")
@@ -301,8 +331,15 @@ def main() -> int:
         if not args.force:
             print(f"already exists (use --force to rebuild): {out}", file=sys.stderr)
             return 2
+        if not owned_fixture(out):
+            print(
+                f"refusing --force: ownership marker is missing or invalid: {out / OWNERSHIP_MARKER}",
+                file=sys.stderr,
+            )
+            return 2
         shutil.rmtree(out)
     out.mkdir(parents=True)
+    (out / OWNERSHIP_MARKER).write_text(OWNERSHIP_MARKER_CONTENT, encoding="utf-8")
     # git init を先に済ませてから identity を導出する (C24 の導出規則が git common dir 依存)。
     git_init(out)
     if args.empty:
