@@ -140,7 +140,8 @@ feedback_contract:
 
 - engine=inline / fork=subagent / max_loops=5 / loop_semantics = **per-invocation chunk limit**。
 - 1 invocation で最大 5 loop (質問→回答→反映) を回す。5 loop 到達で未収集が残れば `hearing_progress.complete=false` と `next_question` を保存し、resumable に返す (`--resume` で続行)。
-- 未収集0を満たしたときだけ `complete=true`・`next_question=null`。未収集セルを完了扱いしない。
+- chunk は未収集0を満たしたときだけ `complete=true`・`next_question=null` を書く。未収集セルを完了扱いしない。ただしこれは **chunk 書込時点の不変則**であり、その後の `reopen` / `add-category` で `hearing_progress` は stale になり得る。
+- `hearing_progress` の各 field の意味論 (`loop_count` = 直近 chunk の turn 数で累計ではない / `complete` を `true` へ進めるのは chunk のみ / reopen・add-category 後の stale) の正本は `references/spec-state-contract.md`「hearing_progress の意味論 (SSOT)」。完了判定には `complete` 単独でなく `--require-complete` を使う。
 - ループの各周回は「未達 = 未収集セル」を最小化する手順を都度立案→ writer で適用→ `validate-coverage-matrix.py` で検証、を繰り返す (固定手順を持たない)。
 
 ## feedback-contract (with-feedback-contract)
@@ -167,6 +168,7 @@ feedback_contract:
 3. 5 loop 到達で未収集が残るなら未完了として保存する。未収集を勝手に確定/対象外にしない。
 4. `category_aggregate` は writer が真理値表から再計算する (手書きしない)。
 5. platform id は canonical 6 種のみ (別名を作らない)。
+6. `qa_log` は 1 entry = 1 論点。複数論点を束ねると C06 が論点別に中立性を検証できない。既登録 entry の逐語は改変せず、束ねが判明したら分離索引を新規 entry として追記する (契約は `references/spec-state-contract.md`「qa_log の論点分離」)。
 
 ## Additional Resources
 

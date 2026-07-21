@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
     "component_id": "C15",
-    "skill_md_sha256": "b8e43d9b95cc305f7523552c4030291ba8c2cd6f073213cb60fb78b8c143d5ee"
+    "skill_md_sha256": "ed6459967c45115aaefd728f145c62747ddc5c189ead5475cca1df71fd03af15"
   },
   "verdict": "PASS",
-  "reviewer": "audit-next-worktree-20260720",
+  "reviewer": "parity-manifest-provenance-worktree-20260721",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "schedule-positive-ready-set",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T124600-r5/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T124600-r5/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T124600-r5/transcript.jsonl",
-        "independent: fresh evaluator replay of r5 task, pane, execution receipt, graph, and canonical lease ledger"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/transcript.jsonl",
+        "independent: fresh evaluator replay of r6 task, pane, execution receipt, graph, and canonical lease ledger"
       ],
-      "observed": "The 2026-07-21 live trial invoked the target Skill, delegated schedule execution and C17 verification to separate Agents, and passed a fresh evaluator. The actual read-only receipt contains LT-TASK-001 as the sole ready task with no unmet dependency, no lease/resource conflict, a unique branch/claim hint, and unchanged graph/tracker/lease digests."
+      "observed": "bd-bridge.py / schedule-graph.py の変更で closure digest が動いたため 2026-07-21 に再実走 (r6)。対象 Skill を最初の tool call で起動し、schedule 実行と C17 検証をそれぞれ別 Agent へ分離した。read-only receipt は LT-TASK-001 を唯一の ready task とし、未充足依存 0・lease/resource conflict 0・一意な branch/claim hint・graph/tracker/lease digest 不変。fresh evaluator が同一引数で schedule-graph.py を再実行し executed_at 以外が receipt と完全一致することを確認して PASS。"
     },
     "OUT2": {
       "status": "PASS",

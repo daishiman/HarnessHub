@@ -9,6 +9,10 @@
 LLM_COV_SINCE ?= 2026-06-24
 COV_THRESHOLD ?= 80
 
+# PROVENANCE_BASE: live-trial verdict の digest 単独書き換え検査の比較起点。
+# CI は origin/main、作業中の局所確認は `make content-review PROVENANCE_BASE=HEAD` が使える。
+PROVENANCE_BASE ?= origin/main
+
 ## sync: creator-kit/skills/ を .claude/skills/ に同期する（--apply）
 sync:
 	bash scripts/sync-skills-to-claude.sh --apply
@@ -139,6 +143,7 @@ feedback-contract:
 content-review:
 	python3 scripts/lint-content-review.py --all
 	python3 scripts/lint-live-trial-verdict.py --all
+	python3 scripts/lint-live-trial-verdict.py --check-provenance $(PROVENANCE_BASE)
 
 ## pytest: tests/ 配下の振る舞いテストを実行する (hook-guard-skillgen 等の機械保証を回帰検証)
 pytest:

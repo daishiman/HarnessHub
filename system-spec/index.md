@@ -45,8 +45,8 @@ kind: index
 | github-actions | 2026-07-16 (取得日。ページ本文に最終更新日の明示なし) | GitHub, Inc. (docs.github.com) | https://docs.github.com/en/actions | 2026-07-16T07:43:59Z | 2026-07-16T07:43:59Z |
 | turso | 2026-07-16 (取得日。ページ内に明示の更新日なし) | Turso (turso.tech) | https://turso.tech/pricing | 2026-07-16T08:15:11Z | 2026-07-16T08:15:11Z |
 | drizzle-orm | v1.0.0-rc.4 (v1 プレリリース現行) / 安定版 0.45.2 | Drizzle Team (github.com) | https://github.com/drizzle-team/drizzle-orm/releases | 2026-07-16T14:09:13Z | 2026-07-18T14:57:14Z |
-| authjs | next-auth@5.0.0-beta 以降 (@auth/* namespace) | Auth.js (OSS) (authjs.dev) | https://authjs.dev/getting-started | 2026-07-16T08:11:29Z | 2026-07-18T14:57:14Z |
-| claude-code-plugins | 2026-07-18 (最新確認日。本文の記載 anchor は v2.1.196 時点、CLI 本体は 2026-07 時点で v2.1.203+ 系まで継続リリース) | Anthropic (code.claude.com) | https://code.claude.com/docs/en/plugin-marketplaces | 2026-07-16T08:11:29Z | 2026-07-18T14:57:14Z |
+| authjs | next-auth@5.0.0-beta 以降 (@auth/* namespace) | Auth.js (OSS) (authjs.dev) | https://authjs.dev/getting-started | 2026-07-21T07:32:40Z | 2026-07-21T07:32:40Z |
+| claude-code-plugins | 2026-07-21 (直接取得日。ページ本文に最終更新日の明示なし。挙動 anchor は Claude Code v2.1.196) | Anthropic (code.claude.com) | https://code.claude.com/docs/en/plugin-marketplaces | 2026-07-21T07:32:40Z | 2026-07-21T07:32:40Z |
 | cloudflare-workers | Jul 7, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/platform/pricing/ | 2026-07-16T08:42:05Z | 2026-07-16T08:42:05Z |
 | wrangler | Jul 3, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/wrangler/ | 2026-07-16T08:42:06Z | 2026-07-16T08:42:06Z |
 | cloudflare-r2 | May 28, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/r2/pricing/ | 2026-07-16T08:42:06Z | 2026-07-16T08:42:06Z |
