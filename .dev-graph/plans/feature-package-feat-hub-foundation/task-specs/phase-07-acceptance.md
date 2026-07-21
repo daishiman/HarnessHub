@@ -3,6 +3,9 @@
 ## Machine-readable registration fields
 
 - feature_package_id: feature-package/feat-hub-foundation (13 task で共有)
+- feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
+- feature_acceptance: 4 items (A1-A4)
+- quality_constraints: 9 items
 - owners: ["daishiman"]
 - tags: ["feat-hub-foundation", "stage-1", "infrastructure", "acceptance"]
 - related_nodes: ["feat-hub-foundation", "arch-harness-hub-infrastructure", "arch-harness-hub-frontend"]
@@ -16,7 +19,7 @@
 
 ## 目的
 
-P06 のテスト実行結果を goal-spec の acceptance 3 件 (CI が test→deploy を完走する / Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する / SLO 99.5% の計測と /health が稼働する) と突合し、feature 単位の受入可否を判定する。この task 完了時点で、feature-execution-package-contract.md §7 が定める「P07/P10/P11 の evidence から feature acceptance が満たされた」という完了条件のうち P07 分の判定材料が揃っている状態にする。
+P06 のテスト実行結果を goal-spec の acceptance 4 件 (A1 CI test→deploy / A2 Worker bundle 3MiB / A3 SLO 99.5% と /health / A4 共通層の単一実装と consumer contract) と突合し、feature 単位の受入可否を判定する。この task 完了時点で、feature-execution-package-contract.md §7 が定める「P07/P10/P11 の evidence から feature acceptance が満たされた」という完了条件のうち P07 分の判定材料が揃っている状態にする。
 
 ## 背景
 
@@ -37,7 +40,7 @@ feature-execution-package-contract.md §7 は「featureを doneへ roll upでき
 - Data: N/A: DB スキーマ実体は feat-domain-model-db の scope であり、本 task の判定対象に含めない
 - Infrastructure: applicable + change: 「CI が test→deploy を完走する」「Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する」の 2 件を P06 の CI run ログと bundle サイズレポートから判定し、acceptance-report.md に記録する (対象物への変更なし)
 - Security: N/A: 認証・認可は feat-auth-tenancy の scope であり、本 feature の受入判定に含めない
-- Quality: applicable + change: acceptance-report.md の新規作成、3 件の acceptance すべての合否を記録する
+- Quality: applicable + change: acceptance-report.md の新規作成、4 件の acceptance (A1-A4) すべての合否を記録する
 - Documentation: applicable + change: docs/features/feat-hub-foundation/acceptance-report.md を新規作成する
 - Operations: applicable + change: 「SLO 99.5% の計測と /health が稼働する」を P06 の外部死活監視疎通確認と SLO ダッシュボード実測値表示から判定し、acceptance-report.md に記録する (対象物への変更なし)
 
@@ -49,7 +52,7 @@ feature-execution-package-contract.md §7 は「featureを doneへ roll upでき
 
 ## 成果物
 
-- Produced artifacts: docs/features/feat-hub-foundation/acceptance-report.md (goal-spec acceptance 3 件それぞれの合否判定と根拠)
+- Produced artifacts: docs/features/feat-hub-foundation/acceptance-report.md (goal-spec acceptance 4 件それぞれの合否判定と根拠)
 - Consumed artifacts: P06 の CI run ログ、bundle サイズレポート、/health 応答ログ、.dev-graph/staging/goal-spec.json
 - Write scope/touches: docs/features/feat-hub-foundation/acceptance-report.md
 
@@ -78,11 +81,11 @@ feature-execution-package-contract.md §7 は「featureを doneへ roll upでき
 ## Verification and evidence
 
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging`
-- Required evidence: acceptance-report.md に goal-spec acceptance 3 件それぞれの合否 (合格/不合格) と根拠となる P06 の証跡パスが明記されていること
+- Required evidence: acceptance-report.md に goal-spec acceptance 4 件 (A1-A4) それぞれの合否 (合格/不合格) と根拠となる P06 の証跡パスが明記されていること
 
 ## Rollout and rollback
 
-- Rollout: acceptance-report.md で全 3 件が合格と判定された場合、P08 (refactoring-migration) へ引き継ぐ
+- Rollout: acceptance-report.md で全 4 件が合格と判定された場合、P08 (refactoring-migration) へ引き継ぐ
 - Rollback trigger and steps: 1 件でも不合格の場合、不合格項目の根本原因が P05 (実装) か P06 (テスト) のどちらにあるかを acceptance-report.md に記録し、該当 task を再実行対象として dev-graph へ差し戻す
 
 ## Handoff

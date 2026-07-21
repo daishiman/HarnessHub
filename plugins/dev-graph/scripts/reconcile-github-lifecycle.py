@@ -91,9 +91,12 @@ def c24_context(root: Path, resolver: Path) -> dict[str, Any]:
         root,
         "C24 repository context",
     )
-    required = ("repo_root", "repository_id", "git_common_dir", "branch", "head_sha")
-    if any(not receipt.get(key) for key in required):
+    required_identity = ("repo_root", "repository_id", "git_common_dir", "head_sha")
+    if any(not receipt.get(key) for key in required_identity) or "branch" not in receipt:
         raise ContractError("C24 repository context omits required identity")
+    branch = receipt["branch"]
+    if branch is not None and (not isinstance(branch, str) or not branch.strip()):
+        raise ContractError("C24 repository context returned an invalid branch state")
     if Path(str(receipt["repo_root"])).resolve() != root:
         raise ContractError("C24 repository context root mismatch")
     repository_id = str(receipt["repository_id"])
@@ -157,6 +160,29 @@ def _local_evidence(root: Path, reference: str) -> Path | None:
     return path
 
 
+def _published_task_verification(root: Path, node: dict[str, Any]) -> tuple[str | None, Path | None]:
+    lineage = node.get("source_lineage") or {}
+    raw = lineage.get("source_path") if isinstance(lineage, dict) else None
+    if not isinstance(raw, str) or not raw:
+        return None, None
+    relative = Path(raw)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ContractError(f"{_node_id(node)} published task spec escapes repository authority")
+    try:
+        path = (root / relative).resolve(strict=True)
+        path.relative_to(root)
+    except (OSError, ValueError) as exc:
+        raise ContractError(f"{_node_id(node)} published task spec is not a repository file") from exc
+    if not path.is_file():
+        raise ContractError(f"{_node_id(node)} published task spec is not a regular file")
+    source_digest = lineage.get("source_digest")
+    if isinstance(source_digest, str) and re.fullmatch(r"[0-9a-f]{64}", source_digest):
+        if source_digest not in path.parts:
+            raise ContractError(f"{_node_id(node)} published task spec generation does not match source digest")
+    body = path.read_text(encoding="utf-8")
+    return _section(body, ("Verification and evidence", "\u691c\u8a3c\u65b9\u6cd5")), path
+
+
 def _validate_task_artifact(
     root: Path,
     node: dict[str, Any],
@@ -174,9 +200,17 @@ def _validate_task_artifact(
     if require_completion_evidence and not allow_pending_status and frontmatter.get("status") != "done":
         raise ContractError(f"{node_id} task Markdown status is not done")
     verification = _section(body, ("Verification and evidence", "\u691c\u8a3c\u65b9\u6cd5"))
+    verification_source: Path | None = None
+    if not verification:
+        verification, verification_source = _published_task_verification(root, node)
     if not verification or PLACEHOLDER.search(verification):
         raise ContractError(f"{node_id} task Markdown has incomplete verification/evidence section")
     result: dict[str, Any] = {"file_path": path.relative_to(root).as_posix(), "sha256": _sha256(path)}
+    if verification_source is not None:
+        result["verification_source"] = {
+            "file_path": verification_source.relative_to(root).as_posix(),
+            "sha256": _sha256(verification_source),
+        }
     if not require_completion_evidence:
         return result
     completion = node.get("completion_evidence") or {}
@@ -407,14 +441,19 @@ def _beads_gate_verified(
     issue_id = (node.get("beads_linkage") or {}).get("bd_issue_id")
     if not issue_id:
         return False
-    receipt = _invoke_json(
-        [
-            sys.executable, str(bridge), "--repo-root", str(root), "--op", "gate-check",
-            "--bd-issue-id", str(issue_id), "--pr", str(pr_number),
-        ],
-        root,
-        "C28 gh:pr gate check",
-    )
+    try:
+        receipt = _invoke_json(
+            [
+                sys.executable, str(bridge), "--repo-root", str(root), "--op", "gate-check",
+                "--bd-issue-id", str(issue_id), "--pr", str(pr_number),
+            ],
+            root,
+            "C28 gh:pr gate check",
+        )
+    except ContractError as exc:
+        if "gh:pr gate does not exist" in str(exc):
+            return False
+        raise
     return receipt.get("op") == "gate-check" and bool((receipt.get("result") or {}).get("gate"))
 
 
@@ -511,7 +550,8 @@ def main() -> int:
     resolver = Path(a.context_resolver).resolve() if a.context_resolver else Path(__file__).with_name("resolve-repo-context.py")
     context = c24_context(root, resolver)
     common = Path(str(context["git_common_dir"])).resolve()
-    branch = str(context["branch"])
+    branch_value = context["branch"]
+    branch = str(branch_value) if branch_value is not None else None
     head_oid = str(context["head_sha"])
     clean = not run(["git", "-C", str(root), "status", "--porcelain"], check=False).stdout.strip()
     coord = common / "dev-graph"
