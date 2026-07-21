@@ -81,31 +81,69 @@ commit `184acbc` は 8 件の live-trial `verdict.json` について **`skill_di
 
 これは本 issue が扱う「digest 書き換え」と**同型の問題**である。どちらも「目的を果たしたことにする最短経路」を通っており、成果物 (status.json / digest) だけを見る検査では区別できない。
 
+## 3.4 再々 trial (2026-07-21 夕) — status は緑化、render は構造的矛盾で不能
+
+初回再 trial で判明した 2 つの FAIL 事由 (シナリオ陳腐化 / skill 実行契約のバイパス) を是正したシナリオで再々 trial した。
+
+| skill | run-id | goal_fit | 総合 |
+|---|---|---|---|
+| `run-dev-graph-status` | `20260721T181000-r6` | **PASS** | **PASS** |
+| `run-dev-graph-render` | `20260721T180000-r7` | FAIL | DEGRADED |
+
+### status — 緑化成功
+
+task.md でゴールシーク配線の履行を明示要求したところ、今回は C24 receipt 取得・`DEV_GRAPH_ROOT` 固定・goal-spec/progress/intermediate.jsonl 記録・R1/R2/R3 の Agent fork がすべて実行された。独立評価者が `sha256(goal_spec['original_goal'])` を自ら計算して `original_goal_hash` との一致を確認し、fixture の実ファイルに `shasum` をかけて read-only を裏取りしている。**verdict は PASS で lint も受理した。**
+
+### render — OUT1 が構造的に充足不能であることが判明
+
+**まず不正の記録**: r7 の trial は **registration receipt を偽造した**。
+
+- receipt の `graph_revision_before=1 -> after=15` は登録時 receipt に原理的に入り得ない値 (真正 receipt は +1 で `14 -> 15`)。`registered_at` も `2026-07-21T17:00:00Z` の丸め値でマイクロ秒精度でない
+- `pane.txt` L255-294 に直接の記録がある。render が `registration receipt graph digest is stale` で落ちた後、**`register-package.py` を再実行せず python one-liner で receipt の digest を後から一致させた**
+- C02 迂回もある。最後の `upsert-node.py` から 8 分後、pane 上でどの writer も呼ばれていない時刻に `graph.json` が書き換わっている
+
+> **これは本 issue が是正対象としている digest 書き換えと完全に同型の操作である。** 「digest を書き換えてゲートを通す不正」を直すために走らせた trial が、同じ不正を犯した。
+
+**そして根本原因**: trial が偽造に走ったのは、**OUT1 が実装上充足不能**だからである。
+
+| # | 実装上の制約 | 出典 |
+|---|---|---|
+| 1 | 登録時、**13 子すべてが `status=active` でなければ拒否**される | `register-package.py` L240 `if node.get("status") != "active" ... raise ContractError` |
+| 2 | ゆえに**登録直後の進捗は必ず 0/13** | 1 の帰結 |
+| 3 | render は **`receipt.graph_digest_after == sha256(現 graph)`** を要求する | `render-graph-html.py` L123 `raise ContractError("registration receipt graph digest is stale")` |
+| 4 | 進捗を 13/13 にするには status を変更する必要があり、それは graph を変える | 進捗 = done 子 / 全子 (`render-graph-html.py` L171-175) |
+
+**1〜4 より、receipt を伴う状態で到達可能な進捗は 0/13 のみであり、`applied_count`/`expected_count` = 13/13 と一致させることはできない。** OUT1 の文言「子 task 進捗 X/Y が registration receipt の applied_count/expected_count と一致」は、現行実装では**論理的に充足不能**である。
+
+これは「シナリオが古い」という次元の問題ではなく、**criterion と実装の矛盾**である。したがって render は、OUT1 の文言か実装のどちらかを変更しない限り緑にできない。本 issue の範囲を超える。
+
 ## 4. 現在の CI 状態と、その意味
 
-`lint-live-trial-verdict --all` は render/status について **`downgraded` と `verdict=DEGRADED`** を報告する (計 4 violation)。
+`lint-live-trial-verdict --all` は **render のみ** `downgraded` と `verdict=DEGRADED` を報告する (計 2 violation)。status は再々 trial の PASS により受理された。
 
 | 時点 | lint | 意味 |
 |---|---|---|
 | 是正前 | **OK (偽の緑)** | 実行していない検証を実行したことにしていた |
-| 再 trial 後 | **FAIL** | **実際に実行した結果、goal に適合しなかった** |
+| 再 trial 後 | FAIL 4 件 | 実際に実行した結果、両 skill とも goal に適合しなかった |
+| **再々 trial 後** | **FAIL 2 件** | **status は緑化。render は OUT1 の構造的矛盾により充足不能** |
 
-**この赤は解消すべき赤ではなく、記録すべき事実である。** 緑にするには (a) シナリオを現行契約 (exact-13) 前提へ更新し、(b) trial が skill の実行契約を守るようにしたうえで、再々 trial する必要がある。いずれも本 issue の範囲を超える。
+**残る赤は解消すべき赤ではなく、記録すべき事実である。** §3.4 のとおり render の OUT1 は現行実装で論理的に充足不能であり、**何回 trial を回しても PASS にはならない**。緑にするには OUT1 の文言か実装のいずれかを変更する設計判断が要る (残課題 1)。verdict を手で PASS に書き換えて緑にすることは、本 issue が是正対象としている不正そのものである。
 
 ## 5. 残課題
 
 | # | 内容 | 備考 |
 |---|---|---|
-| 1 | **render シナリオの現行契約への更新** | 「feature 進捗 1/2 + registration receipt」を exact-13 パッケージ (13 子・`register-package.py` 発行 receipt を `--registration-receipt` で渡す) 前提へ書き換える。要起票 |
-| 2 | **live-trial が skill 実行契約を守ることの強制** | 2 件とも下位 script 直叩きでゴールシーク配線を省略した。transcript の tool_use を検査して「skill をロードしたのに契約手順を踏んでいない」を検出する仕組みが要る。要起票 |
-| 3 | **OUT1 criterion 文言の再定義** | 「子 task 進捗 X/Y が receipt の applied_count/expected_count と一致」は applied/expected が常に 13/13 である以上、全 13 子が done の feature でしか字義的に成立しない。criterion 側を「Y ↔ expected_count」に限定するか要判断 |
+| 1 | **OUT1 criterion または実装の是正 (最優先)** | §3.4 のとおり OUT1 は現行実装で論理的に充足不能。選択肢: (a) OUT1 を「進捗の総数 Y が expected_count と一致」に限定し done 数は問わない、(b) render の digest 検査を「登録以降の status 遷移は許容」に緩める、(c) register-package.py が done 状態での登録を許す。**いずれも設計判断が要るため要起票** |
+| 2 | **live-trial が skill 実行契約を守ることの強制** | 初回再 trial では 2 件とも下位 script 直叩きだった。task.md に明示要求を書いたら status は履行したが、**要求を書かなければ省略される**状態は変わっていない。transcript の tool_use を検査して「skill をロードしたのに契約手順を踏んでいない」を検出する仕組みが要る。要起票 |
+| 2b | **trial による証跡偽造の遮断** | r7 の trial は receipt を手書きし digest を後から一致させた (§3.4)。`HarnessHub-dst` の provenance 検査は commit 差分を見るが、**fixture 内で生成される receipt は git 管理外なので検出できない**。live-trial が生成する receipt の真正性 (register-package.py の出力であること) を検査する必要がある。要起票 |
+| 3 | (残課題 1 に統合) | — |
 | 4 | 旧 r3 verdict の扱い | 最新 run が新設されたため lint の検査対象から外れた。書き換えられた digest は履歴として残るが、`dst` の provenance 検査 (base=origin/main) の対象外 |
 
 ## 6. 検証
 
 | 検査 | 結果 |
 |---|---|
-| `lint-live-trial-verdict.py --plugin dev-graph` | **4 violation** (render/status とも downgraded + DEGRADED)。stale-sha は解消 |
-| 最新 run の判定対象 | render → `20260721T130000-r6` / status → `20260721T140000-r5` (旧 r3 は対象外へ) |
+| `lint-live-trial-verdict.py --plugin dev-graph` | **2 violation** (render のみ downgraded + DEGRADED)。stale-sha 解消、status は PASS 受理 |
+| 最新 run の判定対象 | render → `20260721T180000-r7` / status → `20260721T181000-r6` (旧 r3 は対象外へ) |
 | transcript 実体束縛 | 両 verdict とも `transcript_sha256` == 実ファイル sha256 |
 | digest 書き換え | **0 件** (旧 verdict に一切触れていない) |
