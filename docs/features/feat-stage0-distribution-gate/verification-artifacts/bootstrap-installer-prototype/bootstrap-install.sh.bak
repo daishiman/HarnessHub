@@ -13,7 +13,7 @@
 
 set -eu
 
-MARKETPLACE_REPO="${H7_MARKETPLACE_REPO:-daishiman/h7-probe}"
+MARKETPLACE_REPO="${H7_MARKETPLACE_REPO:-daishiman/HarnessHub}"
 PLUGIN_NAME="${H7_PLUGIN_NAME:-h7-probe}"
 
 log() { printf '[h7-bootstrap] %s\n' "$1"; }

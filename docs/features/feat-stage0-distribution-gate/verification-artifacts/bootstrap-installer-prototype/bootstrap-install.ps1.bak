@@ -11,7 +11,7 @@
 
 $ErrorActionPreference = 'Continue'
 
-$MarketplaceRepo = if ($env:H7_MARKETPLACE_REPO) { $env:H7_MARKETPLACE_REPO } else { 'daishiman/h7-probe' }
+$MarketplaceRepo = if ($env:H7_MARKETPLACE_REPO) { $env:H7_MARKETPLACE_REPO } else { 'daishiman/HarnessHub' }
 $PluginName      = if ($env:H7_PLUGIN_NAME)      { $env:H7_PLUGIN_NAME }      else { 'h7-probe' }
 
 function Write-Log($msg) { Write-Output "[h7-bootstrap] $msg" }
