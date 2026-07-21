@@ -57,11 +57,11 @@ def _contract_plugins() -> list[Path]:
     )
 
 
-# package-contract は持つが entry_points を宣言しておらず plan-live-trials が
-# fail-closed で停止する既知の 2 件 (HarnessHub-c8m の対象外。HarnessHub-btn で是正する)。
-# 黙って skip すると新たな未宣言が同じ穴に落ちるため、名指しの allowlist にして
-# ここに無い plugin は fail させる。
-ENTRY_POINTS_UNDECLARED = {"mf-kessai-invoice-check", "slide-report-generator"}
+# entry_points 未宣言の既知 2 件 (mf-kessai-invoice-check / slide-report-generator) は
+# HarnessHub-btn で是正済みのため allowlist を空にした。以後は例外なく全 plugin が
+# 計画可能であることを要求する。宣言漏れそのものの検査は
+# tests/test_package_contract_entry_points.py が担当する。
+ENTRY_POINTS_UNDECLARED: set[str] = set()
 
 
 def test_every_skill_resolves_its_declared_behavior_closure():
