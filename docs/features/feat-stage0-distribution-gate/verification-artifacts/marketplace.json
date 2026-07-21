@@ -12,8 +12,7 @@
       "version": "0.1.0",
       "source": {
         "source": "github",
-        "repo": "daishiman/HarnessHub",
-        "subdir": "docs/features/feat-stage0-distribution-gate/verification-artifacts/minimal-skill-package"
+        "repo": "daishiman/h7-probe"
       }
     }
   ]
