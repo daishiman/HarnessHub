@@ -195,13 +195,39 @@ python3 scripts/apply-spec-transition.py set-knowledge-candidate \
   --state spec-state.json --candidate knowledge-candidate.json
 ```
 
+## hearing_progress の意味論 (SSOT)
+
+`hearing_progress` は goal-seek chunk の **中断/再開状態** だけを表す 3 field の record。writer (`scripts/apply-spec-transition.py`) 以外は書かない。
+
+> **前提 (最重要)**: 下表の「意味」は **chunk が書き込んだ時点で成立する不変則** であり、**state の不変則ではない**。`chunk` 以外の op (`apply` / `add-category`) は matrix を動かしても `complete` を更新しないため、書込後に matrix が変わると `hearing_progress` は stale になる。判定は必ず matrix 実測 (`--require-complete`) で行う。
+
+| field | 型 | 意味 (chunk 書込時点の不変則) | 更新する経路 |
+|---|---|---|---|
+| `loop_count` | int | **直近 1 invocation (chunk) で適用した turn 数**。chunk 開始時に 0 へリセットし turn 適用ごとに +1 する。累計ではない。上限は `max_loops` (既定 5)。 | `chunk` (更新) / `bootstrap`・`init` (0 へ初期化) |
+| `next_question` | string \| null | 未収集セルが残るときの次質問文 (カテゴリ順 → canonical platform 正順で最初の未収集セル由来)。書込時点で未収集0なら `null`。 | `chunk` / `init` / `add-category` / `bootstrap` |
+| `complete` | bool | 書込時点で未収集0なら `true`。 | `chunk` (更新) / `bootstrap`・`init` (`false` へ初期化) |
+
+- **累計ではない (loop_count)**: `run_chunk` はループ開始前に `loop_count = 0` を明示代入する。よって「通算で何 loop 回したか」は spec-state に保持しない。履歴の正本は `qa_log` / `reopen_log` の追記であり、`loop_count` を進捗率の分子に使わない (分母となる総 loop 数は事前に決まらない)。進捗は matrix の未収集セル数で測る。
+- **`complete` を `true` へ進める経路は chunk だけ**: `apply` (単一セル op) は `hearing_progress` を一切書かないため、`apply` で最後の未収集セルを埋めても `complete` は `false` のまま据え置かれる (`init` / `bootstrap` は `false` へ戻す初期化のみ)。したがって `complete` 単独を「ヒアリング完了」の判定に使わず、完了判定の正本は `validate-coverage-matrix.py --require-complete` (未収集0) とする。
+- **stale になる 2 経路 (誤読の温床)**: `complete=true` の後に (a) `reopen` で確定セルを未収集へ戻す、(b) `add-category` で新カテゴリ行 (全セル未収集) を足す、のいずれかを行うと、未収集が残っているのに `complete=true` が残留する (`reopen` は `hearing_progress` を触らず、`add_category` は `next_question` のみ更新する)。**この状態は writer の欠陥ではなく仕様**であり、「未収集セルが残るのに `complete=true`」を早期停止の兆候として扱う監査 (C06 の `R6-audit-hearing` / `system-spec-hearing-auditor`) は false positive を避ける必要がある。ただし **除外は state 全体ではなくセル単位で行う**: 除外してよいのは (a) `reopened_from` / `reopen_reason` を持つ未収集セル (reopen が付す目印。再 `confirm`/`exclude` でセルごと置き換わるため自己解消する)、(b) `category_aggregate` が `未着手` (= 全セル未収集 = 追加直後) のカテゴリに属する未収集セル、の 2 種のみ。`reopen_log` は追記専用で消えないため、**「`reopen_log` に記録があれば除外」としてはならない** (一度 reopen した state が以後永久に早期停止検出から外れ、真の取りこぼしを恒久的に隠す)。上記 2 種を除いてなお未収集セルが残るなら、`complete=true` は早期停止として検出する。
+- **`complete=true` かつ `loop_count=0` になる経路**: 未収集0の state に対して **適用 turn 数が 0 になる `chunk`** を実行した場合に限る。具体的には (a) `turns` が空配列、(b) `--max-loops 0` (argparse に下限検証がないため CLI から到達可能) の 2 通りで、いずれも `processed=0` のまま `unresolved==0` により `complete=true` が書かれる。`apply` だけではこの組合せに到達しない。
+- **resume 契約**: `complete=false` かつ `next_question` 非 null が resumable な中断状態。`--resume` はこの 2 field から再開し、`loop_count` は再開後の chunk で 0 から数え直す。
+
+## qa_log の論点分離 (1 entry = 1 論点)
+
+`qa_log` entry は監査 (C06) が「どの決定がどの往復に接地するか」を検証する単位であるため、**1 entry に 1 論点** を原則とする。
+
+- 複数論点を 1 entry へ束ねると、後段で論点ごとの中立性・遡及性を分離検証できない (C06 2026-07-17 の qa-014 指摘がこの型)。
+- 既登録 entry の `question` / `answer` は **逐語のまま改変しない** (writer は既存 `id` を上書きしない)。束ねが後から判明した場合は、既存 entry を編集せず **分離索引を新規 entry として追記** し、そこから元 entry を参照する (前例: qa-047 の再登録・qa-049 の逐語補記)。
+- **追記の実行経路と副作用**: qa_log 専用の op は存在しない。entry を追記できるのは `chunk --turns` に `{"qa_id": "...", "question": "...", "answer": "...", "ops": []}` (セル op 空) の turn を渡す経路だけである。この経路は同時に `loop_count` を 0 から数え直し、`complete` / `next_question` を再計算する (`run_chunk` の副作用)。matrix を動かさない索引追記でも `hearing_progress` が書き換わる点を承知して使うこと。
+
 ## 単一 transition writer 契約
 
 `scripts/apply-spec-transition.py` のみが matrix / logs / aggregate / hearing_progress / targets / requirements_foundation を書き換える。
 
 - **確定巻き戻し拒否**: `確定` セルへの `confirm` / `exclude` は `TransitionError`。Bash/script 経由でも拒否。
 - **R4-reopen 経由のみ確定変更**: `確定` を動かせるのは `reopen` (要 reason) だけ。`未収集` へ戻し `reopen_log` に根拠を残す。
-- **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` (5) turn を適用。未収集が残れば `hearing_progress.complete=false`・`next_question` 非 null を保存 (resumable)。未収集0のときだけ `complete=true`。
+- **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` (5) turn を適用。未収集が残れば `hearing_progress.complete=false`・`next_question` 非 null を保存 (resumable)。書込時点で未収集0のときだけ `complete=true` (書込後の `reopen` / `add-category` で stale 化する。上記「hearing_progress の意味論 (SSOT)」参照)。
 - **set-targets**: `targets[]` の唯一の書込経路 (上記「targets と set-targets op」)。
 - **set-foundation / set-serves / set-decision / set-knowledge-candidate**: `requirements_foundation`、確定セルの `serves_goals`、`decisions[]`、`knowledge_candidates[]` の唯一の書込経路。
 
