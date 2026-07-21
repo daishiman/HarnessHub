@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, describe, expect, it } from 'vitest';
+import { CONSUMER_A, inAppEntryImports, publicApiImports } from './source-scan.js';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
 const SCRIPT = path.join(REPO_ROOT, 'scripts/ci/check-shared-layer-duplicates.mjs');
@@ -57,6 +58,22 @@ describe('HF-A4-OWNER-001: 登録共通層の owner 一覧', () => {
     // packages/db は feat-domain-model-db 完了まで境界と型のみ (ADR §11.3-7)
     const empty = report.layers.filter((layer) => !layer.boundary_only && layer.public_api.length === 0);
     expect(empty.map((l) => l.id)).toEqual([]);
+  });
+
+  it('全層が第 2 consumer 系統 (consumer-a fixture) から実際に参照されている', () => {
+    // 登録簿の consumers 欄は「宣言」でしかない。宣言だけを数えると、
+    // 実際には誰も使っていない層が 2 系統ありと見なされる (requirements-baseline §4.2 A4-1 の空洞化)。
+    // ここでは fixture のソースを走査して**実参照**を数える。
+    const unreferenced = report.layers.filter((layer) => {
+      if (layer.package_name !== null) {
+        return publicApiImports(CONSUMER_A, layer.package_name).length === 0;
+      }
+      // package 化されていない層 (apps/hub 内 owner) は index.ts が公開入口
+      const relativeToApp = layer.owner_package.replace(/^apps\/hub\//, '');
+      return inAppEntryImports(CONSUMER_A, relativeToApp).length === 0;
+    });
+
+    expect(unreferenced.map((layer) => layer.id)).toEqual([]);
   });
 
   it('package 化された層は @harness-hub/ 名前空間を持つ (ADR §11.3-2 の公開 contract 規約)', () => {

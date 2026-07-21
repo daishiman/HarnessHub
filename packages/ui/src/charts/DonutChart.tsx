@@ -3,8 +3,7 @@
 /** ドーナツチャート。構成比を示す用途に限り、系列名は凡例テキストでも併記する。 */
 import type { ReactNode } from 'react';
 
-import { colorVar, spaceVar } from '../internal/style.js';
-import { chartSeriesTokens } from '../tokens/tokens.js';
+import { colorVar, seriesColorVar, spaceVar } from '../internal/style.js';
 import { ChartFrame } from './ChartFrame.js';
 import { buildDonutSegments, type ChartDatum } from './scale.js';
 
@@ -39,11 +38,7 @@ export function DonutChart({ title, data, size = 180, thickness = 32 }: DonutCha
       <div style={{ display: 'flex', alignItems: 'center', gap: spaceVar(4), flexWrap: 'wrap' }}>
         <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} focusable="false" aria-hidden="true">
           {segments.map((segment, index) => (
-            <path
-              key={segment.label}
-              d={segment.path}
-              fill={colorVar(chartSeriesTokens[index % chartSeriesTokens.length]!)}
-            />
+            <path key={segment.label} d={segment.path} fill={seriesColorVar(index)} />
           ))}
         </svg>
 
@@ -57,7 +52,7 @@ export function DonutChart({ title, data, size = 180, thickness = 32 }: DonutCha
                   width: '12px',
                   height: '12px',
                   borderRadius: '2px',
-                  background: colorVar(chartSeriesTokens[index % chartSeriesTokens.length]!),
+                  background: seriesColorVar(index),
                 }}
               />
               <span style={{ color: colorVar('text') }}>

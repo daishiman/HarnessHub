@@ -68,6 +68,7 @@ export function Skeleton({ height = '1em', width = '100%', lines = 1, style }: S
     <div aria-hidden="true" style={{ display: 'grid', gap: 'var(--hh-gap)', ...style }}>
       {Array.from({ length: lines }, (_, index) => (
         <span
+          // biome-ignore lint/suspicious/noArrayIndexKey: 行数固定の装飾で識別子を持たず、並べ替えも差し込みも起きないため index が唯一の安定 key
           key={index}
           style={{
             display: 'block',

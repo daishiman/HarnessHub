@@ -1,10 +1,18 @@
 /** 部品が design token を参照するための内部ヘルパー。公開 API ではない (index.ts から export しない)。 */
 import type { CSSProperties } from 'react';
 
-import { type ColorTokenName, colorVariableName } from '../tokens/tokens.js';
+import { type ColorTokenName, chartSeriesTokens, colorVariableName } from '../tokens/tokens.js';
 
 /** 色 token を CSS の `var()` 参照にする。部品内で生の色コードを書かないための唯一の口。 */
 export const colorVar = (token: ColorTokenName): string => `var(${colorVariableName(token)})`;
+
+/**
+ * 系列 index から色を選ぶ。系列数が色数を超えたら先頭へ戻る。
+ * 3 つのチャート部品が同じ折り返し計算を各自持たないよう、ここに 1 つだけ置く。
+ * `?? [0]` は剰余が範囲内であることを型で表現できないための保険で、実行時には到達しない。
+ */
+export const seriesColorVar = (index: number): string =>
+  colorVar(chartSeriesTokens[index % chartSeriesTokens.length] ?? chartSeriesTokens[0]);
 
 /** 余白 token の参照。 */
 export const spaceVar = (step: 1 | 2 | 3 | 4 | 5 | 6 | 7): string => `var(--hh-space-${step})`;

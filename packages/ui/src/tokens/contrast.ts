@@ -2,12 +2,12 @@
 
 /** `#rgb` / `#rrggbb` を 0-255 の RGB へ変換する。 */
 export function parseHexColor(hex: string): { r: number; g: number; b: number } {
-  const normalized = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim());
-  if (!normalized) {
+  // 捕獲群を直接取り出して検査する。match の有無と群の有無を 1 度に確かめられる
+  const body = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim())?.[1];
+  if (body === undefined) {
     throw new Error(`色は #rgb または #rrggbb 形式で指定してください: ${hex}`);
   }
 
-  const body = normalized[1]!;
   const full = body.length === 3 ? body.replace(/./g, (char) => char + char) : body;
   const value = Number.parseInt(full, 16);
 
@@ -27,8 +27,10 @@ export function relativeLuminance(hex: string): number {
 
 /** 2 色のコントラスト比 (1〜21)。順序は結果に影響しない。 */
 export function contrastRatio(foreground: string, background: string): number {
-  const [lighter, darker] = [relativeLuminance(foreground), relativeLuminance(background)].sort((a, b) => b - a);
-  return (lighter! + 0.05) / (darker! + 0.05);
+  // 並べ替えではなく max/min で取り出す。どちらが明るいかを型でも表現できる
+  const a = relativeLuminance(foreground);
+  const b = relativeLuminance(background);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
 
 /** WCAG 2.2 AA の閾値。本文 4.5:1 / 大きい文字と図形 3:1。 */

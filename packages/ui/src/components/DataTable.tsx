@@ -108,6 +108,9 @@ export function DataTable<TRow>({
 
   return (
     <table
+      // 読み込み中は表全体を busy として告知する。骨組み行を aria-hidden で隠すと
+      // 表の行数と読み上げ内容が食い違うため、隠さずに状態のほうを伝える
+      aria-busy={loading || undefined}
       style={{
         width: '100%',
         borderCollapse: 'collapse',
@@ -173,7 +176,8 @@ export function DataTable<TRow>({
       <tbody>
         {loading
           ? Array.from({ length: skeletonRowCount }, (_, index) => (
-              <tr key={`skeleton-${index}`} aria-hidden="true">
+              // biome-ignore lint/suspicious/noArrayIndexKey: 骨組み行は件数固定の装飾で識別子を持たず、並べ替えも差し込みも起きないため index が唯一の安定 key
+              <tr key={`skeleton-${index}`}>
                 {columns.map((column) => (
                   <td key={column.key} style={cellStyle}>
                     <span

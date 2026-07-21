@@ -114,6 +114,7 @@ export function Tabs({ label, items, activeId, defaultActiveId, onActiveIdChange
           id={`${baseId}-panel-${item.id}`}
           aria-labelledby={`${baseId}-tab-${item.id}`}
           hidden={item.id !== currentId}
+          // biome-ignore lint/a11y/noNoninteractiveTabindex: WAI-ARIA APG の Tabs pattern が tabpanel を焦点可能にすることを求めている。中に操作要素が無いタブでもキーボードだけで本文へ到達し読めるようにするため必要
           tabIndex={0}
           data-hh-focusable=""
           style={{ padding: spaceVar(3) }}

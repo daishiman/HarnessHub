@@ -3,8 +3,7 @@
 /** バーチャート。自前 SVG 実装で、値は「表で見る」代替と併せて必ず数値でも取得できるようにする。 */
 import type { ReactNode } from 'react';
 
-import { colorVar } from '../internal/style.js';
-import { chartSeriesTokens } from '../tokens/tokens.js';
+import { seriesColorVar } from '../internal/style.js';
 import { ChartFrame } from './ChartFrame.js';
 import { type ChartDatum, describeChart, resolveValueDomain, scaleValueToY } from './scale.js';
 
@@ -49,7 +48,7 @@ export function BarChart({ title, data, height = 200 }: BarChartProps): ReactNod
               y={Math.min(y, baseline)}
               width={barWidth}
               height={Math.abs(baseline - y)}
-              fill={colorVar(chartSeriesTokens[index % chartSeriesTokens.length]!)}
+              fill={seriesColorVar(index)}
             />
           );
         })}

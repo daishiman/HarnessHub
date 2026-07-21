@@ -1,6 +1,7 @@
 // Next.js middleware エントリ。判定は行わず src/middleware/authz.ts へ委譲するだけの配線層
 import { type NextRequest, NextResponse } from 'next/server';
-import { authorize } from './middleware/authz.js';
+// 認可層は公開入口 (src/middleware/index.ts) 経由でのみ参照する。内部ファイルへ直接入ると境界の迂回になる
+import { authorize } from './middleware/index.js';
 import { createAuthAdapter, toAuthRequestContext } from './shared/auth/index.js';
 
 // provider 未注入の間は deny-all。feat-auth-tenancy が OIDC provider を差し込む。

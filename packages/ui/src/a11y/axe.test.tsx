@@ -73,122 +73,141 @@ const chartSeries = [
   },
 ];
 
-const scenarios: Array<[string, ReactNode]> = [
-  ['Button', <Button variant="primary">公開する</Button>],
-  ['TextInput', <TextInput label="プロジェクト名" description="30 文字以内" required defaultValue="経費精算" />],
-  ['TextInput (エラー時)', <TextInput label="メール" error="形式が正しくありません" />],
+const scenarios: Array<[string, () => ReactNode]> = [
+  ['Button', () => <Button variant="primary">公開する</Button>],
+  ['TextInput', () => <TextInput label="プロジェクト名" description="30 文字以内" required defaultValue="経費精算" />],
+  ['TextInput (エラー時)', () => <TextInput label="メール" error="形式が正しくありません" />],
   [
     'Select',
-    <Select
-      label="公開範囲"
-      placeholder="選択してください"
-      options={[
-        { value: 'workspace', label: 'ワークスペース内' },
-        { value: 'tenant', label: 'テナント全体' },
-      ]}
-    />,
+    () => (
+      <Select
+        label="公開範囲"
+        placeholder="選択してください"
+        options={[
+          { value: 'workspace', label: 'ワークスペース内' },
+          { value: 'tenant', label: 'テナント全体' },
+        ]}
+      />
+    ),
   ],
-  ['Textarea', <Textarea label="説明" description="Markdown が使えます" />],
+  ['Textarea', () => <Textarea label="説明" description="Markdown が使えます" />],
   [
     'DataTable',
-    <DataTable
-      caption="ハーネス一覧"
-      columns={[
-        { key: 'name', header: '名前', value: (row: (typeof rows)[number]) => row.name, sortable: true },
-        { key: 'count', header: '導入数', value: (row: (typeof rows)[number]) => row.count },
-      ]}
-      rows={rows}
-      rowKey={(row) => row.id}
-      defaultSort={{ columnKey: 'name', direction: 'ascending' }}
-    />,
+    () => (
+      <DataTable
+        caption="ハーネス一覧"
+        columns={[
+          { key: 'name', header: '名前', value: (row: (typeof rows)[number]) => row.name, sortable: true },
+          { key: 'count', header: '導入数', value: (row: (typeof rows)[number]) => row.count },
+        ]}
+        rows={rows}
+        rowKey={(row) => row.id}
+        defaultSort={{ columnKey: 'name', direction: 'ascending' }}
+      />
+    ),
   ],
   [
     'DataTable (読み込み中)',
-    <DataTable
-      caption="読み込み中の一覧"
-      columns={[{ key: 'name', header: '名前', value: (row: (typeof rows)[number]) => row.name }]}
-      rows={[]}
-      rowKey={(row) => row.id}
-      loading
-    />,
+    () => (
+      <DataTable
+        caption="読み込み中の一覧"
+        columns={[{ key: 'name', header: '名前', value: (row: (typeof rows)[number]) => row.name }]}
+        rows={[]}
+        rowKey={(row) => row.id}
+        loading
+      />
+    ),
   ],
   [
     'InlineEditTable',
-    <InlineEditTable
-      caption="ユーザー一覧"
-      columns={[
-        { key: 'name', header: '名前', value: (row: (typeof rows)[number]) => row.name, editable: true },
-        { key: 'count', header: '件数', value: (row: (typeof rows)[number]) => String(row.count) },
-      ]}
-      rows={rows}
-      rowKey={(row) => row.id}
-      rowLabel={(row) => row.name}
-      onCommit={() => undefined}
-    />,
+    () => (
+      <InlineEditTable
+        caption="ユーザー一覧"
+        columns={[
+          { key: 'name', header: '名前', value: (row: (typeof rows)[number]) => row.name, editable: true },
+          { key: 'count', header: '件数', value: (row: (typeof rows)[number]) => String(row.count) },
+        ]}
+        rows={rows}
+        rowKey={(row) => row.id}
+        rowLabel={(row) => row.name}
+        onCommit={() => undefined}
+      />
+    ),
   ],
-  ['ProgressBar', <ProgressBar label="公開処理の進捗" value={60} />],
-  ['ProgressBar (不確定)', <ProgressBar label="検査中" />],
-  ['Skeleton', <Skeleton lines={3} />],
-  ['StatusChip', <StatusChip domain="publish" status="approval_pending" />],
-  ['ScopeChip', <ScopeChip scope="workspace" name="開発部" />],
+  ['ProgressBar', () => <ProgressBar label="公開処理の進捗" value={60} />],
+  ['ProgressBar (不確定)', () => <ProgressBar label="検査中" />],
+  ['Skeleton', () => <Skeleton lines={3} />],
+  ['StatusChip', () => <StatusChip domain="publish" status="approval_pending" />],
+  ['ScopeChip', () => <ScopeChip scope="workspace" name="開発部" />],
   [
     'ConfirmDialog',
-    <ConfirmDialog
-      open
-      title="リリースを停止しますか"
-      description="停止すると新規の導入ができなくなります。"
-      reversible={false}
-      onConfirm={() => undefined}
-      onCancel={() => undefined}
-    />,
+    () => (
+      <ConfirmDialog
+        open
+        title="リリースを停止しますか"
+        description="停止すると新規の導入ができなくなります。"
+        reversible={false}
+        onConfirm={() => undefined}
+        onCancel={() => undefined}
+      />
+    ),
   ],
-  ['Alert', <Alert tone="success" title="公開しました" description="一覧に反映されています。" />],
-  ['ErrorState', <ErrorState />],
-  ['EmptyState', <EmptyState action={<Button>作成する</Button>} />],
-  ['DegradedBanner', <DegradedBanner />],
+  ['Alert', () => <Alert tone="success" title="公開しました" description="一覧に反映されています。" />],
+  ['ErrorState', () => <ErrorState />],
+  ['EmptyState', () => <EmptyState action={<Button>作成する</Button>} />],
+  ['DegradedBanner', () => <DegradedBanner />],
   [
     'Tabs',
-    <Tabs
-      label="ハーネス詳細"
-      items={[
-        { id: 'overview', label: '概要', content: <p>概要</p> },
-        { id: 'releases', label: 'リリース', content: <p>リリース</p> },
-      ]}
-    />,
+    () => (
+      <Tabs
+        label="ハーネス詳細"
+        items={[
+          { id: 'overview', label: '概要', content: <p>概要</p> },
+          { id: 'releases', label: 'リリース', content: <p>リリース</p> },
+        ]}
+      />
+    ),
   ],
   [
     'StepWizard',
-    <StepWizard
-      label="公開ウィザード"
-      steps={[
-        { id: 'basic', title: '基本情報', content: <TextInput label="名前" /> },
-        { id: 'confirm', title: '確認', content: <p>内容を確認してください。</p> },
-      ]}
-    />,
+    () => (
+      <StepWizard
+        label="公開ウィザード"
+        steps={[
+          { id: 'basic', title: '基本情報', content: <TextInput label="名前" /> },
+          { id: 'confirm', title: '確認', content: <p>内容を確認してください。</p> },
+        ]}
+      />
+    ),
   ],
   [
     'StageBoard',
-    <StageBoard
-      label="構築パイプライン"
-      columns={[
-        { stage: 'hearing', cards: [{ id: 'c1', title: '経費精算の自動化', meta: '担当: 佐藤', risk: 'warn' }] },
-        { stage: 'design', cards: [] },
-      ]}
-      onMoveCard={() => undefined}
-    />,
+    () => (
+      <StageBoard
+        label="構築パイプライン"
+        columns={[
+          { stage: 'hearing', cards: [{ id: 'c1', title: '経費精算の自動化', meta: '担当: 佐藤', risk: 'warn' }] },
+          { stage: 'design', cards: [] },
+        ]}
+        onMoveCard={() => undefined}
+      />
+    ),
   ],
-  ['MarkdownView', <MarkdownView content={'# 手順\n\n1. 準備する\n2. 実行する\n\n[詳細](https://example.com)'} />],
-  ['MarkdownEditor', <MarkdownEditor label="本文" value="# 見出し" onValueChange={() => undefined} />],
-  ['KpiCard', <KpiCard label="今月の削減時間" value="128" unit="時間" trendValues={[1, 4, 3]} />],
-  ['LineChart', <LineChart title="週次の削減時間" series={chartSeries} />],
-  ['BarChart', <BarChart title="部門別の削減時間" data={[{ label: '経理', value: 12 }]} />],
-  ['DonutChart', <DonutChart title="状態の内訳" data={[{ label: '完了', value: 3 }]} />],
-  ['Sparkline', <Sparkline label="直近 7 日の推移" values={[1, 3, 2]} />],
+  [
+    'MarkdownView',
+    () => <MarkdownView content={'# 手順\n\n1. 準備する\n2. 実行する\n\n[詳細](https://example.com)'} />,
+  ],
+  ['MarkdownEditor', () => <MarkdownEditor label="本文" value="# 見出し" onValueChange={() => undefined} />],
+  ['KpiCard', () => <KpiCard label="今月の削減時間" value="128" unit="時間" trendValues={[1, 4, 3]} />],
+  ['LineChart', () => <LineChart title="週次の削減時間" series={chartSeries} />],
+  ['BarChart', () => <BarChart title="部門別の削減時間" data={[{ label: '経理', value: 12 }]} />],
+  ['DonutChart', () => <DonutChart title="状態の内訳" data={[{ label: '完了', value: 3 }]} />],
+  ['Sparkline', () => <Sparkline label="直近 7 日の推移" values={[1, 3, 2]} />],
 ];
 
 describe('HF-QA-A11Y-001: 部品単体の axe 違反が 0 件', () => {
-  it.each(scenarios)('%s', async (_name, node) => {
-    const violations = await collectViolations(renderForAxe(node));
+  it.each(scenarios)('%s', async (_name, renderScenario) => {
+    const violations = await collectViolations(renderForAxe(renderScenario()));
     expect(violations).toEqual([]);
   });
 

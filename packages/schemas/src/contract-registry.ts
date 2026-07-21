@@ -54,5 +54,5 @@ export function buildContractComponents(info?: { title: string; version: string 
  * 整形の違いを乖離と誤検出しないようにする。
  */
 export function renderContractDocument(info?: { title: string; version: string }): string {
-  return JSON.stringify(buildContractComponents(info), null, 2) + '\n';
+  return `${JSON.stringify(buildContractComponents(info), null, 2)}\n`;
 }

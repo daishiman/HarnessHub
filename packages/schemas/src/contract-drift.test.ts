@@ -19,7 +19,7 @@ import {
  * 突き合わせ先の snapshot。既定は commit 済みの正本。
  * ゲートの実効性検証だけが、書き換えた複製を指すためにこの環境変数を使う。
  */
-const snapshotPath = process.env['HH_OPENAPI_SNAPSHOT'] ?? '../openapi/components.json';
+const snapshotPath = process.env.HH_OPENAPI_SNAPSHOT ?? '../openapi/components.json';
 
 describe('契約登録簿', () => {
   it('宣言した契約名がすべて登録されている', () => {

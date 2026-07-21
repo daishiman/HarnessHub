@@ -6,6 +6,18 @@ import { describe, expect, it, vi } from 'vitest';
 import { DataTable, type DataTableColumn, InlineEditTable } from '../index.js';
 import { renderWithUi } from '../test-utils.js';
 
+/**
+ * 問い合わせ結果の N 番目を取り出す。非 null 断言 (`!`) を使わないのは、
+ * 要素が足りないときに「何番目が無かったか」を出して落としたいため。
+ */
+function nth<T>(elements: readonly T[], index: number): T {
+  const element = elements[index];
+  if (element === undefined) {
+    throw new Error(`${index} 番目の要素がありません (取得できた件数: ${elements.length})`);
+  }
+  return element;
+}
+
 interface Row {
   id: string;
   name: string;
@@ -44,15 +56,15 @@ describe('DataTable', () => {
     renderWithUi(<DataTable caption="一覧" columns={columns} rows={rows} rowKey={(row) => row.id} />);
 
     const headers = screen.getAllByRole('columnheader');
-    expect(within(headers[0]!).queryByRole('button')).not.toBeNull();
-    expect(within(headers[2]!).queryByRole('button')).toBeNull();
+    expect(within(nth(headers, 0)).queryByRole('button')).not.toBeNull();
+    expect(within(nth(headers, 2)).queryByRole('button')).toBeNull();
   });
 
   it('押すたびに昇順→降順を切り替え、aria-sort に反映する', async () => {
     const user = userEvent.setup();
     renderWithUi(<DataTable caption="一覧" columns={columns} rows={rows} rowKey={(row) => row.id} />);
 
-    const nameHeader = screen.getAllByRole('columnheader')[0]!;
+    const nameHeader = nth(screen.getAllByRole('columnheader'), 0);
     await user.click(within(nameHeader).getByRole('button'));
 
     expect(nameHeader.getAttribute('aria-sort')).toBe('ascending');
@@ -67,7 +79,7 @@ describe('DataTable', () => {
     const user = userEvent.setup();
     renderWithUi(<DataTable caption="一覧" columns={columns} rows={rows} rowKey={(row) => row.id} />);
 
-    const countHeader = screen.getAllByRole('columnheader')[1]!;
+    const countHeader = nth(screen.getAllByRole('columnheader'), 1);
     await user.click(within(countHeader).getByRole('button'));
 
     expect(bodyTexts(1)).toEqual(['1', '3', '10']);
@@ -101,7 +113,7 @@ describe('DataTable', () => {
       />,
     );
 
-    await user.click(within(screen.getAllByRole('columnheader')[0]!).getByRole('button'));
+    await user.click(within(nth(screen.getAllByRole('columnheader'), 0)).getByRole('button'));
 
     expect(onSortChange).toHaveBeenCalledWith({ columnKey: 'name', direction: 'descending' });
     // 渡された順序のまま描画される (並べ替えはサーバ側の責務)
@@ -178,7 +190,7 @@ describe('InlineEditTable', () => {
     const user = userEvent.setup();
     setup();
 
-    await user.click(screen.getAllByRole('button')[0]!);
+    await user.click(nth(screen.getAllByRole('button'), 0));
     expect(screen.getByLabelText('いろは の 名前')).toBeDefined();
   });
 
@@ -186,7 +198,7 @@ describe('InlineEditTable', () => {
     const user = userEvent.setup();
     const onCommit = setup();
 
-    await user.click(screen.getAllByRole('button')[0]!);
+    await user.click(nth(screen.getAllByRole('button'), 0));
     await user.clear(screen.getByLabelText('いろは の 名前'));
     await user.type(screen.getByLabelText('いろは の 名前'), 'あたらしい{Enter}');
 
@@ -197,7 +209,7 @@ describe('InlineEditTable', () => {
     const user = userEvent.setup();
     const onCommit = setup();
 
-    await user.click(screen.getAllByRole('button')[0]!);
+    await user.click(nth(screen.getAllByRole('button'), 0));
     await user.type(screen.getByLabelText('いろは の 名前'), 'x{Escape}');
 
     expect(onCommit).not.toHaveBeenCalled();

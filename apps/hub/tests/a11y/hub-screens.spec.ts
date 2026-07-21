@@ -26,7 +26,7 @@ function formatViolations(violations: readonly axe.Result[]): string {
 
 describe('apps/hub 画面結合の a11y', () => {
   it('トップ画面 (layout + page) に axe 違反が無い', async () => {
-    const html = renderToStaticMarkup(createElement(RootLayout, { children: createElement(HomePage) }));
+    const html = renderToStaticMarkup(createElement(RootLayout, null, createElement(HomePage)));
     mountScreen(html);
 
     const results = await axe.run(document);
@@ -35,7 +35,7 @@ describe('apps/hub 画面結合の a11y', () => {
   });
 
   it('検査対象の DOM が実際に描画されている (空ページを緑にしない)', () => {
-    const html = renderToStaticMarkup(createElement(RootLayout, { children: createElement(HomePage) }));
+    const html = renderToStaticMarkup(createElement(RootLayout, null, createElement(HomePage)));
     mountScreen(html);
 
     // 「何も無いページなら違反 0 件」で通ってしまう Goodhart 化を防ぐ

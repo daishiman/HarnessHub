@@ -154,14 +154,14 @@ export const densityTokens: Record<Density, { controlHeight: string; rowPaddingY
  * チャートの系列色の順序 (固定)。
  * 色だけに依存させないため、部品側で形状・ラベルを必ず併記する。
  */
-export const chartSeriesTokens: readonly ColorTokenName[] = [
+export const chartSeriesTokens = [
   'primary',
   'accentAi',
   'infoCyan',
   'warning',
   'magenta',
   'success',
-];
+] as const satisfies readonly ColorTokenName[];
 
 /** コントラスト検証の 1 項目。 */
 export interface ContrastRequirement {

@@ -36,6 +36,13 @@ depends_on: [SYS-HUB-FOUNDATION-P03]
 | HF-QA-A11Y-001 | e2e | qa-018 | `packages/ui` 部品単体の axe 違反が **0 件** | CI |
 | HF-QA-A11Y-002 | e2e | qa-018 | `apps/hub` 画面結合の axe 違反が **0 件** | CI |
 | HF-QA-TENANT-001 | security | qa-006（枠） | 認可 middleware が未認証・越境スコープ要求を **deny-by-default** で拒否する | local + CI |
+| HF-CRON-001 | unit | qa-027 | scheduled handler が cron 式に対応するジョブ列を dispatch する（日次 `0 15 * * *` / 週次 `0 0 * * 1`） | local + CI |
+| HF-CRON-002 | unit | qa-027 | 同一 `runKey`（cron + 論理時刻）での再実行が二重実行にならない（冪等 claim） | local + CI |
+| HF-CRON-003 | unit | qa-027 | 1 ジョブが失敗しても後続ジョブが継続し、失敗はジョブ単位で記録される | local + CI |
+| HF-CRON-004 | unit | qa-027 | **未登録の cron 式を黙って成功にせず失敗として記録する**（配線欠落の検知） | local + CI |
+| HF-CRON-005 | integration | qa-027 | 日次が**全ジョブ完走したときだけ** heartbeat へ ping する（未設定時は ping しない） | local + CI |
+
+- `HF-CRON-*` は P10 指摘 F-08 の是正で追加した scheduled handler（`apps/hub/src/worker/cron.ts`）に対応する。配置は `apps/hub/tests/worker/cron.test.ts`（§3 の配置設計に追記済み）。
 
 - `HF-QA-TENANT-001` は本 feature では**共通境界の deny-by-default 挙動のみ**を検証する枠であり、テナント固有 policy の網羅検証は feat-auth-tenancy の責務。
 - `HF-A3-SLO-001` のみ外部サービス設定に依存する。**未設定の間は A3 を pass にできない**（fail-closed）。
@@ -100,6 +107,8 @@ apps/hub/tests/
   a11y/
     ui-components.spec.ts       # HF-QA-A11Y-001
     hub-screens.spec.ts         # HF-QA-A11Y-002
+  worker/
+    cron.test.ts                # HF-CRON-001〜005 (P10 指摘 F-08 の是正で追加)
 ```
 
 - テストコード実体の作成は **P05**、実行は **P06**。本書は配置と ID の確定まで。

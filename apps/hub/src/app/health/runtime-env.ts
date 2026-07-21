@@ -1,13 +1,31 @@
 // 実行環境 (Cloudflare Workers bindings / ローカル process.env) の差を /health から隠す層
 
-/** health が参照する実行環境の最小表現 */
+/**
+ * R2 binding のうち health が使う部分だけの構造型。
+ * @cloudflare/workers-types を依存に加えずに head 疎通だけを型付けする。
+ */
+export interface R2HeadCapable {
+  head(key: string): Promise<unknown>;
+}
+
+/**
+ * health が参照する実行環境の最小表現。
+ * **実在する binding / secret だけを並べる**。infrastructure-spec §2 の台帳が正本で、
+ * Turso は `@libsql/client` (HTTP) 接続のため native な DB binding は存在しない (§4)。
+ */
 export interface RuntimeEnv {
-  /** 'production' | 'staging' | 'development' */
+  /** 'production' | 'development'。常設 staging は持たない (infrastructure-spec §6) */
   readonly HUB_ENV?: string;
   /** デプロイ済みリビジョン識別子 */
   readonly HUB_VERSION?: string;
-  /** D1/Turso などの DB binding。boundary の型は feat-domain-model-db が確定させる */
-  readonly DB?: unknown;
+  /** Turso 接続 URL (secret 台帳 / infrastructure-spec §2) */
+  readonly TURSO_DATABASE_URL?: string;
+  /** Turso 接続 token (secret 台帳 / infrastructure-spec §2) */
+  readonly TURSO_AUTH_TOKEN?: string;
+  /** R2 binding: PackageRegistry (infrastructure-spec §2/§3) */
+  readonly PACKAGES_BUCKET?: R2HeadCapable;
+  /** R2 binding: DB export 保管 (infrastructure-spec §2/§3) */
+  readonly BACKUPS_BUCKET?: R2HeadCapable;
   readonly [key: string]: unknown;
 }
 

@@ -16,7 +16,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="ja">
       <head>
         {/* design token の CSS カスタムプロパティ。値の正本は packages/ui/src/tokens */}
-        <style dangerouslySetInnerHTML={{ __html: buildThemeCss() }} />
+        {/* React は style を raw text 要素として扱い子要素をエスケープしないため dangerouslySetInnerHTML は不要 */}
+        <style>{buildThemeCss()}</style>
       </head>
       <body>
         <UiProvider>

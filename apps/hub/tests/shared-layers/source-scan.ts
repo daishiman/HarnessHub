@@ -60,6 +60,51 @@ export function deepImports(root: string, packageName: string): readonly ImportR
   return listImports(root).filter((record) => record.specifier.startsWith(`${packageName}/`));
 }
 
+/**
+ * apps/hub 内で owner される共通層 (src/shared/* / src/middleware) の公開入口 index への参照。
+ * これらは package 化されていないため package 名では参照できず、公開入口が index.ts になる。
+ */
+export function inAppEntryImports(root: string, layerDir: string): readonly ImportRecord[] {
+  const dir = path.join(APP_ROOT, layerDir);
+  const entry = path.join(dir, 'index');
+  return listImports(root)
+    .filter((record) => !isOwnedBy(record, dir))
+    .filter((record) => stripExtension(resolveRelativeSpecifier(record)) === entry);
+}
+
+/** 公開入口 index を迂回して owner 内部のファイルを直接参照している import。境界の迂回なので違反 */
+export function inAppDeepImports(root: string, layerDir: string): readonly ImportRecord[] {
+  const dir = path.join(APP_ROOT, layerDir);
+  const entry = path.join(dir, 'index');
+  return (
+    listImports(root)
+      // owner 自身の内部 import は境界の迂回ではない
+      .filter((record) => !isOwnedBy(record, dir))
+      .filter((record) => {
+        const resolved = resolveRelativeSpecifier(record);
+        if (resolved === null) return false;
+        if (!resolved.startsWith(dir + path.sep)) return false;
+        return stripExtension(resolved) !== entry;
+      })
+  );
+}
+
+function isOwnedBy(record: ImportRecord, layerDirAbsolute: string): boolean {
+  return path.resolve(APP_ROOT, record.file).startsWith(layerDirAbsolute + path.sep);
+}
+
+/** 相対 specifier を絶対 path へ解決する。非相対 (package 名) は null */
+function resolveRelativeSpecifier(record: ImportRecord): string | null {
+  if (!record.specifier.startsWith('.')) return null;
+  return path.resolve(APP_ROOT, path.dirname(record.file), record.specifier);
+}
+
+function stripExtension(filePath: string | null): string | null {
+  if (filePath === null) return null;
+  const ext = path.extname(filePath);
+  return SOURCE_EXTENSIONS.has(ext) || ext === '.js' || ext === '.jsx' ? filePath.slice(0, -ext.length) : filePath;
+}
+
 /** 相対 path で packages/ を直接参照している import。package 境界の迂回なので違反 */
 export function boundaryBypassImports(root: string): readonly ImportRecord[] {
   return listImports(root).filter(

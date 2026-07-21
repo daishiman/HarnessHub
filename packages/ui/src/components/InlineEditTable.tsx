@@ -1,7 +1,7 @@
 'use client';
 
 /** 一覧のまま値を直接編集する表。編集開始・確定・取消をキーボードだけで完結できるようにする。 */
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { colorVar, controlStyle, spaceVar, visuallyHidden } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
@@ -46,6 +46,24 @@ export function InlineEditTable<TRow>({
 }: InlineEditTableProps<TRow>): ReactNode {
   const { t } = useUi();
   const [editing, setEditing] = useState<EditingCell | null>(null);
+  const editorRef = useRef<HTMLInputElement>(null);
+
+  /**
+   * 編集中セルの identity。入力内容 (draft) を含めないことで、
+   * 「別のセルの編集を始めた」ときだけ値が変わる。
+   */
+  const editingCellId = editing === null ? null : `${editing.rowId}::${editing.columnKey}`;
+
+  /**
+   * 編集開始時に入力欄へ焦点を移す。`autoFocus` 属性を使わないのは、
+   * 初期表示時にも発火して利用者の居場所を奪う挙動があるため。
+   * identity だけに依存させ、一文字入力するたびに焦点を当て直さないようにしている。
+   */
+  useEffect(() => {
+    if (editingCellId !== null) {
+      editorRef.current?.focus();
+    }
+  }, [editingCellId]);
 
   const commit = (): void => {
     if (editing) onCommit({ rowId: editing.rowId, columnKey: editing.columnKey, value: editing.draft });
@@ -83,7 +101,7 @@ export function InlineEditTable<TRow>({
                       <input
                         // 編集欄には行と列が分かるラベルを与える。表の位置情報だけに頼らせない
                         aria-label={`${label} の ${column.header}`}
-                        autoFocus
+                        ref={editorRef}
                         data-hh-focusable=""
                         value={editing.draft}
                         onChange={(event) => setEditing({ ...editing, draft: event.target.value })}

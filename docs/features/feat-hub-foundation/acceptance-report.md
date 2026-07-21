@@ -20,9 +20,23 @@ measured_at: "2026-07-21"
 | A1 | CI が test→deploy を完走する | **blocked（未実行）** | `ci.yml` に静的ゲート→test→bundle→deploy の連鎖を実装済みだが、**CI run が 1 度も実行されていない**。push 前のため。ローカルで同等コマンドは全 pass |
 | A2 | Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する | **合格** | CI に G5 ゲートが存在（`ci.yml`）。実測 **0.951 MiB / 3.000 MiB**（wrangler dry-run 実 bundle） |
 | A3 | SLO 99.5% の計測と /health が稼働する | **不合格（blocked）** | `/health` route handler は実装され契約テスト 8 件 pass。しかし**外形監視の設定と実デプロイが未実施**のため SLO 計測の時系列が存在しない |
-| A4 | shared-layers 登録済み共通層が単一 package/境界に実装され、消費 feature が同じ実装を参照する | **合格** | contract test 22 件 pass + duplicate scan 0 件（174 ファイル走査）+ owner 一覧に未定義 0 件 |
+| A4 | shared-layers 登録済み共通層が単一 package/境界に実装され、消費 feature が同じ実装を参照する | **条件付き合格**（2026-07-21 再裁定） | duplicate scan 0 件・owner 未定義 0 件・contract test は全 12 層へ拡張済み。**ただし 5 層は実 consumer が fixture の 1 系統のみ**（下記 §2.1） |
 
 **総合: 条件付き合格。** A2・A4 は実測証跡をもって合格。A1・A3 は**外部要因（push 未実施 / Cloudflare・Better Stack 未設定）により判定不能**であり、pass ではなく blocked として記録する。
+
+## 2.1 A4 を「合格」から「条件付き合格」へ再裁定した理由（P10 指摘 F-06）
+
+初版では contract test が `ui` / `schemas` / `inspection` / `estimation` の **4 層のみ**を対象にしており、要件（requirements-baseline §4.2 A4-1「§8 登録簿の**全**共通層」= 12 層）の 1/3 しか判定していなかった。P10 の指摘を受けて全 12 層へ拡張したうえで、以下を**未達として記録する**。
+
+| 層 | 実 consumer | 判定 |
+|---|---|---|
+| `ui` / `schemas` / `inspection` / `estimation` / `db` / `authz-middleware` / `auth` | `apps/hub` 本体 + fixture の **2 系統** | 充足 |
+| `audit` / `aijob` / `notification` / `pii` / `telemetry` | **fixture の 1 系統のみ**（`apps/hub` 本体に呼び出し元が無い） | **未達** |
+
+- 5 層は公開 contract の実体を持つが、**基盤側に使う側がまだ存在しない**。結線は各ドメイン feature（feat-domain-model-db / feat-auth-tenancy ほか）の責務である。
+- これを「fixture があるので 2 系統」と数えない。要件は「**消費 feature が同じ実装を参照する**」ことであり、fixture は consumer の代替であって consumer 本体ではない。
+- 状態は `scripts/ci/shared-layer-registry.json` の `app_wiring: pending` として機械可読に固定し、`ownership.test.ts` が**登録簿の宣言ではなく fixture ソースの実参照**を数えることで、宣言だけ増やして緑にする空洞化を防いでいる。
+- **解除条件**: 各層に `apps/hub` 本体（または他の実 feature）の呼び出し元が生まれた時点で `app_wiring` を外し、A4 を全層充足として再裁定する。
 
 ## 2. test ID 別の実行結果
 

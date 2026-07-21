@@ -14,6 +14,17 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 
 ## 1. 初回セットアップ（未実施。ユーザー作業）
 
+> **順序制約（重要）**: `wrangler secret put` は **Worker が存在しないと実行できない**ため、初回だけは「deploy → secret 投入」の順になり、その間 `/health` は 503 を返します。`ci.yml` の post-deploy `/health` チェックは 200 必須なので、**初回は CI に任せず手動 bootstrap を行ってください**（CI 側のチェックを緩めるとゲートが恒久的に甘くなるため、この方式を採ります）。
+>
+> **初回 bootstrap の順序**:
+> 1. R2 バケット 2 本を作成（`harness-hub-packages` / `harness-hub-backups`）— 未作成だと `wrangler deploy` 自体が失敗する
+> 2. 手動で `wrangler deploy`
+> 3. `wrangler secret put` で secret を投入（下記）
+> 4. `curl https://hub.<domain>/health` が 200 を返すことを確認
+> 5. 外形監視（Better Stack）を有効化 — **ここで初めて SLO 計測を開始する**（4 より前に有効化すると初期の 503 が可用性へ算入される）
+> 6. 以降は main merge による CI 自動デプロイに任せる
+
+
 ```bash
 # 1. Cloudflare 認証
 wrangler login
@@ -28,6 +39,7 @@ cd apps/hub
 wrangler secret put TURSO_DATABASE_URL
 wrangler secret put TURSO_AUTH_TOKEN
 wrangler secret put AUTH_SECRET
+wrangler secret put CRON_HEARTBEAT_URL   # Better Stack の heartbeat URL (未設定なら ping しない)
 ```
 
 4. **Better Stack Free** で以下を登録
@@ -92,9 +104,9 @@ curl -s https://hub.<domain>/health | jq .   # 復旧確認
 
 | # | 未実装 | 影響 | 必要な作業 |
 |---|---|---|---|
-| U-1 | `.github/workflows/backup.yml` | **日次バックアップが動いていない**。§6 の手順は実行対象が無い | workflow 実装（owner は本 feature。ADR §3） |
-| U-2 | Workers scheduled handler（cron 2 系統） | metrics rollup・Turso 使用量監視・通知が動かない | custom entry 実装（ADR §4） |
-| U-3 | G6 secret scan / G8 OpenAPI drift の CI 配線 | 該当ゲートが未実行 | script 追加 |
+| ~~U-1~~ | ~~backup workflow 未実装~~ → **実装済み** (`.github/workflows/backup.yml`) | — | secret 投入後に初回実行を確認すること |
+| ~~U-2~~ | ~~scheduled handler 未実装~~ → **実装済み** (`apps/hub/src/worker.ts` + `src/worker/cron.ts`) | ジョブ本体は空 (id は登録済み)。各ドメイン feature が中身を実装する | — |
+| ~~U-3~~ | ~~G6 / G8 未配線~~ → **配線済み**。実効性も実測 | — | — |
 | U-4 | 未 wrap route の静的検出 | 認可 fail-open のリスクが残る | detector 拡張 |
 
 > **これらは「運用手順があるから大丈夫」ではない。** 実装されるまでは、対応する運用は成立していない。

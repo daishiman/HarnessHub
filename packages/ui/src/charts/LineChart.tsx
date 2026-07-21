@@ -3,8 +3,7 @@
 /** 折れ線チャートとスパークライン。依存ライブラリを持たない自前 SVG 実装 (Worker bundle 予算のため)。 */
 import type { ReactNode } from 'react';
 
-import { colorVar } from '../internal/style.js';
-import { chartSeriesTokens } from '../tokens/tokens.js';
+import { colorVar, seriesColorVar } from '../internal/style.js';
 import { ChartFrame } from './ChartFrame.js';
 import {
   buildPolylinePoints,
@@ -16,9 +15,6 @@ import {
 } from './scale.js';
 
 const PADDING = 8;
-
-/** 系列 index から色 token を選ぶ。系列数が色数を超えたら先頭へ戻る。 */
-const seriesColor = (index: number): string => colorVar(chartSeriesTokens[index % chartSeriesTokens.length]!);
 
 /** 系列を区別する破線パターン。色を見分けられない利用者のための冗長化。 */
 const seriesDash = (index: number): string | undefined =>
@@ -59,7 +55,7 @@ export function LineChart({ title, series, height = 200 }: LineChartProps): Reac
             <polyline
               points={buildPolylinePoints(entry.points, domain, { width, height, padding: PADDING })}
               fill="none"
-              stroke={seriesColor(index)}
+              stroke={seriesColorVar(index)}
               strokeDasharray={seriesDash(index)}
               strokeWidth={2}
             />
@@ -69,7 +65,7 @@ export function LineChart({ title, series, height = 200 }: LineChartProps): Reac
                 cx={scaleIndexToX(pointIndex, entry.points.length, width, PADDING)}
                 cy={scaleValueToY(point.value, domain, height, PADDING)}
                 r={3}
-                fill={seriesColor(index)}
+                fill={seriesColorVar(index)}
               />
             ))}
           </g>

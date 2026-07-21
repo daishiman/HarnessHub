@@ -42,13 +42,13 @@ describe('defaultSchemaConverter', () => {
   it('zod の object を JSON Schema へ変換する', () => {
     const converted = defaultSchemaConverter(z.object({ id: z.string() }));
 
-    expect(converted['type']).toBe('object');
-    expect(converted['properties']).toMatchObject({ id: { type: 'string' } });
+    expect(converted.type).toBe('object');
+    expect(converted.properties).toMatchObject({ id: { type: 'string' } });
   });
 
   it('brand や refine を含む契約 schema も変換できる', () => {
     const converted = defaultSchemaConverter(healthResponseSchema);
-    const properties = converted['properties'] as Record<string, unknown>;
+    const properties = converted.properties as Record<string, unknown>;
 
     expect(Object.keys(properties).sort()).toEqual(['checkedAt', 'dependencies', 'status', 'version']);
   });
@@ -70,9 +70,9 @@ describe('createOpenApiDocument', () => {
 
   it('description を持つ登録は変換結果へ併記する', () => {
     const document = createOpenApiDocument({ info, registry });
-    const schema = document.components.schemas['HealthResponse'] as Record<string, unknown>;
+    const schema = document.components.schemas.HealthResponse as Record<string, unknown>;
 
-    expect(schema['description']).toBe('死活応答');
+    expect(schema.description).toBe('死活応答');
   });
 
   it('paths は consumer が渡す責務境界であり、既定は空', () => {
@@ -89,7 +89,7 @@ describe('createOpenApiDocument', () => {
       converter: () => ({ $ref: '#/stub' }),
     });
 
-    expect(document.components.schemas['HealthResponse']).toEqual({
+    expect(document.components.schemas.HealthResponse).toEqual({
       description: '死活応答',
       $ref: '#/stub',
     });
