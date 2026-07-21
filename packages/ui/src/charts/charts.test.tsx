@@ -39,9 +39,7 @@ describe('LineChart', () => {
   it('系列を破線パターンでも区別する (色以外の手がかり)', () => {
     const { container } = renderWithUi(<LineChart title="推移" series={series} />);
 
-    const dashes = [...container.querySelectorAll('polyline')].map((line) =>
-      line.getAttribute('stroke-dasharray'),
-    );
+    const dashes = [...container.querySelectorAll('polyline')].map((line) => line.getAttribute('stroke-dasharray'));
     expect(new Set(dashes).size).toBe(2);
   });
 
@@ -133,9 +131,7 @@ describe('KpiCard', () => {
   });
 
   it('増減を記号だけでなく文言でも伝える', () => {
-    renderWithUi(
-      <KpiCard label="削減額" value="1,200,000" delta={{ text: '前月比 +12%', trend: 'up' }} />,
-    );
+    renderWithUi(<KpiCard label="削減額" value="1,200,000" delta={{ text: '前月比 +12%', trend: 'up' }} />);
 
     expect(screen.getByText('増加:')).toBeDefined();
     expect(screen.getByText('前月比 +12%')).toBeDefined();

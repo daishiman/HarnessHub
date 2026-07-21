@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
 import {
-  PROBLEM_JSON_MEDIA_TYPE,
   fieldErrorSchema,
+  PROBLEM_JSON_MEDIA_TYPE,
   paginatedSchema,
   parseRequest,
   problemDetails,

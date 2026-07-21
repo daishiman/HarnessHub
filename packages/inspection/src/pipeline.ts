@@ -1,6 +1,5 @@
 // 検査 pipeline の骨格。ルール群を正準順序へ固定して評価し、同一入力に対して常に同一の判定を返す。
 
-import { INSPECTION_STAGES, InspectionRuleError } from './types';
 import type {
   Finding,
   InspectionResult,
@@ -10,6 +9,7 @@ import type {
   PipelineDescriptor,
   RuleFinding,
 } from './types';
+import { INSPECTION_STAGES, InspectionRuleError } from './types';
 import { resolveVerdict } from './verdict';
 
 /** 構築済みの検査 pipeline。ルールは正準順序に整列済みで、以後変更されない。 */
@@ -61,10 +61,7 @@ export function createInspectionPipeline(rules: readonly InspectionRule[]): Insp
 }
 
 /** 既存 pipeline を変更せず、ルールを追加した新しい pipeline を返す (拡張点)。 */
-export function withRules(
-  pipeline: InspectionPipeline,
-  rules: readonly InspectionRule[],
-): InspectionPipeline {
+export function withRules(pipeline: InspectionPipeline, rules: readonly InspectionRule[]): InspectionPipeline {
   return createInspectionPipeline([...pipeline.rules, ...rules]);
 }
 
@@ -125,9 +122,6 @@ export function inspect(pipeline: InspectionPipeline, target: InspectionTarget):
 }
 
 /** ルール配列から 1 回だけ検査する簡易入口。 */
-export function runInspection(
-  rules: readonly InspectionRule[],
-  target: InspectionTarget,
-): InspectionResult {
+export function runInspection(rules: readonly InspectionRule[], target: InspectionTarget): InspectionResult {
   return inspect(createInspectionPipeline(rules), target);
 }

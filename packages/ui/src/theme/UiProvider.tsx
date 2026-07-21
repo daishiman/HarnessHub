@@ -1,21 +1,9 @@
 'use client';
 
 /** テーマ・表示密度・言語を 1 箇所で保持し、design token の適用属性と文言解決を全部品へ供給する。 */
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import {
-  translateUiMessage,
-  type UiLocale,
-  type UiMessageKey,
-} from '../i18n/dictionaries.js';
+import { translateUiMessage, type UiLocale, type UiMessageKey } from '../i18n/dictionaries.js';
 import type { Density, ThemeName, ThemePreference } from '../tokens/tokens.js';
 
 /** 利用者の表示設定。正本はサーバの `user_settings` (PATCH /me) で、ここはその写し。 */
@@ -79,11 +67,7 @@ export interface UiProviderProps {
  * `data-theme` / `data-density` / `lang` を持つ要素を 1 枚描画し、
  * design token の CSS カスタムプロパティがその配下で切り替わるようにする。
  */
-export function UiProvider({
-  children,
-  defaultPreferences,
-  onPreferencesChange,
-}: UiProviderProps): ReactNode {
+export function UiProvider({ children, defaultPreferences, onPreferencesChange }: UiProviderProps): ReactNode {
   const [preferences, setPreferences] = useState<UiPreferences>({
     ...defaultUiPreferences,
     ...defaultPreferences,
@@ -117,7 +101,12 @@ export function UiProvider({
 
   return (
     <UiContext.Provider value={value}>
-      <div data-theme={preferences.theme} data-resolved-theme={resolvedTheme} data-density={preferences.density} lang={preferences.locale}>
+      <div
+        data-theme={preferences.theme}
+        data-resolved-theme={resolvedTheme}
+        data-density={preferences.density}
+        lang={preferences.locale}
+      >
         {children}
       </div>
     </UiContext.Provider>

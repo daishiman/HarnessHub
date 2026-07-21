@@ -1,9 +1,8 @@
 // verdict 集約規則の単体テスト。
 
 import { describe, expect, it } from 'vitest';
-
-import { mergeVerdicts, resolveVerdict, severityRank, verdictRank } from './verdict';
 import type { Finding, FindingSeverity } from './types';
+import { mergeVerdicts, resolveVerdict, severityRank, verdictRank } from './verdict';
 
 function finding(severity: FindingSeverity): Finding {
   return { ruleId: 'r', stage: 'policy', severity, message: 'm' };

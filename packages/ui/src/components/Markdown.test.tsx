@@ -33,18 +33,14 @@ describe('MarkdownView の基本描画', () => {
 
 describe('MarkdownView の XSS sanitize (SEC7)', () => {
   it('script タグを描画しない', () => {
-    const { container } = renderWithUi(
-      <MarkdownView content={'本文\n\n<script>window.__pwned = true;</script>'} />,
-    );
+    const { container } = renderWithUi(<MarkdownView content={'本文\n\n<script>window.__pwned = true;</script>'} />);
 
     expect(container.querySelector('script')).toBeNull();
     expect(container.innerHTML).not.toContain('__pwned');
   });
 
   it('img の onerror などのイベントハンドラ属性を除去する', () => {
-    const { container } = renderWithUi(
-      <MarkdownView content={'<img src="x" onerror="window.__pwned = true">'} />,
-    );
+    const { container } = renderWithUi(<MarkdownView content={'<img src="x" onerror="window.__pwned = true">'} />);
 
     expect(container.innerHTML).not.toContain('onerror');
     expect(container.innerHTML).not.toContain('__pwned');
@@ -62,9 +58,7 @@ describe('MarkdownView の XSS sanitize (SEC7)', () => {
   });
 
   it('iframe を描画しない', () => {
-    const { container } = renderWithUi(
-      <MarkdownView content={'<iframe src="https://evil.example.com"></iframe>'} />,
-    );
+    const { container } = renderWithUi(<MarkdownView content={'<iframe src="https://evil.example.com"></iframe>'} />);
 
     expect(container.querySelector('iframe')).toBeNull();
   });

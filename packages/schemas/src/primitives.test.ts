@@ -20,12 +20,9 @@ describe('identifierSchema', () => {
     expect(identifierSchema.parse('ws_01HZX-9')).toBe('ws_01HZX-9');
   });
 
-  it.each(['', 'a'.repeat(65), '-leading', 'has space', 'slash/inside'])(
-    '不正な識別子 %j を拒否する',
-    (input) => {
-      expect(identifierSchema.safeParse(input).success).toBe(false);
-    },
-  );
+  it.each(['', 'a'.repeat(65), '-leading', 'has space', 'slash/inside'])('不正な識別子 %j を拒否する', (input) => {
+    expect(identifierSchema.safeParse(input).success).toBe(false);
+  });
 });
 
 describe('テナント境界の ID', () => {
@@ -47,12 +44,9 @@ describe('テナント境界の ID', () => {
 });
 
 describe('isoDateTimeSchema', () => {
-  it.each(['2026-07-21T09:30:00Z', '2026-07-21T09:30:00.123Z', '2026-07-21T18:30:00+09:00'])(
-    '%s を通す',
-    (input) => {
-      expect(isoDateTimeSchema.parse(input)).toBe(input);
-    },
-  );
+  it.each(['2026-07-21T09:30:00Z', '2026-07-21T09:30:00.123Z', '2026-07-21T18:30:00+09:00'])('%s を通す', (input) => {
+    expect(isoDateTimeSchema.parse(input)).toBe(input);
+  });
 
   it.each([
     '2026-07-21',

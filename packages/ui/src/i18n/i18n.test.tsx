@@ -7,13 +7,13 @@ import {
   getStatusLabel,
   getStatusTone,
   jaMessages,
+  ScopeChip,
+  StatusChip,
   statusToneColors,
   statusVocabulary,
   translateUiMessage,
   uiLocales,
   uiMessages,
-  ScopeChip,
-  StatusChip,
 } from '../index.js';
 import { renderWithUi } from '../test-utils.js';
 
@@ -69,9 +69,7 @@ describe('状態語彙', () => {
 
   it('全ての tone に配色が定義されている', () => {
     const usedTones = new Set(
-      Object.values(statusVocabulary).flatMap((entries) =>
-        Object.values(entries).map((entry) => entry.tone),
-      ),
+      Object.values(statusVocabulary).flatMap((entries) => Object.values(entries).map((entry) => entry.tone)),
     );
     for (const tone of usedTones) {
       expect(statusToneColors[tone]).toBeDefined();

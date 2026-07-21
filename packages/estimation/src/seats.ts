@@ -1,7 +1,7 @@
 // シート試算と投資対効果 (純関数)。単価・期間はテナント設定由来の引数として受け取る。
 
-import { assertIntegerLimit, assertLimit } from './validation';
 import type { RoiResult, SeatPlanInput, SeatPlanResult } from './types';
+import { assertIntegerLimit, assertLimit } from './validation';
 
 /** シート数 × 月額単価 × 月数から費用を求める。 */
 export function estimateSeatPlan(input: SeatPlanInput): SeatPlanResult {

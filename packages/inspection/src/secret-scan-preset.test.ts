@@ -5,10 +5,10 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  KNOWN_PUBLIC_EXAMPLE_SECRETS,
-  SECRET_SCAN_ALLOW_MARKER,
   createDefaultSecretScanRules,
   isSuppressedSecretMatch,
+  KNOWN_PUBLIC_EXAMPLE_SECRETS,
+  SECRET_SCAN_ALLOW_MARKER,
   scanFilesForSecrets,
   secretScanExitCode,
 } from './secret-scan-preset';
@@ -93,10 +93,7 @@ describe('抑制の口', () => {
   it('抑制は行単位であり、同じファイルの別行は検出し続ける', () => {
     const result = scanFilesForSecrets([
       file(
-        [
-          `const allowed = "${DUMMY.aws}"; // ${SECRET_SCAN_ALLOW_MARKER}`,
-          `const leaked = "${DUMMY.aws}";`,
-        ].join('\n'),
+        [`const allowed = "${DUMMY.aws}"; // ${SECRET_SCAN_ALLOW_MARKER}`, `const leaked = "${DUMMY.aws}";`].join('\n'),
       ),
     ]);
     expect(result.findings).toHaveLength(1);
@@ -118,9 +115,7 @@ describe('抑制の口', () => {
         lineText: `x = "${DUMMY.aws}" // ${SECRET_SCAN_ALLOW_MARKER}`,
       }),
     ).toBe(true);
-    expect(isSuppressedSecretMatch({ match: DUMMY.aws, path: 'a.ts', line: 1, lineText: 'x' })).toBe(
-      false,
-    );
+    expect(isSuppressedSecretMatch({ match: DUMMY.aws, path: 'a.ts', line: 1, lineText: 'x' })).toBe(false);
   });
 });
 

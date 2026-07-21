@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { Button, FormField, Select, TextInput, Textarea } from '../index.js';
+import { Button, FormField, Select, Textarea, TextInput } from '../index.js';
 import { renderWithUi } from '../test-utils.js';
 
 describe('Button', () => {
@@ -61,9 +61,7 @@ describe('Button', () => {
 
 describe('FormField', () => {
   it('ラベルと入力欄を id で紐付ける', () => {
-    renderWithUi(
-      <FormField label="タイトル">{(control) => <input {...control} />}</FormField>,
-    );
+    renderWithUi(<FormField label="タイトル">{(control) => <input {...control} />}</FormField>);
 
     expect(screen.getByLabelText('タイトル')).toBeDefined();
   });
@@ -86,7 +84,9 @@ describe('FormField', () => {
 
   it('エラー時は aria-invalid を立てる', () => {
     renderWithUi(
-      <FormField label="件名" error="必須です">{(control) => <input {...control} />}</FormField>,
+      <FormField label="件名" error="必須です">
+        {(control) => <input {...control} />}
+      </FormField>,
     );
     expect(screen.getByLabelText('件名').getAttribute('aria-invalid')).toBe('true');
   });
@@ -143,9 +143,7 @@ describe('Select', () => {
   });
 
   it('disabled な選択肢を反映する', () => {
-    renderWithUi(
-      <Select label="言語" options={[{ value: 'fr', label: 'Français', disabled: true }]} />,
-    );
+    renderWithUi(<Select label="言語" options={[{ value: 'fr', label: 'Français', disabled: true }]} />);
     expect((screen.getByRole('option', { name: 'Français' }) as HTMLOptionElement).disabled).toBe(true);
   });
 });

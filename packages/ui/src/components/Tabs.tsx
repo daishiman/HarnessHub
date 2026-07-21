@@ -1,13 +1,7 @@
 'use client';
 
 /** タブ。矢印キーでの移動と roving tabindex を実装し、Tab キーはタブ群を 1 ストップとして扱う。 */
-import {
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type ReactNode,
-} from 'react';
+import { type KeyboardEvent as ReactKeyboardEvent, type ReactNode, useId, useRef, useState } from 'react';
 
 import { colorVar, spaceVar } from '../internal/style.js';
 
@@ -30,9 +24,7 @@ export interface TabsProps {
 
 export function Tabs({ label, items, activeId, defaultActiveId, onActiveIdChange }: TabsProps): ReactNode {
   const baseId = useId();
-  const [internalActiveId, setInternalActiveId] = useState<string>(
-    defaultActiveId ?? items[0]?.id ?? '',
-  );
+  const [internalActiveId, setInternalActiveId] = useState<string>(defaultActiveId ?? items[0]?.id ?? '');
   const currentId = activeId ?? internalActiveId;
   const tabRefs = useRef(new Map<string, HTMLButtonElement>());
 

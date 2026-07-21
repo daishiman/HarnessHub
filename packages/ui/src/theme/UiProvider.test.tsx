@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { UiProvider, defaultUiPreferences, useUi, useUiText } from '../index.js';
+import { defaultUiPreferences, UiProvider, useUi, useUiText } from '../index.js';
 
 function Probe(): ReactNode {
   const { theme, resolvedTheme, density, locale, setTheme, setDensity, setLocale } = useUi();

@@ -1,64 +1,60 @@
 /** @harness-hub/schemas の公開 API 単一入口。consumer は必ずここ経由で参照する (deep import 禁止)。 */
 
+export type { ContractSchemaName } from './contract-registry.js';
 export {
-  identifierSchema,
-  tenantIdSchema,
-  workspaceIdSchema,
-  userIdSchema,
-  isoDateTimeSchema,
-  toIsoDateTime,
-  emailSchema,
-  semVerSchema,
-  localeSchema,
-  cursorSchema,
-  paginationQuerySchema,
-} from './primitives.js';
-export type {
-  TenantId,
-  WorkspaceId,
-  UserId,
-  IsoDateTime,
-  Locale,
-  PaginationQuery,
-} from './primitives.js';
-
+  buildContractComponents,
+  contractSchemaNames,
+  createContractRegistry,
+  renderContractDocument,
+} from './contract-registry.js';
+export type { FieldError, Paginated, ParseOutcome, ProblemDetails } from './envelope.js';
 export {
-  healthStatusSchema,
-  dependencyCheckSchema,
-  healthResponseSchema,
-  deriveHealthStatus,
-  healthHttpStatus,
-  buildHealthResponse,
-} from './health.js';
-export type { HealthStatus, DependencyCheck, HealthResponse } from './health.js';
-
-export {
+  fieldErrorSchema,
   PROBLEM_JSON_MEDIA_TYPE,
   paginatedSchema,
-  fieldErrorSchema,
-  problemDetailsSchema,
+  parseRequest,
   problemDetails,
   problemDetailsFromZodError,
-  parseRequest,
+  problemDetailsSchema,
 } from './envelope.js';
-export type { Paginated, FieldError, ProblemDetails, ParseOutcome } from './envelope.js';
-
+export type { DependencyCheck, HealthResponse, HealthStatus } from './health.js';
 export {
-  createSchemaRegistry,
+  buildHealthResponse,
+  dependencyCheckSchema,
+  deriveHealthStatus,
+  healthHttpStatus,
+  healthResponseSchema,
+  healthStatusSchema,
+} from './health.js';
+export type {
+  OpenApiDocument,
+  SchemaConverter,
+  SchemaRegistration,
+  SchemaRegistry,
+} from './openapi.js';
+export {
   createOpenApiDocument,
+  createSchemaRegistry,
   defaultSchemaConverter,
 } from './openapi.js';
 export type {
-  SchemaRegistration,
-  SchemaRegistry,
-  SchemaConverter,
-  OpenApiDocument,
-} from './openapi.js';
-
+  IsoDateTime,
+  Locale,
+  PaginationQuery,
+  TenantId,
+  UserId,
+  WorkspaceId,
+} from './primitives.js';
 export {
-  contractSchemaNames,
-  createContractRegistry,
-  buildContractComponents,
-  renderContractDocument,
-} from './contract-registry.js';
-export type { ContractSchemaName } from './contract-registry.js';
+  cursorSchema,
+  emailSchema,
+  identifierSchema,
+  isoDateTimeSchema,
+  localeSchema,
+  paginationQuerySchema,
+  semVerSchema,
+  tenantIdSchema,
+  toIsoDateTime,
+  userIdSchema,
+  workspaceIdSchema,
+} from './primitives.js';

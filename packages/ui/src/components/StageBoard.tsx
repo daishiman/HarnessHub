@@ -2,9 +2,8 @@
 
 /** かんばん風ステージボード。工程移動はメニュー操作に限り、DnD は採用しない (タッチ/キーボード同等性)。 */
 import type { ReactNode } from 'react';
-
-import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
 import { getStatusLabel, type StatusValue } from '../i18n/status-vocabulary.js';
+import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
 import { Button } from './Button.js';
 
@@ -55,15 +54,10 @@ export function StageBoard({ label, columns, onMoveCard }: StageBoardProps): Rea
         const stageLabel = getStatusLabel('buildStage', column.stage, locale);
 
         return (
-          <div
-            key={column.stage}
-            style={{ ...surfaceStyle, minWidth: '240px', padding: spaceVar(3) }}
-          >
+          <div key={column.stage} style={{ ...surfaceStyle, minWidth: '240px', padding: spaceVar(3) }}>
             <h3 style={{ fontSize: 'var(--hh-font-size-md)', margin: 0 }}>
               {stageLabel}
-              <span style={{ color: colorVar('textMuted') }}>
-                {` (${column.cards.length}${t('board.itemCount')})`}
-              </span>
+              <span style={{ color: colorVar('textMuted') }}>{` (${column.cards.length}${t('board.itemCount')})`}</span>
             </h3>
 
             <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: spaceVar(2) }}>
@@ -122,9 +116,7 @@ export function StageBoard({ label, columns, onMoveCard }: StageBoardProps): Rea
             </ul>
 
             {column.cards.length === 0 ? (
-              <p style={{ color: colorVar('textMuted'), fontSize: 'var(--hh-font-size-sm)' }}>
-                {t('table.empty')}
-              </p>
+              <p style={{ color: colorVar('textMuted'), fontSize: 'var(--hh-font-size-sm)' }}>{t('table.empty')}</p>
             ) : null}
           </div>
         );

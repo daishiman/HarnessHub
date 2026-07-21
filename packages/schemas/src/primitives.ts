@@ -26,8 +26,7 @@ export type WorkspaceId = z.output<typeof workspaceIdSchema>;
 export const userIdSchema = identifierSchema.brand<'UserId'>();
 export type UserId = z.output<typeof userIdSchema>;
 
-const ISO_DATE_TIME_PATTERN =
-  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|([+-])(\d{2}):(\d{2}))$/;
+const ISO_DATE_TIME_PATTERN = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|([+-])(\d{2}):(\d{2}))$/;
 
 /**
  * 実在する日時かを検査する。
@@ -43,8 +42,7 @@ function isRealIsoDateTime(value: string): boolean {
   const utc = new Date(Date.UTC(y, mo - 1, d));
   const isRealDate = utc.getUTCFullYear() === y && utc.getUTCMonth() === mo - 1 && utc.getUTCDate() === d;
   const isRealTime = Number(hour) <= 23 && Number(minute) <= 59 && Number(second) <= 59;
-  const isRealOffset =
-    offsetHour === undefined || (Number(offsetHour) <= 23 && Number(offsetMinute) <= 59);
+  const isRealOffset = offsetHour === undefined || (Number(offsetHour) <= 23 && Number(offsetMinute) <= 59);
 
   return isRealDate && isRealTime && isRealOffset;
 }

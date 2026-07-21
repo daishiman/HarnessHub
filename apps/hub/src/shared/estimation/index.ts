@@ -1,10 +1,6 @@
 // 試算エンジンを Hub 実行文脈へ結線するだけの層。計算式は持たず、テナント設定の係数を渡すだけ
 // 実装の正本は @harness-hub/estimation (同名 export を作らないこと)
-import {
-  estimateSavings,
-  type HourlyRateInput,
-  type SavingsResult,
-} from '@harness-hub/estimation';
+import { estimateSavings, type HourlyRateInput, type SavingsResult } from '@harness-hub/estimation';
 
 /** テナント設定に保持する試算係数。値の永続化は feat-domain-model-db の責務 */
 export interface TenantEstimationSettings {

@@ -2,16 +2,10 @@
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  createInspectionPipeline,
-  describePipeline,
-  inspect,
-  runInspection,
-  withRules,
-} from './pipeline';
+import { createInspectionPipeline, describePipeline, inspect, runInspection, withRules } from './pipeline';
 import { definePolicyRule, defineSecretScanRule, defineStaticValidationRule } from './rules';
-import { INSPECTION_STAGES, InspectionRuleError } from './types';
 import type { InspectionRule, InspectionTarget } from './types';
+import { INSPECTION_STAGES, InspectionRuleError } from './types';
 
 const target: InspectionTarget = {
   files: [
@@ -28,15 +22,13 @@ const secretRule = defineSecretScanRule({
 
 const staticRule = defineStaticValidationRule({
   id: 'static/requires-name',
-  evaluate: (input) =>
-    typeof input.metadata['name'] === 'string' ? [] : [{ message: 'name が必要です' }],
+  evaluate: (input) => (typeof input.metadata['name'] === 'string' ? [] : [{ message: 'name が必要です' }]),
 });
 
 const policyRule = definePolicyRule({
   id: 'policy/file-count',
   severity: 'warn',
-  evaluate: (input) =>
-    input.files.length > 1 ? [{ message: 'ファイルが 2 件以上あります' }] : [],
+  evaluate: (input) => (input.files.length > 1 ? [{ message: 'ファイルが 2 件以上あります' }] : []),
 });
 
 const allRules: readonly InspectionRule[] = [secretRule, staticRule, policyRule];
@@ -85,11 +77,7 @@ describe('pipeline 骨格', () => {
 
   it('describePipeline が stage 別のルール ID を返す', () => {
     const descriptor = describePipeline(createInspectionPipeline(allRules));
-    expect(descriptor.ruleIds).toStrictEqual([
-      'static/requires-name',
-      'secret/token',
-      'policy/file-count',
-    ]);
+    expect(descriptor.ruleIds).toStrictEqual(['static/requires-name', 'secret/token', 'policy/file-count']);
     expect(descriptor.stages['policy']).toStrictEqual(['policy/file-count']);
     expect(Object.keys(descriptor.stages)).toStrictEqual([...INSPECTION_STAGES]);
   });

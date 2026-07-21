@@ -117,7 +117,13 @@ describe('buildDonutSegments', () => {
 describe('describeChart', () => {
   it('系列ごとの最小・最大・点数を読み上げ文にする', () => {
     const description = describeChart('週次の削減時間', [
-      { name: '開発部', points: [{ label: '1週', value: 2 }, { label: '2週', value: 8 }] },
+      {
+        name: '開発部',
+        points: [
+          { label: '1週', value: 2 },
+          { label: '2週', value: 8 },
+        ],
+      },
     ]);
 
     expect(description).toContain('週次の削減時間');

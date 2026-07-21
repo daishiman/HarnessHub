@@ -1,12 +1,11 @@
 'use client';
 
 /** チャート共通の外枠。図と等価な「表で見る」代替を必ず用意し、色以外の手段でも読めるようにする。 */
-import { useId, useState, type ReactNode } from 'react';
-
-import { colorVar, spaceVar, surfaceStyle } from '../internal/style.js';
-import { useUi } from '../theme/UiProvider.js';
+import { type ReactNode, useId, useState } from 'react';
 import { Button } from '../components/Button.js';
 import { DataTable, type DataTableColumn } from '../components/DataTable.js';
+import { colorVar, spaceVar, surfaceStyle } from '../internal/style.js';
+import { useUi } from '../theme/UiProvider.js';
 
 interface TableRow {
   key: string;
@@ -25,13 +24,7 @@ export interface ChartFrameProps {
   children: ReactNode;
 }
 
-export function ChartFrame({
-  title,
-  description,
-  tableColumns,
-  tableRows,
-  children,
-}: ChartFrameProps): ReactNode {
+export function ChartFrame({ title, description, tableColumns, tableRows, children }: ChartFrameProps): ReactNode {
   const { t } = useUi();
   const [asTable, setAsTable] = useState(false);
   const regionId = useId();
@@ -54,20 +47,19 @@ export function ChartFrame({
         }}
       >
         <span style={{ fontWeight: 'var(--hh-font-weight-bold)', color: colorVar('text') }}>{title}</span>
-        <Button variant="ghost" aria-expanded={asTable} aria-controls={regionId} onClick={() => setAsTable((current) => !current)}>
+        <Button
+          variant="ghost"
+          aria-expanded={asTable}
+          aria-controls={regionId}
+          onClick={() => setAsTable((current) => !current)}
+        >
           {asTable ? t('chart.showAsChart') : t('chart.showAsTable')}
         </Button>
       </figcaption>
 
       <div id={regionId}>
         {asTable ? (
-          <DataTable
-            caption={title}
-            hideCaption
-            columns={columns}
-            rows={tableRows}
-            rowKey={(row) => row.key}
-          />
+          <DataTable caption={title} hideCaption columns={columns} rows={tableRows} rowKey={(row) => row.key} />
         ) : (
           // SVG 自体は 1 つの画像として扱い、詳細は上の「表で見る」で提供する
           <div role="img" aria-label={description}>

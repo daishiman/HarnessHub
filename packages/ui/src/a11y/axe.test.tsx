@@ -28,8 +28,8 @@ import {
   StatusChip,
   StepWizard,
   Tabs,
-  TextInput,
   Textarea,
+  TextInput,
   ToastProvider,
   UiProvider,
 } from '../index.js';
@@ -54,8 +54,7 @@ function renderForAxe(node: ReactNode): HTMLElement {
 async function collectViolations(container: HTMLElement): Promise<string[]> {
   const results = await axe.run(container, { resultTypes: ['violations'] });
   return results.violations.map(
-    (violation: Result) =>
-      `${violation.id}: ${violation.nodes.map((node) => node.html).join(' | ')}`,
+    (violation: Result) => `${violation.id}: ${violation.nodes.map((node) => node.html).join(' | ')}`,
   );
 }
 
@@ -65,15 +64,18 @@ const rows = [
 ];
 
 const chartSeries = [
-  { name: '開発部', points: [{ label: '1週', value: 4 }, { label: '2週', value: 9 }] },
+  {
+    name: '開発部',
+    points: [
+      { label: '1週', value: 4 },
+      { label: '2週', value: 9 },
+    ],
+  },
 ];
 
 const scenarios: Array<[string, ReactNode]> = [
   ['Button', <Button variant="primary">公開する</Button>],
-  [
-    'TextInput',
-    <TextInput label="プロジェクト名" description="30 文字以内" required defaultValue="経費精算" />,
-  ],
+  ['TextInput', <TextInput label="プロジェクト名" description="30 文字以内" required defaultValue="経費精算" />],
   ['TextInput (エラー時)', <TextInput label="メール" error="形式が正しくありません" />],
   [
     'Select',
@@ -175,12 +177,7 @@ const scenarios: Array<[string, ReactNode]> = [
       onMoveCard={() => undefined}
     />,
   ],
-  [
-    'MarkdownView',
-    <MarkdownView
-      content={'# 手順\n\n1. 準備する\n2. 実行する\n\n[詳細](https://example.com)'}
-    />,
-  ],
+  ['MarkdownView', <MarkdownView content={'# 手順\n\n1. 準備する\n2. 実行する\n\n[詳細](https://example.com)'} />],
   ['MarkdownEditor', <MarkdownEditor label="本文" value="# 見出し" onValueChange={() => undefined} />],
   ['KpiCard', <KpiCard label="今月の削減時間" value="128" unit="時間" trendValues={[1, 4, 3]} />],
   ['LineChart', <LineChart title="週次の削減時間" series={chartSeries} />],

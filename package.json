@@ -12,12 +12,16 @@
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "lint": "pnpm -r lint",
+    "lint": "biome check",
+    "lint:fix": "biome check --write",
     "typecheck": "pnpm -r typecheck",
     "check:pnpm": "node scripts/ci/check-pnpm-only.mjs",
     "check:duplicates": "node scripts/ci/check-shared-layer-duplicates.mjs",
     "check:bundle": "pnpm --filter @harness-hub/hub run check:bundle",
-    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm typecheck && pnpm test && pnpm check:bundle",
+    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm lint && pnpm typecheck && pnpm test && pnpm check:bundle",
     "preinstall": "npx --yes only-allow pnpm"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.4"
   }
 }

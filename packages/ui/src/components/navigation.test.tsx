@@ -68,9 +68,7 @@ describe('Tabs', () => {
   it('外部管理時は onActiveIdChange のみ通知する', async () => {
     const user = userEvent.setup();
     const onActiveIdChange = vi.fn();
-    renderWithUi(
-      <Tabs label="タブ" items={tabItems} activeId="overview" onActiveIdChange={onActiveIdChange} />,
-    );
+    renderWithUi(<Tabs label="タブ" items={tabItems} activeId="overview" onActiveIdChange={onActiveIdChange} />);
 
     await user.click(screen.getByRole('tab', { name: 'リリース' }));
 
@@ -121,9 +119,7 @@ describe('StepWizard', () => {
   it('最終ステップでは「完了」を出し onComplete を呼ぶ', async () => {
     const user = userEvent.setup();
     const onComplete = vi.fn();
-    renderWithUi(
-      <StepWizard label="ウィザード" steps={wizardSteps} defaultActiveIndex={2} onComplete={onComplete} />,
-    );
+    renderWithUi(<StepWizard label="ウィザード" steps={wizardSteps} defaultActiveIndex={2} onComplete={onComplete} />);
 
     await user.click(screen.getByRole('button', { name: '完了' }));
     expect(onComplete).toHaveBeenCalledTimes(1);
@@ -131,11 +127,13 @@ describe('StepWizard', () => {
 });
 
 /** 算出された accessible name を空白無視で照合する matcher。 */
-const withoutSpaces = (expected: string) => (name: string) =>
-  name.replace(/\s+/g, '') === expected.replace(/\s+/g, '');
+const withoutSpaces = (expected: string) => (name: string) => name.replace(/\s+/g, '') === expected.replace(/\s+/g, '');
 
 const boardColumns = [
-  { stage: 'hearing' as const, cards: [{ id: 'c1', title: '経費精算の自動化', meta: '担当: 佐藤', risk: 'warn' as const }] },
+  {
+    stage: 'hearing' as const,
+    cards: [{ id: 'c1', title: '経費精算の自動化', meta: '担当: 佐藤', risk: 'warn' as const }],
+  },
   { stage: 'design' as const, cards: [] },
   { stage: 'publish' as const, cards: [{ id: 'c2', title: '請求書チェック' }] },
 ];
@@ -171,12 +169,8 @@ describe('StageBoard', () => {
   it('両端では対応する移動を無効化する', () => {
     renderWithUi(<StageBoard label="パイプライン" columns={boardColumns} onMoveCard={vi.fn()} />);
 
-    expect(
-      (screen.getByRole('button', { name: '戻る: 経費精算の自動化' }) as HTMLButtonElement).disabled,
-    ).toBe(true);
-    expect(
-      (screen.getByRole('button', { name: '次へ: 請求書チェック' }) as HTMLButtonElement).disabled,
-    ).toBe(true);
+    expect((screen.getByRole('button', { name: '戻る: 経費精算の自動化' }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole('button', { name: '次へ: 請求書チェック' }) as HTMLButtonElement).disabled).toBe(true);
   });
 
   it('空の工程には空メッセージを出す', () => {
@@ -202,14 +196,7 @@ describe('ConfirmDialog', () => {
 
   it('閉じているときは何も描画しない', () => {
     renderWithUi(
-      <ConfirmDialog
-        open={false}
-        title="確認"
-        description="説明"
-        reversible
-        onConfirm={vi.fn()}
-        onCancel={vi.fn()}
-      />,
+      <ConfirmDialog open={false} title="確認" description="説明" reversible onConfirm={vi.fn()} onCancel={vi.fn()} />,
     );
     expect(screen.queryByRole('dialog')).toBeNull();
   });

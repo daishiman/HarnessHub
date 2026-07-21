@@ -1,23 +1,34 @@
 // HF-A3-HEALTH-001/002/003: /health の応答コード・契約適合・依存不通時の挙動を検証する
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import { healthResponseSchema } from '@harness-hub/schemas';
-import { GET, buildHealthHttpResponse } from '../../src/app/health/route.js';
-import { defaultProbes, runDependencyProbes, type DependencyProbe } from '../../src/app/health/probes.js';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { type DependencyProbe, defaultProbes, runDependencyProbes } from '../../src/app/health/probes.js';
+import { buildHealthHttpResponse, GET } from '../../src/app/health/route.js';
 
 /** 全て疎通する依存 */
-const healthyProbes: readonly DependencyProbe[] = [
-  { name: 'db', critical: true, check: async () => {} },
-];
+const healthyProbes: readonly DependencyProbe[] = [{ name: 'db', critical: true, check: async () => {} }];
 
 /** critical な依存が落ちている状態 */
 const downProbes: readonly DependencyProbe[] = [
-  { name: 'db', critical: true, check: async () => { throw new Error('connection_refused'); } },
+  {
+    name: 'db',
+    critical: true,
+    check: async () => {
+      throw new Error('connection_refused');
+    },
+  },
 ];
 
 /** 非 critical な依存だけが落ちている状態 (縮退運転) */
 const degradedProbes: readonly DependencyProbe[] = [
   { name: 'db', critical: true, check: async () => {} },
-  { name: 'notification-mail', critical: false, check: async () => { throw new Error('smtp_unreachable'); } },
+  {
+    name: 'notification-mail',
+    critical: false,
+    check: async () => {
+      throw new Error('smtp_unreachable');
+    },
+  },
 ];
 
 describe('GET /health', () => {

@@ -29,13 +29,7 @@ export function Textarea({
   ...rest
 }: TextareaProps): ReactNode {
   return (
-    <FormField
-      label={label}
-      hideLabel={hideLabel}
-      description={description}
-      error={error}
-      required={required}
-    >
+    <FormField label={label} hideLabel={hideLabel} description={description} error={error} required={required}>
       {(control) => (
         <textarea
           {...rest}

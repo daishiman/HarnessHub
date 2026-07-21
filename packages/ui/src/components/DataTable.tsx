@@ -1,7 +1,7 @@
 'use client';
 
 /** 一覧表。ソートの aria-sort・見出しの scope・列幅固定によるレイアウトシフト抑制を一括で担保する。 */
-import { useMemo, useState, type CSSProperties, type ReactNode } from 'react';
+import { type CSSProperties, type ReactNode, useMemo, useState } from 'react';
 
 import { colorVar, spaceVar, visuallyHidden } from '../internal/style.js';
 import { useUiText } from '../theme/UiProvider.js';
@@ -116,9 +116,7 @@ export function DataTable<TRow>({
         background: colorVar('surface'),
       }}
     >
-      <caption style={hideCaption ? visuallyHidden : { textAlign: 'start', padding: spaceVar(2) }}>
-        {caption}
-      </caption>
+      <caption style={hideCaption ? visuallyHidden : { textAlign: 'start', padding: spaceVar(2) }}>{caption}</caption>
       <colgroup>
         {columns.map((column) => (
           <col key={column.key} style={column.width ? { width: column.width } : undefined} />

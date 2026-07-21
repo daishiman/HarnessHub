@@ -8,18 +8,17 @@ import { chartSeriesTokens } from '../tokens/tokens.js';
 import { ChartFrame } from './ChartFrame.js';
 import {
   buildPolylinePoints,
+  type ChartSeries,
   describeChart,
   resolveValueDomain,
   scaleIndexToX,
   scaleValueToY,
-  type ChartSeries,
 } from './scale.js';
 
 const PADDING = 8;
 
 /** 系列 index から色 token を選ぶ。系列数が色数を超えたら先頭へ戻る。 */
-const seriesColor = (index: number): string =>
-  colorVar(chartSeriesTokens[index % chartSeriesTokens.length]!);
+const seriesColor = (index: number): string => colorVar(chartSeriesTokens[index % chartSeriesTokens.length]!);
 
 /** 系列を区別する破線パターン。色を見分けられない利用者のための冗長化。 */
 const seriesDash = (index: number): string | undefined =>

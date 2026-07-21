@@ -1,10 +1,10 @@
 // 第 2 consumer 系統による @harness-hub/schemas の利用。public API 経由のみ（相対 path で packages を貫通しない）
 import {
   buildHealthResponse,
-  healthResponseSchema,
-  deriveHealthStatus,
   type DependencyCheck,
+  deriveHealthStatus,
   type HealthResponse,
+  healthResponseSchema,
 } from '@harness-hub/schemas';
 
 /** 同一実装を指していることの照合用に、束縛した公開 API をそのまま公開する */

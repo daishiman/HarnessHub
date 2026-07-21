@@ -1,7 +1,7 @@
 // 認可判定の単一層。deny-by-default で Tenant/Workspace スコープを強制する (shared-layers §2 / qa-006 / D4)
 // この層以外に認可判定を書かないこと。テナント固有 policy は feat-auth-tenancy が本層へ注入する。
 import type { Principal } from '../shared/auth/index.js';
-import { resolveRequestedScope, type RequestedScope } from './scope.js';
+import { type RequestedScope, resolveRequestedScope } from './scope.js';
 
 export type DenyReason =
   | 'unauthenticated'

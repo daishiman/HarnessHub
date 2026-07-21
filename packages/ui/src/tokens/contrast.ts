@@ -27,9 +27,7 @@ export function relativeLuminance(hex: string): number {
 
 /** 2 色のコントラスト比 (1〜21)。順序は結果に影響しない。 */
 export function contrastRatio(foreground: string, background: string): number {
-  const [lighter, darker] = [relativeLuminance(foreground), relativeLuminance(background)].sort(
-    (a, b) => b - a,
-  );
+  const [lighter, darker] = [relativeLuminance(foreground), relativeLuminance(background)].sort((a, b) => b - a);
   return (lighter! + 0.05) / (darker! + 0.05);
 }
 

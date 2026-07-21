@@ -73,10 +73,7 @@ export function createAiJobQueue(options: AiJobQueueOptions): AiJobQueue {
 
   return {
     enqueue: (input) => options.store.upsertQueued(input, now()),
-    lease: (input) =>
-      input.kinds.length === 0
-        ? Promise.resolve(null)
-        : options.store.takeNextQueued(input, now()),
+    lease: (input) => (input.kinds.length === 0 ? Promise.resolve(null) : options.store.takeNextQueued(input, now())),
     complete: (input) => options.store.markSucceeded(input, now()),
     fail: (input) => options.store.markFailed(input, now()),
   };

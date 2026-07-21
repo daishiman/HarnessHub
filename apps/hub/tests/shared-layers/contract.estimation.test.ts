@@ -1,10 +1,11 @@
 // HF-A4-CONTRACT-004: @harness-hub/estimation を 2 系統の consumer が public API 経由で参照し、
 // 同一入力に対して同一結果を返すことを検証
-import { describe, expect, it } from 'vitest';
+
 import { estimateSavings, resolveHourlyRate } from '@harness-hub/estimation';
-import * as consumerA from '../fixtures/consumer-a/uses-estimation.js';
+import { describe, expect, it } from 'vitest';
 import { calculateWorkspaceSavings } from '../../src/shared/estimation/index.js';
-import { APP_SRC, CONSUMER_A, boundaryBypassImports, deepImports, publicApiImports } from './source-scan.js';
+import * as consumerA from '../fixtures/consumer-a/uses-estimation.js';
+import { APP_SRC, boundaryBypassImports, CONSUMER_A, deepImports, publicApiImports } from './source-scan.js';
 
 const PACKAGE_NAME = '@harness-hub/estimation';
 

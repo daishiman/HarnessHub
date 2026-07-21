@@ -1,18 +1,9 @@
 'use client';
 
 /** トースト通知。共通シェルに常駐する 1 つのライブリージョンへ集約し、読み上げの取りこぼしを防ぐ。 */
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
-
+import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { type StatusTone, statusToneColors } from '../i18n/status-vocabulary.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
-import { statusToneColors, type StatusTone } from '../i18n/status-vocabulary.js';
 import { useUiText } from '../theme/UiProvider.js';
 
 export interface ToastOptions {

@@ -1,14 +1,8 @@
 // adapter 境界 (D2 ヘッジ) の単体テスト。
 
 import { describe, expect, it } from 'vitest';
-
-import {
-  DATABASE_DRIVERS,
-  assertSupportedDriver,
-  isDatabaseDriver,
-  isTransactionalAdapter,
-} from './adapter';
 import type { DatabaseAdapter, TransactionalAdapter } from './adapter';
+import { assertSupportedDriver, DATABASE_DRIVERS, isDatabaseDriver, isTransactionalAdapter } from './adapter';
 import { DriverNotSupportedError } from './errors';
 
 const plainAdapter: DatabaseAdapter = { driver: 'turso', schema: {}, client: null };

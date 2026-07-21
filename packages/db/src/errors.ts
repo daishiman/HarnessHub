@@ -1,10 +1,6 @@
 // repository 境界で投げる例外。driver 固有のエラーをアプリ層へ素通しさせないための共通語彙。
 
-export type RepositoryErrorCode =
-  | 'not-found'
-  | 'driver-not-supported'
-  | 'invalid-page-request'
-  | 'invalid-context';
+export type RepositoryErrorCode = 'not-found' | 'driver-not-supported' | 'invalid-page-request' | 'invalid-context';
 
 export class RepositoryError extends Error {
   readonly code: RepositoryErrorCode;
@@ -34,10 +30,7 @@ export class DriverNotSupportedError extends RepositoryError {
   readonly driver: string;
 
   constructor(driver: string, supported: readonly string[]) {
-    super(
-      'driver-not-supported',
-      `driver "${driver}" は未対応です (対応: ${supported.join(', ')})`,
-    );
+    super('driver-not-supported', `driver "${driver}" は未対応です (対応: ${supported.join(', ')})`);
     this.name = 'DriverNotSupportedError';
     this.driver = driver;
   }

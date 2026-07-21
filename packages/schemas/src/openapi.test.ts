@@ -50,12 +50,7 @@ describe('defaultSchemaConverter', () => {
     const converted = defaultSchemaConverter(healthResponseSchema);
     const properties = converted['properties'] as Record<string, unknown>;
 
-    expect(Object.keys(properties).sort()).toEqual([
-      'checkedAt',
-      'dependencies',
-      'status',
-      'version',
-    ]);
+    expect(Object.keys(properties).sort()).toEqual(['checkedAt', 'dependencies', 'status', 'version']);
   });
 });
 

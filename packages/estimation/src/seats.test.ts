@@ -18,15 +18,9 @@ describe('estimateSeatPlan', () => {
   });
 
   it('小数シート数・負の単価・上限超過の月数を拒否する', () => {
-    expect(() => estimateSeatPlan({ seats: 1.5, monthlyUnitPrice: 1500, months: 12 })).toThrow(
-      EstimationInputError,
-    );
-    expect(() => estimateSeatPlan({ seats: 10, monthlyUnitPrice: -1, months: 12 })).toThrow(
-      EstimationInputError,
-    );
-    expect(() => estimateSeatPlan({ seats: 10, monthlyUnitPrice: 1500, months: 121 })).toThrow(
-      EstimationInputError,
-    );
+    expect(() => estimateSeatPlan({ seats: 1.5, monthlyUnitPrice: 1500, months: 12 })).toThrow(EstimationInputError);
+    expect(() => estimateSeatPlan({ seats: 10, monthlyUnitPrice: -1, months: 12 })).toThrow(EstimationInputError);
+    expect(() => estimateSeatPlan({ seats: 10, monthlyUnitPrice: 1500, months: 121 })).toThrow(EstimationInputError);
   });
 });
 

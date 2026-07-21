@@ -1,8 +1,9 @@
 // HF-A4-CONTRACT-002: @harness-hub/schemas を 2 系統の consumer が public API 経由で参照し、同一実装を指すことを検証
-import { describe, expect, it } from 'vitest';
+
 import { buildHealthResponse, deriveHealthStatus, healthResponseSchema } from '@harness-hub/schemas';
+import { describe, expect, it } from 'vitest';
 import * as consumerA from '../fixtures/consumer-a/uses-schemas.js';
-import { APP_SRC, CONSUMER_A, boundaryBypassImports, deepImports, publicApiImports } from './source-scan.js';
+import { APP_SRC, boundaryBypassImports, CONSUMER_A, deepImports, publicApiImports } from './source-scan.js';
 
 const PACKAGE_NAME = '@harness-hub/schemas';
 

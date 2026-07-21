@@ -7,8 +7,8 @@
  * duplicate detector の HF-A4-DUP-002 と同じ考え方。
  */
 import { spawnSync } from 'node:child_process';
-import { createRequire } from 'node:module';
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -31,15 +31,11 @@ const vitestEntry = (): string => {
  * `CI=true` は vitest の snapshot 自動更新を止めるため (これが無いと乖離が黙って書き潰される)。
  */
 function runDriftCheck(snapshotPath: string): number {
-  const result = spawnSync(
-    process.execPath,
-    [vitestEntry(), 'run', 'src/contract-drift.test.ts'],
-    {
-      cwd: packageRoot,
-      encoding: 'utf8',
-      env: { ...process.env, CI: 'true', HH_OPENAPI_SNAPSHOT: snapshotPath },
-    },
-  );
+  const result = spawnSync(process.execPath, [vitestEntry(), 'run', 'src/contract-drift.test.ts'], {
+    cwd: packageRoot,
+    encoding: 'utf8',
+    env: { ...process.env, CI: 'true', HH_OPENAPI_SNAPSHOT: snapshotPath },
+  });
   return result.status ?? 1;
 }
 

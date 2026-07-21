@@ -4,11 +4,7 @@
 export type InspectionStage = 'static-validation' | 'secret-scan' | 'policy';
 
 /** stage の正準順序 (docs/shared-layers.md §2「static validation / secret scan / policy 判定」の順)。 */
-export const INSPECTION_STAGES: readonly InspectionStage[] = [
-  'static-validation',
-  'secret-scan',
-  'policy',
-] as const;
+export const INSPECTION_STAGES: readonly InspectionStage[] = ['static-validation', 'secret-scan', 'policy'] as const;
 
 /** finding 1 件の重大度。verdict への畳み込みは resolveVerdict が行う。 */
 export type FindingSeverity = 'info' | 'warn' | 'error';

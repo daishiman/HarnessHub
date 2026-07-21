@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 import { colorVar } from '../internal/style.js';
 import { chartSeriesTokens } from '../tokens/tokens.js';
 import { ChartFrame } from './ChartFrame.js';
-import { describeChart, resolveValueDomain, scaleValueToY, type ChartDatum } from './scale.js';
+import { type ChartDatum, describeChart, resolveValueDomain, scaleValueToY } from './scale.js';
 
 const PADDING = 8;
 

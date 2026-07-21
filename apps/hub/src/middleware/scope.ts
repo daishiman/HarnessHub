@@ -34,10 +34,7 @@ export function scopeFromHeaders(headers: ReadonlyMap<string, string>): Requeste
  * path 由来と header 由来を突き合わせる。
  * 両方あって値が違う場合は「どちらが正か」を推測せず ambiguous として拒否側へ回す。
  */
-export function resolveRequestedScope(
-  pathname: string,
-  headers: ReadonlyMap<string, string>,
-): ScopeResolution {
+export function resolveRequestedScope(pathname: string, headers: ReadonlyMap<string, string>): ScopeResolution {
   const fromPath = scopeFromPath(pathname);
   const fromHeader = scopeFromHeaders(headers);
 

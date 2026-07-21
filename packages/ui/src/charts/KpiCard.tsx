@@ -48,9 +48,7 @@ export function KpiCard({ label, value, unit, delta, trendValues }: KpiCardProps
         </span>
       ) : null}
 
-      {trendValues && trendValues.length > 0 ? (
-        <Sparkline label={`${label} の推移`} values={trendValues} />
-      ) : null}
+      {trendValues && trendValues.length > 0 ? <Sparkline label={`${label} の推移`} values={trendValues} /> : null}
     </div>
   );
 }

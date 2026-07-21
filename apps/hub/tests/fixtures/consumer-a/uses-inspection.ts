@@ -5,12 +5,12 @@ import {
   defineSecretScanRule,
   defineStaticValidationRule,
   describePipeline,
-  inspect,
-  runInspection,
   type InspectionResult,
   type InspectionRule,
   type InspectionTarget,
+  inspect,
   type PipelineDescriptor,
+  runInspection,
 } from '@harness-hub/inspection';
 
 export const boundInspect = inspect;
@@ -48,8 +48,7 @@ export const sharedRules: readonly InspectionRule[] = [
   definePolicyRule({
     id: 'policy-max-files',
     severity: 'warn',
-    evaluate: (target) =>
-      target.files.length > 2 ? [{ message: 'ファイル数が上限を超えています' }] : [],
+    evaluate: (target) => (target.files.length > 2 ? [{ message: 'ファイル数が上限を超えています' }] : []),
   }),
 ];
 

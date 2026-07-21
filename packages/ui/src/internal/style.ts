@@ -1,7 +1,7 @@
 /** 部品が design token を参照するための内部ヘルパー。公開 API ではない (index.ts から export しない)。 */
 import type { CSSProperties } from 'react';
 
-import { colorVariableName, type ColorTokenName } from '../tokens/tokens.js';
+import { type ColorTokenName, colorVariableName } from '../tokens/tokens.js';
 
 /** 色 token を CSS の `var()` 参照にする。部品内で生の色コードを書かないための唯一の口。 */
 export const colorVar = (token: ColorTokenName): string => `var(${colorVariableName(token)})`;

@@ -1,9 +1,5 @@
 /** design tokens (色・余白・タイポ・表示密度) の正本。文字色は 4.5:1 を token 段階で保証する。 */
-import {
-  AA_CONTRAST_NON_TEXT,
-  AA_CONTRAST_TEXT,
-  contrastRatio,
-} from './contrast.js';
+import { AA_CONTRAST_NON_TEXT, AA_CONTRAST_TEXT, contrastRatio } from './contrast.js';
 
 export const themeNames = ['light', 'dark'] as const;
 export type ThemeName = (typeof themeNames)[number];
@@ -274,6 +270,6 @@ export function buildThemeCss(): string {
     `@media (prefers-color-scheme: dark) {\n  [data-theme='auto'] {\n${colorBlock('dark', '  ')}\n  }\n}`,
     `[data-density='compact'] {\n${declarations(densityTokens.compact)}\n}`,
     // 操作部品のフォーカス可視化。色のみに頼らず輪郭と余白でも示す (WCAG 2.2 の 2.4.11 対応)。
-    ":where([data-hh-focusable]):focus-visible {\n  outline: 2px solid var(--hh-color-focus-ring);\n  outline-offset: 2px;\n}",
+    ':where([data-hh-focusable]):focus-visible {\n  outline: 2px solid var(--hh-color-focus-ring);\n  outline-offset: 2px;\n}',
   ].join('\n\n');
 }

@@ -3,8 +3,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { definePolicyRule, defineSecretScanRule, defineStaticValidationRule, maskSecret } from './rules';
-import { InspectionRuleError } from './types';
 import type { InspectionTarget } from './types';
+import { InspectionRuleError } from './types';
 
 const target: InspectionTarget = {
   files: [{ path: 'app.ts', content: 'const k = "sk-LIVE-1234";' }],
@@ -25,12 +25,8 @@ describe('defineStaticValidationRule / definePolicyRule', () => {
   });
 
   it('空 ID / 前後空白の ID を拒否する', () => {
-    expect(() => defineStaticValidationRule({ id: '   ', evaluate: () => [] })).toThrow(
-      InspectionRuleError,
-    );
-    expect(() => definePolicyRule({ id: 'policy/x ', evaluate: () => [] })).toThrow(
-      InspectionRuleError,
-    );
+    expect(() => defineStaticValidationRule({ id: '   ', evaluate: () => [] })).toThrow(InspectionRuleError);
+    expect(() => definePolicyRule({ id: 'policy/x ', evaluate: () => [] })).toThrow(InspectionRuleError);
   });
 });
 

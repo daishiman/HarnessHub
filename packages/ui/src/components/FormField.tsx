@@ -1,10 +1,9 @@
 'use client';
 
 /** ラベル・補足・エラーと入力欄の a11y 配線を一括で担保する。個別画面で aria-* を書かせない。 */
-import { useId, type CSSProperties, type ReactNode } from 'react';
-
-import { useUiText } from '../theme/UiProvider.js';
+import { type CSSProperties, type ReactNode, useId } from 'react';
 import { colorVar, spaceVar, visuallyHidden } from '../internal/style.js';
+import { useUiText } from '../theme/UiProvider.js';
 
 /** FormField が入力欄へ渡す属性一式。独自の入力部品もこれを受け取れば a11y を満たせる。 */
 export interface FieldControlProps {
@@ -67,9 +66,7 @@ export function FormField({
       <label htmlFor={id} style={hideLabel ? visuallyHidden : labelStyle}>
         {label}
         {required ? (
-          <span style={{ color: colorVar('danger'), marginInlineStart: spaceVar(1) }}>
-            {t('field.required')}
-          </span>
+          <span style={{ color: colorVar('danger'), marginInlineStart: spaceVar(1) }}>{t('field.required')}</span>
         ) : null}
       </label>
 

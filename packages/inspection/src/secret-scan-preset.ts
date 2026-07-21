@@ -3,8 +3,8 @@
 // ルールの内容は P09 で実効性を実測した secret-scan-gate の定義を引き継ぎ、抑制の口だけを追加している。
 
 import { createInspectionPipeline, inspect } from './pipeline';
-import { defineSecretScanRule } from './rules';
 import type { SecretMatchContext } from './rules';
+import { defineSecretScanRule } from './rules';
 import type { InspectionFile, InspectionResult, InspectionRule } from './types';
 
 /** 行内に書くと、その行の検出を抑制するマーカー。除外を「行単位・レビュー可能」に留めるための口。 */

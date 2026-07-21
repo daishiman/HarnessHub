@@ -1,6 +1,6 @@
 // GET /health。外形監視 (Better Stack) と CI が叩く死活エンドポイント (ADR §7 / HF-A3-HEALTH-001..003)
 import { buildHealthResponse, healthHttpStatus } from '@harness-hub/schemas';
-import { defaultProbes, runDependencyProbes, type DependencyProbe } from './probes.js';
+import { type DependencyProbe, defaultProbes, runDependencyProbes } from './probes.js';
 import { readRuntimeEnv, resolveVersion } from './runtime-env.js';
 
 // 依存先の現在状態を返す性質上、キャッシュしてはならない

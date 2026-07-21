@@ -3,15 +3,7 @@ import type { ColorTokenName } from '../tokens/tokens.js';
 import type { UiLocale } from './dictionaries.js';
 
 /** 状態チップの意味づけ。色そのものではなく「意味」を指す。 */
-export type StatusTone =
-  | 'neutral'
-  | 'primary'
-  | 'accentAi'
-  | 'success'
-  | 'warning'
-  | 'danger'
-  | 'info'
-  | 'magenta';
+export type StatusTone = 'neutral' | 'primary' | 'accentAi' | 'success' | 'warning' | 'danger' | 'info' | 'magenta';
 
 /** tone → 色 token。文字色と背景色の組は tokens の contrastRequirements で 4.5:1 が保証されている。 */
 export const statusToneColors: Record<StatusTone, { foreground: ColorTokenName; background: ColorTokenName }> = {
@@ -87,11 +79,7 @@ function lookup<D extends StatusDomain>(domain: D, value: StatusValue<D>): Statu
 }
 
 /** 表示ラベルを引く。 */
-export function getStatusLabel<D extends StatusDomain>(
-  domain: D,
-  value: StatusValue<D>,
-  locale: UiLocale,
-): string {
+export function getStatusLabel<D extends StatusDomain>(domain: D, value: StatusValue<D>, locale: UiLocale): string {
   return lookup(domain, value).labels[locale];
 }
 

@@ -1,144 +1,133 @@
 /** @harness-hub/ui の公開 API 単一入口。consumer は必ずここ経由で参照する (内部実装への deep import 禁止)。 */
 
-// --- design tokens -------------------------------------------------------
+export type { BarChartProps } from './charts/BarChart.js';
+export { BarChart } from './charts/BarChart.js';
+export type { DonutChartProps } from './charts/DonutChart.js';
+export { DonutChart } from './charts/DonutChart.js';
+export type { KpiCardProps, KpiTrend } from './charts/KpiCard.js';
+// --- KPI カード / チャート (軽量 SVG) --------------------------------------
+export { KpiCard } from './charts/KpiCard.js';
+export type { LineChartProps, SparklineProps } from './charts/LineChart.js';
+export { LineChart, Sparkline } from './charts/LineChart.js';
+export type { ChartDatum, ChartSeries, DonutSegment } from './charts/scale.js';
 export {
-  themeNames,
-  densityNames,
-  colorTokens,
-  spacingTokens,
-  radiusTokens,
-  typographyTokens,
-  densityTokens,
-  chartSeriesTokens,
-  contrastRequirements,
-  checkContrastRequirements,
-  colorVariableName,
-  buildThemeCss,
-} from './tokens/tokens.js';
+  buildDonutSegments,
+  buildPolylinePoints,
+  describeChart,
+  resolveValueDomain,
+  scaleIndexToX,
+  scaleValueToY,
+} from './charts/scale.js';
 export type {
-  ThemeName,
-  ThemePreference,
-  Density,
-  ColorTokenName,
-  SpacingTokenName,
-  RadiusTokenName,
-  TypographyTokenName,
-  ContrastRequirement,
-  ContrastCheckResult,
-} from './tokens/tokens.js';
-
-export {
-  parseHexColor,
-  relativeLuminance,
-  contrastRatio,
-  meetsTextContrast,
-  AA_CONTRAST_TEXT,
-  AA_CONTRAST_LARGE_TEXT,
-  AA_CONTRAST_NON_TEXT,
-} from './tokens/contrast.js';
-
-// --- テーマ・表示密度・言語 ----------------------------------------------
-export { UiProvider, useUi, useUiText, defaultUiPreferences } from './theme/UiProvider.js';
-export type { UiProviderProps, UiPreferences, UiContextValue } from './theme/UiProvider.js';
-
-export {
-  uiLocales,
-  uiMessages,
-  jaMessages,
-  enMessages,
-  translateUiMessage,
-} from './i18n/dictionaries.js';
-export type { UiLocale, UiMessageKey } from './i18n/dictionaries.js';
-
-export {
-  statusVocabulary,
-  statusToneColors,
-  getStatusLabel,
-  getStatusTone,
-} from './i18n/status-vocabulary.js';
-export type { StatusTone, StatusDomain, StatusValue } from './i18n/status-vocabulary.js';
-
+  AlertProps,
+  DegradedBannerProps,
+  EmptyStateProps,
+  ErrorStateProps,
+} from './components/Alert.js';
+// --- 通知・エラー表示 ----------------------------------------------------
+export { Alert, DegradedBanner, EmptyState, ErrorState } from './components/Alert.js';
+export type { ButtonProps, ButtonVariant } from './components/Button.js';
 // --- フォーム部品 --------------------------------------------------------
 export { Button } from './components/Button.js';
-export type { ButtonProps, ButtonVariant } from './components/Button.js';
-export { FormField } from './components/FormField.js';
-export type { FormFieldProps, FieldControlProps } from './components/FormField.js';
-export { TextInput } from './components/TextInput.js';
-export type { TextInputProps } from './components/TextInput.js';
-export { Select } from './components/Select.js';
-export type { SelectProps, SelectOption } from './components/Select.js';
-export { Textarea } from './components/Textarea.js';
-export type { TextareaProps } from './components/Textarea.js';
-
-// --- テーブル / 一覧 ------------------------------------------------------
-export { DataTable } from './components/DataTable.js';
+export type { ScopeChipProps, StatusChipProps } from './components/Chip.js';
+export { ScopeChip, StatusChip } from './components/Chip.js';
+export type { ConfirmDialogProps } from './components/ConfirmDialog.js';
+// --- 確認ダイアログ ------------------------------------------------------
+export { ConfirmDialog } from './components/ConfirmDialog.js';
 export type {
-  DataTableProps,
   DataTableColumn,
+  DataTableProps,
   DataTableSort,
   TableSortDirection,
 } from './components/DataTable.js';
-export { InlineEditTable } from './components/InlineEditTable.js';
+
+// --- テーブル / 一覧 ------------------------------------------------------
+export { DataTable } from './components/DataTable.js';
+export type { FieldControlProps, FormFieldProps } from './components/FormField.js';
+export { FormField } from './components/FormField.js';
 export type {
-  InlineEditTableProps,
   InlineEditColumn,
   InlineEditCommit,
+  InlineEditTableProps,
 } from './components/InlineEditTable.js';
-
+export { InlineEditTable } from './components/InlineEditTable.js';
+export type { MarkdownEditorProps, MarkdownViewProps } from './components/Markdown.js';
+// --- Markdown ------------------------------------------------------------
+export { MarkdownEditor, MarkdownView, markdownSanitizeSchema } from './components/Markdown.js';
+export type { ProgressBarProps, SkeletonProps } from './components/Progress.js';
 // --- 進捗・状態表示 ------------------------------------------------------
 export { ProgressBar, Skeleton } from './components/Progress.js';
-export type { ProgressBarProps, SkeletonProps } from './components/Progress.js';
-export { StatusChip, ScopeChip } from './components/Chip.js';
-export type { StatusChipProps, ScopeChipProps } from './components/Chip.js';
-
-// --- 確認ダイアログ ------------------------------------------------------
-export { ConfirmDialog } from './components/ConfirmDialog.js';
-export type { ConfirmDialogProps } from './components/ConfirmDialog.js';
-
-// --- 通知・エラー表示 ----------------------------------------------------
-export { Alert, ErrorState, EmptyState, DegradedBanner } from './components/Alert.js';
+export type { SelectOption, SelectProps } from './components/Select.js';
+export { Select } from './components/Select.js';
 export type {
-  AlertProps,
-  ErrorStateProps,
-  EmptyStateProps,
-  DegradedBannerProps,
-} from './components/Alert.js';
-export { ToastProvider, useToast } from './components/Toast.js';
-export type { ToastProviderProps, ToastContextValue, ToastOptions, ToastItem } from './components/Toast.js';
-
+  BuildStage,
+  StageBoardProps,
+  StageCard,
+  StageColumn,
+  StageRisk,
+} from './components/StageBoard.js';
+export { StageBoard } from './components/StageBoard.js';
+export type { StepWizardProps, WizardStep } from './components/StepWizard.js';
+export { StepWizard } from './components/StepWizard.js';
+export type { TabItem, TabsProps } from './components/Tabs.js';
 // --- タブ / ウィザード / ステージボード -----------------------------------
 export { Tabs } from './components/Tabs.js';
-export type { TabsProps, TabItem } from './components/Tabs.js';
-export { StepWizard } from './components/StepWizard.js';
-export type { StepWizardProps, WizardStep } from './components/StepWizard.js';
-export { StageBoard } from './components/StageBoard.js';
-export type {
-  StageBoardProps,
-  StageColumn,
-  StageCard,
-  StageRisk,
-  BuildStage,
-} from './components/StageBoard.js';
-
-// --- Markdown ------------------------------------------------------------
-export { MarkdownView, MarkdownEditor, markdownSanitizeSchema } from './components/Markdown.js';
-export type { MarkdownViewProps, MarkdownEditorProps } from './components/Markdown.js';
-
-// --- KPI カード / チャート (軽量 SVG) --------------------------------------
-export { KpiCard } from './charts/KpiCard.js';
-export type { KpiCardProps, KpiTrend } from './charts/KpiCard.js';
-export { LineChart, Sparkline } from './charts/LineChart.js';
-export type { LineChartProps, SparklineProps } from './charts/LineChart.js';
-export { BarChart } from './charts/BarChart.js';
-export type { BarChartProps } from './charts/BarChart.js';
-export { DonutChart } from './charts/DonutChart.js';
-export type { DonutChartProps } from './charts/DonutChart.js';
+export type { TextareaProps } from './components/Textarea.js';
+export { Textarea } from './components/Textarea.js';
+export type { TextInputProps } from './components/TextInput.js';
+export { TextInput } from './components/TextInput.js';
+export type { ToastContextValue, ToastItem, ToastOptions, ToastProviderProps } from './components/Toast.js';
+export { ToastProvider, useToast } from './components/Toast.js';
+export type { UiLocale, UiMessageKey } from './i18n/dictionaries.js';
 export {
-  resolveValueDomain,
-  scaleValueToY,
-  scaleIndexToX,
-  buildPolylinePoints,
-  buildDonutSegments,
-  describeChart,
-} from './charts/scale.js';
-export type { ChartDatum, ChartSeries, DonutSegment } from './charts/scale.js';
+  enMessages,
+  jaMessages,
+  translateUiMessage,
+  uiLocales,
+  uiMessages,
+} from './i18n/dictionaries.js';
+export type { StatusDomain, StatusTone, StatusValue } from './i18n/status-vocabulary.js';
+export {
+  getStatusLabel,
+  getStatusTone,
+  statusToneColors,
+  statusVocabulary,
+} from './i18n/status-vocabulary.js';
+export type { UiContextValue, UiPreferences, UiProviderProps } from './theme/UiProvider.js';
+// --- テーマ・表示密度・言語 ----------------------------------------------
+export { defaultUiPreferences, UiProvider, useUi, useUiText } from './theme/UiProvider.js';
+export {
+  AA_CONTRAST_LARGE_TEXT,
+  AA_CONTRAST_NON_TEXT,
+  AA_CONTRAST_TEXT,
+  contrastRatio,
+  meetsTextContrast,
+  parseHexColor,
+  relativeLuminance,
+} from './tokens/contrast.js';
+export type {
+  ColorTokenName,
+  ContrastCheckResult,
+  ContrastRequirement,
+  Density,
+  RadiusTokenName,
+  SpacingTokenName,
+  ThemeName,
+  ThemePreference,
+  TypographyTokenName,
+} from './tokens/tokens.js';
+// --- design tokens -------------------------------------------------------
+export {
+  buildThemeCss,
+  chartSeriesTokens,
+  checkContrastRequirements,
+  colorTokens,
+  colorVariableName,
+  contrastRequirements,
+  densityNames,
+  densityTokens,
+  radiusTokens,
+  spacingTokens,
+  themeNames,
+  typographyTokens,
+} from './tokens/tokens.js';

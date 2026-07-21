@@ -1,14 +1,8 @@
 // 時給・削減時間・削減額の試算 (純関数)。係数は全て呼び出し側から受け取る。
 
-import { assertIntegerLimit, assertLimit } from './validation';
-import type {
-  HourlyRateInput,
-  SavingsInput,
-  SavingsResult,
-  TimeSavingInput,
-  TimeSavingResult,
-} from './types';
+import type { HourlyRateInput, SavingsInput, SavingsResult, TimeSavingInput, TimeSavingResult } from './types';
 import { EstimationInputError } from './types';
+import { assertIntegerLimit, assertLimit } from './validation';
 
 /** 年収と年間労働時間から時給を求める。annualHours は 0 を許さない (0 除算の回避も兼ねる)。 */
 export function calcHourlyRateFromSalary(annualSalary: number, annualHours: number): number {
@@ -26,12 +20,7 @@ export function resolveHourlyRate(input: HourlyRateInput): number {
       return calcHourlyRateFromSalary(input.annualSalary, input.annualHours);
     default: {
       const exhaustive: never = input;
-      throw new EstimationInputError(
-        'not-a-number',
-        'hourlyRate.kind',
-        exhaustive,
-        '時給の指定方法が不正です',
-      );
+      throw new EstimationInputError('not-a-number', 'hourlyRate.kind', exhaustive, '時給の指定方法が不正です');
     }
   }
 }

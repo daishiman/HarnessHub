@@ -104,9 +104,7 @@ export function problemDetailsFromZodError(
  * 検証結果を「成功値」か「problem details」かに畳んだもの。
  * route handler が例外制御を書かずに応答を決められるようにする。
  */
-export type ParseOutcome<T> =
-  | { ok: true; data: T }
-  | { ok: false; problem: ProblemDetails };
+export type ParseOutcome<T> = { ok: true; data: T } | { ok: false; problem: ProblemDetails };
 
 /** schema で検証し、失敗時は RFC 9457 へ写像した結果を返す。 */
 export function parseRequest<TSchema extends z.ZodType>(

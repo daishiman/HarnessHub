@@ -1,10 +1,11 @@
 // HF-A4-CONTRACT-003: @harness-hub/inspection を Hub 正式検査 / Publisher ローカル pre-check の 2 系統が
 // public API 経由で参照し、同一入力に対する判定が一致すること (挙動同値) を検証
+
+import { createInspectionPipeline, describePipeline, type InspectionTarget, inspect } from '@harness-hub/inspection';
 import { describe, expect, it } from 'vitest';
-import { createInspectionPipeline, describePipeline, inspect, type InspectionTarget } from '@harness-hub/inspection';
-import * as consumerA from '../fixtures/consumer-a/uses-inspection.js';
 import { createHubInspectionRegistry, runHubInspection } from '../../src/shared/inspection/index.js';
-import { APP_SRC, CONSUMER_A, boundaryBypassImports, deepImports, publicApiImports } from './source-scan.js';
+import * as consumerA from '../fixtures/consumer-a/uses-inspection.js';
+import { APP_SRC, boundaryBypassImports, CONSUMER_A, deepImports, publicApiImports } from './source-scan.js';
 
 const PACKAGE_NAME = '@harness-hub/inspection';
 

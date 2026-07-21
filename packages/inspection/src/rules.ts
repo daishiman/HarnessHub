@@ -1,13 +1,7 @@
 // ルール登録の口 (拡張点)。3 系統それぞれのルール生成ヘルパを提供し、判定内容そのものは consumer feature が渡す。
 
+import type { FindingSeverity, InspectionRule, InspectionStage, InspectionTarget, RuleFinding } from './types';
 import { InspectionRuleError } from './types';
-import type {
-  FindingSeverity,
-  InspectionRule,
-  InspectionStage,
-  InspectionTarget,
-  RuleFinding,
-} from './types';
 
 /** ルール定義の共通入力。stage は各ヘルパが固定する。 */
 interface RuleDefinition {
@@ -89,9 +83,7 @@ export function maskSecret(value: string): string {
  */
 export function defineSecretScanRule(definition: SecretScanRuleDefinition): InspectionRule {
   assertRuleId(definition.id);
-  const flags = definition.pattern.flags.includes('g')
-    ? definition.pattern.flags
-    : `${definition.pattern.flags}g`;
+  const flags = definition.pattern.flags.includes('g') ? definition.pattern.flags : `${definition.pattern.flags}g`;
   const source = definition.pattern.source;
   const buildMessage = definition.message ?? ((masked: string) => `秘密情報らしき値を検出しました: ${masked}`);
   const shouldReport = definition.shouldReport ?? ((): boolean => true);

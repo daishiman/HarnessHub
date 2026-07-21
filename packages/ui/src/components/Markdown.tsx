@@ -1,7 +1,7 @@
 'use client';
 
 /** Markdown の表示と編集。sanitize 済み AST のみを描画し、生 HTML の埋め込みを一切許さない (SEC7)。 */
-import { useState, type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
@@ -31,10 +31,7 @@ export interface MarkdownViewProps {
  */
 export function MarkdownView({ content }: MarkdownViewProps): ReactNode {
   return (
-    <div
-      data-hh-markdown=""
-      style={{ color: colorVar('text'), lineHeight: 'var(--hh-line-height-normal)' }}
-    >
+    <div data-hh-markdown="" style={{ color: colorVar('text'), lineHeight: 'var(--hh-line-height-normal)' }}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[[rehypeSanitize, markdownSanitizeSchema]]}

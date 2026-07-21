@@ -28,47 +28,42 @@ describe('calcHourlyRateFromSalary', () => {
 describe('resolveHourlyRate', () => {
   it('直接指定と年収換算のどちらでも同じ値に解決できる', () => {
     expect(resolveHourlyRate({ kind: 'direct', hourlyRate: 3000 })).toBe(3000);
-    expect(
-      resolveHourlyRate({ kind: 'from-salary', annualSalary: 6_000_000, annualHours: 2000 }),
-    ).toBe(3000);
+    expect(resolveHourlyRate({ kind: 'from-salary', annualSalary: 6_000_000, annualHours: 2000 })).toBe(3000);
   });
 
   it('直接指定でも範囲検証を行う', () => {
-    expect(() => resolveHourlyRate({ kind: 'direct', hourlyRate: -100 })).toThrow(
-      EstimationInputError,
-    );
+    expect(() => resolveHourlyRate({ kind: 'direct', hourlyRate: -100 })).toThrow(EstimationInputError);
   });
 });
 
 describe('calcTimeSaving', () => {
   it('回数 × 分/回 × 削減率で年間削減時間を求める', () => {
-    expect(calcTimeSaving({ runsPerYear: 120, minutesPerRun: 30, reductionRate: 0.5 })).toStrictEqual(
-      { savedMinutesPerYear: 1800, savedHoursPerYear: 30 },
-    );
+    expect(calcTimeSaving({ runsPerYear: 120, minutesPerRun: 30, reductionRate: 0.5 })).toStrictEqual({
+      savedMinutesPerYear: 1800,
+      savedHoursPerYear: 30,
+    });
   });
 
   it('削減率 0 なら削減時間は 0', () => {
-    expect(
-      calcTimeSaving({ runsPerYear: 120, minutesPerRun: 30, reductionRate: 0 }).savedHoursPerYear,
-    ).toBe(0);
+    expect(calcTimeSaving({ runsPerYear: 120, minutesPerRun: 30, reductionRate: 0 }).savedHoursPerYear).toBe(0);
   });
 
   it('削減率 1 超・負の実施回数・小数の実施回数を拒否する', () => {
-    expect(() =>
-      calcTimeSaving({ runsPerYear: 120, minutesPerRun: 30, reductionRate: 1.2 }),
-    ).toThrow(EstimationInputError);
-    expect(() =>
-      calcTimeSaving({ runsPerYear: -1, minutesPerRun: 30, reductionRate: 0.5 }),
-    ).toThrow(EstimationInputError);
-    expect(() =>
-      calcTimeSaving({ runsPerYear: 1.5, minutesPerRun: 30, reductionRate: 0.5 }),
-    ).toThrow(EstimationInputError);
+    expect(() => calcTimeSaving({ runsPerYear: 120, minutesPerRun: 30, reductionRate: 1.2 })).toThrow(
+      EstimationInputError,
+    );
+    expect(() => calcTimeSaving({ runsPerYear: -1, minutesPerRun: 30, reductionRate: 0.5 })).toThrow(
+      EstimationInputError,
+    );
+    expect(() => calcTimeSaving({ runsPerYear: 1.5, minutesPerRun: 30, reductionRate: 0.5 })).toThrow(
+      EstimationInputError,
+    );
   });
 
   it('1 日を超える分/回 を非現実値として拒否する', () => {
-    expect(() =>
-      calcTimeSaving({ runsPerYear: 1, minutesPerRun: 1441, reductionRate: 0.5 }),
-    ).toThrow(EstimationInputError);
+    expect(() => calcTimeSaving({ runsPerYear: 1, minutesPerRun: 1441, reductionRate: 0.5 })).toThrow(
+      EstimationInputError,
+    );
   });
 });
 

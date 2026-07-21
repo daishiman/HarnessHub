@@ -39,13 +39,7 @@ export function Select({
   ...rest
 }: SelectProps): ReactNode {
   return (
-    <FormField
-      label={label}
-      hideLabel={hideLabel}
-      description={description}
-      error={error}
-      required={required}
-    >
+    <FormField label={label} hideLabel={hideLabel} description={description} error={error} required={required}>
       {(control) => (
         <select
           {...rest}

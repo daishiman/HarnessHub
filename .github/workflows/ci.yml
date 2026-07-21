@@ -82,8 +82,10 @@ jobs:
           cache: pnpm
       - name: install (frozen lockfile)
         run: pnpm install --frozen-lockfile
-      - name: G2 lint / format
-        run: pnpm -r lint
+      # G2 の実体は Biome (lint + format)。以前は tsc --noEmit のエイリアスで
+      # G3 typecheck と同一検査になっており lint/format が実質存在しなかった (P10 指摘 F-09)。
+      - name: G2 lint / format (Biome)
+        run: pnpm exec biome ci
       - name: G3 typecheck
         run: pnpm -r typecheck
       - name: build

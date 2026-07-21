@@ -59,10 +59,7 @@ export type AuditEventDetail = Omit<AuditEvent, 'actorSubject' | 'tenantId' | 'w
  * repository 操作のスコープ (@harness-hub/db の RepositoryContext) から監査イベントを組み立てる。
  * tenantId / actor を呼び出し側で書き写さないことで、DB アクセス境界と監査記録のズレを防ぐ。
  */
-export function auditEventFromContext(
-  context: RepositoryContext,
-  detail: AuditEventDetail,
-): AuditEvent {
+export function auditEventFromContext(context: RepositoryContext, detail: AuditEventDetail): AuditEvent {
   return {
     ...detail,
     // actorId 未設定のスコープ (バッチ等) は 'system' として記録し、空文字で記録しない

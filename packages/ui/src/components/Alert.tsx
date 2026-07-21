@@ -2,9 +2,8 @@
 
 /** 通知・エラー・空状態の表示。「平易な日本語 + 次の一手」を型で強制する統一フォーマット。 */
 import type { CSSProperties, ReactNode } from 'react';
-
+import { type StatusTone, statusToneColors } from '../i18n/status-vocabulary.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
-import { statusToneColors, type StatusTone } from '../i18n/status-vocabulary.js';
 import { useUi } from '../theme/UiProvider.js';
 
 export interface AlertProps {
@@ -43,9 +42,7 @@ export function Alert({ tone, title, description, action, live = 'polite', style
       }}
     >
       <strong>{title}</strong>
-      {description ? (
-        <span style={{ lineHeight: 'var(--hh-line-height-normal)' }}>{description}</span>
-      ) : null}
+      {description ? <span style={{ lineHeight: 'var(--hh-line-height-normal)' }}>{description}</span> : null}
       {action ? <div>{action}</div> : null}
     </div>
   );

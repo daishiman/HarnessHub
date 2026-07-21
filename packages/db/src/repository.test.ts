@@ -1,16 +1,15 @@
 // repository 境界 (ページング正規化・factory 型・エラー語彙) の単体テスト。
 
 import { describe, expect, it } from 'vitest';
-
+import { EntityNotFoundError, RepositoryError } from './errors';
+import type { Repository } from './repository';
 import {
   DEFAULT_PAGE_SIZE,
-  MAX_PAGE_SIZE,
   defineRepositoryFactory,
   emptyPage,
+  MAX_PAGE_SIZE,
   normalizePageRequest,
 } from './repository';
-import type { Repository } from './repository';
-import { EntityNotFoundError, RepositoryError } from './errors';
 import type { RepositoryContext } from './types';
 
 const context: RepositoryContext = { tenantId: 'tenant-1' };

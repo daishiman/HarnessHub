@@ -38,9 +38,7 @@ export interface NotificationDispatcherOptions {
   readonly transports: readonly NotificationTransport[];
 }
 
-export function createNotificationDispatcher(
-  options: NotificationDispatcherOptions,
-): NotificationDispatcher {
+export function createNotificationDispatcher(options: NotificationDispatcherOptions): NotificationDispatcher {
   const byChannel = new Map(options.transports.map((t) => [t.channel, t]));
 
   return {

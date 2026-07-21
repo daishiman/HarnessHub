@@ -1,7 +1,7 @@
 'use client';
 
 /** 一覧のまま値を直接編集する表。編集開始・確定・取消をキーボードだけで完結できるようにする。 */
-import { useState, type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import { colorVar, controlStyle, spaceVar, visuallyHidden } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
@@ -103,9 +103,7 @@ export function InlineEditTable<TRow>({
                       <button
                         type="button"
                         data-hh-focusable=""
-                        onClick={() =>
-                          setEditing({ rowId: id, columnKey: column.key, draft: column.value(row) })
-                        }
+                        onClick={() => setEditing({ rowId: id, columnKey: column.key, draft: column.value(row) })}
                         style={{
                           minHeight: 'var(--hh-control-height)',
                           background: 'none',

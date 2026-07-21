@@ -1,14 +1,7 @@
 'use client';
 
 /** 破壊的操作の確認ダイアログ。可逆かどうかの明示・フォーカストラップ・Esc 閉じを統一パターンで担保する。 */
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type ReactNode,
-} from 'react';
+import { type KeyboardEvent as ReactKeyboardEvent, type ReactNode, useCallback, useEffect, useId, useRef } from 'react';
 
 import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';

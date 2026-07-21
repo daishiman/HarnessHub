@@ -1,8 +1,9 @@
 // HF-A4-CONTRACT-001: @harness-hub/ui を 2 系統の consumer が public API 経由で参照し、同一実装を指すことを検証
-import { describe, expect, it } from 'vitest';
+
 import { Button } from '@harness-hub/ui';
+import { describe, expect, it } from 'vitest';
 import * as consumerA from '../fixtures/consumer-a/uses-ui';
-import { APP_SRC, CONSUMER_A, boundaryBypassImports, deepImports, publicApiImports } from './source-scan.js';
+import { APP_SRC, boundaryBypassImports, CONSUMER_A, deepImports, publicApiImports } from './source-scan.js';
 
 const PACKAGE_NAME = '@harness-hub/ui';
 

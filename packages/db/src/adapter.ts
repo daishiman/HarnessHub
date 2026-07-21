@@ -1,7 +1,7 @@
 // D2 ヘッジ (Turso→D1 退避) をアプリ層へ波及させないための adapter 境界。型と driver 判定のみを持つ。
 
-import { DriverNotSupportedError } from './errors';
 import type { DrizzleSchema } from './drizzle';
+import { DriverNotSupportedError } from './errors';
 
 /** 対応 driver。Turso (libSQL) を既定とし、D1 を退避先として同じ境界の裏に置く。 */
 export const DATABASE_DRIVERS = ['turso', 'd1'] as const;
@@ -42,13 +42,9 @@ export interface DatabaseAdapter<TSchema extends DrizzleSchema = DrizzleSchema, 
  * トランザクション境界。D1 と Turso で保証範囲が異なるため、
  * 「トランザクションを張れる adapter」を別の型として明示し、必要な箇所だけが要求できるようにする。
  */
-export interface TransactionalAdapter<
-  TSchema extends DrizzleSchema = DrizzleSchema,
-  TClient = unknown,
-> extends DatabaseAdapter<TSchema, TClient> {
-  transaction<TResult>(
-    run: (tx: DatabaseAdapter<TSchema, TClient>) => Promise<TResult>,
-  ): Promise<TResult>;
+export interface TransactionalAdapter<TSchema extends DrizzleSchema = DrizzleSchema, TClient = unknown>
+  extends DatabaseAdapter<TSchema, TClient> {
+  transaction<TResult>(run: (tx: DatabaseAdapter<TSchema, TClient>) => Promise<TResult>): Promise<TResult>;
 }
 
 /** adapter がトランザクションに対応しているかの型ガード。 */

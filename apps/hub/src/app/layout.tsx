@@ -1,8 +1,9 @@
 // App Router のルートレイアウト。P0 シェルの最小骨格 (lang / ランドマーク / design token 供給) のみを定義する
 // design system は @harness-hub/ui が正本。ここで token や部品を再定義しない
-import type { ReactNode } from 'react';
+
+import { buildThemeCss, UiProvider } from '@harness-hub/ui';
 import type { Metadata } from 'next';
-import { UiProvider, buildThemeCss } from '@harness-hub/ui';
+import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'Harness Hub',

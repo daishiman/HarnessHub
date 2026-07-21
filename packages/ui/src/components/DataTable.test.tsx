@@ -3,7 +3,7 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DataTable, InlineEditTable, type DataTableColumn } from '../index.js';
+import { DataTable, type DataTableColumn, InlineEditTable } from '../index.js';
 import { renderWithUi } from '../test-utils.js';
 
 interface Row {
@@ -25,9 +25,7 @@ const columns: DataTableColumn<Row>[] = [
 ];
 
 const bodyTexts = (columnIndex: number): string[] =>
-  [...document.querySelectorAll('tbody tr')].map(
-    (row) => row.querySelectorAll('td')[columnIndex]?.textContent ?? '',
-  );
+  [...document.querySelectorAll('tbody tr')].map((row) => row.querySelectorAll('td')[columnIndex]?.textContent ?? '');
 
 describe('DataTable', () => {
   it('caption で表の目的を伝える', () => {
@@ -130,14 +128,7 @@ describe('DataTable', () => {
 
   it('読み込み中はスケルトン行で高さを確保する (CLS 抑制)', () => {
     renderWithUi(
-      <DataTable
-        caption="一覧"
-        columns={columns}
-        rows={[]}
-        rowKey={(row) => row.id}
-        loading
-        skeletonRowCount={4}
-      />,
+      <DataTable caption="一覧" columns={columns} rows={[]} rowKey={(row) => row.id} loading skeletonRowCount={4} />,
     );
 
     expect(document.querySelectorAll('tbody tr')).toHaveLength(4);

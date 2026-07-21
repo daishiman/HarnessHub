@@ -39,9 +39,7 @@ describe('dependencyCheckSchema', () => {
   });
 
   it('負の latencyMs を拒否する', () => {
-    expect(dependencyCheckSchema.safeParse({ name: 'db', status: 'ok', latencyMs: -1 }).success).toBe(
-      false,
-    );
+    expect(dependencyCheckSchema.safeParse({ name: 'db', status: 'ok', latencyMs: -1 }).success).toBe(false);
   });
 });
 
@@ -61,10 +59,7 @@ describe('healthResponseSchema', () => {
     ['version 欠落', { status: 'ok', checkedAt: '2026-07-21T09:30:00.000Z', dependencies: [] }],
     ['checkedAt 欠落', { status: 'ok', version: 'v', dependencies: [] }],
     ['dependencies 欠落', { status: 'ok', version: 'v', checkedAt: '2026-07-21T09:30:00.000Z' }],
-    [
-      'checkedAt が ISO でない',
-      { status: 'ok', version: 'v', checkedAt: '2026/07/21', dependencies: [] },
-    ],
+    ['checkedAt が ISO でない', { status: 'ok', version: 'v', checkedAt: '2026/07/21', dependencies: [] }],
   ])('%s の応答を拒否する', (_label, response) => {
     expect(healthResponseSchema.safeParse(response).success).toBe(false);
   });

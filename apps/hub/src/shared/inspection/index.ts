@@ -2,11 +2,11 @@
 // 実装の正本は @harness-hub/inspection。ここで同名 export を作らないこと (第 4 acceptance の duplicate detector 対象)
 import {
   createInspectionPipeline,
-  inspect,
   type InspectionPipeline,
   type InspectionResult,
   type InspectionRule,
   type InspectionTarget,
+  inspect,
 } from '@harness-hub/inspection';
 
 /**
@@ -33,9 +33,6 @@ export function createHubInspectionRegistry(): HubInspectionRegistry {
 }
 
 /** Hub 正式検査の実行入口。評価そのものは package の inspect に委譲する */
-export function runHubInspection(
-  registry: HubInspectionRegistry,
-  target: InspectionTarget,
-): InspectionResult {
+export function runHubInspection(registry: HubInspectionRegistry, target: InspectionTarget): InspectionResult {
   return inspect(registry.buildPipeline(), target);
 }

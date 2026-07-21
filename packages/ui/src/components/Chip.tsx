@@ -2,16 +2,15 @@
 
 /** 状態チップとスコープチップ。表示ラベルは状態語彙辞書からのみ引き、画面での直書きを避ける。 */
 import type { CSSProperties, ReactNode } from 'react';
-
-import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
 import {
   getStatusLabel,
   getStatusTone,
-  statusToneColors,
   type StatusDomain,
   type StatusTone,
   type StatusValue,
+  statusToneColors,
 } from '../i18n/status-vocabulary.js';
+import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
 
 const baseChipStyle: CSSProperties = {
@@ -45,11 +44,7 @@ export interface StatusChipProps<D extends StatusDomain> {
  * ラベル・配色ともに状態語彙辞書 (`statusVocabulary`) が唯一の出所なので、
  * 表示ゆれが起きない。
  */
-export function StatusChip<D extends StatusDomain>({
-  domain,
-  status,
-  style,
-}: StatusChipProps<D>): ReactNode {
+export function StatusChip<D extends StatusDomain>({ domain, status, style }: StatusChipProps<D>): ReactNode {
   const { locale } = useUi();
   const tone = getStatusTone(domain, status);
 
@@ -85,10 +80,7 @@ export function ScopeChip({ scope, name, style }: ScopeChipProps): ReactNode {
   const descriptor = scopeLabels[scope];
 
   return (
-    <span
-      data-scope={scope}
-      style={{ ...baseChipStyle, ...toneStyle(descriptor.tone), ...style }}
-    >
+    <span data-scope={scope} style={{ ...baseChipStyle, ...toneStyle(descriptor.tone), ...style }}>
       <span>{`${descriptor[locale]}: ${name}`}</span>
     </span>
   );

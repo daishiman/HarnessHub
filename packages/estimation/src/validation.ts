@@ -1,7 +1,7 @@
 // 入力値の検証。SEC5 (クライアント申告値を信じない) のため、試算前に必ずここを通す。
 
-import { EstimationInputError } from './types';
 import type { NumericRange } from './types';
+import { EstimationInputError } from './types';
 
 /**
  * 各フィールドの許容範囲。非現実値をここで機械的に拒否する。
@@ -41,12 +41,7 @@ export type EstimationField = keyof typeof ESTIMATION_LIMITS;
  */
 export function assertFiniteNumber(field: string, value: unknown): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) {
-    throw new EstimationInputError(
-      'not-a-number',
-      field,
-      value,
-      `${field} は有限の数値である必要があります`,
-    );
+    throw new EstimationInputError('not-a-number', field, value, `${field} は有限の数値である必要があります`);
   }
   return value;
 }
@@ -69,12 +64,7 @@ export function assertInRange(field: string, value: unknown, range: NumericRange
 export function assertInteger(field: string, value: unknown, range: NumericRange): number {
   const numeric = assertInRange(field, value, range);
   if (!Number.isInteger(numeric)) {
-    throw new EstimationInputError(
-      'not-an-integer',
-      field,
-      numeric,
-      `${field} は整数である必要があります`,
-    );
+    throw new EstimationInputError('not-an-integer', field, numeric, `${field} は整数である必要があります`);
   }
   return numeric;
 }

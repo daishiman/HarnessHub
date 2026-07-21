@@ -4,16 +4,7 @@ import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  Alert,
-  Button,
-  DegradedBanner,
-  EmptyState,
-  ErrorState,
-  ProgressBar,
-  Skeleton,
-  useToast,
-} from '../index.js';
+import { Alert, Button, DegradedBanner, EmptyState, ErrorState, ProgressBar, Skeleton, useToast } from '../index.js';
 import { renderWithUi } from '../test-utils.js';
 
 describe('ProgressBar', () => {
@@ -84,7 +75,11 @@ describe('ErrorState', () => {
 
   it('文言と導線を差し替えられる', () => {
     renderWithUi(
-      <ErrorState title="公開できません" description="検査に失敗しました" nextAction={<Button>検査結果を見る</Button>} />,
+      <ErrorState
+        title="公開できません"
+        description="検査に失敗しました"
+        nextAction={<Button>検査結果を見る</Button>}
+      />,
     );
 
     expect(screen.getByText('公開できません')).toBeDefined();

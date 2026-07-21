@@ -1,9 +1,10 @@
 /** 本 package が API 契約として公開する schema の登録簿。OpenAPI/zod drift 検査 (CI G8) の入力になる。 */
-import { dependencyCheckSchema, healthResponseSchema, healthStatusSchema } from './health.js';
+
 import { fieldErrorSchema, problemDetailsSchema } from './envelope.js';
-import { paginationQuerySchema } from './primitives.js';
-import { createSchemaRegistry, createOpenApiDocument } from './openapi.js';
+import { dependencyCheckSchema, healthResponseSchema, healthStatusSchema } from './health.js';
 import type { OpenApiDocument, SchemaRegistry } from './openapi.js';
+import { createOpenApiDocument, createSchemaRegistry } from './openapi.js';
+import { paginationQuerySchema } from './primitives.js';
 
 /**
  * 契約名 (`components.schemas` のキー) の一覧。

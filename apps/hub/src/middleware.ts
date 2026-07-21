@@ -1,5 +1,5 @@
 // Next.js middleware エントリ。判定は行わず src/middleware/authz.ts へ委譲するだけの配線層
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { authorize } from './middleware/authz.js';
 import { createAuthAdapter, toAuthRequestContext } from './shared/auth/index.js';
 
@@ -17,10 +17,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   });
 
   if (!decision.allowed) {
-    return NextResponse.json(
-      { error: decision.reason },
-      { status: decision.status },
-    );
+    return NextResponse.json({ error: decision.reason }, { status: decision.status });
   }
 
   return NextResponse.next();
