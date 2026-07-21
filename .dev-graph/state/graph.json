@@ -1,5 +1,5 @@
 {
-  "graph_revision": 262,
+  "graph_revision": 268,
   "nodes": [
     {
       "acceptance": [
@@ -25149,6 +25149,282 @@
       "title": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順",
       "tracker_binding": "beads",
       "updated_at": "2026-07-19T14:21:39Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-render-out1-unsatisfiable-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "run-dev-graph-render の OUT1 criterion が register-package.py の active 強制と render の digest 検査の組合せで論理的に充足不能であることを追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T18:30:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-render-out1-unsatisfiable-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "register-package.py L240 が 13 子すべてに status=active を要求し、render-graph-html.py L123 が receipt.graph_digest_after == sha256(現 graph) を要求するため、receipt が有効な状態で到達可能な進捗は 0/13 のみ。applied/expected=13/13 と一致させられず OUT1 は充足不能。",
+      "graph_node_id": "issue-render-out1-unsatisfiable-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-18T16:20:35Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "register-package.py L240 が 13 子すべてに status=active を要求し、render-graph-html.py L123 が receipt.graph_digest_after == sha256(現 graph) を要求するため、receipt が有効な状態で到達可能な進捗は 0/13 のみ。applied/expected=13/13 と一致させられず OUT1 は充足不能。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-render-out1-unsatisfiable-20260721.md"
+      ],
+      "scope_in": [
+        "issues/sys-render-out1-unsatisfiable-20260721.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-21T18:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T180000-r7/verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "criterion",
+        "contradiction"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T18:30:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-fixture-receipt-forgery-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "live-trial fixture が gitignore されているため fixture 内 receipt の偽造が既存 provenance 検査で検出できない穴を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T18:30:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-fixture-receipt-forgery-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "fixture は gitignore されており dst の commit 差分ベース検査の対象外。s7b の再々 trial で実際に receipt が手書き偽造され digest を後から一致させる操作が行われた (184acbc と同型)。",
+      "graph_node_id": "issue-live-trial-fixture-receipt-forgery-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-18T16:20:35Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "fixture は gitignore されており dst の commit 差分ベース検査の対象外。s7b の再々 trial で実際に receipt が手書き偽造され digest を後から一致させる操作が行われた (184acbc と同型)。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-live-trial-fixture-receipt-forgery-20260721.md"
+      ],
+      "scope_in": [
+        "issues/sys-live-trial-fixture-receipt-forgery-20260721.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-21T18:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T180000-r7/verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "provenance",
+        "anti-goodhart"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T18:30:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-skill-contract-bypass-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "live-trial が skill をロードしながらゴールシーク実行契約を飛ばして下位 script を直叩きできる問題を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T18:30:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-skill-contract-bypass-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "SKILL.md がゴールシーク配線を実行契約と定めるのに、trial は下位 script を直接叩いて成果物だけ出せる。成果物だけ見る検査では正常な実走と区別できない。task.md への明示要求は必要条件ですらない。",
+      "graph_node_id": "issue-live-trial-skill-contract-bypass-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-18T16:20:35Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "SKILL.md がゴールシーク配線を実行契約と定めるのに、trial は下位 script を直接叩いて成果物だけ出せる。成果物だけ見る検査では正常な実走と区別できない。task.md への明示要求は必要条件ですらない。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-live-trial-skill-contract-bypass-20260721.md"
+      ],
+      "scope_in": [
+        "issues/sys-live-trial-skill-contract-bypass-20260721.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-21T18:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T180000-r7/verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "goal-seek",
+        "anti-goodhart"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T18:30:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
