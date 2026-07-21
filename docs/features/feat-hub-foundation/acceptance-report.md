@@ -19,7 +19,7 @@ measured_at: "2026-07-21"
 |---|---|---|---|
 | A1 | CI が test→deploy を完走する | **blocked（deploy 未実行）** | CI run **29795236896 が success**（静的ゲート → build & test → bundle まで全通過、clean install の ubuntu-latest で再現）。ただし deploy job は main 限定で **skip**。skip は success ではないため未達（証跡: `evidence/ci-run.md`） |
 | A2 | Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する | **合格** | CI に G5 ゲートが存在し **CI 上でも success**。実測 **0.952 MiB / 3.000 MiB**（wrangler dry-run 実 bundle） |
-| A3 | SLO 99.5% の計測と /health が稼働する | **不合格（blocked）** | `/health` route handler は実装され契約テスト 8 件 pass。しかし**外形監視の設定と実デプロイが未実施**のため SLO 計測の時系列が存在しない |
+| A3 | SLO 99.5% の計測と /health が稼働する | **部分達成（blocked）** | **`/health` の稼働は本番実測で確認**（2026-07-21 / HTTP 200・db・r2 とも ok。証跡 `evidence/health-response.json`）。ただし SLO 99.5% の算定に必要な**外形監視の時系列が未取得**のため blocked |
 | A4 | shared-layers 登録済み共通層が単一 package/境界に実装され、消費 feature が同じ実装を参照する | **条件付き合格**（2026-07-21 再裁定） | duplicate scan 0 件・owner 未定義 0 件・contract test は全 12 層へ拡張済み。**ただし 5 層は実 consumer が fixture の 1 系統のみ**（下記 §2.1） |
 
 **総合: 条件付き合格。** A2・A4 は実測証跡をもって合格。A1・A3 は**外部要因（push 未実施 / Cloudflare・Better Stack 未設定）により判定不能**であり、pass ではなく blocked として記録する。
@@ -47,7 +47,7 @@ measured_at: "2026-07-21"
 | HF-A1-CI-003 | packageManager の pnpm pin | pass | `evidence/pnpm-only-scan.json` |
 | HF-A2-BUNDLE-001 | 実 bundle ≤ 3 MiB | pass（0.952 MiB） | `evidence/bundle-report.json` |
 | HF-A2-BUNDLE-002 | 予算超過で非ゼロ終了 | pass | `evidence/test-run.log` |
-| HF-A3-HEALTH-001/002/003 | /health 200・契約・異常時 status | pass（8 件） | `evidence/test-run.log` |
+| HF-A3-HEALTH-001/002/003 | /health 200・契約・異常時 status | pass（8 件）＋**本番実測でも 200 / 全依存 ok** | `evidence/test-run.log` / `evidence/health-response.json` |
 | HF-A3-SLO-001 | 外形監視で 99.5% 算定 | **未実行（外部依存）** | — |
 | HF-A4-OWNER-001 | owner 未定義 0 件 | pass | `evidence/shared-layer-ownership.json` |
 | HF-A4-CONTRACT-001〜004 ほか | 全 12 層の consumer contract（§2.1 の 5 層は fixture 1 系統のため未達扱い） | pass（実行分は全件） | `evidence/test-run.log` |
