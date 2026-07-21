@@ -1,0 +1,157 @@
+# Hub 基盤 CI/CD。docs/shared-layers.md §3 の CI 品質ゲートと wrangler デプロイを実装する。
+# 設計正本: docs/features/feat-hub-foundation/architecture-decision-record.md §6
+# 受入基準: A1 (test→deploy 完走) / A2 (bundle 3MiB) / A4 (共通層の単一実装 owner)
+#
+# 実行順は「静的検査 → build → test → bundle 予算 → deploy」。deploy は全ゲート通過後にのみ走る。
+name: hub-ci
+
+on:
+  push:
+    branches: ["main", "devgraph/**", "feat/**"]
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "scripts/ci/**"
+      - "package.json"
+      - "pnpm-workspace.yaml"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "scripts/ci/**"
+      - "package.json"
+      - "pnpm-workspace.yaml"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: hub-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  # ゲート 1: 静的検査。依存インストール前に走らせ、npm 混入と共通層の重複実装を最速で落とす
+  static-gates:
+    name: 静的ゲート (pnpm 混入検査 / 共通層 duplicate detector)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: pnpm 混入検査 (quality_constraint pnpm-only-no-npm)
+        run: node scripts/ci/check-pnpm-only.mjs --json artifacts/pnpm-only.json
+      - name: 共通層 duplicate detector = 0 件 (A4)
+        run: |
+          node scripts/ci/check-shared-layer-duplicates.mjs \
+            --json artifacts/duplicate-scan.json \
+            --report artifacts/shared-layer-ownership.json
+      - name: detector 実効性の検証 (HF-A4-DUP-002 / 意図的違反を検出できること)
+        run: |
+          set +e
+          node scripts/ci/check-shared-layer-duplicates.mjs --include-fixtures --root apps/hub/tests/fixtures/duplicate-violation > /dev/null 2>&1
+          code=$?
+          set -e
+          if [ -d apps/hub/tests/fixtures/duplicate-violation ] && [ "$code" -eq 0 ]; then
+            echo "detector が意図的違反を検出できていません (ゲートの故障)"; exit 1
+          fi
+          echo "detector 実効性チェック完了 (exit=$code)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: static-gate-evidence
+          path: artifacts/
+          if-no-files-found: warn
+
+  test:
+    name: build & test (G2-G9 required status checks)
+    runs-on: ubuntu-latest
+    needs: static-gates
+    steps:
+      - uses: actions/checkout@v4
+      # G1(正本機構): corepack で pnpm を pin する (qa-003 / qa-038【2】/ qa-039【1】)
+      - name: enable corepack (pnpm pin)
+        run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+      # G2 の実体は Biome (lint + format)。以前は tsc --noEmit のエイリアスで
+      # G3 typecheck と同一検査になっており lint/format が実質存在しなかった (P10 指摘 F-09)。
+      - name: G2 lint / format (Biome)
+        run: pnpm exec biome ci
+      - name: G3 typecheck
+        run: pnpm -r typecheck
+      - name: build
+        run: pnpm -r build
+      # bundle contract test も実 bundle を検査できるよう、G4 より前に Worker 成果物を生成する。
+      # 以前は G4 後の生成だったため HF-A2-BUNDLE-001 が CI で常時 skip されていた (P10 F-15)。
+      - name: Worker 成果物の生成 (bundle test / 計測の前提)
+        run: pnpm --filter @harness-hub/hub run build:worker
+      - name: G4 unit / integration / contract test (Tenant 分離・検査 pipeline 挙動同値を含む)
+        run: pnpm -r test
+      - name: G6 secret scan (packages/inspection を CI からも呼ぶ / qa-038【2】)
+        run: |
+          node scripts/ci/check-required-package-script.mjs packages/inspection/package.json scan:secrets
+          pnpm --filter @harness-hub/inspection run scan:secrets
+      - name: G7 破壊的 DDL 検査 (expand/contract 3 段階 / qa-038【5】)
+        run: |
+          if [ -d packages/db/migrations ]; then
+            node scripts/ci/check-required-package-script.mjs packages/db/package.json check:ddl
+            pnpm --filter @harness-hub/db run check:ddl
+          else
+            echo "migrations 未作成 (feat-domain-model-db 未着手) のため対象なし"
+          fi
+      - name: G8 OpenAPI / zod drift 検査
+        run: |
+          node scripts/ci/check-required-package-script.mjs packages/schemas/package.json check:drift
+          pnpm --filter @harness-hub/schemas run check:drift
+      - name: G9 axe a11y (部品単体 + 画面結合の 2 段)
+        run: pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/hub run test:a11y
+      - name: G5 bundle 予算 (Worker gzip 後 3MiB / A2)
+        run: pnpm --filter @harness-hub/hub run check:bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-evidence
+          path: |
+            artifacts/
+            apps/hub/artifacts/
+          if-no-files-found: warn
+
+  # ゲート最終: deploy。static-gates と test の両方が success したときだけ実行される (A1 の "test→deploy 完走")
+  deploy:
+    name: wrangler deploy (Cloudflare Workers)
+    runs-on: ubuntu-latest
+    needs: [static-gates, test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+      - name: opennext build
+        run: pnpm --filter @harness-hub/hub run build:worker
+      - name: wrangler deploy
+        run: pnpm --filter @harness-hub/hub exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: デプロイ後 /health 疎通確認 (A3)
+        run: |
+          set -e
+          url="${{ vars.HUB_HEALTH_URL }}"
+          if [ -z "$url" ]; then echo "HUB_HEALTH_URL 未設定のため疎通確認をスキップできません"; exit 1; fi
+          code=$(curl -s -o /tmp/health.json -w "%{http_code}" "$url")
+          echo "health: $code"; cat /tmp/health.json
+          [ "$code" = "200" ]

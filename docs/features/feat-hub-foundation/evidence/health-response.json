@@ -1,0 +1,42 @@
+{
+  "evidence_id": "E6-partial",
+  "purpose": "A3 の前提『/health が稼働する』の実測証跡。SLO 99.5% の算定には別途 1 ヶ月分の外形監視時系列が必要であり、本証跡はそれを代替しない。",
+  "measured_at": "2026-07-21T04:45:51Z",
+  "request": {
+    "method": "GET",
+    "url": "https://harness-hub.daishimanju.workers.dev/health",
+    "auth": "none (認証なし・rate limit 対象外 / infrastructure-spec §9)"
+  },
+  "response": {
+    "http_status": 200,
+    "body": {
+      "status": "ok",
+      "version": "unknown",
+      "checkedAt": "2026-07-21T04:45:51.497Z",
+      "dependencies": [
+        { "name": "runtime-config", "status": "ok", "latencyMs": 0 },
+        { "name": "db", "status": "ok", "latencyMs": 365 },
+        { "name": "r2", "status": "ok", "latencyMs": 1114 }
+      ]
+    }
+  },
+  "assertions": {
+    "HF-A3-HEALTH-001_http_200": "pass",
+    "HF-A3-HEALTH-002_contract_shape": "pass (status / version / checkedAt / dependencies[] を満たす。ADR §11.6 で正本化した dependencies[] 形)",
+    "db_probe_real_roundtrip": "pass (Turso HTTP API へ SELECT 1 を実往復。365ms)",
+    "r2_probe_real_roundtrip": "pass (PACKAGES_BUCKET / BACKUPS_BUCKET へ head を実行。1114ms)"
+  },
+  "notes": [
+    "P10 指摘 F-01 (存在しない binding に依存し本番で永久に 503) の是正が、実環境で有効だったことの確認になる。是正前の設計ならこの応答は 503 だった。",
+    "version が 'unknown' である点は未解決 (下記 follow-up)。リリース追跡に使うフィールドのため本番で値が入らないのは不十分。",
+    "本証跡は単発の応答であり、SLO 99.5% の算定には外形監視による継続計測 (3 分間隔 / 1 ヶ月) が必要。A3 は依然 blocked。"
+  ],
+  "follow_up": [
+    {
+      "id": "H-01",
+      "issue": "/health の version が 'unknown'。デプロイされた Worker version を追跡できない",
+      "impact": "障害時に『どの版が動いているか』を応答から特定できず、ロールバック判断の一次情報が欠ける",
+      "fix": "wrangler.jsonc の vars か build 時注入で version を渡す (例: CI が git sha を WORKER_VERSION として設定)"
+    }
+  ]
+}

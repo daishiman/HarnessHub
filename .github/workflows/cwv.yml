@@ -1,0 +1,85 @@
+# G11 Core Web Vitals 定期計測。quality_constraint `cwv-good` (qa-018(2)) の計測経路。
+# 設計正本: docs/features/feat-hub-foundation/architecture-decision-record.md §6
+#
+# PR 単位ではなく main 反映後の定期計測にしている理由: PR ごとの Lighthouse 実行は
+# GitHub Actions 無料枠 2,000 分/月 (infrastructure-spec §11) を圧迫し C2 に反するため。
+# bundle 予算 (G5) は代理指標であり good 判定の根拠にならないので、実測経路を別に持つ。
+name: hub-cwv
+
+on:
+  schedule:
+    # 週次 (JST 月曜 10:00)。デプロイ直後の一時的な劣化ではなく定常状態を測る
+    - cron: "0 1 * * 1"
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: "計測対象 URL (未指定なら vars.HUB_PUBLIC_URL)"
+        required: false
+
+jobs:
+  lighthouse:
+    name: Lighthouse (LCP / INP / CLS)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 計測対象が無い状態を「good」と誤判定しないため fail-closed にする。
+      # デプロイ前は URL が無いので、このワークフローは失敗する = 未計測であることが可視化される。
+      - name: 計測対象 URL の解決
+        run: |
+          url="${{ github.event.inputs.target_url }}"
+          [ -n "$url" ] || url="${{ vars.HUB_PUBLIC_URL }}"
+          if [ -z "$url" ]; then
+            echo "::error::計測対象 URL が未設定です (vars.HUB_PUBLIC_URL)。デプロイ (P13) 完了後に設定してください"
+            echo "未計測を good と見なさないため、ここで失敗させています"
+            exit 1
+          fi
+          echo "TARGET_URL=$url" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Lighthouse 実行
+        run: |
+          set -euo pipefail
+          npx --yes lighthouse "$TARGET_URL" \
+            --output=json --output-path=./lighthouse.json \
+            --only-categories=performance \
+            --chrome-flags="--headless --no-sandbox" \
+            --quiet
+
+      # qa-018(2) の閾値: LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1。
+      # 1 つでも外れたら fail させる (警告どまりにすると劣化が放置される)。
+      - name: CWV 閾値判定
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const r = JSON.parse(fs.readFileSync("./lighthouse.json", "utf8"));
+            const a = r.audits ?? {};
+            const metrics = {
+              LCP: { value: a["largest-contentful-paint"]?.numericValue, budget: 2500, unit: "ms" },
+              CLS: { value: a["cumulative-layout-shift"]?.numericValue, budget: 0.1, unit: "" },
+              TBT: { value: a["total-blocking-time"]?.numericValue, budget: 200, unit: "ms (INP の lab 代理指標)" },
+            };
+            let failed = false;
+            for (const [name, m] of Object.entries(metrics)) {
+              if (typeof m.value !== "number") {
+                console.error(`::error::${name} を取得できませんでした (計測失敗を good と見なさない)`);
+                failed = true;
+                continue;
+              }
+              const ok = m.value <= m.budget;
+              console.log(`${name}: ${m.value.toFixed(2)} / 予算 ${m.budget} ${m.unit} → ${ok ? "OK" : "NG"}`);
+              if (!ok) failed = true;
+            }
+            fs.writeFileSync("./cwv-report.json", JSON.stringify({ url: process.env.TARGET_URL, metrics }, null, 2));
+            if (failed) { console.error("::error::Core Web Vitals が good 圏を外れています (qa-018)"); process.exit(1); }
+          '
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cwv-evidence
+          path: |
+            lighthouse.json
+            cwv-report.json
