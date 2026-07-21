@@ -72,23 +72,23 @@
     },
     {
       "target_id": "authjs",
-      "retrieved_at": "2026-07-16T08:11:29Z",
+      "retrieved_at": "2026-07-21T07:32:40Z",
       "source_url": "https://authjs.dev/getting-started",
       "official_publisher": "Auth.js (OSS)",
       "official_host": "authjs.dev",
       "version": "next-auth@5.0.0-beta 以降 (@auth/* namespace)",
-      "latest_checked_at": "2026-07-18T14:57:14Z",
-      "summary": "Auth.js は標準 Web API ベースのランタイム非依存な認証ライブラリで、Next.js 統合を公式サポート。provider 一覧に Microsoft Entra ID・Okta・Keycloak 等 OIDC 系 IdP を多数掲載。統治変更 (2026-07-17 再確認): Auth.js は Better Auth 傘下となり、さらに 2026-07-07 に Vercel が Better Auth を買収 (公式発表 https://vercel.com/blog/vercel-acquires-better-auth。ライブラリは MIT・名称維持・チーム継続と発表)。D3 決定 (Auth.js 採用) の帰趨リスクは高まっており、qa-020 の auth adapter 境界 (Better Auth 移行ヘッジ) を必須の緩和策として維持し、実装着手時に最新の統治状況を再確認する。DB 連携は Drizzle / D1 を含む adapter でオプション対応。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up) 鮮度再確認 (2026-07-18): Vercel の Better Auth 買収 (2026-07-07 公式発表) を再照合一致。加えて Auth.js v5 は maintenance mode (security patch のみ・新機能開発なし) との 2026 年時点の複数ソース情報を確認 — D3 の auth adapter 境界 (qa-020 の Better Auth 移行ヘッジ) の重要度が上がっている。実装着手時の統治・保守状況再確認を必須とする。(C08 鮮度監査是正 2026-07-18: WebFetch 不可環境のため WebSearch 多源照合で再確認。一次 GET 照合は WebFetch 可能環境での follow-up 継続)"
+      "latest_checked_at": "2026-07-21T07:32:40Z",
+      "summary": "2026-07-21 に Auth.js 公式 Getting Started を source_url から直接取得して一次照合した。Auth.js は標準 Web API ベースのランタイム非依存な認証ライブラリで、同ページは next-auth@5.0.0-beta 以降と @auth/* namespace を対象にし、Microsoft Entra ID・Okta・Keycloak 等の provider と Drizzle / Cloudflare D1 を含む adapter を掲載している。公式ページは Auth.js が Better Auth 傘下であることも明示する。さらに Vercel 公式発表 https://vercel.com/blog/vercel-acquires-better-auth と Better Auth 公式発表 https://better-auth.com/blog/better-auth-joins-vercel を直接取得し、2026-07-07 の Vercel による Better Auth 買収、Better Auth の MIT・名称・open contribution model 維持、Auth.js / NextAuth.js の保守・security issue・bug fix 継続方針を一次情報で確認した。D3 決定 (Auth.js 採用) では qa-020 の auth adapter 境界 (Better Auth 移行ヘッジ) を維持し、実装着手時に統治・保守状況を再確認する。"
     },
     {
       "target_id": "claude-code-plugins",
-      "retrieved_at": "2026-07-16T08:11:29Z",
+      "retrieved_at": "2026-07-21T07:32:40Z",
       "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
       "official_publisher": "Anthropic",
       "official_host": "code.claude.com",
-      "last_updated": "2026-07-18 (最新確認日。本文の記載 anchor は v2.1.196 時点、CLI 本体は 2026-07 時点で v2.1.203+ 系まで継続リリース)",
-      "latest_checked_at": "2026-07-18T14:57:14Z",
-      "summary": "marketplace は .claude-plugin/marketplace.json で定義し、GitHub owner/repo・git URL・marketplace.json への remote URL・ローカルパスで追加できる (URL はスキーム必須・https)。remote URL 型では marketplace.json しか取得されないため相対パス source の plugin は解決不能で、plugin 本体 source は外部 source が必要。source type は github・git URL・git-subdir に加え npm も許可されており、コンセプト文書 §8.1 の『npm 非対応』は現行仕様と不一致 (仕様書で事実修正済み)。Stage 0 technical gate (H7) の検証対象。鮮度注意 (2026-07-17 再確認): 記録の挙動 anchor は v2.1.196 時点だが CLI は高頻度リリースされており (2026-07 時点 v2.1.21x 系)、H7 検証と実装着手時に code.claude.com の changelog / 本ページを再照合する。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up) 鮮度再確認 (2026-07-18): CLI 現行 2.1.20x 系 (2.1.203+ の存在を release tracker 複数ソースで確認)。plugin marketplace 仕様 (marketplace.json・source type に npm 含む) に変更の兆候なし。H7 検証時に changelog 再照合。(C08 鮮度監査是正 2026-07-18: WebFetch 不可環境のため WebSearch 多源照合で再確認。一次 GET 照合は WebFetch 可能環境での follow-up 継続)"
+      "last_updated": "2026-07-21 (直接取得日。ページ本文に最終更新日の明示なし。挙動 anchor は Claude Code v2.1.196)",
+      "latest_checked_at": "2026-07-21T07:32:40Z",
+      "summary": "2026-07-21 に Anthropic 公式 Claude Code plugin marketplace 文書を source_url から直接取得して一次照合した。marketplace は .claude-plugin/marketplace.json で定義し、GitHub owner/repo・git URL・marketplace.json への remote URL・ローカルパスで追加できる。URL はスキーム必須で、本文の当該挙動 anchor は Claude Code v2.1.196。remote URL 型は marketplace.json のみを取得するため相対パス source は解決できず、GitHub・npm・git URL 等の外部 source が必要。plugin source は relative path・github・git URL・git-subdir・npm を公式サポートしており、コンセプト文書 §8.1 の『npm 非対応』は現行仕様と不一致 (仕様書で事実修正済み)。Stage 0 technical gate (H7) と実装着手時に本ページを再照合する。"
     },
     {
       "target_id": "cloudflare-workers",

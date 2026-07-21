@@ -9,6 +9,10 @@
 LLM_COV_SINCE ?= 2026-06-24
 COV_THRESHOLD ?= 80
 
+# PROVENANCE_BASE: live-trial verdict の digest 単独書き換え検査の比較起点。
+# CI は origin/main、作業中の局所確認は `make content-review PROVENANCE_BASE=HEAD` が使える。
+PROVENANCE_BASE ?= origin/main
+
 ## sync: creator-kit/skills/ を .claude/skills/ に同期する（--apply）
 sync:
 	bash scripts/sync-skills-to-claude.sh --apply
@@ -128,6 +132,7 @@ contract-intake:
 ##   実検査器 (assign-plugin-package-evaluator/scripts/validate-plugin-package.py) は単一
 ##   plugin 用のため、全 plugin を回す advisory ラッパー経由で呼ぶ。PKG-002/004 は未採用の
 ##   将来標準のため現状は非ブロッキング (詳細は scripts/validate-plugin-packages.py)。
+##   references/package-contract.json ↔ 構文正本 schema の適合検査のみ fail-closed。
 plugin-package-check:
 	python3 scripts/validate-plugin-packages.py
 
@@ -139,6 +144,7 @@ feedback-contract:
 content-review:
 	python3 scripts/lint-content-review.py --all
 	python3 scripts/lint-live-trial-verdict.py --all
+	python3 scripts/lint-live-trial-verdict.py --check-provenance $(PROVENANCE_BASE)
 
 ## pytest: tests/ 配下の振る舞いテストを実行する (hook-guard-skillgen 等の機械保証を回帰検証)
 pytest:

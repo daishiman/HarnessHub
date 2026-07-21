@@ -365,6 +365,24 @@ make test
 
 失敗した検証を「既存不具合」と決めつけて無視せず、今回差分との因果を確認します。解消できない場合は PR 本文と Beads notes に、失敗 command、error、影響、再現方法を残します。
 
+### live-trial verdict が赤いとき
+
+skill を変更した場合、CI（governance-check）は `eval-log/<plugin>/<skill>/live-trial/<run-id>/verdict.json` を検査します。手元では次で再現できます。
+
+```bash
+python3 scripts/lint-live-trial-verdict.py --plugin <plugin>
+```
+
+この検査が赤いとき、**`verdict.json` の digest（`skill_dir_tree_sha` = 検証時点の skill ディレクトリの内容ハッシュ）だけを書き換えて緑にしてはいけません。** skill を実際には再実行していないのに「現在版を検証した」と主張する状態になり、以後この skill に対するゲートは何も検査しなくなります。
+
+正しい解消手順は、**旧 verdict に触れず、新しい run-id で live-trial を再実行する**ことです。lint は skill ごとに最新 run だけを見るため、新しい verdict を追加すれば旧 run は自動的に検査対象から外れます。
+
+書き換えを「元に戻す」操作も、同じ理由で行いません。provenance（＝その値がどこから来たかの由来）検査は「digest が変わったのに transcript が変わっていない」差分を違反として扱います。**改竄と訂正は差分の形が同一**であるため、真値への復元も違反として弾かれます。
+
+正しく再 trial した結果がそれでも FAIL / DEGRADED なら、それは**解消すべき赤ではなく、記録すべき事実**です。原因を次の 3 つに切り分けます。**skill 自体の欠陥**（実装を直す）、**trial シナリオが現行契約に対して古い**（`task.md` を直す）、**criterion と実装が食い違っている**（どちらを正とするか決める設計判断が要る）。切り分けた原因を issue として起票し、PR 本文には「なぜこの赤を残したまま出すのか」を書きます。
+
+赤の原因が判明していても、`verdict` を手で `PASS` に書き換えて緑にすることはしません。再 trial を経ていない `PASS` は、digest だけを書き換えたのと同じ状態です。
+
 ## 10. commit、push、PR作成を Claude Code に依頼する
 
 変更と検証結果を確認した後、Claude Code へ次を入力します。この依頼は commit、push、PR作成を明示的に許可するものです。

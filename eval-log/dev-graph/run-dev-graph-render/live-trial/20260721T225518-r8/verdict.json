@@ -1,0 +1,40 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-render",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/r8-render",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "task.md 契約#2/#3 違反: skill 実行は完了 (index.html 生成・真正 receipt 取得) したが out/status.json を Write せず 'DONE:' 行も報告しないまま turn 終了 (poll STALL 600s / state IDLE_TURN_COMPLETE)",
+      "環境汚染: 並行 trial の live-trial-backend.py reap (既定 prefix 'lt-') が session lt-20260721T225518-r8-render を巻き添え kill。pane.txt 回収不能となり回収完了条件 (out/+pane.txt+transcript.jsonl) 未充足。本 run は無効とし reap-safe な session 名で r8b を再実走した"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "NOT_EVALUATED",
+    "verdict": "BLOCKED"
+  },
+  "skill_dir_tree_sha": "a57ab409e538b191104a8758ae801053c5e099685efc004fc52536ea2bfe9d53",
+  "transcript_sha256": "8e11e2c288e4f672aaf5744e6a4c07ec36edf2f57a3eadb54d634b0adcebc43e",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "tmux 不在 / HARD_CAP 超過等の fail-closed",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "STALL",
+    "wall_clock_s": null
+  },
+  "scenario_id": "render-out1-total-matches-expected"
+}

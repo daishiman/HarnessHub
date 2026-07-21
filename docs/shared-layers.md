@@ -66,6 +66,15 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 | 監視 | /health + Workers logs/analytics + 外部死活監視 + SLO ダッシュボード + エラーバジェットアラート | qa-011, qa-019 |
 | バックアップ | Turso 日次 export → R2。四半期 restore drill (復元できないバックアップは成功と数えない) | qa-019 |
 
+**CI が 2 系統ある境界** (2026-07-21 追記): 本リポジトリは Hub 本体 (プロダクト) と Claude Code スキルハーネス (`plugins/`) の 2 つを同居させており、CI も 2 系統に分かれる。この表と qa-038【2】の required status checks 8 種が対象とするのは **プロダクト層 (`.github/workflows/ci.yml`)** のみである。
+
+| 層 | workflow | 宣言の正本 | 対象 |
+|---|---|---|---|
+| プロダクト | `ci.yml` | `system-spec/dev-workflow.md` (qa-038/qa-039) | `apps/hub` / `packages/*` |
+| メタ (スキルハーネス) | `governance-check.yml` | `plugins/harness-creator/plugin-composition.yaml` の `contract` | `plugins/*` / `scripts/*` / スキル証跡 |
+
+メタ層のゲート (配置規約 lint・skill description lint・live-trial 証跡の検査など) を qa-038 の 8 種へ数え入れないこと。**逆に「8 種に無いから未配線だ」と判断しないこと** — 別の正本が別の workflow で機械強制している。両者はゲートの数を互いに増減させない独立系統であり、片方の変更はもう片方の仕様反映を要さない。
+
 ## 4. リポジトリ構成の提案 (pnpm workspace) — 要ユーザー確認
 
 共通層をパッケージ境界で強制するためのモノレポ構成案。**確定は feat-hub-foundation の P02/P03 で行う**。
