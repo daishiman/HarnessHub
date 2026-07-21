@@ -28,16 +28,25 @@ function findWorkspaceRoot(start) {
   }
 }
 
+// 相対パスの基準。`pnpm --filter <pkg> run` は cwd を package へ移すため、
+// 利用者が打った場所 (pnpm が INIT_CWD に入れる) を優先する。これが無いと
+// `--root .` がリポジトリ root ではなく package を指してしまう。
+const INVOCATION_CWD = process.env.INIT_CWD || process.cwd();
+
 function parseArgs(argv) {
   // 既定の走査対象は workspace 全体。`pnpm --filter` 経由だと cwd が package になるため、
   // package 内だけを見て素通りする事故を防ぐ。
   const args = { root: findWorkspaceRoot(PACKAGE_ROOT), json: null };
   for (let i = 2; i < argv.length; i += 1) {
     const flag = argv[i];
+    // `pnpm run <script> -- --root .` は区切りの `--` もそのまま渡ってくるため読み飛ばす
+    if (flag === "--") {
+      continue;
+    }
     if (flag === "--root") {
-      args.root = resolve(argv[++i]);
+      args.root = resolve(INVOCATION_CWD, argv[++i]);
     } else if (flag === "--json") {
-      args.json = resolve(argv[++i]);
+      args.json = resolve(INVOCATION_CWD, argv[++i]);
     } else if (flag === "--help" || flag === "-h") {
       console.log("使い方: node scripts/scan-secrets.mjs [--root <dir>] [--json <path>]");
       process.exit(0);

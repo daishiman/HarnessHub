@@ -1,4 +1,6 @@
 // secret scan preset の単体テスト。「検出できること」を必ず併せて検証する (test-design §5 の fail-closed 規約)。
+// このファイル自身が G6 の走査対象に含まれるため、検出パターンに一致する文字列を
+// ソース上に連続した形で置かない (分割して連結する)。ファイル単位の除外はしない方針のため。
 
 import { describe, expect, it } from 'vitest';
 
@@ -12,13 +14,16 @@ import {
 } from './secret-scan-preset';
 import type { InspectionFile } from './types';
 
-/** ダミー secret を組み立てる。ソース上に連続した実キー形式の文字列を残さないため分割して連結する。 */
+/** ダミー secret。実キー形式が連続して現れないよう、必ず連結で組み立てる。 */
 const DUMMY = {
   aws: `AKIA${'QWERTYUIOPASDFGH'}`,
   github: `ghp_${'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8'}`,
   slack: `xoxb-${'123456789012'}-${'abcdefghijklmnop'}`,
-  anthropic: `sk-ant-${'api03'}-${'0123456789abcdefghij'}`,
-  privateKey: '-----BEGIN RSA PRIVATE KEY-----',
+  anthropic: `sk-ant-${'api03'}${'0123456789abcdefghij'}`,
+  google: `AIza${'0123456789abcdefghijklmnopqrstuvwxy'}`,
+  privateKey: `-----BEGIN RSA ${'PRIVATE'} KEY-----`,
+  cloudflare: `CLOUDFLARE_API_TOKEN = "${'abcdefghijklmnopqrstuvwxyz0123456789'}"`,
+  assigned: `const apiKey = "${'abcdefghijklmnopqrstuvwxyz012345'}";`,
 } as const;
 
 function file(content: string, path = 'src/app.ts'): InspectionFile {
@@ -27,13 +32,16 @@ function file(content: string, path = 'src/app.ts'): InspectionFile {
 
 describe('検出できること (ゲートが素通りしない証明)', () => {
   it.each([
-    ['AWS access key id', DUMMY.aws, 'secret/aws-access-key-id'],
-    ['GitHub token', DUMMY.github, 'secret/github-token'],
-    ['Slack token', DUMMY.slack, 'secret/slack-token'],
-    ['Anthropic API key', DUMMY.anthropic, 'secret/anthropic-api-key'],
-    ['秘密鍵ブロック', DUMMY.privateKey, 'secret/private-key-block'],
-  ])('%s を検出し、非ゼロ終了コードになる', (_label, secret, expectedRuleId) => {
-    const result = scanFilesForSecrets([file(`const key = "${secret}";`)]);
+    ['秘密鍵ブロック', DUMMY.privateKey, 'secret-scan/private-key-block'],
+    ['AWS access key id', `const id = "${DUMMY.aws}";`, 'secret-scan/aws-access-key-id'],
+    ['GitHub token', `token: ${DUMMY.github}`, 'secret-scan/github-token'],
+    ['Slack token', `const t = "${DUMMY.slack}";`, 'secret-scan/slack-token'],
+    ['Anthropic API key', `const k = "${DUMMY.anthropic}";`, 'secret-scan/anthropic-api-key'],
+    ['Google API key', `const k = "${DUMMY.google}";`, 'secret-scan/google-api-key'],
+    ['Cloudflare API token', DUMMY.cloudflare, 'secret-scan/cloudflare-api-token'],
+    ['代入形の API key', DUMMY.assigned, 'secret-scan/generic-assigned-secret'],
+  ])('%s を検出し、非ゼロ終了コードになる', (_label, content, expectedRuleId) => {
+    const result = scanFilesForSecrets([file(content)]);
 
     expect(result.verdict).toBe('fail');
     expect(result.findings.map((finding) => finding.ruleId)).toContain(expectedRuleId);
@@ -53,6 +61,14 @@ describe('検出 0 件のとき', () => {
     expect(result.verdict).toBe('pass');
     expect(result.findings).toStrictEqual([]);
     expect(secretScanExitCode(result)).toBe(0);
+  });
+
+  it('環境変数参照は検出しない (誤検出でゲートを無効化させないため)', () => {
+    const result = scanFilesForSecrets([
+      file('const token = process.env.CLOUDFLARE_API_TOKEN;\nconst k = `${secretRef}`;'),
+      file('const apiKey = process.env.API_KEY;'),
+    ]);
+    expect(result.findings).toStrictEqual([]);
   });
 
   it('よくある非 secret 文字列を誤検出しない', () => {
@@ -102,9 +118,9 @@ describe('抑制の口', () => {
         lineText: `x = "${DUMMY.aws}" // ${SECRET_SCAN_ALLOW_MARKER}`,
       }),
     ).toBe(true);
-    expect(
-      isSuppressedSecretMatch({ match: DUMMY.aws, path: 'a.ts', line: 1, lineText: 'x' }),
-    ).toBe(false);
+    expect(isSuppressedSecretMatch({ match: DUMMY.aws, path: 'a.ts', line: 1, lineText: 'x' })).toBe(
+      false,
+    );
   });
 });
 
@@ -118,6 +134,6 @@ describe('決定性', () => {
     const first = createDefaultSecretScanRules().map((rule) => rule.id);
     const second = createDefaultSecretScanRules().map((rule) => rule.id);
     expect(second).toStrictEqual(first);
-    expect(first).toContain('secret/aws-access-key-id');
+    expect(first).toContain('secret-scan/aws-access-key-id');
   });
 });
