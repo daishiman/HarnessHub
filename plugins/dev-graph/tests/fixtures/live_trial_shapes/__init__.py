@@ -34,9 +34,13 @@ class Shape(Protocol):
 
 # scenario_id と shape 名の対応は live-trial-positive-scenarios.json が正本。
 #
-# sync / schedule / decompose は本 package に置かない。build_live_trial_fixture.py の
-# BUILDERS が既に持っており (build_sync は C03 sync と C15 schedule を兼ねる)、
-# 二重実装になるため。CLI の正本は build_live_trial_fixture.py の --kind 一本に統一する。
+# sync / decompose は本 package に置かない。build_live_trial_fixture.py の BUILDERS が
+# 既に持っており、二重実装になるため。CLI の正本は build_live_trial_fixture.py の
+# --kind 一本に統一する。
+#
+# schedule だけは C03 sync の流用をやめて独立形状にした。sync fixture は task 1 件・
+# lease 0 件で、ready 集合が --max-parallel を超えずバッチ分割も scope 重複も lease 失効も
+# 一度も評価されないまま OUT2 の「重複 0 件」が真になる (vacuous truth = Goodhart)。
 SHAPE_MODULES: dict[str, str] = {
     "node": "shape_node",
     "requirements": "shape_requirements",
@@ -44,6 +48,7 @@ SHAPE_MODULES: dict[str, str] = {
     "system-spec": "shape_system_spec",
     "status": "shape_status",
     "init": "shape_init",
+    "schedule": "shape_schedule",
 }
 
 

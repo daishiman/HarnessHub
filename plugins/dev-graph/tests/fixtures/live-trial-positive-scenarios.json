@@ -58,16 +58,17 @@
       ]
     },
     {
-      "scenario_id": "C01-OUT1-positive-idempotence-r16",
+      "scenario_id": "C01-OUT1-positive-idempotence-r17",
       "component_id": "C01",
       "skill": "run-dev-graph-init",
       "criterion_id": "OUT1",
       "mode": "positive",
       "task_args_template": "--repo-root <contained-fixture-repo> --hook-source plugin",
-      "fixture_contract": "A contained git repository that is already initialized, carries a user-edited canonical template whose bytes differ from the plugin original, and holds at least one registered node so the C11 check cannot pass on an empty graph. The second pass must re-invoke the skill itself, not a hand-written existence check.",
+      "fixture_contract": "A contained git repository that is NOT yet dev-graph initialized, so that the first pass's creation of the six content roots, the routing policy and the graph store is attributable to the skill rather than to the fixture. Between the two passes the trial must edit one scaffolded canonical template and register one node through C02, so the second pass exercises non-overwrite against real user bytes and C11 cannot pass vacuously on an empty graph. The second pass must re-invoke the skill itself, not a hand-written existence check.",
       "required_observations": [
+        "the first pass creates the six content roots, the routing policy and the graph store",
         "the second pass re-invokes the skill and reports zero planned changes",
-        "the user-edited template still holds its edited bytes after that second pass, proving non-overwrite by running init rather than by inspecting the file alone",
+        "the template edited between the passes still holds its edited bytes after the second pass, proving non-overwrite by running init rather than by inspecting the file alone",
         "the plugin hook source is resolved and its receipt or rejection diagnosis is recorded",
         "config stores no absolute path and no token or node id",
         "C11 passes against a graph that contains at least one node"
@@ -86,6 +87,50 @@
         "the blocked task is excluded from the ready set and the reason is reported",
         "the active lease suppresses its task while the stale lease is reclaimed",
         "batches respect --max-parallel and suggested_branch and worktree claim commands stay unique"
+      ]
+    },
+    {
+      "scenario_id": "C14-OUT1-positive-macro-decomposition",
+      "component_id": "C14",
+      "skill": "run-dev-graph-decompose",
+      "criterion_id": "OUT1",
+      "mode": "positive",
+      "task_args_template": "--repo-root <contained-fixture-repo> --binding none --dry-run",
+      "fixture_contract": "A contained initialized repository holds the macro decomposition input (the want) and deliberately holds no expected feature, architecture or task node, so every produced node is attributable to the skill rather than to the fixture. At least one produced feature must remain in pre-evaluation draft so the zero-issue-publication rule is exercised rather than holding vacuously.",
+      "required_observations": [
+        "the produced feature and architecture nodes form an acyclic DAG whose inter-feature depends_on stays within the declared granularity threshold",
+        "pre-evaluation draft features publish zero issues on every binding",
+        "only features promoted to confirmed, evaluation-pass and readiness-complete become publication candidates",
+        "the dry run reports local, Beads, GitHub and Projects write counts of zero, and the preview graph is validated through the stdin path so no temporary file is created inside the managed repository"
+      ]
+    },
+    {
+      "scenario_id": "C18-OUT1-positive-read-only-status",
+      "component_id": "C18",
+      "skill": "run-dev-graph-status",
+      "criterion_id": "OUT1",
+      "mode": "positive",
+      "task_args_template": "--repo-root <contained-fixture-repo>",
+      "fixture_contract": "A contained initialized repository holds two task nodes in the same lifecycle state with exactly one forward dependency between them, so ready and blocked can be told apart while the fixture does not pre-decide the aggregate the skill must compute.",
+      "required_observations": [
+        "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+        "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+        "the run leaves graph, config, content and GitHub state unchanged"
+      ]
+    },
+    {
+      "scenario_id": "C05-OUT1-positive-feature-progress",
+      "component_id": "C05",
+      "skill": "run-dev-graph-render",
+      "criterion_id": "OUT1",
+      "mode": "positive",
+      "task_args_template": "--repo-root <contained-fixture-repo>",
+      "fixture_contract": "A contained initialized repository holds one feature with an exact-13 P01..P13 task set, a registration receipt carrying applied_count and expected_count, and a child set that is only partially completed, so the completed count and the applied count genuinely differ and the two halves of the progress reading cannot be confused with each other.",
+      "required_observations": [
+        "the rendered HTML and CSS open with no additional runtime dependency and the SVG graph is displayed",
+        "the progress denominator equals the registration receipt applied_count and expected_count, which the renderer already refuses to render when they disagree",
+        "the progress numerator equals the number of child tasks whose status is done or closed, recomputed independently from the graph store rather than read back from the receipt",
+        "the rendered subject corresponds to the source_digest recorded in the registration receipt"
       ]
     }
   ]
