@@ -55,15 +55,24 @@ PUT /accounts/b3dde7be1cd856788fc47595ac455475/workers/scripts/harness-hub/sched
 | 検証 | 結果 |
 |---|---|
 | Worker 本体のアップロード | **成功**（同じ token で通っている） |
-| cron 2 本 → 1 本に減らして再試行 | **同じく失敗**（件数上限ではない） |
+| cron 2 本 → 1 本に減らして再試行 | 同じく失敗 |
 | `wrangler deploy` / `wrangler triggers deploy` 双方 | **同じく失敗** |
 | ローカル wrangler 4.112.0 / グローバル 4.84.1 | どちらでも失敗（バージョン差の問題ではない） |
+| デプロイ済み version | `fa8b36af-ab62-4520-ad34-ece1ca940125`（100% 配信中。Worker 自体は稼働） |
 
-### 未確認（次の診断手順）
+> **切り分けの訂正**: 当初「cron を 1 本に減らしても失敗するので件数上限ではない」と結論したが、これは**誤り**である。Cloudflare の cron トリガー上限は **Worker 単位ではなくアカウント単位**（Free プランで 5 本）であり、**本 Worker の本数を減らしても、同一アカウントの他 Worker が枠を消費していれば解消しない**。本アカウントには他プロジェクト（`automationa-tools` 系・`ubm-*` 系）の Worker が存在するため、**アカウント全体の cron 使用数が上限に達している可能性が最有力**。
 
-- API のレスポンス本文が wrangler ログに残らないため**エラーコードが取得できていない**
-- 有力な仮説: **OAuth token のスコープ不足**。`wrangler login` の OAuth token ではなく、**Cloudflare ダッシュボードで発行した API token**（`Workers Scripts:Edit` を含む）を `CLOUDFLARE_API_TOKEN` に設定して再試行すると切り分けできる
-- 併せてダッシュボードの Workers → `harness-hub` → Settings → Triggers で Cron が登録されているかを目視確認する
+### 未確認（次の診断手順・優先順）
+
+API のレスポンス本文が wrangler ログに残らないため**エラーコードが取得できていない**。以下の順で切り分ける。
+
+| # | 仮説 | 確認方法 |
+|---|---|---|
+| 1 | **アカウント全体の cron 上限（Free プラン 5 本）に到達** | ダッシュボード → Workers & Pages で**他 Worker の Cron Triggers を数える**。上限なら不要な cron を削除するか、Hub の cron を 1 本へ統合する（日次と週次を 1 本にまとめ、handler 側で曜日判定する設計変更で回避可能） |
+| 2 | OAuth token のスコープ不足 | ダッシュボードで **API token**（`Workers Scripts:Edit`）を発行し `CLOUDFLARE_API_TOKEN` に設定して再試行 |
+| 3 | Worker 側の一時障害 | 時間をおいて再試行 |
+
+いずれの場合も、ダッシュボードの Workers → `harness-hub` → Settings → Triggers で Cron が登録されているかを目視確認する。
 
 **この失敗は cron ジョブ（metrics rollup・Turso 使用量監視・週次サマリ）が起動しないことを意味する。** ジョブ本体は現時点で空実装だが、未解決のまま完了扱いにはしない。
 
