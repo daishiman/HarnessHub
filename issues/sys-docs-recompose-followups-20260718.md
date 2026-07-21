@@ -102,10 +102,18 @@ open+closed 併存の external_ref が 57 組 (今回復旧した y5y/5yp 系 28
 
 ## 完了記録 (2026-07-21)
 
-findings 1〜6 すべて解消し、beads の HarnessHub-9ao は `bd-bridge --op close` でクローズ済み。証跡は commit `89c47df` (finding 4/5 のテストと方針)・`2f1d015` (派生 issue)。検証は `pytest plugins/dev-graph/tests -q` => 220 passed、`pytest tests/ -q` => 7113 passed / 4 skipped。
+findings 1〜6 すべて解消し、beads の HarnessHub-9ao は `bd-bridge --op close` でクローズ済み。証跡 commit は `89c47df` (finding 4/5 のテストと方針)・`2f1d015` (派生 issue)・`a34c1a9` (完了記録)・`c002751` (最終レビューでの追加ガード)。
 
-ただし frontmatter の `completion_evidence.status` は **`open` のまま**である。本 issue の `policy` は `linked_pr_merged_all` であり、現時点で commit は作業ブランチ `feat/wt-4` 上にあるだけで main へ merge した PR が存在しないため。PR merge 後に `reconciled_at` と併せて `closed` へ遷移させること。
+検証は `pytest plugins/dev-graph/tests -q` => 221 passed、`pytest tests/ -q` => 7113 passed / 4 skipped、`validate-graph-schema.py` => valid: True / findings 0。変異検査は 2 種実施し、list フォールバック削除で 5 ケース・search 高速経路削除で 3 ケースが fail することを確認済み (テストが実際に退行を捕捉する証明)。
+
+PR は canonical branch `devgraph/issue-docs-recompose-followups-20260718` から #11 を作成した。CI は `verify` / `check` が pass、`change-category-guard` のみ fail するが、これは main (`6035496`) 側に既存する `lint-artifact-placement` 違反 (`docs/features/feat-stage0-distribution-gate/.../h7-probe-echo/SKILL.md` の frontmatter 欠落、`409b52b` 由来) の巻き添えであり本 PR の diff とは無関係 (HarnessHub-5ph として分離起票)。
+
+`completion_evidence.status` は PR #11 の merge をもって `closed` へ遷移させる (`policy: linked_pr_merged_all`)。本 issue node は `.dev-graph/state/graph.json` に含まれないため `reconcile-github-lifecycle.py` の対象外で、遷移は手動更新となる。
 
 ## 派生 issue (2026-07-21)
 
 本 issue の実行中に、`guard-graph-schema` が beads mutation を `bd-bridge.py` の単一チョークポイントへ限定する一方で `bd-bridge.py --op update` が `--notes` / `--design` を、`--op create` が `--priority` を通せないことを観測した。notes 更新の正規経路が存在しないため、本 issue の進捗メモを beads 側へ残せなかった。`issues/sys-bd-bridge-notes-passthrough-20260721.md` (HarnessHub-8ql) として分離して追跡する。
+
+- **HarnessHub-8ql**: 分離後に別セッションが実装し CLOSED (`--op update` へ notes / append-notes / design / description の転送を追加、契約テスト 13 件 PASS)。ただし `origin/main` の `bd-bridge.py` は未変更で、実装は別 branch にある。本 issue の PR は `bd-bridge.py` を変更しないため衝突しない。
+- **HarnessHub-82j** (OPEN): 上記 bd-bridge 変更に伴う 3 skill の live-trial 再検証 (closure stale)。8ql から派生。
+- **HarnessHub-5ph** (OPEN): main の `governance-check` が `lint-artifact-placement` 違反で赤く、無関係な PR が巻き添えで fail する問題。本 issue の PR #11 で顕在化したため起票。
