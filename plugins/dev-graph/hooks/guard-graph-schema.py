@@ -30,6 +30,24 @@ GRAPH_OR_SCHEMA_TARGET = re.compile(
     re.I,
 )
 GRAPH_AUTHORITY_DIR = re.compile(r"(?:^|/)\.dev-graph/?$", re.I)
+# Write/Edit ツールと interpreter 経由の書込みで守る範囲。Bash の GRAPH_OR_SCHEMA_TARGET より
+# 狭く graph authority だけを対象にする (content root への通常編集まで止めると日常作業が壊れる)。
+# authority = graph store (`state/`) と repo-local config、および正準 schema。
+# `.dev-graph/` 全体ではない — templates/ cache/ tmp/ は init が正当に書くため除外する
+# (広く取りすぎると `cp plugins/dev-graph/templates .dev-graph/templates` まで止まる)。
+GRAPH_AUTHORITY_PATH = re.compile(
+    r"(?:^|/)\.dev-graph/(?:state(?:/|$)|config\.json$)"
+    r"|(?:^|/)graph-node\.schema\.json$",
+    re.I,
+)
+FILE_WRITING_TOOLS = frozenset({"Write", "Edit", "MultiEdit", "NotebookEdit"})
+# python/ruby/node 等に file path と書込みモードが同居する呼び出し。rm/sed 等の語彙しか持たない
+# _mutating_operands では、インタプリタ本文に埋め込まれた open(...,'w') を検出できない。
+INTERPRETER_WRITE = re.compile(
+    r"""open\s*\(\s*(?P<q>['"])(?P<path>[^'"]+)(?P=q)\s*,\s*['"][waxr]\+?[bt]?['"]"""
+    r"""|['"](?P<path2>[^'"]*\.dev-graph[^'"]*)['"]\s*,\s*['"][wax]""",
+    re.I,
+)
 
 
 def payload() -> dict:
@@ -45,6 +63,29 @@ def command_of(value: dict) -> str:
     return str(tool_input.get("command") or "") if isinstance(tool_input, dict) else ""
 
 
+def written_paths_of(value: dict) -> list[str]:
+    """Write/Edit 系ツールが書込む対象 path を返す (Bash 以外の C02 迂回経路)。"""
+    if str(value.get("tool_name") or "") not in FILE_WRITING_TOOLS:
+        return []
+    tool_input = value.get("tool_input") or {}
+    if not isinstance(tool_input, dict):
+        return []
+    return [
+        str(tool_input[key])
+        for key in ("file_path", "notebook_path")
+        if isinstance(tool_input.get(key), str) and tool_input[key]
+    ]
+
+
+def interpreter_writes_graph_authority(command: str) -> bool:
+    """python -c / heredoc 内の open(..., 'w') が graph authority を指すか。"""
+    for match in INTERPRETER_WRITE.finditer(command):
+        path = match.group("path") or match.group("path2") or ""
+        if GRAPH_AUTHORITY_PATH.search(path):
+            return True
+    return False
+
+
 def context_ok(root: Path) -> tuple[bool, str]:
     resolver = Path(__file__).resolve().parents[1] / "scripts" / "resolve-repo-context.py"
     if not resolver.is_file():
@@ -58,7 +99,13 @@ def context_ok(root: Path) -> tuple[bool, str]:
 
 def _guarded_target(value: str) -> bool:
     candidate = value.strip().strip("\"'")
-    return bool(GRAPH_OR_SCHEMA_TARGET.search(candidate) or GRAPH_AUTHORITY_DIR.search(candidate))
+    return bool(
+        GRAPH_OR_SCHEMA_TARGET.search(candidate)
+        or GRAPH_AUTHORITY_DIR.search(candidate)
+        # `.dev-graph/` 配下は state/graph.json 以外 (config.json 等) も authority。
+        # これが無いと Write 遮断後に `cat > .dev-graph/config.json` へ逃げられる。
+        or GRAPH_AUTHORITY_PATH.search(candidate)
+    )
 
 
 def _expanded(value: str, assignments: dict[str, str]) -> str:
@@ -175,14 +222,34 @@ def main() -> int:
     args = parser.parse_args()
     value = payload()
     command = command_of(value)
-    if not command:
+    written = written_paths_of(value)
+    if not command and not written:
         return 0
+
+    # graph authority の遮断は最優先かつ subprocess 非依存で判定する。context_ok() は tool 毎に
+    # python を起動するため hook timeout (10s) で guard 全体が素通りしうる。最重要の判定を
+    # その手前に置き、fail-open の窓を塞ぐ。
+    if any(GRAPH_AUTHORITY_PATH.search(path) for path in written):
+        sys.stderr.write(
+            "[guard-graph-schema] BLOCKED: graph authority (.dev-graph/ 配下と "
+            "graph-node.schema.json) への Write/Edit は C02 atomic writer を迂回できない\n"
+        )
+        return 2
+    if command and interpreter_writes_graph_authority(command):
+        sys.stderr.write(
+            "[guard-graph-schema] BLOCKED: interpreter 経由の graph authority 書込みは "
+            "C02 atomic writer を迂回できない\n"
+        )
+        return 2
+
     ok, detail = context_ok(Path(args.repo_root))
     if not ok:
         sys.stderr.write(f"[guard-graph-schema] BLOCKED: repository context invalid: {detail}\n")
         return 2
     reason = None
-    if BD_MUTATION.search(command) and "bd-bridge.py" not in command:
+    if not command:
+        return 0
+    elif BD_MUTATION.search(command) and "bd-bridge.py" not in command:
         reason = "Beads mutation は scripts/bd-bridge.py の単一チョークポイント経由に限定"
     elif GH_MUTATION.search(command) and "gh-bridge.py" not in command:
         reason = "GitHub bulk/write は scripts/gh-bridge.py の dry-run/ledger 経由に限定"

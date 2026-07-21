@@ -253,3 +253,60 @@ def test_validate_rejects_invalid_authority_documents(monkeypatch):
 
     with pytest.raises(mod.ContractError, match="invalid canonical graph schema"):
         mod.schema_findings({}, {"type": 42}, 0)
+
+
+def test_preview_graph_validates_from_stdin_without_writing_into_the_repo(tmp_path):
+    """dry-run preview を管理対象 repo へ書かずに検証できる (C14 OUT3: dry-run write 0)。
+
+    2026-07-21 live-trial r13 で、preview 検証のため `.dev-graph/cache/preview-validate.json`
+    を repo 内へ書いてから unlink する経路を検出した。--graph FILE は contained() を要求し
+    repo 外パスを拒否するため、preview 検証には stdin 経路が必要。
+    """
+    import subprocess
+
+    root = tmp_path / "repo"
+    (root / ".dev-graph" / "state").mkdir(parents=True)
+    before = sorted(p.relative_to(root).as_posix() for p in root.rglob("*"))
+
+    preview = json.dumps({"graph_revision": 0, "nodes": []})
+    proc = subprocess.run(
+        [sys.executable, str(SCRIPTS / "validate-graph-schema.py"),
+         "--graph", "-", "--repo-root", str(root)],
+        input=preview, capture_output=True, text=True, check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["valid"] is True
+
+    after = sorted(p.relative_to(root).as_posix() for p in root.rglob("*"))
+    assert after == before, "preview 検証が管理対象 repo へファイルを残してはならない"
+
+
+def test_preview_stdin_requires_explicit_repo_root() -> None:
+    """repo_root 未指定の stdin preview は fail-closed (artifact 解決先が曖昧なまま通さない)。"""
+    import subprocess
+
+    proc = subprocess.run(
+        [sys.executable, str(SCRIPTS / "validate-graph-schema.py"), "--graph", "-"],
+        input=json.dumps({"nodes": []}), capture_output=True, text=True, check=False,
+    )
+    assert proc.returncode != 0
+    assert "--repo-root is required" in proc.stderr
+
+
+def test_c14_decompose_documents_the_stdin_preview_path() -> None:
+    """C14 の dry-run 手順が stdin 経路へ係留されている (文書側の退行も CI で検出する)。
+
+    requirements 側は test_validate_source_digest.py が同格の保護を持つ。decompose 側だけ
+    文書変更が無保護だと、stdin 経路の記載が消えても赤くならない非対称が残る。
+    """
+    skill = PLUGIN / "skills" / "run-dev-graph-decompose" / "SKILL.md"
+    body = skill.read_text(encoding="utf-8").split("---", 2)[2]
+
+    assert "--graph -" in body, "dry-run preview 検証の stdin 経路が本文に必要"
+    checklist = [line for line in body.splitlines() if line.startswith("- [ ]")]
+    assert any("--graph -" in line for line in checklist), (
+        "完了チェックリストに stdin 経路の項目が必要"
+    )
+    gotchas = body.split("## Gotchas", 1)
+    assert len(gotchas) == 2, "Gotchas 節が必要"
+    assert "--graph -" in gotchas[1], "Gotchas に dry-run 一時ファイルの落とし穴が必要"
