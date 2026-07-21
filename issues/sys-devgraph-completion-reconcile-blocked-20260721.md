@@ -98,6 +98,7 @@ merge 済み PR を持つ node について、`--mode check` が identity エラ
 
 - コマンド: 上記 `--mode check` の再実行
 - 証跡 path: `issues/sys-hub-foundation-progress-reconcile-20260721.md` の「close を見送った理由」節
+- 2026-07-22 認証済み環境での実測 (下記「2026-07-22 live 検証」節)
 
 ## 2026-07-21 実装結果
 
@@ -106,6 +107,38 @@ merge 済み PR を持つ node について、`--mode check` が identity エラ
 - Beads 1.1.0 の gate 一覧が `await_type` を返し `blocks` を省略する実出力に合わせ、対象 issue の `blocks` dependency から gate を照合できるようにした。gate 不在は linkage 未成立として `pending` を返す。
 - 共有 PR #21 について、DONE 判定済みの `HarnessHub-37h.2` (P02) にのみ `gh:pr` gate `HarnessHub-0be` を登録した。fixture による C12 merged fact と組み合わせた実ノード check では linkage が eligible となり、残る conflict は worktree 条件 1 件だけになった。
 
+## 2026-07-22 live 検証
+
+`gh auth login` (device flow) で認証を永続化し、fixture ではなく live GitHub の C12 lifecycle facts に対して `--mode check` を実行した。これにより「認証済み環境での再実行」という外部条件が解消し、本 issue の修正が実データで機能することを確認できた。
+
+```
+$ python3 plugins/dev-graph/scripts/reconcile-github-lifecycle.py \
+    --repo-root . --graph .dev-graph/state/graph.json \
+    --graph-node-id SYS-HUB-FOUNDATION-P02 \
+    --repo daishiman/HarnessHub --pr 21 --mode check
+```
+
+判定結果の要点:
+
+| 項目 | 値 | 意味 |
+|---|---|---|
+| `linkage_decision.eligible` | `true` | linkage 成立 |
+| `linkage_decision.gh_pr_gate_verified` | `true` | 修正した C28 gate 照合が live Beads データで機能 |
+| `linkage_decision.closing_reference_verified` | `true` | PR #21 の closing reference が一致 |
+| `linkage_decision.marker_verified` | `false` | PR 本文に marker 無し (gate 経路で代替) |
+| `ancestor_verified` | `true` | merge commit が HEAD の祖先 |
+| `worktree_decision.clean` | `true` | 作業ツリーは clean |
+| `worktree_decision.synced_default` | `false` | default branch と同期していない |
+| `policy_decision` | `pending` | 下記 conflict 1 件のため |
+| `conflicts` | `["worktree is not clean and synchronized on the remote default branch"]` | 残る唯一の阻害要因 |
+
+`--mode check` が identity エラーではなく完全な判定を返すこと (受入条件 1)、および 1 PR が複数 task を実装する場合に `gh:pr` gate で linkage を成立させる設計 (本 issue の scope_in) が、いずれも live で成立した。
+
 ## 残る外部条件
 
-`pull_request_linkages` と Beads close は C02 writer を伴う durable reconcile でのみ更新する。現在の task worktree は detached・dirty・`origin/main` より 3 commit 古く、main worktree は `main...origin/main [ahead 1, behind 3]` かつ `.beads/interactions.jsonl` に利用者変更があるため、どちらも clean・同期済み default branch 条件を満たさない。`origin/main` は作業中に PR #24 (`bb1d7f0`) まで進んだ。既存変更を退避・上書きしてまで reconcile することは禁止し、受入条件 2・3 は未完了のまま維持する。live GitHub 照会も unauthenticated API rate limit (HTTP 403) のため、認証済み環境での再実行が必要。
+`pull_request_linkages` と Beads close は C02 writer を伴う durable reconcile でのみ更新する。残る条件は **worktree 条件 1 件のみ**に縮小した。
+
+- task worktree は clean だが default branch ではない (`devgraph/issue-devgraph-completion-reconcile-blocked-20260721`)
+- main worktree は `main...origin/main [behind 9]` かつ `.beads/interactions.jsonl` に未コミット変更がある。同ファイルは beads 操作のたびに更新される passive export であり、beads を使いながら clean を保つこと自体に構造的な摩擦がある
+
+既存変更を退避・上書きしてまで reconcile することは禁止し、受入条件 2・3 は未完了のまま維持する。解消手順は「main worktree で `git pull --rebase` して `origin/main` へ同期し、`.beads/interactions.jsonl` の扱いを確定したうえで `--mode reconcile` を実行する」。この操作は利用者の未コミット変更に触れるため、明示的な承認を得てから行う。
