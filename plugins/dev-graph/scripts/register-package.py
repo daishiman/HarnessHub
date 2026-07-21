@@ -544,7 +544,7 @@ def _project_execution_context(args: argparse.Namespace) -> dict[str, Any]:
         return perform()
 
 
-def verify_receipt(receipt_path: Path, graph_path: Path | None = None) -> dict[str, Any]:
+def validate_receipt(receipt_path: Path, graph_path: Path | None = None) -> dict[str, Any]:
     """任意の registration receipt が本 script の発行物として整合するかを単独検証する。
 
     schema だけでは表現できない構造不変条件を検査する。register 経路には既に同等の検査が
@@ -640,7 +640,7 @@ def _parser() -> argparse.ArgumentParser:
     execution.add_argument("--graph-node-id", required=True)
     execution.add_argument("--context-json", required=True)
     execution.add_argument("--dry-run", action="store_true")
-    verify = sub.add_parser("verify-receipt", help="任意の registration receipt の真正性を単独検証する")
+    verify = sub.add_parser("validate-receipt", help="任意の registration receipt の真正性を単独検証する")
     verify.add_argument("--receipt", required=True, help="検証する registration receipt JSON")
     verify.add_argument("--graph", help="指定時は graph_digest_after を実測突合する")
     return parser
@@ -653,8 +653,8 @@ def main(argv: list[str] | None = None) -> int:
             report = preflight_contract(Path(args.system_planner_root), args.required_version, args.required_schema_version)
         elif args.command == "execution-context":
             report = _project_execution_context(args)
-        elif args.command == "verify-receipt":
-            report = verify_receipt(Path(args.receipt), Path(args.graph) if args.graph else None)
+        elif args.command == "validate-receipt":
+            report = validate_receipt(Path(args.receipt), Path(args.graph) if args.graph else None)
             dump(report); return 0 if report["valid"] else 1
         else: report = _register(args)
         dump(report); return 0

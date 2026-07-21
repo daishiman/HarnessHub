@@ -1,4 +1,4 @@
-"""verify-receipt: 任意の registration receipt の真正性を単独検証する検査のテスト。
+"""validate-receipt: 任意の registration receipt の真正性を単独検証する検査のテスト。
 
 背景: live-trial の fixture は gitignore されており、commit 差分ベースの provenance 検査
 (HarnessHub-dst) が届かない。実際に render の live-trial (20260721T180000-r7) で手書き
@@ -63,7 +63,7 @@ class VerifyReceiptTest(unittest.TestCase):
             if graph is not None:
                 graph_path = tmp / "graph.json"
                 graph_path.write_text(json.dumps(graph, ensure_ascii=False), encoding="utf-8")
-            return RP.verify_receipt(write(tmp, doc), graph_path)
+            return RP.validate_receipt(write(tmp, doc), graph_path)
 
     def test_genuine_receipt_passes(self):
         result = self._verify(genuine_receipt())
