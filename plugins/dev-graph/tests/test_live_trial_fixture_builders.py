@@ -157,6 +157,49 @@ def test_node_fixture_declares_no_artifact_kind(built: dict[str, Path]) -> None:
     assert graph["nodes"] == []
 
 
+def test_requirements_fixture_does_not_preseed_c04_outputs(built: dict[str, Path]) -> None:
+    """C04 fixture が被験 skill の成果物を先取りしていない (baseline = 入力だけ)。
+
+    C04 の出力契約は「要件定義書 + readiness/missing_sections 一覧 + capability-build
+    handoff 参照 + graph snapshot」(plugin-plans/dev-graph/component-inventory.json:196)。
+    これらを fixture が同梱すると、runner が既存ファイルを読むだけで PASS を自己申告でき、
+    skill の能力が観測されなくなる。
+
+    紛らわしいのは ``system-build-handoff.json`` と ``task-graph.json`` で、名前は C04 の
+    出力語彙と衝突するが所有者は system-dev-planner である。C04 が gate 3 で走らせる
+    validate-system-plan.py:37,266-267 が両方を必須 load し、欠いた状態では missing-file
+    violation で exit 2 になるため、これらは削除できない *入力* である。よって「消す」
+    ではなく「baseline を閉じた集合として宣言し、実 tree との exact 一致を固定する」形で
+    先取りを防ぐ。
+    """
+    out = built["requirements"]
+    common = Path(_git(out, "rev-parse", "--git-common-dir"))
+    common = (common if common.is_absolute() else out / common).resolve(strict=True)
+    baseline = json.loads(
+        (common / "dev-graph" / "live-trial-baseline.json").read_text(encoding="utf-8")
+    )
+
+    tracked = {
+        line for line in _git(out, "ls-files").splitlines()
+        if line and Path(line).name != ".gitkeep"
+    }
+    assert set(baseline["inputs"]) == tracked
+    for path, entry in baseline["inputs"].items():
+        assert entry["sha256"] == hashlib.sha256((out / path).read_bytes()).hexdigest(), path
+
+    # 衝突しやすい 2 file は system-dev-planner 所有の入力として宣言されている。
+    package = "system-plan/F-LIVE-001"
+    for relative in (f"{package}/system-build-handoff.json", f"{package}/task-graph.json"):
+        assert "validate-system-plan.py" in baseline["inputs"][relative]["provenance"], relative
+        assert relative in baseline["name_collision_warning"], relative
+
+    # C04 が goal-spec/progress/intermediate を書く eval-log は、骨格層
+    # (build_live_trial_fixture.py:522) が空 dir として用意するだけで中身は 0 件である。
+    # ファイルが 1 件でもあれば実走前から成果物が置かれていることになる。
+    assert [path for path in (out / "eval-log").rglob("*") if path.is_file()] == []
+    assert baseline["subject_outputs_absent_at_baseline"]
+
+
 def test_status_fixture_exposes_a_dependency_edge(built: dict[str, Path]) -> None:
     """C18 が ready/blocked を区別できる最小構成 (task 2 件 + 前方依存 1 本) である。"""
     graph = json.loads(
