@@ -1,6 +1,6 @@
 # 36. Plugin Package Harness Contract
 
-最終更新: 2026-05-23
+最終更新: 2026-07-22
 
 ## 目的
 
@@ -127,6 +127,18 @@ PKG ID は閉じた列挙であり、本表に存在しない ID は **存在し
 | PKG-013c | network permissions（外部通信先の allowlist が plugin manifest 宣言と一致） |
 | PKG-013d | MCP / external integration permissions（Notion / Drive / Gmail 等の scope が manifest と一致） |
 
+##### 無印 `PKG-013` の扱い（記録軸と参照軸の分離）
+
+無印 `PKG-013` は上表 4 sub-check の **集約表示専用の親ラベル**であり、記録可能な PKG ID ではない。軸ごとの可否を次に固定する。
+
+| 軸 | 無印 `PKG-013` | 根拠 |
+|---|---|---|
+| **記録軸**（`references/package-contract.json` の `pkg_checks` キー） | **不可**。`PKG-013a`〜`PKG-013d` の 4 件を個別に記録する | 構文正本 `package-contract.schema.json` の `pkg_checks` pattern が無印を受理しない。`pkg-id-catalog.yaml` にも無印エントリは存在しない |
+| **参照軸**（`ref-pkg-contract` への lookup クエリ入力） | **可**。ただし応答は必ず `013a/b/c/d` の 4 件へ展開する | `ref-pkg-contract/prompts/R1-lookup-pkg.md`「PKG-013 単体クエリは 013a/b/c/d の 4 件に展開して返す」 |
+| **集約表示軸**（gate サマリ文字列） | **可**。`PKG-013(a:pass, b:fail, c:pass, d:pass)` 形式 | `run-plugin-package-check/SKILL.md` §sub-check 合算 |
+
+この分離を崩して `pkg_checks` に無印 `PKG-013` を書くと、構文正本 schema の Draft 2020-12 検証が `additionalProperties` 違反で fail する。回帰は `tests/test_package_contract_schema.py` が fail-closed で固定する。
+
 ### 予約 ID（PKG-016〜017）
 
 | ID | 状態 |
@@ -151,45 +163,21 @@ PKG ID 群を機械可読化した正本 schema。`plugins/<plugin>/references/p
 
 ### schema（JSON Schema draft 2020-12・意味理解用の抜粋）
 
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://xl-skills/schemas/package-contract.json",
-  "type": "object",
-  "required": ["package_mode", "pkg_checks"],
-  "properties": {
-    "package_mode": {
-      "enum": ["bundle", "skill-only"]
-    },
-    "package_mode_exception": {
-      "enum": ["legacy", "dev-only", "migration"],
-      "description": "package_mode が skill-only の場合のみ必須"
-    },
-    "pkg_checks": {
-      "type": "object",
-      "patternProperties": {
-        "^PKG-(00[1-9]|01[0-5]|01[3][a-d])$": {
-          "type": "object",
-          "required": ["status", "last_run_at"],
-          "properties": {
-            "status": { "enum": ["pass", "fail", "skip", "not_applicable"] },
-            "last_run_at": { "type": "string", "format": "date-time" },
-            "eval_log_path": { "type": "string" },
-            "skip_reason": { "type": "string" }
-          }
-        }
-      },
-      "additionalProperties": false
-    }
-  },
-  "allOf": [
-    {
-      "if": { "properties": { "package_mode": { "const": "skill-only" } } },
-      "then": { "required": ["package_mode_exception"] }
-    }
-  ]
-}
+**構文正本は外部ファイル 1 本**とする。本章はその意味論（どの PKG ID が何を検査するか）を持ち、構文（キー・型・必須・pattern）は次のファイルだけが正本である。
+
+| 役割 | 所在 |
+|---|---|
+| 構文正本（JSON Schema draft 2020-12 本体） | `plugins/harness-creator/skills/ref-pkg-contract/schemas/package-contract.schema.json` |
+| PKG ID 機械可読カタログ（意味・phase・severity・実装 script） | `plugins/harness-creator/skills/ref-pkg-contract/references/pkg-id-catalog.yaml` |
+| 意味論正本（本章） | `doc/ClaudeCodeスキルの設計書/36-plugin-package-harness-contract.md` |
+
+本章に schema 全文を再掲しない（再掲は二重正本を生み、実際に 2026-07-21 まで無印 `PKG-013` を受理する古い pattern が本章側に残存した）。構文で唯一ここに固定するのは、`pkg_checks` の受理 ID pattern が下記であること、およびそれが構文正本ファイルの値と逐語一致することである。
+
 ```
+^PKG-(00[1-9]|01[0-2]|013[a-d]|01[4-5]|01[6-7])$
+```
+
+この pattern は無印 `PKG-013` を受理しない（§無印 `PKG-013` の扱い 参照）。本章のこの記載と構文正本ファイルの逐語一致は `tests/test_package_contract_schema.py` が fail-closed で検証する。schema 本体の変更は `ref-pkg-contract/SKILL.md` の定めにより P0_breaking 扱いで、33 章 proposal と 27 章 §4.1 governance を要する。
 
 ### harness 専用フィールド（公式 `plugin.json` に混在させない台帳）
 
