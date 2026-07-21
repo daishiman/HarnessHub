@@ -1,5 +1,5 @@
 {
-  "graph_revision": 261,
+  "graph_revision": 262,
   "nodes": [
     {
       "acceptance": [
@@ -18329,9 +18329,9 @@
         {
           "base_branch": "main",
           "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P07",
-          "head_sha": "7d4a2c102cee74ae7508654c0e92eb2e4ede62b9",
-          "last_seen_at": "2026-07-20T23:06:49.117162Z",
-          "lease_acquired_at": "2026-07-20T23:06:39.427841Z",
+          "head_sha": "86d035e02886b64abefb2ffa43e54bd85dea3a09",
+          "last_seen_at": "2026-07-21T00:19:38.041436Z",
+          "lease_acquired_at": "2026-07-21T00:19:35.510053Z",
           "released_at": null,
           "state": "claimed",
           "worktree_id": "wt_eed96293f3fd512f"
@@ -18398,7 +18398,7 @@
       "template_version": "1.0.0",
       "title": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T23:06:49.117162Z"
+      "updated_at": "2026-07-21T00:19:38.041436Z"
     },
     {
       "acceptance": [
