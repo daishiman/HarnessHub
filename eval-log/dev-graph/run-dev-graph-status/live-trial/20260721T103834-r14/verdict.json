@@ -1,0 +1,37 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "args": "--repo-root <fixture r14-status> --id LT-TASK-002",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "5643898c44ed97a33d76c2176a0629238dc9a2ff67c57ba797c68bbdb7f9bf38",
+  "transcript_sha256": "efea51e570331d0a74f4e9621c35e5e396471ca262ba66f0986dd72cf11d7671",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 6.0,
+    "poll_exit": "0",
+    "wall_clock_s": 300.0
+  },
+  "scenario_id": "C18-OUT1-positive-read-only-status"
+}

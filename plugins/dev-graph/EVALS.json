@@ -13,7 +13,7 @@
       "C01": {
         "skill": "skills/run-dev-graph-init/SKILL.md",
         "criteria": {
-          "IN1": ["criteria:in1", "validate-graph-schema.py", "必須キー欠落が0件"],
+          "IN1": ["criteria:in1", "validate-graph-schema.py", "repo-config.schema.json", "必須キー欠落が0件"],
           "OUT1": ["criteria:out1", "issues/tasks/specs/architecture/features/docs", "二回目init"],
           "OUT2": ["criteria:out2", ".dev-graph/templates/", "利用者編集を上書きしない"],
           "OUT3": ["criteria:out3", "cross-read/write 0件", "broken content symlink", "absolute stored path 0件"],

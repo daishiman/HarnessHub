@@ -67,11 +67,13 @@
 - **保護対象レジストリ `_PROTECTION_RULES`**: concrete な書込先に対する保護判定を単一の宣言テーブルへ集約した (id / matcher / scope / reason)。`scope="all"` (spec-state・確定/憲法章) と `scope="bash"` (docs/*-spec.md=Bash のみ・Edit 許可) を宣言で表し、`_match_protection(token, root, bash=…)` が参照する。`bash_decision` の散在した if 判定を置換し、保護対象を 1 箇所で discoverable にした。契約は `TestProtectionRegistry` が固定。
   - 注: Write/Edit/MultiEdit 経路 (`decide()`) は realpath 一致 + 確定セル有無 + frontmatter + F3 fail-closed というより厳密な条件を持つため、レジストリの `scope="all"` 対象を「同等に保護する」形で残置し、完全な単一関数化はしていない (保護対象の宣言は共有・判定精度は経路別)。
 
-**未実装 (follow-up)**:
-- **姉妹 hook `plugins/dev-graph/hooks/guard-graph-schema.py` の同種 conflation**: コマンド文字列に `rm ... *.md` 等が現れると (書込対象でなくても) 破壊操作と誤検知する。本 hook で採った write-target モデルの横展開候補。
+**実装済み (姉妹 hook への横展開)**:
+- **`plugins/dev-graph/hooks/guard-graph-schema.py` の間接一括書換 (bxz)**: 当初 follow-up として「同種の 参照↔書込 conflation (FP)」を記録していたが、再調査の結果、姉妹 hook は既に write-target モデル (`_mutating_operands` が `cp src dst` の dst だけを取る) を持ち FP は解消済みだった。実際に残っていたのは逆向きの **FN** で、`find tasks -name '*.md' | xargs sed -i` のように書換対象が find の列挙結果として渡る経路は宛先を静的抽出できず graph 権威 (`tasks/` `docs/` `specs/` `.dev-graph/`) を素通りで一括改変できた。本 hook の bxz 修正 (§2.2 の「書込先確定不能 + 保護領域走査なら安全側」) を `indirect_mutation_over_guarded_area()` として横展開し、判定を **pipeline 単位** (`|` は 1 単位、`&&`/`;` で分離) にスコープした。全コマンド文字列で見ると `find /tmp … | xargs rm -f && python3 x.py --graph .dev-graph/state/graph.json` の後段 (graph は read arg) を巻き込み、a5w.1 が潰した conflation を再導入するため。契約は `plugins/dev-graph/tests/test_guard_graph_schema_indirect_mutation.py` が固定する。
 
 ## 5. 検証
 
-- 回帰テスト `tests/test_guard_confirmed_chapter_overwrite.py` (47 件): MUST_BLOCK / MUST_PASS (2.1 の FP 群を含む) / KNOWN_GAP。
-- 実行: `python3 -m unittest discover -s plugins/system-spec-harness/hooks/tests -p "test_*.py"`
+- 回帰テスト `hooks/tests/test_guard_confirmed_chapter_overwrite.py` (73 件): MUST_BLOCK / MUST_PASS (2.1 の FP 群を含む) / KNOWN_GAP / PROTECTION_REGISTRY。
+- legacy 回帰テスト `tests/test_guard_hook.py` (61 件): write-target モデル導入前からの期待 (ambiguous glob 遮断・パス境界判定・frontmatter 解釈) を保持する。bxz でこの 2 系統の期待を統合した。
+- 姉妹 hook の横展開契約 `plugins/dev-graph/tests/test_guard_graph_schema_indirect_mutation.py` (16 件)。
+- 実行: `python3 -m unittest discover -s plugins/system-spec-harness/hooks/tests -p "test_*.py"` / `python3 -m pytest -q plugins/system-spec-harness plugins/dev-graph/tests`
 - e2e: 実 compile/validator コマンド → exit0、`echo x > spec-state.json` / `sed -i … security.md` → exit2 を確認済み。
