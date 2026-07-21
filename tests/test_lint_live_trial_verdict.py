@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -228,3 +229,153 @@ def test_latest_run_id_wins_newer_pass(lint):
 
 def test_self_test_passes():
     assert _load().self_test() == 0
+
+
+# --- transcript 束縛 ----------------------------------------------------------
+
+def test_transcript_digest_must_match_actual_file(lint):
+    """記録された transcript_sha256 と実体の不一致を検出する。
+
+    これが無いと digest 単独書き換えの検出 (provenance) を、transcript_sha256 も
+    併せて書き換えるだけで迂回できる。
+    """
+    skill_dir = _make_skill(lint)
+    doc = _valid_doc(lint, skill_dir)
+    doc["transcript_sha256"] = "0" * 64
+    vpath = _write_verdict(lint, doc)
+    (vpath.parent / "transcript.jsonl").write_text('{"t":1}\n', encoding="utf-8")
+    verdict_mod, backend_mod, schema = lint.load_harness()
+    errs = lint.check_verdict(vpath, "demo-plugin", "run-demo", verdict_mod, backend_mod, schema)
+    assert any("transcript-mismatch" in e for e in errs), errs
+
+
+def test_transcript_digest_absent_is_tolerated(lint):
+    """transcript を保持しない run は既存どおり通す (追加検査は additive)。"""
+    skill_dir = _make_skill(lint)
+    vpath = _write_verdict(lint, _valid_doc(lint, skill_dir))
+    verdict_mod, backend_mod, schema = lint.load_harness()
+    assert lint.check_verdict(vpath, "demo-plugin", "run-demo", verdict_mod, backend_mod, schema) == []
+
+
+# --- digest provenance (再 trial なしの緑化検出) -------------------------------
+
+def _provenance_repo(tmp_path):
+    """verdict + transcript を 1 件コミット済みの合成 repo を返す。"""
+    repo = tmp_path / "repo"
+    run = repo / "eval-log" / "demo-plugin" / "run-demo" / "live-trial" / "20260701T000000"
+    run.mkdir(parents=True)
+    (run / "transcript.jsonl").write_text('{"turn":1}\n', encoding="utf-8")
+    (run / "verdict.json").write_text(
+        json.dumps({"skill_dir_tree_sha": "a" * 64, "transcript_sha256": "b" * 64}),
+        encoding="utf-8",
+    )
+    for args in (["init", "-q"], ["add", "-A"],
+                 ["-c", "user.email=t@example.com", "-c", "user.name=t",
+                  "commit", "-q", "-m", "base"]):
+        subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True)
+    return repo, run
+
+
+def test_digest_only_rewrite_is_flagged(tmp_path):
+    repo, run = _provenance_repo(tmp_path)
+    (run / "verdict.json").write_text(
+        json.dumps({"skill_dir_tree_sha": "c" * 64, "transcript_sha256": "b" * 64}),
+        encoding="utf-8",
+    )
+    violations, inspected = _MOD.check_digest_provenance("HEAD", repo_root=repo)
+    assert inspected == 1
+    assert len(violations) == 1 and "digest-only-rewrite" in violations[0]
+
+
+def test_rerun_with_new_transcript_is_not_flagged(tmp_path):
+    """実走して transcript が変われば digest 更新は正当。"""
+    repo, run = _provenance_repo(tmp_path)
+    (run / "transcript.jsonl").write_text('{"turn":1}\n{"turn":2}\n', encoding="utf-8")
+    (run / "verdict.json").write_text(
+        json.dumps({"skill_dir_tree_sha": "c" * 64, "transcript_sha256": "d" * 64}),
+        encoding="utf-8",
+    )
+    violations, _ = _MOD.check_digest_provenance("HEAD", repo_root=repo)
+    assert violations == []
+
+
+def test_new_run_directory_is_not_flagged(tmp_path):
+    """新しい run-id の追加は比較対象が無いので違反にしない。"""
+    repo, run = _provenance_repo(tmp_path)
+    fresh = run.parent / "20260702T000000"
+    fresh.mkdir()
+    (fresh / "transcript.jsonl").write_text('{"turn":9}\n', encoding="utf-8")
+    (fresh / "verdict.json").write_text(
+        json.dumps({"skill_dir_tree_sha": "c" * 64, "transcript_sha256": "e" * 64}),
+        encoding="utf-8",
+    )
+    violations, _ = _MOD.check_digest_provenance("HEAD", repo_root=repo)
+    assert violations == []
+
+
+def test_untouched_tree_is_not_flagged(tmp_path):
+    repo, _run = _provenance_repo(tmp_path)
+    violations, inspected = _MOD.check_digest_provenance("HEAD", repo_root=repo)
+    assert violations == [] and inspected == 0
+
+
+def test_unresolvable_base_ref_is_reported(tmp_path):
+    repo, _run = _provenance_repo(tmp_path)
+    violations, _ = _MOD.check_digest_provenance("no-such-ref", repo_root=repo)
+    assert violations and "base-ref-unresolvable" in violations[0]
+
+
+# --- path を動かす迂回 (履歴束縛の剥がし) ------------------------------------
+
+def test_deleting_transcript_does_not_count_as_rerun(tmp_path):
+    """transcript を消して transcript_sha256 を null にする迂回を塞ぐ。
+
+    削除も `git diff --name-only` には現れるため、「変化した」だけを再実行の証拠に
+    すると 2 行の編集で遮断を無効化できる (2026-07-21 実測)。
+    """
+    repo, run = _provenance_repo(tmp_path)
+    (run / "transcript.jsonl").unlink()
+    (run / "verdict.json").write_text(
+        json.dumps({"skill_dir_tree_sha": "c" * 64, "transcript_sha256": None}),
+        encoding="utf-8",
+    )
+    violations, _ = _MOD.check_digest_provenance("HEAD", repo_root=repo)
+    assert len(violations) == 1 and "digest-only-rewrite" in violations[0]
+
+
+def test_renaming_run_directory_is_flagged_as_evidence_removed(tmp_path):
+    """run ディレクトリ改名で path 束縛を外す迂回を塞ぐ。
+
+    旧 path の現物が消えると突合対象から外れ、新 path は比較対象なしの新規 run に
+    見えるため、改名 + digest 書き換えが素通りしていた。
+    """
+    repo, run = _provenance_repo(tmp_path)
+    renamed = run.parent / (run.name + "-r2")
+    run.rename(renamed)
+    (renamed / "verdict.json").write_text(
+        json.dumps({"skill_dir_tree_sha": "c" * 64, "transcript_sha256": "b" * 64}),
+        encoding="utf-8",
+    )
+    violations, _ = _MOD.check_digest_provenance("HEAD", repo_root=repo)
+    assert len(violations) == 1 and "evidence-removed" in violations[0]
+
+
+def test_deleting_evidence_outright_is_flagged(tmp_path):
+    """証跡ディレクトリごとの削除も報告する (証跡は append-only)。"""
+    repo, run = _provenance_repo(tmp_path)
+    for child in run.iterdir():
+        child.unlink()
+    run.rmdir()
+    violations, _ = _MOD.check_digest_provenance("HEAD", repo_root=repo)
+    assert len(violations) == 1 and "evidence-removed" in violations[0]
+
+
+def test_transcript_sha_downgrade_to_null_is_not_rerun_evidence(tmp_path):
+    """記録 digest の 非null → null は「変化」だが再実行の証拠ではない。"""
+    repo, run = _provenance_repo(tmp_path)
+    (run / "verdict.json").write_text(
+        json.dumps({"skill_dir_tree_sha": "c" * 64, "transcript_sha256": None}),
+        encoding="utf-8",
+    )
+    violations, _ = _MOD.check_digest_provenance("HEAD", repo_root=repo)
+    assert len(violations) == 1 and "digest-only-rewrite" in violations[0]
