@@ -1,0 +1,8 @@
+{
+  "name": "h7-probe",
+  "version": "0.1.0",
+  "description": "Stage 0 technical gate (H7) の配布経路検証専用の最小 plugin。skill を 1 件だけ持ち、install 後に skill が列挙・実行できるかを確かめるためだけに存在する。業務機能は持たない。",
+  "author": {
+    "name": "daishiman"
+  }
+}
