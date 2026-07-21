@@ -7,6 +7,7 @@ tmp の合成 schema に monkeypatch して R1-R5 の FAIL/PASS 経路を System
 network/NOTION は元々不要 (オフライン lint) なので遮断不要。
 """
 import importlib.util
+import hashlib
 import json
 import subprocess
 import sys
@@ -121,7 +122,16 @@ def _good_schema():
         "feedback_protocol": {
             "command": "/run-skill-feedback",
             "firing_conditions": [],
-            "intake_fields": [],
+            "identification_step": {
+                "steps": [
+                    {"action": "open_question"},
+                    {"action": "scan_skills"},
+                    {"action": "match_and_confirm"},
+                    {"action": "read_spec"},
+                ],
+                "fallback": "対象を確定できなければ投入を中断する",
+            },
+            "intake_fields": [{"name": "要望タイトル"}],
             "status_lifecycle": [],
             "open_statuses": [],
             "promise_to_reporter": "",
@@ -135,11 +145,40 @@ def _patch_paths(monkeypatch, tmp_path, schema, skill_md_text, upsert_src, plugi
     sp = tmp_path / "skill-list.schema.json"
     sp.write_text(json.dumps(schema, ensure_ascii=False), encoding="utf-8")
     md = tmp_path / "SKILL.md"
-    md.write_text(skill_md_text, encoding="utf-8")
+    protocol = schema.get("feedback_protocol") or {}
+    canonical = json.dumps(
+        protocol,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    protocol_hash = hashlib.sha256(canonical.encode()).hexdigest()
+    md.write_text(
+        skill_md_text.replace("{{PROTOCOL_HASH}}", protocol_hash),
+        encoding="utf-8",
+    )
     up = tmp_path / "notion-upsert-plugin.py"
     up.write_text(upsert_src, encoding="utf-8")
+    command_prompt = tmp_path / "run-skill-feedback.md"
+    required_names = "|".join(
+        field["name"]
+        for field in protocol.get("intake_fields", [])
+        if field.get("required") is True
+    )
+    optional_names = "|".join(
+        field["name"]
+        for field in protocol.get("intake_fields", [])
+        if field.get("required") is not True
+    )
+    command_prompt.write_text(
+        f"feedback_protocol_sha256: {protocol_hash}\n"
+        f"required_intake_fields: {required_names}\n"
+        f"optional_intake_fields: {optional_names}\n",
+        encoding="utf-8",
+    )
     monkeypatch.setattr(MOD, "SCHEMA", sp)
     monkeypatch.setattr(MOD, "SKILL_MD", md)
+    monkeypatch.setattr(MOD, "COMMAND_PROMPT", command_prompt)
     monkeypatch.setattr(MOD, "UPSERT", up)
     monkeypatch.setattr(MOD, "PLUGINS_DIR", plugins or (tmp_path / "noplugins"))
     monkeypatch.setattr(sys, "argv", ["lint-feedback-protocol.py"])
@@ -147,6 +186,14 @@ def _patch_paths(monkeypatch, tmp_path, schema, skill_md_text, upsert_src, plugi
 
 _GOOD_MD = (
     "feedback_protocol を skill-list.schema.json で参照。\n"
+    "feedback_protocol_sha256: {{PROTOCOL_HASH}}\n"
+    "Step 1 — 目的を聞く\n"
+    "Step 2 — 全スキルを収集してマッチング\n"
+    "Step 3 — 候補を提示して確認\n"
+    "Step 4 — 対象スキルの現状仕様を提示\n"
+    "要望タイトル\n"
+    "required_intake_fields: \n"
+    "optional_intake_fields: 要望タイトル\n"
     "triggers:\n"
     "  - 分かりにくい\n"
     "  - 直してほしい\n"
@@ -188,6 +235,50 @@ def test_main_fails_on_R2_R3_R4_R5_together(tmp_path, monkeypatch, capsys):
     out = capsys.readouterr().out
     for rid in ("R2", "R3", "R4", "R5"):
         assert rid in out
+
+
+def test_main_fails_when_identification_fallback_is_not_fail_closed(tmp_path, monkeypatch, capsys):
+    schema = _good_schema()
+    schema["feedback_protocol"]["identification_step"]["fallback"] = (
+        "plugin='不明' として投入する"
+    )
+    _patch_paths(monkeypatch, tmp_path, schema, _GOOD_MD, _GOOD_UPSERT)
+
+    with pytest.raises(SystemExit) as exc:
+        MOD.main()
+
+    assert exc.value.code == 1
+    assert "R1" in capsys.readouterr().out
+
+
+def test_main_fails_when_skill_protocol_hash_is_stale(tmp_path, monkeypatch, capsys):
+    stale_md = _GOOD_MD.replace("{{PROTOCOL_HASH}}", "0" * 64)
+    _patch_paths(monkeypatch, tmp_path, _good_schema(), stale_md, _GOOD_UPSERT)
+
+    with pytest.raises(SystemExit) as exc:
+        MOD.main()
+
+    assert exc.value.code == 1
+    output = capsys.readouterr().out
+    assert "R3" in output and "hash" in output
+
+
+def test_main_fails_when_command_prompt_makes_exhaustive_review_mandatory(
+    tmp_path, monkeypatch, capsys
+):
+    _patch_paths(monkeypatch, tmp_path, _good_schema(), _GOOD_MD, _GOOD_UPSERT)
+    prompt = MOD.COMMAND_PROMPT.read_text(encoding="utf-8")
+    MOD.COMMAND_PROMPT.write_text(
+        prompt + "30 思考法は全種使用必須\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        MOD.main()
+
+    assert exc.value.code == 1
+    output = capsys.readouterr().out
+    assert "R3" in output and "exhaustive review" in output
 
 
 def test_main_strict_fails_on_R6_R7_warnings(tmp_path, monkeypatch, capsys):

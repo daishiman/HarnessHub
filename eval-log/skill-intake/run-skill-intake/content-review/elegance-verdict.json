@@ -2,27 +2,31 @@
   "target": {
     "plugin": "skill-intake",
     "skill": "run-skill-intake",
-    "skill_md_sha256": "b08fdc5849642d80f8cad7e1bb5bde3a0dcbef25ce687409a7a428088464c024"
+    "skill_md_sha256": "299f79876a6c6a3276b28511cac0da0b650b6ade67e694d5c2f3055bc27d5efc"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "independent-rename-review-subagent-g",
-  "reviewed_at": "2026-07-02T22:00:00+09:00",
+  "reviewer": "content-review-evaluator-subagent (assign-skill-design-evaluator 相当 / builder から独立起動, worktree wt-4)",
+  "reviewed_at": "2026-07-21T17:10:00+09:00",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "IN2", "OUT1"],
     "positive_feedback": [
-      "改名の意味論境界が正しく適用されている (C1/C3) — Phase 11 の引き渡し先呼称は harness-creator へ更新 (L119 『harness-creator 引き渡しモード判定済み』・Gotcha 8 L152 『harness-creator 引き渡し』) される一方、単一 skill 生成を指す run-skill-create / run-build-skill / capability-build は skill 表現を維持。ハーネス総体への引き渡し=harness、単一 skill 生成=skill の二分が一貫し、旧名 skill-creator/skill_creator/スキルクリエイター の残存 0 件を実測。",
-      "IN1 (manifest SSOT) — Key Rule 1/2・Gotcha 2/7・ゴールシークループが workflow-manifest.json phases[] を唯一の SSOT とし固定 Steps を本文へ複製しない設計を全文で一貫維持。改名は handoff 先の語のみに閉じ、この二重管理 drift 回避構造に影響を与えていない。",
-      "IN2 (hook 機械強制) / OUT1 (薄い orchestrator) — Key Rule 9 と Gotcha 8 がスキル生成 hard stop を『プロンプト層=意図説明 / hook-guard-skillgen.py (PreToolUse: exit 2)=機械強制』の二層に明確分離し保証主体を hook 層へ委ねる。業務ロジック非保持の委譲制御に限定する薄い orchestrator 設計が改名後も維持され、委譲先 7 Skill + 4 SubAgent が全実在 (dependency break 0)。"
+      "今回の修正 (reference_refs を ref-workflow-sequence / ref-handoff-contract → references/workflow-sequence.md / references/handoff-contract.md) が根本原因を最小差分で断っている。live-trial-verdict.py の behavior_closure_files() は『/ も . も含まない ref は <plugin>/skills/<ref>/SKILL.md へフォールバックし、無ければ ValueError』という解決規則であり、旧値はここで必ず失敗していた。旧 SKILL.md を git show で一時復元して skill_dir_tree_sha() を実行し ValueError: declared behavior dependency missing: ref-workflow-sequence を再現、現行では 0a65bdf8d0c3d2059d1c4a53191af46607b7a1856f2fd0307089e93b76471a73 が算出されることを実測した。digest 側の例外握り潰しではなく宣言側を直しており、対症療法になっていない。",
+      "OUT1 (薄い orchestrator) — 本文に質問雛形・採点基準・Notion blocks 生成といった業務ロジックが一切なく、Key Rule 1/2 と Gotchas 1/2/7 が『manifest が SSOT・業務ロジックは子 Skill/SubAgent/references に閉じる』を多重に固定している。委譲先は Skill 7 件 (run-intake-kickoff / interview / option-catalog / visualize / finalize / next-action / run-notion-intake-publish) と SubAgent 4 件 (assumption-challenger / user-profiler / purpose-excavator / summarizer) で、plugins/skill-intake/skills/ と plugins/skill-intake/agents/ に全て実在することを確認。橋渡しは handoff JSON 契約のみで、非エンジニアの曖昧要望から実装可能な intake 仕様までという目的への構造の写像に無理がない。",
+      "書き換えた 2 つの参照先が本文・manifest の説明と一致しており別物を指していない。references/workflow-sequence.md は 11 phase の Phase/種別/名前/入力/出力/失敗時の戻り先の表と SubAgent 化判断基準を持ち、Additional Resources の説明『11 phase の起動順序と前提 JSON 依存図 (人間向け)』と合致 (P1〜P11 の delegateType/delegateName を workflow-manifest.json と 11 件全件突合し drift 0)。references/handoff-contract.md は plugin-root 正本 (plugins/skill-intake/references/handoff-contract.md) への pointer で、各 phase の契約が委譲 skill の schemas/output.schema.json と manifest の outputSchemaId のどちらにあるかを示しており、複製禁止 invariant とも整合する。",
+      "manifest の resources[] は id (ref-handoff-contract / ref-workflow-sequence) → path (./references/*.md) の対応表を持つため、frontmatter が path 表記へ移っても同じ 2 ファイルへ収束する。id 空間 (manifest 内部) と behavior closure 宣言 (frontmatter) は層が異なり、表記の違いは矛盾ではない。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "改善余地 (非ブロッカー・今回変更に起因しない): references/keychain-setup.md と references/resource-map.yaml が reference_refs に未宣言。前者は完了チェックリスト Step 0 の exit 44 案内先として実行経路上で読まれる資産だが behavior closure に含まれないため、内容を変えても live-trial の再検証が発火しない。closure の網羅性としては宣言追加が望ましい。",
+      "改善余地 (非ブロッカー): 完了チェックリストが Phase 1〜11 の delegateName / delegateType を再掲しており manifest との軽度な二重記述になっている。今回突合して drift 0 は確認したが、IN1 の主旨 (二重管理 drift の回避) から見れば将来の drift 源にはなり得る。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual (team-lead からの run-skill-intake 再レビュー依頼により起動)",
     "next_action": "none"
   },
-  "notes": "harness-creator 改名 (skill-creator → harness-creator) に伴う SKILL.md 変更への独立 genuine 再評価。現 sha256=b08fdc5 を shasum -a 256 で実測 (旧 verdict sha=b2365dc は改名前で stale)。4条件検証: C1 矛盾0 (Key Rule 9 スキル生成禁止 / Gotcha 8 next-action は推奨 / チェックリスト末尾 生成非起動 が相互整合・引き渡し先=harness-creator と単一 skill 生成=run-skill-create の語の割当てが意味論境界に適合)。C2 漏れ0 (Purpose & Output Contract・Key Rules 9件・ゴールシーク・Gotchas 8件・Additional Resources 揃う)。C3 整合0 (harness-creator 呼称が L119/L152 で統一・旧名 grep 0・run-skill-create 等の単一 skill 概念は skill 維持)。C4 依存0 (委譲先 7 Skill+4 SubAgent・responsibility_refs/schema_refs 5件/references/workflow-manifest.json 全実在)。criteria IN1/IN2/OUT1 充足。重大問題なし PASS。"
+  "notes": "reference_refs 是正 (git diff で frontmatter 2 行のみの変更であることを確認) に対する builder 独立の elegance 評価。skill_md_sha256 は python3 hashlib で実測した 299f79876a6c6a3276b28511cac0da0b650b6ade67e694d5c2f3055bc27d5efc を記録 (既存 verdict の b08fdc58... は変更前の stale 値のため差し替え)。判断根拠は全て実測: (1) 旧 SKILL.md 復元時 skill_dir_tree_sha() は ValueError、現行は正常算出でき closure に SKILL.md / prompts/R1-main.md / references 2 件 / schemas 5 件 / .claude-plugin/plugin.json / hooks 5 件が入ることを列挙確認、(2) scripts/validate-frontmatter.py exit 0 (旧値は check_refs_exist の ^(ref|run|assign|wrap|delegate)-… 分岐で plugins/harness-creator/skills/ または .claude/skills/ を探すため MISSING_REF になる実装であることをコードで確認)、(3) scripts/lint-manifest-contents.py exit 0、(4) scripts/lint-external-refs.py exit 0 かつ run-skill-intake の指摘 0、(5) tests/test_skill_intake_guard_skillgen.py 14 passed。参照実体は plugins/skill-intake/skills/run-skill-intake/references/ 配下に workflow-sequence.md (2117B)・handoff-contract.md (993B) として実在。重大問題なし PASS。negative_feedback 2 件は今回の変更に起因しない既存の改善余地でブロッカーとしない。評価対象外だった観点 (実際の live-trial 実行、Notion 公開経路の動作確認) は本レビューでは行っていない。"
 }
