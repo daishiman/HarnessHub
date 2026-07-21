@@ -115,6 +115,7 @@
         "problemDetails",
         "problemDetailsFromZodError",
         "problemDetailsSchema",
+        "renderContractDocument",
         "semVerSchema",
         "tenantIdSchema",
         "toIsoDateTime",
@@ -147,19 +148,26 @@
         "InspectionStage",
         "InspectionTarget",
         "InspectionVerdict",
+        "KNOWN_PUBLIC_EXAMPLE_SECRETS",
         "PipelineDescriptor",
         "RuleFinding",
+        "SECRET_SCAN_ALLOW_MARKER",
+        "SecretMatchContext",
         "SecretScanRuleDefinition",
+        "createDefaultSecretScanRules",
         "createInspectionPipeline",
         "definePolicyRule",
         "defineSecretScanRule",
         "defineStaticValidationRule",
         "describePipeline",
         "inspect",
+        "isSuppressedSecretMatch",
         "maskSecret",
         "mergeVerdicts",
         "resolveVerdict",
         "runInspection",
+        "scanFilesForSecrets",
+        "secretScanExitCode",
         "severityRank",
         "verdictRank",
         "withRules"
@@ -224,22 +232,14 @@
         "DatabaseAdapter",
         "DatabaseDriver",
         "DriverNotSupportedError",
-        "DrizzleSchema",
         "EntityNotFoundError",
         "MAX_PAGE_SIZE",
-        "Page",
-        "PageRequest",
-        "QueryCriteria",
-        "QueryFilter",
         "ReadOnlyRepository",
         "Repository",
-        "RepositoryContext",
         "RepositoryContextInput",
         "RepositoryError",
         "RepositoryErrorCode",
         "RepositoryFactory",
-        "SortDirection",
-        "SortSpec",
         "TransactionalAdapter",
         "assertSupportedDriver",
         "createRepositoryContext",
@@ -251,7 +251,8 @@
       ],
       "public_api_entry": "packages/db/src/index.ts",
       "consumers": [
-        "apps/hub"
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
       ],
       "boundary_only": true
     },
@@ -278,7 +279,8 @@
       ],
       "public_api_entry": "apps/hub/src/middleware/index.ts",
       "consumers": [
-        "apps/hub"
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
       ],
       "boundary_only": false
     },
@@ -299,7 +301,8 @@
       ],
       "public_api_entry": "apps/hub/src/shared/auth/index.ts",
       "consumers": [
-        "apps/hub"
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
       ],
       "boundary_only": false
     },
@@ -322,7 +325,8 @@
       ],
       "public_api_entry": "apps/hub/src/shared/audit/index.ts",
       "consumers": [
-        "apps/hub"
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
       ],
       "boundary_only": false
     },
@@ -346,7 +350,8 @@
       ],
       "public_api_entry": "apps/hub/src/shared/aijob/index.ts",
       "consumers": [
-        "apps/hub"
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
       ],
       "boundary_only": false
     },
@@ -367,7 +372,8 @@
       ],
       "public_api_entry": "apps/hub/src/shared/notification/index.ts",
       "consumers": [
-        "apps/hub"
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
       ],
       "boundary_only": false
     },
@@ -390,7 +396,8 @@
       ],
       "public_api_entry": "apps/hub/src/shared/pii/index.ts",
       "consumers": [
-        "apps/hub"
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
       ],
       "boundary_only": false
     },
@@ -413,7 +420,8 @@
       ],
       "public_api_entry": "apps/hub/src/shared/telemetry/index.ts",
       "consumers": [
-        "apps/hub"
+        "apps/hub",
+        "apps/hub/tests/fixtures/consumer-a"
       ],
       "boundary_only": false
     }

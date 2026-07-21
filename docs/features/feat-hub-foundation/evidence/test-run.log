@@ -1,49 +1,47 @@
 Scope: 6 of 7 workspace projects
-packages/db test$ vitest run
 packages/estimation test$ vitest run
 packages/inspection test$ vitest run
+packages/db test$ vitest run
 packages/schemas test$ vitest run
-packages/inspection test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/packages/inspection
-packages/db test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/packages/db
-packages/estimation test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/packages/estimation
 packages/schemas test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/packages/schemas
-packages/db test:  ✓ src/context.test.ts (5 tests) 17ms
-packages/db test:  ✓ src/adapter.test.ts (5 tests) 14ms
-packages/db test:  ✓ src/repository.test.ts (7 tests) 21ms
-packages/inspection test:  ✓ src/verdict.test.ts (6 tests) 42ms
-packages/estimation test:  ✓ src/seats.test.ts (7 tests) 12ms
-packages/estimation test:  ✓ src/validation.test.ts (18 tests) 19ms
-packages/estimation test:  ✓ src/estimate.test.ts (14 tests) 24ms
+packages/db test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/packages/db
+packages/inspection test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/packages/inspection
+packages/estimation test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/packages/estimation
+packages/db test:  ✓ src/repository.test.ts (7 tests) 24ms
+packages/db test:  ✓ src/adapter.test.ts (5 tests) 26ms
+packages/estimation test:  ✓ src/seats.test.ts (7 tests) 13ms
+packages/estimation test:  ✓ src/validation.test.ts (18 tests) 24ms
+packages/db test:  ✓ src/context.test.ts (5 tests) 23ms
+packages/estimation test:  ✓ src/estimate.test.ts (14 tests) 31ms
 packages/db test:  Test Files  3 passed (3)
 packages/db test:       Tests  17 passed (17)
-packages/db test:    Start at  08:46:53
-packages/db test:    Duration  4.37s (transform 986ms, setup 0ms, collect 1.21s, tests 52ms, environment 0ms, prepare 1.60s)
-packages/inspection test:  ✓ src/rules.test.ts (9 tests) 27ms
+packages/db test:    Start at  11:17:28
+packages/db test:    Duration  6.75s (transform 1.74s, setup 0ms, collect 2.66s, tests 73ms, environment 1ms, prepare 3.06s)
+packages/inspection test:  ✓ src/verdict.test.ts (6 tests) 26ms
 packages/estimation test:  Test Files  3 passed (3)
 packages/estimation test:       Tests  39 passed (39)
-packages/estimation test:    Start at  08:46:53
-packages/estimation test:    Duration  4.46s (transform 997ms, setup 0ms, collect 1.76s, tests 55ms, environment 0ms, prepare 1.49s)
-packages/inspection test:  ✓ src/pipeline.test.ts (10 tests) 194ms
-packages/inspection test:  Test Files  3 passed (3)
-packages/inspection test:       Tests  25 passed (25)
-packages/inspection test:    Start at  08:46:53
-packages/inspection test:    Duration  4.66s (transform 1.32s, setup 0ms, collect 1.93s, tests 263ms, environment 1ms, prepare 1.62s)
-packages/schemas test:  ✓ src/contract-drift.test.ts (4 tests) 55ms
-packages/schemas test:  ✓ src/envelope.test.ts (14 tests) 61ms
-packages/schemas test:  ✓ src/health.test.ts (21 tests) 38ms
-packages/schemas test:  ✓ src/openapi.test.ts (10 tests) 76ms
-packages/schemas test:  ✓ src/primitives.test.ts (33 tests) 143ms
-packages/schemas test:  Test Files  5 passed (5)
-packages/schemas test:       Tests  82 passed (82)
-packages/schemas test:    Start at  08:46:53
-packages/schemas test:    Duration  5.12s (transform 2.64s, setup 0ms, collect 5.72s, tests 373ms, environment 1ms, prepare 2.43s)
+packages/estimation test:    Start at  11:17:28
+packages/estimation test:    Duration  6.87s (transform 2.11s, setup 0ms, collect 4.50s, tests 68ms, environment 1ms, prepare 4.21s)
+packages/inspection test:  ✓ src/rules.test.ts (9 tests) 51ms
+packages/inspection test:  ✓ src/secret-scan-fs.test.ts (6 tests) 47ms
+packages/schemas test:  ✓ src/health.test.ts (21 tests) 33ms
+packages/inspection test:  ✓ src/pipeline.test.ts (10 tests) 195ms
+packages/inspection test:  ✓ src/secret-scan-preset.test.ts (18 tests) 163ms
+packages/schemas test:  ✓ src/contract-drift.test.ts (4 tests) 109ms
+packages/schemas test:  ✓ src/envelope.test.ts (14 tests) 111ms
+packages/schemas test:  ✓ src/primitives.test.ts (33 tests) 67ms
+packages/schemas test:  ✓ src/openapi.test.ts (10 tests) 144ms
+packages/inspection test:  ✓ src/secret-scan-gate.test.ts (2 tests) 56ms
+packages/inspection test:  Test Files  6 passed (6)
+packages/inspection test:       Tests  51 passed (51)
+packages/inspection test:    Start at  11:17:28
+packages/inspection test:    Duration  7.56s (transform 3.43s, setup 0ms, collect 9.20s, tests 537ms, environment 1ms, prepare 6.48s)
 packages/db test: Done
 packages/ui test$ vitest run
-packages/inspection test: Done
 packages/estimation test: Done
-packages/schemas test: Done
+packages/inspection test: Done
 packages/ui test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/packages/ui
-packages/ui test:  ✓ src/i18n/i18n.test.tsx (15 tests) 275ms
+packages/ui test:  ✓ src/i18n/i18n.test.tsx (15 tests) 514ms
 packages/ui test: stderr | src/a11y/axe.test.tsx > HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > Button
 packages/ui test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 packages/ui test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -56,6 +54,8 @@ packages/ui test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/ta
 packages/ui test:     at Array.some (<anonymous>)
 packages/ui test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 packages/ui test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
+packages/ui test:  ✓ src/theme/UiProvider.test.tsx (7 tests) 1222ms
+packages/ui test:    ✓ UiProvider > テーマ・密度・言語を切り替えられる  620ms
 packages/ui test: stderr | src/a11y/axe.test.tsx > HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > TextInput
 packages/ui test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 packages/ui test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -68,8 +68,9 @@ packages/ui test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/ta
 packages/ui test:     at Array.some (<anonymous>)
 packages/ui test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 packages/ui test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
-packages/ui test:  ✓ src/theme/UiProvider.test.tsx (7 tests) 781ms
-packages/ui test:    ✓ UiProvider > テーマ・密度・言語を切り替えられる  432ms
+packages/ui test:  ✓ src/components/feedback.test.tsx (16 tests) 1399ms
+packages/ui test:    ✓ ProgressBar > 進捗値を読み上げ可能な形で持つ  541ms
+packages/ui test:    ✓ ToastProvider / useToast > showToast で通知を表示し、閉じるで消える  414ms
 packages/ui test: stderr | src/a11y/axe.test.tsx > HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > TextInput (エラー時)
 packages/ui test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 packages/ui test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -82,8 +83,8 @@ packages/ui test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/ta
 packages/ui test:     at Array.some (<anonymous>)
 packages/ui test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 packages/ui test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
-packages/ui test:  ✓ src/components/feedback.test.tsx (16 tests) 911ms
-packages/ui test:  ✓ src/components/forms.test.tsx (18 tests) 930ms
+packages/ui test:  ✓ src/components/forms.test.tsx (18 tests) 1681ms
+packages/ui test:    ✓ Button > 既定の type は button (フォームの誤送信を防ぐ)  538ms
 packages/ui test: stderr | src/a11y/axe.test.tsx > HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > Select
 packages/ui test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 packages/ui test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -96,8 +97,12 @@ packages/ui test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/ta
 packages/ui test:     at Array.some (<anonymous>)
 packages/ui test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 packages/ui test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
-packages/ui test:  ✓ src/charts/charts.test.tsx (16 tests) 1159ms
-packages/ui test:    ✓ LineChart > 「表で見る」で同じデータを表として出す  367ms
+packages/ui test:  ✓ src/components/Markdown.test.tsx (14 tests) 2004ms
+packages/ui test:    ✓ MarkdownView の基本描画 > 見出しと段落を描画する  526ms
+packages/ui test:    ✓ MarkdownEditor > 入力を onValueChange へ通知する  449ms
+packages/ui test:  ✓ src/charts/charts.test.tsx (16 tests) 1809ms
+packages/ui test:    ✓ LineChart > 図として読み上げ用の要約を持つ  489ms
+packages/ui test:    ✓ LineChart > 「表で見る」で同じデータを表として出す  629ms
 packages/ui test: stderr | src/a11y/axe.test.tsx > HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > Textarea
 packages/ui test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 packages/ui test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -110,8 +115,6 @@ packages/ui test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/ta
 packages/ui test:     at Array.some (<anonymous>)
 packages/ui test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 packages/ui test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
-packages/ui test:  ✓ src/components/Markdown.test.tsx (14 tests) 1182ms
-packages/ui test:    ✓ MarkdownView の基本描画 > 見出しと段落を描画する  303ms
 packages/ui test: stderr | src/a11y/axe.test.tsx > HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > DataTable
 packages/ui test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 packages/ui test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -148,9 +151,12 @@ packages/ui test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/ta
 packages/ui test:     at Array.some (<anonymous>)
 packages/ui test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 packages/ui test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
-packages/ui test:  ✓ src/components/DataTable.test.tsx (15 tests) 1584ms
-packages/ui test:    ✓ DataTable > caption で表の目的を伝える  313ms
-packages/ui test:    ✓ DataTable > 押すたびに昇順→降順を切り替え、aria-sort に反映する  317ms
+packages/ui test:  ✓ src/components/DataTable.test.tsx (15 tests) 2557ms
+packages/ui test:    ✓ DataTable > caption で表の目的を伝える  542ms
+packages/ui test:    ✓ DataTable > 押すたびに昇順→降順を切り替え、aria-sort に反映する  510ms
+packages/ui test:  ✓ src/components/navigation.test.tsx (26 tests) 2692ms
+packages/ui test:    ✓ Tabs > tablist / tab / tabpanel の関係を組む  645ms
+packages/ui test:    ✓ Tabs > 矢印キーで移動できる  420ms
 packages/ui test: stderr | src/a11y/axe.test.tsx > HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > StatusChip
 packages/ui test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 packages/ui test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -163,8 +169,6 @@ packages/ui test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/ta
 packages/ui test:     at Array.some (<anonymous>)
 packages/ui test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 packages/ui test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
-packages/ui test:  ✓ src/components/navigation.test.tsx (26 tests) 1827ms
-packages/ui test:    ✓ Tabs > tablist / tab / tabpanel の関係を組む  303ms
 packages/ui test: stderr | src/a11y/axe.test.tsx > HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > ScopeChip
 packages/ui test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 packages/ui test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -357,36 +361,47 @@ packages/ui test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/ta
 packages/ui test:     at Array.some (<anonymous>)
 packages/ui test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 packages/ui test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
-packages/ui test:  ✓ src/a11y/axe.test.tsx (29 tests) 2489ms
-packages/ui test:    ✓ HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > Button  469ms
-packages/ui test:  ✓ src/charts/scale.test.ts (17 tests) 20ms
-packages/ui test:  ✓ src/tokens/tokens.test.ts (79 tests) 28ms
-packages/ui test:  ✓ src/tokens/contrast.test.ts (13 tests) 19ms
+packages/ui test:  ✓ src/a11y/axe.test.tsx (29 tests) 3644ms
+packages/ui test:    ✓ HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > Button  711ms
+packages/ui test:    ✓ HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > TextInput  428ms
+packages/ui test:    ✓ HF-QA-A11Y-001: 部品単体の axe 違反が 0 件 > TextInput (エラー時)  386ms
+packages/ui test:  ✓ src/tokens/tokens.test.ts (79 tests) 36ms
+packages/ui test:  ✓ src/charts/scale.test.ts (17 tests) 250ms
+packages/ui test:  ✓ src/tokens/contrast.test.ts (13 tests) 74ms
 packages/ui test:  Test Files  12 passed (12)
 packages/ui test:       Tests  265 passed (265)
-packages/ui test:    Start at  08:46:59
-packages/ui test:    Duration  6.63s (transform 2.38s, setup 4.66s, collect 10.64s, tests 11.21s, environment 11.57s, prepare 2.82s)
+packages/ui test:    Start at  11:17:38
+packages/ui test:    Duration  12.04s (transform 3.50s, setup 6.23s, collect 20.21s, tests 17.88s, environment 24.44s, prepare 4.65s)
 packages/ui test: Done
+packages/schemas test:  ✓ src/contract-drift-gate.test.ts (4 tests) 16983ms
+packages/schemas test:    ✓ G8 drift 検査の実効性 > commit 済み snapshot と一致していれば exit 0  7310ms
+packages/schemas test:    ✓ G8 drift 検査の実効性 > snapshot が生成物と食い違えば非ゼロ終了する (fail-closed)  5656ms
+packages/schemas test:    ✓ G8 drift 検査の実効性 > snapshot が欠けていても黙って通さない  3997ms
+packages/schemas test:  Test Files  6 passed (6)
+packages/schemas test:       Tests  86 passed (86)
+packages/schemas test:    Start at  11:17:28
+packages/schemas test:    Duration  24.15s (transform 3.36s, setup 0ms, collect 10.41s, tests 17.45s, environment 6ms, prepare 6.68s)
+packages/schemas test: Done
 apps/hub test$ vitest run
 apps/hub test:  RUN  v3.2.7 /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/apps/hub
 apps/hub test: [pnpm-only] NG: 1 件の違反を検出しました
 apps/hub test:   - [packagemanager-not-pinned] package.json: packageManager が pnpm@ で pin されていない (現在値: 未設定)
-apps/hub test:  ✓ tests/shared-layers/contract.estimation.test.ts (6 tests) 37ms
-apps/hub test:  ✓ tests/shared-layers/contract.inspection.test.ts (8 tests) 48ms
-apps/hub test:  ✓ tests/shared-layers/contract.schemas.test.ts (5 tests) 36ms
-apps/hub test:  ✓ tests/health/health.route.test.ts (8 tests) 73ms
+apps/hub test:  ✓ tests/shared-layers/contract.db.test.ts (6 tests) 91ms
+apps/hub test:  ✓ tests/shared-layers/contract.schemas.test.ts (5 tests) 63ms
+apps/hub test:  ✓ tests/shared-layers/contract.inspection.test.ts (8 tests) 96ms
 apps/hub test: [pnpm-only] NG: 1 件の違反を検出しました
 apps/hub test:   - [packagemanager-not-pinned] package.json: packageManager が pnpm@ で pin されていない (現在値: npm@10.0.0)
+apps/hub test:  ✓ tests/health/health.route.test.ts (15 tests) 204ms
 apps/hub test: [pnpm-only] NG: 1 件の違反を検出しました
 apps/hub test:   - [forbidden-lockfile] apps/hub/package-lock.json: pnpm 以外のパッケージマネージャの lockfile が混入している
+apps/hub test:  ✓ tests/shared-layers/contract.in-app-layers.test.ts (26 tests) 217ms
 apps/hub test: [pnpm-only] NG: 1 件の違反を検出しました
 apps/hub test:   - [forbidden-lockfile] apps/hub/npm-shrinkwrap.json: pnpm 以外のパッケージマネージャの lockfile が混入している
-apps/hub test:  ✓ tests/shared-layers/ownership.test.ts (5 tests) 14ms
 apps/hub test: [pnpm-only] NG: 1 件の違反を検出しました
 apps/hub test:   - [forbidden-lockfile] apps/hub/yarn.lock: pnpm 以外のパッケージマネージャの lockfile が混入している
+apps/hub test:  ✓ tests/shared-layers/ownership.test.ts (6 tests) 113ms
 apps/hub test: [pnpm-only] NG: 1 件の違反を検出しました
 apps/hub test:   - [forbidden-lockfile] apps/hub/bun.lockb: pnpm 以外のパッケージマネージャの lockfile が混入している
-apps/hub test:  ✓ tests/shared-layers/contract.ui.test.ts (4 tests) 28ms
 apps/hub test: [duplicate-detector] NG: 重複実装 4 件を検出しました
 apps/hub test:   - [owner-outside-implementation] apps/hub/src/violation.ts: 登録共通層 ui-design-system の公開 API と同名の export が owner package 外に存在する
 apps/hub test:   - [boundary-bypass-deep-import] apps/hub/src/deep-import.ts: @harness-hub/ui を package 名ではなく deep import で参照している: from '@harness-hub/ui/src/components/internal'
@@ -394,10 +409,14 @@ apps/hub test:   - [owner-outside-implementation] apps/hub/src/duplicated-schema
 apps/hub test:   - [boundary-bypass-deep-import] apps/hub/src/duplicated-schema.ts: @harness-hub/schemas を package 名ではなく deep import で参照している: from '@harness-hub/schemas/src/health.js'
 apps/hub test:   例外は scripts/ci/shared-layer-registry.json (docs/shared-layers.md の登録簿) の変更のみを正式経路とします。
 apps/hub test:  ✓ tests/security/authz-deny-by-default.test.ts (10 tests) 20ms
-apps/hub test:  ✓ tests/ci/pnpm-only.test.ts (8 tests) 1845ms
-apps/hub test:    ✓ HF-A1-CI-002: 他パッケージマネージャの lockfile 混入検出 > yarn.lock を混入させると非ゼロ終了する  347ms
-apps/hub test:  ✓ tests/shared-layers/duplicate-detector.test.ts (6 tests) 805ms
-apps/hub test:    ✓ HF-A4-DUP-002: detector が意図的違反を検出する > 既定の走査では fixture の違反を拾わない (本番ゲートを汚染しない)  783ms
+apps/hub test:  ✓ tests/shared-layers/contract.estimation.test.ts (6 tests) 46ms
+apps/hub test:  ✓ tests/ci/pnpm-only.test.ts (8 tests) 2189ms
+apps/hub test:    ✓ HF-A1-CI-002: 他パッケージマネージャの lockfile 混入検出 > package-lock.json を混入させると非ゼロ終了する  303ms
+apps/hub test:    ✓ HF-A1-CI-002: 他パッケージマネージャの lockfile 混入検出 > 実リポジトリの現状は違反 0 件である  453ms
+apps/hub test:  ✓ tests/worker/cron.test.ts (13 tests) 25ms
+apps/hub test:  ✓ tests/shared-layers/duplicate-detector.test.ts (6 tests) 1482ms
+apps/hub test:    ✓ HF-A4-DUP-002: detector が意図的違反を検出する > 既定の走査では fixture の違反を拾わない (本番ゲートを汚染しない)  1456ms
+apps/hub test:  ✓ tests/shared-layers/contract.ui.test.ts (4 tests) 20ms
 apps/hub test: stderr | tests/a11y/hub-screens.spec.ts > apps/hub 画面結合の a11y > トップ画面 (layout + page) に axe 違反が無い
 apps/hub test: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 apps/hub test:     at module.exports (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
@@ -410,18 +429,18 @@ apps/hub test:     at /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-
 apps/hub test:     at Array.some (<anonymous>)
 apps/hub test:     at hasRealTextChildren (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28287:35)
 apps/hub test:     at Rule.colorContrastMatches [as matches] (/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203311-wt-2/node_modules/axe-core/axe.js:28249:12) [90mundefined[39m
-apps/hub test:  ✓ tests/a11y/hub-screens.spec.ts (2 tests) 447ms
-apps/hub test:    ✓ apps/hub 画面結合の a11y > トップ画面 (layout + page) に axe 違反が無い  414ms
+apps/hub test:  ✓ tests/a11y/hub-screens.spec.ts (2 tests) 376ms
+apps/hub test:    ✓ apps/hub 画面結合の a11y > トップ画面 (layout + page) に axe 違反が無い  340ms
 apps/hub test: [bundle] 予算超過: 0.022 MiB (23234 bytes) > 0.001 MiB (1024 bytes)
 apps/hub test: [bundle] コード分割・依存削減で対処してください (quality_constraints: worker-bundle-budget)
 apps/hub test: [bundle] 計測対象が見つかりません: /var/folders/35/t3gvbkdd2w55yk8csmzskzrw0000gn/T/hub-bundle-does-not-exist
 apps/hub test: [bundle] 先に `pnpm --filter @harness-hub/hub run build:worker` を実行してください
 apps/hub test: [bundle] 予算超過: 0.022 MiB (23234 bytes) > 0.001 MiB (1024 bytes)
 apps/hub test: [bundle] コード分割・依存削減で対処してください (quality_constraints: worker-bundle-budget)
-apps/hub test:  ✓ tests/ci/bundle-budget.test.ts (5 tests) 4598ms
-apps/hub test:    ✓ bundle 予算ゲート > Worker bundle が gzip 後 3MiB 以内である  3988ms
-apps/hub test:  Test Files  11 passed (11)
-apps/hub test:       Tests  67 passed (67)
-apps/hub test:    Start at  08:47:07
-apps/hub test:    Duration  5.96s (transform 2.91s, setup 0ms, collect 9.07s, tests 7.95s, environment 706ms, prepare 3.03s)
+apps/hub test:  ✓ tests/ci/bundle-budget.test.ts (5 tests) 5814ms
+apps/hub test:    ✓ bundle 予算ゲート > Worker bundle が gzip 後 3MiB 以内である  5165ms
+apps/hub test:  Test Files  14 passed (14)
+apps/hub test:       Tests  120 passed (120)
+apps/hub test:    Start at  11:17:53
+apps/hub test:    Duration  7.88s (transform 4.32s, setup 0ms, collect 12.02s, tests 10.76s, environment 1.44s, prepare 4.20s)
 apps/hub test: Done

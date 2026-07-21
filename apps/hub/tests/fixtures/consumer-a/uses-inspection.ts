@@ -29,7 +29,7 @@ export const sharedRules: readonly InspectionRule[] = [
   defineStaticValidationRule({
     id: 'manifest-name-required',
     evaluate: (target) =>
-      typeof target.metadata['name'] === 'string' && target.metadata['name'] !== ''
+      typeof target.metadata.name === 'string' && target.metadata.name !== ''
         ? []
         : [{ message: 'manifest の name が未指定です' }],
   }),

@@ -4,6 +4,9 @@
 // requirements-baseline §4.2 A4-1 は「§8 登録簿の**全**共通層について consumer 2 系統以上」を要求する。
 // 従来 contract test は package 化された 4 層しか見ておらず、判定範囲が要件の 1/3 だった (P10 指摘 F-06)。
 
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { authorize, isPublicPath, PUBLIC_PATH_PREFIXES, resolveRequestedScope } from '../../src/middleware/index.js';
 import { createAiJobQueue } from '../../src/shared/aijob/index.js';
@@ -39,6 +42,22 @@ const LAYERS = {
  */
 const WIRED_IN_APP_LAYERS: readonly (keyof typeof LAYERS)[] = ['authz-middleware', 'auth-adapter'];
 
+const REGISTRY_PATH = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../../../../scripts/ci/shared-layer-registry.json',
+);
+
+interface RegistryLayer {
+  id: string;
+  app_wiring?: string;
+}
+
+/** 登録簿で `app_wiring: pending` (= apps/hub 本体に呼び出し元が無い) と宣言されている層。 */
+function pendingLayersInRegistry(): string[] {
+  const registry = JSON.parse(readFileSync(REGISTRY_PATH, 'utf8')) as { layers: RegistryLayer[] };
+  return registry.layers.filter((layer) => layer.app_wiring === 'pending').map((layer) => layer.id);
+}
+
 describe('contract: apps/hub 内 owner の共通層', () => {
   it('全 7 層が consumer-a fixture (第 2 系統) から公開入口経由で参照されている', () => {
     const missing = Object.entries(LAYERS).filter(([, dir]) => inAppEntryImports(CONSUMER_A, dir).length === 0);
@@ -66,6 +85,13 @@ describe('contract: apps/hub 内 owner の共通層', () => {
 
     // 一致しなくなったら「結線が進んだ」か「結線が消えた」のどちらか。どちらも申告なしに通してはいけない
     expect(wired.sort()).toStrictEqual([...WIRED_IN_APP_LAYERS].sort());
+  });
+
+  it('登録簿の app_wiring: pending 宣言が実際の未結線状態と一致する', () => {
+    // 登録簿 (宣言) と ソース走査 (実測) が食い違ったまま緑にならないよう突き合わせる。
+    // 結線したのに pending を外し忘れる / 外したのに結線が無い、のどちらもここで落ちる。
+    const unwired = Object.keys(LAYERS).filter((id) => !WIRED_IN_APP_LAYERS.includes(id as keyof typeof LAYERS));
+    expect(pendingLayersInRegistry().sort()).toStrictEqual(unwired.sort());
   });
 });
 
@@ -184,20 +210,20 @@ describe('contract: pii-guard', () => {
 
   it('admin 以外には要保護属性を返さない', () => {
     const forMember = usesPii.maskForViewer(usesPii.memberViewer);
-    expect(forMember['salary']).toBe(PII_MASK);
-    expect(forMember['passwordHash']).toBe(PII_MASK);
+    expect(forMember.salary).toBe(PII_MASK);
+    expect(forMember.passwordHash).toBe(PII_MASK);
     // policy に載っていない属性はそのまま通る
-    expect(forMember['displayName']).toBe('山田');
+    expect(forMember.displayName).toBe('山田');
   });
 
   it('admin でも never_exposed は返さない', () => {
     const forAdmin = usesPii.maskForViewer(usesPii.adminViewer);
-    expect(forAdmin['salary']).toBe(6_000_000);
-    expect(forAdmin['passwordHash']).toBe(PII_MASK);
+    expect(forAdmin.salary).toBe(6_000_000);
+    expect(forAdmin.passwordHash).toBe(PII_MASK);
   });
 
   it('export では閲覧者に関わらず全てマスクする', () => {
-    expect(usesPii.maskForExport()['salary']).toBe(PII_MASK);
+    expect(usesPii.maskForExport().salary).toBe(PII_MASK);
   });
 });
 
