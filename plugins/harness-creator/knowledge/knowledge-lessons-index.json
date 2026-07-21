@@ -169,6 +169,8 @@
     {
       "id": "lessons-index_009",
       "title": "[auto] PostToolUse:Skill 失敗 — | FM-005 | low (-3) | FAIL |",
+      "intent": "評価失敗パターンを知見ストアへ蓄積し、human triage と再発防止の入力として保持すること",
+      "background": "PostToolUse:Skill フックが評価失敗を自動検知して記録した未 triage エントリ。検知内容: PostToolUse:Skill 失敗 — | FM-005 | low (-3) | FAIL |。根本原因は human triage 待ち。",
       "keywords": [
         "PostToolUse",
         "Skill",
