@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-render",
     "component_id": "C05",
-    "skill_md_sha256": "da9113c9c03ede0ddcba41ac7046e73b312d7fb3b5e04964ac76d0c16a8bca6d"
+    "skill_md_sha256": "e31e1245beaec6ad6b62b0079d0108db03532c40a82ea071bf039eefca4eebf6"
   },
   "verdict": "PASS",
-  "reviewer": "audit-sync-render-20260720",
+  "reviewer": "criteria-test-render-out1-r9-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -20,20 +20,20 @@
         "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_render_scope_containment_and_registration_receipt",
         "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_render_task_scope_adds_parent_without_siblings"
       ],
-      "observed": "Independent audit confirmed canonical receipt digest/count/node/source-lineage checks, repository-contained input/output, feature descendants, task parent without siblings, and dependency closure. Emitted HTML has inline SVG/CSS/JS with zero external script/link/http(s) references while graph input bytes remain unchanged."
+      "observed": "Independent audit confirmed canonical receipt digest/count/node/source-lineage checks, repository-contained input/output, feature descendants, task parent without siblings, and dependency closure. Emitted HTML has inline SVG/CSS/JS with zero external script/link/http(s) references while graph input bytes remain unchanged. 追加検証 (r9): 生成 HTML の外部 http 参照 0 件・<script src / <link 0 件を実測し、graph の 15 node id が欠落なく HTML 内に存在すること (MISSING: []) と edge 12 本を確認した。"
     },
     "OUT1": {
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "render-feature-progress-positive",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260713T090000-r3/verdict.json",
+      "scenario_id": "render-out1-total-matches-expected",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T054040-r9/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260713T090000-r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260713T090000-r3/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T054040-r9/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T054040-r9/transcript.jsonl",
         "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_render_scope_containment_and_registration_receipt"
       ],
-      "observed": "Recorded live trial remains PASS for browser-renderable SVG and feature X/Y progress. Current integration test rendered an exact-13 feature with progress 4/13 from a canonical registration receipt, excluded out-of-scope nodes, and preserved a self-contained output with stable input digest."
+      "observed": "live-trial 20260722T054040-r9 (overall PASS / goal_fit PASS / blockers 0 / nudge 0) で OUT1 を実走検証した。fixture r9-render は validate-graph-schema.py が valid:true / violations 0 を返す正規状態で、registration receipt の graph_digest_after が現 graph の canonical sha256 と一致している (applied_count=expected_count=13)。render 出力の feature_progress.by_feature は {\"done\": 0, \"total\": 13} で、総数 Y=13 が receipt の applied_count/expected_count と一致する (改訂後 OUT1 は done 数 X の一致を求めない)。render-metadata.registration は非 null で source_digest が receipt と一致し、HTML は外部 script/link 参照 0 件・self_contained:true。実ブラウザでの目視は環境上不可のため未実施であり、単一ファイル完結と外部依存 0 を IN1/V5 の実測で代替した。実行前後で fixture の graph.json/receipt/13 子 task md の sha256 は不変。"
     }
   }
 }
