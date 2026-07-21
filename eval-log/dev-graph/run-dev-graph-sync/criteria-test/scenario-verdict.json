@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260713T090000-r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T120000-r7/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260713T090000-r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260713T090000-r3/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T120000-r7/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T120000-r7/transcript.jsonl",
         "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_three_way_apply_second_pass_zero_and_tombstone"
       ],
-      "observed": "Recorded live trial remains PASS for two-pass convergence. The 2026-07-20 independent audit and current integration test additionally confirmed the second apply reports changes=0/write_count=0, leaves the snapshot digest unchanged, and a following dry-run has imports/exports/pending_retry all empty."
+      "observed": "The 2026-07-21 live trial invoked the target Skill, delegated R3-sync to an Agent, saved apply and verification-dry-run receipts, and passed a separate fresh evaluator. The second pass reports changes=0/write_count=0 with imports/exports/pending_retry empty; canonical sync-snapshot state matches the remote title and issue/project/item IDs remain stable."
     },
     "OUT2": {
       "status": "PASS",
