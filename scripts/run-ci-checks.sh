@@ -50,6 +50,7 @@ run "lint-external-refs"                   python3 scripts/lint-external-refs.py
 run "lint-feedback-protocol --strict"      python3 scripts/lint-feedback-protocol.py --strict
 run "lint-content-review (all)"            python3 scripts/lint-content-review.py --all
 run "lint-live-trial-verdict (all)"        python3 scripts/lint-live-trial-verdict.py --all
+run "live-trial digest provenance"         python3 scripts/lint-live-trial-verdict.py --check-provenance origin/main
 run "lint-feedback-contract (all)"         python3 scripts/lint-feedback-contract.py --all
 run "lint-vendored-ssot"                   python3 scripts/lint-vendored-ssot.py
 run "lint-legacy-plugin-name"              python3 scripts/lint-legacy-plugin-name.py
