@@ -121,3 +121,11 @@ published feature package は 2 層に分かれている。`.dev-graph/plans/gen
   - **docs/features (living docs)**: 世代非依存 `--feature-package` 形式へ 7 件反映 (feat-hub-foundation と feat-stage0-distribution-gate の ADR・requirements-baseline・design-review-notes・test-design)。evidence/acceptance-record/test-run-results/implementation-notes は「旧世代 byte-for-byte 不変」原則により凍結証跡として対象外。
   - **tasks/ projection**: 195 spec の `## 実行契約` へ世代非依存 rerun 行を配線済み。
 - **結論**: 受入条件を全件実測で満たし、製品仕様への影響なし・メタツール契約と docs/tasks への反映完了。
+
+## CI 状態と kj1 依存 (2026-07-22 追記)
+
+PR #35 の CI 是正過程で以下を確定した。
+
+- **私の PR が導入した失敗は解消済み**: (1) lint-script-naming の新規2 script verb 違反 → ALLOWED_VERBS 準拠へ rename、(2) rename に伴う content-review verdict の stale-sha → 独立 SubAgent で genuine 再評価。
+- **main の既存赤に追随**: main は PR #22 (9227058d) で dev-graph live-trial の behavior closure が stale 化し governance-check / kit-ci が赤化していた。チームは PR #37 (`revert-22-restore-green`, main=84ee746) で PR #22 を revert し main を緑へ復帰。本 PR も最新 main を merge し追随した。これで naming / content-review / live-trial provenance / verify 該当テストは解消。
+- **残る blocker = HarnessHub-kj1**: 本 PR の generation-lineage 変更 (`validate-source-digest.py` / `validate-system-plan.py` / `feature-execution-package-contract.md`) は dev-graph 4 skill (node/requirements/decompose/system-spec) の declared refs に含まれるため、その live-trial behavior closure を bump し verdict を stale 化する。これは kj1「generation lineage 是正で dev-graph 4 skill の live-trial 証跡が stale」の定義そのもの。**再 trial は PR #22 revert で live-trial fixture の shape 定義 (`live_trial_shapes/*`) が削除され node/requirements 等が再生成不能、かつ requirements/system-spec は DEGRADED (goal-proxy 乖離) のため機械緑化不可**。stale verdict の削除も step 45 provenance guard (evidence-removed) が append-only 契約で拒否する。よって governance-check step 42 の緑化は kj1 が dev-graph live-trial 基盤を復元し再 trial するまで保留とする。
