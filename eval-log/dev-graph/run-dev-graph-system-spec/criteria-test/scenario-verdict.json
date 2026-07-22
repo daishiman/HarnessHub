@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r4-20260722-postmerge",
+  "reviewer": "dev-graph-criteria-scenario-r5-20260722-scl4b",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,12 +28,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T000000-hh6cv/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260722T211411-scl4b/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T000000-hh6cv/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T000000-hh6cv/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260722T211411-scl4b/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260722T211411-scl4b/transcript.jsonl"
       ],
-      "observed": "2026-07-23 再実走 (HarnessHub-6cv, main PR#38 取込後): generation-lineage 変更 + PR#38 の closure 変更で verdict が再 stale 化したため fresh fixture で再 trial。被験 Skill を最初の tool call で 起動し正経路を自走完遂。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し、pre-seed 汚染なし・goal 達成 (受入基準を実行証跡で裏取り) を確認。"
+      "observed": "2026-07-22 再実走 (HarnessHub-scl, fork 台帳 Task|Agent 対応で closure 9/11 ファイル変更により hh6cv verdict が stale 化): fresh fixture (repository_id 227cee0e) で再 trial。被験 Skill を最初の tool call で起動し R0→R1→R2 (elicit/doc-fetch/compile/evaluator 4 skill 実 fork)→R3 (upsert-node.py C02 経由 2 ノード登録) を 28 分で自走完遂。orchestrator と別個体の fresh evaluator が transcript 816 行と fixture 成果物を一次痕跡で走査し、source_digest 実測一致 (cad25dcf/4e37b3b9)・validate-evidence-refs/validate-source-digest 両ゲート EXIT:0・goal-seek 3 点セット (intermediate 6 キー)・ロジック複製なしを確認し goal PASS (blockers=[]) を判定。"
     }
   }
 }

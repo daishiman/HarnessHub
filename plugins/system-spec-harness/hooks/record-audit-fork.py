@@ -37,7 +37,9 @@
 
 ## 記録対象
 
-本 plugin が同梱する agent (`<plugin_root>/agents/*.md` の stem) を `subagent_type` に持つ Task のみ。
+本 plugin が同梱する agent (`<plugin_root>/agents/*.md` の stem) を `subagent_type` に持つ
+subagent 起動 (tool_name が 'Task' または 'Agent') のみ。起動ツール名はハーネス世代で異なる
+(旧ハーネス/Codex 系='Task', 現行 Claude Code='Agent') ため両方を受理し、台帳へは観測名をそのまま書く。
 Claude Code が pinned plugin の agent を `system-spec-harness:<agent>` として渡す場合は、自 plugin の
 qualifier だけを受理して stem へ正規化する。無関係な Task で台帳が膨らむのを避け、レジストリ追加に
 自動追従する (agent を足せば記録対象になる)。
@@ -65,6 +67,11 @@ from pathlib import Path
 SCHEMA_VERSION = "1.0"
 HOOK_NAME = "record-audit-fork"
 PLUGIN_NAME = "system-spec-harness"
+# subagent 起動ツール名はハーネス世代で異なる (旧/Codex 系='Task', 現行 Claude Code='Agent')。
+# 台帳には観測名をそのまま書く (正規化しない)。証跡は harness の観測事実であるべきで、
+# 書き換えると「自己申告でない裏取り」という台帳の存在意義と矛盾するため。
+# 読取側 aggregate-completeness.py の LEDGER_TOOL_NAMES と整合を保つこと。
+AUDIT_FORK_TOOL_NAMES = ("Task", "Agent")
 LEDGER_RELPATH = Path("eval-log") / "system-spec-harness" / "audit-fork-ledger.jsonl"
 LEDGER_ENV = "SYSTEM_SPEC_AUDIT_FORK_LEDGER"
 
@@ -125,8 +132,13 @@ def normalize_subagent_type(subagent_type: object, known_agents: set[str]) -> st
 
 
 def build_record(payload: dict, known_agents: set[str]) -> dict | None:
-    """記録対象なら台帳 1 行を組み立てる。対象外なら None。"""
-    if payload.get("tool_name") != "Task":
+    """記録対象なら台帳 1 行を組み立てる。対象外なら None。
+
+    subagent 起動ツール名はハーネス世代で異なる: 旧ハーネス/Codex 系は 'Task'、
+    現行 Claude Code は 'Agent' を tool_name として渡す (issue: HarnessHub-scl)。
+    """
+    ledger_tool_name = payload.get("tool_name")
+    if ledger_tool_name not in AUDIT_FORK_TOOL_NAMES:
         return None
     tin = payload.get("tool_input")
     if not isinstance(tin, dict):
@@ -142,7 +154,7 @@ def build_record(payload: dict, known_agents: set[str]) -> dict | None:
         "schema_version": SCHEMA_VERSION,
         "ts": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "session_id": payload.get("session_id") or os.environ.get("CLAUDE_SESSION_ID") or "unknown",
-        "tool_name": "Task",
+        "tool_name": ledger_tool_name,
         "subagent_type": subagent_type,
         "prompt_sha256": prompt_sha256,
         "cwd": payload.get("cwd") or str(Path.cwd()),

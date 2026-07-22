@@ -1,0 +1,47 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "--repo-root /private/tmp/claude-501/-Users-dm-dev-dev------HarnessHub--worktrees-task-20260722-093537-wt-11/09591889-1101-451c-9ba7-70a87942c6cf/scratchpad/ltfix-scl。SKILL.md の手順どおり system-spec-harness の version/entry point を preflight し、正規フロー (elicit/doc-fetch/compile/completeness-evaluator) を起動して確定成果物を得て、source lineage を保ったまま C02 経由で specification/architecture ノードへ取り込む。dev-graph 内に同等のヒアリング/compile ロジックを複製しない",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node",
+    "dev-graph:run-dev-graph-system-spec",
+    "system-spec-harness:assign-system-spec-completeness-evaluator",
+    "system-spec-harness:run-system-spec-compile",
+    "system-spec-harness:run-system-spec-doc-fetch",
+    "system-spec-harness:run-system-spec-elicit"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "f3a713942596ecfd596d821eacbdd33c562652dfedf57e3f45c0eb248f3bfabc",
+  "transcript_sha256": "4d7318932871627721b94fae290ad7c661c4236f3722829b392c0ddb4c7803c5",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "0",
+    "wall_clock_s": 1680.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

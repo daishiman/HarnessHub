@@ -5,7 +5,7 @@
 
 本 hook は「保護」ではなく「証跡」の層なので、固定すべき契約は 3 つ:
 
-1. **記録の担保**: 本 plugin 同梱 agent への `Task` は台帳へ 1 行追記される。この行が
+1. **記録の担保**: 本 plugin 同梱 agent への subagent 起動 (`Task`/`Agent`) は台帳へ 1 行追記される。この行が
    `aggregate-completeness.py` の帰属検証の唯一の裏取り材料なので、落とすと fail-closed で
    評価ゲートが通らなくなる (= 緑にはならないが、正当な実行まで止まる)。
 2. **記録対象の限定**: 無関係な Task / 非 Task / 未知の subagent_type は記録しない。
@@ -73,6 +73,14 @@ class BuildRecordTest(unittest.TestCase):
         self.assertTrue(rec["ts"].endswith("Z"))
         self.assertEqual(len(rec["prompt_sha256"]), 64)
 
+    def test_records_agent_tool_fork_with_observed_name(self):
+        """現行ハーネスの起動ツール名 'Agent' も記録対象。台帳へは観測名をそのまま書く
+        (正規化しない = 証跡は harness の観測事実。issue: HarnessHub-scl)。"""
+        rec = hook.build_record(_payload(_MATRIX_AUDITOR, tool_name="Agent"), self.KNOWN)
+        self.assertIsNotNone(rec)
+        self.assertEqual(rec["tool_name"], "Agent")
+        self.assertEqual(rec["subagent_type"], _MATRIX_AUDITOR)
+
     def test_records_plugin_qualified_auditor_fork_as_local_stem(self):
         """live-trial の実 payload は ``plugin:agent``。ledger は consumer 契約の stem へ揃える。"""
         rec = hook.build_record(
@@ -94,8 +102,12 @@ class BuildRecordTest(unittest.TestCase):
         # 他 plugin の agent 名で帰属を偽装する経路を断つ。
         self.assertIsNone(hook.build_record(_payload("general-purpose"), self.KNOWN))
 
-    def test_non_task_tool_is_not_recorded(self):
-        self.assertIsNone(hook.build_record(_payload(_MATRIX_AUDITOR, tool_name="Bash"), self.KNOWN))
+    def test_non_subagent_tool_is_not_recorded(self):
+        for tool_name in ("Bash", "Skill", "TaskCreate", ""):
+            self.assertIsNone(
+                hook.build_record(_payload(_MATRIX_AUDITOR, tool_name=tool_name), self.KNOWN),
+                f"tool_name={tool_name!r} が記録された",
+            )
 
     def test_missing_subagent_type_is_not_recorded(self):
         payload = {"tool_name": "Task", "tool_input": {"prompt": "x"}}
@@ -153,6 +165,17 @@ class EndToEndTest(unittest.TestCase):
                 self.assertEqual(proc.returncode, 0, proc.stderr)
             lines = [json.loads(x) for x in ledger.read_text(encoding="utf-8").splitlines() if x.strip()]
             self.assertEqual([r["subagent_type"] for r in lines], [_MATRIX_AUDITOR, _HEARING_AUDITOR, _DOC_AUDITOR])
+
+    def test_agent_tool_fork_lands_in_ledger(self):
+        """現行ハーネス ('Agent') 経由の実 fork が end-to-end で台帳に残ること (issue: HarnessHub-scl の再発防止)。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "audit-fork-ledger.jsonl"
+            proc = self._run(_payload(f"{hook.PLUGIN_NAME}:{_HEARING_AUDITOR}", tool_name="Agent"), ledger)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            lines = [json.loads(x) for x in ledger.read_text(encoding="utf-8").splitlines() if x.strip()]
+            self.assertEqual(len(lines), 1)
+            self.assertEqual(lines[0]["tool_name"], "Agent")
+            self.assertEqual(lines[0]["subagent_type"], _HEARING_AUDITOR)
 
     def test_unrelated_task_leaves_no_ledger(self):
         with tempfile.TemporaryDirectory() as tmp:
