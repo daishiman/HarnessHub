@@ -7,7 +7,7 @@
     "skill_md_sha256": "2cc7359b79195da6c920f25d56416c7b666a2a8b72fd1f2c7c30b3211a7697d7"
   },
   "verdict": "PASS",
-  "reviewer": "audit-node-status-20260720",
+  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,12 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C18-OUT1-positive-read-only-status",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260713T090000-r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260722T093029-r20/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260713T090000-r3/verdict.json",
-        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260713T090000-r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260722T093029-r20/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260722T093029-r20/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260722T093029-r20/out/status.json"
       ],
-      "observed": "Live-trial verdict overall=PASS (launch=PASS, completion=PASS, goal_fit=PASS, verdict=PASS), actual_model=[claude-opus-4-6], transcript_layer=jsonl, transcript_sha256 present, downgrade_reason=null, tier=live. Positive read-only scenario '--repo-root .../r3-status --id LT-TASK-001' returned status/closed_at/depends_on identical to the graph node's stored values with C11 exit0 (out/status.json scenario=status-positive-read-only status=PASS)."
+      "observed": "2026-07-22 に 2 task・前方依存 1 本の fixture で r20 を正規再実走。status/closed_at/depends_on/dependents/file_path が graph 実値と field 単位一致、002=blocked/001=ready、graph/config/content 無変更 (read-only)。fresh evaluator が sha256 不変を独立確認。goal-seek 3 点セット全出力。"
     },
     "OUT2": {
       "status": "PASS",

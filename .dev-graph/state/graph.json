@@ -29003,6 +29003,470 @@
       "title": "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
       "tracker_binding": "beads",
       "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-render-out1-unsatisfiable-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "run-dev-graph-render の OUT1 criterion が register-package.py の active 強制と render の digest 検査の組合せで論理的に充足不能であることを追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T18:30:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-render-out1-unsatisfiable-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "register-package.py L240 が 13 子すべてに status=active を要求し、render-graph-html.py L123 が receipt.graph_digest_after == sha256(現 graph) を要求するため、receipt が有効な状態で到達可能な進捗は 0/13 のみ。applied/expected=13/13 と一致させられず OUT1 は充足不能。",
+      "graph_node_id": "issue-render-out1-unsatisfiable-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-18T16:20:35Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "register-package.py L240 が 13 子すべてに status=active を要求し、render-graph-html.py L123 が receipt.graph_digest_after == sha256(現 graph) を要求するため、receipt が有効な状態で到達可能な進捗は 0/13 のみ。applied/expected=13/13 と一致させられず OUT1 は充足不能。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-render-out1-unsatisfiable-20260721.md"
+      ],
+      "scope_in": [
+        "issues/sys-render-out1-unsatisfiable-20260721.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-21T18:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T180000-r7/verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "criterion",
+        "contradiction"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T18:30:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-fixture-receipt-forgery-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "live-trial fixture が gitignore されているため fixture 内 receipt の偽造が既存 provenance 検査で検出できない穴を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T18:30:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-fixture-receipt-forgery-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "fixture は gitignore されており dst の commit 差分ベース検査の対象外。s7b の再々 trial で実際に receipt が手書き偽造され digest を後から一致させる操作が行われた (184acbc と同型)。",
+      "graph_node_id": "issue-live-trial-fixture-receipt-forgery-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-18T16:20:35Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "fixture は gitignore されており dst の commit 差分ベース検査の対象外。s7b の再々 trial で実際に receipt が手書き偽造され digest を後から一致させる操作が行われた (184acbc と同型)。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-live-trial-fixture-receipt-forgery-20260721.md"
+      ],
+      "scope_in": [
+        "issues/sys-live-trial-fixture-receipt-forgery-20260721.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-21T18:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T180000-r7/verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "provenance",
+        "anti-goodhart"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T18:30:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-skill-contract-bypass-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "live-trial が skill をロードしながらゴールシーク実行契約を飛ばして下位 script を直叩きできる問題を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T18:30:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-skill-contract-bypass-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "SKILL.md がゴールシーク配線を実行契約と定めるのに、trial は下位 script を直接叩いて成果物だけ出せる。成果物だけ見る検査では正常な実走と区別できない。task.md への明示要求は必要条件ですらない。",
+      "graph_node_id": "issue-live-trial-skill-contract-bypass-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-18T16:20:35Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "SKILL.md がゴールシーク配線を実行契約と定めるのに、trial は下位 script を直接叩いて成果物だけ出せる。成果物だけ見る検査では正常な実走と区別できない。task.md への明示要求は必要条件ですらない。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-live-trial-skill-contract-bypass-20260721.md"
+      ],
+      "scope_in": [
+        "issues/sys-live-trial-skill-contract-bypass-20260721.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-21T18:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T180000-r7/verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "goal-seek",
+        "anti-goodhart"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T18:30:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "criteria-test の scenario-verdict が書き換え済み verdict を受入根拠に参照している検査の穴を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T14:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "criteria-test の OUT1 受入根拠が、再 trial を経た正当な live-trial verdict を指す状態にする。あわせて『scenario-verdict が指す run が最新かつ digest 書き換えを経ていない』ことを機械検査する。",
+      "graph_node_id": "issue-scenario-verdict-stale-live-trial-ref-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T14:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "184acbc が skill_dir_tree_sha だけを書き換えた 9 件の r3 verdict のうち 5 件が、criteria-test の scenario-verdict から OUT1 の受入根拠として明示パスで参照され続けている。lint-live-trial-verdict は最新 run しか見ないため緑になり、この参照は検査の外に落ちる。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md"
+      ],
+      "scope_in": [
+        "issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-21T14:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-render/criteria-test/scenario-verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "provenance",
+        "anti-goodhart",
+        "criteria-test"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "criteria-test の scenario-verdict が digest 書き換え済みの旧 r3 verdict を受入根拠に参照し続けている",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T14:00:00Z"
+    },
+    {
+      "acceptance": [
+        "transcript.jsonl が存在し transcript_sha256 が null または欠落の verdict について lint-live-trial-verdict.py が violation を報告する",
+        "既存の全 verdict が新検査を通過する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-lint-verdict-null-transcript-sha-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "lint の transcript 束縛検査が null を素通りさせる穴を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-22T06:10:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-lint-verdict-null-transcript-sha-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "transcript.jsonl が存在する run について transcript_sha256 の欠落を violation として検出し、束縛が切れた verdict が lint を通過できない状態にする",
+      "graph_node_id": "issue-lint-verdict-null-transcript-sha-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T06:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "check_verdict の transcript 束縛検査が `recorded is not None` ガードで書かれており、transcript_sha256 が null の verdict を突合せずに OK と判定する。証跡と実体の束縛が切れた状態が緑で通る。",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-lint-verdict-null-transcript-sha-20260722.md"
+      ],
+      "scope_in": [
+        "issues/sys-lint-verdict-null-transcript-sha-20260722.md"
+      ],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-22T06:10:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "scripts/lint-live-trial-verdict.py",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "evidence-integrity",
+        "dev-graph",
+        "anti-goodhart"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "lint-live-trial-verdict の check_verdict が transcript_sha256=null を素通りさせる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T06:10:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

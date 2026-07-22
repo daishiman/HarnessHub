@@ -3,6 +3,9 @@
 ## Machine-readable registration fields
 
 - feature_package_id: feature-package/feat-hub-foundation (13 task で共有)
+- feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
+- feature_acceptance: 4 items (A1-A4)
+- quality_constraints: 9 items
 - owners: ["daishiman"]
 - tags: ["feat-hub-foundation", "stage-1", "infrastructure", "design-review"]
 - related_nodes: ["feat-hub-foundation", "arch-harness-hub-infrastructure", "arch-harness-hub-frontend"]
@@ -16,7 +19,7 @@
 
 ## 目的
 
-P02 で確定した pnpm workspace 構成 (apps/hub + packages/ui,schemas,inspection,db)・Cloudflare Workers デプロイ単位・CI 品質ゲート設計を、設計担当から独立した基準で検証し、qa-003/qa-019/qa-007/qa-018 と D1 決定・C1/C2 制約に対する整合性を確定する。この task 完了時点で、P04 以降が安心して依拠できる承認済み設計になっている状態にする。
+P02 で確定した pnpm workspace 構成 (apps/hub + packages/ui,schemas,inspection,db,estimation の 6 member)・Cloudflare Workers デプロイ単位・CI 品質ゲート設計を、設計担当から独立した基準で検証し、qa-003/qa-019/qa-007/qa-018 と D1 決定・C1/C2 制約に対する整合性を確定する。この task 完了時点で、P04 以降が安心して依拠できる承認済み設計になっている状態にする。
 
 ## 背景
 

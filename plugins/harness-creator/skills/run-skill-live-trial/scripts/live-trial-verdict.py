@@ -82,6 +82,58 @@ def extract_models(path: Path) -> list[str]:
     return sorted(models)
 
 
+def extract_skill_invocations(path: Path) -> list[str]:
+    """transcript に残る Skill ツール呼出しの skill 名を返す (重複なし・昇順)。
+
+    「被験 skill を起動せず、その中で使われる script を Bash から直接叩く」実走は、
+    成果物が出ても skill の受け入れ検証になっていない (2026-07-21 live-trial r14 の C05)。
+    起動の有無を orchestrator の自己申告ではなく transcript から機械判定する。
+    """
+    skills: set[str] = set()
+    for obj in iter_transcript(path):
+        content = (obj.get("message") or {}).get("content")
+        if not isinstance(content, list):
+            continue
+        for block in content:
+            if not isinstance(block, dict) or block.get("type") != "tool_use":
+                continue
+            if block.get("name") != "Skill":
+                continue
+            name = (block.get("input") or {}).get("skill")
+            if isinstance(name, str) and name:
+                skills.add(name)
+    return sorted(skills)
+
+
+GOAL_SEEK_ARTIFACTS = ("goal-spec.json", "progress.json", "intermediate.jsonl")
+
+
+def validate_goal_seek_evidence(skill_dir: Path, eval_root: Path | None) -> dict:
+    """goal_seek 成果物の実体と内容を独立 validator で検証する。
+
+    transcript の command/file_path 文字列だけでは、ファイル名を言及しただけの run や
+    空のダミー成果物を PASS にできる。宣言済み skill は eval root 未指定も fail-closed にする。
+    """
+    validator = _load_sibling("validate-goal-seek-evidence")
+    if not validator.declares_goal_seek(skill_dir / "SKILL.md"):
+        return {
+            "valid": True,
+            "goal_seek_declared": False,
+            "violations": [],
+            "checked": {"skipped": "frontmatter に goal_seek 宣言なし"},
+        }
+    if eval_root is None:
+        return {
+            "valid": False,
+            "goal_seek_declared": True,
+            "violations": [
+                "eval-root-missing: goal_seek 宣言 skill は --goal-seek-eval-root が必須"
+            ],
+            "checked": {},
+        }
+    return validator.verify(skill_dir, eval_root)
+
+
 def extract_claude_version(path: Path) -> str | None:
     for obj in iter_transcript(path):
         ver = obj.get("version")
@@ -286,6 +338,42 @@ def _dependency_behavior_contract(plugin_root: Path, expected: str) -> tuple[Pat
     return path.resolve(), entry_points
 
 
+def _resolve_behavior_ref(
+    ref: str, *, skill_dir: Path, repo_root: Path, plugin_root: Path
+) -> Path:
+    """Resolve one declared *_refs entry.  Containment/existence は呼び出し元が弾く。
+
+    SKILL.md の *_refs には 2 つの書式が混在している:
+      - skill dir 相対: `scripts/foo.py`, `../../references/bar.md`
+      - repo root 相対: `plugins/<name>/skills/...`, `doc/notion-schema/...`
+    解決順は近いスコープ優先で固定する (skill dir → 同一 plugin の skill 名 → repo root)。
+    同名が skill dir と repo root の双方にある場合は skill dir 側が shadow する。module
+    import と同じ規則にすることで、宣言を読んだだけで解決先が一意に決まる。`plugins/`
+    始まりだけは plugin 間参照の既存契約として常に repo root 起点。
+
+    repo root 相対を最後に試すのは互換のため: 従来 repo root として扱われたのは
+    `plugins/` 始まりだけで、`doc/notion-schema/...` 等は解決できず fail-closed
+    停止していた (plan-live-trials が dev-graph plugin 全体で停止する原因)。
+    """
+    if ref.startswith("plugins/"):
+        return repo_root / ref
+
+    skill_relative = skill_dir / ref
+    if skill_relative.exists():
+        return skill_relative
+
+    # 拡張子もスラッシュも無い ref は同一 plugin 内の skill 名として解決する (既存挙動)。
+    if "/" not in ref and "." not in ref:
+        return plugin_root / "skills" / ref / "SKILL.md"
+
+    repo_relative = repo_root / ref
+    if repo_relative.exists():
+        return repo_relative
+
+    # どこにも無ければ skill dir 相対を返し、呼び出し元の fail-closed 検査に委ねる。
+    return skill_relative
+
+
 def behavior_closure_files(skill_dir: Path) -> list[tuple[str, Path]]:
     """Resolve the declared behavior closure, fail-closed on missing/unsafe refs."""
     skill_dir = Path(skill_dir).resolve()
@@ -392,12 +480,9 @@ def behavior_closure_files(skill_dir: Path) -> list[tuple[str, Path]]:
         raw = Path(ref)
         if raw.is_absolute():
             raise ValueError(f"declared behavior dependency must be relative: {ref}")
-        if ref.startswith("plugins/"):
-            candidate = repo_root / ref
-        else:
-            candidate = skill_dir / ref
-        if not candidate.exists() and "/" not in ref and "." not in ref:
-            candidate = plugin_root / "skills" / ref / "SKILL.md"
+        candidate = _resolve_behavior_ref(
+            ref, skill_dir=skill_dir, repo_root=repo_root, plugin_root=plugin_root
+        )
         resolved = _contained(candidate, repo_root, ref)
         if context:
             try:
@@ -520,6 +605,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--requested-model", default="")
     ap.add_argument("--session-id", default="", help="transcript 回収用 UUID")
     ap.add_argument("--transcript", default="", help="回収済み transcript のパス (session-id 探索より優先)")
+    ap.add_argument(
+        "--goal-seek-eval-root",
+        default="",
+        help="被験 skill が goal_seek 成果物を書いた eval-log directory",
+    )
     ap.add_argument("--launch", required=True, choices=["PASS", "FAIL"])
     ap.add_argument("--completion", required=True, choices=["PASS", "FAIL"])
     ap.add_argument("--goal-result", default="", choices=["", "PASS", "FAIL"],
@@ -571,12 +661,49 @@ def main(argv: list[str] | None = None) -> int:
     transcript_sha = sha256_file(transcript_dst) if transcript_dst else None
     transcript_layer = "jsonl" if transcript_dst else "tui"
 
+    invoked_skills = extract_skill_invocations(transcript_dst) if transcript_dst else []
+
     goal_result = ns.goal_result or None
     blockers = list(ns.blocker)
     if goal_result is None and not blockers:
         blockers = ["goal 判定未実施 (trial が完走せず fresh evaluator を起動できない)"]
+
+    # 起動の機械 gate: transcript が取れているのに被験 skill の Skill 呼出しが1件も無ければ
+    # launch は PASS になりえない。orchestrator の --launch PASS 自己申告を上書きする。
+    launch = ns.launch
+    if transcript_dst and not ns.blocked and ns.target_skill not in invoked_skills:
+        launch = "FAIL"
+        blockers.append(
+            f"被験 skill {ns.target_skill} の Skill 呼出しが transcript に0件 "
+            f"(実行された Skill: {invoked_skills or 'なし'})。skill を起動せず script を"
+            "直接実行した実走は受け入れ検証にならない"
+        )
+
+    # 配線の機械 gate: ファイル名の transcript 言及ではなく、成果物の実体・必須キー・
+    # original_goal/hash の整合を検証する。fresh evaluator の PASS より機械判定を優先する。
+    goal_seek_evidence = validate_goal_seek_evidence(
+        skill_dir,
+        Path(ns.goal_seek_eval_root) if ns.goal_seek_eval_root else None,
+    )
+    wiring_violations = list(goal_seek_evidence.get("violations") or [])
+    missing_labels = {
+        "goal-spec.json": "goal-spec-missing",
+        "progress.json": "progress-missing",
+        "intermediate.jsonl": "intermediate-missing",
+    }
+    missing_wiring = [
+        artifact
+        for artifact in GOAL_SEEK_ARTIFACTS
+        if any(missing_labels[artifact] in value for value in wiring_violations)
+    ]
+    if wiring_violations and not ns.blocked:
+        goal_result = "FAIL"
+        blockers.append(
+            "ゴールシーク配線の実体検証に失敗: " + " | ".join(wiring_violations)
+        )
+
     goal_fit, verdict, auto_reason = derive_overall(
-        launch=ns.launch, completion=ns.completion, goal_result=goal_result,
+        launch=launch, completion=ns.completion, goal_result=goal_result,
         nudge=ns.nudge_count, gate=ns.gate_response_count, proof=ns.proof,
         requested_model=ns.requested_model, actual_model=actual_model,
         blocked=ns.blocked,
@@ -592,8 +719,11 @@ def main(argv: list[str] | None = None) -> int:
             "result": goal_result or "FAIL",
             "blockers": blockers,
         },
+        "invoked_skills": invoked_skills,
+        "missing_goal_seek_artifacts": missing_wiring,
+        "goal_seek_evidence_violations": wiring_violations,
         "overall": {
-            "launch": ns.launch,
+            "launch": launch,
             "completion": ns.completion,
             "goal_fit": goal_fit,
             "verdict": verdict,
@@ -628,7 +758,7 @@ def main(argv: list[str] | None = None) -> int:
 
     out = workdir / "verdict.json"
     out.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"VERDICT: {doc['overall']['verdict']} (launch={ns.launch} completion={ns.completion} "
+    print(f"VERDICT: {doc['overall']['verdict']} (launch={doc['overall']['launch']} completion={ns.completion} "
           f"goal_fit={goal_fit} nudge={ns.nudge_count} gate={ns.gate_response_count})")
     print(f"WROTE: {out}")
     return 0

@@ -51,6 +51,9 @@ jobs:
       - name: "lint live-trial verdict 突合 (存在するverdictのschema/sha/PASS検査・不在はD13パイロット中record-only)"
         run: python3 scripts/lint-live-trial-verdict.py --all
         continue-on-error: false
+      - name: "guard live-trial digest provenance (再 trial せず digest だけを現在の closure へ合わせる緑化を遮断)"
+        run: python3 scripts/lint-live-trial-verdict.py --check-provenance origin/main
+        continue-on-error: false
       - name: lint feedback_contract 携帯化 (量産先 loop-kind が frontmatter に評価基準を持つ)
         run: python3 scripts/lint-feedback-contract.py --all
         continue-on-error: false

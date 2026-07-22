@@ -215,7 +215,7 @@
       "goal_seek": {"engine": "inline", "fork": "subagent", "max_loops": 5},
       "feedback_contract": {
         "criteria": [
-          {"id": "IN1", "loop_scope": "inner", "text": "C11のreadiness validation digestとC02保存済みimplementation_readiness/evaluation_status/source_digestが一致し、system-dev-plannerのvalidate-system-plan.pyがP01..P13 exact 13・共通parent_feature/feature_package_id・機能内前方dependencyを検証して必須キー欠落とstale digestが0件", "verify_by": "script"},
+          {"id": "IN1", "loop_scope": "inner", "text": "C11のreadiness validation digestとC02保存済みimplementation_readiness/evaluation_statusが一致し、scope内node全件を--registeredに渡したvalidate-source-digest.pyがexit 0 (stale digest 0件) で、system-dev-plannerのvalidate-system-plan.pyがP01..P13 exact 13・共通parent_feature/feature_package_id・機能内前方dependencyを検証して必須キー欠落が0件", "verify_by": "script"},
           {"id": "OUT1", "loop_scope": "outer", "text": "導出した要件定義書が capability-build/task-graph build へ handoff され、本 skill 自身が実装コードを生成しないことを受入テストが確認する", "verify_by": "live-trial"},
           {"id": "OUT2", "loop_scope": "outer", "text": "implementation_readiness=incompleteの参照ノードが混在するとき、missing_sectionsが漏れなくレポートへsurfaceされ、当該ノードのhandoffが保留されることを受入テストが確認する (要件C20)", "verify_by": "test"}
         ]
@@ -269,7 +269,7 @@
       "feedback_contract": {
         "criteria": [
           {"id": "IN1", "loop_scope": "inner", "text": "render-graph-html.py の出力HTMLに外部script/link参照が0件でゼロ依存であることをスクリプト検証する", "verify_by": "script"},
-          {"id": "OUT1", "loop_scope": "outer", "text": "生成したHTML/CSSをブラウザで開いた際に追加ランタイム依存なくSVGグラフが表示され、featureごとの子task進捗X/Yがregistration receiptのapplied_count/expected_countと一致し、表示対象がreceiptのsource_digestに対応することを受入テストが確認する", "verify_by": "live-trial"}
+          {"id": "OUT1", "loop_scope": "outer", "text": "生成したHTML/CSSをブラウザで開いた際に追加ランタイム依存なくSVGグラフが表示され、featureごとの子task進捗X/Yのうち総数Yがregistration receiptのapplied_count/expected_countと一致し(done数Xは登録後のstatus遷移で変動するため一致を求めない)、表示対象がreceiptのsource_digestに対応することを受入テストが確認する", "verify_by": "live-trial"}
         ]
       },
       "depends_on": ["C02", "C11", "C13", "C24"],
@@ -376,9 +376,9 @@
       "id": "C10",
       "component_kind": "hook",
       "name": "guard-graph-schema",
-      "scope": "破壊的なグラフスキーマ操作を validate-graph-schema.py (C11) で検査し fail-closed で阻む。加えて gh write の暴発 (大量 Issue 起票・意図しない一括更新) を検知し exit2 で阻む guard としても機能する (matcher=Bash / exit_semantics は不変)。bdの直接mutation (bd-bridge.py経由でないbd create/update/close/delete/purge/sql DML) もexit2で阻む (references/execution-tracker-contract.md §7 単一チョークポイントの機械的強制)",
+      "scope": "破壊的なグラフスキーマ操作を validate-graph-schema.py (C11) で検査し fail-closed で阻む。加えて gh write の暴発 (大量 Issue 起票・意図しない一括更新) を検知し exit2 で阻む guard としても機能する (exit_semantics=fail-closed-exit2 は不変)。bdの直接mutation (bd-bridge.py経由でないbd create/update/close/delete/purge/sql DML) もexit2で阻む (references/execution-tracker-contract.md §7 単一チョークポイントの機械的強制)。さらに Bash の command 文字列に留まらず、Write/Edit/MultiEdit/NotebookEdit の file_path と interpreter 本文の open(...,'w') が graph authority (.dev-graph/state・config.json・graph-node.schema.json) を書換える C02 atomic writer 迂回経路を遮断する (matcher を Bash から Bash|Write|Edit|MultiEdit|NotebookEdit へ拡張。境界定義は system-spec-harness/hooks/references/hook-guard-protection-scope.md §2/§4)",
       "event": "PreToolUse",
-      "matcher": "Bash",
+      "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
       "exit_semantics": "fail-closed-exit2",
       "settings_wiring": "plugin hooks/hooks.json",
       "fail_closed": true,

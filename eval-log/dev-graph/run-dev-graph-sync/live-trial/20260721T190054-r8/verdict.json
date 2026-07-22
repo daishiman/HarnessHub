@@ -1,0 +1,39 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "外部要因でセッション消失: 独立 verifier 完了直後に tmux セッションが第三者の reap (接頭辞 lt-* 一括回収) で kill され、完了マーカー未書き込みのまま中断。被験 skill の不具合ではない。r9 として再実走し PASS。"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "NOT_EVALUATED",
+    "verdict": "BLOCKED"
+  },
+  "skill_dir_tree_sha": "0c88a4ec0641c3b2fac43e9e26940d8f2d7cfe7a7f8cea1eac2a3d34e3b67b16",
+  "transcript_sha256": "8804f9f2c6cadf341aa4274c1b4b12b4d49a50a7c4111d59b53ce872350eeaf6",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "tmux 不在 / HARD_CAP 超過等の fail-closed",
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "STALL",
+    "wall_clock_s": null
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero"
+}

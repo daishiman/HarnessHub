@@ -163,6 +163,35 @@ def test_bd_helpers_and_all_operations(common, tmp_path, monkeypatch, capsys):
         ("--op", "gate-check", "--repo-root", tmp_path, "--bd-issue-id", "B1", "--pr", "7"),
     ):
         assert call_main(mod, monkeypatch, capsys, *argv)[0] == 0
+
+    real_shape_gate = {"id": "gate-real", "await_type": "gh:pr", "await_id": "8"}
+    monkeypatch.setattr(
+        mod,
+        "bd",
+        lambda args, cwd, check=True: (
+            [real_shape_gate]
+            if args[:3] == ["gate", "list", "--all"]
+            else {"id": "B8", "status": "open", "dependencies": [{"id": "gate-real", "dependency_type": "blocks"}]}
+            if args[0] == "show"
+            else {"ok": True}
+        ),
+    )
+    code, out = call_main(
+        mod,
+        monkeypatch,
+        capsys,
+        "--op",
+        "gate-check",
+        "--repo-root",
+        tmp_path,
+        "--bd-issue-id",
+        "B8",
+        "--pr",
+        "8",
+    )
+    assert code == 0 and out["result"]["gate"] == real_shape_gate
+
+    monkeypatch.setattr(mod, "bd", fake_bd)
     code, out = call_main(mod, monkeypatch, capsys, "--op", "create", "--repo-root", tmp_path, "--dry-run")
     assert code == 0 and out["dry_run_preview"]["op"] == "create"
 
