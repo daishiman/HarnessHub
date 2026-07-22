@@ -1,0 +1,47 @@
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/live-trial-fixtures/r13-status" && cd "/Users/dm/dev/d…)
+  ⎿  {
+       "authority_sha256_after": "cbc56f46688466995b86e060634e9998c1c598a064f50d25d84cd0e1dfbae1dc",
+       "authority_sha256_before": "cbc56f46688466995b86e060634e9998c1c598a064f50d25d84cd0e1dfbae1dc",
+     … +45 lines (ctrl+o to expand)
+
+⏺ Now let me verify post-execution digests are unchanged.
+
+⏺ Bash(cd "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/live-trial-fixtures/r13-status" && shasum -a 256 .dev-graph/state/…)
+  ⎿  921864c4f82d041b2d4608b5ff24a15d7b4fc75cb197ec781d5ca4d7f3d21ae1  .dev-graph/state/graph.json
+     2de463b6073858f5e2d50474fd7b76f245589a5aff0a8895c5107963cc6530c4  .dev-graph/config.json
+
+⏺ Bash(cd "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/live-trial-fixtures/r13-status" && find . -not -path './.dev-graph…)
+  ⎿  b49e848e72140364d8a94f06a4d047202dad1d354977d7a29ca58f1a126339e2  ./tasks/lt-task-001.md
+     eda2722148b0db96bcfba508db79219daa2757813c82e3cca82aab4c22ba09d7  ./tasks/lt-task-002.md
+
+⏺ All 4 checks pass. Let me verify each:
+
+  Check 1 — values_match: Graph LT-TASK-002 has status: "active", closed_at: null, depends_on: ["LT-TASK-001"]. Skill report returned exactly status: "active", closed_at: null,
+  depends_on: ["LT-TASK-001"].
+
+  Check 2 — c11_exit0: validate-graph-schema.py returned valid: true, exit 0.
+
+  Check 3 — digest_unchanged: Pre/post digests identical:
+  - graph.json: 921864c4... (unchanged)
+  - config.json: 2de463b6... (unchanged)
+  - content files: unchanged
+  - authority digest: cbc56f46... before = after
+
+  Check 4 — no_tracker_write: github.enabled: false, execution_tracker.mode: "none", tracker_binding: "none", --no-eval-log used. Zero external writes.
+
+⏺ Bash(mkdir -p "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T102834-r13/out")
+  ⎿  Done
+
+⏺ Write(~/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T102834-r13/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-status/live-trial/20260721T102834-r13/out/status.json
+      1 {"status": "PASS", "scenario": "status-positive-read-only", "checks": {"values_match": true, "c11_exit0": true, "digest_unchanged": true, "no_tracker_write": true}}
+
+⏺ DONE: PASS
+
+✻ Worked for 3m 0s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                    Update available! Run: brew upgrade claude-code
+

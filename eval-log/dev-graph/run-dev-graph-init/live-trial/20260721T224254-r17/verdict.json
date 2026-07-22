@@ -1,0 +1,37 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-init",
+  "args": "--repo-root <fixture eval-log/dev-graph/live-trial-fixtures/20260721T224254-init> (2 回実行)",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "a7ea1b43fa595714fca9b411bb7f9b53d0b901649837e78884a5109663ad208c",
+  "transcript_sha256": "3eac408dc68c49ac0cfb361e530ba20f1d196b17e10610e8b0ec518e3ff9e80f",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "0",
+    "wall_clock_s": 420.0
+  },
+  "scenario_id": "C01-OUT1-positive-idempotence"
+}

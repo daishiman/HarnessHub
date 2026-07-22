@@ -27,14 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260713T090000-r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T054732b-r7/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260713T090000-r3/verdict.json",
-        "independent: eval-log/dev-graph/live-trial-fixtures/r3-node registered-artifact routing inspection",
-        "plugins/dev-graph/tests/test_operational_loop_v2.py::test_node_recovers_crash_before_exposing_graph_to_readers",
-        "plugins/dev-graph/tests/test_operational_loop_v2.py::test_node_writer_waits_for_whole_reader_operation_lock"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T054732b-r7/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T054732b-r7/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T054732b-r7/out/status.json"
       ],
-      "observed": "Recorded mixed-artifact live trial remains PASS for canonical routing and consecutive update parity. Independent 2026-07-20 audit additionally reproduced KeyboardInterrupt rollback, os._exit(99) WAL recovery, pending-WAL fail-closed, and writer blocking behind the reader's whole-operation shared lock; no partial graph/artifact state was returned."
+      "observed": "2026-07-22 再取得 (r7)。前回 (r6) は R4-apply-template が未実行で 5 件すべてが template-contract.json の required_sections を欠落しており独立 evaluator に反証された。C11 の missing_sections は frontmatter / artifact 存在 / schema required のみを見て本文 required_sections を検査しないため、自己申告 PASS が空振りしていた。本 run は task.md にその検査境界を明記し、R4-apply-template の実行と subtype/conditional overlay の本文合成を必須化した。Live-trial verdict overall=PASS (launch/completion/goal_fit/verdict すべて PASS), tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0 (自走)。fixture は commit 済み生成手順 build_live_trial_fixture.py --kind node から 再生成しており artifact_kind を宣言しない (分類は被験 skill の仕事)。5 件が kind ごとの正規 path へ振り分けられ、2 回目の update 後も graph_node_id と格納 path が不変で ID 重複ゼロ、C02 経由の feature 生成なし、C11 は CLI 実行で exit 0。独立 verifier Agent が本文を直接読んで required_sections と overlay の実体を再計算し verified=true。orchestrator と別個体の fresh evaluator が template-contract.json と各 artifact 本文を突き合わせて blocker 0 で PASS。"
     },
     "OUT2": {
       "status": "PASS",
