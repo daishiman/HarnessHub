@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
-    "skill_md_sha256": "ed6459967c45115aaefd728f145c62747ddc5c189ead5475cca1df71fd03af15"
+    "skill_md_sha256": "6f6563a5205fc63a6a8f071d632307222853be988ac40ed51bf33b2b71c79085"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "assign-skill-design-evaluator-20260721",
-  "reviewed_at": "2026-07-21",
+  "reviewer": "assign-skill-design-evaluator-20260722",
+  "reviewed_at": "2026-07-22",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
@@ -22,18 +22,18 @@
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
       "FM-001/NM-001 維持: name=run-dev-graph-schedule は run- prefix + kebab-case でディレクトリ basename と一致し、今回の変更で frontmatter の命名・kind・hierarchy に影響が出ていない",
-      "BD-003/PD-001 維持: 本文は 93 行 (上限 300 / セクション上限 100 内) で、停止条件の追記は既存の CLI 契約段落 1 箇所に集約され、章構成 (Purpose & Output Contract / ゴールシーク実行 / Criteria acceptance / Gotchas) を増殖させていない",
+      "BD-003/PD-001 解消: 2026-07-22 の生成ステップ追記で一時 105 行へ増えたが、L94 の CLI 契約段落と重複していた由来説明段落を削除し本文を 100 行 (上限 300 / セクション上限 100 内) へ圧縮した。ready-json 生成 (C28) → schedule 算出 (C16) の順序と bd-bridge 生成コマンドを追加しつつ章構成 (Purpose & Output Contract / ゴールシーク実行 / Criteria acceptance / Gotchas) を増殖させていない",
       "PG-001 維持: responsibilities[] の R1-elicit / R2-plan / R3-schedule に対応する prompts/*.md が 3 件とも存在し、R3-schedule.md Layer 6 の『前段 receipt/digest と後段 input digest を一致させ stale handoff を拒否する』が今回の stale 停止条件と同方向で、責務プロンプトと SKILL.md が背反しない",
-      "単一責務の保持: 追記は schedule の入力受入 (fail-closed 条件) に限定され、manifest 生成・parity 修復といった C03 sync 側の責務を schedule へ持ち込んでいない。read-only 出力契約 (graph/tracker/lease を変更しない) も不変",
-      "SSOT 参照の明示: 追記文が (execution-tracker-contract §10) を本文中で名指ししており、契約正本と skill 記述の二重管理を避ける参照規約に沿う"
+      "単一責務の保持: 追記は schedule の入力受入 (ready-json 生成→消費の平常経路) に限定され、manifest 生成スクリプトの新設・parity 修復といった C03 sync 側の責務を schedule へ持ち込んでいない。read-only 出力契約 (graph/tracker/lease を変更しない) も不変",
+      "SSOT 参照の明示: 追記文が (execution-tracker-contract §10) を本文中で名指しし、由来必須要件 (generated_at / source_graph_digest) の正本を契約側に置いたまま二重管理を避ける参照規約に沿う"
     ],
     "negative_feedback": [
-      "smell (severity=low / 非ブロッキング): 追記により L87 の 1 段落が 7 つの独立した停止条件 (lease snapshot 欠落 / binding 別 ready 算出 / parity_provenance 必須 / stale digest / 回復手順 / unmapped 引き継ぎ / scope・max-parallel / lease expiry / eval-log containment) を 1 文塊で保持しており、条件の追加ごとに可読性が単調に劣化する。将来さらに停止条件が増える場合は箇条書きへの分解を推奨する。現時点では行数上限・章構成規約に違反せず、記述内容自体は実装と一致するため減点対象外"
+      "smell (severity=low / 非ブロッキング): L94 の 1 段落が依然として複数の独立停止条件 (lease snapshot 欠落 / binding 別 ready 算出 / parity_provenance 必須 / stale digest / 回復手順 / unmapped 引き継ぎ / scope・max-parallel / lease expiry / eval-log containment) を 1 文塊で保持しており、条件追加ごとに可読性が単調に劣化する。将来さらに停止条件が増える場合は箇条書きへの分解を推奨する。現時点では行数上限・章構成規約に違反せず、記述内容自体は実装と一致するため減点対象外"
     ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "incremental profile の focused combined review (30思考法は未使用)。評価 slice は SKILL.md L87 / execution-tracker-contract.md §10 / schedule-graph.py / bd-bridge.py に限定。実測 sha256=ed645996... に対し rubric 観点 (命名 FM/NM、構造 BD/PD、責務プロンプト PG、単一責務、SSOT 参照) で high severity 0 件。\n\nslice 外の pending 事項 (本 verdict に未算入、報告のみ): (1) REG-001 相当 — scripts/validate-build-trace.py が dev-graph の build-trace.json に doc_coverage 欠落で exit 1。commit 6a46c39 以来の repository 全体の schema 乖離で本変更起因ではない。(2) 評価器自身の穴 — plugins/harness-creator/skills/assign-skill-design-evaluator/scripts/render-findings-score.py の check_rule() が未実装 rule に対し None (= 合格扱い) を返し、PD-002 / KL-001..005 / PG-001 / PG-002 / BND-001 / REG-001 の 10 rule が採点されない。本 verdict では該当 rule を手動判定で補完した。いずれも run-skill-rubric-governance へのエスカレーション対象。"
+  "notes": "incremental profile の focused combined review (30思考法は未使用)。評価 slice は 2026-07-22 に変更された SKILL.md 本文の『ready-json 生成 (C28) → schedule 算出 (C16)』節 (HEAD 比 +8 行) と、参照先 execution-tracker-contract.md §10 / schedule-graph.py / bd-bridge.py に限定。現 SKILL.md を実測 (shasum -a 256) した sha256=6f6563a5... に対し rubric 観点 (命名 FM/NM、構造 BD/PD、責務プロンプト PG、単一責務、SSOT 参照) で high severity 0 件。\n\nslice 外の pending 事項 (本 verdict に未算入、報告のみ): (1) REG-001 相当 — scripts/validate-build-trace.py が eval-log/dev-graph/_plugin/build-evidence/20260713/build-trace.json の doc_coverage 欠落で exit 1。commit 6a46c39 以来の repository 全体の schema 乖離で本変更起因ではなく、ubm-goal-setting 等 他 plugin の build-trace も同様に落ちる。run-skill-rubric-governance へのエスカレーション対象。(2) FM-005 (low) — description 冒頭が名詞句のため rubric の動詞マーカー集合に一致しないが、『分離したいとき/算出したいとき』は実質動詞主導で語彙未登録による誤検出寄り。description 自体は本変更で不変。(3) 評価器機械経路 (render-findings-score.py) は content-review verdict を書かず eval-log/core/score.jsonl のみに追記するため、本 verdict は評価結果を content-review schema へ直列化して保存したもの。\n\n重要 (behavior-closure): 本 SKILL.md 変更で skill_dir_tree_sha が 3c921b8f→a78faf60 へ変化したため、OUT1 の live-trial 証跡 (eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T043419/verdict.json) は stale。criteria-test/scenario-verdict.json の再生成には live-trial 再実走が必要 (別途 blocker として報告)。"
 }
