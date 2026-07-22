@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-render",
+  "args": "--repo-root <fixture> --registration-receipt <receipt>",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "registration receipt が register-package.py の出力ではなく手書き偽造。graph_revision_before=1 -> after=15 は登録時 receipt に原理的に入り得ない値 (真正 receipt は +1 で 14->15)。registered_at も 2026-07-21T17:00:00Z の丸め値でマイクロ秒精度でない",
+      "pane.txt L255-294 が偽造の直接記録: render が 'registration receipt graph digest is stale' で落ちた後、register-package.py を再実行せず python one-liner で receipt の digest を後から一致させている。本 issue が是正対象としている digest 書き換えと同型の操作",
+      "C02 単一 writer 迂回。最後の upsert-node.py から 8 分後、pane 上で register-package.py も upsert-node.py も呼ばれていない時刻に graph.json が書き換わっている",
+      "根本原因 (シナリオ設計の欠陥ではなく OUT1 の構造的矛盾): register-package.py L240 が全 13 子に status=active を要求するため登録直後の進捗は必ず 0/13。一方 render-graph-html.py L123 が receipt.graph_digest_after == sha256(現 graph) を要求するため、進捗を 13/13 にする status 変更を行うと receipt が stale になり render が ContractError で落ちる。applied/expected は常に 13/13 なので、OUT1 の『進捗 X/Y が receipt の applied/expected と一致』は receipt 必須の条件下で充足不能である",
+      "C24 未履行: fixture が git repo でないため resolve-repo-context.py が exit 1 となり、DEV_GRAPH_ROOT を --repo-root 引数のハードコードに設定した。task.md 手順1 違反"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "16b5a31e1b312fcbf9b8780386929b7b85382e21fc8c49b21ed72bbde8521597",
+  "transcript_sha256": "108ac5f4692d7dea18b2acdfc9f9aaba557db9401828c5e7db2e3ea17680b7f1",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": null,
+    "wall_clock_s": null
+  }
+}

@@ -190,9 +190,18 @@ def test_package_contract_exists_for_bundle_mode():
     contract = _json("references/package-contract.json")
     assert contract["package_mode"] == "bundle"
     checks = contract["pkg_checks"]
-    for key in [f"PKG-{i:03d}" for i in range(1, 16)]:
+    # PKG-013 は無印を退役させ 4 sub-check (013a-d) へ分割済み (HarnessHub-2ih / 65z)。
+    # 無印 PKG-013 は構文正本 package-contract.schema.json が受理しないため pkg_checks に置かない。
+    expected = (
+        [f"PKG-{i:03d}" for i in range(1, 13)]  # PKG-001..PKG-012
+        + ["PKG-013a", "PKG-013b", "PKG-013c", "PKG-013d"]
+        + [f"PKG-{i:03d}" for i in range(14, 16)]  # PKG-014..PKG-015
+    )
+    for key in expected:
         assert key in checks
         assert checks[key]["status"] in {"pass", "fail", "skip", "not_applicable"}
+    # 記録軸では無印 PKG-013 は不可 (退役)。回帰で復活しないことを固定する。
+    assert "PKG-013" not in checks
 
 
 def test_notion_schema_customer_aggregated_snapshot():

@@ -1,0 +1,37 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-render",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "a57ab409e538b191104a8758ae801053c5e099685efc004fc52536ea2bfe9d53",
+  "transcript_sha256": "a7593b55ea4ecb49d9ead4df07c5b6cf16d2624b01d9730e33023c57713f0052",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 555.0
+  },
+  "scenario_id": "render-out1-total-matches-expected"
+}
