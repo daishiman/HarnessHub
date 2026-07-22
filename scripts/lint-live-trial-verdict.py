@@ -212,6 +212,35 @@ def _has_rerun_evidence(rel, old_doc, new_doc, base_ref, root, repo_root=None):
     return False
 
 
+def _provenance_base(base_ref, repo_root=None):
+    """provenance 差分の実効基準を HEAD と base_ref の分岐点 (merge-base) にする。
+
+    base_ref (例: origin/main) を直接 diff 基準にすると、作業ブランチが base_ref より
+    遅れているとき base_ref 側で後から追加された証跡まで「現ツリーから消えた」と
+    誤判定される (evidence-removed 偽陽性 = HarnessHub-ys3)。分岐点を基準にすれば
+    検査対象は「本ブランチが分岐後に加えた変更」だけに限定され、base_ref の後追い
+    追加は差分に現れない。真の証跡削除 (分岐点→HEAD で消えた run) は引き続き検出できる。
+
+    CI の push-to-main では HEAD==base_ref のため merge-base==base_ref となり従来と同一
+    (無回帰)。
+
+    利用できる材料:
+      - _git("merge-base", "HEAD", base_ref, repo_root=repo_root)
+        → returncode==0 なら .stdout.strip() が分岐点コミットの sha
+      - base_ref: 呼び出し元で rev-parse 済み (解決可能であることは保証済み)
+
+    returns: diff の基準にする ref 文字列。
+
+    フォールバック: merge-base が引けない場合 (無関係履歴・shallow clone・HEAD 不在) は
+    fail-closed の原則に従い厳格側の base_ref を返す。偽陽性は人手調査で回復できるが、
+    真の証跡削除の見逃しは不可逆なので「見逃さない側」へ倒す。
+    """
+    mb = _git("merge-base", "HEAD", base_ref, repo_root=repo_root)
+    if mb.returncode == 0 and mb.stdout.strip():
+        return mb.stdout.strip()
+    return base_ref
+
+
 def check_digest_provenance(base_ref, repo_root=None):
     """digest 単独書き換え (再 trial せずに緑化した証跡) を git 差分から検出する。
 
@@ -234,14 +263,18 @@ def check_digest_provenance(base_ref, repo_root=None):
     probe = _git("rev-parse", "--verify", f"{base_ref}^{{commit}}", repo_root=repo_root)
     if probe.returncode != 0:
         return [f"base-ref-unresolvable: {base_ref}"], 0
-    diff = _git("diff", "--name-only", base_ref, "--", "eval-log", repo_root=repo_root)
+    # base_ref (origin/main) を直接基準にすると、作業ブランチが base_ref より遅れている
+    # とき base_ref 側で後から追加された証跡まで「現ツリーから消えた」と誤判定する
+    # (evidence-removed 偽陽性 = ys3)。HEAD と base_ref の分岐点を実効基準にする。
+    base = _provenance_base(base_ref, repo_root=repo_root)
+    diff = _git("diff", "--name-only", base, "--", "eval-log", repo_root=repo_root)
     if diff.returncode != 0:
         return [f"git-diff-failed: {diff.stderr.strip()}"], 0
 
     root = Path(repo_root or ROOT)
     violations, inspected = [], 0
     for rel in (line for line in diff.stdout.splitlines() if _is_verdict_path(line)):
-        old = _git("show", f"{base_ref}:{rel}", repo_root=repo_root)
+        old = _git("show", f"{base}:{rel}", repo_root=repo_root)
         current = root / rel
         # 新規 run の追加は比較対象が無いので対象外
         if old.returncode != 0:
@@ -249,7 +282,7 @@ def check_digest_provenance(base_ref, repo_root=None):
         # 既存証跡の消失 (削除・run ディレクトリ改名) は履歴束縛を外す迂回になるため違反
         if not current.is_file():
             violations.append(
-                f"{rel}: evidence-removed: base_ref に存在した live-trial 証跡が現ツリーに無い "
+                f"{rel}: evidence-removed: 分岐点 (merge-base) に存在した live-trial 証跡が現ツリーに無い "
                 "(削除または run ディレクトリ改名 — digest 書き換えの履歴束縛を外す経路)"
             )
             continue
@@ -263,7 +296,7 @@ def check_digest_provenance(base_ref, repo_root=None):
         old_sha, new_sha = old_doc.get("skill_dir_tree_sha"), new_doc.get("skill_dir_tree_sha")
         if old_sha == new_sha:
             continue
-        if _has_rerun_evidence(rel, old_doc, new_doc, base_ref, root, repo_root=repo_root):
+        if _has_rerun_evidence(rel, old_doc, new_doc, base, root, repo_root=repo_root):
             continue
         violations.append(
             f"{rel}: digest-only-rewrite: skill_dir_tree_sha を {str(old_sha)[:12]} → "
