@@ -16,11 +16,11 @@ file_path: specs/harness-hub-system-specification.md
 template_id: specification
 template_version: 1.0.0
 confirmation_status: confirmed
-evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
+evaluation_status: fail
+confirmation_evidence: {"evaluated_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
 source_lineage: {"imported_at": "2026-07-18T08:10:00Z", "origin_kind": "system-spec-harness", "source_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15", "source_path": "system-spec/00-requirements-definition.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
 created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-18T15:40:17Z
+updated_at: 2026-07-22T08:15:00Z
 depends_on: []
 related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow"]
 resource_scope: ["specs/harness-hub-system-specification.md"]
@@ -56,7 +56,7 @@ implementation_readiness: {"status": "complete", "missing_sections": [], "checke
 - [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `6b24a06e4116a966…`)
 - [system-spec/index.md](../system-spec/index.md) (sha256: `491539b244ee2436…`)
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
+- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **FAIL** (`system-spec/completeness-report.json`、2026-07-22 実 fork 監査つき再評価。evaluated_digest `f5e022ed4ad5ae96…` = D7 反映後の正本。是正: doc_freshness 2 件 + D7 質疑証跡の補完後に再評価で pass へ復帰させる)
 - 取込日時: 2026-07-18T08:10:00Z / plugin: system-spec-harness v0.1.0
 
 ## 目的と成功状態
