@@ -7,7 +7,7 @@
     "skill_md_sha256": "0f687c574616ac556a0b45c1405ffb5ff9722a5c5e1d20e2a1df3cd388685d11"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-regeneration-worktree-20260722",
+  "reviewer": "live-trial-closure-refresh-worktree-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "decompose-macro-positive-r3",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T051500/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T140508-r6/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T051500/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T051500/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T140508-r6/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T140508-r6/transcript.jsonl",
         "independent: fresh evaluator replay of transcript, receipts and recomputed digests"
       ],
-      "observed": "execution-tracker-contract §10 の再生成手順を 2 段へ是正したことで宣言済み挙動閉包 digest が再び動いたため 2026-07-22 に再実走。対象 Skill を Skill tool で起動し --dry-run のマクロ分解を実施。architecture 1 + feature 2 (TODO feature が認証 feature に依存) が非循環 DAG として preview され、task 粒度の混入 0・全 node draft/tracker_binding=none・外部 write 0。fresh evaluator が fixture の graph.json が {graph_revision:0, nodes:[]} のままであること・git status が空であること・graph.json の mtime が fixture 生成時刻のまま実走時間帯に触れられていないことを実測し、全 tool call を rm/restore/リダイレクト等で正規表現走査して write 後削除による回避が 0 件であることを確認。今回は同梱の validate-graph-schema.py を module import して DAG 検査に用いている。"
+      "observed": "main 取り込み (origin 9227058) で guard-graph-schema.py (全 skill の plugin hooks 閉包) と bd-bridge.py が変わり 宣言済み挙動閉包 digest が動いたため 2026-07-22 に再実走。対象 Skill を Skill tool で起動し --dry-run のマクロ分解を実施。architecture 1 + feature 2 (TODO feature が認証 feature に依存) が非循環 DAG として preview され、task 粒度混入 0・全 node draft/tracker_binding=none・外部 write 0 (fixture graph.json は {graph_revision:0,nodes:[]} のまま・git status 空)。同梱 validate-graph-schema.py を module load して DAG 検査に用い、循環・dangling 無しを確認。fresh evaluator (別個体 Agent) が transcript と fixture を実読して goal_fit=PASS を独立判定。live-trial verdict の skill_dir_tree_sha は現閉包と一致する。"
     },
     "OUT2": {
       "status": "PASS",

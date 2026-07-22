@@ -7,7 +7,7 @@
     "skill_md_sha256": "e21ba72e1027459544a9dc81bd2084fa76494472c4804ca99c0bbac707157fd6"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-regeneration-worktree-20260722",
+  "reviewer": "live-trial-closure-refresh-worktree-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T051500-r11/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T135005-r12/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T051500-r11/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T051500-r11/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T135005-r12/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T135005-r12/transcript.jsonl",
         "independent: fresh evaluator replay of transcript, receipts and recomputed digests"
       ],
-      "observed": "execution-tracker-contract §10 の再生成手順を 2 段 (manifest 再生成 + C28 receipt 取り直し) へ是正したことで宣言済み挙動閉包 digest が再び動いたため 2026-07-22 に再実走 (r11)。対象 Skill を Skill tool で起動し、R3-sync を別 Agent へ分離。pass1 で import(title)/export(Status) を適用し pass2 は changes=0 / imports・exports・pending_retry 全空 / write_count 0 で収束。fresh evaluator が親 transcript と subagent transcript 2 件を 実読して pass1/pass2 の Write 内容が sub-agent の Bash stdout と完全一致することを確認し、自ら sync-graph.py --dry-run を再実行して収束を独立再現。正本 sync-snapshot は現行 remote title と一致し issue/project/item ID も不変。独立 verifier receipt は verified=true (10 checks)。"
+      "observed": "main 取り込み (origin 9227058) で guard-graph-schema.py (全 dev-graph skill の plugin hooks 閉包) と bd-bridge.py が変わり宣言済み挙動閉包 digest が動いたため 2026-07-22 に再実走 (r12)。対象 Skill を Skill tool で起動し R3-sync を別 Agent fork に分離。pass1(--apply)/pass2(--dry-run) を実行し pass2 は changes=0 / imports・exports・pending_retry 全空 / write_count 0 で収束。正本 sync-snapshot は現行 remote title と一致、issue/project/item ID 不変、graph/snapshot/remote の sha256 が前後不変。fresh evaluator (別個体 Agent) が transcript と receipt を実読して goal_fit=PASS を独立判定し、独立 verifier receipt は verified=true (10 checks)。live-trial verdict の skill_dir_tree_sha は 現閉包と一致する。"
     },
     "OUT2": {
       "status": "PASS",

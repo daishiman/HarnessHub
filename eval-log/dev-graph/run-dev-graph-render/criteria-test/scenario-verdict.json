@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-render",
     "component_id": "C05",
-    "skill_md_sha256": "da9113c9c03ede0ddcba41ac7046e73b312d7fb3b5e04964ac76d0c16a8bca6d"
+    "skill_md_sha256": "e31e1245beaec6ad6b62b0079d0108db03532c40a82ea071bf039eefca4eebf6"
   },
   "verdict": "PASS",
-  "reviewer": "audit-sync-render-20260720",
+  "reviewer": "live-trial-closure-refresh-worktree-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "render-feature-progress-positive",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T144231-r10/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T144231-r10/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T144231-r10/transcript.jsonl",
+        "independent: fresh evaluator recomputed rendered node total and feature progress vs graph"
       ],
-      "observed": "2026-07-21 再取得 (r6)。commit 済み生成手順 (live_trial_shapes/shape_render.py) が再現する 「exact-13 package 登録直後・一部 task 完了」状態に対し render を実行。Live-trial verdict overall=PASS, tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0。独立 evaluator が graph を自ら数えて feature progress X/Y の一致を確認し、registration receipt の applied_count/expected_count/source_digest と実 graph の整合、自己完結出力 (外部リソース依存なし)、描画対象外 node の非混入を検証して PASS。"
+      "observed": "main 取り込み (origin 9227058) で render SKILL.md 更新 (skill_md_sha256 を stale の da9113c9c03e… から現行 e31e1245beae… へ是正) と guard-graph-schema.py/bd-bridge.py 由来の閉包 digest 変化が重なったため 2026-07-22 に再実走 (r10)。対象 Skill を Skill tool で起動し R1/R2/R3 を Agent へ分離。外部 CDN/npm 参照 0 の自己完結 index.html を生成し、feature ノードの進捗が 'feature · 0/13' として正しく描画され (render-feature-progress-positive)、描画ノード総数 15 が graph.json の nodes 15 と一致。graph.json は render 実行より前の mtime のまま非改変で、書き込みは index.html のみ。fresh evaluator (別個体 Agent) が実データでノード数と feature 進捗を数え直し外部依存 grep も行って goal_fit=PASS を独立判定。live-trial verdict の skill_dir_tree_sha は現閉包と一致する。"
     }
   }
 }

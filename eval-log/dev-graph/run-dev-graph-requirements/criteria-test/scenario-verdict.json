@@ -7,7 +7,7 @@
     "skill_md_sha256": "3ce641ca34a5ef58c69014b8d5942f0490b116f95ff44ebd7e9b0f5c0e8d164c"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r1",
+  "reviewer": "live-trial-closure-refresh-worktree-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,12 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260713T090000-r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260722T142830-r7/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260713T090000-r3/verdict.json",
-        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260713T090000-r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260722T142830-r7/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260722T142830-r7/transcript.jsonl",
+        "independent: fresh evaluator + dev-graph-requirements-verifier recomputed digests"
       ],
-      "observed": "Live-trial verdict overall=PASS (launch=PASS, completion=PASS, goal_fit=PASS, verdict=PASS), actual_model=[claude-opus-4-6], transcript_layer=jsonl, transcript_sha256 present, downgrade_reason=null, tier=live. Positive scenario 'handoff --feature-id LT-FEATURE-001 --package .../package.json' emitted a capability-build/task-graph handoff bound to the exact-13 package/feature/source-digest and generated zero implementation source files (out/status.json scenario=requirements-positive-handoff status=PASS)."
+      "observed": "main 取り込み (origin 9227058) で guard-graph-schema.py (全 skill の plugin hooks 閉包) と bd-bridge.py が変わり 宣言済み挙動閉包 digest が動いたため 2026-07-22 に再実走 (r7)。対象 Skill を Skill tool で起動し handoff を実施。実装要件 document と readiness matrix を生成し all_implementation_ready=true (15 node complete)、handoff は feature_id=F-LIVE-001 と source_feature/package/graph digest に束縛。fresh verifier (別個体 Agent) が shasum を自ら実行して handoff の digest と一致することを再計算で確認し verified=true。C11 validate-graph-schema.py は --repo-root 付き CLI で exit 0。fresh evaluator が goal_fit=PASS を独立判定。live-trial verdict の skill_dir_tree_sha は現閉包と一致する。"
     },
     "OUT2": {
       "status": "PASS",

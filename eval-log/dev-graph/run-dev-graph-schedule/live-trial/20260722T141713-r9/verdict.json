@@ -1,0 +1,37 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-schedule",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "44de0db1179dd0900f4d0f20a68df3aae1a33c2eb49c5d963eaa5da3e45a8096",
+  "transcript_sha256": "c4fe332aec64b6c3bff73331f589286c8f171b2d6c1c527e2a70aa7f16579d87",
+  "scenario_origin": "replay",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": null
+  },
+  "scenario_id": "schedule-positive-ready-set"
+}

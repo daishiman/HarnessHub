@@ -7,7 +7,7 @@
     "skill_md_sha256": "2124bcd327bbd9a7e00ced1b6a0df2690e2487ccca9c35fab6e43ac490c33c0a"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-regeneration-worktree-20260722",
+  "reviewer": "live-trial-closure-refresh-worktree-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -29,13 +29,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "schedule-positive-ready-set",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T051500-r8/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T141713-r9/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T051500-r8/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T051500-r8/transcript.jsonl",
-        "independent: fresh evaluator replay of r6 task, pane, execution receipt, graph, and canonical lease ledger"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T141713-r9/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T141713-r9/transcript.jsonl",
+        "independent: fresh evaluator replay of task, execution receipt, graph, and canonical lease ledger"
       ],
-      "observed": "回復手順を 2 段 (build-parity-manifest.py での manifest 再生成 + bd-bridge.py --op ready での C28 receipt 取り直し) へ是正したことで宣言済み挙動閉包 digest が動いたため 2026-07-22 に再実走 (r8)。対象 Skill を Skill tool で起動し、R3-schedule と C17 verifier をそれぞれ別 Agent へ分離 (C17 は dev-graph-parallel-safety-verifier)。read-only receipt は LT-TASK-001 を唯一の ready task とし、未充足依存 0・lease/resource conflict 0・一意な branch/claim hint・graph/tracker/lease digest 不変。fresh evaluator が fixture の graph/lease へ shasum を自ら実行して receipt の before/after 双方と一致することを確認し、goal-seek の hash 検査スクリプトも 再実行して PASS。独立 verifier receipt は verified=true (13 checks)。"
+      "observed": "main 取り込み (origin 9227058) で guard-graph-schema.py (全 skill の plugin hooks 閉包) と bd-bridge.py が変わり 宣言済み挙動閉包 digest が動いたため 2026-07-22 に再実走 (r9)。対象 Skill を Skill tool で起動し R3-schedule と C17 verifier を別 Agent へ分離。read-only receipt は LT-TASK-001 を唯一の ready task とし、未充足依存 0・lease/resource conflict 0・一意な branch/claim hint (devgraph/LT-TASK-001)・graph/tracker/lease digest 不変。fresh C17 verifier が receipt/graph/lease を実読して再計算し verified=true (6 checks)。fresh evaluator (別個体 Agent) が goal_fit=PASS を独立判定。live-trial verdict の skill_dir_tree_sha は現閉包と一致する。"
     },
     "OUT2": {
       "status": "PASS",
