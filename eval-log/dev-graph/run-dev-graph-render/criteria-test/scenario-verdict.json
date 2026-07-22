@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "render-feature-progress-positive",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260713T090000-r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260713T090000-r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260713T090000-r3/transcript.jsonl",
-        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_render_scope_containment_and_registration_receipt"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/out/status.json"
       ],
-      "observed": "Recorded live trial remains PASS for browser-renderable SVG and feature X/Y progress. Current integration test rendered an exact-13 feature with progress 4/13 from a canonical registration receipt, excluded out-of-scope nodes, and preserved a self-contained output with stable input digest."
+      "observed": "2026-07-21 再取得 (r6)。commit 済み生成手順 (live_trial_shapes/shape_render.py) が再現する 「exact-13 package 登録直後・一部 task 完了」状態に対し render を実行。Live-trial verdict overall=PASS, tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0。独立 evaluator が graph を自ら数えて feature progress X/Y の一致を確認し、registration receipt の applied_count/expected_count/source_digest と実 graph の整合、自己完結出力 (外部リソース依存なし)、描画対象外 node の非混入を検証して PASS。"
     }
   }
 }

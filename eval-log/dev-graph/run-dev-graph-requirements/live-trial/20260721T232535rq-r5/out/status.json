@@ -1,0 +1,1 @@
+{"status": "PASS", "scenario": "requirements-ready-handoff-positive", "checks": {"handoff_emitted": true, "bound_to_feature_and_digest": true, "exact13_dag_preserved": true, "no_implementation_source_generated": true, "c11_exit0": true}}
