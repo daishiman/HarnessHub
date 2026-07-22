@@ -116,6 +116,10 @@ DELEGATION_ROLES = {"primary", "sub_input"}
 # fork 台帳 (PostToolUse hook `hooks/record-audit-fork.py` が追記する append-only JSONL) の既定位置。
 LEDGER_ENV = "SYSTEM_SPEC_AUDIT_FORK_LEDGER"
 LEDGER_RELPATH = Path("eval-log") / "system-spec-harness" / "audit-fork-ledger.jsonl"
+# 台帳行として受理する subagent 起動ツール名。hook 側は観測名をそのまま記録する
+# (旧ハーネス/Codex 系='Task', 現行 Claude Code='Agent')。record-audit-fork.py の
+# AUDIT_FORK_TOOL_NAMES と整合を保つこと (issue: HarnessHub-scl)。
+LEDGER_TOOL_NAMES = ("Task", "Agent")
 
 
 def required_delegations() -> list[dict]:
@@ -176,7 +180,7 @@ def load_fork_ledger(path) -> dict:
         except json.JSONDecodeError:
             malformed += 1
             continue
-        if not isinstance(rec, dict) or rec.get("tool_name") != "Task":
+        if not isinstance(rec, dict) or rec.get("tool_name") not in LEDGER_TOOL_NAMES:
             malformed += 1
             continue
         st = rec.get("subagent_type")
@@ -323,8 +327,11 @@ def validate_attribution(report: dict, ledger: dict | None = None) -> list[str]:
         if not isinstance(dispatch, dict):
             v.append(f"{label}.dispatch: オブジェクトでない (fork の起動方法が記録されていない)")
         else:
-            if dispatch.get("tool") != "Task":
-                v.append(f"{label}.dispatch.tool != 'Task' (独立 context の fork は Task 経由必須)")
+            if dispatch.get("tool") not in LEDGER_TOOL_NAMES:
+                v.append(
+                    f"{label}.dispatch.tool={dispatch.get('tool')!r} が {list(LEDGER_TOOL_NAMES)} 外"
+                    " (独立 context の fork は subagent 起動ツール経由必須)"
+                )
             if dispatch.get("subagent_type") != req["auditor"]:
                 v.append(f"{label}.dispatch.subagent_type != {req['auditor']!r}")
         dv = d.get("verdict")
