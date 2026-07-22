@@ -7,7 +7,7 @@
     "skill_md_sha256": "ed6459967c45115aaefd728f145c62747ddc5c189ead5475cca1df71fd03af15"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-provenance-worktree-20260721",
+  "reviewer": "dev-graph-criteria-scenario-20260722T134626-e9b-sched-r8",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "schedule-positive-ready-set",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T134626-e9b-sched-r8/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T134626-e9b-sched-r8/verdict.json",
+        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T134626-e9b-sched-r8/out/status.json"
       ],
-      "observed": "2026-07-22 再取得 (r7)。本 PR の guard hook 変更と main merge で behavior closure が動いたため再実走した。sync が --apply で graph を書き換える干渉を避けるため、schedule 専用の fixture を分離して生成している。Live-trial verdict overall=PASS (launch/completion/goal_fit/verdict すべて PASS), tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0 (自走)。R3 を Agent へ分離して --max-parallel 4 で実行し、独立 C17 verifier Agent が C24 receipt・実行 receipt・graph・canonical lease ledger を実際に読んで ready/batch/lease authority を再計算し verified=true。graph/tracker/lease の digest は実行前後で不変 (read-only)。orchestrator と別個体の fresh evaluator が graph から ready-set を独立再計算して厳密一致を確認し blocker 0 で PASS。"
+      "observed": "Live-trial re-verification at the post-PR#22 closure (bd-bridge.py sits inside this skill's declared behavior closure, so run 20260722T053301-r7's sha 11d1ef1a went stale when main moved to 0a5c1e27). Run 20260722T134626-e9b-sched-r8 re-ran scenario schedule-positive-ready-set fresh (fixture rebuilt from build_live_trial_fixture.py --kind sync, fresh Claude session, no intervention): overall=PASS, nudge=0/gate=0, poll DONE at 435s, actual_model=[claude-opus-4-6], tier=live, skill_dir_tree_sha=0a5c1e27 (current closure). Independent fresh evaluator confirmed on primary evidence: literal Skill call first (transcript line 52, prior calls read-only); R3-schedule isolated in an Agent fork running schedule-graph.py with canonical graph, --ready-source self, canonical .git/dev-graph/leases.json, --max-parallel 4; execution receipt read_only=true, ready_set.tasks=[LT-TASK-001], single-task batch, conflicts 0, suggested_branch=devgraph/LT-TASK-001 with unique claim command; graph/lease sha256 recomputed by the evaluator and invariant before/after (tracker digest null per tracker_binding=github); separate C17 Agent verifier re-read all four primary files and wrote verified=true (8 checks) into run-dev-graph-schedule-independent-verifier-r8.json; marker contract kept (out/status.json only, DONE: PASS, zero questions)."
     },
     "OUT2": {
       "status": "PASS",
