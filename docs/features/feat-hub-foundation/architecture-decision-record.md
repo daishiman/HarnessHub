@@ -183,7 +183,7 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 
 - 上位入力: `docs/features/feat-hub-foundation/requirements-baseline.md`（P01）, `docs/shared-layers.md` §1〜§5, `docs/system-design-overview.md`, **`docs/infrastructure-spec.md`（改訂 2 で追加。初版が未接地だった確定仕様正本）**
 - published task spec: `.dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/task-specs/phase-02-architecture.md`
-- 検証コマンド: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging <promoted package>`
+- 検証コマンド: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hub-foundation`（世代非依存形式。current pointer から現行世代を解決する。`--staging <promoted package>` 直書きは promotion 後に stale になるため使わない。contract §2.3）
 - P02 acceptance: (a)(b)(c) の比較表（§2.1）と (b) 採用理由（§2.2）、`apps/hub` と `packages/{ui,schemas,inspection,estimation,db}` の各責務境界（§2.4・§3）が記載されていること
 
 ## 11. P03 差し戻し是正記録（改訂 2 / 2026-07-21）
