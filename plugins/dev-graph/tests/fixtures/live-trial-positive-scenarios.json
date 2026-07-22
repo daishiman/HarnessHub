@@ -21,8 +21,8 @@
       "skill": "run-dev-graph-sync",
       "criterion_id": "OUT1",
       "mode": "positive",
-      "task_args_template": "sync --repo-root <contained-fixture-repo> --binding github --adapter-fixture <contained-fixture-repo>/github-adapter.json --repeat 2",
-      "fixture_contract": "A deterministic GitHub adapter fixture has one valid import and one valid export, stable timestamps, IDs, aliases, and snapshots.",
+      "task_args_template": "--repo-root <contained-fixture-repo> と続けて --dry-run / --apply / 確認 --dry-run の 3 パスを同じ入力で回す (決定論 remote は fixture 内 .dev-graph/remote.json)",
+      "fixture_contract": "A deterministic GitHub remote-state fixture (.dev-graph/remote.json) has one valid import and one valid export, stable timestamps, IDs, aliases, and snapshots, so sync converges without touching any external GitHub API.",
       "required_observations": [
         "the first sync applies the expected import and export",
         "the second sync reports imports changes=0 and exports changes=0",
@@ -35,7 +35,7 @@
       "skill": "run-dev-graph-requirements",
       "criterion_id": "OUT1",
       "mode": "positive",
-      "task_args_template": "handoff --repo-root <contained-fixture-repo> --feature-id F-LIVE-001 --package <contained-fixture-repo>/system-plan/F-LIVE-001/package.json",
+      "task_args_template": "--repo-root <contained-fixture-repo> --feature-id F-LIVE-001 (package は fixture 内 system-plan/F-LIVE-001/ を skill が解決する)",
       "fixture_contract": "The feature is confirmed/evaluation-pass/readiness-complete and the package is a valid P01..P13 exact-13 DAG with matching source digest and parent feature.",
       "required_observations": [
         "a capability-build task-graph handoff is emitted for the exact-13 package",
