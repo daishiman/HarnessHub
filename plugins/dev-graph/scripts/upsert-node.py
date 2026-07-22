@@ -45,6 +45,9 @@ ROOT_BY_KIND = {
     "document": "docs",
     "feature": "features",
 }
+# feature を生む正経路の出自。manual/github/system-dev-planner は macro 層の入口ではない
+# (system-dev-planner は 1 feature → exact-13 task を返す側で、feature 自体は作らない)。
+MACRO_FEATURE_ORIGIN_KINDS = frozenset({"generated", "system-spec-harness"})
 TEMPLATE_BY_KIND = {
     "issue": "issue.md",
     "task": "task.md",
@@ -138,6 +141,52 @@ def _canonical_path(node: dict[str, Any], existing: dict[str, Any] | None) -> st
     if existing is not None and existing.get("file_path") != node["file_path"]:
         raise ContractError("upsert does not move an existing node; create an explicit migration")
     return node["file_path"]
+
+
+def _assert_c14_macro_contract(node: dict[str, Any], root: Path) -> None:
+    """feature は C14 macro contract 由来だけを受理する (通常 artifact routing では作らせない)。
+
+    SKILL.md OUT1 / MM 契約: 「feature は C14 の macro contract から受け取り、通常 artifact
+    routing で新規生成しない」。この gate が無い間、lineage が manual/全 null の feature が
+    通常 add で登録され features/ に実ファイルが作られていた (2026-07-21 live-trial r13)。
+
+    fail-closed: 判定に必要な情報が欠けている場合は必ず ContractError を送出する。
+    """
+    lineage = node.get("source_lineage")
+    if not isinstance(lineage, dict):
+        raise ContractError(
+            "feature requires source_lineage proving C14 macro contract provenance"
+        )
+
+    def source_digest_matches() -> bool:
+        """source_path の実ファイル内容が source_digest と一致するかを実測する。"""
+        raw = lineage.get("source_path")
+        expected = lineage.get("source_digest")
+        if not isinstance(raw, str) or not raw or not isinstance(expected, str) or not expected:
+            return False
+        try:
+            source = contained(root / raw, root, must_exist=True)
+        except (ContractError, OSError):
+            return False
+        return _sha256(source.read_bytes()) == expected
+
+    origin_kind = lineage.get("origin_kind")
+    if origin_kind not in MACRO_FEATURE_ORIGIN_KINDS:
+        raise ContractError(
+            "feature must come from the C14 macro contract: "
+            f"source_lineage.origin_kind {origin_kind!r} is not one of "
+            f"{sorted(MACRO_FEATURE_ORIGIN_KINDS)}"
+        )
+    source_plugin = lineage.get("source_plugin")
+    if not isinstance(source_plugin, str) or not source_plugin.strip():
+        raise ContractError(
+            "feature from the C14 macro contract requires source_lineage.source_plugin"
+        )
+    if not source_digest_matches():
+        raise ContractError(
+            "feature from the C14 macro contract requires source_lineage.source_path to be a "
+            "contained repository file whose sha256 equals source_lineage.source_digest"
+        )
 
 
 def _body_from_artifact(path: Path) -> str:
@@ -260,6 +309,11 @@ def _perform(args: argparse.Namespace) -> dict[str, Any]:
         if _node_id(node) != requested_id:
             raise ContractError("graph_node_id is immutable and must match the request identity")
         relative_path = _canonical_path(node, existing)
+        # 新規 feature と kind 差替えによる feature 化の双方を gate する (dry-run も同じ経路)。
+        if node.get("artifact_kind") == "feature" and (
+            existing is None or existing.get("artifact_kind") != "feature"
+        ):
+            _assert_c14_macro_contract(node, root)
         artifact = contained(root / relative_path, root, must_exist=False)
         body = _body(payload, args.body_file, root, artifact, str(node["artifact_kind"]), existing)
 
