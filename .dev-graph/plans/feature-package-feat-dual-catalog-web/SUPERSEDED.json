@@ -1,0 +1,24 @@
+{
+  "current_pointer": ".dev-graph/state/current/feature-package-feat-dual-catalog-web.json",
+  "feature_package_id": "feature-package/feat-dual-catalog-web",
+  "notice": "この directory は supersede 済みの旧世代であり、正本ではない。実装要件の正本は superseded_by.published_path 配下の content-addressed generation を読むこと。旧世代は byte-for-byte 不変で保持されるため、この directory の中身を編集して現行世代へ追随させてはならない。さらに世代が進んだ場合は current_pointer から再解決すること。",
+  "published_digest": "sha256:6c488a42d91f6d71efff948f6392be3b93f93a84ed449ec9b87f1baeefb73901",
+  "schema_version": "1.0.0",
+  "status": "superseded",
+  "superseded_by": {
+    "generation_id": "7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+    "published_digest": "sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/atomic-promotion-receipt.json"
+  },
+  "superseded_receipts": {
+    "promotion": {
+      "path": ".dev-graph/plans/feature-package-feat-dual-catalog-web/atomic-promotion-receipt.json",
+      "sha256": "sha256:0498c789d65c72bc9425cef0b3d4e1f295b157dbc82fa3eae811f9322a31df11"
+    },
+    "registration": {
+      "path": ".dev-graph/plans/feature-package-feat-dual-catalog-web/registration-receipt.json",
+      "sha256": "sha256:d64f3c6a143b9cc459589be12c5750f09813577c713303dd18092d74e62f87f5"
+    }
+  }
+}

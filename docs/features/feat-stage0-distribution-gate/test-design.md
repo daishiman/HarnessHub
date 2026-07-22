@@ -133,6 +133,6 @@ desktop Linux 向けのチェックリストは**作成しない** (baseline §6
 
 ## 7. 検証
 
-- Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/plans/feature-package-feat-stage0-distribution-gate`
+- Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-stage0-distribution-gate`（世代非依存形式。current pointer から現行世代を解決する。generation path 直書きは再計画で stale になるため使わない。contract §2.3）
 - Required evidence: quality_constraints 8 件と acceptance 3 件の全件に対応する実機検証ケース (macOS/Windows 別チェックリストを含む) が記載されていること → §2・§3・§5・§6 で確認可能
 - rollback trigger: T-Q4 の changelog 再照合で marketplace 仕様の変更が判明した場合、該当 test ID の判定条件を修正し P05 以降を再実行する
