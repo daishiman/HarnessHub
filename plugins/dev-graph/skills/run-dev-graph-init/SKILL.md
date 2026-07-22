@@ -55,7 +55,7 @@ feedback_contract:
   criteria:
     - id: IN1
       loop_scope: inner
-      text: "validate-graph-schema.py で初期グラフストアを、repo-config.schema.json で生成 config を送信前検証しスキーマの必須キー欠落が 0 件"
+      text: "validate-graph-schema.py で初期グラフストアを送信前検証しスキーマの必須キー欠落が 0 件"
       verify_by: script
     - id: OUT1
       loop_scope: outer
@@ -92,7 +92,7 @@ feedback_contract:
 ## Input / output
 
 - 入力: `--repo-root` または信頼済み project context、hook source。保存先や node ID は質問しない。
-- 出力: `issues/ tasks/ specs/ architecture/ features/ docs/`、`.dev-graph/{config.json,state/graph.json,cache/,locks/,templates/}` と初期化 receipt。graph の正本位置は `local_state.graph` (既定 `.dev-graph/state/graph.json`) であり `.dev-graph/graph.json` ではない。
+- 出力: `issues/ tasks/ specs/ architecture/ features/ docs/`、`.dev-graph/{config.json,graph.json,state/,cache/,locks/,templates/}` と初期化 receipt。
 - GitHub は `enabled:false` で初期化し、owner/project number/field name のみ保存する。token と GitHub node ID は保存しない。
 
 ## Execution contract
@@ -101,7 +101,7 @@ feedback_contract:
 2. 既存ファイルを列挙して preview。6 root と repo-local directory は欠落時だけ作る。
 3. plugin の `templates/` 全件を `.dev-graph/templates/` へ欠落時だけコピーする。利用者編集済みファイルは上書きせず `migration_preview` へ記録する。
 4. plugin hook を既定とする。`project-fallback` は plain-symlink 導入かつ effective plugin hook 不在時だけ許可し、既存 `.claude/settings.json` を deep-merge preview 後に更新して rollback manifest を残す。二重登録は拒否する。
-5. 3 系統を別々に検証する。(a) graph = `validate-graph-schema.py`、(b) 生成した `.dev-graph/config.json` = `$CLAUDE_PLUGIN_ROOT/schemas/repo-config.schema.json` による JSON Schema 検証、(c) template readiness = `$CLAUDE_PLUGIN_ROOT/templates/template-contract.json` の列挙資産と `.dev-graph/templates/` の突合。**(a) と (b) は別物で、validate-graph-schema.py は config を見ない** — config を未検証のまま完了すると、schema 不適合 (content_roots の key 欠落、空文字の issue_repository/owner_login、project_number=0 等) の config を正常初期化として出力してしまう (C01 live-trial r16 で実際に発生)。二回目実行の planned changes が 0 でなければ完了しない。
+5. `validate-graph-schema.py` で config/graph/template readiness を検証する。二回目実行の planned changes が 0 でなければ完了しない。
 
 Receipt は `repository_id`, repo-relative roots, created/preserved/migration_preview, hook_source, schema_result を含む。検証失敗時は部分成功を成功扱いしない。
 
@@ -118,8 +118,7 @@ symlinkで配布された任意の呼出し元repository/worktreeを解決し、
 ### 完了チェックリスト
 
 - [ ] `resolve-repo-context.py` receipt の repository_id/common-dir/content root が caller repo と一致する
-- [ ] `issues/tasks/specs/architecture/features/docs` と `.dev-graph/{config.json,state/graph.json,cache,locks}` が実在する
-- [ ] 生成した `.dev-graph/config.json` が `$CLAUDE_PLUGIN_ROOT/schemas/repo-config.schema.json` に適合し、content_roots が 7 key を欠落なく持つ (6 root に対応する `issues`/`tasks`/`specifications`=`specs`/`architecture`/`features`/`documents`=`docs` と、C19 の取込先 `system_spec`=`system-spec`。key 名と directory 名は一致しない)
+- [ ] `issues/tasks/specs/architecture/features/docs` と `.dev-graph/{config.json,graph.json,state,cache,locks}` が実在する
 - [ ] `template-contract.json` 列挙資産が欠落0で、利用者編集済み template の digest が不変である
 - [ ] effective hook は plugin または許可済み fallback の一経路だけで、既存 settings key/hash の変更が0件である
 - [ ] `validate-graph-schema.py` が exit0 で、同じ入力の二回目 init の planned changes が0件である
@@ -157,7 +156,7 @@ PY
 
 ## Criteria acceptance
 
-- `criteria:IN1`: `validate-graph-schema.py` の初期 graph 検証と、`repo-config.schema.json` による生成 config 検証の双方で必須キー欠落が0件である (前者は config を検証しないため 2 系統を別に走らせる)。
+- `criteria:IN1`: `validate-graph-schema.py` の初期 graph 検証で必須キー欠落が0件である。
 - `criteria:OUT1`: `issues/tasks/specs/architecture/features/docs` と graph store が揃い、二回目initの変更が0件である。
 - `criteria:OUT2`: 全 kind template を `.dev-graph/templates/` へ配置し、二回目initでも利用者編集を上書きしない。
 - `criteria:OUT3`: repo A/B の cross-read/write 0件、absolute stored path 0件を確認し、project-root不一致、broken content symlink、harness link切断をfail-closedにする。
