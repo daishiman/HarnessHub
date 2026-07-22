@@ -1,1 +1,0 @@
-{"status": "PASS", "scenario": "decompose-macro-positive", "checks": {"macro_granularity": true, "dependency_direction_correct": true, "has_cycle": false, "task_count_zero": true, "all_draft": true, "no_register_package": true, "c11_exit0": true, "negative_controls_detected": true}}

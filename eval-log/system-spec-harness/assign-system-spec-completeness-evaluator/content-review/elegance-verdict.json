@@ -2,13 +2,13 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "d76db131604e23370a858412867ed02da99ef06ce5b4b886139b17613610f36d"
+    "skill_md_sha256": "13171056272da9ae98f9d1525cd0feb556d99946a8210bd157a123a1918c8e6a"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "run-elegant-review-subagent-team",
-  "reviewed_at": "2026-07-14",
-  "iterations": 1,
+  "reviewer": "assign-skill-design-evaluator-combined",
+  "reviewed_at": "2026-07-22",
+  "iterations": 3,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
@@ -21,15 +21,18 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "観点↔評価主体の対応が矛盾なく一貫している: C06 (hearing-auditor) は system-spec/*.md を読まないため design_knowledge_reflection へ束縛せず matrix_coverage の sub-input へ再配置した旨を、対応表 (L70-74)・本文 (L76)・Step1 (L131)・Gotcha1 (L150) の全箇所で同一に記述し、旧世代の虚偽対応を明示撤去している。",
-      "Goodhart 防止が設計思想として貫通している: design_knowledge_reflection は『存在確認だけで PASS にしない』(意味層=確定セルへの具体適用)、総合判定は aggregate-completeness.py の aggregate_verdict で観点スコアから fail-closed 再導出しレポート verdict と一致必須、と自己肯定バイアスを断つ機構が本文全体で一致。",
-      "C13-C16 の知識グラフ/doctrine 要件を新 top-level aspect を増やさず既存 6 aspect の追加評価次元へ折り込む方針が、折込先 aspect と機械層ゲート (validate-knowledge-graph.py の profile) と意味層失敗を漏れなく対応付けており、C16 の runtime 施行未実装を follow-up として誠実開示している (漏れの隠蔽なし)。"
+      "帰属 (attribution) の証跡を『モデルが書けない層』へ外出しした設計判断が横展開に値する: 監査 agent は Write を持たず自力で痕跡を残せないという制約を出発点に、証跡 writer を skill ではなく PostToolUse hook (hooks/record-audit-fork.py) へ置き、評価者の自己申告 (aspects[].auditor) と独立した corroboration を成立させている。SKILL.md 帰属節・script docstring・hook docstring で同じ論拠が語られ、責務分割 (評価=skill / 証跡=hook) が破綻していない。",
+      "必須 receipt が定数から導出される形になっており、表と実装の二重管理が起きない: SKILL.md の 3 行表は required_delegations() が ASPECTS (auditor != EVALUATOR_NAME → matrix_coverage/C07・doc_freshness/C08 の primary) と SUB_INPUT_AUDITORS (matrix_coverage/C06 の sub_input) から導く集合と過不足なく一致する。観点↔監査主体を後から足しても表だけ古くなる構造になっていない。",
+      "ledger_corroborates() が『採らなかった判定軸とその理由』まで docstring に残しており、後続の改変が Goodhart へ戻りにくい: 照合軸を subagent_type 完全一致 + 件数>=1 の 1 本に絞る理由 (台帳に無い情報を判定したことにすると本 issue と同型の Goodhart を再生産する)、多重度照合を採らない理由 (INDETERMINATE 後の正当な再 fork を violation にしない)、fail-closed の切り分け順序 (台帳不在 → subagent_type 未宣言 → 記録なし = hook 未配線 / レポート不備 / fork 省略で復旧手順が違う) が明文化されている。判断を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針とも整合する型。",
+      "指摘された残余ギャップを『閉じたことにせず、閉じていない範囲として同じ粒度で 4 箇所へ開示する』処理が誠実で、限界開示の型として再利用できる: SKILL.md の機械層の限界・aspect-criteria.md の『残余ギャップ (run/session 非束縛)』・ledger_corroborates docstring の同名節・issue の『機械層が保証しない範囲』が同一の主張 (ts/session_id を照合軸に使わない → 過去 run の記録でも裏取りが成立しうる → 今回の run で fork した証明ではない) で揃い、さらに『なぜ即修正しないか』(レポートへ session_id を持たせると宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する設計が要る) と follow-up 課題 ID (HarnessHub-x4o) まで残している。誇張 (閉じたと書く) も過小 (黙って落とす) もない。"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "negative_feedback": [
+      "(観察・任意改善 / finding には計上しない) 限界開示にある『(確実に)弾くのは「fork を 1 件も起こしていない実行」まで』という圧縮表現は、単独で読むと run 単位の保証と誤読されうる。実際に弾けるのは『台帳全体で当該 subagent_type の記録が 1 件も無い場合』であり、過去 run の記録が残るリポジトリでは fork ゼロの run も通過する。ただし直前の一文が『過去 run の同一 subagent_type 記録でも裏取りが成立しうる』と明記しているため文脈で曖昧さは解けており、開示の不足ではなく表現粒度の話。HarnessHub-x4o の対応時に『台帳履歴に 1 件も無い場合のみ』と言い換えると一層正確になる。"
+    ],
+    "iteration": 3,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "現 SKILL.md (sha256=d76db131604e23370a858412867ed02da99ef06ce5b4b886139b17613610f36d) を全文 read し 4 条件で genuine 再評価。①矛盾なし: 6 aspect 採点主体 (foundation_trace/decision_guidance/design_knowledge_reflection/prompt_quality=C05 自前 / matrix_coverage=C07+C06 sub-input / doc_freshness=C08) が対応表・本文・Steps・Gotchas で一致し矛盾なし。②漏れなし: Purpose/Output Contract・監査 sub-agent 対応・C13-C16 追加次元・評価レポート schema・fail-closed 集約・Key Rules・Steps・Gotchas を被覆。proposer≠approver / read-only / context:fork の境界も明示。③整合性: kind=assign のため feedback_contract.criteria は N/A で skip_reason に checklist 6 観点 + evaluator ゲートで担保する旨を書き Gotcha5 と整合。④依存整合: responsibility_refs (R1-score/R2-delegate)・rubric_refs (scoring-rubric.json)・reference_refs (aspect-criteria.md/resource-map.yaml)・script_refs (aggregate-completeness.py / ../../scripts/validate-coverage-matrix.py)・schema_refs (completeness-findings.schema.json)・agent_refs (matrix/hearing/doc-freshness auditor) を test -e で全件実在確認 (dependency_break=0)。重大問題なし。criteria_evaluated は feedback_contract に criteria が無い assign kind のため主要品質次元 (6 aspect id) を採用。"
+  "notes": "incremental profile の focused combined review (30 思考法は未実施のため申告しない)。iteration 3 は、iteration 2 で挙げた low finding『台帳照合が run/session に束縛されない点が限界開示に無い』への対応 (開示 4 箇所追加 + follow-up 課題 HarnessHub-x4o 起票) を受けた再確認で、SKILL.md 変更に伴い sha を 13171056272da9ae98f9d1525cd0feb556d99946a8210bd157a123a1918c8e6a へ更新した。今回実読: SKILL.md 帰属節『機械層の限界 (正直な境界)』の追記後全文 / references/aspect-criteria.md の『残余ギャップ (run/session 非束縛)』箇条 / scripts/aggregate-completeness.py の ledger_corroborates docstring『残余ギャップ』節と実装本体 / issues/sys-completeness-auditor-attribution-20260721.md L112-123。開示の十分性判定: 4 箇所とも (1) ts/session_id を照合軸に使わない、(2) 過去 run の同一 subagent_type 記録でも裏取りが成立しうる、(3)『今回の run で fork した』ことの証明ではない、(4) session 束縛は follow-up、を同じ粒度で述べており、実装 (dispatched[subagent_type] >= 1 のみを見る) と厳密に一致する。閉じたと書く誇張も、範囲を狭く見せる過小もない。aspect-criteria/issue/docstring はさらに『session 束縛が単純でない理由 = レポートへ session_id を持たせると宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する設計が要る』を明記しており、follow-up を先送りの言い訳でなく設計課題として残せている。よって iteration 2 の omission は解消・HarnessHub-x4o へ移管したものとして findings_summary.omission を 1 → 0 に戻した (緑化目的の削除ではなく、指摘対象の事実が消滅したため)。差分の副作用も確認: 今回変わったのは当該 bullet のみで、Purpose & Output Contract / 監査 sub-agent 対応表 / C13-C16 / 評価レポート形状 / 総合判定 / Key Rules / Steps / Gotchas / Additional Resources は iteration 2 時点と逐語一致 (現行 187 行)。python3 -m pytest plugins/system-spec-harness を自ら再実行して 497 passed / 0 failed、必須 receipt 表と required_delegations() の一致、schema required の audit_delegations も再確認した (contradiction / omission / inconsistency / dependency_break / smell いずれも 0)。残るのは negative_feedback に記した表現粒度の観察 1 件のみで、これは開示の不足ではないため finding には計上していない。"
 }

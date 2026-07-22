@@ -10,7 +10,7 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--feature-id ID] [--handoff-target PATH]"
 allowed-tools: [Read, Write, Bash, Skill, AskUserQuestion, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/gh-bridge.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-source-digest.py, ../../scripts/gh-bridge.py]
 schema_refs: [../../schemas/graph-node.schema.json, ../../schemas/package-registration-receipt.schema.json]
 reference_refs: [../../templates/template-contract.json, ../../../system-dev-planner/references/feature-execution-package-contract.md]
 responsibility_refs:
@@ -49,7 +49,7 @@ feedback_contract:
   criteria:
     - id: IN1
       loop_scope: inner
-      text: "C11のreadiness validation digestとC02保存済みimplementation_readiness/evaluation_status/source_digestが一致し、system-dev-plannerのvalidate-system-plan.pyがP01..P13 exact 13・共通parent_feature/feature_package_id・機能内前方dependencyを検証して必須キー欠落とstale digestが0件"
+      text: "C11のreadiness validation digestとC02保存済みimplementation_readiness/evaluation_statusが一致し、scope内node全件を--registeredに渡したvalidate-source-digest.pyがexit 0 (stale digest 0件) で、system-dev-plannerのvalidate-system-plan.pyがP01..P13 exact 13・共通parent_feature/feature_package_id・機能内前方dependencyを検証して必須キー欠落が0件"
       verify_by: script
     - id: OUT1
       loop_scope: outer
@@ -67,12 +67,18 @@ feedback_contract:
 
 - 入力: C24/C11 検証済み subgraph、C02 保存済み readiness/evaluation/source digest、system-dev-planner package。
 - 出力: requirements document、readiness matrix、snapshot digest に固定した capability-build/task-graph handoff。
-- 完了条件: C11/C02/validate-system-plan の三 gate が同一 digest で PASS し、missing section が0、本 skill による実装 code 生成が0である。
+- 完了条件: C11/C02/`validate-source-digest.py`/`validate-system-plan.py` の四 gate が同一 digest で PASS し、missing section が0、本 skill による実装 code 生成が0である。
 
 実装コードは生成しない。graph の5 artifact kind、C19 が取り込んだ system-spec lineage、external system-dev-planner の feature execution package を引用して requirements handoff を作る。
 
 1. 対象 feature/subgraph と handoff target を確定する。
-2. C11 の純粋 validation report と node の `implementation_readiness/evaluation_status/confirmation_status` を照合する。
+2. C11 の純粋 validation report と node の `implementation_readiness/evaluation_status/confirmation_status` を照合する。あわせて scope 内 node 全件を `--registered` に渡して `validate-source-digest.py` を実行し、**exit 0 を handoff の必須条件にする**。
+
+```bash
+python3 "$DEV_GRAPH_PLUGIN/scripts/validate-source-digest.py" \
+  --repo-root "$DEV_GRAPH_ROOT" --registered "<scope 内 node id をカンマ区切りで全件>"
+# exit 2 = stale/missing digest あり → handoff 0件で停止 (missing_sections へ surface)
+```
 3. system-dev-planner の version/entry point と `validate-system-plan.py` を preflight し、P01..P13 exact set・13-node DAG・package receipt を外部 validator で検証する。13 task の生成ロジックは複製しない。
 4. incomplete/pending/fail/stale、不足 section、lineage/confirmation 不整合が1件でもあれば `missing_sections` と remediation owner を返して handoff 0件で停止する。
 5. 全 gate PASS 時だけ requirements document、graph snapshot digest、package reference、capability-build handoff reference を atomic emit する。
@@ -92,7 +98,8 @@ system-spec-harness確定成果物とsystem development task planを含むグラ
 ### 完了チェックリスト
 
 - [ ] scope 内 node の feature/package/system-spec lineage closure が欠落0である
-- [ ] C11 report と C02 保存済み readiness/evaluation/source digest が一致する
+- [ ] C11 report と C02 保存済み readiness/evaluation が一致する
+- [ ] scope 内 node 全件を `--registered` に渡した `validate-source-digest.py` が exit 0 である (自作の比較ロジックや目視で代替しない)
 - [ ] incomplete/pending/fail/stale node の missing_sections と remediation owner が全件表示される
 - [ ] 全 gate PASS の場合だけ requirements と capability-build handoff が同一 snapshot digest で生成される
 - [ ] 本 skill が生成した実装 code file が0件である
@@ -130,13 +137,14 @@ PY
 
 ## Criteria acceptance
 
-- `criteria:IN1`: C11のreadiness validation digestとC02保存済みimplementation_readiness/evaluation_status/source_digestが一致し、system-dev-plannerの`validate-system-plan.py`がP01..P13 exact 13・共通`parent_feature/feature_package_id`・機能内前方dependencyを検証して必須キー欠落が0件、stale digestが0件になる。`gh-bridge.py` 由来のissue contextは補助入力に留め、この三gateの代替にしない。
+- `criteria:IN1`: C11のreadiness validation digestとC02保存済み`implementation_readiness`/`evaluation_status`が一致し、scope内node全件を`--registered`に渡した`validate-source-digest.py`がexit 0 (stale digest 0件) になり、system-dev-plannerの`validate-system-plan.py`がP01..P13 exact 13・共通`parent_feature/feature_package_id`・機能内前方dependencyを検証して必須キー欠落が0件になる。`gh-bridge.py` 由来のissue contextは補助入力に留め、この四gateの代替にしない。
 - `criteria:OUT1`: requirementsを`capability-build/task-graph`へhandoffし、本skill自身は実装コードを生成しない。
 - `criteria:OUT2`: `implementation_readiness=incomplete`では全`missing_sections`をsurfaceし、該当handoffを保留する。
 
 ## Gotchas
 
 - node 内の readiness 値だけを信頼せず、C11 report、C02 saved state、source digest を同時に照合する。
+- source digest の照合は `validate-source-digest.py` の exit code へ係留する。`confirmation_status`/`evaluation_status`/`implementation_readiness` の比較だけで readiness を PASS にすると、stale digest を素通りさせる fail-open になる (2026-07-21 live-trial r13 で実際に registered_mismatch 4件のまま handoff が emit された)。
 - `validate-system-plan.py` の exact-13 検証を独自ロジックで代替しない。
 - incomplete/pending/fail/stale を一部 handoff で回避せず、対応する `missing_sections` を全件返す。
 - 実装は capability-build/task-graph に引き渡し、本 skill 内で code を生成しない。

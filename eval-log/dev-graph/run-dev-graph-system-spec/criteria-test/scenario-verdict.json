@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-20260721T210154",
+  "reviewer": "dev-graph-criteria-scenario-r4-20260722-postmerge",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,12 +28,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260721T210154/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T000000-hh6cv/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260721T210154/verdict.json",
-        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260721T210154/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T000000-hh6cv/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T000000-hh6cv/transcript.jsonl"
       ],
-      "observed": "Live-trial re-verification after the r12 closure went stale: this branch changed three files that live inside the declared behavior closure (system-spec-harness spec-state-contract.md / R6-audit-hearing.md / system-spec-hearing-auditor.md), so r12's skill_dir_tree_sha 22f207f no longer matched. Run 20260721T210154 overall=PASS (launch=PASS, completion=PASS, goal_fit=PASS), nudge=0/gate=0 self-driven, poll DONE at 1575s, actual_model=[claude-opus-4-6], transcript_layer=jsonl, downgrade_reason=null, tier=live, skill_dir_tree_sha=96d80f6 (current closure). OUT1 element A (lineage-bearing citation): both registered nodes carry all six source_lineage fields; the fresh evaluator independently recomputed each source_path's sha256 and matched source_digest with no cross-file reuse; validate-source-digest.py checked=2 registered_mismatch=[] EXIT:0; validate-evidence-refs.py registered_dangling=[] EXIT:0. OUT1 element B (no duplicated logic in dev-graph): all four system-spec-harness entry points were driven through qualified Skill calls (run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator); grep over plugins/dev-graph found zero spec-state / compile-spec / coverage-matrix / citation / fetched-references implementations; the harness-owned state and reference files never appear as Write/Edit targets (assembler-generated, EXIT:0). Registration occurred ONLY through upsert-node.py (graph_revision 0->1->2, write_count=2 each) with zero direct graph.json writes; the final graph sha matches the last receipt's graph_sha256_after (no post-hoc tampering); no --dry-run substitution and no write-then-delete. IN1 re-confirmed: coverage EXIT:0, source-citation EXIT:0, knowledge-graph 4 profiles EXIT:0, schema gate enforced inside upsert-node.py. Scope note: an earlier evaluation of this same run returned FAIL by additionally requiring the completeness evaluator's R2-delegate Task forks and non-template artifact bodies; a criterion-scoped fresh evaluator judged both outside OUT1 (they belong to assign-system-spec-completeness-evaluator and to C02 body defaults, not to lineage citation or logic duplication) and recorded them as observations. The auditor-attribution hole is tracked as HarnessHub-e9b (P1) and warrants its own criterion on evaluator independence. Run 20260721T202439 (DEGRADED) is retained as evidence of the first attempt."
+      "observed": "2026-07-23 再実走 (HarnessHub-6cv, main PR#38 取込後): generation-lineage 変更 + PR#38 の closure 変更で verdict が再 stale 化したため fresh fixture で再 trial。被験 Skill を最初の tool call で 起動し正経路を自走完遂。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し、pre-seed 汚染なし・goal 達成 (受入基準を実行証跡で裏取り) を確認。"
     }
   }
 }

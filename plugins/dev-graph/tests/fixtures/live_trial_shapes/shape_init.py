@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""scenario ``C01-OUT1-positive-idempotence`` (skill: dev-graph:run-dev-graph-init) の形状。
+"""scenario ``C01-OUT1-positive-idempotence-r17`` (skill: dev-graph:run-dev-graph-init) の形状。
 
 fixture 契約:
   C01 の被験対象は「**まだ dev-graph 化されていない** repository」である。初期化そのものと、

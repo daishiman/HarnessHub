@@ -2,13 +2,13 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "d76db131604e23370a858412867ed02da99ef06ce5b4b886139b17613610f36d"
+    "skill_md_sha256": "13171056272da9ae98f9d1525cd0feb556d99946a8210bd157a123a1918c8e6a"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
-  "iterations": 1,
+  "reviewer": "assign-skill-design-evaluator-combined",
+  "reviewed_at": "2026-07-22",
+  "iterations": 3,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
@@ -21,15 +21,19 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "単一責務が明確 (independent evaluator=採点ゲート) で境界が rubric 通り: proposer≠approver / read-only / context:fork を Key Rules と Purpose で明示し、修正は elicit/doc-fetch/compile への差し戻しに限定。allowed-tools は Read/Bash/Task の最小 allowlist。",
-      "出力契約が schema (completeness-findings.schema.json) に接地し、総合判定が aggregate-completeness.py の決定論再導出と一致必須という検証可能述語 (exit0) で担保され、rubric の出力契約・検証可能性次元を高く満たす。",
-      "SSOT が明快: completeness_exempt manifest で rubric/schema/aggregate script を runtime SSOT と宣言し、監査ロジックは各 auditor agent の SSOT prompt に委ね本 skill は集約のみ (書換えなし)。命名は assign prefix + role_suffix=evaluator + kebab-case で naming 規範に整合。"
+      "単一責務と境界が一連の追加でも崩れていない: 帰属検証で必要になった『証跡の書き込み』を skill 側に持たせず (allowed-tools は Read/Bash/Task のままで Write なし)、PostToolUse hook へ分離した。評価者は read-only・proposer≠approver・context:fork という Key Rules 1-2 の境界を保ったまま、新しい保証を機械層へ足せている。",
+      "出力契約が二重に接地している: SKILL.md のレポート形状は schemas/completeness-findings.schema.json の required (evaluator/verdict/aspects/audit_delegations/findings/gaps) と definitions.audit_delegation の required 7 キーに 1:1 対応し、さらに aggregate-completeness.py --report が形状・総合判定の fail-closed 再導出・帰属接地の 3 検査を行う。宣言 (schema) と施行 (script) の役割が分かれ、検証可能述語 (exit code) で閉じている。",
+      "判断箇所を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針 (knowledge-build-patterns.json feedback-no-todo-human / ref-skill-design-rubric KeyRule5) に適合した: ledger_corroborates() は判定方針に加え、採らなかった軸 (多重度照合 / prompt 内容の妥当性判定) を採らない理由まで docstring に残して実装されており、対象 skill 配下の TODO(human) 残存は 0 件。plugins/system-spec-harness の pytest は 497 passed / 0 failed。",
+      "限界開示の SSOT 展開が規範的: 『残余ギャップ (run/session 非束縛)』が SKILL.md (要点) → aspect-criteria.md (詳細 + 未修正の理由) → ledger_corroborates docstring (実装直上) → issue (follow-up ID HarnessHub-x4o) の 4 層へ、Progressive Disclosure の粒度を保ったまま矛盾なく展開されている。SKILL.md は要点に留め詳細を references/issue へ委譲する構成が守られており、閉じていない範囲を閉じたように書く over-claim も無い。"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "negative_feedback": [
+      "(観察・任意改善 / finding には計上しない。elegance-verdict.json の同項目と同一) 『(確実に)弾くのは「fork を 1 件も起こしていない実行」まで』という圧縮表現は、単独では run 単位の保証と誤読されうる (実際に弾けるのは台帳全体で当該 subagent_type の記録が 1 件も無い場合)。直前の一文が過去 run 記録での成立を明記しているため文脈で解けており、開示の不足ではなく表現粒度の指摘。HarnessHub-x4o 対応時に言い換える余地がある。",
+      "(content 対象外 / 参考) plugin-level 機械ゲート scripts/validate-build-trace.py は system-spec-harness に build-evidence/*/build-trace.json が無いため exit 2。22 plugin 中 build-trace を持つのが 2 plugin のみという系全体の未整備で、本 SKILL.md の内容起因ではないため rubric findings には数えない。lint-skill-tree.py の LS-203 (規約外 top-level dir 'tests') も Warn (exit0) 止まり。"
+    ],
+    "iteration": 3,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "現 SKILL.md (sha256=d76db131604e23370a858412867ed02da99ef06ce5b4b886139b17613610f36d) を ref-skill-design-rubric の規範 (単一責務・命名 kebab+prefix・境界・出力契約・SSOT・Progressive Disclosure) で採点。FM: name=kebab+assign prefix・description=Use when 形・kind/prefix/role_suffix 整合。BD: Purpose & Output Contract 節・Gotchas 節・出力 schema あり (164 行、references へ Progressive Disclosure)。境界: read-only/context:fork/proposer≠approver 明示。SSOT: rubric.json + aggregate-completeness.py が runtime 正本と宣言。全参照 (prompts/rubric/reference/script/schema/agent) 実在。high severity 0 のため PASS。criteria_evaluated は feedback_contract に criteria を持たない assign kind のため 6 品質次元 (aspect id) を採用。"
+  "notes": "incremental profile の combined review のうち rubric 側 (e) を分離投影 (30 思考法は未実施のため申告しない)。iteration 3 は、iteration 2 の low finding『台帳照合の run/session 非束縛が限界開示に無い』に対する開示追加 (SKILL.md 機械層の限界 / aspect-criteria.md 残余ギャップ節 / ledger_corroborates docstring 残余ギャップ節 / issue の機械層が保証しない範囲 + follow-up HarnessHub-x4o) を実読して再採点したもので、SKILL.md 変更に伴い sha を 13171056272da9ae98f9d1525cd0feb556d99946a8210bd157a123a1918c8e6a へ更新した。開示の十分性: 4 箇所とも実装 (dispatched[subagent_type] >= 1 のみを照合軸にする) と厳密に一致し、誇張も過小もない。ref-skill-design-rubric の規範軸での再採点は次のとおり。単一責務 — 証跡書込を hook へ外出しした構成は不変で、skill は評価と根拠検証に限定 (allowed-tools: Read/Bash/Task)。命名 — audit_delegations / role=primary|sub_input / dispatch.subagent_type の語彙が SKILL.md・schema・scoring-rubric.json・R1-score.md・R2-delegate.md で同一、skill 名は lint-skill-name.py exit0。境界 — 今回の追記で『台帳が示す範囲』に加えて『run/session に束縛されない』という残余まで明示され、機械層の主張範囲が実装以下に収まった (over-claim の解消)。出力契約 — 必須 receipt 表は required_delegations() の導出結果と厳密一致、role=primary の receipt.verdict と aspects[aspect].verdict の一致検査も実装済み、fail-closed は台帳不在 / subagent_type 未宣言 / 記録なしの 3 分岐で reason 付き violation。SSOT — 規範正本 scoring-rubric.json attribution / runtime 正本 aggregate-completeness.py の定数という二層は不変で、追記された残余ギャップも aspect-criteria.md を詳細正本として SKILL.md が要点参照する形になっている。Progressive Disclosure — SKILL.md は 187 行で、追記は既存 bullet 1 本の拡張に留め詳細を references/issue へ委譲。機械検査 — validate-frontmatter.py / lint-skill-name.py / lint-skill-tree.py はいずれも exit0、pytest は 497 passed / 0 failed。high severity 0 のため PASS とし、iteration 2 の omission は事実消滅により 0 へ戻した (緑化のための削除ではない)。negative_feedback の 2 点 (表現粒度の観察、plugin-level build-trace 不在は content 対象外) は伏せずに記録した。criteria_evaluated は feedback_contract に criteria を持たない assign kind のため、従前の verdict と同じ粒度で 6 aspect id を採用。"
 }

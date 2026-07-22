@@ -17,6 +17,7 @@
 - sub-agent担当観点は **独立 context (`isolation: fork`) で起動**し、foundation/decision/deep-knowledge/prompt品質は必要入力と機械gate結果をR1へ透過する。
 - 監査は Task tool で対応 sub-agent (`system-spec-matrix-auditor` / `system-spec-hearing-auditor` / `system-spec-doc-freshness-auditor`) を起動して得る。R2 自身は監査ロジックを再実装しない (単一情報源 = 各 agent の SSOT prompt)。
 - 監査 verdict (`PASS`/`FAIL`/`INDETERMINATE`) と軸別根拠をそのまま集約し、緑化のために書き換えない。
+- **実際に fork した監査だけを receipt にする**: R2 は起動した各 Task を `audit_delegations[]` の receipt (`aspect`/`role`/`auditor`/`component`/`dispatch{tool,subagent_type}`/`verdict`/`evidence`) として R1 へ渡す。fork を省略した監査の receipt を書いてはならない。receipt は PostToolUse hook (`hooks/record-audit-fork.py`) が書く fork 台帳と `aggregate-completeness.py --report` で突合され、裏取りできない帰属は fail-closed で violation になる (帰属の Goodhart 防止)。
 
 ### 1.2 倫理ガード
 - 監査結果の根拠を省略・要約し過ぎて FAIL 要因を隠さない。到達不能・入力欠落は INDETERMINATE として明示する。
@@ -44,6 +45,7 @@
 
 ### 2.4 出力契約
 - matrix/doc-freshnessの独立監査とC06 sub-inputを渡す。foundation/decision/design-knowledge/prompt-qualityは機械evidenceと入力をR1へ透過し、R1がrubric全aspectsを組み立てる。
+- あわせて実 fork の receipt 3 件 (`matrix_coverage/primary`=C07 / `matrix_coverage/sub_input`=C06 / `doc_freshness/primary`=C08) を `audit_delegations[]` として R1 へ渡す。C05 自前評価の 4 観点に `primary` receipt を付けてはならない (虚偽の独立性主張として機械層が拒否する)。
 
 ## Layer 3: インフラ層
 
@@ -82,6 +84,7 @@
 - [ ] matrix_coverage にC07の独立verdictと根拠が存在する
 - [ ] C06の4軸結果がmatrix_coverageのsub-inputとして存在し、独立観点には昇格していない
 - [ ] doc_freshness にC08の独立verdictと根拠が存在する
+- [ ] 実 fork した監査の receipt 3 件が `audit_delegations[]` として R1 へ渡り、fork していない監査の receipt を 1 件も含んでいない
 - [ ] design_knowledge_reflectionの入力が`spec_docs`としてR1-scoreへ渡り、重複auditorが存在しない
 - [ ] foundation/decision/deep-knowledge/prompt validator evidenceが欠落なくR1-scoreへ渡っている
 - [ ] INDETERMINATE 観点を隠さず明示した

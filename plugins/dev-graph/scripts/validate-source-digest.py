@@ -7,6 +7,7 @@
 # contexts: [E]
 # network: false
 # write-scope: none
+# dependencies: [resolve-repo-context.py]
 # requires-python: ">=3.11"
 # ///
 """source_digest の他 file 流用を機械検査する R3-import の完了ゲート。
@@ -24,9 +25,60 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import sys
 from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+
+
+def _context_resolver():
+    """dev-graph C24 の repository boundary 実装を再利用する。"""
+    spec = importlib.util.spec_from_file_location("dev_graph_source_digest_context", HERE / "resolve-repo-context.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)  # type: ignore[union-attr]
+    return module
+
+
+def _package_root(root: Path, source: Path) -> Path | None:
+    """source_path を含む published package (staging-manifest.json を持つ dir) を探す。
+
+    system-dev-planner 由来 node の source_lineage.source_digest は個々の task spec
+    ではなく package (content-addressed generation) の canonical digest を指す。
+    package 単位の lineage と per-file の不変性を 1 つの manifest で両方照合するため、
+    まず所属 package を決める。
+    """
+    current = source.parent
+    while current != root and root in current.parents:
+        if (current / "staging-manifest.json").is_file():
+            return current
+        current = current.parent
+    return None
+
+
+def _package_mismatch(package: Path, source: Path, recorded: str) -> dict | None:
+    """package canonical digest と、その package 内 file の実バイトを 2 段で照合する。"""
+    try:
+        manifest = json.loads((package / "staging-manifest.json").read_text(encoding="utf-8"))
+        files = manifest["files"]
+        canonical = str(manifest["canonical_digest"])
+    except Exception as exc:  # noqa: BLE001 - 診断へ理由を載せる
+        return {"reason": f"package staging-manifest.json を読めない: {exc}"}
+    if canonical.removeprefix("sha256:") != recorded:
+        return {"recorded_digest": recorded, "actual_digest": canonical.removeprefix("sha256:"),
+                "reason": "package canonical digest 不一致 (別 package の digest 流用の疑い)"}
+    rel = source.relative_to(package).as_posix()
+    expected = files.get(rel) if isinstance(files, dict) else next(
+        (x.get("sha256") for x in files if isinstance(x, dict) and x.get("path") == rel), None)
+    if not isinstance(expected, str):
+        return {"reason": f"source_path が package manifest に載っていない: {rel}"}
+    actual = hashlib.sha256(source.read_bytes()).hexdigest()
+    if actual != expected.removeprefix("sha256:"):
+        return {"recorded_digest": expected.removeprefix("sha256:"), "actual_digest": actual,
+                "reason": "package 内 file の実バイトが manifest と不一致 (immutable generation の改変)"}
+    return None
 
 
 def _registered_from_progress(progress_path: Path) -> set[str]:
@@ -46,6 +98,7 @@ def main() -> int:
     parser.add_argument("--progress", type=Path, default=None)
     args = parser.parse_args()
     root = args.repo_root.resolve()
+    context = _context_resolver()
     graph_path = args.graph if args.graph else root / ".dev-graph" / "state" / "graph.json"
 
     try:
@@ -76,10 +129,32 @@ def main() -> int:
             mismatch.append({"graph_node_id": node_id, "reason": "source_path/source_digest 欠落"})
             continue
         checked += 1
-        target = root / str(source_path)
+        try:
+            target = context.resolve_declared_path(
+                root,
+                str(source_path),
+                f"{node_id}.source_lineage.source_path",
+                reject_leaf_symlink=False,
+            )
+        except (context.ContractError, OSError, ValueError) as exc:
+            mismatch.append({"graph_node_id": node_id, "source_path": str(source_path),
+                             "reason": f"source_path がrepository boundary 外: {exc}"})
+            continue
         if not target.is_file():
             mismatch.append({"graph_node_id": node_id, "source_path": str(source_path),
                              "reason": "source_path 実 file 不在"})
+            continue
+        planner_origin = sl.get("origin_kind") == "system-dev-planner"
+        package = _package_root(root, target) if planner_origin else None
+        if planner_origin and package is None:
+            mismatch.append({"graph_node_id": node_id, "source_path": str(source_path),
+                             "reason": "system-dev-planner 由来 source のpackage staging-manifest.json が無い"})
+            continue
+        if package is not None:
+            found = _package_mismatch(package, target, str(recorded))
+            if found:
+                mismatch.append({"graph_node_id": node_id, "source_path": str(source_path),
+                                 "package": package.relative_to(root).as_posix(), **found})
             continue
         actual = hashlib.sha256(target.read_bytes()).hexdigest()
         if actual != str(recorded):

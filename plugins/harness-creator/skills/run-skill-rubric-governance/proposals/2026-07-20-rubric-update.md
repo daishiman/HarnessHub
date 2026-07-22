@@ -9,8 +9,8 @@ trigger: aggregate-evals (SessionEnd)
 
 ## 集計サマリ
 
-- 評価件数: 231
-- FAIL 率: 0.87%
+- 評価件数: 228
+- FAIL 率: 0.88%
 - 平均スコア: 90.222
 
 ## 検出された異常
@@ -37,8 +37,7 @@ trigger: aggregate-evals (SessionEnd)
 
 ## 主要 finding カテゴリ (top5)
 
-- confirmation_evidence.evidence_ref (eval-log/completeness-report.json) が fixture repo に存在しない dangling reference。evaluator report は /tmp にのみ書かれ repo に永続化されず、evaluated_digest を repo 内成果物から再現できない: 1 件
-- SKILL.md が求める eval-log/run-dev-graph-system-spec-progress.json (checklist status/evidence 記録) が未生成: 1 件
+- (なし)
 
 ## 提案アクション (要 human review)
 
