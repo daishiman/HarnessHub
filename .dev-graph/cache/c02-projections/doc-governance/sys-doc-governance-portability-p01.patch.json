@@ -1,0 +1,23 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P01 を実行する: 要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "docs/features/feat-doc-governance-portability/requirements-baseline.md"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 3 件/scope_out 4 件/acceptance 4 件/quality_constraints 4 件 (id 単位) が逐語一致で転記されている",
+   "3 検査スコープ ((1) 300 行 fail-closed lint と 6 文書 allowlist ratchet、(2) 仕組みファイルの hard-coded ナレッジ参照検査、(3) 移植チャネルの mechanism-only 既定/knowledge opt-in 検査) がそれぞれ scope_in の対応項目に紐付けて記載されている",
+   "出典として system-spec/dev-workflow.md の qa-070 (appr-008 承認) が参照のみで引用され、条文本文が requirements-baseline.md へ複製されていない",
+   "P02 で確定すべき据置事項 (3 検査の入出力契約・allowlist schema・hard-coded 参照検出の false-positive 除外基準・CI 配線先) が明記されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

@@ -1,0 +1,87 @@
+{
+ "schema": "run-dev-graph-requirements/readiness-matrix/1.0.0",
+ "generated_at": "2026-07-22T10:00:00Z",
+ "graph_revision": 364,
+ "graph_sha256": "sha256:6107b737cbde37e4fc90b5d94c027098d8118a8c1dfd906f618deb24a397c390",
+ "snapshot_digest": "sha256:ecf9ce5b54eceab6b09af4d79ee4d0583e85f966d783548b24d042d8883d363c",
+ "snapshot_inputs": {
+  "feature_id": "feat-dev-pipeline-improvement",
+  "feature_context_digest": "sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78",
+  "feature_source_digest": "sha256:67e76a2391435d3687a11b7bc12bd604359dc2d418d9edb27ef309e388fcb1d1",
+  "graph_revision": 364,
+  "graph_sha256": "sha256:6107b737cbde37e4fc90b5d94c027098d8118a8c1dfd906f618deb24a397c390",
+  "handoff_target": "task-graph",
+  "package_canonical_digest": "sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b"
+ },
+ "verdict": "HANDOFF_READY",
+ "handoff_target": "task-graph",
+ "handoff_count": 1,
+ "gates": {
+  "system_spec_qa071_lineage": "PASS",
+  "c11_graph_schema": "PASS",
+  "c02_saved_state": "PASS",
+  "validate_system_plan": "PASS"
+ },
+ "gate_evidence": {
+  "system_spec_qa071_lineage": {
+   "qa_log_entry": true,
+   "approval_log_entry": "appr-009",
+   "dev_workflow_section": "### qa-071",
+   "elicit_verification_lineage": "PASS",
+   "closure": "QA-071 (dev-graph 方法論 8 要件) が spec-state.json#qa_log・approval_log(appr-009)・system-spec/dev-workflow.md の3箇所に記録済み。elicit-verification.json でも lineage-system-spec/dev-workflow.md=PASS を確認。"
+  },
+  "c11_graph_schema": {
+   "implementation_readiness": "complete",
+   "missing_sections": [],
+   "valid": true,
+   "violations": [],
+   "plan_findings_verdict": "PASS",
+   "plan_findings_evaluated_digest": "sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+   "atomic_promotion_receipt_status": "promoted",
+   "atomic_promotion_receipt_implementation_readiness": "complete"
+  },
+  "c02_saved_state": {
+   "confirmed_count": 14,
+   "evaluation_pass_count": 14,
+   "readiness_complete_count": 14,
+   "scope_node_count": 14,
+   "registration_receipt_source_digest": "sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+   "registration_receipt_graph_revision_after": 364,
+   "registration_receipt_applied_count": 13,
+   "feature_context_digest_matches_package": true,
+   "task_spec_digest_matches_source_inputs_count": 13
+  },
+  "validate_system_plan": {
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "phase_refs": ["P01","P02","P03","P04","P05","P06","P07","P08","P09","P10","P11","P12","P13"],
+   "status": "pass",
+   "validated_digest": "sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+   "violations": []
+  }
+ },
+ "per_feature": {
+  "feat-dev-pipeline-improvement": [
+   {"node":"feat-dev-pipeline-improvement","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P01","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P02","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P03","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P04","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P05","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P06","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P07","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P08","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P09","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P10","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P11","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P12","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true},
+   {"node":"SYS-DEV-PIPELINE-IMPROVEMENT-P13","readiness":"complete","evaluation":"pass","confirmation":"confirmed","source_digest_ok":true}
+  ]
+ },
+ "blockers": [],
+ "missing_sections": [],
+ "stale_digest_count": 0,
+ "implementation_code_generated": 0,
+ "requirements_document": "eval-log/run-dev-graph-requirements-feat-dev-pipeline-improvement-document.md",
+ "handoff_reference": "eval-log/run-dev-graph-requirements-feat-dev-pipeline-improvement-handoff.json"
+}

@@ -1,0 +1,75 @@
+{
+ "schema_version": "1.0.0",
+ "parent_feature": null,
+ "feature_context_digest": "sha256:6855a739f483347401636b9254be473536ac2d9168cc24470f1abf05bd9286fb",
+ "purpose": "qa-070 (appr-008 承認) で確定したドキュメント規約 2 件 — 仕組みとナレッジのオン・オフ分離・1 文書 300 行上限 — を機械的に強制する検査群を実装し、G1 (仕組みの持ち出しによる配布・運用効率)・G4 (fail-closed 品質ゲート)・G5 (ドキュメント管理の持続性) を支える",
+ "goal": "3 検査 (300 行 lint・仕組み-ナレッジ境界検査・移植導線 opt-in 検査) が CI で fail-closed に動作し、既存超過 6 文書の allowlist は縮小のみ許す ratchet で管理され、再実行しても同じ結果 (冪等) になる状態",
+ "scope_in": [
+  "markdown 正本文書 (system-spec 章・architecture・features・tasks・docs) の 300 行上限 fail-closed CI lint (既存超過 6 文書は縮小のみ許す remediation allowlist ratchet 付き)",
+  "仕組み側ファイル (plugins/・.claude/skills/ 等) への repo 固有ナレッジ (固有 node id・固有 path・固有 qa 番号) hard-coded 参照の検査",
+  "extract-blueprint / install-bundle の『仕組みのみ既定 (オン)・ナレッジ同梱は明示 opt-in (オフ既定)』検査"
+ ],
+ "scope_out": [
+  "規約自体の変更 (qa-070 で確定済み)",
+  "既存超過 6 文書の分割実施 (issue-doc-granularity-remediation-20260722 / HarnessHub-3d8 側)",
+  "Hub プロダクト本体機能 (Web/API/DB) の変更",
+  "dev-graph への新 verb 追加"
+ ],
+ "acceptance": [
+  "300 行超過の新規違反が CI で fail-closed に遮断され、allowlist は既存 6 文書のみ・縮小のみ許す ratchet として検査される",
+  "仕組み側ファイルへの repo 固有ナレッジ hard-coded 参照を検出する検査が存在し、検出時に exit 非 0 で停止する",
+  "extract-blueprint / install-bundle がナレッジを既定で含めず、明示 opt-in なしの同梱を検査が遮断する",
+  "3 検査が CI ゲートへ組み込まれ、同一入力での再実行が差分 0 に収束する (冪等)"
+ ],
+ "lineage": [
+  {
+   "path": "features/feat-doc-governance-portability.context.json",
+   "exists": true,
+   "sha256": "6855a739f483347401636b9254be473536ac2d9168cc24470f1abf05bd9286fb",
+   "digest_status": "provided_by_caller",
+   "digest_note": "team-lead (C09/feature-context preflight) 提供値。本 fork elicitor にハッシュ計算ツール (Bash 等) が付与されていないため独立再計算は未実施。graph_node_id=feat-doc-governance-portability を Read で確認し feature_id と一致。",
+   "feature_id": "feat-doc-governance-portability"
+  },
+  {
+   "path": "architecture/harness-hub-dev-workflow.md",
+   "exists": true,
+   "sha256": "5f92c0759a239e101c26ee11fcf635753a3c71ece36a8e1b1308f2e6a470598f",
+   "digest_note": "graph_node_id=arch-harness-hub-dev-workflow の存在と path 解決は Read で確認済み (fail-closed checklist item『architecture refs が caller repository 内で解決できる』は PASS)。sha256 は本 fork にハッシュ計算ツールが無いため未算出。promotion 前に Bash 等を持つエージェントでの digest 補完が必要。"
+  },
+  {
+   "path": "specs/harness-hub-system-specification.md",
+   "exists": true,
+   "sha256": "a619518374201b03723ebd2cfd4d1406b3f9aa1a986f01756a10ccea091a11dc",
+   "digest_note": "graph_node_id=spec-harness-hub-requirements の存在と path 解決は Read で確認済み (fail-closed checklist item『architecture refs が caller repository 内で解決できる』は PASS)。sha256 は本 fork にハッシュ計算ツールが無いため未算出。promotion 前に Bash 等を持つエージェントでの digest 補完が必要。"
+  },
+  {
+   "path": "system-spec/dev-workflow.md",
+   "exists": true,
+   "sha256": "0c48fb74e1f93e4e6fe6e4f31cf5e04c4b3839537fae063002a3ce2f3e10b2bf",
+   "digest_status": "verified",
+   "digest_note": "features/feat-doc-governance-portability.md frontmatter の source_lineage.source_digest (dev-graph 生成時 hash-pin, 2026-07-22T01:25:08Z) と team-lead 提供値が一致することを Read で確認した。qa-070 (対応セル: web, system-spec/dev-workflow.md:27-31) は appr-008 承認済みで、evaluator PASS (eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260722-084907.json, verdict=PASS, foundation_trace/decision_guidance/matrix_coverage 各 aspect PASS かつ qa-070 を new-cell-verification finding で個別に補完検証) を本 fork で直接確認した。"
+  }
+ ],
+ "quality_constraints": [
+  {
+   "id": "fail-closed-lint",
+   "summary": "300 行上限 lint・仕組み-ナレッジ境界検査・移植導線 opt-in 検査の 3 検査は、qa-070 の『超過を fail-closed の CI lint で遮断する』原則に従い、検出時に exit 非 0 で停止する fail-closed とし、警告のみで通過させる soft lint にしない。"
+  },
+  {
+   "id": "idempotent-verification",
+   "summary": "3 検査は goal の『再実行しても同じ結果 (冪等) になる状態』および qa-070 が明示的に踏襲する qa-067 の冪等 migration・beads 起票パターンに従い、同一入力での再実行が差分 0 に収束する冪等な検査として実装する。"
+  },
+  {
+   "id": "single-writer-boundary",
+   "summary": "仕組み側ファイルへのナレッジ焼き込みや、ナレッジ側への仕組みロジック複製など『境界を跨ぐ複製』を新設しない (qa-070)。文書分割時も index/一覧表からの参照で辿れる形を維持し、情報を複製せず単一の正本を参照する構造を守る。"
+  },
+  {
+   "id": "digest-immutability",
+   "summary": "既存の confirmed 文書・remediation allowlist の digest を不要に失効させる変更を避ける。300 行 lint の allowlist は既存超過 6 文書に限定し縮小のみ許す ratchet として管理し、対象外の確定済み文書へ digest 変動を招く書き換えを行わない。"
+  }
+ ],
+ "verification": [
+  "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+ ],
+ "extracted_at": "2026-07-22T09:15:00Z"
+}

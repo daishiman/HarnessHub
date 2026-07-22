@@ -1,0 +1,11 @@
+{
+ "patch": {
+  "graph_node_id": "issue-doc-granularity-remediation-20260722",
+  "updated_at": "2026-07-22T00:49:29Z",
+  "beads_linkage": {
+   "bd_issue_id": "HarnessHub-3d8",
+   "linked_at": "2026-07-22T00:49:29Z",
+   "sync_state": "linked"
+  }
+ }
+}

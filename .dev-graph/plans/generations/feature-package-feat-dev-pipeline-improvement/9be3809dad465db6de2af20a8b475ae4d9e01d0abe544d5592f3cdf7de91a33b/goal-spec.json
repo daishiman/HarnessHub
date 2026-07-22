@@ -1,0 +1,93 @@
+{
+ "schema_version": "1.0.0",
+ "parent_feature": "feat-dev-pipeline-improvement",
+ "feature_context_digest": "sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78",
+ "purpose": "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する",
+ "goal": "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態",
+ "scope_in": [
+  "lifecycle close-loop の機械化 (open 残置検出と md/graph/beads 3 表現の同時 close 導線)",
+  "eval-log/ 配置規約の明文化と CI lint 強制",
+  "improvement-handoff schema への disposition 必須化と未消化 findings の beads 起票",
+  "tasks/ frontmatter status の意味論明記",
+  "graph.json 肥大対策の再検討トリガー記録",
+  "dev-graph 中核 handoff 31 findings の差分監査と disposition 遡及付与",
+  "spec-drift-guardian の verdict close gate 配線",
+  "陳腐化文書の定期棚卸し GC の sync verb 運用組込み"
+ ],
+ "scope_out": [
+  "Hub プロダクト本体機能 (Web/API/DB) の変更",
+  "dev-graph への新 verb 追加",
+  "bd CLI 本体の変更",
+  "graph.json 分割の実装 (トリガー記録のみ)"
+ ],
+ "acceptance": [
+  "解決済み事象の open 残置を検出する決定論検査が存在し、issue-bd-bridge-notes-passthrough-20260721 が close-loop で閉じている",
+  "eval-log/ 配置規約が README に明文化され、CI lint が直下残置・バイト同一重複・1MB 超の git 追跡を遮断する",
+  "improvement-handoff schema に per-finding disposition と根拠 ref が必須化され、既存 21 ファイル 94 findings に消化状態が付与されている",
+  "task template に status = 文書ライフサイクル (active/superseded) の意味論が明記され、実行状態の二重正本が無い",
+  "graph.json 分割の再検討トリガーが仕様に記録されている",
+  "spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される",
+  "陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている"
+ ],
+ "lineage": [
+  {
+   "path": "features/feat-dev-pipeline-improvement.context.json",
+   "exists": true,
+   "sha256": "f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78",
+   "digest_status": "verified",
+   "digest_note": "2026-07-22 wt-10 re-plan: context updated_at sync; current repository bytes hash-pinned before evaluation.",
+   "feature_id": "feat-dev-pipeline-improvement"
+  },
+  {
+   "path": "architecture/harness-hub-dev-workflow.md",
+   "exists": true,
+   "sha256": "ee6ff7b9b95d37d41921f2ca482ae7b90e094e9c6236aff9794be1a1e8a61db3",
+   "digest_status": "verified",
+   "digest_note": "2026-07-21 wt-10 plan: current repository bytes hash-pinned before evaluation."
+  },
+  {
+   "path": "specs/harness-hub-system-specification.md",
+   "exists": true,
+   "sha256": "a619518374201b03723ebd2cfd4d1406b3f9aa1a986f01756a10ccea091a11dc",
+   "digest_status": "verified",
+   "digest_note": "2026-07-21 wt-10 plan: current repository bytes hash-pinned before evaluation."
+  },
+  {
+   "path": "system-spec/dev-workflow.md",
+   "exists": true,
+   "sha256": "bdf3c60e2ab89540c6dd7bdf6009316070d66f9cf36aee17743d825668b6ae21",
+   "digest_status": "verified",
+   "digest_note": "2026-07-21 wt-10 plan: current repository bytes hash-pinned before evaluation."
+  }
+ ],
+ "quality_constraints": [
+  {
+   "id": "choke-point-preservation",
+   "summary": "beads mutation は bd-bridge.py の単一チョークポイントを維持する。lifecycle close-loop の機械化はこのチョークポイントを経由して 3 表現 (issue md / graph node / beads) を閉じるのであって、guard-graph-schema の遮断を緩和・迂回する実装を導入しない (issue-bd-bridge-notes-passthrough-20260721 の scope_out を踏襲)。"
+  },
+  {
+   "id": "single-writer-boundary",
+   "summary": "eval-log 再配置・disposition 遡及付与・tasks status 意味論の明記において、graph の単一 writer (upsert-node.py) と spec-state の単一 writer (apply-spec-transition.py) を迂回した正本直接編集を行わない。md/graph の 2 表現更新は必ず writer 経由で WAL 保護下に行う。"
+  },
+  {
+   "id": "digest-immutability",
+   "summary": "既存 confirmed 文書・live-trial 証跡・promoted package の digest を失効させる変更を避ける。証跡関連の修正では既存 digest を変えないことを最優先し、digest 単独書き換えの誘因を再生産しない。"
+  },
+  {
+   "id": "fail-closed-lint",
+   "summary": "新設する検査 (open 残置検出・eval-log 配置 lint・handoff disposition 検査) は検出時に exit 非 0 で停止する fail-closed とし、警告のみで通過させる soft lint にしない。CI ゲートへの組込みまでを実装範囲とする。"
+  },
+  {
+   "id": "no-dual-authority",
+   "summary": "tasks/ frontmatter の status は文書ライフサイクル (active/superseded) のみを表すと定義し、実行状態の正本は beads/graph 側 (execution_contexts / beads_linkage / completion_evidence) に一元化する。md への実行状態の投影・複製で二重正本を作らない。"
+  },
+  {
+   "id": "idempotent-migration",
+   "summary": "eval-log 既存ファイルの再配置と improvement-handoff 94 findings への disposition 遡及付与は、再実行しても差分 0 に収束する冪等 migration として実装し、実行証跡を eval-log 配下へ保存する。"
+  }
+ ],
+ "verification": [
+  "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+ ],
+ "extracted_at": "2026-07-22T10:45:00Z"
+}

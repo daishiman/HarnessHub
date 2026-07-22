@@ -1,0 +1,1207 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+  "parent_feature": "feat-dev-pipeline-improvement",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P01": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P02": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P03": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P04": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P05": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P06": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P07": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P08": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P09": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P10": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P11": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P12": "beads",
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P01 責務 (要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/design.md"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P02 責務 (検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/design-review.md"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P03 責務 (設計レビュー — 単一 writer・choke-point・sync authority との整合検証) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/test-plan.md"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P04 責務 (テスト設計 — lint script 群と冪等 migration の回帰テスト設計) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/lint-open-residue.py",
+        "plugins/dev-graph/scripts/lint-eval-log-layout.py",
+        "plugins/dev-graph/scripts/lint-handoff-disposition.py",
+        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+        "plugins/dev-graph/tests/test_lint_open_residue.py",
+        "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
+        "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
+        "eval-log/README.md",
+        ".dev-graph/templates/task.md",
+        ".github/workflows/dev-pipeline-lint.yml",
+        "plugins/spec-drift-guardian/"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P05 責務 (実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/pipeline-improvement/test-run-p06.json"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P06 責務 (テスト実行 — 回帰テスト全件と lint 実測の記録) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/acceptance-report.md"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P07 責務 (受入判定 — 8 acceptance の突合と未達の差し戻し) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/",
+        "plugin-plans/",
+        "eval-log/dev-graph/pipeline-improvement/migration-receipt.json"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P08 責務 (移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P09 責務 (品質保証 — fail-closed 実効性の悪性ケース実測) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/final-review.md"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/operations.md"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P12 責務 (運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-21T15:39:16Z",
+      "updated_at": "2026-07-21T15:39:16Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
+      ],
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/pipeline-improvement/release-receipt.json"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/plan-findings.json",
+        "evaluated_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+        "imported_at": "2026-07-21T15:39:16Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P13 責務 (リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-21T15:10:00Z"
+      }
+    }
+  ]
+}

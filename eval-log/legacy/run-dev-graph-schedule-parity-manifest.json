@@ -1,0 +1,29 @@
+{
+  "scope": "feat-dev-pipeline-improvement",
+  "verified_at": "2026-07-22T04:37:30Z",
+  "beads_parity": [
+    {
+      "graph_node_id": "feat-dev-pipeline-improvement",
+      "bd_issue_id": "HarnessHub-k2u",
+      "edge_parity": {
+        "confirmed": true,
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "graph_status": "active",
+      "graph_depends_on": []
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+      "bd_issue_id": "HarnessHub-k2u.1",
+      "edge_parity": {
+        "confirmed": true,
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "graph_status": "active",
+      "graph_depends_on": []
+    }
+  ],
+  "c17_verdict": "PASS"
+}

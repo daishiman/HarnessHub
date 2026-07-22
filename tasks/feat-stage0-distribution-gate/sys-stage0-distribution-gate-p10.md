@@ -12,8 +12,8 @@ iteration: null
 title: "独立最終レビュー — quality_constraints 8 件・acceptance 3 件の最終確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-19T14:19:08Z"
-status: "active"
+updated_at: "2026-07-21T03:18:11Z"
+status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P09"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
 resource_scope: ["docs/features/feat-stage0-distribution-gate/final-review-record.md"]

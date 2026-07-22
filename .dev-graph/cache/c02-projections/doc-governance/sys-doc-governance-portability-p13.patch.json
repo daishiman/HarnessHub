@@ -1,0 +1,21 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P13 を実行する: リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "eval-log/dev-graph/doc-governance-portability/release-receipt.json"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "全成果物の PR が main へ merge され、release-receipt.json に PR 番号・merge commit・CI 結果が記録されている",
+   "governance-check.yml 上で 3 検査が fail-closed で実効していることが CI run の実測 (悪性 diff を投入した検証 run の exit code) で確認されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

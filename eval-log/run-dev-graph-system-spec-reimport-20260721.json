@@ -1,0 +1,39 @@
+{
+ "schema": "run-dev-graph-system-spec/reimport-report/1.0.0",
+ "reimported_at": "2026-07-21T14:30:00Z",
+ "reason": "新機能『開発管理パイプライン改善』(qa-067, dev-workflow.web) の確定反映と、evaluator high finding decision-chapter-drift の是正 (qa-068: D7 ephemeral-preview-only と qa-064 §13 P0 の矛盾解消, infrastructure.web)、および C08 stale 2 件 (pnpm 11.15.1 / claude-code-plugins anchor) の出典追従を再取込した",
+ "evaluator_verdict": "PASS",
+ "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json",
+ "gates": {
+  "coverage_require_complete_require_foundation": "exit 0 (54/54)",
+  "source_citation": "exit 0 (17/17)",
+  "compile_out1_tests": "42 passed",
+  "validate_source_digest": "exit 0 (checked 3, mismatch 0)",
+  "validate_evidence_refs": "exit 0 (registered_dangling 0, existing_dangling 0)",
+  "graph_schema": "valid:true violations:0 readiness:complete"
+ },
+ "audits": {
+  "C05_completeness": "PASS (全6観点 PASS, high 0, medium 3 既知継続)",
+  "C06_hearing": "strict history FAIL (legacy 誘導 6 件) / qa-045〜049 + appr-006/007 で RECOVERED (前回 reimport と同扱い)",
+  "C08_freshness": "監査 FAIL (stale 2) → fetched-references.json 追従で是正済み。unverifiable 2 件は WebFetch 不可の環境制約 (従前同種)"
+ },
+ "graph": {
+  "revision_before": 262,
+  "revision_after": 265,
+  "updated_nodes": [
+   {
+    "graph_node_id": "arch-harness-hub-dev-workflow",
+    "new_digest": "bdf3c60e2ab89540c6dd7bdf6009316070d66f9cf36aee17743d825668b6ae21"
+   },
+   {
+    "graph_node_id": "arch-harness-hub-infrastructure",
+    "new_digest": "d5897caae208aba38b8a0e8d5bbd8b282caf6d7b54ffd9a10c1625b5f4d02b76"
+   },
+   {
+    "graph_node_id": "spec-harness-hub-requirements",
+    "new_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae"
+   }
+  ],
+  "projection": "architecture/graph.json regenerated from 7 canonical system-spec-harness nodes (all digest match)"
+ }
+}

@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-064 |
+| Web (web) | 確定 | 確定質疑: qa-068 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-064 (対応セル: web)
+### qa-068 (対応セル: web)
 
-**質問**: docs/infrastructure-spec.md の 2026-07-18 追記 (R2 配布境界・§13 構築優先順位によるインフラ有効化順) をインフラ仕様へ反映するか。 (訂正再登録: qa-057 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-064 として登録し直す)
+**質問**: 確定決定 D7 (環境構成: 常設 staging を持たず preview は PR ごとに使い捨て) と qa-064 §13 有効化順 P0 の『production/staging』記述の矛盾をどう解消するか。
 
-**回答**: qa-034 の確定内容 (Cloudflare Workers + Turso + R2 のインフラ確定・意思決定 4 論点) を全面維持しつつ、次の delta を確定する。R2 配布境界: S01 の Web upload と Publisher CLI upload は同じ staging prefix・検査 pipeline・content hash 確定処理へ収束させ、ブラウザから R2 への公開 write URL は発行しない。install/download は Worker の POST /api/v1/harnesses/:projectId/install を必ず経由し R2 bucket/object key を UI/API へ返さない。Stage 0 で raw ZIP を採用した場合だけ安定版に固定した TTL 5 分以内・単回の短命 URL を発行。§13 有効化順 (P0-P5): 共通リソース先行と低優先機能先行を混同せず、単一 Worker/Turso/R2 は共有しつつ route・cron・通知を必要 phase で段階有効化 — P0: production/staging・Worker/DB migration・tenant/workspace・OIDC callback・Auth secret・共通認可/監査・/health・CI の tenant 分離 test (metrics rollup/週次サマリー/dashboard monitor は不要)。P1: HearingSheet/AiJob/notification migration・pull job・生成完了通知・キュー滞留監視。P2: private R2 package bucket・Web/CLI upload・検査・content-addressed 保存・install/download Worker 導線・orphan 通知 (承認 queue UI は P5 でも監査記録はこの時点から有効)。P3: feedback/doc AiJob kind・Feedback→修正版 Build 冪等作成・必要時の R2 prefix。P4: salary 鍵・metrics ingest/rollup cron・Turso 使用量監視・週次通知。P5: dashboard/承認/監査 UI 用 route と外形確認。各 phase の migration は tenant_id と必要な workspace_id を最初から必須にし、production 反映前に 2 tenant fixture の分離テストを通す。1 tenant/1 Project 固定の環境変数は作らない。
+**回答**: qa-064 の確定内容 (R2 配布境界・install/download 導線・§13 有効化順 P0-P5 の段階有効化・migration の tenant 分離テスト) を全面維持しつつ、D7 (ephemeral-preview-only) に整合する次の delta のみを確定する。【環境構成の正本】常設環境は production 1 組のみとし、常設 staging 環境は持たない (D7)。qa-064 §13 P0 の『production/staging・Worker/DB migration・…』は『production・Worker/DB migration・…』へ読み替え、PR 単位の動作確認は PR ごとに使い捨てる preview (PR close で破棄・常設リソースを増やさない) で担保する (qa-038【3】と同一方針)。【migration 検証】常設 staging での事前検証の代替として、expand/contract 3 段階の強制と CI の破壊的 DDL 検査 (qa-038) を正本ゲートとし、restore drill は都度一時 DB を作成して実施する (D7 の risks 緩和策)。【secret/リソース管理】常設 secret・binding・R2 prefix は production 1 組のみを台帳管理し、preview 用の一時リソースは PR close 時に破棄されることを検査で担保する。qa-064 のこの delta 以外の確定内容 (P0 のその他項目: tenant/workspace・OIDC callback・Auth secret・共通認可/監査・/health・CI の tenant 分離 test、P1-P5、R2 配布境界) は一切変更しない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

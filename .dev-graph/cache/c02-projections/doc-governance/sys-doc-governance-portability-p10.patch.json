@@ -1,0 +1,21 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P10 を実行する: 最終レビュー — 全 phase 成果の横断整合確認",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "docs/features/feat-doc-governance-portability/final-review.md"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "final-review.md に P01-P09 の成果物一覧・acceptance 4 件充足状況・quality_constraints 4 件 (fail-closed-lint・idempotent-verification・single-writer-boundary・digest-immutability) の適合判定が記録されている",
+   "未達 0 件で P11 へ進むか、残課題の差し戻し先または follow-up 起票が記録されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "verdict": "PASS",
+ "checks": [
+  {
+   "id": "verbatim-purpose",
+   "result": "PASS"
+  },
+  {
+   "id": "verbatim-goal",
+   "result": "PASS"
+  },
+  {
+   "id": "verbatim-scope_in",
+   "result": "PASS"
+  },
+  {
+   "id": "verbatim-scope_out",
+   "result": "PASS"
+  },
+  {
+   "id": "verbatim-acceptance",
+   "result": "PASS"
+  },
+  {
+   "id": "feature-id-match",
+   "result": "PASS",
+   "note": "features/feat-doc-governance-portability.context.json の graph_node_id と caller 指定 feature_id=feat-doc-governance-portability が一致。"
+  },
+  {
+   "id": "non-empty-required-fields",
+   "result": "PASS",
+   "note": "purpose/goal/scope_in(3)/scope_out(4)/acceptance(4) 全て非空。"
+  },
+  {
+   "id": "architecture-refs-resolved-in-repo",
+   "result": "PASS",
+   "note": "architecture/harness-hub-dev-workflow.md (graph_node_id=arch-harness-hub-dev-workflow) と specs/harness-hub-system-specification.md (graph_node_id=spec-harness-hub-requirements) の実在を Read で確認。"
+  },
+  {
+   "id": "system-spec-source-confirmed-pass",
+   "result": "PASS",
+   "note": "system-spec/dev-workflow.md:27-31 qa-070 (appr-008 承認) を直接確認。eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260722-084907.json の verdict=PASS (全 aspect PASS、qa-070 は new-cell-verification finding で個別補完検証済み) を直接確認。"
+  },
+  {
+   "id": "lineage-features/feat-doc-governance-portability.context.json",
+   "result": "PASS",
+   "note": "sha256 は team-lead (C09 preflight) 提供値をそのまま採用。本 fork にハッシュ計算ツールが無いため独立再計算は未実施 (digest_status=provided_by_caller)。"
+  },
+  {
+   "id": "lineage-architecture/harness-hub-dev-workflow.md",
+   "result": "PASS",
+   "note": "path 存在は確認済みだが sha256 未算出 (digest_status=unresolved_no_hash_tool)。本 fork にハッシュ計算ツール (Bash 等) が付与されていないため。 → 解消: 5f92c0759a239e10 で始まる sha256 を orchestrator (Bash 権限あり) が hashlib で算出し goal-spec.json へ補完済み (2026-07-22)。"
+  },
+  {
+   "id": "lineage-specs/harness-hub-system-specification.md",
+   "result": "PASS",
+   "note": "path 存在は確認済みだが sha256 未算出 (digest_status=unresolved_no_hash_tool)。本 fork にハッシュ計算ツール (Bash 等) が付与されていないため。 → 解消: a619518374201b03 で始まる sha256 を orchestrator (Bash 権限あり) が hashlib で算出し goal-spec.json へ補完済み (2026-07-22)。"
+  },
+  {
+   "id": "lineage-system-spec/dev-workflow.md",
+   "result": "PASS",
+   "note": "sha256 は features/feat-doc-governance-portability.md frontmatter の source_lineage.source_digest (dev-graph 生成時 hash-pin) と team-lead 提供値の一致を Read で確認。qa-070 の evaluator PASS も直接確認済み。"
+  },
+  {
+   "id": "no-feature-split-or-task-generation",
+   "result": "PASS",
+   "note": "feature 分割・exact-13 task 生成のいずれも実施していない。"
+  }
+ ],
+ "blocking_gaps": [
+  {
+   "id": "architecture-refs-digest-unresolved",
+   "summary": "architecture/harness-hub-dev-workflow.md と specs/harness-hub-system-specification.md の sha256 が未算出。本 fork (system-dev-plan-elicitor) にハッシュ計算ツールが付与されていないため。",
+   "next_action": "Bash 等ハッシュ計算ツールを持つエージェント (呼び出し元 main / architect 側) で sha256sum を実行し、goal-spec.json の該当 lineage エントリの sha256 / digest_status を補完してから architect へ引き渡すことを推奨。"
+  }
+ ],
+ "resolved_at": "2026-07-22T01:39:35Z",
+ "resolution_note": "digest 未算出 2 件は fork のツール制約 (Read/Write/Glob/Grep のみ) が原因。orchestrator が sha256 を算出し goal-spec.json の lineage を補完、両 check を PASS へ更新した。"
+}

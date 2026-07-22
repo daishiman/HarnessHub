@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "source": {
     "kind": "manual",
     "ref": "plugin-plans/system-spec-harness/improvement-handoff-20260712-knowledge-graph-doctrine.json",
@@ -13,21 +13,30 @@
       "severity": "high",
       "summary": "Knowledge information must be modeled as a typed dependency graph and consumed in dependency order.",
       "recommendation": "Define edge semantics, deterministic ordering, cycle/dangling checks, and shared consumption by elicitation and compilation.",
-      "target_ref": "goal-spec.json/C13-C14"
+      "target_ref": "goal-spec.json/C13-C14",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     },
     {
       "id": "USR-20260712-02",
       "severity": "high",
       "summary": "System domains need upstream doctrine anchors without prematurely fixing concrete technologies.",
       "recommendation": "Use Apple HIG, Clean Architecture, OWASP, and Google SRE as one authority per design concern and map every in-scope category to the applicable concerns.",
-      "target_ref": "goal-spec.json/C15"
+      "target_ref": "goal-spec.json/C15",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     },
     {
       "id": "USR-20260712-03",
       "severity": "high",
       "summary": "The plan must state what information is required and what missing information blocks construction.",
       "recommendation": "Give required-info items a minimum schema, domain coverage floor, dependency order, completion rule, and explicit missing-effect state.",
-      "target_ref": "goal-spec.json/C16"
+      "target_ref": "goal-spec.json/C16",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     }
   ],
   "provenance": {

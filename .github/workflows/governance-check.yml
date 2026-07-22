@@ -25,6 +25,15 @@ jobs:
       - name: "lint artifact placement (保存先の正規表 fail-closed。dev-graph 未初期化 repo は skip)"
         run: python3 scripts/lint-artifact-placement.py
         continue-on-error: false
+      - name: "lint doc line limit (qa-070 300行上限 fail-closed。既存超過は allowlist ratchet)"
+        run: python3 scripts/lint-doc-line-limit.py --repo-root .
+        continue-on-error: false
+      - name: "lint mechanism-knowledge boundary (qa-070 仕組みへの repo 固有ナレッジ hard-code 遮断)"
+        run: python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .
+        continue-on-error: false
+      - name: "lint portability knowledge opt-in (qa-070 移植チャネルは仕組みのみ既定・ナレッジ同梱は明示 opt-in)"
+        run: python3 scripts/lint-portability-knowledge-optin.py --repo-root .
+        continue-on-error: false
       - name: lint skill description (03章 R1-R5)
         run: python3 scripts/lint-skill-description.py
       - name: lint dependency direction

@@ -165,6 +165,38 @@
         "type": "lesson",
         "date": "2026-07-20"
       }
+    },
+    {
+      "id": "lessons-index_009",
+      "title": "[auto] PostToolUse:Skill 失敗 — 評価が完結しました。決定論スクリプトによる再導出でも `verdict=FAIL` の整合が確認され、スキーマ準拠も OK です。以下、最終報告です。",
+      "keywords": [
+        "PostToolUse",
+        "Skill",
+        "skill-invoke",
+        "medium"
+      ],
+      "message": "自動記録。根本原因の human triage 後に title/message を書き直す。",
+      "source": {
+        "file": "plugins/harness-creator/lessons-learned/2026-07-21-posttooluse-skill-assign-system-spec-completeness-evaluator.md",
+        "type": "lesson",
+        "date": "2026-07-21"
+      }
+    },
+    {
+      "id": "lessons-index_010",
+      "title": "[auto] PostToolUse:Skill 失敗 — 最終確定依頼: system-spec/ 一式 (qa-070 反映後) の completeness report を独立検証の上で確定・保存してほしい。監査",
+      "keywords": [
+        "PostToolUse",
+        "Skill",
+        "skill-invoke",
+        "medium"
+      ],
+      "message": "自動記録。根本原因の human triage 後に title/message を書き直す。",
+      "source": {
+        "file": "plugins/harness-creator/lessons-learned/2026-07-22-posttooluse-skill-assign-system-spec-completeness-evaluator.md",
+        "type": "lesson",
+        "date": "2026-07-22"
+      }
     }
   ]
 }

@@ -1,0 +1,32 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+  "purpose": "feat-dev-pipeline-improvement の P05 を実行する: 実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "plugins/dev-graph/scripts/lint-open-residue.py",
+   "plugins/dev-graph/scripts/lint-eval-log-layout.py",
+   "plugins/dev-graph/scripts/lint-handoff-disposition.py",
+   "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+   "plugins/dev-graph/tests/test_lint_open_residue.py",
+   "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
+   "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
+   "eval-log/README.md",
+   ".dev-graph/templates/task.md",
+   ".github/workflows/dev-pipeline-lint.yml",
+   "plugins/spec-drift-guardian/"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "lint script 3 本が P02 の入出力契約どおりに動作し、P04 の MUST_DETECT/MUST_PASS fixture を全件満たす",
+   "improvement-handoff.schema.json が disposition 必須の新形式と既存形式の判別 (schema_version) を持つ",
+   "spec-drift-guardian の C03/C04 verdict が P02 設計どおり close gate へ配線され、verdict 未着のまま proposal のみで close する経路が fail-closed で遮断される (回帰テスト付き)",
+   "eval-log/README.md に配置規約が明文化され、task template に status 意味論が追記され、CI workflow に lint 3 本が fail-closed で配線されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

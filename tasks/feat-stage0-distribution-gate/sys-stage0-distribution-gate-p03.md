@@ -12,8 +12,8 @@ iteration: null
 title: "独立設計レビュー — 検証方式・artifact 構成・実機 E2E 手順の妥当性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-19T14:19:08Z"
-status: "active"
+updated_at: "2026-07-20T22:43:49Z"
+status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P02"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
 resource_scope: ["docs/features/feat-stage0-distribution-gate/design-review-notes.md"]
@@ -42,7 +42,7 @@ beads_linkage: {"bd_issue_id":"HarnessHub-j71.3","linked_at":"2026-07-18T16:05:1
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
-execution_contexts: []
+execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P03","head_sha":"e2b033fb3e1debd057f4b624ce5e71ee9d526af2","last_seen_at":"2026-07-20T22:42:11.586106Z","lease_acquired_at":"2026-07-20T22:42:09.682527Z","released_at":null,"state":"claimed","worktree_id":"wt_eed96293f3fd512f"}]
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---

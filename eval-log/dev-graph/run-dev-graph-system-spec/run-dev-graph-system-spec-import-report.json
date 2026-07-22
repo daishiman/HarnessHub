@@ -1,8 +1,9 @@
 {
   "schema": "run-dev-graph-system-spec/import-report/1.0.0",
-  "imported_at": "2026-07-17T00:35:59Z",
+  "imported_at": "2026-07-22T09:35:00Z",
   "evaluator_verdict": "PASS",
-  "evidence_ref": "system-spec/completeness-report.json",
+  "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260722-qa071.json",
+  "notes": "qa-071 (dev-graph 方法論 8 要件) 追加確定 run (2026-07-22 --resume)。appr-009 登録。arch-harness-hub-dev-workflow digest 97f579c1 に更新。全ゲート PASS。",
   "nodes": [
     {
       "graph_node_id": "spec-harness-hub-requirements",
@@ -54,6 +55,15 @@
       "file_path": "architecture/harness-hub-infrastructure.md",
       "source_path": "system-spec/infrastructure.md",
       "source_digest": "3a78a369622b7c92dcd643ebf0985b4e8fc5e6a8d97fbbda8d050bace11df336",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete"
+    },
+    {
+      "graph_node_id": "arch-harness-hub-dev-workflow",
+      "file_path": "architecture/harness-hub-dev-workflow.md",
+      "source_path": "system-spec/dev-workflow.md",
+      "source_digest": "97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2",
       "confirmation_status": "confirmed",
       "evaluation_status": "pass",
       "implementation_readiness": "complete"

@@ -1,0 +1,55 @@
+{
+ "schema": "run-dev-graph-requirements/handoff/1.0.0",
+ "generated_at": "2026-07-22T10:00:00Z",
+ "handoff_target": "task-graph",
+ "feature_id": "feat-dev-pipeline-improvement",
+ "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+ "package_generation": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+ "package_canonical_digest": "sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+ "snapshot_digest": "sha256:ecf9ce5b54eceab6b09af4d79ee4d0583e85f966d783548b24d042d8883d363c",
+ "snapshot_inputs": {
+  "feature_context_digest": "sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78",
+  "feature_id": "feat-dev-pipeline-improvement",
+  "feature_source_digest": "sha256:67e76a2391435d3687a11b7bc12bd604359dc2d418d9edb27ef309e388fcb1d1",
+  "graph_revision": 364,
+  "graph_sha256": "sha256:6107b737cbde37e4fc90b5d94c027098d8118a8c1dfd906f618deb24a397c390",
+  "handoff_target": "task-graph",
+  "package_canonical_digest": "sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b"
+ },
+ "graph_revision": 364,
+ "graph_sha256": "sha256:6107b737cbde37e4fc90b5d94c027098d8118a8c1dfd906f618deb24a397c390",
+ "requirements_document": "eval-log/run-dev-graph-requirements-feat-dev-pipeline-improvement-document.md",
+ "readiness_matrix": "eval-log/run-dev-graph-requirements-feat-dev-pipeline-improvement-readiness-matrix.json",
+ "gate_status": {
+  "system_spec_qa071_lineage": "PASS",
+  "c11_graph_schema": "PASS",
+  "c02_saved_state": "PASS",
+  "validate_system_plan": "PASS"
+ },
+ "missing_sections": [],
+ "stale_digest_count": 0,
+ "task_entry_points": [
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+  "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md"
+ ],
+ "beads_epic": "HarnessHub-k2u",
+ "implementation_code_generated": 0,
+ "supersedes": {
+  "package_generation": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+  "package_canonical_digest": "sha256:f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+  "snapshot_digest": "sha256:2e3ab6ce0d500e9661c580f79a2969092cb856c6cbe17ac711f2b6fed7a0dada",
+  "graph_revision": 312,
+  "reason": "superseded by atomic-promotion-receipt at 2026-07-22T04:16:31Z"
+ }
+}

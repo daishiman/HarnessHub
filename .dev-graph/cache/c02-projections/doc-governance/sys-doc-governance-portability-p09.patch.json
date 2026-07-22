@@ -1,0 +1,21 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P09 を実行する: 品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "eval-log/dev-graph/doc-governance-portability/qa-fail-closed-report.json"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "qa-fail-closed-report.json に悪性ケース 3 系統 (300 行超過の未 allowlist 文書投入・仕組みファイルへの hard-coded node id/path/qa 番号投入・移植マニフェストでの knowledge 既定 on 投入) の実測 (期待 exit 非 0・実測 exit code) が記録され、全件検出されている",
+   "検査への迂回経路 (allowlist 対象外 path への書込・コメント偽装による hard-coded 参照の隠蔽・opt-in フラグ名の詐称) の探索結果が記録され、発見された迂回は P05 へ差し戻されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

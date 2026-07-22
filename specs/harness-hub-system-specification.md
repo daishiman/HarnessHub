@@ -1,50 +1,50 @@
 ---
-graph_node_id: spec-harness-hub-requirements
-artifact_kind: specification
+graph_node_id: "spec-harness-hub-requirements"
+artifact_kind: "specification"
 artifact_subtypes: []
-title: Harness Hub システム要件仕様 (system-spec 取込)
-project_id: harness-hub
-domain: platform
-status: active
-priority: high
+project_id: "harness-hub"
+domain: "platform"
+tags: ["system-spec-import","platform"]
+priority: "high"
 start_date: null
 target_date: null
 iteration: null
+title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
-tags: ["system-spec-import", "platform"]
-file_path: specs/harness-hub-system-specification.md
-template_id: specification
-template_version: 1.0.0
-confirmation_status: confirmed
-evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
-source_lineage: {"imported_at": "2026-07-18T08:10:00Z", "origin_kind": "system-spec-harness", "source_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15", "source_path": "system-spec/00-requirements-definition.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
-created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-18T15:40:17Z
+created_at: "2026-07-17T00:35:59Z"
+updated_at: "2026-07-21T14:18:05Z"
+status: "active"
 depends_on: []
-related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure", "arch-harness-hub-dev-workflow"]
+related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security"]
 resource_scope: ["specs/harness-hub-system-specification.md"]
-purpose: 非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する
-goal: 全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する
-scope_in: ["system-spec/00-requirements-definition.md", "system-spec/index.md"]
-scope_out: ["\u6b63\u672c\u7ae0\u306e\u5185\u5bb9\u8907\u88fd", "\u672a\u78ba\u5b9a\u7ae0\u306e\u53d6\u8fbc"]
-acceptance: ["\u6b63\u672c\u7ae0\u304c confirmed \u304b\u3064 evaluator PASS", "source_digest \u304c\u6b63\u672c\u3068\u4e00\u81f4"]
+purpose: "非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する"
+goal: "全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する"
+scope_in: ["system-spec/00-requirements-definition.md","system-spec/index.md"]
+scope_out: ["正本章の内容複製","未確定章の取込"]
+acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
 architecture_refs: []
 parent_feature: null
 feature_package_id: null
 phase_ref: null
+file_path: "specs/harness-hub-system-specification.md"
+template_id: "specification"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"}
+source_lineage: {"imported_at":"2026-07-21T14:18:05Z","origin_kind":"system-spec-harness","source_digest":"f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae","source_path":"system-spec/00-requirements-definition.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
-classification_reason: system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)
-classification_candidates: [{"artifact_kind": "specification", "confidence": 0.95, "candidate_path": "specs/harness-hub-system-specification.md"}]
-tracker_binding: none
-beads_linkage: null
-github_publication: {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null}
+classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
+classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
 issue_linkage: null
+tracker_binding: "none"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"policy": "manual", "status": "not_applicable", "source": null, "completed_at": null, "reconciled_at": null, "evidence_refs": []}
-implementation_readiness: {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:35:59Z"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
+implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
 
 # Harness Hub システム要件仕様 (system-spec 取込)

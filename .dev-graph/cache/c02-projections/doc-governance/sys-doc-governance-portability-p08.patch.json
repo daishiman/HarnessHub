@@ -1,0 +1,24 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P08 を実行する: 移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "scripts/doc-line-limit-allowlist.json",
+   "eval-log/dev-graph/doc-governance-portability/migration-receipt.json"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "scripts/doc-line-limit-allowlist.json に既存超過 6 文書 (docs/security-spec.md=910・docs/backend-spec.md=434・docs/features/feat-hub-foundation/design-review-notes.md=366・docs/features/feat-dev-pipeline-improvement/design.md=365・docs/features/feat-stage0-distribution-gate/design-review-notes.md=320・docs/features/feat-hub-foundation/final-review-notes.md=303) の baseline_line_count が遡及付与され、lint-doc-line-limit.py が exit 0 になる",
+   "6 文書自体の分割は実施せず、baseline 付与のみに限定されている (分割実施は issue-doc-granularity-remediation-20260722 / HarnessHub-3d8 側の責務)",
+   "migration-receipt.json に付与内容 (path・baseline_line_count・実測行数との一致確認) が記録され、再実行しても差分 0 (冪等) である",
+   "6 文書 (既存 confirmed 文書) の sha256 が付与前後で不変である"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

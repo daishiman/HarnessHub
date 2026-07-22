@@ -1,0 +1,1204 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-doc-governance-portability",
+  "parent_feature": "feat-doc-governance-portability",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P01": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P02": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P03": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P04": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P05": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P06": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P07": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P08": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P09": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P10": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P11": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P12": "beads",
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p01.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P01 責務 (要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P01"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/design.md"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p02.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P02 責務 (検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P02"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/design-review.md"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p03.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P03 責務 (設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P03"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/test-plan.md"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p04.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P04 責務 (テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P04"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "scripts/lint-doc-line-limit.py",
+        "scripts/lint-mechanism-knowledge-boundary.py",
+        "scripts/lint-portability-knowledge-optin.py",
+        "scripts/doc-line-limit-allowlist.json",
+        "tests/scripts-root/test_root__lint_doc_line_limit.py",
+        "tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py",
+        "tests/scripts-root/test_root__lint_portability_knowledge_optin.py",
+        ".github/workflows/governance-check.yml"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p05.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P05 責務 (実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 回帰テスト全件と 3 検査の実測記録",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P05"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/doc-governance-portability/test-run-p06.json"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p06.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P06 責務 (テスト実行 — 回帰テスト全件と 3 検査の実測記録) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入判定 — 4 acceptance の突合と未達の差し戻し",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P06"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/acceptance-report.md"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p07.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P07 責務 (受入判定 — 4 acceptance の突合と未達の差し戻し) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P07"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow",
+        "issue-doc-granularity-remediation-20260722"
+      ],
+      "resource_scope": [
+        "scripts/doc-line-limit-allowlist.json",
+        "eval-log/dev-graph/doc-governance-portability/migration-receipt.json"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p08.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P08 責務 (移行 — 既存超過 6 文書の allowlist baseline 遡及付与) を実行する task。6 文書自体の分割は issue-doc-granularity-remediation-20260722 (HarnessHub-3d8) 側の責務でありスコープ外",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P08"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/doc-governance-portability/qa-fail-closed-report.json"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p09.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P09 責務 (品質保証 — fail-closed 実効性と境界突破の悪性ケース実測) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P09"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/final-review.md"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p10.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "証跡固定 — 実測ログと成果物 digest の evidence manifest 化",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P10"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/doc-governance-portability/evidence-manifest.json"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p11.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P11 責務 (証跡固定 — 実測ログと成果物 digest の evidence manifest 化) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P11"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/operations.md"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p12.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P12 責務 (運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-22T02:31:19Z",
+      "updated_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P12"
+      ],
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/doc-governance-portability/release-receipt.json"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p13.md",
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json",
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "imported_at": "2026-07-22T02:31:19Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P13 責務 (リリース — main 反映と 3 検査の CI fail-closed 実効性の実証) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-07-22T09:35:00Z"
+      }
+    }
+  ]
+}

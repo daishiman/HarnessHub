@@ -1,12 +1,12 @@
 {
-  "authority_sha256_after": "d0e593c9524c4dd9f5264aa8413df208abb1f2fb401cee866a5253e03c637a4d",
-  "authority_sha256_before": "d0e593c9524c4dd9f5264aa8413df208abb1f2fb401cee866a5253e03c637a4d",
-  "count": 1,
-  "executed_at": "2026-07-20T00:47:22.691825Z",
+  "authority_sha256_after": "5cde07f6e74f59c68f761884b84bfbf58d3ecfb9df6cc04f9d2f904a3ef01f07",
+  "authority_sha256_before": "5cde07f6e74f59c68f761884b84bfbf58d3ecfb9df6cc04f9d2f904a3ef01f07",
+  "count": 14,
+  "executed_at": "2026-07-21T16:04:41.780007Z",
   "filters": {
     "domain": null,
-    "id": "spec-harness-hub-requirements",
-    "keyword": null,
+    "id": null,
+    "keyword": "dev-pipeline-improvement",
     "kind": null,
     "project": null,
     "status": null,
@@ -14,39 +14,394 @@
     "tags": []
   },
   "graph": ".dev-graph/state/graph.json",
-  "graph_sha256_after": "d0e95a14eaac57225f048f89c961d43098333d4bc79378e3c9dfb1aa8c4ac969",
-  "graph_sha256_before": "d0e95a14eaac57225f048f89c961d43098333d4bc79378e3c9dfb1aa8c4ac969",
+  "graph_sha256_after": "db7edae64abb7b45579e5d6169e7618dd837cc7b0eb42b88ffe004cfd65bfce8",
+  "graph_sha256_before": "db7edae64abb7b45579e5d6169e7618dd837cc7b0eb42b88ffe004cfd65bfce8",
   "ok": true,
   "read_only": true,
   "results": [
     {
-      "artifact_kind": "specification",
+      "artifact_kind": "task",
       "beads_linkage": null,
       "closed_at": null,
       "dependents": [
-        "arch-harness-hub-backend",
-        "arch-harness-hub-data",
-        "arch-harness-hub-dev-workflow",
-        "arch-harness-hub-frontend",
-        "arch-harness-hub-infrastructure",
-        "arch-harness-hub-security"
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
       ],
       "depends_on": [],
-      "domain": "platform",
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+      ],
+      "domain": "operations",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P13"
+      ],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
+      ],
+      "domain": "operations",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [],
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
+      ],
+      "domain": "operations",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+      "issue_linkage": null,
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "feature",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [],
+      "depends_on": [],
+      "domain": "dev-workflow",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "specs/harness-hub-system-specification.md",
-      "graph_node_id": "spec-harness-hub-requirements",
+      "file_path": "features/feat-dev-pipeline-improvement.md",
+      "graph_node_id": "feat-dev-pipeline-improvement",
       "issue_linkage": null,
       "parent_feature": null,
       "project_id": "harness-hub",
       "status": "active",
       "tags": [
-        "system-spec-import",
-        "platform"
+        "macro-feature",
+        "dev-pipeline",
+        "governance",
+        "qa-067"
       ],
-      "title": "Harness Hub システム要件仕様 (system-spec 取込)",
-      "tracker_binding": "none"
+      "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
+      "tracker_binding": "beads"
     }
   ]
 }

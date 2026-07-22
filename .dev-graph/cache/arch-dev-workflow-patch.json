@@ -1,0 +1,20 @@
+{
+  "graph_node_id": "arch-harness-hub-dev-workflow",
+  "patch": {
+    "goal": "qa-038/qa-039/qa-066/qa-067/qa-070/qa-071 の確定内容に適合し、P0〜P5 の開発運用・feature baseline の source lineage 逆引き・開発管理パイプライン改善 8 要件 (qa-067)・ドキュメント規約 2 件 (qa-070: 仕組みとナレッジのオン・オフ分離 / 300 行粒度 fail-closed)・dev-graph 方法論 8 要件 (qa-071: マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全) の指針を提供する",
+    "updated_at": "2026-07-22T09:30:00Z",
+    "confirmation_evidence": {
+      "evaluated_digest": "97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2",
+      "evaluator": "assign-system-spec-completeness-evaluator",
+      "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260722-qa071.json"
+    },
+    "source_lineage": {
+      "imported_at": "2026-07-22T09:30:00Z",
+      "origin_kind": "system-spec-harness",
+      "source_digest": "97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2",
+      "source_path": "system-spec/dev-workflow.md",
+      "source_plugin": "system-spec-harness",
+      "source_version": "0.1.0"
+    }
+  }
+}

@@ -12,8 +12,8 @@ iteration: null
 title: "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-19T14:19:08Z"
-status: "active"
+updated_at: "2026-07-21T03:18:16Z"
+status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P11"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
 resource_scope: ["docs/features/feat-stage0-distribution-gate/runbook.md"]

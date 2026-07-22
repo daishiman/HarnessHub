@@ -1,0 +1,68 @@
+{
+ "schema": "run-dev-graph-decompose/macro-report/1.0.0",
+ "recorded_at": "2026-07-22T10:30:00Z",
+ "run_id": "decompose-qa071-20260722",
+ "input": {
+  "source_spec": "system-spec/dev-workflow.md#qa-071",
+  "git_diff_summary": "50 files changed, 5046 insertions, 3259 deletions (HEAD 4e60f27)",
+  "existing_features_in_diff": ["feat-dev-pipeline-improvement", "feat-doc-governance-portability"]
+ },
+ "want_decomposition": {
+  "want": "小さなタスクを積み上げて仕組みにし、二重ループを目的・背景・ゴールで回し、載せる情報と参照する情報、仕組みとナレッジを分離して育てる",
+  "qa071_requirements": [
+   {"req_num": 1, "name": "macro-structure", "covered_by": "dev-graph framework (operational)", "new_feature_needed": false},
+   {"req_num": 2, "name": "exact-13", "covered_by": "system-dev-planner pattern (all features)", "new_feature_needed": false},
+   {"req_num": 3, "name": "outer-loop", "covered_by": "feat-dev-pipeline-improvement", "new_feature_needed": false},
+   {"req_num": 4, "name": "inner-loop", "covered_by": "feat-dev-pipeline-improvement (goal-seek/rubric/feedback per phase)", "new_feature_needed": false},
+   {"req_num": 5, "name": "scope-separation", "covered_by": "feat-dev-pipeline-improvement (lifecycle close-loop)", "new_feature_needed": false},
+   {"req_num": 6, "name": "information-placement", "covered_by": "feat-dev-pipeline-improvement (lineage/ref pattern + eval-log規約)", "new_feature_needed": false},
+   {"req_num": 7, "name": "naming-doc-granularity", "covered_by": "feat-doc-governance-portability (qa-070確定済み)", "new_feature_needed": false},
+   {"req_num": 8, "name": "write-back", "covered_by": "feat-dev-pipeline-improvement (P13 責務 + sync verb 組込み)", "new_feature_needed": false},
+   {"req_num": 9, "name": "preservation-update-control", "covered_by": "feat-dev-pipeline-improvement (reopen gate / CI lint)", "new_feature_needed": false},
+   {"req_num": 10, "name": "portable-separation", "covered_by": "feat-doc-governance-portability (qa-070確定済み)", "new_feature_needed": false}
+  ]
+ },
+ "convergence_analysis": {
+  "verdict": "収束",
+  "description": "全 want 要素が既存 2 feature でカバーされる。qa-071 の実装正本は system-spec/dev-workflow.md#qa-071 に明示のとおり feat-dev-pipeline-improvement と issue-qa070-implementation-feature-20260722 を経由する。新規 feature・architecture node は不要。",
+  "new_features": [],
+  "new_architecture_nodes": [],
+  "updated_features": [
+   {
+    "graph_node_id": "feat-dev-pipeline-improvement",
+    "change": "tags に qa-071 を追加（加算のみ、既存 content 削除なし）",
+    "before_tags": ["macro-feature", "dev-pipeline", "governance", "qa-067"],
+    "after_tags": ["macro-feature", "dev-pipeline", "governance", "qa-067", "qa-071"]
+   }
+  ],
+  "unchanged_features": [
+   {
+    "graph_node_id": "feat-doc-governance-portability",
+    "reason": "qa-070 タグ済み。qa-071 は qa-070 を参照するのみ (portable separation: qa-070で確定済み)"
+   }
+  ]
+ },
+ "feature_dag": {
+  "features": ["feat-dev-pipeline-improvement", "feat-doc-governance-portability"],
+  "edges": [],
+  "cycles": 0,
+  "phase_task_violations": 0
+ },
+ "architecture_nodes": {
+  "referenced": ["arch-harness-hub-dev-workflow"],
+  "new": []
+ },
+ "completion_gates": {
+  "CL1_macro_only": {"status": "pass", "evidence": "feature/architecture/depends_on のみ。循環 0、phase-task 混入 0"},
+  "CL2_no_draft_publication": {"status": "pass", "evidence": "feat-dev-pipeline-improvement: confirmed/pass/complete。feat-doc-governance-portability: confirmed/pass/complete。tracker 投影対象は両 feature とも条件充足済み"},
+  "CL3_ready_packages": {"status": "pending", "evidence": "plan verb (run-system-dev-plan) で exact-13 生成予定。feat-dev-pipeline-improvement と feat-doc-governance-portability はそれぞれ plan 済み"},
+  "CL4_atomic_no_dup": {"status": "pass", "evidence": "tag 加算のみ。upsert 操作。同一 graph_node_id の重複 0"},
+  "CL5_projection_authority": {"status": "pass", "evidence": "両 feature: tracker_binding=beads / github_publication.mode=local_only (衝突なし)"},
+  "CL6_dry_run_zero": {"status": "pass", "evidence": "dry-run 非指定。local write は feat-dev-pipeline-improvement タグ更新 1 件のみ"}
+ },
+ "schema_gate": "PASS",
+ "feature_ids_generated_or_reused": [
+  {"id": "feat-dev-pipeline-improvement", "action": "reused", "update": "tag qa-071 added"},
+  {"id": "feat-doc-governance-portability", "action": "reused", "update": "none"}
+ ]
+}

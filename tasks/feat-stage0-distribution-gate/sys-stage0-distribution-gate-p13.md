@@ -12,8 +12,8 @@ iteration: null
 title: "リリース/デプロイ — 採用経路の decision record C01 writer登録 (C01 writer 経由) と Stage 1 開始条件判定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-19T14:19:08Z"
-status: "active"
+updated_at: "2026-07-21T03:18:20Z"
+status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P12"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
 resource_scope: [".dev-graph/cache/stage0-decision-registration-receipt.json",".dev-graph/cache/stage0-decision-registration-request.json",".dev-graph/cache/stage0-stage1-gate-receipt.json","docs/features/feat-stage0-distribution-gate/release-record.md"]

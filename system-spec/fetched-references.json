@@ -22,13 +22,13 @@
     },
     {
       "target_id": "pnpm",
-      "retrieved_at": "2026-07-18T15:29:49Z",
+      "retrieved_at": "2026-07-21T14:05:53Z",
       "source_url": "https://github.com/pnpm/pnpm/releases",
       "official_publisher": "pnpm maintainers",
       "official_host": "github.com",
-      "version": "11.15.0",
-      "latest_checked_at": "2026-07-18T15:29:49Z",
-      "summary": "pnpm 公式 GitHub organization の Releases で現行安定版 11.15.0 を確認した。pnpm は依存を content-addressable store に一元保存してディスク・時間効率を高め、symlink ベースの非フラットな node_modules で宣言外依存へのアクセスを抑止する。本プロジェクトの唯一のパッケージマネージャとして pnpm を使用し npm は使用しない。"
+      "version": "11.15.1",
+      "latest_checked_at": "2026-07-21T14:05:53Z",
+      "summary": "pnpm 公式 GitHub organization の Releases と npm registry の照合で現行安定版 11.15.1 (2026-07-20 頃公開の patch) を確認した。pnpm は依存を content-addressable store に一元保存してディスク・時間効率を高め、symlink ベースの非フラットな node_modules で宣言外依存へのアクセスを抑止する。本プロジェクトの唯一のパッケージマネージャとして pnpm を使用し npm は使用しない。(鮮度再確認 2026-07-21: C08 監査の stale 指摘 11.15.0→11.15.1 を WebSearch 多源照合で追従。12.0.0-alpha 系 Rust port のプレリリースが並行進行中だが安定版ラインは 11.x)"
     },
     {
       "target_id": "zod",
@@ -86,9 +86,9 @@
       "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
       "official_publisher": "Anthropic",
       "official_host": "code.claude.com",
-      "last_updated": "2026-07-18 (最新確認日。本文の記載 anchor は v2.1.196 時点、CLI 本体は 2026-07 時点で v2.1.203+ 系まで継続リリース)",
-      "latest_checked_at": "2026-07-18T14:57:14Z",
-      "summary": "marketplace は .claude-plugin/marketplace.json で定義し、GitHub owner/repo・git URL・marketplace.json への remote URL・ローカルパスで追加できる (URL はスキーム必須・https)。remote URL 型では marketplace.json しか取得されないため相対パス source の plugin は解決不能で、plugin 本体 source は外部 source が必要。source type は github・git URL・git-subdir に加え npm も許可されており、コンセプト文書 §8.1 の『npm 非対応』は現行仕様と不一致 (仕様書で事実修正済み)。Stage 0 technical gate (H7) の検証対象。鮮度注意 (2026-07-17 再確認): 記録の挙動 anchor は v2.1.196 時点だが CLI は高頻度リリースされており (2026-07 時点 v2.1.21x 系)、H7 検証と実装着手時に code.claude.com の changelog / 本ページを再照合する。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up) 鮮度再確認 (2026-07-18): CLI 現行 2.1.20x 系 (2.1.203+ の存在を release tracker 複数ソースで確認)。plugin marketplace 仕様 (marketplace.json・source type に npm 含む) に変更の兆候なし。H7 検証時に changelog 再照合。(C08 鮮度監査是正 2026-07-18: WebFetch 不可環境のため WebSearch 多源照合で再確認。一次 GET 照合は WebFetch 可能環境での follow-up 継続)"
+      "last_updated": "2026-07-21 (最新確認日。本文の記載 anchor は v2.1.196 時点、CLI 本体は 2026-07-21 時点で v2.1.21x 系まで継続リリース)",
+      "latest_checked_at": "2026-07-21T14:05:53Z",
+      "summary": "marketplace は .claude-plugin/marketplace.json で定義し、GitHub owner/repo・git URL・marketplace.json への remote URL・ローカルパスで追加できる (URL はスキーム必須・https)。remote URL 型では marketplace.json しか取得されないため相対パス source の plugin は解決不能で、plugin 本体 source は外部 source が必要。source type は github・git URL・git-subdir に加え npm も許可されており、コンセプト文書 §8.1 の『npm 非対応』は現行仕様と不一致 (仕様書で事実修正済み)。Stage 0 technical gate (H7) の検証対象。鮮度注意 (2026-07-17 再確認): 記録の挙動 anchor は v2.1.196 時点だが CLI は高頻度リリースされており (2026-07 時点 v2.1.21x 系)、H7 検証と実装着手時に code.claude.com の changelog / 本ページを再照合する。(注: 本再確認は WebFetch 不可環境のため WebSearch による複数ソース照合。一次 GET 照合は C02 の follow-up) 鮮度再確認 (2026-07-18): CLI 現行 2.1.20x 系 (2.1.203+ の存在を release tracker 複数ソースで確認)。plugin marketplace 仕様 (marketplace.json・source type に npm 含む) に変更の兆候なし。H7 検証時に changelog 再照合。(C08 鮮度監査是正 2026-07-18: WebFetch 不可環境のため WebSearch 多源照合で再確認。一次 GET 照合は WebFetch 可能環境での follow-up 継続) 鮮度再確認 (2026-07-21): C08 監査が CLI v2.1.215 (2026-07-19 付) を複数ソースで観測、WebSearch 多源照合でも 2.1.20x-2.1.21x 系の継続リリースを確認。plugin marketplace 仕様 (marketplace.json・source type npm 含む) に変更の兆候なし。H7 検証時に changelog 再照合。(WebFetch 不可環境のため WebSearch 多源照合。一次 GET 照合は WebFetch 可能環境での follow-up 継続)"
     },
     {
       "target_id": "cloudflare-workers",
