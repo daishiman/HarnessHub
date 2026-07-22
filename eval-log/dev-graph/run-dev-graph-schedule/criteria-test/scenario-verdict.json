@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "schedule-positive-ready-set",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T043419/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T043419/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T043419/transcript.jsonl",
-        "independent: fresh evaluator replay of r6 task, pane, execution receipt, graph, and canonical lease ledger"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/out/status.json"
       ],
-      "observed": "bd-bridge.py / schedule-graph.py の変更で closure digest が動いたため 2026-07-21 に再実走 (r6)。対象 Skill を最初の tool call で起動し、schedule 実行と C17 検証をそれぞれ別 Agent へ分離した。read-only receipt は LT-TASK-001 を唯一の ready task とし、未充足依存 0・lease/resource conflict 0・一意な branch/claim hint・graph/tracker/lease digest 不変。fresh evaluator が同一引数で schedule-graph.py を再実行し executed_at 以外が receipt と完全一致することを確認して PASS。"
+      "observed": "2026-07-22 再取得 (r7)。本 PR の guard hook 変更と main merge で behavior closure が動いたため再実走した。sync が --apply で graph を書き換える干渉を避けるため、schedule 専用の fixture を分離して生成している。Live-trial verdict overall=PASS (launch/completion/goal_fit/verdict すべて PASS), tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0 (自走)。R3 を Agent へ分離して --max-parallel 4 で実行し、独立 C17 verifier Agent が C24 receipt・実行 receipt・graph・canonical lease ledger を実際に読んで ready/batch/lease authority を再計算し verified=true。graph/tracker/lease の digest は実行前後で不変 (read-only)。orchestrator と別個体の fresh evaluator が graph から ready-set を独立再計算して厳密一致を確認し blocker 0 で PASS。"
     },
     "OUT2": {
       "status": "PASS",

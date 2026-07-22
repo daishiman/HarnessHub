@@ -1,0 +1,1 @@
+{"status": "PASS", "scenario": "system-spec-lineage-positive", "checks": {"four_entry_points_driven": true, "source_lineage_preserved": true, "evaluator_evidence_present": true, "registration_via_c02_only": true, "no_duplicated_elicit_compile": true, "c11_exit0": true}}
