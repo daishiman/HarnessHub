@@ -60,11 +60,11 @@
     "detail": "diff は system-spec/spec-state.json (D7 質疑証跡 qa-068 参照・elicit writer 経由の正規反映) に触れる。confirmed 章 system-spec/dev-workflow.md と参照 wrapper architecture/harness-hub-dev-workflow.md は既に qa-067/qa-071 を記述済みで実装は逸脱なし。新規の規範的 spec/architecture 変更は不要 (確定章の変更は要件9 reopen->re-confirm ゲート専管)。P13 retrospective は feature docs に集約"
   },
   "pull_request": {
-    "number": null,
-    "url": null,
-    "state": "draft (作成予定)",
+    "number": 41,
+    "url": "https://github.com/daishiman/HarnessHub/pull/41",
+    "state": "draft",
     "merge_commit": null,
-    "note": "PR 番号・merge commit・最終 done 確定は人手 merge 後。live-trial 再 trial (kj1/2n6) 完了までは governance-check / harness-creator-kit-ci が赤のため draft"
+    "note": "2026-07-23 に main 向け draft PR #41 を作成。merge commit・最終 done 確定は人手 merge 後。live-trial 再 trial (kj1/2n6) 完了までは governance-check / harness-creator-kit-ci が赤のため draft"
   },
   "known_residual": {
     "live_trial_stale": {
