@@ -3,6 +3,9 @@
 ## Machine-readable registration fields
 
 - feature_package_id: feature-package/feat-hub-foundation (13 task で共有)
+- feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
+- feature_acceptance: 4 items (A1-A4)
+- quality_constraints: 9 items
 - owners: ["daishiman"]
 - tags: ["feat-hub-foundation", "stage-1", "infrastructure", "test-design"]
 - related_nodes: ["feat-hub-foundation", "arch-harness-hub-infrastructure", "arch-harness-hub-frontend"]
@@ -20,7 +23,7 @@ P03 で承認された設計に基づき、P05 実装に先立って test-first 
 
 ## 背景
 
-goal-spec の acceptance は「CI が test→deploy を完走する」「Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する」「SLO 99.5% の計測と /health が稼働する」の 3 件であり、これらは実装前にテストシナリオとして具体化しておくことで、P05 実装と P06 テスト実行が同じ合否基準を共有できる。qa-018 は axe 自動チェックで検出可能な a11y 違反ゼロをリリース条件とし、docs/shared-layers.md §3 は pnpm 混入検査・axe・bundle 予算・Tenant 分離テスト・検査 pipeline 挙動同値テストを CI 品質ゲートとして列挙している。本 feature の scope では Tenant 分離テストと検査 pipeline 挙動同値テストは後続 feature 用の枠のみを用意する。
+goal-spec の acceptance は A1「CI test→deploy 完走」、A2「Worker bundle 3MiB 以内」、A3「SLO 99.5% 計測と /health 稼働」、A4「登録済み共通層の単一実装と consumer contract」の 4 件であり、実装前にテストシナリオとして具体化して P05 実装と P06 テスト実行が同じ合否基準を共有する。qa-018 は axe 自動チェックで検出可能な a11y 違反ゼロをリリース条件とし、A4 は consumer contract test と duplicate implementation detector=0 を実行条件とする。
 
 ## 前提条件
 
@@ -37,7 +40,7 @@ goal-spec の acceptance は「CI が test→deploy を完走する」「Worker 
 - Data: N/A: DB スキーマ実体は feat-domain-model-db の scope であり、本 task のテスト対象に含めない
 - Infrastructure: applicable + change: Worker bundle サイズ (3MiB 以内、gzip 後) の計測テストと、pnpm 混入検査 (npm 使用時に CI を fail させる) のテストケースを設計する
 - Security: applicable + change: npm 混入検知・secret 非保持境界 (C4) の最小限のセキュリティテスト観点を設計する (認証本体のテストは feat-auth-tenancy)
-- Quality: applicable + change: docs/features/feat-hub-foundation/test-design.md を新規作成し、goal-spec acceptance 3 件を test-first 契約として定義する
+- Quality: applicable + change: docs/features/feat-hub-foundation/test-design.md を新規作成し、goal-spec acceptance 4 件 (A1-A4) を test-first 契約として定義する
 - Documentation: applicable + change: test-design.md 作成
 - Operations: applicable + change: SLO 99.5% 計測・エラーバジェットアラート・外部死活監視の疎通確認テスト (監視自体が正しく動作しているかの検証) を設計する
 
@@ -78,7 +81,7 @@ goal-spec の acceptance は「CI が test→deploy を完走する」「Worker 
 ## Verification and evidence
 
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging`
-- Required evidence: docs/features/feat-hub-foundation/test-design.md に goal-spec acceptance 3 件それぞれに対応するテスト種別 (unit/contract/integration/e2e/security/performance) と合否基準が明記されていること
+- Required evidence: docs/features/feat-hub-foundation/test-design.md に goal-spec acceptance 4 件 (A1-A4) それぞれに対応するテスト種別 (unit/contract/integration/e2e/security/performance) と合否基準が明記されていること
 
 ## Rollout and rollback
 

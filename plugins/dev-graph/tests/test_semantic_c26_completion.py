@@ -111,8 +111,97 @@ def test_c26_consumes_c24_canonical_repository_context(tmp_path, monkeypatch):
     with pytest.raises(module.ContractError, match="non-canonical"):
         module.c24_context(tmp_path, SCRIPTS / "resolve-repo-context.py")
 
+    monkeypatch.setattr(module, "_invoke_json", lambda *args: {**receipt, "branch": None})
+    assert module.c24_context(tmp_path, SCRIPTS / "resolve-repo-context.py")["branch"] is None
 
-def test_c26_requires_unique_marker_and_exact_bound_issue_closing_reference():
+    without_branch = {key: value for key, value in receipt.items() if key != "branch"}
+    monkeypatch.setattr(module, "_invoke_json", lambda *args: without_branch)
+    with pytest.raises(module.ContractError, match="omits required identity"):
+        module.c24_context(tmp_path, SCRIPTS / "resolve-repo-context.py")
+
+    monkeypatch.setattr(module, "_invoke_json", lambda *args: {**receipt, "branch": ""})
+    with pytest.raises(module.ContractError, match="invalid branch state"):
+        module.c24_context(tmp_path, SCRIPTS / "resolve-repo-context.py")
+
+
+def test_c26_detached_check_reports_pending_without_identity_failure(tmp_path, monkeypatch, capsys):
+    module = load(SCRIPTS / "reconcile-github-lifecycle.py", "c26_detached_check")
+    common = tmp_path / "common"
+    common.mkdir()
+    monkeypatch.setattr(
+        module,
+        "c24_context",
+        lambda root, resolver: {
+            "repo_root": str(root),
+            "repository_id": "github:o/r",
+            "git_common_dir": str(common),
+            "branch": None,
+            "head_sha": "1" * 40,
+            "coordination_paths": {"root": str(common / "dev-graph")},
+        },
+    )
+    monkeypatch.setattr(
+        module,
+        "run",
+        lambda *args, **kwargs: SimpleNamespace(returncode=0, stdout="", stderr=""),
+    )
+    monkeypatch.setattr(module, "c12_lifecycle_facts", lambda *args: facts())
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "G.md").write_text(markdown("G"), encoding="utf-8")
+    graph = tmp_path / "graph.json"
+    graph.write_text(
+        json.dumps(
+            {
+                "graph_revision": 1,
+                "nodes": [
+                    {
+                        "graph_node_id": "G",
+                        "artifact_kind": "task",
+                        "status": "active",
+                        "tracker_binding": "none",
+                        "file_path": "tasks/G.md",
+                        "pull_request_linkages": [],
+                        "completion_evidence": {
+                            "policy": "linked_pr_merged_all",
+                            "status": "in_progress",
+                            "evidence_refs": [],
+                        },
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    code, result = call_main(
+        module,
+        monkeypatch,
+        capsys,
+        "--repo-root",
+        tmp_path,
+        "--graph",
+        graph,
+        "--graph-node-id",
+        "G",
+        "--repo",
+        "o/r",
+        "--pr",
+        "1",
+        "--mode",
+        "check",
+    )
+
+    assert code == 1
+    assert result["policy_decision"] == "pending"
+    assert result["worktree_decision"]["branch"] is None
+    assert result["required_pr_decisions"][0]["linkage"]["marker_verified"] is True
+    assert result["conflicts"] == [
+        "worktree is not clean and synchronized on the remote default branch"
+    ]
+
+
+def test_c26_requires_unique_marker_and_exact_bound_issue_closing_reference(tmp_path, monkeypatch):
     module = load(SCRIPTS / "reconcile-github-lifecycle.py", "c26_linkage")
     node = {"graph_node_id": "G", "tracker_binding": "github", "issue_linkage": {"repo": "o/r", "issue_number": 9}}
     pr = facts(closing=[{"number": 9, "repository": "o/r"}])["pull_request"]
@@ -120,6 +209,14 @@ def test_c26_requires_unique_marker_and_exact_bound_issue_closing_reference():
     assert module._linkage_decision(node, "o/r", {**pr, "body": "dev-graph: G\ndev-graph: G\n"})["marker_verified"] is False
     wrong = {**pr, "closingIssuesReferences": [{"number": 9, "repository": "someone/else"}]}
     assert module._linkage_decision(node, "o/r", wrong)["closing_reference_verified"] is False
+
+    beads_node = {"graph_node_id": "G", "tracker_binding": "beads", "beads_linkage": {"bd_issue_id": "B1"}}
+    monkeypatch.setattr(
+        module,
+        "_invoke_json",
+        lambda *args: (_ for _ in ()).throw(module.ContractError("C28 gh:pr gate check failed (1): gh:pr gate does not exist")),
+    )
+    assert module._beads_gate_verified(tmp_path, tmp_path / "bridge.py", beads_node, 1) is False
 
 
 def test_c26_writer_consumer_cli_route_creates_receipt(tmp_path):
@@ -297,6 +394,28 @@ def test_c26_boundary_helpers_fail_closed_with_typed_receipts(tmp_path, monkeypa
     task.write_text(markdown("G").replace("`python3 -m pytest`", "TODO"), encoding="utf-8")
     with pytest.raises(module.ContractError, match="incomplete verification"):
         module._validate_task_artifact(tmp_path, node)
+
+    published = tmp_path / "published-task.md"
+    published.write_text(
+        "# Published task\n\n## Verification and evidence\n\n"
+        "- Automated commands: `python3 -m pytest`\n"
+        "- Required evidence: evidence/run.json\n",
+        encoding="utf-8",
+    )
+    projection = markdown("G").split("## Verification and evidence", 1)[0]
+    task.write_text(projection, encoding="utf-8")
+    projected_node = {**node, "source_lineage": {"source_path": "published-task.md"}}
+    result = module._validate_task_artifact(tmp_path, projected_node)
+    assert result["verification_source"]["file_path"] == "published-task.md"
+
+    published.write_text("# Published task\n\n## Verification and evidence\n\n- TODO\n", encoding="utf-8")
+    with pytest.raises(module.ContractError, match="incomplete verification"):
+        module._validate_task_artifact(tmp_path, projected_node)
+    with pytest.raises(module.ContractError, match="escapes repository authority"):
+        module._validate_task_artifact(
+            tmp_path,
+            {**node, "source_lineage": {"source_path": "../published-task.md"}},
+        )
 
     monkeypatch.setattr(module, "_invoke_json", lambda *args: {"lease": {"state": "pending_review"}})
     with pytest.raises(module.ContractError, match="does not match"):

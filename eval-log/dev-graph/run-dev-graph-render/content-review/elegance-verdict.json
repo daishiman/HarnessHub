@@ -2,21 +2,22 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-render",
-    "skill_md_sha256": "da9113c9c03ede0ddcba41ac7046e73b312d7fb3b5e04964ac76d0c16a8bca6d"
+    "skill_md_sha256": "e31e1245beaec6ad6b62b0079d0108db03532c40a82ea071bf039eefca4eebf6"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "audit-sync-render-20260720",
-  "reviewed_at": "2026-07-20",
+  "reviewer": "content-review-out1-clarification-20260721",
+  "reviewed_at": "2026-07-21",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "C1 矛盾なし: 『graph は read-only、HTML 以外の graph/content を変更しない』(L68) と『外部 script/link/CDN/npm 禁止のゼロ依存単一 HTML』が Purpose・手順・Gotchas で一貫。allowed-tools に Write を含めず HTML 書込みを render-graph-html.py (Bash) に委ねる設計が read-only 原則と矛盾しない。",
-      "C2 漏れなし: IN1 (ゼロ依存 script 検証) と OUT1 (ブラウザ表示+feature X/Y 進捗が receipt applied_count/expected_count/source_digest と一致) の 2 criteria を acceptance で受入条件化し、feature progress は parent_feature task 実数から導出 (手入力値非表示) まで明記。",
-      "C4 依存整合: script_refs (resolve-repo-context/validate-graph-schema/render-graph-html)、schema_refs (graph-node)、prompts R1-R3 が全て実在。goal-seek 配線が --mode read (read-only) を使い skill の read-only 性と整合。"
+      "C1 矛盾なし: 改訂後 OUT1 (frontmatter L50) と `## Criteria acceptance` OUT1 (L133) がともに『総数Yのみ receipt と一致・done数Xは一致を求めない』で一致し、旧文言にあった二読可能性が解消された。完了チェックリストの『ブラウザ live trial で追加 runtime なしに SVG と feature X/Y progress が表示される』(L97) は表示の有無だけを条件化しており X の一致を要求しないため改訂と衝突しない。Purpose の『receipt の counts/digests が実体に一致する』(L60) も node/edge/feature-progress counts と input/output digest を指し、receipt 照合が総数閉包である点と両立する。",
+      "C2 漏れなし: 改訂は criterion を弱めるだけでなく、なぜ X を一致条件から外すかの根拠 (register-package.py が登録時に13子すべてを active 固定、status 遷移は graph_digest_after を stale 化) を acceptance 節に明記しており、後続読者が『検査の手抜き』と誤読する余地を塞いでいる。IN1/OUT1 の2 criteria はいずれも acceptance 節に対応記述を持ち未受入条件化の criterion はない。",
+      "C3 規約整合: criteria は {id, loop_scope, text, verify_by} の構造を保ち、OUT1 は loop_scope=outer / verify_by=live-trial のまま。name=dir 名=prefix run の一致、allowed-tools に Write 非付与 (read-only graph 原則) も改訂で崩れていない。",
+      "C4 依存関係整合: 改訂文言が実装と一致することを実コードで確認した。render-graph-html.py L118 `len(child_nodes) != receipt[\"applied_count\"]` は子 node の総数だけを照合し、done 数は L173-174 で graph から導出するのみで receipt と突合しない。L123 の `receipt[\"graph_digest_after\"] != f\"sha256:{graph_sha}\"` が status 遷移後の receipt 再利用を落とすため acceptance 節の根拠記述も正しい。register-package.py L324-326 の `projected[\"status\"] = \"active\"` 強制も確認済み。既存テスト test_render_scope_containment_and_registration_receipt (test_sync_render_schedule_v2.py) は done=4/total=13 かつ applied_count=13 で exit 0 を期待しており、改訂後文言と同じ弱い読みを固定している。script_refs 3件・schema_refs 1件・prompts R1-R3 は全て実在し、argument-hint の CLI flag 集合も render-graph-html.py L284-288 の argparse 定義と一致する。"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -24,5 +25,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "独立監査で現SKILL.md (sha256 da9113c9...) と実装を再評価。必須graph、scope/receipt/out CLI、feature/task scope閉包、canonical receipt digest、入出力containment、read-only graph、自己完結HTMLが本文/checklist/criteriaと一致する。重大問題0件。PASS。"
+  "notes": "OUT1 文言明確化 (feature 子task進捗 X/Y のうち総数 Y のみを registration receipt と一致させ、done 数 X は登録後の status 遷移で変動するため一致を求めない旨の明記) に伴う incremental profile 再評価。exhaustive の30思考法は使用していない。SKILL.md を実読し、(a)矛盾なし (b)漏れなし (c)規約整合 (d)依存関係整合 (e)rubric high severity 0 の5軸で判定。改訂は到達不能だった強い読みを排し実装 (render-graph-html.py の総数のみ照合) と criterion を一致させる方向で、4条件のいずれも破壊していない。skill_md_sha256 は shasum -a 256 の実測値。findings 0件のため incremental 規定に従い同一評価結果を互換2 verdict へ投影。PASS。"
 }

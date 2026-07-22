@@ -269,7 +269,7 @@
       "feedback_contract": {
         "criteria": [
           {"id": "IN1", "loop_scope": "inner", "text": "render-graph-html.py の出力HTMLに外部script/link参照が0件でゼロ依存であることをスクリプト検証する", "verify_by": "script"},
-          {"id": "OUT1", "loop_scope": "outer", "text": "生成したHTML/CSSをブラウザで開いた際に追加ランタイム依存なくSVGグラフが表示され、featureごとの子task進捗X/Yがregistration receiptのapplied_count/expected_countと一致し、表示対象がreceiptのsource_digestに対応することを受入テストが確認する", "verify_by": "live-trial"}
+          {"id": "OUT1", "loop_scope": "outer", "text": "生成したHTML/CSSをブラウザで開いた際に追加ランタイム依存なくSVGグラフが表示され、featureごとの子task進捗X/Yのうち総数Yがregistration receiptのapplied_count/expected_countと一致し(done数Xは登録後のstatus遷移で変動するため一致を求めない)、表示対象がreceiptのsource_digestに対応することを受入テストが確認する", "verify_by": "live-trial"}
         ]
       },
       "depends_on": ["C02", "C11", "C13", "C24"],

@@ -3,6 +3,9 @@
 ## Machine-readable registration fields
 
 - feature_package_id: feature-package/feat-hub-foundation (13 task で共有)
+- feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
+- feature_acceptance: 4 items (A1-A4)
+- quality_constraints: 9 items
 - owners: ["daishiman"]
 - tags: ["feat-hub-foundation", "stage-1", "infrastructure", "requirements-baseline"]
 - related_nodes: ["feat-hub-foundation", "arch-harness-hub-infrastructure", "arch-harness-hub-frontend"]
@@ -25,7 +28,7 @@ Harness Hub は個人運用制約 (C1: 提供者1名+AI) と費用ゼロ制約 (
 ## 前提条件
 
 - Required spec/architecture/phase/task nodes: feat-hub-foundation, arch-harness-hub-infrastructure, arch-harness-hub-frontend
-- Entry gate: .dev-graph/staging/goal-spec.json の feature_context_digest が sha256:06c97e2ee833b6bb42f76d38f2f133eededd1dc5422a75153f4d3a7a1c42111a に一致し、features/feat-hub-foundation.md の confirmation_status が confirmed であること。evaluation_status は本 task package 生成時点で pending であり、system-dev-plan-evaluator による C12 PASS 判定と C11 promotion を経て解決する
+- Entry gate: features/feat-hub-foundation.context.json の feature_context_digest が sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d に一致し、features/feat-hub-foundation.md の confirmation_status が confirmed であること。evaluation_status は本 task package 生成時点で pending であり、system-dev-plan-evaluator による C12 PASS 判定と C11 promotion を経て解決する
 - Source pin: system-spec-harness v0.1.0 / run-system-spec-compile / assign-system-spec-completeness-evaluator
 - Repository context: repo_identity=github:daishiman/HarnessHub、root_resolution_source=explicit-cli (validate-system-plan.py 実行時に --repo-root を明示指定する運用)、config=.dev-graph/config.json。全 path は repository 相対とし absolute path は使用しない
 
@@ -37,7 +40,7 @@ Harness Hub は個人運用制約 (C1: 提供者1名+AI) と費用ゼロ制約 (
 - Data: N/A: DB スキーマ実体は feat-domain-model-db の責務であり、feat-hub-foundation の scope 外 (goal-spec scope_out)
 - Infrastructure: applicable + change: qa-003 (Cloudflare Workers 一体型 hosting・wrangler CLI デプロイ・R2 native binding・無料枠 10 万 req/日) と qa-019 (SLO 99.5%・エラーバジェット 0.5%・監視・restore drill) の要件を requirements-baseline.md へ確定記述する
 - Security: N/A: 認証・認可は feat-auth-tenancy の scope。本 feature 範囲で新規 secret を扱わない
-- Quality: applicable + change: goal-spec acceptance (CI が test→deploy を完走する / Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する / SLO 99.5% の計測と /health が稼働する) を machine-verifiable な受入基準として requirements-baseline.md に固定する
+- Quality: applicable + change: goal-spec acceptance (CI が test→deploy を完走する / Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する / SLO 99.5% の計測と /health が稼働する / 登録済み共通層が単一 package・境界に実装され consumer が同じ実装を参照する) を machine-verifiable な受入基準として requirements-baseline.md に固定する
 - Documentation: applicable + change: docs/features/feat-hub-foundation/requirements-baseline.md を新規作成する
 - Operations: N/A: 監視・運用手順の具体化は P12 (documentation-operations) と P13 (release-deploy) で行う。本 task は要件確定のみ
 
@@ -81,7 +84,7 @@ Harness Hub は個人運用制約 (C1: 提供者1名+AI) と費用ゼロ制約 (
 ## Verification and evidence
 
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/staging` (C12 が本 task spec の 14 section・placeholder 不在・前方 DAG を検証する)
-- Required evidence: docs/features/feat-hub-foundation/requirements-baseline.md に goal-spec acceptance 3 件 (CI test→deploy 完走 / Worker bundle 3MiB 以内 / SLO 99.5% 計測と /health 稼働) と quality_constraints 8 件 (C2-zero-cost, C1-solo-ops, worker-bundle-budget, pnpm-only-no-npm, slo-error-budget, cwv-good, wrangler-deploy, github-actions-ci) が過不足なく転記されていること
+- Required evidence: docs/features/feat-hub-foundation/requirements-baseline.md に goal-spec acceptance 4 件 (A1-A4) と quality_constraints 9 件 (C2-zero-cost, C1-solo-ops, worker-bundle-budget, pnpm-only-no-npm, slo-error-budget, cwv-good, wrangler-deploy, github-actions-ci, shared-layers-single-implementation-owner) が過不足なく転記されていること
 
 ## Rollout and rollback
 

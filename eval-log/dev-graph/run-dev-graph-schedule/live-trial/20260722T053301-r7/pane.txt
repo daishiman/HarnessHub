@@ -1,0 +1,71 @@
+⏺ Receipt confirmed. Now launch the C17 independent verifier agent.
+
+⏺ Task(C17 independent verifier)
+  ⎿  Done (7 tool uses · 22.9k tokens · 55s)
+  (ctrl+o to expand)
+
+⏺ C17 verifier passed. Let me confirm the verifier file and write the intermediate.jsonl, then compute the goal-seek hash verification.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now write the intermediate.jsonl and run the goal-seek hash verification.
+
+⏺ Bash(python3 -c "
+      import hashlib, json…)
+  ⎿  d0041ddebcc8144ed4c7a8f0f69d0ab279eed66f40807119d91a716b54e32ca6
+
+⏺ Write(eval-log/run-dev-graph-schedule-intermediate.jsonl)
+  ⎿  Wrote 1 lines to eval-log/run-dev-graph-schedule-intermediate.jsonl
+      1 {"original_goal":"グラフの依存関係・完了状態・active worktree leaseから次に着手すべきready-setと、リソーススコープ/lease重複のない複数worktree向け並列バッチを算出・提示した状態になっている","original_goal_hash":"d0041ddebcc8144ed4c7a8f0f69d0ab279eed66f
+        40807119d91a716b54e32ca6","current_goal_snapshot":"R3-schedule Agent実行完了、C17独立verifier PASS。全checklist項目達成。","delta_from_original":"なし。original goalどおりready-set算出・batch提示・read-only確認・独立検証完了。","merged_directive_for_ne
+        xt":"全条件充足。progress更新と最終status出力のみ残る。","drift_signal":"none"}
+
+⏺ Now run the goal-seek hash verification script.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/live-trial-fixtures/20260722T053301-sched"
+      python3 - "…)
+  ⎿  Goal-seek hash verification: PASS
+
+⏺ Now update the progress file and write the final status.
+
+⏺ Write(eval-log/run-dev-graph-schedule-progress.json)
+  ⎿  Added 9 lines, removed 9 lines
+       1  {
+       2    "checklist": [
+       3 -    {"item": "candidate は confirmed/pass/readiness complete、全 depends_on done、active lease なしを満たす", "status": "pending", "evidence": null},
+       4 -    {"item": "feature ready と task ready が別々の ready-set/batch に出力される", "status": "pending", "evidence": null},
+       5 -    {"item": "同一 parallel batch の resource_scope.touches 重複 pair が0件である", "status": "pending", "evidence": null},
+       6 -    {"item": "各 task の suggested_branch が devgraph/<graph_node_id> で claim command が public CLI 形式である", "status": "pending", "evidence": null},
+       7 -    {"item": "実行前後の graph/tracker/lease digest が同一である", "status": "pending", "evidence": null},
+       8 -    {"item": "lease pathがgit common-dirの正本と一致する", "status": "pending", "evidence": null},
+       9 -    {"item": "C17独立verifierがready/batch/lease authorityを再計算してPASSしている", "status": "pending", "evidence": null}
+       3 +    {"item": "candidate は confirmed/pass/readiness complete、全 depends_on done、active lease なしを満たす", "status": "pass", "evidence": "LT-TASK-001: confirmed/pass/complete, depends_on=[], leases=[]"},
+       4 +    {"item": "feature ready と task ready が別々の ready-set/batch に出力される", "status": "pass", "evidence": "ready_set.features=[], ready_set.tasks=[LT-TASK-001], batches separated"},
+       5 +    {"item": "同一 parallel batch の resource_scope.touches 重複 pair が0件である", "status": "pass", "evidence": "conflict_pairs=[], single task in batch"},
+       6 +    {"item": "各 task の suggested_branch が devgraph/<graph_node_id> で claim command が public CLI 形式である", "status": "pass", "evidence": "suggested_branch=devgraph/LT-TASK-001, claim_command=/dev-graph worktree claim LT-TASK-001"},
+       7 +    {"item": "実行前後の graph/tracker/lease digest が同一である", "status": "pass", "evidence": "graph before/after=7860c611..., lease before/after=88965119..."},
+       8 +    {"item": "lease pathがgit common-dirの正本と一致する", "status": "pass", "evidence": "C24 coordination_paths.leases matches canonical .git/dev-graph/leases.json"},
+       9 +    {"item": "C17独立verifierがready/batch/lease authorityを再計算してPASSしている", "status": "pass", "evidence": "verifier-r6.json verified=true, overall_result=PASS"}
+      10    ],
+      11 -  "loop_count": 0,
+      12 -  "updated_at": "2026-07-22T05:33:01Z"
+      11 +  "loop_count": 1,
+      12 +  "updated_at": "2026-07-22T05:36:00Z"
+      13  }
+
+⏺ Bash(mkdir -p /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/out)
+  ⎿  Done
+
+⏺ Write(~/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T053301-r7/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-schedule/live-trial/20260722T053301-r7/out/status.json
+      1 {"status":"PASS","scenario":"schedule-positive-ready-set"}
+
+⏺ DONE: PASS
+
+✻ Worked for 6m 59s
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                                                                           Update available! Run: brew upgrade claude-code
+

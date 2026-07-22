@@ -10,6 +10,10 @@ advisory ラッパー。テストは外部 I/O を排して全分岐を実入力
                      json.loads 経路を genuine に通す。各終了コード/分岐
                      (clean / advisory-only / blocking / JSON 破損 / validator 不在 /
                       plugin ゼロ) を網羅し stdout/stderr を assert。
+- check_contract_schema : references/package-contract.json ↔ 構文正本 schema の適合を
+                     tmp_path 上の contract で駆動。advisory 枠と違い fail-closed である
+                     こと (無印 PKG-013 / JSON 破損 / schema ファイル消失で blocking)
+                     を機械保証する (HarnessHub-2ih / 65z)。
 
 実 .claude/ や実 repo の plugins は一切書き換えない。network: false。
 """
@@ -293,6 +297,102 @@ def test_main_header_lists_advisory_pkgs(tmp_path, monkeypatch, capsys):
     # ヘッダに plugin 件数と advisory 一覧が出る
     assert "1 plugin を検査" in out
     assert "['PKG-002', 'PKG-004', 'PKG-014']" in out
+
+
+# ============================================================================
+# check_contract_schema : package-contract.json の構文正本適合 (fail-closed)
+#
+# HarnessHub-2ih / 65z: advisory 一色だったため mf-kessai の無印 PKG-013 が schema
+# 違反のまま無言で残存した。schema 検証だけは blocking であることを機械保証する。
+# ============================================================================
+
+def _write_contract(base: Path, plugin: str, contract: dict | str) -> None:
+    d = base / "plugins" / plugin / "references"
+    d.mkdir(parents=True, exist_ok=True)
+    body = contract if isinstance(contract, str) else json.dumps(contract, ensure_ascii=False)
+    (d / "package-contract.json").write_text(body, encoding="utf-8")
+
+
+def _valid_contract() -> dict:
+    return {
+        "package_mode": "bundle",
+        "pkg_checks": {
+            "PKG-013a": {"status": "pass", "last_run_at": "2026-06-19T00:00:00Z"}
+        },
+    }
+
+
+def test_check_contract_schema_no_contracts_is_clean(tmp_path, monkeypatch):
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    assert MOD.check_contract_schema() == []
+
+
+def test_check_contract_schema_valid_contract_passes(tmp_path, monkeypatch):
+    _write_contract(tmp_path, "goodp", _valid_contract())
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    assert MOD.check_contract_schema() == []
+
+
+def test_check_contract_schema_rejects_umbrella_pkg013(tmp_path, monkeypatch):
+    """無印 PKG-013 は記録軸で不可 (36章 §無印 PKG-013 の扱い)。"""
+    contract = _valid_contract()
+    contract["pkg_checks"]["PKG-013"] = {"status": "pass", "last_run_at": "2026-06-19T00:00:00Z"}
+    _write_contract(tmp_path, "umbrellap", contract)
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    violations = MOD.check_contract_schema()
+    assert len(violations) == 1
+    assert "umbrellap" in violations[0]
+    assert "PKG-013" in violations[0]
+
+
+def test_check_contract_schema_reports_broken_json(tmp_path, monkeypatch):
+    _write_contract(tmp_path, "brokenc", "{not json")
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    violations = MOD.check_contract_schema()
+    assert len(violations) == 1
+    assert "JSON として読めません" in violations[0]
+
+
+def test_check_contract_schema_missing_schema_file_is_violation(tmp_path, monkeypatch):
+    """構文正本が消えても「検査対象ゼロ」で緑にならない (gate の無言消失を防ぐ)。"""
+    _write_contract(tmp_path, "anyp", _valid_contract())
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(MOD, "CONTRACT_SCHEMA", tmp_path / "absent-schema.json")
+    violations = MOD.check_contract_schema()
+    assert len(violations) == 1
+    assert "構文正本 schema が見つかりません" in violations[0]
+
+
+def test_main_schema_violation_is_blocking(tmp_path, monkeypatch, capsys):
+    """PKG 検査が全て clean でも schema 違反があれば exit 1 になる。"""
+    contract = _valid_contract()
+    contract["pkg_checks"]["PKG-013"] = {"status": "pass", "last_run_at": "2026-06-19T00:00:00Z"}
+    _write_contract(tmp_path, "umbrellap", contract)
+    fake = _write_fake_validator(tmp_path, {"umbrellap": _checks(**{"PKG-003": "pass"})})
+    _wire(monkeypatch, tmp_path, fake, ["umbrellap"])
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    rc = MOD.main()
+    captured = capsys.readouterr()
+    assert rc == 1
+    assert "OK (clean)" in captured.out
+    assert "package-contract schema 違反 1 件 (blocking)" in captured.err
+    assert "blocking failure あり" in captured.err
+
+
+def test_main_reports_schema_conformance_when_clean(tmp_path, monkeypatch, capsys):
+    _write_contract(tmp_path, "goodp", _valid_contract())
+    fake = _write_fake_validator(tmp_path, {"goodp": _checks(**{"PKG-003": "pass"})})
+    _wire(monkeypatch, tmp_path, fake, ["goodp"])
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    rc = MOD.main()
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "package-contract schema: 全 plugin が構文正本に適合" in out
+
+
+def test_real_repo_contracts_conform_to_schema():
+    """実 repo の全 package-contract.json が構文正本に適合する (65z 受け入れ条件)。"""
+    assert MOD.check_contract_schema() == []
 
 
 # ============================================================================
