@@ -37,6 +37,7 @@ script_refs:
   - scripts/live-trial-status.py
   - scripts/live-trial-poll.py
   - scripts/live-trial-verdict.py
+  - scripts/validate-goal-seek-evidence.py
 source: eval-log/harness-creator/_plugin/elegant-review/20260702T160010-anti-goodhart/design-decisions.md
 source-tier: internal
 last-audited: 2026-07-02
@@ -217,6 +218,7 @@ SESSION_ID="$SESSION_ID" python3 $SCRIPTS/live-trial-poll.py --state-file "$WORK
 ```bash
 python3 $SCRIPTS/live-trial-verdict.py --workdir "$WORKDIR" --target-skill "<plugin:skill>" \
   --skill-dir "<被験skillディレクトリ>" --session-id "$SESSION_ID" --requested-model "$MODEL" \
+  --goal-seek-eval-root "<被験repoのeval-log>" \
   --launch PASS --completion PASS --goal-result PASS --nudge-count 0 --gate-response-count 0 \
   --poll-exit DONE [--proof] [--blocked]
 python3 $SCRIPTS/live-trial-backend.py kill-session "$SESSION"
@@ -234,6 +236,8 @@ verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから
 | ✅ | ❌ (hang / gate 抜け失敗) | — | `FAIL` (❌ + どこで止まったか) |
 | ❌ | — | — | `FAIL` (❌ 起動 / install / 引数仕様) |
 
+- **被験 skill の Skill 呼出しが transcript に0件なら `launch` は機械的に `FAIL`** — `--launch PASS` の自己申告を上書きする。skill を起動せず、その中で使われる script を Bash から直接叩いた実走は、成果物が出ても受け入れ検証にならない (正本 = `live-trial-verdict.py` の `extract_skill_invocations()`、記録先 = verdict の `invoked_skills`)。
+- **被験 skill が `goal_seek` を宣言している場合、配線成果物 3 件の実在・intermediate の必須 6 キー・`original_goal`・その SHA-256 を実体検証し、違反時は `goal_fit=FAIL`** — fresh evaluator が PASS を返しても機械 gate が優先する。ファイル名の transcript 言及だけでは履行扱いにしない (正本 = `validate-goal-seek-evidence.py`、記録先 = verdict の `goal_seek_evidence_violations`)。
 - **nudge_count > 0 または gate 応答 > 0 の完走は `DEGRADED` (自走未達) に降格** (自動送信でも介入)。
 - **proof trial** は「人手介入なし PASS」が受け入れ条件 — DEGRADED 相当は `FAIL`、さらに actual_model ≠ requested_model で `FAIL` (機械 gate)。
 - tmux 不在 / HARD_CAP 超過は `BLOCKED` (fail-closed)。

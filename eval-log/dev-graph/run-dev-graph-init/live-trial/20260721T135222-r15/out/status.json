@@ -1,1 +1,0 @@
-{"status": "PASS", "scenario": "init-positive-idempotence", "checks": {"six_content_roots": true, "graph_store_created": true, "c11_exit0": true, "second_init_idempotent": true, "no_outside_write": true}}

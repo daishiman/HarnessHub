@@ -1,0 +1,38 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "<synthetic>",
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 1,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "PASS",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "3fc2fdf557fd6e4c90791051c58dd76ff8292576b84d9f964283e7e8498e5561",
+  "transcript_sha256": "385ef3e4be2122848b677eaa0d01ec49286126c8ab25e6a8570543cba54b4780",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "外部利用上限により全検証成功後の完了マーカー出力直前で中断",
+  "timeline": {
+    "boot_s": 6.0,
+    "poll_exit": "LIMIT",
+    "wall_clock_s": 1179.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

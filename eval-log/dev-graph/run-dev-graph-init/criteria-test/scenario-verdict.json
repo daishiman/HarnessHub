@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
     "component_id": "C01",
-    "skill_md_sha256": "1663f8dce02d8c123f4fa0dd72af1ea176f41bc39e7ae7fa7fbe4d35b016d58b"
+    "skill_md_sha256": "1db7dd6c2cde83fc50e02704fb3e3b725f66dd2209b08521c88a5fc52fc535f0"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r1",
+  "reviewer": "dev-graph-criteria-scenario-r4-20260722-postmerge",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,14 +26,14 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C01-OUT1-positive-idempotence",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260721T224254-r17/verdict.json",
+      "scenario_id": "C01-OUT1-positive-idempotence-r17",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260721T224254-r17/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260721T224254-r17/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260721T224254-r17/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/out/status.json"
       ],
-      "observed": "2026-07-21 再取得 (r17)。dev-graph 未初期化の git repository (--empty fixture) に対し init を 2 回とも Skill リテラル呼び出しで実行。Live-trial verdict overall=PASS, tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0。6 content root 生成・graph store 生成・C11 exit0・2 回目の全ファイル sha256 一致 (冪等)・init receipt 実在を観測。本 issue の修正点である「init が出力する config の repo-config.schema.json 適合」も config_schema_valid=true として実走で確認した。独立 evaluator が対象 repo を自ら ls / jsonschema 検証して PASS。"
+      "observed": "2026-07-22 に未初期化 fixture で r20 を正規再実走。target Skill を pass1/pass2 の 2 回起動し R1-R5 を各 pass で 5 Agent fork。6 content root と routing policy と graph store を pass1 で生成、pass2 は planned_changes=0/created=[]、編集済み template の SHA-256 は pass2 後も編集値を保持。config に絶対 path/token/node ID なし、validate-graph-schema exit 0・node 1 件、goal-seek 3 点セット全出力。fresh evaluator が独立に全 7 条件 PASS を確認。"
     },
     "OUT2": {
       "status": "PASS",

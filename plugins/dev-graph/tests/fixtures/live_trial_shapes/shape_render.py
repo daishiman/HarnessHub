@@ -1,4 +1,4 @@
-"""C05 (run-dev-graph-render) scenario ``render-feature-progress-positive`` の fixture 形状。
+"""scenario ``C05-OUT1-positive-feature-progress`` (skill: dev-graph:run-dev-graph-render) の形状。
 
 復元した scenario 契約:
   render は「feature ノードが配下 task (parent_feature 参照) の完了進捗 X/Y を集約表示する」

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # /// script
 # name: aggregate-completeness
-# version: 0.1.0
+# version: 0.2.0
 # purpose: C05 完成度評価レポートの形状検証と全 6 観点スコア→総合 PASS/FAIL の決定論集約 (Goodhart 防止の fail-closed 集約器)
+#          + 独立 auditor 帰属の実 fork 証跡 (PostToolUse 台帳) への接地検証
 # inputs:
-#   - argv: --report FILE / --matrix FILE [--require-complete]
+#   - argv: --report FILE [--fork-ledger FILE] / --matrix FILE [--require-complete]
+#   - env: CLAUDE_PROJECT_DIR / SYSTEM_SPEC_AUDIT_FORK_LEDGER (fork 台帳の既定位置解決)
 # outputs:
 #   - stdout: OK/violation 一覧 or gate 結果 JSON
 #   - exit: 0=OK / 1=violation or gate fail / 2=usage error
@@ -16,16 +18,38 @@
 # ///
 """assign-system-spec-completeness-evaluator の決定論ヘルパ。
 
-2 つの決定論部品を純関数として提供する (LLM の主観判定から機械層を切り出す)。
+3 つの決定論部品を純関数として提供する (LLM の主観判定から機械層を切り出す)。
 
-1. `validate_report(report)`  — 評価レポートの形状 (観点別スコア + 総合判定 + 不足事項一覧)
-   と、総合判定が全観点 verdict + high finding 数から fail-closed に再導出した値と一致するか
-   (Goodhart 防止の整合検査) を検証し、違反文字列のリストを返す。
+1. `validate_report(report, ledger=None)`  — 評価レポートの形状 (観点別スコア + 総合判定 +
+   不足事項一覧) と、総合判定が全観点 verdict + high finding 数から fail-closed に再導出した値と
+   一致するか (Goodhart 防止の整合検査)、および独立 auditor 帰属が実 fork 証跡に接地しているか
+   を検証し、違反文字列のリストを返す。
 2. `aggregate_verdict(aspect_verdicts, high_count)` — 全 6 観点 (ASPECTS の全キー: foundation_trace /
    decision_guidance / matrix_coverage / design_knowledge_reflection / doc_freshness / prompt_quality)
    の verdict と high severity finding 数から総合 PASS/FAIL を導出する。
    fail-closed: 全観点 PASS かつ high 0 のときだけ PASS。1 観点でも FAIL/INDETERMINATE、
    または high finding が 1 件でもあれば FAIL。観点の取りこぼし (観点未充足) も FAIL。
+3. `validate_attribution(report, ledger)` — 独立 auditor (C07/C08 と matrix_coverage の sub-input
+   C06) を名乗る観点が、`audit_delegations[]` の fork receipt を持ち、かつその receipt が
+   PostToolUse hook (`hooks/record-audit-fork.py`) の書く台帳で裏取りできるかを検証する。
+
+## 帰属検証 (attribution) がなぜ機械層に要るか
+
+旧実装は `aspects[<id>].auditor` が ASPECTS 定数の期待値と文字列一致するかしか見ていなかった。
+これは「どの agent が担当すべきか」の検査であって「その agent が実際に走ったか」の検査ではない。
+独立監査を 1 件も fork しない実行でも「独立 auditor が PASS を出した」と名乗るレポートを生成でき、
+`--report` は exit 0 で通っていた。レポート digest は graph node の
+`confirmation_evidence.evaluated_digest` として confirmed の根拠になるため、fail-closed の証跡連鎖に
+「帰属だけ検証されない」穴が残っていた。
+
+監査 agent は Write を持たず自力で痕跡を残せないので、証跡はモデルが書けない層 = PostToolUse hook
+が書く append-only 台帳に置く。本 script はレポート側の宣言 (`audit_delegations[]`) を台帳と
+突合し、裏取りできない帰属を violation にする (fail-closed: 台帳が無い/空なら緑にしない)。
+
+### 機械層が保証しないこと (正直な境界)
+
+台帳が示すのは「その subagent_type への Task が完了した」ことだけ。監査 prompt が実質を伴うか、
+返った verdict がレポートへ忠実に転記されたかは意味層 (content-review / human) の責務。
 
 `run_coverage_gate(...)` は plugin-root の `validate-coverage-matrix.py` (C05 の
 deterministic_check) を独立 context で実行し、マトリクス網羅性観点の一次根拠を回収する薄い wrapper。
@@ -34,6 +58,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -82,6 +107,144 @@ ASPECT_VERDICTS = {"PASS", "FAIL", "INDETERMINATE"}
 OVERALL_VERDICTS = {"PASS", "FAIL"}
 SEVERITIES = {"high", "medium", "low", "info"}
 
+# 観点の一次根拠を独立 auditor に依存しない sub-input 監査 (R2-delegate が併せて fork する)。
+# C06 は matrix_coverage の網羅性・トレース補助根拠であり、独立観点には昇格しない。
+SUB_INPUT_AUDITORS: dict[str, dict[str, str]] = {
+    "matrix_coverage": {"auditor": "system-spec-hearing-auditor", "component": "C06"},
+}
+DELEGATION_ROLES = {"primary", "sub_input"}
+# fork 台帳 (PostToolUse hook `hooks/record-audit-fork.py` が追記する append-only JSONL) の既定位置。
+LEDGER_ENV = "SYSTEM_SPEC_AUDIT_FORK_LEDGER"
+LEDGER_RELPATH = Path("eval-log") / "system-spec-harness" / "audit-fork-ledger.jsonl"
+
+
+def required_delegations() -> list[dict]:
+    """fork receipt が必須の (観点, 役割, auditor, component) 一覧を返す。
+
+    - primary: ASPECTS の auditor が C05 自身でない観点 (matrix_coverage=C07 / doc_freshness=C08)。
+      C05 自前評価の観点は独立 auditor を持たないので receipt を要求しない (逆に持てば虚偽申告)。
+    - sub_input: SUB_INPUT_AUDITORS が宣言する補助監査 (matrix_coverage の C06)。
+    副作用なし = 単体テスト可能。
+    """
+    required = [
+        {"aspect": aid, "role": "primary", "auditor": spec["auditor"], "component": spec["component"]}
+        for aid, spec in ASPECTS.items()
+        if spec["auditor"] != EVALUATOR_NAME
+    ]
+    required += [
+        {"aspect": aid, "role": "sub_input", "auditor": spec["auditor"], "component": spec["component"]}
+        for aid, spec in SUB_INPUT_AUDITORS.items()
+    ]
+    return required
+
+
+def default_ledger_path() -> Path:
+    """fork 台帳の既定位置。env 上書き > CLAUDE_PROJECT_DIR 相対 > cwd 相対 (hook 側と同一規則)。"""
+    env = os.environ.get(LEDGER_ENV)
+    if env:
+        return Path(env)
+    return Path(os.environ.get("CLAUDE_PROJECT_DIR") or Path.cwd()) / LEDGER_RELPATH
+
+
+def empty_ledger() -> dict:
+    """台帳が無い/読めないときの空集計。fail-closed の既定値 (裏取り 0 件)。"""
+    return {"path": None, "exists": False, "dispatched": {}, "malformed": 0}
+
+
+def load_fork_ledger(path) -> dict:
+    """fork 台帳 JSONL を読み subagent_type ごとの完了 fork 件数へ集計する。
+
+    戻り値: {"path": str|None, "exists": bool, "dispatched": {subagent_type: count}, "malformed": int}
+    不正行は数えるだけで捨てる (台帳は追記専用で部分破損しうるため、健全な行の証跡は活かす)。
+    """
+    if path is None:
+        return empty_ledger()
+    p = Path(path)
+    if not p.is_file():
+        return {"path": str(p), "exists": False, "dispatched": {}, "malformed": 0}
+    dispatched: dict[str, int] = {}
+    malformed = 0
+    try:
+        lines = p.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeDecodeError):
+        return {"path": str(p), "exists": False, "dispatched": {}, "malformed": 0}
+    for line in lines:
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+        except json.JSONDecodeError:
+            malformed += 1
+            continue
+        if not isinstance(rec, dict) or rec.get("tool_name") != "Task":
+            malformed += 1
+            continue
+        st = rec.get("subagent_type")
+        if not isinstance(st, str) or not st:
+            malformed += 1
+            continue
+        dispatched[st] = dispatched.get(st, 0) + 1
+    return {"path": str(p), "exists": True, "dispatched": dispatched, "malformed": malformed}
+
+
+def agent_definition_exists(auditor: str) -> bool:
+    """auditor 名が本 plugin 同梱の agent 定義に接地するか (実在しない agent 名を名乗らせない)。"""
+    if not isinstance(auditor, str) or not auditor or "/" in auditor or auditor.startswith("."):
+        return False
+    return (_plugin_root() / "agents" / f"{auditor}.md").is_file()
+
+
+def ledger_corroborates(delegation: dict, ledger: dict) -> tuple[bool, str]:
+    """宣言された 1 件の fork receipt を台帳で裏取りできるか判定し `(ok, reason)` を返す。
+
+    引数:
+      delegation — レポートの `audit_delegations[]` の 1 要素 (形状検査は呼び出し側で済んでいる)。
+      ledger     — `load_fork_ledger()` の戻り値。
+
+    ## 判定方針 (起案根拠)
+
+    照合軸は `dispatch.subagent_type` の完全一致 + 件数 >= 1 の 1 本に絞る。台帳が記録できるのは
+    hook が観測した事実 (どの subagent_type への Task が完了したか) だけであり、それ以上の軸
+    (prompt 内容の妥当性・監査の実質) は台帳に無い情報なので、ここで判定したことにすると
+    「機械層が保証していない範囲を保証したことにする」= 本 issue と同型の Goodhart を再生産する。
+
+    件数を 1 以上とし「receipt 1 件につき台帳 1 件を消費する」多重度照合を採らないのは、
+    R2-delegate が同一 auditor を再 fork (INDETERMINATE 後の再実行等) しうるためで、
+    多重度を厳格化すると正当な再監査が violation になる。裏取りの目的は
+    「fork を 1 件も起こしていない実行を弾く」ことであり、回数の一致ではない。
+
+    fail-closed の順序は「台帳の不在 → subagent_type 未宣言 → 台帳に記録なし」。台帳自体が
+    無い場合を最初に切り分けるのは、この 3 者で復旧手順が異なるため (hook 未配線 / レポート不備 /
+    fork 省略)。reason には診断に足る文脈 (台帳パス・破損行数) を含める。
+
+    ## 残余ギャップ (run/session 非束縛)
+
+    台帳行の `ts` / `session_id` を照合軸に使わないため、**過去 run の同一 subagent_type 記録でも
+    裏取りが成立しうる**。本関数が確実に弾くのは「fork を 1 件も起こしていない実行」までで、
+    「今回の run で fork した」ことの証明ではない。session 束縛はレポート側へ session_id を
+    持たせる必要があり、その宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する
+    設計を伴う follow-up とする (aspect-criteria.md「残余ギャップ」節)。
+    """
+    dispatch = delegation.get("dispatch")
+    subagent_type = dispatch.get("subagent_type") if isinstance(dispatch, dict) else None
+
+    if not ledger.get("exists"):
+        return False, (
+            f"fork 台帳が存在しない ({ledger.get('path')}) ため独立監査の帰属を裏取りできない "
+            f"(PostToolUse hook record-audit-fork.py の配線を確認するか、監査を実 fork して再評価する)"
+        )
+    if not isinstance(subagent_type, str) or not subagent_type:
+        return False, "dispatch.subagent_type が無く fork 台帳と突合できない"
+
+    if ledger.get("dispatched", {}).get(subagent_type, 0) < 1:
+        malformed = ledger.get("malformed", 0)
+        suffix = f" / 台帳の破損行 {malformed} 件" if malformed else ""
+        return False, (
+            f"fork 台帳に subagent_type={subagent_type!r} の完了記録が無い "
+            f"(独立監査を起動せずに帰属だけ宣言している疑い。台帳={ledger.get('path')}{suffix})"
+        )
+    return True, ""
+
 
 def aggregate_verdict(aspect_verdicts: dict, high_count: int) -> str:
     """全観点 verdict + high finding 数から総合 verdict を fail-closed に導出する。
@@ -104,8 +267,100 @@ def _high_count(findings: list) -> int:
     return sum(1 for f in findings if isinstance(f, dict) and f.get("severity") == "high")
 
 
-def validate_report(report: dict) -> list[str]:
-    """評価レポートの形状 + 総合判定の整合を検証し違反文字列のリストを返す (空=OK)。"""
+def validate_attribution(report: dict, ledger: dict | None = None) -> list[str]:
+    """独立 auditor 帰属が実 fork 証跡へ接地しているかを検証し違反文字列のリストを返す。
+
+    ledger=None は「fork 証跡が回収できていない」= fail-closed で全独立監査を未接地とみなす。
+    """
+    v: list[str] = []
+    ledger = ledger if isinstance(ledger, dict) else empty_ledger()
+    aspects = report.get("aspects") if isinstance(report.get("aspects"), dict) else {}
+
+    delegations = report.get("audit_delegations")
+    if not isinstance(delegations, list):
+        v.append("audit_delegations: 配列でない (独立監査の fork receipt 一覧が無い = 帰属が自己申告のまま)")
+        delegations = []
+
+    # --- 索引化 (形状違反はここで拾い、以降の照合は健全な要素のみで行う) ---
+    seen: dict[tuple, dict] = {}
+    for i, d in enumerate(delegations):
+        if not isinstance(d, dict):
+            v.append(f"audit_delegations[{i}]: オブジェクトでない")
+            continue
+        aspect, role = d.get("aspect"), d.get("role")
+        if aspect not in ASPECTS:
+            v.append(f"audit_delegations[{i}].aspect={aspect!r} が未知の観点")
+            continue
+        if role not in DELEGATION_ROLES:
+            v.append(f"audit_delegations[{i}].role={role!r} が {sorted(DELEGATION_ROLES)} 外")
+            continue
+        if (aspect, role) in seen:
+            v.append(f"audit_delegations: (aspect={aspect}, role={role}) の receipt が重複")
+            continue
+        seen[(aspect, role)] = d
+
+    required = required_delegations()
+    required_keys = {(r["aspect"], r["role"]) for r in required}
+
+    # --- 必須 receipt の実在と整合 ---
+    for req in required:
+        aspect, role = req["aspect"], req["role"]
+        d = seen.get((aspect, role))
+        if d is None:
+            v.append(
+                f"audit_delegations: {aspect} の {role} 監査 ({req['auditor']}/{req['component']}) の "
+                f"fork receipt が無い (独立監査の帰属が自己申告のまま)"
+            )
+            continue
+        label = f"audit_delegations[{aspect}/{role}]"
+        if d.get("auditor") != req["auditor"]:
+            v.append(f"{label}.auditor != {req['auditor']!r} (観点↔監査 agent 対応)")
+        if d.get("component") != req["component"]:
+            v.append(f"{label}.component != {req['component']!r}")
+        if not agent_definition_exists(d.get("auditor")):
+            v.append(f"{label}.auditor={d.get('auditor')!r} に対応する agent 定義が plugin に実在しない")
+        dispatch = d.get("dispatch")
+        if not isinstance(dispatch, dict):
+            v.append(f"{label}.dispatch: オブジェクトでない (fork の起動方法が記録されていない)")
+        else:
+            if dispatch.get("tool") != "Task":
+                v.append(f"{label}.dispatch.tool != 'Task' (独立 context の fork は Task 経由必須)")
+            if dispatch.get("subagent_type") != req["auditor"]:
+                v.append(f"{label}.dispatch.subagent_type != {req['auditor']!r}")
+        dv = d.get("verdict")
+        if dv not in ASPECT_VERDICTS:
+            v.append(f"{label}.verdict={dv!r} が {sorted(ASPECT_VERDICTS)} 外")
+        elif role == "primary":
+            a = aspects.get(aspect)
+            av = a.get("verdict") if isinstance(a, dict) else None
+            if av in ASPECT_VERDICTS and dv != av:
+                v.append(
+                    f"{label}.verdict={dv!r} が aspects[{aspect}].verdict={av!r} と不一致 "
+                    f"(独立監査の判定が観点 verdict へ忠実に転記されていない)"
+                )
+        ev = d.get("evidence")
+        if not isinstance(ev, list) or not ev:
+            v.append(f"{label}.evidence: 非空配列でない (監査の根拠が空)")
+        ok, reason = ledger_corroborates(d, ledger)
+        if not ok:
+            v.append(f"{label}: {reason}")
+
+    # --- 虚偽の独立性主張 (C05 自前評価の観点に独立監査 receipt を付ける) ---
+    for (aspect, role) in seen:
+        if (aspect, role) in required_keys:
+            continue
+        if role == "primary" and ASPECTS[aspect]["auditor"] == EVALUATOR_NAME:
+            v.append(
+                f"audit_delegations: {aspect} は C05 自前評価の観点であり primary の独立監査 receipt を "
+                f"持てない (虚偽の独立性主張)"
+            )
+        else:
+            v.append(f"audit_delegations: (aspect={aspect}, role={role}) は必須 receipt 一覧に無い未知の委譲")
+    return v
+
+
+def validate_report(report: dict, ledger: dict | None = None) -> list[str]:
+    """評価レポートの形状 + 総合判定の整合 + 帰属の fork 証跡接地を検証し違反リストを返す (空=OK)。"""
     v: list[str] = []
     if not isinstance(report, dict):
         return ["report: オブジェクトでない"]
@@ -187,6 +442,9 @@ def validate_report(report: dict) -> list[str]:
     # FAIL のとき不足事項が空なら差し戻し材料が欠落
     if verdict == "FAIL" and not gaps:
         v.append("verdict=FAIL だが gaps (不足事項一覧) が空 (差し戻し材料が無い)")
+
+    # --- 帰属検証: 独立 auditor を名乗る観点が実 fork 証跡に接地しているか ---
+    v.extend(validate_attribution(report, ledger))
     return v
 
 
@@ -261,7 +519,10 @@ def main(argv: list | None = None) -> int:
     ap = argparse.ArgumentParser(
         description="C05 完成度評価レポートの形状検証 / マトリクス網羅性 + 知識グラフ機械ゲート実行"
     )
-    ap.add_argument("--report", help="評価レポート JSON のパス (形状 + 総合判定整合を検証)")
+    ap.add_argument("--report", help="評価レポート JSON のパス (形状 + 総合判定整合 + 帰属接地を検証)")
+    ap.add_argument("--fork-ledger",
+                    help="監査 fork 台帳 JSONL のパス (既定: $SYSTEM_SPEC_AUDIT_FORK_LEDGER または "
+                         "$CLAUDE_PROJECT_DIR/eval-log/system-spec-harness/audit-fork-ledger.jsonl)")
     ap.add_argument("--matrix", help="spec-state.json のパス (マトリクス網羅性ゲートを実行)")
     ap.add_argument("--require-complete", action="store_true", help="ゲートを未収集 0 必須モードで実行")
     ap.add_argument("--knowledge-graph", action="store_true",
@@ -292,14 +553,18 @@ def main(argv: list | None = None) -> int:
         except (json.JSONDecodeError, UnicodeDecodeError) as exc:
             print(f"report の JSON parse 失敗: {exc}", file=sys.stderr)
             return 2
-        violations = validate_report(report)
+        ledger = load_fork_ledger(args.fork_ledger or default_ledger_path())
+        violations = validate_report(report, ledger)
         if violations:
             for msg in violations:
                 print(f"VIOLATION: {msg}", file=sys.stderr)
-            print(f"FAIL: {len(violations)} 件のレポート整合違反", file=sys.stderr)
+            print(f"FAIL: {len(violations)} 件のレポート整合違反 (fork 台帳: {ledger['path']} / "
+                  f"exists={ledger['exists']} / 裏取り fork {sum(ledger['dispatched'].values())} 件)",
+                  file=sys.stderr)
             rc = 1
         else:
-            print(f"OK: レポート形状と総合判定整合を満たす (verdict={report.get('verdict')})")
+            print(f"OK: レポート形状・総合判定整合・独立 auditor 帰属の fork 証跡接地を満たす "
+                  f"(verdict={report.get('verdict')})")
     return rc
 
 

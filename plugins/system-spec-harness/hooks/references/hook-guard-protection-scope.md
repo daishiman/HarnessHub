@@ -3,6 +3,10 @@
 > `guard-confirmed-chapter-overwrite.py` (PreToolUse: Write|Edit|Bash) が **何を守り・何を守らないか** の正本。
 > hook 本体のコメント (「境界定義: references/hook-guard-protection-scope.md」) と回帰テストが本書を参照する。
 
+> **同 plugin の姉妹 hook**: `record-audit-fork.py` (PostToolUse: `Task`) は保護 hook ではなく **証跡 writer**。
+> 監査 sub-agent への fork を append-only 台帳へ記録し、completeness-report の auditor 帰属を自己申告から
+> 切り離す。責務・限界は § 6 を参照。
+
 ## 0. 位置づけ (defense-in-depth)
 
 - 本 hook は要件 C11 の **二重化 (補助防御)**。仕様状態遷移の正本防御は C01 (`apply-spec-transition.py` の単一 transition writer) と C03 (compile) が担う。
@@ -67,15 +71,58 @@
 - **保護対象レジストリ `_PROTECTION_RULES`**: concrete な書込先に対する保護判定を単一の宣言テーブルへ集約した (id / matcher / scope / reason)。`scope="all"` (spec-state・確定/憲法章) と `scope="bash"` (docs/*-spec.md=Bash のみ・Edit 許可) を宣言で表し、`_match_protection(token, root, bash=…)` が参照する。`bash_decision` の散在した if 判定を置換し、保護対象を 1 箇所で discoverable にした。契約は `TestProtectionRegistry` が固定。
   - 注: Write/Edit/MultiEdit 経路 (`decide()`) は realpath 一致 + 確定セル有無 + frontmatter + F3 fail-closed というより厳密な条件を持つため、レジストリの `scope="all"` 対象を「同等に保護する」形で残置し、完全な単一関数化はしていない (保護対象の宣言は共有・判定精度は経路別)。
 
-**実装済み (姉妹 hook への横展開)**:
-- **`plugins/dev-graph/hooks/guard-graph-schema.py` の間接一括書換 (bxz)**: 当初 follow-up として「同種の 参照↔書込 conflation (FP)」を記録していたが、再調査の結果、姉妹 hook は既に write-target モデル (`_mutating_operands` が `cp src dst` の dst だけを取る) を持ち FP は解消済みだった。実際に残っていたのは逆向きの **FN** で、`find tasks -name '*.md' | xargs sed -i` のように書換対象が find の列挙結果として渡る経路は宛先を静的抽出できず graph 権威 (`tasks/` `docs/` `specs/` `.dev-graph/`) を素通りで一括改変できた。本 hook の bxz 修正 (§2.2 の「書込先確定不能 + 保護領域走査なら安全側」) を `indirect_mutation_over_guarded_area()` として横展開し、判定を **pipeline 単位** (`|` は 1 単位、`&&`/`;` で分離) にスコープした。加えて xargs/find -exec の列挙結果を動的 operand として consumer の tool 別 write-target 規則へ通し、`cp {列挙結果} /tmp` や read-only consumer の後段 `tee /tmp` を遮断しない。caller repo root で path を正規化するため、absolute path・`$PWD`・`find .` も相対 path と同じ保護境界になる。
+**未実装 (follow-up)**:
+- **姉妹 hook `plugins/dev-graph/hooks/guard-graph-schema.py` の同種 conflation**: コマンド文字列に `rm ... *.md` 等が現れると (書込対象でなくても) 破壊操作と誤検知する。本 hook で採った write-target モデルの横展開候補。
 
-  判定を「文字列に `xargs` が現れるか」から「`xargs` トークンが consumer の位置にあるか」へ精密化した結果、tokenize の質がそのまま検知力になる。`shlex.split` は `|` を演算子として切り出さないため `find tasks |xargs rm` が `['find','tasks','|xargs','rm']` となり stage 境界と consumer 名を同時に取り違える (FN)。`shlex.shlex(..., punctuation_chars="|")` で `|` だけを独立トークン化し、`grep 'a|b'` のような quote 内の `|` は 1 トークンのまま保つ。契約は `plugins/dev-graph/tests/test_guard_graph_schema_indirect_mutation.py` が固定する (密着 `|` の 3 変種を MUST_BLOCK、quote 内 `|` を MUST_PASS の回帰アンカーとして保持)。
+- **`guard-graph-schema.py` の tool-path 保護 (graph authority への C02 迂回書換)**: 従来 guard は Bash の command 文字列しか見ておらず、Write/Edit ツールや interpreter 本文経由の書換は素通りだった。`.dev-graph/state`・`config.json`・`graph-node.schema.json` を C02 の atomic writer を経由せず直接書換えると、registration receipt を手書きしたうえで python one-liner で digest を後から一致させ C02 を迂回できた (2026-07-21 live-trial r7 で実際に突破)。これを塞ぐため保護次元を 2 つ追加した。(a) matcher を `Bash` から `Bash|Write|Edit|MultiEdit|NotebookEdit` へ拡張し、`FILE_WRITING_TOOLS` の `file_path`/`notebook_path` が graph authority (`GRAPH_AUTHORITY_PATH` = `.dev-graph/state`・`config.json`・`graph-node.schema.json`) を指すなら exit2。(b) Bash 経路でも interpreter 本文の `open(path,'w')` を `INTERPRETER_WRITE` 正規表現で検出し、path が graph authority なら exit2。対象は authority に限定し `templates/`・`cache/`・`tmp/` は init が正当に書くため除外する (広く取ると `cp plugins/dev-graph/templates .dev-graph/templates` まで止まる)。authority 判定は `context_ok()` の subprocess 起動より手前に置き、hook timeout (10s) による fail-open の窓を塞ぐ。契約は `plugins/dev-graph/tests/test_semantic_contract_boundaries_c10_c11_c24.py` 系が固定する。
 
 ## 5. 検証
 
-- 回帰テスト `hooks/tests/test_guard_confirmed_chapter_overwrite.py` (73 件): MUST_BLOCK / MUST_PASS (2.1 の FP 群を含む) / KNOWN_GAP / PROTECTION_REGISTRY。
-- legacy 回帰テスト `tests/test_guard_hook.py` (61 件): write-target モデル導入前からの期待 (ambiguous glob 遮断・パス境界判定・frontmatter 解釈) を保持する。bxz でこの 2 系統の期待を統合した。
-- 姉妹 hook の横展開契約 `plugins/dev-graph/tests/test_guard_graph_schema_indirect_mutation.py`。
-- 実行: `python3 -m unittest discover -s plugins/system-spec-harness/hooks/tests -p "test_*.py"` / `python3 -m pytest -q plugins/system-spec-harness plugins/dev-graph/tests`
+- 回帰テスト `tests/test_guard_confirmed_chapter_overwrite.py` (47 件): MUST_BLOCK / MUST_PASS (2.1 の FP 群を含む) / KNOWN_GAP。
+- 実行: `python3 -m unittest discover -s plugins/system-spec-harness/hooks/tests -p "test_*.py"`
 - e2e: 実 compile/validator コマンド → exit0、`echo x > spec-state.json` / `sed -i … security.md` → exit2 を確認済み。
+
+## 6. 姉妹 hook `record-audit-fork.py` (PostToolUse: Task) — 証跡 writer
+
+### 6.1 位置づけ (保護ではなく証跡)
+
+`guard-*` が「書かせない」層なのに対し、本 hook は「**書き残す**」層。何もブロックせず (exit 0 always)、
+監査 sub-agent への Task fork が完了した事実だけを append-only の JSONL 台帳へ追記する。
+
+解決する欠陥: `assign-system-spec-completeness-evaluator` の評価レポートは観点ごとに `auditor`
+(例 `matrix_coverage` → `system-spec-matrix-auditor`) を宣言するが、これは **評価者自身が書く文字列** で
+あって fork の実在を示さない。独立監査を 1 件も起動しない実行でも「独立 auditor が PASS を出した」と
+名乗るレポートを生成でき、`aggregate-completeness.py --report` は exit 0 で通っていた。レポート digest は
+graph node の `confirmation_evidence.evaluated_digest` として confirmed の根拠になるため、fail-closed の
+証跡連鎖に「帰属だけ検証されない」穴が残っていた。
+
+なぜ hook でなければならないか: 監査 agent (`system-spec-{matrix,hearing,doc-freshness}-auditor`) は
+`tools: Read[, Bash]` のみで **Write を持たない**。自力ではディスク上に痕跡を残せないので、
+「モデルが書けない層」である harness 側 (hook) が記録するしかない。
+
+### 6.2 記録するもの / しないもの
+
+| 項目 | 記録 | 根拠 |
+|---|---|---|
+| `subagent_type` が本 plugin 同梱 agent (`agents/*.md` の stem)、または `system-spec-harness:<stem>` の `Task` | ✅ | pinned plugin の実 payload は qualified 名。本 plugin qualifier のみ受理して stem へ正規化し、レジストリ追加に自動追従する |
+| それ以外の `Task` (他 plugin の agent・汎用 agent) | ❌ | 台帳の肥大化を避ける。帰属検証に使わない |
+| `session_id` / `ts` / `cwd` / `prompt` の sha256 | ✅ | 突合と再現性のための最小メタ |
+| `prompt` 本文 / `tool_response` 本文 | ❌ | 機微情報を台帳へ持ち込まない |
+
+台帳位置: `<CLAUDE_PROJECT_DIR>/eval-log/system-spec-harness/audit-fork-ledger.jsonl`
+(env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。consumer 側 `aggregate-completeness.py` と同一規則)。
+
+### 6.3 既知の限界 (正直な境界)
+
+- 台帳が示すのは「その `subagent_type` への Task が完了した」ことだけ。**監査 prompt が実質を伴うか、
+  返った verdict がレポートへ忠実に転記されたかは判定できない** (意味層 = content-review / human の責務)。
+- hook が無効化された環境では台帳が空になる。その場合 consumer は fail-closed で「帰属未接地」の
+  violation を出す (緑にはならない = 安全側)。
+- guard hook と同じく **表層的な adversarial evasion は設計上許容**する。狙いは「fork を省略した実行が
+  独立監査を名乗って機械層を通過する」という現実に観測された失敗の遮断。
+
+### 6.4 検証
+
+- 回帰テスト `tests/test_record_audit_fork.py`。
+- consumer 側の突合テストは
+  `skills/assign-system-spec-completeness-evaluator/tests/test_aggregate_completeness.py`。
