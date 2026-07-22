@@ -85,38 +85,15 @@ architecture_refs: [arch-harness-hub-dev-workflow]
 
 ### 2.4 CLI
 
-```
-lint-open-residue.py --repo-root PATH
-                     [--graph PATH]            # 既定 .dev-graph/state/graph.json
-                     [--beads-export PATH]
-                     [--no-require-beads]
-                     [--node-id ID]            # 反復指定。診断用に対象を絞る
-                     [--json-out PATH]         # 結果 JSON をファイルへも書く
-```
+`lint-open-residue.py --repo-root PATH [--graph PATH] [--beads-export PATH] [--no-require-beads] [--node-id ID] [--json-out PATH]` (既定 graph は `.dev-graph/state/graph.json`)。
 
 ### 2.5 出力 JSON 追加フィールド
 
-```json
-{
-  "lint": "lint-open-residue",
-  "beads_axis": "resolved | unavailable",
-  "beads_source": "<解決に使った経路>",
-  "scanned": 212,
-  "violations": [
-    {
-      "rule": "OR-003",
-      "path": "issues/sys-bd-bridge-notes-passthrough-20260721.md",
-      "graph_node_id": "issue-bd-bridge-notes-passthrough-20260721",
-      "bd_issue_id": "HarnessHub-8ql",
-      "detail": "beads=closed だが completion_evidence.status=open"
-    }
-  ]
-}
-```
+共通形状 (§1) に `beads_axis` (resolved/unavailable)・`beads_source`・`baselined_residue`・`resolved_baseline_entries` を加える。各 violation は `rule`/`path`/`graph_node_id`/`bd_issue_id`/`detail` を持つ。
 
 ### 2.6 実測ベースライン (2026-07-21)
 
-`OR-001` = 0 件、`OR-002` = 0 件、`OR-003` = **15 件** (`issue-bd-bridge-notes-passthrough-20260721` / `issue-docs-recompose-followups-20260718` / `SYS-STAGE0-DISTRIBUTION-GATE-P01..P13`)、`OR-004` = 0 件。15 件すべて beads 側は `closed` 済みであり、graph の `completion_evidence` だけが追従していない純粋な投影遅れである。§6 の close-loop 手順で全件を reconcile する。
+`OR-001`=0 / `OR-002`=0 / `OR-003`=**15 件** (bd-bridge / docs-recompose の 2 issue + `SYS-STAGE0-DISTRIBUTION-GATE-P01..P13` 13 件) / `OR-004`=0。全 15 件は beads=closed 済みで graph の `completion_evidence` だけが追従しない投影遅れ。2 issue は §6 の close-loop で reconcile し、stage0 13 件は所有者 `HarnessHub-vy0` の shrink-only baseline (`_BASELINE_RESIDUE`) として exit に寄与させない (新規残置のみ遮断)。
 
 ## 3. D2: `lint-eval-log-layout.py` (SI-2 / AC-2)
 
@@ -287,66 +264,31 @@ python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root .
 
 ### 7.1 tasks/ frontmatter `status` の意味論 (SI-4 / AC-4)
 
-`.dev-graph/templates/task.md` へ次を明記する。
-
-> `status` は **文書ライフサイクル**のみを表す。取り得る値は `draft` (起案中) / `active` (有効) / `closed` (文書として役割終了) / `superseded` (後継文書へ置換) / `tombstoned` (論理削除) である。
-> **実行状態 (未着手・進行中・完了) の正本は md ではない。** 実行状態は graph node 側の `completion_evidence` (実行の完了根拠)・`execution_contexts` (実行中の worktree/branch)・`beads_linkage` (課題トラッカー上の状態) に一元化される。md へ実行状態を書き写して二重正本を作ってはならない。
-
-`no-dual-authority` 制約の実装形。`status=closed` かつ `completion_evidence.status=in_progress` は矛盾ではなく「文書は役割終了、実行の reconcile は未了」を意味する — この分離が §2.2 の rule 設計の前提である。
+`.dev-graph/templates/task.md` と `plugins/dev-graph/templates/task.md` の両方へ明記する (2 コピーの drift 防止 — P03-R6c)。`status` は **文書ライフサイクル**のみを表し、取り得る値は graph-node.schema.json の enum (`draft`/`active`/`blocked`/`done`/`closed`/`tombstoned`) に一致させる。**`superseded` は enum に無いため使わず**、後継置換は `closed`+`related_nodes` で表す (P03-R6a)。実行状態の正本は md ではなく graph 側 (`completion_evidence`/`execution_contexts`/`beads_linkage`) に一元化する。`status=closed` かつ `completion_evidence.status=in_progress` は矛盾ではなく「文書は役割終了・実行 reconcile は未了」を意味する (§2.2 の rule 分離の前提)。
 
 ### 7.2 graph.json 分割の再検討トリガー (SI-5 / AC-5)
 
-`system-spec/dev-workflow.md` へ記録する。現状 235 node / 単一 `.dev-graph/state/graph.json`。
-
-| トリガー | 閾値 | 再検討する内容 |
-|---|---|---|
-| node 数 | **500 node** 到達 | feature 単位の shard 分割と index ファイルの導入 |
-| merge 衝突 | 同一ファイルの衝突が **1 週間に 3 回以上** | 書込単位の分割 (node ごとファイル化) と upsert-node の書込境界変更 |
-| ファイルサイズ | **5 MiB** 到達 | 圧縮または binary format への移行 |
-
-いずれかに達した時点で再検討を起票する。本 feature では**トリガーの記録のみ**を行い分割は実装しない (scope_out)。
+`system-spec/dev-workflow.md` へ記録する。**トリガーの記録のみ**行い分割は実装しない (scope_out)。閾値: node 数 **500** 到達 → feature 単位 shard / 同一ファイル merge 衝突 **週 3 回以上** → 書込単位分割 / ファイルサイズ **5 MiB** 到達 → 圧縮・binary 化。
 
 ### 7.3 陳腐化文書の棚卸し GC (SI-8 / AC-7)
 
-`sync` verb の運用へ組み込む。詳細手順は P12 `operations.md` が所有する。対象抽出:
-
-| 対象 | 抽出コマンド | 処置 |
-|---|---|---|
-| 解決済み open issue | `lint-open-residue.py` の `OR-003` 違反 | §6 の close-loop で 3 表現を閉じる |
-| 0-findings handoff | `findings` が空配列の `improvement-handoff*.json` (現状 5 件) | disposition 不要。`schema_version` を `1.1.0` へ更新し保持 (削除しない — 「検査対象なし」という結論自体が証跡) |
-| 陳腐化 eval-log | `eval-log/` 直下の凍結 allowlist エントリで参照元が消滅したもの | `lint-eval-log-layout.py` の `resolved_allowlist_entries` として報告 → 次回 sync で削除 |
-
-周期: `sync` verb 実行時に毎回。GC 自体は自動削除を行わず**候補提示に留める** (`digest-immutability` に抵触する削除を機械に委ねない)。
+`sync` verb 運用へ組み込む。詳細手順は P12 `operations.md` が所有する。対象抽出: 解決済み open issue (`OR-003` 違反 → §6 の close-loop)、消化対象を持つ handoff (`improvements[]`/`clusters[]` を含む — P03-R4 で「0-findings」誤認を撤回。`1.1.0` + disposition 化して保持)、参照元が消滅した凍結 eval-log (`resolved_*_entries` → 次回 sync で削除)。GC は自動削除せず**候補提示に留める** (`digest-immutability` の削除を機械に委ねない)。
 
 ## 8. D7: dev-graph 中核 handoff 31 findings の差分監査手順 (SI-6)
 
-対象: `plugin-plans/dev-graph/improvement-handoff-macro.json` (12) / `improvement-handoff-beads.json` (10) / `improvement-handoff.json` (9) = **31 findings**。94 findings 全件付与の内数として P08 が実行する。
-
-### 8.1 判定手順 (1 finding ごと)
-
-1. `target_ref` が指す実装対象 (`component-inventory.json#Cxx` / script path / schema path) を解決する
-2. 現行実装 (`plugins/dev-graph/` 配下の実ファイル) を読み、`recommendation` が要求する構造が**実在するか**を確認する
-3. 判定:
-   - **`applied`**: 要求された構造が現行実装に実在する。`disposition_ref` = その実ファイル path (可能なら `#<関数名/キー名>` まで)
-   - **`deferred`**: 未実装だが妥当。`disposition_ref` = 追跡する beads issue (`bd:<id>`)。**起票を伴わない `deferred` は認めない**
-   - **`rejected`**: 設計判断として採用しない。`disposition_ref` = 却下根拠を記した文書 path (本 design.md の該当節を含む)
-4. `migration-receipt.json` の `core_handoff_audit[]` へ 31 件分の監査行 (finding id / target_ref / 確認した実ファイル / 判定 / 根拠) を残す
-
-### 8.2 残り 63 findings の扱い
-
-dev-graph 中核 3 ファイル以外の 18 ファイル 63 findings も同じ 3 値で判定するが、差分監査 (実装との突合) は求めない。`applied` と判定するには実ファイル参照を必須とし、確認できないものは `deferred` + beads 起票とする (`fail-closed` の思想を migration にも適用する)。
+対象: `plugin-plans/dev-graph/` の `improvement-handoff-macro.json`(12)/`-beads.json`(10)/`improvement-handoff.json`(9) = **31 findings**。P08 が 123 項目付与の内数として実行する。1 finding ごとに `target_ref` の実装対象を解決し、現行実装 (`plugins/dev-graph/`) に要求構造が実在すれば `applied` (ref=実ファイル path)、未実装だが妥当なら `deferred` (ref=`bd:<id>`。**起票なき deferred 不可**)、不採用なら `rejected` (ref=却下根拠 path)。`applied` の確証には実ファイル参照を必須とし、確認できないものは `deferred` へ倒す (判定不能を applied にしない)。`migration-receipt.json` の `core_handoff_audit[]` に 31 行を残す。
 
 ## 9. quality_constraints 6 件への適合根拠
 
 | id | 適合根拠 |
 |---|---|
-| `choke-point-preservation` | §6 の close-loop 手順が beads mutation を `bd-bridge.py --op close` に限定し、`bd close` 直呼びを禁止。`guard-graph-schema.py` の遮断を緩和しない。§5.3 の gate 拡張は close を**追加で遮断する**方向であり、迂回路を開かない |
-| `single-writer-boundary` | §6 手順 2 が `upsert-node.py` 経由。§3.5 の eval-log 再配置は `spec-state.json` / graph を触らない。tasks status 意味論の明記は template のみを変更 |
-| `digest-immutability` | §3.2 で参照ありの 41 件を凍結し、digest 固定済み package 成果物 (`.dev-graph/plans/generations/`) が参照する path を一切動かさない。既存 handoff の findings 本文 (`id`/`severity`/`summary`/`recommendation`/`target_ref`) を書き換えず、キー追加のみ行う |
-| `fail-closed-lint` | §1 で exit 2 を規定。§4.2 で `1.0.0` 据置による回避を塞ぎ、§5.3 で id 抽出不能を遮断。§8.2 で「確認できないものは deferred」とし判定不能を applied へ倒さない |
-| `no-dual-authority` | §7.1 で `status` を文書ライフサイクルへ限定し、実行状態を graph 側へ一元化。§2.2 で 2 つの軸を別 rule として分離検査する |
-| `idempotent-migration` | §3.5 の再配置は移動先が既に正しい場合 no-op。§4 の disposition 付与は既に `1.1.0` + disposition 完備なら no-op。receipt は移動 0 件・付与 0 件を記録して差分 0 に収束する |
+| `choke-point-preservation` | §6 が beads mutation を `bd-bridge.py --op close` に限定し `bd close` 直呼び禁止。`guard-graph-schema.py` を緩和しない |
+| `single-writer-boundary` | §6 手順 2 が `upsert-node.py` 経由。eval-log 再配置は `spec-state.json`/graph を触らず、status 意味論は template のみ変更 |
+| `digest-immutability` | §3.2 で参照あり 40 件を凍結し digest 固定物 (`.dev-graph/plans/generations/`) の参照 path を不動。handoff findings 本文を書き換えずキー追加のみ |
+| `fail-closed-lint` | §1 で exit 2 規定。§4.2 で `1.0.0` 据置回避を塞ぎ、§8 で判定不能を applied へ倒さない |
+| `no-dual-authority` | §7.1 で `status` を文書ライフサイクルへ限定し実行状態を graph 側へ一元化。§2.2 で 2 軸を別 rule 検査 |
+| `idempotent-migration` | §3.5/§4 は正しい配置・disposition 完備なら no-op。receipt が移動 0/付与 0 を記録し差分 0 に収束 (実測済み) |
 
 ## 10. rollback
 
-設計が既存 choke-point / 単一 writer と衝突すると判明した場合、本 design.md を破棄し P01 baseline から再設計する。
+設計が既存 choke-point / 単一 writer と衝突した場合、本 design.md を破棄し P01 baseline から再設計する。

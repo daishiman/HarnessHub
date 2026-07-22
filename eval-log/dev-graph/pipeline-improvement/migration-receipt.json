@@ -3,226 +3,41 @@
   "mode": "apply",
   "moved": [
     {
-      "from": "eval-log/db-id-resolution.json",
-      "to": "eval-log/legacy/db-id-resolution.json"
+      "from": "eval-log/run-dev-graph-decompose-pipeline-improvement-20260721.json",
+      "to": "eval-log/dev-graph/run-dev-graph-decompose/run-dev-graph-decompose-pipeline-improvement-20260721.json"
     },
     {
-      "from": "eval-log/dry-notion-data-quality.json",
-      "to": "eval-log/notion-gmail-send/dry/dry-notion-data-quality.json"
+      "from": "eval-log/run-dev-graph-decompose-qa070-20260722.json",
+      "to": "eval-log/dev-graph/run-dev-graph-decompose/run-dev-graph-decompose-qa070-20260722.json"
     },
     {
-      "from": "eval-log/dry-notion-info-collector-agent.json",
-      "to": "eval-log/notion-gmail-send/dry/dry-notion-info-collector-agent.json"
+      "from": "eval-log/run-dev-graph-decompose-qa071-20260722.json",
+      "to": "eval-log/dev-graph/run-dev-graph-decompose/run-dev-graph-decompose-qa071-20260722.json"
     },
     {
-      "from": "eval-log/dry-notion-team-onboarding.json",
-      "to": "eval-log/notion-gmail-send/dry/dry-notion-team-onboarding.json"
+      "from": "eval-log/run-dev-graph-requirements-feat-dev-pipeline-improvement-document.md",
+      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-feat-dev-pipeline-improvement-document.md"
     },
     {
-      "from": "eval-log/gate2-rubric.json",
-      "to": "eval-log/legacy/gate2-rubric.json"
+      "from": "eval-log/run-dev-graph-requirements-feat-dev-pipeline-improvement-handoff.json",
+      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-feat-dev-pipeline-improvement-handoff.json"
     },
     {
-      "from": "eval-log/handoff-gate1.json",
-      "to": "eval-log/legacy/handoff/handoff-gate1.json"
+      "from": "eval-log/run-dev-graph-requirements-feat-dev-pipeline-improvement-readiness-matrix.json",
+      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-feat-dev-pipeline-improvement-readiness-matrix.json"
     },
     {
-      "from": "eval-log/handoff-governance.json",
-      "to": "eval-log/legacy/handoff/handoff-governance.json"
+      "from": "eval-log/run-dev-graph-schedule-c17-verification.json",
+      "to": "eval-log/legacy/run-dev-graph-schedule-c17-verification.json"
     },
     {
-      "from": "eval-log/handoff-phase-11.json",
-      "to": "eval-log/legacy/handoff/handoff-phase-11.json"
-    },
-    {
-      "from": "eval-log/handoff-prompts-improvement.json",
-      "to": "eval-log/legacy/handoff/handoff-prompts-improvement.json"
-    },
-    {
-      "from": "eval-log/handoff-step1.json",
-      "to": "eval-log/legacy/handoff/handoff-step1.json"
-    },
-    {
-      "from": "eval-log/prompt-creator-conformance-brief.json",
-      "to": "eval-log/prompt-creator/prompt-creator-conformance-brief.json"
-    },
-    {
-      "from": "eval-log/prompt-creator-improvement-brief.json",
-      "to": "eval-log/prompt-creator/prompt-creator-improvement-brief.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-decompose-docs-recompose-report.json",
-      "to": "eval-log/dev-graph/run-dev-graph-decompose/run-dev-graph-decompose-docs-recompose-report.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-decompose-macro-report.json",
-      "to": "eval-log/dev-graph/run-dev-graph-decompose/run-dev-graph-decompose-macro-report.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-decompose-studio-report.json",
-      "to": "eval-log/dev-graph/run-dev-graph-decompose/run-dev-graph-decompose-studio-report.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-auth-tenancy.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-auth-tenancy.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-build-pipeline-board.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-build-pipeline-board.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-docs-cms.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-docs-cms.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-domain-model-db.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-domain-model-db.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-feedback-loop.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-feedback-loop.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-hearing-intake.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-hearing-intake.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-hub-foundation.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-hub-foundation.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-metrics-tracking.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-metrics-tracking.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-publish-pipeline.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-publish-pipeline.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-tenant-data-retention.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-tenant-data-retention.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-node-confirm-feat-user-org-admin.json",
-      "to": "eval-log/dev-graph/run-dev-graph-node/run-dev-graph-node-confirm-feat-user-org-admin.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-requirements-document.md",
-      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-document.md"
-    },
-    {
-      "from": "eval-log/run-dev-graph-requirements-handoff-validation.json",
-      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-handoff-validation.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-requirements-handoff.json",
-      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-handoff.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-requirements-readiness-matrix.json",
-      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-readiness-matrix.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-requirements-scope-receipt.json",
-      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-scope-receipt.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-requirements-trace-plan.json",
-      "to": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-trace-plan.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-schedule-parity-manifest.json",
-      "to": "eval-log/legacy/run-dev-graph-schedule-parity-manifest.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-sync-execution.json",
-      "to": "eval-log/dev-graph/run-dev-graph-sync/run-dev-graph-sync-execution.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-system-spec-import-report.json",
-      "to": "eval-log/dev-graph/run-dev-graph-system-spec/run-dev-graph-system-spec-import-report.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-system-spec-reimport-20260717.json",
-      "to": "eval-log/dev-graph/run-dev-graph-system-spec/run-dev-graph-system-spec-reimport-20260717.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-system-spec-reimport-20260718.json",
-      "to": "eval-log/dev-graph/run-dev-graph-system-spec/run-dev-graph-system-spec-reimport-20260718.json"
-    },
-    {
-      "from": "eval-log/run-dev-graph-system-spec-reimport-20260719.json",
-      "to": "eval-log/dev-graph/run-dev-graph-system-spec/run-dev-graph-system-spec-reimport-20260719.json"
-    },
-    {
-      "from": "eval-log/run-system-spec-compile-c05-aggregate-20260718.json",
-      "to": "eval-log/system-spec-harness/run-system-spec-compile/run-system-spec-compile-c05-aggregate-20260718.json"
-    },
-    {
-      "from": "eval-log/run-system-spec-completeness-report-2.json",
-      "to": "eval-log/system-spec-harness/completeness/run-system-spec-completeness-report-2.json"
-    },
-    {
-      "from": "eval-log/run-system-spec-completeness-report-20260718-2.json",
-      "to": "eval-log/system-spec-harness/completeness/run-system-spec-completeness-report-20260718-2.json"
-    },
-    {
-      "from": "eval-log/run-system-spec-completeness-report-3.json",
-      "to": "eval-log/system-spec-harness/completeness/run-system-spec-completeness-report-3.json"
-    },
-    {
-      "from": "eval-log/run-system-spec-completeness-report-final.json",
-      "to": "eval-log/system-spec-harness/completeness/run-system-spec-completeness-report-final.json"
-    },
-    {
-      "from": "eval-log/run-system-spec-completeness-report-rerun2.json",
-      "to": "eval-log/system-spec-harness/completeness/run-system-spec-completeness-report-rerun2.json"
-    },
-    {
-      "from": "eval-log/skill-build-trace-prev.json",
-      "to": "eval-log/skill-creator/skill-build-trace-prev.json"
-    },
-    {
-      "from": "eval-log/skill-build-trace-skill-intake-v2.json",
-      "to": "eval-log/skill-creator/skill-build-trace-skill-intake-v2.json"
-    },
-    {
-      "from": "eval-log/skill-creation-report.md",
-      "to": "eval-log/skill-creator/skill-creation-report.md"
-    },
-    {
-      "from": "eval-log/verification-beads-parity-20260718.json",
-      "to": "eval-log/legacy/verification/verification-beads-parity-20260718.json"
-    },
-    {
-      "from": "eval-log/verification-p01-baselines-20260718.json",
-      "to": "eval-log/legacy/verification/verification-p01-baselines-20260718.json"
+      "from": "eval-log/run-dev-graph-system-spec-reimport-20260721.json",
+      "to": "eval-log/dev-graph/run-dev-graph-system-spec/run-dev-graph-system-spec-reimport-20260721.json"
     }
   ],
-  "moved_count": 49,
-  "dispositions_added": 123,
-  "handoffs_touched": [
-    "plugin-plans/dev-graph/improvement-handoff-beads-kanban.json",
-    "plugin-plans/dev-graph/improvement-handoff-beads.json",
-    "plugin-plans/dev-graph/improvement-handoff-macro.json",
-    "plugin-plans/dev-graph/improvement-handoff.json",
-    "plugin-plans/extract-system-blueprint/improvement-handoff-content-intent.json",
-    "plugin-plans/extract-system-blueprint/improvement-handoff-elegant-verify.json",
-    "plugin-plans/extract-system-blueprint/improvement-handoff-own-dev-leverage.json",
-    "plugin-plans/extract-system-blueprint/improvement-handoff-screenshot-persona.json",
-    "plugin-plans/extract-system-blueprint/improvement-handoff-site-coverage-depth.json",
-    "plugin-plans/mf-kessai-invoice-check-fidelity/improvement-handoff-round2.json",
-    "plugin-plans/mf-kessai-invoice-check-fidelity/improvement-handoff.json",
-    "plugin-plans/mf-kessai-invoice-check-matching-rootcause/improvement-handoff.json",
-    "plugin-plans/plugin-dev-planner/improvement-handoff-20260710-execution-contract.json",
-    "plugin-plans/spec-drift-guardian/improvement-handoff-elegant-verify.json",
-    "plugin-plans/system-dev-planner/improvement-handoff-beads.json",
-    "plugin-plans/system-dev-planner/improvement-handoff-macro.json",
-    "plugin-plans/system-dev-planner/improvement-handoff.json",
-    "plugin-plans/system-spec-harness/improvement-handoff-20260712-knowledge-graph-doctrine.json",
-    "plugin-plans/ubm-goal-setting/improvement-handoff-20260711.json",
-    "plugin-plans/with-task-graph-goalseek/improvement-handoff-20260711-full-task-spec-graph.json"
-  ],
+  "moved_count": 8,
+  "dispositions_added": 0,
+  "handoffs_touched": [],
   "core_handoff_audit": [
     {
       "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",

@@ -1,0 +1,47 @@
+{
+  "phase": "P11",
+  "kind": "evidence-manifest",
+  "artifacts": [
+    {
+      "path": "plugins/dev-graph/scripts/lint-open-residue.py",
+      "sha256": "sha256:1aa9c6a6ad1d8da4fd55475c803a103409f035676815e9b0c6ba1606a77790ec"
+    },
+    {
+      "path": "plugins/dev-graph/scripts/lint-eval-log-layout.py",
+      "sha256": "sha256:3b4ae27efba88ab6a97fd35603239b1d0dec8cf51e3cfe5b7292f85833615a70"
+    },
+    {
+      "path": "plugins/dev-graph/scripts/lint-handoff-disposition.py",
+      "sha256": "sha256:59aad5c531916c5514ed0e9d8a1293f9c971dd4f9aacf8d514198ae74e6f3725"
+    },
+    {
+      "path": "plugins/dev-graph/scripts/migrate-pipeline-improvement.py",
+      "sha256": "sha256:0b752dac98f565965ce7fdd354dbef3efd865e70a2fb8964da6c086cbd652b25"
+    },
+    {
+      "path": "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json",
+      "sha256": "sha256:5491e4d628cc92c327005a51da2f0f134bc2b3254c824056671f4550e3479a9a"
+    },
+    {
+      "path": ".github/workflows/dev-pipeline-lint.yml",
+      "sha256": "sha256:fe6a8834611026de9117bac53866d8849602d75b30294954a09421eab50edf19"
+    },
+    {
+      "path": "eval-log/dev-graph/pipeline-improvement/migration-receipt.json",
+      "sha256": "sha256:e50b8a667dee695c6ce42f60e047b7361d7aec795cb13c4d48609ff7a8676988"
+    },
+    {
+      "path": "eval-log/dev-graph/pipeline-improvement/test-run-p06.json",
+      "sha256": "sha256:c749570e95c3c8aace44d889d26d0bc6a22325825da6dec52383e2e50201a271"
+    },
+    {
+      "path": "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json",
+      "sha256": "sha256:5b4b68e8ecb14f57893eda52f59f992e924736164efa1d3a6f6341c553d9d3ca"
+    }
+  ],
+  "rerun_commands": [
+    "python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py plugins/dev-graph/tests/test_lint_eval_log_layout.py plugins/dev-graph/tests/test_lint_handoff_disposition.py plugins/dev-graph/tests/test_migrate_pipeline_improvement.py tests/scripts-root/test_root__lint_doc_line_limit.py tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py tests/scripts-root/test_root__lint_portability_knowledge_optin.py plugins/harness-creator/tests/test_emit_handoff_schema_parity.py -q",
+    "python3 plugins/dev-graph/scripts/migrate-pipeline-improvement.py --repo-root . --dry-run"
+  ],
+  "recorded_at": "2026-07-22T00:00:00Z"
+}
