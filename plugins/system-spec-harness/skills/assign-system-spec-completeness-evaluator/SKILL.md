@@ -94,6 +94,13 @@ feedback_contract:
 {
   "evaluator": {"name": "assign-system-spec-completeness-evaluator", "version": "0.1.0", "context": "fork"},
   "verdict": "PASS" | "FAIL",
+  "audit_delegations": [
+    {"aspect": "matrix_coverage", "role": "primary",   "auditor": "system-spec-matrix-auditor",
+     "component": "C07", "dispatch": {"tool": "Task", "subagent_type": "system-spec-matrix-auditor"},
+     "verdict": "PASS", "evidence": ["..."]},
+    {"aspect": "matrix_coverage", "role": "sub_input", "auditor": "system-spec-hearing-auditor",  "component": "C06", ...},
+    {"aspect": "doc_freshness",   "role": "primary",   "auditor": "system-spec-doc-freshness-auditor", "component": "C08", ...}
+  ],
   "aspects": {
     "foundation_trace":             {"verdict": "...", "auditor": "assign-system-spec-completeness-evaluator", "component": "C05", "summary": "...", ...},
     "decision_guidance":            {"verdict": "...", "auditor": "assign-system-spec-completeness-evaluator", "component": "C05", "summary": "...", ...},
@@ -107,6 +114,21 @@ feedback_contract:
   "gaps": [ "不足事項1", ... ]
 }
 ```
+
+## 帰属の接地 (attribution / fail-closed)
+
+> `aspects[].auditor` は評価者自身が書く文字列であり、それ単体では独立監査の実在を示さない。旧実装は定数との文字列一致しか見ておらず、**監査を 1 件も fork しない実行でも「独立 auditor が PASS を出した」と名乗るレポートが `--report` を exit 0 で通過できた**。監査 agent は `Write` を持たず自力で痕跡を残せないため、証跡は「モデルが書けない層」= PostToolUse hook に書かせる。
+
+| 必須 receipt (`audit_delegations[]`) | role | auditor | component |
+|---|---|---|---|
+| `matrix_coverage` | `primary` | `system-spec-matrix-auditor` | C07 |
+| `matrix_coverage` | `sub_input` | `system-spec-hearing-auditor` | C06 |
+| `doc_freshness` | `primary` | `system-spec-doc-freshness-auditor` | C08 |
+
+- 証跡台帳: `eval-log/system-spec-harness/audit-fork-ledger.jsonl` (writer = `hooks/record-audit-fork.py` / PostToolUse: `Task`)。`--fork-ledger` または env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。
+- C05 自前評価の 4 観点に `primary` receipt を付けるのは **虚偽の独立性主張** として violation。
+- 台帳が無い/空 = 裏取り 0 件 → fail-closed で violation (緑にしない)。
+- **機械層の限界 (正直な境界)**: 台帳が示すのは「その subagent_type への Task が完了した」ことだけ。監査 prompt が実質を伴うか、返った verdict が忠実に転記されたかは意味層 (content-review / human) の未閉塞責務。また突合は **run/session に束縛されない** (台帳行の `ts`/`session_id` を照合に使わない) ため、過去 run の同一 subagent_type 記録でも裏取りが成立しうる。塞ぐのは「fork を 1 件も起こしていない実行」までで、session 束縛は follow-up。
 
 ## 総合判定 (fail-closed 集約)
 
@@ -143,21 +165,23 @@ exit0 をマトリクス網羅性観点の一次根拠にする (`scripts/aggreg
 C05 R1-score が `system-spec/*.md` 各章を直接読み、`ref-system-design-knowledge/references/resource-map.yaml` 由来の設計知識ポインタの (1) 存在 (機械層) と (2) その原則が確定セル要件へ具体適用されているか (意味層) を評価する。**存在確認だけで PASS にしない** (compile が機械注入するポインタを自己循環で肯定しない = Goodhart 防止)。汎用ポインタ (resource-map 索引) のみで具体適用が無い章は medium 以上で拾う。C06 のヒアリング品質監査は本観点でなく matrix_coverage の sub-input として使う。
 
 ### Step 4: レポート出力と整合検査
-`schemas/completeness-findings.schema.json` 準拠で評価レポートを出力。`scripts/aggregate-completeness.py --report <report.json>` で形状 + 総合判定整合 (fail-closed 再導出との一致) を検証する。
+`schemas/completeness-findings.schema.json` 準拠で評価レポートを出力し、Step 1 で実際に fork した監査を `audit_delegations[]` へ receipt として記録する。`scripts/aggregate-completeness.py --report <report.json>` で形状 + 総合判定整合 (fail-closed 再導出との一致) + 帰属の fork 証跡接地を検証する。
 
 ## Gotchas
 
 1. 観点↔評価主体を取り違えない (マトリクス=C07 + C06 ヒアリング品質 sub-input / 設計知識=C05 自前評価・独立 auditor なし / 出典鮮度=C08)。C06 は system-spec/*.md を読まないため設計知識反映へ束縛しない。
-2. 決定論ゲート exit0 でも、意味層 (対象外理由の具体性 / 非公式 host / 設計知識反映の形骸化) で FAIL にしうる。
-3. high severity が 1 件でもあれば総合 FAIL。
-4. INDETERMINATE は fail-closed で FAIL に寄せ、仕様書修正でなく監査再実行/入力補完へ差し戻す。
-5. 本 skill は kind=assign のため feedback_contract.criteria は N/A (評価器自身は評価基準を携帯せず、checklist 観点 + evaluator ゲートで担保。frontmatter の skip_reason 参照)。
+2. `audit_delegations[]` は「fork したことにする」ための宣言欄ではない。Step 1 で実際に Task fork した監査だけを記録する。台帳と突合されるため、fork していない監査の receipt を書いても `--report` は通らない。
+3. 決定論ゲート exit0 でも、意味層 (対象外理由の具体性 / 非公式 host / 設計知識反映の形骸化) で FAIL にしうる。
+4. high severity が 1 件でもあれば総合 FAIL。
+5. INDETERMINATE は fail-closed で FAIL に寄せ、仕様書修正でなく監査再実行/入力補完へ差し戻す。
+6. 本 skill は kind=assign のため feedback_contract.criteria は N/A (評価器自身は評価基準を携帯せず、checklist 観点 + evaluator ゲートで担保。frontmatter の skip_reason 参照)。
 
 ## Additional Resources
 
 - `references/scoring-rubric.json` — 全 6 観点機械判定ルールと fail-closed 集約ポリシー
 - `references/aspect-criteria.md` — 観点別意味判定の詳細基準 + 観点↔監査 agent 対応
 - `schemas/completeness-findings.schema.json` — 評価レポート出力スキーマ
-- `scripts/aggregate-completeness.py` — レポート形状検証 + 総合 fail-closed 集約 (決定論)
+- `scripts/aggregate-completeness.py` — レポート形状検証 + 総合 fail-closed 集約 + 帰属の fork 証跡接地検証 (決定論)
+- `../../hooks/record-audit-fork.py` — 監査 fork 台帳 writer (PostToolUse: `Task`)。帰属検証の証跡正本
 - `prompts/R1-score.md` / `prompts/R2-delegate.md` — R1 (スコアリング) / R2 (監査 fork 集約) 責務正本
 - fork 先 agent: `../../agents/system-spec-{matrix,hearing,doc-freshness}-auditor.md`

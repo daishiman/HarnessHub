@@ -165,6 +165,22 @@
         "type": "lesson",
         "date": "2026-07-20"
       }
+    },
+    {
+      "id": "lessons-index_009",
+      "title": "[auto] PostToolUse:Skill 失敗 — | REG-001 | high | `scripts/validate-build-trace.py` が exit 2。`system-spec-harne",
+      "keywords": [
+        "PostToolUse",
+        "Skill",
+        "skill-invoke",
+        "medium"
+      ],
+      "message": "自動記録。根本原因の human triage 後に title/message を書き直す。",
+      "source": {
+        "file": "plugins/harness-creator/lessons-learned/2026-07-22-posttooluse-skill-assign-skill-design-evaluator.md",
+        "type": "lesson",
+        "date": "2026-07-22"
+      }
     }
   ]
 }

@@ -47,7 +47,8 @@
 
 ### 2.4 出力契約
 - schema: `schemas/completeness-findings.schema.json`
-- 必須: evaluator, verdict(PASS/FAIL), aspects(rubric全観点), findings[], gaps[]
+- 必須: evaluator, verdict(PASS/FAIL), aspects(rubric全観点), audit_delegations[], findings[], gaps[]
+- **帰属の接地**: `aspects[].auditor` は自己申告の文字列にすぎないため、独立 auditor を名乗る観点は R2 が実 fork した receipt を `audit_delegations[]` に持つ (`matrix_coverage/primary`=C07 / `matrix_coverage/sub_input`=C06 / `doc_freshness/primary`=C08)。`role=primary` の receipt `verdict` は `aspects[aspect].verdict` と一致させる (監査判定の忠実転記)。C05 自前評価の 4 観点に `primary` receipt を付けない。
 
 ## Layer 3: インフラ層
 
@@ -94,6 +95,7 @@
 - [ ] scoring-rubricの全aspectsが verdict(PASS/FAIL/INDETERMINATE) + auditor + component + summary で埋まっている
 - [ ] findings[] が非空で info 以上の観点を最低 1 件含む。high には suggested_fix を明記した
 - [ ] レポート verdict が `aggregate-completeness.aggregate_verdict` の再導出値と一致する
+- [ ] `audit_delegations[]` に実 fork した監査 3 件の receipt が揃い、`aggregate-completeness.py --report` の帰属検査 (fork 台帳との突合) を通る
 - [ ] 総合 FAIL のとき gaps (不足事項一覧) を非空にし差し戻し先を記した
 - [ ] 仕様書への書込件数が0件である
 
