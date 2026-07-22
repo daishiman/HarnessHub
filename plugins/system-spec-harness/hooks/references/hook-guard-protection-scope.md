@@ -3,6 +3,10 @@
 > `guard-confirmed-chapter-overwrite.py` (PreToolUse: Write|Edit|Bash) が **何を守り・何を守らないか** の正本。
 > hook 本体のコメント (「境界定義: references/hook-guard-protection-scope.md」) と回帰テストが本書を参照する。
 
+> **同 plugin の姉妹 hook**: `record-audit-fork.py` (PostToolUse: `Task`) は保護 hook ではなく **証跡 writer**。
+> 監査 sub-agent への fork を append-only 台帳へ記録し、completeness-report の auditor 帰属を自己申告から
+> 切り離す。責務・限界は § 6 を参照。
+
 ## 0. 位置づけ (defense-in-depth)
 
 - 本 hook は要件 C11 の **二重化 (補助防御)**。仕様状態遷移の正本防御は C01 (`apply-spec-transition.py` の単一 transition writer) と C03 (compile) が担う。
@@ -77,3 +81,48 @@
 - 回帰テスト `tests/test_guard_confirmed_chapter_overwrite.py` (47 件): MUST_BLOCK / MUST_PASS (2.1 の FP 群を含む) / KNOWN_GAP。
 - 実行: `python3 -m unittest discover -s plugins/system-spec-harness/hooks/tests -p "test_*.py"`
 - e2e: 実 compile/validator コマンド → exit0、`echo x > spec-state.json` / `sed -i … security.md` → exit2 を確認済み。
+
+## 6. 姉妹 hook `record-audit-fork.py` (PostToolUse: Task) — 証跡 writer
+
+### 6.1 位置づけ (保護ではなく証跡)
+
+`guard-*` が「書かせない」層なのに対し、本 hook は「**書き残す**」層。何もブロックせず (exit 0 always)、
+監査 sub-agent への Task fork が完了した事実だけを append-only の JSONL 台帳へ追記する。
+
+解決する欠陥: `assign-system-spec-completeness-evaluator` の評価レポートは観点ごとに `auditor`
+(例 `matrix_coverage` → `system-spec-matrix-auditor`) を宣言するが、これは **評価者自身が書く文字列** で
+あって fork の実在を示さない。独立監査を 1 件も起動しない実行でも「独立 auditor が PASS を出した」と
+名乗るレポートを生成でき、`aggregate-completeness.py --report` は exit 0 で通っていた。レポート digest は
+graph node の `confirmation_evidence.evaluated_digest` として confirmed の根拠になるため、fail-closed の
+証跡連鎖に「帰属だけ検証されない」穴が残っていた。
+
+なぜ hook でなければならないか: 監査 agent (`system-spec-{matrix,hearing,doc-freshness}-auditor`) は
+`tools: Read[, Bash]` のみで **Write を持たない**。自力ではディスク上に痕跡を残せないので、
+「モデルが書けない層」である harness 側 (hook) が記録するしかない。
+
+### 6.2 記録するもの / しないもの
+
+| 項目 | 記録 | 根拠 |
+|---|---|---|
+| `subagent_type` が本 plugin 同梱 agent (`agents/*.md` の stem)、または `system-spec-harness:<stem>` の `Task` | ✅ | pinned plugin の実 payload は qualified 名。本 plugin qualifier のみ受理して stem へ正規化し、レジストリ追加に自動追従する |
+| それ以外の `Task` (他 plugin の agent・汎用 agent) | ❌ | 台帳の肥大化を避ける。帰属検証に使わない |
+| `session_id` / `ts` / `cwd` / `prompt` の sha256 | ✅ | 突合と再現性のための最小メタ |
+| `prompt` 本文 / `tool_response` 本文 | ❌ | 機微情報を台帳へ持ち込まない |
+
+台帳位置: `<CLAUDE_PROJECT_DIR>/eval-log/system-spec-harness/audit-fork-ledger.jsonl`
+(env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。consumer 側 `aggregate-completeness.py` と同一規則)。
+
+### 6.3 既知の限界 (正直な境界)
+
+- 台帳が示すのは「その `subagent_type` への Task が完了した」ことだけ。**監査 prompt が実質を伴うか、
+  返った verdict がレポートへ忠実に転記されたかは判定できない** (意味層 = content-review / human の責務)。
+- hook が無効化された環境では台帳が空になる。その場合 consumer は fail-closed で「帰属未接地」の
+  violation を出す (緑にはならない = 安全側)。
+- guard hook と同じく **表層的な adversarial evasion は設計上許容**する。狙いは「fork を省略した実行が
+  独立監査を名乗って機械層を通過する」という現実に観測された失敗の遮断。
+
+### 6.4 検証
+
+- 回帰テスト `tests/test_record_audit_fork.py`。
+- consumer 側の突合テストは
+  `skills/assign-system-spec-completeness-evaluator/tests/test_aggregate_completeness.py`。

@@ -76,12 +76,40 @@
 - 全promptでprompt-creatorの機械validatorがPASSし、L5は成果状態・原子的停止条件・動的実行方式を持つ。
 - 独立C1-C4評価でLayer役割、L7→L1、再現性、Self-Evaluationを意味層でも確認する。
 
+## 帰属の接地 (attribution / fail-closed)
+
+`aspects[<id>].auditor` は **評価者自身が書く文字列** であり、それ単体では「その agent が実際に走った」
+ことを何も示さない。旧実装は ASPECTS 定数との文字列一致しか見ておらず、独立監査を 1 件も fork しない
+実行でも「独立 auditor が PASS を出した」と名乗るレポートが `--report` を exit 0 で通過できた。
+
+- 独立 auditor を持つ観点は `audit_delegations[]` に **fork receipt** を 1 件持つ。
+  - `matrix_coverage` / `primary` → `system-spec-matrix-auditor` (C07)
+  - `matrix_coverage` / `sub_input` → `system-spec-hearing-auditor` (C06)
+  - `doc_freshness` / `primary` → `system-spec-doc-freshness-auditor` (C08)
+- receipt は PostToolUse hook `hooks/record-audit-fork.py` が書く **fork 台帳**
+  (`eval-log/system-spec-harness/audit-fork-ledger.jsonl`) と突合される。監査 agent は `Write` を
+  持たず自力で痕跡を残せないため、証跡は「モデルが書けない層」に置く。
+- C05 自前評価の観点 (foundation_trace / decision_guidance / design_knowledge_reflection /
+  prompt_quality) に `primary` receipt を付けるのは **虚偽の独立性主張** として violation。
+- 台帳が無い/空の実行は裏取り 0 件 = fail-closed で violation (緑にしない)。
+- **機械層が保証しない範囲**: 台帳が示すのは「その subagent_type への Task が完了した」ことだけ。
+  監査 prompt が実質を伴うか、返った verdict がレポートへ忠実に転記されたかは意味層
+  (content-review / human) の未閉塞責務。receipt の `verdict` と `aspects[].verdict` の一致検査は
+  「転記の自己矛盾」までしか捕まえられない。
+- **残余ギャップ (run/session 非束縛)**: 突合は台帳行の `ts` / `session_id` を照合軸に使わないため、
+  **過去 run の同一 subagent_type 記録でも裏取りが成立しうる**。本ゲートが確実に弾くのは
+  「fork を 1 件も起こしていない実行」までで、「今回の run で fork した」ことの証明ではない。
+  session 束縛は follow-up (レポート側へ session_id を持たせると、その宣言自体が再び自己申告に
+  なるため、宣言と台帳の両方を要求する設計が要る)。
+
 ## 総合判定 (fail-closed)
 - 全観点PASSかつhigh severity finding 0件のときだけ総合PASS。
 - 1 観点でも FAIL/INDETERMINATE、または high finding が 1 件でもあれば総合 FAIL。
 - scoring-rubricの全観点を過不足なく評価していなければ総合FAIL。
 - 総合判定は `aggregate-completeness.aggregate_verdict` で再導出でき、レポートの `verdict` と
   一致すること (総合判定が観点スコアに接地しているかの整合検査)。
+- 帰属が fork 証跡へ接地していなければ `--report` は violation を返す (総合 verdict の再導出とは
+  独立した検査。verdict が整合していても帰属が未接地ならゲートは通さない)。
 
 ## INDETERMINATE の扱い
 - 監査 sub-agent は入力欠落・破損・公式サイト到達不能で `INDETERMINATE` を返しうる。
