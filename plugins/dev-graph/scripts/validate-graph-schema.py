@@ -361,12 +361,26 @@ def validate(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--graph", required=True)
+    parser.add_argument(
+        "--graph",
+        required=True,
+        help="graph JSON path、または '-' で stdin から preview graph を読む (dry-run 用)",
+    )
     parser.add_argument("--repo-root")
     args = parser.parse_args()
-    graph = Path(args.graph).expanduser().resolve(strict=True)
-    nodes = nodes_of(load_json(graph))
-    violations = validate(nodes, repo_root=_repo_root_for(graph, args.repo_root))
+    if args.graph == "-":
+        # dry-run preview 検証: 管理対象 repo へ一時ファイルを書かせないための stdin 経路。
+        # --graph FILE は contained(graph, root) を要求するため、preview を検証するには
+        # repo 内へ書くしかなく「dry-run write 0」契約と矛盾していた (C14 OUT3)。
+        if not args.repo_root:
+            raise ContractError("--repo-root is required when reading a preview graph from stdin")
+        repo_root = Path(args.repo_root).expanduser().resolve(strict=True)
+        nodes = nodes_of(json.loads(sys.stdin.read()))
+    else:
+        graph = Path(args.graph).expanduser().resolve(strict=True)
+        repo_root = _repo_root_for(graph, args.repo_root)
+        nodes = nodes_of(load_json(graph))
+    violations = validate(nodes, repo_root=repo_root)
     missing = sorted({
         item["detail"] for item in violations
         if item["code"] in {"frontmatter_missing", "artifact_missing"}

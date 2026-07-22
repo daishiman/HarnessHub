@@ -220,6 +220,40 @@ def valid_findings(staging: Path, digest: str) -> dict:
     }
 
 
+# producer contract (system-spec-harness v0.2.0): 独立 auditor を名乗る観点は
+# audit_delegations[] の fork receipt を持ち、fork 台帳で裏取りできなければならない。
+AUDIT_DELEGATIONS = [
+    {"aspect": "matrix_coverage", "role": "primary",
+     "auditor": "system-spec-matrix-auditor", "component": "C07",
+     "dispatch": {"tool": "Task", "subagent_type": "system-spec-matrix-auditor"},
+     "verdict": "PASS", "evidence": ["fixture: C07 matrix audit fork receipt"]},
+    {"aspect": "matrix_coverage", "role": "sub_input",
+     "auditor": "system-spec-hearing-auditor", "component": "C06",
+     "dispatch": {"tool": "Task", "subagent_type": "system-spec-hearing-auditor"},
+     "verdict": "PASS", "evidence": ["fixture: C06 hearing audit fork receipt"]},
+    {"aspect": "doc_freshness", "role": "primary",
+     "auditor": "system-spec-doc-freshness-auditor", "component": "C08",
+     "dispatch": {"tool": "Task", "subagent_type": "system-spec-doc-freshness-auditor"},
+     "verdict": "PASS", "evidence": ["fixture: C08 doc-freshness audit fork receipt"]},
+]
+
+
+def write_audit_fork_ledger(root: Path) -> None:
+    """検査対象 repo 内の fork 台帳 (record-audit-fork hook の書式) を fixture として置く。"""
+    ledger = root / "eval-log" / "system-spec-harness" / "audit-fork-ledger.jsonl"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    rows = [
+        {"schema_version": "1.0", "ts": "2026-07-22T00:00:00Z", "session_id": "fixture-session",
+         "tool_name": "Task", "subagent_type": d["dispatch"]["subagent_type"],
+         "prompt_sha256": None, "cwd": str(root)}
+        for d in AUDIT_DELEGATIONS
+    ]
+    ledger.write_text(
+        "".join(json.dumps(r, ensure_ascii=False, sort_keys=True) + "\n" for r in rows),
+        encoding="utf-8",
+    )
+
+
 def write_readiness_sources(root: Path) -> None:
     (root / "system-spec/index.md").write_text("# Confirmed\n\nReady.\n", encoding="utf-8")
     (root / "system-spec/00-requirements-definition.md").write_text(
@@ -237,12 +271,14 @@ def write_readiness_sources(root: Path) -> None:
     dump(root / "system-spec/completeness-findings.json", {
         "evaluator": {"name": "assign-system-spec-completeness-evaluator", "version": "0.1.0", "context": "fork"},
         "verdict": "PASS",
+        "audit_delegations": AUDIT_DELEGATIONS,
         "aspects": {key: {"verdict": "PASS", "auditor": owner, "component": component,
                            "summary": "independently verified"}
                     for key, (owner, component) in aspects.items()},
         "findings": [{"severity": "info", "bucket": "coverage", "observation": "all aspects checked"}],
         "gaps": [],
     })
+    write_audit_fork_ledger(root)
 
 
 def valid_readiness(root: Path, repository_id: str) -> dict:
@@ -250,9 +286,13 @@ def valid_readiness(root: Path, repository_id: str) -> dict:
     context = C09.build_context(
         ["--repo-root", str(root)], {"CLAUDE_PROJECT_DIR": str(root)}
     )
-    report = READINESS.build_report(
-        context, "system-spec", "architecture", "system-spec/completeness-findings.json"
-    )
+    # completeness gate (aggregate-completeness.py) は fork 台帳を env CLAUDE_PROJECT_DIR
+    # 起点で解決する。検査対象の synthetic repo へ固定し、実 repo の台帳への
+    # cross-scope 裏取りを防ぐ。
+    with mock.patch.dict(os.environ, {"CLAUDE_PROJECT_DIR": str(root)}):
+        report = READINESS.build_report(
+            context, "system-spec", "architecture", "system-spec/completeness-findings.json"
+        )
     assert report["status"] == "complete", report
     assert report["repository_id"] == repository_id
     return report

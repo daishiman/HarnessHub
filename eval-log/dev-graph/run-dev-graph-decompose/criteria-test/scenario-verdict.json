@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-decompose",
     "component_id": "C14",
-    "skill_md_sha256": "0f687c574616ac556a0b45c1405ffb5ff9722a5c5e1d20e2a1df3cd388685d11"
+    "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-provenance-worktree-20260721",
+  "reviewer": "dev-graph-criteria-scenario-r4-20260722-postmerge",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,13 +26,14 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "decompose-macro-positive-r3",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T235959-hh6cv/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T171937-r24/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T235959-hh6cv/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T235959-hh6cv/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T171937-r24/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T171937-r24/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T171937-r24/out/status.json"
       ],
-      "observed": "2026-07-22 再実走 (HarnessHub-6cv): generation-lineage 変更 (validate-source-digest.py / validate-system-plan.py / feature-execution-package-contract.md) が dev-graph skill の behavior closure に含まれ digest が動いたため、fixture builder を復元して同一シナリオを再 trial。対象 Skill を最初の tool call で起動し正経路を自走完遂、status.json=PASS。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し goal 達成 (受入基準を実行証跡で裏取り) を確認。"
+      "observed": "2026-07-22 に空 graph fixture で r19 を正規再実走 (--dry-run/--binding none)。feature/architecture が非循環 DAG・粒度閾値内、評価前 draft は起票 0 件、dry-run の write_count 0 で preview は stdin 経路検証。goal-seek 3 点セット全出力。"
     },
     "OUT2": {
       "status": "PASS",

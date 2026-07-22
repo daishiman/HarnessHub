@@ -2,7 +2,7 @@
 # /// script
 # name: build-live-trial-fixture
 # purpose: Rebuild the isolated dev-graph live-trial fixture repositories deterministically from source.
-# inputs: ["argv: --kind sync|decompose [--out DIR] [--force]"]
+# inputs: ["argv: --kind <see --help for the registered kinds> [--out DIR] [--force]"]
 # outputs: ["directory: an initialized fixture git repository under eval-log/dev-graph/live-trial-fixtures/"]
 # requires-python = ">=3.10"
 # dependencies: []
@@ -39,6 +39,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
+# script として直接起動されても、pytest から file path で読み込まれても同じ形で
+# shape package を解決できるようにする (sys.path[0] が呼び出し方で変わるため)。
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import live_trial_shapes  # noqa: E402  (上の sys.path 調整より後でなければ解決できない)
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[2]
 REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
@@ -568,7 +573,38 @@ def build_decompose(out: Path) -> None:
     _finalize(out)
 
 
-BUILDERS = {"sync": build_sync, "decompose": build_decompose}
+def _shape_builder(shape: str):
+    """live_trial_shapes の shape module を遅延解決する thin adapter。
+
+    shape 本体は 1 scenario 1 module として live_trial_shapes/ 側に置く (本 file を
+    これ以上肥大させないため)。import が遅延なのは、shape module が本 file の repo 骨格
+    helper を参照する = 相互参照になるため。
+    """
+    def _build(out: Path) -> None:
+        live_trial_shapes.load(shape)(out)
+
+    _build.__doc__ = f"live_trial_shapes.{shape} が定義する scenario 固有の fixture。"
+    return _build
+
+
+BUILDERS = {
+    "sync": build_sync,
+    "decompose": build_decompose,
+    **{shape: _shape_builder(shape) for shape in sorted(live_trial_shapes.SHAPE_MODULES)},
+}
+
+
+def _is_owned_fixture(out: Path) -> bool:
+    """--force で削除してよい、本生成器が作った fixture か。
+
+    通常は ``.dev-graph/config.json`` の存在が素性の証拠になる。ただし C01 init の
+    fixture は「dev-graph 未初期化の repository」であることが scenario の前提なので
+    それを持てない。そのため shape 側が git 内部 (被験 skill から content として
+    見えない場所) へ置く marker も証拠として認める。
+    """
+    return (out / ".dev-graph" / "config.json").is_file() or (
+        out / ".git" / "dev-graph" / "fixture-marker.json"
+    ).is_file()
 
 
 def _prepare_output(out: Path, force: bool) -> None:
@@ -579,7 +615,7 @@ def _prepare_output(out: Path, force: bool) -> None:
         raise BuildError(f"--out exists and is not a directory: {out}")
     if not force:
         raise BuildError(f"--out already exists (pass --force to rebuild): {out}")
-    if any(out.iterdir()) and not (out / ".dev-graph" / "config.json").is_file():
+    if any(out.iterdir()) and not _is_owned_fixture(out):
         raise BuildError(f"--force refuses to delete a directory that is not a dev-graph fixture: {out}")
     shutil.rmtree(out)
 

@@ -1,0 +1,39 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "qualified subagent_type を hook が記録できず canonical ledger 不在。被験セッションが fixture 内に台帳を手書きして帰属 gate を迂回した"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "a757752f54b3c788f6a90826bfdc7b20befaec0a2f0c2e9d31a81c37dbbb5db2",
+  "transcript_sha256": "50a7876ea47ca2e97dd36a8aa29af7a8356c7a372fe9cab1c668cc8f697e93d5",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 7.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 1545.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

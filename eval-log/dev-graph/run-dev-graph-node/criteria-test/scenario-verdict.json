@@ -7,7 +7,7 @@
     "skill_md_sha256": "8164be5b695d5e7685aedd31d1f66bcc9d0546276299783016592258f37ad9e2"
   },
   "verdict": "PASS",
-  "reviewer": "audit-node-status-20260720",
+  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,12 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T235959-hh6cv/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T083659-r19/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T235959-hh6cv/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T235959-hh6cv/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T083659-r19/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T083659-r19/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260722T083659-r19/out/status.json"
       ],
-      "observed": "2026-07-22 再実走 (HarnessHub-6cv): generation-lineage 変更 (validate-source-digest.py / validate-system-plan.py / feature-execution-package-contract.md) が dev-graph skill の behavior closure に含まれ digest が動いたため、fixture builder を復元して同一シナリオを再 trial。対象 Skill を最初の tool call で起動し正経路を自走完遂、status.json=PASS。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し goal 達成 (受入基準を実行証跡で裏取り) を確認。"
+      "observed": "2026-07-22 に mixed-artifacts fixture で r19 を正規再実走。5 種 artifact が canonical kind path へ routing、consecutive update 後も frontmatter kind と保存 path が一致、C14 macro contract を経ない feature は 0 件。goal-seek 3 点セット全出力。overall PASS。"
     },
     "OUT2": {
       "status": "PASS",

@@ -239,3 +239,51 @@ def test_non_planner_origin_keeps_per_file_check(tmp_path: Path) -> None:
     proc = run(root, "M1")
     assert proc.returncode == 2
     assert "他 file 流用の疑い" in json.loads(proc.stdout)["registered_mismatch"][0]["reason"]
+
+
+def test_c04_requirements_anchors_digest_gate_to_this_script() -> None:
+    """C04 の readiness 照合が散文 checklist ではなく本 script の exit code へ係留されている。
+
+    2026-07-21 live-trial r13 で、C04 が confirmation/evaluation/readiness だけを比較し
+    source_digest 照合を全周回で省略、registered_mismatch 4件のまま handoff を emit する
+    fail-open を検出した回帰テスト。
+    """
+    skill = (
+        Path(__file__).resolve().parents[1]
+        / "skills" / "run-dev-graph-requirements" / "SKILL.md"
+    )
+    text = skill.read_text(encoding="utf-8")
+    _opening, frontmatter, body = text.split("---", 2)
+
+    assert "../../scripts/validate-source-digest.py" in frontmatter, (
+        "validate-source-digest.py must be a declared script_ref of C04"
+    )
+    assert "validate-source-digest.py" in body, (
+        "SKILL body must invoke the digest gate, not describe it only in prose"
+    )
+    checklist = [line for line in body.splitlines() if line.startswith("- [ ]")]
+    assert any(
+        "validate-source-digest.py" in line and "exit 0" in line for line in checklist
+    ), "完了チェックリストに script の exit 0 を条件とする項目が必要"
+
+
+def test_c04_digest_gate_reaches_the_responsibility_prompt() -> None:
+    """gate が SKILL.md だけでなく責務プロンプトまで届いている (片肺修正の防止)。
+
+    SKILL.md は未達 responsibility を prompts/<R-id>.md 経由で Agent へ fork する。
+    prompt 側が散文述語のままだと、分離 context の agent は script を実行する指示を
+    持たず、r13 の fail-open がそのまま再現する。姉妹 skill run-dev-graph-system-spec は
+    同種の gate を prompts/R3-import.md まで伝播済みで、これが前例。
+    """
+    prompt = (
+        Path(__file__).resolve().parents[1]
+        / "skills" / "run-dev-graph-requirements" / "prompts" / "R2b-readiness.md"
+    )
+    text = prompt.read_text(encoding="utf-8")
+    assert "validate-source-digest" in text, (
+        "責務プロンプトの使用資産に digest gate が必要"
+    )
+    checklist = [line for line in text.splitlines() if line.startswith("- [ ]")]
+    assert any(
+        "validate-source-digest.py" in line and "exit 0" in line for line in checklist
+    ), "prompt の完了チェックリスト (停止条件) に script の exit 0 が必要"
