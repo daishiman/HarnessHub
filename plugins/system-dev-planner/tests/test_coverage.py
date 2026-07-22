@@ -44,12 +44,14 @@ def readiness_files(root: Path, *, placeholder: bool = False) -> None:
     fx.dump(root / "system-spec/completeness-findings.json", {
         "evaluator": {"name": "assign-system-spec-completeness-evaluator", "version": "0.1.0", "context": "fork"},
         "verdict": "PASS",
+        "audit_delegations": fx.AUDIT_DELEGATIONS,
         "aspects": {key: {"verdict": "PASS", "auditor": owner, "component": component,
                            "summary": "independently verified"}
                     for key, (owner, component) in aspects.items()},
         "findings": [{"severity": "info", "bucket": "coverage", "observation": "all aspects checked"}],
         "gaps": [],
     })
+    fx.write_audit_fork_ledger(root)
 
 
 class ReadinessCoverageTests(unittest.TestCase):

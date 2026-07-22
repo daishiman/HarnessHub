@@ -212,6 +212,12 @@
         "from_plugin": "system-dev-planner"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Task",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/record-audit-fork.py\"",
+        "from_plugin": "system-spec-harness"
+      },
+      {
         "event": "PreToolUse",
         "matcher": "Write|Edit|MultiEdit|Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py\"",
@@ -373,6 +379,15 @@
           {
             "type": "command",
             "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/slide-report-generator/hooks/hook-postgen-eval.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/record-audit-fork.py\""
           }
         ]
       }
