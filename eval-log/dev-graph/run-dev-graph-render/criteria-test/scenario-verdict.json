@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-render",
     "component_id": "C05",
-    "skill_md_sha256": "da9113c9c03ede0ddcba41ac7046e73b312d7fb3b5e04964ac76d0c16a8bca6d"
+    "skill_md_sha256": "e31e1245beaec6ad6b62b0079d0108db03532c40a82ea071bf039eefca4eebf6"
   },
   "verdict": "PASS",
-  "reviewer": "audit-sync-render-20260720",
+  "reviewer": "dev-graph-criteria-scenario-20260722T150355-e9b-rd-r11",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,14 +26,13 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "render-feature-progress-positive",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/verdict.json",
+      "scenario_id": "render-out1-total-matches-expected",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T150355-e9b-rd-r11/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T150355-e9b-rd-r11/verdict.json",
+        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T150355-e9b-rd-r11/out/status.json"
       ],
-      "observed": "2026-07-21 再取得 (r6)。commit 済み生成手順 (live_trial_shapes/shape_render.py) が再現する 「exact-13 package 登録直後・一部 task 完了」状態に対し render を実行。Live-trial verdict overall=PASS, tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0。独立 evaluator が graph を自ら数えて feature progress X/Y の一致を確認し、registration receipt の applied_count/expected_count/source_digest と実 graph の整合、自己完結出力 (外部リソース依存なし)、描画対象外 node の非混入を検証して PASS。"
+      "observed": "Live-trial re-verification after two closure moves: HarnessHub-rix finalized OUT1 to the weak reading (child-task total Y must equal receipt applied_count/expected_count; done count X not required), changing SKILL.md (receipt target.skill_md_sha256 updated here accordingly), and PR #22 moved the behavior closure again, staling run 20260722T054040-r9 (sha a57ab409 vs current acfa5d14). Run 20260722T150355-e9b-rd-r11 re-ran scenario render-out1-total-matches-expected fresh (fixture rebuilt from build_live_trial_fixture.py --kind render: feature LT-FEATURE-001 + 13 tasks + registration receipt 13/13 with matching graph_digest_after; fresh Claude session, no intervention): overall=PASS, nudge=0/gate=0, poll DONE at 390s, actual_model=[claude-opus-4-6], tier=live, skill_dir_tree_sha=acfa5d14 (current closure). Independent fresh evaluator confirmed on primary evidence: literal Skill tool_use present as the first workflow call (transcript record 8) — checked first because run 20260722T144924-e9b-rd-r10 (DEGRADED, retained as evidence) had bypassed the Skill contract by manually reproducing SKILL.md steps; R1-elicit/R2-plan/R3-render all forked as separate Agent contexts; OUT1 weak reading holds (feature_progress LT-FEATURE-001 total=13 == receipt 13/13, done=4 not required, registration non-null with matching source_digest); index.html self-contained (zero external script/link refs, inline SVG with feature/task/edge, P01..P13 all present); fixture invariant (tracked files untouched, graph canonical digest == receipt graph_digest_after, no staling); progress.json evidence matches actual transcript tool_results, V6 browser check honestly declared not-performed; validate-goal-seek-evidence.py exit 0 re-executed by the evaluator; marker contract kept (out/status.json only, DONE: PASS, zero questions)."
     }
   }
 }
