@@ -94,3 +94,148 @@ def test_progress_supplies_registered(tmp_path: Path) -> None:
         capture_output=True, text=True, check=False,
     )
     assert proc.returncode == 2  # progress 由来 registered の digest 不一致で fail
+
+
+# --- HarnessHub-432: system-dev-planner 由来 node の package lineage ---------
+#
+# published task spec の source_lineage.source_digest は個々の task spec ではなく
+# package (content-addressed generation) の canonical digest を指す。per-file 前提で
+# 照合すると exact-13 task 全件が偽陽性になるため、package を検出した場合は
+# canonical digest と manifest per-file sha256 の 2 段照合へ切り替える。
+
+
+def build_package(root: Path, package_rel: str, specs: dict[str, str]) -> str:
+    """staging-manifest.json を持つ published package を組み立て canonical digest を返す。"""
+    package = root / package_rel
+    package.mkdir(parents=True, exist_ok=True)
+    files: dict[str, str] = {}
+    for rel, content in specs.items():
+        target = package / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+        files[rel] = sha(content)
+    digest = hashlib.sha256()
+    for rel in sorted(files):
+        digest.update(rel.encode()); digest.update(b"\0")
+        digest.update((package / rel).read_bytes()); digest.update(b"\0")
+    canonical = digest.hexdigest()
+    (package / "staging-manifest.json").write_text(
+        json.dumps({"canonical_digest": "sha256:" + canonical, "files": files}), encoding="utf-8"
+    )
+    return canonical
+
+
+def package_node(node_id: str, source_path: str, digest: str) -> dict:
+    return {"graph_node_id": node_id,
+            "source_lineage": {"origin_kind": "system-dev-planner", "source_plugin": "system-dev-planner",
+                               "source_path": source_path, "source_digest": digest}}
+
+
+PKG = ".dev-graph/plans/generations/feature-package-feat-x/gen"
+
+
+def test_package_digest_lineage_passes(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    (root / ".dev-graph" / "state").mkdir(parents=True)
+    canonical = build_package(root, PKG, {"task-specs/phase-01.md": "P1", "task-specs/phase-02.md": "P2"})
+    nodes = [package_node("T1", f"{PKG}/task-specs/phase-01.md", canonical),
+             package_node("T2", f"{PKG}/task-specs/phase-02.md", canonical)]
+    (root / ".dev-graph" / "state" / "graph.json").write_text(
+        json.dumps({"schema_version": "1", "nodes": nodes}), encoding="utf-8")
+    proc = run(root, "T1,T2")
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert json.loads(proc.stdout)["checked"] == 2
+
+
+def test_foreign_package_digest_fails_closed(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    (root / ".dev-graph" / "state").mkdir(parents=True)
+    build_package(root, PKG, {"task-specs/phase-01.md": "P1"})
+    other = build_package(root, ".dev-graph/plans/generations/feature-package-feat-y/gen", {"task-specs/phase-01.md": "Z"})
+    nodes = [package_node("T1", f"{PKG}/task-specs/phase-01.md", other)]
+    (root / ".dev-graph" / "state" / "graph.json").write_text(
+        json.dumps({"schema_version": "1", "nodes": nodes}), encoding="utf-8")
+    proc = run(root, "T1")
+    assert proc.returncode == 2
+    assert "package canonical digest 不一致" in json.loads(proc.stdout)["registered_mismatch"][0]["reason"]
+
+
+def test_mutated_generation_file_fails_closed(tmp_path: Path) -> None:
+    # immutable generation の task spec を手編集すると manifest per-file sha と乖離する
+    root = tmp_path / "repo"
+    (root / ".dev-graph" / "state").mkdir(parents=True)
+    canonical = build_package(root, PKG, {"task-specs/phase-01.md": "P1"})
+    (root / PKG / "task-specs" / "phase-01.md").write_text("TAMPERED", encoding="utf-8")
+    nodes = [package_node("T1", f"{PKG}/task-specs/phase-01.md", canonical)]
+    (root / ".dev-graph" / "state" / "graph.json").write_text(
+        json.dumps({"schema_version": "1", "nodes": nodes}), encoding="utf-8")
+    proc = run(root, "T1")
+    assert proc.returncode == 2
+    assert "immutable generation の改変" in json.loads(proc.stdout)["registered_mismatch"][0]["reason"]
+
+
+def test_source_path_outside_manifest_fails_closed(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    (root / ".dev-graph" / "state").mkdir(parents=True)
+    canonical = build_package(root, PKG, {"task-specs/phase-01.md": "P1"})
+    (root / PKG / "task-specs" / "stray.md").write_text("STRAY", encoding="utf-8")
+    nodes = [package_node("T1", f"{PKG}/task-specs/stray.md", canonical)]
+    (root / ".dev-graph" / "state" / "graph.json").write_text(
+        json.dumps({"schema_version": "1", "nodes": nodes}), encoding="utf-8")
+    proc = run(root, "T1")
+    assert proc.returncode == 2
+    assert "package manifest に載っていない" in json.loads(proc.stdout)["registered_mismatch"][0]["reason"]
+
+
+def test_planner_origin_without_package_manifest_fails_closed(tmp_path: Path) -> None:
+    root = build_repo(
+        tmp_path,
+        [package_node("T1", "spec/phase-01.md", sha("P1"))],
+        {"spec/phase-01.md": "P1"},
+    )
+    proc = run(root, "T1")
+    assert proc.returncode == 2
+    assert "package staging-manifest.json が無い" in \
+        json.loads(proc.stdout)["registered_mismatch"][0]["reason"]
+
+
+def test_absolute_source_path_outside_repo_fails_closed(tmp_path: Path) -> None:
+    outside = tmp_path / "outside.md"
+    outside.write_text("OUTSIDE", encoding="utf-8")
+    root = build_repo(
+        tmp_path,
+        [node("N1", str(outside.resolve()), sha("OUTSIDE"))],
+        {},
+    )
+    proc = run(root, "N1")
+    assert proc.returncode == 2
+    assert "repository boundary 外" in json.loads(proc.stdout)["registered_mismatch"][0]["reason"]
+
+
+def test_source_path_symlink_outside_repo_fails_closed(tmp_path: Path) -> None:
+    outside = tmp_path / "outside.md"
+    outside.write_text("OUTSIDE", encoding="utf-8")
+    root = build_repo(tmp_path, [], {})
+    link = root / "spec" / "link.md"
+    link.parent.mkdir(parents=True)
+    link.symlink_to(outside.resolve())
+    graph = {"schema_version": "1", "nodes": [node("N1", "spec/link.md", sha("OUTSIDE"))]}
+    (root / ".dev-graph" / "state" / "graph.json").write_text(json.dumps(graph), encoding="utf-8")
+    proc = run(root, "N1")
+    assert proc.returncode == 2
+    assert "repository boundary 外" in json.loads(proc.stdout)["registered_mismatch"][0]["reason"]
+
+
+def test_non_planner_origin_keeps_per_file_check(tmp_path: Path) -> None:
+    # package 配下でも origin_kind が system-dev-planner でなければ per-file 契約のまま
+    root = tmp_path / "repo"
+    (root / ".dev-graph" / "state").mkdir(parents=True)
+    canonical = build_package(root, PKG, {"task-specs/phase-01.md": "P1"})
+    nodes = [{"graph_node_id": "M1",
+              "source_lineage": {"origin_kind": "manual", "source_path": f"{PKG}/task-specs/phase-01.md",
+                                 "source_digest": canonical}}]
+    (root / ".dev-graph" / "state" / "graph.json").write_text(
+        json.dumps({"schema_version": "1", "nodes": nodes}), encoding="utf-8")
+    proc = run(root, "M1")
+    assert proc.returncode == 2
+    assert "他 file 流用の疑い" in json.loads(proc.stdout)["registered_mismatch"][0]["reason"]

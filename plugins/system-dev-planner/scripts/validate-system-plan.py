@@ -451,14 +451,49 @@ def validate(staging: Path, repository_id: str) -> dict:
             "phase_refs": PHASES, "violations": violations}
 
 
+def _package_slug(package_id: str) -> str:
+    """promote-system-plan.py と同一規則で feature_package_id を pointer slug へ写す。"""
+    slug = re.sub(r"[^A-Za-z0-9._-]+", "-", package_id).strip("-")
+    if not slug:
+        raise ValueError("feature_package_id does not produce a stable generation slug")
+    return slug
+
+
+def _current_generation(c09, repo_root: Path, context: dict, package_id: str) -> str:
+    """feature 別 current pointer から現行世代の published package path を解決する。
+
+    task spec の Automated commands へ generation id を直書きすると再計画のたびに
+    stale になるため、世代非依存で再実行できる解決経路を CLI 側に持たせる。
+    """
+    state_rel = context["plan_roots"]["state"]["relative"]
+    pointer_rel = f"{state_rel}/current/{_package_slug(package_id)}.json"
+    pointer_path = c09.guard_relative_path(repo_root, pointer_rel)
+    if not pointer_path.is_file():
+        raise ValueError(f"current pointer が無い: {pointer_path}")
+    pointer = json.loads(pointer_path.read_text(encoding="utf-8"))
+    if pointer.get("feature_package_id") != package_id:
+        raise ValueError("current pointer package identity mismatch")
+    published = pointer.get("published_path")
+    if not isinstance(published, str) or not published:
+        raise ValueError("current pointer published_path が不正")
+    return published
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Validate staged system plan")
     p.add_argument("--repo-root"); p.add_argument("--config", default=".dev-graph/config.json")
-    p.add_argument("--staging", required=True, help="repository-relative staging generation path")
+    source = p.add_mutually_exclusive_group(required=True)
+    source.add_argument("--staging", help="repository-relative staging generation path")
+    source.add_argument("--feature-package",
+                        help="feature_package_id (例: feature-package/feat-hub-foundation)。"
+                             "feature 別 current pointer から現行世代の published package を解決する")
     args = p.parse_args(argv); c09 = _resolver()
     try:
         context = c09.build_context(["--repo-root", args.repo_root, "--config", args.config] if args.repo_root else ["--config", args.config], dict(os.environ))
-        staging = Path(c09.guard_relative_path(Path(context["repo_root"]), args.staging))
+        target = args.staging or _current_generation(
+            c09, Path(context["repo_root"]), context, args.feature_package
+        )
+        staging = Path(c09.guard_relative_path(Path(context["repo_root"]), target))
         report = validate(staging, context["repository_id"])
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["status"] == "pass" else 2
