@@ -121,7 +121,7 @@
         "OUT5"
       ],
       "uncovered_ids": [],
-      "checklist_items": 6,
+      "checklist_items": 5,
       "under_derived": false,
       "coverage_pct": 100.0,
       "since": null

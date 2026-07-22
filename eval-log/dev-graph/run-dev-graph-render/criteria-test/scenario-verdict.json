@@ -7,7 +7,7 @@
     "skill_md_sha256": "e31e1245beaec6ad6b62b0079d0108db03532c40a82ea071bf039eefca4eebf6"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-20260722T150355-e9b-rd-r11",
+  "reviewer": "criteria-test-render-out1-r9-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -20,19 +20,20 @@
         "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_render_scope_containment_and_registration_receipt",
         "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_render_task_scope_adds_parent_without_siblings"
       ],
-      "observed": "Independent audit confirmed canonical receipt digest/count/node/source-lineage checks, repository-contained input/output, feature descendants, task parent without siblings, and dependency closure. Emitted HTML has inline SVG/CSS/JS with zero external script/link/http(s) references while graph input bytes remain unchanged."
+      "observed": "Independent audit confirmed canonical receipt digest/count/node/source-lineage checks, repository-contained input/output, feature descendants, task parent without siblings, and dependency closure. Emitted HTML has inline SVG/CSS/JS with zero external script/link/http(s) references while graph input bytes remain unchanged. 追加検証 (r9): 生成 HTML の外部 http 参照 0 件・<script src / <link 0 件を実測し、graph の 15 node id が欠落なく HTML 内に存在すること (MISSING: []) と edge 12 本を確認した。"
     },
     "OUT1": {
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "render-out1-total-matches-expected",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T150355-e9b-rd-r11/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T054040-r9/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T150355-e9b-rd-r11/verdict.json",
-        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T150355-e9b-rd-r11/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T054040-r9/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T054040-r9/transcript.jsonl",
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_render_scope_containment_and_registration_receipt"
       ],
-      "observed": "Live-trial re-verification after two closure moves: HarnessHub-rix finalized OUT1 to the weak reading (child-task total Y must equal receipt applied_count/expected_count; done count X not required), changing SKILL.md (receipt target.skill_md_sha256 updated here accordingly), and PR #22 moved the behavior closure again, staling run 20260722T054040-r9 (sha a57ab409 vs current acfa5d14). Run 20260722T150355-e9b-rd-r11 re-ran scenario render-out1-total-matches-expected fresh (fixture rebuilt from build_live_trial_fixture.py --kind render: feature LT-FEATURE-001 + 13 tasks + registration receipt 13/13 with matching graph_digest_after; fresh Claude session, no intervention): overall=PASS, nudge=0/gate=0, poll DONE at 390s, actual_model=[claude-opus-4-6], tier=live, skill_dir_tree_sha=acfa5d14 (current closure). Independent fresh evaluator confirmed on primary evidence: literal Skill tool_use present as the first workflow call (transcript record 8) — checked first because run 20260722T144924-e9b-rd-r10 (DEGRADED, retained as evidence) had bypassed the Skill contract by manually reproducing SKILL.md steps; R1-elicit/R2-plan/R3-render all forked as separate Agent contexts; OUT1 weak reading holds (feature_progress LT-FEATURE-001 total=13 == receipt 13/13, done=4 not required, registration non-null with matching source_digest); index.html self-contained (zero external script/link refs, inline SVG with feature/task/edge, P01..P13 all present); fixture invariant (tracked files untouched, graph canonical digest == receipt graph_digest_after, no staling); progress.json evidence matches actual transcript tool_results, V6 browser check honestly declared not-performed; validate-goal-seek-evidence.py exit 0 re-executed by the evaluator; marker contract kept (out/status.json only, DONE: PASS, zero questions)."
+      "observed": "live-trial 20260722T054040-r9 (overall PASS / goal_fit PASS / blockers 0 / nudge 0) で OUT1 を実走検証した。fixture r9-render は validate-graph-schema.py が valid:true / violations 0 を返す正規状態で、registration receipt の graph_digest_after が現 graph の canonical sha256 と一致している (applied_count=expected_count=13)。render 出力の feature_progress.by_feature は {\"done\": 0, \"total\": 13} で、総数 Y=13 が receipt の applied_count/expected_count と一致する (改訂後 OUT1 は done 数 X の一致を求めない)。render-metadata.registration は非 null で source_digest が receipt と一致し、HTML は外部 script/link 参照 0 件・self_contained:true。実ブラウザでの目視は環境上不可のため未実施であり、単一ファイル完結と外部依存 0 を IN1/V5 の実測で代替した。実行前後で fixture の graph.json/receipt/13 子 task md の sha256 は不変。"
     }
   }
 }
