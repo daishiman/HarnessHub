@@ -80,7 +80,7 @@
           "additionalProperties": false,
           "required": ["tool", "subagent_type"],
           "properties": {
-            "tool": {"const": "Task"},
+            "tool": {"enum": ["Task", "Agent"], "description": "subagent 起動ツール名の観測値 (旧ハーネス/Codex 系='Task', 現行 Claude Code='Agent')。aggregate-completeness.py の LEDGER_TOOL_NAMES と整合"},
             "subagent_type": {"type": "string", "minLength": 1, "description": "auditor と一致すること。fork 台帳の subagent_type と突合される"}
           }
         },
