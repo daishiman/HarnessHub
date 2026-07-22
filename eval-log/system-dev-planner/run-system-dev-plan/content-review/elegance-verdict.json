@@ -2,7 +2,7 @@
   "target": {
     "plugin": "system-dev-planner",
     "skill": "run-system-dev-plan",
-    "skill_md_sha256": "55b3f7f8c3d23b482daa30ae300f415bc3c33268cae55bbf9436273db9432759"
+    "skill_md_sha256": "8d0245a60a83c691c97131dc5307fd73802ad315f956c4260f12726b11080718"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
@@ -14,8 +14,8 @@
     "smell": 0
   },
   "reviewer": "elegant-improvement-executor",
-  "reviewed_at": "2026-07-22T00:14:22Z",
-  "iterations": 2,
+  "reviewed_at": "2026-07-22T04:15:00Z",
+  "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
@@ -27,12 +27,14 @@
       "OUT3"
     ],
     "positive_feedback": [
-      "system-dev-planner origin は contained package manifest を必須化し、absolute/symlink escape を repository boundary で拒否する。projection は全 preflight 完了後だけ書き込むため、12/13 の失敗で部分更新を残さない。focused tests 60件、現行13 projection、lineage、generation-independent validation、195 node digest 検査がすべて通過した。"
+      "C1 矛盾なし: script_refs (L40-41 validate-generation-lineage.py / build-task-projection-rerun.py) と完了条件 prose (L75 の 2 コマンド例) と workflow-manifest.json (L25-26) が全て同一の新名を指し、旧名と新名が混在する矛盾が一切ない。純粋なリネーム参照更新として一貫している。",
+      "C4 依存整合: script_refs が指す 2 script (plugins/system-dev-planner/scripts/validate-generation-lineage.py, build-task-projection-rerun.py) がファイルシステム上に実在し、旧名 (verify-generation-lineage / sync-task-projection-rerun) はファイル・SKILL.md・manifest・リポジトリ全体で残存 0。dangling reference (壊れた参照) が発生しておらず、完了条件のゲート意味 (lineage 再検査 + task projection rerun) は新名でそのまま保たれている。",
+      "C2 漏れなし: リネームで触れるべき 4 箇所 (script_refs 2 行 + 完了条件 prose 2 コマンド) が全て更新済みで、更新漏れによる旧名の取り残しがない。IN1/OUT3 が参照する generation lineage・task projection rerun のゲート記述も新名と整合している。"
     ],
     "negative_feedback": [],
-    "iteration": 2,
+    "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual: HarnessHub-6cv incremental re-review",
+    "hook_trigger": "manual: HarnessHub-6cv script rename re-review",
     "next_action": "none"
   }
 }
