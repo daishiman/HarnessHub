@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T053301-r10/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T043419/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T053301-r10/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T053301-r10/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T053301-r10/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T043419/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T043419/transcript.jsonl",
+        "independent: fresh evaluator replay of transcript, receipts and recomputed digests"
       ],
-      "observed": "2026-07-22 再取得 (r10)。本 PR の guard hook 変更と main merge で behavior closure が動いたため再実走した。fixture は commit 済み生成手順 build_live_trial_fixture.py --kind sync から再生成し、adapter fixture (.dev-graph/remote.json) によるオフライン再生で実 GitHub API へ一切接続しない。Live-trial verdict overall=PASS (launch/completion/goal_fit/verdict すべて PASS), tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0 (自走)。1 回目の apply と 2 回目の dry-run を R3-sync Agent へ分離して実行し、2 回目は changes=0 かつ imports/exports/pending_retry すべて 0。snapshot 正本 .dev-graph/state/sync-snapshot.json が現行 remote title と一致し、issue/project/item ID は前後不変。独立 verifier Agent が C24 receipt・pass1・pass2・最終 graph・remote・canonical snapshot を実際に読んで再計算し verified=true。orchestrator と別個体の fresh evaluator が transcript の実 tool 呼び出しで上記を再確認し blocker 0 で PASS。"
+      "observed": "bd-bridge.py 変更で closure digest が動いたため 2026-07-21 に再実走 (r9)。対象 Skill を最初の tool call で起動し、R3-sync を別 Agent へ分離。pass1 で import(title)/export(Status) を適用し pass2 は changes=0 / imports・exports・pending_retry 全空 / write_count 0 で収束。fresh evaluator が sub-agent の Bash stdout と Write された pass1/pass2 をJSON 比較して完全一致を確認し、graph・sync-snapshot・remote の sha256 を自ら再計算して receipt の *_after と厳密一致することを検証。正本 snapshot は現行 remote title と一致し issue/project/item ID も不変。"
     },
     "OUT2": {
       "status": "PASS",

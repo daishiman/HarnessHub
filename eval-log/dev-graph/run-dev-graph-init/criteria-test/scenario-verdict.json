@@ -4,7 +4,7 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
     "component_id": "C01",
-    "skill_md_sha256": "1663f8dce02d8c123f4fa0dd72af1ea176f41bc39e7ae7fa7fbe4d35b016d58b"
+    "skill_md_sha256": "1db7dd6c2cde83fc50e02704fb3e3b725f66dd2209b08521c88a5fc52fc535f0"
   },
   "verdict": "PASS",
   "reviewer": "dev-graph-criteria-scenario-r1",
@@ -27,13 +27,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C01-OUT1-positive-idempotence",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260721T224254-r17/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260713T090000-r3/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260721T224254-r17/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260721T224254-r17/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260721T224254-r17/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260713T090000-r3/verdict.json",
+        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260713T090000-r3/out/status.json + poll-state.json"
       ],
-      "observed": "2026-07-21 再取得 (r17)。dev-graph 未初期化の git repository (--empty fixture) に対し init を 2 回とも Skill リテラル呼び出しで実行。Live-trial verdict overall=PASS, tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0。6 content root 生成・graph store 生成・C11 exit0・2 回目の全ファイル sha256 一致 (冪等)・init receipt 実在を観測。本 issue の修正点である「init が出力する config の repo-config.schema.json 適合」も config_schema_valid=true として実走で確認した。独立 evaluator が対象 repo を自ら ls / jsonschema 検証して PASS。"
+      "observed": "Replay of the captured init-positive-idempotence live trial (model claude-opus-4-6, poll gate_ticks=0, stall=0, status.json PASS). The r3-init fixture holds the six content roots issues/tasks/specs/architecture/features/docs plus .dev-graph/{config.json,state/graph.json,cache,locks,templates}; the graph store passes C11 and the verdict.json reports overall launch/completion/goal_fit/verdict = PASS with downgrade_reason null."
     },
     "OUT2": {
       "status": "PASS",
