@@ -87,6 +87,12 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 - Automated commands: <commands>
 - Required evidence: <paths>
 
+`Automated commands` は promotion 後 (content-addressed generation へ atomic rename された後) も
+そのまま再実行できる形だけを書く。`--repo-root . --staging .` のように repository root 起点で
+解決できない形と、generation id の直書き (再計画で stale になる) は禁止する。plan validator の
+再実行は世代非依存の `validate-system-plan.py --repo-root <root> --feature-package <feature_package_id>`
+を使う (`references/feature-execution-package-contract.md` §2.3)。
+
 ## Inner goal-seek execution loop
 
 - Methodology contract: `system-task-goal-seek/v1`

@@ -8,7 +8,7 @@ capability: skill-invoke
 
 ## observation
 
-最終確定依頼: system-spec/ 一式 (qa-070 反映後) の completeness report を独立検証の上で確定・保存してほしい。監査 3 軸はすべて完了済み: (1) C07 マトリクス網羅性 = PASS (54 セル未収集 0・qa_ref dangling 0・集約一致)、(2) C08 出典鮮度 = PASS (17 target 全件一致・low 3 件は issue-source-freshness-ops-20260722 へ起票済み
+`assign-system-spec-completeness-evaluator` skill を `--spec-dir system-spec --output system-spec/completeness-report.json` で実行するよう指示を受け、生成済み仕様書セット (`system-spec/*.md`)・`spec-state.json`・`fetched-references.json` を 6 観点で評価し、fail-closed(判定不能や
 
 ## hypothesis
 

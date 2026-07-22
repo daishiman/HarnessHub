@@ -37,6 +37,8 @@ script_refs:
   - ../../scripts/build-system-handoff.py
   - ../../scripts/validate-system-plan.py
   - ../../scripts/promote-system-plan.py
+  - ../../scripts/validate-generation-lineage.py
+  - ../../scripts/build-task-projection-rerun.py
 combinators:
   - with-feedback-contract
 feedback_contract: # per-skill 評価基準(SSOT=plugins/harness-creator/scripts/feedback_contract_ssot.py)。content-review verdict の criteria_evaluated と突合
@@ -44,7 +46,7 @@ feedback_contract: # per-skill 評価基準(SSOT=plugins/harness-creator/scripts
   criteria:
     - id: IN1
       loop_scope: inner
-      text: "1 feature の分解が exact 13 task specs と 13-entry inventory・13-node の intra-feature DAG を生成し validate-system-plan.py が DAG 非循環/orphan 0/inventory 矛盾 0/13 件厳密一致で exit0 通過する"
+      text: "1 feature の分解が exact 13 task specs と 13-entry inventory・13-node の intra-feature DAG を生成し validate-system-plan.py が DAG 非循環/orphan 0/inventory 矛盾 0/13 件厳密一致で exit0 通過する。promotion 後は対象 feature の generation lineage と task projection rerun を書込なしモードで再検査し exit0 になる"
       verify_by: script
     - id: IN2
       loop_scope: inner
@@ -60,7 +62,7 @@ feedback_contract: # per-skill 評価基準(SSOT=plugins/harness-creator/scripts
       verify_by: evaluator
     - id: OUT3
       loop_scope: outer
-      text: "実 feature-context を入力に end-to-end で R1-elicit→R2-decompose→R3-emit を走らせ、生成された 13 task specs が staging へ atomic promotion され二回目実行で構造が変化しないことを受入テストが確認する"
+      text: "実 feature-context を入力に end-to-end で R1-elicit→R2-decompose→R3-emit を走らせ、生成された 13 task specs が staging へ atomic promotion される。その後に対象 feature の lineage marker と 13 task projection の世代非依存 rerun をゲートし、二回目実行で構造が変化しないことを受入テストが確認する"
       verify_by: live-trial
 ---
 
@@ -70,7 +72,7 @@ feedback_contract: # per-skill 評価基準(SSOT=plugins/harness-creator/scripts
 
 - 入力: dev-graph の ready feature (`--feature-id` と caller-repository 相対の `--feature-context` JSON。JSON の `graph_node_id` と `--feature-id`、feature digest の一致が必須)。
 - 出力: exact-13 task specs、13-entry inventory、13-node intra-feature DAG、`system-build-handoff.json`、plan-structure/task-specs HTML を含む staging→atomic promotion 済み feature package。
-- 完了条件: C12 deterministic validation と fork evaluator C1..C4 が同一 canonical digest で PASS し、C11 の atomic promotion receipt が発行され、二回目実行で構造が変化しない。
+- 完了条件: C12 deterministic validation と fork evaluator C1..C4 が同一 canonical digest で PASS し、C11 の atomic promotion receipt が発行され、二回目実行で構造が変化しない。加えて対象 feature だけに scope した `validate-generation-lineage.py --package <current-package-slug>` (書込なし) と `build-task-projection-rerun.py --feature-package <feature_package_id> --check` がともに exit 0 であること、すなわち supersede 済み世代が byte-for-byte 不変で現行世代を指す marker を持ち、その feature の exact 13 task projection が世代非依存の再実行コマンドを持つことまでを完了条件に含める。未配線は同じ feature scope の書込モード (`--package <current-package-slug> --write-markers` / `--feature-package <feature_package_id>` 実行) で是正し、書込なしで再確認して完了とする。repository 全件の移行・監査は引数を省略した別運用とし、1 feature run の完了スコープに混ぜない。
 
 ## Invariants
 

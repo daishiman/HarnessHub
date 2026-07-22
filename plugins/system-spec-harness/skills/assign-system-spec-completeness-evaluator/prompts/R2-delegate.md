@@ -17,7 +17,7 @@
 - sub-agent担当観点は **独立 context (`isolation: fork`) で起動**し、foundation/decision/deep-knowledge/prompt品質は必要入力と機械gate結果をR1へ透過する。
 - 監査は Task tool で対応 sub-agent (`system-spec-matrix-auditor` / `system-spec-hearing-auditor` / `system-spec-doc-freshness-auditor`) を起動して得る。R2 自身は監査ロジックを再実装しない (単一情報源 = 各 agent の SSOT prompt)。
 - 監査 verdict (`PASS`/`FAIL`/`INDETERMINATE`) と軸別根拠をそのまま集約し、緑化のために書き換えない。
-- **実際に fork した監査だけを receipt にする**: R2 は起動した各 Task を `audit_delegations[]` の receipt (`aspect`/`role`/`auditor`/`component`/`dispatch{tool,subagent_type}`/`verdict`/`evidence`) として R1 へ渡す。fork を省略した監査の receipt を書いてはならない。receipt は PostToolUse hook (`hooks/record-audit-fork.py`) が書く fork 台帳と `aggregate-completeness.py --report` で突合され、裏取りできない帰属は fail-closed で violation になる (帰属の Goodhart 防止)。
+- **実際に fork した監査だけを receipt にする**: R2 は起動した各 fork を `audit_delegations[]` の receipt (`aspect`/`role`/`auditor`/`component`/`dispatch{tool,subagent_type}`/`verdict`/`evidence`) として R1 へ渡す。`dispatch.tool` には実際に使った起動ツール名 (`Task` または `Agent`) を観測どおりに書く (正規化しない)。fork を省略した監査の receipt を書いてはならない。receipt は PostToolUse hook (`hooks/record-audit-fork.py`) が書く fork 台帳と `aggregate-completeness.py --report` で突合され、裏取りできない帰属は fail-closed で violation になる (帰属の Goodhart 防止)。
 
 ### 1.2 倫理ガード
 - 監査結果の根拠を省略・要約し過ぎて FAIL 要因を隠さない。到達不能・入力欠落は INDETERMINATE として明示する。

@@ -3,9 +3,6 @@
 ## Machine-readable registration fields
 
 - feature_package_id: feature-package/feat-hub-foundation (13 task で共有)
-- feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
-- feature_acceptance: 4 items (A1-A4)
-- quality_constraints: 9 items
 - owners: ["daishiman"]
 - tags: ["feat-hub-foundation", "stage-1", "infrastructure", "release-deploy"]
 - related_nodes: ["feat-hub-foundation", "arch-harness-hub-infrastructure", "arch-harness-hub-frontend"]
@@ -19,7 +16,7 @@
 
 ## 目的
 
-P12 の runbook に従い、goal-spec acceptance「CI が test→deploy まで完走する」を満たす形で、Hub 基盤を Cloudflare Workers 本番環境へ wrangler CLI 経由でデプロイする。この task 完了時点で、.github/workflows/ci.yml の deploy ステップが本番へ到達し、/health が本番 URL 上で応答し、外部死活監視と SLO ダッシュボードが本番稼働を計測している状態にする。goal-spec の acceptance 4 件のうち、本番環境での実現は本 task が担う (P07 は CI/開発環境での判定)。
+P12 の runbook に従い、goal-spec acceptance「CI が test→deploy まで完走する」を満たす形で、Hub 基盤を Cloudflare Workers 本番環境へ wrangler CLI 経由でデプロイする。この task 完了時点で、.github/workflows/ci.yml の deploy ステップが本番へ到達し、/health が本番 URL 上で応答し、外部死活監視と SLO ダッシュボードが本番稼働を計測している状態にする。goal-spec の acceptance 3 件のうち、本番環境での実現は本 task が担う (P07 は CI/開発環境での判定)。
 
 ## 背景
 
