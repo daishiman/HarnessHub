@@ -187,6 +187,8 @@
     {
       "id": "lessons-index_010",
       "title": "[auto] PostToolUse:Skill 失敗 — | REG-001 | high | `scripts/validate-build-trace.py` が exit 2。`system-spec-harne",
+      "intent": "評価失敗パターンを知見ストアへ蓄積し、human triage と再発防止の入力として保持すること",
+      "background": "PostToolUse:Skill フックが評価失敗を自動検知して記録した未 triage エントリ。検知内容: PostToolUse:Skill 失敗 — | REG-001 | high | scripts/validate-build-trace.py が exit 2 (system-spec-harness の skill 起動時)。根本原因は human triage 待ち。",
       "keywords": [
         "PostToolUse",
         "Skill",
