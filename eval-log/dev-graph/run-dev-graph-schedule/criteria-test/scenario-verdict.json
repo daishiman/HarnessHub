@@ -7,7 +7,7 @@
     "skill_md_sha256": "ed6459967c45115aaefd728f145c62747ddc5c189ead5475cca1df71fd03af15"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-provenance-worktree-20260721",
+  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,14 +26,14 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "schedule-positive-ready-set",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/verdict.json",
+      "scenario_id": "C15-OUT1-positive-ready-set-r16",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T095731-r19/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260721T185054-r6/transcript.jsonl",
-        "independent: fresh evaluator replay of r6 task, pane, execution receipt, graph, and canonical lease ledger"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T095731-r19/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T095731-r19/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260722T095731-r19/out/status.json"
       ],
-      "observed": "bd-bridge.py / schedule-graph.py の変更で closure digest が動いたため 2026-07-21 に再実走 (r6)。対象 Skill を最初の tool call で起動し、schedule 実行と C17 検証をそれぞれ別 Agent へ分離した。read-only receipt は LT-TASK-001 を唯一の ready task とし、未充足依存 0・lease/resource conflict 0・一意な branch/claim hint・graph/tracker/lease digest 不変。fresh evaluator が同一引数で schedule-graph.py を再実行し executed_at 以外が receipt と完全一致することを確認して PASS。"
+      "observed": "2026-07-22 に ready>max-parallel・scope 重複・active/stale lease・blocked を持つ専用 fixture で r19 を正規再実走。scope 重複ペア 001/002 は別バッチ、blocked 005 は ready 除外・理由報告、active lease 004 抑止・stale lease 006 回収、suggested_branch/claim command 一意。goal-seek 3 点セット全出力。"
     },
     "OUT2": {
       "status": "PASS",

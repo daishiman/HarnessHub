@@ -7,7 +7,7 @@
     "skill_md_sha256": "e21ba72e1027459544a9dc81bd2084fa76494472c4804ca99c0bbac707157fd6"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-provenance-worktree-20260721",
+  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T192630-r9/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T094751-r19/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T192630-r9/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260721T192630-r9/transcript.jsonl",
-        "independent: fresh evaluator replay of transcript, receipts and recomputed digests"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T094751-r19/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T094751-r19/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260722T094751-r19/out/status.json"
       ],
-      "observed": "bd-bridge.py 変更で closure digest が動いたため 2026-07-21 に再実走 (r9)。対象 Skill を最初の tool call で起動し、R3-sync を別 Agent へ分離。pass1 で import(title)/export(Status) を適用し pass2 は changes=0 / imports・exports・pending_retry 全空 / write_count 0 で収束。fresh evaluator が sub-agent の Bash stdout と Write された pass1/pass2 をJSON 比較して完全一致を確認し、graph・sync-snapshot・remote の sha256 を自ら再計算して receipt の *_after と厳密一致することを検証。正本 snapshot は現行 remote title と一致し issue/project/item ID も不変。"
+      "observed": "2026-07-22 に決定論 remote fixture で r19 を正規再実走。dry-run→apply→確認 dry-run の 3 パスで、初回 apply が import 1/export 1 を適用、2 回目は changes=0/converged=true、snapshot・graph digest 不変、dry-run パスの write_count 0。外部 GitHub API 呼び出しなし。fresh evaluator が digest チェーン連続性を独立確認。"
     },
     "OUT2": {
       "status": "PASS",

@@ -2,17 +2,21 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-requirements",
-    "skill_md_sha256": "3ce641ca34a5ef58c69014b8d5942f0490b116f95ff44ebd7e9b0f5c0e8d164c"
+    "skill_md_sha256": "8ec14bc49447c56bea83da092a9a97a67defdf8394222894444c9ee889323e16"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "run-elegant-review-subagent-team",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "independent-content-reviewer-20260722",
+  "reviewed_at": "2026-07-22",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1", "OUT2"],
+    "criteria_evaluated": [
+      "IN1",
+      "OUT1",
+      "OUT2"
+    ],
     "positive_feedback": [
       "C1 矛盾なし: 『実装コードは生成しない』(L72) が description・Purpose・手順・Criteria acceptance・Gotchas で一貫し、readiness 完了時だけ capability-build/task-graph build へ handoff する gate 条件と矛盾しない。",
       "C2 漏れなし: IN1+OUT1+OUT2 の 3 criteria を acceptance で全受入条件化し、三 gate (C11 report / C02 保存 readiness / validate-system-plan.py) の同一 digest 照合、incomplete/pending/fail/stale での missing_sections surface と handoff 保留 (C20) を漏れなく規定。",
@@ -24,5 +28,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "現 SKILL.md (sha256 3ce641ca...) を全文 read し 4 条件で genuine 再評価。①矛盾なし: 実装コード非生成・三 gate 全 PASS 時のみ handoff・exact-13 検証は外部 validator へ委譲、が description〜Gotchas で終始一貫。gh-bridge は補助入力に留め三 gate の代替にしない、も IN1 acceptance で明記。②漏れなし: IN1/OUT1/OUT2 を acceptance で網羅し goal-seek checklist/配線/hash 検証まで完備。③整合性: responsibilities R1/R2/R2b/R3 と本文 5 手順・criteria acceptance が齟齬なく対応。④依存整合: 参照 script/schema/reference/prompt/外部 validator の実在を確認済み。重大問題 0 件。PASS。"
+  "notes": "C04 SKILL.md 変更 (readiness 判定を validate-source-digest.py exit code へ係留する四 gate 化) を独立 reviewer が 4 条件で再評価。C1 四 gate (C11/C02/validate-source-digest/validate-system-plan) が description・完了条件・手順2・criteria・Gotchas で一貫し矛盾なし。C4 で新規 script_refs の validate-source-digest.py (--registered・exit0/2 fail-closed) が実装に接地していることを確認。重大 0 件で PASS。"
 }

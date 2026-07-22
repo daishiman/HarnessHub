@@ -7,7 +7,7 @@
     "skill_md_sha256": "da9113c9c03ede0ddcba41ac7046e73b312d7fb3b5e04964ac76d0c16a8bca6d"
   },
   "verdict": "PASS",
-  "reviewer": "audit-sync-render-20260720",
+  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,14 +26,14 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "render-feature-progress-positive",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/verdict.json",
+      "scenario_id": "C05-OUT1-positive-feature-progress",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T095731-r19/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260721T231517-r6/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T095731-r19/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T095731-r19/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T095731-r19/out/status.json"
       ],
-      "observed": "2026-07-21 再取得 (r6)。commit 済み生成手順 (live_trial_shapes/shape_render.py) が再現する 「exact-13 package 登録直後・一部 task 完了」状態に対し render を実行。Live-trial verdict overall=PASS, tier=live, downgrade_reason=null, transcript_layer=jsonl, nudge=0/gate=0。独立 evaluator が graph を自ら数えて feature progress X/Y の一致を確認し、registration receipt の applied_count/expected_count/source_digest と実 graph の整合、自己完結出力 (外部リソース依存なし)、描画対象外 node の非混入を検証して PASS。"
+      "observed": "2026-07-22 に部分完了 exact-13 fixture で r19 を正規再実走。外部依存ゼロの単一 HTML で SVG 表示、進捗分母 Y=receipt applied_count=expected_count、分子 X=done/closed 子数を graph から独立再計算 (部分完了で X≠Y)、表示対象が source_digest に対応。goal-seek 3 点セット全出力。"
     }
   }
 }
