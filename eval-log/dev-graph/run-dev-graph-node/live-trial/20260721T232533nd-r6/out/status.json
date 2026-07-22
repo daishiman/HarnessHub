@@ -1,1 +1,0 @@
-{"status": "PASS", "scenario": "node-mixed-artifacts-positive", "checks": {"five_canonical_paths": true, "stable_ids_on_update": true, "kind_path_agree": true, "no_feature_outside_c14": true, "c11_exit0": true}}
