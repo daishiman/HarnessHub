@@ -1,9 +1,10 @@
 name: dev-pipeline-lint
 
 # feat-dev-pipeline-improvement (qa-067) の 3 決定論検査を fail-closed で強制する。
-# lint は違反検出時に exit 2 で job を落とす。open-residue の beads 状態は
-# .beads/issues.jsonl (受動エクスポート) から解決し、--no-require-beads は使わない
-# (使うと OR-003/OR-004 が無効化される。無効化には本 yaml の可視 diff が要る)。
+# lint は違反検出時に exit 2 で job を落とす。CI checkout は Beads の Dolt DB を
+# 持たないため、open-residue は git 追跡成果物で完結する OR-001/OR-002 を強制する。
+# OR-003/OR-004 は Dolt DB があるローカル品質ゲートで `bd export` から評価する。
+# `.beads/issues.jsonl` は受動エクスポートであり、状態判定の正本には使わない。
 
 on:
   pull_request:
@@ -31,18 +32,7 @@ jobs:
         continue-on-error: false
 
       - name: "lint open residue (解決済み事象の md/graph/beads 3 表現の乖離検出)"
-        run: |
-          if [ -f .beads/issues.jsonl ]; then
-            python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . \
-              --beads-export .beads/issues.jsonl
-          else
-            # beads 受動エクスポートが無い CI では OR-001/OR-002 のみ強制する
-            # (git 追跡ファイルで完結する軸)。OR-003/OR-004 は beads_axis=unavailable として
-            # 未評価であることが JSON に記録される。--no-require-beads の使用は本 step の
-            # 可視 diff としてのみ許され、握り潰しにはならない。
-            python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . \
-              --no-require-beads
-          fi
+        run: python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . --no-require-beads
         continue-on-error: false
 
       - name: verify migration idempotency (再実行が差分 0 に収束する)

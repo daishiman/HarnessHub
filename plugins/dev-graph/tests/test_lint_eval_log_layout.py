@@ -74,6 +74,25 @@ def test_el_d03_oversize_blocks(tmp_path: Path) -> None:
     assert any(v["rule"] == "EL-003" for v in out["violations"])
 
 
+def test_el_d04_all_three_rules_are_reported(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    _add(root, "eval-log/stray.json", b"same-and-too-large")
+    _add(root, "eval-log/sub/copy.json", b"same-and-too-large")
+    code, out = _run(root, "--max-bytes", "4")
+    assert code == 2
+    assert {v["rule"] for v in out["violations"]} == {"EL-001", "EL-002", "EL-003"}
+
+
+def test_el_d05_three_way_duplicate_lists_both_peers(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    for rel in ("eval-log/top.json", "eval-log/a/x.json", "eval-log/b/y.json"):
+        _add(root, rel, b"identical")
+    code, out = _run(root)
+    assert code == 2
+    row = next(v for v in out["violations"] if v["rule"] == "EL-002" and v["path"] == "eval-log/top.json")
+    assert "eval-log/a/x.json" in row["detail"] and "eval-log/b/y.json" in row["detail"]
+
+
 # --- MUST_PASS ---
 
 def test_el_p01_clean_passes(tmp_path: Path) -> None:
@@ -83,6 +102,19 @@ def test_el_p01_clean_passes(tmp_path: Path) -> None:
     code, out = _run(root)
     assert code == 0
     assert out["violation_count"] == 0
+
+
+def test_el_p02_missing_allowlist_entry_is_reported_as_resolved(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    allowlist = root / "allow.json"
+    allowlist.write_text(json.dumps(["eval-log/old.json"]), encoding="utf-8")
+    proc = subprocess.run(
+        [sys.executable, str(SCRIPT), "--repo-root", str(root), "--allowlist", str(allowlist)],
+        capture_output=True, text=True, check=False,
+    )
+    out = json.loads(proc.stdout)
+    assert proc.returncode == 0
+    assert out["resolved_allowlist_entries"] == ["eval-log/old.json"]
 
 
 def test_el_p03_untracked_toplevel_ignored(tmp_path: Path) -> None:
@@ -123,6 +155,18 @@ def test_el_c01_real_repo_frozen_list_exists() -> None:
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     assert len(mod._FROZEN_RESIDUE) == 40
+
+
+def test_el_c02_allowlist_override_replaces_builtin(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    _add(root, "eval-log/custom.json", b"custom")
+    allowlist = root / "custom-allow.json"
+    allowlist.write_text(json.dumps(["eval-log/custom.json"]), encoding="utf-8")
+    proc = subprocess.run(
+        [sys.executable, str(SCRIPT), "--repo-root", str(root), "--allowlist", str(allowlist)],
+        capture_output=True, text=True, check=False,
+    )
+    assert proc.returncode == 0, proc.stdout
 
 
 def test_el_c03_real_repo_exit_zero() -> None:

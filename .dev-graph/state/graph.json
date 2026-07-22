@@ -1,5 +1,5 @@
 {
-  "graph_revision": 366,
+  "graph_revision": 380,
   "nodes": [
     {
       "acceptance": [
@@ -25274,6 +25274,14 @@
       "updated_at": "2026-07-22T04:16:31Z"
     },
     {
+      "acceptance": [
+        "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) が逐語一致で転記されている",
+        "現行 feature context sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である",
+        "P02 で確定すべき据置事項 (検査 script 入出力契約・handoff schema 後方互換方式・eval-log 再配置対象一覧・close-loop の bd-bridge 経由手順) が明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -25314,6 +25322,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P01 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25330,12 +25339,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "qa-067 で確定した開発管理パイプライン改善 8 要件と goal-spec の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) を machine-verifiable な要件ベースラインとして固定し、P02 以降の全 task が同一の合意事項を参照できる状態にする。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -25355,12 +25375,23 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:49:33.943491Z"
     },
     {
+      "acceptance": [
+        "design.md に lint-open-residue.py / lint-eval-log-layout.py / lint-handoff-disposition.py の入出力契約 (引数・exit code・検出条件・JSON 出力形状) が確定している",
+        "improvement-handoff schema の disposition (applied|deferred|rejected) と根拠 ref の必須化が、既存 21 ファイルとの後方互換方式 (遡及付与 migration) と併せて設計されている",
+        "spec-drift-guardian の C03/C04 verdict を close gate へ配線する設計 (対象: plugins/spec-drift-guardian の該当 hook/skill、verdict 未着時は proposal のみでの close を遮断する fail-closed 条件、improvement-handoff-elegant-verify.json findings 8 件への対応表) が確定している",
+        "eval-log 配置規約 (skill 名 prefix サブディレクトリ・1MB 超 gitignore・重複/変種遮断) と再配置対象一覧、tasks status 意味論、graph.json 分割トリガー、棚卸し GC 手順が設計されている",
+        "dev-graph 中核 handoff 3 ファイル (improvement-handoff-macro/beads/無印) 31 findings の差分監査手順 (現行実装との突合で applied/deferred/rejected を根拠付き判定する方式。94 findings 全件付与の内数として P08 が実行する) が設計されている",
+        "P01 の据置事項 4 点が全て確定し、未確定の持ち越しが 0 件である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -25403,6 +25434,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P02 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25419,12 +25451,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "qa-067 の 8 要件を実装可能な決定論検査・規約・schema へ設計する。lint-open-residue (解決済み事象の open 残置検出)、lint-eval-log-layout (配置規約検査)、improvement-handoff schema の disposition 拡張、spec-drift-guardian の C03/C04 verdict close-gate 配線、棚卸し GC 手順、tasks status 意味論、graph.json 分割トリガー記録の 7 設計を確定する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "docs/features/feat-dev-pipeline-improvement/design.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/design.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -25444,12 +25487,19 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:49:52.879339Z"
     },
     {
+      "acceptance": [
+        "design-review.md に 6 設計それぞれの整合検証結果 (choke-point / 単一 writer / sync authority / digest 不変 / fail-closed / 冪等) が verdict 付きで記録されている",
+        "不整合が検出された場合は P02 へ差し戻され、全 verdict PASS の場合のみ P04 へ進む判定が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -25492,6 +25542,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P03 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25508,12 +25559,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "P02 の 6 設計が既存パイプラインの不変条件 (bd-bridge choke-point、upsert-node/apply-spec-transition の単一 writer、sync の binding 別単一 authority、guard hook の fail-closed) を破壊しないことを独立視点でレビューし、実装着手可否を判定する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "docs/features/feat-dev-pipeline-improvement/design-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/design-review.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -25533,12 +25595,21 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:50:12.003588Z"
     },
     {
+      "acceptance": [
+        "test-plan.md に lint-open-residue / lint-eval-log-layout / lint-handoff-disposition の各 MUST_DETECT (悪性) / MUST_PASS (良性) ケースがテスト ID 付きで定義されている",
+        "spec-drift-guardian close-gate 配線の回帰テスト (verdict 未着 proposal-only close が遮断される MUST_BLOCK ケースと、verdict 付き close が通過する MUST_PASS ケース) がテスト ID 付きで定義されている",
+        "P08 冪等 migration の再実行差分 0 検証と disposition 遡及付与の全件性検証 (31 findings 差分監査行の存在検証を含む) がテスト ID 付きで定義されている",
+        "全テスト ID が P06 で実行可能な pytest 形式 (plugins/dev-graph/tests または plugins/spec-drift-guardian/tests 配下) として設計されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -25581,6 +25652,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P04 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25597,12 +25669,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "P05 で実装する lint script 3 本と P08 の冪等 migration に対する回帰テストを設計し、実行可能なテスト ID 一覧を確定する。悪性ケース (検出すべき違反) と良性ケース (通過すべき正常形) の両方を fixture で定義する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "docs/features/feat-dev-pipeline-improvement/test-plan.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/test-plan.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -25622,12 +25705,21 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:50:30.705989Z"
     },
     {
+      "acceptance": [
+        "lint script 3 本が P02 の入出力契約どおりに動作し、P04 の MUST_DETECT/MUST_PASS fixture を全件満たす",
+        "improvement-handoff.schema.json が disposition 必須の新形式と既存形式の判別 (schema_version) を持つ",
+        "spec-drift-guardian の C03/C04 verdict が P02 設計どおり close gate へ配線され、verdict 未着のまま proposal のみで close する経路が fail-closed で遮断される (回帰テスト付き)",
+        "eval-log/README.md に配置規約が明文化され、task template に status 意味論が追記され、CI workflow に lint 3 本が fail-closed で配線されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -25670,6 +25762,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P05 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25686,6 +25779,7 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "P02 設計と P04 テスト設計に従い、lint-open-residue.py / lint-eval-log-layout.py / lint-handoff-disposition.py、improvement-handoff.schema.json、eval-log/README.md 配置規約、task template の status 意味論追記、CI への lint 配線を実装する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
@@ -25702,6 +25796,26 @@
         ".dev-graph/templates/task.md",
         ".github/workflows/dev-pipeline-lint.yml",
         "plugins/spec-drift-guardian/"
+      ],
+      "scope_in": [
+        "plugins/dev-graph/scripts/lint-open-residue.py",
+        "plugins/dev-graph/scripts/lint-eval-log-layout.py",
+        "plugins/dev-graph/scripts/lint-handoff-disposition.py",
+        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+        "plugins/dev-graph/tests/test_lint_open_residue.py",
+        "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
+        "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
+        "eval-log/README.md",
+        ".dev-graph/templates/task.md",
+        ".github/workflows/dev-pipeline-lint.yml",
+        "plugins/spec-drift-guardian/"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -25721,12 +25835,19 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:50:49.109463Z"
     },
     {
+      "acceptance": [
+        "test-plan.md の全テスト ID が実行され、test-run-p06.json に実行コマンド・exit code・pass/fail 件数が生のまま記録されている",
+        "失敗 0 件で P07 へ進むか、失敗があれば P05 差し戻しが記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -25769,6 +25890,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P06 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25785,12 +25907,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "P04 で設計し P05 で実装した全テスト ID を実行し、生の実行結果 (pass/fail 件数・実行コマンド・exit code) を改変なしで記録する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "eval-log/dev-graph/pipeline-improvement/test-run-p06.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/pipeline-improvement/test-run-p06.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -25810,12 +25943,19 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:51:16.875214Z"
     },
     {
+      "acceptance": [
+        "acceptance-report.md に feature acceptance 7 件それぞれの充足判定 (根拠 evidence の path 付き) が記録されている",
+        "P08 完了後に再判定が必要な項目が明示され、未達項目の差し戻し先 phase が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -25858,6 +25998,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P07 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25874,12 +26015,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "feature の acceptance 7 件 (qa-067 の 8 要件に対応) と P06 実測結果を突合し、各 acceptance の充足/未達を判定する。未達は該当 phase への差し戻しとして記録する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "docs/features/feat-dev-pipeline-improvement/acceptance-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/acceptance-report.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -25899,12 +26051,22 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:51:36.022038Z"
     },
     {
+      "acceptance": [
+        "再配置後に lint-eval-log-layout.py が exit 0 になり、migration-receipt.json に移動一覧 (旧 path→新 path) と重複整理の記録が残る",
+        "94 findings 全件に disposition (applied|deferred|rejected) と根拠 ref が付与され、lint-handoff-disposition.py が exit 0 になる",
+        "そのうち dev-graph 中核 handoff 3 ファイル (improvement-handoff-macro/beads/無印) の 31 findings は、P02 設計の差分監査手順に従い現行実装 (plugins/dev-graph の該当 script/schema) と突合した根拠 ref 付きで applied/deferred/rejected が判定され、migration-receipt.json に 31 件分の監査行が残る (94 件全件付与の内数として実行)",
+        "deferred/rejected 以外で未実装の findings が beads 課題として起票され、migration の再実行が差分 0 に収束する",
+        "validate-evidence-refs.py が exit 0 のまま (再配置による dangling evidence_ref が 0 件) である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -25947,6 +26109,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P08 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25963,6 +26126,7 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "P05 で確定した配置規約に従い eval-log/ 直下の残置ファイルをサブディレクトリへ再配置し、バイト同一重複と反復変種を整理する。plugin-plans の improvement-handoff 21 ファイル 94 findings へ disposition を遡及付与し、未消化 findings を beads 課題へ起票する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
@@ -25971,6 +26135,18 @@
         "eval-log/",
         "plugin-plans/",
         "eval-log/dev-graph/pipeline-improvement/migration-receipt.json"
+      ],
+      "scope_in": [
+        "eval-log/",
+        "plugin-plans/",
+        "eval-log/dev-graph/pipeline-improvement/migration-receipt.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -25990,12 +26166,19 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:51:55.580433Z"
     },
     {
+      "acceptance": [
+        "qa-fail-closed-report.json に悪性ケース 3 系統以上の実測 (投入した違反・期待 exit 非 0・実測 exit code) が記録され、全件検出されている",
+        "検査への迂回経路 (lint 対象外 path への書込・schema_version 偽装) の探索結果が記録され、発見された迂回は P05 へ差し戻されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -26038,6 +26221,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P09 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -26054,12 +26238,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "新設 lint 3 本と close-loop 検査が、悪性ケース (規約違反ファイルの直下追加・disposition 欠落 handoff の新規作成・解決済み issue の open 残置) を実際に遮断することを一時 fixture で実測し、Goodhart 緑化 (検査を通すためだけの形式的修正) が起きていないことを検証する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -26079,12 +26274,19 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:52:14.327167Z"
     },
     {
+      "acceptance": [
+        "final-review.md に P01-P09 の成果物一覧・acceptance 充足状況・quality_constraints 6 件の適合判定が記録されている",
+        "未達 0 件で P11 へ進むか、残課題の差し戻し先または follow-up 起票が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -26127,6 +26329,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P10 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -26143,12 +26346,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "P01-P09 の成果物を横断し、baseline との乖離・acceptance の残未達・quality_constraints 違反の有無を最終確認して、P11 以降 (証跡固定・文書化・リリース) へ進む可否を判定する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "docs/features/feat-dev-pipeline-improvement/final-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/final-review.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -26168,12 +26382,19 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:52:33.115327Z"
     },
     {
+      "acceptance": [
+        "evidence-manifest.json に P06/P08/P09 の実測ログと P05 成果物の path・sha256・生成 phase が記録されている",
+        "manifest 記載の sha256 が実ファイルと全件一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -26216,6 +26437,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P11 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -26232,12 +26454,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "P06/P08/P09 の実測ログと主要成果物の sha256 を evidence manifest として固定し、後からの改変を検出可能にする。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -26257,12 +26490,19 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:52:51.970242Z"
     },
     {
+      "acceptance": [
+        "operations.md に棚卸し GC の周期・対象抽出コマンド・close-loop の 3 表現 (md/graph/beads) 同時クローズ手順が記録されている",
+        "手順が choke-point (bd-bridge) と単一 writer (upsert-node) を迂回しないことが明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -26305,6 +26545,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P12 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -26321,12 +26562,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "陳腐化文書の棚卸し GC (解決済み open issue・0-findings handoff の定期整理) と lifecycle close-loop の運用手順を文書化し、sync verb の運用に組み込む。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "docs/features/feat-dev-pipeline-improvement/operations.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/operations.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -26346,12 +26598,19 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:53:10.850845Z"
     },
     {
+      "acceptance": [
+        "全成果物の PR が main へ merge され、release-receipt.json に PR 番号・merge commit・CI 結果が記録されている",
+        "issue-bd-bridge-notes-passthrough-20260721 が md (status)・graph node (completion)・beads (close) の 3 表現で閉じられ、lint-open-residue.py が exit 0 になっている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -26394,6 +26653,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "P13 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
       "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -26410,12 +26670,23 @@
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
       "pull_request_linkages": [],
+      "purpose": "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "eval-log/dev-graph/pipeline-improvement/release-receipt.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/pipeline-improvement/release-receipt.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-22T04:16:31Z",
@@ -26435,10 +26706,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-22T12:53:29.470296Z"
     },
     {
       "acceptance": [
@@ -26572,12 +26843,16 @@
       "classification_confidence": 0.95,
       "classification_reason": "C06 hearing 監査 (c06-hearing-sync 2026-07-21) の medium finding (D7 遡及参照欠落) を追跡する issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-22T12:24:07Z",
+        "evidence_refs": [
+          "system-spec/spec-state.json#decisions/D7",
+          "system-spec/spec-state.json#qa_log/qa-068",
+          "system-spec/infrastructure.md#qa-068-対応セル-web"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-22T12:24:07Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -26641,7 +26916,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "system-spec",
         "hearing-audit",
@@ -26652,7 +26927,7 @@
       "template_version": "1.0.0",
       "title": "spec-state: D7 (環境構成決定) に qa_log への遡及参照が無く hearing 往復の中立性を独立検証できない",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T00:49:29Z"
+      "updated_at": "2026-07-22T12:24:07Z"
     },
     {
       "acceptance": [

@@ -1,3 +1,52 @@
+---
+graph_node_id: "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
+artifact_kind: "task"
+artifact_subtypes: []
+project_id: "feature-package-feat-dev-pipeline-improvement"
+domain: "documentation"
+tags: ["feat-dev-pipeline-improvement","macro-feature","dev-pipeline","documentation"]
+priority: null
+start_date: null
+target_date: null
+iteration: null
+title: "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計"
+owners: ["daishiman"]
+created_at: "2026-07-22T04:16:31Z"
+updated_at: "2026-07-22T12:49:52.879339Z"
+status: "active"
+depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P01"]
+related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
+resource_scope: ["docs/features/feat-dev-pipeline-improvement/design.md"]
+purpose: "qa-067 の 8 要件を実装可能な決定論検査・規約・schema へ設計する。lint-open-residue (解決済み事象の open 残置検出)、lint-eval-log-layout (配置規約検査)、improvement-handoff schema の disposition 拡張、spec-drift-guardian の C03/C04 verdict close-gate 配線、棚卸し GC 手順、tasks status 意味論、graph.json 分割トリガー記録の 7 設計を確定する。"
+goal: "P02 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す"
+scope_in: ["docs/features/feat-dev-pipeline-improvement/design.md"]
+scope_out: ["Hub プロダクト本体機能 (Web/API/DB) の変更","dev-graph への新 verb 追加","bd CLI 本体の変更","graph.json 分割の実装 (トリガー記録のみ)","本 phase の責務外の成果物生成 (他 phase の write scope への書込)"]
+acceptance: ["design.md に lint-open-residue.py / lint-eval-log-layout.py / lint-handoff-disposition.py の入出力契約 (引数・exit code・検出条件・JSON 出力形状) が確定している","improvement-handoff schema の disposition (applied|deferred|rejected) と根拠 ref の必須化が、既存 21 ファイルとの後方互換方式 (遡及付与 migration) と併せて設計されている","spec-drift-guardian の C03/C04 verdict を close gate へ配線する設計 (対象: plugins/spec-drift-guardian の該当 hook/skill、verdict 未着時は proposal のみでの close を遮断する fail-closed 条件、improvement-handoff-elegant-verify.json findings 8 件への対応表) が確定している","eval-log 配置規約 (skill 名 prefix サブディレクトリ・1MB 超 gitignore・重複/変種遮断) と再配置対象一覧、tasks status 意味論、graph.json 分割トリガー、棚卸し GC 手順が設計されている","dev-graph 中核 handoff 3 ファイル (improvement-handoff-macro/beads/無印) 31 findings の差分監査手順 (現行実装との突合で applied/deferred/rejected を根拠付き判定する方式。94 findings 全件付与の内数として P08 が実行する) が設計されている","P01 の据置事項 4 点が全て確定し、未確定の持ち越しが 0 件である"]
+architecture_refs: ["arch-harness-hub-dev-workflow"]
+parent_feature: "feat-dev-pipeline-improvement"
+feature_package_id: "feature-package/feat-dev-pipeline-improvement"
+phase_ref: "P02"
+file_path: "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md"
+template_id: "task"
+template_version: "1.1.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-22T04:16:31Z","origin_kind":"system-dev-planner","source_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","source_path":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-02-architecture.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+classification_confidence: 0.87
+classification_reason: "qa-067 の開発管理パイプライン改善 8 要件のうち P02 責務 (検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計) を実行する task"
+classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md","confidence":0.87}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections":[],"status":"complete"}
+---
+
 # System task overlay: 検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計
 
 ## Machine-readable registration fields
@@ -83,6 +132,15 @@ P01 の baseline が固定した要件に対し、既存実装 (guard-graph-sche
 
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .`
 - Required evidence: design.md に 7 設計と quality_constraints 6 件への適合根拠が記載されていること
+
+## Inner goal-seek execution loop
+
+- Methodology contract: `system-task-goal-seek/v1`
+- Goal: P02 の Phase acceptance と Verification and evidence をすべて満たす
+- Generic execution prompt: 目的・背景・前提条件・write scope・成果物・受け入れ条件を入力に、実装手段を固定せず最小の安全な変更を行う
+- Rubric: acceptance 全件、回帰テスト、必須証跡、write scope、依存整合がすべて PASS
+- Feedback loop: 実装→独立評価→finding を次の prompt へ反映→再実行し、`rubric verdict=PASS` まで反復する。上限到達時は fail-closed
+- P13 spec/architecture writeback: N/A: P13 owns writeback
 
 ## Rollout and rollback
 

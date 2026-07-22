@@ -1,3 +1,52 @@
+---
+graph_node_id: "SYS-DEV-PIPELINE-IMPROVEMENT-P13"
+artifact_kind: "task"
+artifact_subtypes: []
+project_id: "feature-package-feat-dev-pipeline-improvement"
+domain: "operations"
+tags: ["feat-dev-pipeline-improvement","macro-feature","dev-pipeline","operations"]
+priority: null
+start_date: null
+target_date: null
+iteration: null
+title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
+owners: ["daishiman"]
+created_at: "2026-07-22T04:16:31Z"
+updated_at: "2026-07-22T12:53:29.470296Z"
+status: "active"
+depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
+related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
+resource_scope: ["eval-log/dev-graph/pipeline-improvement/release-receipt.json"]
+purpose: "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。"
+goal: "P13 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す"
+scope_in: ["eval-log/dev-graph/pipeline-improvement/release-receipt.json"]
+scope_out: ["Hub プロダクト本体機能 (Web/API/DB) の変更","dev-graph への新 verb 追加","bd CLI 本体の変更","graph.json 分割の実装 (トリガー記録のみ)","本 phase の責務外の成果物生成 (他 phase の write scope への書込)"]
+acceptance: ["全成果物の PR が main へ merge され、release-receipt.json に PR 番号・merge commit・CI 結果が記録されている","issue-bd-bridge-notes-passthrough-20260721 が md (status)・graph node (completion)・beads (close) の 3 表現で閉じられ、lint-open-residue.py が exit 0 になっている"]
+architecture_refs: ["arch-harness-hub-dev-workflow"]
+parent_feature: "feat-dev-pipeline-improvement"
+feature_package_id: "feature-package/feat-dev-pipeline-improvement"
+phase_ref: "P13"
+file_path: "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md"
+template_id: "task"
+template_version: "1.1.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-22T04:16:31Z","origin_kind":"system-dev-planner","source_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","source_path":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-13-release-deploy.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+classification_confidence: 0.87
+classification_reason: "qa-067 の開発管理パイプライン改善 8 要件のうち P13 責務 (リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証) を実行する task"
+classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md","confidence":0.87}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections":[],"status":"complete"}
+---
+
 # System task overlay: リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証
 
 ## Machine-readable registration fields
@@ -83,6 +132,15 @@
 
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .`
 - Required evidence: release-receipt.json と main 上での lint 3 本 + 回帰テストの exit 0
+
+## Inner goal-seek execution loop
+
+- Methodology contract: `system-task-goal-seek/v1`
+- Goal: P13 の Phase acceptance と Verification and evidence をすべて満たす
+- Generic execution prompt: 目的・背景・前提条件・write scope・成果物・受け入れ条件を入力に、実装手段を固定せず最小の安全な変更を行う
+- Rubric: acceptance 全件、回帰テスト、必須証跡、write scope、依存整合がすべて PASS
+- Feedback loop: 実装→独立評価→finding を次の prompt へ反映→再実行し、`rubric verdict=PASS` まで反復する。上限到達時は fail-closed
+- P13 spec/architecture writeback: required: 本実行の結果・判断・改善点を system-spec/dev-workflow.md と architecture/harness-hub-dev-workflow.md へ反映し、次回の外側ループへ引き継ぐ
 
 ## Rollout and rollback
 

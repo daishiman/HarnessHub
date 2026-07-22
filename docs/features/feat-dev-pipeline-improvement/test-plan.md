@@ -20,8 +20,9 @@ architecture_refs: [arch-harness-hub-dev-workflow]
 | `plugins/dev-graph/tests/test_lint_open_residue.py` | `lint-open-residue.py` | design §2 |
 | `plugins/dev-graph/tests/test_lint_eval_log_layout.py` | `lint-eval-log-layout.py` | design §3 |
 | `plugins/dev-graph/tests/test_lint_handoff_disposition.py` | `lint-handoff-disposition.py` | design §4 |
-| `plugins/spec-drift-guardian/tests/test_guard_spec_drift_close_beads.py` | `guard-spec-drift-close.py` の beads 経路 | design §5 |
-| `plugins/dev-graph/tests/test_pipeline_improvement_migration.py` | P08 冪等 migration | design §3.5 / §4 / §8 |
+| `plugins/spec-drift-guardian/tests/test_guard_spec_drift_close.py` / `test_check_triage_complete.py` | GitHub/Beads close と C10 | design §5 |
+| `plugins/dev-graph/tests/test_migrate_pipeline_improvement.py` | P08 冪等 migration | design §3.5 / §4 / §8 |
+| `plugins/harness-creator/tests/test_emit_improvement_handoff.py` / `test_emit_handoff_schema_parity.py` | 新規 handoff emit の1.1.0強制 | design §4 |
 
 実行コマンド (P06):
 
@@ -29,8 +30,11 @@ architecture_refs: [arch-harness-hub-dev-workflow]
 python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py \
                  plugins/dev-graph/tests/test_lint_eval_log_layout.py \
                  plugins/dev-graph/tests/test_lint_handoff_disposition.py \
-                 plugins/dev-graph/tests/test_pipeline_improvement_migration.py \
-                 plugins/spec-drift-guardian/tests/test_guard_spec_drift_close_beads.py -q
+                 plugins/dev-graph/tests/test_migrate_pipeline_improvement.py \
+                 plugins/spec-drift-guardian/tests/test_guard_spec_drift_close.py \
+                 plugins/spec-drift-guardian/tests/test_check_triage_complete.py \
+                 plugins/harness-creator/tests/test_emit_improvement_handoff.py \
+                 plugins/harness-creator/tests/test_emit_handoff_schema_parity.py -q
 ```
 
 全テストは `tmp_path` 上に最小 fixture を構築し、実リポジトリを変更しない。
@@ -93,7 +97,7 @@ python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py \
 
 | test ID | 検証内容 |
 |---|---|
-| `EL-C01` | script 内の凍結 allowlist `_FROZEN_RESIDUE` が 41 件であり、全件が実リポジトリの `git ls-files eval-log` 直下に実在する |
+| `EL-C01` | script 内の凍結 allowlist `_FROZEN_RESIDUE` が 40 件であり、全件が実リポジトリの `git ls-files eval-log` 直下に実在する |
 | `EL-C02` | `--allowlist` でリストを差し替えたとき、差し替え後のリストのみが有効 (テスト用 override が本番リストへ混ざらない) |
 | `EL-C03` | 実リポジトリに対する実行が exit 0 (P08 migration 完了後の到達状態) |
 
@@ -125,9 +129,16 @@ python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py \
 
 | test ID | 検証内容 |
 |---|---|
-| `HD-C01` | `plugins/dev-graph/schemas/improvement-handoff.schema.json` が JSON Schema として妥当で、`1.0.0` / `1.1.0` の条件分岐 (`allOf` + `if/then`) を持つ |
+| `HD-C01` | `plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json` が JSON Schema として妥当で、`1.0.0` / `1.1.0` の条件分岐 (`allOf` + `if/then`) を持つ |
 | `HD-C02` | schema の `1.1.0` 分岐が `disposition` / `disposition_ref` / `disposition_recorded_at` を `required` に含む |
 | `HD-C03` | 既存 findings 本文キー (`id`/`severity`/`summary`/`recommendation`/`target_ref`) を schema が禁止していない (`digest-immutability`: 既存内容を保持できる) |
+
+### 3.4 emitter 契約
+
+| test ID | 検証内容 |
+|---|---|
+| `HD-E01` | 新規 emit の既定が1.1.0で、入力 disposition 3項目を保持し正本 schema に適合する |
+| `HD-E02` | 1.0.0指定、disposition欠落、非ISO時刻を emit 前に拒否する |
 
 ## 4. spec-drift-guardian close gate の beads 経路 (design §5)
 
@@ -173,8 +184,8 @@ python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py \
 
 | test ID | 検証内容 |
 |---|---|
-| `MG-A01` | migration 後、`plugin-plans/**/improvement-handoff*.json` 21 ファイルすべての `schema_version` が `1.1.0` |
-| `MG-A02` | 94 findings 全件に `disposition` / `disposition_ref` / `disposition_recorded_at` が存在する |
+| `MG-A01` | migration 後、fixture 1件を除く20ファイルすべての `schema_version` が `1.1.0` |
+| `MG-A02` | findings 94 + improvements 18 + clusters 11 = 123項目全件に disposition 3項目が存在する |
 | `MG-A03` | `migration-receipt.json` の `core_handoff_audit[]` が **31 行**あり、finding id が dev-graph 中核 3 ファイルの id 集合と完全一致する |
 | `MG-A04` | `core_handoff_audit[]` の各行が `finding_id` / `target_ref` / `verified_path` / `disposition` / `rationale` を持つ |
 | `MG-A05` | `disposition: "deferred"` の finding はすべて `disposition_ref` が `bd:` 形式 (design §8.1: 起票を伴わない deferred を認めない) |
@@ -193,13 +204,13 @@ python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py \
 |---|---|
 | AC-1 (open 残置検出 + bd-bridge issue の close) | `OR-D01`〜`OR-D06` / `OR-P01`〜`OR-P05` / `OR-C01`〜`OR-C04` |
 | AC-2 (eval-log 配置規約 + CI lint) | `EL-D01`〜`EL-D05` / `EL-P01`〜`EL-P05` / `EL-C01`〜`EL-C03` |
-| AC-3 (disposition 必須化 + 94 findings 付与) | `HD-D01`〜`HD-D07` / `HD-P01`〜`HD-P05` / `HD-C01`〜`HD-C03` / `MG-A01`〜`MG-A05` |
+| AC-3 (disposition 必須化 + 123項目付与) | `HD-D01`〜`HD-D07` / `HD-P01`〜`HD-P05` / `HD-C01`〜`HD-C03` / `HD-E01`〜`HD-E02` / `MG-A01`〜`MG-A05` |
 | AC-4 (task template status 意味論) | P07 で文書検証 (実行テストなし。`OR-P02` が意味論を間接検証) |
 | AC-5 (graph.json 分割トリガー) | P07 で文書検証 (実行テストなし) |
 | AC-6 (C03/C04 verdict close gate) | `SG-B01`〜`SG-B06` / `SG-P01`〜`SG-P05` / `SG-C01`〜`SG-C02` |
 | AC-7 (棚卸し GC 手順) | P12 で文書検証 (実行テストなし) |
 
-テスト ID 総数: **60** (実行可能 pytest)。文書検証のみ: AC-4 / AC-5 / AC-7。
+テスト ID 総数: **69** (実行可能 pytest。1関数で複数契約を検査する場合あり)。文書検証のみ: AC-4 / AC-5 / AC-7。
 
 ## 7. P05 実装対象との 1 対 1 対応
 
@@ -208,7 +219,8 @@ python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py \
 | `plugins/dev-graph/scripts/lint-open-residue.py` | `OR-*` (15) |
 | `plugins/dev-graph/scripts/lint-eval-log-layout.py` | `EL-*` (13) |
 | `plugins/dev-graph/scripts/lint-handoff-disposition.py` | `HD-D*` / `HD-P*` (12) |
-| `plugins/dev-graph/schemas/improvement-handoff.schema.json` | `HD-C*` (3) |
+| `plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json` | `HD-C*` (3) |
+| `plugins/harness-creator/scripts/emit-improvement-handoff.py` | `HD-E*` (2) |
 | `plugins/spec-drift-guardian/hooks/guard-spec-drift-close.py` | `SG-B*` / `SG-P*` (11) |
 | `.claude/settings.json` の hook 登録 | `SG-C*` (2) |
 | P08 migration script | `MG-*` (11) |

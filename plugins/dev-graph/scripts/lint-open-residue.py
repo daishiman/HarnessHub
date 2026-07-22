@@ -30,9 +30,11 @@
 
 beads 状態の解決順序:
   1. --beads-export FILE
-  2. .beads/issues.jsonl (beads の受動エクスポート)
-  3. PATH 上の bd による `bd export`
-  4. いずれも不可なら --require-beads (既定) で exit 2
+  2. PATH 上の bd による `bd export` (Dolt DB の live 状態)
+  3. いずれも不可なら --require-beads (既定) で exit 2
+
+`.beads/issues.jsonl` は通信・状態判定の正本ではないため暗黙には読みません。固定 snapshot
+を検査する場合だけ、利用者が `--beads-export` で明示します。
 
 保証境界: CI に beads (Dolt DB) が無い環境では --no-require-beads を用い、
 git 追跡ファイルのみで完結する OR-001 / OR-002 のみを強制する。この場合
@@ -104,20 +106,12 @@ def _read_frontmatter(path: Path) -> dict | None:
 
 def _resolve_beads(root: Path, explicit: Path | None) -> tuple[dict[str, str] | None, str]:
     """beads issue id -> status の写像を解決する。(写像, 由来) を返す。解決不能なら (None, 理由)。"""
-    candidates: list[tuple[Path, str]] = []
     if explicit is not None:
-        candidates.append((explicit, f"--beads-export {explicit}"))
-    else:
-        passive = root / ".beads" / "issues.jsonl"
-        if passive.is_file():
-            candidates.append((passive, ".beads/issues.jsonl"))
-
-    for path, source in candidates:
         try:
-            mapping = _parse_beads_jsonl(path)
+            mapping = _parse_beads_jsonl(explicit)
         except (OSError, json.JSONDecodeError) as exc:
-            raise LintError(f"beads export を読めません: {path}: {exc}") from exc
-        return mapping, source
+            raise LintError(f"beads export を読めません: {explicit}: {exc}") from exc
+        return mapping, f"--beads-export {explicit}"
 
     if explicit is None and shutil.which("bd"):
         with tempfile.TemporaryDirectory() as tmp:
@@ -216,17 +210,9 @@ def decide_exit_code(violations: list[dict], beads_axis: str, require_beads: boo
     # 違反が 1 件でもあれば遮断する (fail-closed-lint 制約)。
     if violations:
         return 2
-    # unavailable (OR-003/OR-004 未評価) でも 0 を返すのは意図的で、fail-closed の
-    # 本丸を「ここ」ではなく 2 つの外側の関門へ二重化しているため:
-    #   (1) main() の require_beads 関門 — beads を解決できず且つ --no-require-beads
-    #       を明示していなければ、この関数へ来る前に exit 2 で止まる。すなわち
-    #       ここへ到達する unavailable は「運用者が明示的に beads 評価を放棄した」
-    #       監査可能な選択であり、beads_axis="unavailable" として JSON に必ず残る。
-    #   (2) CI 配線 — dev-pipeline-lint.yml は --no-require-beads を渡さず
-    #       --beads-export で beads を供給する。よって CI では常に resolved になり、
-    #       OR-003/OR-004 の無効化には CI yaml の可視 diff が要る (allowlist と同じ
-    #       ratchet 思想)。状態を 0/2 に潰さず beads_axis へ分離記録することで、
-    #       「違反 0」と「未検査」を後段が区別できる。
+    # live Beads 軸を要求したのに解決できなければ、JSON 証跡を出した上で遮断する。
+    if beads_axis == "unavailable" and require_beads:
+        return 2
     return 0
 
 
@@ -262,7 +248,7 @@ def lint(
         scanned += 1
         for finding in _inspect(root, node, beads):
             # 既知残置 (baseline) は違反ではなく別枠へ。exit には寄与しない (shrink-only)。
-            if finding["graph_node_id"] in _BASELINE_RESIDUE:
+            if finding["rule"] == "OR-003" and finding["graph_node_id"] in _BASELINE_RESIDUE:
                 baselined.append(finding)
             else:
                 violations.append(finding)
@@ -304,14 +290,6 @@ def main(argv: list[str] | None = None) -> int:
         root = args.repo_root.resolve(strict=True)
         graph_path = args.graph or root / ".dev-graph" / "state" / "graph.json"
         beads, beads_source = _resolve_beads(root, args.beads_export)
-        if beads is None and args.require_beads:
-            print(
-                f"[{LINT_NAME}] FAIL: beads 状態を解決できません ({beads_source})。"
-                "確証不能のため fail-closed で遮断しました。"
-                "--beads-export を指定するか --no-require-beads を明示してください。",
-                file=sys.stderr,
-            )
-            return 2
         result = lint(
             root, graph_path, beads, beads_source,
             set(args.node_id) or None, args.require_beads,
@@ -333,11 +311,9 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
     elif result["beads_axis"] == "unavailable":
-        print(
-            f"[{LINT_NAME}] NOTE: beads 未解決のため OR-003/OR-004 は未評価です "
-            f"({result['beads_source']})",
-            file=sys.stderr,
-        )
+        level = "FAIL" if args.require_beads else "NOTE"
+        print(f"[{LINT_NAME}] {level}: beads 未解決のため OR-003/OR-004 は未評価です "
+              f"({result['beads_source']})", file=sys.stderr)
     return result["exit_code"]
 
 

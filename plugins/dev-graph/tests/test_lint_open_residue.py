@@ -74,6 +74,16 @@ def test_or_d01_status_mismatch(tmp_path: Path) -> None:
     assert code == 2 and any(v["rule"] == "OR-001" for v in out["violations"])
 
 
+def test_or_d02_completion_evidence_mismatch(tmp_path: Path) -> None:
+    nodes = [_node("issue-a", status="closed", ce_status="open")]
+    root, export = _repo(tmp_path, nodes, {"HarnessHub-x": "open"})
+    front = json.loads(json.dumps(nodes[0]))
+    front["completion_evidence"]["status"] = "done"
+    (root / nodes[0]["file_path"]).write_text(_fm(front), encoding="utf-8")
+    code, out = _run(root, export)
+    assert code == 2 and any(v["rule"] == "OR-002" for v in out["violations"])
+
+
 def test_or_d03_resolved_open_residue(tmp_path: Path) -> None:
     nodes = [_node("issue-a", status="closed", ce_status="open")]
     root, export = _repo(tmp_path, nodes, {"HarnessHub-x": "closed"})
@@ -92,13 +102,24 @@ def test_or_d05_beads_unavailable_fail_closed(tmp_path: Path) -> None:
     nodes = [_node("issue-a", status="closed", ce_status="done")]
     root, _ = _repo(tmp_path, nodes, {"HarnessHub-x": "closed"})
     # export を渡さず、.beads も bd も無い → require_beads (既定) で exit 2。
-    # この経路は JSON を出さず stderr に理由を出す (確証不能の fail-closed)。
     proc = subprocess.run(
         [sys.executable, str(SCRIPT), "--repo-root", str(root)],
         capture_output=True, text=True, check=False,
     )
     assert proc.returncode == 2
-    assert "fail-closed" in proc.stderr
+    out = json.loads(proc.stdout)
+    assert out["beads_axis"] == "unavailable" and out["exit_code"] == 2
+    assert "FAIL" in proc.stderr
+
+
+def test_or_d06_combined_status_and_residue_detection(tmp_path: Path) -> None:
+    nodes = [_node("issue-a", status="active", ce_status="open")]
+    root, export = _repo(tmp_path, nodes, {"HarnessHub-x": "closed"})
+    front = json.loads(json.dumps(nodes[0])); front["status"] = "closed"
+    (root / nodes[0]["file_path"]).write_text(_fm(front), encoding="utf-8")
+    code, out = _run(root, export)
+    assert code == 2
+    assert {v["rule"] for v in out["violations"]} == {"OR-001", "OR-003"}
 
 
 # --- MUST_PASS ---
@@ -118,6 +139,14 @@ def test_or_p02_closed_doc_inprogress_execution_not_violation(tmp_path: Path) ->
     assert code == 0, out["violations"]
 
 
+def test_or_p03_non_beads_node_is_not_scanned(tmp_path: Path) -> None:
+    node = _node("issue-a", status="closed", ce_status="open")
+    node["tracker_binding"] = "github"
+    root, export = _repo(tmp_path, [node], {"HarnessHub-x": "closed"})
+    code, out = _run(root, export)
+    assert code == 0 and out["scanned"] == 0
+
+
 def test_or_p04_no_require_beads(tmp_path: Path) -> None:
     nodes = [_node("issue-a", status="closed", ce_status="open")]
     root, _ = _repo(tmp_path, nodes, {"HarnessHub-x": "closed"})
@@ -135,7 +164,7 @@ def test_or_p05_not_applicable_settled(tmp_path: Path) -> None:
 
 # --- 契約 ---
 
-def test_or_c04_deterministic_across_node_order(tmp_path: Path) -> None:
+def test_or_c02_deterministic_across_node_order(tmp_path: Path) -> None:
     a = _node("issue-a", status="closed", ce_status="open", bd_id="HarnessHub-a")
     b = _node("issue-b", status="closed", ce_status="open", bd_id="HarnessHub-b")
     root1, e1 = _repo(tmp_path / "1", [a, b], {"HarnessHub-a": "closed", "HarnessHub-b": "closed"})
@@ -143,3 +172,21 @@ def test_or_c04_deterministic_across_node_order(tmp_path: Path) -> None:
     _, o1 = _run(root1, e1)
     _, o2 = _run(root2, e2)
     assert o1["violations"] == o2["violations"]
+
+
+def test_or_c04_repeated_stdout_is_byte_identical(tmp_path: Path) -> None:
+    nodes = [_node("issue-a", status="closed", ce_status="open")]
+    root, export = _repo(tmp_path, nodes, {"HarnessHub-x": "closed"})
+    args = [sys.executable, str(SCRIPT), "--repo-root", str(root), "--beads-export", str(export)]
+    first = subprocess.run(args, capture_output=True, check=False).stdout
+    second = subprocess.run(args, capture_output=True, check=False).stdout
+    assert first == second
+
+
+def test_or_c01_c03_common_shape_and_relative_paths(tmp_path: Path) -> None:
+    nodes = [_node("issue-a", status="closed", ce_status="open")]
+    root, export = _repo(tmp_path, nodes, {"HarnessHub-x": "closed"})
+    _, out = _run(root, export)
+    assert {"lint", "repo_root", "scanned", "violations", "violation_count", "exit_code"} <= set(out)
+    assert out["repo_root"] == "."
+    assert all(not Path(v["path"]).is_absolute() for v in out["violations"])

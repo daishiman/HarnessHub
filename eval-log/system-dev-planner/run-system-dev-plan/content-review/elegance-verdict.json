@@ -2,32 +2,33 @@
   "target": {
     "plugin": "system-dev-planner",
     "skill": "run-system-dev-plan",
-    "skill_md_sha256": "67553fbb7e136af0898587c0510a473088bbd4674f474d41680d23220c243898"
+    "skill_md_sha256": "f1c5c77eec2d1316e2824fd02d2ead81a7b5b7dcb75e067f0916aa8e150b86cc"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
   "reviewer": "assign-skill-design-evaluator (focused combined review, 4条件 in-context)",
-  "reviewed_at": "2026-07-20",
+  "reviewed_at": "2026-07-22T13:32:58Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["C1", "C2", "C3", "C4", "IN1", "IN2", "OUT1", "OUT2", "OUT3"],
+    "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "IN1 (script): `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/plans/generations/feature-package-<slug>/<generation>` を current pointer (.dev-graph/state/current/*.json) が指す現行世代の全 15 feature package に対して実行し全件 exit 0・violations 0 (DAG 非循環は forward-edge 検査、orphan 0 は cross-feature-or-missing-edge 検査、exact-13 は package/inventory/graph 三重計数で担保) を実測確認。旧 flat published dir (.dev-graph/plans/feature-package-*) は validator 強化 (184acbc) 前に promote された supersedes 済み旧世代のため現行検査では fail するが、新世代 receipt の supersedes chain が設計どおり旧世代を追跡している",
-      "IN2 (lint): scratch 環境 (git init + origin=github:daishiman/HarnessHub + config 複製) に feat-hub-foundation 現行世代の source 16 files を複製し pre-handoff manifest を再構成のうえ `build-system-handoff.py --repo-root <scratch> --staging .dev-graph/staging/pkg` を実行し exit 0 で handoff 生成、system-build-handoff.schema.json への独立 schema 検査 violations 0、生成物は原本世代の handoff と source_manifest.sha256_before_handoff (再構成 manifest 由来の期待差分) 以外 byte 同値、二回目実行も exit 0 で handoff sha256 完全一致 (byte-for-byte 冪等)、直後の validate-system-plan.py も exit 0",
-      "OUT1 (elegant-review): 既存 C1-C4 PASS 評価の主張 (Purpose & Output Contract / Gotchas 4項目 / Invariants との整合) を現 SKILL.md (sha256 67553fbb…) 全文と突合して妥当と再確認。1 run=1 parent_feature と follow-up feature candidate 返却規則で feature 境界を、C09 resolver 一元化と absolute/../symlink 拒否で repository boundary を保持。skill ディレクトリ全体 grep で UBM 固有物の混入 0 件 (唯一の 'UBM' 出現は OUT1 criterion 定義文自身)",
-      "OUT2 (evaluator): eval-log/system-dev-planner/readiness-*.json 11 件が status=complete (repository_id/system-spec probes 記録付き)、fork context の assign-system-dev-plan-evaluator による evaluator-findings-*.json 11 件が verdict PASS (C1..C4 各 evidence 付き・evaluated_digest 束縛)、かつ現行世代への validate 再実行で各 task の implementation_readiness=complete (not-ready 検査) を含め exit 0 を実測確認",
-      "OUT3 (live-trial): 実 feature-context 起点の end-to-end 産物として 15 feature package が goal-spec.json (R1)・exact-13 task specs/inventory/DAG (R2/R3)・atomic-promotion-receipt.json (same-filesystem-atomic-rename・quality_conditions 4 PASS)・dev-graph-registration-receipt.json・feature別 current pointer まで揃って staging→promotion 済みであることを確認し、二回目実行の構造不変は受入テスト (plugins/system-dev-planner/tests: test_rerun_is_byte_for_byte_idempotent / test_post_rename_failure_recovers_idempotently / test_feature_context_drift_promotes_new_immutable_generation_and_advances_feature_pointer を含む 60/60 PASS を `python3 -m pytest plugins/system-dev-planner/tests/ -q` で実行) と scratch 二回目実行の byte 同一で確認",
-      "追加された '## Purpose & Output Contract' の完了条件 (C12 検証 + fork evaluator C1..C4 同一 canonical digest PASS・C11 atomic promotion receipt・二回目実行で構造不変) が Invariants の publish ゲート (本文79) と feedback_contract OUT2/OUT3 の受入条件を同一の合流点として指しており矛盾がない",
-      "'## Gotchas' 4項目 (1 run=1 parent_feature/exact-13 逸脱禁止・lock は C13 単独 writer・containment 拒否規則・旧世代維持と handoff receipt 非自己発行) はすべて既存 Invariants/plan/Failure handling からの導出で新規範を導入していない",
-      "C11 世代管理強化 (canonical digest ごとの promotion・feature別 current pointer・source drift 時の supersedes 追跡・generation別 registration receipt) は Failure handling/Gotchas の『途中失敗時も published/current は旧世代を維持』と整合し、all-or-none apply/supersede の receipt 境界一意性も保たれている"
+      "外側ループ(purpose/background/goal を goal-spec に固定)と各 P01..P13 の内側ループ(portable 契約 system-task-goal-seek/v1)を明示分離した記述は qa-071 方法論の『外側/内側ループ・書き戻し』を skill 本文へ落とし込む再利用可能パターンで、同一 changeset の system-task-spec-template.md v1.1.0 『## Inner goal-seek execution loop』と R3-emit の 15 section 契約へ一貫写像されている(横展開候補)。",
+      "P13 の spec/architecture writeback を required として SKILL.md 本文・R3-emit 完了チェックリスト・template の三点に同時明記し、validate-system-plan.py の P13 writeback marker + negative test で機械検証まで閉じている設計は、書き戻し要件を単一 skill 内で portable に担保する良い設計判断。"
     ],
     "negative_feedback": [],
     "iteration": 1,
-    "iteration_limit": 2,
-    "hook_trigger": "stop-hook stale-skill review (skill_md_sha256 不一致検出)",
+    "iteration_limit": 3,
+    "hook_trigger": "Stop",
     "next_action": "none"
   },
-  "notes": "現 SKILL.md (sha256 67553fbb7e136af0898587c0510a473088bbd4674f474d41680d23220c243898) を全文 read し focused 4条件で検証した。2026-07-20 の独立 context 再評価で frontmatter feedback_contract の IN1/IN2/OUT1/OUT2/OUT3 を実コマンド実行と既存証跡の突合で個別検証し (各根拠は positive_feedback に記録)、全 PASS のため criteria_evaluated へ追加した。HEAD 差分は (a) '## Purpose & Output Contract' と '## Gotchas' の追加 (rubric findings BD-001/BD-002 の補修・既存本文からの導出のみ)、(b) C11 の generation-aware promotion 記述強化。C1 矛盾なし: 追加セクションと Invariants/plan/Failure handling の間に規範衝突なし。best-effort 非ゲートの plan-structure/spec-browser を publish ゲートへ持ち込まない構図も維持。C2 漏れなし: 入力 (feature-id + feature-context + digest 一致)・出力 (exact-13 specs/inventory/DAG/handoff/HTML)・完了条件を契約セクションが被覆し、init/plan/Failure handling の実体は無変更。C3 整合性: feedback_contract IN1/IN2/OUT1/OUT2/OUT3 は無変更のまま本文と対応 (完了条件の『二回目実行で構造不変』は OUT3 と一致)。C4 依存整合: 本文参照 script はすべて script_refs に実在し、C11 世代管理は同一 changeset の promote-system-plan.py / atomic-promotion-receipt.schema.json 改訂と対応。新規外部依存の導入なし。verification_profile=exhaustive 未指定のため 30思考法 run-elegant-review は実行せず focused 経路 (1 context・再評価なしで PASS)。"
+  "notes": "現行 SKILL.md (sha256 f1c5c77eec2d1316e2824fd02d2ead81a7b5b7dcb75e067f0916aa8e150b86cc) を全文 read し focused 4条件で検証した incremental verdict。verification_profile=exhaustive 未指定のため 30思考法 run-elegant-review は起動していない(focused 1 context・findings 0 で再評価なし)。前回 verdict (2026-07-20, sha 67553fbb) からの HEAD 差分は (a) SKILL.md `## plan` へ外側/内側ループと P13 writeback を記す1段落追加、(b) prompts/R3-emit.md の 14→15 section 更新と goal-seek/writeback チェック項目追加であり、いずれも documentation 追加で script/flow の意味論を変えない。C1 矛盾なし: 追加した『反復上限で PASS 未達なら fail-closed 停止』は Failure handling の goal_seek.max_loops=5 と、内側ループ記述は exact-13 invariant(1 run=1 parent_feature・exact 13 tasks)・二回目実行の構造不変(OUT3)と衝突しない。C2 漏れなし: 入力(feature-id+context+digest 一致)・出力(exact-13/inventory/DAG/handoff/HTML)・完了条件は Purpose & Output Contract と plan/Invariants が被覆し、変更は section を 14→15 に拡張しただけで削除なし。R3-emit の残存『14』は全て『14件目のタスク禁止』の意で section 数と無関係(実 grep 確認)。C3 整合性: feedback_contract IN1/IN2/OUT1/OUT2/OUT3 は無変更のまま本文と対応し、新記述は template v1.1.0『標準15 section』と R3-emit 完了チェックリストへ一貫投影。C4 依存整合: 本文参照 script は全て script_refs に実在し、新 methodology 契約 system-task-goal-seek/v1 は同一 changeset の template と validate-system-plan.py が受けており未配線の外部依存を導入しない。runtime 束縛: 本 delta は script/flow を変えないため、IN1/IN2(validate-system-plan / build-system-handoff)と OUT2/OUT3(evaluator/live-trial)の実測 runtime 証跡は 2026-07-20 verdict のものが継続有効。加えて本 changeset の goal-seek/P13 writeback marker は plugins/system-dev-planner/tests/test_runtime.py が束縛し、直近の回帰実行(plugins/system-dev-planner/tests 全 PASS・repo 全体 2414 passed の一部)で PASS を実測。rubric 側は別 verdict で score 100/findings 0。"
 }

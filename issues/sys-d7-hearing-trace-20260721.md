@@ -12,8 +12,8 @@ iteration: null
 title: "spec-state: D7 (環境構成決定) に qa_log への遡及参照が無く hearing 往復の中立性を独立検証できない"
 owners: ["daishiman"]
 created_at: "2026-07-21T18:30:00Z"
-updated_at: "2026-07-22T00:49:29Z"
-status: "draft"
+updated_at: "2026-07-22T12:24:07Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","feat-dev-pipeline-improvement"]
 resource_scope: ["system-spec/spec-state.json"]
@@ -43,18 +43,22 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-22T12:24:07Z","evidence_refs":["system-spec/spec-state.json#decisions/D7","system-spec/spec-state.json#qa_log/qa-068","system-spec/infrastructure.md#qa-068-対応セル-web"],"policy":"manual","reconciled_at":"2026-07-22T12:24:07Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-21T18:30:00Z","missing_sections":[],"status":"complete"}
 ---
 
 # 概要
 
-C06 (system-spec-hearing-auditor) の 2026-07-21 監査で、decisions 配列の D7 (環境構成: 常設 staging 可否、confirmed_at=2026-07-21) が qa_log への遡及参照を持たないことが medium finding として検出された。
+C06 (system-spec-hearing-auditor) の 2026-07-21 監査で検出された、D7 の質疑証跡への遡及参照欠落を追跡した issue。
 
-## 背景と問題
+## 解決内容
 
-D5 (質疑証跡: qa-028)・D6 (質疑証跡: qa-029) と異なり、D7 の user_decision.note には対応する qa id の記録が無く、AskUserQuestion 往復の逐語記録が qa_log に存在しない。このため決定プロセスの中立性を独立監査で検証できない。
+- D7 の確定内容 `ephemeral-preview-only` と過去の決定履歴は変更していない。
+- D7 の `user_decision.note` へ、既存かつ実在する質疑証跡 `qa-068` を elicit writer の `set-decision` 経由で追記した。
+- `qa-068` は D7 と qa-064 の環境構成矛盾を質問・回答として保持し、`system-spec/infrastructure.md` にも同じ対応セルとして compile 済みである。
 
-## 対応方針
+## 検証
 
-次回 spec 改訂時に、D7 の決定往復 (質問・選択肢・ユーザー回答) を qa として elicit writer 経由で追記登録し、D7 の user_decision.note へ質疑証跡 id を記録する。決定内容 (ephemeral-preview-only) 自体は確定済みであり変更しない。
+- `jq -e '.qa_log[] | select(.id=="qa-068")' system-spec/spec-state.json`
+- `jq -e '.decisions[] | select(.id=="D7" and (.user_decision.note | contains("qa-068")))' system-spec/spec-state.json`
+- system-spec compile が 11 文書を正常生成し、D7 の確定値を維持した。

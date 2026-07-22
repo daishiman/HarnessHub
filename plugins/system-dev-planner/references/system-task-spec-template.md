@@ -1,6 +1,6 @@
 <!--
 正本: system-dev-planner (生成器) 側テンプレート。
-template_version: 1.0.0
+template_version: 1.1.0
 `plugin-plans/dev-graph/templates/system-task-spec.md` (draft) は現状独立ファイルであり、
 P08/P12 で本正本への pointer 化予定。それまでフィールド名・節構成は非後退とし
 draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (goal-spec C5)。
@@ -87,6 +87,15 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 - Automated commands: <commands>
 - Required evidence: <paths>
 
+## Inner goal-seek execution loop
+
+- Methodology contract: `system-task-goal-seek/v1`
+- Goal: <このtask単体で達成する検証可能な状態>
+- Generic execution prompt: <実装手段を固定せず、目的・背景・制約・成果物を渡すprompt>
+- Rubric: <PASS条件を列挙。最低限、受け入れ条件・回帰・証跡・scopeを含む>
+- Feedback loop: <実装→独立評価→findingをpromptへ反映→再実行し、rubric verdict=PASSまで反復。上限到達時はfail-closed>
+- P13 spec/architecture writeback: <P13はrequired: execution results, decisions, and improvement findingsをsystem specとarchitectureへ反映。P01..P12はN/A: P13 owns writeback>
+
 ## Rollout and rollback
 
 - Rollout: <steps/flags>
@@ -109,7 +118,7 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 
 - runtime outputは本テンプレートを使う実行task spec 13件だけで構成し、別の13 lifecycle文書や14件目のcanonical taskを生成しない。正本=`references/feature-execution-package-contract.md`。
 - 上記全 section が placeholder (`<...>`) のまま残っていないこと。
-- 標準14 section (最低限 `Machine-readable registration fields`/`前提条件`/`成果物`/`Tracker publication and completion`/`Branch and worktree execution`/`Verification and evidence`/`Handoff` の7 sectionを含む) は必須充足とし、空・重複・TODO・未解決 `<...>` を禁止する。1件でも残る場合、`validate-system-plan.py` (system-dev-planner C12) が promotion 前に fail-closed で拒否する。C08 は upstream の confirmed system-spec と completeness evaluation を検査し、task spec 本文の検査は C12 が所有する。
+- 標準15 section (最低限 `Machine-readable registration fields`/`前提条件`/`成果物`/`Tracker publication and completion`/`Branch and worktree execution`/`Verification and evidence`/`Inner goal-seek execution loop`/`Handoff` の8 sectionを含む) は必須充足とし、空・重複・TODO・未解決 `<...>` を禁止する。1件でも残る場合、`validate-system-plan.py` (system-dev-planner C12) が promotion 前に fail-closed で拒否する。C08 は upstream の confirmed system-spec と completeness evaluation を検査し、task spec 本文の検査は C12 が所有する。
 - `Workstream applicability` は該当しない workstream を `N/A: reason` で明示し、空欄のまま省略しない (適用外の理由を機械可読に残す)。
 - 全pathはcaller repository相対でC09 containment済みであること。`/absolute`、drive-letter、`..`、root外symlinkはincomplete。
 - task spec本文かruntime時に読むgoal/manifest/validator/evidenceはpackage-relative pathまたはcanonical published pathで参照する。C11のatomic rename後に消滅する`.dev-graph/staging`参照は禁止し、C12がpromotion前にfail-closedで拒否する。

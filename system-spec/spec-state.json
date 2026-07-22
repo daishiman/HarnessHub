@@ -2484,7 +2484,7 @@
       "user_decision": {
         "option_id": "ephemeral-preview-only",
         "confirmed_at": "2026-07-21T08:00:00+09:00",
-        "note": "AskUserQuestion で「qa-038 を正とする (常設 staging なし)」を選択 (2026-07-21)。feat-hub-foundation P03 指摘 R-01 の上位エスカレーションに対する確定。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定した。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12"
+        "note": "AskUserQuestion で「qa-038 を正とする (常設 staging なし)」を選択 (2026-07-21)。feat-hub-foundation P03 指摘 R-01 の上位エスカレーションに対する確定。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定した。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12。質疑証跡: qa-068"
       }
     }
   ],

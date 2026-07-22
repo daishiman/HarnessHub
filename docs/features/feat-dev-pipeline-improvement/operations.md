@@ -25,8 +25,8 @@ python3 plugins/dev-graph/scripts/upsert-node.py --repo-root . \
   --input eval-log/dev-graph/pipeline-improvement/<node>-close.json
 
 # 3) 残置解消を検査 (exit 0 で close-loop 完了)
-python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . \
-  --beads-export .beads/issues.jsonl
+# Dolt DB の live 状態を bd export 経由で自動取得する
+python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root .
 ```
 
 ## 2. 棚卸し GC (sync 運用に毎回組込み)
@@ -44,4 +44,8 @@ python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . \
 
 ## 3. CI ゲート
 
-`.github/workflows/dev-pipeline-lint.yml` が push/PR で 3 lint を fail-closed 実行し、`migrate-pipeline-improvement.py --dry-run` の差分 0 収束を検証する。`--no-require-beads` の使用は yaml の可視 diff としてのみ許され、握り潰しにはならない。
+`.github/workflows/dev-pipeline-lint.yml` が push/PR で 3 lint を fail-closed 実行し、`migrate-pipeline-improvement.py --dry-run` の差分 0 収束を検証する。CI checkout は Dolt DB を持たないため open-residue の OR-001/OR-002 を `--no-require-beads` で強制し、Beads 軸の未評価を JSON に残す。ローカル gate は option 無しで live `bd export` を必須化する。`.beads/issues.jsonl` は受動エクスポートであり正本として使わない。
+
+## 4. P13 の仕様書・アーキテクチャ書き戻し
+
+P13 は qa-071 を実装する `system-task-goal-seek/v1` に従い、実行結果・判断・改善点を `system-spec/dev-workflow.md` と `architecture/harness-hub-dev-workflow.md` へ writer/正規生成経路で反映する。rubric verdict が PASS になる前、または commit/push/PR が未実行の時点では release receipt と epic を完了扱いにしない。

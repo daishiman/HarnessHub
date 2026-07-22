@@ -1,3 +1,52 @@
+---
+graph_node_id: "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+artifact_kind: "task"
+artifact_subtypes: []
+project_id: "feature-package-feat-dev-pipeline-improvement"
+domain: "quality"
+tags: ["feat-dev-pipeline-improvement","macro-feature","dev-pipeline","quality"]
+priority: null
+start_date: null
+target_date: null
+iteration: null
+title: "受入判定 — 8 acceptance の突合と未達の差し戻し"
+owners: ["daishiman"]
+created_at: "2026-07-22T04:16:31Z"
+updated_at: "2026-07-22T12:51:36.022038Z"
+status: "active"
+depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P06"]
+related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
+resource_scope: ["docs/features/feat-dev-pipeline-improvement/acceptance-report.md"]
+purpose: "feature の acceptance 7 件 (qa-067 の 8 要件に対応) と P06 実測結果を突合し、各 acceptance の充足/未達を判定する。未達は該当 phase への差し戻しとして記録する。"
+goal: "P07 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す"
+scope_in: ["docs/features/feat-dev-pipeline-improvement/acceptance-report.md"]
+scope_out: ["Hub プロダクト本体機能 (Web/API/DB) の変更","dev-graph への新 verb 追加","bd CLI 本体の変更","graph.json 分割の実装 (トリガー記録のみ)","本 phase の責務外の成果物生成 (他 phase の write scope への書込)"]
+acceptance: ["acceptance-report.md に feature acceptance 7 件それぞれの充足判定 (根拠 evidence の path 付き) が記録されている","P08 完了後に再判定が必要な項目が明示され、未達項目の差し戻し先 phase が記録されている"]
+architecture_refs: ["arch-harness-hub-dev-workflow"]
+parent_feature: "feat-dev-pipeline-improvement"
+feature_package_id: "feature-package/feat-dev-pipeline-improvement"
+phase_ref: "P07"
+file_path: "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md"
+template_id: "task"
+template_version: "1.1.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-22T04:16:31Z","origin_kind":"system-dev-planner","source_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","source_path":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-07-acceptance.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+classification_confidence: 0.87
+classification_reason: "qa-067 の開発管理パイプライン改善 8 要件のうち P07 責務 (受入判定 — 8 acceptance の突合と未達の差し戻し) を実行する task"
+classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md","confidence":0.87}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections":[],"status":"complete"}
+---
+
 # System task overlay: 受入判定 — 8 acceptance の突合と未達の差し戻し
 
 ## Machine-readable registration fields
@@ -83,6 +132,15 @@ feature の acceptance 7 件 (qa-067 の 8 要件に対応) と P06 実測結果
 
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .`
 - Required evidence: acceptance-report.md の各判定が P06 実測または実在ファイルへ遡れること
+
+## Inner goal-seek execution loop
+
+- Methodology contract: `system-task-goal-seek/v1`
+- Goal: P07 の Phase acceptance と Verification and evidence をすべて満たす
+- Generic execution prompt: 目的・背景・前提条件・write scope・成果物・受け入れ条件を入力に、実装手段を固定せず最小の安全な変更を行う
+- Rubric: acceptance 全件、回帰テスト、必須証跡、write scope、依存整合がすべて PASS
+- Feedback loop: 実装→独立評価→finding を次の prompt へ反映→再実行し、`rubric verdict=PASS` まで反復する。上限到達時は fail-closed
+- P13 spec/architecture writeback: N/A: P13 owns writeback
 
 ## Rollout and rollback
 

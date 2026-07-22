@@ -15,18 +15,54 @@
       "blocked": true
     },
     {
-      "case": "eval-log 直下新規ファイル追加",
+      "case": "handoff emitter の旧1.0.0指定または未triage入力",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "blocked": true
+    },
+    {
+      "case": "eval-log 直下新規・重複・上限超過の同時投入",
       "expected_exit": 2,
       "actual_exit": 2,
       "blocked": true
     },
     {
-      "case": "open-residue beads解決不能(既定require)",
+      "case": "open-residue Beads解決不能(既定require)",
       "expected_exit": 2,
       "actual_exit": 2,
+      "blocked": true
+    },
+    {
+      "case": "spec-drift proposal-onlyでbd close/bridge/update close",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "blocked": true
+    },
+    {
+      "case": "spec-drift Beads idが変数で解決不能",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "blocked": true
+    },
+    {
+      "case": "C10 triage_verdict.agree=false",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "blocked": true
+    },
+    {
+      "case": "system taskのinner goal-seek marker欠落",
+      "expected_status": "fail",
+      "actual_status": "fail",
+      "blocked": true
+    },
+    {
+      "case": "P13 spec/architecture writeback marker欠落",
+      "expected_status": "fail",
+      "actual_status": "fail",
       "blocked": true
     }
   ],
   "all_blocked": true,
-  "recorded_at": "2026-07-22T00:00:00Z"
+  "recorded_at": "2026-07-22T12:34:00Z"
 }

@@ -92,6 +92,8 @@ missing config keys/directories だけを作成し、既存値・docs/specs/task
 
 実行時は未充足 gate を順に解消する動的計画を組み、次の成果状態をすべて満たすまで反復する。
 
+実装を始める前に、外側ループの `purpose`（なぜ行うか）/`background`（どの経緯・制約か）/`goal`（何をもって完了か）を goal-spec に固定する。各 P01..P13 は qa-071 を実装する portable 契約 `system-task-goal-seek/v1` の内側ループとして、汎用実行 prompt・task goal・rubric・前周の feedback を入力に実行し、独立評価の `rubric verdict=PASS` まで修正と再評価を反復する。反復上限で PASS に届かなければ fail-closed で停止する。P13 は実行結果・判断・改善点を確定 system spec と architecture へ書き戻し、次回の外側ループへ引き継ぐ。
+
 - C09 repo context と feature identity/context digest が確定している。
 - C08 が system-spec index/requirements/architecture graph を `complete` と判定している。
 - C13 が repository_id/run_id/session_owner/expires_at と feature id/digest を束縛した staging lock を atomic acquire し、各反復で heartbeat renew している。

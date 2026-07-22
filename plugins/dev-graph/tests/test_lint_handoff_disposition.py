@@ -9,6 +9,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "lint-handoff-disposition.py"
 GLOB = "plugin-plans/**/improvement-handoff*.json"
 
@@ -49,6 +51,12 @@ def _handoff(findings, **over) -> dict:
 def test_hd_d01_schema_1_0_0(tmp_path: Path) -> None:
     _write(tmp_path, "plugin-plans/a/improvement-handoff.json",
            {"schema_version": "1.0.0", "findings": [{"id": "x", "severity": "low", "summary": "s"}]})
+    code, out = _run(tmp_path)
+    assert code == 2 and any(v["rule"] == "HD-001" for v in out["violations"])
+
+
+def test_hd_d02_missing_schema_version(tmp_path: Path) -> None:
+    _write(tmp_path, "plugin-plans/a/improvement-handoff.json", {"findings": [_finding()]})
     code, out = _run(tmp_path)
     assert code == 2 and any(v["rule"] == "HD-001" for v in out["violations"])
 
@@ -120,6 +128,14 @@ def test_hd_p03_empty_findings_ok(tmp_path: Path) -> None:
     assert code == 0
 
 
+def test_hd_p04_path_anchor_checks_path_part(tmp_path: Path) -> None:
+    (tmp_path / "real.md").write_text("# Anchor\n", encoding="utf-8")
+    _write(tmp_path, "plugin-plans/a/improvement-handoff.json",
+           _handoff([_finding(disposition_ref="real.md#anchor")]))
+    code, out = _run(tmp_path)
+    assert code == 0, out
+
+
 def test_hd_fixture_excluded(tmp_path: Path) -> None:
     # /fixtures/ 配下は検査対象外
     _write(tmp_path, "plugin-plans/finish/x/fixtures/improvement-handoff.json",
@@ -136,3 +152,19 @@ def test_hd_p05_real_repo_exit_zero() -> None:
         capture_output=True, text=True, check=False,
     )
     assert proc.returncode == 0, proc.stdout[-2000:]
+
+
+def test_hd_c01_c02_c03_canonical_schema_contract() -> None:
+    repo = Path(__file__).resolve().parents[3]
+    path = repo / "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json"
+    schema = json.loads(path.read_text(encoding="utf-8"))
+    branch = next(item for item in schema["allOf"] if item.get("if", {}).get("properties", {}).get("schema_version", {}).get("const") == "1.1.0")
+    required = set(branch["then"]["properties"]["findings"]["items"]["required"])
+    assert {"disposition", "disposition_ref", "disposition_recorded_at"} <= required
+    properties = set(schema["properties"]["findings"]["items"]["properties"])
+    assert {"id", "severity", "summary", "recommendation", "target_ref"} <= properties
+    try:
+        import jsonschema
+    except ImportError:
+        pytest.skip("jsonschema is not installed")
+    jsonschema.Draft7Validator.check_schema(schema)

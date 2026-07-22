@@ -1,19 +1,23 @@
 {
   "phase": "P06",
   "kind": "test-run",
-  "command": "python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py plugins/dev-graph/tests/test_lint_eval_log_layout.py plugins/dev-graph/tests/test_lint_handoff_disposition.py plugins/dev-graph/tests/test_migrate_pipeline_improvement.py tests/scripts-root/test_root__lint_doc_line_limit.py tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py tests/scripts-root/test_root__lint_portability_knowledge_optin.py plugins/harness-creator/tests/test_emit_handoff_schema_parity.py -q",
+  "command": "python3 -m pytest -q plugins/dev-graph/tests/test_lint_open_residue.py plugins/dev-graph/tests/test_lint_eval_log_layout.py plugins/dev-graph/tests/test_lint_handoff_disposition.py plugins/dev-graph/tests/test_migrate_pipeline_improvement.py plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py plugins/spec-drift-guardian/tests/test_guard_spec_drift_close.py plugins/spec-drift-guardian/tests/test_check_triage_complete.py plugins/harness-creator/tests/test_emit_improvement_handoff.py plugins/harness-creator/tests/test_emit_handoff_schema_parity.py plugins/system-dev-planner/tests/test_runtime.py plugins/system-spec-harness/tests tests/scripts-root/test_root__lint_doc_line_limit.py tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py tests/scripts-root/test_root__lint_portability_knowledge_optin.py",
   "result": {
-    "passed": 98,
+    "passed": 425,
     "failed": 0,
-    "exit_code": 0
+    "exit_code": 0,
+    "duration_seconds": 70.0
   },
   "lint_exit_codes": {
-    "lint-open-residue": 0,
+    "lint-open-residue-live-beads": 0,
     "lint-eval-log-layout": 0,
     "lint-handoff-disposition": 0,
+    "migration-idempotency": 0,
     "lint-doc-line-limit": 0,
     "lint-mechanism-knowledge-boundary": 0,
-    "lint-portability-knowledge-optin": 0
+    "lint-portability-knowledge-optin": 0,
+    "build-claude-settings-check": 0,
+    "py-compile": 0
   },
-  "recorded_at": "2026-07-22T00:00:00Z"
+  "recorded_at": "2026-07-22T13:00:15Z"
 }

@@ -76,13 +76,9 @@ KNOWLEDGE_TOKEN_RES = [
 # として exempt する (argparse help=/description= 等)。
 DOC_KWARGS = {"help", "description", "epilog", "usage", "metavar"}
 
-# qa-070 既存混入 baseline (発見済み・beads 段階解消対象。fail させず可視化のみ)。
-# (repo 相対 posix path, kind, token) で照合し行番号ドリフトに頑健にする。縮小のみ許す。
-KNOWN_EXISTING = {
-    # 一回限りの移行 script が receipt へ自 feature id をラベルとして焼き込む既存箇所。
-    ("plugins/dev-graph/scripts/migrate-pipeline-improvement.py",
-     "node-id", "feat-dev-pipeline-improvement"),
-}
+# 既存混入 baseline。(repo 相対 posix path, kind, token) で照合する shrink-only 集合。
+# qa-070 導入時の唯一の既知項目は portable な script 自己名から導出する形へ移行済み。
+KNOWN_EXISTING: set[tuple[str, str, str]] = set()
 
 
 def find_knowledge_literals(source: str) -> list[tuple[int, str, str]]:

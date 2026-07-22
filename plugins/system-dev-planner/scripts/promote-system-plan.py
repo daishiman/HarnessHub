@@ -341,7 +341,7 @@ def _registration_nodes(*, inventory: dict, package: dict, destination_rel: str,
             "depends_on": task["depends_on"], "related_nodes": task["related_nodes"],
             "resource_scope": task["write_scope"], "parent_feature": package["parent_feature"],
             "feature_package_id": package["feature_package_id"], "phase_ref": task["phase_ref"],
-            "file_path": file_path, "template_id": "task", "template_version": "1.0.0",
+            "file_path": file_path, "template_id": "task", "template_version": "1.1.0",
             "confirmation_status": "confirmed", "evaluation_status": "pass",
             "confirmation_evidence": {
                 "evaluator": "system-dev-plan-evaluator", "evidence_ref": findings_rel,

@@ -119,12 +119,9 @@ def test_syntax_error_source_returns_empty():
     assert MOD.find_knowledge_literals("def (: broken\n") == []
 
 
-# ── lint(): known-existing baseline は violation でなく note ────────────────
-def test_known_existing_is_note_not_violation(tmp_path):
-    # baseline に載る (path, kind, token) は note へ回り violation にならない。
-    entry = next(iter(MOD.KNOWN_EXISTING))
-    rel, kind, token = entry
-    assert kind and token and rel.endswith(".py")
+# ── lint(): baseline は解消後に空へ収束 ───────────────────────────────────
+def test_known_existing_baseline_is_empty():
+    assert MOD.KNOWN_EXISTING == set()
 
 
 # ── 実リポジトリ契約 (exit 0) ──────────────────────────────────────────────
