@@ -18,6 +18,13 @@ advisory である理由:
 
 正式採用 (ブロッキング化) は entry_points スキーマ定義を伴う repo 横断マイグレーション
 で行うこと。その際は本スクリプトの ADVISORY_PKG を空にすれば fail を昇格できる。
+
+package-contract schema 検証だけは fail-closed である理由 (HarnessHub-2ih / 65z, 2026-07-22):
+  上記 advisory 枠は「検査器の方が plugin 群より新しい未採用標準」であり赤化が正当化
+  できないが、`references/package-contract.json` が構文正本 schema に適合することは
+  未採用標準ではなく既に repo 全 plugin が満たしている前提条件である。実際 2026-07-21
+  まで mf-kessai が無印 PKG-013 を記録して schema 違反していたにもかかわらず、本ラッパー
+  が advisory 一色だったため無言で残存した。同じ穴を塞ぐため schema 検証は blocking とする。
 """
 from __future__ import annotations
 
@@ -40,12 +47,54 @@ VALIDATOR = (
 #   (findings は引き続き報告される)。
 ADVISORY_PKG = {"PKG-002", "PKG-004", "PKG-014"}
 
+# `references/package-contract.json` の構文正本 (36章 §schema)。
+CONTRACT_SCHEMA = (
+    REPO_ROOT
+    / "plugins/harness-creator/skills/ref-pkg-contract/schemas/package-contract.schema.json"
+)
+
 
 def discover_plugins() -> list[str]:
     return sorted(
         p.parent.parent.name
         for p in REPO_ROOT.glob("plugins/*/.claude-plugin/plugin.json")
     )
+
+
+def check_contract_schema() -> list[str]:
+    """全 plugin の package-contract.json を構文正本で検証し、違反行を返す (fail-closed)。
+
+    jsonschema 不在時は skip せず違反として扱う。gate を無言で素通りさせる経路を作らない
+    (CI は requirements-dev.txt を SSOT に install 済み)。
+    """
+    contracts = sorted(REPO_ROOT.glob("plugins/*/references/package-contract.json"))
+    if not contracts:
+        return []
+    if not CONTRACT_SCHEMA.is_file():
+        return [f"構文正本 schema が見つかりません: {CONTRACT_SCHEMA}"]
+    try:
+        import jsonschema  # type: ignore
+    except ImportError:
+        return [
+            "jsonschema 未インストールのため package-contract schema 検証を実行できません "
+            "(`python3 -m pip install -r requirements-dev.txt`)"
+        ]
+
+    validator = jsonschema.Draft202012Validator(
+        json.loads(CONTRACT_SCHEMA.read_text(encoding="utf-8"))
+    )
+    violations = []
+    for path in contracts:
+        name = path.parent.parent.name
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            violations.append(f"{name}: package-contract.json が JSON として読めません ({exc})")
+            continue
+        for err in sorted(validator.iter_errors(data), key=lambda e: list(e.path)):
+            location = "/".join(str(p) for p in err.path) or "(root)"
+            violations.append(f"{name}: {location}: {err.message}")
+    return violations
 
 
 def main() -> int:
@@ -89,6 +138,18 @@ def main() -> int:
         else:
             note = f"advisory={sorted(advisory)}" if advisory else "clean"
             print(f"  {name:<32} OK ({note})")
+
+    schema_violations = check_contract_schema()
+    if schema_violations:
+        print(
+            f"[plugin-package-check] package-contract schema 違反 {len(schema_violations)} 件 (blocking)",
+            file=sys.stderr,
+        )
+        for line in schema_violations:
+            print(f"  - {line}", file=sys.stderr)
+        hard_fail = True
+    else:
+        print("[plugin-package-check] package-contract schema: 全 plugin が構文正本に適合")
 
     if advisory_total:
         print(

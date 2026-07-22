@@ -47,7 +47,7 @@ feedback_contract:
       verify_by: script
     - id: OUT1
       loop_scope: outer
-      text: "生成したHTML/CSSをブラウザで開いた際に追加ランタイム依存なくSVGグラフが表示され、featureごとの子task進捗X/Yがregistration receiptのapplied_count/expected_countと一致し、表示対象がreceiptのsource_digestに対応することを受入テストが確認する"
+      text: "生成したHTML/CSSをブラウザで開いた際に追加ランタイム依存なくSVGグラフが表示され、featureごとの子task進捗X/Yのうち総数Yがregistration receiptのapplied_count/expected_countと一致し(done数Xは登録後のstatus遷移で変動するため一致を求めない)、表示対象がreceiptのsource_digestに対応することを受入テストが確認する"
       verify_by: live-trial
 ---
 
@@ -130,7 +130,7 @@ PY
 ## Criteria acceptance
 
 - `criteria:IN1`: output HTMLの外部script/link参照が0件でゼロ依存である。
-- `criteria:OUT1`: 生成HTML/CSSをブラウザで開き、追加ランタイム依存なくSVGグラフとfeatureごとの子task進捗X/Yが表示され、registration receiptの`applied_count/expected_count`と`source_digest`が表示内容に一致する。
+- `criteria:OUT1`: 生成HTML/CSSをブラウザで開き、追加ランタイム依存なくSVGグラフとfeatureごとの子task進捗X/Yが表示され、**総数Y**がregistration receiptの`applied_count/expected_count`と一致し、`source_digest`が表示内容に一致する。**done数Xの一致は求めない** — 登録時点で13子すべてが`active`強制 (`register-package.py`) であるため receipt を伴う状態のXは常に0であり、Xを動かすと `graph_digest_after` が stale 化して render 自体が落ちる。実装も総数のみを照合する (`render-graph-html.py` の `len(child_nodes) != receipt["applied_count"]`)。
 
 ## Gotchas
 

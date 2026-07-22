@@ -1,0 +1,41 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-render",
+  "args": "--repo-root <fixture> --output <fixture>/.dev-graph/render/index.html",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "検証項目3 (feature 進捗 1/2) は現行契約下で構造的に達成不能: validate-graph-schema.py が子を持つ feature に exact-13 を強制し upsert-node.py が ContractError で登録を拒否する (feature_package_not_exact_13 count=2 を独立再現)",
+      "検証項目4 (表示 digest が receipt source_digest に対応) は未検証: receipt を発行できる register-package.py は expected/applied が 13 固定で、task.md の C02 制約 (graph.json 書込は upsert-node.py 経由のみ) が receipt 取得経路を塞いでいる。生成 HTML の render-metadata は registration:null",
+      "SKILL.md のゴールシーク配線が要求する goal-spec/progress/intermediate.jsonl が fixture 配下に不在 — シナリオ陳腐化とは別の trial 実行手順の欠落",
+      "(要確認) OUT1 criterion の文言は applied/expected が常に 13/13 である以上、全13子が done の feature でしか字義的に成立しない"
+    ]
+  },
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "16b5a31e1b312fcbf9b8780386929b7b85382e21fc8c49b21ed72bbde8521597",
+  "transcript_sha256": "3c5dca7201d06e944f706290fe94c70f0a70b0abb48a57067ab91f1404e74267",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": null,
+    "wall_clock_s": null
+  }
+}
