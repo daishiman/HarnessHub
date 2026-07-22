@@ -78,17 +78,27 @@ def _row(node: dict[str, Any]) -> dict[str, Any] | None:
     そのまま写す。
 
     binding が beads 以外の node は C28 の突合対象外なので静かに除外する。一方 binding が
-    beads なのに linkage が無い node は「投影すべきなのに欠けている」graph 側の欠陥であり、
+    beads なのに linkage が無い node は原則「投影すべきなのに欠けている」graph 側の欠陥であり、
     黙って落とすと C28 では `parity_manifest_missing` (= 取りこぼし) に化けて原因が遠くなる。
-    §10 の「素性のない snapshot を流通させない」に従い、生成側で停止する。
+    §10 の「素性のない snapshot を流通させない」に従い、生成側で停止する。ただし `status=draft`
+    は起票直後でまだ sync を通していない未投影状態であり linkage=null が正当なので、この 1 例外
+    だけは欠陥ではなく snapshot 対象外として扱う (下の分岐)。
     """
     if node.get("tracker_binding") != "beads":
         return None
     graph_node_id = node.get("graph_node_id")
-    bd_issue_id = (node.get("beads_linkage") or {}).get("bd_issue_id")
     if not isinstance(graph_node_id, str) or not graph_node_id:
         raise ContractError("graph node requires a non-empty graph_node_id")
+    bd_issue_id = (node.get("beads_linkage") or {}).get("bd_issue_id")
     if not isinstance(bd_issue_id, str) or not bd_issue_id:
+        # beads-binding なのに beads_linkage.bd_issue_id が無い node の扱い。
+        # status=draft は起票直後で sync 前の未投影状態 → manifest は「投影済み snapshot」なので
+        # 対象外として除外する (draft は MAPPABLE_GRAPH_STATUS にも無い = そもそも C28 の突合対象外)。
+        # `== "draft"` の厳密一致だけを免除し、None や想定外 status は投影漏れの欠陥として下へ落とす。
+        if node.get("status") == "draft":
+            return None
+        # 非 draft (active/blocked/done/closed/tombstoned) での linkage 欠落は投影すべき node の
+        # 欠落 = graph 側の欠陥なので fail-closed する (§10「素性のない snapshot を流通させない」)。
         raise ContractError(f"{graph_node_id}: tracker_binding=beads requires beads_linkage.bd_issue_id")
     depends_on = node.get("depends_on", [])
     if not isinstance(depends_on, list) or not all(isinstance(value, str) and value for value in depends_on):

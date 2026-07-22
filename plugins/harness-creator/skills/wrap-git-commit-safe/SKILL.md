@@ -29,7 +29,12 @@ script_refs:
   - scripts/pre-commit-secret-scan.py
   - scripts/preflight-git-commit.py
 reference_refs:
-  - references/resource-map.yaml
+  # 本 skill が実際に依存する base 側 reference は本文 L74 が正本と明示する
+  # goal-seek-paradigm.md。旧宣言 references/resource-map.yaml は実体を持たず
+  # behavior closure が fail-closed で digest 計算不能になっていた
+  # (設計書06 第13条の resource-map.yaml は references/ が 3 ファイル以上のときの推奨で、
+  #  references/ を持たない本 skill には該当しない)。
+  - plugins/harness-creator/skills/run-build-skill/references/goal-seek-paradigm.md
 feedback_contract: # per-skill 評価基準(SSOT=scripts/feedback_contract_ssot.py)
   max_iterations: 3
   criteria:

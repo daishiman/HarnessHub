@@ -3,6 +3,9 @@
 ## Machine-readable registration fields
 
 - feature_package_id: feature-package/feat-hub-foundation (13 task で共有)
+- feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d
+- feature_acceptance: 4 items (A1-A4)
+- quality_constraints: 9 items
 - owners: ["daishiman"]
 - tags: ["feat-hub-foundation", "stage-1", "infrastructure", "quality-assurance"]
 - related_nodes: ["feat-hub-foundation", "arch-harness-hub-infrastructure", "arch-harness-hub-frontend"]

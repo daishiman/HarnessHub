@@ -1,6 +1,34 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "package_mode": "bundle",
+  "plugin_name": "mf-kessai-invoice-check",
+  "entry_points": {
+    "skills": [
+      "run-mf-invoice-check",
+      "run-mf-invoice-db-setup",
+      "ref-mf-kessai-api",
+      "run-mf-initial-month-enrich",
+      "run-mf-invoice-reconcile",
+      "run-mf-invoice-report"
+    ],
+    "agents": [
+      "mfk-gap-verifier",
+      "mfk-reconcile-verifier",
+      "mfk-report-verifier"
+    ],
+    "commands": [
+      "run-mf-invoice-reconcile",
+      "run-mf-invoice-check",
+      "run-mf-invoice-db-setup",
+      "run-mf-initial-month-enrich",
+      "run-mf-invoice-report",
+      "run-mf-invoice-doctor"
+    ],
+    "hooks": [
+      "guard-mfk-readonly",
+      "guard-mfk-no-reinvent"
+    ]
+  },
   "pkg_checks": {
     "PKG-001": {
       "status": "skip",
@@ -73,11 +101,6 @@
       "skip_kind": "time_boxed_debt",
       "next_audit_by": "2026-09-30",
       "debt_note": "恒久免除ではない。upgrade smoke を回す repo harness 整備後に pass へ昇格する期限付き負債。期限到来時に再監査する。2026-06-24: enrich skill / 新ホスト権限 / OAuth secret が追加され配布表面が拡大。再監査対象。"
-    },
-    "PKG-013": {
-      "status": "pass",
-      "last_run_at": "2026-06-19T00:00:00Z",
-      "eval_log_path": "eval-log/mf-kessai-invoice-check/pkg-013/"
     },
     "PKG-013a": {
       "status": "pass",

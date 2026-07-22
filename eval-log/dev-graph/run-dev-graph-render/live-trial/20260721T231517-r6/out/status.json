@@ -1,0 +1,1 @@
+{"status": "PASS", "scenario": "render-feature-progress-positive", "checks": {"progress_xy_matches_graph": true, "self_contained_output": true, "receipt_matches_graph": true, "out_of_scope_excluded": true, "stable_input_digest": true}}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T19:26:36Z",
+  "generated_at": "2026-07-22T03:20:29Z",
   "nodes": [
     {
       "bd_issue_id": "HarnessHub-15h.1",
@@ -1683,5 +1683,5 @@
       "graph_status": "draft"
     }
   ],
-  "source_graph_digest": "sha256:96ab605424ed95c343a8a4daf01aae252c4be6970f23ffe5c98589d5bd7f4c70"
+  "source_graph_digest": "sha256:5cc317578ec54dd0c4d8958cfdc1edbbf0b568a740d75601a0ebcfb710d6de6f"
 }

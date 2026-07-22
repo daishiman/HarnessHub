@@ -227,7 +227,7 @@ python3 plugins/dev-graph/scripts/build-parity-manifest.py \
 
 - **2 段目を省略すると回復しない。** C16 が突合するのは `--ready-json` に載った `parity_provenance` であり (manifest ファイル自体は読まない)、manifest だけ作り直しても receipt には古い `source_graph_digest` が残るため同じ stale 停止が再発する。
 - 手で書いた manifest・過去の manifest を手編集した manifest は正本ではない。stale 停止・由来欠落はいずれもこの 2 段で回復する。
-- 生成器は `tracker_binding=beads` の node を **全件** 載せる。部分集合 manifest は、載らなかった node を C28 で `parity_manifest_missing` (= 取りこぼし) に化けさせるため作らない。`tracker_binding=beads` なのに `beads_linkage.bd_issue_id` が無い node は graph 側の欠陥として生成時に停止する。
+- 生成器は `tracker_binding=beads` の node を **全件** 載せる。部分集合 manifest は、載らなかった node を C28 で `parity_manifest_missing` (= 取りこぼし) に化けさせるため作らない。`tracker_binding=beads` なのに `beads_linkage.bd_issue_id` が無い node は原則 graph 側の欠陥として生成時に停止する。**ただし `status=draft` の node は 1 例外**: 起票直後で sync 前の未投影状態は linkage=null が正当なので、欠陥ではなく snapshot 対象外として除外する (draft は上表 status_map にも無く C28 の突合対象外)。`draft` の厳密一致だけを免除し、`None` や想定外 status での linkage 欠落は従来どおり fail-closed する。これにより、未 sync の draft issue node を含む graph (main 取り込み後に発生) でも manifest 再生成 (= stale 回復手順) が動く。
 - `depends_on` は graph の値をそのまま写す (並べ替えない)。C16 は `graph_depends_on == node.depends_on` をリスト等価で突合するため、生成側で sort すると順序差だけで parity が unconfirmed へ落ちる。
 - `nodes[]` は `graph_node_id` 昇順。graph の nodes 配列順に依存させず、同じ graph からは常に同じ内容が出る。
 - 上表に無い `graph_status` (現 graph の `draft`) を持つ node も manifest には載せる。間引くと投影済みの node が snapshot から消えて `parity_manifest_missing` に化けるため。生成 receipt の `unmappable_status` に列挙し、C28 で `conflicts` になる件数を実行前に見せる。

@@ -2,27 +2,32 @@
   "target": {
     "plugin": "skill-intake",
     "skill": "run-skill-intake",
-    "skill_md_sha256": "b08fdc5849642d80f8cad7e1bb5bde3a0dcbef25ce687409a7a428088464c024"
+    "skill_md_sha256": "299f79876a6c6a3276b28511cac0da0b650b6ade67e694d5c2f3055bc27d5efc"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent-rename-review-subagent-g",
-  "reviewed_at": "2026-07-02T22:00:00+09:00",
+  "reviewer": "content-review-evaluator-subagent (assign-skill-design-evaluator 相当 / builder から独立起動, worktree wt-4)",
+  "reviewed_at": "2026-07-21T17:10:00+09:00",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "IN2", "OUT1"],
     "positive_feedback": [
-      "完全性/簡潔性 — ## Purpose & Output Contract が入力・成果物表 (11 phase)・完了条件を明示、## Gotchas 8件、## Key Rules / ## Additional Resources も揃い body 167 行で 300 行上限内。phases[] を本文へ複製せず manifest 参照へ徹底し詳細を references/ へ逃がす progressive disclosure。5次元 rubric の完全性/簡潔性を満たす。",
-      "一貫性 (改名) — Phase 11 引き渡し先を harness-creator へ更新 (L119/L152) しつつ、単一 skill 生成 skill (run-skill-create/run-build-skill/capability-build) は skill 表現を維持する意味論境界が一貫。旧名 skill-creator 残存 0・用語ゆれ 0。dirname==name (run-skill-intake)・prefix=run 整合。",
-      "検証可能性/深度 — IN1 を manifest SSOT lint、IN2 を hook-guard-skillgen test で構造担保し、context:fork 必須箇所 (P2/3/5/8)・Gate A 周回上限 2 周・Phase 5 skip 条件 (needs_excavation=false のみ+理由記録必須)・Notion target 保持 (create fallback 禁止) まで二値/数値で具体化。委譲先 7 Skill+4 SubAgent 実在で dependency break 0。"
+      "C4 依存関係整合 (今回の主眼) — 宣言された *_refs の実体を全件実確認した。responsibility_refs: prompts/R1-main.md 実在。schema_refs 5 件 (output / phase2-assumption / phase3-profile / phase5-purpose / phase8-summary) 全て schemas/ 配下に実在。reference_refs 2 件は書き換え後の references/workflow-sequence.md・references/handoff-contract.md が実在。manifest: workflow-manifest.json も実在。委譲先 Skill 7 件・SubAgent 4 件、参照スクリプト (validate-notion-ready.py / quality_gate.py / cross_check.py / keychain_get_secret.py / intake_publish_pipeline.py / verify_notion_assets.py) も plugins/skill-intake/scripts/ に全て実在。scripts/validate-frontmatter.py exit 0 で MISSING_REF なし。",
+      "IN1 (manifest 単一 SSOT) — scripts/lint-manifest-contents.py exit 0。SKILL.md 本文に phases[] のコピーはなく、Key Rule 1/2・Gotchas 2/7・ゴールシークループが一貫して workflow-manifest.json 参照に寄せている。完了チェックリストの Phase 1〜11 記述と manifest の delegateType/delegateName、および references/workflow-sequence.md の表を 11 件全件突合したところ三者に drift 0 (P2/P3/P5/P8 が agent、残り 7 件が skill で一致)。",
+      "IN2 (スキル生成禁止の機械強制) — plugins/skill-intake/hooks/hook-guard-skillgen.py が実在し、PreToolUse(Skill|Task|Bash) として plugins/skill-intake/.claude-plugin/plugin.json (5 箇所) と .claude/settings.json (4 箇所) の両方に配線済み。lock ライフサイクル (Skill(run-skill-intake) で作成 / 生成スキル起動で exit 2 / lock 削除 Bash も遮断 / PostToolUse・SessionEnd で解除 / Stop では解除しない) が hook 側に閉じておりモデル挙動非依存。回帰テストは SKILL.md が指す tests/test_skill_intake_guard_skillgen.py に実在し 14 passed を実行確認。Key Rule 9 / Gotcha 8 が『プロンプト層=意図説明・hook 層=保証主体』と役割を明示している点も一貫。",
+      "C1 矛盾なし / C2 漏れなし / C3 規約整合 — C1: Key Rule 4 の context:fork 必須箇所 (P2/3/5/8) が manifest の delegateType=agent と一致、Gate A 上限 2 周・Phase 5 skip 条件 (needs_excavation=false かつ理由記録必須)・next-action は推奨であって実行ではない、が Key Rules / ゴールシークループ / Gotchas / チェックリストの四箇所で相互に整合。C2: Purpose & Output Contract (成果物表 11 行 + 完了条件)・Key Rules 9 件・ゴールシーク (Goal / Why / Checklist / Loop)・Gotchas 8 件・Additional Resources が揃い body 168 行。C3: reference_refs をパス表記にする形は prompt-creator / ubm-goal-setting / plugin-dev-planner など他プラグインの既存 SKILL.md と同じ書式で、リポジトリ規約に沿った是正になっている。dirname==name (run-skill-intake)・prefix=run・kind=run も整合。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "改善余地 (非ブロッカー): reference_refs が references/ 配下を網羅していない (keychain-setup.md・resource-map.yaml が未宣言)。lint はいずれも通るが、behavior closure に入らないため両ファイルの変更が live-trial 再検証のトリガーにならない。",
+      "運用上の注意 (非ブロッカー): 前世代の rubric-verdict.json は『reference_refs … 実在で参照 drift なし』と記載していたが、当時の値 (ref-workflow-sequence / ref-handoff-contract) は実際には解決不能だった。参照実在の検査は目視ではなく validate-frontmatter.py / skill_dir_tree_sha() の実行で裏取りする運用が必要。",
+      "既知の warn (非ブロッカー): validate-frontmatter.py が disable-model-invocation=true + user-invocable=true を unusual として warn するが exit 0。slash command 専用起動という設計意図と整合しており是正不要と判断した。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual (team-lead からの run-skill-intake 再レビュー依頼により起動)",
     "next_action": "none"
   },
-  "notes": "harness-creator 改名に伴う SKILL.md 変更への rubric 独立再評価。plugins/harness-creator/references/quality-rubric.md の 5次元 (完全性/一貫性/深度/検証可能性/簡潔性) で採点し全次元 >=2、FM/BD/NM/PD 系規範も違反 0。現 sha256=b08fdc5 実測 (旧 sha=b2365dc は改名前で stale)。改名観点: (1) 旧名 skill-creator/skill_creator/スキルクリエイター 残存 0 (grep)。(2) 引き渡し先=harness-creator と単一 skill 生成=run-skill-create の語の割当てが意味論境界に適合。(3) responsibility_refs/schema_refs 5件/reference_refs/manifest 実在で参照 drift なし。criteria IN1 (manifest SSOT lint)/IN2 (hook-guard skillgen test)/OUT1 (薄い orchestrator elegant-review) はスキル実目的に即した固有観点で充足。ブロッキング欠陥 0 で PASS。"
+  "notes": "reference_refs 是正後の SKILL.md を全文 Read した上での rubric 独立評価。skill_md_sha256 は python3 hashlib 実測値 299f79876a6c6a3276b28511cac0da0b650b6ade67e694d5c2f3055bc27d5efc (既存の b08fdc58... は変更前で stale のため差し替え)。frontmatter の feedback_contract に宣言された criteria は IN1 / IN2 / OUT1 の 3 件で、全て評価した (OUT1 は elegance 側と共通観点として、業務ロジック非保持と委譲のみで構成される薄い orchestrator 構造を本文全体で確認)。実行した機械検査: validate-frontmatter.py exit 0 / lint-manifest-contents.py exit 0 / lint-external-refs.py exit 0 / lint-feedback-contract.py --all exit 0 (run-skill-intake は live-trial criteria 未宣言の baseline 免除 warn のみ、非 fail) / pytest tests/test_skill_intake_guard_skillgen.py 14 passed。参照実体は 2 件とも中身を読み、workflow-sequence.md は 11 phase の順序表 (本文・manifest と一致)、handoff-contract.md は plugin-root 正本への pointer (Additional Resources の説明どおりの役割) であることを確認済み。ブロッキング欠陥 0 で PASS。なお本レビューでは live-trial の実走行と Notion 公開の実動作は検証していない。"
 }

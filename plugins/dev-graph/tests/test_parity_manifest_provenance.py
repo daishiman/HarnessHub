@@ -222,14 +222,16 @@ def test_builder_output_satisfies_c28_provenance_and_c16_digest(tmp_path, monkey
 
 
 def test_builder_stops_on_beads_node_without_linkage(tmp_path, monkeypatch, capsys):
-    """binding=beads なのに linkage が無い node は graph 側の欠陥。黙って落とさない。
+    """binding=beads なのに linkage が無い **非 draft** node は graph 側の欠陥。黙って落とさない。
 
     ここで除外すると、その node は C28 で `parity_manifest_missing` (= graph 管理下の
-    取りこぼし) に化け、原因が manifest 生成から遠い場所で初めて露見する。
+    取りこぼし) に化け、原因が manifest 生成から遠い場所で初めて露見する。draft のみの例外は
+    test_builder_skips_unprojected_draft_node が固定する。
     """
     builder = load("build-parity-manifest.py", "build_parity_manifest_linkage")
     graph_path = tmp_path / "graph.json"
     graph_path.write_text(json.dumps({"nodes": [
+        # _graph_node の既定 status は active なので、これは非 draft の linkage 欠落 = 欠陥。
         _graph_node("node-a", "B-1"), _graph_node("node-b", "B-2", beads_linkage=None),
     ]}), encoding="utf-8")
 
@@ -237,6 +239,31 @@ def test_builder_stops_on_beads_node_without_linkage(tmp_path, monkeypatch, caps
         call_main(builder, monkeypatch, capsys, "--repo-root", tmp_path,
                   "--graph", graph_path, "--out", tmp_path / "parity.json")
     assert not (tmp_path / "parity.json").exists()
+
+
+def test_builder_skips_unprojected_draft_node(tmp_path, monkeypatch, capsys):
+    """status=draft の未投影 beads node (linkage=null) は欠陥ではなく snapshot 対象外として除外する。
+
+    起票直後の draft は sync 前で linkage が無いのが正当な状態。ここを fatal にすると、main
+    取り込みで未 sync の draft issue node が 1 つでも入った瞬間に manifest 再生成が不能になり、
+    schedule の stale 回復手順そのものが動かなくなる (実際に origin/main の起票 node 5 件で発生)。
+    draft は除外し、それ以外での linkage 欠落は停止のまま (対の non-draft テストが担保)。
+    """
+    builder = load("build-parity-manifest.py", "build_parity_manifest_draft_skip")
+    graph_path = tmp_path / "graph.json"
+    graph_path.write_text(json.dumps({"nodes": [
+        _graph_node("node-a", "B-1"),
+        _graph_node("node-draft", "unused", status="draft", beads_linkage=None),
+    ]}), encoding="utf-8")
+    out = tmp_path / "parity.json"
+
+    code, receipt = call_main(builder, monkeypatch, capsys, "--repo-root", tmp_path,
+                              "--graph", graph_path, "--out", out,
+                              "--generated-at", "2026-07-22T00:00:00Z")
+    # draft は除外され node-a だけが載る。receipt も 1 件で、fail-closed せず正常終了する。
+    assert code == 0 and receipt["node_count"] == 1
+    manifest = json.loads(out.read_text(encoding="utf-8"))
+    assert [row["graph_node_id"] for row in manifest["nodes"]] == ["node-a"]
 
 
 def test_builder_check_reports_drift_without_writing(tmp_path, monkeypatch, capsys):

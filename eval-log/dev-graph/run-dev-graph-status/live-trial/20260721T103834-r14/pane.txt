@@ -1,0 +1,47 @@
+⏺ Searched for 2 patterns (ctrl+o to expand)
+
+⏺ The issue is the --graph path. It should be relative to repo-root, not cwd. Let me fix the invocation.
+
+⏺ Bash(cd "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5" && python3 plugins/dev-graph/scripts/status-graph.py --repo-root "eval-log/dev-graph…)
+  ⎿  {
+       "authority_sha256_after": "973bcd100293528291895bbaa1088533507f4b083ef31ce0f939c6582c572851",
+       "authority_sha256_before": "973bcd100293528291895bbaa1088533507f4b083ef31ce0f939c6582c572851",
+     … +45 lines (ctrl+o to expand)
+
+⏺ Script succeeded. Now let me verify post-execution digests are unchanged.
+
+⏺ Bash(FIXTURE_ROOT="/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/live-trial-fixtures/r14-status" && echo "=== graph.json…)
+  ⎿  === graph.json ===
+     03decd1fc65b625b173dee1564fd4ea9a582455fe44f8831485c48518a7c38f3  /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260720-203452-wt-5/eval-log/dev-graph/live-trial
+     -fixtures/r14-status/.dev-graph/state/graph.json
+     … +8 lines (ctrl+o to expand)
+
+⏺ All digests match pre-execution values. Now let me verify the 5 checks:
+
+  Check 1 — values_match: Graph shows LT-TASK-002 has status: "active", closed_at: null (via completion_evidence.completed_at: null), depends_on: ["LT-TASK-001"]. Skill report
+  returned exactly: status: "active", closed_at: null, depends_on: ["LT-TASK-001"]. PASS
+
+  Check 2 — c24_exit0: resolve-repo-context.py --mode read returned valid JSON with exit 0. PASS
+
+  Check 3 — c11_exit0: validate-graph-schema.py returned valid: true, no violations, exit 0. PASS
+
+  Check 4 — digest_unchanged: All pre/post digests identical. Script also confirmed authority_sha256_before == authority_sha256_after and graph_sha256_before == graph_sha256_after.
+   PASS
+
+  Check 5 — no_tracker_write: Config has execution_tracker.mode: "none" and github.enabled: false. No sync/render/GitHub/Beads commands were invoked. Only file written was the
+  eval-log receipt inside the fixture repo's eval-log/ directory (expected by the script). PASS
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T103834-r14/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-status/live-trial/20260721T103834-r14/out/status.json
+      1 {"status": "PASS", "scenario": "status-positive-read-only", "checks": {"values_match": true, "c24_exit0": true, "c11_exit0": true, "digest_unchanged": true, "no_trac
+        ker_write": true}}
+
+⏺ DONE: PASS
+
+✻ Cooked for 4m 29s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)
+
