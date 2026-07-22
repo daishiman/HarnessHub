@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /// script
-# name: verify-generation-lineage
+# name: validate-generation-lineage
 # purpose: feature 別 current pointer が指す現行世代と supersede 済み旧世代の実バイト整合を再計算し、旧世代 directory が自己記述的な supersession marker を持つことを fail-closed 検査する。
 # inputs: [argv --repo-root --config --package --write-markers]
 # outputs: [stdout JSON {checked, violations, markers_written}, exit 0 ok, exit 2 fail-closed]
@@ -313,7 +313,7 @@ def main(argv: list[str] | None = None) -> int:
         root = Path(context["repo_root"])
         state_root = _contained(c09, root, context["plan_roots"]["state"]["relative"])
     except (c09.UsageError, c09.PolicyError, LineageError, OSError, ValueError) as exc:
-        print(f"[verify-generation-lineage] FAIL: {exc}", file=sys.stderr)
+        print(f"[validate-generation-lineage] FAIL: {exc}", file=sys.stderr)
         return 2
 
     try:
@@ -321,20 +321,20 @@ def main(argv: list[str] | None = None) -> int:
             c09, root, (state_root / "current").relative_to(root).as_posix()
         )
     except (LineageError, ValueError) as exc:
-        print(f"[verify-generation-lineage] FAIL: current pointer directory を解決できない: {exc}", file=sys.stderr)
+        print(f"[validate-generation-lineage] FAIL: current pointer directory を解決できない: {exc}", file=sys.stderr)
         return 2
     if not pointer_dir.is_dir():
-        print(f"[verify-generation-lineage] FAIL: {pointer_dir} が無い", file=sys.stderr)
+        print(f"[validate-generation-lineage] FAIL: {pointer_dir} が無い", file=sys.stderr)
         return 2
 
     pointers = sorted(pointer_dir.glob("*.json"))
     if args.package:
         pointers = [p for p in pointers if p.stem == args.package]
         if not pointers:
-            print(f"[verify-generation-lineage] FAIL: package {args.package} の current pointer が無い", file=sys.stderr)
+            print(f"[validate-generation-lineage] FAIL: package {args.package} の current pointer が無い", file=sys.stderr)
             return 2
     elif not pointers:
-        print("[verify-generation-lineage] FAIL: current pointer が 0 件", file=sys.stderr)
+        print("[validate-generation-lineage] FAIL: current pointer が 0 件", file=sys.stderr)
         return 2
 
     violations: list[dict] = []
@@ -348,7 +348,7 @@ def main(argv: list[str] | None = None) -> int:
     print(json.dumps({"checked": len(pointers), "markers_written": markers_written,
                       "violations": violations}, ensure_ascii=False, indent=2))
     if violations:
-        print(f"[verify-generation-lineage] FAIL: lineage violation {len(violations)} 件", file=sys.stderr)
+        print(f"[validate-generation-lineage] FAIL: lineage violation {len(violations)} 件", file=sys.stderr)
         return 2
     return 0
 

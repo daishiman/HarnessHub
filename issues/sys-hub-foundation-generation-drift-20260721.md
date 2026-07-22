@@ -16,12 +16,12 @@ updated_at: "2026-07-22T00:00:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-devgraph-parity-manifest-provenance-20260721"]
-resource_scope: ["plugins/system-dev-planner/scripts/verify-generation-lineage.py","plugins/system-dev-planner/scripts/sync-task-projection-rerun.py","plugins/system-dev-planner/scripts/validate-system-plan.py","plugins/dev-graph/scripts/validate-source-digest.py","plugins/system-dev-planner/references/feature-execution-package-contract.md"]
+resource_scope: ["plugins/system-dev-planner/scripts/validate-generation-lineage.py","plugins/system-dev-planner/scripts/build-task-projection-rerun.py","plugins/system-dev-planner/scripts/validate-system-plan.py","plugins/dev-graph/scripts/validate-source-digest.py","plugins/system-dev-planner/references/feature-execution-package-contract.md"]
 purpose: "published generation の世代関係を、pointer/receipt を辿らない読み手にも機械にも誤読させない状態にする"
 goal: "supersede 済み世代が自己記述的な marker を持ち、旧世代の byte-for-byte 不変性・現行世代の digest・再実行コマンドの解決可能性が fail-closed で検査される"
 scope_in: ["supersede 済み世代への決定論的 supersession marker","current pointer 起点の generation lineage 検査 (V1..V7)","validate-system-plan の世代非依存な再実行経路","task projection への再実行コマンド冪等配線","package 由来 node の source_digest 契約整合","契約文書と task spec template への明記","回帰テスト"]
 scope_out: ["旧世代の内容を現行世代へ上書きする是正","graph.json の source_lineage schema 変更と 195 node backfill","content-addressed generation 本文の手編集","live-trial 証跡の再取得"]
-acceptance: ["supersede 済み世代 15 件が現行世代を指す SUPERSEDED.json を持ち、旧世代の canonical digest が変化しない","verify-generation-lineage.py が V1..V7 を fail-closed で検査し、旧世代の上書きと marker 改竄を exit 2 で拒否する","validate-system-plan.py --feature-package が current pointer から現行世代を解決し PASS する","task projection 195 件が世代非依存の再実行コマンドを持ち --check が exit 0 になる","validate-source-digest.py が system-dev-planner 由来 195 node を検出力を落とさず exit 0 で通す","契約文書に supersession marker と再実行コマンドの規範が明記される"]
+acceptance: ["supersede 済み世代 15 件が現行世代を指す SUPERSEDED.json を持ち、旧世代の canonical digest が変化しない","validate-generation-lineage.py が V1..V7 を fail-closed で検査し、旧世代の上書きと marker 改竄を exit 2 で拒否する","validate-system-plan.py --feature-package が current pointer から現行世代を解決し PASS する","task projection 195 件が世代非依存の再実行コマンドを持ち --check が exit 0 になる","validate-source-digest.py が system-dev-planner 由来 195 node を検出力を落とさず exit 0 で通す","契約文書に supersession marker と再実行コマンドの規範が明記される"]
 architecture_refs: []
 parent_feature: null
 feature_package_id: null
@@ -114,7 +114,7 @@ published feature package は 2 層に分かれている。`.dev-graph/plans/gen
 - **Beads ID**: `HarnessHub-6cv` / **dev-graph node**: `issue-hub-foundation-generation-drift-20260721`
 - **品質ゲート再実行 (実測)**:
   - focused pytest 60 passed / 広域 (system-dev-planner 全 + source-digest) 120 passed
-  - 受入 4 コマンドを実 repository で再実行: `verify-generation-lineage.py`=15 checked/0 violations、`sync-task-projection-rerun.py --check`=195 checked/0 missing、`validate-source-digest.py --registered <195>`=195 checked/0 mismatch、`validate-system-plan.py --feature-package`=status pass/0 violations
+  - 受入 4 コマンドを実 repository で再実行: `validate-generation-lineage.py`=15 checked/0 violations、`build-task-projection-rerun.py --check`=195 checked/0 missing、`validate-source-digest.py --registered <195>`=195 checked/0 mismatch、`validate-system-plan.py --feature-package`=status pass/0 violations
 - **仕様・設計への影響判断**:
   - **製品仕様 (`system-spec/`・`specs/`・`architecture/`)**: 影響なし。本変更は dev-graph / system-dev-planner の**開発メタツール層** (published generation の自己記述性・世代非依存の再実行経路) に閉じる。製品仕様は HarnessHub 本体を記述し、`architecture/harness-hub-dev-workflow.md`・`system-spec/dev-workflow.md` にも generation/promotion/supersede の記述は存在しないため、正規フローでの反映対象は無い。
   - **メタツール契約 (正本)**: `plugins/system-dev-planner/references/feature-execution-package-contract.md` §2.2 (supersede 済み世代の自己記述性) / §2.3 (promotion 後も解決可能な再実行コマンド) と `system-task-spec-template.md`・`run-system-dev-plan/SKILL.md`・`workflow-manifest.json` に反映済み。

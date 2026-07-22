@@ -18,7 +18,7 @@ from pathlib import Path
 import test_runtime as fx
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
-SYNC_SCRIPT = SCRIPTS / "sync-task-projection-rerun.py"
+SYNC_SCRIPT = SCRIPTS / "build-task-projection-rerun.py"
 SLUG = "feature-package-feat-x"
 PACKAGE_ID = "feature-package/feat-x"
 
@@ -333,7 +333,7 @@ def test_symlink_escape_tasks_root_is_rejected_without_writing(tmp_path: Path) -
 
 
 def test_lineage_gate_also_routes_paths_through_c09(tmp_path: Path) -> None:
-    # verify-generation-lineage.py も同じ一元化を持つ (plan_roots.state が repo 外)
+    # validate-generation-lineage.py も同じ一元化を持つ (plan_roots.state が repo 外)
     root = (tmp_path / "repo").resolve()
     root.mkdir(parents=True)
     fx.make_repo(root)
@@ -342,7 +342,7 @@ def test_lineage_gate_also_routes_paths_through_c09(tmp_path: Path) -> None:
     config["plan_roots"]["state"] = "../outside"
     config_path.write_text(json.dumps(config), encoding="utf-8")
     proc = subprocess.run(
-        [sys.executable, str(SCRIPTS / "verify-generation-lineage.py"), "--repo-root", str(root)],
+        [sys.executable, str(SCRIPTS / "validate-generation-lineage.py"), "--repo-root", str(root)],
         capture_output=True, text=True, check=False,
         env={**os.environ, "CLAUDE_PROJECT_DIR": str(root)})
     assert proc.returncode == 2
@@ -372,7 +372,7 @@ def test_symlinked_projection_file_is_rejected(tmp_path: Path) -> None:
 
 
 def test_symlinked_marker_is_rejected(tmp_path: Path) -> None:
-    # verify-generation-lineage.py の marker 書込先が repo 外 symlink の場合も拒否する
+    # validate-generation-lineage.py の marker 書込先が repo 外 symlink の場合も拒否する
     import test_generation_lineage as gl
 
     root, _, _ = gl.build_repo(tmp_path)

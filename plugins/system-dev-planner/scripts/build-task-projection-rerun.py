@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /// script
-# name: sync-task-projection-rerun
+# name: build-task-projection-rerun
 # purpose: task projection の実行契約へ、世代非依存で再解決できる validate-system-plan 再実行コマンドを冪等に配線する。
 # inputs: [argv --repo-root --config --feature-package --check]
 # outputs: [stdout JSON {checked, updated, missing}, exit 0 ok, exit 2 fail-closed]
@@ -134,7 +134,7 @@ def main(argv: list[str] | None = None) -> int:
         # content_roots は C09 が containment 検査済み。書込先を独自に組み立てない。
         tasks_root = c09.guard_relative_path(root, context["content_roots"]["tasks"]["relative"])
     except (c09.UsageError, c09.PolicyError, OSError, ValueError, KeyError) as exc:
-        print(f"[sync-task-projection-rerun] FAIL: repo context を解決できない: {exc}", file=sys.stderr)
+        print(f"[build-task-projection-rerun] FAIL: repo context を解決できない: {exc}", file=sys.stderr)
         return 2
 
     updated: list[str] = []
@@ -207,7 +207,7 @@ def main(argv: list[str] | None = None) -> int:
     print(json.dumps({"checked": checked, "updated": updated, "missing": missing},
                      ensure_ascii=False, indent=2))
     if missing:
-        print(f"[sync-task-projection-rerun] FAIL: 未配線/不正 {len(missing)} 件", file=sys.stderr)
+        print(f"[build-task-projection-rerun] FAIL: 未配線/不正 {len(missing)} 件", file=sys.stderr)
         return 2
     return 0
 

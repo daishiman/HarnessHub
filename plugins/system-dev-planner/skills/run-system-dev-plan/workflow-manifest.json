@@ -22,7 +22,7 @@
     {"id": "script-validator", "kind": "script", "path": "../../scripts/validate-system-plan.py", "phaseIds": ["R3-validate-evaluate"]},
     {"id": "skill-evaluator", "kind": "skill", "path": "../assign-system-dev-plan-evaluator/SKILL.md", "phaseIds": ["R3-validate-evaluate"]},
     {"id": "script-promoter", "kind": "script", "path": "../../scripts/promote-system-plan.py", "phaseIds": ["R4-promote-register"]},
-    {"id": "script-lineage", "kind": "script", "path": "../../scripts/verify-generation-lineage.py", "phaseIds": ["R5-release-report"]},
-    {"id": "script-projection-rerun", "kind": "script", "path": "../../scripts/sync-task-projection-rerun.py", "phaseIds": ["R5-release-report"]}
+    {"id": "script-lineage", "kind": "script", "path": "../../scripts/validate-generation-lineage.py", "phaseIds": ["R5-release-report"]},
+    {"id": "script-projection-rerun", "kind": "script", "path": "../../scripts/build-task-projection-rerun.py", "phaseIds": ["R5-release-report"]}
   ]
 }

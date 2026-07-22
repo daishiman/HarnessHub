@@ -1,4 +1,4 @@
-"""verify-generation-lineage.py (HarnessHub-6cv) の検証。
+"""validate-generation-lineage.py (HarnessHub-6cv) の検証。
 
 supersede 済み旧世代 directory は byte-for-byte 不変で残る一方、名前が最も発見しやすく
 render 済み成果物も同居するため、pointer を辿らない読み手が旧世代を正本と誤読しうる。
@@ -15,7 +15,7 @@ from pathlib import Path
 
 import test_runtime as fx
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "verify-generation-lineage.py"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "validate-generation-lineage.py"
 SLUG = "feature-package-feat-x"
 PACKAGE_ID = "feature-package/feat-x"
 LEGACY_REL = f".dev-graph/plans/{SLUG}"

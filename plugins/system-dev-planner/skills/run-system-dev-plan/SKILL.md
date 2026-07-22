@@ -37,8 +37,8 @@ script_refs:
   - ../../scripts/build-system-handoff.py
   - ../../scripts/validate-system-plan.py
   - ../../scripts/promote-system-plan.py
-  - ../../scripts/verify-generation-lineage.py
-  - ../../scripts/sync-task-projection-rerun.py
+  - ../../scripts/validate-generation-lineage.py
+  - ../../scripts/build-task-projection-rerun.py
 combinators:
   - with-feedback-contract
 feedback_contract: # per-skill 評価基準(SSOT=plugins/harness-creator/scripts/feedback_contract_ssot.py)。content-review verdict の criteria_evaluated と突合
@@ -72,7 +72,7 @@ feedback_contract: # per-skill 評価基準(SSOT=plugins/harness-creator/scripts
 
 - 入力: dev-graph の ready feature (`--feature-id` と caller-repository 相対の `--feature-context` JSON。JSON の `graph_node_id` と `--feature-id`、feature digest の一致が必須)。
 - 出力: exact-13 task specs、13-entry inventory、13-node intra-feature DAG、`system-build-handoff.json`、plan-structure/task-specs HTML を含む staging→atomic promotion 済み feature package。
-- 完了条件: C12 deterministic validation と fork evaluator C1..C4 が同一 canonical digest で PASS し、C11 の atomic promotion receipt が発行され、二回目実行で構造が変化しない。加えて対象 feature だけに scope した `verify-generation-lineage.py --package <current-package-slug>` (書込なし) と `sync-task-projection-rerun.py --feature-package <feature_package_id> --check` がともに exit 0 であること、すなわち supersede 済み世代が byte-for-byte 不変で現行世代を指す marker を持ち、その feature の exact 13 task projection が世代非依存の再実行コマンドを持つことまでを完了条件に含める。未配線は同じ feature scope の書込モード (`--package <current-package-slug> --write-markers` / `--feature-package <feature_package_id>` 実行) で是正し、書込なしで再確認して完了とする。repository 全件の移行・監査は引数を省略した別運用とし、1 feature run の完了スコープに混ぜない。
+- 完了条件: C12 deterministic validation と fork evaluator C1..C4 が同一 canonical digest で PASS し、C11 の atomic promotion receipt が発行され、二回目実行で構造が変化しない。加えて対象 feature だけに scope した `validate-generation-lineage.py --package <current-package-slug>` (書込なし) と `build-task-projection-rerun.py --feature-package <feature_package_id> --check` がともに exit 0 であること、すなわち supersede 済み世代が byte-for-byte 不変で現行世代を指す marker を持ち、その feature の exact 13 task projection が世代非依存の再実行コマンドを持つことまでを完了条件に含める。未配線は同じ feature scope の書込モード (`--package <current-package-slug> --write-markers` / `--feature-package <feature_package_id>` 実行) で是正し、書込なしで再確認して完了とする。repository 全件の移行・監査は引数を省略した別運用とし、1 feature run の完了スコープに混ぜない。
 
 ## Invariants
 
