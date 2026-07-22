@@ -27,13 +27,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T171937-r24/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T171937-r24/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T171937-r24/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T171937-r24/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/transcript.jsonl"
       ],
-      "observed": "2026-07-22 に空 graph fixture で r19 を正規再実走 (--dry-run/--binding none)。feature/architecture が非循環 DAG・粒度閾値内、評価前 draft は起票 0 件、dry-run の write_count 0 で preview は stdin 経路検証。goal-seek 3 点セット全出力。"
+      "observed": "2026-07-23 再実走 (HarnessHub-6cv, main PR#38 取込後): generation-lineage 変更 + PR#38 の closure 変更で verdict が再 stale 化したため fresh fixture で再 trial。被験 Skill を最初の tool call で 起動し正経路を自走完遂。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し、pre-seed 汚染なし・goal 達成 (受入基準を実行証跡で裏取り) を確認。"
     },
     "OUT2": {
       "status": "PASS",
