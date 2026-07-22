@@ -14,7 +14,7 @@
 
 ### 入力契約
 
-- C11 report、C02保存readiness/evaluation、source digest。
+- C11 report、C02保存readiness/evaluation、source digest。source digest の照合は `validate-source-digest.py` の exit code へ係留し、`confirmation_status`/`evaluation_status`/`implementation_readiness` の比較だけで readiness を PASS にしない (2026-07-21 live-trial r13 で registered_mismatch 4件のまま handoff が emit された fail-open の再発防止)。
 
 ### 出力契約
 
@@ -26,11 +26,11 @@
 
 ### 受入条件
 
-- C11 reportとC02 saved state/source digestが一致し、validate-system-plan.pyのP01..P13 exact-set/13-node DAGがPASSしたcomplete/pass/confirmedだけreadyになる。
+- C11 reportとC02 saved stateが一致し、scope内node全件を `--registered` に渡した `validate-source-digest.py` が exit 0 (stale digest 0件) で、validate-system-plan.pyのP01..P13 exact-set/13-node DAGがPASSしたcomplete/pass/confirmedだけreadyになる。
 
 ## Layer 3: インフラ層
 
-- 使用資産: validate-graph-schemaとvalidate-system-plan。
+- 使用資産: validate-graph-schemaとvalidate-source-digestとvalidate-system-plan。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
@@ -56,7 +56,9 @@
 - [ ] 宣言した入力が全て検証済みである
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
-- [ ] C11 reportとC02 saved state/source digestが一致し、validate-system-plan.pyのP01..P13 exact-set/13-node DAGがPASSしたcomplete/pass/confirmedだけreadyになる
+- [ ] C11 reportとC02 saved stateが一致したcomplete/pass/confirmedだけreadyになる
+- [ ] scope内node全件を `--registered` に渡した `validate-source-digest.py` を実行し exit 0 である (stale digest 0件。status 比較や目視で代替しない)
+- [ ] validate-system-plan.pyのP01..P13 exact-set/13-node DAGがPASSしている
 
 ### 5.4 実行方式
 

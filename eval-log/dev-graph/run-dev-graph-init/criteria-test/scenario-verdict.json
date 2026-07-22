@@ -7,7 +7,7 @@
     "skill_md_sha256": "1db7dd6c2cde83fc50e02704fb3e3b725f66dd2209b08521c88a5fc52fc535f0"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r1",
+  "reviewer": "dev-graph-criteria-scenario-r4-20260722-postmerge",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,13 +26,14 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C01-OUT1-positive-idempotence",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260713T090000-r3/verdict.json",
+      "scenario_id": "C01-OUT1-positive-idempotence-r17",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260713T090000-r3/verdict.json",
-        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260713T090000-r3/out/status.json + poll-state.json"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/out/status.json"
       ],
-      "observed": "Replay of the captured init-positive-idempotence live trial (model claude-opus-4-6, poll gate_ticks=0, stall=0, status.json PASS). The r3-init fixture holds the six content roots issues/tasks/specs/architecture/features/docs plus .dev-graph/{config.json,state/graph.json,cache,locks,templates}; the graph store passes C11 and the verdict.json reports overall launch/completion/goal_fit/verdict = PASS with downgrade_reason null."
+      "observed": "2026-07-22 に未初期化 fixture で r20 を正規再実走。target Skill を pass1/pass2 の 2 回起動し R1-R5 を各 pass で 5 Agent fork。6 content root と routing policy と graph store を pass1 で生成、pass2 は planned_changes=0/created=[]、編集済み template の SHA-256 は pass2 後も編集値を保持。config に絶対 path/token/node ID なし、validate-graph-schema exit 0・node 1 件、goal-seek 3 点セット全出力。fresh evaluator が独立に全 7 条件 PASS を確認。"
     },
     "OUT2": {
       "status": "PASS",

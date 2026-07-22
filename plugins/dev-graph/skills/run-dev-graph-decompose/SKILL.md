@@ -118,6 +118,13 @@ dev-graph はマクロ層: purpose/goal/scope/acceptance を持つ feature、共
 
 local commit 後の外部失敗は rollback せず node/operation 単位 pending_retry。`--dry-run` は local/Beads/GitHub write 0。出力は macro report、per-feature package receipt、publication report。
 
+`--dry-run` の preview graph を C11 検証するときは、管理対象 repo へ一時ファイルを書かず **stdin 経路**を使う。`--graph FILE` は `contained(graph, repo_root)` を要求するため、preview を file 経由で検証すると必ず write が発生し `--dry-run write 0` 契約を破る (書いて直後に unlink しても write count は0にならない)。
+
+```bash
+printf '%s' "$PREVIEW_GRAPH_JSON" \
+  | python3 "$DEV_GRAPH_PLUGIN/scripts/validate-graph-schema.py" --graph - --repo-root "$DEV_GRAPH_ROOT"
+```
+
 ## ゴールシーク実行
 
 ### ゴール (Goal)
@@ -135,7 +142,7 @@ local commit 後の外部失敗は rollback せず node/operation 単位 pending
 - [ ] 各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす
 - [ ] C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である
 - [ ] beads/github/none の各 task が単一 projection authority と linkage を持つ
-- [ ] `--dry-run` の local/Beads/GitHub/Projects write count が0である
+- [ ] `--dry-run` の local/Beads/GitHub/Projects write count が0である (preview 検証は `--graph -` の stdin 経路を使い、一時ファイルの作成→削除も write として数える)
 
 ### ゴールシークループ
 
@@ -186,3 +193,4 @@ PY
 - 自動と手動の planner 結果を別 gate にせず、同じ `graph_node_id+source_digest` の冪等キーへ収束させる。
 - local commit 後の外部失敗で macro graph を rollback せず、失敗 operation だけを `pending_retry` に残す。
 - `mode=both+auto`、`github+local_only`、`beads+Issue mutation` は authority 衝突として fail-closed にする。
+- `--dry-run` の preview 検証で管理対象 repo へ一時ファイルを書かない。`--graph -` の stdin 経路を使う。書いて直後に unlink しても write count は0にならず、receipt の `write_counts.local_files` を0と自己申告すると過少報告になる (2026-07-21 live-trial r13 の実例)。

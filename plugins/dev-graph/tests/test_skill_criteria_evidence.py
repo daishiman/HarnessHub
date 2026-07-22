@@ -157,10 +157,21 @@ def test_positive_live_trial_scenarios_cover_out1_without_eval_log_fixture_coupl
     suite = json.loads(POSITIVE_SCENARIOS.read_text(encoding="utf-8"))
     scenarios = suite["scenarios"]
     assert suite["schema_version"] == "1.0.0"
+    # C01/C15 は 2026-07-21 追加。r13 で「拒否対象が1件も無い空っぽの検証」で OUT1 が
+    # 成立していたため、fixture_contract を強化して衝突・blocked・lease を実際に行使させる。
+    # C05/C14/C18 は 2026-07-22 追加。9 skill 全ての live-trial 再取得時に、OUT1 が
+    # live-trial verify_by なのに scenario 契約を持たない 3 skill を発見したため補完した
+    # (C05 は render の進捗 X/Y、C14 は decompose の dry-run マクロ分解、C18 は status の
+    # read-only 一致)。
     assert {(item["component_id"], item["criterion_id"]) for item in scenarios} == {
+        ("C01", "OUT1"),
         ("C02", "OUT1"),
         ("C03", "OUT1"),
         ("C04", "OUT1"),
+        ("C05", "OUT1"),
+        ("C14", "OUT1"),
+        ("C15", "OUT1"),
+        ("C18", "OUT1"),
         ("C19", "OUT1"),
     }
     assert len({item["scenario_id"] for item in scenarios}) == len(scenarios)
@@ -170,8 +181,18 @@ def test_positive_live_trial_scenarios_cover_out1_without_eval_log_fixture_coupl
     }
     for scenario in scenarios:
         assert scenario["mode"] == "positive"
-        assert scenario["task_args_template"].strip()
-        assert "--dry-run" not in scenario["task_args_template"]
+        args = scenario["task_args_template"]
+        assert args.strip()
+        # dry-run 単独で positive を成立させる vacuous 検証を防ぐ。ただし
+        # (a) --apply を併せ持つ多段実行 (C03 sync の dry-run→apply→確認 dry-run で
+        #     2 回目 changes=0 を観測) と、(b) dry-run preview 自体が成果物の skill
+        #     (C14 decompose: 評価前 draft の起票 0 件を観測する) は、副作用ではなく
+        #     「副作用が起きないこと」を観測するのが scenario の本質なので許容する。
+        if "--dry-run" in args:
+            assert "--apply" in args or scenario["component_id"] == "C14", (
+                f"{scenario['component_id']}: dry-run 単独の positive scenario は "
+                "vacuous 検証になりうる (apply 併存か dry-run preview が本質の skill に限る)"
+            )
         assert len(scenario["required_observations"]) >= 3
         assert all(item.strip() for item in scenario["required_observations"])
         skill_name, skill_path = inventory_targets[scenario["component_id"]]
@@ -208,3 +229,24 @@ def test_canonical_content_reviews_are_current_and_complete(
         assert loop["loop_scope"] == "both"
         assert loop["iteration_limit"] == 3
         assert loop["next_action"] == "none"
+
+
+def test_positive_scenarios_are_not_vacuous_by_contract() -> None:
+    """positive シナリオが「拒否対象0件」で自明成立しない fixture 契約を持つ。
+
+    2026-07-21 live-trial r13 で、C15 は ready 3件 < --max-parallel 4 かつ resource_scope が
+    入力側で完全排他だったため conflict/lease 判定が一度も行使されず、C01 は空グラフで
+    C11 が vacuous に成立していた。「除外されるべき対象が実在すること」を fixture 契約へ要求する。
+    """
+    suite = json.loads(POSITIVE_SCENARIOS.read_text(encoding="utf-8"))
+    exclusion_markers = (
+        "blocked", "overlap", "conflict", "stale", "reject", "fail-closed",
+        "exceeds", "differ", "outside", "not ", "no ", "never", "zero",
+        "=0", "unchanged",
+    )
+    for scenario in suite["scenarios"]:
+        observations = " ".join(scenario["required_observations"]).lower()
+        assert any(marker in observations for marker in exclusion_markers), (
+            f"{scenario['scenario_id']}: required_observations must assert on a case that is "
+            "excluded, rejected or converges to zero; otherwise the criterion can hold vacuously"
+        )
