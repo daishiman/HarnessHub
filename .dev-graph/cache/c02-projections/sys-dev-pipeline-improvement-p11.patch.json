@@ -1,0 +1,20 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+  "purpose": "feat-dev-pipeline-improvement の P11 を実行する: 証跡固定 — 実測ログと digest の evidence manifest 化",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "evidence-manifest.json に P06/P08/P09 の実測ログと P05 成果物の path・sha256・生成 phase が記録されている",
+   "manifest 記載の sha256 が実ファイルと全件一致する"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

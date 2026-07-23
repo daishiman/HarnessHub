@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-dev-pipeline-improvement",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "現行 features/feat-dev-pipeline-improvement.context.json (sha256:16d9e07bc878c21e6054ba7f178d2d1fc5e303961a297f9a5949a20f328e5085) と goal-spec.json / feature-package.json の purpose・goal・scope_in 8 件・scope_out 4 件・acceptance 7 件は逐語一致し意味的矛盾はない。goal-spec.json は前回評価から無変更 (feature_context_digest 一致を再確認)。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "前回 FAIL の 2 findings が是正され owner・verification・evidence まで漏れなく保持されたことを確認した。(1) high: scope_in item7『spec-drift-guardian の verdict close gate 配線』は P02 の 7 設計 (design.md acceptance に対象 hook/skill・fail-closed 条件・findings 8 件対応表を明記) → P04 (MUST_BLOCK/MUST_PASS 回帰テスト設計をテスト ID 付きで追加) → P05 (Produced artifacts/Write scope に plugins/spec-drift-guardian/ を追加し、close gate 配線実装と回帰テストを Phase acceptance に明記) という owner chain が確立した。P06 は test-plan.md の全テスト ID を実行する既存責務のため当該回帰テストも自動的に対象となる。(2) medium: scope_in item6『31 findings の差分監査』は P02 acceptance で『94 findings 全件付与の内数として P08 が実行する』と関係が明確化され、P08 acceptance に『dev-graph 中核 handoff 3 ファイル 31 findings は現行実装との突合で根拠 ref 付き判定され migration-receipt.json に 31 件分の監査行が残る』という個別検証条件が追加された。scope_in 8 件 / acceptance 7 件の owner・verification・evidence 被覆に漏れは残っていない。",
+      "evidence": [
+        "workstream-inventory.json",
+        "task-specs/phase-02-architecture.md",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-08-refactoring-migration.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-dev-pipeline-improvement が exit 0 で PASS し、validated_digest が新しい staging-manifest.json の canonical_digest (sha256:f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f) と一致。staging-manifest.json の files 17 件全てを再計算した sha256 が manifest 記載値と完全一致し、exact-set/identity に相違なし。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01 は depends_on=[] で独立エントリであり、task-graph.json/workstream-inventory.json/system-build-handoff.json execution_tasks の p01_entry_gate (selector=parent_feature.depends_on, operator=all, required_statuses=[done,closed]) は canonical 定義と一致。features/feat-dev-pipeline-improvement.context.json に depends_on フィールドが存在しない (空集合として all() は自明に真)。P02..P13 は各々直前 phase のみに depends_on し、P01→P02→...→P13 の完全直列で後方参照は 0 件 (再生成後も変化なし)。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "system-build-handoff.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-dev-pipeline-improvement"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f\",\n  \"feature_package_id\": \"feature-package/feat-dev-pipeline-improvement\",\n  \"parent_feature\": \"feat-dev-pipeline-improvement\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "2a35643b69df8cb32ff61f50556c129d2c519b7ac140b65b244c291bfbde136f"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "5fcf965de1fb8450a984013555f783f24a95d244cba7b3334dd279cfbf154a4e"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "eced7f12d64a7e915c1e4f3c389c59a0d32afbc056c8b7befbb612d8ac509e9a"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "ea041804f618fe3000c84f1298d065c7b6fbeacb5549bcf74020304b594e1c26"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "7a6b2db4223408a6fbf2f2dab1e807ddb133a6370b14a715250020dd3899d9b4"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "8965cc518f0c5f36932a52c63ea65d10bee474018f9be0514b2078e329d8141c"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "2bcf73b64680d4159e1254585d790fdd08041e2a0ee8a08ad73b4ea8d61bb3bb"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "900d478a0e3cbe696bfe2c7072179f2eb2e707e8c3123f55a8bc53dc8724e0ba"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "56571216533a9dba080789418f74c64d9b92403b071c061c8383653b52429031"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "df331d8468326a2905408261801bf63c9ef754f0fc9fc226be71d259c982db28"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "956577c952c7596036168cfa7620981ce3925706b92e596edb1f8d83fe03996a"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "2fecf85c68f045d3837dd2eeadf04ddbe0bd2ba1b6db0563294b7a0b131efbb2"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "ee248e66bf9491f5f14f8b673ac602f6f95ac36dbe27eb3f2bcc3c75ab1d7ef5"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "00c7da83cbfa31a521e30a372bd2335050c67772a8e4193bfa3223d1c8bd907a"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "a6cdbc79a946cd4f4d362be4a1f6e58a4cbab39329c847b52c392767f4d0ae57"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "108dfecf07f7b9ab07dd4f52fa8139f1530bc81e13a7f4fef9d029375062e986"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "7127c32fcbc1d5614147d9a68350ec14829f743fac136670903942b1222cef21"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "161acc09505dc07cec44eb653ce78dd8763ce245d5d2fb7ddf373f83a6d58a4b"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "remediation-verified",
+      "observation": "前回 FAIL findings (spec-drift-guardian close gate 配線の owner 不在、31 findings 差分監査の検証条件不明瞭) はいずれも P02/P04/P05/P08 の task-specs 本文および workstream-inventory.json の acceptance/write_scope に具体的な owner・成果物・検証条件として反映されたことを確認した。",
+      "evidence": [
+        "task-specs/phase-02-architecture.md:136,138 (Phase acceptance)",
+        "task-specs/phase-04-test-design.md:135,136 (Phase acceptance)",
+        "task-specs/phase-05-implementation.md:63,65,145 (Produced artifacts/Write scope/Phase acceptance)",
+        "task-specs/phase-08-refactoring-migration.md:136 (Phase acceptance)",
+        "workstream-inventory.json (P02/P04/P05/P08 tasks の acceptance 配列)"
+      ]
+    }
+  ]
+}

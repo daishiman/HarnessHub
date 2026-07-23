@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-dev-pipeline-improvement",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "goal-spec.json の feature_context_digest、feature-package.json の source_feature_digest、および features/feat-dev-pipeline-improvement.context.json の実ファイル sha256 が全て sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 で一致。purpose/goal/scope_in/scope_out/acceptance の各フィールドが context.json と goal-spec.json / feature-package.json 間で逐語一致していることを確認。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-01-requirements.md",
+        "workstream-inventory.json"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "scope_in 8件・acceptance 7件の全てに workstream-inventory.json の P01-P13 いずれかが owner として割り当たっており、各 task に verification フィールドで evidence chain が定義されている。workstream-inventory.json の 13 task に欠落なし (P01-P13 全件存在)。",
+      "evidence": [
+        "workstream-inventory.json#p01_entry_gate: selector=parent_feature.depends_on, operator=all, required_statuses=[done, closed]"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "staging-manifest.json の canonical_digest が sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b で C12 validated_digest と一致。manifest 記載の 17 ファイル sha256 が実ファイルの shasum -a 256 実測値と全件一致。",
+      "evidence": [
+        "staging-manifest.json#canonical_digest == sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json にて P01 の depends_on=[]、P02-P13 は各々直前 phase のみに depends_on が設定されていることを確認。workstream-inventory.json の p01_entry_gate が selector=parent_feature.depends_on / operator=all で定義されていることを確認。",
+      "evidence": [
+        "workstream-inventory.json#p01_entry_gate.selector == parent_feature.depends_on (確認)",
+        "workstream-inventory.json#p01_entry_gate.operator == all (確認)",
+        "system-build-handoff.json#p01_entry_gate.selector == parent_feature.depends_on (確認)",
+        "system-build-handoff.json#p01_entry_gate.operator == all (確認)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-dev-pipeline-improvement"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"status\": \"pass\", \"validated_digest\": \"sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b\", \"feature_package_id\": \"feature-package/feat-dev-pipeline-improvement\", \"parent_feature\": \"feat-dev-pipeline-improvement\", \"phase_refs\": [\"P01\", \"P02\", \"P03\", \"P04\", \"P05\", \"P06\", \"P07\", \"P08\", \"P09\", \"P10\", \"P11\", \"P12\", \"P13\"], \"violations\": []}",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "153ec417e99be316ae29a039055b3f49767ef333c8751b349949616aed60e22b"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "427bb9d65dd36c8db0f03e9fbf2cfcea1fed939b90ec2c5ecb43cc907a770d9f"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "81cc4c00a6a70f02ddbfb8f642161a6ac20e90e5175dc35ac722796e1c4b4ed6"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "eced7f12d64a7e915c1e4f3c389c59a0d32afbc056c8b7befbb612d8ac509e9a"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "2a21feeaebfaf26cdb2dd476a149e7721194db60ed27d4685e950ba38263a8cf"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "7a6b2db4223408a6fbf2f2dab1e807ddb133a6370b14a715250020dd3899d9b4"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "8965cc518f0c5f36932a52c63ea65d10bee474018f9be0514b2078e329d8141c"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "2bcf73b64680d4159e1254585d790fdd08041e2a0ee8a08ad73b4ea8d61bb3bb"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "900d478a0e3cbe696bfe2c7072179f2eb2e707e8c3123f55a8bc53dc8724e0ba"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "56571216533a9dba080789418f74c64d9b92403b071c061c8383653b52429031"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "df331d8468326a2905408261801bf63c9ef754f0fc9fc226be71d259c982db28"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "956577c952c7596036168cfa7620981ce3925706b92e596edb1f8d83fe03996a"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "2fecf85c68f045d3837dd2eeadf04ddbe0bd2ba1b6db0563294b7a0b131efbb2"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "ee248e66bf9491f5f14f8b673ac602f6f95ac36dbe27eb3f2bcc3c75ab1d7ef5"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "00c7da83cbfa31a521e30a372bd2335050c67772a8e4193bfa3223d1c8bd907a"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "a6cdbc79a946cd4f4d362be4a1f6e58a4cbab39329c847b52c392767f4d0ae57"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "108dfecf07f7b9ab07dd4f52fa8139f1530bc81e13a7f4fef9d029375062e986"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "2fb8f6a73b0a302aeef153c2b8ff3904d87ba4825d72a0d2acffd0d9964c71cf"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": []
+}

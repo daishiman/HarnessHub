@@ -1,0 +1,16 @@
+{
+ "patch": {
+  "graph_node_id": "issue-source-freshness-ops-20260722",
+  "updated_at": "2026-07-21T23:58:50Z",
+  "scope_in": [
+   "claude-code-plugins: H7 (Stage 0 technical gate) 直前の changelog 再照合と marketplace.json 仕様不変確認 (2026-07-22 第2回監査: anchor v2.1.215 に対し現行 v2.1.216・moderate。git-subdir source type の一部クライアント schema 検証エラー事例も H7 で要確認)",
+   "drizzle-orm: v1 系採用時の GitHub releases 最新 rc 再確認 (npm rc dist-tag は rc.3 を指し rc.4 を取得できない構造に注意)",
+   "wrangler: pinned version 記録追加の要否検討",
+   "nextjs: 記録 16.2.10 に対し現行 16.2.11 (patch 1 世代遅れ・low)。次回 doc-fetch で更新"
+  ],
+  "acceptance": [
+   "4 件の再照合タイミングが該当 feature/task の手順に組み込まれている",
+   "nextjs / claude-code-plugins の記録が次回 run-system-spec-doc-fetch で現行版へ更新されている"
+  ]
+ }
+}

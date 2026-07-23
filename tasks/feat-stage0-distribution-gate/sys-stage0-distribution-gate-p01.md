@@ -12,8 +12,8 @@ iteration: null
 title: "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-20T12:44:37.942819Z"
-status: "active"
+updated_at: "2026-07-20T12:57:22Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
 resource_scope: ["docs/features/feat-stage0-distribution-gate/requirements-baseline.md"]

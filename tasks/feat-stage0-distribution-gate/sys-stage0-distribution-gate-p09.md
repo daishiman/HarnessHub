@@ -12,8 +12,8 @@ iteration: null
 title: "品質・セキュリティ・運用保証 — C1 (体制)・C2 (コストゼロ)・H7 fail-closed ゲートの充足確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-19T14:19:08Z"
-status: "active"
+updated_at: "2026-07-21T03:18:08Z"
+status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P08"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
 resource_scope: [".dev-graph/cache/stage0-decision-registration-receipt.json",".dev-graph/cache/stage0-decision-registration-request.json",".dev-graph/cache/stage0-stage1-gate-receipt.json","docs/features/feat-stage0-distribution-gate/quality-assurance-report.md"]

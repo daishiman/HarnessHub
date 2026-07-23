@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-doc-governance-portability/plan-doc-governance-20260722",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "system-spec/dev-workflow.md qa-070 (appr-008 承認) 原文を直接読み合わせ、goal-spec.json の purpose・goal・scope_in 3 件・scope_out 4 件・acceptance 4 件・quality_constraints 4 件が qa-070 の 2 規約 (仕組み-ナレッジ分離、300 行上限 fail-closed lint) と 3 検査スコープを逐語的に反映し逸脱・拡散がないことを確認した。13 task specs 全ての『Current canonical feature baseline』節は同一の purpose/goal/scope_in/scope_out/acceptance を verbatim 転記しており、phase 間で矛盾する記述は存在しない。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#L98-121",
+        "gate:deterministic-validation",
+        "feature-package.json",
+        "task-specs/phase-04-test-design.md#L97-121",
+        "task-specs/phase-13-release-deploy.md#L97-121"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "validate-system-plan.py の exact-13 検証 (task_count=13, phase_refs P01-P13, task_spec_paths/task_node_ids 一致) が 0 violations で通過。goal-spec の acceptance 4 件・quality_constraints 4 件それぞれについて所有 phase (P01 基線記録、P03 設計レビュー 5 観点、P04 テスト ID 設計、P05 単一 writer 境界実装、P06/P09 実測・迂回検証、P08 allowlist 遡及付与、P11 証跡固定、P13 CI 実証) が具体的な Phase acceptance 文言として存在し、要求の漏れは検出されなかった。14 個の必須 task-spec 見出しは全 13 ファイルで非空・非重複であることを validator と目視の両方で確認した。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "feature-package.json",
+        "task-graph.json",
+        "workstream-inventory.json"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-doc-governance-portability/plan-doc-governance-20260722 を独立再実行し exit 0・PASS・validated_digest 一致 (0 violations, PLACEHOLDER/STAGING_RUNTIME_REF/P01_ENTRY_GATE 検査含む) を確認した。staging-manifest.json の files 17 件全てを shasum -a 256 で再計算し manifest 記載値と完全一致。goal-spec の lineage 4 件 (feature context, architecture/harness-hub-dev-workflow.md, specs/harness-hub-system-specification.md, system-spec/dev-workflow.md) の sha256 も再計算し一致 (これは上流 elicitor fork が hash tool 不在で未検証のまま残していた項目を、本 fork が Bash で初めて実証的に検証したもの)。P08 記載の既存超過 6 文書の行数 (910/434/366/365/320/303) を wc -l で実測し完全一致を確認した。全 13 task specs の Verification and evidence・Rollout and rollback・Phase acceptance は具体的な path・コマンド・数値条件を持ち placeholder は検出されなかった。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "feature-package.json",
+        "task-specs/phase-08-refactoring-migration.md#L23",
+        "task-specs/phase-08-refactoring-migration.md#L127"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json は P01 の depends_on=[] を起点に P02..P13 が各々直前 phase のみに依存する完全直列 DAG であり、workstream-inventory.json・system-build-handoff.json execution_tasks の依存関係と 3 ソースとも一致した (再計算で後方参照・分岐は 0 件)。P01_ENTRY_GATE_MARKER (selector=parent_feature.depends_on, operator=all, required_statuses=[done,closed]) の存在を確認。全 13 ノード/タスクが feature_package_id=feature-package/feat-doc-governance-portability・parent_feature=feat-doc-governance-portability に単一収束しており、他 feature との混在は検出されなかった。quality_constraints 4 件 (fail-closed-lint, idempotent-verification, single-writer-boundary, digest-immutability) は P03 設計レビュー・P05 write scope 記述・P06/P09 冪等/迂回実測・P08 digest 不変確認・P11 証跡固定という各 phase の acceptance/verification に具体的に反映されている。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "system-build-handoff.json",
+        "task-specs/phase-01-requirements.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-doc-governance-portability/plan-doc-governance-20260722"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee\",\n  \"feature_package_id\": \"feature-package/feat-doc-governance-portability\",\n  \"parent_feature\": \"feat-doc-governance-portability\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "6f66ab6c156b27308e81e48c8e37f0cff9549adc0ae05643e7eee4f9582cf7ca"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "4187739e2efec3f3f7cb26f63d0c60de0ba80315393db78b8b4b491ed06f7f4e"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "c54c3c75f759a0486f99552ca4410f6c09286667a346f96d01bd612bc74f217c"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "b93d05ebfd98f9c547278cfbd15dab6b7d3c1e2bae5bc232c372303952ccb923"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "4f948c902493b0525fd0e2ae7bcdcd1a8bccfbdc57c6d7db769a430c1b27ff6a"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "cf2c7c860c59c91d81500b662009a456b8721292d659dd0612029f7e943423ef"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "93416363fe93324c0a3580e37fb62a88cd495f4b15c10b8b23877295a1e2da28"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "b122b968e5a6f2a6f9e7d235ab88506069e7ed6e280f46999a26ca28160d1198"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "d741cfef0ff909119c8da7a5877abca58d6a6b180c998cb5522949764b69af02"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "e9fa0c7249dd22b46d7380e31e0e64ccedbe192fc28f5deeb8f30ed295e1ef79"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "71922a7ba196230f41918e8945b35b4efb8c7edec402d63cb74ae4ff58e332d0"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "9dd22d76f7e5f26e708dea8c2c671d1343ee5b92633d920623698b091d69968d"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "2053db4ea1d2a8f0b7d24516805bac4899a52e9f03257e226fd785a751ff6172"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "ee9389a1fbb647d34fd767e5d3b82355c3d152d4c3254617180c04ebcdd598cc"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "89b6a20f5d79a23d94aeb2f29020429d570ef66b21c296e5ea1fcb25f7749e67"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "3656620a14e87b970a577f2b800663f97961504a3e384b5ea9fdef72728d66ef"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "993b5b32314973ac0f4822e808fa061044d5de4a231872a107781b0584dee71b"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "536dd833a51f4ba623498d366730e0d2d9c53dc8f9d707369fa0bd173f37a807"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "digest-lineage-verified",
+      "observation": "上流 elicitor fork (elicit-verification.json) は architecture/harness-hub-dev-workflow.md と specs/harness-hub-system-specification.md の sha256 を 'unresolved_no_hash_tool' として未検証のまま PASS 判定していた。本 fork は Bash で shasum -a 256 を用いてこれら 2 ファイルおよび feature context・system-spec/dev-workflow.md を含む lineage 4 件全てを独立再計算し、goal-spec.json の lineage 記載値と byte 単位で一致することを確認した。",
+      "evidence": [
+        "elicit-verification.json",
+        "goal-spec.json (lineage)",
+        "architecture/harness-hub-dev-workflow.md",
+        "specs/harness-hub-system-specification.md"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "grounded-claims-verified",
+      "observation": "task-specs/phase-08-refactoring-migration.md が挙げる既存超過 6 文書の行数 (910/434/366/365/320/303) を wc -l で実測し、全 6 件が記載値と完全一致することを確認した。数値主張が実リポジトリ状態に正確に基づいており、計画の実行可能性を裏付けている。",
+      "evidence": [
+        "task-specs/phase-08-refactoring-migration.md",
+        "docs/security-spec.md"
+      ]
+    }
+  ]
+}

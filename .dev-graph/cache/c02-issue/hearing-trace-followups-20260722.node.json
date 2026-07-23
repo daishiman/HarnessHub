@@ -1,0 +1,103 @@
+{
+ "node": {
+  "graph_node_id": "issue-hearing-trace-followups-20260722",
+  "artifact_kind": "issue",
+  "artifact_subtypes": [],
+  "project_id": "harness-hub",
+  "domain": "documentation",
+  "tags": [
+   "system-spec",
+   "hearing-audit",
+   "follow-up"
+  ],
+  "priority": "medium",
+  "start_date": null,
+  "target_date": null,
+  "iteration": null,
+  "title": "spec-state: qa-067 のユーザー確認記録欠落 (C06 MEDIUM) と質問様式の中立化 (C06 LOW) のフォローアップ",
+  "owners": [
+   "daishiman"
+  ],
+  "created_at": "2026-07-21T23:30:33Z",
+  "updated_at": "2026-07-21T23:30:33Z",
+  "status": "draft",
+  "depends_on": [],
+  "related_nodes": [
+   "issue-d7-hearing-trace-20260721",
+   "feat-dev-pipeline-improvement"
+  ],
+  "resource_scope": [
+   "system-spec/spec-state.json"
+  ],
+  "purpose": "C06 hearing 監査 (2026-07-22) の MEDIUM/LOW findings を追跡し、qa-067 の確認記録遡及と質問様式の中立化を行う",
+  "goal": "qa-067 に確認記録が遡及付与され、R2/R3 の質問様式が中立形式 (採否両案の提示) になり、C06 監査が両 finding で FAIL しない",
+  "scope_in": [
+   "qa-067 確認記録の遡及付与方式の確定 (次回 reopen 時の確認ラウンド等)",
+   "R2/R3 質問様式の中立化 (appr-006 の『選択肢を先に提示→推奨は後段』方針へ合流)"
+  ],
+  "scope_out": [
+   "qa-067 確定内容 (8 要件) の変更",
+   "qa_log 過去エントリの改変"
+  ],
+  "acceptance": [
+   "qa-067 系の確認記録が approval_log または qa_log から遡及できる",
+   "R2/R3 質問テンプレが採用/不採用の対称選択肢を持つ"
+  ],
+  "architecture_refs": [],
+  "parent_feature": null,
+  "feature_package_id": null,
+  "phase_ref": null,
+  "file_path": "issues/sys-hearing-trace-followups-20260722.md",
+  "template_id": "issue",
+  "template_version": "1.0.0",
+  "confirmation_status": "draft",
+  "evaluation_status": "pending",
+  "confirmation_evidence": {
+   "evaluated_digest": null,
+   "evaluator": null,
+   "evidence_ref": null
+  },
+  "source_lineage": {
+   "imported_at": "2026-07-21T23:30:33Z",
+   "origin_kind": "manual",
+   "source_digest": null,
+   "source_path": "system-spec/spec-state.json",
+   "source_plugin": null,
+   "source_version": null
+  },
+  "classification_confidence": 0.95,
+  "classification_reason": "C06 hearing 監査 (2026-07-22, qa-070 再確定 run) の MEDIUM (qa-067 確認記録欠落)・LOW (誘導質問形式) findings を追跡する issue",
+  "classification_candidates": [
+   {
+    "artifact_kind": "issue",
+    "candidate_path": "issues/sys-hearing-trace-followups-20260722.md",
+    "confidence": 0.95
+   }
+  ],
+  "issue_linkage": null,
+  "tracker_binding": "beads",
+  "beads_linkage": null,
+  "github_publication": {
+   "labels": [],
+   "milestone": null,
+   "mode": "local_only",
+   "project_aliases": []
+  },
+  "github_project_linkages": [],
+  "pull_request_linkages": [],
+  "execution_contexts": [],
+  "completion_evidence": {
+   "completed_at": null,
+   "evidence_refs": [],
+   "policy": "manual",
+   "reconciled_at": null,
+   "source": null,
+   "status": "open"
+  },
+  "implementation_readiness": {
+   "checked_at": "2026-07-21T23:30:33Z",
+   "missing_sections": [],
+   "status": "complete"
+  }
+ }
+}

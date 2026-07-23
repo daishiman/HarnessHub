@@ -12,8 +12,8 @@ iteration: "Stage 0"
 title: "Stage 0: 配布経路 technical gate (H7) 検証"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-19T14:19:08Z"
-status: "active"
+updated_at: "2026-07-21T03:20:08Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["features/feat-stage0-distribution-gate.md"]

@@ -1,0 +1,96 @@
+{
+  "receipt": "release-receipt",
+  "task": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+  "feature": "feat-dev-pipeline-improvement",
+  "beads": {"epic": "HarnessHub-k2u", "release_task": "HarnessHub-k2u.13"},
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+  "branch": "devgraph/feat-dev-pipeline-and-doc-governance",
+  "base_branch": "main",
+  "recorded_at": "2026-07-22T14:23:51Z",
+  "release_head_sha": "9245529e6d5cc5018872a260fe73e310c9d6fd63 (第2統合後・本 receipt commit の直前)",
+  "main_integration": {
+    "merged_ref": "origin/main",
+    "merge_commit": "47e917fb3853d0553617e676c58b4b5773ec1430",
+    "commits_behind_before": 92,
+    "conflicts_resolved": 6,
+    "resolutions": {
+      ".dev-graph/state/graph.json": "両ブランチの disjoint ノード追加を union (dev-pipeline/doc-governance の feature/task/issue + main の 5 issue、重複 id 0)、graph_revision=380 (max)。validate-graph-schema.py valid / violations 0",
+      "eval-log/review-queue.jsonl": "append-only 診断ログを union",
+      "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py": "別々の test 関数を union",
+      "plugins/harness-creator/knowledge/knowledge-lessons-index.json": "main 版採用 (auto 生成・id 衝突回避)",
+      "system-spec/index.md": "main の新しい doc-freshness を採用 (--theirs)",
+      "system-spec/fetched-references.json": "main の新しい doc-freshness を採用 (--theirs)"
+    },
+    "post_merge_fixes": [
+      "lint-script-naming: migrate-pipeline-improvement.py を PENDING_RENAME_PATHS へ登録 (domain verb 'migrate')",
+      "live-trial fixture generator (requirements_exact13_package.py) に 15番目 section 'Inner goal-seek execution loop' を追加 (build-system-handoff.py の 14->15 section 契約強化への追随。29 errors -> 30 passed)"
+    ]
+  },
+  "second_integration": {
+    "reason": "PR #41 作成後に main が 22 コミット進み PR が CONFLICTING 化したため再統合 (2026-07-23)",
+    "merged_ref": "origin/main",
+    "merge_commit": "d8e59cc",
+    "commits_behind_before": 22,
+    "conflicts_resolved": 6,
+    "resolutions": {
+      "eval-log/review-queue.jsonl": "union",
+      "content-review/{elegance,rubric}-verdict.json": "SKILL.md が auto-merge で第3の sha (1d524a8a) 化したため、両 verdict を合成状態で再生成 (4条件 findings 0 / rubric score 100 / lint-content-review OK)",
+      "plugins/harness-creator/lessons-learned/2026-07-22-posttooluse-...md": "main 版採用 (--theirs, auto 生成)",
+      "plugins/system-dev-planner/references/system-task-spec-template.md": "main の Automated commands 再実行性段落 と 本ブランチの Inner goal-seek section を union",
+      "specs/harness-hub-system-specification.md": "main 版採用 (--theirs, 本ブランチの feature 変更外・main が最新評価状態)"
+    },
+    "graph_json": "auto-merge、validate-graph-schema valid / violations 0"
+  },
+  "verification": {
+    "ci_deterministic_gates": {
+      "lint-eval-log-layout": "exit 0",
+      "lint-handoff-disposition": "exit 0 (123 findings)",
+      "lint-open-residue": "exit 0",
+      "lint-script-naming": "exit 0",
+      "migration-idempotency": "dry-run moved 0 / dispositions_added 0",
+      "validate-graph-schema": "valid / violations 0"
+    },
+    "regression": {
+      "command": "pytest plugins/dev-graph/tests plugins/spec-drift-guardian/tests plugins/system-dev-planner/tests plugins/harness-creator/tests tests/scripts-root",
+      "passed": 2577,
+      "failed": 3,
+      "errors": 0,
+      "known_failures": "3件はすべて dev-graph skill の live-trial stale-sha (C02 run-dev-graph-node / C04 run-dev-graph-requirements / C14 run-dev-graph-decompose)。HarnessHub-kj1 / HarnessHub-2n6 で追跡"
+    },
+    "content_review": {
+      "run-system-dev-plan": "elegance PASS / rubric PASS (score 100 / findings 0)、統合後 skill_md_sha256 1d524a8a8f39df13a200407eb980697b1c40fcf382e0eb3efdcc75632416c16b (本ブランチ goal-seek + origin/main script rename の合成)。lint-content-review --changed-only [OK]"
+    },
+    "independent_final_review": "差分 60+ ファイルを独立 context でレビュー。BLOCKER 0 / fail-open 化・guard 検知漏れ・退行・証跡改ざんなし"
+  },
+  "close_loop": {
+    "issue": "issue-bd-bridge-notes-passthrough-20260721",
+    "md_status": "closed",
+    "graph_completion": "done",
+    "beads": "closed",
+    "lint_open_residue": "exit 0",
+    "note": "AC-1 の 3 表現同時 close は前コミットで実証済み。lint-open-residue exit 0 で整合を実測"
+  },
+  "spec_reflection": {
+    "spec_impact": "reflected",
+    "detail": "diff は system-spec/spec-state.json (D7 質疑証跡 qa-068 参照・elicit writer 経由の正規反映) に触れる。confirmed 章 system-spec/dev-workflow.md と参照 wrapper architecture/harness-hub-dev-workflow.md は既に qa-067/qa-071 を記述済みで実装は逸脱なし。新規の規範的 spec/architecture 変更は不要 (確定章の変更は要件9 reopen->re-confirm ゲート専管)。P13 retrospective は feature docs に集約"
+  },
+  "pull_request": {
+    "number": 41,
+    "url": "https://github.com/daishiman/HarnessHub/pull/41",
+    "state": "draft",
+    "merge_commit": null,
+    "note": "2026-07-23 に main 向け draft PR #41 を作成。merge commit・最終 done 確定は人手 merge 後。live-trial 再 trial (kj1/2n6) 完了までは governance-check / harness-creator-kit-ci が赤のため draft"
+  },
+  "known_residual": {
+    "live_trial_stale": {
+      "skills": ["run-dev-graph-node (C02)", "run-dev-graph-requirements (C04)", "run-dev-graph-decompose (C14)"],
+      "cause": "本ブランチの system-dev-planner 変更 (goal-seek: SKILL.md/R3-emit.md/validate-system-plan.py/build-system-handoff.py/promote-system-plan.py) がこれら dev-graph skill の behavior closure に含まれ、live-trial verdict の skill_dir_tree_sha を stale 化",
+      "tracked_by": ["HarnessHub-kj1", "HarnessHub-2n6"],
+      "resolution": "merge 前に run-skill-live-trial で 3 skill を再 trial (digest 単独書き換えは forge であり禁止)",
+      "ci_impact": "governance-check (lint-live-trial-verdict --all) と harness-creator-kit-ci (criteria pytest) が再 trial まで赤"
+    },
+    "review_minor": [
+      "sys-dev-pipeline-improvement-p05.md の scope が実在しない schema path を指す (md<->graph 一致・機能/ゲート影響なし・follow-up 予定)"
+    ]
+  }
+}

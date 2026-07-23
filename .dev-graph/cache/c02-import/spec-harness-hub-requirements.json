@@ -1,0 +1,19 @@
+{
+ "patch": {
+  "graph_node_id": "spec-harness-hub-requirements",
+  "updated_at": "2026-07-21T14:18:05Z",
+  "source_lineage": {
+   "imported_at": "2026-07-21T14:18:05Z",
+   "origin_kind": "system-spec-harness",
+   "source_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae",
+   "source_path": "system-spec/00-requirements-definition.md",
+   "source_plugin": "system-spec-harness",
+   "source_version": "0.1.0"
+  },
+  "confirmation_evidence": {
+   "evaluated_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae",
+   "evaluator": "assign-system-spec-completeness-evaluator",
+   "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"
+  }
+ }
+}

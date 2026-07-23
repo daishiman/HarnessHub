@@ -138,7 +138,9 @@ def _task_spec_text(phase: str, responsibility: str, spec_task_id: str,
     """C12 の task spec 検査を満たす 1 phase 分の spec 本文を組む。
 
     制約 (validate-system-plan.py:39-59, 342-365):
-      - REQUIRED_TASK_SPEC_SECTIONS の 14 見出しがちょうど 1 回ずつ、本文が非空
+      - REQUIRED_TASK_SPEC_SECTIONS の 15 見出しがちょうど 1 回ずつ、本文が非空
+        (`Inner goal-seek execution loop` は system-task-goal-seek/v1 と rubric verdict=PASS を含み、
+         P13 は `P13 spec/architecture writeback: required` を宣言する)
       - PLACEHOLDER 正規表現に当たらない。``<`` は ``<[^>]+>`` が改行も跨いで一致する
         ため本文へ 1 文字も置かない
       - staging runtime path を本文へ残さない (promotion 後に解決不能になるため)
@@ -154,6 +156,11 @@ def _task_spec_text(phase: str, responsibility: str, spec_task_id: str,
         "- 本 fixture では適用対象が無いため N/A: 隔離 fixture に移行対象資産が無い\n"
         if phase in {"P08", "P13"}
         else ""
+    )
+    goal_seek_writeback = (
+        "- P13 spec/architecture writeback: required: 実行結果・判断・改善点を system spec と architecture へ反映する"
+        if phase == "P13"
+        else "- P13 spec/architecture writeback: N/A (P13 owns writeback)"
     )
     sections = [
         ("Machine-readable registration fields", "\n".join([
@@ -195,6 +202,14 @@ def _task_spec_text(phase: str, responsibility: str, spec_task_id: str,
         ("Verification and evidence", "\n".join([
             f"- 検証: {responsibility}の完了を phase 成果物で確認する",
             "- 証跡: 本 package 相対 path に閉じた成果物のみを参照する",
+        ])),
+        ("Inner goal-seek execution loop", "\n".join([
+            "- Methodology contract: system-task-goal-seek/v1",
+            "- Goal: 本 phase の Phase acceptance と Verification and evidence をすべて満たす",
+            "- Generic execution prompt: 目的・背景・前提条件・write scope・成果物・受入条件を入力に最小の安全な変更を行う",
+            "- Rubric: acceptance 全件・必須証跡・write scope・依存整合がすべて PASS",
+            "- Feedback loop: 実装→独立評価→finding 反映→再実行 を rubric verdict=PASS まで反復し、上限到達時は fail-closed",
+            goal_seek_writeback,
         ])),
         ("Rollout and rollback", "\n".join([
             "- rollout: 前方 phase 順に段階適用する",

@@ -1,0 +1,14 @@
+{
+ "patch": {
+  "graph_node_id": "issue-hearing-trace-followups-20260722",
+  "updated_at": "2026-07-21T23:54:58Z",
+  "source_lineage": {
+   "imported_at": "2026-07-21T23:54:58Z",
+   "origin_kind": "manual",
+   "source_digest": "132b59ea13a07b1a6488a10ce4008e85a93cd98069a3363fb06c3e73869305bd",
+   "source_path": "system-spec/spec-state.json",
+   "source_plugin": null,
+   "source_version": null
+  }
+ }
+}

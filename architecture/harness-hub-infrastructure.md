@@ -1,50 +1,50 @@
 ---
-graph_node_id: arch-harness-hub-infrastructure
-artifact_kind: architecture
+graph_node_id: "arch-harness-hub-infrastructure"
+artifact_kind: "architecture"
 artifact_subtypes: ["infrastructure"]
-title: Harness Hub infrastructure アーキテクチャ (system-spec 取込)
-project_id: harness-hub
-domain: infrastructure
-status: active
-priority: high
+project_id: "harness-hub"
+domain: "infrastructure"
+tags: ["system-spec-import","infrastructure"]
+priority: "high"
 start_date: null
 target_date: null
 iteration: null
+title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
-tags: ["system-spec-import", "infrastructure"]
-file_path: architecture/harness-hub-infrastructure.md
-template_id: architecture
-template_version: 1.0.0
-confirmation_status: confirmed
-evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "15a91e7e243c3558f92c4cb8c82756a2b9e375eb7c6044369764b28f9b454e9d", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
-source_lineage: {"imported_at": "2026-07-18T15:01:04Z", "origin_kind": "system-spec-harness", "source_digest": "15a91e7e243c3558f92c4cb8c82756a2b9e375eb7c6044369764b28f9b454e9d", "source_path": "system-spec/infrastructure.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
-created_at: 2026-07-17T00:35:59Z
-updated_at: 2026-07-18T15:01:04Z
+created_at: "2026-07-17T00:35:59Z"
+updated_at: "2026-07-23T00:04:47.206172Z"
+status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-dev-workflow"]
+related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
 resource_scope: ["architecture/harness-hub-infrastructure.md"]
-purpose: Cloudflare Workers 一体型 (OpenNext) + 無料枠運用・SLO 99.5%・エラーバジェット・監視/ポストモーテム運用の正本参照
-goal: qa-003/qa-011/qa-019 の確定要件に適合する infrastructure/運用の指針を提供する
-scope_in: ["system-spec/infrastructure.md", "system-spec/maintenance-ops.md"]
-scope_out: ["\u6b63\u672c\u7ae0\u306e\u5185\u5bb9\u8907\u88fd", "\u672a\u78ba\u5b9a\u7ae0\u306e\u53d6\u8fbc"]
-acceptance: ["\u6b63\u672c\u7ae0\u304c confirmed \u304b\u3064 evaluator PASS", "source_digest \u304c\u6b63\u672c\u3068\u4e00\u81f4"]
+purpose: "Cloudflare Workers 一体型 (OpenNext) + 無料枠運用・SLO 99.5%・エラーバジェット・監視/ポストモーテム運用の正本参照"
+goal: "qa-003/qa-011/qa-019 の確定要件に適合する infrastructure/運用の指針を提供する"
+scope_in: ["system-spec/infrastructure.md","system-spec/maintenance-ops.md"]
+scope_out: ["正本章の内容複製","未確定章の取込"]
+acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
 architecture_refs: []
 parent_feature: null
 feature_package_id: null
 phase_ref: null
+file_path: "architecture/harness-hub-infrastructure.md"
+template_id: "architecture"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"system-spec/completeness-report.json"}
+source_lineage: {"imported_at":"2026-07-23T00:04:07Z","origin_kind":"system-spec-harness","source_digest":"dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
-classification_reason: system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)
-classification_candidates: [{"artifact_kind": "architecture", "confidence": 0.95, "candidate_path": "architecture/harness-hub-infrastructure.md"}]
-tracker_binding: none
-beads_linkage: null
-github_publication: {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null}
+classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
+classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
 issue_linkage: null
+tracker_binding: "none"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"policy": "manual", "status": "not_applicable", "source": null, "completed_at": null, "reconciled_at": null, "evidence_refs": []}
-implementation_readiness: {"status": "complete", "missing_sections": [], "checked_at": "2026-07-17T00:35:59Z"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
+implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
 
 # Harness Hub infrastructure アーキテクチャ (system-spec 取込)

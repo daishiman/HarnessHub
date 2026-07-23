@@ -1,0 +1,11 @@
+{
+ "patch": {
+  "graph_node_id": "issue-d7-hearing-trace-20260721",
+  "updated_at": "2026-07-22T00:49:29Z",
+  "beads_linkage": {
+   "bd_issue_id": "HarnessHub-9rg",
+   "linked_at": "2026-07-22T00:49:29Z",
+   "sync_state": "linked"
+  }
+ }
+}

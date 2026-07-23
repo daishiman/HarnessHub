@@ -91,5 +91,5 @@ serves_goals: [G4, G5, G1]
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
 |---|---|---|---|---|---|
-| owasp-asvs | 5.0.0 | OWASP Foundation (owasp.org) | https://owasp.org/www-project-application-security-verification-standard/ | 2026-07-18T00:00:00Z | 2026-07-18T00:00:00Z |
-| rehype-sanitize | 6.0.0 | rehype (unified collective) (github.com) | https://github.com/rehypejs/rehype-sanitize | 2026-07-18T00:00:00Z | 2026-07-18T00:00:00Z |
+| owasp-asvs | 5.0.0 | OWASP Foundation (owasp.org) | https://owasp.org/www-project-application-security-verification-standard/ | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
+| rehype-sanitize | 6.0.0 | rehype (unified collective) (github.com) | https://github.com/rehypejs/rehype-sanitize | 2026-07-18T00:00:00Z | 2026-07-22T22:54:39Z |

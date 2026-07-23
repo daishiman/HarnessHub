@@ -1,0 +1,20 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+  "purpose": "feat-dev-pipeline-improvement の P06 を実行する: テスト実行 — 回帰テスト全件と lint 実測の記録",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "eval-log/dev-graph/pipeline-improvement/test-run-p06.json"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "test-plan.md の全テスト ID が実行され、test-run-p06.json に実行コマンド・exit code・pass/fail 件数が生のまま記録されている",
+   "失敗 0 件で P07 へ進むか、失敗があれば P05 差し戻しが記録されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

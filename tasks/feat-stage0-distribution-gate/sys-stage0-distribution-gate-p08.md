@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — 検証 prototype 資産の整理 (N/A 判断を含む)"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-19T14:19:08Z"
-status: "active"
+updated_at: "2026-07-21T03:18:05Z"
+status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P07"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
 resource_scope: ["docs/features/feat-stage0-distribution-gate/refactoring-migration-note.md"]

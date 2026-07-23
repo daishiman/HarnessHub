@@ -1,0 +1,49 @@
+{
+  "verdict": "FAIL",
+  "checked_at": "2026-07-21T14:03:48Z",
+  "targets_total": 17,
+  "fresh": 13,
+  "stale": [
+    {
+      "target_id": "pnpm",
+      "recorded_version": "11.15.0",
+      "recorded_latest_checked_at": "2026-07-18T15:29:49Z",
+      "current_version_found": "11.15.1",
+      "current_release_date_found": "2026-07-20頃 (npm registry: 「last published 20 hours ago」との照合結果。GitHub release tag v11.15.1)",
+      "severity": "low (patch level)",
+      "note": "記録は取得・確認時点 (2026-07-18) では正確だったが、2026-07-20頃に 11.15.1 がリリースされ、現在は1パッチ世代遅れ。SSOTの厳密定義 (メジャー/マイナーの旧版) には該当しないが、Layer4の安全側原則 (疑いあり→検出側に倒す) により検出として計上。"
+    },
+    {
+      "target_id": "claude-code-plugins",
+      "recorded_anchor": "v2.1.196 (本文記載anchor) / v2.1.203+ 系 (2026-07-18時点の注記)",
+      "recorded_latest_checked_at": "2026-07-18T14:57:14Z",
+      "current_version_found": "v2.1.215 (2026-07-19付, releasebot等の複数ソースで確認)",
+      "severity": "moderate (再確認遅延)",
+      "note": "CLI本体は高頻度リリースが継続しており、latest_checked_at (2026-07-18) 以降に少なくとも十数件のリリースが発生。記録エントリ自体がこの変動性を注記し『H7検証時に再照合』としているが、marketplace仕様 (marketplace.json・source type npm対応) 自体に変更の兆候は本監査でも確認できず、仕様面はFRESH相当。バージョンanchorの再確認遅延のみを検出として計上。"
+    }
+  ],
+  "unverifiable": [
+    {
+      "target_id": "wrangler",
+      "reason": "記録の last_updated=\"Jul 3, 2026\" は developers.cloudflare.com/workers/wrangler/ ページ本文の更新日表示に基づくと推測されるが、本監査はWebFetch不可環境でありページ自体のfetchによる直接確認ができない。WebSearchでは製品情報 (wrangler CLI概要・最新パッケージバージョン4.112.0等) は確認できたが、ドキュメントページ自体の最終更新日は裏取り不能。"
+    },
+    {
+      "target_id": "drizzle-orm",
+      "reason": "記録は 'v1.0.0-rc.4 (2026-06-27公開のGitHub release)' を現行プレリリースとして裏取り済みと主張するが、本監査のWebSearchでは npm dist-tag 'rc' が v1.0.0-rc.3 (2026-05-18公開) を指し、'rc4' は custom tag のdevスナップショット (1.0.0-rc.4-5d5b77c, 2026-05-20公開) として観測され、記録のGitHub release起点 (2026-06-27) とは一致しなかった。WebFetch不可のためGitHub releasesページを直接確認できず、rc.3とrc.4のどちらが正本の現行プレリリースかを本監査だけでは確定できない。安定版0.45.2の一致は確認済み。"
+    }
+  ],
+  "unofficial_hosts": [],
+  "missing_fields": [],
+  "form_layer_c13": {
+    "exit_code": 0,
+    "result": "OK: 出典記録が全件対応・必須フィールド充足・公式host一致を満たす",
+    "targets_input": "system-spec/spec-state.json の targets[] (17件) を --targets として使用",
+    "state_warnings": "なし"
+  },
+  "coverage_check": {
+    "spec_state_targets": 17,
+    "fetched_references": 17,
+    "missing_targets": []
+  },
+  "notes": "層1(形式・C13)はexit0でPASS。層2(内容鮮度)はWebFetch不可環境のためWebSearchのみで再照合 (前回2026-07-18監査時と同条件)。非公式host・必須フィールド欠落は0件。stale 2件 (pnpm: パッチ1世代遅れ・低深刻度、claude-code-plugins: 再確認遅延・中深刻度) を検出したためverdict=FAIL。unverifiable 2件 (wrangler・drizzle-orm) はいずれも3件以下の許容範囲内だが、参考情報として記録。owasp-asvs(5.0.0)・rehype-sanitize(6.0.0)・opennext-cloudflare(1.20.1)・typescript(7.0)・zod(4)・resend・turso・cloudflare-workers/r2/d1・github-actions・authjs・nextjsは現行版/内容と一致を確認しFRESH。"
+}

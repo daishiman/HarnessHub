@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-066 |
+| Web (web) | 確定 | 確定質疑: qa-071 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-039 |
@@ -24,11 +24,20 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-066 (対応セル: web)
+### qa-071 (対応セル: web)
 
-**質問**: docs/features/README.md と docs/features/*/requirements-baseline.md 11 件を、既存 dev-workflow 確定 qa-051/qa-038 を維持しながら、循環複製せず system-spec へどう取り込むか。
+**質問**: 既存確定 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 を全面維持したまま、開発管理パイプラインの方法論 (methodology) として次の 8 要件を追加確定する: (1) マクロ構造、(2) exact-13、(3) 外側ループ、(4) 内側ループ、(5) スコープ分離、(6) 情報配置、(8) 書き戻し、(9) 既存保全と更新統制。ユーザー提供の要件定義 (2026-07-22 /dev-graph spec --resume 引数) に基づき、仕様確定に不可欠な情報が既に揃っているため追加ヒアリングなしで確定する。(要件 7 の命名規則/doc 粒度は qa-070 で確定済み。要件 10 の portable separation は qa-070 で確定済み。要件 11 の Git 差分照合は completeness evaluator の responsibilities に帰属)
 
-**回答**: qa-051 の P0〜P5 構築順と qa-038/qa-039 の開発・品質ゲートを全面維持する。docs/features/README.md は system-design-overview.md §3 の構築順を feature から逆引きする派生索引、11 件の requirements-baseline は promoted goal-spec の purpose/goal/scope/acceptance/quality_constraints を P01 で確定転記した delivery 層の派生正本である。このため feature 本文を system-spec へ重複コピーせず、次の参照型トレースとして取り込む。(P0) feat-stage0-distribution-gate = 2 経路以上+Windows/macOS 実機検証と採用 decision、feat-hub-foundation = pnpm CI→Workers deploy・/health・SLO 99.5%・3MiB、feat-domain-model-db = Tenant→Workspace→Project→TargetChannel→immutable Release・libSQL/D1 接続・R2 registry/restore、feat-auth-tenancy = tenant OIDC・role 4 種・単一認可 MW・Device Flow・2 tenant 分離。(P1) feat-hearing-intake = S10→受付番号/D5→S11/S12、sanitize と本人/admin 境界。(P2) feat-publish-pipeline = PublishRequest 検査・immutable Release/stable pointer・rollback/監査、feat-build-pipeline-board = S13 7 工程・admin 操作・PublishRequest 接続。この phase は baseline 未生成の feat-publisher-plugin/feat-dual-catalog-web も README と features/*.md を参照して CLI/Web upload→管理→install/download を閉じる。(P3) feat-feedback-loop = CLI/Web 同一 Feedback→D5→人確認後 publish→通知、feat-docs-cms = common/tenant doc・S15・sanitize・D5 下書き・編集監査。(P4/P5) feat-user-org-admin = S17/S18・role/PII salary/係数/通知、feat-metrics-tracking = 短命 token+冪等 ingest・サーバ換算・rollup・S16/S17、P5 S09。baseline 未生成の feat-workspace-governance は README と features/*.md を参照し S05/S06 を P5 で閉じる。各 baseline の acceptance と quality_constraints は system-spec の U/G/I/D/qa および architecture wrapper を source に持つ下流投影であり、system-spec へ逆輸入して二重正本にしない。上流未解決は派生 baseline 側で保持し、特に feat-domain-model-db の User 基底 table owner と qa-045 digest 外、feat-publish-pipeline の schema/authz/inspection owner-consumer 境界、feat-metrics-tracking の estimation engine owner を P02/follow-up で解消する。対象 11 path は feat-auth-tenancy / feat-build-pipeline-board / feat-docs-cms / feat-domain-model-db / feat-feedback-loop / feat-hearing-intake / feat-hub-foundation / feat-metrics-tracking / feat-publish-pipeline / feat-stage0-distribution-gate / feat-user-org-admin の各 docs/features/<id>/requirements-baseline.md。これにより全 baseline を source lineage で追跡しつつ、feature→system-spec の循環複製を 0 にする。
+**回答**: 既存 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 の確定内容は全面維持し、本 qa は以下 8 要件をユーザー提供の回答として確定する。出典: ユーザー逐語 (2026-07-22 /dev-graph spec --resume 引数。追加ヒアリング不要として明示)。
+【1. マクロ構造 (macro-structure)】小さな task と依存関係を積み上げて feature にし、複数 feature を system にする。グラフには依存関係のある実行タスクだけを載せる (仕様本文・architecture 本文は正規文書に集約し、task/feature は参照と lineage だけを持つ)。実行タスクの最小単位は feature 内の 1 フェーズ相当作業であり、feature 間の依存は feature 粒度で表現する。
+【2. exact-13 (13フェーズ固定)】1 feature は P01..P13 の 13 フェーズで構成し、13 フェーズは直列依存 (前フェーズ完了が次フェーズの開始条件)。各フェーズ内の子タスク数は固定せず、達成に必要な粒度で分解し、並列実行可能なものは並列化する。小さい機能でも 13 フェーズを省略しない。1 feature → 13 task への分解は system-dev-planner (/dev-graph plan) が担う。
+【3. 外側ループ (outer loop)】feature 全体の改善とフィードバックを回す外側ループを持つ。中心には目的・背景・ゴールを置き、これらを確定してから 13 フェーズを進める。feature の目的・背景・ゴールが未確定のまま実装フェーズへ進まない。
+【4. 内側ループ (inner loop)】各フェーズに汎用 task prompt・goal-seek・rubric・feedback loop を持たせ、各フェーズの目的達成まで反復する。フェーズ内の達成基準 (rubric) が PASS するまでループを回す。
+【5. スコープ分離 (scope separation)】量が多い・1 task で完結しない・目的・背景から外れる問題は別 task または別 feature に切り出す。切り出した feature も同じ 13 フェーズと品質ゲートを通す。スコープ拡大の誘惑に負けず、切り出しを先行させる。
+【6. 情報配置 (information placement)】task graph に仕様本文や architecture 本文を詰め込まない。仕様・architecture・task-spec・docs は正規文書に集約し、task/feature は参照と lineage だけを持つ (内容を複製しない)。正規文書への参照は source_lineage と architecture_refs で追跡する。
+【8. 書き戻し (write-back)】実装完了後、結果・判断・改善点を仕様書と architecture へ反映し、次の task/feature が再利用できるようにする。一方通行にしない: 実装→仕様書→次の feature というフィードバックループを確立する。書き戻しの責務は feature の P13 (保守・運用移行) フェーズに含める。
+【9. 既存保全と更新統制 (preservation and update control)】AI の追加偏重による重複・矛盾を防ぎ、既存情報を消さずに差分更新する。不要情報の削除や置換は仕組み化された gate (reopen → re-confirm フロー・CI lint) で管理する。既存確定 qa 項目を AI が単独で書き換えない。変更は必ず reopen → 確認 → re-confirm の経路を通す。
+要件 7 (命名規則と検索可能性・文書粒度): qa-070 の確定内容 (kebab-case 接頭辞体系・300 行上限 fail-closed CI lint・責務単位分割) が実効値として包含する。要件 10 (portable separation): qa-070 の仕組みとナレッジのオン・オフ分離で確定済み。以上 8 要件 + qa-070 の 2 要件 (portable separation / doc 粒度) + qa-067 の 8 要件 (lifecycle close-loop 他) がG1 (仕組みの持ち出しによる配布・運用効率)・G4 (fail-closed 品質ゲート)・G5 (ドキュメント管理の持続性) に資する。実装は関連 feature (feat-dev-pipeline-improvement の 13 フェーズ・issue-qa070-implementation-feature-20260722) を通じて行う。
 
 ### qa-039 (対応セル: desktop-windows, desktop-macos)
 

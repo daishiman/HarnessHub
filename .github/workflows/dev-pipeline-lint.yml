@@ -1,0 +1,42 @@
+name: dev-pipeline-lint
+
+# feat-dev-pipeline-improvement (qa-067) の 3 決定論検査を fail-closed で強制する。
+# lint は違反検出時に exit 2 で job を落とす。CI checkout は Beads の Dolt DB を
+# 持たないため、open-residue は git 追跡成果物で完結する OR-001/OR-002 を強制する。
+# OR-003/OR-004 は Dolt DB があるローカル品質ゲートで `bd export` から評価する。
+# `.beads/issues.jsonl` は受動エクスポートであり、状態判定の正本には使わない。
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  dev-pipeline-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: lint eval-log layout (直下残置/バイト同一重複/1MiB 超の遮断)
+        run: python3 plugins/dev-graph/scripts/lint-eval-log-layout.py --repo-root .
+        continue-on-error: false
+
+      - name: lint improvement-handoff disposition (per-finding 消化状態の必須化)
+        run: python3 plugins/dev-graph/scripts/lint-handoff-disposition.py --repo-root .
+        continue-on-error: false
+
+      - name: "lint open residue (解決済み事象の md/graph/beads 3 表現の乖離検出)"
+        run: python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . --no-require-beads
+        continue-on-error: false
+
+      - name: verify migration idempotency (再実行が差分 0 に収束する)
+        run: |
+          python3 plugins/dev-graph/scripts/migrate-pipeline-improvement.py --repo-root . --dry-run \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if d['moved_count']==0 and d['dispositions_added']==0 else 1)"
+        continue-on-error: false

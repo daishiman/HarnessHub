@@ -1,0 +1,24 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+  "purpose": "feat-dev-pipeline-improvement の P02 を実行する: 検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "docs/features/feat-dev-pipeline-improvement/design.md"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "design.md に lint-open-residue.py / lint-eval-log-layout.py / lint-handoff-disposition.py の入出力契約 (引数・exit code・検出条件・JSON 出力形状) が確定している",
+   "improvement-handoff schema の disposition (applied|deferred|rejected) と根拠 ref の必須化が、既存 21 ファイルとの後方互換方式 (遡及付与 migration) と併せて設計されている",
+   "spec-drift-guardian の C03/C04 verdict を close gate へ配線する設計 (対象: plugins/spec-drift-guardian の該当 hook/skill、verdict 未着時は proposal のみでの close を遮断する fail-closed 条件、improvement-handoff-elegant-verify.json findings 8 件への対応表) が確定している",
+   "eval-log 配置規約 (skill 名 prefix サブディレクトリ・1MB 超 gitignore・重複/変種遮断) と再配置対象一覧、tasks status 意味論、graph.json 分割トリガー、棚卸し GC 手順が設計されている",
+   "dev-graph 中核 handoff 3 ファイル (improvement-handoff-macro/beads/無印) 31 findings の差分監査手順 (現行実装との突合で applied/deferred/rejected を根拠付き判定する方式。94 findings 全件付与の内数として P08 が実行する) が設計されている",
+   "P01 の据置事項 4 点が全て確定し、未確定の持ち越しが 0 件である"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

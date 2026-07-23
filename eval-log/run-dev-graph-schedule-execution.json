@@ -1,53 +1,44 @@
 {
   "assignment_hints": [
     {
-      "claim_command": "/dev-graph worktree claim SYS-STAGE0-DISTRIBUTION-GATE-P01 --branch devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01 --session-id <session>",
-      "graph_node_id": "SYS-STAGE0-DISTRIBUTION-GATE-P01",
-      "suggested_branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01"
-    },
-    {
-      "claim_command": "/dev-graph worktree claim spec-harness-hub-requirements --branch devgraph/spec-harness-hub-requirements --session-id <session>",
-      "graph_node_id": "spec-harness-hub-requirements",
-      "suggested_branch": "devgraph/spec-harness-hub-requirements"
+      "claim_command": "/dev-graph worktree claim SYS-DEV-PIPELINE-IMPROVEMENT-P01 --branch devgraph/SYS-DEV-PIPELINE-IMPROVEMENT-P01 --session-id <session>",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+      "suggested_branch": "devgraph/SYS-DEV-PIPELINE-IMPROVEMENT-P01"
     }
   ],
   "batches": {
     "features": [
       [
-        "feat-hub-foundation",
-        "feat-stage0-distribution-gate"
+        "feat-dev-pipeline-improvement"
       ]
     ],
     "tasks": [
       [
-        "SYS-STAGE0-DISTRIBUTION-GATE-P01",
-        "spec-harness-hub-requirements"
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
       ]
     ]
   },
   "conflict_pairs": [],
   "conflicts": [],
-  "executed_at": "2026-07-20T02:42:20.221649Z",
-  "graph_sha256_after": "e27016856c7205e8b6d6c8363b977cd75d8ae8a38686ac017fd0f554d587b525",
-  "graph_sha256_before": "e27016856c7205e8b6d6c8363b977cd75d8ae8a38686ac017fd0f554d587b525",
-  "lease_sha256_after": "7216c847a14e2fedb094fb2851862dfaa56e43c5aa5f8f79b5a2b82d469c0ebf",
-  "lease_sha256_before": "7216c847a14e2fedb094fb2851862dfaa56e43c5aa5f8f79b5a2b82d469c0ebf",
+  "executed_at": "2026-07-22T04:37:10.158273Z",
+  "graph_sha256_after": "6107b737cbde37e4fc90b5d94c027098d8118a8c1dfd906f618deb24a397c390",
+  "graph_sha256_before": "6107b737cbde37e4fc90b5d94c027098d8118a8c1dfd906f618deb24a397c390",
+  "lease_sha256_after": "a593c13181d758746389321a48507691d2cebacf7008b2ca28888fdd2f7320e7",
+  "lease_sha256_before": "a593c13181d758746389321a48507691d2cebacf7008b2ca28888fdd2f7320e7",
   "lease_source": "git_common_dir",
-  "max_parallel": null,
+  "max_parallel": 4,
   "read_only": true,
   "ready_set": {
     "features": [
-      "feat-hub-foundation",
-      "feat-stage0-distribution-gate"
+      "feat-dev-pipeline-improvement"
     ],
     "tasks": [
-      "SYS-STAGE0-DISTRIBUTION-GATE-P01",
-      "spec-harness-hub-requirements"
+      "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
     ]
   },
-  "ready_source": "bd-bridge",
-  "scope": null,
-  "tracker_sha256_after": "b9384ac86b6de3a9a9c1916115c14ab5ef143839d357bfb8c4bb146eddcb54e8",
-  "tracker_sha256_before": "b9384ac86b6de3a9a9c1916115c14ab5ef143839d357bfb8c4bb146eddcb54e8",
+  "ready_source": "binding-aware",
+  "scope": "feat-dev-pipeline-improvement",
+  "tracker_sha256_after": "3ef25026b7b5cd9a250c7ab4c4c7b6248011f1d03e4e877751f634d40e212a46",
+  "tracker_sha256_before": "3ef25026b7b5cd9a250c7ab4c4c7b6248011f1d03e4e877751f634d40e212a46",
   "unmapped": []
 }

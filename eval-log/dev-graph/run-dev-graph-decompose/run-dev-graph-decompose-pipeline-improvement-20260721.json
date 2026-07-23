@@ -1,0 +1,35 @@
+{
+ "schema": "run-dev-graph-decompose/macro-report/1.0.0",
+ "decomposed_at": "2026-07-21T14:45:00Z",
+ "source": "system-spec/dev-workflow.md qa-067 (開発管理パイプライン改善 8 要件, 2026-07-21 確定)",
+ "mode": "incremental-macro-add",
+ "features_added": [
+  {
+   "graph_node_id": "feat-dev-pipeline-improvement",
+   "stage": "qa-067 (開発管理パイプライン改善)",
+   "depends_on": [],
+   "architecture_refs": [
+    "arch-harness-hub-dev-workflow"
+   ],
+   "status": "draft",
+   "evidence": [
+    "system-spec/dev-workflow.md qa-067",
+    "eval-log/run-dev-graph-system-spec-reimport-20260721.json"
+   ]
+  }
+ ],
+ "edges_added": [],
+ "features_unchanged": 15,
+ "beads_projection": {
+  "published_packages": [],
+  "draft_features_not_published": [
+   "feat-dev-pipeline-improvement"
+  ],
+  "note": "draft/pending のため tracker 投影なし (投影は plan 昇格後の package 単位)"
+ },
+ "graph": {
+  "revision_before": 265,
+  "revision_after": 266
+ },
+ "next": "plan verb: /dev-graph plan --feature-id feat-dev-pipeline-improvement --feature-context features/feat-dev-pipeline-improvement.context.json"
+}

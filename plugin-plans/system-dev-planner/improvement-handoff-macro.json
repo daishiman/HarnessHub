@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "source": {
     "kind": "manual",
     "ref": "macro-micro-separation-20260712",
@@ -21,28 +21,40 @@
       "severity": "high",
       "summary": "system-dev-planner の purpose/位置づけが『plugin-dev-planner 同型のシステム開発ハーネス』止まりで、dev-graph の 1 feature を入力にその機能を細タスク化するミクロ層である点、および自動/手動の起動経路が明示されていない。",
       "recommendation": "goal-spec purpose と index 冒頭へ位置づけを明確化: system-dev-planner はミクロ層で、dev-graph の 1 つの feature ノード (purpose/goal/scope_in/scope_out/acceptance/architecture_refs) を入力文脈に受け、その機能を達成する 13 lifecycle タスク仕様書 + 機能内依存 DAG を生成する per-feature ファクトリ。起動は自動 (dev-graph C14 が ready feature ごとに Skill 呼出し) と手動 (/system-dev-plan) の両対応。feature 自体の生成・program 全体の goal/scope は扱わない (dev-graph マクロ層の責務)。purpose の冗長語彙は最適化してよい。",
-      "target_ref": "goal-spec.json (purpose) + index.md"
+      "target_ref": "goal-spec.json (purpose) + index.md",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     },
     {
       "id": "MS-02",
       "severity": "high",
       "summary": "dev-graph-registration-contract.json が生成 task を feature 配下に吊るす parent_feature を持たず、dev-graph 側 MM-03 (parent_feature 追加) と 1:1 対応が崩れる。",
       "recommendation": "required_fields へ parent_feature を追加。fixed_values に parent_feature の由来を注記 (system-dev-planner の 1 run が計画する feature の graph_node_id。全 promoted task が共有。dev-graph feature ノード実在を前提とし、値は起動時に feature 文脈から解決)。dev-graph-registration.schema.json の items override へ parent_feature (type string, feature graph_node_id 参照) を追加し、node_schema_ref 先 graph-node.schema.json の MM-03 追加と同期。fail_closed_on へ unknown_parent_feature を追加。",
-      "target_ref": "dev-graph-registration-contract.json + schemas-draft/dev-graph-registration.schema.json"
+      "target_ref": "dev-graph-registration-contract.json + schemas-draft/dev-graph-registration.schema.json",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     },
     {
       "id": "MS-03",
       "severity": "medium",
       "summary": "system-dev-planner の入力契約が『プラグイン構想/システム構想 1 件の自然文』のままで、dev-graph feature ノードを入力文脈として受ける経路 (自動起動時) が未記述。",
       "recommendation": "入力契約へ feature 文脈入力を追加: 自動起動時は dev-graph の feature ノード (purpose/goal/scope_in/scope_out/acceptance/architecture_refs) を構造化入力として受理し goal-spec (purpose/background/goal/checklist) へ写像する (intake.json と同格の構造化入口)。手動起動時は従来どおり自然文構想。architecture_refs 先の仕様/アーキテクチャは system-spec-harness 引用と重複させない。",
-      "target_ref": "goal-spec.json + references/system-task-spec-template.md"
+      "target_ref": "goal-spec.json + references/system-task-spec-template.md",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     },
     {
       "id": "MS-04",
       "severity": "medium",
       "summary": "index.md のプランナー選定節が beads 統合時の『plugin 構築 vs システム構築』軸のみで、dev-graph(マクロ) と system-dev-planner(ミクロ) の二層関係が未記述。棲み分けが読み取れない。",
       "recommendation": "index.md のプランナー選定/責務境界節へ二層モデルを追記: system-dev-planner は dev-graph マクロ層の 1 feature を細タスク化するミクロ層 (want→dev-graph C14 マクロ分解→feature→per-feature system-dev-planner→13 タスク仕様書→dev-graph へ parent_feature 登録)。正本 = dev-graph plan の references/execution-tracker-contract.md §0 と本 improvement の二層モデル節。既存の beads 選定軸 (plugin=plugin-dev-planner) とは直交する軸として併記。",
-      "target_ref": "index.md"
+      "target_ref": "index.md",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     }
   ],
   "provenance": {

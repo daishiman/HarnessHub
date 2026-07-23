@@ -12,8 +12,8 @@ iteration: null
 title: "docs/ 全体マクロ再分解 (2026-07-18) の残 findings 5 件の是正"
 owners: ["daishiman"]
 created_at: "2026-07-18T16:20:35Z"
-updated_at: "2026-07-21T00:00:00Z"
-status: "done"
+updated_at: "2026-07-22T05:50:25.084681Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-tenant-data-retention","feat-domain-model-db","feat-auth-tenancy"]
 resource_scope: ["docs/security-spec.md","features/feat-domain-model-db.md","plugins/dev-graph/scripts/bd-bridge.py"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-21T01:50:12Z","evidence_refs":["pr:daishiman/HarnessHub#11","commit:d9e0711","commit:89c47df","commit:2f1d015","commit:a34c1a9","commit:c002751","beads:HarnessHub-9ao","plugins/dev-graph/tests/test_bd_bridge_external_ref_idempotency.py"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-21T01:50:12Z","source":"manual (graph 未登録 node のため reconcile-github-lifecycle.py 対象外)","status":"closed"}
+completion_evidence: {"completed_at":"2026-07-21T01:50:12Z","evidence_refs":["plugins/dev-graph/tests/test_bd_bridge_external_ref_idempotency.py"],"policy":"manual","reconciled_at":"2026-07-22T00:00:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-18T16:20:35Z","missing_sections":[],"status":"complete"}
 ---
 

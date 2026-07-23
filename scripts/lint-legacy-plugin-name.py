@@ -51,6 +51,10 @@ ALLOWLIST = {
     "doc/マルチ企業展開/クリーンアップ計画.md":
         "実在する凍結層ディレクトリ doc/参考Skill/skill-creator/ への整理対象パス言及と"
         "旧 repo 構造の歴史記述",
+    "plugins/dev-graph/scripts/migrate-pipeline-improvement.py":
+        "改名前 skill-creator 期の eval-log 成果物 (skill-build-trace-*/skill-creation-report) を"
+        "実在する凍結層ディレクトリ eval-log/skill-creator/ へ整理する route 定義。歴史的実体への"
+        "整理対象パス言及であり、現行 harness-creator へ route すると別時代の成果物が混入する",
 }
 
 

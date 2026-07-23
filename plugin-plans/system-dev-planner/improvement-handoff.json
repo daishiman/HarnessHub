@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "source": {
     "kind": "manual",
     "ref": "current-user-request",
@@ -13,26 +13,38 @@
       "severity": "high",
       "summary": "仕様書・architectureの作成責務とシステム開発task-spec生成責務を独立ハーネス境界で固定する必要がある。",
       "recommendation": "system-spec-harness v0.1.0のcompile/evaluator確定成果物を引用し、内容ロジックを複製しない。",
-      "target_ref": "goal-spec.json#C3,C9"
+      "target_ref": "goal-spec.json#C3,C9",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     },
     {
       "id": "SDP-002",
       "severity": "high",
       "summary": "symlink配布時に物理リンク元をcontent rootと誤認すると別repositoryの文書をcross-readする。",
       "recommendation": "repo-root resolver、repo-local config、realpath containment、absolute/traversal拒否、multi-repo isolation testを追加する。",
-      "target_ref": "goal-spec.json#C10"
+      "target_ref": "goal-spec.json#C10",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     },
     {
       "id": "SDP-003",
       "severity": "high",
       "summary": "生成途中のtask specsをdev-graphへ登録するとpartial stateがIssue化される。",
       "recommendation": "same-digest決定論検証+独立4条件評価+readiness complete後だけatomic promotionし、promotion receiptから登録する。",
-      "target_ref": "references/atomic-promotion-contract.md"
+      "target_ref": "references/atomic-promotion-contract.md",
+      "disposition": "deferred",
+      "disposition_ref": "bd:HarnessHub-k2u",
+      "disposition_recorded_at": "2026-07-22T00:00:00Z"
     }
   ],
   "provenance": {
     "source_intake": "intake.json",
     "prev_goal_spec": "goal-spec.json",
-    "origin_request": {"kind": "verbal", "ref": "current-user-request"}
+    "origin_request": {
+      "kind": "verbal",
+      "ref": "current-user-request"
+    }
   }
 }

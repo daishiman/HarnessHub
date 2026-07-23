@@ -1,0 +1,269 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec/",
+  "verdict": "PASS",
+  "run_timestamp": "2026-07-22T00:00:00Z",
+  "trigger": "qa-071 追加確定後の差分照合評価 (Req 11: Git 差分照合責務の completeness evaluator 帰属)",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "score": 93,
+      "summary": "qa-071 追加後も validate-coverage-matrix.py --require-foundation が exit0 を維持している。dev-workflow.web セルの qa_ref が qa-070 から qa-071 へ更新されたが、serves_goals (G1/G4/G5) は保持され、上位概念 U1-U9 → goals G1/G4/G5 → dev-workflow.web セル → system-spec/dev-workflow.md の trace が途切れない。qa-071 answer 本文でも G1/G4/G5 への接地 (仕組み持ち出しの配布効率・fail-closed 品質ゲート・ドキュメント管理持続性) が明文化されている。reopen_log 末尾エントリが qa-071 追加の R4-reopen 理由 (dev-graph 方法論 8 要件の追加確定・qa-070 全内容の全面維持句継承) を記録しており、上位概念トレースを損なわない。",
+      "evidence": [
+        "validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-foundation -> exit0 (2026-07-22 qa-071 追加後の実行: 'OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす')",
+        "spec-state.json matrix.dev-workflow.web = {state: 確定, qa_ref: qa-071, serves_goals: [G1,G4,G5]}",
+        "spec-state.json reopen_log 末尾エントリ: {category: dev-workflow, platform: web, reason: 'dev-graph 方法論 8 要件 (マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全) を qa-071 として追加確定するため R4-reopen。既存 qa-070 の全内容は qa-071 の全面維持句で継承する'}",
+        "system-spec/dev-workflow.md:27 (qa-071 対応セル: web) / qa-071 answer 末尾 G1/G4/G5 への接地記述"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "score": 89,
+      "summary": "qa-071 は新規技術 decision (D1-D7) を追加せず、qa-038/039/051/066/067/070 の全面維持句で既存 decisions と矛盾しない。8 要件はいずれも『方法論の確定 (methodology confirmation)』であり、特定技術スタック選定 (D1-D7) には触れない。approval_ref は存在しないが、qa-071 は『ユーザー提供の要件定義 (2026-07-22 /dev-graph spec --resume 引数) に基づき、追加ヒアリングなしで確定』と明示されており、source が user-provided argument として扱われている。ただし appr-009 相当の正式 approval_log エントリが spec-state.json に存在しないため、qa-067 同型の hearing-confirmation-gap として medium finding を継続計上する。",
+      "evidence": [
+        "spec-state.json decisions[D1..D7].status = confirmed (7/7, qa-071 で変更なし)",
+        "spec-state.json qa_log[qa-071].question に '全面維持' 句と '追加ヒアリングなしで確定' の明示あり",
+        "spec-state.json qa_log[qa-071].answer に 'ユーザー提供の回答として確定する。出典: ユーザー逐語 (2026-07-22 /dev-graph spec --resume 引数)' とあり、source 明示済み",
+        "spec-state.json approval_log に appr-009 相当エントリなし (qa-071 の approval_ref = null)"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "score": 88,
+      "summary": "validate-coverage-matrix.py --require-complete が exit0 を維持している。qa-070 時点の 54 セル (確定 25 + 対象外 29・未収集 0) の構成は qa-071 追加後も変化なく、category_aggregate 9 カテゴリ全て確定。差替セル dev-workflow.web の qa_ref=qa-071 は qa_log に実在し (qa-070 の全面維持句で確定系譜が保たれる)、dangling 0。qa-071 は dev-workflow.web セルの qa_ref を qa-070 から qa-071 へ更新するが、実質は qa-070 の全面維持句を含む追加確定であり、セル状態変化 (確定→確定) は適正。継続 medium 2 件 (ui-ux desktop の qa-007 流用 / qa-017 反映の qa_ref 未言及) は未是正を再確認し継続計上する。",
+      "evidence": [
+        "validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-complete -> exit0 (2026-07-22 qa-071 追加後: 'OK: 収集マトリクス網羅性 (final(未収集0)) を満たす')",
+        "spec-state.json matrix.dev-workflow.web.qa_ref = 'qa-071' (qa_log に実在、qa-070 全面維持句付き)",
+        "spec-state.json category_aggregate 9 カテゴリ全て確定 / hearing_progress.complete=true",
+        "spec-state.json matrix.ui-ux.desktop-windows.qa_ref=qa-007 / matrix.ui-ux.desktop-macos.qa_ref=qa-007 (継続 medium・未是正再確認)",
+        "spec-state.json matrix.backend.web.qa_ref=qa-059 / matrix.security.web.qa_ref=qa-061 (qa-017 反映 qa_ref 未言及・継続 medium)"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "score": 88,
+      "summary": "aggregate-completeness.py --knowledge-graph が exit0 を維持している。qa-071 は方法論要件の追加確定であり、新規設計知識カードや doctrine anchor の追加はない。system-spec/dev-workflow.md の doctrine anchor (Google SRE operations) と適用設計知識節は qa-071 追加後も整合を維持する (qa-071 の 8 要件はいずれも SRE 原則の下でのパイプライン方法論として矛盾しない)。継続 medium (backend.md の設計知識カード表示順が topo_order と不一致) は未是正を再確認し継続計上する。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph -> exit_code=0 (subgates knowledge=0/doctrine=0/required-info=0/cross=0)",
+        "system-spec/dev-workflow.md 末尾の '上流指針 (doctrine anchor)' 節・'適用された設計知識' 節が qa-071 追加後も存在",
+        "qa-071 の 8 要件 (マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全) が Google SRE operations anchor (トイル削減・ポストモーテム) と矛盾しないことを意味層確認",
+        "system-spec/backend.md:50,91,134 (カード表示順の継続 medium・未是正再確認)"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "score": 86,
+      "summary": "validate-source-citation.py が exit0 を維持している。qa-071 は新規技術出典を追加しないため targets 件数は変化なし (17 件のまま)。fetched-references.json も qa-071 追加によって変更不要で整合する。ただし、system-spec/dev-workflow.md の内容が qa-071 追加によって変更されたため、このファイルを source_path とする artifacts の source_digest が旧 digest (0c48fb74...) を参照し続けている問題を検出した。具体的には architecture/harness-hub-dev-workflow.md・issues/sys-qa070-implementation-feature-20260722.md・issues/sys-doc-granularity-remediation-20260722.md・features/feat-doc-governance-portability.md が旧 digest を参照している。これは source_drift (正本変更後の依存成果物 digest 追従漏れ) であり medium finding として計上する。",
+      "evidence": [
+        "validate-source-citation.py --targets system-spec/spec-state.json --references system-spec/fetched-references.json -> exit0 (2026-07-22 qa-071 追加後: 'OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす')",
+        "shasum -a 256 system-spec/dev-workflow.md -> 97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2 (qa-071 追加後の現在値)",
+        "architecture/harness-hub-dev-workflow.md frontmatter source_digest = 0c48fb74e1f93e4e6fe6e4f31cf5e04c4b3839537fae063002a3ce2f3e10b2bf (qa-070 時点・旧 digest・不一致)",
+        "issues/sys-qa070-implementation-feature-20260722.md source_lineage.source_digest = 0c48fb74... (旧 digest)",
+        "issues/sys-doc-granularity-remediation-20260722.md source_lineage.source_digest = 0c48fb74... (旧 digest)",
+        "features/feat-doc-governance-portability.md source_lineage.source_digest = 0c48fb74... (旧 digest)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "G-matrix-complete",
+      "name": "validate-coverage-matrix (--require-complete)",
+      "conditions": ["matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-complete"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)) を満たす"
+    },
+    {
+      "id": "G-matrix-foundation",
+      "name": "validate-coverage-matrix (--require-foundation)",
+      "conditions": ["foundation_trace", "decision_guidance"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-foundation"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-source-citation",
+      "name": "validate-source-citation (17 targets)",
+      "conditions": ["doc_freshness"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-source-citation.py", "--targets", "system-spec/spec-state.json", "--references", "system-spec/fetched-references.json"],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす"
+    },
+    {
+      "id": "G-knowledge-graph",
+      "name": "validate-knowledge-graph (4 profiles: knowledge/doctrine/required-info/cross)",
+      "conditions": ["design_knowledge_reflection", "matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py", "--knowledge-graph"],
+      "exit_code": 0,
+      "stdout": "subgates: knowledge=0, doctrine=0, required-info=0, cross=0"
+    },
+    {
+      "id": "G-qa071-section-check",
+      "name": "system-spec/dev-workflow.md の qa-071 セクション 8 要件キーワード検証",
+      "conditions": ["foundation_trace", "decision_guidance"],
+      "command": ["grep", "-c", "マクロ構造\\|exact-13\\|外側ループ\\|内側ループ\\|スコープ分離\\|情報配置\\|書き戻し\\|既存保全と更新統制", "system-spec/dev-workflow.md"],
+      "exit_code": 0,
+      "stdout": "8 キーワード全件確認: マクロ構造 / exact-13 / 外側ループ / 内側ループ / スコープ分離 / 情報配置 / 書き戻し / 既存保全と更新統制"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "hearing-confirmation-gap-qa071",
+      "observation": "qa-071 に approval_ref 相当の confirmation_log エントリ (appr-009) が spec-state.json に存在しない。qa-067 と同型の hearing-confirmation-gap。qa-071 は 'ユーザー提供の要件定義 (2026-07-22 /dev-graph spec --resume 引数) に基づき追加ヒアリングなしで確定する' と明示されており、source の出自は記録されているが、approval_log への正式エントリがなく qa-070 (appr-008) とのトレーサビリティ対称性を欠く。qa-067 同様、確定内容は下流成果物 (feat-dev-pipeline-improvement + 13 task が qa-067/qa-070 全面維持句経由で参照) を変えないため非ブロッキングと判断するが、次回 spec 改訂時に遡及付与を推奨する。",
+      "suggested_fix": "spec-state.json の approval_log へ appr-009 エントリを追加し、qa-071 の出典根拠 ('/dev-graph spec --resume 引数・2026-07-22・追加ヒアリング不要の明示') を記録する。qa-071 の qa_log エントリに approval_ref: 'appr-009' を付与する。",
+      "evidence": [
+        "spec-state.json qa_log[qa-071].approval_ref = null (field absent)",
+        "spec-state.json approval_log 末尾エントリ = appr-008 (qa-071 対応エントリなし)",
+        "system-spec/dev-workflow.md:29 (qa-071 question: '追加ヒアリングなしで確定する' 明示あり)"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "source-digest-drift-qa071",
+      "observation": "system-spec/dev-workflow.md が qa-071 追加により更新 (sha256: 97f579c1...) されたが、このファイルを source_path とする 4 つの成果物が旧 digest (0c48fb74e1f9...) を参照し続けている: (1) architecture/harness-hub-dev-workflow.md (source_lineage.source_digest = 0c48fb74... / confirmation_evidence.evaluated_digest = 0c48fb74...) (2) issues/sys-qa070-implementation-feature-20260722.md (source_lineage.source_digest = 0c48fb74...) (3) issues/sys-doc-granularity-remediation-20260722.md (source_lineage.source_digest = 0c48fb74...) (4) features/feat-doc-governance-portability.md (source_lineage.source_digest = 0c48fb74...) これは source_drift (正本変更後の依存成果物 digest 追従漏れ) であり、qa-071 の '既存保全と更新統制' 要件 【9】 との整合性の観点からも、R3-import による再 digest 更新が必要。",
+      "suggested_fix": "system-spec/dev-workflow.md の現在 digest (97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2) を各成果物の source_lineage.source_digest に反映する。特に architecture/harness-hub-dev-workflow.md は R3-import wrapper として confirmation_evidence.evaluated_digest と source_lineage.source_digest の両方を更新し、goal フィールドに qa-071 参照を追記する。",
+      "evidence": [
+        "shasum -a 256 system-spec/dev-workflow.md -> 97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2",
+        "architecture/harness-hub-dev-workflow.md frontmatter: source_digest=0c48fb74e1f93e4e6fe6e4f31cf5e04c4b3839537fae063002a3ce2f3e10b2bf (旧)",
+        "architecture/harness-hub-dev-workflow.md frontmatter: goal='qa-038/qa-039/qa-066/qa-067/qa-070 の確定内容に適合し...' (qa-071 未言及)",
+        "issues/sys-qa070-implementation-feature-20260722.md source_lineage.source_digest=0c48fb74... (旧)",
+        "features/feat-doc-governance-portability.md source_lineage.source_digest=0c48fb74... (旧)",
+        "issues/sys-doc-granularity-remediation-20260722.md source_lineage.source_digest=0c48fb74... (旧)"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "feat-dev-pipeline-improvement-scope-gap",
+      "observation": "qa-071 の answer 末尾に '実装は関連 feature (feat-dev-pipeline-improvement の 13 フェーズ・issue-qa070-implementation-feature-20260722) を通じて行う' と記されているが、features/feat-dev-pipeline-improvement.md の scope_in / goal / tags / classification_reason は qa-067 の 8 要件 (lifecycle close-loop 等) を中心とし、qa-071 の 8 要件 (マクロ構造・exact-13・外側ループ等) が scope_in に明示されていない。feat-dev-pipeline-improvement はパイプライン改善 (qa-067) を目的として生成された feature であり、qa-071 の方法論要件をそのまま実装する feature として設計されていない。qa-071 の方法論要件 (exact-13 の強制・スコープ分離の自動化等) の実装 feature が別途 decompose → plan されていない状態は、要件 → 実装の lineage が途切れているリスクを示す。ただし qa-071 の性質は 'パイプラインが従うべき方法論の確定' であり、新規ツール実装を直接要求しない要件も含まれるため、非ブロッキングと判断する。",
+      "suggested_fix": "qa-071 の 8 要件のうち実装 (自動化・lint 強制等) が必要なものを issue として起票し、feat-dev-pipeline-improvement の scope_in または別 feature の scope に明示的に含める。feat-dev-pipeline-improvement.md の classification_reason に qa-071 への参照を追記し、tags に 'qa-071' を追加することを検討する。",
+      "evidence": [
+        "features/feat-dev-pipeline-improvement.md:7 tags=['macro-feature','dev-pipeline','governance','qa-067'] (qa-071 なし)",
+        "features/feat-dev-pipeline-improvement.md:21 goal='qa-067 の 8 要件が実装され...' (qa-071 の 8 要件への言及なし)",
+        "features/feat-dev-pipeline-improvement.md:22 scope_in (qa-071 の方法論要件を直接含む項目なし)",
+        "spec-state.json qa_log[qa-071].answer 末尾: '実装は関連 feature (feat-dev-pipeline-improvement の 13 フェーズ・issue-qa070-implementation-feature-20260722) を通じて行う'",
+        "issues/sys-qa070-implementation-feature-20260722.md scope_in=['300 行上限 fail-closed CI lint','仕組み側ファイルのナレッジ参照検査','extract-blueprint/install-bundle 検査'] (qa-071 の exact-13 強制等を含まず)"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "hearing-confirmation-gap-qa067",
+      "observation": "(前回レポート 084907 からの継続) qa-067 に approval_ref 相当の confirmation_log エントリがない。qa-070 の確認ラウンド (appr-008) でも 'qa-067 は全面維持' がユーザー提示文脈に含まれていたが、qa-067 単体の approval_log への正式記録がない。issue-hearing-trace-followups-20260722 で追跡中。",
+      "suggested_fix": "次回 spec 改訂時に qa-067 系の確認記録を appr-00x として遡及付与する (issue-hearing-trace-followups-20260722 の acceptance に準拠)。",
+      "evidence": [
+        "issues/sys-hearing-trace-followups-20260722.md (scope_in: qa-067 確認記録の遡及付与方式の確定)",
+        "spec-state.json qa_log[qa-067] (approval_ref 相当の確認記録なし)",
+        "spec-state.json qa_log[qa-071].question '全面維持' 句で qa-067 も包含 (間接的維持記録)"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "knowledge-order",
+      "observation": "(前回レポート 084907 からの継続) backend.md の設計知識カード表示順 (Clean Architecture→API Design Patterns→DDD) が knowledge-catalog の topo_order と一致しない。qa-071 追加後も未是正。",
+      "suggested_fix": "compile-spec-doc.py の category_design_refs() を knowledge-catalog.json の topo_order でソートするか、R2-render.md の C14 記述を実装に合わせて修正する。",
+      "evidence": [
+        "system-spec/backend.md:50,91,134 (カード見出し順 Clean Architecture→API Design Patterns→DDD)",
+        "validate-knowledge-graph.py --profile knowledge --order -> topo_order=[clean-code,ddd,design-patterns,clean-architecture,api-design-patterns] との不一致"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "qa-ref-weak-support",
+      "observation": "(前回レポート 084907 からの継続) ui-ux.desktop-windows/desktop-macos の qa_ref=qa-007 は UI-UX 固有の直接的裏付けとして薄い。qa-071 追加後も未是正。",
+      "suggested_fix": "infrastructure.desktop 系 (qa-043) と同様に ui-ux desktop 固有の専用質疑へ格上げする。",
+      "evidence": [
+        "spec-state.json matrix.ui-ux.desktop-windows.qa_ref=qa-007 / matrix.ui-ux.desktop-macos.qa_ref=qa-007 (2026-07-22 qa-071 追加後再確認)"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "qa-ref-traceability",
+      "observation": "(前回レポート 084907 からの継続) qa-017 規約の backend/security への適用が qa_ref 未反映。qa-059/qa-061/qa-048 の answer に 'qa-017' 文字列なし。qa-071 追加後も未是正。",
+      "suggested_fix": "qa-059/qa-061 の回答文へ qa-017 規約適用箇所への明示的言及を追記するか、qa-017 を参照する専用の追補質疑を起票する。",
+      "evidence": [
+        "spec-state.json matrix.backend.web.qa_ref=qa-059 / matrix.security.web.qa_ref=qa-061",
+        "qa_log[id=qa-059/qa-061/qa-048].answer に 'qa-017' の文字列なし (2026-07-22 qa-071 追加後再確認)"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "hearing-question-form",
+      "observation": "(前回レポート 084907 からの継続) qa-067/qa-069 の質問文が採否の対称選択肢を持たない形式。issue-hearing-trace-followups-20260722 で追跡中。qa-071 も 'ヒアリングなしで確定' 形式のため同型だが、source がユーザー提供 argument として明示されており意図的な非ヒアリング形式と解釈する。",
+      "suggested_fix": "R2-interview / R3-reask の質問テンプレへ採用/不採用の対称選択肢を組み込む (issue-hearing-trace-followups-20260722 の acceptance に準拠)。",
+      "evidence": [
+        "issues/sys-hearing-trace-followups-20260722.md (scope_in: R2/R3 質問様式の中立化)",
+        "system-spec/dev-workflow.md:29 (qa-071 question: '追加ヒアリングなしで確定する' = 非ヒアリング形式だが source 明示あり)"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "doc-freshness-follow-ups",
+      "observation": "(前回レポート 084907 からの継続) claude-code-plugins anchor v2.1.196 と CLI 現行 v2.1.216 の差拡大 / drizzle-orm v1 系 rc 番号の情報源差 / wrangler の pinned version 記録追加検討。issue-source-freshness-ops-20260722 で追跡中。qa-071 追加は技術出典を変更しないため新規 low は発生しない。",
+      "suggested_fix": "issue-source-freshness-ops-20260722 に従い、該当 feature/task の手順へ再照合タイミングを組み込む。",
+      "evidence": [
+        "issues/sys-source-freshness-ops-20260722.md (low 3 件の対象と対応方針)",
+        "system-spec/fetched-references.json (qa-071 追加後も 17 件・変更なし)"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "qa071-keyword-verification",
+      "observation": "system-spec/dev-workflow.md の qa-071 セクション (行 27-40) を現物確認し、指定された 8 要件キーワードの全件存在を検証した: マクロ構造 (行 32)・exact-13 (行 33)・外側ループ (行 34)・内側ループ (行 35)・スコープ分離 (行 36)・情報配置 (行 37)・書き戻し (行 38)・既存保全と更新統制 (行 39)。全 8 キーワードが該当行に存在し、qa-071 の question 文と answer 文の対応が整合している。qa-071 の全面維持句 (qa-038/039/051/066/067/070) の継承も answer 末尾に明示されている。",
+      "evidence": [
+        "system-spec/dev-workflow.md:27-40 (qa-071 セクション現物確認)",
+        "キーワード全件: マクロ構造:32行 / exact-13:33行 / 外側ループ:34行 / 内側ループ:35行 / スコープ分離:36行 / 情報配置:37行 / 書き戻し:38行 / 既存保全と更新統制:39行",
+        "system-spec/dev-workflow.md:18 (カテゴリ別収集状態表 web 行: '確定 | 確定質疑: qa-071')"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "qa071-full-preservation-verification",
+      "observation": "qa-071 の全面維持条項を検証した。qa-071 は qa-038/039/051/066/067/070 を全面維持すると宣言し、answer 末尾でも 'qa-067 の 8 要件 (lifecycle close-loop 他) が G1/G4/G5 に資する' と明示している。spec-state.json の qa_log を確認し、qa-038/039/051/066/067/070 が全て保持されており変更・削除されていないことを確認した。",
+      "evidence": [
+        "spec-state.json qa_log に qa-038/039/051/066/067/070 全て実在 (qa_log count: 71)",
+        "system-spec/dev-workflow.md の qa-039/qa-071 セクションが並立して残存 (全面維持を体現)",
+        "spec-state.json matrix.dev-workflow.desktop-windows.qa_ref=qa-039 / matrix.dev-workflow.desktop-macos.qa_ref=qa-039 (qa-039 セル維持)"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "architecture-digest-drift-scope",
+      "observation": "architecture/harness-hub-dev-workflow.md の goal フィールドが 'qa-038/qa-039/qa-066/qa-067/qa-070 の確定内容に適合し...' (qa-071 未言及) となっているが、本 artifact は R3-import 参照型 wrapper であり、内容の正本は system-spec/dev-workflow.md にある。goal フィールドの qa-071 未言及は参照の遅れを示すが、wrapper としての機能 (正本への参照) は維持されているため機能的ブロックではない。source-digest-drift-qa071 finding で medium として計上済みの side effect として info に留める。",
+      "evidence": [
+        "architecture/harness-hub-dev-workflow.md:21 goal='qa-038/qa-039/qa-066/qa-067/qa-070 の確定内容に適合し...' (qa-071 未言及)",
+        "architecture/harness-hub-dev-workflow.md:52-54 (R3-import wrapper として正本への参照を明記)"
+      ]
+    }
+  ],
+  "gaps": [],
+  "req11_git_diff_reconciliation": {
+    "description": "Req 11: 現在の Git 変更が qa-071 要件を本当に反映しているかの差分照合 (system-spec / specs / architecture / features / tasks / plugin 契約)",
+    "changed_files_relevant": [
+      "system-spec/dev-workflow.md (qa-071 セクション追加・dev-workflow.web の qa_ref 更新)",
+      "system-spec/spec-state.json (qa_log に qa-071 追加・matrix.dev-workflow.web.qa_ref 更新・reopen_log 末尾エントリ追加)",
+      "system-spec/index.md (dev-workflow 行の最新反映)",
+      "architecture/harness-hub-dev-workflow.md (変更されているが qa-071 未反映・source_digest 旧値のまま)"
+    ],
+    "aligned": [
+      "spec-state.json matrix.dev-workflow.web.qa_ref が qa-070 から qa-071 へ更新済み",
+      "spec-state.json qa_log に qa-071 エントリ追加済み (question/answer 両方完備)",
+      "spec-state.json reopen_log に R4-reopen 理由付きエントリ追加済み",
+      "system-spec/dev-workflow.md に qa-071 セクション (行 27-40) が追加済み",
+      "system-spec/dev-workflow.md カテゴリ別収集状態表が qa-071 参照に更新済み",
+      "tasks/feat-dev-pipeline-improvement/ の 13 task は qa-067 の 8 要件を実装対象としており、qa-071 の全面維持句経由で qa-067 を継承・矛盾なし"
+    ],
+    "missing_or_contradictory": [
+      "architecture/harness-hub-dev-workflow.md の goal が qa-071 に未更新 (qa-070 までの参照・source_digest 旧値)",
+      "architecture/harness-hub-dev-workflow.md の source_lineage.source_digest が旧値 (0c48fb74...) のまま",
+      "feat-dev-pipeline-improvement.md の tags/classification_reason/scope_in に qa-071 への明示的参照なし",
+      "issues/sys-qa070-implementation-feature-20260722.md の source_lineage.source_digest が旧値",
+      "features/feat-doc-governance-portability.md の source_lineage.source_digest が旧値",
+      "qa-071 の方法論 8 要件 (exact-13 強制・スコープ分離の自動化等) の実装 feature/task が decompose 未着手"
+    ]
+  },
+  "previous_report": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260722-084907.json"
+}

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 270,
+  "graph_revision": 380,
   "nodes": [
     {
       "acceptance": [
@@ -28,9 +28,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15",
+        "evaluated_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae",
         "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -85,9 +85,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T08:10:00Z",
+        "imported_at": "2026-07-23T00:04:07Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "6b24a06e4116a9665e1cd6f7a978918010599f51c2c5faf0aedf7ca7ce88fc15",
+        "source_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae",
         "source_path": "system-spec/00-requirements-definition.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -103,7 +103,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-18T15:40:17Z"
+      "updated_at": "2026-07-23T00:04:30.693628Z"
     },
     {
       "acceptance": [
@@ -560,9 +560,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "15a91e7e243c3558f92c4cb8c82756a2b9e375eb7c6044369764b28f9b454e9d",
+        "evaluated_digest": "dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf",
         "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -581,7 +581,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-003/qa-011/qa-019 の確定要件に適合する infrastructure/運用の指針を提供する",
+      "goal": "qa-003/qa-011/qa-019/qa-068 の確定要件 (D7: 常設 staging なし・production 1 組 + 使い捨て preview) に適合する infrastructure/運用の指針を提供する",
       "graph_node_id": "arch-harness-hub-infrastructure",
       "implementation_readiness": {
         "checked_at": "2026-07-17T00:35:59Z",
@@ -618,9 +618,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T15:01:04Z",
+        "imported_at": "2026-07-23T00:04:07Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "15a91e7e243c3558f92c4cb8c82756a2b9e375eb7c6044369764b28f9b454e9d",
+        "source_digest": "dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -636,7 +636,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-18T15:01:04Z"
+      "updated_at": "2026-07-23T00:04:47.206172Z"
     },
     {
       "acceptance": [
@@ -733,7 +733,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "stage-0",
@@ -744,7 +744,7 @@
       "template_version": "1.0.0",
       "title": "Stage 0: 配布経路 technical gate (H7) 検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-21T03:20:08Z"
     },
     {
       "acceptance": [
@@ -12899,9 +12899,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "c8f21b091cfc28b29992454908c3281ff519dce8535f3629c6fddc156ccd543f",
+        "evaluated_digest": "97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2",
         "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260722-qa071.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -12920,7 +12920,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066 の確定内容に適合し、P0〜P5 の開発運用と feature baseline の source lineage を逆引きできる指針を提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-070/qa-071 の確定内容に適合し、P0〜P5 の開発運用・feature baseline の source lineage 逆引き・開発管理パイプライン改善 8 要件 (qa-067)・ドキュメント規約 2 件 (qa-070: 仕組みとナレッジのオン・オフ分離 / 300 行粒度 fail-closed)・dev-graph 方法論 8 要件 (qa-071: マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全) の指針を提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -12956,9 +12956,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T15:40:17Z",
+        "imported_at": "2026-07-22T09:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "c8f21b091cfc28b29992454908c3281ff519dce8535f3629c6fddc156ccd543f",
+        "source_digest": "97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -12974,7 +12974,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-18T15:40:17Z"
+      "updated_at": "2026-07-22T09:30:00Z"
     },
     {
       "acceptance": [
@@ -17642,7 +17642,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -17654,7 +17654,7 @@
       "template_version": "1.0.0",
       "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T12:44:37.942819Z"
+      "updated_at": "2026-07-20T12:57:22Z"
     },
     {
       "acceptance": [
@@ -17762,7 +17762,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -17774,7 +17774,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — 3 経路検証方式・最小 artifact 構成・実機 E2E 手順・decision record 登録経路の確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T22:23:28.278360Z"
+      "updated_at": "2026-07-20T22:41:59Z"
     },
     {
       "acceptance": [
@@ -17882,7 +17882,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -17894,7 +17894,7 @@
       "template_version": "1.0.0",
       "title": "独立設計レビュー — 検証方式・artifact 構成・実機 E2E 手順の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T22:42:11.586106Z"
+      "updated_at": "2026-07-20T22:43:49Z"
     },
     {
       "acceptance": [
@@ -18008,7 +18008,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18020,7 +18020,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — quality_constraints 8 件・acceptance 3 件に対応する実機検証ケースの設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T22:44:01.277341Z"
+      "updated_at": "2026-07-20T22:46:30Z"
     },
     {
       "acceptance": [
@@ -18140,7 +18140,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18152,7 +18152,7 @@
       "template_version": "1.0.0",
       "title": "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T22:46:37.559620Z"
+      "updated_at": "2026-07-20T22:51:28Z"
     },
     {
       "acceptance": [
@@ -18266,7 +18266,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18278,7 +18278,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T22:51:33.885252Z"
+      "updated_at": "2026-07-20T23:05:07Z"
     },
     {
       "acceptance": [
@@ -18386,7 +18386,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18398,7 +18398,7 @@
       "template_version": "1.0.0",
       "title": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-21T00:19:38.041436Z"
+      "updated_at": "2026-07-21T03:17:54Z"
     },
     {
       "acceptance": [
@@ -18494,7 +18494,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18506,7 +18506,7 @@
       "template_version": "1.0.0",
       "title": "リファクタリング/マイグレーション — 検証 prototype 資産の整理 (N/A 判断を含む)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-21T03:18:05Z"
     },
     {
       "acceptance": [
@@ -18609,7 +18609,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18621,7 +18621,7 @@
       "template_version": "1.0.0",
       "title": "品質・セキュリティ・運用保証 — C1 (体制)・C2 (コストゼロ)・H7 fail-closed ゲートの充足確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-21T03:18:08Z"
     },
     {
       "acceptance": [
@@ -18718,7 +18718,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18730,7 +18730,7 @@
       "template_version": "1.0.0",
       "title": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件の最終確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-21T03:18:11Z"
     },
     {
       "acceptance": [
@@ -18827,7 +18827,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18839,7 +18839,7 @@
       "template_version": "1.0.0",
       "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-21T03:18:14Z"
     },
     {
       "acceptance": [
@@ -18936,7 +18936,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -18948,7 +18948,7 @@
       "template_version": "1.0.0",
       "title": "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-21T03:18:16Z"
     },
     {
       "acceptance": [
@@ -19051,7 +19051,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -19063,7 +19063,7 @@
       "template_version": "1.0.0",
       "title": "リリース/デプロイ — 採用経路の decision record C01 writer登録 (C01 writer 経由) と Stage 1 開始条件判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:08Z"
+      "updated_at": "2026-07-21T03:18:20Z"
     },
     {
       "acceptance": [
@@ -19207,12 +19207,14 @@
       "classification_confidence": 0.95,
       "classification_reason": "docs/ 全体マクロ再分解 (2026-07-18) の R2 カバレッジ分析 findings と実行中インシデント (INC-1) を追跡する issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "completed_at": "2026-07-21T01:50:12Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_bd_bridge_external_ref_idempotency.py"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-22T00:00:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -19282,7 +19284,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "decompose",
         "follow-up",
@@ -19293,7 +19295,7 @@
       "template_version": "1.0.0",
       "title": "docs/ 全体マクロ再分解 (2026-07-18) の残 findings 5 件の是正",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-18T16:20:35Z"
+      "updated_at": "2026-07-22T05:50:25.084681Z"
     },
     {
       "acceptance": [
@@ -25151,6 +25153,3858 @@
       "updated_at": "2026-07-19T14:21:39Z"
     },
     {
+      "acceptance": [
+        "解決済み事象の open 残置を検出する決定論検査が存在し、issue-bd-bridge-notes-passthrough-20260721 が close-loop で閉じている",
+        "eval-log/ 配置規約が README に明文化され、CI lint が直下残置・バイト同一重複・1MB 超の git 追跡を遮断する",
+        "improvement-handoff schema に per-finding disposition と根拠 ref が必須化され、既存 21 ファイル 94 findings に消化状態が付与されている",
+        "task template に status = 文書ライフサイクル (active/superseded) の意味論が明記され、実行状態の二重正本が無い",
+        "graph.json 分割の再検討トリガーが仕様に記録されている",
+        "spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される",
+        "陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-k2u",
+        "linked_at": "2026-07-21T16:50:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-dev-pipeline-improvement.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T14:40:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-dev-pipeline-improvement.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態",
+      "graph_node_id": "feat-dev-pipeline-improvement",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する",
+      "related_nodes": [
+        "issue-audit-followups-20260717"
+      ],
+      "resource_scope": [
+        "features/feat-dev-pipeline-improvement.md"
+      ],
+      "scope_in": [
+        "lifecycle close-loop の機械化 (open 残置検出と md/graph/beads 3 表現の同時 close 導線)",
+        "eval-log/ 配置規約の明文化と CI lint 強制",
+        "improvement-handoff schema への disposition 必須化と未消化 findings の beads 起票",
+        "tasks/ frontmatter status の意味論明記",
+        "graph.json 肥大対策の再検討トリガー記録",
+        "dev-graph 中核 handoff 31 findings の差分監査と disposition 遡及付与",
+        "spec-drift-guardian の verdict close gate 配線",
+        "陳腐化文書の定期棚卸し GC の sync verb 運用組込み"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T14:40:00Z",
+        "origin_kind": "generated",
+        "source_digest": "bdf3c60e2ab89540c6dd7bdf6009316070d66f9cf36aee17743d825668b6ae21",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "macro-feature",
+        "dev-pipeline",
+        "governance",
+        "qa-067",
+        "qa-071"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T04:16:31Z"
+    },
+    {
+      "acceptance": [
+        "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) が逐語一致で転記されている",
+        "現行 feature context sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である",
+        "P02 で確定すべき据置事項 (検査 script 入出力契約・handoff schema 後方互換方式・eval-log 再配置対象一覧・close-loop の bd-bridge 経由手順) が明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P01 責務 (要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P01 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P01",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "qa-067 で確定した開発管理パイプライン改善 8 要件と goal-spec の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) を machine-verifiable な要件ベースラインとして固定し、P02 以降の全 task が同一の合意事項を参照できる状態にする。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-01-requirements.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:49:33.943491Z"
+    },
+    {
+      "acceptance": [
+        "design.md に lint-open-residue.py / lint-eval-log-layout.py / lint-handoff-disposition.py の入出力契約 (引数・exit code・検出条件・JSON 出力形状) が確定している",
+        "improvement-handoff schema の disposition (applied|deferred|rejected) と根拠 ref の必須化が、既存 21 ファイルとの後方互換方式 (遡及付与 migration) と併せて設計されている",
+        "spec-drift-guardian の C03/C04 verdict を close gate へ配線する設計 (対象: plugins/spec-drift-guardian の該当 hook/skill、verdict 未着時は proposal のみでの close を遮断する fail-closed 条件、improvement-handoff-elegant-verify.json findings 8 件への対応表) が確定している",
+        "eval-log 配置規約 (skill 名 prefix サブディレクトリ・1MB 超 gitignore・重複/変種遮断) と再配置対象一覧、tasks status 意味論、graph.json 分割トリガー、棚卸し GC 手順が設計されている",
+        "dev-graph 中核 handoff 3 ファイル (improvement-handoff-macro/beads/無印) 31 findings の差分監査手順 (現行実装との突合で applied/deferred/rejected を根拠付き判定する方式。94 findings 全件付与の内数として P08 が実行する) が設計されている",
+        "P01 の据置事項 4 点が全て確定し、未確定の持ち越しが 0 件である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P02 責務 (検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P02 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P02",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "qa-067 の 8 要件を実装可能な決定論検査・規約・schema へ設計する。lint-open-residue (解決済み事象の open 残置検出)、lint-eval-log-layout (配置規約検査)、improvement-handoff schema の disposition 拡張、spec-drift-guardian の C03/C04 verdict close-gate 配線、棚卸し GC 手順、tasks status 意味論、graph.json 分割トリガー記録の 7 設計を確定する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/design.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/design.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-02-architecture.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:49:52.879339Z"
+    },
+    {
+      "acceptance": [
+        "design-review.md に 6 設計それぞれの整合検証結果 (choke-point / 単一 writer / sync authority / digest 不変 / fail-closed / 冪等) が verdict 付きで記録されている",
+        "不整合が検出された場合は P02 へ差し戻され、全 verdict PASS の場合のみ P04 へ進む判定が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P03 責務 (設計レビュー — 単一 writer・choke-point・sync authority との整合検証) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P03 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P03",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "P02 の 6 設計が既存パイプラインの不変条件 (bd-bridge choke-point、upsert-node/apply-spec-transition の単一 writer、sync の binding 別単一 authority、guard hook の fail-closed) を破壊しないことを独立視点でレビューし、実装着手可否を判定する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/design-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/design-review.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-03-design-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:50:12.003588Z"
+    },
+    {
+      "acceptance": [
+        "test-plan.md に lint-open-residue / lint-eval-log-layout / lint-handoff-disposition の各 MUST_DETECT (悪性) / MUST_PASS (良性) ケースがテスト ID 付きで定義されている",
+        "spec-drift-guardian close-gate 配線の回帰テスト (verdict 未着 proposal-only close が遮断される MUST_BLOCK ケースと、verdict 付き close が通過する MUST_PASS ケース) がテスト ID 付きで定義されている",
+        "P08 冪等 migration の再実行差分 0 検証と disposition 遡及付与の全件性検証 (31 findings 差分監査行の存在検証を含む) がテスト ID 付きで定義されている",
+        "全テスト ID が P06 で実行可能な pytest 形式 (plugins/dev-graph/tests または plugins/spec-drift-guardian/tests 配下) として設計されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P04 責務 (テスト設計 — lint script 群と冪等 migration の回帰テスト設計) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P04 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P04",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "P05 で実装する lint script 3 本と P08 の冪等 migration に対する回帰テストを設計し、実行可能なテスト ID 一覧を確定する。悪性ケース (検出すべき違反) と良性ケース (通過すべき正常形) の両方を fixture で定義する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/test-plan.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/test-plan.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-04-test-design.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:50:30.705989Z"
+    },
+    {
+      "acceptance": [
+        "lint script 3 本が P02 の入出力契約どおりに動作し、P04 の MUST_DETECT/MUST_PASS fixture を全件満たす",
+        "improvement-handoff.schema.json が disposition 必須の新形式と既存形式の判別 (schema_version) を持つ",
+        "spec-drift-guardian の C03/C04 verdict が P02 設計どおり close gate へ配線され、verdict 未着のまま proposal のみで close する経路が fail-closed で遮断される (回帰テスト付き)",
+        "eval-log/README.md に配置規約が明文化され、task template に status 意味論が追記され、CI workflow に lint 3 本が fail-closed で配線されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P05 責務 (実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P05 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P05",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "P02 設計と P04 テスト設計に従い、lint-open-residue.py / lint-eval-log-layout.py / lint-handoff-disposition.py、improvement-handoff.schema.json、eval-log/README.md 配置規約、task template の status 意味論追記、CI への lint 配線を実装する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/lint-open-residue.py",
+        "plugins/dev-graph/scripts/lint-eval-log-layout.py",
+        "plugins/dev-graph/scripts/lint-handoff-disposition.py",
+        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+        "plugins/dev-graph/tests/test_lint_open_residue.py",
+        "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
+        "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
+        "eval-log/README.md",
+        ".dev-graph/templates/task.md",
+        ".github/workflows/dev-pipeline-lint.yml",
+        "plugins/spec-drift-guardian/"
+      ],
+      "scope_in": [
+        "plugins/dev-graph/scripts/lint-open-residue.py",
+        "plugins/dev-graph/scripts/lint-eval-log-layout.py",
+        "plugins/dev-graph/scripts/lint-handoff-disposition.py",
+        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+        "plugins/dev-graph/tests/test_lint_open_residue.py",
+        "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
+        "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
+        "eval-log/README.md",
+        ".dev-graph/templates/task.md",
+        ".github/workflows/dev-pipeline-lint.yml",
+        "plugins/spec-drift-guardian/"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-05-implementation.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:50:49.109463Z"
+    },
+    {
+      "acceptance": [
+        "test-plan.md の全テスト ID が実行され、test-run-p06.json に実行コマンド・exit code・pass/fail 件数が生のまま記録されている",
+        "失敗 0 件で P07 へ進むか、失敗があれば P05 差し戻しが記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P06 責務 (テスト実行 — 回帰テスト全件と lint 実測の記録) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P06 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P06",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "P04 で設計し P05 で実装した全テスト ID を実行し、生の実行結果 (pass/fail 件数・実行コマンド・exit code) を改変なしで記録する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/pipeline-improvement/test-run-p06.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/pipeline-improvement/test-run-p06.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-06-test-run.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:51:16.875214Z"
+    },
+    {
+      "acceptance": [
+        "acceptance-report.md に feature acceptance 7 件それぞれの充足判定 (根拠 evidence の path 付き) が記録されている",
+        "P08 完了後に再判定が必要な項目が明示され、未達項目の差し戻し先 phase が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P07 責務 (受入判定 — 8 acceptance の突合と未達の差し戻し) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P07 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P07",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "feature の acceptance 7 件 (qa-067 の 8 要件に対応) と P06 実測結果を突合し、各 acceptance の充足/未達を判定する。未達は該当 phase への差し戻しとして記録する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/acceptance-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/acceptance-report.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-07-acceptance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:51:36.022038Z"
+    },
+    {
+      "acceptance": [
+        "再配置後に lint-eval-log-layout.py が exit 0 になり、migration-receipt.json に移動一覧 (旧 path→新 path) と重複整理の記録が残る",
+        "94 findings 全件に disposition (applied|deferred|rejected) と根拠 ref が付与され、lint-handoff-disposition.py が exit 0 になる",
+        "そのうち dev-graph 中核 handoff 3 ファイル (improvement-handoff-macro/beads/無印) の 31 findings は、P02 設計の差分監査手順に従い現行実装 (plugins/dev-graph の該当 script/schema) と突合した根拠 ref 付きで applied/deferred/rejected が判定され、migration-receipt.json に 31 件分の監査行が残る (94 件全件付与の内数として実行)",
+        "deferred/rejected 以外で未実装の findings が beads 課題として起票され、migration の再実行が差分 0 に収束する",
+        "validate-evidence-refs.py が exit 0 のまま (再配置による dangling evidence_ref が 0 件) である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P08 責務 (移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P08 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P08",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "P05 で確定した配置規約に従い eval-log/ 直下の残置ファイルをサブディレクトリへ再配置し、バイト同一重複と反復変種を整理する。plugin-plans の improvement-handoff 21 ファイル 94 findings へ disposition を遡及付与し、未消化 findings を beads 課題へ起票する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/",
+        "plugin-plans/",
+        "eval-log/dev-graph/pipeline-improvement/migration-receipt.json"
+      ],
+      "scope_in": [
+        "eval-log/",
+        "plugin-plans/",
+        "eval-log/dev-graph/pipeline-improvement/migration-receipt.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-08-refactoring-migration.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:51:55.580433Z"
+    },
+    {
+      "acceptance": [
+        "qa-fail-closed-report.json に悪性ケース 3 系統以上の実測 (投入した違反・期待 exit 非 0・実測 exit code) が記録され、全件検出されている",
+        "検査への迂回経路 (lint 対象外 path への書込・schema_version 偽装) の探索結果が記録され、発見された迂回は P05 へ差し戻されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P09 責務 (品質保証 — fail-closed 実効性の悪性ケース実測) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P09 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P09",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "新設 lint 3 本と close-loop 検査が、悪性ケース (規約違反ファイルの直下追加・disposition 欠落 handoff の新規作成・解決済み issue の open 残置) を実際に遮断することを一時 fixture で実測し、Goodhart 緑化 (検査を通すためだけの形式的修正) が起きていないことを検証する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-09-quality-assurance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:52:14.327167Z"
+    },
+    {
+      "acceptance": [
+        "final-review.md に P01-P09 の成果物一覧・acceptance 充足状況・quality_constraints 6 件の適合判定が記録されている",
+        "未達 0 件で P11 へ進むか、残課題の差し戻し先または follow-up 起票が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P10 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P10",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "P01-P09 の成果物を横断し、baseline との乖離・acceptance の残未達・quality_constraints 違反の有無を最終確認して、P11 以降 (証跡固定・文書化・リリース) へ進む可否を判定する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/final-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/final-review.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-10-final-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:52:33.115327Z"
+    },
+    {
+      "acceptance": [
+        "evidence-manifest.json に P06/P08/P09 の実測ログと P05 成果物の path・sha256・生成 phase が記録されている",
+        "manifest 記載の sha256 が実ファイルと全件一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P11 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P11",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "P06/P08/P09 の実測ログと主要成果物の sha256 を evidence manifest として固定し、後からの改変を検出可能にする。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-11-evidence.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:52:51.970242Z"
+    },
+    {
+      "acceptance": [
+        "operations.md に棚卸し GC の周期・対象抽出コマンド・close-loop の 3 表現 (md/graph/beads) 同時クローズ手順が記録されている",
+        "手順が choke-point (bd-bridge) と単一 writer (upsert-node) を迂回しないことが明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P12 責務 (運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P12 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P12",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "陳腐化文書の棚卸し GC (解決済み open issue・0-findings handoff の定期整理) と lifecycle close-loop の運用手順を文書化し、sync verb の運用に組み込む。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/operations.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-dev-pipeline-improvement/operations.md"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-12-documentation-operations.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:53:10.850845Z"
+    },
+    {
+      "acceptance": [
+        "全成果物の PR が main へ merge され、release-receipt.json に PR 番号・merge commit・CI 結果が記録されている",
+        "issue-bd-bridge-notes-passthrough-20260721 が md (status)・graph node (completion)・beads (close) の 3 表現で閉じられ、lint-open-residue.py が exit 0 になっている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P13 責務 (リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T04:16:31Z",
+      "depends_on": [
+        "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P13 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T15:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-dev-pipeline-improvement",
+      "phase_ref": "P13",
+      "priority": null,
+      "project_id": "feature-package-feat-dev-pipeline-improvement",
+      "pull_request_linkages": [],
+      "purpose": "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/pipeline-improvement/release-receipt.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/pipeline-improvement/release-receipt.json"
+      ],
+      "scope_out": [
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加",
+        "bd CLI 本体の変更",
+        "graph.json 分割の実装 (トリガー記録のみ)",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T04:16:31Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-13-release-deploy.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-dev-pipeline-improvement",
+        "macro-feature",
+        "dev-pipeline",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:53:29.470296Z"
+    },
+    {
+      "acceptance": [
+        "bd-bridge --op update --bd-issue-id <id> --notes <text> が成功する",
+        "guard hook を迂回せずに notes 更新が完了する",
+        "回帰テストが plugins/dev-graph/tests に存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-8ql",
+        "linked_at": "2026-07-21T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-bd-bridge-notes-passthrough-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "issue HarnessHub-9ao (finding 4/5) の実行中に観測した bd-bridge のフィールド欠落を追跡する issue",
+      "completion_evidence": {
+        "completed_at": "2026-07-21T04:00:00Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_bd_bridge_update_field_passthrough.py"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-22T00:00:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-bd-bridge-notes-passthrough-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "bd-bridge 経由で notes/design を更新でき、チョークポイントを迂回せずに進捗記録が残せている",
+      "graph_node_id": "issue-bd-bridge-notes-passthrough-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "guard-graph-schema が beads mutation を bd-bridge の単一チョークポイントに限定する一方、bd-bridge が notes/design を通さないため、エージェントが課題へ進捗メモを残せない不整合を解消する",
+      "related_nodes": [
+        "issue-docs-recompose-followups-20260718"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "plugins/dev-graph/hooks/guard-graph-schema.py"
+      ],
+      "scope_in": [
+        "bd-bridge.py --op update への --notes/--design パススルー追加",
+        "bd-bridge.py --op create への --priority パススルー追加",
+        "追加フィールドの回帰テスト"
+      ],
+      "scope_out": [
+        "guard-graph-schema の緩和 (チョークポイント自体は維持する)",
+        "bd CLI 側の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "issues/sys-docs-recompose-followups-20260718.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "bd-bridge",
+        "choke-point",
+        "dev-graph"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "bd-bridge 経由で beads の notes/design を更新できず進捗記録の経路が塞がっている",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T05:49:40.634240Z"
+    },
+    {
+      "acceptance": [
+        "D7 が D5/D6 と同様に qa_log の実在 id へ遡及できる",
+        "C06 監査のトレーサビリティ軸が D7 起因で FAIL しない"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9rg",
+        "linked_at": "2026-07-22T00:49:29Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-d7-hearing-trace-20260721.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "C06 hearing 監査 (c06-hearing-sync 2026-07-21) の medium finding (D7 遡及参照欠落) を追跡する issue",
+      "completion_evidence": {
+        "completed_at": "2026-07-22T12:24:07Z",
+        "evidence_refs": [
+          "system-spec/spec-state.json#decisions/D7",
+          "system-spec/spec-state.json#qa_log/qa-068",
+          "system-spec/infrastructure.md#qa-068-対応セル-web"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-22T12:24:07Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T18:30:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-d7-hearing-trace-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "D7 の決定往復が qa として登録され、user_decision.note に質疑証跡 id が記録され、C06 トレーサビリティ軸が PASS になっている",
+      "graph_node_id": "issue-d7-hearing-trace-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T18:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C06 hearing 監査 (2026-07-21) の medium finding を追跡し、D7 決定の hearing 往復を qa_log へ遡及可能にする",
+      "related_nodes": [
+        "issue-audit-followups-20260717",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json"
+      ],
+      "scope_in": [
+        "D7 決定往復の qa 追記登録 (writer 経由)",
+        "D7 user_decision.note への質疑証跡 id 記録"
+      ],
+      "scope_out": [
+        "D7 決定内容の変更 (ephemeral-preview-only は確定済み)",
+        "qa_log 過去エントリの改変"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T18:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "system-spec",
+        "hearing-audit",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "spec-state: D7 (環境構成決定) に qa_log への遡及参照が無く hearing 往復の中立性を独立検証できない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T12:24:07Z"
+    },
+    {
+      "acceptance": [
+        "qa-067 系の確認記録が approval_log または qa_log から遡及できる",
+        "R2/R3 質問テンプレが採用/不採用の対称選択肢を持つ"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-4z0",
+        "linked_at": "2026-07-22T00:49:29Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hearing-trace-followups-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "C06 hearing 監査 (2026-07-22, qa-070 再確定 run) の MEDIUM (qa-067 確認記録欠落)・LOW (誘導質問形式) findings を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T23:30:33Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hearing-trace-followups-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-067 に確認記録が遡及付与され、R2/R3 の質問様式が中立形式 (採否両案の提示) になり、C06 監査が両 finding で FAIL しない",
+      "graph_node_id": "issue-hearing-trace-followups-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T23:30:33Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C06 hearing 監査 (2026-07-22) の MEDIUM/LOW findings を追跡し、qa-067 の確認記録遡及と質問様式の中立化を行う",
+      "related_nodes": [
+        "issue-d7-hearing-trace-20260721",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json"
+      ],
+      "scope_in": [
+        "qa-067 確認記録の遡及付与方式の確定 (次回 reopen 時の確認ラウンド等)",
+        "R2/R3 質問様式の中立化 (appr-006 の『選択肢を先に提示→推奨は後段』方針へ合流)"
+      ],
+      "scope_out": [
+        "qa-067 確定内容 (8 要件) の変更",
+        "qa_log 過去エントリの改変"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T09:30:00Z",
+        "origin_kind": "generated",
+        "source_digest": "4abdb8c76b091e9422db8d92a06fc4006f4b2f5d0226b30afc7363168f71e7e4",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec",
+        "hearing-audit",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "spec-state: qa-067 のユーザー確認記録欠落 (C06 MEDIUM) と質問様式の中立化 (C06 LOW) のフォローアップ",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T09:30:00Z"
+    },
+    {
+      "acceptance": [
+        "decompose により feature 文書と context.json が生成される",
+        "plan により exact-13 task が昇格登録される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-iwu",
+        "linked_at": "2026-07-22T00:49:29Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-qa070-implementation-feature-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "qa-070 の実装 (lint・境界検査・移植導線) を 13 フェーズ正規ルートで feature 化するための起票 issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T23:30:33Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-qa070-implementation-feature-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "/dev-graph decompose → plan の正規ルートで feature 化され、exact-13 task で実装が完了する",
+      "graph_node_id": "issue-qa070-implementation-feature-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T23:30:33Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "qa-070 で明文化した規約 2 件の実装を、13 フェーズを省略しない正規 feature として起票する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "system-spec/dev-workflow.md"
+      ],
+      "scope_in": [
+        "300 行上限 fail-closed CI lint (remediation allowlist ratchet 付き)",
+        "仕組み側ファイルの repo 固有ナレッジ hard-coded 参照検査",
+        "extract-blueprint / install-bundle の『仕組みのみ既定・ナレッジ opt-in』検査"
+      ],
+      "scope_out": [
+        "規約自体の変更 (qa-070 で確定済み)",
+        "既存超過 6 文書の分割 (issue-doc-granularity-remediation-20260722 側)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T09:30:00Z",
+        "origin_kind": "generated",
+        "source_digest": "97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-pipeline",
+        "qa-070",
+        "feature-candidate"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T09:30:00Z"
+    },
+    {
+      "acceptance": [
+        "対象 root の md で 300 行超が 0 件",
+        "分割後も命名規則 (kebab-case・種別接頭辞) と参照導線が維持されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3d8",
+        "linked_at": "2026-07-22T00:49:29Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-doc-granularity-remediation-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "qa-070 (2026-07-22 確定) の粒度規約 300 行上限に対する既存超過 6 件の remediation issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T23:30:33Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-doc-granularity-remediation-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "300 行超過の正本 markdown が 0 件になり、fail-closed lint を全面適用できる状態",
+      "graph_node_id": "issue-doc-granularity-remediation-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T23:30:33Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "qa-070 (1 文書 300 行上限・fail-closed) の全面適用に向け、既存超過 6 文書を責務単位で分割する",
+      "related_nodes": [
+        "issue-qa070-implementation-feature-20260722"
+      ],
+      "resource_scope": [
+        "docs/security-spec.md",
+        "docs/backend-spec.md",
+        "docs/features/feat-hub-foundation/design-review-notes.md",
+        "docs/features/feat-dev-pipeline-improvement/design.md",
+        "docs/features/feat-stage0-distribution-gate/design-review-notes.md",
+        "docs/features/feat-hub-foundation/final-review-notes.md"
+      ],
+      "scope_in": [
+        "docs/security-spec.md (910 行) の責務分割",
+        "docs/backend-spec.md (434 行) の責務分割",
+        "docs/features/*/design-review-notes.md ほか 4 件の分割または縮約",
+        "分割後の index/一覧表からの参照維持"
+      ],
+      "scope_out": [
+        "既存文書の一括機械分割",
+        "300 行 lint 本体の実装 (issue-qa070-implementation-feature-20260722 側)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T09:30:00Z",
+        "origin_kind": "generated",
+        "source_digest": "97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "documentation",
+        "qa-070",
+        "remediation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "qa-070 粒度規約: 300 行超過 6 文書の remediation (縮小のみ許す初期一覧)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T09:30:00Z"
+    },
+    {
+      "acceptance": [
+        "4 件の再照合タイミングが該当 feature/task の手順に組み込まれている",
+        "nextjs / claude-code-plugins の記録が次回 run-system-spec-doc-fetch で現行版へ更新されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-e2u",
+        "linked_at": "2026-07-22T00:49:29Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-source-freshness-ops-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "C08 出典鮮度監査 (2026-07-22) の low findings 3 件 (追随運用の示唆) を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T23:30:33Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-source-freshness-ops-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "高頻度リリース系の出典 3 件に追随運用が定義され、実装着手時の再照合が漏れない状態",
+      "graph_node_id": "issue-source-freshness-ops-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T23:30:33Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C08 出典鮮度監査 (2026-07-22) の low findings 3 件を運用として追跡する",
+      "related_nodes": [
+        "feat-stage0-distribution-gate"
+      ],
+      "resource_scope": [
+        "system-spec/index.md",
+        "system-spec/fetched-references.json"
+      ],
+      "scope_in": [
+        "claude-code-plugins: H7 (Stage 0 technical gate) 直前の changelog 再照合と marketplace.json 仕様不変確認 (2026-07-22 第2回監査: anchor v2.1.215 に対し現行 v2.1.216・moderate。git-subdir source type の一部クライアント schema 検証エラー事例も H7 で要確認)",
+        "drizzle-orm: v1 系採用時の GitHub releases 最新 rc 再確認 (npm rc dist-tag は rc.3 を指し rc.4 を取得できない構造に注意)",
+        "wrangler: pinned version 記録追加の要否検討",
+        "nextjs: 記録 16.2.10 に対し現行 16.2.11 (patch 1 世代遅れ・low)。次回 doc-fetch で更新"
+      ],
+      "scope_out": [
+        "fetched-references.json の即時再取得 (現記録は全件鮮度 PASS)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T23:54:58Z",
+        "origin_kind": "manual",
+        "source_digest": "ece8e03c27620e76a1cf4e06598f2e0d8067234974f605d54e2186501f59f17f",
+        "source_path": "system-spec/index.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec",
+        "freshness",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T00:49:29Z"
+    },
+    {
+      "acceptance": [
+        "security.web の qa_ref chain が backend/database/frontend と同様に answer 本文の ID citation で qa-020 へ到達する",
+        "C07 監査で qa_ref 要確認 0 件"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ntj",
+        "linked_at": "2026-07-22T00:49:29Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-security-web-qaref-chain-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "C07 matrix 監査 (2026-07-22 事後 fork) の medium finding (security.web chain-of-custody 断絶) を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T23:58:50Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-security-web-qaref-chain-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "security.web の確定 qa の answer 本文から qa-020 (認可単一ミドルウェア集約のコード構造規約) へ ID citation で遡及でき、C07 の qa_ref 要確認が 0 件になっている",
+      "graph_node_id": "issue-security-web-qaref-chain-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T23:58:50Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C07 マトリクス監査 (2026-07-22) の medium finding を追跡し、security.web の chain-of-custody (qa_ref 系譜の本文引用) を他カテゴリと同水準へ回復する",
+      "related_nodes": [
+        "issue-hearing-trace-followups-20260722"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json"
+      ],
+      "scope_in": [
+        "security.web 系確定 qa (qa-050 または後継) の answer 本文へ『qa-020 (コード構造規約の security 適用) を全面維持』句を C01 writer 経由で明示追加"
+      ],
+      "scope_out": [
+        "security 確定内容の変更 (decide()/resolveEffectiveRole()/withAuthz() 単一接点は qa-020 規約を実質反映済み)",
+        "qa_log 過去エントリの改変 (追記は新 qa として登録)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T09:30:00Z",
+        "origin_kind": "generated",
+        "source_digest": "4abdb8c76b091e9422db8d92a06fc4006f4b2f5d0226b30afc7363168f71e7e4",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec",
+        "matrix-audit",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "security.web の qa_ref 系譜引用の断絶 (C07 medium): qa-042/qa-046 本文に qa-020 維持句がない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T09:30:00Z"
+    },
+    {
+      "acceptance": [
+        "300 行超過の新規違反が CI で fail-closed に遮断され、allowlist は既存 6 文書のみ・縮小のみ許す ratchet として検査される",
+        "仕組み側ファイルへの repo 固有ナレッジ hard-coded 参照を検出する検査が存在し、検出時に exit 非 0 で停止する",
+        "extract-blueprint / install-bundle がナレッジを既定で含めず、明示 opt-in なしの同梱を検査が遮断する",
+        "3 検査が CI ゲートへ組み込まれ、同一入力での再実行が差分 0 に収束する (冪等)"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-doc-governance-portability.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 qa-070 ドキュメント規約 2 件の実装 3 スコープから導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T01:25:08Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-doc-governance-portability.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "3 検査 (300 行 lint・仕組み-ナレッジ境界検査・移植導線 opt-in 検査) が CI で fail-closed に動作し、既存超過 6 文書の allowlist は縮小のみ許す ratchet で管理され、再実行しても同じ結果 (冪等) になる状態",
+      "graph_node_id": "feat-doc-governance-portability",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "qa-070 (appr-008 承認) で確定したドキュメント規約 2 件 — 仕組みとナレッジのオン・オフ分離・1 文書 300 行上限 — を機械的に強制する検査群を実装し、G1 (仕組みの持ち出しによる配布・運用効率)・G4 (fail-closed 品質ゲート)・G5 (ドキュメント管理の持続性) を支える",
+      "related_nodes": [
+        "issue-qa070-implementation-feature-20260722",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "features/feat-doc-governance-portability.md"
+      ],
+      "scope_in": [
+        "markdown 正本文書 (system-spec 章・architecture・features・tasks・docs) の 300 行上限 fail-closed CI lint (既存超過 6 文書は縮小のみ許す remediation allowlist ratchet 付き)",
+        "仕組み側ファイル (plugins/・.claude/skills/ 等) への repo 固有ナレッジ (固有 node id・固有 path・固有 qa 番号) hard-coded 参照の検査",
+        "extract-blueprint / install-bundle の『仕組みのみ既定 (オン)・ナレッジ同梱は明示 opt-in (オフ既定)』検査"
+      ],
+      "scope_out": [
+        "規約自体の変更 (qa-070 で確定済み)",
+        "既存超過 6 文書の分割実施 (issue-doc-granularity-remediation-20260722 / HarnessHub-3d8 側)",
+        "Hub プロダクト本体機能 (Web/API/DB) の変更",
+        "dev-graph への新 verb 追加"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T01:25:08Z",
+        "origin_kind": "generated",
+        "source_digest": "0c48fb74e1f93e4e6fe6e4f31cf5e04c4b3839537fae063002a3ce2f3e10b2bf",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "macro-feature",
+        "dev-pipeline",
+        "governance",
+        "qa-070"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "ドキュメント規約とポータビリティ検査 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植 opt-in 検査)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 3 件/scope_out 4 件/acceptance 4 件/quality_constraints 4 件 (id 単位) が逐語一致で転記されている",
+        "3 検査スコープ ((1) 300 行 fail-closed lint と 6 文書 allowlist ratchet、(2) 仕組みファイルの hard-coded ナレッジ参照検査、(3) 移植チャネルの mechanism-only 既定/knowledge opt-in 検査) がそれぞれ scope_in の対応項目に紐付けて記載されている",
+        "出典として system-spec/dev-workflow.md の qa-070 (appr-008 承認) が参照のみで引用され、条文本文が requirements-baseline.md へ複製されていない",
+        "P02 で確定すべき据置事項 (3 検査の入出力契約・allowlist schema・hard-coded 参照検出の false-positive 除外基準・CI 配線先) が明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.1",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p01.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P01 責務 (要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p01.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P01",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P01 を実行する: 要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/requirements-baseline.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-doc-governance-portability/requirements-baseline.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-01-requirements.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "design.md に lint-doc-line-limit.py / lint-mechanism-knowledge-boundary.py / lint-portability-knowledge-optin.py の入出力契約 (引数・exit code・検出条件・JSON 出力形状) が確定している",
+        "scripts/doc-line-limit-allowlist.json の schema (path・baseline_line_count・縮小のみ許す ratchet 方式: 実測行数が baseline を上回れば fail-closed、baseline 未満へ縮小したら baseline も追随して更新する) が確定している",
+        "hard-coded ナレッジ参照検出について、制御フロー・既定値として使われる repo 固有 node id/path/qa 番号のリテラル (FAIL 対象) と、根拠引用としてのコメント・docstring 内 qa 番号記載 (PASS 対象) を区別する判定基準が false-positive ケース付きで確定している",
+        ".claude-plugin/bundles.json・plugin.json の distributable フラグ・scripts/install-bundle.sh の現状 (mechanism=plugin 名のみ参照、knowledge content-root 不参照) を lint-portability-knowledge-optin.py がどう固定検査するかの契約が確定している",
+        "P01 の据置事項 4 点が全て確定し、未確定の持ち越しが 0 件である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.2",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p02.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P02 責務 (検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P01"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p02.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P02",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P02 を実行する: 検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/design.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-doc-governance-portability/design.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-02-architecture.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "design-review.md に 5 観点 (fail-closed・冪等・単一 writer 境界・digest 不変・仕組み-ナレッジ境界非複製) それぞれの整合検証結果が verdict 付きで記録されている",
+        "3 検査いずれも警告のみの soft lint ではなく exit 非 0 の fail-closed であることが確認されている",
+        "不整合が検出された場合は P02 へ差し戻され、全 verdict PASS の場合のみ P04 へ進む判定が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.3",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p03.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P03 責務 (設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P02"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p03.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P03",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P03 を実行する: 設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/design-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-doc-governance-portability/design-review.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-03-design-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "test-plan.md に 3 検査それぞれの MUST_DETECT(悪性)/MUST_PASS(良性) fixture がテスト ID 付きで定義されている (300 行超過文書、allowlist 逸脱、仕組みファイル中の hard-coded node id/path/qa 番号の実例、knowledge content 同梱を既定 on にした移植マニフェスト等)",
+        "hard-coded 参照検出の false-positive guard ケース (コメント・docstring 内の qa 番号引用は PASS するテスト) がテスト ID 付きで定義されている",
+        "P08 冪等 migration (allowlist baseline 遡及付与) の再実行差分 0 検証がテスト ID 付きで定義されている",
+        "全テスト ID が P06 で実行可能な pytest 形式 (tests/scripts-root/test_root__lint_*.py) として設計されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.4",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p04.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P04 責務 (テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P03"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p04.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P04",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P04 を実行する: テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/test-plan.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-doc-governance-portability/test-plan.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-04-test-design.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "3 lint script が P02 の入出力契約どおりに動作し、P04 の MUST_DETECT/MUST_PASS fixture を全件満たす",
+        "scripts/doc-line-limit-allowlist.json が schema 準拠のスケルトン (6 文書分のエントリ枠) で作成され、baseline_line_count の実値投入は P08 へ引き継がれる",
+        "hard-coded ナレッジ参照検査が false-positive guard ケースを PASS させたまま悪性ケースを全件検出する",
+        ".github/workflows/governance-check.yml の change-category-guard job に 3 lint が fail-closed (exit 非 0 で job 失敗) で配線されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.5",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p05.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P05 責務 (実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P04"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p05.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P05",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P05 を実行する: 実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "scripts/lint-doc-line-limit.py",
+        "scripts/lint-mechanism-knowledge-boundary.py",
+        "scripts/lint-portability-knowledge-optin.py",
+        "scripts/doc-line-limit-allowlist.json",
+        "tests/scripts-root/test_root__lint_doc_line_limit.py",
+        "tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py",
+        "tests/scripts-root/test_root__lint_portability_knowledge_optin.py",
+        ".github/workflows/governance-check.yml"
+      ],
+      "scope_in": [
+        "scripts/lint-doc-line-limit.py",
+        "scripts/lint-mechanism-knowledge-boundary.py",
+        "scripts/lint-portability-knowledge-optin.py",
+        "scripts/doc-line-limit-allowlist.json",
+        "tests/scripts-root/test_root__lint_doc_line_limit.py",
+        "tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py",
+        "tests/scripts-root/test_root__lint_portability_knowledge_optin.py",
+        ".github/workflows/governance-check.yml"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-05-implementation.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "test-plan.md の全テスト ID が実行され、test-run-p06.json に実行コマンド・exit code・pass/fail 件数が生のまま記録されている",
+        "失敗 0 件で P07 へ進むか、失敗があれば P05 差し戻しが記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.6",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p06.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P06 責務 (テスト実行 — 回帰テスト全件と 3 検査の実測記録) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P05"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p06.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P06",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P06 を実行する: テスト実行 — 回帰テスト全件と 3 検査の実測記録",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/doc-governance-portability/test-run-p06.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/doc-governance-portability/test-run-p06.json"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-06-test-run.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "テスト実行 — 回帰テスト全件と 3 検査の実測記録",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "acceptance-report.md に feature acceptance 4 件それぞれの充足判定 (根拠 evidence の path 付き) が記録されている",
+        "P08 完了後に再判定が必要な項目 (allowlist baseline 遡及付与の完了確認) が明示され、未達項目の差し戻し先 phase が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.7",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p07.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P07 責務 (受入判定 — 4 acceptance の突合と未達の差し戻し) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P06"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p07.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P07",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P07 を実行する: 受入判定 — 4 acceptance の突合と未達の差し戻し",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/acceptance-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-doc-governance-portability/acceptance-report.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-07-acceptance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "受入判定 — 4 acceptance の突合と未達の差し戻し",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "scripts/doc-line-limit-allowlist.json に既存超過 6 文書 (docs/security-spec.md=910・docs/backend-spec.md=434・docs/features/feat-hub-foundation/design-review-notes.md=366・docs/features/feat-dev-pipeline-improvement/design.md=365・docs/features/feat-stage0-distribution-gate/design-review-notes.md=320・docs/features/feat-hub-foundation/final-review-notes.md=303) の baseline_line_count が遡及付与され、lint-doc-line-limit.py が exit 0 になる",
+        "6 文書自体の分割は実施せず、baseline 付与のみに限定されている (分割実施は issue-doc-granularity-remediation-20260722 / HarnessHub-3d8 側の責務)",
+        "migration-receipt.json に付与内容 (path・baseline_line_count・実測行数との一致確認) が記録され、再実行しても差分 0 (冪等) である",
+        "6 文書 (既存 confirmed 文書) の sha256 が付与前後で不変である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.8",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p08.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P08 責務 (移行 — 既存超過 6 文書の allowlist baseline 遡及付与) を実行する task。6 文書自体の分割は issue-doc-granularity-remediation-20260722 (HarnessHub-3d8) 側の責務でありスコープ外",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P07"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p08.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P08",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P08 を実行する: 移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow",
+        "issue-doc-granularity-remediation-20260722"
+      ],
+      "resource_scope": [
+        "scripts/doc-line-limit-allowlist.json",
+        "eval-log/dev-graph/doc-governance-portability/migration-receipt.json"
+      ],
+      "scope_in": [
+        "scripts/doc-line-limit-allowlist.json",
+        "eval-log/dev-graph/doc-governance-portability/migration-receipt.json"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-08-refactoring-migration.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "qa-fail-closed-report.json に悪性ケース 3 系統 (300 行超過の未 allowlist 文書投入・仕組みファイルへの hard-coded node id/path/qa 番号投入・移植マニフェストでの knowledge 既定 on 投入) の実測 (期待 exit 非 0・実測 exit code) が記録され、全件検出されている",
+        "検査への迂回経路 (allowlist 対象外 path への書込・コメント偽装による hard-coded 参照の隠蔽・opt-in フラグ名の詐称) の探索結果が記録され、発見された迂回は P05 へ差し戻されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.9",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p09.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P09 責務 (品質保証 — fail-closed 実効性と境界突破の悪性ケース実測) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P08"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p09.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P09",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P09 を実行する: 品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/doc-governance-portability/qa-fail-closed-report.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/doc-governance-portability/qa-fail-closed-report.json"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-09-quality-assurance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "quality"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "final-review.md に P01-P09 の成果物一覧・acceptance 4 件充足状況・quality_constraints 4 件 (fail-closed-lint・idempotent-verification・single-writer-boundary・digest-immutability) の適合判定が記録されている",
+        "未達 0 件で P11 へ進むか、残課題の差し戻し先または follow-up 起票が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.10",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p10.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P09"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p10.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P10",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P10 を実行する: 最終レビュー — 全 phase 成果の横断整合確認",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/final-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-doc-governance-portability/final-review.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-10-final-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "evidence-manifest.json に P06/P08/P09 の実測ログと P05 成果物の path・sha256・生成 phase が記録されている",
+        "manifest 記載の sha256 が実ファイルと全件一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.11",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p11.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P11 責務 (証跡固定 — 実測ログと成果物 digest の evidence manifest 化) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P10"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p11.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P11",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P11 を実行する: 証跡固定 — 実測ログと成果物 digest の evidence manifest 化",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/doc-governance-portability/evidence-manifest.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/doc-governance-portability/evidence-manifest.json"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-11-evidence.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "証跡固定 — 実測ログと成果物 digest の evidence manifest 化",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "operations.md に allowlist ratchet の運用手順 (縮小反映タイミング・baseline 更新の承認経路) が記録されている",
+        "hard-coded 参照検査の誤検出トリアージ手順 (false-positive 申請と allowlist 追加の承認フロー) が記録されている",
+        "手順が単一 writer 境界 (graph は upsert-node.py、beads は bd-bridge.py 経由) を迂回しないことが明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.12",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p12.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P12 責務 (運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P11"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p12.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P12",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P12 を実行する: 運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "docs/features/feat-doc-governance-portability/operations.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-doc-governance-portability/operations.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-12-documentation-operations.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
+      "acceptance": [
+        "全成果物の PR が main へ merge され、release-receipt.json に PR 番号・merge commit・CI 結果が記録されている",
+        "governance-check.yml 上で 3 検査が fail-closed で実効していることが CI run の実測 (悪性 diff を投入した検証 run の exit code) で確認されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ik0.13",
+        "linked_at": "2026-07-22T02:47:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p13.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "qa-070 のドキュメント統治・移植性境界 3 検査のうち P13 責務 (リリース — main 反映と 3 検査の CI fail-closed 実効性の実証) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-22T02:31:19Z",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P12"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-doc-governance-portability",
+      "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p13.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T09:35:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-doc-governance-portability",
+      "phase_ref": "P13",
+      "priority": null,
+      "project_id": "feature-package-feat-doc-governance-portability",
+      "pull_request_linkages": [],
+      "purpose": "feat-doc-governance-portability の P13 を実行する: リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "eval-log/dev-graph/doc-governance-portability/release-receipt.json"
+      ],
+      "scope_in": [
+        "eval-log/dev-graph/doc-governance-portability/release-receipt.json"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T02:31:19Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/task-specs/phase-13-release-deploy.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-doc-governance-portability",
+        "macro-feature",
+        "doc-governance",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T02:47:44Z"
+    },
+    {
       "acceptance": [],
       "architecture_refs": [],
       "artifact_kind": "issue",
@@ -25613,6 +29467,212 @@
       "title": "lint-live-trial-verdict の check_verdict が transcript_sha256=null を素通りさせる",
       "tracker_binding": "beads",
       "updated_at": "2026-07-22T06:10:00Z"
+    },
+    {
+      "acceptance": [
+        "features 14 件の source_digest が実測値と一致するか、再 import 差し戻しの記録がある",
+        "digest 更新は upsert-node.py patch 経由のみで行われている",
+        "意味影響の判定根拠が本 issue に記録されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-features-source-digest-drift-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-t9q の lineage 調査 (2026-07-22、全 215 artifact 突合) で観測した features 14 件の source_digest 既存 drift を追跡する follow-up issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-22T23:04:59Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-features-source-digest-drift-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "features 14 件の source_lineage が現行 source 実体へ追随済みで、source 変更が feature の意味に影響する場合は再 import 経路へ差し戻されている",
+      "graph_node_id": "issue-features-source-digest-drift-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T23:04:59Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "features/feat-*.md 14 件の source_lineage.source_digest (a4c26b6d…) が import 時点の specs/harness-hub-system-specification.md の姿のまま残り、現行実体 digest (56c60159…) と不一致の既存 drift になっている。validate-source-digest.py は registered_this_run のみ検査するため既存 node の drift は検出されず、lineage の追跡性が劣化している。",
+      "related_nodes": [
+        "spec-harness-hub-requirements"
+      ],
+      "resource_scope": [
+        "features/",
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/scripts/validate-source-digest.py"
+      ],
+      "scope_in": [
+        "source (specs/harness-hub-system-specification.md) の変更内容が各 feature の意味に影響するかの判定",
+        "影響なしの feature の lineage refresh (source_digest 実測更新) を正規 writer upsert-node.py patch で実施",
+        "影響ありの feature の再 import 経路への差し戻し"
+      ],
+      "scope_out": [
+        "sha 手書換での digest 合わせ (偽装として禁止)",
+        "validate-source-digest.py の検査範囲拡張 (別課題)",
+        "t9q の R3 再 import 対象 (spec-harness-hub-requirements / arch-harness-hub-infrastructure)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T23:04:59Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "specs/harness-hub-system-specification.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "source-lineage",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T23:04:59Z"
+    },
+    {
+      "acceptance": [
+        "C08 auditor が registry.npmjs.org と api.github.com へ read-only GET を実行した監査証跡が残る",
+        "公開直後の版 (npm index 遅延中) でも一次 2 経路照合で確定判定できる",
+        "変更が agent 定義または SKILL の正本に反映され、session 一時指示に依存しない"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c08-audit-primary-get-capability-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "C05 再々評価 (HarnessHub-t9q) の medium finding (audit-environment) と gap 4 で指摘された監査環境の構造要因を追跡する follow-up issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-22T23:38:10Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-c08-audit-primary-get-capability-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "C08 監査 sub-agent と C05 評価経路が公式 API host (registry.npmjs.org / api.github.com 等) へ read-only の一次 GET を実行でき、二次索引ラグ由来の判定不能 FAIL が発生しない",
+      "graph_node_id": "issue-c08-audit-primary-get-capability-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T23:38:10Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C05 再々評価 (2026-07-22 23:21Z、completeness-report.json) の medium finding (bucket: audit-environment) と gap 4 の恒久是正。C08 (system-spec-doc-freshness-auditor) の実行環境では WebFetch が無効 ('No such tool available')・curl は Bash 権限拒否で、registry.npmjs.org / api.github.com 等の公式一次ソースへ直接 GET できない。C08 は WebSearch (検索エンジンの二次索引) のみに依拠し、索引ラグと真の乖離を区別できず、pnpm 11.16.0 / opennext-cloudflare 1.20.2 のような公開直後の版で『裏取り不能 FAIL』が構造的に反復する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/system-spec-harness/agents/",
+        "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/"
+      ],
+      "scope_in": [
+        "C08 auditor の一次 GET 手段の確立 (WebFetch 有効化、Bash python3 urllib 手順の agent 定義への明記、または許可リスト追加のいずれか)",
+        "auditor prompt / agent 定義への照合手順 (curl 拒否時の fallback) の追記",
+        "C05 evaluator の delegation prompt での手段伝達の標準化"
+      ],
+      "scope_out": [
+        "検査基準の緩和 (fail-closed 原則は維持)",
+        "WebSearch 照合自体の廃止 (補助手段としては維持)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T23:38:10Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "system-spec/completeness-report.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "audit-environment",
+        "doc-freshness"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C08 監査 sub-agent が公式 API へ一次 GET できず WebSearch 二次索引依存で doc_freshness FAIL が反復する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T23:38:10Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

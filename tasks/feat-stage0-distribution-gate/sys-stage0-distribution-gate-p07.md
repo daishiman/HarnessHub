@@ -12,8 +12,8 @@ iteration: null
 title: "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-19T14:19:08Z"
-status: "active"
+updated_at: "2026-07-21T03:17:54Z"
+status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P06"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
 resource_scope: ["docs/features/feat-stage0-distribution-gate/acceptance-record.md"]
@@ -42,7 +42,7 @@ beads_linkage: {"bd_issue_id":"HarnessHub-j71.7","linked_at":"2026-07-18T16:05:2
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
-execution_contexts: []
+execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P07","head_sha":"86d035e02886b64abefb2ffa43e54bd85dea3a09","last_seen_at":"2026-07-21T00:19:38.041436Z","lease_acquired_at":"2026-07-21T00:19:35.510053Z","released_at":null,"state":"claimed","worktree_id":"wt_eed96293f3fd512f"}]
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---

@@ -1,0 +1,232 @@
+{
+  "digest_contract": {
+    "algorithm": "sha256",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded"
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "script",
+      "depends_on": [],
+      "phase_ref": "P01",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P01"
+      ],
+      "phase_ref": "P02",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P02"
+      ],
+      "phase_ref": "P03",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P03"
+      ],
+      "phase_ref": "P04",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P04"
+      ],
+      "phase_ref": "P05",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P05"
+      ],
+      "phase_ref": "P06",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P06"
+      ],
+      "phase_ref": "P07",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P07"
+      ],
+      "phase_ref": "P08",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P08"
+      ],
+      "phase_ref": "P09",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P09"
+      ],
+      "phase_ref": "P10",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P10"
+      ],
+      "phase_ref": "P11",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P11"
+      ],
+      "phase_ref": "P12",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-DOC-GOVERNANCE-PORTABILITY-P12"
+      ],
+      "phase_ref": "P13",
+      "task_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md"
+    }
+  ],
+  "identity": {
+    "feature_id": "feat-doc-governance-portability",
+    "feature_package_id": "feature-package/feat-doc-governance-portability",
+    "parent_feature": "feat-doc-governance-portability",
+    "repository_id": "github:daishiman/HarnessHub",
+    "source_feature_digest": "sha256:6855a739f483347401636b9254be473536ac2d9168cc24470f1abf05bd9286fb"
+  },
+  "kind": "system-build-handoff",
+  "p01_entry_gate": {
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ],
+    "selector": "parent_feature.depends_on"
+  },
+  "registration_request": {
+    "consumer": "dev-graph/C02",
+    "owner": "system-dev-planner/C11",
+    "path": "dev-graph-registration.json",
+    "promotion_receipt": {
+      "owner": "system-dev-planner/C11",
+      "path": "atomic-promotion-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "registration_receipt": {
+      "owner": "dev-graph/C02",
+      "path": "dev-graph-registration-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "status": "deferred-until-promotion"
+  },
+  "schema_version": "1.0.0",
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "6f66ab6c156b27308e81e48c8e37f0cff9549adc0ae05643e7eee4f9582cf7ca"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "993b5b32314973ac0f4822e808fa061044d5de4a231872a107781b0584dee71b"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "c54c3c75f759a0486f99552ca4410f6c09286667a346f96d01bd612bc74f217c"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "b93d05ebfd98f9c547278cfbd15dab6b7d3c1e2bae5bc232c372303952ccb923"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "4f948c902493b0525fd0e2ae7bcdcd1a8bccfbdc57c6d7db769a430c1b27ff6a"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "cf2c7c860c59c91d81500b662009a456b8721292d659dd0612029f7e943423ef"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "93416363fe93324c0a3580e37fb62a88cd495f4b15c10b8b23877295a1e2da28"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "b122b968e5a6f2a6f9e7d235ab88506069e7ed6e280f46999a26ca28160d1198"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "d741cfef0ff909119c8da7a5877abca58d6a6b180c998cb5522949764b69af02"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "e9fa0c7249dd22b46d7380e31e0e64ccedbe192fc28f5deeb8f30ed295e1ef79"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "71922a7ba196230f41918e8945b35b4efb8c7edec402d63cb74ae4ff58e332d0"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "9dd22d76f7e5f26e708dea8c2c671d1343ee5b92633d920623698b091d69968d"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "2053db4ea1d2a8f0b7d24516805bac4899a52e9f03257e226fd785a751ff6172"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "ee9389a1fbb647d34fd767e5d3b82355c3d152d4c3254617180c04ebcdd598cc"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "89b6a20f5d79a23d94aeb2f29020429d570ef66b21c296e5ea1fcb25f7749e67"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "3656620a14e87b970a577f2b800663f97961504a3e384b5ea9fdef72728d66ef"
+    }
+  ],
+  "source_manifest": {
+    "canonical_digest_before_handoff": "sha256:28b34faca0d391c8f28216dcee18dcee45dc44bfaaae9b729d962f1ec1866500",
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "eea4364f398d1cfca73733770121e5794b67988e02acc85cf57884196d40da93"
+  }
+}

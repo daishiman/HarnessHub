@@ -1,0 +1,103 @@
+{
+ "node": {
+  "graph_node_id": "issue-qa070-implementation-feature-20260722",
+  "artifact_kind": "issue",
+  "artifact_subtypes": [],
+  "project_id": "harness-hub",
+  "domain": "documentation",
+  "tags": [
+   "dev-pipeline",
+   "qa-070",
+   "feature-candidate"
+  ],
+  "priority": "medium",
+  "start_date": null,
+  "target_date": null,
+  "iteration": null,
+  "title": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)",
+  "owners": [
+   "daishiman"
+  ],
+  "created_at": "2026-07-21T23:30:33Z",
+  "updated_at": "2026-07-21T23:30:33Z",
+  "status": "draft",
+  "depends_on": [],
+  "related_nodes": [
+   "feat-dev-pipeline-improvement"
+  ],
+  "resource_scope": [
+   "system-spec/dev-workflow.md"
+  ],
+  "purpose": "qa-070 で明文化した規約 2 件の実装を、13 フェーズを省略しない正規 feature として起票する",
+  "goal": "/dev-graph decompose → plan の正規ルートで feature 化され、exact-13 task で実装が完了する",
+  "scope_in": [
+   "300 行上限 fail-closed CI lint (remediation allowlist ratchet 付き)",
+   "仕組み側ファイルの repo 固有ナレッジ hard-coded 参照検査",
+   "extract-blueprint / install-bundle の『仕組みのみ既定・ナレッジ opt-in』検査"
+  ],
+  "scope_out": [
+   "規約自体の変更 (qa-070 で確定済み)",
+   "既存超過 6 文書の分割 (issue-doc-granularity-remediation-20260722 側)"
+  ],
+  "acceptance": [
+   "decompose により feature 文書と context.json が生成される",
+   "plan により exact-13 task が昇格登録される"
+  ],
+  "architecture_refs": [],
+  "parent_feature": null,
+  "feature_package_id": null,
+  "phase_ref": null,
+  "file_path": "issues/sys-qa070-implementation-feature-20260722.md",
+  "template_id": "issue",
+  "template_version": "1.0.0",
+  "confirmation_status": "draft",
+  "evaluation_status": "pending",
+  "confirmation_evidence": {
+   "evaluated_digest": null,
+   "evaluator": null,
+   "evidence_ref": null
+  },
+  "source_lineage": {
+   "imported_at": "2026-07-21T23:30:33Z",
+   "origin_kind": "manual",
+   "source_digest": null,
+   "source_path": "system-spec/dev-workflow.md",
+   "source_plugin": null,
+   "source_version": null
+  },
+  "classification_confidence": 0.95,
+  "classification_reason": "qa-070 の実装 (lint・境界検査・移植導線) を 13 フェーズ正規ルートで feature 化するための起票 issue",
+  "classification_candidates": [
+   {
+    "artifact_kind": "issue",
+    "candidate_path": "issues/sys-qa070-implementation-feature-20260722.md",
+    "confidence": 0.95
+   }
+  ],
+  "issue_linkage": null,
+  "tracker_binding": "beads",
+  "beads_linkage": null,
+  "github_publication": {
+   "labels": [],
+   "milestone": null,
+   "mode": "local_only",
+   "project_aliases": []
+  },
+  "github_project_linkages": [],
+  "pull_request_linkages": [],
+  "execution_contexts": [],
+  "completion_evidence": {
+   "completed_at": null,
+   "evidence_refs": [],
+   "policy": "manual",
+   "reconciled_at": null,
+   "source": null,
+   "status": "open"
+  },
+  "implementation_readiness": {
+   "checked_at": "2026-07-21T23:30:33Z",
+   "missing_sections": [],
+   "status": "complete"
+  }
+ }
+}
