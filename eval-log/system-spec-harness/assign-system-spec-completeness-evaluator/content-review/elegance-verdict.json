@@ -2,13 +2,13 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "13171056272da9ae98f9d1525cd0feb556d99946a8210bd157a123a1918c8e6a"
+    "skill_md_sha256": "febfdb3dae3f9a39a3474b32befee07f8f9bfabb0d150c1cf498af678588df4e"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
   "reviewer": "assign-skill-design-evaluator-combined",
-  "reviewed_at": "2026-07-22",
-  "iterations": 3,
+  "reviewed_at": "2026-07-23",
+  "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
@@ -21,18 +21,18 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "帰属 (attribution) の証跡を『モデルが書けない層』へ外出しした設計判断が横展開に値する: 監査 agent は Write を持たず自力で痕跡を残せないという制約を出発点に、証跡 writer を skill ではなく PostToolUse hook (hooks/record-audit-fork.py) へ置き、評価者の自己申告 (aspects[].auditor) と独立した corroboration を成立させている。SKILL.md 帰属節・script docstring・hook docstring で同じ論拠が語られ、責務分割 (評価=skill / 証跡=hook) が破綻していない。",
-      "必須 receipt が定数から導出される形になっており、表と実装の二重管理が起きない: SKILL.md の 3 行表は required_delegations() が ASPECTS (auditor != EVALUATOR_NAME → matrix_coverage/C07・doc_freshness/C08 の primary) と SUB_INPUT_AUDITORS (matrix_coverage/C06 の sub_input) から導く集合と過不足なく一致する。観点↔監査主体を後から足しても表だけ古くなる構造になっていない。",
-      "ledger_corroborates() が『採らなかった判定軸とその理由』まで docstring に残しており、後続の改変が Goodhart へ戻りにくい: 照合軸を subagent_type 完全一致 + 件数>=1 の 1 本に絞る理由 (台帳に無い情報を判定したことにすると本 issue と同型の Goodhart を再生産する)、多重度照合を採らない理由 (INDETERMINATE 後の正当な再 fork を violation にしない)、fail-closed の切り分け順序 (台帳不在 → subagent_type 未宣言 → 記録なし = hook 未配線 / レポート不備 / fork 省略で復旧手順が違う) が明文化されている。判断を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針とも整合する型。",
-      "指摘された残余ギャップを『閉じたことにせず、閉じていない範囲として同じ粒度で 4 箇所へ開示する』処理が誠実で、限界開示の型として再利用できる: SKILL.md の機械層の限界・aspect-criteria.md の『残余ギャップ (run/session 非束縛)』・ledger_corroborates docstring の同名節・issue の『機械層が保証しない範囲』が同一の主張 (ts/session_id を照合軸に使わない → 過去 run の記録でも裏取りが成立しうる → 今回の run で fork した証明ではない) で揃い、さらに『なぜ即修正しないか』(レポートへ session_id を持たせると宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する設計が要る) と follow-up 課題 ID (HarnessHub-x4o) まで残している。誇張 (閉じたと書く) も過小 (黙って落とす) もない。"
+      "前回レビューが指摘した残余ギャップ (run/session 非束縛; HarnessHub-x4o) を、指摘時に予告された設計 (『レポート側へ session_id を持たせると宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する設計が要る』) のとおりに閉じた: receipt の dispatch.session_id (宣言) と台帳行の session_id (harness 観測 = モデルが書けない層) の突合を要求し、宣言単独 (自己申告) でも台帳単独 (過去 run と区別不能) でも成立しない三層構造 (receipt 単体突合 → 必須 receipt 全件の単一 run 収束 → --session での現在 run 一致) になっている。各層が塞ぐ攻撃 (fork なし偽装 / 複数 run つまみ食い / 過去 run 丸ごと流用) が docstring・SKILL.md・aspect-criteria.md で同一粒度で説明され、層の重複がない。",
+      "『\"unknown\" 宣言の扱い』という運用互換性と fail-closed のトレードオフを、TODO(human) で凍結せず AI 起案 + 根拠記録で閉じた (repo 方針 feedback-no-todo-human 適合): 受理した場合に戻る穴 (任意の過去 \"unknown\" 行で裏取り成立 = 本 issue の再発) と、拒否した場合の代償 (session を観測できないハーネス世代では正当な fork も violation) の両方を実装コメントに残し、台帳不在・空 ledger・INDETERMINATE と同じ fail-closed 系譜であることを根拠に拒否を選んでいる。最悪ケース (台帳側にも \"unknown\" 行がある状態) の回帰テストまで固定した。",
+      "閉じた範囲と閉じていない範囲の開示が更新後も等幅で誠実: 旧『残余ギャップ (run/session 非束縛)』は解消済みとして削除するのではなく『run/session 束縛』(実装済みの保証) と『残余ギャップ (能動的偽装)』(--session 併用時を除き、過去 run の session_id 丸写しは機械層で弾けない) へ書き換えられ、保証の主張範囲が実装と厳密に一致し続けている。guard hook 系と同じ『表層的 adversarial evasion は意味層責務として開示する』という repo の限界開示の型を踏襲。",
+      "reason 文字列が復旧手順の分岐まで含み診断可能: 宣言なし (R2 が fork 時の session を記録する) / \"unknown\" (session_id を観測できるハーネスで再評価する) / 台帳に無い session (過去 run の名指し違い・fork 省略・偽装の疑い + 観測済み session 数) の 3 分岐が、既存の 3 分岐 (台帳不在 / subagent_type 未宣言 / 記録なし) と同じ設計原則 (復旧手順が異なるものは reason で切り分ける) で増設されている。"
     ],
     "negative_feedback": [
-      "(観察・任意改善 / finding には計上しない) 限界開示にある『(確実に)弾くのは「fork を 1 件も起こしていない実行」まで』という圧縮表現は、単独で読むと run 単位の保証と誤読されうる。実際に弾けるのは『台帳全体で当該 subagent_type の記録が 1 件も無い場合』であり、過去 run の記録が残るリポジトリでは fork ゼロの run も通過する。ただし直前の一文が『過去 run の同一 subagent_type 記録でも裏取りが成立しうる』と明記しているため文脈で曖昧さは解けており、開示の不足ではなく表現粒度の話。HarnessHub-x4o の対応時に『台帳履歴に 1 件も無い場合のみ』と言い換えると一層正確になる。"
+      "(レビュー中に修正済み / finding には計上しない) (1) load_fork_ledger の session 集計が sessions.setdefault(st, {}) を同一式内で 2 回呼ぶ冗長形だった → by_session 変数へ括り出して解消。(2) aspect-criteria.md の run/session 束縛節に \"unknown\" 宣言の扱いが明記されておらず docstring/実装コメントのみだった → 詳細正本である aspect-criteria.md へ fail-closed 拒否とその根拠参照を 1 項追記して解消。いずれも修正後に pytest 514 passed を再確認。"
     ],
-    "iteration": 3,
-    "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "iteration": 1,
+    "iteration_limit": 2,
+    "hook_trigger": "stop-hook",
     "next_action": "none"
   },
-  "notes": "incremental profile の focused combined review (30 思考法は未実施のため申告しない)。iteration 3 は、iteration 2 で挙げた low finding『台帳照合が run/session に束縛されない点が限界開示に無い』への対応 (開示 4 箇所追加 + follow-up 課題 HarnessHub-x4o 起票) を受けた再確認で、SKILL.md 変更に伴い sha を 13171056272da9ae98f9d1525cd0feb556d99946a8210bd157a123a1918c8e6a へ更新した。今回実読: SKILL.md 帰属節『機械層の限界 (正直な境界)』の追記後全文 / references/aspect-criteria.md の『残余ギャップ (run/session 非束縛)』箇条 / scripts/aggregate-completeness.py の ledger_corroborates docstring『残余ギャップ』節と実装本体 / issues/sys-completeness-auditor-attribution-20260721.md L112-123。開示の十分性判定: 4 箇所とも (1) ts/session_id を照合軸に使わない、(2) 過去 run の同一 subagent_type 記録でも裏取りが成立しうる、(3)『今回の run で fork した』ことの証明ではない、(4) session 束縛は follow-up、を同じ粒度で述べており、実装 (dispatched[subagent_type] >= 1 のみを見る) と厳密に一致する。閉じたと書く誇張も、範囲を狭く見せる過小もない。aspect-criteria/issue/docstring はさらに『session 束縛が単純でない理由 = レポートへ session_id を持たせると宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する設計が要る』を明記しており、follow-up を先送りの言い訳でなく設計課題として残せている。よって iteration 2 の omission は解消・HarnessHub-x4o へ移管したものとして findings_summary.omission を 1 → 0 に戻した (緑化目的の削除ではなく、指摘対象の事実が消滅したため)。差分の副作用も確認: 今回変わったのは当該 bullet のみで、Purpose & Output Contract / 監査 sub-agent 対応表 / C13-C16 / 評価レポート形状 / 総合判定 / Key Rules / Steps / Gotchas / Additional Resources は iteration 2 時点と逐語一致 (現行 187 行)。python3 -m pytest plugins/system-spec-harness を自ら再実行して 497 passed / 0 failed、必須 receipt 表と required_delegations() の一致、schema required の audit_delegations も再確認した (contradiction / omission / inconsistency / dependency_break / smell いずれも 0)。残るのは negative_feedback に記した表現粒度の観察 1 件のみで、これは開示の不足ではないため finding には計上していない。"
+  "notes": "incremental profile の focused combined review (verification_profile=exhaustive 非明示のため 30 思考法 run-elegant-review + 独立 rubric evaluator は未実施であることを申告する)。今回実読: SKILL.md 帰属節 (run/session 束縛 + 機械層の限界の書換後全文) / references/aspect-criteria.md の帰属節 (束縛 + 残余ギャップ書換後) / scripts/aggregate-completeness.py の load_fork_ledger・ledger_corroborates (docstring + 実装本体 + \"unknown\" 設計判断コメント)・validate_attribution (単一 run 収束 + expected_session)・validate_report・main (--session) / schemas/completeness-findings.schema.json の dispatch (session_id 必須化 + description) / prompts/R2-delegate.md の receipt 指示 (session_id 記録 + --session 運用) / prompts/R1-score.md の帰属接地行 / tests/test_aggregate_completeness.py の session 束縛ブロック 7 テスト + fixture。整合検査: (1) SKILL.md・aspect-criteria.md・docstring・schema description・R2/R1 prompt の主張が『宣言と台帳の両方を要求 / 単一 run 収束 / --session で現在 run 一致 / 能動的偽装は --session 併用時を除き意味層責務』で完全一致し、実装 (declared_sid 検査 3 分岐 + declared_sessions 収束検査 + expected_session 一致検査) と過不足がない。(2) hook (record-audit-fork.py) が session 不明時に \"unknown\" を書く契約と、consumer が \"unknown\" 宣言を拒否する設計は『記録は残すが裏取りには使えない』として無矛盾 (台帳側 \"unknown\" 行は malformed ではなく sessions へ集計され、宣言側の拒否で穴を塞ぐ)。(3) producer↔consumer 契約: schema required 変更に対し system-dev-planner の AUDIT_DELEGATIONS fixture へ session_id: fixture-session を追従させ、write_audit_fork_ledger の台帳行と一致 (62 passed)。既存の LEDGER_TOOL_NAMES / LEDGER_RELPATH 契約テストも green。(4) pytest plugins/system-spec-harness = 514 passed / 0 failed (前回 verdict 時 497 から +17 は session 束縛系の新テスト)。機械検査: validate-frontmatter.py exit0 / lint-skill-name.py exit0 / lint-skill-tree.py exit0 (LS-203 'tests' Warn は従前どおり。'.claude' Warn は本セッションの PreCompact hook が skill cwd へ自動生成した未追跡 handoff snapshot で、SKILL.md 内容起因ではない = content 対象外として注記)。findings 5 分類はいずれも 0 のため PASS。"
 }

@@ -59,8 +59,12 @@ def _golden_aspects(verdicts=None):
     return out
 
 
-def _golden_delegations(verdicts=None):
-    """必須 receipt (C07 primary / C06 sub_input / C08 primary) を観点 verdict と整合させて組む。"""
+def _golden_delegations(verdicts=None, session_id="sess-1"):
+    """必須 receipt (C07 primary / C06 sub_input / C08 primary) を観点 verdict と整合させて組む。
+
+    dispatch.session_id は _golden_ledger()/_write_ledger() の台帳行と同じ "sess-1" を既定にする
+    (宣言↔台帳の突合が成立する golden 状態; issue: HarnessHub-x4o)。
+    """
     verdicts = verdicts or {}
     out = []
     for req in MOD.required_delegations():
@@ -69,14 +73,14 @@ def _golden_delegations(verdicts=None):
             "role": req["role"],
             "auditor": req["auditor"],
             "component": req["component"],
-            "dispatch": {"tool": "Task", "subagent_type": req["auditor"]},
+            "dispatch": {"tool": "Task", "subagent_type": req["auditor"], "session_id": session_id},
             "verdict": verdicts.get(req["aspect"], "PASS"),
             "evidence": [f"{req['auditor']}: 独立 context で監査"],
         })
     return out
 
 
-def _golden_ledger(auditors=None):
+def _golden_ledger(auditors=None, session_id="sess-1"):
     """hook が書いた台帳の集計結果を模す。auditors=None なら必須 auditor 全件が fork 済み。"""
     if auditors is None:
         auditors = [req["auditor"] for req in MOD.required_delegations()]
@@ -84,6 +88,7 @@ def _golden_ledger(auditors=None):
         "path": "eval-log/system-spec-harness/audit-fork-ledger.jsonl",
         "exists": True,
         "dispatched": {name: 1 for name in auditors},
+        "sessions": {name: {session_id: 1} for name in auditors},
         "malformed": 0,
     }
 
@@ -330,7 +335,8 @@ def test_delegation_on_self_evaluated_aspect_is_false_independence_claim():
         "role": "primary",
         "auditor": "system-spec-hearing-auditor",
         "component": "C06",
-        "dispatch": {"tool": "Task", "subagent_type": "system-spec-hearing-auditor"},
+        "dispatch": {"tool": "Task", "subagent_type": "system-spec-hearing-auditor",
+                     "session_id": "sess-1"},
         "verdict": "PASS",
         "evidence": ["でっちあげ"],
     }]
@@ -359,11 +365,20 @@ def test_primary_delegation_verdict_must_match_aspect_verdict():
     assert any("忠実に転記" in v for v in violations)
 
 
-def test_dispatch_must_be_task_tool():
+def test_dispatch_must_be_subagent_tool():
     report = _golden_report()
     report["audit_delegations"][0]["dispatch"]["tool"] = "Bash"
     violations = MOD.validate_attribution(report, _golden_ledger())
-    assert any("Task" in v for v in violations)
+    assert any("dispatch.tool" in v for v in violations)
+
+
+def test_dispatch_agent_tool_is_accepted():
+    """現行ハーネスの起動ツール名 'Agent' を正直に申告した receipt は violation にならない
+    (issue: HarnessHub-scl)。"""
+    report = _golden_report()
+    for d in report["audit_delegations"]:
+        d["dispatch"]["tool"] = "Agent"
+    assert MOD.validate_report(report, _golden_ledger()) == []
 
 
 def test_delegation_requires_non_empty_evidence():
@@ -385,6 +400,7 @@ def test_ledger_corroborates_accepts_refork():
     d = _golden_delegations()[0]
     ledger = _golden_ledger()
     ledger["dispatched"][d["auditor"]] = 3
+    ledger["sessions"][d["auditor"]] = {"sess-1": 3}
     ok, reason = MOD.ledger_corroborates(d, ledger)
     assert ok, reason
 
@@ -401,6 +417,71 @@ def test_ledger_corroborates_reason_distinguishes_recovery_paths():
 
     ok, reason = MOD.ledger_corroborates(d, _golden_ledger(auditors=[]))
     assert not ok and "完了記録が無い" in reason
+
+
+# ---------- run/session 束縛 (issue: HarnessHub-x4o) ----------
+#
+# 本ブロックが固定するのは issue「subagent_type 軸だけの突合では過去 run の同一 auditor 記録でも
+# 裏取りが成立する」の回帰ガード。宣言 (dispatch.session_id) と台帳 (harness 観測) の両方を要求する。
+
+def test_receipt_matching_ledger_session_is_corroborated():
+    """golden: 宣言 session と同一 (session_id, subagent_type) の台帳行があれば裏取り成立。"""
+    d = _golden_delegations()[0]
+    ok, reason = MOD.ledger_corroborates(d, _golden_ledger())
+    assert ok, reason
+
+
+def test_receipt_without_session_id_is_rejected():
+    """宣言 session の無い receipt は台帳へ束縛できない (自己申告のまま)。"""
+    d = _golden_delegations()[0]
+    del d["dispatch"]["session_id"]
+    ok, reason = MOD.ledger_corroborates(d, _golden_ledger())
+    assert not ok and "session_id" in reason
+
+
+def test_receipt_naming_unrecorded_session_is_rejected():
+    """核心の回帰: 台帳に無い session を名指しする宣言 (過去 run の名指し違い/fork 省略/偽装) は
+    subagent_type の記録があっても裏取りにならない。"""
+    d = _golden_delegations()[0]
+    d["dispatch"]["session_id"] = "sess-fabricated"
+    ok, reason = MOD.ledger_corroborates(d, _golden_ledger())
+    assert not ok
+
+
+def test_unknown_session_declaration_is_rejected():
+    """hook は session 不明時に "unknown" を台帳へ書くが、receipt 側の "unknown" 宣言を受理すると
+    『任意の過去 "unknown" 行で裏取り成立』の穴が戻る。fail-closed で拒否する (設計判断は
+    ledger_corroborates 実装コメント参照)。"""
+    d = _golden_delegations()[0]
+    d["dispatch"]["session_id"] = "unknown"
+    ledger = _golden_ledger()
+    ledger["sessions"][d["auditor"]] = {"unknown": 1}  # 台帳側にも "unknown" 行がある最悪ケース
+    ok, reason = MOD.ledger_corroborates(d, ledger)
+    assert not ok and "unknown" in reason
+
+
+def test_mixed_session_receipts_are_rejected():
+    """receipt 単位の突合を通っても、複数 run の記録のつまみ食いは単一 run 収束で遮断する。"""
+    delegations = _golden_delegations()
+    delegations[0]["dispatch"]["session_id"] = "sess-other"
+    ledger = _golden_ledger()
+    ledger["sessions"][delegations[0]["auditor"]] = {"sess-other": 1}
+    violations = MOD.validate_attribution(_golden_report(delegations=delegations), ledger)
+    assert any("収束していない" in v for v in violations)
+
+
+def test_expected_session_mismatch_is_rejected():
+    """--session で現在 session を明示したとき、過去 run 一式の丸ごと再利用を遮断する。"""
+    violations = MOD.validate_attribution(
+        _golden_report(), _golden_ledger(), expected_session="sess-current"
+    )
+    assert any("一致しない" in v for v in violations)
+
+
+def test_expected_session_match_passes():
+    assert MOD.validate_attribution(
+        _golden_report(), _golden_ledger(), expected_session="sess-1"
+    ) == []
 
 
 # ---------- load_fork_ledger (hook 台帳の集計) ----------
@@ -433,6 +514,59 @@ def test_load_fork_ledger_tolerates_broken_lines(tmp_path):
     assert len(ledger["dispatched"]) == 3
 
 
+def test_load_fork_ledger_aggregates_sessions(tmp_path):
+    """session_id ごとの件数を subagent_type 単位で集計する (run/session 束縛の照合軸;
+    issue: HarnessHub-x4o)。"""
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    _write_ledger(path, extra_lines=[json.dumps({
+        "schema_version": "1.0",
+        "ts": "2026-07-22T01:00:00Z",
+        "session_id": "sess-2",
+        "tool_name": "Task",
+        "subagent_type": "system-spec-matrix-auditor",
+        "prompt_sha256": "0" * 64,
+        "cwd": "/tmp/project",
+    }, ensure_ascii=False)])
+    ledger = MOD.load_fork_ledger(path)
+    assert ledger["sessions"]["system-spec-matrix-auditor"] == {"sess-1": 1, "sess-2": 1}
+    assert ledger["dispatched"]["system-spec-matrix-auditor"] == 2
+
+
+def test_load_fork_ledger_row_without_session_is_malformed(tmp_path):
+    """hook は session 不明時に "unknown" を書く契約なので、session_id 欄そのものが無い行は
+    契約外 = malformed として捨てる (裏取りの照合軸を欠くため)。"""
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    _write_ledger(path, auditors=[], extra_lines=[json.dumps({
+        "schema_version": "1.0",
+        "ts": "2026-07-22T00:00:00Z",
+        "tool_name": "Task",
+        "subagent_type": "system-spec-matrix-auditor",
+        "prompt_sha256": "0" * 64,
+        "cwd": "/tmp/project",
+    }, ensure_ascii=False)])
+    ledger = MOD.load_fork_ledger(path)
+    assert ledger["malformed"] == 1
+    assert ledger["dispatched"] == {}
+
+
+def test_load_fork_ledger_accepts_agent_tool_rows(tmp_path):
+    """現行ハーネスの観測名 'Agent' の行も裏取りに使えること (issue: HarnessHub-scl)。
+    consumer が 'Task' しか受理しないと、writer を拡張しても Agent 行が malformed 扱いになる。"""
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    _write_ledger(path, auditors=[], extra_lines=[json.dumps({
+        "schema_version": "1.0",
+        "ts": "2026-07-22T00:00:00Z",
+        "session_id": "sess-1",
+        "tool_name": "Agent",
+        "subagent_type": "system-spec-hearing-auditor",
+        "prompt_sha256": "0" * 64,
+        "cwd": "/tmp/project",
+    }, ensure_ascii=False)])
+    ledger = MOD.load_fork_ledger(path)
+    assert ledger["malformed"] == 0
+    assert ledger["dispatched"]["system-spec-hearing-auditor"] == 1
+
+
 def test_agent_definition_exists_rejects_path_traversal():
     assert MOD.agent_definition_exists("system-spec-matrix-auditor") is True
     assert MOD.agent_definition_exists("../agents/system-spec-matrix-auditor") is False
@@ -456,6 +590,13 @@ def test_ledger_path_contract_matches_hook_writer():
     hook = _load_hook()
     assert hook.LEDGER_RELPATH == MOD.LEDGER_RELPATH
     assert hook.LEDGER_ENV == MOD.LEDGER_ENV
+
+
+def test_ledger_tool_names_contract_matches_hook_writer():
+    """consumer が受理する tool_name 集合が hook writer の観測集合と一致していること。
+    片側だけ拡張すると『hook は記録するのに裏取りは不成立』という無音の欠落が再発する。"""
+    hook = _load_hook()
+    assert tuple(hook.AUDIT_FORK_TOOL_NAMES) == tuple(MOD.LEDGER_TOOL_NAMES)
 
 
 def test_hook_records_every_required_auditor():
@@ -529,7 +670,9 @@ def test_schema_requires_audit_delegations():
     assert set(d["required"]) == {"aspect", "role", "auditor", "component", "dispatch", "verdict", "evidence"}
     assert set(d["properties"]["role"]["enum"]) == MOD.DELEGATION_ROLES
     assert set(d["properties"]["aspect"]["enum"]) == set(MOD.ASPECTS)
-    assert d["properties"]["dispatch"]["properties"]["tool"]["const"] == "Task"
+    assert set(d["properties"]["dispatch"]["properties"]["tool"]["enum"]) == set(MOD.LEDGER_TOOL_NAMES)
+    # 宣言 session を schema 必須にする (宣言が無いと台帳と突合できない; issue: HarnessHub-x4o)
+    assert set(d["properties"]["dispatch"]["required"]) == {"tool", "subagent_type", "session_id"}
 
 
 def test_rubric_aspect_to_auditor_matches_module():
@@ -573,6 +716,16 @@ def test_main_report_violation(tmp_path):
     lp = tmp_path / "audit-fork-ledger.jsonl"
     _write_ledger(lp)
     assert MOD.main(["--report", str(rp), "--fork-ledger", str(lp)]) == 1
+
+
+def test_main_report_session_flag_binds_to_current_run(tmp_path):
+    """E2E: --session 一致で exit 0、不一致 (過去 run の記録流用) で exit 1 (issue: HarnessHub-x4o)。"""
+    rp = tmp_path / "report.json"
+    rp.write_text(json.dumps(_golden_report(), ensure_ascii=False), encoding="utf-8")
+    lp = tmp_path / "audit-fork-ledger.jsonl"
+    _write_ledger(lp)
+    assert MOD.main(["--report", str(rp), "--fork-ledger", str(lp), "--session", "sess-1"]) == 0
+    assert MOD.main(["--report", str(rp), "--fork-ledger", str(lp), "--session", "sess-2"]) == 1
 
 
 def test_main_report_without_ledger_is_fail_closed(tmp_path):

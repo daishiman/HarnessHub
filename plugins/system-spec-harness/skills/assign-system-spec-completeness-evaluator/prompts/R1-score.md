@@ -48,7 +48,7 @@
 ### 2.4 出力契約
 - schema: `schemas/completeness-findings.schema.json`
 - 必須: evaluator, verdict(PASS/FAIL), aspects(rubric全観点), audit_delegations[], findings[], gaps[]
-- **帰属の接地**: `aspects[].auditor` は自己申告の文字列にすぎないため、独立 auditor を名乗る観点は R2 が実 fork した receipt を `audit_delegations[]` に持つ (`matrix_coverage/primary`=C07 / `matrix_coverage/sub_input`=C06 / `doc_freshness/primary`=C08)。`role=primary` の receipt `verdict` は `aspects[aspect].verdict` と一致させる (監査判定の忠実転記)。C05 自前評価の 4 観点に `primary` receipt を付けない。
+- **帰属の接地**: `aspects[].auditor` は自己申告の文字列にすぎないため、独立 auditor を名乗る観点は R2 が実 fork した receipt を `audit_delegations[]` に持つ (`matrix_coverage/primary`=C07 / `matrix_coverage/sub_input`=C06 / `doc_freshness/primary`=C08)。`role=primary` の receipt `verdict` は `aspects[aspect].verdict` と一致させる (監査判定の忠実転記)。C05 自前評価の 4 観点に `primary` receipt を付けない。各 receipt の `dispatch.session_id` は fork を起動した現在の評価 session の id をそのまま保持する (R2 から受け取った値を書き換えない。全 receipt が単一 session へ収束していないと機械層が violation を返す; issue: HarnessHub-x4o)。
 
 ## Layer 3: インフラ層
 

@@ -78,10 +78,11 @@
         "dispatch": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["tool", "subagent_type"],
+          "required": ["tool", "subagent_type", "session_id"],
           "properties": {
-            "tool": {"const": "Task"},
-            "subagent_type": {"type": "string", "minLength": 1, "description": "auditor と一致すること。fork 台帳の subagent_type と突合される"}
+            "tool": {"enum": ["Task", "Agent"], "description": "subagent 起動ツール名の観測値 (旧ハーネス/Codex 系='Task', 現行 Claude Code='Agent')。aggregate-completeness.py の LEDGER_TOOL_NAMES と整合"},
+            "subagent_type": {"type": "string", "minLength": 1, "description": "auditor と一致すること。fork 台帳の subagent_type と突合される"},
+            "session_id": {"type": "string", "minLength": 1, "description": "fork を起動した評価 session の id。宣言単独では自己申告のため、fork 台帳 (hook が harness 観測値を記録) に同一 (session_id, subagent_type) の行が実在するときだけ裏取り成立 (issue: HarnessHub-x4o)。必須 receipt 全件で同一 session を名指しすること (単一 run 収束)"}
           }
         },
         "verdict": {"type": "string", "enum": ["PASS", "FAIL", "INDETERMINATE"], "description": "role=primary のとき aspects[aspect].verdict と一致必須 (監査判定の忠実転記)"},

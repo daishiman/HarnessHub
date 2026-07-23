@@ -3,7 +3,7 @@
 > `guard-confirmed-chapter-overwrite.py` (PreToolUse: Write|Edit|Bash) が **何を守り・何を守らないか** の正本。
 > hook 本体のコメント (「境界定義: references/hook-guard-protection-scope.md」) と回帰テストが本書を参照する。
 
-> **同 plugin の姉妹 hook**: `record-audit-fork.py` (PostToolUse: `Task`) は保護 hook ではなく **証跡 writer**。
+> **同 plugin の姉妹 hook**: `record-audit-fork.py` (PostToolUse: `Task|Agent`) は保護 hook ではなく **証跡 writer**。
 > 監査 sub-agent への fork を append-only 台帳へ記録し、completeness-report の auditor 帰属を自己申告から
 > 切り離す。責務・限界は § 6 を参照。
 
@@ -80,12 +80,13 @@
 - 実行: `python3 -m unittest discover -s plugins/system-spec-harness/hooks/tests -p "test_*.py"`
 - e2e: 実 compile/validator コマンド → exit0、`echo x > spec-state.json` / `sed -i … security.md` → exit2 を確認済み。
 
-## 6. 姉妹 hook `record-audit-fork.py` (PostToolUse: Task) — 証跡 writer
+## 6. 姉妹 hook `record-audit-fork.py` (PostToolUse: Task|Agent) — 証跡 writer
 
 ### 6.1 位置づけ (保護ではなく証跡)
 
 `guard-*` が「書かせない」層なのに対し、本 hook は「**書き残す**」層。何もブロックせず (exit 0 always)、
-監査 sub-agent への Task fork が完了した事実だけを append-only の JSONL 台帳へ追記する。
+監査 sub-agent への fork (起動ツール名はハーネス世代で `Task` または `Agent`) が完了した事実だけを
+append-only の JSONL 台帳へ追記する。台帳へは観測名をそのまま書く (正規化しない)。
 
 解決する欠陥: `assign-system-spec-completeness-evaluator` の評価レポートは観点ごとに `auditor`
 (例 `matrix_coverage` → `system-spec-matrix-auditor`) を宣言するが、これは **評価者自身が書く文字列** で
