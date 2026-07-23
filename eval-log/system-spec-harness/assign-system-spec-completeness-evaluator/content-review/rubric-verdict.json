@@ -2,18 +2,18 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "d76db131604e23370a858412867ed02da99ef06ce5b4b886139b17613610f36d"
+    "skill_md_sha256": "b5b22a7513e2df14e4be152f9473d008825ed909db36ba49548ee6ce157746e1"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "assign-skill-design-evaluator-combined",
+  "reviewed_at": "2026-07-22T21:02:20Z",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
-    "inconsistency": 0,
+    "inconsistency": 1,
     "dependency_break": 0,
     "smell": 0
   },
@@ -21,15 +21,19 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "単一責務が明確 (independent evaluator=採点ゲート) で境界が rubric 通り: proposer≠approver / read-only / context:fork を Key Rules と Purpose で明示し、修正は elicit/doc-fetch/compile への差し戻しに限定。allowed-tools は Read/Bash/Task の最小 allowlist。",
-      "出力契約が schema (completeness-findings.schema.json) に接地し、総合判定が aggregate-completeness.py の決定論再導出と一致必須という検証可能述語 (exit0) で担保され、rubric の出力契約・検証可能性次元を高く満たす。",
-      "SSOT が明快: completeness_exempt manifest で rubric/schema/aggregate script を runtime SSOT と宣言し、監査ロジックは各 auditor agent の SSOT prompt に委ね本 skill は集約のみ (書換えなし)。命名は assign prefix + role_suffix=evaluator + kebab-case で naming 規範に整合。"
+      "単一責務の境界が今回の拡張でも崩れていない: ツール名の世代差 (旧ハーネス/Codex 系='Task', 現行 Claude Code='Agent') への対応を、skill 本体の責務 (評価・集約) へ持ち込まず観測層 (hook writer) と検証層 (ledger reader / schema) だけで吸収した。SKILL.md の変更は帰属節と Additional Resources の事実記述 2 行に留まり、Key Rules・Steps・Gotchas の評価責務は不変。",
+      "出力契約の二重接地 (宣言=schema / 施行=script) が拡張後も保たれ、両者の同期が契約テストで検証可能述語になっている: schema の dispatch.tool enum ['Task','Agent'] は LEDGER_TOOL_NAMES と、LEDGER_TOOL_NAMES は writer の AUDIT_FORK_TOOL_NAMES と、それぞれ test_aggregate_completeness.py の突合テスト (L566 / L492) で集合一致が固定され、pytest exit code で閉じている。",
+      "SSOT 準拠の変更伝搬: schema description と両 script の定数直上コメントが「record-audit-fork.py の AUDIT_FORK_TOOL_NAMES / aggregate-completeness.py の LEDGER_TOOL_NAMES と整合を保つこと (issue: HarnessHub-scl)」と相互参照し、変更理由が issue ID へトレースできる。将来 3 つ目の起動ツール名が現れた際に触るべき箇所が定数 2 つ + schema enum 1 つに特定されている。",
+      "「正規化しない」判断の根拠記録が規範的: 観測名をそのまま記録する理由 (書き換えると『自己申告でない裏取り』という台帳の存在意義と矛盾する) を writer の定数直上に残し、判断を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針に適合している。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "(low / inconsistency 1 件として計上。elegance-verdict.json と同一指摘) references/scoring-rubric.json の `ledger_writer` 文字列が「(PostToolUse: Task)」のまま。SKILL.md が規範正本として参照する rubric 内の事実記述が hooks.json matcher の実体 (Task|Agent) と食い違う doc-drift。施行層は正しいため挙動影響なし。follow-up で追随させる余地がある。",
+      "(観察・任意改善 / finding には計上しない) frontmatter allowed-tools [Read, Bash, Task] は Agent 未記載だが、これは Task を残す 18+ skill と共有する多数派規約で本 delta の scope 外 (dispatch 層の世代追随は repo-wide 移行課題)。また SKILL.md 帰属節・scoring-rubric.json・aspect-criteria.md が共有する『その subagent_type への Task が完了した』という総称表現も、機械層の限界を述べる定型句として 4 箇所で同一に保たれており、単独の言い換えはかえって表記揺れを生むため現状維持が妥当。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "現 SKILL.md (sha256=d76db131604e23370a858412867ed02da99ef06ce5b4b886139b17613610f36d) を ref-skill-design-rubric の規範 (単一責務・命名 kebab+prefix・境界・出力契約・SSOT・Progressive Disclosure) で採点。FM: name=kebab+assign prefix・description=Use when 形・kind/prefix/role_suffix 整合。BD: Purpose & Output Contract 節・Gotchas 節・出力 schema あり (164 行、references へ Progressive Disclosure)。境界: read-only/context:fork/proposer≠approver 明示。SSOT: rubric.json + aggregate-completeness.py が runtime 正本と宣言。全参照 (prompts/rubric/reference/script/schema/agent) 実在。high severity 0 のため PASS。criteria_evaluated は feedback_contract に criteria を持たない assign kind のため 6 品質次元 (aspect id) を採用。"
+  "notes": "incremental profile の combined review のうち rubric 側を分離投影 (30 思考法は未実施のため申告しない)。SKILL.md 変更 (de631db, issue HarnessHub-scl) に伴う stale-sha 再評価で、sha を b5b22a7513e2df14e4be152f9473d008825ed909db36ba49548ee6ce157746e1 (shasum -a 256 で再計算し一致確認) へ更新した。ref-skill-design-rubric の規範軸での採点: 単一責務 — 世代差吸収を hook/validator 層へ限定し skill 責務 (read-only 評価・proposer≠approver・context:fork) は不変。命名 — AUDIT_FORK_TOOL_NAMES / LEDGER_TOOL_NAMES という writer/reader 別名は「同じ集合を別レイヤが所有する」構造を名前で表しており、schema description・定数コメントの相互参照で結ばれている。境界 — 受理拡張 (tool_name 2 名) と選別不変 (subagent_type は plugin 同梱 agent のみ) が直交し、拡張の影響範囲が 1 軸に閉じる。出力契約 — dispatch.tool の enum 化は receipt の必須 7 キー構造を変えず後方互換 (既存 'Task' receipt はそのまま valid)。SSOT — 集合の正本は定数 2 + enum 1 で、一致は契約テスト (L492/L566) が機械固定。Progressive Disclosure — SKILL.md の変更は事実記述 2 行に留まり詳細 (世代差の理由・正規化しない根拠) は hook docstring / schema description へ委譲、SKILL.md は 187 行のまま。機械検査 — python3 -m pytest plugins/system-spec-harness で 504 passed / 0 failed (Agent 観測の unit/e2e・台帳読取・receipt 受理・schema/契約突合の回帰テスト含む)。findings は low の inconsistency 1 件 (scoring-rubric.json ledger_writer の旧表記残存) のみで high severity 0 のため PASS。criteria_evaluated は feedback_contract に criteria を持たない assign kind (skip_reason 明記) のため、従前の verdict と同じ粒度で 6 aspect id を採用。"
 }

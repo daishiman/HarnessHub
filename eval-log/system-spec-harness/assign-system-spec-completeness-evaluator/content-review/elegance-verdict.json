@@ -2,18 +2,18 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "d76db131604e23370a858412867ed02da99ef06ce5b4b886139b17613610f36d"
+    "skill_md_sha256": "b5b22a7513e2df14e4be152f9473d008825ed909db36ba49548ee6ce157746e1"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "run-elegant-review-subagent-team",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "assign-skill-design-evaluator-combined",
+  "reviewed_at": "2026-07-22T21:02:20Z",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
-    "inconsistency": 0,
+    "inconsistency": 1,
     "dependency_break": 0,
     "smell": 0
   },
@@ -21,15 +21,19 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "観点↔評価主体の対応が矛盾なく一貫している: C06 (hearing-auditor) は system-spec/*.md を読まないため design_knowledge_reflection へ束縛せず matrix_coverage の sub-input へ再配置した旨を、対応表 (L70-74)・本文 (L76)・Step1 (L131)・Gotcha1 (L150) の全箇所で同一に記述し、旧世代の虚偽対応を明示撤去している。",
-      "Goodhart 防止が設計思想として貫通している: design_knowledge_reflection は『存在確認だけで PASS にしない』(意味層=確定セルへの具体適用)、総合判定は aggregate-completeness.py の aggregate_verdict で観点スコアから fail-closed 再導出しレポート verdict と一致必須、と自己肯定バイアスを断つ機構が本文全体で一致。",
-      "C13-C16 の知識グラフ/doctrine 要件を新 top-level aspect を増やさず既存 6 aspect の追加評価次元へ折り込む方針が、折込先 aspect と機械層ゲート (validate-knowledge-graph.py の profile) と意味層失敗を漏れなく対応付けており、C16 の runtime 施行未実装を follow-up として誠実開示している (漏れの隠蔽なし)。"
+      "「証跡は harness の観測事実であり正規化しない」という原則を writer 側の設計判断として明文化し、writer は観測名 (Task/Agent) をそのまま台帳へ書き、reader 側 (LEDGER_TOOL_NAMES) が両名を受理する非対称構造にした点が横展開に値する: hook が Agent を Task へ書き換えて記録すると「自己申告でない裏取り」という台帳の存在意義そのものと矛盾する、という理由が record-audit-fork.py の定数直上コメントと build_record docstring の双方に残されており、後続の改変が正規化へ退行しにくい。",
+      "ツール名集合 {Task, Agent} の 3 者一致 (writer AUDIT_FORK_TOOL_NAMES / reader LEDGER_TOOL_NAMES / schema dispatch.tool enum) を文書規約でなく契約テスト (test_aggregate_completeness.py L492 の writer==reader 突合、L566 の schema enum==reader 突合) で機械固定した点: 片側だけ拡張して他方が Agent 行を malformed 扱いする片肺事故 (テスト L447 コメントが明記する failure mode) を、SKILL.md の「整合を保つこと」という注意書きに頼らず exit code で塞いでいる。",
+      "受理拡張と選別の直交が保たれている: tool_name の受理は 2 名へ広げたが、subagent_type の選別 (plugin 同梱 agent の stem のみ + qualified 名は自 plugin qualifier のみ受理) は不変で、無関係 subagent 起動で台帳が膨らむ経路は開いていない。拡張の blast radius が「どの起動ツール名を観測と認めるか」の 1 軸に閉じている。",
+      "R2-delegate 1.1 の追記「dispatch.tool には実際に使った起動ツール名 (Task または Agent) を観測どおりに書く (正規化しない)」が、writer 側の同一原則 (観測名をそのまま記録) と鏡像になっており、receipt (自己申告側) と台帳 (裏取り側) が同じ表記規則で突合される前提が両文書で一致している。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "(low / inconsistency 1 件として計上) references/scoring-rubric.json の attribution 節 `ledger_writer` 文字列が「(PostToolUse: Task)」のまま残り、同一事実を述べる SKILL.md 帰属節・Additional Resources・hooks.json matcher の「Task|Agent」と食い違う。施行層 (aggregate-completeness.py / hook) は正しく両名を受理するため挙動影響は無いが、scoring-rubric.json は帰属ポリシーの規範正本として SKILL.md から参照されており、doc-sync 対象 (SKILL.md / R2-delegate.md / hook-guard-protection-scope.md) からこの 1 箇所だけ漏れた。follow-up で「(PostToolUse: Task|Agent)」へ追随させるのが望ましい。",
+      "(観察・任意改善 / finding には計上しない) SKILL.md frontmatter の allowed-tools [Read, Bash, Task] と R1-score.md の tool 列挙は 'Task' のみで、現行 Claude Code のツール名 'Agent' を含まない。ただしこれは allowed-tools に Task を残す 18+ skill が共有するリポジトリ多数派規約であり、本 delta (観測層の両世代対応) の scope 外。dispatch 層のツール名世代追随は repo-wide の移行課題として別建てが妥当で、実際に fork が起動できるかの behavioral claim は Gate D (live-trial) の管轄。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "現 SKILL.md (sha256=d76db131604e23370a858412867ed02da99ef06ce5b4b886139b17613610f36d) を全文 read し 4 条件で genuine 再評価。①矛盾なし: 6 aspect 採点主体 (foundation_trace/decision_guidance/design_knowledge_reflection/prompt_quality=C05 自前 / matrix_coverage=C07+C06 sub-input / doc_freshness=C08) が対応表・本文・Steps・Gotchas で一致し矛盾なし。②漏れなし: Purpose/Output Contract・監査 sub-agent 対応・C13-C16 追加次元・評価レポート schema・fail-closed 集約・Key Rules・Steps・Gotchas を被覆。proposer≠approver / read-only / context:fork の境界も明示。③整合性: kind=assign のため feedback_contract.criteria は N/A で skip_reason に checklist 6 観点 + evaluator ゲートで担保する旨を書き Gotcha5 と整合。④依存整合: responsibility_refs (R1-score/R2-delegate)・rubric_refs (scoring-rubric.json)・reference_refs (aspect-criteria.md/resource-map.yaml)・script_refs (aggregate-completeness.py / ../../scripts/validate-coverage-matrix.py)・schema_refs (completeness-findings.schema.json)・agent_refs (matrix/hearing/doc-freshness auditor) を test -e で全件実在確認 (dependency_break=0)。重大問題なし。criteria_evaluated は feedback_contract に criteria が無い assign kind のため主要品質次元 (6 aspect id) を採用。"
+  "notes": "incremental profile の focused combined review (30 思考法は未実施のため申告しない)。SKILL.md 変更 (de631db: subagent 起動ツール名を 'Task' 固定から 'Task'|'Agent' 両対応へ拡張、issue HarnessHub-scl) に伴う stale-sha 再評価で、sha を b5b22a7513e2df14e4be152f9473d008825ed909db36ba49548ee6ce157746e1 (shasum -a 256 で再計算し一致確認) へ更新した。今回実読: SKILL.md 全文 (delta = 帰属節 L128 と Additional Resources L185 の Task→Task|Agent) / prompts/R2-delegate.md 1.1 の追記 / schemas/completeness-findings.schema.json dispatch.tool (const 'Task' → enum ['Task','Agent'] + LEDGER_TOOL_NAMES 整合の description) / scripts/aggregate-completeness.py (LEDGER_TOOL_NAMES 新設と load_fork_ledger・validate_attribution の受理拡張) / hooks/record-audit-fork.py (AUDIT_FORK_TOOL_NAMES 新設と build_record の観測名記録) / hooks/hooks.json matcher / .claude/settings.json の投影 2 箇所 / references/scoring-rubric.json / references/aspect-criteria.md / tests/test_aggregate_completeness.py の契約テスト。整合検証: ツール名集合 {Task, Agent} が SKILL.md 記述・hooks.json matcher・settings.json 投影・AUDIT_FORK_TOOL_NAMES・LEDGER_TOOL_NAMES・schema enum の 6 箇所で一致し、writer/reader/schema の 3 者一致は契約テストが機械固定する。python3 -m pytest plugins/system-spec-harness は 504 passed / 0 failed。findings は low の inconsistency 1 件のみ (scoring-rubric.json の ledger_writer 文字列が旧表記 '(PostToolUse: Task)' のまま。施行層は正しく規範記述のみ stale) で、high severity 0 のため fail-closed 集約でも PASS。criteria_evaluated は feedback_contract に criteria を持たない assign kind (skip_reason 明記) のため、従前の verdict と同じ粒度で 6 aspect id を採用。"
 }

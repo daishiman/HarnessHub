@@ -21,7 +21,7 @@
       },
       {
         "event": "PreToolUse",
-        "matcher": "Bash",
+        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"",
         "from_plugin": "dev-graph"
       },
@@ -212,6 +212,12 @@
         "from_plugin": "system-dev-planner"
       },
       {
+        "event": "PostToolUse",
+        "matcher": "Task|Agent",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/record-audit-fork.py\"",
+        "from_plugin": "system-spec-harness"
+      },
+      {
         "event": "PreToolUse",
         "matcher": "Write|Edit|MultiEdit|Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py\"",
@@ -375,6 +381,15 @@
             "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/slide-report-generator/hooks/hook-postgen-eval.py"
           }
         ]
+      },
+      {
+        "matcher": "Task|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/record-audit-fork.py\""
+          }
+        ]
       }
     ],
     "PreCompact": [
@@ -425,7 +440,7 @@
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
         "hooks": [
           {
             "type": "command",

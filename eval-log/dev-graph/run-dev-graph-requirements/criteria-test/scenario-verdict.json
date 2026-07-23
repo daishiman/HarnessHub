@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-requirements",
     "component_id": "C04",
-    "skill_md_sha256": "3ce641ca34a5ef58c69014b8d5942f0490b116f95ff44ebd7e9b0f5c0e8d164c"
+    "skill_md_sha256": "8ec14bc49447c56bea83da092a9a97a67defdf8394222894444c9ee889323e16"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r1",
+  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,12 +27,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260713T090000-r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260723T000000-hh6cv/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260713T090000-r3/verdict.json",
-        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260713T090000-r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260723T000000-hh6cv/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260723T000000-hh6cv/transcript.jsonl"
       ],
-      "observed": "Live-trial verdict overall=PASS (launch=PASS, completion=PASS, goal_fit=PASS, verdict=PASS), actual_model=[claude-opus-4-6], transcript_layer=jsonl, transcript_sha256 present, downgrade_reason=null, tier=live. Positive scenario 'handoff --feature-id LT-FEATURE-001 --package .../package.json' emitted a capability-build/task-graph handoff bound to the exact-13 package/feature/source-digest and generated zero implementation source files (out/status.json scenario=requirements-positive-handoff status=PASS)."
+      "observed": "2026-07-23 再実走 (HarnessHub-6cv, main PR#38 取込後): generation-lineage 変更 + PR#38 の closure 変更で verdict が再 stale 化したため fresh fixture で再 trial。被験 Skill を最初の tool call で 起動し正経路を自走完遂。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し、pre-seed 汚染なし・goal 達成 (受入基準を実行証跡で裏取り) を確認。"
     },
     "OUT2": {
       "status": "PASS",

@@ -1,6 +1,34 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "package_mode": "bundle",
+  "plugin_name": "mf-kessai-invoice-check",
+  "entry_points": {
+    "skills": [
+      "run-mf-invoice-check",
+      "run-mf-invoice-db-setup",
+      "ref-mf-kessai-api",
+      "run-mf-initial-month-enrich",
+      "run-mf-invoice-reconcile",
+      "run-mf-invoice-report"
+    ],
+    "agents": [
+      "mfk-gap-verifier",
+      "mfk-reconcile-verifier",
+      "mfk-report-verifier"
+    ],
+    "commands": [
+      "run-mf-invoice-reconcile",
+      "run-mf-invoice-check",
+      "run-mf-invoice-db-setup",
+      "run-mf-initial-month-enrich",
+      "run-mf-invoice-report",
+      "run-mf-invoice-doctor"
+    ],
+    "hooks": [
+      "guard-mfk-readonly",
+      "guard-mfk-no-reinvent"
+    ]
+  },
   "pkg_checks": {
     "PKG-001": {
       "status": "skip",

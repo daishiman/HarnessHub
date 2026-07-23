@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-decompose",
     "component_id": "C14",
-    "skill_md_sha256": "0f687c574616ac556a0b45c1405ffb5ff9722a5c5e1d20e2a1df3cd388685d11"
+    "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "parity-manifest-provenance-worktree-20260721",
+  "reviewer": "dev-graph-criteria-scenario-r4-20260722-postmerge",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,14 +26,13 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "decompose-macro-positive-r3",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T043419/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T043419/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260722T043419/transcript.jsonl",
-        "independent: fresh evaluator replay of transcript, receipts and recomputed digests"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/transcript.jsonl"
       ],
-      "observed": "bd-bridge.py 変更で closure digest が動いたため 2026-07-21 に再実走。対象 Skill を最初の tool call で起動し --dry-run のマクロ分解を実施。architecture 1 + feature 2 (F-todo depends_on F-auth) が非循環 DAG として preview され、task 粒度の混入 0・全 node draft・外部 write 0 (fixture の git status クリーン、graph digest 不変)。fresh evaluator が transcript を走査し、非 dry-run 実行・write 後の rm による回避・C02 直登録が無いことを確認。観察 (非 blocker): 同梱の validate-graph-schema.py を使わず inline python で DAG 検査を自作しており手順忠実性は弱い。"
+      "observed": "2026-07-23 再実走 (HarnessHub-6cv, main PR#38 取込後): generation-lineage 変更 + PR#38 の closure 変更で verdict が再 stale 化したため fresh fixture で再 trial。被験 Skill を最初の tool call で 起動し正経路を自走完遂。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し、pre-seed 汚染なし・goal 達成 (受入基準を実行証跡で裏取り) を確認。"
     },
     "OUT2": {
       "status": "PASS",

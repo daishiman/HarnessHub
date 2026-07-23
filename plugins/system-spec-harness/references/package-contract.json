@@ -20,7 +20,8 @@
       "spec-compile"
     ],
     "hooks": [
-      "guard-confirmed-chapter-overwrite"
+      "guard-confirmed-chapter-overwrite",
+      "record-audit-fork"
     ]
   },
   "distribution": {

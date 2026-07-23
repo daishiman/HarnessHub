@@ -2,17 +2,26 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-decompose",
-    "skill_md_sha256": "0f687c574616ac556a0b45c1405ffb5ff9722a5c5e1d20e2a1df3cd388685d11"
+    "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "independent-content-reviewer-20260722",
+  "reviewed_at": "2026-07-22",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3", "OUT4", "OUT5", "OUT6", "OUT7"],
+    "criteria_evaluated": [
+      "IN1",
+      "OUT1",
+      "OUT2",
+      "OUT3",
+      "OUT4",
+      "OUT5",
+      "OUT6",
+      "OUT7"
+    ],
     "positive_feedback": [
       "NM 命名: name=run-dev-graph-decompose が kind=run/prefix=run とディレクトリ名一致、description は『…したいときに使う』の trigger 型で発火条件が明快。",
       "BD 出力契約: ## Purpose & Output Contract に入力/出力/完了条件を明記し、Gotchas 節も具備。本文行数は 300 未満で PD 良好。",
@@ -24,5 +33,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "ref-skill-design-rubric (FM/BD/NM/PD/RG・threshold80/high-20) の規範で現 SKILL.md (sha256 0f687c57...) を採点。FM: name/description/trigger 適合。BD: Output contract+Gotchas 具備、body<300行。NM: dir 名一致・prefix 整合。PD: 本文簡潔で prompts/references へ分離済。RG: goal_seek/feedback_contract 明示。責務は elicit→plan→decompose→project→retry→dryrun とやや多段だが全て『macro 分解+micro planner オーケストレーション+binding 投影』の単一目的に従属し、13-task 生成は system-dev-planner へ委譲され越境なし。high severity 0 件。PASS。"
+  "notes": "C14 SKILL.md 変更を rubric 観点で再評価。criteria IN1/OUT1..OUT7 全 8 件は不変で ## Criteria acceptance に 1:1 対応を維持。追加した stdin 経路契約は OUT3 の dry-run write 0 を「一時ファイルの作成→削除も write として数える」形で厳格化し測定可能性を高める。重大 0 件で PASS。"
 }
