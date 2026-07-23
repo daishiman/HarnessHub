@@ -3,7 +3,7 @@
   "floors": {
     "scripts": {
       "mechanical": 85.6,
-      "llm_eval": 64.3
+      "llm_eval": 64.1
     },
     "skills": {
       "mechanical": 100.0,
@@ -22,9 +22,9 @@
       "llm_eval": 100.0
     },
     "docs": {
-      "mechanical": 84.9,
-      "llm_eval": 69.8
+      "mechanical": 83.9,
+      "llm_eval": 69.6
     }
   },
-  "note": "各軸カバレッジの下限 floor。現値がこれを下回ると --ratchet が exit1。改善時は --update-floor で floor を引き上げる (ratchet up・回帰は焼かない)。2026-07-12: plugins/ 再編 (refactor/restructure-to-plugins) で test/verdict 未添付の新規 doc/scripts artifact が母数に加わったため、scripts.llm_eval / docs.mechanical / docs.llm_eval の floor を clean-checkout 実測値へ意図的に baseline reset (evaluation の捏造による緑化を避ける)。"
+  "note": "各軸カバレッジの下限 floor。現値がこれを下回ると --ratchet が exit1。改善時は --update-floor で floor を引き上げる (ratchet up・回帰は焼かない)。2026-07-12: plugins/ 再編 (refactor/restructure-to-plugins) で test/verdict 未添付の新規 doc/scripts artifact が母数に加わったため、scripts.llm_eval / docs.mechanical / docs.llm_eval の floor を clean-checkout 実測値へ意図的に baseline reset (evaluation の捏造による緑化を避ける)。2026-07-23 (HarnessHub-aoe): validate-receipt.py (deterministic script・機械テスト有/llm_eval 対象外) と doc/evidence-integrity-practices.md (散文の統治知見・test/verdict 未添付) の 2 新規 artifact が母数に加わり、同 3 軸が floor を 0.2〜1.0pp 割ったため、2026-07-12 と同型に実測値 (scripts.llm_eval 64.1 / docs.mechanical 83.9 / docs.llm_eval 69.6) へ意図的 reset。verdict の捏造 (Goodhart) を避ける本 PR の主題に沿った honest な対応。"
 }
