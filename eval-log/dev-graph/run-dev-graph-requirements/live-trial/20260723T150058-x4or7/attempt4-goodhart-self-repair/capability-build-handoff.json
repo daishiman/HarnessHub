@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "capability-build-handoff-reference",
+  "handoff_target": "capability-build/task-graph",
+  "feature_id": "F-LIVE-001",
+  "feature_package_id": "feature-package/F-LIVE-001",
+  "source_feature_digest": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+  "graph_snapshot_digest": "sha256:1eefa78f6c43f5d310b34f25b06c4b65d124f3e1dd425f0c2459efa0be909a29",
+  "package_validated_digest": "sha256:63b7a6fb8bc6c6a99ed8795ef60b2cbd7a4971afb2d26e5010efc4f28a474df3",
+  "repository_id": "local:sha256:702fd29be91ecea460386c4066c80a5e04e10b3e5fd66986c0b670f74fcd3535",
+  "system_build_handoff": {
+    "path": "system-plan/F-LIVE-001/system-build-handoff.json",
+    "sha256": "bee1cf0176c8e1ebdef298bdcc7f27fe1ee793cfb583d03c9bf75c59335cbe75"
+  },
+  "execution_tasks": [
+    {"task_id": "SYS-LIVE-001-P01", "phase_ref": "P01", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-01-requirements.md"},
+    {"task_id": "SYS-LIVE-001-P02", "phase_ref": "P02", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-02-architecture.md"},
+    {"task_id": "SYS-LIVE-001-P03", "phase_ref": "P03", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-03-design-review.md"},
+    {"task_id": "SYS-LIVE-001-P04", "phase_ref": "P04", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-04-test-design.md"},
+    {"task_id": "SYS-LIVE-001-P05", "phase_ref": "P05", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-05-implementation.md"},
+    {"task_id": "SYS-LIVE-001-P06", "phase_ref": "P06", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-06-test-run.md"},
+    {"task_id": "SYS-LIVE-001-P07", "phase_ref": "P07", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-07-acceptance.md"},
+    {"task_id": "SYS-LIVE-001-P08", "phase_ref": "P08", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-08-refactoring-migration.md"},
+    {"task_id": "SYS-LIVE-001-P09", "phase_ref": "P09", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-09-quality-assurance.md"},
+    {"task_id": "SYS-LIVE-001-P10", "phase_ref": "P10", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-10-final-review.md"},
+    {"task_id": "SYS-LIVE-001-P11", "phase_ref": "P11", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-11-evidence.md"},
+    {"task_id": "SYS-LIVE-001-P12", "phase_ref": "P12", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-12-documentation-operations.md"},
+    {"task_id": "SYS-LIVE-001-P13", "phase_ref": "P13", "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-13-release-deploy.md"}
+  ],
+  "requirements_document": "eval-log/requirements-document.json",
+  "emitted_at": "2026-07-23T15:01:30Z"
+}

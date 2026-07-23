@@ -231,18 +231,23 @@ def valid_findings(staging: Path, digest: str) -> dict:
 
 # producer contract (system-spec-harness v0.2.0): 独立 auditor を名乗る観点は
 # audit_delegations[] の fork receipt を持ち、fork 台帳で裏取りできなければならない。
+# dispatch.session_id は write_audit_fork_ledger() が書く台帳行の session_id と一致させる
+# (宣言↔台帳の run/session 束縛; producer issue: HarnessHub-x4o)。
 AUDIT_DELEGATIONS = [
     {"aspect": "matrix_coverage", "role": "primary",
      "auditor": "system-spec-matrix-auditor", "component": "C07",
-     "dispatch": {"tool": "Task", "subagent_type": "system-spec-matrix-auditor"},
+     "dispatch": {"tool": "Task", "subagent_type": "system-spec-matrix-auditor",
+                  "session_id": "fixture-session"},
      "verdict": "PASS", "evidence": ["fixture: C07 matrix audit fork receipt"]},
     {"aspect": "matrix_coverage", "role": "sub_input",
      "auditor": "system-spec-hearing-auditor", "component": "C06",
-     "dispatch": {"tool": "Task", "subagent_type": "system-spec-hearing-auditor"},
+     "dispatch": {"tool": "Task", "subagent_type": "system-spec-hearing-auditor",
+                  "session_id": "fixture-session"},
      "verdict": "PASS", "evidence": ["fixture: C06 hearing audit fork receipt"]},
     {"aspect": "doc_freshness", "role": "primary",
      "auditor": "system-spec-doc-freshness-auditor", "component": "C08",
-     "dispatch": {"tool": "Task", "subagent_type": "system-spec-doc-freshness-auditor"},
+     "dispatch": {"tool": "Task", "subagent_type": "system-spec-doc-freshness-auditor",
+                  "session_id": "fixture-session"},
      "verdict": "PASS", "evidence": ["fixture: C08 doc-freshness audit fork receipt"]},
 ]
 
@@ -295,13 +300,12 @@ def valid_readiness(root: Path, repository_id: str) -> dict:
     context = C09.build_context(
         ["--repo-root", str(root)], {"CLAUDE_PROJECT_DIR": str(root)}
     )
-    # completeness gate (aggregate-completeness.py) は fork 台帳を env CLAUDE_PROJECT_DIR
-    # 起点で解決する。検査対象の synthetic repo へ固定し、実 repo の台帳への
-    # cross-scope 裏取りを防ぐ。
-    with mock.patch.dict(os.environ, {"CLAUDE_PROJECT_DIR": str(root)}):
-        report = READINESS.build_report(
-            context, "system-spec", "architecture", "system-spec/completeness-findings.json"
-        )
+    # completeness gate (aggregate-completeness.py) へは probe 自身が検査対象 repo の
+    # fork 台帳を --fork-ledger で明示束縛する (HarnessHub-sk0)。env CLAUDE_PROJECT_DIR
+    # を固定しなくても実 repo の台帳への cross-scope 裏取りは起きない。
+    report = READINESS.build_report(
+        context, "system-spec", "architecture", "system-spec/completeness-findings.json"
+    )
     assert report["status"] == "complete", report
     assert report["repository_id"] == repository_id
     return report
@@ -318,6 +322,52 @@ def make_repo(root: Path) -> str:
                 ".dev-graph/locks", "issues", "tasks", "specs", "architecture", "docs", "system-spec"):
         (root / rel).mkdir(parents=True, exist_ok=True)
     return repository_id
+
+
+class ReadinessLedgerScopeTests(unittest.TestCase):
+    """completeness probe の fork 台帳束縛 (HarnessHub-sk0) の回帰テスト。"""
+
+    def test_probe_binds_ledger_to_inspected_repo_not_env(self):
+        """検査対象 repo に台帳が無ければ、env CLAUDE_PROJECT_DIR が指す別 repo に
+        裏取り可能な台帳があっても completeness probe は fail-closed で落ちる
+        (cross-scope 裏取りの遮断。--fork-ledger 明示束縛が無いと green になってしまう)。"""
+        with tempfile.TemporaryDirectory() as td:
+            inspected = Path(td) / "inspected"
+            other = Path(td) / "other"
+            for root in (inspected, other):
+                root.mkdir()
+                make_repo(root)
+                write_readiness_sources(root)
+            # 検査対象の台帳だけ消す (= 実 fork 証跡なし)。other 側は裏取り可能な台帳を保持。
+            (inspected / "eval-log/system-spec-harness/audit-fork-ledger.jsonl").unlink()
+            context = C09.build_context(
+                ["--repo-root", str(inspected)], {"CLAUDE_PROJECT_DIR": str(inspected)}
+            )
+            with mock.patch.dict(os.environ, {"CLAUDE_PROJECT_DIR": str(other)}):
+                report = READINESS.build_report(
+                    context, "system-spec", "architecture", "system-spec/completeness-findings.json"
+                )
+        self.assertEqual(report["status"], "incomplete", report)
+        self.assertIn("completeness_evaluation:producer-verification-failed",
+                      report["missing_sections"])
+
+    def test_probe_verifies_against_inspected_repo_ledger(self):
+        """検査対象 repo 自身の台帳で裏取りできるときは env に依存せず complete になる。"""
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "inspected"
+            root.mkdir()
+            repository_id = make_repo(root)
+            write_readiness_sources(root)
+            context = C09.build_context(
+                ["--repo-root", str(root)], {"CLAUDE_PROJECT_DIR": str(root)}
+            )
+            # env は無関係な場所を指していても、probe は検査対象の台帳へ束縛される。
+            with mock.patch.dict(os.environ, {"CLAUDE_PROJECT_DIR": td}):
+                report = READINESS.build_report(
+                    context, "system-spec", "architecture", "system-spec/completeness-findings.json"
+                )
+        self.assertEqual(report["status"], "complete", report)
+        self.assertEqual(report["repository_id"], repository_id)
 
 
 class RemoteParsingTests(unittest.TestCase):

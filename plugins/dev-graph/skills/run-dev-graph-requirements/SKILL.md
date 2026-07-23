@@ -72,16 +72,19 @@ feedback_contract:
 実装コードは生成しない。graph の5 artifact kind、C19 が取り込んだ system-spec lineage、external system-dev-planner の feature execution package を引用して requirements handoff を作る。
 
 1. 対象 feature/subgraph と handoff target を確定する。
-2. C11 の純粋 validation report と node の `implementation_readiness/evaluation_status/confirmation_status` を照合する。あわせて scope 内 node 全件を `--registered` に渡して `validate-source-digest.py` を実行し、**exit 0 を handoff の必須条件にする**。
+2. C11 の純粋 validation report と node の `implementation_readiness/evaluation_status/confirmation_status` を照合する。C11 report は `validate-graph-schema.py` の実行出力だけを正本とする (graph.json の直読や自作比較 script で代替しない)。あわせて scope 内 node 全件を `--registered` に渡して `validate-source-digest.py` を実行し、**exit 0 を handoff の必須条件にする**。
 
 ```bash
+# C11 report の取得 (これを実行せずに「C11 と照合した」と扱わない)
+python3 "$DEV_GRAPH_PLUGIN/scripts/validate-graph-schema.py" \
+  --graph "$DEV_GRAPH_ROOT/.dev-graph/state/graph.json" --repo-root "$DEV_GRAPH_ROOT"
 python3 "$DEV_GRAPH_PLUGIN/scripts/validate-source-digest.py" \
   --repo-root "$DEV_GRAPH_ROOT" --registered "<scope 内 node id をカンマ区切りで全件>"
 # exit 2 = stale/missing digest あり → handoff 0件で停止 (missing_sections へ surface)
 ```
 3. system-dev-planner の version/entry point と `validate-system-plan.py` を preflight し、P01..P13 exact set・13-node DAG・package receipt を外部 validator で検証する。13 task の生成ロジックは複製しない。
 4. incomplete/pending/fail/stale、不足 section、lineage/confirmation 不整合が1件でもあれば `missing_sections` と remediation owner を返して handoff 0件で停止する。
-5. 全 gate PASS 時だけ requirements document、graph snapshot digest、package reference、capability-build handoff reference を atomic emit する。
+5. 全 gate PASS 時だけ requirements document、graph snapshot digest、package reference、capability-build handoff reference を atomic emit する。gate 検証の PASS だけで完了扱いにしない — 要件定義書と handoff package の**成果物ファイルを emit するまでが本 skill の完了条件**であり、emit 0 件での完了申告は契約違反として扱う。
 
 出力は readiness matrix と handoff package。`run-system-dev-plan` の出力を消費するが dev-graph 自身は task spec を作らない。
 
@@ -98,10 +101,10 @@ system-spec-harness確定成果物とsystem development task planを含むグラ
 ### 完了チェックリスト
 
 - [ ] scope 内 node の feature/package/system-spec lineage closure が欠落0である
-- [ ] C11 report と C02 保存済み readiness/evaluation が一致する
+- [ ] C11 report と C02 保存済み readiness/evaluation が一致する (report は `validate-graph-schema.py` の実行出力。graph.json 直読や自作照合で代替しない)
 - [ ] scope 内 node 全件を `--registered` に渡した `validate-source-digest.py` が exit 0 である (自作の比較ロジックや目視で代替しない)
 - [ ] incomplete/pending/fail/stale node の missing_sections と remediation owner が全件表示される
-- [ ] 全 gate PASS の場合だけ requirements と capability-build handoff が同一 snapshot digest で生成される
+- [ ] 全 gate PASS の場合だけ requirements と capability-build handoff が同一 snapshot digest で生成される (成果物ファイルの実在が条件。progress.json 内の記載やgate PASS の事実だけでは未達)
 - [ ] 本 skill が生成した実装 code file が0件である
 
 ### ゴールシークループ

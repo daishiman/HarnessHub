@@ -2,18 +2,18 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "b5b22a7513e2df14e4be152f9473d008825ed909db36ba49548ee6ce157746e1"
+    "skill_md_sha256": "febfdb3dae3f9a39a3474b32befee07f8f9bfabb0d150c1cf498af678588df4e"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
   "reviewer": "assign-skill-design-evaluator-combined",
-  "reviewed_at": "2026-07-22T21:02:20Z",
+  "reviewed_at": "2026-07-23",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
-    "inconsistency": 1,
+    "inconsistency": 0,
     "dependency_break": 0,
     "smell": 0
   },
@@ -21,19 +21,19 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "単一責務の境界が今回の拡張でも崩れていない: ツール名の世代差 (旧ハーネス/Codex 系='Task', 現行 Claude Code='Agent') への対応を、skill 本体の責務 (評価・集約) へ持ち込まず観測層 (hook writer) と検証層 (ledger reader / schema) だけで吸収した。SKILL.md の変更は帰属節と Additional Resources の事実記述 2 行に留まり、Key Rules・Steps・Gotchas の評価責務は不変。",
-      "出力契約の二重接地 (宣言=schema / 施行=script) が拡張後も保たれ、両者の同期が契約テストで検証可能述語になっている: schema の dispatch.tool enum ['Task','Agent'] は LEDGER_TOOL_NAMES と、LEDGER_TOOL_NAMES は writer の AUDIT_FORK_TOOL_NAMES と、それぞれ test_aggregate_completeness.py の突合テスト (L566 / L492) で集合一致が固定され、pytest exit code で閉じている。",
-      "SSOT 準拠の変更伝搬: schema description と両 script の定数直上コメントが「record-audit-fork.py の AUDIT_FORK_TOOL_NAMES / aggregate-completeness.py の LEDGER_TOOL_NAMES と整合を保つこと (issue: HarnessHub-scl)」と相互参照し、変更理由が issue ID へトレースできる。将来 3 つ目の起動ツール名が現れた際に触るべき箇所が定数 2 つ + schema enum 1 つに特定されている。",
-      "「正規化しない」判断の根拠記録が規範的: 観測名をそのまま記録する理由 (書き換えると『自己申告でない裏取り』という台帳の存在意義と矛盾する) を writer の定数直上に残し、判断を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針に適合している。"
+      "単一責務と境界が run/session 束縛の追加後も崩れていない: session の観測は引き続き hook (record-audit-fork.py) の責務、宣言は R2 (fork 起動者) の責務、突合は consumer (aggregate-completeness.py) の責務で、skill 側 allowed-tools に Write が増えていない。『証跡はモデルが書けない層に置く』という既存の設計原理の延長として session 軸が増えており、新しい原理を持ち込んでいない。",
+      "出力契約の二重接地が session 軸にも及ぶ: schema (dispatch.session_id required + 単一 run 収束要件を description に明記) と施行 (validate_attribution の収束検査 + ledger_corroborates の突合 + --session の CLI 検査) が 1:1 対応し、schema にだけ書いて施行しない・施行するのに schema へ書かない、のどちらの片肺も無い。契約テスト (test_schema_requires_audit_delegations の dispatch.required 検査) で固定済み。",
+      "判断箇所を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針 (knowledge-build-patterns.json feedback-no-todo-human / ref-skill-design-rubric KeyRule5) に適合: \"unknown\" 宣言の受理/拒否というトレードオフを、両選択肢の帰結を実装コメントへ記録した上で fail-closed 拒否として決定し、対象 skill 配下の TODO(human) 残存は 0 件。pytest は 514 passed / 0 failed。",
+      "Progressive Disclosure が保たれている: SKILL.md への追記は帰属節の bullet 2 本 (束縛の要点 + 機械層の限界の更新) に留まり、分岐仕様の詳細は aspect-criteria.md、設計判断の根拠は ledger_corroborates の docstring/実装コメント、運用手順は R2-delegate.md へ委譲されている。issue 正本 (issues/sys-completeness-auditor-attribution-20260721.md) の残余ギャップ節が予告した設計とも一致。"
     ],
     "negative_feedback": [
-      "(low / inconsistency 1 件として計上。elegance-verdict.json と同一指摘) references/scoring-rubric.json の `ledger_writer` 文字列が「(PostToolUse: Task)」のまま。SKILL.md が規範正本として参照する rubric 内の事実記述が hooks.json matcher の実体 (Task|Agent) と食い違う doc-drift。施行層は正しいため挙動影響なし。follow-up で追随させる余地がある。",
-      "(観察・任意改善 / finding には計上しない) frontmatter allowed-tools [Read, Bash, Task] は Agent 未記載だが、これは Task を残す 18+ skill と共有する多数派規約で本 delta の scope 外 (dispatch 層の世代追随は repo-wide 移行課題)。また SKILL.md 帰属節・scoring-rubric.json・aspect-criteria.md が共有する『その subagent_type への Task が完了した』という総称表現も、機械層の限界を述べる定型句として 4 箇所で同一に保たれており、単独の言い換えはかえって表記揺れを生むため現状維持が妥当。"
+      "(content 対象外 / 参考) lint-skill-tree.py の LS-203 Warn 2 件: top-level 'tests' は従前どおり系全体の規約論点。'.claude/handoff' は本セッションの PreCompact hook が skill ディレクトリを cwd として自動生成した未追跡 snapshot で、SKILL.md 内容起因ではない (git 未追跡のため commit 対象にもならない)。",
+      "(landing 制約 / 本 skill の内容起因ではない) schema の dispatch.session_id required 化は破壊的変更であり、origin/main に既存の completeness-report.json (PR #39 で再生成) は session_id 欠落のため landing 後に violation となる。レポート再生成の migration follow-up が必要 (セッション報告で起票予定)。"
     ],
     "iteration": 1,
-    "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "iteration_limit": 2,
+    "hook_trigger": "stop-hook",
     "next_action": "none"
   },
-  "notes": "incremental profile の combined review のうち rubric 側を分離投影 (30 思考法は未実施のため申告しない)。SKILL.md 変更 (de631db, issue HarnessHub-scl) に伴う stale-sha 再評価で、sha を b5b22a7513e2df14e4be152f9473d008825ed909db36ba49548ee6ce157746e1 (shasum -a 256 で再計算し一致確認) へ更新した。ref-skill-design-rubric の規範軸での採点: 単一責務 — 世代差吸収を hook/validator 層へ限定し skill 責務 (read-only 評価・proposer≠approver・context:fork) は不変。命名 — AUDIT_FORK_TOOL_NAMES / LEDGER_TOOL_NAMES という writer/reader 別名は「同じ集合を別レイヤが所有する」構造を名前で表しており、schema description・定数コメントの相互参照で結ばれている。境界 — 受理拡張 (tool_name 2 名) と選別不変 (subagent_type は plugin 同梱 agent のみ) が直交し、拡張の影響範囲が 1 軸に閉じる。出力契約 — dispatch.tool の enum 化は receipt の必須 7 キー構造を変えず後方互換 (既存 'Task' receipt はそのまま valid)。SSOT — 集合の正本は定数 2 + enum 1 で、一致は契約テスト (L492/L566) が機械固定。Progressive Disclosure — SKILL.md の変更は事実記述 2 行に留まり詳細 (世代差の理由・正規化しない根拠) は hook docstring / schema description へ委譲、SKILL.md は 187 行のまま。機械検査 — python3 -m pytest plugins/system-spec-harness で 504 passed / 0 failed (Agent 観測の unit/e2e・台帳読取・receipt 受理・schema/契約突合の回帰テスト含む)。findings は low の inconsistency 1 件 (scoring-rubric.json ledger_writer の旧表記残存) のみで high severity 0 のため PASS。criteria_evaluated は feedback_contract に criteria を持たない assign kind (skip_reason 明記) のため、従前の verdict と同じ粒度で 6 aspect id を採用。"
+  "notes": "incremental profile の combined review のうち rubric 側を分離投影 (verification_profile=exhaustive 非明示のため 30 思考法 + 独立 rubric evaluator は未実施であることを申告する)。ref-skill-design-rubric の規範軸での採点: 単一責務 — 観測 (hook) / 宣言 (R2) / 突合 (consumer) の三権分立が session 軸でも維持され、skill は read-only のまま (allowed-tools: Read/Bash/Task)。命名 — session_id / sessions / declared_sid / recorded_sessions / expected_session の語彙が schema・script・SKILL.md・aspect-criteria.md・R2/R1 prompt・テストで一貫し、『宣言』と『観測』の区別が全箇所で保たれている。境界 — 機械層の主張範囲は『(session_id, subagent_type) の fork 完了』までで、能動的偽装 (--session なしでの過去 session 丸写し) を意味層責務として開示し over-claim なし。出力契約 — dispatch.required = {tool, subagent_type, session_id} は schema と契約テストで固定、fail-closed 分岐は台帳不在 / subagent_type 未宣言 / 記録なし / 宣言なし / \"unknown\" / session 不一致 の 6 分岐全てに復旧手順つき reason。SSOT — 規範正本 scoring-rubric.json の attribution 節は receipt 集合を定めるもので session 軸の変更対象外 (required_receipts 不変)、runtime 正本は aggregate-completeness.py の実装、詳細正本は aspect-criteria.md という層構造が維持されている。機械検査 — validate-frontmatter.py exit0 / lint-skill-name.py exit0 / lint-skill-tree.py exit0 (Warn のみ) / pytest plugins/system-spec-harness 514 passed / pytest plugins/system-dev-planner 62 passed (producer↔consumer 追従の検証)。high severity 0 のため PASS。negative_feedback の 2 点はいずれも本 SKILL.md の内容起因ではないため findings に計上しないが、隠さず記録した。"
 }

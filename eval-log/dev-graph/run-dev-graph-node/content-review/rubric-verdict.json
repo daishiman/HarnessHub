@@ -2,21 +2,21 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-node",
-    "skill_md_sha256": "8164be5b695d5e7685aedd31d1f66bcc9d0546276299783016592258f37ad9e2"
+    "skill_md_sha256": "5a2cf162d207756e8b7f82c03b31f95fd0d9d82a7d53636bdc42f5c8c8d44a10"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "audit-node-status-20260720",
-  "reviewed_at": "2026-07-20",
+  "reviewer": "independent-content-reviewer-20260723",
+  "reviewed_at": "2026-07-23",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "NM 命名: name=run-dev-graph-node が dir 名/prefix=run と一致、description は atomic 追加/差分更新+exact-13 登録という発火条件を trigger 型で明示。",
-      "BD 出力契約: Purpose & Output Contract に入力/出力/完了条件を明記し、Classification and write・Exact-13 package gate・Execution-context consumer・Gotchas を節分割。",
-      "RG/責務: 『唯一の graph/content 単一 writer』という単一責務に収束し、exact-13 検証本体を register-package.py へ委譲して skill 内実装重複を回避。goal_seek/feedback_contract を frontmatter で明示。"
+      "NM 命名: name=run-dev-graph-node が dir 名/prefix=run/kind=run と一致し、description は atomic 追加・差分更新+exact-13 all-or-none 登録という発火条件を trigger 型で維持。今回の変更は命名・description に影響しない。",
+      "BD 出力契約: Purpose & Output Contract の入力/出力/完了条件、Classification and write・Deterministic upsert・Exact-13 package gate・Execution-context consumer・Gotchas の節分割が維持され、追加文は既存の ### ゴールシーク配線 節内で成果物定義 bullet に密着配置されており progressive disclosure を崩さない。",
+      "RG 責務: 追加文は新しい責務や成果物を導入せず、既定義の 3 配線成果物の履行条件 (単発依頼時も省略不可) を明確化するのみで、C02 単一 writer という単一責務に収束したまま。受入条件の測定可能性 (欠落0件/applied_count=0/expected_count=applied_count=13 等) も全て維持され、追加文自体も eval-log ファイルの実在検査で live-trial 検証可能な行動記述になっている。"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -24,5 +24,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "独立監査で現SKILL.md (sha256 8164be5b...) をrubric観点で再確認。命名・出力契約・単一writer責務・progressive disclosureに加え、WAL/共有lockの受入条件が実装と一致する。重大違反0件。PASS。"
+  "notes": "配線成果物書き出しの履行ばらつき対策として単発 node 操作でも省略不可の 1 文を追加した変更後 SKILL.md (sha256 5a2cf162...) を rubric 観点で独立再評価。命名・出力契約・単一責務・progressive disclosure・受入条件の測定可能性はいずれも維持され、追加文は既存構造への最小挿入で rubric 違反を新規に生まない。重大違反 0 件。PASS。"
 }
