@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-node",
     "component_id": "C02",
-    "skill_md_sha256": "8164be5b695d5e7685aedd31d1f66bcc9d0546276299783016592258f37ad9e2"
+    "skill_md_sha256": "5a2cf162d207756e8b7f82c03b31f95fd0d9d82a7d53636bdc42f5c8c8d44a10"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
+  "reviewer": "dev-graph-criteria-scenario-r6-20260723-x4osk",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,12 +27,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260723T000000-hh6cv/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260723T101037-x4osk/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260723T000000-hh6cv/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260723T000000-hh6cv/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260723T101037-x4osk/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260723T101037-x4osk/transcript.jsonl"
       ],
-      "observed": "2026-07-23 再実走 (HarnessHub-6cv, main PR#38 取込後): generation-lineage 変更 + PR#38 の closure 変更で verdict が再 stale 化したため fresh fixture で再 trial。被験 Skill を最初の tool call で 起動し正経路を自走完遂。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し、pre-seed 汚染なし・goal 達成 (受入基準を実行証跡で裏取り) を確認。"
+      "observed": "2026-07-23 再実走 (HarnessHub-x4o/sk0: main merge の closure 変更で hh6cv verdict が stale 化。単発 node 操作でも配線 3 点セットを省略しない旨の SKILL.md 明文化を同梱): fresh fixture で再 trial。被験 Skill を最初の tool call で起動し、mixed artifacts (architecture+spec) の登録と goal-seek 3 点セット (goal-spec/progress/intermediate 6 キー) を自走完遂。完了マーカーは auto-compact 後に fixture 内相対パスへ誤配置され poll は STALL (exit 2) — trial 配管の問題として回収時に status.json.misplaced-recovered へ保全し、orchestrator と別個体の fresh evaluator が誤配置の事実を明示された上で transcript を一次痕跡で走査し goal 達成無傷 (blockers=[]) と判定。"
     },
     "OUT2": {
       "status": "PASS",

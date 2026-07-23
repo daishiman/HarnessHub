@@ -1,0 +1,48 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "ゴールシーク配線の実体検証に失敗: progress-missing: run-dev-graph-node-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [
+    "progress.json"
+  ],
+  "goal_seek_evidence_violations": [
+    "progress-missing: run-dev-graph-node-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "96475417854843b918cdd3e83f4586345c2b8d106b87b20b64c9aa0d653a7d49",
+  "transcript_sha256": "2fd6e836e57c2b8228854c45e6e2827ffad61a692e42e70848d0c84299fc69c5",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 495.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts"
+}
