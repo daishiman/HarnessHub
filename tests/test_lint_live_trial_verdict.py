@@ -444,3 +444,67 @@ def test_transcript_sha_downgrade_to_null_is_not_rerun_evidence(tmp_path):
     )
     violations, _ = _MOD.check_digest_provenance("HEAD", repo_root=repo)
     assert len(violations) == 1 and "digest-only-rewrite" in violations[0]
+
+
+# --- ys3: base_ref より遅れたツリーでの evidence-removed 偽陽性回避 ------------
+
+def _git_c(repo, *args):
+    return subprocess.run(
+        ["git", *args], cwd=repo, check=True, capture_output=True, text=True
+    )
+
+
+def _commit_all(repo, msg):
+    _git_c(repo, "add", "-A")
+    _git_c(repo, "-c", "user.email=t@example.com", "-c", "user.name=t",
+           "commit", "-q", "-m", msg)
+
+
+def _add_run(repo, run_id, sha_prefix):
+    run = repo / "eval-log" / "demo-plugin" / "run-demo" / "live-trial" / run_id
+    run.mkdir(parents=True)
+    (run / "transcript.jsonl").write_text('{"turn":1}\n', encoding="utf-8")
+    (run / "verdict.json").write_text(
+        json.dumps({"skill_dir_tree_sha": sha_prefix * 64, "transcript_sha256": "b" * 64}),
+        encoding="utf-8",
+    )
+    return run
+
+
+def test_evidence_added_on_base_after_branch_point_is_not_flagged(tmp_path):
+    """作業ブランチが base_ref より遅れているとき、base_ref 側で分岐後に追加された
+    証跡を evidence-removed と誤判定しない (ys3 の中核)。
+
+    base_ref を直接 diff 基準にする旧実装ではこの追加が「現ツリーから消えた」に
+    見えて偽陽性になっていた。merge-base(HEAD, base_ref) 基準では差分に現れない。
+    """
+    repo, _run = _provenance_repo(tmp_path)
+    base_sha = _git_c(repo, "rev-parse", "HEAD").stdout.strip()
+    # base_ref (= 進んだ main) 側に、分岐点より後で証跡を 1 件追加
+    _add_run(repo, "20260703T000000", "f")
+    _commit_all(repo, "advance base_ref with new evidence")
+    advanced_sha = _git_c(repo, "rev-parse", "HEAD").stdout.strip()
+    # 作業ツリーを分岐点へ戻す = base_ref より 1 コミット遅れた状態
+    _git_c(repo, "checkout", "-q", base_sha)
+    violations, _ = _MOD.check_digest_provenance(advanced_sha, repo_root=repo)
+    assert violations == [], violations
+
+
+def test_real_deletion_still_flagged_when_behind_base(tmp_path):
+    """遅れたツリーでも、分岐後に本ブランチが実際に消した証跡は捕捉する。
+
+    偽陽性回避 (merge-base 基準化) が真の証跡削除の見逃しへ退化しないことを固定する。
+    """
+    repo, run = _provenance_repo(tmp_path)  # base コミットに E1
+    base_sha = _git_c(repo, "rev-parse", "HEAD").stdout.strip()
+    _add_run(repo, "20260703T000000", "f")  # base_ref 側に E2 追加
+    _commit_all(repo, "advance base_ref")
+    advanced_sha = _git_c(repo, "rev-parse", "HEAD").stdout.strip()
+    # 分岐点から作業ブランチを作り、E1 を削除してコミット
+    _git_c(repo, "checkout", "-q", "-b", "work", base_sha)
+    for child in run.iterdir():
+        child.unlink()
+    run.rmdir()
+    _commit_all(repo, "work removes E1")
+    violations, _ = _MOD.check_digest_provenance(advanced_sha, repo_root=repo)
+    assert len(violations) == 1 and "evidence-removed" in violations[0], violations
