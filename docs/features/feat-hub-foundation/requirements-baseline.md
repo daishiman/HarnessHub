@@ -252,4 +252,4 @@ E1-E3 の具体的な証跡パスは §4.2 A4-3 を正本とする。
   2. 現行 feature context (`938ecf38`) の scope_in / acceptance 全件に実行責務 phase が割り当てられ、未割当 0 件であること (§5・§4.1)
   3. docs/shared-layers.md §1〜§3 と第 4 acceptance (A4) が要件ベースラインに含まれていること (§8・§4.1)
   4. Normative closure (§9) が固定され、A4 を計画・文書で代替できない実判定契約が明示されていること
-- 検証コマンド: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .`
+- 検証コマンド: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hub-foundation`（世代非依存形式。current pointer から現行世代を解決する。`--staging .` は repository root から解決できないため使わない。contract §2.3）

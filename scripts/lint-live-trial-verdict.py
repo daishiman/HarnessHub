@@ -137,18 +137,46 @@ def check_verdict(path, plugin, skill, verdict_mod, backend_mod, schema):
                 "(被験 skill の挙動面が verdict 後に変更された — 再 trial 要)"
             )
 
-    # transcript 束縛: 記録された digest を同じ run の transcript 実体と突合する。
-    # これが無いと transcript_sha256 も併せて書き換えるだけで provenance 検査を
-    # 迂回できてしまう (digest 単独書き換えの検出が transcript の不変を根拠にするため)。
+    # transcript 束縛 (fail-closed): jsonl 層の live 証拠は必ず transcript_sha256 を持ち、
+    # その digest が同じ run の transcript.jsonl 実体と一致しなければならない。
+    # 'recorded is not None' の否定ガードで書くと、transcript_sha256=null (と transcript 削除)
+    # だけで束縛検査を丸ごとすり抜け、どの会話ログにも紐付かない verdict が live 受け入れ証拠
+    # として通過してしまう (provenance 側の _has_rerun_evidence と同じ故障モード、2026-07-21 実測)。
+    # 肯定形 (存在と一致の実体確認) で書くこと。null は schema 上 tui 層 (jsonl transcript 不在)
+    # のみ正当なので、tui + 実体なし + digest なしだけを素通しする
+    # (生成側 live-trial-verdict.py は transcript_dst の有無で jsonl/tui を決めるため、
+    #  jsonl ⟺ transcript 実体あり が本来の不変条件)。
     recorded_transcript = data.get("transcript_sha256")
+    transcript_layer = (data.get("environment") or {}).get("transcript_layer")
     transcript = path.parent / "transcript.jsonl"
-    if recorded_transcript is not None and transcript.is_file():
-        actual = hashlib.sha256(transcript.read_bytes()).hexdigest()
-        if actual != recorded_transcript:
+    transcript_required = (
+        transcript_layer == "jsonl"
+        or transcript.is_file()
+        or recorded_transcript is not None
+    )
+    if transcript_required:
+        # jsonl 宣言・transcript 実体・記録 digest のどれかがあれば束縛が必要。
+        # 存在と一致を肯定形で確かめ、null / 実体消失 / 差し替えをすべて違反として閉じる。
+        # layer 表示だけに依存すると、実体がある run を tui と偽るだけで迂回できるため、
+        # transcript.is_file() も独立した根拠にする。
+        if recorded_transcript is None:
             errs.append(
-                f"transcript-mismatch: 記録 {str(recorded_transcript)[:12]} != 実体 {actual[:12]} "
-                "(verdict が指す会話ログが差し替わっている — 証拠として無効)"
+                "transcript-unbound: transcript 実体または jsonl 宣言がある verdict に "
+                "transcript_sha256 が無い "
+                "(どの会話ログにも束縛されていない — live 受け入れ証拠として無効)"
             )
+        elif not transcript.is_file():
+            errs.append(
+                "transcript-missing: transcript_sha256 は記録されているが transcript.jsonl が"
+                "実体として無い (束縛先の会話ログが消失 — 証拠として無効)"
+            )
+        else:
+            actual = hashlib.sha256(transcript.read_bytes()).hexdigest()
+            if actual != recorded_transcript:
+                errs.append(
+                    f"transcript-mismatch: 記録 {str(recorded_transcript)[:12]} != 実体 {actual[:12]} "
+                    "(verdict が指す会話ログが差し替わっている — 証拠として無効)"
+                )
 
     # 降格除外: tier が live 未満 or downgrade_reason 有りは PASS 扱い禁止 (D13)
     if data.get("tier") != "live" or data.get("downgrade_reason") is not None:
@@ -373,6 +401,11 @@ def self_test():
         }
         vpath = EVAL_LOG / "demo-plugin" / "run-demo" / "live-trial" / "20260702T000000" / "verdict.json"
         vpath.parent.mkdir(parents=True)
+        # jsonl 層の valid 証拠は transcript 実体に束縛される。一致する transcript.jsonl を
+        # 併置し、その digest を doc へ記録して束縛検査 (fail-closed) を満たす。
+        transcript_body = b'{"turn":1}\n'
+        (vpath.parent / "transcript.jsonl").write_bytes(transcript_body)
+        doc["transcript_sha256"] = hashlib.sha256(transcript_body).hexdigest()
 
         def write(d):
             vpath.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
@@ -394,6 +427,12 @@ def self_test():
         expect("extra-key", lambda d: d.__setitem__("score", 95), "schema")
         expect("deny-subject", lambda d: d.__setitem__("target_skill", "x:run-skill-iter-improve"),
                "denylist-subject")
+        # jsonl 層 (transcript_layer=jsonl) で transcript_sha256=null は会話ログ未束縛 → 違反
+        expect("transcript-unbound", lambda d: d.__setitem__("transcript_sha256", None),
+               "transcript-unbound")
+        # 記録 digest と transcript 実体の不一致 (差し替え) → 違反
+        expect("transcript-mismatch", lambda d: d.__setitem__("transcript_sha256", "0" * 64),
+               "transcript-mismatch")
         vpath.write_text("{broken", encoding="utf-8")
         errs = check_verdict(vpath, "demo-plugin", "run-demo", verdict_mod, backend_mod, schema)
         if not any("invalid-json" in e for e in errs):
@@ -407,7 +446,7 @@ def self_test():
         for f in failures:
             print(f"  - {f}")
         return 1
-    print("[OK] self-test: 8 case(s) passed")
+    print("[OK] self-test: 10 case(s) passed")
     return 0
 
 

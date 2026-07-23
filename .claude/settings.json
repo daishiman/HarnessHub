@@ -213,7 +213,7 @@
       },
       {
         "event": "PostToolUse",
-        "matcher": "Task",
+        "matcher": "Task|Agent",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/record-audit-fork.py\"",
         "from_plugin": "system-spec-harness"
       },
@@ -383,7 +383,7 @@
         ]
       },
       {
-        "matcher": "Task",
+        "matcher": "Task|Agent",
         "hooks": [
           {
             "type": "command",

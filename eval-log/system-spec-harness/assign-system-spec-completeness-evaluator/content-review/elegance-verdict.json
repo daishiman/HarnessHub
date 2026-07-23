@@ -2,18 +2,18 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "13171056272da9ae98f9d1525cd0feb556d99946a8210bd157a123a1918c8e6a"
+    "skill_md_sha256": "b5b22a7513e2df14e4be152f9473d008825ed909db36ba49548ee6ce157746e1"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
   "reviewer": "assign-skill-design-evaluator-combined",
-  "reviewed_at": "2026-07-22",
-  "iterations": 3,
+  "reviewed_at": "2026-07-22T21:02:20Z",
+  "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
-    "inconsistency": 0,
+    "inconsistency": 1,
     "dependency_break": 0,
     "smell": 0
   },
@@ -21,18 +21,19 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "帰属 (attribution) の証跡を『モデルが書けない層』へ外出しした設計判断が横展開に値する: 監査 agent は Write を持たず自力で痕跡を残せないという制約を出発点に、証跡 writer を skill ではなく PostToolUse hook (hooks/record-audit-fork.py) へ置き、評価者の自己申告 (aspects[].auditor) と独立した corroboration を成立させている。SKILL.md 帰属節・script docstring・hook docstring で同じ論拠が語られ、責務分割 (評価=skill / 証跡=hook) が破綻していない。",
-      "必須 receipt が定数から導出される形になっており、表と実装の二重管理が起きない: SKILL.md の 3 行表は required_delegations() が ASPECTS (auditor != EVALUATOR_NAME → matrix_coverage/C07・doc_freshness/C08 の primary) と SUB_INPUT_AUDITORS (matrix_coverage/C06 の sub_input) から導く集合と過不足なく一致する。観点↔監査主体を後から足しても表だけ古くなる構造になっていない。",
-      "ledger_corroborates() が『採らなかった判定軸とその理由』まで docstring に残しており、後続の改変が Goodhart へ戻りにくい: 照合軸を subagent_type 完全一致 + 件数>=1 の 1 本に絞る理由 (台帳に無い情報を判定したことにすると本 issue と同型の Goodhart を再生産する)、多重度照合を採らない理由 (INDETERMINATE 後の正当な再 fork を violation にしない)、fail-closed の切り分け順序 (台帳不在 → subagent_type 未宣言 → 記録なし = hook 未配線 / レポート不備 / fork 省略で復旧手順が違う) が明文化されている。判断を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針とも整合する型。",
-      "指摘された残余ギャップを『閉じたことにせず、閉じていない範囲として同じ粒度で 4 箇所へ開示する』処理が誠実で、限界開示の型として再利用できる: SKILL.md の機械層の限界・aspect-criteria.md の『残余ギャップ (run/session 非束縛)』・ledger_corroborates docstring の同名節・issue の『機械層が保証しない範囲』が同一の主張 (ts/session_id を照合軸に使わない → 過去 run の記録でも裏取りが成立しうる → 今回の run で fork した証明ではない) で揃い、さらに『なぜ即修正しないか』(レポートへ session_id を持たせると宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する設計が要る) と follow-up 課題 ID (HarnessHub-x4o) まで残している。誇張 (閉じたと書く) も過小 (黙って落とす) もない。"
+      "「証跡は harness の観測事実であり正規化しない」という原則を writer 側の設計判断として明文化し、writer は観測名 (Task/Agent) をそのまま台帳へ書き、reader 側 (LEDGER_TOOL_NAMES) が両名を受理する非対称構造にした点が横展開に値する: hook が Agent を Task へ書き換えて記録すると「自己申告でない裏取り」という台帳の存在意義そのものと矛盾する、という理由が record-audit-fork.py の定数直上コメントと build_record docstring の双方に残されており、後続の改変が正規化へ退行しにくい。",
+      "ツール名集合 {Task, Agent} の 3 者一致 (writer AUDIT_FORK_TOOL_NAMES / reader LEDGER_TOOL_NAMES / schema dispatch.tool enum) を文書規約でなく契約テスト (test_aggregate_completeness.py L492 の writer==reader 突合、L566 の schema enum==reader 突合) で機械固定した点: 片側だけ拡張して他方が Agent 行を malformed 扱いする片肺事故 (テスト L447 コメントが明記する failure mode) を、SKILL.md の「整合を保つこと」という注意書きに頼らず exit code で塞いでいる。",
+      "受理拡張と選別の直交が保たれている: tool_name の受理は 2 名へ広げたが、subagent_type の選別 (plugin 同梱 agent の stem のみ + qualified 名は自 plugin qualifier のみ受理) は不変で、無関係 subagent 起動で台帳が膨らむ経路は開いていない。拡張の blast radius が「どの起動ツール名を観測と認めるか」の 1 軸に閉じている。",
+      "R2-delegate 1.1 の追記「dispatch.tool には実際に使った起動ツール名 (Task または Agent) を観測どおりに書く (正規化しない)」が、writer 側の同一原則 (観測名をそのまま記録) と鏡像になっており、receipt (自己申告側) と台帳 (裏取り側) が同じ表記規則で突合される前提が両文書で一致している。"
     ],
     "negative_feedback": [
-      "(観察・任意改善 / finding には計上しない) 限界開示にある『(確実に)弾くのは「fork を 1 件も起こしていない実行」まで』という圧縮表現は、単独で読むと run 単位の保証と誤読されうる。実際に弾けるのは『台帳全体で当該 subagent_type の記録が 1 件も無い場合』であり、過去 run の記録が残るリポジトリでは fork ゼロの run も通過する。ただし直前の一文が『過去 run の同一 subagent_type 記録でも裏取りが成立しうる』と明記しているため文脈で曖昧さは解けており、開示の不足ではなく表現粒度の話。HarnessHub-x4o の対応時に『台帳履歴に 1 件も無い場合のみ』と言い換えると一層正確になる。"
+      "(low / inconsistency 1 件として計上) references/scoring-rubric.json の attribution 節 `ledger_writer` 文字列が「(PostToolUse: Task)」のまま残り、同一事実を述べる SKILL.md 帰属節・Additional Resources・hooks.json matcher の「Task|Agent」と食い違う。施行層 (aggregate-completeness.py / hook) は正しく両名を受理するため挙動影響は無いが、scoring-rubric.json は帰属ポリシーの規範正本として SKILL.md から参照されており、doc-sync 対象 (SKILL.md / R2-delegate.md / hook-guard-protection-scope.md) からこの 1 箇所だけ漏れた。follow-up で「(PostToolUse: Task|Agent)」へ追随させるのが望ましい。",
+      "(観察・任意改善 / finding には計上しない) SKILL.md frontmatter の allowed-tools [Read, Bash, Task] と R1-score.md の tool 列挙は 'Task' のみで、現行 Claude Code のツール名 'Agent' を含まない。ただしこれは allowed-tools に Task を残す 18+ skill が共有するリポジトリ多数派規約であり、本 delta (観測層の両世代対応) の scope 外。dispatch 層のツール名世代追随は repo-wide の移行課題として別建てが妥当で、実際に fork が起動できるかの behavioral claim は Gate D (live-trial) の管轄。"
     ],
-    "iteration": 3,
+    "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "incremental profile の focused combined review (30 思考法は未実施のため申告しない)。iteration 3 は、iteration 2 で挙げた low finding『台帳照合が run/session に束縛されない点が限界開示に無い』への対応 (開示 4 箇所追加 + follow-up 課題 HarnessHub-x4o 起票) を受けた再確認で、SKILL.md 変更に伴い sha を 13171056272da9ae98f9d1525cd0feb556d99946a8210bd157a123a1918c8e6a へ更新した。今回実読: SKILL.md 帰属節『機械層の限界 (正直な境界)』の追記後全文 / references/aspect-criteria.md の『残余ギャップ (run/session 非束縛)』箇条 / scripts/aggregate-completeness.py の ledger_corroborates docstring『残余ギャップ』節と実装本体 / issues/sys-completeness-auditor-attribution-20260721.md L112-123。開示の十分性判定: 4 箇所とも (1) ts/session_id を照合軸に使わない、(2) 過去 run の同一 subagent_type 記録でも裏取りが成立しうる、(3)『今回の run で fork した』ことの証明ではない、(4) session 束縛は follow-up、を同じ粒度で述べており、実装 (dispatched[subagent_type] >= 1 のみを見る) と厳密に一致する。閉じたと書く誇張も、範囲を狭く見せる過小もない。aspect-criteria/issue/docstring はさらに『session 束縛が単純でない理由 = レポートへ session_id を持たせると宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する設計が要る』を明記しており、follow-up を先送りの言い訳でなく設計課題として残せている。よって iteration 2 の omission は解消・HarnessHub-x4o へ移管したものとして findings_summary.omission を 1 → 0 に戻した (緑化目的の削除ではなく、指摘対象の事実が消滅したため)。差分の副作用も確認: 今回変わったのは当該 bullet のみで、Purpose & Output Contract / 監査 sub-agent 対応表 / C13-C16 / 評価レポート形状 / 総合判定 / Key Rules / Steps / Gotchas / Additional Resources は iteration 2 時点と逐語一致 (現行 187 行)。python3 -m pytest plugins/system-spec-harness を自ら再実行して 497 passed / 0 failed、必須 receipt 表と required_delegations() の一致、schema required の audit_delegations も再確認した (contradiction / omission / inconsistency / dependency_break / smell いずれも 0)。残るのは negative_feedback に記した表現粒度の観察 1 件のみで、これは開示の不足ではないため finding には計上していない。"
+  "notes": "incremental profile の focused combined review (30 思考法は未実施のため申告しない)。SKILL.md 変更 (de631db: subagent 起動ツール名を 'Task' 固定から 'Task'|'Agent' 両対応へ拡張、issue HarnessHub-scl) に伴う stale-sha 再評価で、sha を b5b22a7513e2df14e4be152f9473d008825ed909db36ba49548ee6ce157746e1 (shasum -a 256 で再計算し一致確認) へ更新した。今回実読: SKILL.md 全文 (delta = 帰属節 L128 と Additional Resources L185 の Task→Task|Agent) / prompts/R2-delegate.md 1.1 の追記 / schemas/completeness-findings.schema.json dispatch.tool (const 'Task' → enum ['Task','Agent'] + LEDGER_TOOL_NAMES 整合の description) / scripts/aggregate-completeness.py (LEDGER_TOOL_NAMES 新設と load_fork_ledger・validate_attribution の受理拡張) / hooks/record-audit-fork.py (AUDIT_FORK_TOOL_NAMES 新設と build_record の観測名記録) / hooks/hooks.json matcher / .claude/settings.json の投影 2 箇所 / references/scoring-rubric.json / references/aspect-criteria.md / tests/test_aggregate_completeness.py の契約テスト。整合検証: ツール名集合 {Task, Agent} が SKILL.md 記述・hooks.json matcher・settings.json 投影・AUDIT_FORK_TOOL_NAMES・LEDGER_TOOL_NAMES・schema enum の 6 箇所で一致し、writer/reader/schema の 3 者一致は契約テストが機械固定する。python3 -m pytest plugins/system-spec-harness は 504 passed / 0 failed。findings は low の inconsistency 1 件のみ (scoring-rubric.json の ledger_writer 文字列が旧表記 '(PostToolUse: Task)' のまま。施行層は正しく規範記述のみ stale) で、high severity 0 のため fail-closed 集約でも PASS。criteria_evaluated は feedback_contract に criteria を持たない assign kind (skip_reason 明記) のため、従前の verdict と同じ粒度で 6 aspect id を採用。"
 }

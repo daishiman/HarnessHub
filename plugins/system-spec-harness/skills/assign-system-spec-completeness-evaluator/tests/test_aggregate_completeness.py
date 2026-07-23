@@ -359,11 +359,20 @@ def test_primary_delegation_verdict_must_match_aspect_verdict():
     assert any("忠実に転記" in v for v in violations)
 
 
-def test_dispatch_must_be_task_tool():
+def test_dispatch_must_be_subagent_tool():
     report = _golden_report()
     report["audit_delegations"][0]["dispatch"]["tool"] = "Bash"
     violations = MOD.validate_attribution(report, _golden_ledger())
-    assert any("Task" in v for v in violations)
+    assert any("dispatch.tool" in v for v in violations)
+
+
+def test_dispatch_agent_tool_is_accepted():
+    """現行ハーネスの起動ツール名 'Agent' を正直に申告した receipt は violation にならない
+    (issue: HarnessHub-scl)。"""
+    report = _golden_report()
+    for d in report["audit_delegations"]:
+        d["dispatch"]["tool"] = "Agent"
+    assert MOD.validate_report(report, _golden_ledger()) == []
 
 
 def test_delegation_requires_non_empty_evidence():
@@ -433,6 +442,24 @@ def test_load_fork_ledger_tolerates_broken_lines(tmp_path):
     assert len(ledger["dispatched"]) == 3
 
 
+def test_load_fork_ledger_accepts_agent_tool_rows(tmp_path):
+    """現行ハーネスの観測名 'Agent' の行も裏取りに使えること (issue: HarnessHub-scl)。
+    consumer が 'Task' しか受理しないと、writer を拡張しても Agent 行が malformed 扱いになる。"""
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    _write_ledger(path, auditors=[], extra_lines=[json.dumps({
+        "schema_version": "1.0",
+        "ts": "2026-07-22T00:00:00Z",
+        "session_id": "sess-1",
+        "tool_name": "Agent",
+        "subagent_type": "system-spec-hearing-auditor",
+        "prompt_sha256": "0" * 64,
+        "cwd": "/tmp/project",
+    }, ensure_ascii=False)])
+    ledger = MOD.load_fork_ledger(path)
+    assert ledger["malformed"] == 0
+    assert ledger["dispatched"]["system-spec-hearing-auditor"] == 1
+
+
 def test_agent_definition_exists_rejects_path_traversal():
     assert MOD.agent_definition_exists("system-spec-matrix-auditor") is True
     assert MOD.agent_definition_exists("../agents/system-spec-matrix-auditor") is False
@@ -456,6 +483,13 @@ def test_ledger_path_contract_matches_hook_writer():
     hook = _load_hook()
     assert hook.LEDGER_RELPATH == MOD.LEDGER_RELPATH
     assert hook.LEDGER_ENV == MOD.LEDGER_ENV
+
+
+def test_ledger_tool_names_contract_matches_hook_writer():
+    """consumer が受理する tool_name 集合が hook writer の観測集合と一致していること。
+    片側だけ拡張すると『hook は記録するのに裏取りは不成立』という無音の欠落が再発する。"""
+    hook = _load_hook()
+    assert tuple(hook.AUDIT_FORK_TOOL_NAMES) == tuple(MOD.LEDGER_TOOL_NAMES)
 
 
 def test_hook_records_every_required_auditor():
@@ -529,7 +563,7 @@ def test_schema_requires_audit_delegations():
     assert set(d["required"]) == {"aspect", "role", "auditor", "component", "dispatch", "verdict", "evidence"}
     assert set(d["properties"]["role"]["enum"]) == MOD.DELEGATION_ROLES
     assert set(d["properties"]["aspect"]["enum"]) == set(MOD.ASPECTS)
-    assert d["properties"]["dispatch"]["properties"]["tool"]["const"] == "Task"
+    assert set(d["properties"]["dispatch"]["properties"]["tool"]["enum"]) == set(MOD.LEDGER_TOOL_NAMES)
 
 
 def test_rubric_aspect_to_auditor_matches_module():

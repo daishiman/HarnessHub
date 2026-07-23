@@ -75,6 +75,14 @@ feedback_contract:
 
 出力は ready sets、parallel batches、conflict pairs、各 task の `devgraph/<graph_node_id>` branch と `dev-graph worktree claim <id>` command。read-only で graph/tracker/lease を変更せず、実行receiptだけを`eval-log/run-dev-graph-schedule-execution.json`へ保存する。
 
+平常経路は **ready-json 生成 (C28) → schedule 算出 (C16)** の順で実行する。`--ready-json`は毎回この生成ステップで作り直す成果物で、`parity_provenance`を持たない古い committed receipt (例: eval-log 配下の 2026-07-18 実行分) をそのまま渡すと`schedule-graph.py`が即`ContractError`で止まる。生成は`bd-bridge.py --op ready`が`bd ready --json`候補を由来必須の`--parity-manifest`(`generated_at`/`source_graph_digest`、契約 §10) と突合し、`parity_provenance`つき receipt を stdout へ出すので、これを`--ready-json`のパスへ書き出す (`github`/`none` binding は ready-json 不要)。manifest が stale/欠落なら`run-dev-graph-sync` (C03) で作り直す。
+
+```bash
+python3 ../../scripts/bd-bridge.py --op ready --repo-root "$DEV_GRAPH_ROOT" \
+  --parity-manifest "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-parity-manifest.json" \
+  > "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-beads-ready.json"
+```
+
 ```bash
 python3 ../../scripts/schedule-graph.py \
   --repo-root "$DEV_GRAPH_ROOT" \

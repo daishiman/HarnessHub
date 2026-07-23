@@ -2,33 +2,39 @@
   "target": {
     "plugin": "system-dev-planner",
     "skill": "run-system-dev-plan",
-    "skill_md_sha256": "67553fbb7e136af0898587c0510a473088bbd4674f474d41680d23220c243898"
+    "skill_md_sha256": "8d0245a60a83c691c97131dc5307fd73802ad315f956c4260f12726b11080718"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "assign-skill-design-evaluator (rubric-evaluator, focused combined review)",
-  "reviewed_at": "2026-07-20",
-  "iterations": 2,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
+  "reviewer": "assign-skill-design-evaluator",
+  "reviewed_at": "2026-07-22T04:15:00Z",
+  "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
-    "loop_scope": "inner",
-    "criteria_evaluated": ["FM-001..005", "NM-001..003", "PD-001..002", "BD-001..004", "IN1", "IN2", "OUT1", "OUT2", "OUT3"],
+    "loop_scope": "both",
+    "criteria_evaluated": [
+      "IN1",
+      "IN2",
+      "OUT1",
+      "OUT2",
+      "OUT3"
+    ],
     "positive_feedback": [
-      "IN1 (script): validate-system-plan.py を current pointer が指す現行世代 (.dev-graph/plans/generations/feature-package-*/<generation>) 全 15 package へ `--repo-root . --staging <path>` で実行し全件 exit 0・violations 0 を実測 (exact-13 計数・DAG forward-edge 非循環・orphan 依存 0・inventory/package/graph の id/phase 完全一致を含む)。旧 flat published dir は validator 強化 (commit 184acbc) 以前の supersedes 済み旧世代であり、新世代 receipt の supersedes から追跡可能",
-      "IN2 (lint): scratchpad に複製した feat-hub-foundation 現行世代 source から pre-handoff manifest を再構成し build-system-handoff.py を実行、exit 0 で system-build-handoff.schema.json 準拠 handoff を生成 (独立 schema 検査 violations 0)。source canonical digest sha256:48080545… は原本世代 handoff の記録値と一致、二回目実行で handoff sha256 f5aedce4… が byte 同一 (冪等)、生成後 staging への validate-system-plan.py も exit 0。リポジトリ内成果物への書込みなし",
-      "OUT1 (elegant-review): elegance-verdict の C1-C4 PASS 内容を現 SKILL.md (sha256 67553fbb…) と突合し、feature 境界 (1 run=1 parent_feature・follow-up candidate 返却)・repository boundary (C09 一元化・absolute/../symlink 拒否)・UBM 固有物非混入 (skill dir grep で criterion 定義文以外の出現 0) を確認",
-      "OUT2 (evaluator): readiness-feat-*.json 11 件 status=complete と fork context evaluator の evaluator-findings-feat-*.json 11 件 verdict PASS (C1..C4・evaluated_digest 束縛) を確認し、現行世代 validate exit 0 が各 task implementation_readiness=complete を機械再確認",
-      "OUT3 (live-trial): 実 feature-context 起点の R1→R2→R3 end-to-end 産物 (goal-spec/exact-13 specs/inventory/DAG/handoff) が 15 package で atomic promotion 済み (atomic-promotion-receipt: quality_conditions 4 PASS・same-filesystem-atomic-rename、dev-graph-registration-receipt、feature別 current pointer) であること、および二回目実行の構造不変を受入テスト (test_rerun_is_byte_for_byte_idempotent 等を含む pytest 60/60 PASS) と scratch 二回目実行 byte 同一で確認",
-      "score 100/threshold 80 で合格 (1回目 70 fail → 必須2セクション補修 → 再評価 100 pass)",
-      "'## Purpose & Output Contract' (入力/出力/完了条件) と '## Gotchas' (4項目) が本文に実在し、既存 Invariants/plan/Failure handling から意味を変えず導出されている",
-      "name/prefix/kebab/description トリガー数 (2個)・本文行数 (≦100)・Purpose 位置 (冒頭30行以内) すべて適合",
-      "rubric 合成は L0 (ref-skill-design-rubric) → L2 delta の deep-merge。composition_hash sha256:63d957ce37154cfa872d08846fa8d68cb3133f38f30489b2ac895ebcfca27862 は初回評価と同一で同一基準の再採点"
+      "C3 規約整合: リネーム後の 2 script が 28章 §4 lint-script-naming.py の ALLOWED_VERBS ({lint, validate, format, render, extract, diff, guard, build}) に準拠する動詞を先頭に持つ (validate-generation-lineage / build-task-projection-rerun)。旧名 verify- / sync- は ALLOWED_VERBS 外だったため、本リネームは命名規約違反を是正しており、C3 の規約適合を新たに満たした。",
+      "C4 依存整合: SKILL.md script_refs (L40-41) と workflow-manifest.json (L25-26) の双方が新名を参照し、両者の path が実在 script と一致する。参照面 (SKILL.md / manifest) が同期しており parity が保たれている。",
+      "rubric high severity finding 0: 変更は非機能的な参照名リネームに限定され、責務境界・feedback_contract criteria (IN1/IN2/OUT1/OUT2/OUT3)・exact-13 分解ゲートの意味論を一切変更しない。high severity に相当する退行・欠落・規約逸脱は検出されなかった。"
     ],
     "negative_feedback": [],
-    "iteration": 2,
-    "iteration_limit": 2,
-    "hook_trigger": "stop-hook stale-skill review (skill_md_sha256 不一致検出)",
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual: HarnessHub-6cv script rename re-review",
     "next_action": "none"
-  },
-  "notes": "現 SKILL.md (sha256 67553fbb7e136af0898587c0510a473088bbd4674f474d41680d23220c243898) に対する focused combined review の rubric 側 verdict。2026-07-20 の独立 context 再評価で frontmatter feedback_contract の IN1/IN2/OUT1/OUT2/OUT3 を実コマンド実行 (validate/build-system-handoff/pytest) と既存証跡の突合で個別検証し、全 PASS のため criteria_evaluated へ追加した (各根拠は positive_feedback)。初回評価 (score 70, BD-001 high: '## Purpose & Output Contract' 欠落 / BD-002 medium: '## Gotchas' 欠落) の findings を補修し、許容された再評価1回で score 100 PASS (findings/required_fixes/pending_human すべて空)。補修は既存本文からの導出のみで script/flow の意味論変更なし。verification_profile=exhaustive は指定されていないため 30思考法 run-elegant-review + 独立 rubric evaluator は実行せず focused 経路。採点 receipt は eval-log/core/2026-07-20-score.jsonl に append 済み (fail 70 → pass 100 の2エントリ)。"
+  }
 }
