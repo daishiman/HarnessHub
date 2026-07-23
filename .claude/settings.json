@@ -737,6 +737,7 @@
     "skill-governance-secrets@skills": true,
     "skill-intake@skills": true,
     "slide-report-generator@skills": true,
+    "spec-drift-guardian@skills": true,
     "system-dev-planner@skills": true,
     "system-spec-harness@skills": true,
     "ubm-goal-setting@skills": true
