@@ -1,0 +1,21 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P07 を実行する: 受入判定 — 4 acceptance の突合と未達の差し戻し",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "docs/features/feat-doc-governance-portability/acceptance-report.md"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "acceptance-report.md に feature acceptance 4 件それぞれの充足判定 (根拠 evidence の path 付き) が記録されている",
+   "P08 完了後に再判定が必要な項目 (allowlist baseline 遡及付与の完了確認) が明示され、未達項目の差し戻し先 phase が記録されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

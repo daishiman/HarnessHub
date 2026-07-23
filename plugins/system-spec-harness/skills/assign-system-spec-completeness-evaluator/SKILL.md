@@ -128,7 +128,8 @@ feedback_contract:
 - 証跡台帳: `eval-log/system-spec-harness/audit-fork-ledger.jsonl` (writer = `hooks/record-audit-fork.py` / PostToolUse: `Task|Agent`)。`--fork-ledger` または env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。
 - C05 自前評価の 4 観点に `primary` receipt を付けるのは **虚偽の独立性主張** として violation。
 - 台帳が無い/空 = 裏取り 0 件 → fail-closed で violation (緑にしない)。
-- **機械層の限界 (正直な境界)**: 台帳が示すのは「その subagent_type への Task が完了した」ことだけ。監査 prompt が実質を伴うか、返った verdict が忠実に転記されたかは意味層 (content-review / human) の未閉塞責務。また突合は **run/session に束縛されない** (台帳行の `ts`/`session_id` を照合に使わない) ため、過去 run の同一 subagent_type 記録でも裏取りが成立しうる。塞ぐのは「fork を 1 件も起こしていない実行」までで、session 束縛は follow-up。
+- **run/session 束縛 (issue: HarnessHub-x4o)**: receipt の `dispatch.session_id` (宣言) と台帳行の `session_id` (harness 観測) の両方を要求し、同一 `(session_id, subagent_type)` の台帳行が実在するときだけ裏取り成立。必須 receipt 全件の宣言 session は単一に収束すること (複数 run のつまみ食い遮断)。`--session <id>` で現在 session を明示すると宣言との一致まで検査する (事後再検証では省略可)。
+- **機械層の限界 (正直な境界)**: 台帳が示すのは「その subagent_type への fork がその session で完了した」ことだけ。監査 prompt が実質を伴うか、返った verdict が忠実に転記されたかは意味層 (content-review / human) の未閉塞責務。また台帳は読み取り可能なため、過去 run の `session_id` を receipt へ丸写しする能動的偽装は `--session` 併用時を除き機械層では弾けない。
 
 ## 総合判定 (fail-closed 集約)
 

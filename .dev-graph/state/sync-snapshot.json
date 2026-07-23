@@ -1,0 +1,5066 @@
+{
+  "nodes": {
+    "SYS-AUTH-TENANCY-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定",
+          "remote": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P01"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計",
+          "remote": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P02"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認",
+          "remote": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P03"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計",
+          "remote": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P04"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理の実装",
+          "remote": "実装 — Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P05"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録",
+          "remote": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P06"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3 項目の確認",
+          "remote": "受入 — goal-spec acceptance 3 項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P07"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立",
+          "remote": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P08"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — CI 品質ゲート (tenant 分離・adapter 境界隔離・dev provider 非存在・認可判定単一集約) の確認",
+          "remote": "品質保証 — CI 品質ゲート (tenant 分離・adapter 境界隔離・dev provider 非存在・認可判定単一集約) の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P09"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終独立レビュー — quality_constraints 7 件の充足判定",
+          "remote": "最終独立レビュー — quality_constraints 7 件の充足判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P10"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+          "remote": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P11"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成",
+          "remote": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-AUTH-TENANCY-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P12"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト",
+          "remote": "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "構築パイプラインボード要件ベースライン確定",
+          "remote": "構築パイプラインボード要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P01"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計",
+          "remote": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P02"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認",
+          "remote": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P03"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成",
+          "remote": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P04"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装",
+          "remote": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P05"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録",
+          "remote": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P06"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3 項目の確認",
+          "remote": "受入 — goal-spec acceptance 3 項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P07"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認",
+          "remote": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P08"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認",
+          "remote": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P09"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終独立レビュー — quality_constraints 6 件の充足判定",
+          "remote": "最終独立レビュー — quality_constraints 6 件の充足判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P10"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス収集 — 再現可能な検証証跡の集約",
+          "remote": "エビデンス収集 — 再現可能な検証証跡の集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P11"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成",
+          "remote": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-BUILD-PIPELINE-BOARD-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-BUILD-PIPELINE-BOARD-P12"
+          ],
+          "remote": [
+            "SYS-BUILD-PIPELINE-BOARD-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+          "remote": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
+          "remote": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
+          "remote": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
+          "remote": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
+          "remote": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
+          "remote": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 回帰テスト全件と lint 実測の記録",
+          "remote": "テスト実行 — 回帰テスト全件と lint 実測の記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入判定 — 8 acceptance の突合と未達の差し戻し",
+          "remote": "受入判定 — 8 acceptance の突合と未達の差し戻し"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
+          "remote": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — fail-closed 実効性の悪性ケース実測",
+          "remote": "品質保証 — fail-closed 実効性の悪性ケース実測"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終レビュー — 全 phase 成果の横断整合確認",
+          "remote": "最終レビュー — 全 phase 成果の横断整合確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "証跡固定 — 実測ログと digest の evidence manifest 化",
+          "remote": "証跡固定 — 実測ログと digest の evidence manifest 化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
+          "remote": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
+          ],
+          "remote": [
+            "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
+          "remote": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント CMS 要件ベースライン確定",
+          "remote": "ドキュメント CMS 要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P01"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — Doc スキーマ・S15 画面構成・B7 API 契約・AI 下書きキュー契約の設計",
+          "remote": "アーキテクチャ設計 — Doc スキーマ・S15 画面構成・B7 API 契約・AI 下書きキュー契約の設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P02"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — Doc スキーマ・S15 認可・AI キュー契約・Markdown sanitize の妥当性確認",
+          "remote": "独立設計レビュー — Doc スキーマ・S15 認可・AI キュー契約・Markdown sanitize の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P03"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — tenant 分離/admin 限定編集/Markdown sanitize/AI キュー認可/監査記録のテストスタブ作成",
+          "remote": "テストファースト設計 — tenant 分離/admin 限定編集/Markdown sanitize/AI キュー認可/監査記録のテストスタブ作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P04"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装",
+          "remote": "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P05"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 単体/結合/tenant 分離/認可/sanitize テストの実行と結果記録",
+          "remote": "テスト実行 — 単体/結合/tenant 分離/認可/sanitize テストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P06"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3 項目の確認",
+          "remote": "受入 — goal-spec acceptance 3 項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P07"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — Doc テーブルマイグレーション生成と後方互換性確認",
+          "remote": "リファクタリング/マイグレーション — Doc テーブルマイグレーション生成と後方互換性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P08"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の確認",
+          "remote": "品質保証 — CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P09"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終独立レビュー — quality_constraints 8 件の充足判定",
+          "remote": "最終独立レビュー — quality_constraints 8 件の充足判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P10"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス収集 — 再現可能な検証証跡の集約",
+          "remote": "エビデンス収集 — 再現可能な検証証跡の集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P11"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成",
+          "remote": "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOCS-CMS-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOCS-CMS-P12"
+          ],
+          "remote": [
+            "SYS-DOCS-CMS-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+          "remote": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
+          "remote": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P01"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
+          "remote": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P02"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
+          "remote": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P03"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
+          "remote": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P04"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
+          "remote": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P05"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
+          "remote": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P06"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3 項目の確認",
+          "remote": "受入 — goal-spec acceptance 3 項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P07"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
+          "remote": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P08"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
+          "remote": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P09"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終独立レビュー — quality_constraints 10 件の充足判定",
+          "remote": "最終独立レビュー — quality_constraints 10 件の充足判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P10"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+          "remote": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P11"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
+          "remote": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOMAIN-MODEL-DB-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOMAIN-MODEL-DB-P12"
+          ],
+          "remote": [
+            "SYS-DOMAIN-MODEL-DB-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
+          "remote": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — dual catalog UI(Workspace Catalog)・publish状況表示ポーリング・marketplace.json出力・axe/CWV品質ゲートの要件確定",
+          "remote": "要件ベースライン確定 — dual catalog UI(Workspace Catalog)・publish状況表示ポーリング・marketplace.json出力・axe/CWV品質ゲートの要件確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P01"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — S01/S02/S03/S04画面構成・install descriptor取得・ポーリング契約・marketplace.json生成方式・CWVバンドル予算の決定",
+          "remote": "アーキテクチャ設計 — S01/S02/S03/S04画面構成・install descriptor取得・ポーリング契約・marketplace.json生成方式・CWVバンドル予算の決定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P02"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — S01-S04画面構成・install descriptor契約・ポーリング設計・marketplace.json生成方式の妥当性確認",
+          "remote": "独立設計レビュー — S01-S04画面構成・install descriptor契約・ポーリング設計・marketplace.json生成方式の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P03"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — axe自動検査・Playwright J1/J2ジャーニー×2 viewport・Lighthouse CWV予算・marketplace.jsonスキーマ検証・ポーリングbackoff契約のテスト設計",
+          "remote": "テストファースト設計 — axe自動検査・Playwright J1/J2ジャーニー×2 viewport・Lighthouse CWV予算・marketplace.jsonスキーマ検証・ポーリングbackoff契約のテスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P04"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — S01/S02/S03/S04画面実装・marketplace.json出力パイプライン・配布経路連携・axe CI組込・CWVバンドル最適化・ポーリング実装",
+          "remote": "実装 — S01/S02/S03/S04画面実装・marketplace.json出力パイプライン・配布経路連携・axe CI組込・CWVバンドル最適化・ポーリング実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P05"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — Vitest部品テスト・Playwright E2E・axe自動チェック・Lighthouse CWV計測の実行",
+          "remote": "テスト実行 — Vitest部品テスト・Playwright E2E・axe自動チェック・Lighthouse CWV計測の実行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P06"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — axe検出可能違反0のCIゲート存在・CWV全指標good実測・Hub停止中の導入済みSkill動作継続の受入判定",
+          "remote": "受入 — axe検出可能違反0のCIゲート存在・CWV全指標good実測・Hub停止中の導入済みSkill動作継続の受入判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P07"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — mockup由来静的画面からshared-layers準拠の本番動的コンポーネント構成への移行",
+          "remote": "リファクタリング/マイグレーション — mockup由来静的画面からshared-layers準拠の本番動的コンポーネント構成への移行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P08"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質・セキュリティ・運用保証 — テナント分離(deny-by-default)・§6.1縮退設計運用確認・SLOダッシュボード・WCAG/CWV最終確認",
+          "remote": "品質・セキュリティ・運用保証 — テナント分離(deny-by-default)・§6.1縮退設計運用確認・SLOダッシュボード・WCAG/CWV最終確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P09"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立最終レビュー — quality_constraints 7件・acceptance 3件の最終確認",
+          "remote": "独立最終レビュー — quality_constraints 7件・acceptance 3件の最終確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P10"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立",
+          "remote": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P11"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "文書化・runbook・引き継ぎ — カタログ利用者/管理者向け手順・marketplace.json形式文書・障害時縮退runbook・更新通知導線の文書化",
+          "remote": "文書化・runbook・引き継ぎ — カタログ利用者/管理者向け手順・marketplace.json形式文書・障害時縮退runbook・更新通知導線の文書化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DUAL-CATALOG-WEB-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DUAL-CATALOG-WEB-P12"
+          ],
+          "remote": [
+            "SYS-DUAL-CATALOG-WEB-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — Cloudflare Workers(wrangler)へのロールアウト・rollback手順・Stage 1完了判定",
+          "remote": "リリース/デプロイ — Cloudflare Workers(wrangler)へのロールアウト・rollback手順・Stage 1完了判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "改善要望フィードバックループ要件ベースライン確定",
+          "remote": "改善要望フィードバックループ要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P01"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計",
+          "remote": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P02"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認",
+          "remote": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P03"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成",
+          "remote": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P04"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装",
+          "remote": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P05"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録",
+          "remote": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P06"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3 項目の確認",
+          "remote": "受入 — goal-spec acceptance 3 項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P07"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認",
+          "remote": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P08"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認",
+          "remote": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P09"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終独立レビュー — quality_constraints 8 件の充足判定",
+          "remote": "最終独立レビュー — quality_constraints 8 件の充足判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P10"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス収集 — 再現可能な検証証跡の集約",
+          "remote": "エビデンス収集 — 再現可能な検証証跡の集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P11"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成",
+          "remote": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-FEEDBACK-LOOP-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-FEEDBACK-LOOP-P12"
+          ],
+          "remote": [
+            "SYS-FEEDBACK-LOOP-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+          "remote": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ヒアリング intake 要件ベースライン確定",
+          "remote": "ヒアリング intake 要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P01"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計",
+          "remote": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P02"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer 設計・AI キュー認可・Markdown sanitize の妥当性確認",
+          "remote": "独立設計レビュー — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer 設計・AI キュー認可・Markdown sanitize の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P03"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
+          "remote": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P04"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
+          "remote": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P05"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録",
+          "remote": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P06"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3 項目の確認",
+          "remote": "受入 — goal-spec acceptance 3 項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P07"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — HearingSheet/FormData新規テーブルのmigration（共通ai_jobsは既存schemaを消費） 生成と後方互換性確認",
+          "remote": "リファクタリング/マイグレーション — HearingSheet/FormData新規テーブルのmigration（共通ai_jobsは既存schemaを消費） 生成と後方互換性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P08"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認",
+          "remote": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P09"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終独立レビュー — feature 全体の confirmation 前最終点検",
+          "remote": "最終独立レビュー — feature 全体の confirmation 前最終点検"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P10"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約",
+          "remote": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P11"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化",
+          "remote": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HEARING-INTAKE-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HEARING-INTAKE-P12"
+          ],
+          "remote": [
+            "SYS-HEARING-INTAKE-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認",
+          "remote": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 要件ベースライン確定",
+          "remote": "Hub 基盤 要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P01"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
+          "remote": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P02"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 独立設計レビュー",
+          "remote": "Hub 基盤 独立設計レビュー"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P03"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 テスト設計 (test-first 受入契約)",
+          "remote": "Hub 基盤 テスト設計 (test-first 受入契約)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P04"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
+          "remote": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P05"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 テスト実行",
+          "remote": "Hub 基盤 テスト実行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P06"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 feature 受入判定",
+          "remote": "Hub 基盤 feature 受入判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P07"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
+          "remote": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P08"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 品質・セキュリティ・運用保証",
+          "remote": "Hub 基盤 品質・セキュリティ・運用保証"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P09"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 最終独立レビュー",
+          "remote": "Hub 基盤 最終独立レビュー"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P10"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 証跡収集",
+          "remote": "Hub 基盤 証跡収集"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P11"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 運用ドキュメント整備",
+          "remote": "Hub 基盤 運用ドキュメント整備"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-HUB-FOUNDATION-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-HUB-FOUNDATION-P12"
+          ],
+          "remote": [
+            "SYS-HUB-FOUNDATION-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤 本番リリース・デプロイ",
+          "remote": "Hub 基盤 本番リリース・デプロイ"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定",
+          "remote": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P01"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計",
+          "remote": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P02"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認",
+          "remote": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P03"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計",
+          "remote": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P04"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装",
+          "remote": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P05"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録",
+          "remote": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P06"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3 項目の確認",
+          "remote": "受入 — goal-spec acceptance 3 項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P07"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認",
+          "remote": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P08"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認",
+          "remote": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P09"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終独立レビュー — quality_constraints 8 件の充足判定",
+          "remote": "最終独立レビュー — quality_constraints 8 件の充足判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P10"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+          "remote": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P11"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成",
+          "remote": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-METRICS-TRACKING-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-METRICS-TRACKING-P12"
+          ],
+          "remote": [
+            "SYS-METRICS-TRACKING-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+          "remote": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定",
+          "remote": "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P01"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定",
+          "remote": "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P02"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認",
+          "remote": "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P03"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テスト設計",
+          "remote": "テストファースト設計 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P04"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録",
+          "remote": "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P05"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録",
+          "remote": "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P06"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3 項目の確認",
+          "remote": "受入 — goal-spec acceptance 3 項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P07"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立",
+          "remote": "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P08"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立",
+          "remote": "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P09"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認",
+          "remote": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P10"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
+          "remote": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P11"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立",
+          "remote": "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISH-PIPELINE-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISH-PIPELINE-P12"
+          ],
+          "remote": [
+            "SYS-PUBLISH-PIPELINE-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test",
+          "remote": "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — TypeScript統一Publisher・Device Flow認証・検査ロジック共有・wranglerスクリプト実行・初回publish15分以内",
+          "remote": "要件ベースライン確定 — TypeScript統一Publisher・Device Flow認証・検査ロジック共有・wranglerスクリプト実行・初回publish15分以内"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P01"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — apps/publisher (TS/Node/pnpm) 構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の決定",
+          "remote": "アーキテクチャ設計 — apps/publisher (TS/Node/pnpm) 構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の決定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P02"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — apps/publisher構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の妥当性確認",
+          "remote": "独立設計レビュー — apps/publisher構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P03"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — quality_constraints 8件・acceptance 3件に対応する挙動同値性テスト・実機E2Eタイムボックス計測ケースの設計",
+          "remote": "テストファースト設計 — quality_constraints 8件・acceptance 3件に対応する挙動同値性テスト・実機E2Eタイムボックス計測ケースの設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P04"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — apps/publisher (CLI + Claude Code/Codex plugin)・Device Flow認証クライアント・wrangler実行ラッパーの実装",
+          "remote": "実装 — apps/publisher (CLI + Claude Code/Codex plugin)・Device Flow認証クライアント・wrangler実行ラッパーの実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P05"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 挙動同値性テスト・Device Flow単体テスト・macOS/Windows実機E2Eタイムボックス計測の実行",
+          "remote": "テスト実行 — 挙動同値性テスト・Device Flow単体テスト・macOS/Windows実機E2Eタイムボックス計測の実行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P06"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — macOS/Windows実機E2E成功・pre-checkとHub検査の判定同値・初回publish15分以内の受入判定",
+          "remote": "受入 — macOS/Windows実機E2E成功・pre-checkとHub検査の判定同値・初回publish15分以内の受入判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P07"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — Python資産参照コメントの整理とpackages/inspection消費コードのクリーンアップ",
+          "remote": "リファクタリング/マイグレーション — Python資産参照コメントの整理とpackages/inspection消費コードのクリーンアップ"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P08"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質・セキュリティ・運用保証 — Device Flow数値契約遵守・OS資格情報域保存・scope最小権限・secret非保存の確認",
+          "remote": "品質・セキュリティ・運用保証 — Device Flow数値契約遵守・OS資格情報域保存・scope最小権限・secret非保存の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P09"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立最終レビュー — quality_constraints 8件・acceptance 3件の最終確認",
+          "remote": "独立最終レビュー — quality_constraints 8件・acceptance 3件の最終確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P10"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順の確立",
+          "remote": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順の確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P11"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "文書化・runbook・引き継ぎ — 作者向けpublish手順・token失効導線・障害時対応手順の確立",
+          "remote": "文書化・runbook・引き継ぎ — 作者向けpublish手順・token失効導線・障害時対応手順の確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-PUBLISHER-PLUGIN-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-PUBLISHER-PLUGIN-P12"
+          ],
+          "remote": [
+            "SYS-PUBLISHER-PLUGIN-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — Claude Code/Codex marketplaceへのPublisher plugin配布登録依頼とStage1完了条件判定",
+          "remote": "リリース/デプロイ — Claude Code/Codex marketplaceへのPublisher plugin配布登録依頼とStage1完了条件判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
+          "remote": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P01"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P01"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — 3 経路検証方式・最小 artifact 構成・実機 E2E 手順・decision record 登録経路の確定",
+          "remote": "アーキテクチャ設計 — 3 経路検証方式・最小 artifact 構成・実機 E2E 手順・decision record 登録経路の確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P02"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P02"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "独立設計レビュー — 検証方式・artifact 構成・実機 E2E 手順の妥当性確認",
+          "remote": "独立設計レビュー — 検証方式・artifact 構成・実機 E2E 手順の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P03"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P03"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "テストファースト設計 — quality_constraints 8 件・acceptance 3 件に対応する実機検証ケースの設計",
+          "remote": "テストファースト設計 — quality_constraints 8 件・acceptance 3 件に対応する実機検証ケースの設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P04"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P04"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成",
+          "remote": "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P05"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P05"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "テスト実行 — macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行",
+          "remote": "テスト実行 — macOS/Windows 実機での URL 型 marketplace・npm source・Bootstrap Installer 検証実行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P06"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P06"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認",
+          "remote": "受入 — 2 経路以上の実機検証記録と Windows E2E 成功の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P07"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P07"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — 検証 prototype 資産の整理 (N/A 判断を含む)",
+          "remote": "リファクタリング/マイグレーション — 検証 prototype 資産の整理 (N/A 判断を含む)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P08"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P08"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "品質・セキュリティ・運用保証 — C1 (体制)・C2 (コストゼロ)・H7 fail-closed ゲートの充足確認",
+          "remote": "品質・セキュリティ・運用保証 — C1 (体制)・C2 (コストゼロ)・H7 fail-closed ゲートの充足確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P09"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P09"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件の最終確認",
+          "remote": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件の最終確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P10"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P10"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
+          "remote": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P11"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P11"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立",
+          "remote": "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-STAGE0-DISTRIBUTION-GATE-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P12"
+          ],
+          "remote": [
+            "SYS-STAGE0-DISTRIBUTION-GATE-P12"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "リリース/デプロイ — 採用経路の decision record C01 writer登録 (C01 writer 経由) と Stage 1 開始条件判定",
+          "remote": "リリース/デプロイ — 採用経路の decision record C01 writer登録 (C01 writer 経由) と Stage 1 開始条件判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — tenant_data_objects CRUD API・R2封筒暗号化保管・即時完全削除・R2使用量監視の要件確定",
+          "remote": "要件ベースライン確定 — tenant_data_objects CRUD API・R2封筒暗号化保管・即時完全削除・R2使用量監視の要件確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P01"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — encryption_keys.purpose拡張・R2 tenant prefix分離・API詳細設計・R2使用量監視cron拡張・削除完全性テスト採番の決定",
+          "remote": "アーキテクチャ設計 — encryption_keys.purpose拡張・R2 tenant prefix分離・API詳細設計・R2使用量監視cron拡張・削除完全性テスト採番の決定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P02"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — encryption_keys拡張・R2 prefix分離・API契約・削除完全性テスト採番の妥当性確認",
+          "remote": "独立設計レビュー — encryption_keys拡張・R2 prefix分離・API契約・削除完全性テスト採番の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P03"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートのテスト設計",
+          "remote": "テストファースト設計 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートのテスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P04"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — tenant_data_objects API・R2封筒暗号化保管/取得/即時完全削除・R2使用量監視cron拡張の実装",
+          "remote": "実装 — tenant_data_objects API・R2封筒暗号化保管/取得/即時完全削除・R2使用量監視cron拡張の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P05"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートテストの実行",
+          "remote": "テスト実行 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートテストの実行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P06"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — テナント分離・削除完全性・暗号化検証の3件受入判定",
+          "remote": "受入 — テナント分離・削除完全性・暗号化検証の3件受入判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P07"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — encryption_keys.tenant_id/key uniqueness migration・per-tenant DEK provisioning・R2バケット/prefix新設の既存基盤互換移行",
+          "remote": "リファクタリング/マイグレーション — encryption_keys.tenant_id/key uniqueness migration・per-tenant DEK provisioning・R2バケット/prefix新設の既存基盤互換移行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P08"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質・セキュリティ・運用保証 — テナント越境読取防止(T14)・削除不完全対策(T15)・R2使用量監視運用確認",
+          "remote": "品質・セキュリティ・運用保証 — テナント越境読取防止(T14)・削除不完全対策(T15)・R2使用量監視運用確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P09"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立最終レビュー — quality_constraints 6件・acceptance 3件の最終確認",
+          "remote": "独立最終レビュー — quality_constraints 6件・acceptance 3件の最終確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P10"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立",
+          "remote": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P11"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "文書化・runbook・引き継ぎ — 業務データ保管/取得/削除手順・R2使用量監視runbook・鍵ローテーションrunbook拡張の文書化",
+          "remote": "文書化・runbook・引き継ぎ — 業務データ保管/取得/削除手順・R2使用量監視runbook・鍵ローテーションrunbook拡張の文書化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TENANT-DATA-RETENTION-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TENANT-DATA-RETENTION-P12"
+          ],
+          "remote": [
+            "SYS-TENANT-DATA-RETENTION-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — encryption_keys DEK seed migration適用順序・wranglerロールアウト・rollback手順",
+          "remote": "リリース/デプロイ — encryption_keys DEK seed migration適用順序・wranglerロールアウト・rollback手順"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ユーザー管理・アカウント設定 要件ベースライン確定",
+          "remote": "ユーザー管理・アカウント設定 要件ベースライン確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P01"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計",
+          "remote": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P02"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認",
+          "remote": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P03"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計",
+          "remote": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P04"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続",
+          "remote": "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P05"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録",
+          "remote": "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P06"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — goal-spec acceptance 3項目の確認",
+          "remote": "受入 — goal-spec acceptance 3項目の確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P07"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認",
+          "remote": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P08"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認",
+          "remote": "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P09"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終独立レビュー — feature全体のconfirmation前最終点検",
+          "remote": "最終独立レビュー — feature全体のconfirmation前最終点検"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P10"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約",
+          "remote": "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P11"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化",
+          "remote": "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-USER-ORG-ADMIN-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-USER-ORG-ADMIN-P12"
+          ],
+          "remote": [
+            "SYS-USER-ORG-ADMIN-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認",
+          "remote": "リリース/デプロイ — S17/S18のCloudflare Workers本番反映とロールアウト確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — 承認キュー・RBAC細分化・監査ログ閲覧・統制ポリシー設定の要件確定",
+          "remote": "要件ベースライン確定 — 承認キュー・RBAC細分化・監査ログ閲覧・統制ポリシー設定の要件確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P01"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ設計 — governance_policies拡張ポイント・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの決定",
+          "remote": "アーキテクチャ設計 — governance_policies拡張ポイント・publish/:id/reject契約・RBAC権限マトリクスUI・監査ログUI・追加監査actionの決定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P02"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "独立設計レビュー — governance_policies拡張点・reject契約・RBAC/監査UI・feature境界遵守の妥当性確認",
+          "remote": "独立設計レビュー — governance_policies拡張点・reject契約・RBAC/監査UI・feature境界遵守の妥当性確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P03"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テストファースト設計 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6適用のテスト設計",
+          "remote": "テストファースト設計 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6適用のテスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P04"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — governance_policiesテーブル・publish/:id/reject API・RBAC権限マトリクスUI(S04拡張)・承認キューUI(S05)・監査ログUI(S06)の実装",
+          "remote": "実装 — governance_policiesテーブル・publish/:id/reject API・RBAC権限マトリクスUI(S04拡張)・承認キューUI(S05)・監査ログUI(S06)の実装"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P05"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6テストの実行",
+          "remote": "テスト実行 — policy遮断・監査テナントスコープ検索・RBAC変更監査記録・T-1/T-1b/T-1c/T-6テストの実行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P06"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入 — 承認フローpolicy遮断・監査ログテナントスコープ検索・RBAC変更監査記録の3件受入判定",
+          "remote": "受入 — 承認フローpolicy遮断・監査ログテナントスコープ検索・RBAC変更監査記録の3件受入判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P07"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリング/マイグレーション — governance_policies新設テーブル・audit_events追加action(governance.policy_change)の既存基盤互換移行",
+          "remote": "リファクタリング/マイグレーション — governance_policies新設テーブル・audit_events追加action(governance.policy_change)の既存基盤互換移行"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P08"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — ASVS L2アクセス制御/ログ到達目標・T-1/T-1b/T-1c/T-6・deny-by-default認可の横断確認",
+          "remote": "品質保証 — ASVS L2アクセス制御/ログ到達目標・T-1/T-1b/T-1c/T-6・deny-by-default認可の横断確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P09"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終レビュー — goal-spec 6件quality_constraints・3件acceptanceの全件最終合否判定",
+          "remote": "最終レビュー — goal-spec 6件quality_constraints・3件acceptanceの全件最終合否判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P10"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "エビデンス集約 — P04〜P10成果物の証跡パッケージ化",
+          "remote": "エビデンス集約 — P04〜P10成果物の証跡パッケージ化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P11"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント/運用 — workspace-admin向け承認/監査/RBAC設定 運用手順書の整備",
+          "remote": "ドキュメント/運用 — workspace-admin向け承認/監査/RBAC設定 運用手順書の整備"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-WORKSPACE-GOVERNANCE-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-WORKSPACE-GOVERNANCE-P12"
+          ],
+          "remote": [
+            "SYS-WORKSPACE-GOVERNANCE-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順",
+          "remote": "リリース/デプロイ — governance_policiesマイグレーション適用順序・wranglerロールアウト・rollback手順"
+        }
+      },
+      "projects": {}
+    },
+    "feat-auth-tenancy": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ],
+          "remote": [
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)",
+          "remote": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-build-pipeline-board": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hearing-intake",
+            "feat-hub-foundation",
+            "feat-publish-pipeline"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hearing-intake",
+            "feat-hub-foundation",
+            "feat-publish-pipeline"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Studio: 構築パイプライン可視化 (7 工程ボード)",
+          "remote": "Studio: 構築パイプライン可視化 (7 工程ボード)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-dev-pipeline-improvement": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
+          "remote": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-docs-cms": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Studio: ドキュメント CMS (common/tenant スコープ・AI 下書き)",
+          "remote": "Studio: ドキュメント CMS (common/tenant スコープ・AI 下書き)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-domain-model-db": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-hub-foundation"
+          ],
+          "remote": [
+            "feat-hub-foundation"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
+          "remote": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-dual-catalog-web": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-publish-pipeline",
+            "feat-stage0-distribution-gate"
+          ],
+          "remote": [
+            "feat-publish-pipeline",
+            "feat-stage0-distribution-gate"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub Web: Thin Dual Catalog (Skill + WebApp) と配布出口",
+          "remote": "Hub Web: Thin Dual Catalog (Skill + WebApp) と配布出口"
+        }
+      },
+      "projects": {}
+    },
+    "feat-feedback-loop": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation",
+            "feat-publish-pipeline"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation",
+            "feat-publish-pipeline"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Studio: 改善要望フィードバックループ (2 経路受付・AI 対応・再公開)",
+          "remote": "Studio: 改善要望フィードバックループ (2 経路受付・AI 対応・再公開)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-hearing-intake": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Studio: ヒアリング intake (ウィザード・シート管理・AI 生成キュー)",
+          "remote": "Studio: ヒアリング intake (ウィザード・シート管理・AI 生成キュー)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-hub-foundation": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
+          "remote": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
+        }
+      },
+      "projects": {}
+    },
+    "feat-metrics-tracking": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation",
+            "feat-user-org-admin"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation",
+            "feat-user-org-admin"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)",
+          "remote": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-publish-pipeline": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "PublishRequest パイプライン (状態機械・検査・promote/rollback)",
+          "remote": "PublishRequest パイプライン (状態機械・検査・promote/rollback)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-publisher-plugin": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-publish-pipeline",
+            "feat-stage0-distribution-gate"
+          ],
+          "remote": [
+            "feat-publish-pipeline",
+            "feat-stage0-distribution-gate"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)",
+          "remote": "Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-stage0-distribution-gate": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "Stage 0: 配布経路 technical gate (H7) 検証",
+          "remote": "Stage 0: 配布経路 technical gate (H7) 検証"
+        }
+      },
+      "projects": {}
+    },
+    "feat-tenant-data-retention": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テナント業務データ保管 (C4 改訂: R2 封筒暗号化・即時完全削除)",
+          "remote": "テナント業務データ保管 (C4 改訂: R2 封筒暗号化・即時完全削除)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-user-org-admin": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-domain-model-db",
+            "feat-hub-foundation"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Studio: ユーザー管理・アカウント設定 (role 統合・係数設定・PII ガード)",
+          "remote": "Studio: ユーザー管理・アカウント設定 (role 統合・係数設定・PII ガード)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-workspace-governance": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-auth-tenancy",
+            "feat-dual-catalog-web"
+          ],
+          "remote": [
+            "feat-auth-tenancy",
+            "feat-dual-catalog-web"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Stage 2: Workspace ガバナンス (approval queue / RBAC / audit log)",
+          "remote": "Stage 2: Workspace ガバナンス (approval queue / RBAC / audit log)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-audit-followups-20260717": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正",
+          "remote": "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正"
+        }
+      },
+      "projects": {}
+    },
+    "issue-bd-bridge-notes-passthrough-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "bd-bridge 経由で beads の notes/design を更新できず進捗記録の経路が塞がっている",
+          "remote": "bd-bridge 経由で beads の notes/design を更新できず進捗記録の経路が塞がっている"
+        }
+      },
+      "projects": {}
+    },
+    "issue-d7-hearing-trace-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "spec-state: D7 (環境構成決定) に qa_log への遡及参照が無く hearing 往復の中立性を独立検証できない",
+          "remote": "spec-state: D7 (環境構成決定) に qa_log への遡及参照が無く hearing 往復の中立性を独立検証できない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-doc-granularity-remediation-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "qa-070 粒度規約: 300 行超過 6 文書の remediation (縮小のみ許す初期一覧)",
+          "remote": "qa-070 粒度規約: 300 行超過 6 文書の remediation (縮小のみ許す初期一覧)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-docs-recompose-followups-20260718": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "docs/ 全体マクロ再分解 (2026-07-18) の残 findings 5 件の是正",
+          "remote": "docs/ 全体マクロ再分解 (2026-07-18) の残 findings 5 件の是正"
+        }
+      },
+      "projects": {}
+    },
+    "issue-hearing-trace-followups-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "spec-state: qa-067 のユーザー確認記録欠落 (C06 MEDIUM) と質問様式の中立化 (C06 LOW) のフォローアップ",
+          "remote": "spec-state: qa-067 のユーザー確認記録欠落 (C06 MEDIUM) と質問様式の中立化 (C06 LOW) のフォローアップ"
+        }
+      },
+      "projects": {}
+    },
+    "issue-qa070-implementation-feature-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)",
+          "remote": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-security-web-qaref-chain-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "security.web の qa_ref 系譜引用の断絶 (C07 medium): qa-042/qa-046 本文に qa-020 維持句がない",
+          "remote": "security.web の qa_ref 系譜引用の断絶 (C07 medium): qa-042/qa-046 本文に qa-020 維持句がない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-source-freshness-ops-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)",
+          "remote": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)"
+        }
+      },
+      "projects": {}
+    }
+  },
+  "schema_version": "1.0",
+  "updated_at": "2026-07-22T01:16:10.939535Z"
+}

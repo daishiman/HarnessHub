@@ -96,11 +96,19 @@
   監査 prompt が実質を伴うか、返った verdict がレポートへ忠実に転記されたかは意味層
   (content-review / human) の未閉塞責務。receipt の `verdict` と `aspects[].verdict` の一致検査は
   「転記の自己矛盾」までしか捕まえられない。
-- **残余ギャップ (run/session 非束縛)**: 突合は台帳行の `ts` / `session_id` を照合軸に使わないため、
-  **過去 run の同一 subagent_type 記録でも裏取りが成立しうる**。本ゲートが確実に弾くのは
-  「fork を 1 件も起こしていない実行」までで、「今回の run で fork した」ことの証明ではない。
-  session 束縛は follow-up (レポート側へ session_id を持たせると、その宣言自体が再び自己申告に
-  なるため、宣言と台帳の両方を要求する設計が要る)。
+- **run/session 束縛 (issue: HarnessHub-x4o)**: receipt の `dispatch.session_id` (宣言) と台帳行の
+  `session_id` (harness 観測) の **両方** を要求し、同一 `(session_id, subagent_type)` の台帳行が
+  実在するときだけ裏取り成立とする。宣言単独では自己申告 (書くだけで通る)、台帳単独では過去 run と
+  区別不能であり、両者の突合で初めて「この報告が名指しする run で fork が完了した」ことに接地する。
+  さらに必須 receipt 全件の宣言 session が **単一に収束** することを要求し (複数の過去 run からの
+  つまみ食い遮断)、`--session` で現在 session を明示されたときは宣言との一致まで検査する
+  (過去 run 一式の丸ごと再利用の遮断。CI/probe の事後再検証では省略可 = 宣言↔台帳整合のみ)。
+  宣言なし・`"unknown"` 宣言 (hook が session を観測できない環境の記録値) ・台帳に無い session の
+  名指しは、いずれも fail-closed で violation ("unknown" 受理は『任意の過去 "unknown" 行で裏取り
+  成立』の穴を戻すため拒否する。設計判断の根拠は `ledger_corroborates` の実装コメント参照)。
+- **残余ギャップ (能動的偽装)**: 台帳は読み取り可能なため、過去 run の `session_id` を receipt へ
+  丸写しする能動的偽装は `--session` 併用時を除き機械層では弾けない。表層的 adversarial evasion は
+  設計上許容し、意味層 (content-review / human) の未閉塞責務として開示する。
 
 ## 総合判定 (fail-closed)
 - 全観点PASSかつhigh severity finding 0件のときだけ総合PASS。

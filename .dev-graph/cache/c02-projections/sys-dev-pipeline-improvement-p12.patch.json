@@ -1,0 +1,20 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+  "purpose": "feat-dev-pipeline-improvement の P12 を実行する: 運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "docs/features/feat-dev-pipeline-improvement/operations.md"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "operations.md に棚卸し GC の周期・対象抽出コマンド・close-loop の 3 表現 (md/graph/beads) 同時クローズ手順が記録されている",
+   "手順が choke-point (bd-bridge) と単一 writer (upsert-node) を迂回しないことが明記されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

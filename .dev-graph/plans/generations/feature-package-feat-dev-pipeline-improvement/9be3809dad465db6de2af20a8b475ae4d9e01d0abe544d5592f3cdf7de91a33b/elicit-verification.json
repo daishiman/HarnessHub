@@ -1,0 +1,41 @@
+{
+ "verdict": "PASS",
+ "checks": [
+  {
+   "id": "verbatim-purpose",
+   "result": "PASS"
+  },
+  {
+   "id": "verbatim-goal",
+   "result": "PASS"
+  },
+  {
+   "id": "verbatim-scope_in",
+   "result": "PASS"
+  },
+  {
+   "id": "verbatim-scope_out",
+   "result": "PASS"
+  },
+  {
+   "id": "verbatim-acceptance",
+   "result": "PASS"
+  },
+  {
+   "id": "lineage-features/feat-dev-pipeline-improvement.context.json",
+   "result": "PASS"
+  },
+  {
+   "id": "lineage-architecture/harness-hub-dev-workflow.md",
+   "result": "PASS"
+  },
+  {
+   "id": "lineage-specs/harness-hub-system-specification.md",
+   "result": "PASS"
+  },
+  {
+   "id": "lineage-system-spec/dev-workflow.md",
+   "result": "PASS"
+  }
+ ]
+}

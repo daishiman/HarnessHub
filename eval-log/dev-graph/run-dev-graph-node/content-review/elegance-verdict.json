@@ -2,27 +2,30 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-node",
-    "skill_md_sha256": "8164be5b695d5e7685aedd31d1f66bcc9d0546276299783016592258f37ad9e2"
+    "skill_md_sha256": "5a2cf162d207756e8b7f82c03b31f95fd0d9d82a7d53636bdc42f5c8c8d44a10"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "audit-node-status-20260720",
-  "reviewed_at": "2026-07-20",
+  "reviewer": "independent-content-reviewer-20260723",
+  "reviewed_at": "2026-07-23",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "C1 矛盾なし: 『全 graph/content write の単一 writer』(L81) が Purpose・Classification and write・Exact-13 package gate・Gotchas で一貫し、feature は C14 macro contract 由来のみ・通常 routing で新規生成しない、が矛盾なく貫かれている。",
-      "C2 漏れなし: IN1+OUT1..OUT3 の 4 criteria を ## Criteria acceptance で全受入条件化し、通常 5 artifact routing・kind 別必須セクション適用 (C18/C19)・exact-13 gate の異常系 (12/14/phase 欠落重複/mixed/cross-feature edge→applied_count=0) を網羅。C27 execution-context consumer 入口も明記。",
-      "C4 依存整合: script_refs (resolve-repo-context/validate-graph-schema/register-package)、schema_refs (graph-node/package-registration-receipt)、reference_refs、prompts R0-R4 が全て実在。exact-13 gate を register-package.py へ委譲し skill 側は整形/提示に留める分離が実装本体の存在と整合。"
+      "C1 矛盾なし: 追加文『単発の node 操作 1 件だけを依頼された場合でも、この配線成果物 (goal-spec / progress / intermediate) の書き出しは省略しない』は、### ゴールシーク検証 の検査 (assert rows で intermediate.jsonl 非空を強制) が従来から前提としていた「常時書き出し」を本文側で明文化するもので、検証スクリプトと本文記述の潜在的乖離を解消する方向に働く。『--dry-run は local/external write 0』(Exact-13 節) は graph node 書込みへの限定保証 (dry-run receipt 自体はファイル出力される) であり、eval-log telemetry の書き出しとは書込みクラスが別で矛盾しない。",
+      "C2 漏れなし: 追加文の括弧書き (goal-spec / progress / intermediate) が同節で定義される 3 つの配線成果物パスと過不足なく一致し、live-trial 実測で観測された履行ばらつき (単発依頼時の書き出し省略) の抜け穴を対象成果物の全列挙で閉じている。IN1+OUT1..OUT3 の 4 criteria は全て ## Criteria acceptance に受入条件化され、通常5 artifact routing・kind別必須セクション (C18/C19)・exact-13 異常系 (12/14/欠落重複/mixed/cross-feature edge→applied_count=0)・WAL/共有lock 回復を網羅する。",
+      "C4 依存整合: script_refs 5件 (resolve-repo-context/validate-graph-schema/upsert-node/node_transaction/register-package)・schema_refs 2件・reference_refs 3件・prompts R0-R4 の全参照ファイルが実在することを確認。goal_seek.max_loops=5 と『5周到達時』、feedback_contract.max_iterations=3 と『最大 3 周』の数値も frontmatter と本文で一致する。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "非ブロッキング: 追加文中の intermediate は同 bullet でなく 2 つ後の bullet で定義される前方参照だが、括弧書きの全列挙により誤読リスクは低い。",
+      "非ブロッキング: 単発依頼時の書き出し履行が実際に改善するかは behavioral claim であり、本静的レビューでは設計 adequacy のみ確認した。収束確認は Gate D (run-skill-live-trial) の再実走証拠による。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "独立監査で現SKILL.md (sha256 8164be5b...) と実装を再評価。通常node/exact-13の単一writer境界、durable WAL、reader全処理の共有lock、例外/KeyboardInterrupt/os._exit回復、pending時fail-closedがformal criteria/checklistと一致する。集中probe 9件PASS、重大問題0件。PASS。"
+  "notes": "live-trial でゴールシーク配線成果物の書き出し履行が実行個体でばらつく (3回中1回のみ完備) 実測を受け、単発 node 操作でも省略不可の 1 文を配線節へ追加した最小変更の独立再評価。SKILL.md 全文 (sha256 5a2cf162...) を対象に focused combined review を実施し、4条件いずれも重大問題 0 件。追加文は検証スクリプトの非空 assert と整合し、対象成果物を全列挙して抜け穴を閉じる設計として妥当。PASS。"
 }

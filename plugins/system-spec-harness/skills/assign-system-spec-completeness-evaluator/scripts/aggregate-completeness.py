@@ -152,26 +152,31 @@ def default_ledger_path() -> Path:
 
 def empty_ledger() -> dict:
     """台帳が無い/読めないときの空集計。fail-closed の既定値 (裏取り 0 件)。"""
-    return {"path": None, "exists": False, "dispatched": {}, "malformed": 0}
+    return {"path": None, "exists": False, "dispatched": {}, "sessions": {}, "malformed": 0}
 
 
 def load_fork_ledger(path) -> dict:
     """fork 台帳 JSONL を読み subagent_type ごとの完了 fork 件数へ集計する。
 
-    戻り値: {"path": str|None, "exists": bool, "dispatched": {subagent_type: count}, "malformed": int}
+    戻り値: {"path": str|None, "exists": bool, "dispatched": {subagent_type: count},
+             "sessions": {subagent_type: {session_id: count}}, "malformed": int}
+    `sessions` は run/session 束縛 (issue: HarnessHub-x4o) の照合軸。session_id は hook が
+    harness の観測値 (payload/env) から書くためモデルは偽造できない。receipt が宣言した
+    session_id がここに実在するときだけ裏取りが成立する。
     不正行は数えるだけで捨てる (台帳は追記専用で部分破損しうるため、健全な行の証跡は活かす)。
     """
     if path is None:
         return empty_ledger()
     p = Path(path)
     if not p.is_file():
-        return {"path": str(p), "exists": False, "dispatched": {}, "malformed": 0}
+        return {"path": str(p), "exists": False, "dispatched": {}, "sessions": {}, "malformed": 0}
     dispatched: dict[str, int] = {}
+    sessions: dict[str, dict[str, int]] = {}
     malformed = 0
     try:
         lines = p.read_text(encoding="utf-8").splitlines()
     except (OSError, UnicodeDecodeError):
-        return {"path": str(p), "exists": False, "dispatched": {}, "malformed": 0}
+        return {"path": str(p), "exists": False, "dispatched": {}, "sessions": {}, "malformed": 0}
     for line in lines:
         if not line.strip():
             continue
@@ -187,8 +192,17 @@ def load_fork_ledger(path) -> dict:
         if not isinstance(st, str) or not st:
             malformed += 1
             continue
+        sid = rec.get("session_id")
+        if not isinstance(sid, str) or not sid:
+            # hook は session 不明時に "unknown" を書く契約 (record-audit-fork.py)。
+            # 欄そのものが無い/空の行は契約外なので malformed として捨てる。
+            malformed += 1
+            continue
         dispatched[st] = dispatched.get(st, 0) + 1
-    return {"path": str(p), "exists": True, "dispatched": dispatched, "malformed": malformed}
+        by_session = sessions.setdefault(st, {})
+        by_session[sid] = by_session.get(sid, 0) + 1
+    return {"path": str(p), "exists": True, "dispatched": dispatched, "sessions": sessions,
+            "malformed": malformed}
 
 
 def agent_definition_exists(auditor: str) -> bool:
@@ -221,13 +235,24 @@ def ledger_corroborates(delegation: dict, ledger: dict) -> tuple[bool, str]:
     無い場合を最初に切り分けるのは、この 3 者で復旧手順が異なるため (hook 未配線 / レポート不備 /
     fork 省略)。reason には診断に足る文脈 (台帳パス・破損行数) を含める。
 
-    ## 残余ギャップ (run/session 非束縛)
+    ## run/session 束縛 (issue: HarnessHub-x4o)
 
-    台帳行の `ts` / `session_id` を照合軸に使わないため、**過去 run の同一 subagent_type 記録でも
-    裏取りが成立しうる**。本関数が確実に弾くのは「fork を 1 件も起こしていない実行」までで、
-    「今回の run で fork した」ことの証明ではない。session 束縛はレポート側へ session_id を
-    持たせる必要があり、その宣言自体が再び自己申告になるため、宣言と台帳の両方を要求する
-    設計を伴う follow-up とする (aspect-criteria.md「残余ギャップ」節)。
+    subagent_type 軸だけでは **過去 run の同一 auditor 記録でも裏取りが成立してしまう**。そこで
+    receipt の `dispatch.session_id` (宣言) と台帳行の `session_id` (harness 観測) の **両方** を
+    要求し、同一 (session_id, subagent_type) の台帳行が実在するときだけ裏取り成立とする。
+    宣言単独では自己申告 (書くだけで通る)、台帳単独では過去 run と区別不能であり、両者の突合で
+    初めて「この報告が名指しする run で fork が完了した」ことに接地する。宣言なし・
+    `"unknown"` 宣言・台帳に無い session の名指しはいずれも fail-closed で False
+    ("unknown" の扱いは実装内コメント参照)。
+    `validate_attribution` 側は必須 receipt 全件の宣言 session が単一に収束することも要求する
+    (複数の過去 run からのつまみ食い遮断)。`--session` で現在 session を明示されたときは
+    宣言との一致まで検査する (過去 run 一式の丸ごと再利用の遮断。事後再検証では省略可)。
+
+    ## 残余ギャップ (能動的偽装)
+
+    台帳は読み取り可能なため、過去 run の session_id を receipt へ丸写しする能動的偽装は
+    `--session` 併用時を除き機械層では弾けない。guard hook と同じく表層的 adversarial evasion は
+    設計上許容し、意味層 (content-review / human) の未閉塞責務として開示する。
     """
     dispatch = delegation.get("dispatch")
     subagent_type = dispatch.get("subagent_type") if isinstance(dispatch, dict) else None
@@ -246,6 +271,33 @@ def ledger_corroborates(delegation: dict, ledger: dict) -> tuple[bool, str]:
         return False, (
             f"fork 台帳に subagent_type={subagent_type!r} の完了記録が無い "
             f"(独立監査を起動せずに帰属だけ宣言している疑い。台帳={ledger.get('path')}{suffix})"
+        )
+
+    # --- run/session 束縛 (issue: HarnessHub-x4o) ---
+    declared_sid = dispatch.get("session_id")
+    recorded_sessions = ledger.get("sessions", {}).get(subagent_type, {})
+    if not isinstance(declared_sid, str) or not declared_sid:
+        return False, (
+            "dispatch.session_id が無く fork 台帳の run/session と突合できない "
+            "(宣言の無い帰属は自己申告のまま。R2 が fork 起動時の session_id を receipt へ記録する)"
+        )
+    if declared_sid == "unknown":
+        # hook は session を観測できない環境で "unknown" を台帳へ書く (record-audit-fork.py 契約)。
+        # "unknown" 宣言を受理すると『任意の過去 "unknown" 行で裏取りが成立する』という本 issue の
+        # 穴がそのまま戻るため、fail-closed で拒否する (repo 一貫方針: 台帳不在・空 ledger・
+        # INDETERMINATE と同じく、保証できない状態を緑にしない)。session を観測できない
+        # ハーネス世代では正当な fork も violation になるが、それは「機械層が run 束縛を
+        # 保証できない環境」の正直な申告であり、受理して穴を隠すより安全側に倒す。
+        return False, (
+            "dispatch.session_id='unknown' は run/session 束縛の裏取りに使えない "
+            "(session 不明の fork は過去 run の 'unknown' 行と区別できない。"
+            "session_id を観測できるハーネスで再評価する)"
+        )
+    if declared_sid not in recorded_sessions:
+        return False, (
+            f"fork 台帳に (session_id={declared_sid!r}, subagent_type={subagent_type!r}) の完了記録が無い "
+            f"(宣言 session が台帳へ接地しない = 過去 run の名指し違い / fork 省略 / 偽装の疑い。"
+            f"当該 subagent_type の観測済み session {len(recorded_sessions)} 種)"
         )
     return True, ""
 
@@ -271,10 +323,17 @@ def _high_count(findings: list) -> int:
     return sum(1 for f in findings if isinstance(f, dict) and f.get("severity") == "high")
 
 
-def validate_attribution(report: dict, ledger: dict | None = None) -> list[str]:
+def validate_attribution(
+    report: dict, ledger: dict | None = None, expected_session: str | None = None
+) -> list[str]:
     """独立 auditor 帰属が実 fork 証跡へ接地しているかを検証し違反文字列のリストを返す。
 
     ledger=None は「fork 証跡が回収できていない」= fail-closed で全独立監査を未接地とみなす。
+
+    expected_session を渡すと、必須 receipt が名指しする session がその値と一致することまで
+    検査する (過去 run の記録一式を丸ごと再利用する偽装の遮断; issue: HarnessHub-x4o)。
+    None のときは宣言↔台帳の整合のみ検査する (CI や probe の事後再検証では評価時の
+    session を知り得ないため省略可能にしている)。
     """
     v: list[str] = []
     ledger = ledger if isinstance(ledger, dict) else empty_ledger()
@@ -307,6 +366,7 @@ def validate_attribution(report: dict, ledger: dict | None = None) -> list[str]:
     required_keys = {(r["aspect"], r["role"]) for r in required}
 
     # --- 必須 receipt の実在と整合 ---
+    declared_sessions: set[str] = set()  # 必須 receipt が名指しした session (単一 run 収束の検査用)
     for req in required:
         aspect, role = req["aspect"], req["role"]
         d = seen.get((aspect, role))
@@ -334,6 +394,9 @@ def validate_attribution(report: dict, ledger: dict | None = None) -> list[str]:
                 )
             if dispatch.get("subagent_type") != req["auditor"]:
                 v.append(f"{label}.dispatch.subagent_type != {req['auditor']!r}")
+            sid = dispatch.get("session_id")
+            if isinstance(sid, str) and sid:
+                declared_sessions.add(sid)
         dv = d.get("verdict")
         if dv not in ASPECT_VERDICTS:
             v.append(f"{label}.verdict={dv!r} が {sorted(ASPECT_VERDICTS)} 外")
@@ -352,6 +415,22 @@ def validate_attribution(report: dict, ledger: dict | None = None) -> list[str]:
         if not ok:
             v.append(f"{label}: {reason}")
 
+    # --- 単一 run 収束 (issue: HarnessHub-x4o) ---
+    # receipt ごとの宣言↔台帳突合 (ledger_corroborates) を通っても、receipt A は run X・
+    # receipt B は run Y の記録を指す「複数の過去 run からのつまみ食い」は成立しうる。
+    # 必須 receipt 全件が同一 session へ収束することを要求して遮断する。
+    if len(declared_sessions) > 1:
+        v.append(
+            "audit_delegations: 必須 receipt の dispatch.session_id が単一の評価 run に収束していない "
+            f"(宣言された session {len(declared_sessions)} 種: {sorted(declared_sessions)}。"
+            "複数 run の fork 記録を組み合わせた帰属は 1 回の独立監査の裏取りにならない)"
+        )
+    if expected_session and declared_sessions and declared_sessions != {expected_session}:
+        v.append(
+            f"audit_delegations: 宣言 session {sorted(declared_sessions)} が評価 run の session "
+            f"{expected_session!r} と一致しない (過去 run の fork 記録を今回の評価の裏取りへ流用している疑い)"
+        )
+
     # --- 虚偽の独立性主張 (C05 自前評価の観点に独立監査 receipt を付ける) ---
     for (aspect, role) in seen:
         if (aspect, role) in required_keys:
@@ -366,8 +445,13 @@ def validate_attribution(report: dict, ledger: dict | None = None) -> list[str]:
     return v
 
 
-def validate_report(report: dict, ledger: dict | None = None) -> list[str]:
-    """評価レポートの形状 + 総合判定の整合 + 帰属の fork 証跡接地を検証し違反リストを返す (空=OK)。"""
+def validate_report(
+    report: dict, ledger: dict | None = None, expected_session: str | None = None
+) -> list[str]:
+    """評価レポートの形状 + 総合判定の整合 + 帰属の fork 証跡接地を検証し違反リストを返す (空=OK)。
+
+    expected_session は帰属検証 (validate_attribution) へそのまま渡す。
+    """
     v: list[str] = []
     if not isinstance(report, dict):
         return ["report: オブジェクトでない"]
@@ -451,7 +535,7 @@ def validate_report(report: dict, ledger: dict | None = None) -> list[str]:
         v.append("verdict=FAIL だが gaps (不足事項一覧) が空 (差し戻し材料が無い)")
 
     # --- 帰属検証: 独立 auditor を名乗る観点が実 fork 証跡に接地しているか ---
-    v.extend(validate_attribution(report, ledger))
+    v.extend(validate_attribution(report, ledger, expected_session))
     return v
 
 
@@ -530,6 +614,10 @@ def main(argv: list | None = None) -> int:
     ap.add_argument("--fork-ledger",
                     help="監査 fork 台帳 JSONL のパス (既定: $SYSTEM_SPEC_AUDIT_FORK_LEDGER または "
                          "$CLAUDE_PROJECT_DIR/eval-log/system-spec-harness/audit-fork-ledger.jsonl)")
+    ap.add_argument("--session",
+                    help="評価 run の session_id。指定すると必須 receipt の宣言 session がこの値へ"
+                         "一致することまで検査する (過去 run の fork 記録の丸ごと流用を遮断; "
+                         "issue: HarnessHub-x4o)。CI/probe の事後再検証では省略可 (宣言↔台帳整合のみ検査)")
     ap.add_argument("--matrix", help="spec-state.json のパス (マトリクス網羅性ゲートを実行)")
     ap.add_argument("--require-complete", action="store_true", help="ゲートを未収集 0 必須モードで実行")
     ap.add_argument("--knowledge-graph", action="store_true",
@@ -561,7 +649,7 @@ def main(argv: list | None = None) -> int:
             print(f"report の JSON parse 失敗: {exc}", file=sys.stderr)
             return 2
         ledger = load_fork_ledger(args.fork_ledger or default_ledger_path())
-        violations = validate_report(report, ledger)
+        violations = validate_report(report, ledger, expected_session=args.session)
         if violations:
             for msg in violations:
                 print(f"VIOLATION: {msg}", file=sys.stderr)

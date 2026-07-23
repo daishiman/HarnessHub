@@ -1,0 +1,14 @@
+{
+ "patch": {
+  "graph_node_id": "issue-source-freshness-ops-20260722",
+  "updated_at": "2026-07-21T23:54:58Z",
+  "source_lineage": {
+   "imported_at": "2026-07-21T23:54:58Z",
+   "origin_kind": "manual",
+   "source_digest": "ece8e03c27620e76a1cf4e06598f2e0d8067234974f605d54e2186501f59f17f",
+   "source_path": "system-spec/index.md",
+   "source_plugin": null,
+   "source_version": null
+  }
+ }
+}

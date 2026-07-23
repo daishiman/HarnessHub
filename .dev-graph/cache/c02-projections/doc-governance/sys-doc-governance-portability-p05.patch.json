@@ -1,0 +1,30 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P05 を実行する: 実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "scripts/lint-doc-line-limit.py",
+   "scripts/lint-mechanism-knowledge-boundary.py",
+   "scripts/lint-portability-knowledge-optin.py",
+   "scripts/doc-line-limit-allowlist.json",
+   "tests/scripts-root/test_root__lint_doc_line_limit.py",
+   "tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py",
+   "tests/scripts-root/test_root__lint_portability_knowledge_optin.py",
+   ".github/workflows/governance-check.yml"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "3 lint script が P02 の入出力契約どおりに動作し、P04 の MUST_DETECT/MUST_PASS fixture を全件満たす",
+   "scripts/doc-line-limit-allowlist.json が schema 準拠のスケルトン (6 文書分のエントリ枠) で作成され、baseline_line_count の実値投入は P08 へ引き継がれる",
+   "hard-coded ナレッジ参照検査が false-positive guard ケースを PASS させたまま悪性ケースを全件検出する",
+   ".github/workflows/governance-check.yml の change-category-guard job に 3 lint が fail-closed (exit 非 0 で job 失敗) で配線されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

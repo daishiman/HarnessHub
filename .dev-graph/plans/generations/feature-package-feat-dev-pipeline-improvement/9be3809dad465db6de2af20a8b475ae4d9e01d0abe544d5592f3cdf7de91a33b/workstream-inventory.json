@@ -1,0 +1,1151 @@
+{
+ "schema_version": "1.0.0",
+ "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+ "parent_feature": "feat-dev-pipeline-improvement",
+ "repo_context": {
+  "config_path": ".dev-graph/config.json",
+  "repo_identity": "github:daishiman/HarnessHub",
+  "root_resolution_source": "explicit-cli"
+ },
+ "source_lineage": {
+  "source_plugin": "system-spec-harness",
+  "source_version": "0.1.0",
+  "compile_entrypoint": "run-system-spec-compile",
+  "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+  "source_paths": [
+   "goal-spec.json",
+   "features/feat-dev-pipeline-improvement.context.json",
+   "architecture/harness-hub-dev-workflow.md",
+   "specs/harness-hub-system-specification.md",
+   "system-spec/dev-workflow.md"
+  ],
+  "confirmed": true
+ },
+ "tasks": [
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "documentation"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "documentation",
+   "secondary_workstreams": [
+    "quality",
+    "operations"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P01",
+   "depends_on": [],
+   "write_scope": [
+    "docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P01 責務 (要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) が逐語一致で転記されている",
+    "現行 feature context sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である",
+    "P02 で確定すべき据置事項 (検査 script 入出力契約・handoff schema 後方互換方式・eval-log 再配置対象一覧・close-loop の bd-bridge 経由手順) が明記されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "goal-spec との逐語一致に齟齬が見つかった場合、requirements-baseline.md を修正し本 task を再実行する",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P01"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "documentation"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "documentation",
+   "secondary_workstreams": [
+    "quality",
+    "operations"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P02",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
+   ],
+   "write_scope": [
+    "docs/features/feat-dev-pipeline-improvement/design.md"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P02 責務 (検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "design.md に lint-open-residue.py / lint-eval-log-layout.py / lint-handoff-disposition.py の入出力契約 (引数・exit code・検出条件・JSON 出力形状) が確定している",
+    "improvement-handoff schema の disposition (applied|deferred|rejected) と根拠 ref の必須化が、既存 21 ファイルとの後方互換方式 (遡及付与 migration) と併せて設計されている",
+    "spec-drift-guardian の C03/C04 verdict を close gate へ配線する設計 (対象: plugins/spec-drift-guardian の該当 hook/skill、verdict 未着時は proposal のみでの close を遮断する fail-closed 条件、improvement-handoff-elegant-verify.json findings 8 件への対応表) が確定している",
+    "eval-log 配置規約 (skill 名 prefix サブディレクトリ・1MB 超 gitignore・重複/変種遮断) と再配置対象一覧、tasks status 意味論、graph.json 分割トリガー、棚卸し GC 手順が設計されている",
+    "dev-graph 中核 handoff 3 ファイル (improvement-handoff-macro/beads/無印) 31 findings の差分監査手順 (現行実装との突合で applied/deferred/rejected を根拠付き判定する方式。94 findings 全件付与の内数として P08 が実行する) が設計されている",
+    "P01 の据置事項 4 点が全て確定し、未確定の持ち越しが 0 件である"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "設計が既存 choke-point/単一 writer と衝突すると判明した場合、design.md を破棄し P01 baseline から再設計する",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P02"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "documentation"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "documentation",
+   "secondary_workstreams": [
+    "quality",
+    "security"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P03",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
+   ],
+   "write_scope": [
+    "docs/features/feat-dev-pipeline-improvement/design-review.md"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P03 責務 (設計レビュー — 単一 writer・choke-point・sync authority との整合検証) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "design-review.md に 6 設計それぞれの整合検証結果 (choke-point / 単一 writer / sync authority / digest 不変 / fail-closed / 冪等) が verdict 付きで記録されている",
+    "不整合が検出された場合は P02 へ差し戻され、全 verdict PASS の場合のみ P04 へ進む判定が記録されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "レビューで不整合が検出された場合、design-review.md へ差し戻し理由を記録し P02 を再実行する",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P03"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "quality"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "quality",
+   "secondary_workstreams": [
+    "documentation"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P04",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
+   ],
+   "write_scope": [
+    "docs/features/feat-dev-pipeline-improvement/test-plan.md"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P04 責務 (テスト設計 — lint script 群と冪等 migration の回帰テスト設計) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "test-plan.md に lint-open-residue / lint-eval-log-layout / lint-handoff-disposition の各 MUST_DETECT (悪性) / MUST_PASS (良性) ケースがテスト ID 付きで定義されている",
+    "spec-drift-guardian close-gate 配線の回帰テスト (verdict 未着 proposal-only close が遮断される MUST_BLOCK ケースと、verdict 付き close が通過する MUST_PASS ケース) がテスト ID 付きで定義されている",
+    "P08 冪等 migration の再実行差分 0 検証と disposition 遡及付与の全件性検証 (31 findings 差分監査行の存在検証を含む) がテスト ID 付きで定義されている",
+    "全テスト ID が P06 で実行可能な pytest 形式 (plugins/dev-graph/tests または plugins/spec-drift-guardian/tests 配下) として設計されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "テスト設計が P02 契約と乖離した場合、test-plan.md を修正し P02/P03 との整合を回復する",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P04"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "quality"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "quality",
+   "secondary_workstreams": [
+    "documentation",
+    "operations"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P05",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
+   ],
+   "write_scope": [
+    "plugins/dev-graph/scripts/lint-open-residue.py",
+    "plugins/dev-graph/scripts/lint-eval-log-layout.py",
+    "plugins/dev-graph/scripts/lint-handoff-disposition.py",
+    "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+    "plugins/dev-graph/tests/test_lint_open_residue.py",
+    "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
+    "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
+    "eval-log/README.md",
+    ".dev-graph/templates/task.md",
+    ".github/workflows/dev-pipeline-lint.yml",
+    "plugins/spec-drift-guardian/"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P05 責務 (実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "lint script 3 本が P02 の入出力契約どおりに動作し、P04 の MUST_DETECT/MUST_PASS fixture を全件満たす",
+    "improvement-handoff.schema.json が disposition 必須の新形式と既存形式の判別 (schema_version) を持つ",
+    "spec-drift-guardian の C03/C04 verdict が P02 設計どおり close gate へ配線され、verdict 未着のまま proposal のみで close する経路が fail-closed で遮断される (回帰テスト付き)",
+    "eval-log/README.md に配置規約が明文化され、task template に status 意味論が追記され、CI workflow に lint 3 本が fail-closed で配線されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "lint の誤検出が既存 CI を赤化させた場合、CI 配線 commit のみを revert し script 本体は fixture 修正後に再配線する",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P05"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "quality"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "quality",
+   "secondary_workstreams": [],
+   "build_target_kind": "script",
+   "phase_ref": "P06",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
+   ],
+   "write_scope": [
+    "eval-log/dev-graph/pipeline-improvement/test-run-p06.json"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P06 責務 (テスト実行 — 回帰テスト全件と lint 実測の記録) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "test-plan.md の全テスト ID が実行され、test-run-p06.json に実行コマンド・exit code・pass/fail 件数が生のまま記録されている",
+    "失敗 0 件で P07 へ進むか、失敗があれば P05 差し戻しが記録されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "テスト失敗時は test-run-p06.json に失敗を記録したまま P05 へ差し戻す (記録の書き換え・削除をしない)",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P06"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "quality"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "quality",
+   "secondary_workstreams": [
+    "documentation"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P07",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
+   ],
+   "write_scope": [
+    "docs/features/feat-dev-pipeline-improvement/acceptance-report.md"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P07 責務 (受入判定 — 8 acceptance の突合と未達の差し戻し) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "acceptance-report.md に feature acceptance 7 件それぞれの充足判定 (根拠 evidence の path 付き) が記録されている",
+    "P08 完了後に再判定が必要な項目が明示され、未達項目の差し戻し先 phase が記録されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "判定根拠の不備が見つかった場合、該当 phase へ差し戻し acceptance-report.md に差し戻し履歴を残す",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P07"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "operations"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "operations",
+   "secondary_workstreams": [
+    "quality",
+    "documentation"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P08",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+   ],
+   "write_scope": [
+    "eval-log/",
+    "plugin-plans/",
+    "eval-log/dev-graph/pipeline-improvement/migration-receipt.json"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P08 責務 (移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "再配置後に lint-eval-log-layout.py が exit 0 になり、migration-receipt.json に移動一覧 (旧 path→新 path) と重複整理の記録が残る",
+    "94 findings 全件に disposition (applied|deferred|rejected) と根拠 ref が付与され、lint-handoff-disposition.py が exit 0 になる",
+    "そのうち dev-graph 中核 handoff 3 ファイル (improvement-handoff-macro/beads/無印) の 31 findings は、P02 設計の差分監査手順に従い現行実装 (plugins/dev-graph の該当 script/schema) と突合した根拠 ref 付きで applied/deferred/rejected が判定され、migration-receipt.json に 31 件分の監査行が残る (94 件全件付与の内数として実行)",
+    "deferred/rejected 以外で未実装の findings が beads 課題として起票され、migration の再実行が差分 0 に収束する",
+    "validate-evidence-refs.py が exit 0 のまま (再配置による dangling evidence_ref が 0 件) である"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "dangling が発生した場合は移動一覧から逆適用して原状回復し、参照更新方式を P02 設計へ差し戻す",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P08"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "quality"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "quality",
+   "secondary_workstreams": [
+    "security"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P09",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
+   ],
+   "write_scope": [
+    "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P09 責務 (品質保証 — fail-closed 実効性の悪性ケース実測) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "qa-fail-closed-report.json に悪性ケース 3 系統以上の実測 (投入した違反・期待 exit 非 0・実測 exit code) が記録され、全件検出されている",
+    "検査への迂回経路 (lint 対象外 path への書込・schema_version 偽装) の探索結果が記録され、発見された迂回は P05 へ差し戻されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "検出漏れが見つかった場合、P05 へ差し戻し fixture を MUST_DETECT へ追加してから再実装する",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P09"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "最終レビュー — 全 phase 成果の横断整合確認",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "documentation"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "documentation",
+   "secondary_workstreams": [
+    "quality"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P10",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
+   ],
+   "write_scope": [
+    "docs/features/feat-dev-pipeline-improvement/final-review.md"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "final-review.md に P01-P09 の成果物一覧・acceptance 充足状況・quality_constraints 6 件の適合判定が記録されている",
+    "未達 0 件で P11 へ進むか、残課題の差し戻し先または follow-up 起票が記録されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "横断不整合が見つかった場合、該当 phase へ差し戻し final-review.md に履歴を残す",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P10"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "documentation"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "documentation",
+   "secondary_workstreams": [
+    "quality"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P11",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
+   ],
+   "write_scope": [
+    "eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "evidence-manifest.json に P06/P08/P09 の実測ログと P05 成果物の path・sha256・生成 phase が記録されている",
+    "manifest 記載の sha256 が実ファイルと全件一致する"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "照合不一致が見つかった場合、当該証跡の生成 phase へ差し戻し原因を記録する",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P11"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "operations"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "operations",
+   "secondary_workstreams": [
+    "documentation"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P12",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
+   ],
+   "write_scope": [
+    "docs/features/feat-dev-pipeline-improvement/operations.md"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P12 責務 (運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "operations.md に棚卸し GC の周期・対象抽出コマンド・close-loop の 3 表現 (md/graph/beads) 同時クローズ手順が記録されている",
+    "手順が choke-point (bd-bridge) と単一 writer (upsert-node) を迂回しないことが明記されている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "手順が実態と乖離した場合、operations.md を修正し P09 の実測と再整合させる",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P12"
+   }
+  },
+  {
+   "id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+   "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
+   "owners": [
+    "daishiman"
+   ],
+   "tags": [
+    "feat-dev-pipeline-improvement",
+    "macro-feature",
+    "dev-pipeline",
+    "operations"
+   ],
+   "related_nodes": [
+    "feat-dev-pipeline-improvement",
+    "arch-harness-hub-dev-workflow"
+   ],
+   "workstream_kind": "operations",
+   "secondary_workstreams": [
+    "quality"
+   ],
+   "build_target_kind": "script",
+   "phase_ref": "P13",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
+   ],
+   "write_scope": [
+    "eval-log/dev-graph/pipeline-improvement/release-receipt.json"
+   ],
+   "deploy_unit": "dev-tooling/repository",
+   "source_lineage": [
+    "goal-spec.json",
+    "features/feat-dev-pipeline-improvement.context.json",
+    "architecture/harness-hub-dev-workflow.md",
+    "specs/harness-hub-system-specification.md",
+    "system-spec/dev-workflow.md"
+   ],
+   "classification": {
+    "confidence": 0.87,
+    "reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P13 責務 (リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証) を実行する task",
+    "candidates": [
+     {
+      "artifact_kind": "task",
+      "confidence": 0.87,
+      "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md"
+     }
+    ]
+   },
+   "tracker_binding_intent": "beads",
+   "github_publication": {
+    "mode": "local_only",
+    "project_aliases": [],
+    "labels": [],
+    "milestone": null
+   },
+   "pr_completion_policy": "linked_pr_merged_all",
+   "branch_policy": {
+    "strategy": "one-task-one-branch",
+    "worktree_lease_required": true,
+    "completion_projection": "default-branch-reconciliation",
+    "assignment_owner": "dev-graph-scheduler"
+   },
+   "acceptance": [
+    "全成果物の PR が main へ merge され、release-receipt.json に PR 番号・merge commit・CI 結果が記録されている",
+    "issue-bd-bridge-notes-passthrough-20260721 が md (status)・graph node (completion)・beads (close) の 3 表現で閉じられ、lint-open-residue.py が exit 0 になっている"
+   ],
+   "verification": [
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+   ],
+   "rollback": "merge 後に重大欠陥が判明した場合は revert PR で戻し、release-receipt.json に revert 記録を残す",
+   "implementation_readiness": {
+    "status": "complete",
+    "missing_sections": [],
+    "checked_at": "2026-07-21T15:10:00Z"
+   },
+   "graph_node_registration": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+    "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
+    "parent_feature": "feat-dev-pipeline-improvement",
+    "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+    "phase_ref": "P13"
+   }
+  }
+ ],
+ "p01_entry_gate": {
+  "selector": "parent_feature.depends_on",
+  "operator": "all",
+  "required_statuses": [
+   "done",
+   "closed"
+  ]
+ }
+}

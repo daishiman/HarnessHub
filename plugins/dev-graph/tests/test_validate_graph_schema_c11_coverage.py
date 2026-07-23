@@ -255,6 +255,23 @@ def test_validate_rejects_invalid_authority_documents(monkeypatch):
         mod.schema_findings({}, {"type": 42}, 0)
 
 
+def test_pipeline_improvement_exact13_projection_has_canonical_frontmatter():
+    """Regression for HarnessHub-t1i: status must read the promoted exact-13 package."""
+    mod = load()
+    repo_root = PLUGIN.parents[1]
+    graph = json.loads((repo_root / ".dev-graph/state/graph.json").read_text(encoding="utf-8"))
+    nodes = [
+        node for node in graph["nodes"]
+        if node.get("feature_package_id") == "feature-package/feat-dev-pipeline-improvement"
+    ]
+    nodes.sort(key=lambda node: node["phase_ref"])
+    assert [node["phase_ref"] for node in nodes] == [f"P{number:02d}" for number in range(1, 14)]
+    assert {node["template_version"] for node in nodes} == {"1.1.0"}
+
+    contract = json.loads((PLUGIN / "templates/template-contract.json").read_text(encoding="utf-8"))
+    assert mod.artifact_findings(nodes, repo_root, contract) == []
+
+
 def test_preview_graph_validates_from_stdin_without_writing_into_the_repo(tmp_path):
     """dry-run preview を管理対象 repo へ書かずに検証できる (C14 OUT3: dry-run write 0)。
 

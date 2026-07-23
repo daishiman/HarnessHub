@@ -39,6 +39,9 @@ HANDOFF_PATH = "system-build-handoff.json"
 PLACEHOLDER = re.compile(r"\b(?:TODO|TBD)\b|__PLACEHOLDER__|<[^>]+>", re.I)
 STAGING_RUNTIME_REF = re.compile(r"(?:^|[^A-Za-z0-9_.-])\.dev-graph/staging(?:/|\b)")
 P01_ENTRY_GATE_MARKER = "parent_feature.depends_on all done|closed"
+METHODOLOGY_MARKER = "system-task-goal-seek/v1"
+GOAL_SEEK_PASS_MARKER = "rubric verdict=PASS"
+P13_WRITEBACK_MARKER = "P13 spec/architecture writeback: required"
 SCHEMAS = HERE.parent / "schemas"
 TASK_SPEC_HEADING = re.compile(r"^##[ \t]+(.+?)[ \t]*#*[ \t]*$", re.MULTILINE)
 REQUIRED_TASK_SPEC_SECTIONS = (
@@ -53,6 +56,7 @@ REQUIRED_TASK_SPEC_SECTIONS = (
     "Branch and worktree execution",
     "スコープ外",
     "Verification and evidence",
+    "Inner goal-seek execution loop",
     "Rollout and rollback",
     "Handoff",
     "参照情報",
@@ -363,6 +367,18 @@ def validate(staging: Path, repository_id: str) -> dict:
                 )
             for code, section in task_spec_violations(text):
                 fail(code, rel, section)
+            if METHODOLOGY_MARKER not in text or GOAL_SEEK_PASS_MARKER not in text:
+                fail(
+                    "inner-goal-seek-contract",
+                    rel,
+                    "portable methodology marker and rubric verdict=PASS feedback loop are required",
+                )
+            if rel == TASK_PATHS[-1] and P13_WRITEBACK_MARKER not in text:
+                fail(
+                    "p13-spec-architecture-writeback",
+                    rel,
+                    "P13 must write execution results, decisions, and improvement findings back to canonical specs",
+                )
     for i, task in enumerate(tasks):
         if task.get("feature_package_id") != package_id or task.get("parent_feature") != parent:
             fail("mixed-task-package", f"tasks[{i}]", "feature_package_id/parent_feature mismatch")

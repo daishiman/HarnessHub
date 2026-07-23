@@ -1,0 +1,11 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+  "updated_at": "2026-07-22T02:47:44Z",
+  "beads_linkage": {
+   "bd_issue_id": "HarnessHub-ik0.11",
+   "linked_at": "2026-07-22T02:47:44Z",
+   "sync_state": "linked"
+  }
+ }
+}

@@ -1,0 +1,22 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P12 を実行する: 運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "docs/features/feat-doc-governance-portability/operations.md"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "operations.md に allowlist ratchet の運用手順 (縮小反映タイミング・baseline 更新の承認経路) が記録されている",
+   "hard-coded 参照検査の誤検出トリアージ手順 (false-positive 申請と allowlist 追加の承認フロー) が記録されている",
+   "手順が単一 writer 境界 (graph は upsert-node.py、beads は bd-bridge.py 経由) を迂回しないことが明記されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

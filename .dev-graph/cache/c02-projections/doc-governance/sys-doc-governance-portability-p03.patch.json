@@ -1,0 +1,22 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+  "updated_at": "2026-07-22T02:40:02Z",
+  "purpose": "feat-doc-governance-portability の P03 を実行する: 設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "docs/features/feat-doc-governance-portability/design-review.md"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "design-review.md に 5 観点 (fail-closed・冪等・単一 writer 境界・digest 不変・仕組み-ナレッジ境界非複製) それぞれの整合検証結果が verdict 付きで記録されている",
+   "3 検査いずれも警告のみの soft lint ではなく exit 非 0 の fail-closed であることが確認されている",
+   "不整合が検出された場合は P02 へ差し戻され、全 verdict PASS の場合のみ P04 へ進む判定が記録されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}
