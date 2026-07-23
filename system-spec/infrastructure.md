@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-064 |
+| Web (web) | 確定 | 確定質疑: qa-068 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-064 (対応セル: web)
+### qa-068 (対応セル: web)
 
-**質問**: docs/infrastructure-spec.md の 2026-07-18 追記 (R2 配布境界・§13 構築優先順位によるインフラ有効化順) をインフラ仕様へ反映するか。 (訂正再登録: qa-057 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-064 として登録し直す)
+**質問**: matrix.infrastructure.web の確定根拠 qa-064 は「qa-034 の確定内容 (production + staging の 2 環境を含む意思決定 4 論点) を全面維持」および「P0: production/staging」と記述しており、D7 (ephemeral-preview-only, qa-067) と矛盾する stale reference になっている。qa-064 の R2 配布境界・§13 段階有効化順は維持しつつ、環境構成の記述だけを D7 整合へ改訂して qa_ref を差し替えるか。(2026-07-22 AskUserQuestion でユーザーが「D7 どおり改訂する」を選択)
 
-**回答**: qa-034 の確定内容 (Cloudflare Workers + Turso + R2 のインフラ確定・意思決定 4 論点) を全面維持しつつ、次の delta を確定する。R2 配布境界: S01 の Web upload と Publisher CLI upload は同じ staging prefix・検査 pipeline・content hash 確定処理へ収束させ、ブラウザから R2 への公開 write URL は発行しない。install/download は Worker の POST /api/v1/harnesses/:projectId/install を必ず経由し R2 bucket/object key を UI/API へ返さない。Stage 0 で raw ZIP を採用した場合だけ安定版に固定した TTL 5 分以内・単回の短命 URL を発行。§13 有効化順 (P0-P5): 共通リソース先行と低優先機能先行を混同せず、単一 Worker/Turso/R2 は共有しつつ route・cron・通知を必要 phase で段階有効化 — P0: production/staging・Worker/DB migration・tenant/workspace・OIDC callback・Auth secret・共通認可/監査・/health・CI の tenant 分離 test (metrics rollup/週次サマリー/dashboard monitor は不要)。P1: HearingSheet/AiJob/notification migration・pull job・生成完了通知・キュー滞留監視。P2: private R2 package bucket・Web/CLI upload・検査・content-addressed 保存・install/download Worker 導線・orphan 通知 (承認 queue UI は P5 でも監査記録はこの時点から有効)。P3: feedback/doc AiJob kind・Feedback→修正版 Build 冪等作成・必要時の R2 prefix。P4: salary 鍵・metrics ingest/rollup cron・Turso 使用量監視・週次通知。P5: dashboard/承認/監査 UI 用 route と外形確認。各 phase の migration は tenant_id と必要な workspace_id を最初から必須にし、production 反映前に 2 tenant fixture の分離テストを通す。1 tenant/1 Project 固定の環境変数は作らない。
+**回答**: D7 どおり改訂する。qa-064 の delta (R2 配布境界・§13 段階有効化順 P0-P5) は次の 2 点を除き一言一句維持する: (1) 冒頭の「qa-034 の確定内容を全面維持」は「qa-034 の確定内容のうち論点(1) 環境構成のみ D7 (ephemeral-preview-only, qa-067) が上書きし、残る論点 (独自ドメイン・CI/CD 3 workflow・監視/バックアップ) は維持」と読み替える。(2) P0 の「production/staging」は「production (1 組のみ)」へ改訂し、常設 staging は構築しない。環境は production 1 組 + PR ごとの使い捨て preview (Workers preview URL) とし、migration 検証と restore drill は PR preview と production 反映前チェックで受ける。R2 配布境界 (staging prefix への upload 収束・公開 write URL 不発行・install/download の Worker 経由・短命 URL 規則) の「staging prefix」は R2 バケット内の検査待ち prefix の名称であり環境としての staging とは無関係のため変更しない。P1-P5 の段階有効化・migration の tenant_id/workspace_id 必須・2 tenant fixture 分離テスト・1 tenant/1 Project 固定環境変数の禁止も全て維持する。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 
