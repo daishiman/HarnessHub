@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
-    "skill_md_sha256": "ed6459967c45115aaefd728f145c62747ddc5c189ead5475cca1df71fd03af15"
+    "skill_md_sha256": "6f6563a5205fc63a6a8f071d632307222853be988ac40ed51bf33b2b71c79085"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "assign-skill-design-evaluator-20260721",
-  "reviewed_at": "2026-07-21",
+  "reviewer": "assign-skill-design-evaluator-20260722",
+  "reviewed_at": "2026-07-22",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
@@ -21,20 +21,20 @@
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "(a) 矛盾なし: 追記した stale 停止条件が実装と逐語一致する。SKILL.md の `parity_provenance` 必須化は schedule-graph.py:235-236 の ContractError、`source_graph_digest` 不一致停止は同 237-243 の `_canonical_digest(data)` 比較に 1:1 対応し、余剰も不足もない",
-      "(d) 依存関係整合: 契約正本 §10 が主張する『canonical digest 式は C05 render-graph-html の graph_digest_after と同一』が実装で裏づけられている (render-graph-html.py:210 と schedule-graph.py:92 が同一式 json.dumps(ensure_ascii=False, sort_keys=True, separators=(',',':')) の sha256)。整形差で stale 判定が揺れる経路が閉じている",
-      "権限分割が契約どおり: 由来の形式検証 (generated_at=RFC3339 UTC / source_graph_digest=sha256:<64hex>) は C28 bd-bridge.py:341-347 が fail-closed で担い、C16 は graph 実体との digest 突合だけを担う。§10 の『C28 が拒否し C16 が突合する』owner 分担と一致し、二重実装による drift を作っていない",
-      "silent drop 禁止が実装に接地: 『C28 の unmapped/conflicts は判定に使わず source: \"bd-bridge\" 付きで report へ引き継ぐ』が _tracker_side_unmapped() (schedule-graph.py:160-177) と完全一致し、schedule 判定へ混入しないという責務境界も保たれている",
-      "(c) 規約整合: 回復手順を『parity manifest の再生成であり digest の書き換えではない』と明記し、実装のエラーメッセージ (regenerate the parity manifest) と §10 の禁則に一致。Goodhart 的な『digest を現在値へ合わせて検出を恒久無効化する』抜け道を文面で塞いでいる",
-      "層間一貫: commands/dev-graph.md:98 の CLI 面記述も同じ停止条件を宣言しており、SKILL.md / command / references / 実装の 4 層で表現が割れていない"
+      "(a) 矛盾なし: 追記した『ready-json 生成 (C28) → schedule 算出 (C16)』の平常経路が実装と逐語一致する。生成コマンド bd-bridge.py --op ready --parity-manifest > ready-json は bd-bridge.py の _ready_with_parity が parity_provenance を receipt へ載せて stdout 出力する挙動に、`parity_provenance` 必須化は schedule-graph.py の ContractError に、`source_graph_digest` 不一致停止は同 _canonical_digest(data) 比較に 1:1 対応する",
+      "(b→改善) 未文書だった生成手順の充足: 従来 SKILL.md は --ready-json を消費する schedule-graph.py 呼び出しのみを示し、その JSON を作る生成ステップが本文に無かった。provenance を持たない 2026-07-18 の committed receipt を平常経路の初回実行が掴むと schedule-graph.py が即 ContractError で停止する退行を、生成→消費の順序と C03 sync 再生成の明記で塞いだ (本課題 HarnessHub-hiu の目的)",
+      "(d) 依存関係整合: 契約正本 §10 の『canonical digest 式は render-graph-html の graph_digest_after と同一』が実装で裏づけられ (同一式 json.dumps(ensure_ascii=False, sort_keys=True, separators=(',',':')) の sha256)、整形差で stale 判定が揺れる経路が閉じている",
+      "権限分割が契約どおり: 由来の形式検証 (generated_at=RFC3339 UTC / source_graph_digest=sha256:<64hex>) は C28 bd-bridge.py が fail-closed で担い、C16 は graph 実体との digest 突合だけを担う。§10 の owner 分担と一致し二重実装 drift を作らない",
+      "(c) 規約整合: 回復手順を『manifest が stale/欠落なら run-dev-graph-sync (C03) で作り直す』と明記し、digest だけを現在値へ書き換える抜け道を残さない。Goodhart 的な検出恒久無効化を文面で塞いでいる",
+      "重複除去による簡潔化: 2026-07-22 の初版追記で L94 と重複していた由来説明段落を削除し、生成手順は 1 段落 + 1 コード塊へ集約。SKILL.md / commands / references / 実装の 4 層で停止条件の表現が割れていない"
     ],
     "negative_feedback": [
-      "(b) 漏れ (severity=low / 非ブロッキング): 新設した停止条件が『## ゴールシーク実行』の完了チェックリストと criteria IN1 のテキストへ写像されていない。IN1 は node 単位 exact-set parity のみを述べるが、§10 は『node 単位検査は snapshot 生成後に追加/削除された node を原理的に捕まえられない』と明言しており、graph 全体 digest 突合はその穴を埋める別条件である。既存 checklist の『実行前後の graph/tracker/lease digest が同一』は不変性チェックであって由来の鮮度チェックではない。ただし schedule-graph.py が beads_present 時に fail-closed で例外送出するため stale snapshot 由来の ready-set が出力される実行経路は存在せず、script 検証 (test_parity_manifest_provenance.py 4 件) も通っているため PASS を妨げない"
+      "(b) 漏れ (severity=low / 非ブロッキング): 新設した停止条件が『## ゴールシーク実行』の完了チェックリストと criteria IN1 のテキストへ写像されていない。IN1 は node 単位 exact-set parity のみを述べるが、§10 は node 単位検査が snapshot 生成後に追加/削除された node を捕まえられないと明言しており、graph 全体 digest 突合はその穴を埋める別条件である。ただし schedule-graph.py が beads_present 時に fail-closed で例外送出するため stale snapshot 由来の ready-set が出力される実行経路は存在せず、script 検証 (test_parity_manifest_provenance.py 4 件 + test_schedule_ready_json_generation_documented.py) も通っているため PASS を妨げない"
     ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "incremental profile の focused combined review (30思考法は未使用)。評価 slice は今回変更された意味 obligation のみ: SKILL.md L87 / execution-tracker-contract.md §10 / schedule-graph.py / bd-bridge.py。現 SKILL.md を実測 (shasum -a 256) した sha256=ed645996... で再評価し、(a)矛盾0 (b)漏れ1(low) (c)規約整合 (d)依存関係整合 (e)high severity 0。裏づけ実行: pytest test_parity_manifest_provenance.py 4 passed / test_sync_render_schedule_v2.py + test_c27_c28_projection_contract.py 17 passed。\n\nslice 外の既知条件 (本 verdict の判定には未算入): scripts/validate-build-trace.py が eval-log/dev-graph/_plugin/build-evidence/20260713/build-trace.json に対し 'missing top-level key: doc_coverage' で exit 1。git log 上、初期構築 commit 6a46c39 以来の状態で本変更起因ではなく、ubm-goal-setting など他 plugin の build-trace も同様に落ちる repository 全体の schema 乖離。run-skill-rubric-governance へのエスカレーション対象。"
+  "notes": "incremental profile の focused combined review (30思考法は未使用)。評価 slice は 2026-07-22 に変更された意味 obligation のみ: SKILL.md 本文『ready-json 生成 (C28) → schedule 算出 (C16)』節 (HEAD 比 +8 行) / execution-tracker-contract.md §10 / schedule-graph.py / bd-bridge.py。現 SKILL.md を実測 (shasum -a 256) した sha256=6f6563a5... で再評価し、(a)矛盾0 (b)漏れ1(low) (c)規約整合 (d)依存関係整合 (e)high severity 0。裏づけ実行: pytest test_parity_manifest_provenance.py 4 passed / test_schedule_ready_json_generation_documented.py 1 passed / test_skill_mass_production_contracts.py。\n\nslice 外の既知条件 (本 verdict の判定には未算入): scripts/validate-build-trace.py が eval-log/dev-graph/_plugin/build-evidence/20260713/build-trace.json に対し doc_coverage 欠落で exit 1。初期構築 commit 6a46c39 以来の状態で本変更起因ではなく repository 全体の schema 乖離。run-skill-rubric-governance へのエスカレーション対象。\n\n重要 (behavior-closure): 本 SKILL.md 変更で skill_dir_tree_sha が 3c921b8f→a78faf60 へ変化したため OUT1 の live-trial 証跡 (live-trial/20260722T043419/verdict.json) は stale。offline の内容 adequacy (本 elegance/rubric) は再発行済みだが、OUT1 の挙動証跡再生成には live-trial 再実走が必要 (別途 blocker として報告)。"
 }
