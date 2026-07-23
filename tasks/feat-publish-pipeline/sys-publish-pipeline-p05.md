@@ -68,5 +68,6 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - claim: Beads issueをatomic claimし、並行実行時はworktree leaseを取得する。
 - scope: frontmatter `resource_scope` と published task spec の Write scope/touches を両方守る。
 - verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
+- rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-publish-pipeline` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。

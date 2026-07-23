@@ -1,0 +1,24 @@
+{
+  "current_pointer": ".dev-graph/state/current/feature-package-feat-publisher-plugin.json",
+  "feature_package_id": "feature-package/feat-publisher-plugin",
+  "notice": "この directory は supersede 済みの旧世代であり、正本ではない。実装要件の正本は superseded_by.published_path 配下の content-addressed generation を読むこと。旧世代は byte-for-byte 不変で保持されるため、この directory の中身を編集して現行世代へ追随させてはならない。さらに世代が進んだ場合は current_pointer から再解決すること。",
+  "published_digest": "sha256:8fd4221cbc7fa8d2278014888d1d55be3db8401066964dd46d17bb2d75231199",
+  "schema_version": "1.0.0",
+  "status": "superseded",
+  "superseded_by": {
+    "generation_id": "b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+    "published_digest": "sha256:b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/atomic-promotion-receipt.json"
+  },
+  "superseded_receipts": {
+    "promotion": {
+      "path": ".dev-graph/plans/feature-package-feat-publisher-plugin/atomic-promotion-receipt.json",
+      "sha256": "sha256:ec6ebaeb0edc861ac1d9f7df056b75fb6454df2180e83548c0afcdb096c456a7"
+    },
+    "registration": {
+      "path": ".dev-graph/plans/feature-package-feat-publisher-plugin/registration-receipt.json",
+      "sha256": "sha256:5068813f22a6d545261afa0bc2feb8ae0f62438e35fe9dbc12cb8501eba4ae5e"
+    }
+  }
+}

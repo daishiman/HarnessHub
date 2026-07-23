@@ -74,6 +74,8 @@
 **未実装 (follow-up)**:
 - **姉妹 hook `plugins/dev-graph/hooks/guard-graph-schema.py` の同種 conflation**: コマンド文字列に `rm ... *.md` 等が現れると (書込対象でなくても) 破壊操作と誤検知する。本 hook で採った write-target モデルの横展開候補。
 
+- **`guard-graph-schema.py` の tool-path 保護 (graph authority への C02 迂回書換)**: 従来 guard は Bash の command 文字列しか見ておらず、Write/Edit ツールや interpreter 本文経由の書換は素通りだった。`.dev-graph/state`・`config.json`・`graph-node.schema.json` を C02 の atomic writer を経由せず直接書換えると、registration receipt を手書きしたうえで python one-liner で digest を後から一致させ C02 を迂回できた (2026-07-21 live-trial r7 で実際に突破)。これを塞ぐため保護次元を 2 つ追加した。(a) matcher を `Bash` から `Bash|Write|Edit|MultiEdit|NotebookEdit` へ拡張し、`FILE_WRITING_TOOLS` の `file_path`/`notebook_path` が graph authority (`GRAPH_AUTHORITY_PATH` = `.dev-graph/state`・`config.json`・`graph-node.schema.json`) を指すなら exit2。(b) Bash 経路でも interpreter 本文の `open(path,'w')` を `INTERPRETER_WRITE` 正規表現で検出し、path が graph authority なら exit2。対象は authority に限定し `templates/`・`cache/`・`tmp/` は init が正当に書くため除外する (広く取ると `cp plugins/dev-graph/templates .dev-graph/templates` まで止まる)。authority 判定は `context_ok()` の subprocess 起動より手前に置き、hook timeout (10s) による fail-open の窓を塞ぐ。契約は `plugins/dev-graph/tests/test_semantic_contract_boundaries_c10_c11_c24.py` 系が固定する。
+
 ## 5. 検証
 
 - 回帰テスト `tests/test_guard_confirmed_chapter_overwrite.py` (47 件): MUST_BLOCK / MUST_PASS (2.1 の FP 群を含む) / KNOWN_GAP。

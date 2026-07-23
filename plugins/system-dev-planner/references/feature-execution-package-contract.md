@@ -41,6 +41,22 @@ system-dev-planner の 1 run は、dev-graph が管理する **1つの feature**
 - 機械検査: validate-system-plan.py (`registration-file-path`) と promote-system-plan.py が `tasks/<parent_feature>/` 接頭辞を強制し、dev-graph 側 register-package.py も `parent_feature` を持つ node へ同一検査を行う (defense in depth)。`parent_feature=null` の fast-path task はこの規約の対象外。
 - legacy 例外: 本規約導入 (2026-07-17) 以前に登録済みの `feat-hub-foundation` package 13 件はフラット配置のまま。移行は C02 (run-dev-graph-node update) 経由の follow-up とする。
 
+### 2.2 supersede 済み世代の自己記述性
+
+supersede 済み世代 directory は pointer/receipt を辿らないと旧世代だと分からない。generations layout 導入前の第 1 世代 (`<published>/<package-slug>/`) は名前が最も発見しやすく render 済み成果物も同居するため、読み手が旧世代を正本と誤読しうる。
+
+- supersede 済み世代 directory は現行世代を指す `SUPERSEDED.json` を持つ。payload は current pointer、旧世代の再計算 digest、旧 promotion/registration receipt の実 bytes の SHA-256 から決まる決定論値とし、生成時刻や実行者を含めない。registration receipt の正準名は `dev-graph-registration-receipt.json`、規約導入前の旧世代だけは `registration-receipt.json` を互換入力とし、両方が併存する場合は authority の二重化として拒否する。marker が receipt digest を束縛することで、canonical files の外側にある旧 receipt の改竄も書込みなし検査が fail-closed で拒否する。`--write-markers` は marker 欠落時の create-only 操作であり、既存 marker が不一致なら上書きせず改竄として拒否する。
+- marker は canonical digest の対象集合 (`staging-manifest.json` の `files`) の外側にある付帯 file であり、追加しても旧世代の `published_digest` は変わらない。既存 file を書き換えないため byte-for-byte 不変性を損なわない。
+- 旧世代を現行世代の内容へ「追随」させる上書き是正は禁止する。旧世代の実バイトは `supersedes.published_digest` の正しさそのものであり、上書きは記録済み receipt を偽にする。乖離の解消は新世代の promotion で行う。
+- 機械検査: `scripts/validate-generation-lineage.py` が feature 別 current pointer を走査し、現行世代の canonical digest 再計算・receipt 3 digest 一致・旧世代の byte-for-byte 不変性・marker の内容一致を fail-closed で検証する。`--write-markers` は marker を冪等に再生成する。
+
+### 2.3 promotion 後も解決可能な再実行コマンド
+
+task spec 本文の `Automated commands` は §2 のとおり `.dev-graph/staging` を保存しないが、`--repo-root . --staging .` のような repository root 起点で解決できない形も同じ理由で禁止する。generation id の直書きは再計画のたびに stale になるため使わない。
+
+- validate-system-plan の再実行は世代非依存の `validate-system-plan.py --repo-root <root> --feature-package <feature_package_id>` を正本形式とする。この経路は feature 別 current pointer から現行世代の published package を解決する。
+- 2026-07-22 以前に promote 済みの 15 package (計 195 task spec) は本文に `--staging .` を残したまま不変保持する。executor が読む mutable な task projection (`tasks/<parent_feature>/<id>.md` の `## 実行契約`) 側へ `scripts/build-task-projection-rerun.py` が正本形式を冪等配線し、`--check` が未配線を fail-closed で報告する。planner の 1 feature run では `--feature-package <feature_package_id>` で対象の exact 13 だけに scope し、引数省略の 195 件全体モードは repository 移行・監査に限定する。どちらも対象 0 件は exit 2 とする。
+
 ## 3. 13 taskの固定写像
 
 | phase_ref | task responsibility |

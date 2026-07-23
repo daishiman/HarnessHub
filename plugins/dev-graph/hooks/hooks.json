@@ -2,7 +2,7 @@
   "description": "dev-graph shared hooks; project settings fallback must not be enabled at the same time",
   "hooks": {
     "PreToolUse": [{
-      "matcher": "Bash",
+      "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
       "hooks": [{"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"", "timeout": 10}]
     }],
     "SessionStart": [{

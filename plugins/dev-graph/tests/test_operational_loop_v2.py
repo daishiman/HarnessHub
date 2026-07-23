@@ -182,6 +182,110 @@ def test_node_upsert_is_atomic_idempotent_and_patchable(tmp_path, monkeypatch):
     assert artifact.read_bytes() == artifact_before
 
 
+def architecture_fixture(node_id: str = "ARCH-user-management") -> dict:
+    node = node_fixture(node_id)
+    node.update(
+        {
+            "artifact_kind": "architecture",
+            "artifact_subtypes": ["backend"],
+            "title": "User management architecture",
+            "resource_scope": [f"architecture/{node_id}.md"],
+            "file_path": f"architecture/{node_id}.md",
+            "template_id": "architecture",
+        }
+    )
+    return node
+
+
+def feature_fixture(node_id: str = "FEAT-user-management") -> dict:
+    node = node_fixture(node_id)
+    node.update(
+        {
+            "artifact_kind": "feature",
+            "title": "User management feature",
+            "resource_scope": [f"features/{node_id}.md"],
+            "file_path": f"features/{node_id}.md",
+            "template_id": "feature",
+            "purpose": "利用者アカウントの一元管理",
+            "goal": "登録・認証・権限の3経路を単一 feature で扱う",
+            "scope_in": ["登録", "認証"],
+            "scope_out": ["課金"],
+            "acceptance": ["登録した利用者で認証できる"],
+            "architecture_refs": ["ARCH-user-management"],
+        }
+    )
+    return node
+
+
+def seed_architecture(graph: Path) -> None:
+    """feature の architecture_refs が解決できるよう architecture node を先に置く。"""
+    saved = json.loads(graph.read_text(encoding="utf-8"))
+    saved["nodes"].append(architecture_fixture())
+    graph.write_text(json.dumps(saved), encoding="utf-8")
+
+
+def test_feature_direct_add_is_fail_closed_without_c14_macro_contract(tmp_path):
+    """通常 artifact routing での feature 直接 add は拒否される (C14 macro contract 由来のみ受理)。
+
+    2026-07-21 の live-trial (r13) で、lineage が manual/全 null の feature が
+    status=applied で登録され features/ に実ファイルが作られる欠陥を検出した回帰テスト。
+    """
+    module = load("upsert-node.py", "upsert_node_feature_gate")
+    root, graph, input_path = workspace(tmp_path)
+    seed_architecture(graph)
+    graph_before = graph.read_bytes()
+
+    node = feature_fixture()
+    assert node["source_lineage"]["origin_kind"] == "manual"
+    input_path.write_text(
+        json.dumps({"node": node, "body": "# 概要\n\n直接 add された feature。"}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(module.ContractError, match="C14"):
+        module._perform(args(root, input_path))
+
+    # fail-closed: graph も features/ も一切変化しない
+    assert graph.read_bytes() == graph_before
+    assert not (root / "features").exists()
+
+    # dry-run でも同じ経路で拒否される (preview だけ通る抜け道を作らない)
+    with pytest.raises(module.ContractError, match="C14"):
+        module._perform(args(root, input_path, dry_run=True))
+    assert graph.read_bytes() == graph_before
+
+
+def test_feature_from_c14_macro_contract_is_accepted(tmp_path):
+    """C14 由来の provenance を持つ feature は従来どおり登録できる (gate が正経路を塞がない)。"""
+    module = load("upsert-node.py", "upsert_node_feature_gate_positive")
+    root, graph, input_path = workspace(tmp_path)
+    seed_architecture(graph)
+
+    spec = root / "specs" / "macro-source.md"
+    spec.parent.mkdir(parents=True, exist_ok=True)
+    spec.write_text("# マクロ分解の入力仕様\n", encoding="utf-8")
+    digest = module._sha256(spec.read_bytes())
+
+    node = feature_fixture()
+    node["source_lineage"] = {
+        "origin_kind": "generated",
+        "source_plugin": "dev-graph",
+        "source_path": "specs/macro-source.md",
+        "source_version": None,
+        "source_digest": digest,
+        "imported_at": "2026-07-21T00:00:00Z",
+    }
+    input_path.write_text(
+        json.dumps({"node": node, "body": "# 概要\n\nC14 macro contract 由来の feature。"}),
+        encoding="utf-8",
+    )
+
+    applied = module._perform(args(root, input_path))
+    assert applied["operation"] == "added" and applied["write_count"] == 2
+    assert (root / "features" / "FEAT-user-management.md").is_file()
+    assert json.loads(graph.read_text())["graph_revision"] == 1
+
+
 def test_node_rolls_artifact_back_when_graph_commit_fails(tmp_path, monkeypatch):
     module = load("upsert-node.py", "upsert_node_rollback")
     root, graph, input_path = workspace(tmp_path)

@@ -21,7 +21,7 @@
       },
       {
         "event": "PreToolUse",
-        "matcher": "Bash",
+        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"",
         "from_plugin": "dev-graph"
       },
@@ -440,7 +440,7 @@
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
         "hooks": [
           {
             "type": "command",

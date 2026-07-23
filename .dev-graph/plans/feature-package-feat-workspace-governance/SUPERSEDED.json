@@ -1,0 +1,24 @@
+{
+  "current_pointer": ".dev-graph/state/current/feature-package-feat-workspace-governance.json",
+  "feature_package_id": "feature-package/feat-workspace-governance",
+  "notice": "この directory は supersede 済みの旧世代であり、正本ではない。実装要件の正本は superseded_by.published_path 配下の content-addressed generation を読むこと。旧世代は byte-for-byte 不変で保持されるため、この directory の中身を編集して現行世代へ追随させてはならない。さらに世代が進んだ場合は current_pointer から再解決すること。",
+  "published_digest": "sha256:aa8d2f2a6d4f9005f719696a6df84d215d36a72044634c988684ec1770dc4d91",
+  "schema_version": "1.0.0",
+  "status": "superseded",
+  "superseded_by": {
+    "generation_id": "b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+    "published_digest": "sha256:b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-workspace-governance/b9e6253a594b533507a73c4eb38c33f2b2fb08c8474e2ec0053aa4941e943b10/atomic-promotion-receipt.json"
+  },
+  "superseded_receipts": {
+    "promotion": {
+      "path": ".dev-graph/plans/feature-package-feat-workspace-governance/atomic-promotion-receipt.json",
+      "sha256": "sha256:7ad6bc39bc49842bbbb649051d63055215f9f3fd78552bdb3225aeb026b1e3df"
+    },
+    "registration": {
+      "path": ".dev-graph/plans/feature-package-feat-workspace-governance/registration-receipt.json",
+      "sha256": "sha256:85e3a80e745cba60ff7009eb92000a0ebd2d9987d0e2ca478deddb4bd239b801"
+    }
+  }
+}

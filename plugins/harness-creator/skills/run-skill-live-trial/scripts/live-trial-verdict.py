@@ -82,6 +82,58 @@ def extract_models(path: Path) -> list[str]:
     return sorted(models)
 
 
+def extract_skill_invocations(path: Path) -> list[str]:
+    """transcript に残る Skill ツール呼出しの skill 名を返す (重複なし・昇順)。
+
+    「被験 skill を起動せず、その中で使われる script を Bash から直接叩く」実走は、
+    成果物が出ても skill の受け入れ検証になっていない (2026-07-21 live-trial r14 の C05)。
+    起動の有無を orchestrator の自己申告ではなく transcript から機械判定する。
+    """
+    skills: set[str] = set()
+    for obj in iter_transcript(path):
+        content = (obj.get("message") or {}).get("content")
+        if not isinstance(content, list):
+            continue
+        for block in content:
+            if not isinstance(block, dict) or block.get("type") != "tool_use":
+                continue
+            if block.get("name") != "Skill":
+                continue
+            name = (block.get("input") or {}).get("skill")
+            if isinstance(name, str) and name:
+                skills.add(name)
+    return sorted(skills)
+
+
+GOAL_SEEK_ARTIFACTS = ("goal-spec.json", "progress.json", "intermediate.jsonl")
+
+
+def validate_goal_seek_evidence(skill_dir: Path, eval_root: Path | None) -> dict:
+    """goal_seek 成果物の実体と内容を独立 validator で検証する。
+
+    transcript の command/file_path 文字列だけでは、ファイル名を言及しただけの run や
+    空のダミー成果物を PASS にできる。宣言済み skill は eval root 未指定も fail-closed にする。
+    """
+    validator = _load_sibling("validate-goal-seek-evidence")
+    if not validator.declares_goal_seek(skill_dir / "SKILL.md"):
+        return {
+            "valid": True,
+            "goal_seek_declared": False,
+            "violations": [],
+            "checked": {"skipped": "frontmatter に goal_seek 宣言なし"},
+        }
+    if eval_root is None:
+        return {
+            "valid": False,
+            "goal_seek_declared": True,
+            "violations": [
+                "eval-root-missing: goal_seek 宣言 skill は --goal-seek-eval-root が必須"
+            ],
+            "checked": {},
+        }
+    return validator.verify(skill_dir, eval_root)
+
+
 def extract_claude_version(path: Path) -> str | None:
     for obj in iter_transcript(path):
         ver = obj.get("version")
@@ -553,6 +605,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--requested-model", default="")
     ap.add_argument("--session-id", default="", help="transcript 回収用 UUID")
     ap.add_argument("--transcript", default="", help="回収済み transcript のパス (session-id 探索より優先)")
+    ap.add_argument(
+        "--goal-seek-eval-root",
+        default="",
+        help="被験 skill が goal_seek 成果物を書いた eval-log directory",
+    )
     ap.add_argument("--launch", required=True, choices=["PASS", "FAIL"])
     ap.add_argument("--completion", required=True, choices=["PASS", "FAIL"])
     ap.add_argument("--goal-result", default="", choices=["", "PASS", "FAIL"],
@@ -604,12 +661,49 @@ def main(argv: list[str] | None = None) -> int:
     transcript_sha = sha256_file(transcript_dst) if transcript_dst else None
     transcript_layer = "jsonl" if transcript_dst else "tui"
 
+    invoked_skills = extract_skill_invocations(transcript_dst) if transcript_dst else []
+
     goal_result = ns.goal_result or None
     blockers = list(ns.blocker)
     if goal_result is None and not blockers:
         blockers = ["goal 判定未実施 (trial が完走せず fresh evaluator を起動できない)"]
+
+    # 起動の機械 gate: transcript が取れているのに被験 skill の Skill 呼出しが1件も無ければ
+    # launch は PASS になりえない。orchestrator の --launch PASS 自己申告を上書きする。
+    launch = ns.launch
+    if transcript_dst and not ns.blocked and ns.target_skill not in invoked_skills:
+        launch = "FAIL"
+        blockers.append(
+            f"被験 skill {ns.target_skill} の Skill 呼出しが transcript に0件 "
+            f"(実行された Skill: {invoked_skills or 'なし'})。skill を起動せず script を"
+            "直接実行した実走は受け入れ検証にならない"
+        )
+
+    # 配線の機械 gate: ファイル名の transcript 言及ではなく、成果物の実体・必須キー・
+    # original_goal/hash の整合を検証する。fresh evaluator の PASS より機械判定を優先する。
+    goal_seek_evidence = validate_goal_seek_evidence(
+        skill_dir,
+        Path(ns.goal_seek_eval_root) if ns.goal_seek_eval_root else None,
+    )
+    wiring_violations = list(goal_seek_evidence.get("violations") or [])
+    missing_labels = {
+        "goal-spec.json": "goal-spec-missing",
+        "progress.json": "progress-missing",
+        "intermediate.jsonl": "intermediate-missing",
+    }
+    missing_wiring = [
+        artifact
+        for artifact in GOAL_SEEK_ARTIFACTS
+        if any(missing_labels[artifact] in value for value in wiring_violations)
+    ]
+    if wiring_violations and not ns.blocked:
+        goal_result = "FAIL"
+        blockers.append(
+            "ゴールシーク配線の実体検証に失敗: " + " | ".join(wiring_violations)
+        )
+
     goal_fit, verdict, auto_reason = derive_overall(
-        launch=ns.launch, completion=ns.completion, goal_result=goal_result,
+        launch=launch, completion=ns.completion, goal_result=goal_result,
         nudge=ns.nudge_count, gate=ns.gate_response_count, proof=ns.proof,
         requested_model=ns.requested_model, actual_model=actual_model,
         blocked=ns.blocked,
@@ -625,8 +719,11 @@ def main(argv: list[str] | None = None) -> int:
             "result": goal_result or "FAIL",
             "blockers": blockers,
         },
+        "invoked_skills": invoked_skills,
+        "missing_goal_seek_artifacts": missing_wiring,
+        "goal_seek_evidence_violations": wiring_violations,
         "overall": {
-            "launch": ns.launch,
+            "launch": launch,
             "completion": ns.completion,
             "goal_fit": goal_fit,
             "verdict": verdict,
@@ -661,7 +758,7 @@ def main(argv: list[str] | None = None) -> int:
 
     out = workdir / "verdict.json"
     out.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"VERDICT: {doc['overall']['verdict']} (launch={ns.launch} completion={ns.completion} "
+    print(f"VERDICT: {doc['overall']['verdict']} (launch={doc['overall']['launch']} completion={ns.completion} "
           f"goal_fit={goal_fit} nudge={ns.nudge_count} gate={ns.gate_response_count})")
     print(f"WROTE: {out}")
     return 0

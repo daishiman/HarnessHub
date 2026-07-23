@@ -8,6 +8,7 @@
 """
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -17,6 +18,11 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 LINT_PATH = ROOT / "scripts" / "lint-live-trial-verdict.py"
+
+# jsonl 層の valid 証拠は transcript 実体に束縛される。baseline fixture はこの本文と
+# その digest を対で用い、束縛検査 (fail-closed) を満たす正の状態を表す。
+TRANSCRIPT_BODY = b'{"turn":1}\n'
+TRANSCRIPT_SHA = hashlib.sha256(TRANSCRIPT_BODY).hexdigest()
 
 
 def _load():
@@ -82,7 +88,7 @@ def _valid_doc(lint, skill_dir, skill="run-demo"):
         "goal_verdict": {"result": "PASS", "blockers": []},
         "overall": {"launch": "PASS", "completion": "PASS", "goal_fit": "PASS", "verdict": "PASS"},
         "skill_dir_tree_sha": verdict_mod.skill_dir_tree_sha(skill_dir),
-        "transcript_sha256": None,
+        "transcript_sha256": TRANSCRIPT_SHA,
         "scenario_origin": "synthetic",
         "environment": {
             "claude_version": "2.0.0",
@@ -100,6 +106,10 @@ def _write_verdict(lint, doc, skill="run-demo", run_id="20260702T000000"):
     vdir = lint.EVAL_LOG / "demo-plugin" / skill / "live-trial" / run_id
     vdir.mkdir(parents=True, exist_ok=True)
     (vdir / "verdict.json").write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
+    # baseline digest を持つ doc には一致する transcript.jsonl を併置し、jsonl 層の
+    # 束縛検査を満たす。異なる digest を明示指定したケースは各テストが transcript を自前管理する。
+    if doc.get("transcript_sha256") == TRANSCRIPT_SHA:
+        (vdir / "transcript.jsonl").write_bytes(TRANSCRIPT_BODY)
     return vdir / "verdict.json"
 
 
@@ -249,10 +259,65 @@ def test_transcript_digest_must_match_actual_file(lint):
     assert any("transcript-mismatch" in e for e in errs), errs
 
 
-def test_transcript_digest_absent_is_tolerated(lint):
-    """transcript を保持しない run は既存どおり通す (追加検査は additive)。"""
+def test_tui_layer_null_transcript_is_tolerated(lint):
+    """tui 層 (jsonl transcript を保持しない run) は transcript_sha256=null を正当に通す。
+
+    null が許されるのは schema 上 tui 層のみ。jsonl 層の null は別テストで違反として固定する。
+    """
+    skill_dir = _make_skill(lint)
+    doc = _valid_doc(lint, skill_dir)
+    doc["transcript_sha256"] = None
+    doc["environment"]["transcript_layer"] = "tui"
+    vpath = _write_verdict(lint, doc)
+    verdict_mod, backend_mod, schema = lint.load_harness()
+    assert lint.check_verdict(vpath, "demo-plugin", "run-demo", verdict_mod, backend_mod, schema) == []
+
+
+def test_transcript_file_null_sha_hard_fails_even_if_tui_layer(lint, capsys):
+    """transcript 実体があるのに sha=null なら会話ログ未束縛 → 違反 (exit 1)。
+
+    否定ガード ('recorded is not None') の素通しを塞ぐ本課題の中核回帰。null + transcript 削除
+    だけで束縛検査を迂回できてはならず、layer 表示だけにも依存してはならない。
+    """
+    skill_dir = _make_skill(lint)
+    doc = _valid_doc(lint, skill_dir)
+    doc["transcript_sha256"] = None
+    doc["environment"]["transcript_layer"] = "tui"  # layer 表示で実体検査を迂回できないこと
+    vpath = _write_verdict(lint, doc)
+    (vpath.parent / "transcript.jsonl").write_bytes(TRANSCRIPT_BODY)
+    assert lint.run_lint() == 1
+    assert "transcript-unbound" in capsys.readouterr().out
+
+
+def test_transcript_file_with_missing_sha_key_hard_fails(lint, capsys):
+    """transcript 実体があり transcript_sha256 キーが欠落した verdict は schema 違反。"""
+    skill_dir = _make_skill(lint)
+    doc = _valid_doc(lint, skill_dir)
+    del doc["transcript_sha256"]
+    vpath = _write_verdict(lint, doc)
+    (vpath.parent / "transcript.jsonl").write_bytes(TRANSCRIPT_BODY)
+    assert lint.run_lint() == 1
+    out = capsys.readouterr().out
+    assert "schema" in out and "transcript_sha256" in out
+
+
+def test_jsonl_layer_missing_transcript_file_hard_fails(lint):
+    """jsonl 層で digest は記録されているのに transcript.jsonl 実体が無い → 違反。"""
+    skill_dir = _make_skill(lint)
+    doc = _valid_doc(lint, skill_dir)
+    doc["transcript_sha256"] = "a" * 64  # 実体を併置しない digest → transcript.jsonl 不在
+    vpath = _write_verdict(lint, doc)
+    assert not (vpath.parent / "transcript.jsonl").exists()
+    verdict_mod, backend_mod, schema = lint.load_harness()
+    errs = lint.check_verdict(vpath, "demo-plugin", "run-demo", verdict_mod, backend_mod, schema)
+    assert any("transcript-missing" in e for e in errs), errs
+
+
+def test_jsonl_layer_bound_transcript_passes(lint):
+    """jsonl 層で transcript_sha256 が実体と一致すれば束縛は満たされる (正の経路)。"""
     skill_dir = _make_skill(lint)
     vpath = _write_verdict(lint, _valid_doc(lint, skill_dir))
+    assert (vpath.parent / "transcript.jsonl").read_bytes() == TRANSCRIPT_BODY
     verdict_mod, backend_mod, schema = lint.load_harness()
     assert lint.check_verdict(vpath, "demo-plugin", "run-demo", verdict_mod, backend_mod, schema) == []
 

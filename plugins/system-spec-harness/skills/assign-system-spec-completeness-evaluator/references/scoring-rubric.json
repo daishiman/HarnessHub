@@ -90,7 +90,7 @@
     "policy": "fail-closed",
     "why": "aspects[].auditor は評価者自身が書く文字列であり、独立監査を 1 件も fork しない実行でも『独立 auditor が PASS を出した』と名乗れた。監査 agent は Write を持たず自力で痕跡を残せないため、証跡はモデルが書けない層 (PostToolUse hook) が書く append-only 台帳に置く",
     "ledger": "eval-log/system-spec-harness/audit-fork-ledger.jsonl (env SYSTEM_SPEC_AUDIT_FORK_LEDGER で上書き可)",
-    "ledger_writer": "plugins/system-spec-harness/hooks/record-audit-fork.py (PostToolUse: Task)",
+    "ledger_writer": "plugins/system-spec-harness/hooks/record-audit-fork.py (PostToolUse: Task|Agent)",
     "required_receipts": [
       {"aspect": "matrix_coverage", "role": "primary", "auditor": "system-spec-matrix-auditor", "component": "C07"},
       {"aspect": "matrix_coverage", "role": "sub_input", "auditor": "system-spec-hearing-auditor", "component": "C06"},
