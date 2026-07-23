@@ -5,81 +5,82 @@
     "context": "fork"
   },
   "spec_dir": "system-spec",
-  "verdict": "FAIL",
+  "verdict": "PASS",
   "aspects": {
     "foundation_trace": {
       "verdict": "PASS",
       "auditor": "assign-system-spec-completeness-evaluator",
       "component": "C05",
-      "summary": "上位概念 U1-U9 は全て値で確定 (requirements_foundation.confirmed=true / approval_ref=appr-007)、goal-objective-intent-cell-chapter の trace に dangling 無し。決定論ゲート validate-coverage-matrix.py --require-foundation は exit 0、--profile cross も exit 0。出荷済み 00-requirements-definition.md は D7 反映済みの決定論 compile 再実行版 (sha256=f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae で一致) で、foundation 節は spec-state と整合する。",
+      "summary": "requirements_foundation は 9 要素 (essential_purpose〜concrete_intents) 全て confirmed=true / approval_ref=appr-007 (approval_log 実在、2026-07-18 中立再確認 3 ラウンドの承認)。決定論ゲート validate-coverage-matrix.py --require-foundation は exit 0、--knowledge-graph の cross profile も exit 0 で goal/objective/intent → cell → chapter trace に dangling 0。出荷 00-requirements-definition.md は U1-U9 全 9 節 (14-83 行) + 意思決定表 D1-D7 (87-93 行) を保持し spec-state と整合。前々回以降の是正 (D1-D3 note 追記・doc 再取得・re-compile) 後も trace 破断なし (本 run で全ゲート独立再実行)。",
       "evidence": [
-        "validate-coverage-matrix.py --require-foundation → exit 0 (単独および --require-complete 併用の両方)",
-        "validate-knowledge-graph.py --profile cross → exit 0 (goal/objective/intent → cell → chapter 写像に dangling 0)",
-        "spec-state.json: requirements_foundation.confirmed=true, approval_ref=appr-007 (approval_log 7 件内に実在)",
-        "shasum -a 256 system-spec/00-requirements-definition.md = f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae (D7 反映済み compile 出力と一致)"
+        "validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-foundation → exit 0 (本 run 独立実行)",
+        "aggregate-completeness.py --knowledge-graph の cross profile → exit 0 (写像 dangling 0)",
+        "spec-state.json: requirements_foundation.confirmed=true, approval_ref=appr-007 (approval_log 実在)。foundation 改訂の質疑証跡 = qa-047",
+        "00-requirements-definition.md: U1-U9 全 9 節 (14-83 行) + 意思決定表 D1-D7 (87-93 行) を現物確認"
       ]
     },
     "decision_guidance": {
-      "verdict": "FAIL",
+      "verdict": "PASS",
       "auditor": "assign-system-spec-completeness-evaluator",
       "component": "C05",
-      "summary": "decisions D1-D7 は形式基準を全件充足 (各 2-3 案 + cost_model.category=free の無料案 + goal_fit/lock_in/ops_burden/security_fit + evidence_refs + user_decision.option_id/confirmed_at。D2 はユーザーが AI 推奨 d1-drizzle でなく turso-free を選択し『AI 推奨のみで confirmed にしない』を実証)。前回 high だった D7 の出荷 doc 未反映は解消済み (00-requirements-definition.md 93 行目に D7 行が存在、決定論 compile 再実行で反映)。しかし D7 (環境構成: ephemeral-preview-only, confirmed_at 2026-07-21T08:00+09:00) の確定質疑が qa_log に完全欠落しており (qa_log は qa-001〜066 で 2026-07-18 まで。D5/D6 は note に『質疑証跡: qa-028/qa-029』を持つが D7 に質疑参照が無い)、AskUserQuestion の提示逐語も未記録のため『AI 推奨のみで confirmed にしない』を D7 について独立検証できない。確定の質疑トレーサビリティ欠落は fail-closed で FAIL (自己申告 note のみの確定を PASS にしない)。",
+      "summary": "decisions D1-D7 は全件 status=confirmed で形式基準を充足: 各 2-3 案、全 7 decision に cost_model.category='free' の無料案が存在 (cost_model は category/amount/currency/billing_period/tco の構造化オブジェクトであることを機械確認)、goal_fit/security_fit/lock_in/ops_burden の 4 軸比較 + pros/cons/risks + evidence_refs + recommendation (rationale/caveats/confidence/latest_checked_at) + user_decision (option_id/confirmed_at/note)。D2 はユーザーが AI 推奨 d1-drizzle でなく turso-free を選択し『AI 推奨のみで confirmed にしない』を実証。前々回 medium の是正 (D1/D2/D3 note への質疑証跡 qa-003/qa-004/qa-005 追記) は維持されており、D1-D7 の 7 件全てが qa_log の実 entry へ機械検証可能な形で遡れる。",
       "evidence": [
-        "spec-state.json decisions[]: D1-D7 全件 status=confirmed、2-3 options + cost_model free 案 + 4 軸比較 + evidence_refs + user_decision あり (機械確認済み)",
+        "spec-state.json decisions[]: D1-D7 全件 confirmed、2-3 options + cost_model.category='free' 案 (7/7 decision) + 4 軸比較 + evidence_refs + user_decision (C05 が python3 で機械確認)",
         "D2: recommendation.option_id=d1-drizzle に対し user_decision.option_id=turso-free (AI 推奨と異なる選択の実証)",
-        "grep 'D7' system-spec/00-requirements-definition.md → 93 行目に意思決定表 D7 行あり (2 案 + 無料枠 TCO + 推奨理由 + 注意点 4 点 + confirmed_at)",
-        "D7 user_decision.note は『AskUserQuestion で選択 (2026-07-21)』の自己申告のみで質疑参照無し。qa_log 66 件に D7/ephemeral-preview-only の確定質疑 entry が存在せず、reopen_log 91 件にも D7 関連 0 件 (C06 監査検出 (b) を state で裏取り)"
+        "D1 note=qa-003 / D2 note=qa-004 / D3 note=qa-005 の質疑証跡引用を維持、D4=qa-006 / D5=qa-028 / D6=qa-029 / D7=qa-067,qa-068 (7/7 件が qa_log へ遡及可能)",
+        "validate-coverage-matrix.py --require-foundation → exit 0 (decisions 形状の機械層)"
       ]
     },
     "matrix_coverage": {
       "verdict": "PASS",
       "auditor": "system-spec-matrix-auditor",
       "component": "C07",
-      "summary": "一次監査 C07 (system-spec-matrix-auditor) の verdict=PASS (loop_pass=true, final_ready=true) を忠実転記。2 回実行 (初回 + 独立再確認) とも同一結論。機械層: validate-coverage-matrix.py が loop+foundation / require-complete+foundation の両モードで exit 0、C05 の独立再実行でも plain/--require-complete/--require-foundation/併用の 4 モード全て exit 0。54 セル = 確定 25 / 対象外 29 (reason 空欄 0) / 未収集 0、qa_ref dangling 0、category_aggregate 9 カテゴリ全て真理値表と整合、canonical platform 6 行欠落なし。C16 機械層 (--profile required-info) も exit 0。sub-input C06 (hearing-auditor) は verdict=FAIL (D7 関連のトレーサビリティ検出 (a)(b) 等) だが、指示に従い独立観点へ昇格させず C07 verdict を転記し、C06 検出は findings へ severity 付きで収載 (high 2 件を含む)。",
+      "summary": "一次監査 C07 (system-spec-matrix-auditor、本 run で実 fork) の verdict=PASS (loop_pass=PASS, final_ready=PASS) を忠実転記。機械層: validate-coverage-matrix.py が loop / --require-complete の両モードで exit 0 (C07 実行 + C05 独立再実行の両方)、C16 required-info profile も exit 0。54 セル = 確定 25 / 対象外 29 (理由要改善 0) / 未収集 0。qa_ref 要確認 0 (25 確定セル全件を qa_log 現物と突合し内容一致、reopen_log の訂正再登録系譜 qa-052→qa-059 等も dangling なし)、category_aggregate 9 カテゴリ全て真理値表と一致、canonical platform 6 行欠落 0、goal-spec 例示 8 カテゴリ全含有。sub_input C06 (hearing-auditor、本 run で実 fork) は verdict=FAIL (誘導質問 6 件 = qa-014/028/029/030/031/034。聞き漏れ 0・早期停止 0・トレース欠落 0) だが、C05 が spec-state 現物で qa-047 (2026-07-18 中立再確認 3 ラウンド、記録上も『誘導質問 6 件』と同一 id 列挙) と appr-006 (既確定の事後承認 + 今後の様式改善) を裏取りし、既知残差の再検出であることを確認。網羅性・トレースの裏付けは C06 自身も健全と報告しており、規定どおり独立観点へ昇格させず C07 primary verdict を維持、C06 検出は low finding に収載。",
       "evidence": [
-        "C07 監査結果: PASS (loop_pass=true, final_ready=true)。validate-coverage-matrix.py exit code: loop+foundation=0 / require-complete+foundation=0。2 回実行とも同一結論",
-        "C05 独立再実行: validate-coverage-matrix.py plain/--require-complete/--require-foundation/併用 → 全て exit 0。aggregate-completeness.py --matrix --require-complete → exit 0",
-        "C07: 確定 25 件の qa_ref は qa_log(66)/approval_log(7) の実 entry を参照、dangling 0。意味層の要確認 1 系統 (ui-ux.desktop-windows/macos の qa-007) は違反ではなく要確認 (findings low)",
+        "C07 監査結果 (本 run 実 fork): loop_pass=PASS / final_ready=PASS。validate-coverage-matrix.py exit: loop=0 / --require-complete=0、VIOLATION 行 0 件",
+        "C05 独立再実行: validate-coverage-matrix.py loop → exit 0 / --require-complete → exit 0。C05 直接集計でも 54 セル = 確定 25 / 対象外 29",
+        "C07: 対象外 29 セル全件の reason が具体的 (placeholder 0)、確定 25 セル全件の qa_ref が qa_log 実 entry と内容整合 (qa_ref 要確認 0)",
         "aggregate-completeness.py --knowledge-graph の required-info profile → exit 0 (C16 必須情報被覆の機械層)",
-        "sub-input C06: verdict=FAIL。検出 (a) infrastructure.web qa_ref=qa-064 の D7 矛盾 stale reference / (b) D7 の qa_log 証跡欠落 → findings の high 2 件として収載"
+        "sub_input C06 (本 run 実 fork): verdict=FAIL。検出は誘導質問 6 件 (qa-014/028/029/030/031/034) のみで、聞き漏れ 0・早期停止 0・トレース欠落 0 (loop_count=2 / complete=true は未収集 0 と整合)。qa-047 の記録 (誘導質問 6 件 = 同一 id) と完全一致し、appr-006 + qa-047 の既対応を C05 が spec-state 現物で裏取り"
       ]
     },
     "design_knowledge_reflection": {
       "verdict": "PASS",
       "auditor": "assign-system-spec-completeness-evaluator",
       "component": "C05",
-      "summary": "機械層 (C13/C14/C15/C16): aggregate-completeness.py --knowledge-graph で knowledge/doctrine/required-info/cross の 4 profile 全て exit 0。意味層 (自前照合): auth.md (Secure by Design + OWASP ASVS anchor + Device Flow 数値契約 device_code TTL 10 分/user_code Crockford Base32/interval 5 秒/token rotation) / backend.md (Clean Architecture + API Design Patterns + DDD、qa-059/qa-010 接地) / security.md (Secure by Design + owasp-asvs 5.0.0 出典) / frontend.md (Clean Architecture) / maintenance-ops.md (Clean Code) / database.md (data-access anchor) で deep card 原則の確定セル要件への具体適用を確認 (ポインタ存在確認だけの自己循環 PASS ではない)。C14 位相順: topo_order = [clean-code, ddd, design-patterns, clean-architecture, api-design-patterns, secure-by-design] に対し確定順 (foundation appr-001 → D1〜D7) は位相順を破っていない。medium 2 件 (ui-ux/infrastructure/dev-workflow の汎用ポインタのみ 3 章 / backend card 表示順) は findings に記録。",
+      "summary": "機械層 (C13/C14/C15/C16): aggregate-completeness.py --knowledge-graph で knowledge/doctrine/required-info/cross の 4 profile 全て exit 0。意味層 (自前照合、ポインタ存在の自己循環 PASS ではない): auth.md は Secure by Design card の原則 (secure default・短命 credential・最小権限・fail closed の釣り合い) が qa-036/qa-041 の確定要件 (JWT session 数値契約 maxAge 8h/updateAge 15m・OIDC 検証契約 issuer 厳密一致/PKCE S256/idp_subject 束縛・Device Flow RFC 8628 数値契約・refresh token rotation + 再利用検知 family 全失効・保存先 OS 資格情報域限定・scope 4 種最小権限・失効の意味論) へ具体適用されている。backend.md は Clean Architecture / API Design Patterns / DDD の 3 deep card が qa-059/qa-010 の確定質疑へ接地。全 9 章に doctrine anchor 表 (concern→authority + 従属宣言 + 乖離時 R4-reopen 根拠) が存在。C14 位相順: topo_order に対し確定順の位相破りなし。medium 2 件継続 (ui-ux/infrastructure/dev-workflow の 3 章はカテゴリ専用 deep card 未定義で汎用ポインタ + doctrine anchor のみ / backend card 表示順が topo_order と表示上不一致) を findings に記録。",
       "evidence": [
-        "aggregate-completeness.py --knowledge-graph → exit 0 (knowledge/doctrine/required-info/cross の 4 subgate 全て exit 0)",
-        "validate-knowledge-graph.py --profile knowledge --order → topo_order = [clean-code, ddd, design-patterns, clean-architecture, api-design-patterns, secure-by-design]",
-        "auth.md: OWASP ASVS anchor + RFC 8628 Device Flow の数値契約 (TTL/試行回数/interval/token 期限/保存先 OS 資格情報域/scope 4 種最小権限) が確定セル要件へ具体適用",
-        "backend.md: Clean Architecture / API Design Patterns / DDD の 3 deep card + qa-059/qa-010 の確定質疑接地。card 表示順のみ topo_order と不一致 (medium、内容欠落なし)",
-        "ui-ux.md / infrastructure.md / dev-workflow.md: カテゴリ専用 deep card 未定義の汎用ポインタのみ (doctrine anchor HIG/Google SRE の行は存在するが、ui-ux の HIG アクセシビリティの明示適用なし → medium)"
+        "aggregate-completeness.py --knowledge-graph → exit 0 (knowledge/doctrine/required-info/cross の 4 subgate 全て exit 0、本 run 独立再実行)",
+        "auth.md 27-37 行 (qa-036/qa-041 確定内容) と 50-89 行 (Secure by Design card): 数値契約・OS 資格情報域・scope 最小権限への原則の具体適用を確認",
+        "backend.md: qa-059/qa-010 確定質疑 + Clean Architecture (50 行) / API Design Patterns (91 行) / DDD (134 行) の 3 card 接地",
+        "ui-ux.md:49 / infrastructure.md:50 / dev-workflow.md:70: 『このカテゴリ専用の deep card は resource-map に未定義』の汎用ポインタ節のみ (doctrine anchor 行は存在) → medium 継続",
+        "backend.md card 節順: Clean Architecture → API Design Patterns → DDD で topo_order (ddd が先) と表示上不一致 (内容欠落なし) → medium 継続"
       ]
     },
     "doc_freshness": {
-      "verdict": "FAIL",
+      "verdict": "PASS",
       "auditor": "system-spec-doc-freshness-auditor",
       "component": "C08",
-      "summary": "一次監査 C08 (system-spec-doc-freshness-auditor) の verdict=FAIL を忠実転記。層1 (形式層): validate-source-citation.py exit 0 (17 targets ↔ 17 references の 1:1 対応、必須フィールド全件充足、公式 host 一致。C05 の独立再実行でも exit 0)。層2 (内容鮮度層、WebFetch 不可環境のため WebSearch 多源照合で代替): 非公式 host 0 件 / 対象一覧欠落 0 件だが、[FAIL確定] pnpm 記録 11.15.0 に対し npm latest 11.15.1 / [FAIL確定] claude-code-plugins の挙動 anchor 'Claude Code v2.1.196' に対し現行 CLI v2.1.216 (約 3 週間・約 20 バージョン乖離) / [鮮度未確認] typescript (記録 '7.0' が情報源間で矛盾、一次ページ GET 未到達) / [鮮度未確認] drizzle-orm (v1.0.0-rc.4 の確証未取得、一次 GitHub releases GET 未到達)。世代落ち確定 2 件 + 一次確定不能 2 件のため FAIL。",
+      "summary": "一次監査 C08 (system-spec-doc-freshness-auditor、本 run で実 fork) の verdict=PASS を忠実転記。層1 (形式層): C08 実行の validate-source-citation.py exit 0 + C05 追認 exit 0 (17 targets ↔ 17 references 1:1・必須フィールド全件充足・公式 host 一致・非公式 host 0)。層2 (内容鮮度層): C08 は WebFetch 不在環境の制約を python3 urllib による一次 GET (npm registry / GitHub Releases API / 公式サイト本文へ計 20 回以上、全て HTTP 200) で克服し、WebSearch は host 裏取りの補助のみに使用。前回 run で裏取り不能だった 2 件を一次資料で確定: pnpm = registry.npmjs.org dist-tags latest 11.16.0 + api.github.com releases/latest tag_name v11.16.0 (published 2026-07-22T20:36:06Z, prerelease=false) の 2 経路一致、opennext-cloudflare = dist-tags latest 1.20.2 + tag @opennextjs/cloudflare@1.20.2 (published 2026-07-21T17:40:58Z) の 2 経路一致。いずれも C02 が record summary に追記した生証跡断片と完全一致し、前回 FAIL の是正 (C02 の 2026-07-22T23:24:40Z 再照合) が正当であることを独立確認。残る 15 records も nextjs 16.2.11 (GitHub release 本文の High 4 件 + Moderate 5 件を逐語確認) / typescript 7.0 / zod 4 / cloudflare 4 doc (last updated 日付トークン完全一致) 等で全件整合。古い version 0・鮮度未確認 (到達不能) 0・確認時刻/出典欠落 0。",
       "evidence": [
-        "C08 監査結果: FAIL。層1 = validate-source-citation.py exit 0 / 層2 = WebSearch 多源照合 (WebFetch 不可環境の代替、C08 が開示)",
-        "C05 追認: validate-source-citation.py --targets (spec-state.targets 17 件) --references fetched-references.json → exit 0",
-        "[FAIL確定] pnpm: 記録 11.15.0 (retrieved_at 2026-07-18) vs npm latest 11.15.1 (検索時点で 20 時間前公開)",
-        "[FAIL確定] claude-code-plugins: 挙動 anchor 'Claude Code v2.1.196' vs 現行 CLI v2.1.216 (2026-07-20)",
-        "[鮮度未確認] typescript ('7.0' vs 6.0.3 stable + 7.0 RC 説 vs npm 7.0.2 説) / drizzle-orm (v1.0.0-rc.4 未確証) — 未確認を PASS と誤認しない (fail-closed surface)"
+        "C08 監査結果 (本 run 実 fork): PASS。層1 = validate-source-citation.py exit 0 / 層2 = python3 urllib 一次 GET 計 20 回以上 (全て HTTP 200) + WebSearch host 裏取り",
+        "C05 追認: validate-source-citation.py --targets system-spec/spec-state.json --references system-spec/fetched-references.json --state → exit 0 (本 run 独立実行)",
+        "[前回 FAIL 是正確認] pnpm: GET registry.npmjs.org/-/package/pnpm/dist-tags → latest=11.16.0、GET api.github.com/repos/pnpm/pnpm/releases/latest → tag_name=v11.16.0 (published 2026-07-22T20:36:06Z)。record summary の生証跡主張と完全一致",
+        "[前回鮮度未確認の解消] opennext-cloudflare: GET dist-tags → latest=1.20.2、GET releases/latest → tag_name=@opennextjs/cloudflare@1.20.2 (published 2026-07-21T17:40:58Z)。record と完全一致",
+        "[整合] nextjs 16.2.11 (release 本文 High 4 + Moderate 5 逐語一致) / typescript 7.0 / zod 4.4.3 (メジャー 4) / drizzle-orm 0.45.2+rc.4 / authjs 5.0.0-beta.32 / rehype-sanitize 6.0.0 / owasp-asvs 5.0.0 / cloudflare 4 doc 日付一致 / turso / resend / github-actions / claude-code-plugins anchor 一致 — 17/17 整合",
+        "軸別カウント (C08 報告): 欠落 target 0 / 非公式 host 0 / 古い version・更新日 0 / 確認時刻・出典欠落 0 / 鮮度未確認 (到達不能) 0"
       ]
     },
     "prompt_quality": {
       "verdict": "PASS",
       "auditor": "assign-system-spec-completeness-evaluator",
       "component": "C05",
-      "summary": "prompt-creator plugin が本環境に存在するため機械ゲートを必須実行: plugins/system-spec-harness/skills/*/prompts/*.md 全 18 prompt に対し verify-completeness.py --input と validate-prompt.py --input の両方が exit 0 (36/36 実行成功)。意味層: R1-score.md / R2-delegate.md を精読し、L1-L7 層被覆・客観的停止条件 (5.3 完了チェックリスト)・reproducible 宣言・fail-closed 集約規則・『実際に fork した監査だけを receipt にする』帰属規則の実質深度を確認。独立 design findings に high なし。",
+      "summary": "prompt-creator plugin が本環境に存在するため機械ゲートを必須実行: plugins/system-spec-harness/skills/*/prompts/*.md 全 18 prompt に対し verify-completeness.py --input と validate-prompt.py --input の両方が exit 0 (36/36 実行成功、失敗 0)。意味層: R1-score.md / R2-delegate.md を精読し、L1-L7 層被覆・客観的停止条件 (5.3 完了チェックリスト: 全観点 verdict / receipt 3 件 / verdict 再導出一致 / 仕様書書込 0 件)・fail-closed 集約規則・『実際に fork した監査だけを receipt にする』『dispatch.tool は観測どおりに書く』の帰属規則の実質深度を確認。独立 design findings に high なし。",
       "evidence": [
-        "verify-completeness.py --input: 18/18 prompt で exit 0",
-        "validate-prompt.py --input: 18/18 prompt で exit 0 (l5-contract v2.0)",
+        "verify-completeness.py --input: 18/18 prompt で exit 0 (本 run 実行)",
+        "validate-prompt.py --input: 18/18 prompt で exit 0 (本 run 実行)",
         "R1-score.md 5.3: 全観点被覆 / receipt 3 件 / verdict 再導出一致 / 仕様書書込 0 件の客観停止条件を確認",
-        "R2-delegate.md 1.1: 『実際に fork した監査だけを receipt にする』『INDETERMINATE を隠さず明示』の不変ルールを確認 (本レポートの receipt 3 件は親 orchestrator が実際に fork した監査のみ。findings の R2 逸脱開示参照)"
+        "R2-delegate.md 1.1: 帰属の Goodhart 防止規則 (実 fork のみ receipt 化・台帳突合) を確認。本 run の receipt 3 件は C05 自身が Agent tool で実 fork した監査のみ"
       ]
     }
   },
@@ -90,17 +91,15 @@
       "auditor": "system-spec-matrix-auditor",
       "component": "C07",
       "dispatch": {
-        "tool": "Task",
+        "tool": "Agent",
         "subagent_type": "system-spec-matrix-auditor"
       },
       "verdict": "PASS",
       "evidence": [
-        "実 fork による監査 2 回実行 (初回 + 独立再確認) とも同一結論: PASS (loop_pass=true, final_ready=true)",
-        "validate-coverage-matrix.py exit code: loop+foundation=0 / require-complete+foundation=0",
-        "セル内訳 (9 カテゴリ×6 canonical platform=54): 確定 25 / 対象外 29 (reason 空欄なし) / 未収集 0。qa_ref dangling 0 (qa_log 66 件 / approval_log 7 件内の実 entry を参照)",
-        "category_aggregate 9 カテゴリ全て『確定』で真理値表と整合、platform 行は 6 canonical platform が全 9 カテゴリで揃い欠落なし",
-        "意味層の要確認 1 系統 (初回実行時): ui-ux.desktop-windows/desktop-macos の qa_ref=qa-007 が frontend 質疑としてはやや薄い (違反ではなく要確認)",
-        "逸脱開示: fork の起動は nested fork 不可のため親 orchestrator が subagent fork ツール (本ハーネス表示名 'Agent'。契約語彙上 tool='Task' と記録) で代行した。結果は改変なく転記 (findings 参照)"
+        "C05 自身が本 run で実 fork (fork 台帳: session_id=09591889-1101-451c-9ba7-70a87942c6cf, tool_name=Agent, ts=2026-07-22T23:44:25Z)",
+        "監査結果: loop_pass=PASS / final_ready=PASS。validate-coverage-matrix.py exit: loop=0 / --require-complete=0、VIOLATION 0 件",
+        "セル内訳 54 = 確定 25 (qa_ref 要確認 0) / 対象外 29 (理由要改善 0) / 未収集 0。platform 欠落 0・category_aggregate 不一致 0",
+        "確定 25 セルの qa_ref 全件を qa_log 現物と突合 (reopen_log の訂正再登録系譜 qa-052→qa-059 / qa-001→qa-007,qa-043 差し替え含め dangling・取り違え 0)。goal-spec 例示 8 カテゴリ全含有 (dev-workflow は追加カテゴリ)"
       ]
     },
     {
@@ -109,17 +108,17 @@
       "auditor": "system-spec-hearing-auditor",
       "component": "C06",
       "dispatch": {
-        "tool": "Task",
+        "tool": "Agent",
         "subagent_type": "system-spec-hearing-auditor"
       },
       "verdict": "FAIL",
       "evidence": [
-        "実 fork による 5 軸監査 (依頼 4 軸 + SSOT 定義の上位概念遡及性): FAIL",
-        "軸1 聞き漏れ: 形式上なし (54 セル全て確定/理由付き対象外、next_question=null・complete=true と整合)。ただし D7 確定後に infrastructure.web を再質問すべきだった疑い",
-        "軸2 誘導質問: qa-028/029/031/034 の AI 推奨先出し型は appr-006 で事後承認済み。新規: D7 の AskUserQuestion 提示逐語が qa_log に存在せず中立性を独立検証不能 (INDETERMINATE)",
-        "軸3 早期停止: 形式上なし。ただし D7 (confirmed_at 2026-07-21) 確定後に hearing_progress 再評価の形跡なし (loop_count 増なし、reopen_log に D7 関連 0 件)",
-        "軸4 トレーサビリティ (最重要): (a) matrix.infrastructure.web.qa_ref='qa-064' の本文は『P0: production/staging』の 2 環境構成前提で D7 の ephemeral-preview-only 決定と矛盾 (stale reference)、qa_ref 更新・新規 qa_log 登録・reopen_log 記録のいずれも無し / (b) D7 自体の qa_log 参照が完全欠落 (D5/D6 は『質疑証跡: qa-XXX』を持つが D7 に無く、qa_log は 2026-07-16〜18 の qa-001〜066 のみ)。その他 54 セルの dangling 参照は 0 件",
-        "軸5 上位概念遡及性: 検出なし (U1-U9 全て qa_log へ遡及可、appr-007 実在)。C06 は matrix_coverage の sub-input としてのみ使用し独立観点へ昇格させない"
+        "C05 自身が本 run で実 fork (fork 台帳: session_id=09591889-1101-451c-9ba7-70a87942c6cf, tool_name=Agent, ts=2026-07-22T23:46:12Z)",
+        "軸1 聞き漏れ: 検出 0 (54 セル全て確定 25 / 理由付き対象外 29、未収集 0)",
+        "軸2 誘導質問: 6 件検出 = qa-014 (複数論点束ね) / qa-028・qa-029 (AI 推奨断定埋め込み + 他案欠点のみ列挙) / qa-030 (広範な変更点群の一括 Yes/No) / qa-031・qa-034 (未確定論点全てへ AI 推奨列挙)。qa-047/appr-006 に記録された過去 C06 検出 (誘導質問 6 件 = 同一 id) と完全一致する再現性ある結果で、qa_log 質問文が監査証跡として不変保持されるため presence-based 監査で今回も検出",
+        "軸3 早期停止: 検出 0 (loop_count=2 / 上限 5、未収集 0 で complete=true は整合)",
+        "軸4 トレーサビリティ: 検出 0 (確定 25 セルの qa_ref 全件が qa_log 実 entry へ遡及・dangling 0)",
+        "C06 検出は matrix_coverage の sub-input としてのみ使用し独立観点へ昇格させない。verdict=FAIL は改変なく転記 (aspect verdict は primary C07 に従う)。前回 run の C06 は 4 件 (qa-028/029/031/034) 報告だったが、qa-047 の記録は 6 件であり今回の検出数の方が正確 (前回報告が 2 件過少)"
       ]
     },
     {
@@ -128,36 +127,36 @@
       "auditor": "system-spec-doc-freshness-auditor",
       "component": "C08",
       "dispatch": {
-        "tool": "Task",
+        "tool": "Agent",
         "subagent_type": "system-spec-doc-freshness-auditor"
       },
-      "verdict": "FAIL",
+      "verdict": "PASS",
       "evidence": [
-        "実 fork による二層監査: FAIL",
-        "層1 (形式層 = validate-source-citation.py): exit 0。17 targets ↔ 17 references 1:1 対応、必須フィールド全件充足、公式 host 一致",
-        "層2 (内容鮮度層。WebFetch 不可環境のため WebSearch 多源照合で代替): 非公式 host 0 件 / 対象一覧の欠落 0 件 / 確認時刻・出典欠落 0 件",
-        "[FAIL確定] pnpm: 記録 11.15.0 (retrieved_at 2026-07-18) に対し npm latest 11.15.1 (検索時点で 20 時間前公開)",
-        "[FAIL確定] claude-code-plugins: 挙動 anchor 'Claude Code v2.1.196' に対し現行 CLI v2.1.216 (2026-07-20)。約 3 週間・約 20 バージョン分の乖離",
-        "[鮮度未確認] typescript: 記録 '7.0' だが情報源間で矛盾 (6.0.3 stable + 7.0 RC 説 vs npm latest 7.0.2 説)、一次ページ GET 未到達 / drizzle-orm: 記録 v1.0.0-rc.4 の確証未取得 (一次 GitHub releases GET 未到達、前回監査と同一制約)"
+        "C05 自身が本 run で実 fork (fork 台帳: session_id=09591889-1101-451c-9ba7-70a87942c6cf, tool_name=Agent, ts=2026-07-22T23:51:10Z)。fork prompt には python3 urllib による一次 GET の監査手段情報を明示 (前回 gap 1 対応。判定基準の緩和ではなく検査手段の追加)",
+        "層1 (形式層): validate-source-citation.py exit 0。17 targets ↔ 17 references 1:1、必須フィールド全件充足、公式 host 一致、非公式 host 0 (code.claude.com / opennext.js.org / authjs.dev / zod.dev 等も publisher 直営を個別確認)",
+        "層2 (内容鮮度層): python3 urllib 一次 GET 計 20 回以上 (npm registry dist-tags / GitHub Releases API / 公式サイト本文、全て HTTP 200)。WebSearch は host 裏取り補助のみ",
+        "[確定] pnpm 11.16.0: dist-tags latest + GitHub releases/latest tag_name v11.16.0 (published 2026-07-22T20:36:06Z, prerelease=false) の 2 経路一致。前回 run の『裏取り不能』は監査手段の制約 (二次索引のみ) が原因で、記録は正確だったことを確定",
+        "[確定] opennext-cloudflare 1.20.2: dist-tags latest + tag @opennextjs/cloudflare@1.20.2 (published 2026-07-21T17:40:58Z) の 2 経路一致",
+        "17/17 records 整合。古い version・更新日 0 / 鮮度未確認 (到達不能) 0 / 確認時刻・出典欠落 0"
       ]
     }
   ],
   "gate_results": [
     {
       "id": "G-matrix",
-      "name": "validate-coverage-matrix (aggregate-completeness --matrix --require-complete)",
+      "name": "validate-coverage-matrix --require-complete",
       "conditions": ["未収集セル 0", "対象外セル reason 必須", "確定セル qa_ref トレーサビリティ", "category_aggregate 真理値表一致", "canonical platform 6 行全存在"],
-      "command": ["python3", "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py", "--matrix", "system-spec/spec-state.json", "--require-complete"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-complete"],
       "exit_code": 0,
-      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)) を満たす。単体実行の plain / --require-complete / --require-foundation / 併用の 4 モードも全て exit 0"
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)) を満たす"
     },
     {
       "id": "G-foundation",
       "name": "validate-coverage-matrix --require-foundation (foundation_trace / decision_guidance 機械層)",
-      "conditions": ["U1-U9 値または明示 N/A", "decisions 形状", "goal トレース"],
+      "conditions": ["U 構成 9 要素の確定", "decisions 形状", "goal トレース"],
       "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-foundation"],
       "exit_code": 0,
-      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)+foundation(上位概念トレース)) を満たす (--require-complete 併用時)"
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす"
     },
     {
       "id": "G-knowledge-graph",
@@ -171,133 +170,55 @@
       "id": "G-source-citation",
       "name": "validate-source-citation (C08 形式層の C05 追認)",
       "conditions": ["対象 target 漏れなし", "必須フィールド存在", "source_url と official_host の一致"],
-      "command": ["python3", "plugins/system-spec-harness/scripts/validate-source-citation.py", "--targets", "<spec-state.targets 17 件>", "--references", "system-spec/fetched-references.json", "--state", "system-spec/spec-state.json"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-source-citation.py", "--targets", "system-spec/spec-state.json", "--references", "system-spec/fetched-references.json", "--state", "system-spec/spec-state.json"],
       "exit_code": 0,
       "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす"
     },
     {
       "id": "G-prompts",
       "name": "prompt-creator 機械 validator (C05 prompt_quality)",
-      "conditions": ["verify-completeness.py --input exit 0", "validate-prompt.py --input exit 0 (l5-contract v2.0)"],
+      "conditions": ["verify-completeness.py --input exit 0", "validate-prompt.py --input exit 0"],
       "command": ["python3", "plugins/prompt-creator/skills/run-prompt-creator-7layer/scripts/{verify-completeness,validate-prompt}.py", "--input", "plugins/system-spec-harness/skills/*/prompts/*.md (18 ファイル)"],
       "exit_code": 0,
-      "stdout": "18/18 prompt で両 validator exit 0 (36/36 実行成功)"
-    },
-    {
-      "id": "G-d7-reflection",
-      "name": "D7 反映の決定論確認 (decision_guidance 補助 evidence)",
-      "conditions": ["出荷 00-requirements-definition.md の sha256 が D7 反映済み compile 出力と一致", "意思決定表に D7 行が存在"],
-      "command": ["shasum", "-a", "256", "system-spec/00-requirements-definition.md", "&&", "grep -n D7 system-spec/00-requirements-definition.md"],
-      "exit_code": 0,
-      "stdout": "sha256 = f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae (指定値と一致)。93 行目に D7 行 (ephemeral-preview-only @ 2026-07-21T08:00+09:00) が存在"
+      "stdout": "18/18 prompt で両 validator exit 0 (36/36 実行成功、失敗 0)"
     }
   ],
   "findings": [
     {
-      "severity": "high",
-      "bucket": "attribution-ledger-drift",
-      "observation": "fork 台帳 writer (hooks/record-audit-fork.py) は hooks.json matcher 'Task' + tool_name=='Task' のみ観測するが、本ハーネスの subagent 起動ツール名は 'Agent' のため、本 run で親 orchestrator が実際に起動した実 fork 4 件 (C07×2 / C06 / C08) は台帳 (eval-log/system-spec-harness/audit-fork-ledger.jsonl、7 行のまま) に記録されない。receipt の台帳裏取りは過去 run (2026-07-22T03:36-04:12Z、wt-8 live-trial、session ba6ddb08/d0536597) の同一 subagent_type 行で成立している = HarnessHub-x4o の run/session 非束縛による既知ギャップへの依存。本ハーネス構成のままでは今後も新規台帳行が書かれず、『fork を 1 件も起こしていない実行を弾く』機械層保証がツール名ドリフトで空洞化する。",
-      "suggested_fix": "hooks.json の matcher と record-audit-fork.py の tool_name 判定に本ハーネスの subagent 起動ツール名 'Agent' を追加観測させる (hook 改修は e9b 資産で本タスク範囲外のため follow-up 課題を起票する)。session/run 束縛 (HarnessHub-x4o) も併せて対処する。",
+      "severity": "info",
+      "bucket": "remediation-verified",
+      "observation": "前回 FAIL (2026-07-22 23:21Z 評価) の唯一の FAIL 観点 doc_freshness の是正を一次資料で確定した。(1) pnpm 11.16.0: C08 が python3 urllib の一次 GET で registry.npmjs.org dist-tags latest=11.16.0 と api.github.com releases/latest tag_name=v11.16.0 (published 2026-07-22T20:36:06Z) の 2 経路一致を独立確認。前回 high (『一次確認の主張が独立照合で裏取りできない』) は、記録の誤りではなく監査手段の制約 (WebSearch 二次索引の索引ラグ) が原因だったことが確定し、C02 が record summary へ追記した生証跡断片 (2026-07-22T23:24:40Z 再照合) も正確だった。(2) opennext-cloudflare 1.20.2: 同様に 2 経路一致で前回の『鮮度未確認』を解消。(3) 前回 medium (audit-environment: 一次 GET 手段の構造的不能) は、C08 fork prompt へ python3 urllib による一次 GET 手段を明示する運用是正 (前回 gap 対応) により本 run で機能することを実証 — C08 は 20 回以上の一次 GET を全て HTTP 200 で完了し、鮮度未確認 0 件で監査を完結した。判定基準は緩和しておらず fail-closed 原則は維持 (検査手段の追加のみ)。",
       "evidence": [
-        "eval-log/system-spec-harness/audit-fork-ledger.jsonl: 7 行全てが tool_name='Task'、ts=2026-07-22T03:36-04:12Z (過去 run)。本 run の 4 fork は未記録",
-        "台帳 7 行に system-spec-matrix-auditor×2 / system-spec-hearing-auditor×2 / system-spec-doc-freshness-auditor×3 が存在するため aggregate --report の突合 (件数>=1) は過去行で成立する",
-        "aspect-criteria.md『残余ギャップ (run/session 非束縛)』: 本ゲートが確実に弾くのは『fork を 1 件も起こしていない実行』まで"
+        "C08 監査結果 (本 run): pnpm / opennext-cloudflare の一次 GET 生証跡 (dist-tags + releases/latest の 2 経路) が record と完全一致",
+        "fetched-references.json: pnpm record (latest_checked_at=2026-07-22T23:24:40Z) の summary に一次 GET の生証跡断片が追記済み (C02 是正)",
+        "C08 軸別カウント: 古い version 0 / 鮮度未確認 0 / 非公式 host 0 / 欠落 0 / 出典欠落 0 (前回: 古い version 1 + 鮮度未確認 1)"
       ]
     },
     {
-      "severity": "medium",
-      "bucket": "process-deviation",
-      "observation": "R2-delegate の SSOT は C05 自身が Task tool で 3 監査 sub-agent を fork する設計だが、本ハーネスでは fork 内 (C05 評価器 fork) からの nested fork が不可のため、3 監査 sub-agent (C07×2 回 / C06 / C08) は親 orchestrator が subagent fork ツールで実際に起動し、C05 はその結果全文を改変なく受領して忠実転記した。receipt 3 件は全てこの実 fork の記録であり、fork していない監査の receipt は含まない。dispatch.tool は schema const 'Task' (契約語彙) で記録しているが、本ハーネスの fork ツール表示名は 'Agent' である (命名ドリフトは attribution-ledger-drift finding で開示)。",
-      "suggested_fix": "評価結果の信頼性には影響しない (結果は透過転記) が、R2 の帰属連鎖に親 orchestrator の 1 hop が挟まる構造逸脱として開示する。nested fork 可能な環境での再実行、または R2-delegate SSOT へのハーネス制約注記の追加を follow-up とする。",
+      "severity": "low",
+      "bucket": "hearing-neutrality-residual",
+      "observation": "C06 軸2 検出 (sub-input): 誘導質問 6 件 = qa-014 (複数論点束ね型) / qa-028・qa-029 (AI 推奨断定埋め込み + 他案欠点のみ列挙) / qa-030 (広範な変更点群の一括 Yes/No) / qa-031・qa-034 (未確定論点全てへの AI 推奨列挙)。この 6 件は appr-006 (2026-07-17、既確定の事後承認 + 今後の様式改善) と qa-047 (2026-07-18、中立再確認 3 ラウンド) で対応済みであり、qa-047 の記録 (『誘導質問 6 件 = qa-014/028/029/030/031/034』) と今回検出が id 単位で完全一致する既知残差。qa_log の質問文は監査証跡として不変保持されるため今後の再監査でも再現し続ける。なお前回 run (2026-07-22 23:21Z) のレポートは C06 検出を 4 件 (qa-028/029/031/034) と記載していたが、qa-047 の記録は 6 件であり前回報告が 2 件 (qa-014/qa-030) 過少だった。検出内容の性質は同一で、前回評価の verdict には影響しない (いずれの run でも sub-input FAIL / primary PASS 維持の同一判定)。",
+      "suggested_fix": "任意: C01 の hearing 様式 (選択肢→推奨の順・1 問 1 論点) の徹底を継続する。qa_log の書き換えは監査証跡の破壊になるため行わない。",
       "evidence": [
-        "親 orchestrator からの委任指示: 3 監査は subagent fork ツールで実際に起動済み、結果全文を受領",
-        "receipt の verdict は監査結果の忠実転記 (C07=PASS / C06=FAIL / C08=FAIL、緑化・赤化どちらの書換もなし)"
-      ]
-    },
-    {
-      "severity": "high",
-      "bucket": "hearing-traceability",
-      "observation": "C06 検出 (a) を C05 が state で裏取り: matrix.infrastructure.web (state=確定) の qa_ref='qa-064' の本文は『P0: production/staging・Worker/DB migration・…』の 2 環境構成前提で書かれており、D7 (ephemeral-preview-only、常設 staging を持たない、confirmed_at 2026-07-21) の確定内容と矛盾する stale reference になっている。qa_ref の更新・D7 反映の新規 qa_log 登録・reopen_log への記録 (91 件中 D7 関連 0 件) のいずれも行われておらず、確定セルの根拠が確定済み意思決定と食い違ったまま出荷されている。",
-      "suggested_fix": "run-system-spec-elicit (C01) へ差し戻し、infrastructure.web セルを D7 前提で再質問 (reopen_log へ記録) して qa_log へ新 entry を登録し、qa_ref を差し替える。その後 compile (C03) 再実行。",
-      "evidence": [
-        "spec-state.json matrix.infrastructure.web = {state: 確定, qa_ref: qa-064}",
-        "qa-064 answer 本文: 『P0: production/staging・Worker/DB migration・tenant/workspace・…』(2 環境前提の phase 有効化順)",
-        "D7 user_decision: ephemeral-preview-only (常設 staging なし)。D7 注意点にも『qa-034 を参照している既存記述が改訂前提のまま残ると二重正本になる。本決定の反映範囲を追跡すること』と明記されているが未追跡"
-      ]
-    },
-    {
-      "severity": "high",
-      "bucket": "decision-evidence",
-      "observation": "C06 検出 (b) を C05 が state で裏取り: D7 の確定質疑が qa_log に完全欠落している。D5/D6 は user_decision.note に『質疑証跡: qa-028 / qa-029』を持つが D7 の note は『AskUserQuestion で選択 (2026-07-21)』の自己申告のみで質疑参照が無く、qa_log は 2026-07-16〜18 の qa-001〜066 のみで confirmed_at (2026-07-21T08:00+09:00) に対応する entry が存在しない。AskUserQuestion の提示逐語も未記録のため、提示の中立性 (『AI 推奨のみで confirmed にしない』の実効性) を独立検証できない。decision_guidance FAIL の一次根拠。",
-      "suggested_fix": "run-system-spec-elicit (C01) へ差し戻し、D7 の確定質疑 (提示逐語 + 回答) を qa_log へ登録し、D7 user_decision.note に質疑証跡参照を追記する (仕様書の手修正ではなく state 更新 + compile 再実行の経路で)。",
-      "evidence": [
-        "spec-state.json: D5 note『質疑証跡: qa-028』/ D6 note『質疑証跡: qa-029』/ D7 note に質疑参照なし",
-        "qa_log 66 件に 'D7' / 'ephemeral' を含む entry 0 件、qa 最終 entry は 2026-07-18 以前",
-        "hearing_progress: {loop_count: 2, next_question: null, complete: true} のまま D7 確定 (2026-07-21) 後の再評価形跡なし"
-      ]
-    },
-    {
-      "severity": "medium",
-      "bucket": "hearing-loop",
-      "observation": "C06 軸1/軸3: D7 確定 (2026-07-21) 後に hearing_progress の再評価が行われた形跡が無い (loop_count=2 のまま増加なし、complete=true 維持、reopen_log に D7 関連 0 件)。D7 は infrastructure カテゴリの前提 (環境構成) を変える決定のため、少なくとも infrastructure.web の再質問要否を判定すべきだった。形式上の聞き漏れ/早期停止は無し (54 セル全て確定/理由付き対象外で next_question=null と整合)。",
-      "suggested_fix": "C01 差し戻し時に hearing_progress を再評価し、D7 影響セルの再質問を loop として記録する (hearing-traceability finding の是正と同一経路)。",
-      "evidence": [
-        "hearing_progress: loop_count=2, complete=true, next_question=null (D7 confirmed_at より古い状態のまま)",
-        "reopen_log 91 件: ui-ux 系 (C07 指摘由来) 等のみで D7/infrastructure 関連 0 件"
-      ]
-    },
-    {
-      "severity": "medium",
-      "bucket": "hearing-neutrality",
-      "observation": "C06 軸2: qa-028/029/031/034 の AI 推奨先出し型質問は appr-006 で事後承認済み (解消済み)。新規検出として、D7 の AskUserQuestion 提示逐語が qa_log に存在せず、選択肢提示の中立性を独立検証できない (INDETERMINATE)。fail-closed で decision-evidence finding と併せて decision_guidance FAIL に寄与。",
-      "suggested_fix": "D7 質疑の qa_log 登録時に提示逐語 (選択肢と推奨の提示文) を含めて記録する。",
-      "evidence": [
-        "C06 軸2 監査結果: D7 提示逐語の qa_log 不在 → 中立性 INDETERMINATE",
-        "approval_log: appr-006 (AI 推奨先出し型の事後承認) は既存 4 件のみを対象とし D7 を含まない"
-      ]
-    },
-    {
-      "severity": "high",
-      "bucket": "doc-freshness",
-      "observation": "C08 [FAIL確定]: claude-code-plugins の挙動 anchor 'Claude Code v2.1.196' に対し現行 CLI は v2.1.216 (2026-07-20)。約 3 週間・約 20 バージョン分の乖離。本プロジェクト (HarnessHub) は Claude Code plugin 機構そのものを配布対象とするため、plugin 挙動の anchor 世代落ちは仕様前提の妥当性に直結する。",
-      "suggested_fix": "run-system-spec-doc-fetch (C02) へ差し戻し、claude-code-plugins の公式ドキュメントを再 GET して挙動 anchor を現行版で再確認・更新する。挙動差分があれば影響章を C01 で再質問する。",
-      "evidence": [
-        "C08 層2: 挙動 anchor 'Claude Code v2.1.196' vs 現行 CLI v2.1.216 (2026-07-20 時点)",
-        "fetched-references.json の claude-code-plugins entry が旧 anchor のまま"
-      ]
-    },
-    {
-      "severity": "medium",
-      "bucket": "doc-freshness",
-      "observation": "C08 [FAIL確定]: pnpm の記録 version 11.15.0 (retrieved_at 2026-07-18) に対し npm latest は 11.15.1 (C08 検索時点で 20 時間前公開)。patch 1 世代の軽微な世代落ちだが『記録 version が公式現行版から世代落ちしていない』の pass 基準に反する。",
-      "suggested_fix": "C02 で pnpm の reference を 11.15.1 へ更新する (軽微・機械的な再取得で解消)。",
-      "evidence": [
-        "C08 層2: pnpm 11.15.0 (記録) vs 11.15.1 (npm latest)"
-      ]
-    },
-    {
-      "severity": "medium",
-      "bucket": "doc-freshness-unverified",
-      "observation": "C08 [鮮度未確認] 2 件: typescript は記録 '7.0' に対し情報源間で矛盾 (6.0.3 stable + 7.0 RC 説 vs npm latest 7.0.2 説) があり一次ページ GET 未到達。drizzle-orm は記録 v1.0.0-rc.4 の確証が取れず一次 GitHub releases GET 未到達 (前回監査と同一制約)。未確認を PASS と誤認せず fail-closed で surface する。",
-      "suggested_fix": "WebFetch (一次ページ GET) が可能な環境で C02/C08 を再実行し、typescript と drizzle-orm の現行版を一次ソースで確定する (フォローアップ)。",
-      "evidence": [
-        "C08 層2: typescript 一次ページ GET 未到達 / drizzle-orm 一次 GitHub releases GET 未到達"
+        "C06 検出 (本 run): 6 件の qa id と検出理由の分類 (束ね型 / 断定埋め込み型 / 一括承認型 / 推奨列挙型)",
+        "spec-state.json qa-047: 『誘導質問 6 件 = qa-014/028/029/030/031/034』の記録 (今回検出と完全一致)",
+        "spec-state.json appr-006: 既指摘とユーザー対応 (既確定は承認・今後の様式を改善) の記録"
       ]
     },
     {
       "severity": "medium",
       "bucket": "design-knowledge",
-      "observation": "ui-ux.md / infrastructure.md / dev-workflow.md の 3 章は resource-map.yaml にカテゴリ専用 deep card が未定義のため、『適用された設計知識』節が汎用ポインタ (resource-map 索引 + 正本委譲の注記) のみ。doctrine anchor (Apple HIG / Google SRE) の行は存在するが、ui-ux の HIG アクセシビリティ指針は確定セル要件への明示適用が無い。aspect-criteria の『汎用ポインタのみで具体適用が無い章は medium 以上で拾う』に該当 (前回評価から継続、今回も現物で再確認)。",
+      "observation": "ui-ux.md / infrastructure.md / dev-workflow.md の 3 章は resource-map.yaml にカテゴリ専用 deep card が未定義のため、『適用された設計知識』節が汎用ポインタ (resource-map 索引 + 正本委譲の注記) のみ。doctrine anchor (Apple HIG / Google SRE) の行は存在するが、原則の確定セル要件への明示適用が章内に無い。aspect-criteria の『汎用ポインタのみで具体適用が無い章は medium 以上で拾う』に該当 (前回評価から継続、今回も現物で再確認)。",
       "suggested_fix": "ref-system-design-knowledge の resource-map.yaml に ui-ux / infrastructure / dev-workflow のカテゴリ専用 deep card を追加する (follow-up。card 追加後の再 compile で反映され、仕様書の再オープンは不要)。",
       "evidence": [
         "ui-ux.md:49 / infrastructure.md:50 / dev-workflow.md:70: 『このカテゴリ専用の deep card は resource-map に未定義』の汎用ポインタ節のみ",
-        "ui-ux.md:43: HIG anchor 行は存在するがアクセシビリティ原則の確定セル要件への明示適用なし"
+        "ui-ux.md:41-45: HIG anchor 行は存在するがアクセシビリティ原則等の確定セル要件への明示適用なし"
       ]
     },
     {
       "severity": "medium",
       "bucket": "knowledge-order",
-      "observation": "backend.md の設計知識 card 表示順 (Clean Architecture → API Design Patterns → DDD) が C14 の topo_order (clean-code → ddd → design-patterns → clean-architecture → api-design-patterns → secure-by-design) と表示上不一致 (DDD が下位 card より後に表示)。確定判断の依存順 (上位概念→下位技術) と card 内容には欠落が無く、表示層のみの divergence (前回評価から継続、今回 grep で card 節順を再確認)。",
+      "observation": "backend.md の設計知識 card 表示順 (Clean Architecture → API Design Patterns → DDD) が C14 の topo_order (clean-code → ddd → design-patterns → clean-architecture → api-design-patterns → secure-by-design) と表示上不一致 (DDD が下位 card より後に表示)。確定判断の依存順 (上位概念→下位技術) と card 内容には欠落が無く、表示層のみの divergence (前回評価から継続)。",
       "suggested_fix": "compile-spec-doc.py の render_design_refs が resource-map 順でなく topo_order で card を並べるよう C03 側で整列する (follow-up)。",
       "evidence": [
         "backend.md card 節順: 50 行 Clean Architecture → 91 行 API Design Patterns → 134 行 Domain-Driven Design",
@@ -305,48 +226,26 @@
       ]
     },
     {
-      "severity": "low",
-      "bucket": "matrix-semantic",
-      "observation": "C07 意味層の要確認 1 系統 (初回実行時): ui-ux.desktop-windows / desktop-macos の qa_ref=qa-007 が frontend 質疑としてはやや薄い (C07 判定は違反ではなく要確認。reopen_log には C07 指摘による qa-001→qa-007 差し替えの経緯が記録済み)。",
-      "suggested_fix": "次回 hearing loop で desktop UI-UX の直接質疑を追加して qa_ref を厚くする (任意)。",
+      "severity": "info",
+      "bucket": "attribution-ledger",
+      "observation": "本 run の 3 監査 (C07/C06/C08) は全て C05 自身が Agent tool で実 fork し、PostToolUse hook (record-audit-fork.py) が fork 台帳へ tool_name='Agent'・session_id=09591889-1101-451c-9ba7-70a87942c6cf の行として記録した (ts=2026-07-22T23:44:25Z / 23:46:12Z / 23:51:10Z)。audit_delegations の 3 receipt は全て台帳と突合可能。既知の残余ギャップ (run/session 非束縛の突合) は follow-up のまま。",
       "evidence": [
-        "C07 監査結果: 意味層の要確認 1 系統 (違反ではない)",
-        "reopen_log: ui-ux desktop-windows/macos の qa_ref 差し替え経緯 (C07 指摘由来) が記録済み"
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl 末尾 3 行 (本 run): subagent_type = system-spec-matrix-auditor / system-spec-hearing-auditor / system-spec-doc-freshness-auditor、tool_name='Agent'、ts=2026-07-22T23:44:25Z / 23:46:12Z / 23:51:10Z"
       ]
     },
     {
       "severity": "info",
-      "bucket": "foundation",
-      "observation": "上位概念トレーサビリティは健全: U1-U9 全確定 (appr-007)、--require-foundation exit 0、--profile cross exit 0 (goal/objective/intent → cell → chapter trace に dangling 0)。前回 high だった D7 の出荷 doc 未反映は決定論 compile 再実行で解消済み (sha256 一致を確認)。",
+      "bucket": "gates-green",
+      "observation": "決定論ゲートは全て exit 0: validate-coverage-matrix (loop / --require-complete / --require-foundation) / validate-knowledge-graph 4 profile / validate-source-citation / prompt validator 36 本。前回 run で唯一 FAIL だった doc_freshness の内容鮮度層も一次 GET の確定により PASS へ転換し、全 6 観点 PASS + high 0 で fail-closed 集約の総合 PASS 条件を満たす。",
       "evidence": [
-        "validate-coverage-matrix.py --require-foundation → exit 0",
-        "00-requirements-definition.md sha256 = f5e022ed... (D7 反映済み compile 出力と一致)"
-      ]
-    },
-    {
-      "severity": "info",
-      "bucket": "matrix-machine",
-      "observation": "マトリクス機械層は健全: 54 セル = 確定 25 / 対象外 29 (reason 全件あり) / 未収集 0、qa_ref dangling 0、C16 required-info profile exit 0。C07 は 2 回実行 (初回 + 独立再確認) とも同一結論 PASS。",
-      "evidence": [
-        "aggregate-completeness.py --matrix --require-complete → exit 0",
-        "C07 監査結果 2 回とも PASS (loop_pass=true, final_ready=true)"
-      ]
-    },
-    {
-      "severity": "info",
-      "bucket": "prompt-quality",
-      "observation": "prompt-creator 機械 validator (verify-completeness.py / validate-prompt.py) が 18/18 prompt で exit 0。R1-score / R2-delegate の意味層精読でも high 相当の設計欠陥なし。",
-      "evidence": [
-        "18/18 prompt × 2 validator = 36/36 実行で exit 0"
+        "gate_results 5 件全て exit_code=0",
+        "findings: high 0 件 (medium 2 / low 1 / info 3)"
       ]
     }
   ],
   "gaps": [
-    "【C01 (run-system-spec-elicit) へ差し戻し】D7 の確定質疑 (AskUserQuestion 提示逐語 + 回答) を qa_log へ登録し、D7 user_decision.note に質疑証跡参照を追記する。併せて infrastructure.web セルを D7 (ephemeral-preview-only) 前提で再質問して qa_ref を qa-064 から差し替え (reopen_log へ記録)、hearing_progress を再評価する。decision_guidance FAIL と high findings (hearing-traceability / decision-evidence) の是正材料。",
-    "【C02 (run-system-spec-doc-fetch) へ差し戻し】claude-code-plugins の公式ドキュメントを再 GET して挙動 anchor を現行 CLI (v2.1.216 時点) で更新し、pnpm を 11.15.1 へ更新する。typescript / drizzle-orm は一次ページ GET が可能な環境で現行版を確定する。doc_freshness FAIL の是正材料。",
-    "【C03 (run-system-spec-compile) 再実行】上記 C01/C02 の state 更新後に決定論 compile を再実行し、11 ファイルを再生成する (仕様書の手修正は行わない)。",
-    "【C08 再監査 + C05 再評価】C02 是正後に doc-freshness 監査を再実行し、全是正後に本完成度評価を再実行する。",
-    "【follow-up 課題起票 (本タスク範囲外)】fork 台帳 hook (hooks/record-audit-fork.py + hooks.json matcher) に本ハーネスの subagent 起動ツール名 'Agent' を追加観測させる。台帳裏取りが過去 run 行に依存する run/session 非束縛ギャップ (HarnessHub-x4o) も併せて対処する。",
-    "【follow-up (仕様書再オープン不要)】resource-map.yaml へ ui-ux / infrastructure / dev-workflow のカテゴリ専用 deep card を追加し、compile の render_design_refs card 表示順を topo_order へ整列する (medium findings の恒久対処)。"
+    "【follow-up (仕様書再オープン不要)】resource-map.yaml へ ui-ux / infrastructure / dev-workflow のカテゴリ専用 deep card を追加し、compile の render_design_refs card 表示順を topo_order へ整列する (medium findings 2 件の恒久対処)。",
+    "【harness follow-up (監査手段の恒久整備)】C08 の一次 GET は本 run では fork prompt への python3 urllib 手段明示 (運用 workaround) で成立した。この手段情報を C05 の R2-delegate SSOT または C08 agent 定義へ恒久記載する (fork prompt の手動記載依存だと将来 run で漏れて前回型の INDETERMINATE が再発しうる)。WebFetch 有効化または公式 API host 許可リスト追加の環境是正も引き続き有効。",
+    "【follow-up (既知ギャップ継続)】fork 台帳の run/session 束縛: 台帳は append-only で過去 run の行が累積するため、receipt との突合は subagent_type 存在検査に留まる。run id での束縛を record-audit-fork.py へ追加する対処を継続検討する。"
   ]
 }

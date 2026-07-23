@@ -26,9 +26,9 @@ serves_goals: [G1, G4, G5, G2]
 
 ### qa-068 (対応セル: web)
 
-**質問**: 確定決定 D7 (環境構成: 常設 staging を持たず preview は PR ごとに使い捨て) と qa-064 §13 有効化順 P0 の『production/staging』記述の矛盾をどう解消するか。
+**質問**: matrix.infrastructure.web の確定根拠 qa-064 は「qa-034 の確定内容 (production + staging の 2 環境を含む意思決定 4 論点) を全面維持」および「P0: production/staging」と記述しており、D7 (ephemeral-preview-only, qa-067) と矛盾する stale reference になっている。qa-064 の R2 配布境界・§13 段階有効化順は維持しつつ、環境構成の記述だけを D7 整合へ改訂して qa_ref を差し替えるか。(2026-07-22 AskUserQuestion でユーザーが「D7 どおり改訂する」を選択)
 
-**回答**: qa-064 の確定内容 (R2 配布境界・install/download 導線・§13 有効化順 P0-P5 の段階有効化・migration の tenant 分離テスト) を全面維持しつつ、D7 (ephemeral-preview-only) に整合する次の delta のみを確定する。【環境構成の正本】常設環境は production 1 組のみとし、常設 staging 環境は持たない (D7)。qa-064 §13 P0 の『production/staging・Worker/DB migration・…』は『production・Worker/DB migration・…』へ読み替え、PR 単位の動作確認は PR ごとに使い捨てる preview (PR close で破棄・常設リソースを増やさない) で担保する (qa-038【3】と同一方針)。【migration 検証】常設 staging での事前検証の代替として、expand/contract 3 段階の強制と CI の破壊的 DDL 検査 (qa-038) を正本ゲートとし、restore drill は都度一時 DB を作成して実施する (D7 の risks 緩和策)。【secret/リソース管理】常設 secret・binding・R2 prefix は production 1 組のみを台帳管理し、preview 用の一時リソースは PR close 時に破棄されることを検査で担保する。qa-064 のこの delta 以外の確定内容 (P0 のその他項目: tenant/workspace・OIDC callback・Auth secret・共通認可/監査・/health・CI の tenant 分離 test、P1-P5、R2 配布境界) は一切変更しない。
+**回答**: D7 どおり改訂する。qa-064 の delta (R2 配布境界・§13 段階有効化順 P0-P5) は次の 2 点を除き一言一句維持する: (1) 冒頭の「qa-034 の確定内容を全面維持」は「qa-034 の確定内容のうち論点(1) 環境構成のみ D7 (ephemeral-preview-only, qa-067) が上書きし、残る論点 (独自ドメイン・CI/CD 3 workflow・監視/バックアップ) は維持」と読み替える。(2) P0 の「production/staging」は「production (1 組のみ)」へ改訂し、常設 staging は構築しない。環境は production 1 組 + PR ごとの使い捨て preview (Workers preview URL) とし、migration 検証と restore drill は PR preview と production 反映前チェックで受ける。R2 配布境界 (staging prefix への upload 収束・公開 write URL 不発行・install/download の Worker 経由・短命 URL 規則) の「staging prefix」は R2 バケット内の検査待ち prefix の名称であり環境としての staging とは無関係のため変更しない。P1-P5 の段階有効化・migration の tenant_id/workspace_id 必須・2 tenant fixture 分離テスト・1 tenant/1 Project 固定環境変数の禁止も全て維持する。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

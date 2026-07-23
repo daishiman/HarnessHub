@@ -351,7 +351,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-071",
+        "qa_ref": "qa-066",
         "serves_goals": [
           "G1",
           "G4",
@@ -721,28 +721,13 @@
     },
     {
       "id": "qa-067",
-      "question": "既存確定 qa-066 (spec 参照型トレース)・qa-038 (CI/CD)・qa-039 (ローカル開発フロー) を維持したまま、HarnessHub の開発管理パイプライン (dev-graph 11 verb・beads 課題管理・plugin-plans 13 phase 計画・eval-log 証跡・issues/tasks/features 成果物管理) の運用実態調査 (2026-07-21) で検出された整合性・肥大化・消化状態の課題を、どのような改善要件として仕様へ反映するか。",
-      "answer": "調査で観測した事実に基づき、開発管理パイプライン改善の要件を次の 8 点で確定する。既存 qa-038/qa-039/qa-051/qa-066 の確定内容は全面維持し、本 qa は追加要件のみを定める。【1. lifecycle close-loop の機械化 (優先度高)】修正 commit/PR merge と issue/graph node 状態を自動収束させる。実測: bd-bridge notes passthrough 課題 (issues/sys-bd-bridge-notes-passthrough-20260721.md) はコード修正・回帰テスト完了済み (commit 29f9549, plugins/dev-graph/tests/test_bd_bridge_update_field_passthrough.py) だが issue md status=draft・graph node confirmation=draft のまま残置。要件: 解決済み事象の open 残置を検出する決定論検査を sync verb の lifecycle 収束および bd doctor 相当ゲートへ追加し、issue の acceptance 充足時に md/graph/beads の 3 表現を閉じる導線を持つ。【2. eval-log/ 配置規約の強制 (優先度高)】実測: eval-log/ 直下 90 ファイル (再帰 1,872)、既存 eval-log/dev-graph/ があるのに run-dev-graph-* が直下 48 件、バイト同一重複 3 件 (dry-notion-*)、completeness-report 6 変種、3.8MB の code-coverage.json を git 追跡。要件: skill 名 prefix によるサブディレクトリ配置規約を eval-log/README.md に明文化し CI lint で強制する。1MB 超の生成物は gitignore + 要約 JSON 化し、バイト同一重複と反復変種 (-2/-final/-rerun 等) の発生を検査で遮断する。【3. improvement-handoff の disposition 必須化 (優先度高)】実測: plugin-plans/ の improvement-handoff*.json 21 ファイル 94 findings 中、消化状態を機械判定できるのは 1 ファイル 7 件のみ。要件: handoff schema へ per-finding の disposition (applied|deferred|rejected) と根拠 ref を必須化し、未消化 findings は beads 課題へ起票して滞留を可視化する。【4. tasks/ frontmatter status の意味論明記 (優先度中)】実測: tasks/ 15 feature × 13 task = 195 件全件 status=active 固定。要件: 実行状態の正本は beads/graph 側 (execution_contexts / beads_linkage) であることを task template と規約へ明記し、md の status は文書ライフサイクル (active/superseded) を表すと定義して二重正本を作らない。【5. graph.json 肥大対策の方針確定 (優先度中)】実測: .dev-graph/state/graph.json は 1.17MB / 219 node / revision 262 の単一ファイル。要件: 当面は単一ファイルを維持し、500 node 到達または worktree 間 merge 衝突の頻発を分割 (feature 単位シャーディング等) の再検討トリガーとして仕様に記録する。【6. 未消化 findings の差分監査 (優先度中)】要件: dev-graph 中核 handoff (improvement-handoff-macro/beads/無印 計 31 findings) と現行実装の差分を監査し、実装済み項目へ disposition を遡及付与、未実装項目は beads 課題化する。【7. spec-drift-guardian close-gate 配線 (優先度中)】実測: plugin-plans/spec-drift-guardian/improvement-handoff-elegant-verify.json の 8 findings (spec-diff 80 行 preview の全 diff 扱い、C03/C04 verdict の close gate 未配線、proposal のみで close 可能) が未消化。要件: verdict を close gate へ配線し、整合性ガードの実効性を回復する。【8. 陳腐化文書の棚卸し GC (優先度低)】要件: 解決済み事象の open issue・0-findings プレースホルダ handoff (extract-system-blueprint 系 4 件等) の定期棚卸しを sync verb 運用へ組み込む。これらは G1 (作者の配布・運用効率)・G4 (品質ゲート)・G5 (運用持続性) に資する開発管理パイプライン要件であり、実装優先順は 1→2→3 (高) → 4→5→6→7 (中) → 8 (低) とする。"
+      "question": "環境構成: 常設 staging 環境を持つか、preview 使い捨てのみとするか (qa-034 と qa-038 の矛盾解消。feat-hub-foundation P03 指摘 R-01 の上位エスカレーション)。※追補登録: 2026-07-21 の AskUserQuestion で実施済みの確定質疑が qa_log に未登録だったため、C05 完成度評価 (2026-07-22, completeness-report.json high finding) の指摘により正規登録する。",
+      "answer": "qa-038 を正とする (常設 staging なし)。D7 の選択肢 ephemeral-preview-only を選択し、環境は production 1 組 + PR ごとの使い捨て preview とする。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12。出典: D7.user_decision (option_id=ephemeral-preview-only, confirmed_at=2026-07-21T08:00:00+09:00) の note 記録からの追補であり、新規の質疑ではない。"
     },
     {
       "id": "qa-068",
-      "question": "確定決定 D7 (環境構成: 常設 staging を持たず preview は PR ごとに使い捨て) と qa-064 §13 有効化順 P0 の『production/staging』記述の矛盾をどう解消するか。",
-      "answer": "qa-064 の確定内容 (R2 配布境界・install/download 導線・§13 有効化順 P0-P5 の段階有効化・migration の tenant 分離テスト) を全面維持しつつ、D7 (ephemeral-preview-only) に整合する次の delta のみを確定する。【環境構成の正本】常設環境は production 1 組のみとし、常設 staging 環境は持たない (D7)。qa-064 §13 P0 の『production/staging・Worker/DB migration・…』は『production・Worker/DB migration・…』へ読み替え、PR 単位の動作確認は PR ごとに使い捨てる preview (PR close で破棄・常設リソースを増やさない) で担保する (qa-038【3】と同一方針)。【migration 検証】常設 staging での事前検証の代替として、expand/contract 3 段階の強制と CI の破壊的 DDL 検査 (qa-038) を正本ゲートとし、restore drill は都度一時 DB を作成して実施する (D7 の risks 緩和策)。【secret/リソース管理】常設 secret・binding・R2 prefix は production 1 組のみを台帳管理し、preview 用の一時リソースは PR close 時に破棄されることを検査で担保する。qa-064 のこの delta 以外の確定内容 (P0 のその他項目: tenant/workspace・OIDC callback・Auth secret・共通認可/監査・/health・CI の tenant 分離 test、P1-P5、R2 配布境界) は一切変更しない。"
-    },
-    {
-      "id": "qa-069",
-      "question": "既存確定 qa-038/qa-039/qa-051/qa-066/qa-067 を全面維持したまま、開発管理パイプラインのドキュメント規約 2 概念 — (1) 仕組みとナレッジのオン・オフ分離、(2) ドキュメント粒度規約 (1 文書約 500 行目安) — を、どのような追加要件として仕様へ反映するか。(一次情報: 作者提供の運用記事 2 本、2026-07-22 提供)",
-      "answer": "既存 qa-038/qa-039/qa-051/qa-066/qa-067 の確定内容は全面維持し、本 qa は追加要件のみを定める。【1. 仕組みとナレッジのオン・オフ分離 (優先度中)】定義:『仕組み (mechanism)』= 別の開発システムへ持ち出して再利用する資産 — dev-graph 11 verb・plugins/ 配下の plugin 実装 (dev-graph / system-spec-harness / system-dev-plan 等)・.claude/skills/ の skill・template_id/template_version で参照される文書テンプレート・検査 script・配置/命名規約。『ナレッジ (knowledge)』= 本 repo 固有の内容 — system-spec/ 確定章と qa 質疑録・specs/・architecture/・features/・tasks/・issues/・docs/・eval-log/ 証跡・.dev-graph/state のグラフ実体。要件: (a) 仕組み側ファイルは repo 固有ナレッジ (固有 node id・固有 path・固有 qa 番号) への hard-coded 参照を持たず、必要な文脈は入力 (args・config・C24 content root 解決) として受け取る。(b) 移植導線 (extract-blueprint / install-bundle 等) は仕組みのみを持ち出し対象にでき (オン)、ナレッジは既定で含めない (オフ)。同梱する場合は明示 opt-in とする。(c) この境界を跨ぐ複製 (仕組み内へのナレッジ焼き込み・ナレッジ内への仕組みロジック複製) を新設しない。既存の混入は一括修正せず、発見時に beads issue へ起票して段階的に解消する。【2. ドキュメント粒度規約 (優先度中)】(a) 人と AI が一読で扱える粒度として、markdown 正本文書 (system-spec 章・architecture・features・tasks・docs) は 1 文書約 500 行を目安上限とする。超過が見込まれる場合は責務単位で分割し、index/一覧表 (system-spec/index.md 等) から参照で辿れる形を維持する (情報は複製せず参照で呼び出す)。(b) 500 行は警告閾値 (soft guideline) とし fail-closed lint にはしない — 機械分割の強制は『情報を散らさない』原則と矛盾し、分割判断は責務境界に基づき人が行うため。行数超過の警告レポートを qa-067 要件2 の eval-log 配置 lint と同系の CI 検査へ warning として追加する。(c) 既存文書の一括分割は行わず、新規作成・大規模改稿時に適用する。(d) 命名規則は既存の kebab-case と種別接頭辞 (feat-/sys-/arch-/spec-) を正とし、粒度分割時も接頭辞体系を維持して検索可能性を保つ。両要件は G1 (仕組みの持ち出しによる配布・運用効率)・G5 (ドキュメント管理の持続性) に資する (qa-067 由来の G4 トレースは維持)。実装は本 qa では規約の明文化までとし、検査の実装・移植導線の整備は別 feature として 13 フェーズを省略せず起票する。"
-    },
-    {
-      "id": "qa-070",
-      "question": "qa-069 で登録した追加要件 2 件 (仕組みとナレッジのオン・オフ分離 / ドキュメント粒度規約) のうち、AI が記事から肉付けした設計判断 — (a) 粒度の閾値と強制度、(b) 仕組み/ナレッジ境界の包含リストと移植時の既定 — を採用するか否かを含めてユーザーへ明示確認し、その結果をどう確定内容へ反映するか。(C06 ヒアリング監査 2026-07-22 HIGH finding『ユーザー確認記録の欠落』の是正ラウンド。既存確定 qa-038/qa-039/qa-051/qa-066/qa-067 は全面維持)",
-      "answer": "既存 qa-038/qa-039/qa-051/qa-066/qa-067 の確定内容は全面維持し、本 qa は qa-069 の 2 要件をユーザー明示確認の結果で更新して確定する。確認記録: AskUserQuestion 2 問 (2026-07-22)、承認 appr-008。一次出典 (作者記事の逐語): 『仕組みは持っていきたいけど、ナレッジは置いていきたい』『だから、仕組みとナレッジをオン・オフできるようにしておく』『粒度は、今のところ500行で落ち着いています』— うち粒度はユーザー逐語『2の内容で、300行を上限として』により 300 行上限・fail-closed へ更新して確定する。【1. 仕組みとナレッジのオン・オフ分離 (優先度中・ユーザー選択『提案どおり確定』)】定義:『仕組み (mechanism)』= 別の開発システムへ持ち出して再利用する資産 — dev-graph 11 verb・plugins/ 配下の plugin 実装 (dev-graph / system-spec-harness / system-dev-plan 等)・.claude/skills/ の skill・template_id/template_version で参照される文書テンプレート・検査 script・配置/命名規約。『ナレッジ (knowledge)』= 本 repo 固有の内容 — system-spec/ 確定章と qa 質疑録・specs/・architecture/・features/・tasks/・issues/・docs/・eval-log/ 証跡・.dev-graph/state のグラフ実体。要件: (a) 仕組み側ファイルは repo 固有ナレッジ (固有 node id・固有 path・固有 qa 番号) への hard-coded 参照を持たず、必要な文脈は入力 (args・config・C24 content root 解決) として受け取る。(b) 移植導線 (extract-blueprint / install-bundle 等) は仕組みのみを持ち出し対象にでき (オン)、ナレッジは既定で含めない (オフ)。同梱する場合は明示 opt-in とする。(c) この境界を跨ぐ複製 (仕組み内へのナレッジ焼き込み・ナレッジ内への仕組みロジック複製) を新設しない。既存の混入は一括修正せず、発見時に beads issue へ起票して段階的に解消する。【2. ドキュメント粒度規約 (優先度中・ユーザー逐語『2の内容で、300行を上限として』)】(a) markdown 正本文書 (system-spec 章・architecture・features・tasks・docs) は 1 文書 300 行を上限とし、超過を fail-closed の CI lint で遮断する (qa-067 の fail-closed-lint 原則と同型)。(b) 実測 (2026-07-22): 対象 root の md 291 件中 300 行超は 6 件 (最大 910 行 docs/security-spec.md)。既存超過 6 件は縮小のみ許す初期 remediation 一覧として beads 起票し、分割完了までは新規違反のみ遮断、一覧 0 件で全面適用とする (qa-067 の冪等 migration・beads 起票パターンを踏襲)。(c) 分割は責務単位で行い、index/一覧表 (system-spec/index.md 等) から参照で辿れる形を維持する (情報は複製せず参照で呼び出す)。(d) 命名規則は既存の kebab-case と種別接頭辞 (feat-/sys-/arch-/spec-) を正とし、分割時も接頭辞体系を維持して検索可能性を保つ。両要件は G1 (仕組みの持ち出しによる配布・運用効率)・G4 (fail-closed 品質ゲート)・G5 (ドキュメント管理の持続性) に資する (qa-067 由来の G4 トレースも維持)。実装 (300 行 lint・remediation・移植導線の検査) は本 qa では規約の明文化までとし、別 feature として 13 フェーズを省略せず起票する。"
-    },
-    {
-      "id": "qa-071",
-      "question": "既存確定 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 を全面維持したまま、開発管理パイプラインの方法論 (methodology) として次の 8 要件を追加確定する: (1) マクロ構造、(2) exact-13、(3) 外側ループ、(4) 内側ループ、(5) スコープ分離、(6) 情報配置、(8) 書き戻し、(9) 既存保全と更新統制。ユーザー提供の要件定義 (2026-07-22 /dev-graph spec --resume 引数) に基づき、仕様確定に不可欠な情報が既に揃っているため追加ヒアリングなしで確定する。(要件 7 の命名規則/doc 粒度は qa-070 で確定済み。要件 10 の portable separation は qa-070 で確定済み。要件 11 の Git 差分照合は completeness evaluator の responsibilities に帰属)",
-      "answer": "既存 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 の確定内容は全面維持し、本 qa は以下 8 要件をユーザー提供の回答として確定する。出典: ユーザー逐語 (2026-07-22 /dev-graph spec --resume 引数。追加ヒアリング不要として明示)。\n【1. マクロ構造 (macro-structure)】小さな task と依存関係を積み上げて feature にし、複数 feature を system にする。グラフには依存関係のある実行タスクだけを載せる (仕様本文・architecture 本文は正規文書に集約し、task/feature は参照と lineage だけを持つ)。実行タスクの最小単位は feature 内の 1 フェーズ相当作業であり、feature 間の依存は feature 粒度で表現する。\n【2. exact-13 (13フェーズ固定)】1 feature は P01..P13 の 13 フェーズで構成し、13 フェーズは直列依存 (前フェーズ完了が次フェーズの開始条件)。各フェーズ内の子タスク数は固定せず、達成に必要な粒度で分解し、並列実行可能なものは並列化する。小さい機能でも 13 フェーズを省略しない。1 feature → 13 task への分解は system-dev-planner (/dev-graph plan) が担う。\n【3. 外側ループ (outer loop)】feature 全体の改善とフィードバックを回す外側ループを持つ。中心には目的・背景・ゴールを置き、これらを確定してから 13 フェーズを進める。feature の目的・背景・ゴールが未確定のまま実装フェーズへ進まない。\n【4. 内側ループ (inner loop)】各フェーズに汎用 task prompt・goal-seek・rubric・feedback loop を持たせ、各フェーズの目的達成まで反復する。フェーズ内の達成基準 (rubric) が PASS するまでループを回す。\n【5. スコープ分離 (scope separation)】量が多い・1 task で完結しない・目的・背景から外れる問題は別 task または別 feature に切り出す。切り出した feature も同じ 13 フェーズと品質ゲートを通す。スコープ拡大の誘惑に負けず、切り出しを先行させる。\n【6. 情報配置 (information placement)】task graph に仕様本文や architecture 本文を詰め込まない。仕様・architecture・task-spec・docs は正規文書に集約し、task/feature は参照と lineage だけを持つ (内容を複製しない)。正規文書への参照は source_lineage と architecture_refs で追跡する。\n【8. 書き戻し (write-back)】実装完了後、結果・判断・改善点を仕様書と architecture へ反映し、次の task/feature が再利用できるようにする。一方通行にしない: 実装→仕様書→次の feature というフィードバックループを確立する。書き戻しの責務は feature の P13 (保守・運用移行) フェーズに含める。\n【9. 既存保全と更新統制 (preservation and update control)】AI の追加偏重による重複・矛盾を防ぎ、既存情報を消さずに差分更新する。不要情報の削除や置換は仕組み化された gate (reopen → re-confirm フロー・CI lint) で管理する。既存確定 qa 項目を AI が単独で書き換えない。変更は必ず reopen → 確認 → re-confirm の経路を通す。\n要件 7 (命名規則と検索可能性・文書粒度): qa-070 の確定内容 (kebab-case 接頭辞体系・300 行上限 fail-closed CI lint・責務単位分割) が実効値として包含する。要件 10 (portable separation): qa-070 の仕組みとナレッジのオン・オフ分離で確定済み。以上 8 要件 + qa-070 の 2 要件 (portable separation / doc 粒度) + qa-067 の 8 要件 (lifecycle close-loop 他) がG1 (仕組みの持ち出しによる配布・運用効率)・G4 (fail-closed 品質ゲート)・G5 (ドキュメント管理の持続性) に資する。実装は関連 feature (feat-dev-pipeline-improvement の 13 フェーズ・issue-qa070-implementation-feature-20260722) を通じて行う。"
+      "question": "matrix.infrastructure.web の確定根拠 qa-064 は「qa-034 の確定内容 (production + staging の 2 環境を含む意思決定 4 論点) を全面維持」および「P0: production/staging」と記述しており、D7 (ephemeral-preview-only, qa-067) と矛盾する stale reference になっている。qa-064 の R2 配布境界・§13 段階有効化順は維持しつつ、環境構成の記述だけを D7 整合へ改訂して qa_ref を差し替えるか。(2026-07-22 AskUserQuestion でユーザーが「D7 どおり改訂する」を選択)",
+      "answer": "D7 どおり改訂する。qa-064 の delta (R2 配布境界・§13 段階有効化順 P0-P5) は次の 2 点を除き一言一句維持する: (1) 冒頭の「qa-034 の確定内容を全面維持」は「qa-034 の確定内容のうち論点(1) 環境構成のみ D7 (ephemeral-preview-only, qa-067) が上書きし、残る論点 (独自ドメイン・CI/CD 3 workflow・監視/バックアップ) は維持」と読み替える。(2) P0 の「production/staging」は「production (1 組のみ)」へ改訂し、常設 staging は構築しない。環境は production 1 組 + PR ごとの使い捨て preview (Workers preview URL) とし、migration 検証と restore drill は PR preview と production 反映前チェックで受ける。R2 配布境界 (staging prefix への upload 収束・公開 write URL 不発行・install/download の Worker 経由・短命 URL 規則) の「staging prefix」は R2 バケット内の検査待ち prefix の名称であり環境としての staging とは無関係のため変更しない。P1-P5 の段階有効化・migration の tenant_id/workspace_id 必須・2 tenant fixture 分離テスト・1 tenant/1 Project 固定環境変数の禁止も全て維持する。"
     }
   ],
   "approval_log": [
@@ -773,14 +758,6 @@
     {
       "id": "appr-007",
       "note": "中立再確認 (2026-07-18・AskUserQuestion 3 ラウンド) による requirements_foundation 改訂の承認: C4 を保持前提へ改訂・U6 stakeholders から「顧客の情報システム/セキュリティ部門」を削除・G5 文言をユーザー個別追認。C06 監査指摘 (誘導質問 6 件・上位概念遡及性 2 件) への対応。"
-    },
-    {
-      "id": "appr-008",
-      "note": "2026-07-22 AskUserQuestion 確認ラウンド (C06 HIGH finding 是正)。設問1 (粒度規約の強制度): ユーザー回答逐語『2の内容で、300行を上限として』= fail-closed (超過で CI 失敗)・上限 300 行で確定。設問2 (仕組み/ナレッジ境界定義): ユーザー選択『提案どおり確定 (Recommended)』= 包含リストと opt-in 方式ごと確定。"
-    },
-    {
-      "id": "appr-009",
-      "note": "ユーザー逐語提供 (/dev-graph spec --resume 引数 2026-07-22): dev-graph 方法論 8 要件 (マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を qa-071 として確定。ユーザーは「ヒアリングには、まず以下を今回の対象機能の回答として使用してください」と明示し、仕様確定に不可欠な情報が既に揃っているため追加ヒアリングなしで確定することを明示した。要件 7 (500行目安) は既存 qa-070 の 300 行上限 fail-closed が実効値として包含するため保全。要件 10 (portable separation) は qa-070 で確定済みのため保全。"
     }
   ],
   "reopen_log": [
@@ -1331,33 +1308,9 @@
       "from": "確定"
     },
     {
-      "category": "dev-workflow",
-      "platform": "web",
-      "reason": "2026-07-21 の開発管理パイプライン運用実態調査 (対象: tasks/ system-spec/ specs/ plugin-plans/ issues/ installers/ features/ eval-log/ docs/ architecture/ .dev-graph/ .beads/) で検出した整合性・肥大化・消化状態の課題を、新機能『開発管理パイプライン改善』として dev-workflow 要件へ反映するため (R4-reopen)",
-      "from": "確定"
-    },
-    {
       "category": "infrastructure",
       "platform": "web",
-      "reason": "確定決定 D7 (常設 staging を持たず preview は PR ごとに使い捨て・2026-07-21 確定) が qa-064 の §13 有効化順 P0 の『production/staging』2 環境前提と矛盾しているため、D7 整合の delta を反映する (completeness evaluator 2026-07-21 の high finding: decision-chapter-drift の是正・R4-reopen)",
-      "from": "確定"
-    },
-    {
-      "category": "dev-workflow",
-      "platform": "web",
-      "reason": "作者提供の運用記事 2 本 (2026-07-22 提供:『小さなタスクを積み上げて仕組みにする』『何でもグラフでつないだら、タスクが回らなくなった』) のうち未反映の 2 概念 (仕組みとナレッジのオン・オフ分離 / ドキュメント粒度規約 約500行) を追加要件として確定するため。qa-067 の確定内容 (開発管理パイプライン改善 8 要件) および qa-066 以前は全面維持し、追加のみ行う (R4-reopen)",
-      "from": "確定"
-    },
-    {
-      "category": "dev-workflow",
-      "platform": "web",
-      "reason": "C06 ヒアリング監査 (2026-07-22) の HIGH finding『qa-069 の詳細設計判断 (粒度の強制度・仕組み/ナレッジ境界の包含リスト) にユーザー確認記録がない』の是正。AskUserQuestion による明示確認ラウンドを実施し、承認記録 appr-008 を伴う qa-070 で再確定する。確認の結果、粒度は記事の 500 行目安からユーザー決定により 300 行上限 fail-closed へ更新される (R4-reopen)",
-      "from": "確定"
-    },
-    {
-      "category": "dev-workflow",
-      "platform": "web",
-      "reason": "dev-graph 方法論 8 要件 (マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全) を qa-071 として追加確定するため R4-reopen。既存 qa-070 の全内容は qa-071 の全面維持句で継承する",
+      "reason": "C05 完成度評価 (2026-07-22) の high finding: qa-064 は production/staging 前提で D7 (ephemeral-preview-only, 2026-07-21 確定) と矛盾する stale reference。D7 整合の qa-068 へ qa_ref を差し替えるため再オープン",
       "from": "確定"
     }
   ],
@@ -1754,7 +1707,7 @@
       "user_decision": {
         "option_id": "cf-workers-opennext",
         "confirmed_at": "2026-07-16T00:00:00+09:00",
-        "note": "AskUserQuestion で「Cloudflare Workers 一体型」を選択"
+        "note": "AskUserQuestion で「Cloudflare Workers 一体型」を選択 質疑証跡: qa-003 (2026-07-22 C05 指摘対応で D4-D7 と形式を統一)。"
       }
     },
     {
@@ -1881,7 +1834,7 @@
       "user_decision": {
         "option_id": "turso-free",
         "confirmed_at": "2026-07-16T00:00:00+09:00",
-        "note": "ユーザーは AI 推奨 (D1) ではなく Turso を選択。ヘッジ条件: スキーマ・クエリを SQLite 方言互換に保ち (Drizzle は D1/libSQL 両対応)、Turso の無料枠改定・事業継続リスクが顕在化した場合は D1 へ移行する退避経路を仕様として明記する"
+        "note": "ユーザーは AI 推奨 (D1) ではなく Turso を選択。ヘッジ条件: スキーマ・クエリを SQLite 方言互換に保ち (Drizzle は D1/libSQL 両対応)、Turso の無料枠改定・事業継続リスクが顕在化した場合は D1 へ移行する退避経路を仕様として明記する 質疑証跡: qa-004 (2026-07-22 C05 指摘対応で D4-D7 と形式を統一)。"
       }
     },
     {
@@ -2009,7 +1962,7 @@
       "user_decision": {
         "option_id": "authjs-oidc",
         "confirmed_at": "2026-07-16T00:00:00+09:00",
-        "note": "AskUserQuestion で「Auth.js + テナント別 OIDC」を選択"
+        "note": "AskUserQuestion で「Auth.js + テナント別 OIDC」を選択 質疑証跡: qa-005 (2026-07-22 C05 指摘対応で D4-D7 と形式を統一)。"
       }
     },
     {
@@ -2484,13 +2437,13 @@
       "user_decision": {
         "option_id": "ephemeral-preview-only",
         "confirmed_at": "2026-07-21T08:00:00+09:00",
-        "note": "AskUserQuestion で「qa-038 を正とする (常設 staging なし)」を選択 (2026-07-21)。feat-hub-foundation P03 指摘 R-01 の上位エスカレーションに対する確定。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定した。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12。質疑証跡: qa-068"
+        "note": "AskUserQuestion で「qa-038 を正とする (常設 staging なし)」を選択 (2026-07-21)。feat-hub-foundation P03 指摘 R-01 の上位エスカレーションに対する確定。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定した。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12 質疑証跡: qa-067 (2026-07-21 確定質疑の追補登録, 2026-07-22 C05 指摘対応)。infrastructure.web の D7 整合改訂は qa-068。"
       }
     }
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 1,
+    "loop_count": 2,
     "next_question": null,
     "complete": true
   }

@@ -85,7 +85,7 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-21T14:18:05Z",
+        "imported_at": "2026-07-23T00:04:07Z",
         "origin_kind": "system-spec-harness",
         "source_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae",
         "source_path": "system-spec/00-requirements-definition.md",
@@ -103,7 +103,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-21T14:18:05Z"
+      "updated_at": "2026-07-23T00:04:30.693628Z"
     },
     {
       "acceptance": [
@@ -560,7 +560,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "d5897caae208aba38b8a0e8d5bbd8b282caf6d7b54ffd9a10c1625b5f4d02b76",
+        "evaluated_digest": "dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf",
         "evaluator": "assign-system-spec-completeness-evaluator",
         "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"
       },
@@ -618,9 +618,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-21T14:18:05Z",
+        "imported_at": "2026-07-23T00:04:07Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "d5897caae208aba38b8a0e8d5bbd8b282caf6d7b54ffd9a10c1625b5f4d02b76",
+        "source_digest": "dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -636,7 +636,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-21T14:18:05Z"
+      "updated_at": "2026-07-23T00:04:47.206172Z"
     },
     {
       "acceptance": [
@@ -29467,6 +29467,212 @@
       "title": "lint-live-trial-verdict の check_verdict が transcript_sha256=null を素通りさせる",
       "tracker_binding": "beads",
       "updated_at": "2026-07-22T06:10:00Z"
+    },
+    {
+      "acceptance": [
+        "features 14 件の source_digest が実測値と一致するか、再 import 差し戻しの記録がある",
+        "digest 更新は upsert-node.py patch 経由のみで行われている",
+        "意味影響の判定根拠が本 issue に記録されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-features-source-digest-drift-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-t9q の lineage 調査 (2026-07-22、全 215 artifact 突合) で観測した features 14 件の source_digest 既存 drift を追跡する follow-up issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-22T23:04:59Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-features-source-digest-drift-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "features 14 件の source_lineage が現行 source 実体へ追随済みで、source 変更が feature の意味に影響する場合は再 import 経路へ差し戻されている",
+      "graph_node_id": "issue-features-source-digest-drift-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T23:04:59Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "features/feat-*.md 14 件の source_lineage.source_digest (a4c26b6d…) が import 時点の specs/harness-hub-system-specification.md の姿のまま残り、現行実体 digest (56c60159…) と不一致の既存 drift になっている。validate-source-digest.py は registered_this_run のみ検査するため既存 node の drift は検出されず、lineage の追跡性が劣化している。",
+      "related_nodes": [
+        "spec-harness-hub-requirements"
+      ],
+      "resource_scope": [
+        "features/",
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/scripts/validate-source-digest.py"
+      ],
+      "scope_in": [
+        "source (specs/harness-hub-system-specification.md) の変更内容が各 feature の意味に影響するかの判定",
+        "影響なしの feature の lineage refresh (source_digest 実測更新) を正規 writer upsert-node.py patch で実施",
+        "影響ありの feature の再 import 経路への差し戻し"
+      ],
+      "scope_out": [
+        "sha 手書換での digest 合わせ (偽装として禁止)",
+        "validate-source-digest.py の検査範囲拡張 (別課題)",
+        "t9q の R3 再 import 対象 (spec-harness-hub-requirements / arch-harness-hub-infrastructure)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T23:04:59Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "specs/harness-hub-system-specification.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "source-lineage",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T23:04:59Z"
+    },
+    {
+      "acceptance": [
+        "C08 auditor が registry.npmjs.org と api.github.com へ read-only GET を実行した監査証跡が残る",
+        "公開直後の版 (npm index 遅延中) でも一次 2 経路照合で確定判定できる",
+        "変更が agent 定義または SKILL の正本に反映され、session 一時指示に依存しない"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c08-audit-primary-get-capability-20260722.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "C05 再々評価 (HarnessHub-t9q) の medium finding (audit-environment) と gap 4 で指摘された監査環境の構造要因を追跡する follow-up issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-22T23:38:10Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-c08-audit-primary-get-capability-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "C08 監査 sub-agent と C05 評価経路が公式 API host (registry.npmjs.org / api.github.com 等) へ read-only の一次 GET を実行でき、二次索引ラグ由来の判定不能 FAIL が発生しない",
+      "graph_node_id": "issue-c08-audit-primary-get-capability-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-22T23:38:10Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C05 再々評価 (2026-07-22 23:21Z、completeness-report.json) の medium finding (bucket: audit-environment) と gap 4 の恒久是正。C08 (system-spec-doc-freshness-auditor) の実行環境では WebFetch が無効 ('No such tool available')・curl は Bash 権限拒否で、registry.npmjs.org / api.github.com 等の公式一次ソースへ直接 GET できない。C08 は WebSearch (検索エンジンの二次索引) のみに依拠し、索引ラグと真の乖離を区別できず、pnpm 11.16.0 / opennext-cloudflare 1.20.2 のような公開直後の版で『裏取り不能 FAIL』が構造的に反復する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/system-spec-harness/agents/",
+        "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/"
+      ],
+      "scope_in": [
+        "C08 auditor の一次 GET 手段の確立 (WebFetch 有効化、Bash python3 urllib 手順の agent 定義への明記、または許可リスト追加のいずれか)",
+        "auditor prompt / agent 定義への照合手順 (curl 拒否時の fallback) の追記",
+        "C05 evaluator の delegation prompt での手段伝達の標準化"
+      ],
+      "scope_out": [
+        "検査基準の緩和 (fail-closed 原則は維持)",
+        "WebSearch 照合自体の廃止 (補助手段としては維持)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-22T23:38:10Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "system-spec/completeness-report.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "audit-environment",
+        "doc-freshness"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C08 監査 sub-agent が公式 API へ一次 GET できず WebSearch 二次索引依存で doc_freshness FAIL が反復する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T23:38:10Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
