@@ -7,7 +7,7 @@
   "branch": "devgraph/feat-dev-pipeline-and-doc-governance",
   "base_branch": "main",
   "recorded_at": "2026-07-22T14:23:51Z",
-  "release_head_sha": "7fbda7652386551754aebcd39c86e4eabd5759c7",
+  "release_head_sha": "9245529e6d5cc5018872a260fe73e310c9d6fd63 (第2統合後・本 receipt commit の直前)",
   "main_integration": {
     "merged_ref": "origin/main",
     "merge_commit": "47e917fb3853d0553617e676c58b4b5773ec1430",
@@ -26,6 +26,21 @@
       "live-trial fixture generator (requirements_exact13_package.py) に 15番目 section 'Inner goal-seek execution loop' を追加 (build-system-handoff.py の 14->15 section 契約強化への追随。29 errors -> 30 passed)"
     ]
   },
+  "second_integration": {
+    "reason": "PR #41 作成後に main が 22 コミット進み PR が CONFLICTING 化したため再統合 (2026-07-23)",
+    "merged_ref": "origin/main",
+    "merge_commit": "d8e59cc",
+    "commits_behind_before": 22,
+    "conflicts_resolved": 6,
+    "resolutions": {
+      "eval-log/review-queue.jsonl": "union",
+      "content-review/{elegance,rubric}-verdict.json": "SKILL.md が auto-merge で第3の sha (1d524a8a) 化したため、両 verdict を合成状態で再生成 (4条件 findings 0 / rubric score 100 / lint-content-review OK)",
+      "plugins/harness-creator/lessons-learned/2026-07-22-posttooluse-...md": "main 版採用 (--theirs, auto 生成)",
+      "plugins/system-dev-planner/references/system-task-spec-template.md": "main の Automated commands 再実行性段落 と 本ブランチの Inner goal-seek section を union",
+      "specs/harness-hub-system-specification.md": "main 版採用 (--theirs, 本ブランチの feature 変更外・main が最新評価状態)"
+    },
+    "graph_json": "auto-merge、validate-graph-schema valid / violations 0"
+  },
   "verification": {
     "ci_deterministic_gates": {
       "lint-eval-log-layout": "exit 0",
@@ -37,13 +52,13 @@
     },
     "regression": {
       "command": "pytest plugins/dev-graph/tests plugins/spec-drift-guardian/tests plugins/system-dev-planner/tests plugins/harness-creator/tests tests/scripts-root",
-      "passed": 2522,
+      "passed": 2577,
       "failed": 3,
       "errors": 0,
       "known_failures": "3件はすべて dev-graph skill の live-trial stale-sha (C02 run-dev-graph-node / C04 run-dev-graph-requirements / C14 run-dev-graph-decompose)。HarnessHub-kj1 / HarnessHub-2n6 で追跡"
     },
     "content_review": {
-      "run-system-dev-plan": "elegance PASS / rubric PASS (score 100 / findings 0)、skill_md_sha256 f1c5c77eec2d1316e2824fd02d2ead81a7b5b7dcb75e067f0916aa8e150b86cc"
+      "run-system-dev-plan": "elegance PASS / rubric PASS (score 100 / findings 0)、統合後 skill_md_sha256 1d524a8a8f39df13a200407eb980697b1c40fcf382e0eb3efdcc75632416c16b (本ブランチ goal-seek + origin/main script rename の合成)。lint-content-review --changed-only [OK]"
     },
     "independent_final_review": "差分 60+ ファイルを独立 context でレビュー。BLOCKER 0 / fail-open 化・guard 検知漏れ・退行・証跡改ざんなし"
   },
