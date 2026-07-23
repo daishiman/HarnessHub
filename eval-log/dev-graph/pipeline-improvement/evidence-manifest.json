@@ -1,0 +1,135 @@
+{
+  "phase": "P11",
+  "kind": "evidence-manifest",
+  "artifacts": [
+    {
+      "path": ".claude/settings.json",
+      "sha256": "sha256:393366e25d5ac467ae865aa9c49e07f423786930a6423f12ee82c76d4c2348b4"
+    },
+    {
+      "path": ".dev-graph/state/graph.json",
+      "sha256": "sha256:9e9f02c92c182c38af48edbc486a8278cd13aaf371567d4509fbbde1aa071405"
+    },
+    {
+      "path": ".github/workflows/dev-pipeline-lint.yml",
+      "sha256": "sha256:d8b4c8d91542dc823efe9834040bb2c71bd976be1a7da0ea3a5b882b17f1820b"
+    },
+    {
+      "path": "docs/features/feat-dev-pipeline-improvement/design.md",
+      "sha256": "sha256:3cc8de145adabb65724011e55536e1047c98b57476ae2ac708c71600aeb963b5"
+    },
+    {
+      "path": "docs/features/feat-dev-pipeline-improvement/design-review.md",
+      "sha256": "sha256:3e4d7da704871c93ce525fd30e48d130d8fbba6b7dabd7fa127479f6c291f894"
+    },
+    {
+      "path": "docs/features/feat-dev-pipeline-improvement/acceptance-report.md",
+      "sha256": "sha256:f0b7c693d27c680c27f2792d4157267d8a216515e74eb158666682509ec43dfb"
+    },
+    {
+      "path": "docs/features/feat-dev-pipeline-improvement/final-review.md",
+      "sha256": "sha256:084e9066a2adce0c554bcf0e45ee0dbb632cbe42207d0acc59025a88b3f2df7e"
+    },
+    {
+      "path": "docs/features/feat-dev-pipeline-improvement/operations.md",
+      "sha256": "sha256:97e83d2f4c73e3b4d7c3e415404fa48b4bc7b910e7722b69ed2561029967fc2c"
+    },
+    {
+      "path": "eval-log/dev-graph/pipeline-improvement/migration-receipt.json",
+      "sha256": "sha256:efc898dd632ad9503ea9fe55842247df0181a18df877108ea413da1d26e805e1"
+    },
+    {
+      "path": "eval-log/dev-graph/pipeline-improvement/test-run-p06.json",
+      "sha256": "sha256:405ea7cf5337e393ca244daf2da030efabbddc4da778b3ed2004af3858e241e8"
+    },
+    {
+      "path": "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json",
+      "sha256": "sha256:8b63997ab34b113af3c421652afdc029802ae20091ca58fd8cb57a48702ac000"
+    },
+    {
+      "path": "issues/sys-d7-hearing-trace-20260721.md",
+      "sha256": "sha256:d56a3094f2a4b047b7b2104101b3cdf8017df4245c585b69ded0c944912b55f9"
+    },
+    {
+      "path": "plugins/dev-graph/scripts/lint-open-residue.py",
+      "sha256": "sha256:f92d29e3bb62a42996775703b01d033084374057c856c6d2ae01f4d70c457fc2"
+    },
+    {
+      "path": "plugins/dev-graph/scripts/lint-eval-log-layout.py",
+      "sha256": "sha256:3b4ae27efba88ab6a97fd35603239b1d0dec8cf51e3cfe5b7292f85833615a70"
+    },
+    {
+      "path": "plugins/dev-graph/scripts/lint-handoff-disposition.py",
+      "sha256": "sha256:59aad5c531916c5514ed0e9d8a1293f9c971dd4f9aacf8d514198ae74e6f3725"
+    },
+    {
+      "path": "plugins/dev-graph/scripts/migrate-pipeline-improvement.py",
+      "sha256": "sha256:862c4347a16f44b5f86fdcc46b5c7a7498b3ad7a0c0f54da9363d2234d9fb81d"
+    },
+    {
+      "path": "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py",
+      "sha256": "sha256:ba1933f3b359df9c3f0b0a429c5c033fb0d671278f70133369f33ec10744b0ba"
+    },
+    {
+      "path": "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json",
+      "sha256": "sha256:5491e4d628cc92c327005a51da2f0f134bc2b3254c824056671f4550e3479a9a"
+    },
+    {
+      "path": "plugins/harness-creator/scripts/emit-improvement-handoff.py",
+      "sha256": "sha256:90236f38f0d9cf1af8567f4e85719485a850fa70209e2d2c5d9216b15be52609"
+    },
+    {
+      "path": "plugins/spec-drift-guardian/hooks/guard-spec-drift-close.py",
+      "sha256": "sha256:1afd47a835176d1bbee9f65472c35eb7dc1ca0c18e6df2aa9c5a281eadb6e793"
+    },
+    {
+      "path": "plugins/spec-drift-guardian/scripts/check-triage-complete.py",
+      "sha256": "sha256:e3bf2a9c60094f781ee2917f261e3aff85d648fbe8c9108cfd6ff1118dc3ab29"
+    },
+    {
+      "path": "plugins/spec-drift-guardian/schemas/triage-report.schema.json",
+      "sha256": "sha256:4c01d20c846e8c1e32130c917904dddb409b027854f14cf1c47d781f64dd1c64"
+    },
+    {
+      "path": "plugins/spec-drift-guardian/schemas/sync-audit-verdict.schema.json",
+      "sha256": "sha256:56a136fabf1478ec169251872db68db098f0fcdcdc009a97b91c62508b951aab"
+    },
+    {
+      "path": "plugins/system-dev-planner/references/system-task-spec-template.md",
+      "sha256": "sha256:50e00c3c500acd30dfcffd75507bfe23bee14ec05f84e2e686acbdc4083dc5ae"
+    },
+    {
+      "path": "plugins/system-dev-planner/scripts/validate-system-plan.py",
+      "sha256": "sha256:3bc977faff7cff4b3d8e50e88598ccfc215c3157136c4789cfceeb8bfd57bb9c"
+    },
+    {
+      "path": "plugins/system-dev-planner/scripts/build-system-handoff.py",
+      "sha256": "sha256:ea1e9ad1f5920d98a13733bae782b7ef3a8f82ea3ddfbc9eafea8afe4c7ee26a"
+    },
+    {
+      "path": "plugins/system-dev-planner/scripts/promote-system-plan.py",
+      "sha256": "sha256:517e02c8651da269de657609be00386eb079e3b88c29d0f25327ca4dc8077eec"
+    },
+    {
+      "path": "system-spec/spec-state.json",
+      "sha256": "sha256:c6afce9e71847c812de5ac2c023deb45bcaaecfb0ae0fb931b70c0191d914623"
+    },
+    {
+      "path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
+      "sha256": "sha256:ee3027a411bca5da629df40115e7a1204df59c137248d4fea73914f96433fd9b"
+    }
+  ],
+  "artifact_count": 29,
+  "rerun_commands": [
+    "python3 -m pytest -q plugins/dev-graph/tests/test_lint_open_residue.py plugins/dev-graph/tests/test_lint_eval_log_layout.py plugins/dev-graph/tests/test_lint_handoff_disposition.py plugins/dev-graph/tests/test_migrate_pipeline_improvement.py plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py plugins/spec-drift-guardian/tests/test_guard_spec_drift_close.py plugins/spec-drift-guardian/tests/test_check_triage_complete.py plugins/harness-creator/tests/test_emit_improvement_handoff.py plugins/harness-creator/tests/test_emit_handoff_schema_parity.py plugins/system-dev-planner/tests/test_runtime.py plugins/system-spec-harness/tests tests/scripts-root/test_root__lint_doc_line_limit.py tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py tests/scripts-root/test_root__lint_portability_knowledge_optin.py",
+    "python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root .",
+    "python3 plugins/dev-graph/scripts/lint-eval-log-layout.py --repo-root .",
+    "python3 plugins/dev-graph/scripts/lint-handoff-disposition.py --repo-root .",
+    "python3 plugins/dev-graph/scripts/migrate-pipeline-improvement.py --repo-root . --dry-run",
+    "python3 scripts/build-claude-settings.py --check",
+    "python3 scripts/lint-doc-line-limit.py --repo-root .",
+    "python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .",
+    "python3 scripts/lint-portability-knowledge-optin.py --repo-root ."
+  ],
+  "recorded_at": "2026-07-22T13:00:15Z"
+}

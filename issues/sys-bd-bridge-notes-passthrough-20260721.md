@@ -12,8 +12,8 @@ iteration: null
 title: "bd-bridge 経由で beads の notes/design を更新できず進捗記録の経路が塞がっている"
 owners: ["daishiman"]
 created_at: "2026-07-21T00:00:00Z"
-updated_at: "2026-07-21T00:00:00Z"
-status: "draft"
+updated_at: "2026-07-22T05:49:40.634240Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-docs-recompose-followups-20260718"]
 resource_scope: ["plugins/dev-graph/scripts/bd-bridge.py","plugins/dev-graph/hooks/guard-graph-schema.py"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-21T04:00:00Z","evidence_refs":["plugins/dev-graph/tests/test_bd_bridge_update_field_passthrough.py"],"policy":"manual","reconciled_at":"2026-07-22T00:00:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-21T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 

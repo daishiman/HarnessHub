@@ -1,50 +1,50 @@
 ---
-graph_node_id: arch-harness-hub-dev-workflow
-artifact_kind: architecture
+graph_node_id: "arch-harness-hub-dev-workflow"
+artifact_kind: "architecture"
 artifact_subtypes: ["infrastructure"]
-title: Harness Hub dev-workflow アーキテクチャ (system-spec 取込)
-project_id: harness-hub
-domain: dev-workflow
-status: active
-priority: high
+project_id: "harness-hub"
+domain: "dev-workflow"
+tags: ["system-spec-import","dev-workflow"]
+priority: "high"
 start_date: null
 target_date: null
 iteration: null
+title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
-tags: ["system-spec-import", "dev-workflow"]
-file_path: architecture/harness-hub-dev-workflow.md
-template_id: architecture
-template_version: 1.0.0
-confirmation_status: confirmed
-evaluation_status: pass
-confirmation_evidence: {"evaluated_digest": "c8f21b091cfc28b29992454908c3281ff519dce8535f3629c6fddc156ccd543f", "evaluator": "assign-system-spec-completeness-evaluator", "evidence_ref": "system-spec/completeness-report.json"}
-source_lineage: {"imported_at": "2026-07-18T15:40:17Z", "origin_kind": "system-spec-harness", "source_digest": "c8f21b091cfc28b29992454908c3281ff519dce8535f3629c6fddc156ccd543f", "source_path": "system-spec/dev-workflow.md", "source_plugin": "system-spec-harness", "source_version": "0.1.0"}
-created_at: 2026-07-18T08:10:00Z
-updated_at: 2026-07-18T15:40:17Z
+created_at: "2026-07-18T08:10:00Z"
+updated_at: "2026-07-22T09:30:00Z"
+status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend", "arch-harness-hub-backend", "arch-harness-hub-data", "arch-harness-hub-security", "arch-harness-hub-infrastructure"]
+related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
-purpose: Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration)、作者ローカル環境規律、features README と 11 requirements-baseline の派生正本境界を参照する
-goal: qa-038/qa-039/qa-066 の確定内容に適合し、P0〜P5 の開発運用と feature baseline の source lineage を逆引きできる指針を提供する
+purpose: "Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration)、作者ローカル環境規律、features README と 11 requirements-baseline の派生正本境界を参照する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-070/qa-071 の確定内容に適合し、P0〜P5 の開発運用・feature baseline の source lineage 逆引き・開発管理パイプライン改善 8 要件 (qa-067)・ドキュメント規約 2 件 (qa-070: 仕組みとナレッジのオン・オフ分離 / 300 行粒度 fail-closed)・dev-graph 方法論 8 要件 (qa-071: マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全) の指針を提供する"
 scope_in: ["system-spec/dev-workflow.md"]
-scope_out: ["正本章の内容複製", "未確定章の取込"]
-acceptance: ["正本章が confirmed かつ evaluator PASS", "source_digest が正本と一致"]
+scope_out: ["正本章の内容複製","未確定章の取込"]
+acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
 architecture_refs: []
 parent_feature: null
 feature_package_id: null
 phase_ref: null
+file_path: "architecture/harness-hub-dev-workflow.md"
+template_id: "architecture"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260722-qa071.json"}
+source_lineage: {"imported_at":"2026-07-22T09:30:00Z","origin_kind":"system-spec-harness","source_digest":"97f579c1195a08319415e4cb7c23a73a2881cb26fe6223ee535d641f5e9d44c2","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
-classification_reason: system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)
-classification_candidates: [{"artifact_kind": "architecture", "confidence": 0.95, "candidate_path": "architecture/harness-hub-dev-workflow.md"}]
-tracker_binding: none
-beads_linkage: null
-github_publication: {"mode": "local_only", "project_aliases": [], "labels": [], "milestone": null}
+classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
+classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
 issue_linkage: null
+tracker_binding: "none"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"policy": "manual", "status": "not_applicable", "source": null, "completed_at": null, "reconciled_at": null, "evidence_refs": []}
-implementation_readiness: {"status": "complete", "missing_sections": [], "checked_at": "2026-07-18T08:10:00Z"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
+implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections":[],"status":"complete"}
 ---
 
 # Harness Hub dev-workflow アーキテクチャ (system-spec 取込)

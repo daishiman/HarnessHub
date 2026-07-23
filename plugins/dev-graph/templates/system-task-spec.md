@@ -1,7 +1,7 @@
 <!--
   POINTER (SSOT)。このファイルは独立テンプレートではない。
   system 開発の実行タスク仕様 (runtime task spec) を emit する正本は system-dev-planner:
-    - plan 正本   : plugin-plans/system-dev-planner/references/system-task-spec-template.md (template_version 1.0.0)
+    - plan 正本   : plugin-plans/system-dev-planner/references/system-task-spec-template.md (template_version 1.1.0)
     - build 後資産 : plugins/system-dev-planner/references/system-task-spec-template.md
   dev-graph は system 実行タスク仕様を emit しない (登録・投影・完了収束のみ担う)。
   かつて本ファイルに存在した draft body は正本へ統合済み (SSOT 重複解消・EV-BK07 / system-dev-planner phase-08,phase-12)。
@@ -34,4 +34,3 @@
 | (正本のみ) | Machine-readable registration fields / Source pin / Repository context / Branch and worktree execution / implementation-readiness 判定 |
 
 > beads/GitHub 投影に要する id (=graph_node_id・登録時採番) / depends_on (task-graph DAG) / status (registration schema const) / parent (parent_feature) は、正本テンプレート + `dev-graph-registration.schema.json` + `task-graph.json` の合成で充足する (`references/execution-tracker-contract.md` §2 状態写像表が正本)。
-

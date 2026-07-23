@@ -1,0 +1,254 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec/",
+  "verdict": "FAIL",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "score": 92,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "requirements_foundation (confirmed=true, approval_ref=appr-007) の goals(G1-G5)/objectives(O1-O4)/success_criteria/stakeholders(4)/scope(in/out)/constraints(C1-C4)/concrete_intents(I1-I14) が全て値を保持し、00-requirements-definition.md の U1-U9 が値または明示 N/A で確定している。intent.serves 参照および goal-objective-intent-cell-chapter 参照に dangling は無く、validate-coverage-matrix.py --require-foundation は exit0。ただし D7 (decision_guidance 側で high 判定) と infrastructure.md の内容矛盾は、上位決定→章内容という trace の実質破れでもあるため info として本観点にも横断記録する。",
+      "evidence": [
+        "spec-state.json requirements_foundation.confirmed=true, approval_ref=appr-007",
+        "validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-foundation -> exit0 (『OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす』)",
+        "system-spec/00-requirements-definition.md: U1-U9 全項目値または理由付き N/A で確定",
+        "spec-state.json concrete_intents (I1-I14) の serves 参照に dangling 0 件"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "FAIL",
+      "score": 55,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "decisions[] 7件 (D1-D7) は全て confirmed で、規定フォーマット (options 2-3案・cost_model・free_tier_limits・goal_fit/security_fit・pros/cons/risks・lock_in/ops_burden・evidence_refs・recommendation(comparison_basis 5軸+caveats+confidence+latest_checked_at)・user_decision) を満たす。D2 は AI 推奨 (d1-drizzle, confidence=medium) と異なるユーザー決定 (turso-free、ヘッジ条件付き) が採用されており AI 追従バイアスが無いことの積極的な証跡である。しかし D7 (環境構成: 常設 staging 廃止・ephemeral-preview-only, confirmed_at=2026-07-21T08:00:00+09:00, feat-hub-foundation P03 の指摘 R-01 エスカレーションに基づく確定) が、対応するカテゴリ章 system-spec/infrastructure.md (qa-064, セル infrastructure.web) の確定内容に反映されていない。infrastructure.md 本文の §13 有効化順 P0 説明には『production/staging』という 2 環境前提の記述がそのまま残存し、D7 の決定と直接矛盾する。D7 自身の note に『qa-034 を参照している既存記述が改訂前提のまま残ると二重正本になる。本決定の反映範囲を追跡すること』という caveat が明記されているにもかかわらず、spec-state.json の reopen_log を確認すると infrastructure/web セルは D7 確定 (2026-07-21) 以降に一度も再オープンされておらず、章内容の追従が行われていない。仕様書セット内 (00-requirements-definition.md vs infrastructure.md) で直接矛盾する記述が併存する状態であり、開発者がこの矛盾に気づかず infrastructure.md の P0 記述に従って実装した場合、確定済みの意思決定 (D7) に反する常設 staging 環境を構築してしまう実害あるリスクがある。high finding として計上する。",
+      "evidence": [
+        "system-spec/00-requirements-definition.md:93 (D7 行。user_decision=ephemeral-preview-only @ 2026-07-21T08:00:00+09:00。caveat に『本決定の反映範囲を追跡すること』と明記)",
+        "system-spec/infrastructure.md:31 (qa-064 回答内『§13 有効化順 (P0-P5): … P0: production/staging・Worker/DB migration・tenant/workspace…』)",
+        "spec-state.json decisions[id=D2].recommendation.option_id=d1-drizzle / user_decision.option_id=turso-free (AI推奨と異なる採用の健全な証跡)",
+        "spec-state.json reopen_log: category=infrastructure, platform=web の最終エントリは qa-064 差替理由のみで D7 確定日 (2026-07-21) 以降の再オープン記録なし"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "score": 84,
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "C07 (system-spec-matrix-auditor) による独立監査結果 (loop_pass=PASS, final_ready=PASS) を一次根拠とする。決定論ゲート (loop / --require-complete / --require-foundation) は全て exit0。全9カテゴリ×6 platform=54セルが未収集0で埋まり、対象外29件は理由が具体的、確定25件の qa_ref は全て qa_log に実在し dangling 0件。6 axis 中5 axis は PASS、qa_ref トレーサビリティ axis は PASS_WITH_FINDINGS (medium 2件: ui-ux desktop の qa-007 流用、backend/security web の qa-017 反映がqa_ref本文から確認不能)。C16 必須情報カタログ被覆 (validate-knowledge-graph.py --profile required-info) は exit0。sub-input として依頼した C06 (system-spec-hearing-auditor) のヒアリング品質監査結果は、本評価の集約時点まで着信しなかった (進捗確認メッセージ2回送付済み、応答なし)。C06 は本来『網羅性・トレースの補助根拠』であり必須の一次根拠ではないため、C07 の独立監査結果のみでも観点 verdict は確定可能と判断したが、C06 未着信は gaps に記録する。",
+      "evidence": [
+        "C07 (system-spec-matrix-auditor) 監査結果: verdict=PASS, loop_pass=PASS, final_ready=PASS, gate_exit_codes={loop:0, require_complete:0, require_foundation:0}",
+        "C07 finding medium-1: ui-ux.desktop-windows/desktop-macos の qa_ref=qa-007 (フロントエンド構成質問) は UI-UX 固有の裏付けが薄い",
+        "C07 finding medium-2: backend.web(qa-059)/security.web(qa-061) の系譜元 qa-048 回答本文に qa-017 への言及がなく reopen 目的達成が qa_ref から確認不能",
+        "C07 finding info: goals G1-G5 は全て確定セルの serves_goals で最低1回使用、drift候補0件",
+        "validate-knowledge-graph.py --profile required-info -> exit0",
+        "C06 (system-spec-hearing-auditor) への進捗確認メッセージ2回 (未応答)"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "score": 88,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "9カテゴリ全章に上流指針 (doctrine anchor) テーブル (Apple HIG=presentation / Clean Architecture=application-architecture・data-access / OWASP ASVS=authentication・security / Google SRE=reliability・operations) と適用設計知識節が存在し、全 category→concern 写像は全射 (validate-knowledge-graph.py --profile doctrine は exit0)。database (DDD)・auth/security (Secure by Design)・backend (Clean Architecture→API Design Patterns→DDD の3カード)・frontend (Clean Architecture)・maintenance-ops (Clean Code) の各章は具体的 deep knowledge card を確定セル要件へ具体適用しており、Goodhart 防止基準 (ポインタ存在確認のみでPASSにしない) を満たす。ui-ux/infrastructure/dev-workflow は専用 deep card を resource-map.yaml に持たず汎用ポインタのみだが、doctrine anchor authority への従属記述があり形骸化とまでは言えない。validate-knowledge-graph.py の4 profile (knowledge/doctrine/required-info/cross) は全て exit0 (循環/dangling/孤立/root到達不能 0)。ただし backend.md の設計知識カード表示順 (Clean Architecture → API Design Patterns → DDD) が resource-map.yaml 記載順のままで、knowledge-catalog.json の topo_order (clean-code→ddd→design-patterns→clean-architecture→api-design-patterns→secure-by-design) と一致しない。compile-spec-doc.py の category_design_refs()/render_design_refs() の実装を確認したところ、resource-map.yaml 記載順で refs を構築しており topo_order によるソートを行っていない一方、R2-render.md プロンプト (22/28/55行目) は『知識の位相順消費 (C14)』をチェックリスト項目として明記しており、プロンプト仕様と実装が乖離している。これは既存 completeness-report.json でも medium finding として指摘済みの既知課題であり、確定判断の依存順自体や内容欠落は無いため medium 級に留める。",
+      "evidence": [
+        "validate-knowledge-graph.py --profile knowledge/doctrine/required-info/cross 全て exit0",
+        "system-spec/database.md, auth.md, security.md, backend.md, frontend.md, maintenance-ops.md: doctrine anchor テーブル + 適用設計知識カードあり",
+        "system-spec/backend.md: 設計知識カード見出し順 = Clean Architecture → API Design Patterns → DDD",
+        "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/knowledge-catalog.json: depends_on グラフから導出される topo_order = clean-code, ddd, design-patterns, clean-architecture, api-design-patterns, secure-by-design",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/scripts/compile-spec-doc.py: category_design_refs() が resource-map.yaml 記載順 (read_when 順) で refs を構築、topo_order ソート未実施",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/prompts/R2-render.md:22,28,55: 『知識の位相順消費 (C14)』チェックリスト項目"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "INDETERMINATE",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "C08 (system-spec-doc-freshness-auditor) へ独立監査を委任し進捗確認メッセージを2回送付したが、本評価の集約完了までに結果が着信しなかった。機械層 (validate-source-citation.py --targets --references --state) は exit0 で、fetched-references.json の17 target 全件が必須フィールド (target_id/source_url/official_host/version or last_updated/latest_checked_at) を充足し host 一致していることを確認した。意味層 (公式サイト再照合) は自前で Next.js のみサンプル検証し (WebSearch: 最新安定版16.2.10, 2026-07-01リリース、fetched-references.json記載と一致)、pnpm 等の他 target は複数の二次情報源でバージョン表記に揺れがあり (11.12.0〜11.15.0 の範囲で情報源ごとに差異)、fetched-references.json 記載の 11.15.0 が世代落ちか否かを一次情報のみで断定できなかった。C08 が本来担う17 target全件の意味層再照合が未完了のため、fail-closed の原則に従い本観点は独立監査未完了 (INDETERMINATE) として記録し、機械層 PASS のみで意味層を PASS と断定しない。",
+      "evidence": [
+        "C08 (system-spec-doc-freshness-auditor) への進捗確認メッセージ2回 (未応答)",
+        "validate-source-citation.py --targets <17件target_id> --references system-spec/fetched-references.json --state system-spec/spec-state.json -> exit0 (『OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす』)",
+        "WebSearch 'Next.js latest version release July 2026': 最新安定版16.2.10 (2026-07-01リリース) — fetched-references.json記載 (16.2.10, official_host=nextjs.org) と一致",
+        "WebSearch 'pnpm latest release version July 2026': 二次情報源間でバージョン表記に揺れ (11.12.0/11.13.1/11.14.0 等) があり fetched-references.json 記載の 11.15.0 との整合を一次情報だけで確定できず"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "score": 96,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "plugins/system-spec-harness/**/prompts/*.md 全18ファイルに対し prompt-creator の verify-completeness.py / validate-prompt.py を実行し、18/18 とも exit0 (機械層 PASS)。R1-score.md 等のサンプル精査で Layer1-7 構造・L7→L1 循環参照・出力指示・完了チェックリスト (原子的停止条件) を保持していることを意味層でも確認した。独立 design findings に high は無い。",
+      "evidence": [
+        "対象18ファイル: assign-system-spec-completeness-evaluator/{R1-score,R2-delegate}.md, ref-system-design-knowledge/R1-system-design-knowledge.md, run-system-spec-compile/{R1-assemble,R2-render,R3-crosslink}.md, run-system-spec-doc-fetch/{R1-identify,R2-fetch,R3-record,R4-audit-doc-freshness}.md, run-system-spec-elicit/{R0-foundation,R1-init,R2-interview,R3-reask,R4-reopen,R5-decision-guide,R6-audit-hearing,R7-audit-matrix}.md",
+        "verify-completeness.py --input <各ファイル> -> 18/18 exit0",
+        "validate-prompt.py --input <各ファイル> -> 18/18 exit0"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "G-matrix-complete",
+      "name": "validate-coverage-matrix (--require-complete)",
+      "conditions": [
+        "matrix_coverage"
+      ],
+      "command": [
+        "python3",
+        "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "--matrix",
+        "system-spec/spec-state.json",
+        "--require-complete"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)) を満たす"
+    },
+    {
+      "id": "G-matrix-foundation",
+      "name": "validate-coverage-matrix (--require-foundation)",
+      "conditions": [
+        "foundation_trace",
+        "decision_guidance"
+      ],
+      "command": [
+        "python3",
+        "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "--matrix",
+        "system-spec/spec-state.json",
+        "--require-foundation"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-knowledge-graph",
+      "name": "validate-knowledge-graph (4 profiles: knowledge/doctrine/required-info/cross)",
+      "conditions": [
+        "design_knowledge_reflection",
+        "matrix_coverage"
+      ],
+      "command": [
+        "python3",
+        "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py",
+        "--knowledge-graph"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "G-source-citation",
+      "name": "validate-source-citation",
+      "conditions": [
+        "doc_freshness"
+      ],
+      "command": [
+        "python3",
+        "plugins/system-spec-harness/scripts/validate-source-citation.py",
+        "--targets",
+        "<17件target_id>",
+        "--references",
+        "system-spec/fetched-references.json",
+        "--state",
+        "system-spec/spec-state.json"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす"
+    },
+    {
+      "id": "G-prompt-quality",
+      "name": "prompt-creator verify-completeness + validate-prompt (18 files aggregate)",
+      "conditions": [
+        "prompt_quality"
+      ],
+      "command": [
+        "python3",
+        "plugins/prompt-creator/skills/run-prompt-creator-7layer/scripts/verify-completeness.py",
+        "--input",
+        "<各prompt>"
+      ],
+      "exit_code": 0,
+      "stdout": "18/18 files: verify=0, validate=0"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "decision-chapter-drift",
+      "observation": "D7 (環境構成の意思決定: 常設 staging 廃止・ephemeral-preview-only、confirmed_at=2026-07-21T08:00:00+09:00) が system-spec/infrastructure.md の確定内容 (qa-064, セル infrastructure.web) に反映されていない。infrastructure.md §13 有効化順 P0 説明に『production/staging』という2環境前提の記述が残存し、D7 の決定と直接矛盾する。D7 自身の caveat に『反映範囲を追跡すること』と明記されているにもかかわらず、reopen_log に D7 確定後の infrastructure/web 再オープン記録が無く章内容が未追従。 なお、この矛盾を含む D7 自体とdev-workflow.md (qa-067) は評価時点で git 未コミットのworking tree変更であり (評価者による変更ではないことをgit diffで確認済み)、commit前の段階でこの反映漏れが検出された。",
+      "suggested_fix": "run-system-spec-elicit で infrastructure.web セルを reopen し、D7 (ephemeral-preview-only) に整合する内容へ qa-064 回答を改訂した上で run-system-spec-compile を再実行して infrastructure.md を再生成する。あわせて dev-workflow.md 等 D7 に関連しうる他章に『常設 staging』前提の残存記述が無いか横断確認する。",
+      "evidence": [
+        "system-spec/00-requirements-definition.md:93",
+        "system-spec/infrastructure.md:31",
+        "spec-state.json reopen_log (infrastructure/web 最終エントリは qa-064 差替のみ、D7 確定日以降の再オープン無し)",
+        "git status (評価時点): system-spec/00-requirements-definition.md, system-spec/dev-workflow.md, system-spec/spec-state.json はD7追加を含め未コミット (working tree上の変更のみで、まだリポジトリへcommitされていない。評価者(C05)による変更ではなく、評価開始前から存在した既存差分であることをgit diffで確認済み)。D7はspec-state.json上はconfirmedだが、commit前の状態であるため、infrastructure.md改訂とあわせてcommit前に反映漏れを解消することが望ましい。"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "knowledge-order",
+      "observation": "backend.md の設計知識カード表示順 (Clean Architecture→API Design Patterns→DDD) が resource-map.yaml 記載順のままで、knowledge-catalog.json の topo_order とR2-render.mdが要求する『知識の位相順消費 (C14)』チェックリストと一致しない。既存 completeness-report.json でも同一趣旨の medium finding として指摘済みの既知課題。",
+      "suggested_fix": "compile-spec-doc.py の render_design_refs()/category_design_refs() を knowledge-catalog.json の topo_order でソートするよう改修するか、R2-render.md の C14 記述を実装 (resource-map 順) に合わせて修正する。",
+      "evidence": [
+        "system-spec/backend.md: 設計知識カード見出し順",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/scripts/compile-spec-doc.py: category_design_refs()",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/prompts/R2-render.md:22,28,55"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "qa-ref-weak-support",
+      "observation": "(C07由来) ui-ux.desktop-windows/desktop-macos の qa_ref=qa-007 はフロントエンド構成に関する質問であり UI-UX 固有の直接的裏付けとしては薄い。infrastructure/maintenance-ops で実施された『専用質疑への格上げ』と同水準の是正が未実施。",
+      "suggested_fix": "infrastructure.desktop 系 (qa-043) と同様に ui-ux desktop 固有の専用質疑へ格上げする。",
+      "evidence": [
+        "matrix.ui-ux.desktop-windows.qa_ref=qa-007",
+        "matrix.ui-ux.desktop-macos.qa_ref=qa-007",
+        "qa_log[id=qa-007].question=『フロントエンド構成…』"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "qa-ref-traceability",
+      "observation": "(C07由来) reopen_log の『qa-017規約のbackend/securityへの適用がqa_ref未反映のため再オープン』の反映結果が、再オープン後の現qa_ref (qa-059/qa-061) 及び系譜元 qa-048 の回答本文に qa-017 への言及がなく、qa_ref単体からは reopen 目的の達成が確認できない。",
+      "suggested_fix": "qa-059/qa-061 の回答文へ qa-017 規約適用箇所への明示的言及を追記するか、qa-017 を参照する専用の追補質疑を起票する。",
+      "evidence": [
+        "matrix.backend.web.qa_ref=qa-059",
+        "matrix.security.web.qa_ref=qa-061",
+        "qa_log[id=qa-059/qa-061/qa-048].answer に 'qa-017' の文字列なし"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "doc-freshness-partial-verification",
+      "observation": "C08 (system-spec-doc-freshness-auditor) の独立監査結果が本評価の集約完了時点で未着信 (進捗確認2回送付、応答なし)。機械層 (validate-source-citation.py) は exit0 だが、17 target 全件の意味層 (公式サイト内容鮮度) 再照合は完了していない。自前サンプリングでは Next.js のみ記載内容と一致を確認できた。",
+      "suggested_fix": "C08 (system-spec-doc-freshness-auditor) を再実行し、17 target 全件の意味層再照合結果を得て doc_freshness 観点を確定させる。",
+      "evidence": [
+        "c08-doc-freshness-auditor 宛て進捗確認メッセージ2件 (未応答)",
+        "validate-source-citation.py exit0"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "matrix-sub-input-missing",
+      "observation": "C06 (system-spec-hearing-auditor) のヒアリング品質監査結果 (matrix_coverage の sub-input) が本評価の集約完了時点で未着信 (進捗確認2回送付、応答なし)。C07 の独立監査結果のみを一次根拠として matrix_coverage 観点を確定した。",
+      "suggested_fix": "C06 (system-spec-hearing-auditor) を再実行し、聞き漏れ/誘導質問/早期停止/トレーサビリティの4軸結果を matrix_coverage の補助根拠として追補する。",
+      "evidence": [
+        "c06-hearing-auditor 宛て進捗確認メッセージ2件 (未応答)"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "decision-quality",
+      "observation": "D2 (control-plane DB選定) は AI 推奨 (d1-drizzle, confidence=medium) と異なるユーザー決定 (turso-free) が採用されており、ヘッジ条件 (SQLite方言互換維持・退避経路明記) も付記されている。AI 推奨のみで confirmed にしていないことの積極的な証跡。",
+      "evidence": [
+        "spec-state.json decisions[id=D2].recommendation.option_id=d1-drizzle",
+        "decisions[id=D2].user_decision.option_id=turso-free"
+      ]
+    }
+  ],
+  "gaps": [
+    "D7 (常設staging廃止の意思決定) を system-spec/infrastructure.md (qa-064回答, セルinfrastructure.web) へ反映するreopenをrun-system-spec-elicitで実施し、run-system-spec-compileで再生成すること。他章のstaging前提記述の横断確認も併せて行うこと。差し戻し先: run-system-spec-elicit -> run-system-spec-compile。",
+    "C08 (system-spec-doc-freshness-auditor) の独立監査結果が本評価完了までに得られなかったため、doc_freshness観点はINDETERMINATE。C08を再実行し17 target全件の意味層 (公式サイト内容鮮度) 再照合結果を得ること。差し戻し先: 監査再実行 (system-spec-doc-freshness-auditor)。",
+    "C06 (system-spec-hearing-auditor) のsub-input結果が未着信。matrix_coverage観点の補助根拠として再取得することが望ましい (必須の差し戻し要件ではない)。差し戻し先: 監査再実行 (system-spec-hearing-auditor)。"
+  ]
+}

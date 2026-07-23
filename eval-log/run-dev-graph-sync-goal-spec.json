@@ -1,4 +1,5 @@
 {
-  "original_goal": "tracker_binding=beads の authority に従い local graph と Beads を 3-way 突合し、失われた feature 間 blocks 辺 34 件と claim 1 件を export、2 回目 changes=0 の冪等収束を確認する",
-  "recorded_at": "2026-07-20T00:00:00Z"
+ "original_goal": "tracker_binding=beads の authority に従い local graph と Beads を 3-way 突合し、失われた feature 間 blocks 辺 34 件と claim 1 件を export、2 回目 changes=0 の冪等収束を確認する",
+ "recorded_at": "2026-07-22T00:32:15Z",
+ "run_note": "2026-07-22 wt-10: 新規 issue node 6 件 (hearing-trace/doc-granularity/qa070-implementation/source-freshness/security-web-qaref/既存 d7) の beads 投影。--dry-run → --apply → --dry-run で changes=0 収束を確認"
 }

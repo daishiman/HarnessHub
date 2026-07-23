@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/feature-package-feat-doc-governance-portability/plan-doc-governance-20260722",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+  "digest": "sha256:d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+  "feature_package_id": "feature-package/feat-doc-governance-portability",
+  "package_slug": "feature-package-feat-doc-governance-portability",
+  "generation_id": "d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+  "supersedes": null,
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-22T02:31:19Z"
+}

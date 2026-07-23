@@ -1,0 +1,102 @@
+{
+ "node": {
+  "graph_node_id": "issue-source-freshness-ops-20260722",
+  "artifact_kind": "issue",
+  "artifact_subtypes": [],
+  "project_id": "harness-hub",
+  "domain": "documentation",
+  "tags": [
+   "system-spec",
+   "freshness",
+   "operations"
+  ],
+  "priority": "low",
+  "start_date": null,
+  "target_date": null,
+  "iteration": null,
+  "title": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)",
+  "owners": [
+   "daishiman"
+  ],
+  "created_at": "2026-07-21T23:30:33Z",
+  "updated_at": "2026-07-21T23:30:33Z",
+  "status": "draft",
+  "depends_on": [],
+  "related_nodes": [
+   "feat-stage0-distribution-gate"
+  ],
+  "resource_scope": [
+   "system-spec/index.md",
+   "system-spec/fetched-references.json"
+  ],
+  "purpose": "C08 出典鮮度監査 (2026-07-22) の low findings 3 件を運用として追跡する",
+  "goal": "高頻度リリース系の出典 3 件に追随運用が定義され、実装着手時の再照合が漏れない状態",
+  "scope_in": [
+   "claude-code-plugins: H7 (Stage 0 technical gate) 直前の changelog 再照合と marketplace.json 仕様不変確認",
+   "drizzle-orm: v1 系採用時の GitHub releases 最新 rc 再確認",
+   "wrangler: pinned version 記録追加の要否検討"
+  ],
+  "scope_out": [
+   "fetched-references.json の即時再取得 (現記録は全件鮮度 PASS)"
+  ],
+  "acceptance": [
+   "3 件の再照合タイミングが該当 feature/task の手順に組み込まれている"
+  ],
+  "architecture_refs": [],
+  "parent_feature": null,
+  "feature_package_id": null,
+  "phase_ref": null,
+  "file_path": "issues/sys-source-freshness-ops-20260722.md",
+  "template_id": "issue",
+  "template_version": "1.0.0",
+  "confirmation_status": "draft",
+  "evaluation_status": "pending",
+  "confirmation_evidence": {
+   "evaluated_digest": null,
+   "evaluator": null,
+   "evidence_ref": null
+  },
+  "source_lineage": {
+   "imported_at": "2026-07-21T23:30:33Z",
+   "origin_kind": "manual",
+   "source_digest": null,
+   "source_path": "system-spec/index.md",
+   "source_plugin": null,
+   "source_version": null
+  },
+  "classification_confidence": 0.95,
+  "classification_reason": "C08 出典鮮度監査 (2026-07-22) の low findings 3 件 (追随運用の示唆) を追跡する issue",
+  "classification_candidates": [
+   {
+    "artifact_kind": "issue",
+    "candidate_path": "issues/sys-source-freshness-ops-20260722.md",
+    "confidence": 0.95
+   }
+  ],
+  "issue_linkage": null,
+  "tracker_binding": "beads",
+  "beads_linkage": null,
+  "github_publication": {
+   "labels": [],
+   "milestone": null,
+   "mode": "local_only",
+   "project_aliases": []
+  },
+  "github_project_linkages": [],
+  "pull_request_linkages": [],
+  "execution_contexts": [],
+  "completion_evidence": {
+   "completed_at": null,
+   "evidence_refs": [],
+   "policy": "manual",
+   "reconciled_at": null,
+   "source": null,
+   "status": "open"
+  },
+  "implementation_readiness": {
+   "checked_at": "2026-07-21T23:30:33Z",
+   "missing_sections": [],
+   "status": "complete"
+  }
+ }
+}

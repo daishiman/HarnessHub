@@ -1,0 +1,109 @@
+{
+ "node": {
+  "graph_node_id": "issue-doc-granularity-remediation-20260722",
+  "artifact_kind": "issue",
+  "artifact_subtypes": [],
+  "project_id": "harness-hub",
+  "domain": "documentation",
+  "tags": [
+   "documentation",
+   "qa-070",
+   "remediation"
+  ],
+  "priority": "medium",
+  "start_date": null,
+  "target_date": null,
+  "iteration": null,
+  "title": "qa-070 粒度規約: 300 行超過 6 文書の remediation (縮小のみ許す初期一覧)",
+  "owners": [
+   "daishiman"
+  ],
+  "created_at": "2026-07-21T23:30:33Z",
+  "updated_at": "2026-07-21T23:30:33Z",
+  "status": "draft",
+  "depends_on": [],
+  "related_nodes": [
+   "issue-qa070-implementation-feature-20260722"
+  ],
+  "resource_scope": [
+   "docs/security-spec.md",
+   "docs/backend-spec.md",
+   "docs/features/feat-hub-foundation/design-review-notes.md",
+   "docs/features/feat-dev-pipeline-improvement/design.md",
+   "docs/features/feat-stage0-distribution-gate/design-review-notes.md",
+   "docs/features/feat-hub-foundation/final-review-notes.md"
+  ],
+  "purpose": "qa-070 (1 文書 300 行上限・fail-closed) の全面適用に向け、既存超過 6 文書を責務単位で分割する",
+  "goal": "300 行超過の正本 markdown が 0 件になり、fail-closed lint を全面適用できる状態",
+  "scope_in": [
+   "docs/security-spec.md (910 行) の責務分割",
+   "docs/backend-spec.md (434 行) の責務分割",
+   "docs/features/*/design-review-notes.md ほか 4 件の分割または縮約",
+   "分割後の index/一覧表からの参照維持"
+  ],
+  "scope_out": [
+   "既存文書の一括機械分割",
+   "300 行 lint 本体の実装 (issue-qa070-implementation-feature-20260722 側)"
+  ],
+  "acceptance": [
+   "対象 root の md で 300 行超が 0 件",
+   "分割後も命名規則 (kebab-case・種別接頭辞) と参照導線が維持されている"
+  ],
+  "architecture_refs": [],
+  "parent_feature": null,
+  "feature_package_id": null,
+  "phase_ref": null,
+  "file_path": "issues/sys-doc-granularity-remediation-20260722.md",
+  "template_id": "issue",
+  "template_version": "1.0.0",
+  "confirmation_status": "draft",
+  "evaluation_status": "pending",
+  "confirmation_evidence": {
+   "evaluated_digest": null,
+   "evaluator": null,
+   "evidence_ref": null
+  },
+  "source_lineage": {
+   "imported_at": "2026-07-21T23:30:33Z",
+   "origin_kind": "manual",
+   "source_digest": null,
+   "source_path": "system-spec/dev-workflow.md",
+   "source_plugin": null,
+   "source_version": null
+  },
+  "classification_confidence": 0.95,
+  "classification_reason": "qa-070 (2026-07-22 確定) の粒度規約 300 行上限に対する既存超過 6 件の remediation issue",
+  "classification_candidates": [
+   {
+    "artifact_kind": "issue",
+    "candidate_path": "issues/sys-doc-granularity-remediation-20260722.md",
+    "confidence": 0.95
+   }
+  ],
+  "issue_linkage": null,
+  "tracker_binding": "beads",
+  "beads_linkage": null,
+  "github_publication": {
+   "labels": [],
+   "milestone": null,
+   "mode": "local_only",
+   "project_aliases": []
+  },
+  "github_project_linkages": [],
+  "pull_request_linkages": [],
+  "execution_contexts": [],
+  "completion_evidence": {
+   "completed_at": null,
+   "evidence_refs": [],
+   "policy": "manual",
+   "reconciled_at": null,
+   "source": null,
+   "status": "open"
+  },
+  "implementation_readiness": {
+   "checked_at": "2026-07-21T23:30:33Z",
+   "missing_sections": [],
+   "status": "complete"
+  }
+ }
+}

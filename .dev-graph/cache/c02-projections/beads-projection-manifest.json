@@ -1,0 +1,138 @@
+{
+ "feature": {
+  "graph_node_id": "feat-dev-pipeline-improvement",
+  "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
+  "description": "qa-067 の 8 要件 (close-loop 機械化・eval-log 配置規約・handoff disposition 必須化ほか) を実装する macro feature の beads projection"
+ },
+ "children": [
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+   "phase_ref": "P01",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [],
+   "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
+   "description": "dev-graph P01 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+   "phase_ref": "P02",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
+   ],
+   "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
+   "description": "dev-graph P02 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
+   "phase_ref": "P03",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
+   ],
+   "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
+   "description": "dev-graph P03 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
+   "phase_ref": "P04",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
+   ],
+   "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
+   "description": "dev-graph P04 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+   "phase_ref": "P05",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
+   ],
+   "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
+   "description": "dev-graph P05 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+   "phase_ref": "P06",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
+   ],
+   "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
+   "description": "dev-graph P06 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+   "phase_ref": "P07",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
+   ],
+   "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
+   "description": "dev-graph P07 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
+   "phase_ref": "P08",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
+   ],
+   "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
+   "description": "dev-graph P08 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+   "phase_ref": "P09",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
+   ],
+   "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
+   "description": "dev-graph P09 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
+   "phase_ref": "P10",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
+   ],
+   "title": "最終レビュー — 全 phase 成果の横断整合確認",
+   "description": "dev-graph P10 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+   "phase_ref": "P11",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
+   ],
+   "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+   "description": "dev-graph P11 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+   "phase_ref": "P12",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
+   ],
+   "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
+   "description": "dev-graph P12 projection (feature-package/feat-dev-pipeline-improvement)"
+  },
+  {
+   "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+   "phase_ref": "P13",
+   "parent_feature": "feat-dev-pipeline-improvement",
+   "depends_on": [
+    "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
+   ],
+   "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
+   "description": "dev-graph P13 projection (feature-package/feat-dev-pipeline-improvement)"
+  }
+ ],
+ "source_digest": "sha256:f9dcb78262870bf542c4200647b2dd9f0e5c14a882c928a4554d5e9d67dd2e9f"
+}

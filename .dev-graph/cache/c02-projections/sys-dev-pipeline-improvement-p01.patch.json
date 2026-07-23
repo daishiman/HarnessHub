@@ -1,0 +1,21 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+  "purpose": "feat-dev-pipeline-improvement の P01 を実行する: 要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) が逐語一致で転記されている",
+   "現行 feature context sha256:16d9e07bc878c21e6054ba7f178d2d1fc5e303961a297f9a5949a20f328e5085 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である",
+   "P02 で確定すべき据置事項 (検査 script 入出力契約・handoff schema 後方互換方式・eval-log 再配置対象一覧・close-loop の bd-bridge 経由手順) が明記されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}

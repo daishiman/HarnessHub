@@ -92,6 +92,15 @@ def task_spec_text(phase: str) -> str:
         "Branch and worktree execution": "- Branch: assigned by dev-graph\n- Worktree lease: required",
         "スコープ外": "- Changes outside the declared write scope.",
         "Verification and evidence": f"- Automated commands: verify {phase}\n- Required evidence: evidence/{phase}.json",
+        "Inner goal-seek execution loop": (
+            "- Methodology contract: `system-task-goal-seek/v1`\n"
+            f"- Goal: produce and verify the {phase} result\n"
+            "- Generic execution prompt: use the goal, constraints, and required artifacts\n"
+            "- Rubric: acceptance, regression, evidence, and scope must pass\n"
+            "- Feedback loop: evaluate findings and rerun until rubric verdict=PASS\n"
+            + ("- P13 spec/architecture writeback: required"
+               if phase == "P13" else "- P13 spec/architecture writeback: N/A: P13 owns writeback")
+        ),
         "Rollout and rollback": f"- Rollout: publish {phase}\n- Rollback: revert {phase}",
         "Handoff": "- Executor: system build route\n- Ready when: all gates pass",
         "参照情報": "- System specification: system-spec/index.md\n- Feature: FEATURE-1",
@@ -435,6 +444,23 @@ class SchemaValidationTests(unittest.TestCase):
                 "staging-runtime-reference",
                 {item["code"] for item in report["violations"]},
             )
+
+    def test_inner_goal_seek_contract_and_p13_writeback_fail_closed(self):
+        cases = (
+            ("P01", "system-task-goal-seek/v1", "inner-goal-seek-contract"),
+            ("P13", "P13 spec/architecture writeback: required", "p13-spec-architecture-writeback"),
+        )
+        for phase, marker, expected in cases:
+            with self.subTest(phase=phase), tempfile.TemporaryDirectory() as td:
+                root = Path(td); repository_id = make_repo(root)
+                staging, _ = make_fixture(root, repository_id)
+                index = VALIDATOR.PHASES.index(phase)
+                path = staging / VALIDATOR.TASK_PATHS[index]
+                path.write_text(path.read_text(encoding="utf-8").replace(marker, "removed-marker"), encoding="utf-8")
+                refresh_manifest(staging)
+                report = VALIDATOR.validate(staging, repository_id)
+                self.assertEqual(report["status"], "fail")
+                self.assertIn(expected, {item["code"] for item in report["violations"]})
 
     def test_registration_path_traversal_fails(self):
         with tempfile.TemporaryDirectory() as td:

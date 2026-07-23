@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "a0b6e59394bd47462572c991bc1977e225a24f6d47e8afeb2274d45563b8d073",
+  "transcript_sha256": "d0ae937ff1a26a49dd60807ce4c4c36af74d830819adfe0e7b48bbd8b4cbdfe2",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": null
+  },
+  "scenario_id": "C14-OUT1-positive-macro-decomposition"
+}

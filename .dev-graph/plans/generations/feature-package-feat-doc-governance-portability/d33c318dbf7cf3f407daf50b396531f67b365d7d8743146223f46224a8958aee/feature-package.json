@@ -1,0 +1,52 @@
+{
+ "schema_version": "1.0.0",
+ "feature_package_id": "feature-package/feat-doc-governance-portability",
+ "parent_feature": "feat-doc-governance-portability",
+ "source_feature_digest": "sha256:6855a739f483347401636b9254be473536ac2d9168cc24470f1abf05bd9286fb",
+ "task_count": 13,
+ "phase_refs": [
+  "P01",
+  "P02",
+  "P03",
+  "P04",
+  "P05",
+  "P06",
+  "P07",
+  "P08",
+  "P09",
+  "P10",
+  "P11",
+  "P12",
+  "P13"
+ ],
+ "task_spec_paths": [
+  "task-specs/phase-01-requirements.md",
+  "task-specs/phase-02-architecture.md",
+  "task-specs/phase-03-design-review.md",
+  "task-specs/phase-04-test-design.md",
+  "task-specs/phase-05-implementation.md",
+  "task-specs/phase-06-test-run.md",
+  "task-specs/phase-07-acceptance.md",
+  "task-specs/phase-08-refactoring-migration.md",
+  "task-specs/phase-09-quality-assurance.md",
+  "task-specs/phase-10-final-review.md",
+  "task-specs/phase-11-evidence.md",
+  "task-specs/phase-12-documentation-operations.md",
+  "task-specs/phase-13-release-deploy.md"
+ ],
+ "task_node_ids": [
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P02",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P04",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+  "SYS-DOC-GOVERNANCE-PORTABILITY-P13"
+ ]
+}

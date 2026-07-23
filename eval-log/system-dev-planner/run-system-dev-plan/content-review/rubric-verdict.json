@@ -2,7 +2,7 @@
   "target": {
     "plugin": "system-dev-planner",
     "skill": "run-system-dev-plan",
-    "skill_md_sha256": "8d0245a60a83c691c97131dc5307fd73802ad315f956c4260f12726b11080718"
+    "skill_md_sha256": "1d524a8a8f39df13a200407eb980697b1c40fcf382e0eb3efdcc75632416c16b"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
@@ -13,28 +13,23 @@
     "dependency_break": 0,
     "smell": 0
   },
-  "reviewer": "assign-skill-design-evaluator",
-  "reviewed_at": "2026-07-22T04:15:00Z",
+  "reviewer": "assign-skill-design-evaluator (rubric-evaluator, focused combined review)",
+  "reviewed_at": "2026-07-23T00:00:31Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": [
-      "IN1",
-      "IN2",
-      "OUT1",
-      "OUT2",
-      "OUT3"
-    ],
+    "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "C3 規約整合: リネーム後の 2 script が 28章 §4 lint-script-naming.py の ALLOWED_VERBS ({lint, validate, format, render, extract, diff, guard, build}) に準拠する動詞を先頭に持つ (validate-generation-lineage / build-task-projection-rerun)。旧名 verify- / sync- は ALLOWED_VERBS 外だったため、本リネームは命名規約違反を是正しており、C3 の規約適合を新たに満たした。",
-      "C4 依存整合: SKILL.md script_refs (L40-41) と workflow-manifest.json (L25-26) の双方が新名を参照し、両者の path が実在 script と一致する。参照面 (SKILL.md / manifest) が同期しており parity が保たれている。",
-      "rubric high severity finding 0: 変更は非機能的な参照名リネームに限定され、責務境界・feedback_contract criteria (IN1/IN2/OUT1/OUT2/OUT3)・exact-13 分解ゲートの意味論を一切変更しない。high severity に相当する退行・欠落・規約逸脱は検出されなかった。"
+      "render-findings-score.py を origin/main 統合後の合成 SKILL.md (sha 1d524a8a) へ実行し score 100/threshold 80/passed=true・findings 0・required_fixes 0・pending_human 0 を実測 (rubric_hash sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d / composition_hash sha256:19d6928b132fb05db5145502d2d76dbaa91e009f0eabde2c2c05d6c7e28407da)。",
+      "name/prefix/kebab/description トリガー・本文行数・Purpose 位置は goal-seek 追加と main の script rename の統合後も適合を維持し、rubric 規範の後退なし。",
+      "統合前の2 verdict (本ブランチ f1c5c77e goal-seek / origin/main 8d0245a6 script rename) の主張は disjoint な変更のため合成状態でも保存される。"
     ],
     "negative_feedback": [],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual: HarnessHub-6cv script rename re-review",
+    "hook_trigger": "Stop",
     "next_action": "none"
-  }
+  },
+  "notes": "origin/main 統合 (merge d8e59cc) 後の合成 SKILL.md (sha256 1d524a8a8f39df13a200407eb980697b1c40fcf382e0eb3efdcc75632416c16b) に対する focused combined review の rubric 側 verdict (incremental)。render-findings-score.py を rubric-refs=[ref-skill-design-rubric/references/rubric.json(L0 v1.3.0), assign-skill-design-evaluator/references/rubric.json(L2)] で実行し score 100/passed=true/findings 0 を実測 (composition_hash sha256:19d6928b…)。verification_profile=exhaustive 未指定のため exhaustive 経路は起動せず focused 経路。合成 SKILL.md は本ブランチの goal-seek 1段落 (## plan) と origin/main の HarnessHub-6cv script rename (script_refs / 完了条件) の 2 変更を disjoint に含み、いずれも rubric スコアに影響する構造欠落を生まない。frontmatter feedback_contract の IN1/IN2/OUT1/OUT2/OUT3 は無変更。runtime 束縛 (validate-system-plan / build-system-handoff / evaluator / live-trial) の実測証跡は script/flow の意味論不変のため継続有効。"
 }

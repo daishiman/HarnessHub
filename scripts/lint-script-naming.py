@@ -458,6 +458,10 @@ PENDING_RENAME_PATHS = {
     "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
     "plugins/dev-graph/scripts/resolve-repo-context.py",
     "plugins/dev-graph/scripts/register-package.py",
+    # migrate-pipeline-improvement.py: 'migrate' は skill-governance-migration/scripts/migrate/*.py
+    # と同種の domain 動詞で ALLOWED_VERBS 外。SKILL.md/CI/test 参照を原子的に更新する後続
+    # Change Governance PR (許可動詞化 or リネーム) まで PENDING。
+    "plugins/dev-graph/scripts/migrate-pipeline-improvement.py",
     # dev-graph 運用ループ v2 (node/sync/status verb 対応): domain 動詞 (sync/status/upsert) と
     # WAL transaction モジュール node_transaction.py (§4.3 underscore) が ALLOWED_VERBS 外。
     # 上記 dev-graph 群と同じく SKILL.md script_refs / README / test 参照を原子的に更新する

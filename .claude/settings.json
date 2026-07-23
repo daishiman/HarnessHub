@@ -207,6 +207,12 @@
       },
       {
         "event": "PreToolUse",
+        "matcher": "Bash",
+        "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/spec-drift-guardian/hooks/guard-spec-drift-close.py",
+        "from_plugin": "spec-drift-guardian"
+      },
+      {
+        "event": "PreToolUse",
         "matcher": "Bash|Task",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/system-dev-planner/hooks/guard-implementation-readiness.py",
         "from_plugin": "system-dev-planner"
@@ -548,6 +554,15 @@
         ]
       },
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/spec-drift-guardian/hooks/guard-spec-drift-close.py"
+          }
+        ]
+      },
+      {
         "matcher": "Bash|Task",
         "hooks": [
           {
@@ -722,6 +737,7 @@
     "skill-governance-secrets@skills": true,
     "skill-intake@skills": true,
     "slide-report-generator@skills": true,
+    "spec-drift-guardian@skills": true,
     "system-dev-planner@skills": true,
     "system-spec-harness@skills": true,
     "ubm-goal-setting@skills": true

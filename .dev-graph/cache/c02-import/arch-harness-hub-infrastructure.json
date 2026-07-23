@@ -1,0 +1,20 @@
+{
+ "patch": {
+  "graph_node_id": "arch-harness-hub-infrastructure",
+  "updated_at": "2026-07-21T14:18:05Z",
+  "source_lineage": {
+   "imported_at": "2026-07-21T14:18:05Z",
+   "origin_kind": "system-spec-harness",
+   "source_digest": "d5897caae208aba38b8a0e8d5bbd8b282caf6d7b54ffd9a10c1625b5f4d02b76",
+   "source_path": "system-spec/infrastructure.md",
+   "source_plugin": "system-spec-harness",
+   "source_version": "0.1.0"
+  },
+  "confirmation_evidence": {
+   "evaluated_digest": "d5897caae208aba38b8a0e8d5bbd8b282caf6d7b54ffd9a10c1625b5f4d02b76",
+   "evaluator": "assign-system-spec-completeness-evaluator",
+   "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"
+  },
+  "goal": "qa-003/qa-011/qa-019/qa-068 の確定要件 (D7: 常設 staging なし・production 1 組 + 使い捨て preview) に適合する infrastructure/運用の指針を提供する"
+ }
+}

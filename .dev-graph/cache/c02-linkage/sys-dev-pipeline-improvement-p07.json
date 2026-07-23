@@ -1,0 +1,10 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+  "beads_linkage": {
+   "bd_issue_id": "HarnessHub-k2u.7",
+   "linked_at": "2026-07-21T16:50:00Z",
+   "sync_state": "linked"
+  }
+ }
+}

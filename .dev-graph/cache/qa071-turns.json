@@ -1,0 +1,26 @@
+[
+  {
+    "qa_id": "qa-071",
+    "question": "既存確定 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 を全面維持したまま、開発管理パイプラインの方法論 (methodology) として次の 8 要件を追加確定する: (1) マクロ構造、(2) exact-13、(3) 外側ループ、(4) 内側ループ、(5) スコープ分離、(6) 情報配置、(8) 書き戻し、(9) 既存保全と更新統制。ユーザー提供の要件定義 (2026-07-22 /dev-graph spec --resume 引数) に基づき、仕様確定に不可欠な情報が既に揃っているため追加ヒアリングなしで確定する。(要件 7 の命名規則/doc 粒度は qa-070 で確定済み。要件 10 の portable separation は qa-070 で確定済み。要件 11 の Git 差分照合は completeness evaluator の responsibilities に帰属)",
+    "answer": "既存 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 の確定内容は全面維持し、本 qa は以下 8 要件をユーザー提供の回答として確定する。出典: ユーザー逐語 (2026-07-22 /dev-graph spec --resume 引数。追加ヒアリング不要として明示)。\n【1. マクロ構造 (macro-structure)】小さな task と依存関係を積み上げて feature にし、複数 feature を system にする。グラフには依存関係のある実行タスクだけを載せる (仕様本文・architecture 本文は正規文書に集約し、task/feature は参照と lineage だけを持つ)。実行タスクの最小単位は feature 内の 1 フェーズ相当作業であり、feature 間の依存は feature 粒度で表現する。\n【2. exact-13 (13フェーズ固定)】1 feature は P01..P13 の 13 フェーズで構成し、13 フェーズは直列依存 (前フェーズ完了が次フェーズの開始条件)。各フェーズ内の子タスク数は固定せず、達成に必要な粒度で分解し、並列実行可能なものは並列化する。小さい機能でも 13 フェーズを省略しない。1 feature → 13 task への分解は system-dev-planner (/dev-graph plan) が担う。\n【3. 外側ループ (outer loop)】feature 全体の改善とフィードバックを回す外側ループを持つ。中心には目的・背景・ゴールを置き、これらを確定してから 13 フェーズを進める。feature の目的・背景・ゴールが未確定のまま実装フェーズへ進まない。\n【4. 内側ループ (inner loop)】各フェーズに汎用 task prompt・goal-seek・rubric・feedback loop を持たせ、各フェーズの目的達成まで反復する。フェーズ内の達成基準 (rubric) が PASS するまでループを回す。\n【5. スコープ分離 (scope separation)】量が多い・1 task で完結しない・目的・背景から外れる問題は別 task または別 feature に切り出す。切り出した feature も同じ 13 フェーズと品質ゲートを通す。スコープ拡大の誘惑に負けず、切り出しを先行させる。\n【6. 情報配置 (information placement)】task graph に仕様本文や architecture 本文を詰め込まない。仕様・architecture・task-spec・docs は正規文書に集約し、task/feature は参照と lineage だけを持つ (内容を複製しない)。正規文書への参照は source_lineage と architecture_refs で追跡する。\n【8. 書き戻し (write-back)】実装完了後、結果・判断・改善点を仕様書と architecture へ反映し、次の task/feature が再利用できるようにする。一方通行にしない: 実装→仕様書→次の feature というフィードバックループを確立する。書き戻しの責務は feature の P13 (保守・運用移行) フェーズに含める。\n【9. 既存保全と更新統制 (preservation and update control)】AI の追加偏重による重複・矛盾を防ぎ、既存情報を消さずに差分更新する。不要情報の削除や置換は仕組み化された gate (reopen → re-confirm フロー・CI lint) で管理する。既存確定 qa 項目を AI が単独で書き換えない。変更は必ず reopen → 確認 → re-confirm の経路を通す。\n要件 7 (命名規則と検索可能性・文書粒度): qa-070 の確定内容 (kebab-case 接頭辞体系・300 行上限 fail-closed CI lint・責務単位分割) が実効値として包含する。要件 10 (portable separation): qa-070 の仕組みとナレッジのオン・オフ分離で確定済み。以上 8 要件 + qa-070 の 2 要件 (portable separation / doc 粒度) + qa-067 の 8 要件 (lifecycle close-loop 他) がG1 (仕組みの持ち出しによる配布・運用効率)・G4 (fail-closed 品質ゲート)・G5 (ドキュメント管理の持続性) に資する。実装は関連 feature (feat-dev-pipeline-improvement の 13 フェーズ・issue-qa070-implementation-feature-20260722) を通じて行う。",
+    "ops": [
+      {
+        "action": "reopen",
+        "category": "dev-workflow",
+        "platform": "web",
+        "reason": "dev-graph 方法論 8 要件 (マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全) を qa-071 として追加確定するため R4-reopen。既存 qa-070 の全内容は qa-071 の全面維持句で継承する"
+      },
+      {
+        "action": "confirm",
+        "category": "dev-workflow",
+        "platform": "web",
+        "qa_ref": "qa-071",
+        "serves_goals": [
+          "G1",
+          "G4",
+          "G5"
+        ]
+      }
+    ]
+  }
+]

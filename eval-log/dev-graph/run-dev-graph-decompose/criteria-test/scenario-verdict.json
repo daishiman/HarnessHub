@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r4-20260722-postmerge",
+  "reviewer": "dev-graph-criteria-scenario-20260723T094257-wt10-wt10-postmerge",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,12 +27,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T094257-wt10/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T000000-hh6cv/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T094257-wt10/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T094257-wt10/transcript.jsonl"
       ],
-      "observed": "2026-07-23 再実走 (HarnessHub-6cv, main PR#38 取込後): generation-lineage 変更 + PR#38 の closure 変更で verdict が再 stale 化したため fresh fixture で再 trial。被験 Skill を最初の tool call で 起動し正経路を自走完遂。orchestrator と別個体の fresh evaluator が transcript を一次痕跡で走査し、pre-seed 汚染なし・goal 達成 (受入基準を実行証跡で裏取り) を確認。"
+      "observed": "2026-07-23 再実走 (branch devgraph/feat-dev-pipeline-and-doc-governance, run 20260723T094257-wt10): 本 PR の system-dev-planner goal-seek 変更が behavior closure を変えたため live-trial を fresh fixture で再取得。独立 fresh evaluator が PASS、skill_dir_tree_sha が現行 closure と一致、overall=PASS。"
     },
     "OUT2": {
       "status": "PASS",

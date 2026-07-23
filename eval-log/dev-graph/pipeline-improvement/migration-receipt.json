@@ -1,0 +1,264 @@
+{
+  "migration": "migrate-pipeline-improvement",
+  "mode": "apply",
+  "moved": [],
+  "moved_count": 0,
+  "dispositions_added": 0,
+  "handoffs_touched": [],
+  "core_handoff_audit": [
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-01",
+      "target_ref": "schemas-draft/graph-node.schema.json",
+      "verified_path": "plugins/dev-graph/schemas/graph-node.schema.json",
+      "disposition": "applied",
+      "rationale": "feature の第一級語彙と purpose/goal/scope/acceptance を schema が保持する。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-02",
+      "target_ref": "schemas-draft/graph-node.schema.json + templates/template-contract.json + index.md",
+      "verified_path": "plugins/dev-graph/templates/template-contract.json",
+      "disposition": "applied",
+      "rationale": "feature を features/ へ配置する canonical template 契約がある。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-03",
+      "target_ref": "schemas-draft/graph-node.schema.json",
+      "verified_path": "plugins/dev-graph/schemas/graph-node.schema.json",
+      "disposition": "applied",
+      "rationale": "task の parent_feature と feature 二層制約を schema 化した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-04",
+      "target_ref": "component-inventory.json#C14",
+      "verified_path": "plugins/dev-graph/skills/run-dev-graph-decompose/SKILL.md",
+      "disposition": "applied",
+      "rationale": "decompose を feature/architecture/機能間依存のマクロ分解へ限定した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-05",
+      "target_ref": "component-inventory.json#C14 + references/ (新規 feature-planning-contract 検討)",
+      "verified_path": "plugins/dev-graph/skills/run-dev-graph-decompose/SKILL.md",
+      "disposition": "applied",
+      "rationale": "ready feature ごとの system-dev-planner 自動・手動共通経路を配線した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-06",
+      "target_ref": "goal-spec.json (purpose/background)",
+      "verified_path": "plugin-plans/dev-graph/goal-spec.json",
+      "disposition": "applied",
+      "rationale": "purpose/background をマクロ層の責務へ更新した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-07",
+      "target_ref": "goal-spec.json (checklist)",
+      "verified_path": "plugin-plans/dev-graph/goal-spec.json",
+      "disposition": "applied",
+      "rationale": "feature と per-feature planning の受入条件を checklist 化した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-08",
+      "target_ref": "index.md",
+      "verified_path": "plugins/dev-graph/README.md",
+      "disposition": "applied",
+      "rationale": "マクロ/ミクロ二層モデルと verb 境界を利用者向けに記載した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-09",
+      "target_ref": "component-inventory.json#C11",
+      "verified_path": "plugins/dev-graph/scripts/validate-graph-schema.py",
+      "disposition": "applied",
+      "rationale": "feature、parent_feature、機能間依存を決定論検査する。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-10",
+      "target_ref": "component-inventory.json#C15,C16",
+      "verified_path": "plugins/dev-graph/scripts/schedule-graph.py",
+      "disposition": "applied",
+      "rationale": "feature ready と task ready を分離して算出する。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-11",
+      "target_ref": "templates/template-contract.json",
+      "verified_path": "plugins/dev-graph/templates/template-contract.json",
+      "disposition": "applied",
+      "rationale": "feature artifact の canonical template を追加した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-macro.json",
+      "finding_id": "MM-12",
+      "target_ref": "component-inventory.json#C19",
+      "verified_path": "plugins/dev-graph/references/execution-tracker-contract.md",
+      "disposition": "applied",
+      "rationale": "architecture_refs を lineage-pinned content として planner へ渡す境界を定義した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B01",
+      "target_ref": "schemas-draft/repo-config.schema.json",
+      "verified_path": "plugins/dev-graph/schemas/repo-config.schema.json",
+      "disposition": "applied",
+      "rationale": "execution_tracker.mode を repository 設定として schema 化した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B02",
+      "target_ref": "schemas-draft/graph-node.schema.json",
+      "verified_path": "plugins/dev-graph/schemas/graph-node.schema.json",
+      "disposition": "applied",
+      "rationale": "beads_linkage と tracker_binding を node schema に追加した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B03",
+      "target_ref": "component-inventory.json",
+      "verified_path": "plugins/dev-graph/scripts/bd-bridge.py",
+      "disposition": "applied",
+      "rationale": "bd CLI の決定論的な単一チョークポイントを実装した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B04",
+      "target_ref": "component-inventory.json#C15,C16",
+      "verified_path": "plugins/dev-graph/scripts/schedule-graph.py",
+      "disposition": "applied",
+      "rationale": "Beads binding は bridge の ready/parity 結果を利用する。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B05",
+      "target_ref": "schemas-draft/graph-node.schema.json + component-inventory.json#C11",
+      "verified_path": "plugins/dev-graph/references/execution-tracker-contract.md",
+      "disposition": "applied",
+      "rationale": "binding ごとの単一 publication authority と二重起票禁止を定義した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B06",
+      "target_ref": "references/execution-tracker-contract-draft.md",
+      "verified_path": "plugins/dev-graph/references/execution-tracker-contract.md",
+      "disposition": "applied",
+      "rationale": "tracker 選択、状態写像、完了カスケードを正本化した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B07",
+      "target_ref": "component-inventory.json#C26 + references/github-lifecycle-contract.md",
+      "verified_path": "plugins/dev-graph/hooks/reconcile-task-lifecycle.py",
+      "disposition": "applied",
+      "rationale": "PR/Beads/ローカル task の完了収束を hook から共通処理する。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B08",
+      "target_ref": "component-inventory.json#C25,C27",
+      "verified_path": "plugins/dev-graph/hooks/reconcile-task-lifecycle.py",
+      "disposition": "applied",
+      "rationale": "hook と worktree lease と Beads parity を統合した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B09",
+      "target_ref": "goal-spec.json",
+      "verified_path": "plugin-plans/dev-graph/goal-spec.json",
+      "disposition": "applied",
+      "rationale": "execution tracker 抽象化を受入 checklist へ追加した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff-beads.json",
+      "finding_id": "EV-B10",
+      "target_ref": "references/execution-tracker-contract-draft.md#§7 + component-inventory.json (C28)",
+      "verified_path": "plugins/dev-graph/scripts/bd-bridge.py",
+      "disposition": "applied",
+      "rationale": "bd version window と JSON envelope 差異を bridge 内へ隔離した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-001",
+      "target_ref": "component-inventory.json#C01,C02,C11,C14,C18",
+      "verified_path": "plugins/dev-graph/templates/template-contract.json",
+      "disposition": "applied",
+      "rationale": "artifact kind ごとの directory policy と routing を定義した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-002",
+      "target_ref": "schemas-draft/graph-node.schema.json",
+      "verified_path": "plugins/dev-graph/schemas/graph-node.schema.json",
+      "disposition": "applied",
+      "rationale": "artifact 語彙と frontmatter authority を単一 schema に統一した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-003",
+      "target_ref": "phase-05-implementation.md..phase-12-documentation.md",
+      "verified_path": "plugin-plans/dev-graph/phase-05-implementation.md",
+      "disposition": "applied",
+      "rationale": "P05-P12 の build/QA/evidence/documentation 到達条件を phase 仕様で分離した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-004",
+      "target_ref": "component-inventory.json#C09",
+      "verified_path": "plugins/dev-graph/commands/dev-graph.md",
+      "disposition": "applied",
+      "rationale": "command verb、引数、dispatch 先を単一表で整合させた。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-005",
+      "target_ref": "phase-02-design.md",
+      "verified_path": "plugin-plans/dev-graph/phase-02-design.md",
+      "disposition": "applied",
+      "rationale": "件数増加時の split trigger と migration 境界を設計した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-006",
+      "target_ref": "plan-findings.json",
+      "verified_path": "plugin-plans/dev-graph/plan-findings.json",
+      "disposition": "applied",
+      "rationale": "現行入力 digest に基づく findings を再生成した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-007",
+      "target_ref": "templates/; component-inventory.json#C01,C02,C04,C11",
+      "verified_path": "plugins/dev-graph/templates/README.md",
+      "disposition": "applied",
+      "rationale": "artifact kind 別 template 正本と readiness 契約を文書化した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-008",
+      "target_ref": "component-inventory.json#C19-C23",
+      "verified_path": "plugins/dev-graph/references/execution-tracker-contract.md",
+      "disposition": "applied",
+      "rationale": "system-spec-harness と system-dev-planner の引用・委譲境界を定義した。"
+    },
+    {
+      "handoff": "plugin-plans/dev-graph/improvement-handoff.json",
+      "finding_id": "EV-009",
+      "target_ref": "component-inventory.json#C24; schemas-draft/repo-config.schema.json",
+      "verified_path": "plugins/dev-graph/scripts/resolve-repo-context.py",
+      "disposition": "applied",
+      "rationale": "symlink 配布時も caller repository の root/state を安全に解決する。"
+    }
+  ],
+  "core_handoff_audit_count": 31,
+  "historical_apply_totals": {
+    "initial_moved_count": 49,
+    "initial_dispositions_added": 123,
+    "evidence_commit": "b3bbbd41cc43b64a7b53db0bc3dd5e19b2d2774a"
+  }
+}

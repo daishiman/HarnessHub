@@ -1,0 +1,14 @@
+{
+ "patch": {
+  "graph_node_id": "issue-qa070-implementation-feature-20260722",
+  "updated_at": "2026-07-21T23:54:58Z",
+  "source_lineage": {
+   "imported_at": "2026-07-21T23:54:58Z",
+   "origin_kind": "manual",
+   "source_digest": "0c48fb74e1f93e4e6fe6e4f31cf5e04c4b3839537fae063002a3ce2f3e10b2bf",
+   "source_path": "system-spec/dev-workflow.md",
+   "source_plugin": null,
+   "source_version": null
+  }
+ }
+}

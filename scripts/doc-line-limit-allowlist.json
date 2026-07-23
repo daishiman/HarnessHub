@@ -1,0 +1,32 @@
+{
+  "$note": "doc-line-limit ratchet allowlist (qa-070 ドキュメント粒度規約). lint-doc-line-limit.py が参照する。",
+  "description": "markdown 正本文書 300 行上限の remediation allowlist。ここに載る文書だけが上限超過を許されるが、baseline_line_count を上回る増加は許さない (縮小のみ許す ratchet)。分割 remediation は HarnessHub-3d8 (issue-doc-granularity-remediation-20260722) 側で行い、300 行以下へ縮小したらエントリを削除する。",
+  "line_limit": 300,
+  "allowlist": [
+    {
+      "path": "docs/security-spec.md",
+      "baseline_line_count": 910,
+      "reason": "qa-070 remediation baseline (2026-07-22 実測)。縮小のみ許す。"
+    },
+    {
+      "path": "docs/backend-spec.md",
+      "baseline_line_count": 434,
+      "reason": "qa-070 remediation baseline (2026-07-22 実測)。縮小のみ許す。"
+    },
+    {
+      "path": "docs/features/feat-hub-foundation/design-review-notes.md",
+      "baseline_line_count": 366,
+      "reason": "qa-070 remediation baseline (2026-07-22 実測)。縮小のみ許す。"
+    },
+    {
+      "path": "docs/features/feat-stage0-distribution-gate/design-review-notes.md",
+      "baseline_line_count": 320,
+      "reason": "qa-070 remediation baseline (2026-07-22 実測)。縮小のみ許す。"
+    },
+    {
+      "path": "docs/features/feat-hub-foundation/final-review-notes.md",
+      "baseline_line_count": 303,
+      "reason": "qa-070 remediation baseline (2026-07-22 実測)。縮小のみ許す。"
+    }
+  ]
+}

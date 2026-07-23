@@ -1,0 +1,20 @@
+{
+ "patch": {
+  "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+  "purpose": "feat-dev-pipeline-improvement の P09 を実行する: 品質保証 — fail-closed 実効性の悪性ケース実測",
+  "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+  "scope_in": [
+   "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json"
+  ],
+  "scope_out": [
+   "published task spec の『スコープ外』節を正本とする"
+  ],
+  "acceptance": [
+   "qa-fail-closed-report.json に悪性ケース 3 系統以上の実測 (投入した違反・期待 exit 非 0・実測 exit code) が記録され、全件検出されている",
+   "検査への迂回経路 (lint 対象外 path への書込・schema_version 偽装) の探索結果が記録され、発見された迂回は P05 へ差し戻されている"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-dev-workflow"
+  ]
+ }
+}
