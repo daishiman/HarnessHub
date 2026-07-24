@@ -1,0 +1,31 @@
+{
+  "patch": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+    "completion_evidence": {
+      "completed_at": "2026-07-23T04:02:24Z",
+      "evidence_refs": [
+        "https://github.com/daishiman/HarnessHub/pull/41"
+      ],
+      "policy": "linked_pr_merged_all",
+      "reconciled_at": "2026-07-24T07:07:52.148676Z",
+      "source": "github_pr_merge",
+      "status": "done"
+    },
+    "pull_request_linkages": [
+      {
+        "base_branch": "main",
+        "closing_reference_verified": true,
+        "head_branch": "devgraph/feat-dev-pipeline-and-doc-governance",
+        "linked_at": "2026-07-24T07:07:52.148155Z",
+        "merge_commit_sha": "b655e22db768f38fb044cb24482807ce35ec00f5",
+        "merged_at": "2026-07-23T04:02:24Z",
+        "pr_number": 41,
+        "repo": "daishiman/HarnessHub",
+        "state": "merged",
+        "url": "https://github.com/daishiman/HarnessHub/pull/41"
+      }
+    ],
+    "status": "done",
+    "updated_at": "2026-07-24T07:07:52.151248Z"
+  }
+}

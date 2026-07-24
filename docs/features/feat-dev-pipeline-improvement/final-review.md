@@ -31,7 +31,7 @@ P01-P09 成果物を横断し baseline 乖離・acceptance 残未達・quality_c
 
 ## 残課題 (P13 へ)
 
-- **P13 (完了)**: 2026-07-22 にリリースを実行し main 向け PR #41 を作成。2026-07-23 に PR #41 が main へ merge (merge commit `b655e22`、CI 4 check 全 SUCCESS)。2026-07-24 に close-loop reconciliation を実走し、graph (graph_revision 506)・md・beads の 3 表現を durable done へ確定した。
+- **P13 (完了)**: 2026-07-22 にリリースを実行し main 向け PR #41 を作成。2026-07-23 に PR #41 が main へ merge (merge commit `b655e22`、CI 4 check 全 SUCCESS)。2026-07-24 に close-loop reconciliation を実走し、graph (graph_revision 491)・md・beads の 3 表現を durable done へ確定した。
 - **AC-1 の 3 表現同時 close**: 対象 `issue-bd-bridge-notes-passthrough-20260721` は既に md(status closed)・graph(completion done)・beads(closed) の 3 表現で閉じ、`lint-open-residue.py` exit 0 で整合を実測済み (前コミットで close-loop 実証済み)。
 
 ## 関連バグの解消

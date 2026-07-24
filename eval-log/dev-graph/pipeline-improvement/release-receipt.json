@@ -91,28 +91,9 @@
   "completion_reconciliation": {
     "reconciled_at": "2026-07-24T07:07:52Z",
     "event_key": "daishiman/HarnessHub#task:SYS-DEV-PIPELINE-IMPROVEMENT-P13#policy:316a4db9479c8c6cad67e27ec6de26e352280780af370427ec51d6f2729eb54c",
-    "steps": {
-      "c02_writer": "applied",
-      "completion_event": "applied",
-      "system_release": "not_applicable",
-      "beads_close": "applied"
-    },
+    "steps": {"c02_writer": "applied", "completion_event": "applied", "system_release": "not_applicable", "beads_close": "applied"},
     "linkage": "gh:pr gate (bd-bridge gate-add HarnessHub-k2u.13 <-> PR #41)",
     "worktree": "clean main @ 8d802c23095c896c0b129708f375d9e341ec8873 (synced origin/main)"
-  },
-  "final_review_2026_07_24": {
-    "reviewer": "claude-opus-4-8 (final review + reconciliation landing)",
-    "scope": "worktree task-20260724-135557-wt-5 の未コミット差分: graph.json (graph_revision 491->506)、features/feat-dev-pipeline-improvement.md と task p01-p13 の status->done 照合、release-receipt.json、p05/graph の handoff schema path 正本化、docs (acceptance-report/final-review) の done 反映",
-    "quality_gates_rerun": {
-      "lint-eval-log-layout": "exit 0 (2396 scanned / 0 violations)",
-      "lint-handoff-disposition": "exit 0 (20 files / 123 findings / 0 violations)",
-      "migration-idempotency": "dry-run moved 0 / dispositions_added 0",
-      "validate-graph-schema": "valid / violations 0",
-      "lint-open-residue": "global exit 2 (27 residue) — 本 feature (k2u.*) 残置は 0。stash 差分実測で 28->27 と本 delta が p13 自身の残置を解消したことを確認。残 27 は別 feature (doc-governance-portability ik0.* / mvp-first-scheduling 6gl.* / issue-qa070 iwu / issue-render-out1 rix) の既存残置で本タスク scope 外 (各々の branch で reconcile される)"
-    },
-    "spec_impact_delta": "none",
-    "spec_impact_reason": "本 delta は (1) lifecycle status の done 照合 (bookkeeping) と (2) p05/graph の handoff schema path を実在の正本 (plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json) へ修正するポインタ訂正のみ。旧 path (plugins/dev-graph/schemas/improvement-handoff.schema.json) の残存参照は system-spec/ architecture/ docs/ に 0 件 (grep 実測)。規範的 spec/architecture 章の変更は不要で、原 spec 反映 (spec_reflection ブロック / D7 qa-068) からの逸脱なし",
-    "reconciliation_pr": "本 delta は devgraph/SYS-DEV-PIPELINE-IMPROVEMENT-P13 ブランチから main 向けの reconciliation PR で反映 (PR #41 の feature 実装本体とは別の後照合コミット)"
   },
   "known_residual": {
     "live_trial_stale": {
