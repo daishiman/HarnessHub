@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-requirements",
-    "skill_md_sha256": "8ec14bc49447c56bea83da092a9a97a67defdf8394222894444c9ee889323e16"
+    "skill_md_sha256": "6d2058664b908138d4349663bcd0b0f0aaeba4d50dfe5f3f3fddbdd20ddaa653"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent-content-reviewer-20260722",
-  "reviewed_at": "2026-07-22",
+  "reviewer": "independent-content-reviewer-20260723",
+  "reviewed_at": "2026-07-23",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -18,9 +18,10 @@
       "OUT2"
     ],
     "positive_feedback": [
-      "NM 命名: name=run-dev-graph-requirements が dir 名/prefix=run と一致、description は要件導出+readiness 完了時のみ handoff という発火条件を trigger 型で明示。",
-      "BD 出力契約: Purpose & Output Contract に入力/出力 (requirements document+readiness matrix+handoff)/完了条件を明記し、Gotchas 節も具備。",
-      "RG/責務: 『要件導出と gated handoff』へ単一収束し、実装コード生成と exact-13 検証を外部 (capability-build/validate-system-plan.py) へ委譲。goal_seek/feedback_contract を frontmatter で明示。"
+      "NM 命名: name=run-dev-graph-requirements が dir 名/prefix=run と一致し、description は要件導出 + readiness 完了時のみ handoff という発火条件を trigger 型で明示。",
+      "BD 出力契約: Purpose & Output Contract に入力/出力 (requirements document + readiness matrix + handoff)/四 gate 完了条件を明記し、Gotchas 節も具備。手順5 が emit 対象成果物 4 点を列挙し、emit 0 件での完了申告を契約違反として明記。",
+      "測定可能性: 完了チェックリストが『成果物ファイルの実在が条件。progress.json 内の記載や gate PASS の事実だけでは未達』という機械確認可能 (ファイル実在検査可能) な二値条件へ強化され、C11 report の validate-graph-schema.py 実行出力係留・validate-source-digest.py exit 0 係留と合わせて自己申告不能なチェックリストになった。",
+      "RG/責務: 『要件導出と gated handoff』へ単一収束し、実装コード生成と exact-13 検証を外部 (capability-build / validate-system-plan.py) へ委譲。emit 責務は R3-handoff prompt の出力契約・達成ゴールと 1:1 対応し責務逸脱なし。"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -28,5 +29,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "C04 SKILL.md 変更を rubric 観点で再評価。IN1/OUT1/OUT2 が ## Criteria acceptance に 1:1 で測定可能な受入条件化 (IN1 は validate-source-digest.py exit 0 という機械判定へ係留)。手順・チェックリスト・criteria が source-digest gate で齟齬なく対応。重大 0 件で PASS。"
+  "notes": "『gate 検証 PASS のみで成果物 emit を省略して完了申告する』fail-open への追加修正 (手順5 + 完了チェックリストへ emit を完了条件として明文化) を rubric 観点で再評価。IN1/OUT1/OUT2 は ## Criteria acceptance に 1:1 で測定可能な受入条件化を維持し、OUT1 (handoff の live-trial 確認) が emit 条件の behavioral 検証を担う。チェックリスト強化により completion 判定の測定可能性が向上し、high severity 0 件で PASS。"
 }

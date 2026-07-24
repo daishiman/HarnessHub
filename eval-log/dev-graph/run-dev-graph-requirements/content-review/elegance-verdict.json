@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-requirements",
-    "skill_md_sha256": "8ec14bc49447c56bea83da092a9a97a67defdf8394222894444c9ee889323e16"
+    "skill_md_sha256": "6d2058664b908138d4349663bcd0b0f0aaeba4d50dfe5f3f3fddbdd20ddaa653"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "independent-content-reviewer-20260722",
-  "reviewed_at": "2026-07-22",
+  "reviewer": "independent-content-reviewer-20260723",
+  "reviewed_at": "2026-07-23",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -18,9 +18,10 @@
       "OUT2"
     ],
     "positive_feedback": [
-      "C1 矛盾なし: 『実装コードは生成しない』(L72) が description・Purpose・手順・Criteria acceptance・Gotchas で一貫し、readiness 完了時だけ capability-build/task-graph build へ handoff する gate 条件と矛盾しない。",
-      "C2 漏れなし: IN1+OUT1+OUT2 の 3 criteria を acceptance で全受入条件化し、三 gate (C11 report / C02 保存 readiness / validate-system-plan.py) の同一 digest 照合、incomplete/pending/fail/stale での missing_sections surface と handoff 保留 (C20) を漏れなく規定。",
-      "C4 依存整合: script_refs (resolve-repo-context/validate-graph-schema/gh-bridge)、schema_refs (graph-node/package-registration-receipt)、reference_refs (template-contract・feature-execution-package-contract)、prompts R1/R2/R2b/R3 が全て実在。外部 validate-system-plan.py も system-dev-planner/scripts に実在し委譲整合。"
+      "C1 矛盾なし: 手順5 の『gate 検証の PASS だけで完了扱いにしない — 成果物ファイルを emit するまでが完了条件、emit 0 件での完了申告は契約違反』が、OUT1 (要件定義書の handoff を live-trial で確認)・R3-handoff prompt の達成ゴール (atomic requirements document / handoff ref / snapshot digest の生成)・Purpose の出力宣言と同一方向で矛盾がない。",
+      "C2 漏れなし: 完了チェックリストの括弧書き『成果物ファイルの実在が条件。progress.json 内の記載や gate PASS の事実だけでは未達』が、live-trial で実測された fail-open 経路 (gate PASS のみでの完了自己申告) を名指しで遮断し、emit すべき成果物 4 点 (requirements document / graph snapshot digest / package reference / capability-build handoff reference) は手順5 に列挙済み。C11 係留 (validate-graph-schema.py 実行出力を正本とし graph.json 直読を禁止) も手順2・チェックリスト・R2b prompt で維持。",
+      "C3 規約整合: 『〜だけでは未達 / 〜で代替しない』の括弧書き明文化は、validate-source-digest r13 係留 (2026-07-21) および C11 係留と同型の fail-open 再発防止パターンで、既存チェックリスト項目の書式と一致。",
+      "C4 依存整合: 今回の追記は新規依存を導入せず、emit 担当の R3-handoff prompt は既に出力契約と達成ゴールで成果物生成を要求しているため変更不要で整合。validate-graph-schema.py の --graph/--repo-root 引数と .dev-graph/state/graph.json path 慣行の接地も前回確認どおり有効。"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -28,5 +29,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "C04 SKILL.md 変更 (readiness 判定を validate-source-digest.py exit code へ係留する四 gate 化) を独立 reviewer が 4 条件で再評価。C1 四 gate (C11/C02/validate-source-digest/validate-system-plan) が description・完了条件・手順2・criteria・Gotchas で一貫し矛盾なし。C4 で新規 script_refs の validate-source-digest.py (--registered・exit0/2 fail-closed) が実装に接地していることを確認。重大 0 件で PASS。"
+  "notes": "live-trial で実測された『gate 検証 PASS のみで要件定義書と handoff の emit を省略して完了申告する』fail-open への追加修正 (手順5 と完了チェックリストへ成果物 emit を完了条件として明文化) を含む SKILL.md 全体を独立 reviewer が 4 条件で再評価。emit 条件は手順5 (契約違反明記)・チェックリスト (ファイル実在条件)・R3 達成ゴール・OUT1 live-trial の 4 点で相互補強され重大 0 件のため PASS。軽微 (non-blocker) 2 件: (1) Purpose の『完了条件:』行 (四 gate PASS・missing 0・code 生成 0) に成果物 emit が未追記だが、completeness_exempt が停止条件の正本を ## ゴールシーク実行 (チェックリスト) と明示しており enforcement は成立。(2) Gotchas に C11 係留 (2026-07-23) と emit fail-open の再発防止項目が未追加だが、本文手順とチェックリストで遮断済み。いずれも次回改訂での追記を推奨するが blocker ではない。"
 }

@@ -1,0 +1,43 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-init",
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "0c1549d4386474c3f0cd95e32f13a02a454b1aba6fad75179ad91c6edd97754a",
+  "transcript_sha256": "9af256287c2d483115d839df09822d9072c7ae15addab888cfe843d5209a4da1",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "2",
+    "wall_clock_s": 1388.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts"
+}
