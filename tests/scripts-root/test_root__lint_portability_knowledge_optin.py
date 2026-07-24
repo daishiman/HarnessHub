@@ -118,6 +118,19 @@ def test_install_script_pass_with_optin_gate():
     assert MOD.check_install_script(sh) == []
 
 
+def test_install_script_detect_fake_gate_in_comment():
+    sh = '# INCLUDE_KNOWLEDGE is the opt-in gate\ncp -r docs/ "$DEST"\n'
+    v = MOD.check_install_script(sh)
+    assert len(v) == 1 and "docs/" in v[0]
+
+
+def test_install_script_detect_fake_gate_in_non_condition_code():
+    # 条件構文らしい単語を含む表示文でも、行頭が echo なら gate ではない。
+    sh = 'echo "if INCLUDE_KNOWLEDGE is set"\ncp -r docs/ "$DEST"\n'
+    v = MOD.check_install_script(sh)
+    assert len(v) == 1 and "docs/" in v[0]
+
+
 # ── 実リポジトリ契約 (exit 0) ──────────────────────────────────────────────
 def test_cli_real_repo_exit_zero():
     res = subprocess.run([sys.executable, str(SCRIPT), "--repo-root", str(ROOT)],

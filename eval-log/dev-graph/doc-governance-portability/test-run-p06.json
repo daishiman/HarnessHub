@@ -1,0 +1,73 @@
+{
+  "phase": "P06",
+  "kind": "test-run",
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+  "test_plan": "docs/features/feat-doc-governance-portability/test-plan.md",
+  "commands": [
+    {
+      "id": "pytest-regression-3-files",
+      "command": "python3 -m pytest tests/scripts-root/test_root__lint_doc_line_limit.py tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py tests/scripts-root/test_root__lint_portability_knowledge_optin.py -q",
+      "exit_code": 0,
+      "passed": 76,
+      "failed": 0,
+      "note": "T1=29 (ratchet-base 6 件含む) / T2=28 (分割記述回避 11 件含む) / T3=19 (install gate コメント/非条件コード偽装 2 件含む)"
+    },
+    {
+      "id": "pytest-scripts-root-full",
+      "command": "python3 -m pytest tests/scripts-root -q",
+      "exit_code": 0,
+      "passed": 1019,
+      "failed": 0,
+      "note": "最終監査の opt-in gate 判定強化後に scripts-root 全体を再実行"
+    },
+    {
+      "id": "py-compile",
+      "command": "python3 -m py_compile scripts/lint-doc-line-limit.py scripts/lint-mechanism-knowledge-boundary.py scripts/lint-portability-knowledge-optin.py",
+      "exit_code": 0
+    },
+    {
+      "id": "lint-doc-line-limit-real-repo",
+      "command": "python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main --json",
+      "exit_code_run1": 0,
+      "exit_code_run2": 0,
+      "rerun_diff": 0,
+      "checked_docs": 328,
+      "violations": 0,
+      "notes": 0
+    },
+    {
+      "id": "lint-mechanism-knowledge-boundary-real-repo",
+      "command": "python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root . --json",
+      "exit_code_run1": 0,
+      "exit_code_run2": 0,
+      "rerun_diff": 0,
+      "violations": 0,
+      "known_existing_notes": 0
+    },
+    {
+      "id": "lint-portability-knowledge-optin-real-repo",
+      "command": "python3 scripts/lint-portability-knowledge-optin.py --repo-root . --json",
+      "exit_code_run1": 0,
+      "exit_code_run2": 0,
+      "rerun_diff": 0,
+      "violations": 0
+    },
+    {
+      "id": "validate-system-plan",
+      "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+      "status": "fail",
+      "exit_code": 2,
+      "errors": 0,
+      "violations": 27,
+      "validated_digest": "sha256:d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee",
+      "known_deviation": "27 violations = task-spec-section-missing/inner-goal-seek-contract (13 spec × 2) + p13-spec-architecture-writeback (P13 × 1)。package 昇格 (2026-07-22) 後に validator 契約が強化されたことによる遡及不整合で、content-addressed package は digest 不変契約のため編集不可。本 feature の成果物起因ではない。追跡: HarnessHub-8vx"
+    }
+  ],
+  "result": {
+    "test_ids_executed": "test-plan.md の T1/T2/T3 全件 (P09 差し戻し後の追補テスト含む)",
+    "failed": 0,
+    "verdict": "PASS",
+    "handoff": "失敗 0 件のため P07 へ進む"
+  },
+  "recorded_at": "2026-07-24T06:59:57Z"
+}

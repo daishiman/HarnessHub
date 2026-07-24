@@ -29,6 +29,13 @@ design.md §1-§3 の入出力契約に対し、各 lint の悪性 (MUST_DETECT=
   対象外にする = 親の並行編集と衝突しない設計の固定) / `list_tracked_docs_not_a_repo_raises`
 - **schema/設定エラー**: `load_allowlist_malformed` (6 変種で exit 2 相当) /
   `main_exit2_bad_allowlist`
+- **allowlist 改ざん検査 (`--ratchet-base`, P09 差し戻しで追加)**
+  - MUST_DETECT: `ratchet_base_new_entry_blocked` (新規エントリ追加で緑化) /
+    `ratchet_base_baseline_increase_blocked` (baseline 拡大) /
+    `ratchet_base_limit_increase_blocked` (line_limit 拡大)
+  - MUST_PASS: `ratchet_base_shrink_and_remove_pass` (縮小追随+卒業削除)
+  - 設定エラー/初導入: `ratchet_base_unresolvable_rev_config_error` (exit 2) /
+    `ratchet_base_missing_base_file_is_initial_introduction` (NOTE + exit 0)
 - **実リポジトリ契約**: `cli_real_repo_exit_zero` (allowlist 込みで exit 0)
 - **冪等 (P08)**: 同一入力で `evaluate` が同じ (violations, notes) を返すことは決定論的
   純関数として保証され、再実行差分 0 に収束する (allowlist baseline 遡及後も同様)。
@@ -52,6 +59,15 @@ design.md §1-§3 の入出力契約に対し、各 lint の悪性 (MUST_DETECT=
     `spec-drift-guardian`・`docs/…`/`eval-log/…` path・埋め込み `feat-` 部分文字列を非検出
   - `cli_passes_clean_plugin_tree` / `syntax_error_source_returns_empty`
 - **既存混入 baseline**: `known_existing_is_note_not_violation` (KNOWN_EXISTING は note へ)
+- **分割記述回避の遮断 (定数畳み込み, P09 差し戻しで追加)**
+  - MUST_DETECT: `detect_qa_number_split_concat` (`"qa-" + "070"`) /
+    `detect_qa_number_split_concat_nested` / `detect_qa_number_fstring_constant`
+    (`f"qa-{70}"`) / `detect_qa_number_percent_format` (`"qa-%d" % 70`) /
+    `detect_knowledge_path_str_format_constant` / `detect_implicit_adjacent_concat`
+  - MUST_PASS (動的組み立て guard): `pass_dynamic_fstring_path` (`f"tasks/{name}.md"`) /
+    `pass_dynamic_concat_qa_prefix` / `pass_dynamic_percent_format` /
+    `pass_composite_in_help_kwarg` (help= 内連結 citation) /
+    `pass_composite_bare_expression_citation`
 - **実リポジトリ契約**: `cli_real_repo_exit_zero` (exit 0)
 
 ## T3 test_root__lint_portability_knowledge_optin.py
@@ -69,6 +85,10 @@ design.md §1-§3 の入出力契約に対し、各 lint の悪性 (MUST_DETECT=
   - `manifest_pass_explicit_optin` / `install_script_pass_with_optin_gate`
   - **false-positive guard**: `bundles_pass_description_mentions_knowledge_word` /
     `manifest_pass_description_prose` / `install_script_pass_comment_reference`
+  - **gate 偽装 MUST_DETECT**: `install_script_detect_fake_gate_in_comment`
+    (コメントに `INCLUDE_KNOWLEDGE` を置くだけでは gate にならない) /
+    `install_script_detect_fake_gate_in_non_condition_code` (`echo` 等の非条件コードに
+    token を置くだけでは gate にならない)
   - `is_knowledge_ref_true_cases` / `is_knowledge_ref_false_cases`
 - **実リポジトリ契約**: `cli_real_repo_exit_zero` (exit 0)
 

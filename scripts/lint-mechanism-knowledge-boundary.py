@@ -23,6 +23,11 @@ hard-coded 参照していないかを検査する。
 解消する』) は KNOWN_EXISTING baseline で記録し、fail させず可視化のみ行う。新規混入
 だけを遮断する ratchet。エントリを増やして緑化する Goodhart は禁止 (縮小のみが正)。
 
+分割記述による検出回避 (`"qa-" + "070"` / `f"qa-{70}"` / `"qa-%d" % 70` /
+`"qa-{}".format(70)`) は定数畳み込みで合成後の文字列を検査して遮断する。非定数部を
+含む合成 (`f"tasks/{name}.md"` / `"qa-" + suffix`) は入力由来の正当な組み立てなので
+検出しない (placeholder `{}` が token 照合を構造的に不成立にする)。
+
 ナレッジ参照トークン (repo 固有・低誤検出):
   K1 qa 番号            qa-<digits>
   K2 ナレッジ path      (system-spec|specs|architecture|features|tasks|issues)/….(md|json|jsonl)
@@ -81,11 +86,66 @@ DOC_KWARGS = {"help", "description", "epilog", "usage", "metavar"}
 KNOWN_EXISTING: set[tuple[str, str, str]] = set()
 
 
+def _fold_constant_str(node: ast.AST) -> str | None:
+    """定数のみから合成される文字列式を畳み込んで返す (分割記述回避の遮断)。
+
+    対象: Constant str / `+` 連結 / `%` フォーマット / f-string / str.format。
+    f-string の非定数部は placeholder `{}` に置換する — `{}` は token 正規表現の
+    文字クラスに入らないため、入力由来の動的組み立てを誤検出しない。
+    畳み込めない式は None (検査対象外)。
+    """
+    if isinstance(node, ast.Constant):
+        return node.value if isinstance(node.value, str) else None
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+        left = _fold_constant_str(node.left)
+        right = _fold_constant_str(node.right)
+        return left + right if left is not None and right is not None else None
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Mod):
+        left = _fold_constant_str(node.left)
+        if left is None:
+            return None
+        r = node.right
+        try:
+            if isinstance(r, ast.Constant):
+                return left % r.value
+            if isinstance(r, ast.Tuple) and all(isinstance(e, ast.Constant) for e in r.elts):
+                return left % tuple(e.value for e in r.elts)
+        except (TypeError, ValueError, KeyError):
+            return None
+        return None
+    if isinstance(node, ast.JoinedStr):
+        parts: list[str] = []
+        for v in node.values:
+            if isinstance(v, ast.Constant) and isinstance(v.value, str):
+                parts.append(v.value)
+            elif isinstance(v, ast.FormattedValue) and isinstance(v.value, ast.Constant):
+                parts.append(str(v.value.value))
+            else:
+                parts.append("{}")
+        return "".join(parts)
+    if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "format"
+            and isinstance(node.func.value, ast.Constant)
+            and isinstance(node.func.value.value, str)
+            and all(isinstance(a, ast.Constant) for a in node.args)
+            and all(kw.arg and isinstance(kw.value, ast.Constant) for kw in node.keywords)):
+        try:
+            return node.func.value.value.format(
+                *[a.value for a in node.args],
+                **{kw.arg: kw.value.value for kw in node.keywords},
+            )
+        except (IndexError, KeyError, ValueError):
+            return None
+    return None
+
+
 def find_knowledge_literals(source: str) -> list[tuple[int, str, str]]:
     """コード値の文字列リテラルに含まれるナレッジ参照を (lineno, kind, token) で返す。
 
     docstring / bare 文字列式 (Expr(Constant str)) とコメントは根拠引用として exempt。
     argparse 等の documentation channel keyword 引数 (help=/description= 等) も exempt。
+    定数のみの合成式 (`+`/`%`/f-string/str.format) は畳み込み後の文字列も検査する
+    (分割記述による検出回避の遮断)。
     構文エラーの source は検査不能として空を返す (別 lint が構文を担保)。
     """
     try:
@@ -93,30 +153,42 @@ def find_knowledge_literals(source: str) -> list[tuple[int, str, str]]:
     except SyntaxError:
         return []
 
-    # docstring / bare 文字列式 + documentation channel keyword の Constant を exempt。
-    exempt_ids: set[int] = set()
+    # docstring / bare 文字列式 + documentation channel keyword を exempt。
+    # 合成 citation (`"qa-" + "070"` の bare 文 / help= 内連結) は内側の部分式も
+    # 畳み込み対象に現れるため、除外は root だけでなく部分木ごと行う。
+    # bare Expr で除外するのは文字列合成形 (Constant/BinOp/JoinedStr) のみ —
+    # bare Call 文 (`register("qa-070")`) は実行コードなので除外しない。
+    exempt_roots: list[ast.AST] = []
     for node in ast.walk(tree):
-        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) \
-                and isinstance(node.value.value, str):
-            exempt_ids.add(id(node.value))
+        if isinstance(node, ast.Expr) and isinstance(
+                node.value, (ast.Constant, ast.BinOp, ast.JoinedStr)):
+            exempt_roots.append(node.value)
         elif isinstance(node, ast.Call):
             for kw in node.keywords:
-                if kw.arg in DOC_KWARGS and isinstance(kw.value, ast.Constant) \
-                        and isinstance(kw.value.value, str):
-                    exempt_ids.add(id(kw.value))
+                if kw.arg in DOC_KWARGS:
+                    exempt_roots.append(kw.value)
+    exempt_ids: set[int] = {
+        id(sub) for root in exempt_roots for sub in ast.walk(root)
+    }
 
     hits: list[tuple[int, str, str]] = []
     for node in ast.walk(tree):
-        if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
-            continue
         if id(node) in exempt_ids:
             continue
-        value = node.value
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            value = node.value
+        elif isinstance(node, (ast.BinOp, ast.JoinedStr, ast.Call)):
+            folded = _fold_constant_str(node)
+            if folded is None:
+                continue
+            value = folded
+        else:
+            continue
         for kind, rex in KNOWLEDGE_TOKEN_RES:
             m = rex.search(value)
             if m:
                 hits.append((getattr(node, "lineno", 0), kind, m.group(0)))
-    # 決定論: 行番号・kind・token で sorted。
+    # 決定論: 行番号・kind・token で sorted。set で合成式と内包リテラルの重複を排除。
     return sorted(set(hits))
 
 

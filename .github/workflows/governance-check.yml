@@ -25,8 +25,8 @@ jobs:
       - name: "lint artifact placement (保存先の正規表 fail-closed。dev-graph 未初期化 repo は skip)"
         run: python3 scripts/lint-artifact-placement.py
         continue-on-error: false
-      - name: "lint doc line limit (qa-070 300行上限 fail-closed。既存超過は allowlist ratchet)"
-        run: python3 scripts/lint-doc-line-limit.py --repo-root .
+      - name: "lint doc line limit (qa-070 300行上限 fail-closed。既存超過は allowlist ratchet、allowlist 改ざんは origin/main 基準で遮断)"
+        run: python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main
         continue-on-error: false
       - name: "lint mechanism-knowledge boundary (qa-070 仕組みへの repo 固有ナレッジ hard-code 遮断)"
         run: python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .
