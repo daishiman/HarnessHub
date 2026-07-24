@@ -57,6 +57,19 @@ task spec 本文の `Automated commands` は §2 のとおり `.dev-graph/stagin
 - validate-system-plan の再実行は世代非依存の `validate-system-plan.py --repo-root <root> --feature-package <feature_package_id>` を正本形式とする。この経路は feature 別 current pointer から現行世代の published package を解決する。
 - 2026-07-22 以前に promote 済みの 15 package (計 195 task spec) は本文に `--staging .` を残したまま不変保持する。executor が読む mutable な task projection (`tasks/<parent_feature>/<id>.md` の `## 実行契約`) 側へ `scripts/build-task-projection-rerun.py` が正本形式を冪等配線し、`--check` が未配線を fail-closed で報告する。planner の 1 feature run では `--feature-package <feature_package_id>` で対象の exact 13 だけに scope し、引数省略の 195 件全体モードは repository 移行・監査に限定する。どちらも対象 0 件は exit 2 とする。
 
+### 2.4 契約 version と promote 済み package の再検証
+
+C12 の検査内容は強化されうるが、promote 済み package は content-addressed で digest 不変のため、後から強化された契約を満たすよう修正できない。修正すれば digest が変わり、`published_digest` を記録済みの receipt が偽になる (§2.2 と同じ理由)。したがって validator 側が契約 version を持ち、各 package を **promote 時点で妥当だった契約** で再検証する。
+
+- 契約 version は `scripts/validate-system-plan.py` の `CONTRACT_VERSIONS` が正本。`1.0.0` は 2026-07-22T13:53:21Z (commit 367ba5c) 以前の契約で必須節 14 件、`1.1.0` は同 commit が追加した Inner goal-seek execution loop 節・`system-task-goal-seek/v1` marker・`rubric verdict=PASS` feedback loop・P13 spec/architecture writeback を要求する現行契約。
+- 適用 version は `assets/validation-contract-baseline.json` が canonical digest 単位で定める。照合鍵は `staging-manifest.json` の申告値ではなく **canonical files の実バイトから再計算した digest** とする。manifest 自身は digest 対象集合の外にあり書き換え可能なため、申告値を根拠にすると台帳登録済み digest を騙るだけで契約を回避できる。
+- 台帳に無い digest、digest を再計算できない対象、台帳 asset の欠落・破損はすべて最新契約で検証する。台帳の削除・改変が緩和経路にならず、新規生成 package は常に fail-closed で最新契約に晒される。
+- 免除の及ぶ範囲は version 間で差のある検査 (必須節集合・goal-seek marker・P13 writeback) に限る。違反 code 単位で免除すると `task-spec-section-missing` が丸ごと無効化され、goal-seek 以外の節欠落まで素通りする fail-open になる。
+- 検証 report は `contract_version` と `contract_baseline_exemption` を返し、免除が効いた pass を下流が識別できるようにする。
+- 台帳への追加は、当該 digest が (a) 既に promote 済みで、(b) 記載 version で残違反ゼロの pass になることを確認したうえでレビューする。現行契約で pass する package は登録しない (免除枠の希釈防止)。
+- C14 handoff builder (`scripts/build-system-handoff.py`) は同じ契約検査を独自に保持するが、新規生成専用のため最新契約のみを持つ。旧 package の handoff は既に digest へ封じ込まれており、遡及検証の対象外。
+- 現況: 2026-07-19〜2026-07-22 に promote された 18 generation を `1.0.0` として登録。`feat-mvp-first-scheduling` (2026-07-23 promote) は現行契約で pass するため未登録。
+
 ## 3. 13 taskの固定写像
 
 | phase_ref | task responsibility |

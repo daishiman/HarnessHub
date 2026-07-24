@@ -508,7 +508,9 @@ def _recover_published(root: Path, context: dict, intent_path: Path, intent: dic
     registration = _json(registration_path)
     findings = _json(findings_path)
     digest = intent["digest"]
-    deterministic = validator.validate(destination, context["repository_id"])
+    # baseline={} で契約 version 免除を無効化する。免除は既 promote package の再検証専用であり、
+    # promotion 経路へ効かせると台帳へ digest を先回り登録するだけで旧契約 package を新規昇格できる。
+    deterministic = validator.validate(destination, context["repository_id"], baseline={})
     if deterministic.get("status") != "pass" or deterministic.get("validated_digest") != digest:
         raise ValueError("published generation bytes do not match promotion intent digest")
     if receipt.get("status") != "promoted" or any(
@@ -569,7 +571,7 @@ def main(argv: list[str] | None = None) -> int:
         findings = _json(Path(c09.guard_relative_path(root, args.findings)))
         readiness = _json(Path(c09.guard_relative_path(root, args.readiness)))
         validation = _json(Path(c09.guard_relative_path(root, args.validation)))
-        deterministic = validator.validate(staging, context["repository_id"])
+        deterministic = validator.validate(staging, context["repository_id"], baseline={})
         _validate_findings(findings, validator)
         if findings.get("plan_dir") != args.staging:
             raise ValueError("plan findings plan_dir does not match promotion staging")

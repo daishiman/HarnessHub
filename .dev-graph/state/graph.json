@@ -1,5 +1,5 @@
 {
-  "graph_revision": 524,
+  "graph_revision": 528,
   "nodes": [
     {
       "acceptance": [
@@ -32324,6 +32324,236 @@
       "title": "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築",
       "tracker_binding": "beads",
       "updated_at": "2026-07-24T11:56:47Z"
+    },
+    {
+      "acceptance": [
+        "再現コマンド (feat-doc-governance-portability / feat-stage0-distribution-gate / feat-mvp-first-scheduling) が violations 0 で status=pass を返す",
+        "report が contract_version と contract_baseline_exemption を返し免除された pass を下流が識別できる",
+        "台帳未登録 digest・digest 計算不能対象・台帳欠落のいずれも最新契約へ倒れる (fail-closed)",
+        "promote 経路の validate 呼び出しが全て baseline={} を渡す (AST テストで機械検証)",
+        "planner pytest が全件 PASS し、1 ファイル 500 行以下を維持している"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-8vx",
+        "linked_at": "2026-07-24T23:20:15Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-validator-contract-version-20260724.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "content-addressed package への遡及契約適用という C12 validator の欠陥を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T23:20:15Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-validator-contract-version-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "既 promote 済み 18 generation の再検証が digest を一切変えずに status=pass へ収束し、かつ新規生成 package は最新契約 1.1.0 で fail-closed 検証されたままであること",
+      "graph_node_id": "issue-validator-contract-version-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T23:20:15Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "promote 済み feature-execution-package は canonical digest で内容が確定しており、後から強化された C12 契約 (Inner goal-seek execution loop 節・P13 spec/architecture writeback) を満たすよう修正できない。修正すれば digest が変わり published_digest を記録済みの receipt が偽になる。そこで validator 側に契約 version と台帳を持たせ、各 package を promote 時点で妥当だった契約で再検証できるようにする。新規 package は台帳に存在しないため常に最新契約で fail-closed 検証され、緩和経路にはならない",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "plugins/system-dev-planner/scripts/validate-task-spec-contract.py",
+        "plugins/system-dev-planner/scripts/validate-json-schema-subset.py",
+        "plugins/system-dev-planner/scripts/promote-system-plan.py",
+        "plugins/system-dev-planner/assets/validation-contract-baseline.json",
+        "plugins/system-dev-planner/references/feature-execution-package-contract.md",
+        "plugins/system-dev-planner/tests/test_contract_versioning.py"
+      ],
+      "scope_in": [
+        "CONTRACT_VERSIONS (1.0.0 / 1.1.0) と契約 version 解決ロジックの追加",
+        "validation-contract-baseline.json 台帳の新規作成と既 promote 18 generation の登録",
+        "実ファイル群から再計算した canonical digest による免除解決 (manifest 申告値は使わない)",
+        "promote 経路への免除無効化 (baseline={}) と AST ベースの境界テスト",
+        "validate-system-plan.py の 500 行超過に対する責務単位分割",
+        "契約正本 feature-execution-package-contract.md への §2.4 追記"
+      ],
+      "scope_out": [
+        "promote 済み package 本体の編集 (digest 不変性の破壊で受け入れ不可)",
+        "staging-manifest.json 申告 digest による免除判定 (改ざん可能で fail-open)",
+        "C14 build-system-handoff.py の JSON Schema サブセット統合 (C12 へのビルド依存を作るため意図的に非対象)",
+        "dev-graph 3 skill の live-trial 再取得 (HarnessHub-1y6 で追跡)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:20:15Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-dev-planner",
+        "c12-validation",
+        "content-addressed",
+        "contract-version",
+        "fail-closed"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "validate-system-plan の promoted package 遡及契約を契約 version 台帳で互換化する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T23:45:00Z"
+    },
+    {
+      "acceptance": [
+        "対象 2 本と分離先の全ファイルが 500 行以下",
+        "lint-script-naming.py で新規 VIOLATION 0 件",
+        "make plugin-package-check で blocking failure 0 件",
+        "planner pytest 全件 PASS",
+        "既 promote package の canonical digest が不変"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-7ui",
+        "linked_at": "2026-07-25T00:05:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-planner-script-line-limit-20260724.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "500 行上限超過という保守性の残件を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T23:58:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-planner-script-line-limit-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "promote-system-plan.py と build-system-handoff.py および分離先の全ファイルが 500 行以下になり、命名規則・PKG 検査・planner pytest・既 promote package の digest 不変性がいずれも維持されている",
+      "graph_node_id": "issue-planner-script-line-limit-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T23:58:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "issue-validator-contract-version-20260724 の対応で validate-system-plan.py を 601 行から 401 行へ分割した際、同 plugin 内の他 2 本が 500 行上限を超過したまま残っていることを確認した。いずれも当該変更以前からの超過であり、当該変更が触ったのは promote-system-plan.py の 2 行のみ。責務単位へ分割して上限へ収める",
+      "related_nodes": [
+        "issue-validator-contract-version-20260724"
+      ],
+      "resource_scope": [
+        "plugins/system-dev-planner/scripts/promote-system-plan.py",
+        "plugins/system-dev-planner/scripts/build-system-handoff.py"
+      ],
+      "scope_in": [
+        "promote-system-plan.py (677 行) の責務単位分割",
+        "build-system-handoff.py (580 行) の責務単位分割",
+        "分離先 module の命名規則準拠と実行ビット付与"
+      ],
+      "scope_out": [
+        "C12 validate-json-schema-subset.py と C14 の JSON Schema サブセット実装の統合 (依存の非対称性を壊すため)",
+        "500 行上限そのものの緩和",
+        "既 promote package の canonical digest を変える改変"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:58:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-dev-planner",
+        "line-limit",
+        "refactoring",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "system-dev-planner: 500 行超の script 2 本 (promote-system-plan.py 677 / build-system-handoff.py 580) を責務単位へ分割する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:05:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
