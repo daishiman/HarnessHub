@@ -1,0 +1,17 @@
+{
+  "patch": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "done",
+      "source": "reconciliation",
+      "completed_at": "2026-07-22T06:30:28Z",
+      "reconciled_at": "2026-07-23T11:10:47Z",
+      "evidence_refs": [
+        "plugins/dev-graph/tests/test_lint_open_residue.py",
+        "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
+        "plugins/dev-graph/tests/test_lint_handoff_disposition.py"
+      ]
+    }
+  }
+}

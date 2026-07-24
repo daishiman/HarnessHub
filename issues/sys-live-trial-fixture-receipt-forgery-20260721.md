@@ -12,7 +12,7 @@ iteration: null
 title: "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない"
 owners: ["daishiman"]
 created_at: "2026-07-21T18:30:00Z"
-updated_at: "2026-07-21T18:30:00Z"
+updated_at: "2026-07-23T10:25:09.866807Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -38,7 +38,7 @@ classification_reason: "live-trial fixture が gitignore されているため f
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-live-trial-fixture-receipt-forgery-20260721.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-aoe","linked_at":"2026-07-23T10:11:37Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

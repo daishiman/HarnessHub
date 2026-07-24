@@ -1,0 +1,26 @@
+{
+  "lint": "lint-open-residue",
+  "repo_root": ".",
+  "beads_axis": "resolved",
+  "beads_source": "bd export",
+  "scanned": 14,
+  "violations": [],
+  "violation_count": 0,
+  "baselined_residue": [],
+  "resolved_baseline_entries": [
+    "SYS-STAGE0-DISTRIBUTION-GATE-P01",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P02",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P03",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P04",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P05",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P07",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P08",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P09",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P10",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P11",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P12",
+    "SYS-STAGE0-DISTRIBUTION-GATE-P13"
+  ],
+  "exit_code": 0
+}

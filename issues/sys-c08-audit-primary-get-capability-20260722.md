@@ -12,7 +12,7 @@ iteration: null
 title: "C08 監査 sub-agent が公式 API へ一次 GET できず WebSearch 二次索引依存で doc_freshness FAIL が反復する"
 owners: ["daishiman"]
 created_at: "2026-07-22T23:38:10Z"
-updated_at: "2026-07-22T23:38:10Z"
+updated_at: "2026-07-23T10:24:14.484185Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -38,7 +38,7 @@ classification_reason: "C05 再々評価 (HarnessHub-t9q) の medium finding (au
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-c08-audit-primary-get-capability-20260722.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-nq2","linked_at":"2026-07-23T10:11:37Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

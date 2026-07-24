@@ -1,0 +1,86 @@
+{
+  "schema": "goal-spec/v1",
+  "feature_id": "feat-mvp-first-scheduling",
+  "repository_id": "harness-hub",
+  "generated_at": "2026-07-23T05:20:00Z",
+  "generated_by": "system-dev-plan-elicitor",
+  "identity_verification": {
+    "graph_node_id_match": true,
+    "feature_context_graph_node_id": "feat-mvp-first-scheduling",
+    "feature_document_graph_node_id": "feat-mvp-first-scheduling",
+    "feature_document_confirmation_status": "confirmed",
+    "feature_document_graph_rev": 383
+  },
+  "purpose": "dev-graph/beads (bd) のタスク優先度選定が品質・本質・再現性を先回りする基準に寄り、いちばん作りたい機能 (MVP) から離れて同じ基盤タスクを繰り返す停滞が起きている (qa-069)。判断軸を「目的=何のために作るか / 背景=どういう経緯か / MVP=今必要な動くもの」の3軸へ組み替え、まず作って使って課題をあぶり出す build-use-learn の回転を取り戻す",
+  "background": "dev-graph/beads (bd) のタスク優先度選定が品質・本質・再現性を先回りする基準に寄り、いちばん作りたい機能 (MVP) から離れて同じ基盤タスクを繰り返す停滞が起きている (qa-069)。判断軸を「目的=何のために作るか / 背景=どういう経緯か / MVP=今必要な動くもの」の3軸へ組み替え、まず作って使って課題をあぶり出す build-use-learn の回転を取り戻す",
+  "background_source_note": "feature context/文書は目的節と背景節を分離しておらず、単一の purpose フィールド (および文書 `# 目的` 節) に両方を統合して記述している。そのため background は purpose と同一テキストを転記し、独自の要約・分割は行っていない。",
+  "goal": "next/schedule と bd ready の着手候補選定が MVP 適合 (今必要な動くものへの直結度) を第一ソートキーとして動作し、品質・再現性強化系タスクは MVP 成立後へ繰り延べられ、同一入力での選定結果が冪等に再現される状態 (既確定 CI/CD・quality gate 要件 qa-066 は維持)",
+  "scope_in": [
+    "feature/task metadata への MVP 判断軸 (目的・背景・MVP 適合度) の表現追加と登録経路",
+    "schedule/next の着手候補算出への MVP 適合第一ソートキー導入",
+    "bd-bridge ready 候補順序の MVP-first 整合",
+    "品質・再現性強化系タスクの MVP 成立後繰り延べ規則",
+    "選定理由 (なぜこのタスクが先か) の receipt 出力"
+  ],
+  "scope_out": [
+    "bd CLI 本体の変更",
+    "CI/CD・quality gate 要件 (qa-066) 自体の緩和・削除",
+    "dev-graph への新 verb 追加",
+    "既存 task 資産の一括書き換え",
+    "Hub プロダクト本体機能 (Web/API/DB) の変更"
+  ],
+  "acceptance": [
+    "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+    "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+    "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+    "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+    "qa-066 由来の既存品質ゲートの検査が非退行である"
+  ],
+  "architecture_refs": [
+    {
+      "ref": "architecture/harness-hub-dev-workflow.md",
+      "resolved": true,
+      "graph_node_id": "arch-harness-hub-dev-workflow",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass"
+    },
+    {
+      "ref": "specs/harness-hub-system-specification.md",
+      "resolved": true,
+      "note": "context.json の architecture_refs に列挙されているがパス実在のみ確認。feature/architecture 両 frontmatter の architecture_refs では言及されていないため、本 goal-spec では第2参照として保持しつつ主参照は arch-harness-hub-dev-workflow とする。"
+    }
+  ],
+  "source_lineage": {
+    "system_spec": {
+      "source_path": "system-spec/dev-workflow.md",
+      "source_digest": "sha256:43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+      "source_status": "confirmed",
+      "relevant_qa": "qa-069",
+      "digest_grounding": "feature 文書 (features/feat-mvp-first-scheduling.md) の source_lineage.source_digest と architecture ラッパー (architecture/harness-hub-dev-workflow.md) frontmatter の source_lineage.source_digest がいずれも同一値で一致し、依頼元指定値とも一致することをテキスト比較で確認した。バイト内容からの sha256 再計算はハッシュ計算ツールが利用できないため未実施 (呼び出し元/各 frontmatter の申告値をそのまま採用)。"
+    },
+    "feature_context": {
+      "path": "features/feat-mvp-first-scheduling.context.json",
+      "digest": "sha256:b0d003254ac6f42d4616dfff30ab605e355c09c9abe642b71559cea6a49e6291",
+      "digest_verification_note": "依頼元 (team-lead) 提供値をそのまま記録。ハッシュ計算ツールが利用できないため独自再計算による検証は未実施。"
+    },
+    "architecture_wrapper": {
+      "path": "architecture/harness-hub-dev-workflow.md",
+      "graph_node_id": "arch-harness-hub-dev-workflow",
+      "source_digest": "sha256:43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+      "source_plugin": "system-spec-harness",
+      "source_version": "0.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "evaluator": "assign-system-spec-completeness-evaluator",
+      "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"
+    }
+  },
+  "drift_signals": [
+    "architecture/harness-hub-dev-workflow.md 本文中の「正本 (source of truth)」節は sha256 の先頭断片 `c8f21b091cfc28b2…` と取込日時 2026-07-18T15:40:17Z を記載しているが、同ファイルの frontmatter (source_lineage.source_digest = 43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86、imported_at = 2026-07-23T04:45:00Z) と一致しない。frontmatter は qa-069 追加後に更新済みだが本文プロースが追随していない、という更新漏れとみられる。goal-spec は機械可読な frontmatter 側 source_lineage を正本として採用した。"
+  ],
+  "out_of_scope_for_this_step": [
+    "feature 分割 (13 task への分解) は行っていない",
+    "P01..P13 task 生成は行っていない",
+    "readiness promotion (staging から確定領域への昇格) は行っていない"
+  ]
+}

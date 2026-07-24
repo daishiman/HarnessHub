@@ -1,0 +1,19 @@
+{
+ "patch": {
+  "graph_node_id": "arch-harness-hub-security",
+  "updated_at": "2026-07-23T04:45:00Z",
+  "confirmation_evidence": {
+   "evaluated_digest": "06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e",
+   "evaluator": "assign-system-spec-completeness-evaluator",
+   "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"
+  },
+  "source_lineage": {
+   "imported_at": "2026-07-23T04:45:00Z",
+   "origin_kind": "system-spec-harness",
+   "source_digest": "06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e",
+   "source_path": "system-spec/security.md",
+   "source_plugin": "system-spec-harness",
+   "source_version": "0.1.0"
+  }
+ }
+}

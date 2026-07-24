@@ -1,0 +1,21 @@
+{
+  "patch": {
+    "graph_node_id": "issue-sync-legacy-linkage-20260723",
+    "status": "closed",
+    "updated_at": "2026-07-23T12:13:21Z",
+    "completion_evidence": {
+      "completed_at": "2026-07-23T12:13:21Z",
+      "evidence_refs": [
+        "eval-log/run-dev-graph-sync-execution.json",
+        "eval-log/dev-graph/sync-legacy-linkage-open-residue.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260723T114338Z-wt1r1/verdict.json",
+        "plugins/dev-graph/tests/test_sync_render_schedule_v2.py",
+        "plugins/dev-graph/tests/test_c27_c28_projection_contract.py"
+      ],
+      "policy": "manual",
+      "reconciled_at": "2026-07-23T12:13:21Z",
+      "source": "reconciliation",
+      "status": "done"
+    }
+  }
+}

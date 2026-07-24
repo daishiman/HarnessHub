@@ -1,0 +1,10 @@
+{
+  "patch": {
+    "graph_node_id": "issue-live-trial-skill-contract-bypass-20260721",
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-m7d",
+      "linked_at": "2026-07-23T10:11:37Z",
+      "sync_state": "linked"
+    }
+  }
+}

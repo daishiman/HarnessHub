@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "generated": true,
+  "browser_verified": false,
+  "browser_blocker": "in-app browser unavailable in this session",
+  "out_relative": ".dev-graph/render/index.html",
+  "nodes": 276,
+  "edges": 258,
+  "feature_count": 18,
+  "feature_progress": {
+    "aggregate": {
+      "done": 25,
+      "total": 234
+    },
+    "feat-dev-pipeline-improvement": {
+      "done": 12,
+      "total": 13
+    },
+    "feat-mvp-first-scheduling": {
+      "done": 0,
+      "total": 13
+    }
+  },
+  "input_sha256": "5d7eb8975c303e1bd69b744d0f44c5af77190909ff5183066d1cef00cb278104",
+  "output_sha256": "c7fcc614e91479f45a51f79b65c2cec16b1f4a4d84635008d2bd37277472ce91",
+  "self_contained": true,
+  "external_script_count": 0,
+  "external_link_count": 0,
+  "svg_count": 1,
+  "inline_node_count": 276,
+  "registration": null,
+  "scope": null,
+  "executed_at": "2026-07-23T12:53:46Z"
+}

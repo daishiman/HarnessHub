@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/feature-package-feat-mvp-first-scheduling",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-mvp-first-scheduling/55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
+  "digest": "sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
+  "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+  "package_slug": "feature-package-feat-mvp-first-scheduling",
+  "generation_id": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
+  "supersedes": null,
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-mvp-first-scheduling/55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-23T07:08:08Z"
+}

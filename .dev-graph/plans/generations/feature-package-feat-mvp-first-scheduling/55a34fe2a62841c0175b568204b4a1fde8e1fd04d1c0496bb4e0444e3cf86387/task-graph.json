@@ -1,0 +1,148 @@
+{
+  "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+  "nodes": [
+    {
+      "depends_on": [],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p01",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P01",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P01",
+      "title": "要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P01"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p02",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P02",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P02",
+      "title": "設計 — MVP 適合軸メタデータ・schedule/next ソートキー・bd-bridge ready 整合・繰り延べ規則・選定 receipt の決定論設計"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P02"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p03",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P03",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P03",
+      "title": "設計レビュー — 単一 writer (schedule-graph.py)・後方互換・qa-066 非退行との整合検証"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P03"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p04",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P04",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P04",
+      "title": "テスト設計 — MVP-first ソート・冪等性・後方互換・receipt 出力の回帰テスト設計"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P04"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p05",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P05",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P05",
+      "title": "実装 — MVP 適合軸メタデータ・schedule-graph.py ソートキー・bd-bridge ready 整合・選定 receipt 出力"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P05"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p06",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P06",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P06",
+      "title": "テスト実行 — 回帰テスト全件と ready/next 実測の記録"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P06"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p07",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P07",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P07",
+      "title": "受入判定 — goal-spec acceptance 5 件の突合と未達の差し戻し"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P07"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p08",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P08",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P08",
+      "title": "移行 — 既存 task 資産一括書き換えを行わないことの互換性確認 (fallback 動作の実測記録)"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P08"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p09",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P09",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P09",
+      "title": "品質保証 — fail-closed 実効性の悪性ケース実測 (qa-066 非退行含む)"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P09"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p10",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P10",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P10",
+      "title": "最終レビュー — 全 phase 成果の横断整合確認"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P10"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p11",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P11",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P11",
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P11"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p12",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P12",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P12",
+      "title": "運用文書化 — MVP 適合軸設定手順と選定 receipt の運用手順"
+    },
+    {
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P12"
+      ],
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "graph_node_id": "sys-mvp-first-scheduling-p13",
+      "id": "SYS-MVP-FIRST-SCHEDULING-P13",
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P13",
+      "title": "リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback"
+    }
+  ],
+  "parent_feature": "feat-mvp-first-scheduling",
+  "schema_version": "1.0.0"
+}

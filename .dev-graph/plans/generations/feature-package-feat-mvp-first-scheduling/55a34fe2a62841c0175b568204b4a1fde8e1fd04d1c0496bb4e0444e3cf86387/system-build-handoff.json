@@ -1,0 +1,232 @@
+{
+  "digest_contract": {
+    "algorithm": "sha256",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded"
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "script",
+      "depends_on": [],
+      "phase_ref": "P01",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P01"
+      ],
+      "phase_ref": "P02",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P02"
+      ],
+      "phase_ref": "P03",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P03"
+      ],
+      "phase_ref": "P04",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P04"
+      ],
+      "phase_ref": "P05",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P05"
+      ],
+      "phase_ref": "P06",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P06"
+      ],
+      "phase_ref": "P07",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P07"
+      ],
+      "phase_ref": "P08",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P08"
+      ],
+      "phase_ref": "P09",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P09"
+      ],
+      "phase_ref": "P10",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P10"
+      ],
+      "phase_ref": "P11",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P11"
+      ],
+      "phase_ref": "P12",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md"
+    },
+    {
+      "build_target_kind": "script",
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P12"
+      ],
+      "phase_ref": "P13",
+      "task_id": "SYS-MVP-FIRST-SCHEDULING-P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md"
+    }
+  ],
+  "identity": {
+    "feature_id": "feat-mvp-first-scheduling",
+    "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+    "parent_feature": "feat-mvp-first-scheduling",
+    "repository_id": "github:daishiman/HarnessHub",
+    "source_feature_digest": "sha256:b0d003254ac6f42d4616dfff30ab605e355c09c9abe642b71559cea6a49e6291"
+  },
+  "kind": "system-build-handoff",
+  "p01_entry_gate": {
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ],
+    "selector": "parent_feature.depends_on"
+  },
+  "registration_request": {
+    "consumer": "dev-graph/C02",
+    "owner": "system-dev-planner/C11",
+    "path": "dev-graph-registration.json",
+    "promotion_receipt": {
+      "owner": "system-dev-planner/C11",
+      "path": "atomic-promotion-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "registration_receipt": {
+      "owner": "dev-graph/C02",
+      "path": "dev-graph-registration-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "status": "deferred-until-promotion"
+  },
+  "schema_version": "1.0.0",
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "ad36562740a54b6c41f7a153a6bcf9de9468fe9b105f6703dc22233b636398a7"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "224d054273e0db8341a9e4fc61bf8ae3deb60870a4f5856b8c872d243e4aced1"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "7c99ef5aad54ba0a42abe16b65d60d3381a52c4aa581fc7f98091ba903c1fbf9"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "ee2008f70ef79ebd873ec82f93a3609a5fb675fd6a60444e2f7dc36bbbab883f"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "80899bb29fff3dbb4ec57e6dc2a3af54350f92c88c6b67d14ed066c916553ffa"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "9d5077cc67089e26e294f468d8a58eee0bb5e1bd9a30751ee0ffe0053db1d5fa"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "92dcdcc040520e61847c87fdf057a03fcb040b831003fe19eb79fdfcbedc30a2"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "f788ca0be410fa10efe6c6b2738fdf62546f12b9040b225d9d07b0cdf382cd68"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "d80adee3df7c47eca8b44b31cb38051c74a54b224d43abe11553ecaab0f9d9bc"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "daa937f6144bf6225d4afd6dc735c95af527a35485805ca8070770cfd5ec73f5"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "f5064cd9430a7f7d857df597855bea6b8c4c690987dcba993d95dc95dfae8083"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "61471c446a255fcdcdbd21630c5772b34d10e5fa5766e17646486ea09d71be4d"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "2c045af40c34184ecb503cbbe90af04e088b5a8a458e1e3be6948684bcab2173"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "94748fa98ce6ce0a0d1bfefab15e0f72eafe94c6002091a99bd90d5e61902cd3"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "de17b2b7b7120b4ad10e46a7c6f83910c58519b1a0534e44329b869c8a131f7a"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "b7be141fc5e2ac9b6af66bb165ffc3374e6ad1d7654148fb3a472f84d87e531c"
+    }
+  ],
+  "source_manifest": {
+    "canonical_digest_before_handoff": "sha256:098e17382de30adb1a6ef6c09eb00fa27137c5e91df4c71fe63450b0ba90c201",
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "569c59ba36864d33984bffa2d6af501627d232002f44ce70da542f82fa5e7c13"
+  }
+}
