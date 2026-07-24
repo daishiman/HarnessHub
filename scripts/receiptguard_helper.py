@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# /// script
+# name: receiptguard_helper
+# purpose: live-trial fixture 内の C02 (単一 graph writer) 迂回を transcript から検出する。
+# inputs: []  (import 専用モジュール。CLI なし。呼び口は lint-live-trial-verdict.py:check_verdict)
+# outputs: []  (違反文字列の list を返すのみ。標準出力・ファイル書込みなし)
+# requires-python = ">=3.10"
+# dependencies: []
+# contexts: [C, E]
+# network: false
+# write-scope: none
+# ///
 """live-trial fixture 内の C02 (単一 graph writer) 迂回を transcript から検出する。
 
 lint-live-trial-verdict.py から責務分離した helper (§4.3/§4.4 例外: Python import 上

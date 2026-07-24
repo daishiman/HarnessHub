@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# /// script
+# name: provenance_helper
+# purpose: digest 単独書き換え (再 trial せずに緑化した live-trial 証跡) を git 差分から検出する。
+# inputs: []  (import 専用モジュール。CLI なし。呼び口は lint-live-trial-verdict.py --check-provenance)
+# outputs: []  (違反文字列の list / exit code を返すのみ。ファイル書込みなし)
+# requires-python = ">=3.10"
+# dependencies: []
+# contexts: [C, E]
+# network: false
+# write-scope: none
+# ///
 """digest 単独書き換え (再 trial せずに緑化した live-trial 証跡) を git 差分から検出する。
 
 lint-live-trial-verdict.py から責務分離した helper (§4.3/§4.4 例外: Python import 上
