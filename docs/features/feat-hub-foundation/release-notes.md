@@ -52,7 +52,7 @@ deployed_at: "2026-07-21T03:46:26Z"
 | 2 | cron トリガー登録 | **失敗** | 日次・週次バッチが起動しない（§3） |
 | ~~3~~ | ~~`/health` の 200 確認~~ → **完了**（2026-07-21 04:45 UTC / HTTP 200・db 365ms・r2 1114ms すべて ok。証跡: `evidence/health-response.json`） | **外形監視を有効化してよい状態になった** |
 | 4 | 外部死活監視（Better Stack） | **未設定**（前提は満たしたので登録可能） | A3 が blocked のまま。SLO 算定には 1 ヶ月の時系列が要る |
-| 5 | GitHub Secrets / Variables | **未設定と確定**（2026-07-24 に `gh` 認証回復。secret / variable とも 0 件。main run の deploy job は `CLOUDFLARE_API_TOKEN` 不在で fail することをログ実測。`evidence/recheck-2026-07-24.md` §1-§2） | CI の deploy job 完走証跡が無く、A1 は blocked のまま |
+| 5 | GitHub Secrets / Variables | **未確認**（`gh` token 失効により API 401。以前の記録では未設定） | CI の deploy job 完走証跡が無く、A1 は blocked のまま |
 | 6 | 独自ドメイン（`hub.<domain>`） | **未設定** | 現状は workers.dev サブドメイン |
 
 ## 3. cron トリガー登録の失敗（未解決）
@@ -74,11 +74,7 @@ PUT /accounts/b3dde7be1cd856788fc47595ac455475/workers/scripts/harness-hub/sched
 
 > **切り分けの訂正**: 当初「cron を 1 本に減らしても失敗するので件数上限ではない」と結論したが、これは**誤り**である。Cloudflare の cron トリガー上限は **Worker 単位ではなくアカウント単位**（Free プランで 5 本）であり、**本 Worker の本数を減らしても、同一アカウントの他 Worker が枠を消費していれば解消しない**。本アカウントには他プロジェクト（`automationa-tools` 系・`ubm-*` 系）の Worker が存在するため、**アカウント全体の cron 使用数が上限に達している可能性が最有力**。
 
-### 確定（2026-07-24 再診断）
-
-`WRANGLER_LOG=debug WRANGLER_LOG_SANITIZE=false` で API レスポンス本文を取得し、**エラーコード 10072「You have exceeded the limit of 5 cron triggers」= 仮説 1（アカウント単位の cron 上限 Free 5 本に到達）が確定**した（`evidence/recheck-2026-07-24.md` §4）。解消は次のいずれか（ユーザー判断）: (a) 他プロジェクト（automationa-tools 系・ubm-* 系）の不要 cron を削除して枠を空ける、(b) Hub の cron 2 本を 1 本へ統合（handler 側で曜日判定）+ 空き枠 1 本の確保、(c) Workers Paid への移行（C2 制約の再交渉を伴う）。
-
-### 当初の診断手順（記録として保持）
+### 未確認（次の診断手順・優先順）
 
 API のレスポンス本文が wrangler ログに残らないため**エラーコードが取得できていない**。以下の順で切り分ける。
 

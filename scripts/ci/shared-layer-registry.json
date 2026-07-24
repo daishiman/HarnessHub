@@ -153,12 +153,10 @@
       "shared_layers_ref": "§3",
       "owner_artifacts": [
         "apps/hub/src/app/health/route.ts",
-        ".github/workflows/cwv.yml",
-        "apps/hub/monitoring/better-stack.monitors.json",
-        "apps/hub/monitoring/slo-dashboard.json"
+        ".github/workflows/cwv.yml"
       ],
       "external_wiring": "pending",
-      "external_wiring_note": "Better Stack の外形監視と月次 SLO 時系列はユーザー管理の外部設定。ローカル実装だけで充足扱いにしない。設定内容の正本は apps/hub/monitoring/ の 2 ファイル (P05)、適用手順は runbook §1"
+      "external_wiring_note": "Better Stack の外形監視と月次 SLO 時系列はユーザー管理の外部設定。ローカル実装だけで充足扱いにしない"
     },
     {
       "id": "backup",

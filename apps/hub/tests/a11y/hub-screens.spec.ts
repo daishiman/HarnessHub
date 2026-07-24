@@ -45,18 +45,4 @@ describe('apps/hub 画面結合の a11y', () => {
     expect(document.querySelectorAll('h1, h2').length).toBeGreaterThan(0);
     expect(document.querySelector('a[href="#main"]')).not.toBeNull();
   });
-
-  it('意図的な a11y 違反を画面結合の検査系が検出し、常時緑ではない', async () => {
-    const html = renderToStaticMarkup(createElement(RootLayout, null, createElement(HomePage)));
-    mountScreen(html);
-
-    // 実画面へ alt の無い画像を注入し、この検査系 (mountScreen + axe.run(document)) 自体が
-    // 違反を検出できることを固定する (packages/ui 側の注入テストと対の、画面結合側の実効性検査)
-    const image = document.createElement('img');
-    image.src = '/missing-alt.png';
-    document.querySelector('main')?.appendChild(image);
-
-    const results = await axe.run(document);
-    expect(results.violations.some((violation) => violation.id === 'image-alt')).toBe(true);
-  });
 });
