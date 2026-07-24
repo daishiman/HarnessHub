@@ -524,6 +524,16 @@ python3 scripts/lint-artifact-placement.py
 
 ---
 
+# Part 5: Hub アプリ（apps/hub）の開発と本番運用
+
+Hub 本体（Cloudflare Workers 上で動く Next.js アプリ）のローカル開発・本番運用の入口は、専用ガイドへ分離しました。
+
+- **入口ガイド**: [docs/hub-app-operations.md](docs/hub-app-operations.md)（開発環境セットアップ・本番運用・必要な GitHub Secrets/Variables）
+- **運用手順の正本**: `docs/features/feat-hub-foundation/runbook.md`
+- **監視設定の正本**: `apps/hub/monitoring/`（`better-stack.monitors.json` / `slo-dashboard.json`）
+
+---
+
 # 参考
 
 - `/dev-graph` dispatcher の正本: `plugins/dev-graph/commands/dev-graph.md`
