@@ -42,11 +42,9 @@ wrangler secret put AUTH_SECRET
 wrangler secret put CRON_HEARTBEAT_URL   # Better Stack の heartbeat URL (未設定なら ping しない)
 ```
 
-4. **Better Stack Free** で以下を登録（**設定内容の正本: `apps/hub/monitoring/better-stack.monitors.json`**。SLO ダッシュボード構成は `apps/hub/monitoring/slo-dashboard.json`）
+4. **Better Stack Free** で以下を登録
    - production `/health` を **3 分間隔**で監視（SLO 99.5% の一次計測源）
-   - cron heartbeat（日次バッチ完了 ping 用）→ 発行 URL を Worker secret `CRON_HEARTBEAT_URL` へ
-   - backup heartbeat（backup.yml 完走検知用）→ 発行 URL を GitHub secret `BACKUP_HEARTBEAT_URL` へ
-   - 適用したら `better-stack.monitors.json` の `applied_at` を記入し、`scripts/ci/shared-layer-registry.json` の `mechanisms.monitoring.external_wiring` を解除する
+   - cron heartbeat（日次バッチ完了 ping 用）
 
 > secret / binding の**内容正本**は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §2。本 runbook は手順のみを持つ。
 
@@ -109,6 +107,6 @@ curl -s https://hub.<domain>/health | jq .   # 復旧確認
 | ~~U-1~~ | ~~backup workflow 未実装~~ → **実装済み** (`.github/workflows/backup.yml`) | — | secret 投入後に初回実行を確認すること |
 | ~~U-2~~ | ~~scheduled handler 未実装~~ → **実装済み** (`apps/hub/src/worker.ts` + `src/worker/cron.ts`) | ジョブ本体は空 (id は登録済み)。各ドメイン feature が中身を実装する | — |
 | ~~U-3~~ | ~~G6 / G8 未配線~~ → **配線済み**。実効性も実測 | — | — |
-| ~~U-4~~ | ~~未 wrap route の静的検出~~ → **実装済み**（`adae505` で duplicate detector に `unwrapped-route-handler` 検出を追加。ADR R-19 / §11.3-3） | — | — |
+| U-4 | 未 wrap route の静的検出 | 認可 fail-open のリスクが残る | detector 拡張 |
 
 > **これらは「運用手順があるから大丈夫」ではない。** 実装されるまでは、対応する運用は成立していない。

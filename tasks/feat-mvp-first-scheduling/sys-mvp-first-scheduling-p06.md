@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 回帰テスト全件と ready/next 実測の記録"
 owners: ["daishiman"]
 created_at: "2026-07-23T07:08:08Z"
-updated_at: "2026-07-23T08:25:00Z"
-status: "active"
+updated_at: "2026-07-24T11:18:17Z"
+status: "done"
 depends_on: ["SYS-MVP-FIRST-SCHEDULING-P05"]
 related_nodes: ["feat-mvp-first-scheduling","arch-harness-hub-dev-workflow"]
 resource_scope: ["eval-log/dev-graph/mvp-first-scheduling/test-run-p06.json"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-6gl.6","linked_at":"2026-07-23T08:22:25Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
-execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/SYS-MVP-FIRST-SCHEDULING-P13","linked_at":"2026-07-24T11:18:17Z","merge_commit_sha":"8d802c23095c896c0b129708f375d9e341ec8873","merged_at":"2026-07-24T02:54:22Z","pr_number":47,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/47"}]
+execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-MVP-FIRST-SCHEDULING-P06","head_sha":"6ab7d593967b2f93ed1c2a5f069719bfe032c71f","last_seen_at":"2026-07-23T13:47:48.943169Z","lease_acquired_at":"2026-07-23T13:47:47.950158Z","released_at":null,"state":"claimed","worktree_id":"wt_f5b59c7488943714"}]
+completion_evidence: {"completed_at":"2026-07-24T02:54:22Z","evidence_refs":["https://github.com/daishiman/HarnessHub/pull/47"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-24T11:18:17Z","source":"github_pr_merge","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-23T06:00:00Z","missing_sections":[],"status":"complete"}
 ---
 

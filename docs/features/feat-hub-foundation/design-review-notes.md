@@ -8,7 +8,7 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 package_digest: sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502
 depends_on: [SYS-HUB-FOUNDATION-P02]
 reviewed_artifact: docs/features/feat-hub-foundation/architecture-decision-record.md
-verdict: 承認 (Round 3 / 2026-07-24。初回判定は差し戻し → ADR 改訂 2/3 で全 27 件是正。照合明細は別紙 design-review-round3-2026-07-24.md)
+verdict: 差し戻し
 architecture_refs: [arch-harness-hub-infrastructure, arch-harness-hub-frontend, arch-harness-hub-backend, arch-harness-hub-data, arch-harness-hub-security, arch-harness-hub-dev-workflow]
 ---
 
