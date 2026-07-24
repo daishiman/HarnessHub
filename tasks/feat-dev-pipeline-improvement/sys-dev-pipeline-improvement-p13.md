@@ -12,8 +12,8 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-22T04:16:31Z"
-updated_at: "2026-07-23T10:23:56.119594Z"
-status: "active"
+updated_at: "2026-07-24T07:07:52.151248Z"
+status: "done"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["eval-log/dev-graph/pipeline-improvement/release-receipt.json"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-k2u.13","linked_at":"2026-07-21T16:50:00Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/feat-dev-pipeline-and-doc-governance","linked_at":"2026-07-24T07:07:52.148155Z","merge_commit_sha":"b655e22db768f38fb044cb24482807ce35ec00f5","merged_at":"2026-07-23T04:02:24Z","pr_number":41,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/41"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-23T04:02:24Z","evidence_refs":["https://github.com/daishiman/HarnessHub/pull/41"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-24T07:07:52.148676Z","source":"github_pr_merge","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections":[],"status":"complete"}
 ---
 

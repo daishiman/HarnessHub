@@ -1,0 +1,51 @@
+{
+  "receipt_kind": "spec-reflection",
+  "schema_version": "1.0.0",
+  "subject": "feat-dev-pipeline-improvement 完了リコンサイル + issue-devgraph-completion-reconcile-blocked-20260721 クローズ + MVP-first follow-up 起票",
+  "reviewed_at": "2026-07-24",
+  "reviewer": "dev-graph reconciliation session (Claude Opus)",
+  "changeset": {
+    "graph_revision_after": 510,
+    "primary_graph_nodes": [
+      "feat-dev-pipeline-improvement",
+      "sys-dev-pipeline-improvement-p01..p13",
+      "issue-devgraph-completion-reconcile-blocked-20260721",
+      "sys-stage0-distribution-gate-p01",
+      "issue-mvp-first-scheduling-completion-projection-20260724"
+    ],
+    "beads": {
+      "HarnessHub-k2u.13": "closed (P13 completion projection)",
+      "HarnessHub-vy0": "closed (reconcile-blocked close-out live proof)",
+      "HarnessHub-j71.1": "closed (stage0-p01, PR #3 merge projection)",
+      "HarnessHub-xjv": "open/draft (MVP-first OR-003 follow-up, newly created)"
+    },
+    "nature": "lifecycle-state reconciliation (status->done + completion_evidence + PR linkage). 振る舞い/契約の変更ではない"
+  },
+  "spec_impact": {
+    "verdict": "no_canonical_impact",
+    "scope_reviewed": ["system-spec/", "architecture/", "specs/", "docs/", "features/", "tasks/"],
+    "rationale": [
+      "本変更はライフサイクル状態の確定 (status=done + completion_evidence + pull_request_linkages) であり、振る舞い・入出力契約・スキーマの変更を含まない。.dev-graph/templates/task.md の『status の意味論 (二重正本の禁止)』が定める enum (draft/active/blocked/done/closed/tombstoned) と、policy=linked_pr_merged_all は github_pr_merge 証跡、policy=manual は manual 証跡という遷移規則に適合している。",
+      "P05 の schema path 修正は md/graph の resource_scope 参照を実在ファイルへ是正するもの。旧 path 'plugins/dev-graph/schemas/improvement-handoff.schema.json' を system-spec/・architecture/・specs/・docs/・features/・tasks/ で全文検索した結果ヒット 0 件 (ヒットは .worktrees/ 配下の生成済みプラン断片のみ=canonical でない揮発物)。よって canonical 仕様/設計に drift は無い。",
+      "実行状態の正本は graph.json (dev-graph) であり、template の二重正本禁止原則により system-spec/ へ実行状態を書き写さない。したがって system-spec/・architecture/ への編集は不要かつ不適切。反映は本受領書への判断記録で完結する。"
+    ],
+    "evidence": {
+      "validate_graph_schema": "valid=true, violations=[] (.dev-graph/state/graph.json, graph-node.schema.json)",
+      "lint_eval_log_layout": "exit 0, scanned=2396, violations=0",
+      "lint_handoff_disposition": "exit 0, findings_scanned=123, violations=0",
+      "lint_open_residue": "exit 2 (既知の他ストリーム残置のみ)。feat-dev-pipeline-improvement 帰属の違反=0。本変更は SYS-STAGE0-DISTRIBUTION-GATE-P01 を resolved_baseline_entries へ解消。残る OR-003 26件は MVP-first 13件 (HarnessHub-xjv で追跡) と doc-governance-portability 13件 (別ストリーム)",
+      "old_schema_path_refs_in_canonical": 0
+    }
+  },
+  "docs_reflection": {
+    "features/feat-dev-pipeline-improvement.md": "status=done へ確定 (completion_evidence 投影)",
+    "tasks/feat-dev-pipeline-improvement/*.md": "P01..P13 status=done へ確定",
+    "docs/features/feat-dev-pipeline-improvement/acceptance-report.md": "P13 確定と完了リコンサイルの節を追記",
+    "system-spec/": "drift なし (no-impact 判定) — 編集せず",
+    "architecture/": "drift なし (no-impact 判定) — 編集せず"
+  },
+  "residual": {
+    "HarnessHub-xjv": "MVP-first feature 13 node の completion projection (OR-003 13件) は本 PR のスコープ外。C26 reconcile を clean main worktree で 1 node ずつ実走して別途解消する",
+    "doc-governance-portability": "SYS-DOC-GOVERNANCE-PORTABILITY-P01..P12 + issue-qa070 の OR-003 13件は別 feature ストリームの残置。本 PR は関与しない"
+  }
+}

@@ -21,5 +21,9 @@ parent_feature: feat-dev-pipeline-improvement
 
 ## 残件・関連対応
 
-- **P13 (リリース)**: main 反映と AC-1 の 3 表現同時 close の最終実証は PR merge 後に確定する (未実施)。
+- **P13 (リリース)**: **2026-07-24 に確定済み**。PR #41 が main へ merge (merge_commit `b655e22`, CI 4 check 全 SUCCESS) 後、C26 reconcile-github-lifecycle を `gh:pr` gate + C02 apply-lifecycle-request 経由で実走し、`SYS-DEV-PIPELINE-IMPROVEMENT-P13` を durable done へ確定 (graph_revision 491)、`HarnessHub-k2u.13` を beads close。AC-1 の 3 表現 (issue/graph/beads) 同時 close-loop を実証した。証跡は `eval-log/dev-graph/pipeline-improvement/release-receipt.json`。
 - **HarnessHub-t1i**: exact-13 task の graph 登録メタデータと YAML frontmatter を canonical writer で同期し、`validate-graph-schema` と正規 `status-graph --keyword PIPELINE-IMPROVEMENT` を通せる形へ修復した。回帰テストも追加済み。
+
+## 2026-07-24 完了リコンサイル (この受入判定の後続)
+
+feature と P01..P13 の frontmatter `status` を `closed`/`active` → `done` へ確定し、`completion_evidence` に merge 済み PR (#41) 証跡を投影した。P05 の `resource_scope` が指していた実在しない schema path (`plugins/dev-graph/schemas/improvement-handoff.schema.json`) を正本 path (`plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json`) へ C02 upsert で修正した (md↔graph 一致・機能/ゲート影響なし)。仕様・設計 (system-spec/ · architecture/ · specs/) への影響は無しと判定 (判断理由は `eval-log/dev-graph/pipeline-improvement/spec-reflection-receipt.json`)。
