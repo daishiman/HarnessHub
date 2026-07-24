@@ -21,5 +21,5 @@ parent_feature: feat-dev-pipeline-improvement
 
 ## 残件・関連対応
 
-- **P13 (リリース)**: main 反映と AC-1 の 3 表現同時 close の最終実証は PR merge 後に確定する (未実施)。
+- **P13 (リリース)**: **完了**。PR #41 が 2026-07-23 に main へ merge (merge commit `b655e22`、CI 4 check 全 SUCCESS)。2026-07-24 に close-loop reconciliation を実走し、SYS-DEV-PIPELINE-IMPROVEMENT-P13 を graph (graph_revision 506)・md・beads (HarnessHub-k2u.13 closed) の 3 表現で durable done へ確定。AC-1 の 3 表現同時 close は `lint-open-residue.py` で本 feature 残置 0 件を実測。
 - **HarnessHub-t1i**: exact-13 task の graph 登録メタデータと YAML frontmatter を canonical writer で同期し、`validate-graph-schema` と正規 `status-graph --keyword PIPELINE-IMPROVEMENT` を通せる形へ修復した。回帰テストも追加済み。
