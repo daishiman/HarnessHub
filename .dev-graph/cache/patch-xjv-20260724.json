@@ -1,0 +1,38 @@
+{
+  "patch": {
+    "graph_node_id": "issue-mvp-first-scheduling-completion-projection-20260724",
+    "status": "done",
+    "updated_at": "2026-07-24T12:04:39Z",
+    "resource_scope": [
+      ".dev-graph/state/graph.json",
+      "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p01.md",
+      "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p13.md"
+    ],
+    "scope_in": [
+      "SYS-MVP-FIRST-SCHEDULING-P01..P13 の graph node completion projection (status=done / completion_evidence=done)",
+      "13 task Markdown frontmatter の done 同期",
+      "PR #47 検証済み merge 事実 (closing_reference_verified=true) の pull_request_linkages 投影"
+    ],
+    "scope_out": [
+      "doc-governance-portability / qa070 / render-out1 等の別ストリーム OR-003 (別途判断)",
+      "C26 completion_event 台帳の emission (writer-consumer 不在の設計ギャップ・follow-up)"
+    ],
+    "acceptance": [
+      "SYS-MVP-FIRST-SCHEDULING-P01..P13 が status=done かつ completion_evidence.status=done へ収束している",
+      "lint-open-residue.py の MVP-first (OR-003) 違反が 0 件になっている",
+      "validate-graph-schema が valid=true (violations=0) である",
+      "各 node の completion_evidence が PR #47 の検証済み merge 事実 (closing_reference_verified=true) に接地している"
+    ],
+    "completion_evidence": {
+      "status": "done",
+      "policy": "manual",
+      "source": "reconciliation",
+      "completed_at": "2026-07-24T12:04:39Z",
+      "reconciled_at": "2026-07-24T12:04:39Z",
+      "evidence_refs": [
+        "https://github.com/daishiman/HarnessHub/pull/47",
+        ".dev-graph/state/graph.json"
+      ]
+    }
+  }
+}
