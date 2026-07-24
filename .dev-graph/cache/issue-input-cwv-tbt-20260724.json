@@ -1,0 +1,105 @@
+{
+ "acceptance": [
+  "gh workflow run cwv.yml -f target_url=<本番URL> の run が success で終了する",
+  "TBT (INP の lab 代理指標) ≤ 200ms",
+  "LCP ≤ 2500ms / CLS ≤ 0.1 を維持している"
+ ],
+ "architecture_refs": [],
+ "artifact_kind": "issue",
+ "artifact_subtypes": [],
+ "beads_linkage": null,
+ "classification_candidates": [
+  {
+   "artifact_kind": "issue",
+   "candidate_path": "issues/sys-hub-cwv-tbt-over-budget-20260724.md",
+   "confidence": 0.95
+  }
+ ],
+ "classification_confidence": 0.95,
+ "classification_reason": "G11 初回実測 (2026-07-24 / run 30074457529) の TBT 予算超過を是正する issue。G11 の設計 (good を外れたら是正起票) に基づく",
+ "completion_evidence": {
+  "completed_at": null,
+  "evidence_refs": [],
+  "policy": "manual",
+  "reconciled_at": null,
+  "source": null,
+  "status": "open"
+ },
+ "confirmation_evidence": {
+  "evaluated_digest": null,
+  "evaluator": null,
+  "evidence_ref": null
+ },
+ "confirmation_status": "draft",
+ "created_at": "2026-07-24T09:00:00Z",
+ "depends_on": [],
+ "domain": "frontend",
+ "evaluation_status": "pending",
+ "execution_contexts": [],
+ "feature_package_id": null,
+ "file_path": "issues/sys-hub-cwv-tbt-over-budget-20260724.md",
+ "github_project_linkages": [],
+ "github_publication": {
+  "labels": [],
+  "milestone": null,
+  "mode": "local_only",
+  "project_aliases": []
+ },
+ "goal": "本番 URL への cwv.yml 実測で TBT ≤ 200ms となり、CWV 全指標 good で run が success 終了する状態",
+ "graph_node_id": "issue-hub-cwv-tbt-over-budget-20260724",
+ "implementation_readiness": {
+  "checked_at": "2026-07-24T09:00:00Z",
+  "missing_sections": [],
+  "status": "complete"
+ },
+ "issue_linkage": null,
+ "iteration": null,
+ "owners": [
+  "daishiman"
+ ],
+ "parent_feature": null,
+ "phase_ref": null,
+ "priority": "medium",
+ "project_id": "harness-hub",
+ "pull_request_linkages": [],
+ "purpose": "G11 (cwv.yml) の初回実測 (2026-07-24 / run 30074457529 / 本番 harness-hub.daishimanju.workers.dev) で LCP 1154ms・CLS 0.00 は good、TBT 926.50ms が予算 200ms を超過し run が fail した。qa-018(2) の確定手段 (不要 JS 削減) による是正を追跡する。証跡: docs/features/feat-hub-foundation/evidence/recheck-2026-07-24.md §5",
+ "related_nodes": [
+  "feat-hub-foundation"
+ ],
+ "resource_scope": [
+  "apps/hub/",
+  ".github/workflows/cwv.yml"
+ ],
+ "scope_in": [
+  "hydration / クライアント JS の削減 (不要 JS 削減。qa-018(2) の確定手段)",
+  "依存の見直しと code splitting",
+  "cwv.yml 再計測での good 確認"
+ ],
+ "scope_out": [
+  "G11 閾値の緩和",
+  "bundle 予算 (G5) の変更",
+  "PR 単位の Lighthouse 実行 (C2 の Actions 無料枠に反する)"
+ ],
+ "source_lineage": {
+  "imported_at": "2026-07-24T09:00:00Z",
+  "origin_kind": "manual",
+  "source_digest": "2d8fb58e0087dbb308a0e42c92a238b8e0ced6141b189866906888644f720ab2",
+  "source_path": "docs/features/feat-hub-foundation/evidence/recheck-2026-07-24.md",
+  "source_plugin": null,
+  "source_version": null
+ },
+ "start_date": null,
+ "status": "draft",
+ "tags": [
+  "feat-hub-foundation",
+  "cwv",
+  "performance",
+  "qa-018"
+ ],
+ "target_date": null,
+ "template_id": "issue",
+ "template_version": "1.0.0",
+ "title": "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 JS 削減の是正",
+ "tracker_binding": "beads",
+ "updated_at": "2026-07-24T09:00:00Z"
+}

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 491,
+  "graph_revision": 514,
   "nodes": [
     {
       "acceptance": [
@@ -17551,12 +17551,14 @@
       "classification_confidence": 0.9,
       "classification_reason": "goal-spec (goal-spec.json) と features/feat-stage0-distribution-gate.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-20T12:46:06Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/3"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T08:42:20.267239Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
@@ -17573,10 +17575,10 @@
           "base_branch": "main",
           "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01",
           "head_sha": "5f313162029df3fdc3a51df00e25d9c57e7402e1",
-          "last_seen_at": "2026-07-20T11:48:41.006853Z",
+          "last_seen_at": "2026-07-24T08:37:05.416641Z",
           "lease_acquired_at": "2026-07-20T11:48:38.892319Z",
-          "released_at": null,
-          "state": "claimed",
+          "released_at": "2026-07-24T08:37:05.416641Z",
+          "state": "released",
           "worktree_id": "wt_eed96293f3fd512f"
         }
       ],
@@ -17610,12 +17612,12 @@
           "base_branch": "main",
           "closing_reference_verified": true,
           "head_branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01",
-          "linked_at": "2026-07-20T12:44:37Z",
-          "merge_commit_sha": null,
-          "merged_at": null,
+          "linked_at": "2026-07-24T08:42:20.266647Z",
+          "merge_commit_sha": "2ec0d78157b466b4af6b2693fcfc6864520160ad",
+          "merged_at": "2026-07-20T12:46:06Z",
           "pr_number": 3,
           "repo": "daishiman/HarnessHub",
-          "state": "open",
+          "state": "merged",
           "url": "https://github.com/daishiman/HarnessHub/pull/3"
         }
       ],
@@ -17642,7 +17644,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -17654,7 +17656,7 @@
       "template_version": "1.0.0",
       "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T12:57:22Z"
+      "updated_at": "2026-07-24T08:49:05.298462Z"
     },
     {
       "acceptance": [
@@ -25182,12 +25184,16 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-23T04:02:24Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/acceptance-report.md",
+          "eval-log/dev-graph/pipeline-improvement/release-receipt.json",
+          "https://github.com/daishiman/HarnessHub/pull/41"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-24T07:20:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
@@ -25258,7 +25264,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "macro-feature",
         "dev-pipeline",
@@ -25271,7 +25277,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-24T07:20:00Z"
     },
     {
       "acceptance": [
@@ -25372,7 +25378,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25384,7 +25390,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:17:44.611957Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25490,7 +25496,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25502,7 +25508,7 @@
       "template_version": "1.1.0",
       "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:18:02.411985Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25604,7 +25610,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25616,7 +25622,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:18:21.271976Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25720,7 +25726,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25732,7 +25738,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:18:39.529241Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25820,7 +25826,7 @@
         "plugins/dev-graph/scripts/lint-open-residue.py",
         "plugins/dev-graph/scripts/lint-eval-log-layout.py",
         "plugins/dev-graph/scripts/lint-handoff-disposition.py",
-        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json",
         "plugins/dev-graph/tests/test_lint_open_residue.py",
         "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
         "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
@@ -25833,7 +25839,7 @@
         "plugins/dev-graph/scripts/lint-open-residue.py",
         "plugins/dev-graph/scripts/lint-eval-log-layout.py",
         "plugins/dev-graph/scripts/lint-handoff-disposition.py",
-        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json",
         "plugins/dev-graph/tests/test_lint_open_residue.py",
         "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
         "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
@@ -25858,7 +25864,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25870,7 +25876,7 @@
       "template_version": "1.1.0",
       "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:18:58.051445Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25972,7 +25978,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25984,7 +25990,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:19:16.576900Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26086,7 +26092,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26098,7 +26104,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:19:35.147719Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26207,7 +26213,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26219,7 +26225,7 @@
       "template_version": "1.1.0",
       "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:19:53.600132Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26321,7 +26327,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26333,7 +26339,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:20:11.871776Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26435,7 +26441,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26447,7 +26453,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:20:30.337742Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26549,7 +26555,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26561,7 +26567,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:20:48.885708Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26663,7 +26669,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26675,7 +26681,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:21:07.594265Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26702,12 +26708,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P13 責務 (リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-23T04:02:24Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/41"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T07:07:52.148676Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
@@ -26747,7 +26755,20 @@
       "phase_ref": "P13",
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/feat-dev-pipeline-and-doc-governance",
+          "linked_at": "2026-07-24T07:07:52.148155Z",
+          "merge_commit_sha": "b655e22db768f38fb044cb24482807ce35ec00f5",
+          "merged_at": "2026-07-23T04:02:24Z",
+          "pr_number": 41,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/41"
+        }
+      ],
       "purpose": "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
@@ -26775,7 +26796,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26787,7 +26808,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T10:23:56.119594Z"
+      "updated_at": "2026-07-24T07:07:52.151248Z"
     },
     {
       "acceptance": [
@@ -31887,6 +31908,552 @@
       "title": "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される",
       "tracker_binding": "beads",
       "updated_at": "2026-07-24T08:23:21Z"
+    },
+    {
+      "acceptance": [
+        "test_skill_criteria_evidence.py の stale behavior closure digest 起因の FAIL が 0 件になる",
+        "各 verdict の skill_dir_tree_sha が現行 closure と一致する",
+        "live-trial は tier=live で取得され downgrade_reason が null である"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xjv",
+        "linked_at": "2026-07-24T07:55:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-mvp-first-scheduling-completion-projection-20260724.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "PR #47 merge 後の close-loop 未投影 (OR-003) を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T07:45:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-mvp-first-scheduling-completion-projection-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "SYS-MVP-FIRST-SCHEDULING-P01..P13 が C26 reconcile で durable done になり、lint-open-residue.py --repo-root . が exit 0 に収束している",
+      "graph_node_id": "issue-mvp-first-scheduling-completion-projection-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T13:51:02Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "PR #47 (merge commit 8d802c2) で feat-mvp-first-scheduling が main へ統合され beads HarnessHub-6gl.1..13 は closed だが、graph の SYS-MVP-FIRST-SCHEDULING-P01..P13 は completion_evidence=in_progress のまま残置され lint-open-residue OR-003 が 13 件検出される。policy は全 node linked_pr_merged_all のため、正規の解消は C26 reconcile-github-lifecycle の実走のみ (手動 ce 書換は completion authority の偽装で禁止)。gh:pr gate (HarnessHub-6gl.N <-> PR #47) は 2026-07-24 作成済み。C26 は起動時に clean main worktree を要求するため、P13 projection commit 後に 1 node ずつ reconcile し projection commit を挟んで直列実行する",
+      "related_nodes": [
+        "feat-mvp-first-scheduling"
+      ],
+      "resource_scope": [
+        "issues/sys-live-trial-closure-stale-mvp-first-20260723.md"
+      ],
+      "scope_in": [
+        "dev-graph 9 skill (init/node/sync/requirements/render/decompose/schedule/status/system-spec) の live-trial 再実行",
+        "scenario-verdict.json / live-trial verdict.json の再生成",
+        "test_skill_criteria_evidence.py 全件 PASS の確認"
+      ],
+      "scope_out": [
+        "鮮度ゲート (test_skill_criteria_evidence.py) 自体の緩和・skip 追加",
+        "証跡 receipt の手書き修正 (受け入れ不可: 証跡改ざん)",
+        "P05 実装コードの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-23T13:51:02Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "close-loop",
+        "open-residue",
+        "follow-up",
+        "qa-069",
+        "mvp-first"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "MVP-first feature 13 node の completion projection 未実施 (lint-open-residue OR-003 13件)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T07:55:00Z"
+    },
+    {
+      "acceptance": [
+        "gh workflow run cwv.yml -f target_url=<本番URL> の run が success で終了する",
+        "TBT (INP の lab 代理指標) ≤ 200ms",
+        "LCP ≤ 2500ms / CLS ≤ 0.1 を維持している"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hub-cwv-tbt-over-budget-20260724.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "G11 初回実測 (2026-07-24 / run 30074457529) の TBT 予算超過を是正する issue。G11 の設計 (good を外れたら是正起票) に基づく",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T09:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hub-cwv-tbt-over-budget-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "本番 URL への cwv.yml 実測で TBT ≤ 200ms となり、CWV 全指標 good で run が success 終了する状態",
+      "graph_node_id": "issue-hub-cwv-tbt-over-budget-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T09:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "G11 (cwv.yml) の初回実測 (2026-07-24 / run 30074457529 / 本番 harness-hub.daishimanju.workers.dev) で LCP 1154ms・CLS 0.00 は good、TBT 926.50ms が予算 200ms を超過し run が fail した。qa-018(2) の確定手段 (不要 JS 削減) による是正を追跡する。証跡: docs/features/feat-hub-foundation/evidence/recheck-2026-07-24.md §5",
+      "related_nodes": [
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "apps/hub/",
+        ".github/workflows/cwv.yml"
+      ],
+      "scope_in": [
+        "hydration / クライアント JS の削減 (不要 JS 削減。qa-018(2) の確定手段)",
+        "依存の見直しと code splitting",
+        "cwv.yml 再計測での good 確認"
+      ],
+      "scope_out": [
+        "G11 閾値の緩和",
+        "bundle 予算 (G5) の変更",
+        "PR 単位の Lighthouse 実行 (C2 の Actions 無料枠に反する)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T09:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": "2d8fb58e0087dbb308a0e42c92a238b8e0ced6141b189866906888644f720ab2",
+        "source_path": "docs/features/feat-hub-foundation/evidence/recheck-2026-07-24.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "feat-hub-foundation",
+        "cwv",
+        "performance",
+        "qa-018"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 JS 削減の是正",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T09:00:00Z"
+    },
+    {
+      "acceptance": [
+        "docs/shared-layers.md §3 のゲート表が ci.yml の実ゲート構成 (G1〜G11) を網羅している",
+        "正本ポインタ (dev-workflow 章) の記述と矛盾しない"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-shared-layers-gate-table-stale-20260724.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "ADR §11.4 F-2 の未消化 follow-up を起票 (P03 Round 3 再レビューで残存を確認)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T09:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-shared-layers-gate-table-stale-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "shared-layers §3 の CI ゲート表が実装 (G1〜G11) と一致し、登録簿としての網羅が回復した状態",
+      "graph_node_id": "issue-shared-layers-gate-table-stale-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T09:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ADR (architecture-decision-record.md) §11.4 F-2 が起票を求めた follow-up。docs/shared-layers.md §3 の CI 品質ゲート表は 5 項目のままで、qa-038【2】の required status checks 8 種と G9〜G11 への再構成 (ADR 改訂 2 / R-03) に追随していない。2026-07-21 追記で正本ポインタは張られており二重正本にはなっていないが、登録簿としての網羅は欠けたまま。P03 Round 3 再レビュー (design-review-notes.md §12.2) でも残 follow-up として確認した",
+      "related_nodes": [
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "docs/shared-layers.md"
+      ],
+      "scope_in": [
+        "shared-layers §3 のゲート表を G1〜G11 構成へ更新",
+        "正本 (dev-workflow 章) との整合確認"
+      ],
+      "scope_out": [
+        "ゲート実装自体の変更",
+        "メタ層 (governance-check) ゲートの数え入れ"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T09:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": "a64647e16b1e859a2d316a97ae844751606cffb7bc743dfe63b18ecfe2e92b6d",
+        "source_path": "docs/features/feat-hub-foundation/design-review-notes.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "feat-hub-foundation",
+        "shared-layers",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "docs/shared-layers.md §3 の CI ゲート表が 5 項目のまま (qa-038 の 8 種 + G9〜G11 へ未追随)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T09:00:00Z"
+    },
+    {
+      "acceptance": [
+        "Beads に ready な linkage 済み schedulable node が 1 件以上ある fixture で、通常の schedule 実行が空でない ready_set を返す",
+        "正しく linkage 済みの node が parity_manifest_missing に分類されない",
+        "manifest は generated_at / source_graph_digest と全対象 node の graph_node_id / bd_issue_id / graph_status / depends_on を持つ",
+        "stale manifest は停止または正規再生成され、digest 手書き更新では回復しない",
+        "C03 / C16 / C28 の責務と実コマンドが SKILL.md・契約・実装で一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-i07",
+        "linked_at": "2026-07-24T09:27:21Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/run-dev-graph-schedule-parity-manifest-recovery-20260724.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "C03/C16/C28 間の parity manifest 生成責務が実装上欠落し、schedule の自動選定が empty ready-set になる再現可能な dev-graph tooling issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T09:23:39Z",
+      "depends_on": [],
+      "domain": "tooling",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/run-dev-graph-schedule-parity-manifest-recovery-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "schedule の通常経路が現行 graph から provenance 付き parity manifest を決定論的に生成し、正しく linkage 済みの Beads ready node を silent drop せず推薦できる状態",
+      "graph_node_id": "issue-run-dev-graph-schedule-parity-manifest-recovery-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T09:23:39Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "run-dev-graph-schedule の自動選定で、Beads ready 候補が存在しても parity manifest に node が無いと C28 が parity_manifest_missing へ分類し、C16 の ready-set が空になる。SKILL.md は C03 sync で manifest を再生成すると案内するが、sync-graph.py と run-dev-graph-sync に manifest 生成出力がなく、通常経路だけでは自己回復できない。",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/skills/run-dev-graph-schedule/",
+        "plugins/dev-graph/skills/run-dev-graph-sync/",
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "plugins/dev-graph/scripts/schedule-graph.py",
+        "plugins/dev-graph/scripts/sync-graph.py",
+        "plugins/dev-graph/tests/"
+      ],
+      "scope_in": [
+        "canonical graph から parity manifest を生成する単一の正規経路を C03 または schedule 前処理へ実装",
+        "graph_node_id / bd_issue_id / graph_status / depends_on と generated_at / source_graph_digest の完全生成",
+        "run-dev-graph-schedule が毎回 fresh manifest を生成して C28 ready → C16 schedule へ渡す配線",
+        "missing / stale / 正常 manifest の回帰テストと recovery 手順の正本化"
+      ],
+      "scope_out": [
+        "parity_provenance の fail-closed 要件を緩める",
+        "source_graph_digest だけを現在値へ書き換える",
+        "draft status の写像問題 (HarnessHub-57v)",
+        "merge 後 lifecycle 投影 (HarnessHub-vy0)",
+        "package-contract.json 被覆 (HarnessHub-dbb)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T09:23:39Z",
+        "origin_kind": "manual",
+        "source_digest": "6f6563a5205fc63a6a8f071d632307222853be988ac40ed51bf33b2b71c79085",
+        "source_path": "plugins/dev-graph/skills/run-dev-graph-schedule/SKILL.md",
+        "source_plugin": "dev-graph",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "schedule",
+        "parity-manifest",
+        "c03",
+        "c16",
+        "c28"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-dev-graph-schedule が parity manifest を再生成できず ready-set が空になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T09:28:14.113001Z"
+    },
+    {
+      "acceptance": [
+        "固定 digest 8735bb の feat-hub-foundation package が生成時契約で再現可能に validate pass する、または新 digest への正規 repromotion 手順が機械実行できる",
+        "旧 generation を直接書き換えず source digest と registration receipt の整合を維持する",
+        "新規生成 package では Inner goal-seek execution loop と P13 writeback 契約を引き続き必須にする",
+        "validator 強化前後の promoted package を対象にした backward-compatibility / migration test が pass する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-4q8",
+        "linked_at": "2026-07-24T09:31:20Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/promoted-plan-validator-version-drift-20260724.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "promoted content-addressed plan と validator の契約版が分離されておらず、後日の validator 強化で既存の pass package が遡及失敗する tooling compatibility issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T09:29:31Z",
+      "depends_on": [],
+      "domain": "tooling",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/promoted-plan-validator-version-drift-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "promoted generation が生成時の契約版で再検証可能か、正規の再生成・再 promotion で新契約へ移行でき、固定 generation を手編集せず品質ゲートを再現できる状態",
+      "graph_node_id": "issue-promoted-plan-validator-version-drift-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T09:29:31Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "2026-07-19 に pass/readiness complete で promoted された feat-hub-foundation の固定 digest を、2026-07-24 の validate-system-plan.py で再検証すると、後から追加された Inner goal-seek execution loop と P13 spec/architecture writeback を遡及要求され 27 violations になる。content-addressed generation の不変性と current validator の契約強化が両立していない。",
+      "related_nodes": [
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "plugins/system-dev-planner/",
+        ".dev-graph/plans/generations/",
+        "tasks/"
+      ],
+      "scope_in": [
+        "plan/task-spec の contract version を generation metadata へ明示",
+        "validator の version-aware 検証または正規 migration / repromotion 経路",
+        "旧 promoted package と新 package の回帰テスト",
+        "task projection の current pointer・digest・再実行コマンド整合"
+      ],
+      "scope_out": [
+        "content-addressed generation の直接手編集",
+        "required section を無条件に緩和",
+        "feat-hub-foundation 成果物の実装変更",
+        "旧 issue HarnessHub-p4f が扱った acceptance 3→4 / quality constraints 8→9 の drift"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T09:29:31Z",
+        "origin_kind": "manual",
+        "source_digest": "368722ab009d1297dabe0193417ef1b58cb08daff4003458f977b1abda498d45",
+        "source_path": "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-dev-planner",
+        "validator",
+        "task-spec",
+        "backward-compatibility",
+        "feat-hub-foundation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "promoted plan が validator 強化後に遡及失敗する（goal-seek / P13 writeback 契約差）",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T09:33:16.827962Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
