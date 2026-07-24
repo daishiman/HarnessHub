@@ -1,0 +1,29 @@
+{
+  "$schema": "../../harness-creator/skills/ref-pkg-contract/schemas/package-contract.schema.json",
+  "package_mode": "bundle",
+  "plugin_name": "contract-generator",
+  "entry_points": {
+    "skills": [
+      "run-contract-generate",
+      "run-contract-finalize",
+      "run-template-sync"
+    ],
+    "agents": [
+      "contract-draft-agent",
+      "contract-finalize-agent",
+      "template-sync-agent"
+    ],
+    "commands": [],
+    "hooks": [
+      "hook-guard-secret.py"
+    ]
+  },
+  "distribution": {
+    "distributable": true,
+    "bundle_targets": ["skills-full"],
+    "category": "productivity",
+    "tags": ["contract", "docs", "drive", "half-automation"]
+  },
+  "depends_on": [],
+  "pkg_checks": {}
+}
