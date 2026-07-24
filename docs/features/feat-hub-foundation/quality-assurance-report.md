@@ -25,12 +25,12 @@ measured_at: "2026-07-21"
 | G3 typecheck | 全 6 package PASS | `exactOptionalPropertyTypes` 由来の型エラー 5 件を**実際に検出**（P05 中に発生・修正済み） | ✅ 実効あり |
 | G4 test | 46 files / 592 tests pass | a11y テストの timeout 故障を検出（下記 §2） | ✅ 実効あり |
 | G5 bundle 予算 | 998,715 bytes（0.952 MiB）/ 3 MiB | 閾値 1 KiB で**非ゼロ終了**を実測。未ビルド時も**非ゼロ終了**（fail-closed） | ✅ 実効あり |
-| G9 axe a11y | 部品・画面とも違反 0 件 | — （違反注入は未実施。§4 の限界） | ⚠️ 片系のみ |
+| G9 axe a11y | 部品・画面とも違反 0 件 | **両系で違反注入を実測**（2026-07-24）。部品単体は `packages/ui/src/a11y/axe.test.tsx`、画面結合は `apps/hub/tests/a11y/hub-screens.spec.ts` に alt 無し画像の注入テストを恒久化し、`image-alt` 違反の検出を固定（hub 3 tests / ui 30 tests pass） | ✅ 実効あり |
 | G10 duplicate / boundary detector | 200 ファイル走査・0 件 | owner 外 export / deep import / 未認可 route / §3 owner artifact 欠落を検出 | ✅ 実効あり |
 | G6 secret scan | 191 ファイル走査・検出 0 件 | private key / AWS key / GitHub token / 代入形 API key の 4 種で**検出を実測**。env 参照は誤検出しないことも確認 | ✅ 実効あり |
 | G8 OpenAPI / zod drift | snapshot 一致で exit 0 | snapshot を 1 文字ずらすと **exit 1** を実測 | ✅ 実効あり |
 | G7 破壊的 DDL | 対象 migrations 不在を明示判定 | migration が存在する場合は script の事前存在検査を行う | ✅ 現 scope は対象なし（fail-open ではない） |
-| G11 CWV 定期計測 | — | — | ⬜ **未実行**（デプロイ後） |
+| G11 CWV 定期計測 | **初回実測済み**（2026-07-24 / run 30074457529 / 本番 URL）。LCP 1154ms（予算 2500ms）OK・CLS 0.00（予算 0.1）OK | **TBT 926ms（予算 200ms・INP の lab 代理指標）超過で run が fail** = 劣化を検出して赤くなることを実証 | ✅ 実効あり（CWV good 自体は未達 → 不要 JS 削減の是正を起票） |
 
 ## 2. 実効性検証で発見・是正した「常時緑/常時赤」故障 4 件
 
