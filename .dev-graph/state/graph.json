@@ -1,5 +1,5 @@
 {
-  "graph_revision": 490,
+  "graph_revision": 510,
   "nodes": [
     {
       "acceptance": [
@@ -17551,12 +17551,14 @@
       "classification_confidence": 0.9,
       "classification_reason": "goal-spec (goal-spec.json) と features/feat-stage0-distribution-gate.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-20T12:46:06Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/3"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T08:42:20.267239Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
@@ -17573,10 +17575,10 @@
           "base_branch": "main",
           "branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01",
           "head_sha": "5f313162029df3fdc3a51df00e25d9c57e7402e1",
-          "last_seen_at": "2026-07-20T11:48:41.006853Z",
+          "last_seen_at": "2026-07-24T08:37:05.416641Z",
           "lease_acquired_at": "2026-07-20T11:48:38.892319Z",
-          "released_at": null,
-          "state": "claimed",
+          "released_at": "2026-07-24T08:37:05.416641Z",
+          "state": "released",
           "worktree_id": "wt_eed96293f3fd512f"
         }
       ],
@@ -17610,12 +17612,12 @@
           "base_branch": "main",
           "closing_reference_verified": true,
           "head_branch": "devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P01",
-          "linked_at": "2026-07-20T12:44:37Z",
-          "merge_commit_sha": null,
-          "merged_at": null,
+          "linked_at": "2026-07-24T08:42:20.266647Z",
+          "merge_commit_sha": "2ec0d78157b466b4af6b2693fcfc6864520160ad",
+          "merged_at": "2026-07-20T12:46:06Z",
           "pr_number": 3,
           "repo": "daishiman/HarnessHub",
-          "state": "open",
+          "state": "merged",
           "url": "https://github.com/daishiman/HarnessHub/pull/3"
         }
       ],
@@ -17642,7 +17644,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-stage0-distribution-gate",
         "macro-feature",
@@ -17654,7 +17656,7 @@
       "template_version": "1.0.0",
       "title": "配布経路検証 (H7) 要件ベースライン確定 — URL 型 marketplace / npm source / Bootstrap Installer 2 経路以上実機検証・Windows E2E・decision record 登録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-20T12:57:22Z"
+      "updated_at": "2026-07-24T08:49:05.298462Z"
     },
     {
       "acceptance": [
@@ -25182,12 +25184,16 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-23T04:02:24Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/acceptance-report.md",
+          "eval-log/dev-graph/pipeline-improvement/release-receipt.json",
+          "https://github.com/daishiman/HarnessHub/pull/41"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-24T07:20:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
@@ -25258,7 +25264,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "macro-feature",
         "dev-pipeline",
@@ -25271,7 +25277,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T04:16:31Z"
+      "updated_at": "2026-07-24T07:20:00Z"
     },
     {
       "acceptance": [
@@ -25372,7 +25378,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25384,7 +25390,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:17:44.611957Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25490,7 +25496,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25502,7 +25508,7 @@
       "template_version": "1.1.0",
       "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:18:02.411985Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25604,7 +25610,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25616,7 +25622,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:18:21.271976Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25720,7 +25726,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25732,7 +25738,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:18:39.529241Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25820,7 +25826,7 @@
         "plugins/dev-graph/scripts/lint-open-residue.py",
         "plugins/dev-graph/scripts/lint-eval-log-layout.py",
         "plugins/dev-graph/scripts/lint-handoff-disposition.py",
-        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json",
         "plugins/dev-graph/tests/test_lint_open_residue.py",
         "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
         "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
@@ -25833,7 +25839,7 @@
         "plugins/dev-graph/scripts/lint-open-residue.py",
         "plugins/dev-graph/scripts/lint-eval-log-layout.py",
         "plugins/dev-graph/scripts/lint-handoff-disposition.py",
-        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json",
         "plugins/dev-graph/tests/test_lint_open_residue.py",
         "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
         "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
@@ -25858,7 +25864,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25870,7 +25876,7 @@
       "template_version": "1.1.0",
       "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:18:58.051445Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -25972,7 +25978,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25984,7 +25990,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:19:16.576900Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26086,7 +26092,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26098,7 +26104,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:19:35.147719Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26207,7 +26213,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26219,7 +26225,7 @@
       "template_version": "1.1.0",
       "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:19:53.600132Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26321,7 +26327,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26333,7 +26339,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:20:11.871776Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26435,7 +26441,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26447,7 +26453,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:20:30.337742Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26549,7 +26555,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26561,7 +26567,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:20:48.885708Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26663,7 +26669,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26675,7 +26681,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T11:21:07.594265Z"
+      "updated_at": "2026-07-24T07:22:00Z"
     },
     {
       "acceptance": [
@@ -26702,12 +26708,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P13 責務 (リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-23T04:02:24Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/41"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T07:07:52.148676Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
@@ -26747,7 +26755,20 @@
       "phase_ref": "P13",
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/feat-dev-pipeline-and-doc-governance",
+          "linked_at": "2026-07-24T07:07:52.148155Z",
+          "merge_commit_sha": "b655e22db768f38fb044cb24482807ce35ec00f5",
+          "merged_at": "2026-07-23T04:02:24Z",
+          "pr_number": 41,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/41"
+        }
+      ],
       "purpose": "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
@@ -26775,7 +26796,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26787,7 +26808,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T10:23:56.119594Z"
+      "updated_at": "2026-07-24T07:07:52.151248Z"
     },
     {
       "acceptance": [
@@ -31780,6 +31801,222 @@
       "title": "MVP-first 実装 (P05) で stale 化した 9 skill の live-trial 証跡再取得",
       "tracker_binding": "beads",
       "updated_at": "2026-07-23T13:55:28Z"
+    },
+    {
+      "acceptance": [
+        "リポジトリ実在の build trace 12 ファイル全てで exit 0 になる",
+        "dict 形式の旧 B-3 契約 (ch11/13/14/15/16 必須・true) が維持される",
+        "list 形式で PASS=evidence 必須 / N/A=reason または evidence 必須が検証される",
+        "component trace 形式で components[].id/sha256 と components_total/components_existing の整合が検証される",
+        "python3 -m pytest tests/ が全件 PASS する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-build-trace-doc-coverage-schema-drift-20260723.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "検証 script の schema 乖離により評価ゲートが誤 FAIL する欠陥を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T08:23:21Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-build-trace-doc-coverage-schema-drift-20260723.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "証跡データ (eval-log) を書き換えず、validator が実データ 3 形式 (dict / list / component trace) を自動判別して fail-closed で検証し、リポジトリ実在の健全な build trace 全件が exit 0 になっている",
+      "graph_node_id": "issue-build-trace-doc-coverage-schema-drift-20260723",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T08:23:21Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "scripts/validate-build-trace.py が期待する build-trace JSON schema (top-level doc_coverage dict) が初期構築 commit 6a46c39 以来の実データ 3 形式と乖離し、skill-design rubric の REG-001 (high) が被評価 skill へ一律誤計上される。無関係な SKILL.md 変更 (例: HarnessHub-hiu の schedule doc 修正, score 74<80 FAIL) が巻き添え減点される状態を解消する",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-build-trace-doc-coverage-schema-drift-20260723.md",
+        "scripts/validate-build-trace.py",
+        "tests/scripts-root/test_root__validate_build_trace_doc_coverage.py"
+      ],
+      "scope_in": [
+        "scripts/validate-build-trace.py の 3 形式自動判別対応",
+        "tests/scripts-root/test_root__validate_build_trace_doc_coverage.py の回帰テスト拡充",
+        "実在 build trace 全件の exit 0 確認"
+      ],
+      "scope_out": [
+        "証跡データ (eval-log) の書き換え (証跡改ざんに該当)",
+        "skill-design rubric.json REG-001 定義の変更 (check 文はそのまま成立)",
+        "plugins/harness-creator 側 validate-build-trace.py の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T08:23:21Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "scripts/validate-build-trace.py",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality-gate",
+        "skill-design",
+        "reg-001",
+        "build-trace",
+        "schema-drift"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T08:23:21Z"
+    },
+    {
+      "acceptance": [
+        "test_skill_criteria_evidence.py の stale behavior closure digest 起因の FAIL が 0 件になる",
+        "各 verdict の skill_dir_tree_sha が現行 closure と一致する",
+        "live-trial は tier=live で取得され downgrade_reason が null である"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xjv",
+        "linked_at": "2026-07-24T07:55:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-mvp-first-scheduling-completion-projection-20260724.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "PR #47 merge 後の close-loop 未投影 (OR-003) を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T07:45:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-mvp-first-scheduling-completion-projection-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "SYS-MVP-FIRST-SCHEDULING-P01..P13 が C26 reconcile で durable done になり、lint-open-residue.py --repo-root . が exit 0 に収束している",
+      "graph_node_id": "issue-mvp-first-scheduling-completion-projection-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T13:51:02Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "PR #47 (merge commit 8d802c2) で feat-mvp-first-scheduling が main へ統合され beads HarnessHub-6gl.1..13 は closed だが、graph の SYS-MVP-FIRST-SCHEDULING-P01..P13 は completion_evidence=in_progress のまま残置され lint-open-residue OR-003 が 13 件検出される。policy は全 node linked_pr_merged_all のため、正規の解消は C26 reconcile-github-lifecycle の実走のみ (手動 ce 書換は completion authority の偽装で禁止)。gh:pr gate (HarnessHub-6gl.N <-> PR #47) は 2026-07-24 作成済み。C26 は起動時に clean main worktree を要求するため、P13 projection commit 後に 1 node ずつ reconcile し projection commit を挟んで直列実行する",
+      "related_nodes": [
+        "feat-mvp-first-scheduling"
+      ],
+      "resource_scope": [
+        "issues/sys-live-trial-closure-stale-mvp-first-20260723.md"
+      ],
+      "scope_in": [
+        "dev-graph 9 skill (init/node/sync/requirements/render/decompose/schedule/status/system-spec) の live-trial 再実行",
+        "scenario-verdict.json / live-trial verdict.json の再生成",
+        "test_skill_criteria_evidence.py 全件 PASS の確認"
+      ],
+      "scope_out": [
+        "鮮度ゲート (test_skill_criteria_evidence.py) 自体の緩和・skip 追加",
+        "証跡 receipt の手書き修正 (受け入れ不可: 証跡改ざん)",
+        "P05 実装コードの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-23T13:51:02Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "close-loop",
+        "open-residue",
+        "follow-up",
+        "qa-069",
+        "mvp-first"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "MVP-first feature 13 node の completion projection 未実施 (lint-open-residue OR-003 13件)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T07:55:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

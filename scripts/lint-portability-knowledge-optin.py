@@ -18,7 +18,8 @@ FAIL する。opt-in 規約:
   - plugin.json: 最上位 `"knowledge_optin": true` があるときだけ payload key に
     ナレッジ content-root を置ける
   - install-bundle.sh: `INCLUDE_KNOWLEDGE` / `knowledge-optin` の opt-in gate が
-    あるときだけナレッジ content-root を参照してよい
+    実行コードの条件式にあるときだけナレッジ content-root を参照してよい。
+    コメントや echo に gate token を置くだけの偽装は gate と認めない
 
 ナレッジ content-root: system-spec/ specs/ architecture/ features/ tasks/ issues/
 docs/ eval-log/ .dev-graph/ (qa-070 のナレッジ定義)。plugins/・.claude/ は仕組みで
@@ -56,6 +57,11 @@ FREE_TEXT_KEYS = {"description", "$schema", "author", "homepage", "license", "ke
 EXCLUDE_KEYS = {"exclude", "excludes", "ignore", "gitignore"}
 # install-bundle.sh の opt-in gate トークン。
 OPTIN_GATE_TOKENS = ("INCLUDE_KNOWLEDGE", "knowledge-optin")
+OPTIN_CONDITION_RE = re.compile(
+    r"^\s*(?:if|elif|while|until|case)\b"
+    r"[^\n]*(?:\bINCLUDE_KNOWLEDGE\b|knowledge-optin)",
+    re.MULTILINE,
+)
 
 
 def is_knowledge_ref(value: str) -> bool:
@@ -125,20 +131,36 @@ def check_plugin_manifest(rel: str, data: dict) -> list[str]:
     return violations
 
 
+def _shell_code_lines(text: str) -> list[tuple[int, str]]:
+    """コメントを除いた shell code を (lineno, code) で返す。
+
+    opt-in token をコメントへ置くだけの gate 偽装を防ぐため、gate 判定と content-root
+    判定の両方が同じ code view を使う。
+    """
+    code_lines: list[tuple[int, str]] = []
+    for i, raw in enumerate(text.splitlines(), start=1):
+        if raw.strip().startswith("#"):
+            continue
+        code = re.split(r"\s#", raw, maxsplit=1)[0]
+        if code.strip():
+            code_lines.append((i, code))
+    return code_lines
+
+
 def check_install_script(text: str) -> list[str]:
     """install-bundle.sh がナレッジ content-root を opt-in なしで参照しないか検査。"""
-    has_optin_gate = any(tok in text for tok in OPTIN_GATE_TOKENS)
+    code_lines = _shell_code_lines(text)
+    code_text = "\n".join(code for _, code in code_lines)
+    # token の存在だけでは gate と認めない。コメントや echo に token を置く偽装を防ぎ、
+    # if/test/case 等の条件式で明示 opt-in を評価していることを要求する。
+    has_optin_gate = OPTIN_CONDITION_RE.search(code_text) is not None
     if has_optin_gate:
         return []
     pattern = re.compile(
         r"(?<![\w./-])(?:" + "|".join(re.escape(r) for r in KNOWLEDGE_ROOTS) + r")/"
     )
     violations: list[str] = []
-    for i, raw in enumerate(text.splitlines(), start=1):
-        line = raw.strip()
-        if line.startswith("#"):  # コメント行は根拠引用として exempt
-            continue
-        code = re.split(r"\s#", raw, maxsplit=1)[0]  # 行末インラインコメント除去
+    for i, code in code_lines:
         m = pattern.search(code)
         if m:
             violations.append(

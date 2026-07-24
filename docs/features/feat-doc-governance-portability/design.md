@@ -33,6 +33,12 @@ false-positive 除外基準・allowlist schema を確定する。共通規約: s
   - allowlist 内で `n <= limit` → OK + NOTE (卒業。エントリ削除可)
   - allowlist にあるが追跡対象に不在 → OK + NOTE (stale entry)
 - **出力**: text (NOTE は stdout, VIOLATION は stderr) または `--json`。
+- **allowlist 改ざん検査 (`--ratchet-base <rev>`, P09 差し戻しで追加)**: allowlist 自体への
+  不正追加を fail-closed に遮断する。基準 rev (`git show <rev>:scripts/doc-line-limit-allowlist.json`)
+  と現在値を比較し、(a) 新規エントリ追加、(b) `baseline_line_count` の拡大、
+  (c) `line_limit` の拡大、を VIOLATION (exit 1) にする。縮小・エントリ削除 (卒業) は許す。
+  rev 解決不能は exit 2 (fail-closed)。基準 rev に allowlist が無い場合は初導入として
+  NOTE + skip (移植先 repo での再利用を壊さない)。CI は `--ratchet-base origin/main` で起動する。
 - **allowlist schema** (`scripts/doc-line-limit-allowlist.json`):
   ```json
   {
@@ -74,7 +80,13 @@ false-positive 除外基準・allowlist schema を確定する。共通規約: s
     (b) docstring / bare 文字列文 — `Expr(Constant str)` を exempt。
     (c) documentation channel の keyword 引数 (`help=/description=/epilog=/usage=/metavar=`)
     の文字列 — 制御フローでも既定値でもない説明文 (citation)。`argparse` の
-    `default=None` で実既定は config 解決である事実と整合。
+    `default=None` で実既定は config 解決である事実と整合。exempt は root だけでなく
+    部分木ごと適用する (help= 内の連結式の内側部分式を誤検出しない)。
+  - **分割記述回避の遮断 (P09 差し戻しで追加)**: 定数のみから合成される文字列式
+    (`"qa-" + "070"` / `f"qa-{70}"` / `"qa-%d" % 70` / `"qa-{}".format(70)` / 隣接リテラル
+    連結) は畳み込み後の文字列も検査して FAIL する。非定数部を含む合成
+    (`f"tasks/{name}.md"` / `"qa-" + suffix`) は入力由来の正当な組み立てなので検出しない
+    (非定数部は placeholder `{}` になり token 正規表現が構造的に不成立)。
 - **既存混入 baseline**: qa-070 は『既存の混入は一括修正せず beads で段階解消する』と
   定める。発見済みの 1 件 (`migrate-pipeline-improvement.py` が receipt へ自 feature id を
   ラベルとして焼き込む箇所) を `KNOWN_EXISTING` 定数 (path, kind, token) に記録し、
@@ -98,7 +110,9 @@ false-positive 除外基準・allowlist schema を確定する。共通規約: s
     非対象。(b) `exclude/ignore` キーにナレッジ root が載るのは opt-out (むしろ compliant)
     なので非対象 — 実在例 `skill-intake` の `package.exclude: ["eval-log/**"]` を PASS。
   - **install-bundle.sh**: `INCLUDE_KNOWLEDGE` / `knowledge-optin` の opt-in gate が
-    無い限りナレッジ content-root path を参照しない。コメント行 (`#`) は citation で非対象。
+    無い限りナレッジ content-root path を参照しない。gate token は `if` / `test` /
+    `case` 等の条件式に現れる場合だけ有効とし、コメント行 (`#`) や `echo` に token を
+    置いただけの gate 偽装は認めない。コメント行は citation として content-root 検査の非対象。
 - **baseline (2026-07-22)**: bundles/plugin.json/install-bundle.sh いずれもナレッジ
   content-root を同梱経路に持たず、全 PASS (exit 0)。
 - **出力/exit**: violation ありで exit 1、なしで exit 0。

@@ -1,0 +1,44 @@
+{
+  "phase": "P09",
+  "kind": "qa-fail-closed",
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+  "method": "隔離 sandbox repo に悪性 fixture を注入し、実 repo の scripts/lint-*.py 3 本を --repo-root sandbox で実行して exit code を実測 (実 repo へは書込まない)",
+  "trial_script_note": "scratchpad の p09_bypass_trial.py と P05 回帰 fixture で全ケースを実測。悪性 15 ケース + 良性対向 2 ケース",
+  "malicious_cases": [
+    {"case": "1a 新規超過文書を allowlist 追加で緑化", "lint": "lint-doc-line-limit --ratchet-base", "expected_exit": 1, "actual_exit": 1, "blocked": true},
+    {"case": "1b baseline_line_count 拡大で肥大を緑化", "lint": "lint-doc-line-limit --ratchet-base", "expected_exit": 1, "actual_exit": 1, "blocked": true},
+    {"case": "1c line_limit 自体の拡大", "lint": "lint-doc-line-limit --ratchet-base", "expected_exit": 1, "actual_exit": 1, "blocked": true},
+    {"case": "1d 重複 path で allowlist schema を破る", "lint": "lint-doc-line-limit", "expected_exit": 2, "actual_exit": 2, "blocked": true},
+    {"case": "2a コード値リテラルに citation コメントを添えて検査除外を偽装", "lint": "lint-mechanism-knowledge-boundary", "expected_exit": 1, "actual_exit": 1, "blocked": true, "note": "exempt は AST 構造 (docstring/bare 文/help=) で決まり、コメント装飾では変わらない"},
+    {"case": "2b install-bundle.sh のナレッジ copy をインラインコメントで偽装", "lint": "lint-portability-knowledge-optin", "expected_exit": 1, "actual_exit": 1, "blocked": true, "note": "行頭 # のみ exempt。コード部の参照は検出"},
+    {"case": "2c install-bundle.sh のコメントに INCLUDE_KNOWLEDGE を置いて gate を偽装", "lint": "lint-portability-knowledge-optin", "expected_exit": 1, "actual_exit": 1, "blocked": true, "note": "gate 判定はコメントを除いた code view の条件式だけを対象にする"},
+    {"case": "2d install-bundle.sh の echo に INCLUDE_KNOWLEDGE を置いて gate を偽装", "lint": "lint-portability-knowledge-optin", "expected_exit": 1, "actual_exit": 1, "blocked": true, "note": "echo 内に if という語も混ぜた表示文を注入。token や条件構文らしい語の存在だけでなく、行頭の if/elif/while/until/case 条件式を要求する"},
+    {"case": "3a qa 番号の分割連結 'qa-' + '070'", "lint": "lint-mechanism-knowledge-boundary", "expected_exit": 1, "actual_exit": 1, "blocked": true, "note": "P09 初回実測で突破を確認し P05 差し戻し (定数畳み込み追加) 後に遮断"},
+    {"case": "3b f-string 定数 f'qa-{70}'", "lint": "lint-mechanism-knowledge-boundary", "expected_exit": 1, "actual_exit": 1, "blocked": true},
+    {"case": "3c percent 形式 'qa-%d' % 70", "lint": "lint-mechanism-knowledge-boundary", "expected_exit": 1, "actual_exit": 1, "blocked": true},
+    {"case": "3d 隣接リテラル連結 'qa-' '070'", "lint": "lint-mechanism-knowledge-boundary", "expected_exit": 1, "actual_exit": 1, "blocked": true},
+    {"case": "3e str.format 定数によるナレッジ path 合成", "lint": "lint-mechanism-knowledge-boundary", "expected_exit": 1, "actual_exit": 1, "blocked": true},
+    {"case": "4a opt-in なしの knowledge 同梱宣言 (bundles.json)", "lint": "lint-portability-knowledge-optin", "expected_exit": 1, "actual_exit": 1, "blocked": true},
+    {"case": "4b bundle plugins 配列へのナレッジ path 混入", "lint": "lint-portability-knowledge-optin", "expected_exit": 1, "actual_exit": 1, "blocked": true}
+  ],
+  "benign_counter_cases": [
+    {"case": "2a' 純粋コメントでの qa 番号引用", "lint": "lint-mechanism-knowledge-boundary", "expected_exit": 0, "actual_exit": 0, "false_positive": false},
+    {"case": "3f 入力由来の動的組み立て f'tasks/{name}.md'", "lint": "lint-mechanism-knowledge-boundary", "expected_exit": 0, "actual_exit": 0, "false_positive": false},
+    {"case": "実リポジトリ全体 (3 lint とも)", "lint": "all", "expected_exit": 0, "actual_exit": 0, "false_positive": false, "evidence": "eval-log/dev-graph/doc-governance-portability/test-run-p06.json"}
+  ],
+  "warning_only_paths": {
+    "exists": false,
+    "verification": "3 lint とも violation 検出時は return 1、設定エラーは return 2 の単一経路 (ソース検証 + pytest 76 件で exit 契約を固定)。NOTE (縮小追随促し・卒業・stale entry・初導入 skip) は規約違反を表さず、違反はすべて VIOLATION として exit 1 へ集約される"
+  },
+  "residual_risks": [
+    {
+      "case": "docstring 間接取得 (docstring に token を置き __doc__ を実行時に切り出す)",
+      "actual_exit": 0,
+      "blocked": false,
+      "assessment": "静的 citation-exempt の原理的限界。コメント/docstring を根拠引用として PASS させる設計 (qa-070 の運用性要件) と実行時 self-parsing の静的検出は両立不能。正当な用途が存在しない作為的コードであり、PR review と P12 トリアージ手順 (operations.md) で扱う"
+    }
+  ],
+  "all_named_patterns_blocked": true,
+  "named_patterns": ["allowlist 不正追加 (1a-1d)", "検査対象コメント化・gate token 偽装 (2a-2d)", "qa 番号分割記述回避 (3a-3e)"],
+  "recorded_at": "2026-07-24T06:59:57Z"
+}
