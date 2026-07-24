@@ -19,11 +19,12 @@
   2. 同一バイト列のファイルを複数 path で git 追跡しない
   3. 1 MiB を超えるファイルを git 追跡しない
 
-既存 91 件への適用は ratchet 方式を採る。他所から path 文字列で参照されている 40 件は
-_FROZEN_RESIDUE として凍結し、それ以外の直下ファイルは即違反とする。凍結リストを
-外部ファイルではなく本 script 内の定数に置くのは、「検査を通すための追記」を必ず
-diff 上で可視にするため (緑化の誘因を構造的に潰す)。リストは shrink-only であり、
-エントリが実在しなくなった場合は違反ではなく resolved_allowlist_entries として報告する。
+既存 91 件への適用は ratchet 方式を採る。他所から path 文字列で参照されている 40 件を
+_FROZEN_RESIDUE として凍結し、2026-07-24 に揮発投影 8 件を追跡解除して現行 32 件とした。
+それ以外の直下ファイルは即違反とする。凍結リストを外部ファイルではなく本 script 内の
+定数に置くのは、「検査を通すための追記」を必ず diff 上で可視にするため
+(緑化の誘因を構造的に潰す)。リストは shrink-only であり、エントリが実在しなくなった
+場合は違反ではなく resolved_allowlist_entries として報告する。
 
 検出 rule:
   EL-001  直下の git 追跡ファイルが凍結 allowlist にも恒久例外にも無い
@@ -59,10 +60,13 @@ DEFAULT_MAX_BYTES = 1048576  # 1 MiB
 # ratchet の対象ではない (減らすべき残置ではない) ため _FROZEN_RESIDUE と分離する。
 _PERMANENT_EXEMPT = frozenset({"README.md", ".gitignore", ".gitkeep"})
 
-# 2026-07-21 実測の凍結 allowlist (40 件)。
+# 2026-07-21 実測の凍結 allowlist (凍結時 40 件)。
 # いずれも eval-log/ 以外の git 追跡ファイルから path 文字列で参照されており、
 # 移動すると SKILL.md / script / CI / digest 固定済み package 成果物の参照が壊れる。
 # 追加は禁止 (追加したい場合は規約側の再設計が必要)。解消したら行ごと削除する。
+# 2026-07-24: run-dev-graph-*-{progress,intermediate} 8 件を追跡解除して削除 (残 32 件)。
+# .gitignore が同 8 件を除外宣言しており、SKILL.md の言及は実行時出力先の指定のみで
+# 追跡内容への依存が無いため (HarnessHub-ym5)。再追跡は EL-001 で即検出される。
 _FROZEN_RESIDUE = frozenset({
     "eval-log/code-coverage.json",
     "eval-log/dogfooding-fail-counter.json",
@@ -81,21 +85,13 @@ _FROZEN_RESIDUE = frozenset({
     "eval-log/run-dev-graph-decompose-docs-coverage-audit-20260719.json",
     "eval-log/run-dev-graph-decompose-goal-spec.json",
     "eval-log/run-dev-graph-init-goal-spec.json",
-    "eval-log/run-dev-graph-init-intermediate.jsonl",
-    "eval-log/run-dev-graph-init-progress.json",
     "eval-log/run-dev-graph-node-confirm-feat-stage0-distribution-gate.json",
     "eval-log/run-dev-graph-node-goal-spec.json",
-    "eval-log/run-dev-graph-node-intermediate.jsonl",
-    "eval-log/run-dev-graph-node-progress.json",
     "eval-log/run-dev-graph-render-goal-spec.json",
     "eval-log/run-dev-graph-requirements-goal-spec.json",
-    "eval-log/run-dev-graph-requirements-intermediate.jsonl",
-    "eval-log/run-dev-graph-requirements-progress.json",
     "eval-log/run-dev-graph-schedule-beads-ready.json",
     "eval-log/run-dev-graph-schedule-execution.json",
     "eval-log/run-dev-graph-schedule-goal-spec.json",
-    "eval-log/run-dev-graph-schedule-intermediate.jsonl",
-    "eval-log/run-dev-graph-schedule-progress.json",
     "eval-log/run-dev-graph-status-execution.json",
     "eval-log/run-dev-graph-status-goal-spec.json",
     "eval-log/run-dev-graph-sync-goal-spec.json",

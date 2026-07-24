@@ -1,0 +1,30 @@
+{
+  "$schema": "../../harness-creator/skills/ref-pkg-contract/schemas/package-contract.schema.json",
+  "package_mode": "bundle",
+  "plugin_name": "notion-gmail-send",
+  "entry_points": {
+    "skills": [
+      "ref-notion-gmail-send-spec",
+      "ref-gmail-dwd-setup",
+      "run-notion-gmail-sendlog-setup",
+      "run-notion-gmail-source-audit",
+      "run-notion-gmail-dry-run",
+      "run-notion-gmail-send"
+    ],
+    "agents": [
+      "gmail-send-presend-verifier"
+    ],
+    "commands": [],
+    "hooks": [
+      "guard-gmail-send.py"
+    ]
+  },
+  "distribution": {
+    "distributable": true,
+    "bundle_targets": ["skills-full"],
+    "category": "productivity",
+    "tags": ["notion", "gmail", "bulk-send", "idempotent"]
+  },
+  "depends_on": [],
+  "pkg_checks": {}
+}

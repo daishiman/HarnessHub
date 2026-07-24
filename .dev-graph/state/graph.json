@@ -1,5 +1,5 @@
 {
-  "graph_revision": 510,
+  "graph_revision": 523,
   "nodes": [
     {
       "acceptance": [
@@ -29949,12 +29949,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P01 責務 (要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -30003,7 +30005,20 @@
       "phase_ref": "P01",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "goal-spec.json の purpose/background/goal/scope_in 5 件/scope_out 5 件/acceptance 5 件 (id 単位) を machine-verifiable な要件ベースラインとして固定し、P02 以降の全 task が同一の合意事項を参照できる状態にする。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -30032,7 +30047,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -30046,7 +30061,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T13:04:13.437445Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -30076,12 +30091,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P02 責務 (設計 — MVP 適合軸メタデータ・schedule/next ソートキー・bd-bridge ready 整合・繰り延べ規則・選定 receipt の決定論設計) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -30132,7 +30149,20 @@
       "phase_ref": "P02",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "MVP 判断軸 (目的・背景・MVP 適合度) を表現する node metadata の追加案、schedule/next の MVP 適合第一ソートキー設計、bd-bridge ready 候補順序の MVP-first 整合方式、品質・再現性強化系タスクの繰り延べ規則、選定 receipt の出力形式を P07/P10 が判定可能な粒度で確定する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -30161,7 +30191,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -30175,7 +30205,7 @@
       "template_version": "1.1.0",
       "title": "設計 — MVP 適合軸メタデータ・schedule/next ソートキー・bd-bridge ready 整合・繰り延べ規則・選定 receipt の決定論設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T13:07:46.176391Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -30205,12 +30235,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P03 責務 (設計レビュー — 単一 writer (schedule-graph.py)・後方互換・qa-066 非退行との整合検証) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -30261,7 +30293,20 @@
       "phase_ref": "P03",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "P02 の設計が単一 writer 原則 (schedule-graph.py が着手候補順序の唯一の決定点であること)・既存 node の後方互換 (MVP metadata 未設定時の fallback)・qa-066 品質ゲート要件との非衝突を満たすことを、P02 とは独立した視点で検証し、実装可能と承認する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -30290,7 +30335,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -30304,7 +30349,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 単一 writer (schedule-graph.py)・後方互換・qa-066 非退行との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T13:12:34.546218Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -30334,12 +30379,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P04 責務 (テスト設計 — MVP-first ソート・冪等性・後方互換・receipt 出力の回帰テスト設計) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -30390,7 +30437,20 @@
       "phase_ref": "P04",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "MVP-first ソート・選定結果の冪等性・MVP metadata 未設定 node の後方互換・選定 receipt 出力・MVP 判断軸 metadata を持つ node の schema 登録検証の 5 カテゴリについて、P06 が実行できる具体的なテスト ID と期待結果を定義する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -30419,7 +30479,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -30433,7 +30493,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — MVP-first ソート・冪等性・後方互換・receipt 出力の回帰テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T13:24:47.954359Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -30461,12 +30521,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P05 責務 (実装 — MVP 適合軸メタデータ・schedule-graph.py ソートキー・bd-bridge ready 整合・選定 receipt 出力) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -30517,7 +30579,20 @@
       "phase_ref": "P05",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "P04 で定義したテスト ID の実装対象 (MVP 適合軸 metadata 追加・schedule-graph.py ソートキー変更・bd-bridge.py ready 順序整合・選定 receipt 出力・MVP 判断軸 metadata を持つ node の validate-graph-schema.py 登録検証) を write scope の範囲内で実装する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -30556,7 +30631,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -30570,7 +30645,7 @@
       "template_version": "1.1.0",
       "title": "実装 — MVP 適合軸メタデータ・schedule-graph.py ソートキー・bd-bridge ready 整合・選定 receipt 出力",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T13:27:16.253283Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -30600,12 +30675,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P06 責務 (テスト実行 — 回帰テスト全件と ready/next 実測の記録) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -30656,7 +30733,20 @@
       "phase_ref": "P06",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "P04 で定義した全テスト ID を実行し、pass/fail の実測結果を記録する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -30685,7 +30775,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -30699,7 +30789,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 回帰テスト全件と ready/next 実測の記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T13:47:48.943169Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -30729,12 +30819,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P07 責務 (受入判定 — goal-spec acceptance 5 件の突合と未達の差し戻し) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -30785,7 +30877,20 @@
       "phase_ref": "P07",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "goal-spec acceptance 5 件を P06 の実測証跡に照らして突合し、未達がある場合は P05 へ差し戻す。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -30814,7 +30919,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -30828,7 +30933,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — goal-spec acceptance 5 件の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T14:01:24.562653Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -30854,12 +30959,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P08 責務 (移行 — 既存 task 資産一括書き換えを行わないことの互換性確認 (fallback 動作の実測記録)) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -30910,7 +31017,20 @@
       "phase_ref": "P08",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "scope_out『既存 task 資産の一括書き換え』を行わないという判断が正しいこと、および既存 node (MVP metadata 未設定) が P05 実装後も fallback 動作でスケジュール継続できることを実測し、N/A 判定の根拠として記録する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -30939,7 +31059,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -30953,7 +31073,7 @@
       "template_version": "1.1.0",
       "title": "移行 — 既存 task 資産一括書き換えを行わないことの互換性確認 (fallback 動作の実測記録)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T14:03:59.766832Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -30979,12 +31099,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P09 責務 (品質保証 — fail-closed 実効性の悪性ケース実測 (qa-066 非退行含む)) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -31035,7 +31157,20 @@
       "phase_ref": "P09",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "MVP metadata が不正・欠損・悪性な入力であっても schedule-graph.py と bd-bridge.py が fail-closed で安全側に倒れること、および qa-066 由来の既存品質ゲートが非退行であることを悪性ケースで実測する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -31064,7 +31199,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -31078,7 +31213,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — fail-closed 実効性の悪性ケース実測 (qa-066 非退行含む)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T14:09:41.528776Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -31108,12 +31243,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -31164,7 +31301,20 @@
       "phase_ref": "P10",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "P01 から P09 までの全成果物が goal-spec と矛盾なく整合していることを横断的に確認する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -31193,7 +31343,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -31207,7 +31357,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T14:12:56.192253Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -31237,12 +31387,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -31293,7 +31445,20 @@
       "phase_ref": "P11",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "P06 のテスト実行ログと P09 の悪性ケース実測ログを digest 付きの evidence manifest として固定し、再実行可能な形で保存する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -31322,7 +31487,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -31336,7 +31501,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T14:15:18.861537Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -31362,12 +31527,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P12 責務 (運用文書化 — MVP 適合軸設定手順と選定 receipt の運用手順) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -31418,7 +31585,20 @@
       "phase_ref": "P12",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "MVP 適合軸 metadata の設定手順と選定 receipt の読み方を運用文書として整備し、既存 node への適用方法を明文化する。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -31447,7 +31627,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -31461,7 +31641,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — MVP 適合軸設定手順と選定 receipt の運用手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T14:19:38.901407Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [
@@ -31491,12 +31671,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-069 の MVP ファースト化要求のうち P13 責務 (リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T02:54:22Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47"
+        ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-24T11:18:17Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
@@ -31536,7 +31718,20 @@
       "phase_ref": "P13",
       "priority": null,
       "project_id": "feature-package-feat-mvp-first-scheduling",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+          "linked_at": "2026-07-24T11:18:17Z",
+          "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+          "merged_at": "2026-07-24T02:54:22Z",
+          "pr_number": 47,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/47"
+        }
+      ],
       "purpose": "実装・テスト・受入・証跡が揃った成果を default branch (main) へ反映し、MVP-first 選定が実運用で機能することを実証したうえで、system spec/architecture への writeback を行う。",
       "related_nodes": [
         "feat-mvp-first-scheduling",
@@ -31565,7 +31760,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-mvp-first-scheduling",
         "macro-feature",
@@ -31579,7 +31774,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T08:25:00Z"
+      "updated_at": "2026-07-24T11:18:17Z"
     },
     {
       "acceptance": [

@@ -31,7 +31,7 @@ P01-P09 成果物を横断し baseline 乖離・acceptance 残未達・quality_c
 
 ## 残課題 (P13 へ)
 
-- **P13 (実行中)**: 2026-07-22 にユーザー権限付与のもとリリースを実行。対象差分を commit、origin/main を本ブランチへ統合し、`release-receipt.json` に検証結果を固定した上で main 向け draft PR を作成した。PR merge・merge commit の確定は人手 merge 後 (draft のため保留)。
+- **P13 (完了)**: 2026-07-22 にリリースを実行し main 向け PR #41 を作成。2026-07-23 に PR #41 が main へ merge (merge commit `b655e22`、CI 4 check 全 SUCCESS)。2026-07-24 に close-loop reconciliation を実走し、graph (graph_revision 491)・md・beads の 3 表現を durable done へ確定した。
 - **AC-1 の 3 表現同時 close**: 対象 `issue-bd-bridge-notes-passthrough-20260721` は既に md(status closed)・graph(completion done)・beads(closed) の 3 表現で閉じ、`lint-open-residue.py` exit 0 で整合を実測済み (前コミットで close-loop 実証済み)。
 
 ## 関連バグの解消
@@ -40,4 +40,4 @@ P01-P09 成果物を横断し baseline 乖離・acceptance 残未達・quality_c
 
 ## 判定
 
-P11 以降 (証跡固定・文書化・リリース) へ進む条件を満たす。機能 acceptance は7件すべて PASS。P13 の外部リリース操作 (commit/main 統合/push/draft PR) は 2026-07-22 のユーザー権限付与で実行済み。最終 done 確定 (PR merge・merge commit 記録) のみ人手 merge 後に残る。
+P11 以降 (証跡固定・文書化・リリース) へ進む条件を満たす。機能 acceptance は7件すべて PASS。P13 の外部リリース操作 (commit/main 統合/push/PR) は実行済みで、PR #41 は 2026-07-23 に main へ merge 済み。最終 done 確定 (merge commit `b655e22` 記録・graph/md/beads の 3 表現 durable done) まで完了した。
