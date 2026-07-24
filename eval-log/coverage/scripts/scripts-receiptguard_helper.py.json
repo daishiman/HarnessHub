@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/receiptguard_helper.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 88,
+    "notes": "genuine code-review + py_compile OK / `# /// script` frontmatter を本レビューで補完 (network:false, write-scope:none, import 専用で CLI なし)。lint-live-trial-verdict.py から責務分離した C02 迂回検出 module。soundness: anchor 選択が中核の設計判断で、graph.json 書込みを鍵にすると fixture の正当な初期化 (Write/python での graph.json 生成) と区別できず誤検出が多発するため、register-package.py の専有出力である registration receipt を anchor にしている (全 97 dev-graph trial で r7 のみ検出・誤検出 0 を実測)。writer 名 (register-package.py) を allowlist にしない判断も正しい — allowlist だと `register-package.py ...; python -c 'receipt.write_text(...)'` と同一 Bash tool_use へ連結するだけで全体を無条件許可でき、test_c02_bypass_writer_name_cannot_mask_chained_forgery がこの回帰を固定している。_transcript_tool_actions は assistant ターンの tool_use のみを走査し tool_result/user ターンを除外するため、「実際に発行された操作」だけが母集団になる。responsibility: 単一 (transcript からの C02 迂回検出のみ。verdict の schema 検査・digest 突合は呼び口の check_verdict、provenance は provenance_helper が持つ)。error-handling: transcript 不在は空リスト (tui 層の run は transcript を持たないため正当なスキップ。jsonl 層の transcript 不在・改竄は check_verdict の束縛検査が別途 fail-closed で塞ぐ二重化)、read_text は errors='replace' + OSError 捕捉、行単位の JSONDecodeError は skip して走査継続 (壊れた 1 行で検出全体を落とさない)。side-effect-safety: import は json/re のみで subprocess・network・ファイル書込み一切なし = 完全 read-only、write-scope:none 宣言と整合。LIMITATION (意図的かつ文書化済み): _RECEIPT_MUTATORS は列挙式 denylist であり、未知のシェル構文・別スクリプト経由の間接書込み・別名生成後の rename は素通りする。この残穴は doc/evidence-integrity-practices.md §2.1 に明記されており、指標を隠さず限界を宣言する姿勢は本 module の主題 (Goodhart 回避) と一貫する。TESTS: tests/test_receiptguard_helper.py の 9 件が実 r7 偽造 fixture の固定検出・合成 forge・正規 register 呼出の非検出・writer 名 masking・Path.open('w')・shell cp・read-only の非検出・Write ツール経路・transcript 不在の 9 経路を exercise (42 passed, 行カバレッジ 94%)。"
+  },
+  "reviewed_by": "harness-ratchet-recovery-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}
