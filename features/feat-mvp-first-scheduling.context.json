@@ -1,0 +1,32 @@
+{
+ "graph_node_id": "feat-mvp-first-scheduling",
+ "artifact_kind": "feature",
+ "purpose": "dev-graph/beads (bd) のタスク優先度選定が品質・本質・再現性を先回りする基準に寄り、いちばん作りたい機能 (MVP) から離れて同じ基盤タスクを繰り返す停滞が起きている (qa-069)。判断軸を「目的=何のために作るか / 背景=どういう経緯か / MVP=今必要な動くもの」の3軸へ組み替え、まず作って使って課題をあぶり出す build-use-learn の回転を取り戻す",
+ "goal": "next/schedule と bd ready の着手候補選定が MVP 適合 (今必要な動くものへの直結度) を第一ソートキーとして動作し、品質・再現性強化系タスクは MVP 成立後へ繰り延べられ、同一入力での選定結果が冪等に再現される状態 (既確定 CI/CD・quality gate 要件 qa-066 は維持)",
+ "scope_in": [
+  "feature/task metadata への MVP 判断軸 (目的・背景・MVP 適合度) の表現追加と登録経路",
+  "schedule/next の着手候補算出への MVP 適合第一ソートキー導入",
+  "bd-bridge ready 候補順序の MVP-first 整合",
+  "品質・再現性強化系タスクの MVP 成立後繰り延べ規則",
+  "選定理由 (なぜこのタスクが先か) の receipt 出力"
+ ],
+ "scope_out": [
+  "bd CLI 本体の変更",
+  "CI/CD・quality gate 要件 (qa-066) 自体の緩和・削除",
+  "dev-graph への新 verb 追加",
+  "既存 task 資産の一括書き換え",
+  "Hub プロダクト本体機能 (Web/API/DB) の変更"
+ ],
+ "acceptance": [
+  "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+  "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+  "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+  "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+  "qa-066 由来の既存品質ゲートの検査が非退行である"
+ ],
+ "architecture_refs": [
+  "architecture/harness-hub-dev-workflow.md",
+  "specs/harness-hub-system-specification.md"
+ ],
+ "updated_at": "2026-07-23T05:00:00Z"
+}

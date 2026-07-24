@@ -1,0 +1,84 @@
+{
+  "phase": "P06",
+  "graph_node_id": "sys-mvp-first-scheduling-p06",
+  "bd_issue_id": "HarnessHub-6gl.6",
+  "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+  "test_plan_ref": "docs/features/feat-mvp-first-scheduling/test-plan.md",
+  "recorded_at": "2026-07-23T13:58:30Z",
+  "targeted_run": {
+    "command": "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py --junitxml=eval-log/dev-graph/mvp-first-scheduling/test-run-p06.xml",
+    "executed_at": "2026-07-23T13:48:01Z",
+    "junitxml": "eval-log/dev-graph/mvp-first-scheduling/test-run-p06.xml",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 0.608
+  },
+  "results": [
+    {"test_id": "TC-MVP-SORT-01", "test": "test_schedule_graph_mvp_first.py::test_mvp_sort_orders_candidates_by_rank_before_node_id", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SORT-02", "test": "test_schedule_graph_mvp_first.py::test_mvp_sort_tie_breaks_same_rank_by_node_id", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SORT-03", "test": "test_schedule_graph_mvp_first.py::test_mvp_sort_applies_to_feature_batches", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SORT-04", "test": "test_schedule_graph_mvp_first.py::test_mvp_sort_fails_closed_on_unknown_mvp_fit", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SORT-05", "test": "test_schedule_graph_mvp_first.py::test_mvp_sort_fails_closed_on_non_object_alignment", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-IDEM-01", "test": "test_schedule_graph_mvp_first.py::test_mvp_idempotent_plan_between_runs", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-COMPAT-01", "test": "test_schedule_graph_mvp_first.py::test_mvp_compat_unset_graph_keeps_lexicographic_order", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-COMPAT-02", "test": "test_schedule_graph_mvp_first.py::test_mvp_compat_existing_plan_keys_unchanged", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-RCPT-01", "test": "test_schedule_graph_mvp_first.py::test_mvp_receipt_transcribes_alignment_with_order_index", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-RCPT-02", "test": "test_schedule_graph_mvp_first.py::test_mvp_receipt_records_unset_nodes_without_silent_drop", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-RCPT-03", "test": "test_schedule_graph_mvp_first.py::test_mvp_receipt_deferral_reason_variants", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-RCPT-04", "test": "test_schedule_graph_mvp_first.py::test_mvp_receipt_mvp_established_true_false_null", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-RCPT-05", "test": "test_schedule_graph_mvp_first.py::test_mvp_receipt_present_on_stdout_without_eval_log", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-BRIDGE-01", "test": "test_bd_bridge_mvp_ready_order.py::test_ready_set_sorted_by_mvp_rank_then_external_ref", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-BRIDGE-02", "test": "test_bd_bridge_mvp_ready_order.py::test_missing_or_null_mvp_fit_falls_back_tolerantly", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-BRIDGE-03", "test": "test_bd_bridge_mvp_ready_order.py::test_invalid_mvp_fit_moves_candidate_to_conflicts", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-BRIDGE-04", "test": "test_bd_bridge_mvp_ready_order.py::test_rank_constant_identical_between_schedule_and_bridge", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SCHEMA-REG-01", "test": "test_graph_node_mvp_schema_registration.py::test_schema_reg_mvp_metadata_task_passes", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SCHEMA-REG-02", "test": "test_graph_node_mvp_schema_registration.py::test_schema_reg_unknown_enum_value_fails", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SCHEMA-REG-03", "test": "test_graph_node_mvp_schema_registration.py::test_schema_reg_unknown_property_fails", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SCHEMA-REG-04", "test": "test_graph_node_mvp_schema_registration.py::test_schema_reg_omitted_and_null_pass", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {"test_id": "TC-MVP-SCHEMA-REG-05", "test": "test_graph_node_mvp_schema_registration.py::test_schema_reg_missing_required_subfield_fails", "result": "pass", "executed_at": "2026-07-23T13:48:01Z"},
+    {
+      "test_id": "TC-MVP-REGR-01",
+      "test": "python3 -m pytest plugins/dev-graph/tests/ -q (既存+新規全件)",
+      "result": "fail",
+      "executed_at": "2026-07-23T13:56:58Z",
+      "finished_at": "2026-07-23T13:57:53Z",
+      "detail": {
+        "passed": 406,
+        "failed": 9,
+        "failed_tests": "test_skill_criteria_evidence.py::test_independent_scenario_receipt_covers_exact_criteria の C01/C02/C03/C04/C05/C14/C15/C18/C19 (OUT1) 9 件のみ",
+        "classification": "designed_freshness_gate_not_logic_regression",
+        "explanation": "9 件は全て 'stale behavior closure digest' assertion (test_skill_criteria_evidence.py:151)。P05 が behavior closure 構成ファイル (schedule-graph.py / bd-bridge.py / graph-node.schema.json) を正当に変更したため、live-trial 証跡 digest の鮮度ゲートが設計どおり再取得を要求している状態。実装 logic の退行は 0 件。既存テストの修正・削除・skip 追加は行っていない (scope_out: qa-066 ゲートの緩和禁止を遵守)。",
+        "follow_up": {
+          "bd_issue_id": "HarnessHub-4y5",
+          "graph_node_id": "issue-live-trial-closure-stale-mvp-first-20260723",
+          "artifact": "issues/sys-live-trial-closure-stale-mvp-first-20260723.md",
+          "action": "run-skill-live-trial で 9 skill の live-trial を tier=live で再取得し test_skill_criteria_evidence.py 全件 PASS へ戻す"
+        }
+      }
+    }
+  ],
+  "validate_graph_schema": {
+    "command": "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root .",
+    "executed_at": "2026-07-23T13:58:02Z",
+    "exit_code": 0,
+    "verdict": "PASS",
+    "valid": true,
+    "violations": 0,
+    "note": "follow-up issue node (issue-live-trial-closure-stale-mvp-first-20260723, graph_revision 484) 追加後の最終状態で実行"
+  },
+  "acceptance_trace": {
+    "AC-1_mvp_first_selection": {"tests": ["TC-MVP-SORT-01", "TC-MVP-SORT-02", "TC-MVP-SORT-03", "TC-MVP-SORT-04", "TC-MVP-SORT-05", "TC-MVP-BRIDGE-01", "TC-MVP-BRIDGE-02", "TC-MVP-BRIDGE-03", "TC-MVP-BRIDGE-04"], "verdict": "pass"},
+    "AC-2_idempotent": {"tests": ["TC-MVP-IDEM-01"], "verdict": "pass"},
+    "AC-3_schema_registration": {"tests": ["TC-MVP-SCHEMA-REG-01", "TC-MVP-SCHEMA-REG-02", "TC-MVP-SCHEMA-REG-03", "TC-MVP-SCHEMA-REG-04", "TC-MVP-SCHEMA-REG-05"], "verdict": "pass"},
+    "AC-4_selection_receipt": {"tests": ["TC-MVP-RCPT-01", "TC-MVP-RCPT-02", "TC-MVP-RCPT-03", "TC-MVP-RCPT-04", "TC-MVP-RCPT-05"], "verdict": "pass"},
+    "AC-5_qa066_non_regression": {"tests": ["TC-MVP-REGR-01"], "verdict": "fail_by_designed_freshness_gate", "note": "qa-066 由来ゲート自体は非退行 (緩和・skip なし)。FAIL 9 件は鮮度ゲートが設計どおり発火した結果で、live-trial 再取得 (HarnessHub-4y5) で解消する。"},
+    "backward_compat": {"tests": ["TC-MVP-COMPAT-01", "TC-MVP-COMPAT-02"], "verdict": "pass"}
+  },
+  "environment": {
+    "python": "python3",
+    "pytest_plugins": "pytest-randomly (テスト順序ランダム化環境で PASS を確認)",
+    "hostname": "ommp2021.local"
+  }
+}

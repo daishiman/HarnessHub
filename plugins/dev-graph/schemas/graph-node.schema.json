@@ -223,6 +223,45 @@
       ],
       "description": "feature ノードが達成する到達状態。旧 目標+ゴールの語彙を1本に統合した表現。artifact_kind=feature のとき非null必須、他kindはnull (MM-01)。program全体のgoalはgoal-spec.jsonが正本で、本フィールドは機能単位に閉じる"
     },
+    "mvp_alignment": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "mvp_fit",
+        "purpose",
+        "background",
+        "rationale"
+      ],
+      "properties": {
+        "mvp_fit": {
+          "enum": [
+            "direct",
+            "enabling",
+            "deferred"
+          ],
+          "description": "MVP 適合度 (qa-069 第3軸)。direct=今必要な動くものに直結 / enabling=MVP の直接の前提 / deferred=品質・再現性強化系で MVP 成立後へ繰り延べ"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "description": "目的 (qa-069 第1軸): 何のために作るか。selection receipt へ転写する自然文"
+        },
+        "background": {
+          "type": "string",
+          "minLength": 1,
+          "description": "背景 (qa-069 第2軸): どういう経緯か。selection receipt へ転写する自然文"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "description": "mvp_fit 判定の根拠 (なぜこの適合度か)"
+        }
+      },
+      "description": "qa-069 の MVP 判断 3 軸 (目的・背景・MVP 適合度)。optional/nullable — 省略・null は既存挙動 (node_id 辞書順) へ fallback し、既存 node を invalid 化しない (scope_out: 一括書き換え禁止)。MM-01 の purpose/goal (feature 限定) とは独立の task/feature 共用 metadata"
+    },
     "scope_in": {
       "type": "array",
       "items": {

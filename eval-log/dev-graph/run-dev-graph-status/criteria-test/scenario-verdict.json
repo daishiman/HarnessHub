@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C18-OUT1-positive-read-only-status",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260722T093029-r20/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260724T062623Z-wt1/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260722T093029-r20/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260722T093029-r20/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260722T093029-r20/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260724T062623Z-wt1/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260724T062623Z-wt1/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260724T062623Z-wt1/out/status.json"
       ],
-      "observed": "2026-07-22 に 2 task・前方依存 1 本の fixture で r20 を正規再実走。status/closed_at/depends_on/dependents/file_path が graph 実値と field 単位一致、002=blocked/001=ready、graph/config/content 無変更 (read-only)。fresh evaluator が sha256 不変を独立確認。goal-seek 3 点セット全出力。"
+      "observed": "2026-07-24 に closure 更新後の behavior digest へ整合させるため 2 task・前方依存 1 本の fixture で wt1 を正規再実走 (fresh claude session, opus-4-6, 自走完走 nudge=0/gate=0)。status/closed_at/depends_on/dependents/file_path が graph 実値と field 単位一致、002=blocked/001=ready、graph/config/content 無変更 (read-only, sha256 不変を fresh evaluator が独立確認)。goal-seek 3 点セット全出力・intermediate は append-only 2 行・original_goal hash 検証 PASS。skill_dir_tree_sha が現行 closure と一致。"
     },
     "OUT2": {
       "status": "PASS",

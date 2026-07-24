@@ -1,48 +1,10 @@
 {
-  "goal": "グラフの依存関係・完了状態・active worktree leaseから次に着手すべきready-setと、リソーススコープ/lease重複のない複数worktree向け並列バッチを算出・提示した状態になっている",
-  "checklist": [
-    {
-      "id": "candidate_states",
-      "desc": "candidate は confirmed/pass/readiness complete、全 depends_on done、active lease なし",
-      "status": "PASS",
-      "evidence": "schedule-graph.py + C17 verifier PASS"
-    },
-    {
-      "id": "ready_set_split",
-      "desc": "feature ready と task ready が別々の ready-set/batch",
-      "status": "PASS",
-      "evidence": "features=[feat-dev-pipeline-improvement], tasks=[SYS-DEV-PIPELINE-IMPROVEMENT-P01]"
-    },
-    {
-      "id": "no_resource_conflict",
-      "desc": "同一 parallel batch の resource_scope.touches 重複 pair が0件",
-      "status": "PASS",
-      "evidence": "conflict_pairs=[], C17 PASS"
-    },
-    {
-      "id": "branch_claim_commands",
-      "desc": "各 task の suggested_branch と claim command が提示",
-      "status": "PASS",
-      "evidence": "devgraph/SYS-DEV-PIPELINE-IMPROVEMENT-P01 + claim command"
-    },
-    {
-      "id": "digest_invariant",
-      "desc": "実行前後の graph/tracker/lease digest が同一",
-      "status": "PASS",
-      "evidence": "before==after for all 3 digests"
-    },
-    {
-      "id": "lease_path_authority",
-      "desc": "lease path が git common-dir 正本と一致",
-      "status": "PASS",
-      "evidence": "lease_source=git_common_dir"
-    },
-    {
-      "id": "c17_verifier",
-      "desc": "C17独立 verifier が PASS",
-      "status": "PASS",
-      "evidence": "C17 agent PASS, all 6 checks pass"
-    }
+  "verb": "next",
+  "scope": "feat-mvp-first-scheduling",
+  "status": "completed",
+  "ready_batch": [
+    "SYS-MVP-FIRST-SCHEDULING-P01"
   ],
-  "completed_at": "2026-07-22T04:37:30Z"
+  "verdict": "PASS",
+  "generated_at": "2026-07-23T09:33:29Z"
 }

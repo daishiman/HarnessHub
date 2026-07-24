@@ -78,7 +78,12 @@ def _invoke(argv: list[str], root: Path, label: str) -> dict[str, Any]:
 
 def _dependency_ids(issue: dict[str, Any]) -> list[str]:
     result: list[str] = []
-    for item in issue.get("dependencies", []):
+    raw = issue.get("dependencies")
+    if raw is None:
+        return result
+    if not isinstance(raw, list):
+        raise ContractError("Beads dependencies must be an array or null")
+    for item in raw:
         if isinstance(item, dict):
             dependency = item.get("id")
             relation = item.get("dependency_type") or item.get("type")

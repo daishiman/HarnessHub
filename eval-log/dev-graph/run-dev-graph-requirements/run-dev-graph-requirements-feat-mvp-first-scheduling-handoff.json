@@ -1,0 +1,47 @@
+{
+ "schema": "run-dev-graph-requirements/handoff/1.0.0",
+ "generated_at": "2026-07-23T13:10:00Z",
+ "handoff_target": "task-graph",
+ "feature_id": "feat-mvp-first-scheduling",
+ "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+ "package_generation": ".dev-graph/plans/generations/feature-package-feat-mvp-first-scheduling/55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
+ "package_canonical_digest": "sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
+ "snapshot_digest": "sha256:45ddb06c63b891e576ef42ece9b74f650d33ec8505e05ffbb6ce6b4caf195edb",
+ "snapshot_inputs": {
+  "feature_context_digest": "sha256:b0d003254ac6f42d4616dfff30ab605e355c09c9abe642b71559cea6a49e6291",
+  "feature_id": "feat-mvp-first-scheduling",
+  "feature_source_digest": "sha256:d96c364f5350c104ae542b6a7942c542fdd2df869111d9f0c4b81bdc404eef0b",
+  "graph_revision": 429,
+  "graph_sha256": "sha256:1f6217b2a37fc73855e4b97af532d804da73656145b8bf78b570066db6e6d96e",
+  "handoff_target": "task-graph",
+  "package_canonical_digest": "sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387"
+ },
+ "graph_revision": 429,
+ "graph_sha256": "sha256:1f6217b2a37fc73855e4b97af532d804da73656145b8bf78b570066db6e6d96e",
+ "requirements_document": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-feat-mvp-first-scheduling-document.md",
+ "readiness_matrix": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-feat-mvp-first-scheduling-readiness-matrix.json",
+ "gate_status": {
+  "c11_graph_schema": "PASS",
+  "c02_saved_state": "PASS",
+  "source_digest": "PASS",
+  "validate_system_plan": "PASS"
+ },
+ "missing_sections": [],
+ "stale_digest_count": 0,
+ "task_entry_points": [
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p01.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p02.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p03.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p04.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p05.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p06.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p07.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p08.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p09.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p10.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p11.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p12.md",
+  "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p13.md"
+ ],
+ "supersedes_snapshot": "sha256:ee11f5a94912fe68841e9935077be3a9f24ba6a683983cde810fe2100546d88c"
+}
