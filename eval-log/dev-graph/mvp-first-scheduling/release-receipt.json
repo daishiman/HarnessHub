@@ -109,6 +109,12 @@
       "id": "HarnessHub-vnr",
       "title": "C14 OUT1 の live-trial scenario が --binding none --dry-run のみを被覆",
       "severity": "非 blocker"
+    },
+    {
+      "id": "HarnessHub-ym5",
+      "title": "eval-log/run-dev-graph-*-{progress,intermediate} が .gitignore 宣言に反して追跡され続けている",
+      "severity": "非 blocker",
+      "note": "本リリースで顕在化した構造的な衝突 (clean tree 要件 vs 無関係差分を commit しない規律) を追跡する"
     }
   ],
 
@@ -130,6 +136,6 @@
       "eval-log/run-dev-graph-requirements-intermediate.jsonl"
     ],
     "reason": "当初は .gitignore の『周回・build ごとの揮発投影ゆえ除外』宣言に従い commit から外したが、guard-spec-reflection.py が仕様反映受領書を HEAD へ束縛するため clean tree を要求する。これら 4 件は .gitignore 宣言に反して過去から追跡済みであり、かつ差分の実体は本作業 (2026-07-23 wt-1) の live-trial 実走が書き換えた goal-seek 進捗である (旧内容は 2026-07-19 の別 worktree 記録)。無関係差分ではないため release commit へ含めた",
-    "known_inconsistency": ".gitignore の除外宣言と実 index の追跡状態が食い違っている (git rm --cached 未実施)。追跡解除は他 worktree へ波及するため本 PR のスコープ外とし、follow-up beads で追跡する"
+    "known_inconsistency": ".gitignore の除外宣言と実 index の追跡状態が食い違っている (git rm --cached 未実施)。追跡解除は他 worktree へ波及するため本 PR のスコープ外とし、HarnessHub-ym5 で追跡する"
   }
 }
