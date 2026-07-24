@@ -124,6 +124,35 @@
     "honest_recording": "非 blocker の留意点 2 件を隠さず follow_ups へ記録し、beads 課題として追跡可能にした"
   },
 
+  "ci_remediation": {
+    "trigger": "PR #47 の dev-pipeline-lint (job #17) と verify (job #163) が失敗",
+    "root_cause": "release commit c695d9e が eval-log/ 直下の 4 ファイルを新規に git 追跡下へ入れた。lint-eval-log-layout.py の凍結 allowlist は 2026-07-21 実測時点で固定されており、以降の直下追跡は EL-001 違反となる。前回の全回帰 (2615 passed) 時点ではこれらが未追跡だったため検出されなかった",
+    "why_not_allowlist": "allowlist は歴史的残渣を段階的に解消するための凍結リストであり、新規追加は凍結の意味を失わせる。ゲート緩和として禁止",
+    "untracked_paths": [
+      "eval-log/run-dev-graph-render-execution.json",
+      "eval-log/run-dev-graph-schedule-parity-manifest.json",
+      "eval-log/run-dev-graph-sync-execution.json",
+      "eval-log/run-dev-graph-sync-projection-manifest.json"
+    ],
+    "disposition": "git rm --cached で追跡解除 (作業ツリーの実体は保持)。4 件とも origin/main では追跡されておらず、2026-07-23 の skill 実走が生んだ execution receipt / manifest である。live-trial 証跡の本体は eval-log/dev-graph/<skill>/live-trial/<run>/ に正規配置で保存済みのため、証跡の欠落は発生しない",
+    "verification": {
+      "lint-eval-log-layout": "exit 0 (violations 0 / scanned 2391)",
+      "migrate-pipeline-improvement --dry-run": "moved_count=0 / dispositions_added=0 (CI の冪等性チェックと同条件)",
+      "test_lint_eval_log_layout + test_migrate_pipeline_improvement": "22 passed",
+      "full_regression_after_fix": "2615 passed / 0 failed (151.2s)",
+      "dev-pipeline-lint 全 step": "lint-eval-log-layout / lint-handoff-disposition / lint-open-residue / migrate 冪等 いずれも exit 0",
+      "governance-check lint 群": "doc-line-limit / mechanism-knowledge-boundary / portability-knowledge-optin / content-review / live-trial-verdict / feedback-contract / prompt-contract-drift / script-naming / artifact-placement / skill-description / legacy-plugin-name / validate-plugin-completeness いずれも exit 0"
+    }
+  },
+
+  "open_residue_note": {
+    "observation": "bd (Dolt DB) が利用可能なローカルでは lint-open-residue が OR-003 を 13 件検出する (HarnessHub-6gl.1〜.13 が beads=closed かつ completion_evidence.status='in_progress')",
+    "ci_impact": "なし。CI には bd が無く beads export も追跡外のため beads_axis='unavailable' となり、OR-003/OR-004 は未評価。git 追跡ファイルのみで完結する OR-001/OR-002 は violations 0",
+    "why_not_hand_edit": "completion_evidence の policy は 'linked_pr_merged_all' であり、完了条件は紐づく PR のマージ。draft PR の段階で status を done へ手編集するのは事実に反する偽の緑化にあたるため行わない",
+    "why_not_reopen": "P01〜P12 も 2026-07-23 に同じ流儀で closed 済みであり、13 件が一貫して『closed + in_progress』の過渡状態にある。P13 のみ再 open すると一貫性を失う",
+    "resolution_path": "PR #47 のマージ後に reconcile-github-lifecycle.py で completion_evidence を done へ収束させる。ただし issues/sys-devgraph-completion-reconcile-blocked-20260721.md (status=active) が『task worktree から reconcile が実行できない』と記録しており、同 issue の scope_out には『手動 bd close による回避』が明記されている。本 feature の phase close 運用はこの既知の未解決課題の影響下にある"
+  },
+
   "excluded_from_commit": {
     "plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-07-23-rubric-update.md": "本 feature と無関係な既存の未追跡提案。PR 作成中は git stash へ退避し、作成後に作業ツリーへ戻す"
   },
