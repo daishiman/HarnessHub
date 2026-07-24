@@ -1,5 +1,5 @@
 {
-  "graph_revision": 490,
+  "graph_revision": 491,
   "nodes": [
     {
       "acceptance": [
@@ -31780,6 +31780,113 @@
       "title": "MVP-first 実装 (P05) で stale 化した 9 skill の live-trial 証跡再取得",
       "tracker_binding": "beads",
       "updated_at": "2026-07-23T13:55:28Z"
+    },
+    {
+      "acceptance": [
+        "リポジトリ実在の build trace 12 ファイル全てで exit 0 になる",
+        "dict 形式の旧 B-3 契約 (ch11/13/14/15/16 必須・true) が維持される",
+        "list 形式で PASS=evidence 必須 / N/A=reason または evidence 必須が検証される",
+        "component trace 形式で components[].id/sha256 と components_total/components_existing の整合が検証される",
+        "python3 -m pytest tests/ が全件 PASS する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-build-trace-doc-coverage-schema-drift-20260723.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "検証 script の schema 乖離により評価ゲートが誤 FAIL する欠陥を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T08:23:21Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-build-trace-doc-coverage-schema-drift-20260723.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "証跡データ (eval-log) を書き換えず、validator が実データ 3 形式 (dict / list / component trace) を自動判別して fail-closed で検証し、リポジトリ実在の健全な build trace 全件が exit 0 になっている",
+      "graph_node_id": "issue-build-trace-doc-coverage-schema-drift-20260723",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T08:23:21Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "scripts/validate-build-trace.py が期待する build-trace JSON schema (top-level doc_coverage dict) が初期構築 commit 6a46c39 以来の実データ 3 形式と乖離し、skill-design rubric の REG-001 (high) が被評価 skill へ一律誤計上される。無関係な SKILL.md 変更 (例: HarnessHub-hiu の schedule doc 修正, score 74<80 FAIL) が巻き添え減点される状態を解消する",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-build-trace-doc-coverage-schema-drift-20260723.md",
+        "scripts/validate-build-trace.py",
+        "tests/scripts-root/test_root__validate_build_trace_doc_coverage.py"
+      ],
+      "scope_in": [
+        "scripts/validate-build-trace.py の 3 形式自動判別対応",
+        "tests/scripts-root/test_root__validate_build_trace_doc_coverage.py の回帰テスト拡充",
+        "実在 build trace 全件の exit 0 確認"
+      ],
+      "scope_out": [
+        "証跡データ (eval-log) の書き換え (証跡改ざんに該当)",
+        "skill-design rubric.json REG-001 定義の変更 (check 文はそのまま成立)",
+        "plugins/harness-creator 側 validate-build-trace.py の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T08:23:21Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "scripts/validate-build-trace.py",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality-gate",
+        "skill-design",
+        "reg-001",
+        "build-trace",
+        "schema-drift"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T08:23:21Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
