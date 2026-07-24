@@ -1,6 +1,9 @@
 ---
+status: recorded
+layer: session-handoff
 doc_type: session-handoff
 date: 2026-07-24
+updated: 2026-07-25
 worktree: task-20260724-135338-wt-4
 branch: devgraph/feat-domain-model-db
 head_sha: 815c0e2eeb7f98f897d3f70da39cdefb4f0beec6
@@ -255,3 +258,77 @@ git -C "$R" log --oneline origin/main -1   # 現在 53f14b8。前進していれ
 
 - **最重要の是正**: §8-2 の「beads 書込み不可」は誤診断。beads-audit-1・completeness-2・実行者の 3 者が独立に、`plugins/dev-graph/scripts/bd-bridge.py` の実在と guard の部分文字列判定を実測確認。実際に u6q へ PR #53 link を追記して実証した。
 - **未反映で残す判断**: 特になし（minor 含め全反映）。
+
+---
+
+## 12. 追補: 2026-07-25 セッション（CI 赤の解消 + main 再取り込み）
+
+前セッション（§1〜§11、2026-07-24）で PR #53 まで到達したが、**CI が 1 ジョブだけ赤のまま残っていた**。本追補はその解消と、その後の main 前進の取り込みを記録する。
+
+### 12-1. 何が赤だったか（根本原因）
+
+- 落ちていたジョブ: `change-category-guard`（`.github/workflows/governance-check.yml` → `scripts/lint-artifact-placement.py`）。
+- エラー内容: `docs/features/feat-domain-model-db/session-handoff-20260724.md` の frontmatter に **`status:` と `layer:` が無い**（2 violations）。
+- **原因**: この lint は `docs/` 配下の全 `*.md` を `rglob` で走査し「無標識（ラベルの無い）文書を置かせない」規約を課す。前セッションで本引き継ぎ書を新規追加した際、同ディレクトリの他 12 文書が持つこの 2 キーを付け忘れた。実装（`packages/db`）とは無関係な**文書メタデータの欠落**。
+- **補足**: この lint はキーの**存在**のみを検査し、値は検証しない。したがって値は「規約としての一貫性」で選ぶ必要があった。
+
+### 12-2. 修正内容
+
+| 対象 | 変更 | 選定理由 |
+|---|---|---|
+| `session-handoff-20260724.md` | `status: recorded` を追加 | 本書は「設計を確定する文書」ではなく「事実を記録する文書」。同じ性質の `spec-reflection-receipt.md` が既に `recorded` を使っており揃う（`docs/` 全体の分布は confirmed 59 / draft 13 / recorded 1 / in_progress 1）。 |
+| 同上 | `layer: session-handoff` を追加 | `docs/` 配下の `layer` は「文書の役割」を表す自由記述で、既に 21 種の値が実在する（`feature-design` 43・`system-wide-design` 5・`test-design` 2 ほか）。引き継ぎ書は設計文書ではないため、役割を正確に表す値を新設した。 |
+| 同上 / `spec-reflection-receipt.md` | `updated: 2026-07-25` を追加 | 追補が入ったことを frontmatter からも辿れるようにする。 |
+
+**検証**: `python3 scripts/lint-artifact-placement.py` → `OK: 保存先の正規表に適合`（**exit 0**）。self-test も緑。
+
+### 12-3. main の再取り込み（依頼「リモート main → ローカル main → 本ブランチ」）
+
+- 前セッション終了時点の想定 `53f14b8` からさらに前進しており、実際の `origin/main` は **`55e0440`**（PR #56・#57 マージ後）だった。
+- ローカル `main` は `origin/main` と同一（`merge --ff-only` は `Already up to date.`）。→ そこから本ブランチへ `git merge main` を実行し、**コンフリクト 0 で完了**（42 ファイル前進を取り込み）。
+
+### 12-4. graph.json の衝突回避（重要な手順）
+
+`.dev-graph/state/graph.json` は**単一の正本状態ファイル**なので、ブランチ間で必ず衝突する。本セッションでは以下の順で回避した。
+
+1. 未コミットだった graph.json（rev 512・9hj ノード入り）を `git stash push` で退避 — 素直に merge すると「ローカル変更が上書きされる」で失敗するため。
+2. `git merge main` を実行 → graph.json は main 版（**rev 523 / 279 ノード**）がクリーンに入る。
+3. 退避分は**復元せず**、正規経路 `plugins/dev-graph/scripts/upsert-node.py` で 9hj ノードを**再登録**（receipt: `operation: added` / `graph_revision 523 → 524` / `write_count: 2`）。
+4. 実測で「追加ノード 1 件のみ・既存 279 ノードの改変 0 件」を確認。
+
+> **なぜ手マージしないか**: JSON 全体が競合するうえ、手編集では `graph_revision` の単調増加と digest 整合が壊れる。「main 版を土台に採り、追加分を upsert で再適用」が唯一整合する手順。
+> ※ `git stash@{0}`（`wip-9hj-graph-node`）は復元不要になったが、**破壊操作を避けるため drop せず残置**している（§12-7）。
+
+### 12-5. follow-up issue の起票（§8-5 の宿題を消化）
+
+- 前セッション §8-5 で「follow-up の起票が必要」としていた件を **`HarnessHub-9hj`** として起票済み（graph node `issue-test-coverage-enforcement-20260724` / 本体 `issues/sys-test-coverage-enforcement-20260724.md`）。
+- 内容: **タスク仕様書がテスト網羅（単体 + 結合 + 境界 + 既存回帰 + カバレッジ 80%+）を再現的に機械強制する仕組み**の構築。3 層（テンプレート正本 `system-task-spec-template.md` / C12 `validate-system-plan.py` / 各 `vitest.config.ts` のカバレッジ実測基盤）で fail-closed 化する。
+- 発見の経緯: 本 feature のテスト品質レビューで「13 フェーズ契約は P04=test-design・P06=各テスト種別を**名前としては持つが、網羅とカバレッジが束縛されていない**（器はあるが強制力が無い）」と判明したため。
+
+### 12-6. 品質ゲート再実行（2026-07-25 実測・全緑）
+
+| ゲート | 結果 |
+|---|---|
+| `pnpm --filter @harness-hub/db test` | ✅ 13 files / **62 tests pass / 0 fail** |
+| `tsc --noEmit` | ✅ 0 error |
+| `biome check packages/db` | ✅ 65 files / 0 diagnostics |
+| `check:ddl` | ✅ 1 migration / 単一 lineage / 破壊的 DDL 0 |
+| `check:tenant-isolation-coverage` | ✅ scoped=14 / exempt=4 / fixture 14/14 |
+| `check:connection-isolation` | ✅ driver 直接 import 0 |
+| `lint-artifact-placement.py`（**CI 赤の原因**） | ✅ **exit 0**（修正前 2 violations） |
+| `validate-graph-schema.py` | ✅ `valid: true` / violations 0 |
+| `lint-eval-log-layout.py` | ✅ 2389 走査 / 0 |
+| `lint-handoff-disposition.py` | ✅ 123 findings / 0 |
+| `lint-open-residue.py` | ⚠️ ローカルのみ 19 件（下記） |
+
+**`lint-open-residue` 19 件は本 PR 起因ではない**: 違反ノードは `SYS-DOC-GOVERNANCE-PORTABILITY-P01..P13`・`SYS-STAGE0-DISTRIBUTION-GATE-P02..P13`・独立 issue 6 件で、`feat-domain-model-db` 系および新規 9hj は **0 件**。CI の同ステップは `continue-on-error: false` でも PR #53 で pass しており、差の理由は **beads DB の有無**（ローカルは `beads_axis=resolved` で md/graph/beads 3 表現の乖離まで見るが、CI には beads DB が無くこの軸が評価されない）。つまりローカルの方が厳しく、本 PR のマージ可否には影響しない。
+
+### 12-7. 本セッション時点の未完了・申し送り
+
+- **P13（本番反映）は依然 未実施** — 完了条件 `linked_pr_merged_all` のため PR #53 merge 後に着手（§8-1 の手順が有効）。
+- **`.dev-graph/tmp/`（upsert 用の一時入力 2 ファイル）が worktree に残存** — 本環境は `rm` が permission ポリシーで拒否されるため削除代行不可。commit 対象外なので PR には混入しない。手動削除コマンド: `rm -r .dev-graph/tmp`
+- **`git stash@{0}`（`wip-9hj-graph-node`）が残置** — 9hj は upsert で再登録済みのため内容は不要。破棄する場合は `git stash drop stash@{0}`（破壊操作のため実行者判断）。
+- **意図的に commit しない揮発 2 ファイル**（§8-4 から継続・ファイル名のみ更新）:
+  - `eval-log/run-dev-graph-status-execution.json`（`run-dev-graph-status` の実行ログ。巨大差分・揮発物）
+  - `plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-07-25-rubric-update.md`（SessionEnd フックの自動生成ドラフト・日付が 07-25 に更新）
+- **既知の環境負債は §8-5 のまま有効**（`validate-system-plan` の 27 violations は spec 文書側の失効で実装品質と無関係）。
