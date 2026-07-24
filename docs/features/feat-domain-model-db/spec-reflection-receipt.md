@@ -78,6 +78,7 @@ reviewer: independent-fork (spec-impact 監査。read-only + digest 実測 + 検
 | A | `docs/features/feat-domain-model-db/session-handoff-20260724.md` の frontmatter へ `status: recorded` / `layer: session-handoff` を追加 | 文書メタデータ | **なし**。`scripts/lint-artifact-placement.py` が課す配置規約 (docs/*.md は status:/layer: 必須) への適合であり、本文の主張・実装契約・正本の内容には一切触れない。CI `change-category-guard` の唯一の赤を解消する修正。 |
 | B | `issues/sys-test-coverage-enforcement-20260724.md` (新規) + `.dev-graph/state/graph.json` への issue ノード 1 件追加 (rev 523 → 524) | tracker 起票 | **なし**。「タスク仕様書がテスト網羅を機械強制する仕組み」の**起票**であって、仕様の変更ではない。実際の仕様変更 (template 正本 / validate-system-plan.py / vitest coverage 閾値) は当該 issue が別途担当し、その実施時に改めて spec 反映判定を行う。 |
 | C | `main` (55e0440) の本ブランチへのマージ | 履歴統合 | **なし**。main 側で既に review・CI を通過した確定内容の取り込みで、本ブランチ由来の新規変更を含まない。graph.json は main 版 (279 node) を土台に採り、既存ノードの改変 0 件・追加 1 件のみであることを実測 (下記)。 |
+| D | `session-handoff-20260724.md` の分割 → `session-handoff-20260725.md` (新規) | 文書分割 | **なし**。qa-070 の 1 文書 300 行上限 (`scripts/lint-doc-line-limit.py`) への適合措置。追補を足すと 334 行で超過するためセッション単位で責務分割した。本文の主張は無改変で移設のみ (20260724 版は §12 を後続文書への参照リンクへ置換)。allowlist 登録は `--ratchet-base` が新規追加を遮断する設計であり、規約の意図にも反するため採らない。 |
 
 ### 7-2. 無改変の実測根拠 (fact)
 
@@ -95,7 +96,9 @@ reviewer: independent-fork (spec-impact 監査。read-only + digest 実測 + 検
 | `check:ddl` | ✅ 1 migration / 単一 lineage / 破壊的 DDL 0 |
 | `check:tenant-isolation-coverage` | ✅ scoped=14 / exempt=4 / fixture 14/14 |
 | `check:connection-isolation` | ✅ driver 直接 import 0 |
-| `scripts/lint-artifact-placement.py` (**CI 赤の原因**) | ✅ self-test 緑 + 本検査 **exit 0** (修正前は 2 violations) |
+| `scripts/lint-artifact-placement.py` (**CI 赤の原因 1**) | ✅ self-test 緑 + 本検査 **exit 0** (修正前は 2 violations) |
+| `scripts/lint-doc-line-limit.py --ratchet-base origin/main` (**CI 赤の原因 2**) | ✅ 345 文書検査 / **exit 0** (分割前は 334 行で 1 violation) |
+| `pytest tests/scripts-root/test_root__lint_doc_line_limit.py` | ✅ **29 passed** (`test_cli_real_repo_exit_zero` を含む) |
 | `validate-graph-schema.py` | ✅ `valid: true` / violations 0 |
 | `lint-eval-log-layout.py` | ✅ 2389 走査 / violations 0 |
 | `lint-handoff-disposition.py` | ✅ 123 findings 走査 / violations 0 |
