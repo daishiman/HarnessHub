@@ -351,7 +351,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-066",
+        "qa_ref": "qa-069",
         "serves_goals": [
           "G1",
           "G4",
@@ -728,6 +728,11 @@
       "id": "qa-068",
       "question": "matrix.infrastructure.web の確定根拠 qa-064 は「qa-034 の確定内容 (production + staging の 2 環境を含む意思決定 4 論点) を全面維持」および「P0: production/staging」と記述しており、D7 (ephemeral-preview-only, qa-067) と矛盾する stale reference になっている。qa-064 の R2 配布境界・§13 段階有効化順は維持しつつ、環境構成の記述だけを D7 整合へ改訂して qa_ref を差し替えるか。(2026-07-22 AskUserQuestion でユーザーが「D7 どおり改訂する」を選択)",
       "answer": "D7 どおり改訂する。qa-064 の delta (R2 配布境界・§13 段階有効化順 P0-P5) は次の 2 点を除き一言一句維持する: (1) 冒頭の「qa-034 の確定内容を全面維持」は「qa-034 の確定内容のうち論点(1) 環境構成のみ D7 (ephemeral-preview-only, qa-067) が上書きし、残る論点 (独自ドメイン・CI/CD 3 workflow・監視/バックアップ) は維持」と読み替える。(2) P0 の「production/staging」は「production (1 組のみ)」へ改訂し、常設 staging は構築しない。環境は production 1 組 + PR ごとの使い捨て preview (Workers preview URL) とし、migration 検証と restore drill は PR preview と production 反映前チェックで受ける。R2 配布境界 (staging prefix への upload 収束・公開 write URL 不発行・install/download の Worker 経由・短命 URL 規則) の「staging prefix」は R2 バケット内の検査待ち prefix の名称であり環境としての staging とは無関係のため変更しない。P1-P5 の段階有効化・migration の tenant_id/workspace_id 必須・2 tenant fixture 分離テスト・1 tenant/1 Project 固定環境変数の禁止も全て維持する。"
+    },
+    {
+      "id": "qa-069",
+      "question": "dev-graph/beads (bd) のタスク優先度選定 (schedule/ready の判断軸) を、どのような基準へ変更しますか? 現行の品質・本質先行の選定で何が問題になっていますか?",
+      "answer": "現行は AI が文脈から『本質的なシステムを作り上げること』を最優先に選定するため、同じ基盤タスクを繰り返し実行して解決せず、依存関係でつながった他タスクまで止まり、いちばん作りたかった機能から離れていく (根本原因は品質と再現性を求めすぎる完璧主義がスケジューラの優先度に転写されたこと)。変更後の判断軸は (1) 目的=何のために作るか、(2) 背景=どういう経緯で必要になったか、(3) MVP=今必要な動くもの、の3軸とし、品質を先回りする基盤・本質課題解決タスクよりも『まず使えるものを構築する』タスクを優先して選定する。まず作って、使って、課題をあぶり出す回転 (build-use-learn) に戻すことが狙い。具体的には feature/task の選定時に MVP 適合 (今必要な動くものに直結するか) を第一ソートキーへ昇格し、品質・再現性強化系は MVP 成立後に繰り延べる。CI/CD・quality gate 等の既確定の dev-workflow 要件 (qa-066) 自体は維持し、優先度選定の判断軸のみ組み替える"
     }
   ],
   "approval_log": [
@@ -1311,6 +1316,12 @@
       "category": "infrastructure",
       "platform": "web",
       "reason": "C05 完成度評価 (2026-07-22) の high finding: qa-064 は production/staging 前提で D7 (ephemeral-preview-only, 2026-07-21 確定) と矛盾する stale reference。D7 整合の qa-068 へ qa_ref を差し替えるため再オープン",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "利用者要望による仕様変更: dev-graph/beads (bd) のタスク優先度選定が品質・本質・再現性を先回りする基準になっており、依存グラフ上で本質的なシステム構築タスクが最優先されて『いちばん作りたいもの (MVP)』から離れる。判断軸を目的・背景・MVP の3軸へ組み替えるため dev-workflow.web を再オープンする",
       "from": "確定"
     }
   ],

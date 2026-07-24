@@ -77,6 +77,100 @@ ACTIVE_LEASE_STATES = {
     "claim_pending_local_repair",
 }
 
+# qa-069 MVP-first: MVP 適合 rank 第一・node_id 辞書順 tie-break の決定論ソート定数。
+# 未設定 (None) を deferred より前に置くのは、既存資産 (全て未設定) を品質系明示 task より
+# 優先し、一括書き換え禁止 (scope_out) の下で現行挙動から劣化させないため。
+# bd-bridge.py 側の同名定数と一致必須 (test_bd_bridge_mvp_ready_order.py が固定する)。
+MVP_FIT_RANK: dict[str | None, int] = {"direct": 0, "enabling": 1, None: 2, "deferred": 3}
+
+
+def _mvp_fit(node: dict[str, Any]) -> str | None:
+    """mvp_alignment.mvp_fit を fail-closed で読む。fallback はキー欠落 / null のみ。
+
+    enum 外の非 null 値を未設定 rank へ丸めると不正 metadata が黙って通る (AC-3 の裏面)。
+    validate-graph-schema.py PASS 済み graph では到達しない防衛線として ContractError で落とす。
+    """
+    alignment = node.get("mvp_alignment")
+    if alignment is None:
+        return None
+    node_ref = node.get("graph_node_id") or node.get("id") or "<unknown>"
+    if not isinstance(alignment, dict):
+        raise ContractError(f"{node_ref}: mvp_alignment must be an object or null")
+    fit = alignment.get("mvp_fit")
+    if fit is None:
+        return None
+    if fit not in MVP_FIT_RANK:
+        raise ContractError(f"{node_ref}: unsupported mvp_fit {fit!r} (expected direct|enabling|deferred)")
+    return fit
+
+
+def _mvp_established(by_id: dict[str, dict[str, Any]], candidates: list[dict[str, Any]]) -> dict[str, bool | None]:
+    """selection_receipt に載る feature の MVP 成立状況を全 graph から計算する。
+
+    --scope に依存させないのは、mvp_established が feature の graph 上の事実であり、
+    閲覧範囲で真偽が変わると冪等 (AC-2) の「同一入力」が曖昧になるため。
+    direct task 0 件は空虚な真で true と誤読させないため null とする (design §5)。
+    掲載対象は candidates に現れる parent_feature 集合 + candidates 中の feature 自身のみ。
+    """
+    feature_ids: set[str] = set()
+    for node in candidates:
+        parent = node.get("parent_feature")
+        if isinstance(parent, str) and parent:
+            feature_ids.add(parent)
+        if node.get("artifact_kind", node.get("kind")) == "feature":
+            feature_ids.add(str(node.get("graph_node_id") or node.get("id")))
+    result: dict[str, bool | None] = {}
+    for feature_id in sorted(feature_ids):
+        direct = [
+            node for node in by_id.values()
+            if node.get("parent_feature") == feature_id and _mvp_fit(node) == "direct"
+        ]
+        result[feature_id] = (
+            None if not direct
+            else all(node.get("status") in {"done", "closed"} for node in direct)
+        )
+    return result
+
+
+def _deferral_reason(node: dict[str, Any], established: dict[str, bool | None]) -> str | None:
+    """deferred 行の繰り延べ理由。状況別 3+1 種の固定文字列 (design §5)。"""
+    if _mvp_fit(node) != "deferred":
+        return None
+    parent = node.get("parent_feature")
+    if not isinstance(parent, str) or not parent:
+        return "quality-after-mvp: parent feature なしのため mvp_established 判定対象外、繰り延べ順序のみ適用"
+    state = established.get(parent)
+    if state is None:
+        return "quality-after-mvp: MVP 未定義 (direct task 0 件) のため繰り延べ順序のみ適用"
+    if state:
+        return "quality-after-mvp: parent feature の MVP 成立済み。deferred rank による繰り延べ順序のみ適用"
+    return "quality-after-mvp: parent feature の MVP (direct 全件 done) が未成立のため繰り延べ"
+
+
+def _selection_receipt(by_id: dict[str, dict[str, Any]], candidates: list[dict[str, Any]]) -> dict[str, Any]:
+    """選定理由の receipt (qa-069 SI-5 / AC-4)。既存 plan キーへは触れない additive 出力。
+
+    order_index は features/tasks 分割前の単一 candidates リストの通し番号 (design §6)。
+    mvp_alignment 未設定 node も null で必ず記録し、判断根拠が無いことを silent drop させない。
+    """
+    established = _mvp_established(by_id, candidates)
+    entries: list[dict[str, Any]] = []
+    for index, node in enumerate(candidates):
+        fit = _mvp_fit(node)
+        alignment = node.get("mvp_alignment") if isinstance(node.get("mvp_alignment"), dict) else {}
+        entries.append({
+            "graph_node_id": node.get("graph_node_id") or node.get("id"),
+            "artifact_kind": node.get("artifact_kind", node.get("kind")),
+            "order_index": index,
+            "mvp_fit": fit,
+            "sort_rank": MVP_FIT_RANK[fit],
+            "purpose": alignment.get("purpose"),
+            "background": alignment.get("background"),
+            "rationale": alignment.get("rationale"),
+            "deferral_reason": _deferral_reason(node, established),
+        })
+    return {"policy": "mvp-first/v1", "mvp_established": established, "entries": entries}
+
 
 def _sha(value: bytes | None) -> str | None:
     return hashlib.sha256(value).hexdigest() if value is not None else None
@@ -295,7 +389,15 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
         node_id for node_id in ready_ids
         if node_id in leased_ids or touches(by_id[node_id]) & leased_touches
     }
-    candidates = [by_id[node_id] for node_id in sorted(ready_ids - lease_conflicts)]
+    # qa-069: MVP 適合 rank 第一、node_id 辞書順 tie-break (design §3 INV-1)。
+    # 順序決定点はこの 1 行のみ (単一 writer 原則)。batches()/features 分割は順序を継承する。
+    candidates = [
+        by_id[node_id]
+        for node_id in sorted(
+            ready_ids - lease_conflicts,
+            key=lambda nid: (MVP_FIT_RANK[_mvp_fit(by_id[nid])], nid),
+        )
+    ]
     features = [node for node in candidates if node.get("artifact_kind", node.get("kind")) == "feature"]
     tasks = [node for node in candidates if node not in features]
 
@@ -358,6 +460,7 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
             "tasks": [node.get("graph_node_id") or node.get("id") for node in tasks],
         },
         "batches": {"features": feature_batches, "tasks": task_batches},
+        "selection_receipt": _selection_receipt(by_id, candidates),
         "conflicts": sorted(lease_conflicts),
         "conflict_pairs": conflict_pairs,
         "assignment_hints": hints,

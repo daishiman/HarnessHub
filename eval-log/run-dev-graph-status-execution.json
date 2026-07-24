@@ -1,407 +1,253 @@
 {
-  "authority_sha256_after": "5cde07f6e74f59c68f761884b84bfbf58d3ecfb9df6cc04f9d2f904a3ef01f07",
-  "authority_sha256_before": "5cde07f6e74f59c68f761884b84bfbf58d3ecfb9df6cc04f9d2f904a3ef01f07",
-  "count": 14,
-  "executed_at": "2026-07-21T16:04:41.780007Z",
+  "verb": "status",
+  "scope": "feat-mvp-first-scheduling",
+  "executed_at": "2026-07-23T09:42:00Z",
+  "verdict": "PASS",
+  "read_only": true,
   "filters": {
-    "domain": null,
+    "keyword": "mvp-first-scheduling",
     "id": null,
-    "keyword": "dev-pipeline-improvement",
     "kind": null,
     "project": null,
+    "domain": null,
     "status": null,
-    "tag_match": "all",
-    "tags": []
+    "tags": [],
+    "tag_match": "all"
   },
-  "graph": ".dev-graph/state/graph.json",
-  "graph_sha256_after": "db7edae64abb7b45579e5d6169e7618dd837cc7b0eb42b88ffe004cfd65bfce8",
-  "graph_sha256_before": "db7edae64abb7b45579e5d6169e7618dd837cc7b0eb42b88ffe004cfd65bfce8",
-  "ok": true,
-  "read_only": true,
-  "results": [
+  "summary": {
+    "total_nodes_found": 14,
+    "expected_nodes": 14,
+    "feature_nodes": 1,
+    "task_nodes": 13,
+    "missing_from_graph": 0,
+    "dag_errors": 0,
+    "physical_artifact_missing": 0,
+    "all_confirmation_status": "confirmed",
+    "all_evaluation_status": "pass",
+    "all_implementation_readiness": "complete"
+  },
+  "graph_integrity": {
+    "graph_sha256_before": "1f6217b2a37fc73855e4b97af532d804da73656145b8bf78b570066db6e6d96e",
+    "graph_sha256_after": "1f6217b2a37fc73855e4b97af532d804da73656145b8bf78b570066db6e6d96e",
+    "authority_sha256_before": "84a353490f9d121f0fec4704264caa839d41401c7a39b4118faaac279b394359",
+    "authority_sha256_after": "84a353490f9d121f0fec4704264caa839d41401c7a39b4118faaac279b394359",
+    "external_writes": 0
+  },
+  "dag_chain": "P01 -> P02 -> P03 -> P04 -> P05 -> P06 -> P07 -> P08 -> P09 -> P10 -> P11 -> P12 -> P13",
+  "feature_package": {
+    "path": ".dev-graph/state/current/feature-package-feat-mvp-first-scheduling.json",
+    "digest": "6c3d785c0d4793ab9105b55b2829ddcbf1a0decd86cffb412a38f1b09ca6d9f4"
+  },
+  "nodes": [
     {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
-      ],
-      "depends_on": [],
-      "domain": "documentation",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "documentation"
-      ],
-      "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
-      ],
-      "domain": "documentation",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p02.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "documentation"
-      ],
-      "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
-      ],
-      "domain": "documentation",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p03.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "documentation"
-      ],
-      "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p04.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "quality"
-      ],
-      "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p05.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "quality"
-      ],
-      "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p06.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "quality"
-      ],
-      "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p07.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "quality"
-      ],
-      "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
-      ],
-      "domain": "operations",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "operations"
-      ],
-      "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "quality"
-      ],
-      "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
-      ],
-      "domain": "documentation",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p10.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "documentation"
-      ],
-      "title": "最終レビュー — 全 phase 成果の横断整合確認",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
-      ],
-      "domain": "documentation",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "documentation"
-      ],
-      "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P13"
-      ],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
-      ],
-      "domain": "operations",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "operations"
-      ],
-      "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [],
-      "depends_on": [
-        "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
-      ],
-      "domain": "operations",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
-      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
-      "issue_linkage": null,
-      "parent_feature": "feat-dev-pipeline-improvement",
-      "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "status": "active",
-      "tags": [
-        "feat-dev-pipeline-improvement",
-        "macro-feature",
-        "dev-pipeline",
-        "operations"
-      ],
-      "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
-      "tracker_binding": "beads"
-    },
-    {
+      "graph_node_id": "feat-mvp-first-scheduling",
       "artifact_kind": "feature",
-      "beads_linkage": null,
-      "closed_at": null,
-      "dependents": [],
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "features/feat-mvp-first-scheduling.md",
+      "content_digest": "d96c364f5350c104ae542b6a7942c542fdd2df869111d9f0c4b81bdc404eef0b",
+      "beads_id": "HarnessHub-6gl",
+      "beads_sync_state": "linked",
       "depends_on": [],
       "domain": "dev-workflow",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "features/feat-dev-pipeline-improvement.md",
-      "graph_node_id": "feat-dev-pipeline-improvement",
-      "issue_linkage": null,
-      "parent_feature": null,
-      "project_id": "harness-hub",
+      "parent_feature": null
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P01",
+      "artifact_kind": "task",
       "status": "active",
-      "tags": [
-        "macro-feature",
-        "dev-pipeline",
-        "governance",
-        "qa-067"
-      ],
-      "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
-      "tracker_binding": "beads"
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p01.md",
+      "content_digest": "31946c0e455344599397d4a2168b82bd548ea68dc8f57c46486864f8d954157d",
+      "beads_id": "HarnessHub-6gl.1",
+      "beads_sync_state": "linked",
+      "depends_on": [],
+      "domain": "documentation",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P02",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p02.md",
+      "content_digest": "af89b0546ee6ee1291be3d87477964d69ab03ab72b5633ad3fc6d1a93ad7bfc9",
+      "beads_id": "HarnessHub-6gl.2",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P01"],
+      "domain": "documentation",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P03",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p03.md",
+      "content_digest": "c0cdf63b970f9ee7f3c2bd670bd40777c67476a2e9f3b832389fe054597849ee",
+      "beads_id": "HarnessHub-6gl.3",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P02"],
+      "domain": "documentation",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P04",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p04.md",
+      "content_digest": "8e213ee1c81489550f858e3e063473ab509c314a0edc53a4552d8252e7f9e247",
+      "beads_id": "HarnessHub-6gl.4",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P03"],
+      "domain": "quality",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P05",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p05.md",
+      "content_digest": "b2ee765d98809d4ca8fb234dd7ee7d4ec94e864ecba4dcacbcd89c9c2f8485e3",
+      "beads_id": "HarnessHub-6gl.5",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P04"],
+      "domain": "quality",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P06",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p06.md",
+      "content_digest": "fabdf20861a7012f4aa0bd17a9392c6df00994157af563b64719e7f2059f4f37",
+      "beads_id": "HarnessHub-6gl.6",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P05"],
+      "domain": "quality",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P07",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p07.md",
+      "content_digest": "1ade3f0582b3d92ad9c4e57494ca0aeb844b11fc1c5dfa2dd182f914d1a53d41",
+      "beads_id": "HarnessHub-6gl.7",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P06"],
+      "domain": "quality",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P08",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p08.md",
+      "content_digest": "08202bb55b8d2a61c1a8d34ef28cadbd95dd7290bfb7e8b72272b33f7a85952d",
+      "beads_id": "HarnessHub-6gl.8",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P07"],
+      "domain": "operations",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P09",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p09.md",
+      "content_digest": "7b687f4ef71c66a12c7aff3bc6871cf20ffd13e1b36c9bb90f68a0fadb4aefdd",
+      "beads_id": "HarnessHub-6gl.9",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P08"],
+      "domain": "quality",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P10",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p10.md",
+      "content_digest": "30c7b3ccf77e7ab831217ec00e36bcf9f52f684c11f9614dd6eac815289b2afb",
+      "beads_id": "HarnessHub-6gl.10",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P09"],
+      "domain": "documentation",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P11",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p11.md",
+      "content_digest": "75c9c6fd1263a4a1ef2cf410df67a3d8a3cf57329f65f5ad0ef9a5191840b8ba",
+      "beads_id": "HarnessHub-6gl.11",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P10"],
+      "domain": "documentation",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P12",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p12.md",
+      "content_digest": "84674c8ef4261cef5d46ae07f6e2ab331ad47e4843d650c8d2b11efdb893cc24",
+      "beads_id": "HarnessHub-6gl.12",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P11"],
+      "domain": "operations",
+      "parent_feature": "feat-mvp-first-scheduling"
+    },
+    {
+      "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P13",
+      "artifact_kind": "task",
+      "status": "active",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p13.md",
+      "content_digest": "de5cc457442334b20d5ec158e4ba43295c4b8002e04f2989005114f41a12ba8f",
+      "beads_id": "HarnessHub-6gl.13",
+      "beads_sync_state": "linked",
+      "depends_on": ["SYS-MVP-FIRST-SCHEDULING-P12"],
+      "domain": "operations",
+      "parent_feature": "feat-mvp-first-scheduling"
     }
   ]
 }

@@ -12,7 +12,7 @@ iteration: null
 title: "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能"
 owners: ["daishiman"]
 created_at: "2026-07-21T18:30:00Z"
-updated_at: "2026-07-21T18:30:00Z"
+updated_at: "2026-07-23T10:25:46.615020Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -38,7 +38,7 @@ classification_reason: "run-dev-graph-render の OUT1 criterion が register-pac
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-render-out1-unsatisfiable-20260721.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-rix","linked_at":"2026-07-23T10:11:37Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

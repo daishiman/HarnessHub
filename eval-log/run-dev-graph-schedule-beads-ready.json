@@ -1,11 +1,41 @@
 {
   "bd_version": "1.1.0",
-  "candidate_count": 24,
-  "conflicts": [],
+  "candidate_count": 36,
+  "conflicts": [
+    {
+      "bd_issue_id": "HarnessHub-ntj",
+      "graph_node_id": "issue-security-web-qaref-chain-20260722",
+      "reason": "unsupported graph status in parity manifest: draft"
+    },
+    {
+      "bd_issue_id": "HarnessHub-iwu",
+      "graph_node_id": "issue-qa070-implementation-feature-20260722",
+      "reason": "unsupported graph status in parity manifest: draft"
+    },
+    {
+      "bd_issue_id": "HarnessHub-3d8",
+      "graph_node_id": "issue-doc-granularity-remediation-20260722",
+      "reason": "unsupported graph status in parity manifest: draft"
+    },
+    {
+      "bd_issue_id": "HarnessHub-4z0",
+      "graph_node_id": "issue-hearing-trace-followups-20260722",
+      "reason": "unsupported graph status in parity manifest: draft"
+    },
+    {
+      "bd_issue_id": "HarnessHub-e2u",
+      "graph_node_id": "issue-source-freshness-ops-20260722",
+      "reason": "unsupported graph status in parity manifest: draft"
+    }
+  ],
   "op": "ready",
+  "parity_provenance": {
+    "generated_at": "2026-07-23T07:38:37Z",
+    "source_graph_digest": "sha256:0d90d75fd271c7a76d508aa9cfa9a21e858242c892933d931decce4ec6b83a7d"
+  },
   "ready_set": [
     {
-      "bd_issue_id": "HarnessHub-k2u.1",
+      "bd_issue_id": "HarnessHub-ik0.1",
       "edge_parity": {
         "actual_depends_on": [],
         "actual_status": "open",
@@ -15,12 +45,12 @@
         "missing_edges": [],
         "unexpected_edges": []
       },
-      "external_ref": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+      "external_ref": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
       "graph_depends_on": [],
       "graph_status": "active"
     },
     {
-      "bd_issue_id": "HarnessHub-k2u",
+      "bd_issue_id": "HarnessHub-ik0",
       "edge_parity": {
         "actual_depends_on": [],
         "actual_status": "open",
@@ -30,17 +60,47 @@
         "missing_edges": [],
         "unexpected_edges": []
       },
-      "external_ref": "feat-dev-pipeline-improvement",
+      "external_ref": "feat-doc-governance-portability",
       "graph_depends_on": [],
       "graph_status": "active"
     }
   ],
   "result": {
-    "candidate_count": 24,
-    "conflicts": [],
+    "candidate_count": 36,
+    "conflicts": [
+      {
+        "bd_issue_id": "HarnessHub-ntj",
+        "graph_node_id": "issue-security-web-qaref-chain-20260722",
+        "reason": "unsupported graph status in parity manifest: draft"
+      },
+      {
+        "bd_issue_id": "HarnessHub-iwu",
+        "graph_node_id": "issue-qa070-implementation-feature-20260722",
+        "reason": "unsupported graph status in parity manifest: draft"
+      },
+      {
+        "bd_issue_id": "HarnessHub-3d8",
+        "graph_node_id": "issue-doc-granularity-remediation-20260722",
+        "reason": "unsupported graph status in parity manifest: draft"
+      },
+      {
+        "bd_issue_id": "HarnessHub-4z0",
+        "graph_node_id": "issue-hearing-trace-followups-20260722",
+        "reason": "unsupported graph status in parity manifest: draft"
+      },
+      {
+        "bd_issue_id": "HarnessHub-e2u",
+        "graph_node_id": "issue-source-freshness-ops-20260722",
+        "reason": "unsupported graph status in parity manifest: draft"
+      }
+    ],
+    "parity_provenance": {
+      "generated_at": "2026-07-23T07:38:37Z",
+      "source_graph_digest": "sha256:0d90d75fd271c7a76d508aa9cfa9a21e858242c892933d931decce4ec6b83a7d"
+    },
     "ready_set": [
       {
-        "bd_issue_id": "HarnessHub-k2u.1",
+        "bd_issue_id": "HarnessHub-ik0.1",
         "edge_parity": {
           "actual_depends_on": [],
           "actual_status": "open",
@@ -50,12 +110,12 @@
           "missing_edges": [],
           "unexpected_edges": []
         },
-        "external_ref": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+        "external_ref": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
         "graph_depends_on": [],
         "graph_status": "active"
       },
       {
-        "bd_issue_id": "HarnessHub-k2u",
+        "bd_issue_id": "HarnessHub-ik0",
         "edge_parity": {
           "actual_depends_on": [],
           "actual_status": "open",
@@ -65,20 +125,55 @@
           "missing_edges": [],
           "unexpected_edges": []
         },
-        "external_ref": "feat-dev-pipeline-improvement",
+        "external_ref": "feat-doc-governance-portability",
         "graph_depends_on": [],
         "graph_status": "active"
       }
     ],
     "unmapped": [
       {
-        "bd_issue_id": "HarnessHub-8up",
-        "external_ref": "issue-completeness-report-refork-regeneration-20260722",
+        "bd_issue_id": "HarnessHub-t9q",
+        "external_ref": "issue-spec-freshness-d7-evidence-remediation-20260722",
         "reason": "parity_manifest_missing"
       },
       {
-        "bd_issue_id": "HarnessHub-6cv",
-        "external_ref": "issue-hub-foundation-generation-drift-20260721",
+        "bd_issue_id": "HarnessHub-p73",
+        "external_ref": null,
+        "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-nk5",
+        "external_ref": null,
+        "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-hkx",
+        "external_ref": "issue-build-trace-doc-coverage-schema-drift-20260723",
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-nq2",
+        "external_ref": "issue-c08-audit-primary-get-capability-20260722",
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-5kh",
+        "external_ref": "issue-features-source-digest-drift-20260722",
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-419",
+        "external_ref": null,
+        "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-2n6",
+        "external_ref": null,
+        "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-kj1",
+        "external_ref": "issue-live-trial-stale-behavior-closure-20260722",
         "reason": "parity_manifest_missing"
       },
       {
@@ -87,29 +182,14 @@
         "reason": "parity_manifest_missing"
       },
       {
-        "bd_issue_id": "HarnessHub-bsa",
-        "external_ref": null,
-        "reason": "parity_manifest_missing"
-      },
-      {
         "bd_issue_id": "HarnessHub-936",
         "external_ref": "issue-pkg-contract-skill-dependencies-undefined-20260721",
         "reason": "parity_manifest_missing"
       },
       {
-        "bd_issue_id": "HarnessHub-cc6",
-        "external_ref": null,
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-432",
-        "external_ref": null,
-        "reason": "parity_manifest_missing"
-      },
-      {
         "bd_issue_id": "HarnessHub-vy0",
         "external_ref": null,
-        "reason": "parity_manifest_missing"
+        "reason": "external_ref_absent"
       },
       {
         "bd_issue_id": "HarnessHub-dbb",
@@ -117,18 +197,8 @@
         "reason": "parity_manifest_missing"
       },
       {
-        "bd_issue_id": "HarnessHub-2ih",
-        "external_ref": "issue-pkg-013-contract-schema-divergence-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
         "bd_issue_id": "HarnessHub-d15",
         "external_ref": "issue-spec-state-writer-implicit-contracts-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-65z",
-        "external_ref": null,
         "reason": "parity_manifest_missing"
       },
       {
@@ -147,19 +217,49 @@
         "reason": "parity_manifest_missing"
       },
       {
+        "bd_issue_id": "HarnessHub-3tw",
+        "external_ref": null,
+        "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-yp4",
+        "external_ref": "issue-wt9-session-byproducts-triage-20260723",
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-ldq",
+        "external_ref": "issue-resource-map-deep-cards-20260722",
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-x44",
+        "external_ref": null,
+        "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-4d8",
+        "external_ref": "issue-aggregate-completeness-file-split-20260722",
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-57v",
+        "external_ref": "issue-c28-draft-status-unmappable-20260722",
+        "reason": "parity_manifest_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-rzc",
+        "external_ref": "issue-contract-s10-unmappable-status-overstated-20260722",
+        "reason": "parity_manifest_missing"
+      },
+      {
         "bd_issue_id": "HarnessHub-883",
         "external_ref": "issue-run-skill-feedback-ref-format-unify-20260722",
         "reason": "parity_manifest_missing"
       },
       {
-        "bd_issue_id": "HarnessHub-9rg",
-        "external_ref": "issue-d7-hearing-trace-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
         "bd_issue_id": "HarnessHub-cza",
         "external_ref": null,
-        "reason": "parity_manifest_missing"
+        "reason": "external_ref_absent"
       },
       {
         "bd_issue_id": "HarnessHub-ifo",
@@ -167,31 +267,65 @@
         "reason": "parity_manifest_missing"
       },
       {
-        "bd_issue_id": "HarnessHub-rbj",
-        "external_ref": "issue-devgraph-schedule-checklist-provenance-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
         "bd_issue_id": "HarnessHub-dc7",
         "external_ref": null,
-        "reason": "parity_manifest_missing"
+        "reason": "external_ref_absent"
       },
       {
         "bd_issue_id": "HarnessHub-7j7",
         "external_ref": null,
-        "reason": "parity_manifest_missing"
+        "reason": "external_ref_absent"
       }
-    ]
+    ],
+    "unmapped_summary": {
+      "external_ref_absent": 10,
+      "parity_manifest_missing": 19
+    }
   },
   "unmapped": [
     {
-      "bd_issue_id": "HarnessHub-8up",
-      "external_ref": "issue-completeness-report-refork-regeneration-20260722",
+      "bd_issue_id": "HarnessHub-t9q",
+      "external_ref": "issue-spec-freshness-d7-evidence-remediation-20260722",
       "reason": "parity_manifest_missing"
     },
     {
-      "bd_issue_id": "HarnessHub-6cv",
-      "external_ref": "issue-hub-foundation-generation-drift-20260721",
+      "bd_issue_id": "HarnessHub-p73",
+      "external_ref": null,
+      "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-nk5",
+      "external_ref": null,
+      "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-hkx",
+      "external_ref": "issue-build-trace-doc-coverage-schema-drift-20260723",
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-nq2",
+      "external_ref": "issue-c08-audit-primary-get-capability-20260722",
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-5kh",
+      "external_ref": "issue-features-source-digest-drift-20260722",
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-419",
+      "external_ref": null,
+      "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-2n6",
+      "external_ref": null,
+      "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-kj1",
+      "external_ref": "issue-live-trial-stale-behavior-closure-20260722",
       "reason": "parity_manifest_missing"
     },
     {
@@ -200,29 +334,14 @@
       "reason": "parity_manifest_missing"
     },
     {
-      "bd_issue_id": "HarnessHub-bsa",
-      "external_ref": null,
-      "reason": "parity_manifest_missing"
-    },
-    {
       "bd_issue_id": "HarnessHub-936",
       "external_ref": "issue-pkg-contract-skill-dependencies-undefined-20260721",
       "reason": "parity_manifest_missing"
     },
     {
-      "bd_issue_id": "HarnessHub-cc6",
-      "external_ref": null,
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-432",
-      "external_ref": null,
-      "reason": "parity_manifest_missing"
-    },
-    {
       "bd_issue_id": "HarnessHub-vy0",
       "external_ref": null,
-      "reason": "parity_manifest_missing"
+      "reason": "external_ref_absent"
     },
     {
       "bd_issue_id": "HarnessHub-dbb",
@@ -230,18 +349,8 @@
       "reason": "parity_manifest_missing"
     },
     {
-      "bd_issue_id": "HarnessHub-2ih",
-      "external_ref": "issue-pkg-013-contract-schema-divergence-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
       "bd_issue_id": "HarnessHub-d15",
       "external_ref": "issue-spec-state-writer-implicit-contracts-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-65z",
-      "external_ref": null,
       "reason": "parity_manifest_missing"
     },
     {
@@ -260,19 +369,49 @@
       "reason": "parity_manifest_missing"
     },
     {
+      "bd_issue_id": "HarnessHub-3tw",
+      "external_ref": null,
+      "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-yp4",
+      "external_ref": "issue-wt9-session-byproducts-triage-20260723",
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-ldq",
+      "external_ref": "issue-resource-map-deep-cards-20260722",
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-x44",
+      "external_ref": null,
+      "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-4d8",
+      "external_ref": "issue-aggregate-completeness-file-split-20260722",
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-57v",
+      "external_ref": "issue-c28-draft-status-unmappable-20260722",
+      "reason": "parity_manifest_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-rzc",
+      "external_ref": "issue-contract-s10-unmappable-status-overstated-20260722",
+      "reason": "parity_manifest_missing"
+    },
+    {
       "bd_issue_id": "HarnessHub-883",
       "external_ref": "issue-run-skill-feedback-ref-format-unify-20260722",
       "reason": "parity_manifest_missing"
     },
     {
-      "bd_issue_id": "HarnessHub-9rg",
-      "external_ref": "issue-d7-hearing-trace-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
       "bd_issue_id": "HarnessHub-cza",
       "external_ref": null,
-      "reason": "parity_manifest_missing"
+      "reason": "external_ref_absent"
     },
     {
       "bd_issue_id": "HarnessHub-ifo",
@@ -280,21 +419,20 @@
       "reason": "parity_manifest_missing"
     },
     {
-      "bd_issue_id": "HarnessHub-rbj",
-      "external_ref": "issue-devgraph-schedule-checklist-provenance-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
       "bd_issue_id": "HarnessHub-dc7",
       "external_ref": null,
-      "reason": "parity_manifest_missing"
+      "reason": "external_ref_absent"
     },
     {
       "bd_issue_id": "HarnessHub-7j7",
       "external_ref": null,
-      "reason": "parity_manifest_missing"
+      "reason": "external_ref_absent"
     }
   ],
+  "unmapped_summary": {
+    "external_ref_absent": 10,
+    "parity_manifest_missing": 19
+  },
   "workspace_identity": {
     "attributes": {
       "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",

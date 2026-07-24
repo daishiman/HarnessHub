@@ -12,7 +12,7 @@ iteration: null
 title: "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随"
 owners: ["daishiman"]
 created_at: "2026-07-22T23:04:59Z"
-updated_at: "2026-07-22T23:04:59Z"
+updated_at: "2026-07-23T10:24:33.032661Z"
 status: "draft"
 depends_on: []
 related_nodes: ["spec-harness-hub-requirements"]
@@ -38,7 +38,7 @@ classification_reason: "HarnessHub-t9q の lineage 調査 (2026-07-22、全 215 
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-features-source-digest-drift-20260722.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-5kh","linked_at":"2026-07-23T10:11:37Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

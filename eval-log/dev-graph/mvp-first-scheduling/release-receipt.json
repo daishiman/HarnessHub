@@ -1,0 +1,170 @@
+{
+  "receipt": "release-receipt",
+  "task": "SYS-MVP-FIRST-SCHEDULING-P13",
+  "feature": "feat-mvp-first-scheduling",
+  "beads": {
+    "epic": "HarnessHub-6gl",
+    "release_task": "HarnessHub-6gl.13",
+    "evidence_task": "HarnessHub-4y5"
+  },
+  "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P13",
+  "branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+  "base_branch": "main",
+  "recorded_at": "2026-07-24T02:05:00Z",
+  "purpose": "MVP-first スケジューリング (qa-069) の成果を default branch へ反映する前に、main 反映結果・qa-066 由来の既存品質ゲートの非退行・system spec / architecture への writeback 先を実測値で固定し、後から再現・改ざん検知できる形で記録する",
+  "release_head_sha": "3f4e143ec4f7cfe1b31c5911c00e0f7ef34b1514 (本 receipt commit の直前)",
+
+  "main_integration": {
+    "remote_to_local": {
+      "note": "リモート main をローカル main へ取り込み済み。git fetch 後に origin/main == main で差分 0 (git rev-list --count main..origin/main = 0)",
+      "origin_main": "a12f17295bc4949c50d3aca48314d3b4b862fe4b",
+      "local_main": "a12f17295bc4949c50d3aca48314d3b4b862fe4b"
+    },
+    "local_to_branch": {
+      "merge_commit": "3f4e143ec4f7cfe1b31c5911c00e0f7ef34b1514",
+      "parents": [
+        "2e8caf2c29eabb5b9a15d9ad39a45ad9eeec47c4 (feature)",
+        "a12f17295bc4949c50d3aca48314d3b4b862fe4b (local main)"
+      ],
+      "commits_behind_before": 19,
+      "resolutions": {
+        "run-dev-graph-decompose の criteria 受領書": "ours 採用 (feature 側 bd-bridge closure 整合版)",
+        "run-dev-graph-{node,requirements,system-spec} の criteria 受領書": "main 版採用 (後段で 4 件とも再実走の新 verdict へ更新)",
+        "SKILL.md / eval-log/review-queue.jsonl": "main 版採用",
+        "architecture/harness-hub-dev-workflow.md": "両側 auto-merge (qa-069 の MVP-first 記述を保持)"
+      }
+    },
+    "verification": "git merge-base --is-ancestor origin/main HEAD = true (origin/main は本ブランチへ完全統合済み)"
+  },
+
+  "qa_066_non_regression": {
+    "definition": "qa-066 は CI/CD・quality gate 等の既確定 dev-workflow 要件。qa-069 は優先度選定の判断軸のみを組み替え、qa-066 の要件自体は維持する (dev-workflow の qa-069 回答に明記)",
+    "full_regression": {
+      "command": "python3 -m pytest plugins/dev-graph/tests plugins/spec-drift-guardian/tests plugins/system-dev-planner/tests plugins/harness-creator/tests tests/scripts-root -q",
+      "executed_at": "2026-07-24T01:55:00Z",
+      "passed": 2615,
+      "failed": 0,
+      "errors": 0,
+      "duration_s": 143.5,
+      "baseline": "先行 release-receipt (feat-dev-pipeline-improvement P13) 時点は 2577 passed / 3 failed (live-trial stale-sha)。本 receipt 時点で failed 0 へ収束"
+    },
+    "deterministic_gates": {
+      "test_skill_criteria_evidence (鮮度ゲート)": "20 passed / 0 failed",
+      "lint-live-trial-verdict --all": "exit 0 (9 verdict verified、6 missing は record-only の D13 パイロット対象)",
+      "lint-doc-line-limit": "exit 0 (検査 328 文書、上限 300 行、allowlist 5 件)",
+      "lint-script-naming": "exit 0 (OK=153 EXCEPTION=19 PENDING=260 VIOLATION=0)",
+      "lint-artifact-placement": "exit 0 (orphan / docs-frontmatter / system-spec / root すべて緑)",
+      "validate-graph-schema": "valid=true / violations=0",
+      "validate-system-plan --feature-package feature-package/feat-mvp-first-scheduling": "status=pass / violations=0 / validated_digest=sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387 (HarnessHub-6gl.13 の dev_graph_source_digest と一致)"
+    }
+  },
+
+  "spec_architecture_writeback": {
+    "policy": "system-spec-harness の正規フロー (R4-reopen → compile → completeness evaluator → C02 取込) で反映。手編集ではない",
+    "targets": [
+      {
+        "path": "system-spec/dev-workflow.md",
+        "change": "qa-069 (MVP ファースト基準) の質問・回答を確定追記。qa-066 / qa-067 の既存要件は維持"
+      },
+      {
+        "path": "system-spec/spec-state.json",
+        "change": "qa-069 の確定状態を反映 (C01/C03 の単一 writer 経由)"
+      },
+      {
+        "path": "system-spec/completeness-findings.json",
+        "change": "完全性評価の findings を qa-069 込みで更新"
+      },
+      {
+        "path": "architecture/harness-hub-dev-workflow.md",
+        "change": "選定判断軸を qa-071 系記述から qa-069 (MVP-first) へ更新"
+      }
+    ],
+    "acceptance_receipt": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json",
+    "elicitation_record": "eval-log/run-dev-graph-system-spec-goal-spec.json の run_note に 2026-07-23 wt-1 の差分ヒアリング内容を記録"
+  },
+
+  "live_trial_reacquisition": {
+    "cause": "P05 実装 (schedule-graph.py / bd-bridge.py / graph-node.schema.json) が 9 skill の behavior closure に含まれ、既存 live-trial verdict の skill_dir_tree_sha が stale 化 (HarnessHub-4y5)",
+    "policy": "鮮度ゲートの緩和・receipt の手編集は証拠改ざんとして禁止。現閉包を記録した本物の再実走 verdict のみを合法な緑化手段とする",
+    "runs": [
+      {"skill": "run-dev-graph-init", "run": "20260724T063927Z-init-wt1", "verdict": "PASS"},
+      {"skill": "run-dev-graph-sync", "run": "20260724T075011Z-sync-wt1r3", "verdict": "PASS"},
+      {"skill": "run-dev-graph-node", "run": "20260724T093756Z-node-wt1r3", "verdict": "PASS"},
+      {"skill": "run-dev-graph-requirements", "run": "20260724T093756Z-requirements-wt1r3", "verdict": "PASS"},
+      {"skill": "run-dev-graph-decompose", "run": "20260724T095200Z-decompose-wt1r3", "verdict": "PASS"},
+      {"skill": "run-dev-graph-system-spec", "run": "20260724T095200Z-system-spec-wt1r3", "verdict": "PASS"}
+    ],
+    "evaluation": "各 run は orchestrator と別個体の fresh evaluator (dev-graph-integrity-auditor / dev-graph-requirements-verifier) が一次痕跡のみから独立判定。全件 PASS / blockers なし。出力は PASS|FAIL + blocker 列挙のみで点数出力なし",
+    "mechanical_gates": "launch (Skill 起動の transcript 実在) / completion / goal_fit (goal-seek 3 点セットの実体検証) を live-trial-verdict.py が機械判定。全件 nudge=0 / gate=0 / poll-exit=DONE",
+    "session_hygiene": "全 4 セッションで kill-session + reap を実行し、残存 tmux セッション 0"
+  },
+
+  "follow_ups": [
+    {
+      "id": "HarnessHub-dtg",
+      "title": "run-dev-graph-node の progress.json completed_at 転記ミスと SKILL.md 記載の Agent fork 未使用",
+      "severity": "非 blocker"
+    },
+    {
+      "id": "HarnessHub-vnr",
+      "title": "C14 OUT1 の live-trial scenario が --binding none --dry-run のみを被覆",
+      "severity": "非 blocker"
+    },
+    {
+      "id": "HarnessHub-ym5",
+      "title": "eval-log/run-dev-graph-*-{progress,intermediate} が .gitignore 宣言に反して追跡され続けている",
+      "severity": "非 blocker",
+      "note": "本リリースで顕在化した構造的な衝突 (clean tree 要件 vs 無関係差分を commit しない規律) を追跡する"
+    }
+  ],
+
+  "integrity_notes": {
+    "self_reference": "本 receipt 自身は digest 対象外 (自己参照になるため)。本 receipt が指す証跡の実体は git 追跡下にあり、第三者が再計算で照合できる",
+    "tamper_policy": "verdict の skill_dir_tree_sha / transcript_sha256 を手編集して鮮度ゲートを通す行為は証拠偽造であり禁止。stale 化した場合は再実走で新 verdict を取得する",
+    "honest_recording": "非 blocker の留意点 2 件を隠さず follow_ups へ記録し、beads 課題として追跡可能にした"
+  },
+
+  "ci_remediation": {
+    "trigger": "PR #47 の dev-pipeline-lint (job #17) と verify (job #163) が失敗",
+    "root_cause": "release commit c695d9e が eval-log/ 直下の 4 ファイルを新規に git 追跡下へ入れた。lint-eval-log-layout.py の凍結 allowlist は 2026-07-21 実測時点で固定されており、以降の直下追跡は EL-001 違反となる。前回の全回帰 (2615 passed) 時点ではこれらが未追跡だったため検出されなかった",
+    "why_not_allowlist": "allowlist は歴史的残渣を段階的に解消するための凍結リストであり、新規追加は凍結の意味を失わせる。ゲート緩和として禁止",
+    "untracked_paths": [
+      "eval-log/run-dev-graph-render-execution.json",
+      "eval-log/run-dev-graph-schedule-parity-manifest.json",
+      "eval-log/run-dev-graph-sync-execution.json",
+      "eval-log/run-dev-graph-sync-projection-manifest.json"
+    ],
+    "disposition": "git rm --cached で追跡解除 (作業ツリーの実体は保持)。4 件とも origin/main では追跡されておらず、2026-07-23 の skill 実走が生んだ execution receipt / manifest である。live-trial 証跡の本体は eval-log/dev-graph/<skill>/live-trial/<run>/ に正規配置で保存済みのため、証跡の欠落は発生しない",
+    "verification": {
+      "lint-eval-log-layout": "exit 0 (violations 0 / scanned 2391)",
+      "migrate-pipeline-improvement --dry-run": "moved_count=0 / dispositions_added=0 (CI の冪等性チェックと同条件)",
+      "test_lint_eval_log_layout + test_migrate_pipeline_improvement": "22 passed",
+      "full_regression_after_fix": "2615 passed / 0 failed (151.2s)",
+      "dev-pipeline-lint 全 step": "lint-eval-log-layout / lint-handoff-disposition / lint-open-residue / migrate 冪等 いずれも exit 0",
+      "governance-check lint 群": "doc-line-limit / mechanism-knowledge-boundary / portability-knowledge-optin / content-review / live-trial-verdict / feedback-contract / prompt-contract-drift / script-naming / artifact-placement / skill-description / legacy-plugin-name / validate-plugin-completeness いずれも exit 0"
+    }
+  },
+
+  "open_residue_note": {
+    "observation": "bd (Dolt DB) が利用可能なローカルでは lint-open-residue が OR-003 を 13 件検出する (HarnessHub-6gl.1〜.13 が beads=closed かつ completion_evidence.status='in_progress')",
+    "ci_impact": "なし。CI には bd が無く beads export も追跡外のため beads_axis='unavailable' となり、OR-003/OR-004 は未評価。git 追跡ファイルのみで完結する OR-001/OR-002 は violations 0",
+    "why_not_hand_edit": "completion_evidence の policy は 'linked_pr_merged_all' であり、完了条件は紐づく PR のマージ。draft PR の段階で status を done へ手編集するのは事実に反する偽の緑化にあたるため行わない",
+    "why_not_reopen": "P01〜P12 も 2026-07-23 に同じ流儀で closed 済みであり、13 件が一貫して『closed + in_progress』の過渡状態にある。P13 のみ再 open すると一貫性を失う",
+    "resolution_path": "PR #47 のマージ後に reconcile-github-lifecycle.py で completion_evidence を done へ収束させる。ただし issues/sys-devgraph-completion-reconcile-blocked-20260721.md (status=active) が『task worktree から reconcile が実行できない』と記録しており、同 issue の scope_out には『手動 bd close による回避』が明記されている。本 feature の phase close 運用はこの既知の未解決課題の影響下にある"
+  },
+
+  "excluded_from_commit": {
+    "plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-07-23-rubric-update.md": "本 feature と無関係な既存の未追跡提案。PR 作成中は git stash へ退避し、作成後に作業ツリーへ戻す"
+  },
+
+  "late_included_in_release_commit": {
+    "paths": [
+      "eval-log/run-dev-graph-node-progress.json",
+      "eval-log/run-dev-graph-node-intermediate.jsonl",
+      "eval-log/run-dev-graph-requirements-progress.json",
+      "eval-log/run-dev-graph-requirements-intermediate.jsonl"
+    ],
+    "reason": "当初は .gitignore の『周回・build ごとの揮発投影ゆえ除外』宣言に従い commit から外したが、guard-spec-reflection.py が仕様反映受領書を HEAD へ束縛するため clean tree を要求する。これら 4 件は .gitignore 宣言に反して過去から追跡済みであり、かつ差分の実体は本作業 (2026-07-23 wt-1) の live-trial 実走が書き換えた goal-seek 進捗である (旧内容は 2026-07-19 の別 worktree 記録)。無関係差分ではないため release commit へ含めた",
+    "known_inconsistency": ".gitignore の除外宣言と実 index の追跡状態が食い違っている (git rm --cached 未実施)。追跡解除は他 worktree へ波及するため本 PR のスコープ外とし、HarnessHub-ym5 で追跡する"
+  }
+}

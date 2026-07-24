@@ -1,0 +1,10 @@
+{
+  "patch": {
+    "graph_node_id": "issue-lint-verdict-null-transcript-sha-20260722",
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-ofq",
+      "linked_at": "2026-07-23T10:11:37Z",
+      "sync_state": "linked"
+    }
+  }
+}

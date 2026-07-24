@@ -66,6 +66,15 @@ def github_workspace(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
     return root, graph, input_path, remote
 
 
+def test_sync_normalizes_null_beads_dependencies_and_rejects_invalid_shape():
+    sync = load("sync-graph.py", "sync_null_beads_dependencies")
+
+    assert sync._dependency_ids({"dependencies": None}) == []
+    assert sync._dependency_ids({}) == []
+    with pytest.raises(sync.ContractError, match="array or null"):
+        sync._dependency_ids({"dependencies": "not-an-array"})
+
+
 def test_sync_three_way_apply_second_pass_zero_and_tombstone(tmp_path, monkeypatch, capsys):
     upsert = load("upsert-node.py", "sync_v2_upsert")
     sync = load("sync-graph.py", "sync_graph_v2")

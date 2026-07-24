@@ -1,0 +1,160 @@
+{
+ "schema": "run-dev-graph-requirements/readiness-matrix/1.0.0",
+ "generated_at": "2026-07-23T13:10:00Z",
+ "feature_id": "feat-mvp-first-scheduling",
+ "snapshot_digest": "sha256:45ddb06c63b891e576ef42ece9b74f650d33ec8505e05ffbb6ce6b4caf195edb",
+ "nodes": [
+  {
+   "graph_node_id": "feat-mvp-first-scheduling",
+   "artifact_kind": "feature",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "arch-harness-hub-dev-workflow",
+   "artifact_kind": "architecture",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "spec-harness-hub-requirements",
+   "artifact_kind": "specification",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P01",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P02",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P03",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P04",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P05",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P06",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P07",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P08",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P09",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P10",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P11",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P12",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  },
+  {
+   "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P13",
+   "artifact_kind": "task",
+   "confirmation_status": "confirmed",
+   "evaluation_status": "pass",
+   "implementation_readiness": "complete",
+   "missing_sections": []
+  }
+ ],
+ "gates": {
+  "c11_graph_schema": {
+   "result": "PASS",
+   "evidence": "validate-graph-schema.py valid=True violations=0 readiness=complete (graph rev 429)"
+  },
+  "c02_saved_state": {
+   "result": "PASS",
+   "evidence": "scope 16 node 全件 confirmed/pass/complete (graph rev 429)"
+  },
+  "source_digest": {
+   "result": "PASS",
+   "evidence": "feature_context sha256:b0d003… / feature_source sha256:d96c36… 一致確認 (graph rev 429)"
+  },
+  "validate_system_plan": {
+   "result": "PASS",
+   "evidence": "validate-system-plan.py --feature-package feature-package/feat-mvp-first-scheduling pass digest sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387"
+  },
+  "post_audit_fix": {
+   "result": "PASS",
+   "evidence": "graph_revision 384→429 不一致是正、progress file の旧 feature path 混入解消、goal_loop 契約違反修正。C11 valid/violations 0 再確認済み"
+  }
+ },
+ "stale_digest_count": 0,
+ "missing_sections": []
+}

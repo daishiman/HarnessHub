@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C01-OUT1-positive-idempotence-r17",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260722T173925-r21/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/out/status.json"
       ],
-      "observed": "2026-07-22 に未初期化 fixture で r20 を正規再実走。target Skill を pass1/pass2 の 2 回起動し R1-R5 を各 pass で 5 Agent fork。6 content root と routing policy と graph store を pass1 で生成、pass2 は planned_changes=0/created=[]、編集済み template の SHA-256 は pass2 後も編集値を保持。config に絶対 path/token/node ID なし、validate-graph-schema exit 0・node 1 件、goal-seek 3 点セット全出力。fresh evaluator が独立に全 7 条件 PASS を確認。"
+      "observed": "2026-07-24 に closure 更新後の behavior digest へ整合させるため未初期化 fixture で wt1 を正規再実走 (fresh claude session, opus-4-6, 自走完走 nudge=0/gate=0)。target Skill を pass1/pass2 の 2 回 Skill ツールで起動 (script 直叩きでない)。6 content root・routing policy・graph store を pass1 で生成、pass2 は planned_changes=0。pass 間で編集した template は pass2 後も編集後 bytes/SHA を保持 (非上書きを再走で証明)、config に絶対 path/token/node ID なし、validate-graph-schema exit0・node 1 件。goal-seek 3 点セット全出力・intermediate append-only。fresh evaluator が独立に全 6 observation PASS を確認、skill_dir_tree_sha が現行 closure と一致。"
     },
     "OUT2": {
       "status": "PASS",

@@ -1,0 +1,1160 @@
+{
+  "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+  "p01_entry_gate": {
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ],
+    "selector": "parent_feature.depends_on"
+  },
+  "parent_feature": "feat-mvp-first-scheduling",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "schema_version": "1.0.0",
+  "source_lineage": {
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "confirmed": true,
+    "source_paths": [
+      "goal-spec.json",
+      "features/feat-mvp-first-scheduling.md",
+      "architecture/harness-hub-dev-workflow.md",
+      "system-spec/dev-workflow.md"
+    ],
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0"
+  },
+  "tasks": [
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p01.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P01 責務 (要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化) を実行する task"
+      },
+      "depends_on": [],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p01.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P01",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P01"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P01",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "goal-spec との逐語一致に齟齬が見つかった場合、requirements-baseline.md を修正し本 task を再実行する",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "documentation"
+      ],
+      "title": "要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "docs/features/feat-mvp-first-scheduling/requirements-baseline.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p02.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P02 責務 (設計 — MVP 適合軸メタデータ・schedule/next ソートキー・bd-bridge ready 整合・繰り延べ規則・選定 receipt の決定論設計) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P01"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p02.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P02",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P02"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P02",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "P03 の設計レビューで差し戻された場合、design.md を修正し本 task を再実行する",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "documentation"
+      ],
+      "title": "設計 — MVP 適合軸メタデータ・schedule/next ソートキー・bd-bridge ready 整合・繰り延べ規則・選定 receipt の決定論設計",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "docs/features/feat-mvp-first-scheduling/design.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p03.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P03 責務 (設計レビュー — 単一 writer (schedule-graph.py)・後方互換・qa-066 非退行との整合検証) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P02"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p03.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P03",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P03"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P03",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "承認できない設計事項が見つかった場合、承認しないまま P02 へ差し戻し理由を記録する",
+      "secondary_workstreams": [
+        "quality",
+        "security"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "documentation"
+      ],
+      "title": "設計レビュー — 単一 writer (schedule-graph.py)・後方互換・qa-066 非退行との整合検証",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "docs/features/feat-mvp-first-scheduling/design-review.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p04.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P04 責務 (テスト設計 — MVP-first ソート・冪等性・後方互換・receipt 出力の回帰テスト設計) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P03"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p04.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P04",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P04"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P04",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "P05/P06 実行時にテスト ID の不備が判明した場合、test-plan.md を修正し本 task を再実行する",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "quality"
+      ],
+      "title": "テスト設計 — MVP-first ソート・冪等性・後方互換・receipt 出力の回帰テスト設計",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "docs/features/feat-mvp-first-scheduling/test-plan.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p05.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P05 責務 (実装 — MVP 適合軸メタデータ・schedule-graph.py ソートキー・bd-bridge ready 整合・選定 receipt 出力) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P04"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p05.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P05",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P05"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P05",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "write scope 外への変更や既存動作の破壊が判明した場合、当該変更を revert し write scope 内の最小差分へ作り直す",
+      "secondary_workstreams": [
+        "documentation",
+        "operations"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "quality"
+      ],
+      "title": "実装 — MVP 適合軸メタデータ・schedule-graph.py ソートキー・bd-bridge ready 整合・選定 receipt 出力",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py",
+        "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root .",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "plugins/dev-graph/schemas/graph-node.schema.json",
+        "plugins/dev-graph/scripts/schedule-graph.py",
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "plugins/dev-graph/tests/test_schedule_graph_mvp_first.py",
+        "plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py",
+        "plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p06.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P06 責務 (テスト実行 — 回帰テスト全件と ready/next 実測の記録) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P05"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p06.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P06",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P06"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P06",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "テスト実行が失敗した場合、失敗内容を記録したうえで P05 へ差し戻す",
+      "secondary_workstreams": [],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "quality"
+      ],
+      "title": "テスト実行 — 回帰テスト全件と ready/next 実測の記録",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py --junitxml=eval-log/dev-graph/mvp-first-scheduling/test-run-p06.xml",
+        "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "eval-log/dev-graph/mvp-first-scheduling/test-run-p06.json"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p07.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P07 責務 (受入判定 — goal-spec acceptance 5 件の突合と未達の差し戻し) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P06"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p07.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P07",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P07"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P07",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "acceptance 未達が判明した場合、未達項目を記録したうえで P05 へ差し戻す",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "quality"
+      ],
+      "title": "受入判定 — goal-spec acceptance 5 件の突合と未達の差し戻し",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "docs/features/feat-mvp-first-scheduling/acceptance-report.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p08.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P08 責務 (移行 — 既存 task 資産一括書き換えを行わないことの互換性確認 (fallback 動作の実測記録)) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P07"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p08.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P08",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P08"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P08",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "fallback 動作の実測で既存 node のスケジュール停止が確認された場合、P05 の後方互換実装を修正し本 task を再実行する",
+      "secondary_workstreams": [
+        "quality",
+        "documentation"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "operations"
+      ],
+      "title": "移行 — 既存 task 資産一括書き換えを行わないことの互換性確認 (fallback 動作の実測記録)",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py -k backward_compat"
+      ],
+      "workstream_kind": "operations",
+      "write_scope": [
+        "docs/features/feat-mvp-first-scheduling/compatibility-note.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p09.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P09 責務 (品質保証 — fail-closed 実効性の悪性ケース実測 (qa-066 非退行含む)) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P08"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p09.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P09",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P09"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P09",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "fail-closed 動作の欠落や qa-066 ゲートの退行が確認された場合、P05 へ差し戻す",
+      "secondary_workstreams": [
+        "security"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "quality"
+      ],
+      "title": "品質保証 — fail-closed 実効性の悪性ケース実測 (qa-066 非退行含む)",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py -k fail_closed",
+        "python3 -m pytest plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py -k fail_closed"
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "eval-log/dev-graph/mvp-first-scheduling/qa-fail-closed-report.json"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p10.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P09"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p10.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P10",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P10"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P10",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "phase 間の不整合が見つかった場合、不整合の原因となった phase へ差し戻す",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "documentation"
+      ],
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "docs/features/feat-mvp-first-scheduling/final-review.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p11.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P10"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p11.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P11",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P11"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P11",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "証跡の digest 不一致が見つかった場合、対象証跡を再取得し本 task を再実行する",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "documentation"
+      ],
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "eval-log/dev-graph/mvp-first-scheduling/evidence-manifest.json"
+      ]
+    },
+    {
+      "acceptance": [
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p12.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P12 責務 (運用文書化 — MVP 適合軸設定手順と選定 receipt の運用手順) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P11"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p12.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P12",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P12"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P12",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "運用手順の不備が P13 実施時に判明した場合、operations.md を修正し本 task を再実行する",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "operations"
+      ],
+      "title": "運用文書化 — MVP 適合軸設定手順と選定 receipt の運用手順",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "operations",
+      "write_scope": [
+        "docs/features/feat-mvp-first-scheduling/operations.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "MVP 適合度を持つ task と品質先行 task が混在する入力で、next が MVP 適合 task を先に選定する",
+        "同一入力で next を再実行しても選定 batch と順序が一致する (冪等)",
+        "MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる",
+        "選定 receipt に 目的・背景・MVP 適合の判断根拠が記録される",
+        "qa-066 由来の既存品質ゲートの検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p13.md",
+            "confidence": 0.87
+          }
+        ],
+        "confidence": 0.87,
+        "reason": "qa-069 の MVP ファースト化要求のうち P13 責務 (リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback) を実行する task"
+      },
+      "depends_on": [
+        "SYS-MVP-FIRST-SCHEDULING-P12"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p13.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P13",
+        "parent_feature": "feat-mvp-first-scheduling",
+        "phase_ref": "P13"
+      },
+      "id": "SYS-MVP-FIRST-SCHEDULING-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-07-23T06:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-mvp-first-scheduling",
+      "phase_ref": "P13",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-mvp-first-scheduling",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "rollback": "main 反映後に qa-066 ゲートの退行または acceptance 未達が判明した場合、当該変更を revert し P05 へ差し戻す",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-mvp-first-scheduling.md",
+        "system-spec/dev-workflow.md"
+      ],
+      "tags": [
+        "feat-mvp-first-scheduling",
+        "macro-feature",
+        "mvp-first",
+        "scheduling",
+        "qa-069",
+        "operations"
+      ],
+      "title": "リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "operations",
+      "write_scope": [
+        "eval-log/dev-graph/mvp-first-scheduling/release-receipt.json"
+      ]
+    }
+  ]
+}

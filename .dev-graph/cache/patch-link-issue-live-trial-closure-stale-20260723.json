@@ -1,0 +1,12 @@
+{
+  "patch": {
+    "graph_node_id": "issue-live-trial-closure-stale-mvp-first-20260723",
+    "updated_at": "2026-07-23T13:55:28Z",
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-4y5",
+      "linked_at": "2026-07-23T13:55:28Z",
+      "sync_state": "linked"
+    },
+    "tracker_binding": "beads"
+  }
+}

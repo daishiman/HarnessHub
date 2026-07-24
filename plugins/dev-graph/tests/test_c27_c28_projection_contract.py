@@ -249,12 +249,76 @@ def test_c27_context_fails_closed_on_invalid_c24_receipts(tmp_path, monkeypatch)
     receipt({})
     with pytest.raises(module.ContractError, match="omitted required"):
         module.context(tmp_path, resolver)
+    receipt({**valid, "branch": None})
+    detached = module.context(tmp_path, resolver)
+    assert detached["branch"] is None
+    receipt({key: value for key, value in valid.items() if key != "branch"})
+    with pytest.raises(module.ContractError, match="invalid branch state"):
+        module.context(tmp_path, resolver)
+    receipt({**valid, "branch": ""})
+    with pytest.raises(module.ContractError, match="invalid branch state"):
+        module.context(tmp_path, resolver)
     receipt({**valid, "repo_root": str(tmp_path.parent)})
     with pytest.raises(module.ContractError, match="root mismatch"):
         module.context(tmp_path, resolver)
     receipt({**valid, "repository_id": "repo_legacy"})
     with pytest.raises(module.ContractError, match="non-canonical"):
         module.context(tmp_path, resolver)
+
+
+def test_c27_list_accepts_detached_head_without_mutating_lease_ledgers(tmp_path, monkeypatch, capsys):
+    module = load(SCRIPTS / "manage-worktree-lease.py", "c27_detached_list")
+    common = tmp_path / "common"
+    coordination = common / "dev-graph"
+    coordination.mkdir(parents=True)
+    ledger = coordination / "leases.json"
+    events = coordination / "events.json"
+    ledger.write_text(json.dumps({
+        "schema_version": "1.1",
+        "workspace_identity": "bdw_fixture",
+        "leases": [{
+            "graph_node_id": "G",
+            "state": "released",
+            "session_id": "S",
+            "worktree_id": "wt_fixture",
+            "resource_scope": [],
+        }],
+    }))
+    events.write_text(json.dumps({
+        "schema_version": "1.0",
+        "events": [{"type": "lease.released", "graph_node_id": "G"}],
+    }))
+    ledger_before, events_before = ledger.read_bytes(), events.read_bytes()
+    receipt = {
+        "repo_root": str(tmp_path),
+        "git_common_dir": str(common),
+        "repository_id": "local:sha256:" + "a" * 64,
+        "worktree_id": "wt_" + "1" * 16,
+        "branch": None,
+        "default_branch": "main",
+        "head_sha": "1" * 40,
+    }
+    resolver = tmp_path / "resolve.py"
+    resolver.write_text(
+        "import json\n"
+        f"print(json.dumps({receipt!r}))\n",
+    )
+
+    code, listed = call_main(
+        module,
+        monkeypatch,
+        capsys,
+        "--repo-root", tmp_path,
+        "--op", "list",
+        "--context-resolver", resolver,
+    )
+
+    assert code == 0
+    assert listed["branch"] is None
+    assert [item["graph_node_id"] for item in listed["leases"]] == ["G"]
+    assert [item["type"] for item in listed["events"]] == ["lease.released"]
+    assert ledger.read_bytes() == ledger_before
+    assert events.read_bytes() == events_before
 
 
 def test_c27_bridge_graph_and_c02_consumer_boundaries(tmp_path, monkeypatch):

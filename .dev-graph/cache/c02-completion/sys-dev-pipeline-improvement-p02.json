@@ -1,0 +1,15 @@
+{
+  "patch": {
+    "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "done",
+      "source": "reconciliation",
+      "completed_at": "2026-07-22T06:30:09Z",
+      "reconciled_at": "2026-07-23T11:10:47Z",
+      "evidence_refs": [
+        "docs/features/feat-dev-pipeline-improvement/design.md"
+      ]
+    }
+  }
+}

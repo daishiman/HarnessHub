@@ -1,0 +1,106 @@
+{
+  "phase": "P09",
+  "graph_node_id": "sys-mvp-first-scheduling-p09",
+  "bd_issue_id": "HarnessHub-6gl.9",
+  "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+  "recorded_at": "2026-07-23T14:11:30Z",
+  "purpose": "不正・欠損・悪性な MVP metadata 入力に対する schedule-graph.py / bd-bridge.py の fail-closed 動作と、qa-066 由来既存品質ゲートの非退行を実測記録する",
+  "unit_tests": {
+    "spec_literal_commands": [
+      {
+        "command": "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py -k fail_closed",
+        "executed_at": "2026-07-23T14:09:52Z",
+        "exit_code": 5,
+        "note": "逸脱注記: テスト命名が test_mvp_sort_fails_closed_* のため -k 'fail_closed' は 0 件収集 (命名想定のずれ)。等価コマンドで同カテゴリを実行した"
+      },
+      {
+        "command": "python3 -m pytest plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py -k fail_closed",
+        "executed_at": "2026-07-23T14:09:52Z",
+        "exit_code": 5,
+        "note": "逸脱注記: bd-bridge 側の fail-closed テストは test_invalid_mvp_fit_moves_candidate_to_conflicts / test_missing_or_null_mvp_fit_falls_back_tolerantly の命名。等価コマンドで実行した"
+      }
+    ],
+    "equivalent_commands": [
+      {
+        "command": "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py -k fails_closed",
+        "executed_at": "2026-07-23T14:09:52Z",
+        "exit_code": 0,
+        "result": "2 passed",
+        "tests": [
+          {"test_id": "TC-MVP-SORT-04", "case": "enum 外 mvp_fit → ContractError 'unsupported mvp_fit' (全体 fail)", "result": "pass"},
+          {"test_id": "TC-MVP-SORT-05", "case": "mvp_alignment が非 object → ContractError 'mvp_alignment must be an object or null' (全体 fail)", "result": "pass"}
+        ]
+      },
+      {
+        "command": "python3 -m pytest plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py -k 'invalid or tolerant'",
+        "executed_at": "2026-07-23T14:09:52Z",
+        "exit_code": 0,
+        "result": "2 passed",
+        "tests": [
+          {"test_id": "TC-MVP-BRIDGE-02", "case": "キー欠落 / null → rank 2 へ tolerant fallback (欠損は悪性でない)", "result": "pass"},
+          {"test_id": "TC-MVP-BRIDGE-03", "case": "enum 外の非 null → per-candidate conflicts[] 転記、他候補は生存 (rank 2 への silent 丸めをしない)", "result": "pass"}
+        ]
+      },
+      {
+        "command": "python3 -m pytest plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py -k fails",
+        "executed_at": "2026-07-23T14:09:52Z",
+        "exit_code": 0,
+        "result": "3 passed",
+        "tests": [
+          {"test_id": "TC-MVP-SCHEMA-REG-02", "case": "登録経路: enum 外 mvp_fit は validate-graph-schema FAIL", "result": "pass"},
+          {"test_id": "TC-MVP-SCHEMA-REG-03", "case": "登録経路: mvp_alignment 内の未知キーは additionalProperties で FAIL", "result": "pass"},
+          {"test_id": "TC-MVP-SCHEMA-REG-05", "case": "登録経路: required サブフィールド (purpose) 欠落は FAIL", "result": "pass"}
+        ]
+      }
+    ]
+  },
+  "adversarial_probes": {
+    "note": "実 graph / 実 bd DB を一切変更しない読み取り専用プローブ。悪性入力は .dev-graph/cache/ 上の複製へのみ注入した (p09-tampered-*.json / p09-probeB-ready.json として cache に残置。正規経路はこれらを参照しないが、混同防止のため手動削除を推奨)",
+    "probe_a_bridge_malicious_manifest": {
+      "scenario": "parity manifest の 1 行 (feat-mvp-first-scheduling) に enum 外 mvp_fit='urgent' を注入し bd-bridge --op ready を実行",
+      "executed_at": "2026-07-23T14:10:13Z",
+      "exit_code": 0,
+      "observed": {
+        "tampered_candidate": {"graph_node_id": "feat-mvp-first-scheduling", "in_conflicts": true, "reason": "unsupported mvp_fit in parity manifest: 'urgent'"},
+        "ready_set_survivors": ["SYS-DOC-GOVERNANCE-PORTABILITY-P01", "feat-doc-governance-portability"],
+        "conflicts_total": 10
+      },
+      "verdict": "fail-closed PASS — 悪性行のみ conflicts[] へ隔離され、rank への silent 丸めなし・他候補は生存 (per-candidate 契約どおり)"
+    },
+    "probe_b_schedule_malicious_graph": {
+      "scenario": "実 graph の複製 (.dev-graph/cache/) の schedulable node に mvp_alignment={mvp_fit:'urgent',...} を注入し、複製の digest で整合する manifest を添えて schedule-graph を実行",
+      "executed_at": "2026-07-23T14:10:51Z",
+      "exit_code": 2,
+      "observed_stderr": "feat-mvp-first-scheduling: unsupported mvp_fit 'urgent' (expected direct|enabling|deferred)",
+      "verdict": "fail-closed PASS — plan を一切出力せず全体停止 (graph 正本の悪性 metadata は全体 fail の契約どおり)"
+    },
+    "probe_c_schedule_stale_digest": {
+      "scenario": "graph 更新後 (graph_revision 487) に、更新前 (revision 486 時点) の digest を持つ旧 ready receipt を schedule-graph へ与える",
+      "executed_at": "2026-07-23T14:10:51Z",
+      "exit_code": 2,
+      "observed_stderr": "beads parity snapshot is stale: parity manifest source_graph_digest sha256:e75ac5b1... != current graph sha256:e7b35832... (regenerate the parity manifest)",
+      "verdict": "fail-closed PASS — stale snapshot による推薦を全体停止で拒否し、manifest 再生成を要求 (mvp_alignment 付与→digest 変化→manifest 再生成の順序制約が機械的に強制されることの実証)"
+    },
+    "asymmetry_contract": "bd-bridge は per-candidate fail-closed (悪性行のみ隔離・他候補生存)、schedule-graph は graph 正本汚染に対し whole-plan fail-closed (全体停止)。この非対称は design F-6/SI-3 の意図どおりで、TC-MVP-BRIDGE-04 が両者の MVP_FIT_RANK 定数同一性を固定している"
+  },
+  "qa066_non_regression": {
+    "gate_files_modified": false,
+    "gate_relaxation_or_skip_added": false,
+    "evidence": "eval-log/dev-graph/mvp-first-scheduling/test-run-p06.json (2026-07-23T13:56:58Z 全 suite 実測: 406 passed / 9 failed)",
+    "failed_classification": "9 件は全て test_skill_criteria_evidence.py の stale behavior closure digest (designed freshness gate) — qa-066 由来ゲートの検査自体の退行は 0 件。ゲートは P05 の正当な振る舞い変更を検出して発火しており、非退行かつ機能していることの実証。解消は HarnessHub-4y5 (live-trial 再取得) が追跡",
+    "verdict": "non-regression PASS"
+  },
+  "reproduction": {
+    "unit": [
+      "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py -k fails_closed",
+      "python3 -m pytest plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py -k 'invalid or tolerant'",
+      "python3 -m pytest plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py -k fails"
+    ],
+    "probes": [
+      "Probe A: docs/features/feat-mvp-first-scheduling/compatibility-note.md の手順で parity manifest を生成し、任意の 1 行へ mvp_fit='urgent' を注入して bd-bridge --op ready --parity-manifest <tampered> を実行 → 当該行が conflicts[] に 'unsupported mvp_fit' で載ることを確認",
+      "Probe B: graph.json を .dev-graph/cache/ へ複製し schedulable node に mvp_alignment={mvp_fit:'urgent',purpose,background,rationale} を注入、複製の canonical digest で manifest を作り schedule-graph --graph <複製> --ready-json <その receipt> → exit 2 / 'unsupported mvp_fit' を確認",
+      "Probe C: graph 変更後に変更前 digest の ready receipt で schedule-graph を実行 → exit 2 / 'beads parity snapshot is stale' を確認"
+    ],
+    "cleanup": "悪性注入ファイル (p09-tampered-*.json, p09-probeB-ready.json) は .dev-graph/cache/ に残置 (削除は未実施)。cache は guard 保護外の作業領域で正規経路からは参照されないが、混同防止のため不要になり次第の手動削除を推奨"
+  }
+}

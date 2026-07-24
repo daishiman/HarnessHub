@@ -31,6 +31,11 @@ RFC3339_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
 # 「graph 管理外の bd 課題」と「graph 管理下なのに manifest から落ちた課題」は
 # 対処 owner が違う (前者は放置可・後者は sync 必要) ため、同じ袋へ入れない。
 UNMAPPED_REASONS = ("external_ref_absent", "parity_manifest_missing")
+# qa-069 MVP-first: ready_set の表示順を schedule-graph.py の選定順と整合させる rank (SI-3)。
+# 正本は graph node の mvp_alignment を直接参照する schedule-graph.py 側で、こちらは
+# parity manifest 経由の表示順のみを揃える。schedule-graph.py の同名定数と一致必須
+# (_common.py が write scope 外のため二重定義し、test_bd_bridge_mvp_ready_order.py が固定する)。
+MVP_FIT_RANK: dict[str | None, int] = {"direct": 0, "enabling": 1, None: 2, "deferred": 3}
 # --op update が bd update へ転送してよい field の exact-set。
 # bridge が単一チョークポイントである以上、ここに無い field は運用上「存在しない」ため、
 # 受理する field は網羅的に宣言し、転送忘れ (silent drop) を構造的に起こせなくする。
@@ -383,6 +388,11 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
             graph_dependencies = expected.get("depends_on", [])
             if not isinstance(graph_dependencies, list) or any(dep not in by_graph for dep in graph_dependencies):
                 raise ContractError("parity manifest dependency lacks a Beads linkage")
+            # qa-069: キー欠落 / null は未設定 rank へ tolerant fallback、enum 外の非 null は
+            # rank 2 へ丸めず per-candidate fail-closed (silent fallback は AC-3 の裏面を破る)。
+            mvp_fit = expected.get("mvp_fit")
+            if mvp_fit is not None and mvp_fit not in MVP_FIT_RANK:
+                raise ContractError(f"unsupported mvp_fit in parity manifest: {mvp_fit!r}")
             parity = verify_parity(shown, status_map[graph_status], [by_graph[dep] for dep in graph_dependencies])
         except ContractError as exc:
             conflicts.append({"bd_issue_id": issue_id, "graph_node_id": expected.get("graph_node_id"), "reason": str(exc)})
@@ -393,7 +403,10 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
             "edge_parity": parity,
             "graph_status": graph_status,
             "graph_depends_on": graph_dependencies,
+            "mvp_fit": mvp_fit,
         })
+    # qa-069: schedule-graph.py の選定順 (rank → node_id) と表示順を揃える (SI-3)。
+    ready_set.sort(key=lambda row: (MVP_FIT_RANK[row.get("mvp_fit")], str(row.get("external_ref") or "")))
     # 理由別件数を receipt へ載せ、unmapped を数えるだけで「graph 管理外が何件・
     # 管理下の取りこぼしが何件」を下流と人間の双方が見分けられるようにする。
     summary = {reason: sum(1 for row in unmapped if row["reason"] == reason) for reason in UNMAPPED_REASONS}

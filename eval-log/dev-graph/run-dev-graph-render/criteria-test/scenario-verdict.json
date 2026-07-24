@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C05-OUT1-positive-feature-progress",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T134933-r21/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260724T065450Z-render-wt1r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T134933-r21/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T134933-r21/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260722T134933-r21/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260724T065450Z-render-wt1r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260724T065450Z-render-wt1r2/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260724T065450Z-render-wt1r2/out/status.json"
       ],
-      "observed": "2026-07-22 に部分完了 exact-13 fixture で r19 を正規再実走。外部依存ゼロの単一 HTML で SVG 表示、進捗分母 Y=receipt applied_count=expected_count、分子 X=done/closed 子数を graph から独立再計算 (部分完了で X≠Y)、表示対象が source_digest に対応。goal-seek 3 点セット全出力。"
+      "observed": "2026-07-24 再実走 (run 20260724T065450Z-render-wt1r2, fresh claude session opus-4-6, 自走完走 nudge=0/gate=0, Skill ツール起動): closure 更新後の behavior digest へ整合させるため部分完了 exact-13 fixture で再取得。外部 runtime 依存ゼロの単一 HTML で SVG 表示、進捗分母=applied_count=expected_count=13、分子=done/closed child=4 を graph store から独立再計算 (receipt 読み戻しでない)、subject=source_digest 対応、を独立 fresh evaluator が field 単位で PASS 確認。skill_dir_tree_sha が現行 closure と一致、overall=PASS。"
     }
   }
 }

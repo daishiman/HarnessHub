@@ -1,0 +1,16 @@
+{
+  "patch": {
+    "graph_node_id": "issue-lint-verdict-null-transcript-sha-20260722",
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "done",
+      "source": "reconciliation",
+      "completed_at": "2026-07-22T00:47:35Z",
+      "reconciled_at": "2026-07-23T11:10:47Z",
+      "evidence_refs": [
+        "scripts/lint-live-trial-verdict.py",
+        "plugins/harness-creator/plugin-composition.yaml"
+      ]
+    }
+  }
+}

@@ -572,8 +572,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
@@ -594,8 +594,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
@@ -616,8 +616,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
@@ -638,8 +638,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
@@ -660,8 +660,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
@@ -682,8 +682,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — 回帰テスト全件と lint 実測の記録",
@@ -704,8 +704,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入判定 — 8 acceptance の突合と未達の差し戻し",
@@ -726,8 +726,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
@@ -748,8 +748,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質保証 — fail-closed 実効性の悪性ケース実測",
@@ -770,8 +770,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "最終レビュー — 全 phase 成果の横断整合確認",
@@ -792,8 +792,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "証跡固定 — 実測ログと digest の evidence manifest 化",
@@ -814,8 +814,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
@@ -842,6 +842,288 @@
         "title": {
           "local": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
           "remote": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化",
+          "remote": "要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P01"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定",
+          "remote": "検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P02"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証",
+          "remote": "設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P03"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定",
+          "remote": "テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P04"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線",
+          "remote": "実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P05"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 回帰テスト全件と 3 検査の実測記録",
+          "remote": "テスト実行 — 回帰テスト全件と 3 検査の実測記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P06"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入判定 — 4 acceptance の突合と未達の差し戻し",
+          "remote": "受入判定 — 4 acceptance の突合と未達の差し戻し"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P07"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)",
+          "remote": "移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P08"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測",
+          "remote": "品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P09"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終レビュー — 全 phase 成果の横断整合確認",
+          "remote": "最終レビュー — 全 phase 成果の横断整合確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P10"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "証跡固定 — 実測ログと成果物 digest の evidence manifest 化",
+          "remote": "証跡固定 — 実測ログと成果物 digest の evidence manifest 化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P11"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順",
+          "remote": "運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-DOC-GOVERNANCE-PORTABILITY-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P12"
+          ],
+          "remote": [
+            "SYS-DOC-GOVERNANCE-PORTABILITY-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
+          "remote": "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証"
         }
       },
       "projects": {}
@@ -2820,6 +3102,288 @@
       },
       "projects": {}
     },
+    "SYS-MVP-FIRST-SCHEDULING-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化",
+          "remote": "要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P01"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "設計 — MVP 適合軸メタデータ・schedule/next ソートキー・bd-bridge ready 整合・繰り延べ規則・選定 receipt の決定論設計",
+          "remote": "設計 — MVP 適合軸メタデータ・schedule/next ソートキー・bd-bridge ready 整合・繰り延べ規則・選定 receipt の決定論設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P02"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "設計レビュー — 単一 writer (schedule-graph.py)・後方互換・qa-066 非退行との整合検証",
+          "remote": "設計レビュー — 単一 writer (schedule-graph.py)・後方互換・qa-066 非退行との整合検証"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P03"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト設計 — MVP-first ソート・冪等性・後方互換・receipt 出力の回帰テスト設計",
+          "remote": "テスト設計 — MVP-first ソート・冪等性・後方互換・receipt 出力の回帰テスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P04"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — MVP 適合軸メタデータ・schedule-graph.py ソートキー・bd-bridge ready 整合・選定 receipt 出力",
+          "remote": "実装 — MVP 適合軸メタデータ・schedule-graph.py ソートキー・bd-bridge ready 整合・選定 receipt 出力"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P05"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — 回帰テスト全件と ready/next 実測の記録",
+          "remote": "テスト実行 — 回帰テスト全件と ready/next 実測の記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P06"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入判定 — goal-spec acceptance 5 件の突合と未達の差し戻し",
+          "remote": "受入判定 — goal-spec acceptance 5 件の突合と未達の差し戻し"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P07"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "移行 — 既存 task 資産一括書き換えを行わないことの互換性確認 (fallback 動作の実測記録)",
+          "remote": "移行 — 既存 task 資産一括書き換えを行わないことの互換性確認 (fallback 動作の実測記録)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P08"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — fail-closed 実効性の悪性ケース実測 (qa-066 非退行含む)",
+          "remote": "品質保証 — fail-closed 実効性の悪性ケース実測 (qa-066 非退行含む)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P09"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終レビュー — 全 phase 成果の横断整合確認",
+          "remote": "最終レビュー — 全 phase 成果の横断整合確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P10"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "証跡固定 — 実測ログと digest の evidence manifest 化",
+          "remote": "証跡固定 — 実測ログと digest の evidence manifest 化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P11"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "運用文書化 — MVP 適合軸設定手順と選定 receipt の運用手順",
+          "remote": "運用文書化 — MVP 適合軸設定手順と選定 receipt の運用手順"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-MVP-FIRST-SCHEDULING-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-MVP-FIRST-SCHEDULING-P12"
+          ],
+          "remote": [
+            "SYS-MVP-FIRST-SCHEDULING-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback",
+          "remote": "リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback"
+        }
+      },
+      "projects": {}
+    },
     "SYS-PUBLISH-PIPELINE-P01": {
       "binding": "beads",
       "issue": {
@@ -4584,6 +5148,24 @@
       },
       "projects": {}
     },
+    "feat-doc-governance-portability": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメント規約とポータビリティ検査 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植 opt-in 検査)",
+          "remote": "ドキュメント規約とポータビリティ検査 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植 opt-in 検査)"
+        }
+      },
+      "projects": {}
+    },
     "feat-docs-cms": {
       "binding": "beads",
       "issue": {
@@ -4752,6 +5334,24 @@
         "title": {
           "local": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)",
           "remote": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)"
+        }
+      },
+      "projects": {}
+    },
+    "feat-mvp-first-scheduling": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "タスク優先度選定の MVP ファースト化 (目的・背景・MVP 3軸)",
+          "remote": "タスク優先度選定の MVP ファースト化 (目的・背景・MVP 3軸)"
         }
       },
       "projects": {}
@@ -4934,7 +5534,7 @@
       },
       "projects": {}
     },
-    "issue-d7-hearing-trace-20260721": {
+    "issue-c08-audit-primary-get-capability-20260722": {
       "binding": "beads",
       "issue": {
         "depends_on": {
@@ -4944,6 +5544,24 @@
         "status": {
           "local": "open",
           "remote": "open"
+        },
+        "title": {
+          "local": "C08 監査 sub-agent が公式 API へ一次 GET できず WebSearch 二次索引依存で doc_freshness FAIL が反復する",
+          "remote": "C08 監査 sub-agent が公式 API へ一次 GET できず WebSearch 二次索引依存で doc_freshness FAIL が反復する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-d7-hearing-trace-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "spec-state: D7 (環境構成決定) に qa_log への遡及参照が無く hearing 往復の中立性を独立検証できない",
@@ -4988,6 +5606,24 @@
       },
       "projects": {}
     },
+    "issue-features-source-digest-drift-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随",
+          "remote": "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随"
+        }
+      },
+      "projects": {}
+    },
     "issue-hearing-trace-followups-20260722": {
       "binding": "beads",
       "issue": {
@@ -5006,6 +5642,60 @@
       },
       "projects": {}
     },
+    "issue-lint-verdict-null-transcript-sha-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "lint-live-trial-verdict の check_verdict が transcript_sha256=null を素通りさせる",
+          "remote": "lint-live-trial-verdict の check_verdict が transcript_sha256=null を素通りさせる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-live-trial-fixture-receipt-forgery-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない",
+          "remote": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-live-trial-skill-contract-bypass-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる",
+          "remote": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる"
+        }
+      },
+      "projects": {}
+    },
     "issue-qa070-implementation-feature-20260722": {
       "binding": "beads",
       "issue": {
@@ -5020,6 +5710,42 @@
         "title": {
           "local": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)",
           "remote": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-render-out1-unsatisfiable-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能",
+          "remote": "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能"
+        }
+      },
+      "projects": {}
+    },
+    "issue-scenario-verdict-stale-live-trial-ref-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "criteria-test の scenario-verdict が digest 書き換え済みの旧 r3 verdict を受入根拠に参照し続けている",
+          "remote": "criteria-test の scenario-verdict が digest 書き換え済みの旧 r3 verdict を受入根拠に参照し続けている"
         }
       },
       "projects": {}
@@ -5056,6 +5782,24 @@
         "title": {
           "local": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)",
           "remote": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-sync-legacy-linkage-20260723": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "sync pending_retry 20件 (external_linkage_missing) の legacy 収束",
+          "remote": "sync pending_retry 20件 (external_linkage_missing) の legacy 収束"
         }
       },
       "projects": {}

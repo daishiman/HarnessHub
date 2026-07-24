@@ -1,0 +1,21 @@
+{
+ "patch": {
+  "graph_node_id": "arch-harness-hub-dev-workflow",
+  "updated_at": "2026-07-23T04:45:00Z",
+  "purpose": "Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration)、作者ローカル環境規律、dev-graph/beads (bd) タスク優先度選定の MVP ファースト判断軸 (目的・背景・MVP) を参照する",
+  "goal": "qa-038/qa-039/qa-066/qa-067/qa-069 の確定内容に適合し、P0〜P5 の開発運用・feature baseline の source lineage 逆引き・開発管理パイプライン改善 8 要件 (qa-067)・タスク優先度選定の MVP ファースト判断軸 (qa-069: 目的=何のために作るか / 背景=どういう経緯か / MVP=今必要な動くもの の3軸を第一ソートキーとし、品質・再現性強化系タスクは MVP 成立後へ繰り延べる。既確定 CI/CD・quality gate 要件は維持) の指針を提供する",
+  "confirmation_evidence": {
+   "evaluated_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+   "evaluator": "assign-system-spec-completeness-evaluator",
+   "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"
+  },
+  "source_lineage": {
+   "imported_at": "2026-07-23T04:45:00Z",
+   "origin_kind": "system-spec-harness",
+   "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+   "source_path": "system-spec/dev-workflow.md",
+   "source_plugin": "system-spec-harness",
+   "source_version": "0.1.0"
+  }
+ }
+}

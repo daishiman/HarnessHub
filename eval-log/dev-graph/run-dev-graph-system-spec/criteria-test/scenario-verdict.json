@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r6-20260723-x4osk",
+  "reviewer": "dev-graph-integrity-auditor-fresh-evaluator-20260724T095200Z-system-spec-wt1r3",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,12 +28,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T101037-x4osk/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260724T095200Z-system-spec-wt1r3/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T101037-x4osk/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260723T101037-x4osk/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260724T095200Z-system-spec-wt1r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260724T095200Z-system-spec-wt1r3/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260724T095200Z-system-spec-wt1r3/out/status.json"
       ],
-      "observed": "2026-07-23 再実走 (HarnessHub-x4o/sk0: main merge の closure 変更で scl4b verdict が stale 化): fresh fixture で再 trial。被験 Skill を最初の tool call で起動し、elicit/doc-fetch/compile/evaluator の 4 entry point を全て Skill tool 経由で fork、登録は C02 (upsert-node.py) 経路のみで 2 node (spec/arch) を lineage 6 キー完備で登録して自走完遂。1 回目 doc-freshness 監査の FAIL (fastapi 世代落ち) を握り潰さず references 再取得後に 3 監査を再 fork して PASS。poll は長考による pane 静止で STALL (exit 2) だが本体は完走しマーカーは契約パスに契約どおり出力。orchestrator と別個体の fresh evaluator が全 7 gate の実行実体を transcript の Bash tool_use と突合し、source_digest/goal hash を独立再実測で一致確認して goal PASS (blockers=[]) を判定。"
+      "observed": "2026-07-24 再実走 (run 20260724T095200Z-system-spec-wt1r3, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0, 32 分 15 秒, 途中 auto-compact 発生): MVP-first 実装で挙動閉包 sha が更新され旧 verdict (wt1r2) が stale 化したため、fixture を baseline (ca42a87) へ戻して再取得。被験 Skill を index121 で起動し、delegate 先の system-spec-harness の 4 entry point (elicit / doc-fetch / compile / assign-system-spec-completeness-evaluator) も全て Skill ツール経由で起動。fresh evaluator が graph.json を直接読み、graph_revision=2 / node 2 件 (spec-system-spec-index, arch-requirements-definition) がいずれも source_lineage (origin_kind / source_plugin / source_path / source_version / source_digest / imported_at)・confirmation_status=confirmed・confirmation_evidence・implementation_readiness=complete を 保持することを実体で確認。source_digest 2 件と confirmation_evidence.evaluated_digest を shasum -a 256 で独立再計算して完全一致、upsert receipt の graph_sha256_before/after 連鎖 (0→1→2) と最終 graph_sha256_after (be555888…643a0c) の実ファイル再計算一致も確認。doc-fetch は実 WebFetch を行い、初期版数の誤り (SQLite 3.46 / FastAPI 0.115) を doc-freshness-auditor fork が検出して 3.53.3 / 0.139.2 へ訂正した 自己修正フローが audit-fork-ledger.jsonl に実データとして残存 (echo 偽装でない)。goal-seek 3 点セットは必須 6 キー充足・original_goal hash (30a1de05…382ce454) 一致・1 行目 (index114 の Write、skill 実行より前) と 2 行目 (index822 の append redirect、compact 後・全検証完了後) で append-only を実証。validate-source-digest.py (checked=2 / mismatch なし) と validate-evidence-refs.py (scanned=2 / dangling なし) も exit0。AskUserQuestion 0 件。blocker 0 で PASS。skill_dir_tree_sha が現行 closure と一致。"
     }
   }
 }

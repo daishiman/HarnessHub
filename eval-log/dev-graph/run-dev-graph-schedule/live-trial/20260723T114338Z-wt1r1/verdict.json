@@ -1,0 +1,44 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-schedule",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/schedule-wt1-r1 --max-parallel 2",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "goal-seek intermediate rows were written together post-hoc and edited in place after a hash failure instead of append-only per loop"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-schedule"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "9c075113add7063e97cb3b18ab5f89e07adb466e3a44823c6fc8270f11d5c5c9",
+  "transcript_sha256": "c1d93ef5fa8bc8d778b16cdb471c4d74235b2a1894b03d907a615fc13c221d1d",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 4.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 435.0
+  },
+  "scenario_id": "C15-OUT1-positive-ready-set-r16"
+}

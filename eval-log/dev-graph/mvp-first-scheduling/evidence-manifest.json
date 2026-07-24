@@ -1,0 +1,75 @@
+{
+  "phase": "P11",
+  "graph_node_id": "sys-mvp-first-scheduling-p11",
+  "bd_issue_id": "HarnessHub-6gl.11",
+  "feature_package_id": "feature-package/feat-mvp-first-scheduling",
+  "recorded_at": "2026-07-23T14:17:36Z",
+  "purpose": "P06 のテスト実行ログと P09 の悪性ケース実測ログを sha256 digest 付きで固定し、再実行可能な形で保存する (証跡の改ざん検知と再現性の担保)",
+  "digest_algorithm": "sha256",
+  "digest_verification_command": "shasum -a 256 <path> の出力が本 manifest の sha256 と一致することを確認する。一致しない場合、当該証跡は digest 採取後に変更されており、証跡として無効",
+  "primary_evidence": [
+    {
+      "path": "eval-log/dev-graph/mvp-first-scheduling/test-run-p06.json",
+      "source_phase": "P06",
+      "sha256": "fa8b2abd79640c36fa6bbafc2f023c75def911585a1f5466c89ba9b2652ad570",
+      "role": "P04 全 23 テスト ID の実行結果 (22 pass + TC-MVP-REGR-01 の designed freshness gate fail 分類) と実 graph の validate-graph-schema PASS 記録",
+      "rerun_commands": [
+        "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py --junitxml=eval-log/dev-graph/mvp-first-scheduling/test-run-p06.xml",
+        "python3 -m pytest plugins/dev-graph/tests/ -q",
+        "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root ."
+      ],
+      "rerun_notes": "全件回帰 (2 本目) は HarnessHub-4y5 (live-trial 再取得) が完了するまで test_skill_criteria_evidence.py の 9 件が stale behavior closure digest で fail する設計状態。分類と後続課題は証跡本文の TC-MVP-REGR-01.detail を参照。また validate-graph-schema は graph_revision 484 時点の記録であり、graph は以後の lease 操作で revision が進むが、schema 妥当性は revision に依存しない"
+    },
+    {
+      "path": "eval-log/dev-graph/mvp-first-scheduling/test-run-p06.xml",
+      "source_phase": "P06",
+      "sha256": "890c5557c5f44ed2d5d05d6064b684c99b1319a5a3252cdf3cecb9e8284e3aed",
+      "role": "P06 targeted run (22 tests / 0 failures) の junitxml 一次出力 (test-run-p06.json の機械可読な裏付け)",
+      "rerun_commands": [
+        "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py --junitxml=eval-log/dev-graph/mvp-first-scheduling/test-run-p06.xml"
+      ],
+      "rerun_notes": "再実行すると本ファイルは上書きされ timestamp が変わるため digest は不一致になる。再現検証では上書き前に退避するか、別パスへ --junitxml を出力すること"
+    },
+    {
+      "path": "eval-log/dev-graph/mvp-first-scheduling/qa-fail-closed-report.json",
+      "source_phase": "P09",
+      "sha256": "6dc58f122106da6055d406c71321707fd3dc022d674df3bc1cd0567a062242cc",
+      "role": "悪性入力に対する fail-closed 実測 (unit 7 件 + adversarial probe A/B/C) と qa-066 非退行判定の記録",
+      "rerun_commands": [
+        "python3 -m pytest plugins/dev-graph/tests/test_schedule_graph_mvp_first.py -k fails_closed",
+        "python3 -m pytest plugins/dev-graph/tests/test_bd_bridge_mvp_ready_order.py -k 'invalid or tolerant'",
+        "python3 -m pytest plugins/dev-graph/tests/test_graph_node_mvp_schema_registration.py -k fails"
+      ],
+      "rerun_notes": "task spec 字義の -k 式 (fail_closed / backward_compat) は実テスト命名と一致せず 0 件収集 (exit 5) になるため、上記の等価式を使うこと (逸脱注記は証跡本文 unit_tests.spec_literal_commands に記録済み)。adversarial probe A/B/C は読み取り専用の手動プローブであり、再現手順は証跡本文の reproduction.probes を参照 (graph が更新されるたびに digest が変わるため、プローブ用 manifest はその時点の graph から作り直す)"
+    }
+  ],
+  "supporting_chain": [
+    {
+      "path": "docs/features/feat-mvp-first-scheduling/acceptance-report.md",
+      "source_phase": "P07",
+      "sha256": "0568560ed7489cfb879e86cb47fb2d1295e6e73773b3ba872af6395dde9cdc20",
+      "role": "P06 証跡のみに基づく acceptance 5 件の判定 (総合 pass、AC-5 は逸脱注記あり)"
+    },
+    {
+      "path": "docs/features/feat-mvp-first-scheduling/compatibility-note.md",
+      "source_phase": "P08",
+      "sha256": "a76d189b12efecff35e3145ad107a3a8e4473794b4080250d5483e0fa423c1c1",
+      "role": "実データ実測による migration N/A 判定 (226 件 fallback 継続・冪等性の実データ裏付け)"
+    },
+    {
+      "path": "docs/features/feat-mvp-first-scheduling/final-review.md",
+      "source_phase": "P10",
+      "sha256": "48771c1e3d6db0fe4a64b54d00a1cd9f3934165e217fe32c0ed87649dbfef260",
+      "role": "P01〜P09 成果物チェーンの横断整合レビュー (verdict pass、non-blocking 2 件を P12/P13 へ引き継ぎ)"
+    }
+  ],
+  "integrity_notes": {
+    "self_reference": "本 manifest 自身の digest は自己参照になるため含めない。本 manifest の同一性検証が必要な場合は外部 (git object 等) で行うこと",
+    "tamper_policy": "digest 採取後の証跡ファイル編集は禁止 (証跡改ざん)。修正が必要な場合は新しい証跡ファイルを別 path に作成し、本 manifest を新 revision として更新する",
+    "honest_recording": "TC-MVP-REGR-01 は result: fail のまま固定されている (greenwash しない)。分類 designed_freshness_gate_not_logic_regression と後続課題 HarnessHub-4y5 (graph node issue-live-trial-closure-stale-mvp-first-20260723) が機械可読で記録されており、P07 が pass 判定した根拠は acceptance-report.md の AC-5 節を参照"
+  },
+  "plan_consistency_check": {
+    "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-mvp-first-scheduling",
+    "note": "世代非依存 (--staging ではなく feature-package を指定) の再検証コマンド。実行結果は本 manifest 確定時に採取し release 前に確認した"
+  }
+}

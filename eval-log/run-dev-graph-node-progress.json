@@ -1,34 +1,30 @@
 {
- "recorded_at": "2026-07-19T00:00:00Z",
- "checklist": [
-  {
-   "item": "C24 containment (repo root 一致)",
+ "skill": "run-dev-graph-node",
+  "updated_at": "2026-07-23T12:13:21Z",
+ "checklist": {
+  "containment": {
    "status": "PASS",
-   "evidence": "resolve-repo-context.py --mode write: repo_root=.worktrees/task-20260716-154821-wt-1、repository_id=github:daishiman/HarnessHub、diagnostics=[]"
+      "evidence": "C24 receipt repo_root 一致。detached HEAD の branch:null を正規状態として保持した write context で実行"
   },
-  {
-   "item": "classification decision の証跡",
+  "classification": {
    "status": "PASS",
-   "evidence": "重複判定: tasks/ 直下フラット13ファイル (created 2026-07-17T08:03:32Z・旧digest d6cce29a) は graph 未登録の旧世代。正規 path tasks/feat-hub-foundation/ 配下13ファイル (created 2026-07-19T14:15:47Z・新digest 8735bb16) が同一 graph_node_id SYS-HUB-FOUNDATION-P01..P13 で graph 登録済み。ユーザー明示指示『既存の方が古いので削除してok』により旧世代削除を確定"
+      "evidence": "既存 graph node 33件への beads_linkage/status/completion_evidence patch のため kind/path は登録済み値を使用 (新規分類なし)"
   },
-  {
-   "item": "frontmatter/body/path/template 整合",
+  "frontmatter_schema": {
    "status": "PASS",
-   "evidence": "graph 全 219 node の file_path 実在 100%・欠落0。削除対象は graph 非参照のため frontmatter/path 整合に影響なし"
+      "evidence": "linkage 20件・status import 13件・completion evidence 13件の反映後に validate-graph-schema.py valid=True / violations=0"
   },
-  {
-   "item": "package gate (P01..P13 exact-set)",
-   "status": "PASS",
-   "evidence": "feat-hub-foundation 含む全 15 feature が exact-13 (task 合計195)。削除後も graph 側 package 構成は不変。cross-feature edge 0・壊れた depends_on 参照 0"
+  "package_exact13": {
+   "status": "N/A",
+   "evidence": "package 登録は plan verb の register-package で完了済み (applied 13/13)"
   },
-  {
-   "item": "schema 検証と atomic 整合",
+  "receipt_consistency": {
    "status": "PASS",
-   "evidence": "validate-graph-schema.py: valid=true・violations=[]・implementation_readiness=complete・missing_sections=[]。graph.json は本操作で無変更 (revision 40 維持)、content 側のみ孤児13ファイルを git rm"
+      "evidence": "C02 receipt は linkage 20件で revision 429→449、sync status 13件で449→462、completion evidence 13件で462→475。追跡issue本文/status/completionをdry-run→applyして475→476。全件 operation=updated/applied"
+  },
+  "wal_recovery": {
+   "status": "PASS",
+      "evidence": "全 upsert が status=applied、sync receipt 13件は recovered_interrupted_transaction=false、最終 schema PASS"
   }
- ],
- "updated_at": "2026-07-21T16:20:00Z",
- "notes": [
-  "2026-07-21 wt-10 run: 上位 command 未登録の issues/sys-bd-bridge-notes-passthrough-20260721.md を upsert-node dry-run(write_count=0)→apply で登録 (rev 281, operation=added)。再実行 noop/write_count=0 で冪等確認。分類は md frontmatter の confidence 0.95 (>=0.80 閾値) で自動確定。"
- ]
+ }
 }

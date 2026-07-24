@@ -12,8 +12,8 @@ iteration: null
 title: "lint-live-trial-verdict の check_verdict が transcript_sha256=null を素通りさせる"
 owners: ["daishiman"]
 created_at: "2026-07-22T06:10:00Z"
-updated_at: "2026-07-22T06:10:00Z"
-status: "draft"
+updated_at: "2026-07-23T11:17:26.172451Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["issues/sys-lint-verdict-null-transcript-sha-20260722.md"]
@@ -38,15 +38,14 @@ classification_reason: "lint の transcript 束縛検査が null を素通りさ
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-lint-verdict-null-transcript-sha-20260722.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-ofq","linked_at":"2026-07-23T10:11:37Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-22T00:47:35Z","evidence_refs":["scripts/lint-live-trial-verdict.py","plugins/harness-creator/plugin-composition.yaml"],"policy":"manual","reconciled_at":"2026-07-23T11:10:47Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-22T06:10:00Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 概要
 

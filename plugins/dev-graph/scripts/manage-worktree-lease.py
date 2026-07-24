@@ -25,7 +25,7 @@ from _common import ContractError, atomic_json, dump, git, load_json, run, utc_n
 ACTIVE = {"reserving", "claimed", "in_progress", "pending_review", "pending_merge", "claim_pending_local_repair"}
 
 
-def context(root: Path, resolver: Path | None = None) -> dict[str, str]:
+def context(root: Path, resolver: Path | None = None) -> dict[str, Any]:
     """Consume C24's canonical repository/worktree identity instead of re-deriving it."""
     boundary = resolver or Path(__file__).with_name("resolve-repo-context.py")
     if not boundary.is_file():
@@ -41,9 +41,12 @@ def context(root: Path, resolver: Path | None = None) -> dict[str, str]:
         receipt = json.loads(cp.stdout)
     except json.JSONDecodeError as exc:
         raise ContractError("C24 context resolver returned invalid JSON") from exc
-    required = ("repo_root", "git_common_dir", "repository_id", "worktree_id", "branch", "default_branch", "head_sha")
+    required = ("repo_root", "git_common_dir", "repository_id", "worktree_id", "default_branch", "head_sha")
     if not isinstance(receipt, dict) or any(not receipt.get(key) for key in required):
         raise ContractError("C24 context resolver omitted required identity")
+    branch = receipt.get("branch")
+    if "branch" not in receipt or (branch is not None and (not isinstance(branch, str) or not branch)):
+        raise ContractError("C24 context resolver returned an invalid branch state")
     top = Path(str(receipt["repo_root"])).resolve()
     if top != root.resolve():
         raise ContractError("C24 context resolver root mismatch")
@@ -55,7 +58,7 @@ def context(root: Path, resolver: Path | None = None) -> dict[str, str]:
         "git_common_dir": str(Path(str(receipt["git_common_dir"])).resolve()),
         "repository_id": repository_id,
         "worktree_id": str(receipt["worktree_id"]),
-        "branch": str(receipt["branch"]),
+        "branch": branch,
         "base_branch": str(receipt["default_branch"]),
         "head_sha": str(receipt["head_sha"]),
     }
@@ -74,7 +77,7 @@ def invoke_bd_bridge(root: Path, bridge: Path, argv: list[str]) -> dict[str, Any
     return value
 
 
-def _ensure_claim_branch(root: Path, graph_node_id: str, requested: str | None, current: dict[str, str]) -> dict[str, str]:
+def _ensure_claim_branch(root: Path, graph_node_id: str, requested: str | None, current: dict[str, Any]) -> dict[str, Any]:
     canonical = f"devgraph/{graph_node_id}"
     if requested and requested != canonical:
         raise ContractError(f"claim branch must be canonical {canonical}")
@@ -121,7 +124,7 @@ def invoke_execution_context_consumer(
     consumer: Path,
     graph: Path,
     lease: dict[str, Any],
-    ctx: dict[str, str],
+    ctx: dict[str, Any],
 ) -> dict[str, Any]:
     if not consumer.is_file():
         raise ContractError(f"missing C02 execution-context consumer: {consumer}")

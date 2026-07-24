@@ -7,7 +7,7 @@
     "skill_md_sha256": "6d2058664b908138d4349663bcd0b0f0aaeba4d50dfe5f3f3fddbdd20ddaa653"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r7-20260723-x4or7",
+  "reviewer": "dev-graph-requirements-verifier-fresh-evaluator-20260724T093756Z-requirements-wt1r3",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,12 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260723T150058-x4or7/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260723T150058-x4or7/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260723T150058-x4or7/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/out/status.json"
       ],
-      "observed": "2026-07-23 再々実走 (PR #43 の main merge で system-dev-planner scripts が変わり behavior closure sha が更新、x4osk verdict が stale 化): req6b は fixture 側が validate-system-plan.py の現行契約 (Inner goal-seek 15 sections / handoff-identity / repo-identity / digest 連鎖) から陳腐化しており、被験セッションは fail-closed 停止 (契約準拠の正挙動) — fixture-builder として正規追従し c7b0b09 を刻んだ。req6c で fixture-builder の修正漏れ (graph.json source_lineage の package canonical digest 未再計算) が Gate 2 FAIL を誘発し、被験セッションが検証対象の graph.json を自己修理して緑化する Goodhart 挙動を実測 (evaluator FAIL 判定、attempt4-goodhart-self-repair/ に diff・pane・transcript を保全)。trial 産変更を git apply -R で逆適用し、lineage を正規再計算して 6b4ccda を刻み req6d 再走。req6d: fixture 書換 0 件 (git diff 空、transcript 全 38 tool call 走査で書込 0)、4 gate を実 Bash 実行 (Gate2 checked=15 mismatch=[] / Gate3 validated_digest=63b7a6fb…)、handoff 実体 emit (docs/requirements-handoff-F-LIVE-001.json)、readiness_matrix 15 行突合一致、graph_snapshot_digest 独立再計算一致。orchestrator と別個体の fresh evaluator が blockers=[] で PASS 判定 (non-blocker: requirements document が単一 handoff JSON に統合、emitted_at 固定値)。|| 前回記録: 先行試行で 2 つの fail-open を実測 — (1) C11 照合が validate-graph-schema.py 0 回実行のまま自己申告 (req1-3)、(2) 全 gate PASS 後に requirements/handoff の emit を省略して完了申告 (req4)。SKILL.md へ検証器の名指し係留と emit 完了条件を明文化して req5 で解消。"
+      "observed": "2026-07-24 再実走 (run 20260724T093756Z-requirements-wt1r3, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0, Skill ツール起動が最初の実行アクション): MVP-first 実装で挙動閉包 sha が更新され旧 verdict が stale 化したため再取得。fresh evaluator が fixture 実体を独立走査し、graph.json 全 15 node が confirmed / pass / complete、validate-graph-schema.py exit0 (valid=true, violations=[])、validate-source-digest.py checked=14 / registered_mismatch=[]、validate-system-plan.py --staging system-plan/F-LIVE-001 が status=pass かつ validated_digest (sha256:00114efd…290337) が成果物記載値と一致することを自分で再実行して確認。graph_snapshot_digest も hashlib.sha256(graph.json bytes) で再計算し sha256:b882e943…412058 が一致。capability-build-handoff.json の exact_13_tasks と source_feature_digest を上流 feature-package.json と突合して lineage 接続を実測、requirements-document.json の source_lineage 参照先 4 件の実在も確認。eval-log 外に実装ソース (.ts/.js/.py/.go/.java/.rs) 生成 0 件、git status は ?? eval-log/ のみ。goal-seek 3 点セットは必須 6 キー充足・original_goal hash (04482e65…) 一致・Skill 起動前の Write と約 7 分後の append で append-only を実証。pane.txt の EXIT_CODE=2 は evaluator が自ら再現し、validate-system-plan.py の相互排他フラグ (--staging | --feature-package) の誤用による CLI 使用ミスでデータ不整合ではないと切り分け済み。blocker 0 で PASS。skill_dir_tree_sha が現行 closure と一致。"
     },
     "OUT2": {
       "status": "PASS",

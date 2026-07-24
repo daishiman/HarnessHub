@@ -1,99 +1,100 @@
 {
-    "schema_version": "1.1.0",
-    "target": {
-        "plugin": "dev-graph",
-        "skill": "run-dev-graph-decompose",
-        "component_id": "C14",
-        "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
+  "schema_version": "1.1.0",
+  "target": {
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-decompose",
+    "component_id": "C14",
+    "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
+  },
+  "verdict": "PASS",
+  "reviewer": "dev-graph-integrity-auditor-fresh-evaluator-20260724T095200Z-decompose-wt1r3",
+  "loop_scope": "both",
+  "iteration_limit": 3,
+  "criteria_results": {
+    "IN1": {
+      "status": "PASS",
+      "verify_by": "script",
+      "evidence_kind": "hybrid",
+      "test_refs": [
+        "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_domain_dag_exact13_evidence_and_readiness_boundaries",
+        "plugins/dev-graph/tests/test_runtime_coverage.py::test_validate_graph_schema_and_main",
+        "independent: validate-graph-schema.py on eval-log/dev-graph/live-trial-fixtures/r3-decompose graph + graph_node_id-drop negative control"
+      ],
+      "observed": "validate-graph-schema.py against the r3-decompose repo-root returned valid=true, violations=[], implementation_readiness=complete (0 missing required keys), exit 0. A negative control that removed graph_node_id from node[0] flipped the same script to valid=false with violations code=missing_id and code=schema_violation detail \"$: 'graph_node_id' is a required property\", proving the pre-send gate rejects any missing required key. Both pytest nodes passed (2 passed in ~1.6s)."
     },
-    "verdict": "PASS",
-    "reviewer": "dev-graph-criteria-scenario-r7-20260723-x4or7",
-    "loop_scope": "both",
-    "iteration_limit": 3,
-    "criteria_results": {
-        "IN1": {
-            "status": "PASS",
-            "verify_by": "script",
-            "evidence_kind": "hybrid",
-            "test_refs": [
-                "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_domain_dag_exact13_evidence_and_readiness_boundaries",
-                "plugins/dev-graph/tests/test_runtime_coverage.py::test_validate_graph_schema_and_main",
-                "independent: validate-graph-schema.py on eval-log/dev-graph/live-trial-fixtures/r3-decompose graph + graph_node_id-drop negative control"
-            ],
-            "observed": "validate-graph-schema.py against the r3-decompose repo-root returned valid=true, violations=[], implementation_readiness=complete (0 missing required keys), exit 0. A negative control that removed graph_node_id from node[0] flipped the same script to valid=false with violations code=missing_id and code=schema_violation detail \"$: 'graph_node_id' is a required property\", proving the pre-send gate rejects any missing required key. Both pytest nodes passed (2 passed in ~1.6s)."
-        },
-        "OUT1": {
-            "status": "PASS",
-            "verify_by": "live-trial",
-            "evidence_kind": "live-trial",
-            "scenario_id": "C14-OUT1-positive-macro-decomposition",
-            "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T150058-x4or7/verdict.json",
-            "test_refs": [
-                "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T150058-x4or7/verdict.json",
-                "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260723T150058-x4or7/transcript.jsonl"
-            ],
-            "observed": "2026-07-23 再々実走 (HarnessHub-x4o/sk0): 20260723T101037-x4osk の dec2 PASS verdict は、リモート main マージ (7a0b993) で依存 plugin system-dev-planner の scripts が変わり挙動閉包 sha 更新により stale 化。fixture を新規構築 (ltr7: マージ後 worktree から plugin 再配備・repository_id rebind・plan_roots 追加) して dec3b で再 trial。C24 --mode write receipt 取得、4 node preview (feature 3 + architecture 1、6 属性実値) を validate-graph-schema.py --graph - (stdin) で実検証、独立 auditor (dev-graph-integrity-auditor) の Task fork 実行、dry-run write 0 (graph.json nodes=[] のまま)、goal-seek 3 点セット hash 整合を自走完遂。poll は完了後静止を STALL と判定 (exit 2, 600s) だが status.json は契約パスに PASS で実在。orchestrator と別個体の fresh evaluator が transcript 一次痕跡と fixture 実測で dec1 の 6 blocker の再発なしを含め blocker 0 の PASS 判定。non-blocker: validate-graph-schema.py の stdin 経路は artifact_missing で必ず exit 1 になる設計ギャップの指摘あり (被験セッションは隠さず開示し正しく解釈)。 || 前回記録: 2026-07-23 再実走 (HarnessHub-x4o/sk0: main merge の closure 変更で hh6cv verdict が stale 化): 1 回目の試行 (dec1) は fixture の .dev-graph/config.json に plan_roots が欠落しており readiness-guard hook が全 Bash/Task を遮断する環境起因 FAIL。fixture 修正 (plan_roots 追加) 後の dec2 で fresh fixture 再 trial。被験 Skill を最初の tool call で起動し、validate-graph-schema.py を stdin 経路で実行 (evaluator が同入力で再現実行し完全同一出力を確認)、4 node preview (architecture 1 + feature 3、依存 2 辺・非循環・task 粒度混入 0)、goal-seek 3 点セット + goal hash 逐語一致、C24 receipt による DEV_GRAPH_ROOT 固定、独立 auditor fork (dev-graph-integrity-auditor、12 tool uses) を自走完遂。write 0 契約は evaluator の fixture git status 実測で遵守確認 (graph.json 無変更・bd/gh/git commit の tool_use 0 件)。ready-feature package 項目を PASS 偽装せず NOT_APPLICABLE と正直申告する fail-closed 規律も確認。poll は長考による pane 静止で STALL (exit 2) だが本体は完走しマーカーは契約パスへ出力。orchestrator と別個体の fresh evaluator が blocker 0 件で goal PASS と判定。"
-        },
-        "OUT2": {
-            "status": "PASS",
-            "verify_by": "test",
-            "evidence_kind": "pytest",
-            "test_refs": [
-                "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_registers_exact_13_atomically_and_is_idempotent",
-                "plugins/dev-graph/tests/test_c27_c28_projection_contract.py::test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready",
-                "plugins/dev-graph/tests/test_semantic_c25_c28.py::test_c27_beads_claim_saga_and_compensation"
-            ],
-            "observed": "Re-running the same input kept exactly one set per binding: register-package produced 1 feature + 13 tracker_binding=none task nodes (graph_revision 5) and the second run returned idempotent=true with byte-identical receipt (binding=none local nodes, one set). The C28 beads projection created one epic B01 with B02..B14 parented to it plus 'dep add --type blocks' edges, and repeating create() left the create-call count unchanged (binding=beads bd issue/blocks edge, one set). The C27 beads claim saga confirmed a repeated same-owner claim invoked the bd bridge only once (idempotent external item). All nodes passed."
-        },
-        "OUT3": {
-            "status": "PASS",
-            "verify_by": "test",
-            "evidence_kind": "pytest",
-            "test_refs": [
-                "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_dry_run_writes_nothing",
-                "plugins/dev-graph/tests/test_register_package.py::RegisterPackageInProcessCoverageTest::test_in_process_register_dry_run_commit_and_idempotency",
-                "plugins/dev-graph/tests/test_c27_c28_projection_contract.py::test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready"
-            ],
-            "observed": "--dry-run left the graph JSON byte-equal to the pre-run state, created no receipt file, and reported write_count=0 (register-package). The C28 create --dry-run preview returned projection.write_count=0 and made zero bd calls, so binding resolution/projection diff was previewed without any local/Beads/GitHub/Projects write. All nodes passed."
-        },
-        "OUT4": {
-            "status": "PASS",
-            "verify_by": "test",
-            "evidence_kind": "pytest",
-            "test_refs": [
-                "plugins/dev-graph/tests/test_register_package.py::RegisterPackageInProcessCoverageTest::test_in_process_contract_and_binding_failures"
-            ],
-            "observed": "Each authority conflict was fail-closed before any external write: _resolved_nodes(mode=both) with all-auto intents raised ContractError matching 'both requires'; resolving with tracker binding 'beads' while a node intent was 'github' raised ContractError matching 'not allowed' (beads + Issue/github publication conflict); and a source lineage digest mismatch raised ContractError 'lineage digest mismatch'. No node was registered and no external mutation occurred. Test passed."
-        },
-        "OUT5": {
-            "status": "PASS",
-            "verify_by": "test",
-            "evidence_kind": "pytest",
-            "test_refs": [
-                "plugins/dev-graph/tests/test_semantic_c25_c28.py::test_c27_beads_claim_saga_and_compensation",
-                "plugins/dev-graph/tests/test_c27_c28_projection_contract.py::test_c27_fail_closed_owner_pending_release_and_projection_repair"
-            ],
-            "observed": "After a successful local lease claim (state=claimed, execution_context_projection=applied via the C02 writer), forcing the subsequent bd claim to raise ContractError left the ledger row for the failed node in state=released with compensation=reservation_released_after_bd_claim_failure, while the earlier succeeded local claim was untouched and the same-owner re-claim stayed idempotent (bridge invoked once). The C27 fail-closed pending-release/projection-repair node confirmed only the failed operation is repaired, so local state is preserved and just the failed operation is re-runnable. Both nodes passed."
-        },
-        "OUT6": {
-            "status": "PASS",
-            "verify_by": "test",
-            "evidence_kind": "pytest",
-            "test_refs": [
-                "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_registers_exact_13_atomically_and_is_idempotent",
-                "plugins/dev-graph/tests/test_c27_c28_projection_contract.py::test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready"
-            ],
-            "observed": "register-package registered exactly 13 task nodes under parent_feature=feature-1 with feature_package_id=feature-package/demo and expected_count=13 across phase_refs P01..P13; the second invocation returned idempotent=true with byte-identical receipt, so re-running the same ready feature keeps a single P01..P13 exact-13 set with matching parent_feature/feature_package_id. The C28 projection independently asserted expected_count==applied_count==13 with all 13 tasks parented to one epic. Both nodes passed."
-        },
-        "OUT7": {
-            "status": "PASS",
-            "verify_by": "test",
-            "evidence_kind": "pytest",
-            "test_refs": [
-                "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_rejects_conflicting_duplicate_registration",
-                "plugins/dev-graph/tests/test_register_package.py::RegisterPackageInProcessCoverageTest::test_idempotent_registration_rejects_conflicting_immutable_receipt"
-            ],
-            "observed": "A second registration presenting conflicting content for the same nodes was rejected, and tampering with the immutable receipt then re-registering raised ContractError 'immutable receipt conflicts'. Because both auto and manual routes are keyed on graph_node_id+source_digest, an identical re-registration converges to the one immutable receipt with no duplicate node, so auto and manual /system-dev-plan paths cannot double-register. Both nodes passed."
-        }
+    "OUT1": {
+      "status": "PASS",
+      "verify_by": "live-trial",
+      "evidence_kind": "live-trial",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/verdict.json",
+      "test_refs": [
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/out/status.json"
+      ],
+      "observed": "2026-07-24 再実走 (run 20260724T095200Z-decompose-wt1r3, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0, Skill ツール起動, --binding none --dry-run): MVP-first 実装で挙動閉包 sha が更新され旧 verdict (wt1r2) が stale 化したため、fixture を git reset --hard + clean -fdx で baseline (1f33d07) へ戻してから再取得。fresh evaluator が transcript のコマンドを そのまま再実行して同一 JSON 出力 (valid=false, artifact_missing 3 件のみ、schema_violation / dependency_cycle / binding_collision は 0 件) を再現し、fabrication でないことを裏取り。DAG を独自再計算し node_count=3 (architecture 1 + feature 2)、feat-dashboard depends_on feat-user-auth、cycles=[]、kinds={architecture, feature} (task 粒度の混入なし)、orphan なしを確認。git status は ?? eval-log/ のみで graph.json / config.json に差分なし、leases は空、transcript 中の gh-bridge / bd-bridge 呼出し 0 件により local / beads / github / projects の write_count=0 を独立裏取り。resolve-repo-context.py --mode write の receipt で repo_root == content_roots.repository を確認。goal-seek 3 点セットは必須 6 キー充足・original_goal hash (ceef75f3…) 一致・1 行目 (Skill 起動 00:59:10Z より前の 00:58:49Z) と 2 行目 (01:03:48Z) で約 5 分差の append-only を実証。AskUserQuestion 0 件。blocker 0 で PASS。非 blocker の scope 留意点 (本 scenario は --binding none --dry-run のみを被覆) は HarnessHub-vnr で追跡。skill_dir_tree_sha が現行 closure と一致。"
+    },
+    "OUT2": {
+      "status": "PASS",
+      "verify_by": "test",
+      "evidence_kind": "pytest",
+      "test_refs": [
+        "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_registers_exact_13_atomically_and_is_idempotent",
+        "plugins/dev-graph/tests/test_c27_c28_projection_contract.py::test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready",
+        "plugins/dev-graph/tests/test_semantic_c25_c28.py::test_c27_beads_claim_saga_and_compensation"
+      ],
+      "observed": "Re-running the same input kept exactly one set per binding: register-package produced 1 feature + 13 tracker_binding=none task nodes (graph_revision 5) and the second run returned idempotent=true with byte-identical receipt (binding=none local nodes, one set). The C28 beads projection created one epic B01 with B02..B14 parented to it plus 'dep add --type blocks' edges, and repeating create() left the create-call count unchanged (binding=beads bd issue/blocks edge, one set). The C27 beads claim saga confirmed a repeated same-owner claim invoked the bd bridge only once (idempotent external item). All nodes passed."
+    },
+    "OUT3": {
+      "status": "PASS",
+      "verify_by": "test",
+      "evidence_kind": "pytest",
+      "test_refs": [
+        "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_dry_run_writes_nothing",
+        "plugins/dev-graph/tests/test_register_package.py::RegisterPackageInProcessCoverageTest::test_in_process_register_dry_run_commit_and_idempotency",
+        "plugins/dev-graph/tests/test_c27_c28_projection_contract.py::test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready"
+      ],
+      "observed": "--dry-run left the graph JSON byte-equal to the pre-run state, created no receipt file, and reported write_count=0 (register-package). The C28 create --dry-run preview returned projection.write_count=0 and made zero bd calls, so binding resolution/projection diff was previewed without any local/Beads/GitHub/Projects write. All nodes passed."
+    },
+    "OUT4": {
+      "status": "PASS",
+      "verify_by": "test",
+      "evidence_kind": "pytest",
+      "test_refs": [
+        "plugins/dev-graph/tests/test_register_package.py::RegisterPackageInProcessCoverageTest::test_in_process_contract_and_binding_failures"
+      ],
+      "observed": "Each authority conflict was fail-closed before any external write: _resolved_nodes(mode=both) with all-auto intents raised ContractError matching 'both requires'; resolving with tracker binding 'beads' while a node intent was 'github' raised ContractError matching 'not allowed' (beads + Issue/github publication conflict); and a source lineage digest mismatch raised ContractError 'lineage digest mismatch'. No node was registered and no external mutation occurred. Test passed."
+    },
+    "OUT5": {
+      "status": "PASS",
+      "verify_by": "test",
+      "evidence_kind": "pytest",
+      "test_refs": [
+        "plugins/dev-graph/tests/test_semantic_c25_c28.py::test_c27_beads_claim_saga_and_compensation",
+        "plugins/dev-graph/tests/test_c27_c28_projection_contract.py::test_c27_fail_closed_owner_pending_release_and_projection_repair"
+      ],
+      "observed": "After a successful local lease claim (state=claimed, execution_context_projection=applied via the C02 writer), forcing the subsequent bd claim to raise ContractError left the ledger row for the failed node in state=released with compensation=reservation_released_after_bd_claim_failure, while the earlier succeeded local claim was untouched and the same-owner re-claim stayed idempotent (bridge invoked once). The C27 fail-closed pending-release/projection-repair node confirmed only the failed operation is repaired, so local state is preserved and just the failed operation is re-runnable. Both nodes passed."
+    },
+    "OUT6": {
+      "status": "PASS",
+      "verify_by": "test",
+      "evidence_kind": "pytest",
+      "test_refs": [
+        "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_registers_exact_13_atomically_and_is_idempotent",
+        "plugins/dev-graph/tests/test_c27_c28_projection_contract.py::test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready"
+      ],
+      "observed": "register-package registered exactly 13 task nodes under parent_feature=feature-1 with feature_package_id=feature-package/demo and expected_count=13 across phase_refs P01..P13; the second invocation returned idempotent=true with byte-identical receipt, so re-running the same ready feature keeps a single P01..P13 exact-13 set with matching parent_feature/feature_package_id. The C28 projection independently asserted expected_count==applied_count==13 with all 13 tasks parented to one epic. Both nodes passed."
+    },
+    "OUT7": {
+      "status": "PASS",
+      "verify_by": "test",
+      "evidence_kind": "pytest",
+      "test_refs": [
+        "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_rejects_conflicting_duplicate_registration",
+        "plugins/dev-graph/tests/test_register_package.py::RegisterPackageInProcessCoverageTest::test_idempotent_registration_rejects_conflicting_immutable_receipt"
+      ],
+      "observed": "A second registration presenting conflicting content for the same nodes was rejected, and tampering with the immutable receipt then re-registering raised ContractError 'immutable receipt conflicts'. Because both auto and manual routes are keyed on graph_node_id+source_digest, an identical re-registration converges to the one immutable receipt with no duplicate node, so auto and manual /system-dev-plan paths cannot double-register. Both nodes passed."
     }
+  }
 }

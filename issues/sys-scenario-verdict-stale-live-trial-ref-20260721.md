@@ -12,7 +12,7 @@ iteration: null
 title: "criteria-test の scenario-verdict が digest 書き換え済みの旧 r3 verdict を受入根拠に参照し続けている"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:00:00Z"
-updated_at: "2026-07-21T14:00:00Z"
+updated_at: "2026-07-23T10:26:04.811683Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -38,7 +38,7 @@ classification_reason: "criteria-test の scenario-verdict が書き換え済み
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-yg3","linked_at":"2026-07-23T10:11:37Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-21T14:00:00Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 概要
 

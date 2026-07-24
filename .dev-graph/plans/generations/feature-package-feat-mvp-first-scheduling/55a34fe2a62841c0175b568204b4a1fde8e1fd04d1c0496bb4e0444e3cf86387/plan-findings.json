@@ -1,0 +1,188 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-mvp-first-scheduling",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "前回 (digest sha256:bf549f07a1d8ff6ac2856268c065db717c9f6baa2154e27ee952c4368e158b1c) の C1 判定を維持する。今回の再生成は workstream-inventory.json の graph_node_registration.graph_node_id を task.id (大文字) へ統一し、staging-manifest.json/system-build-handoff.json を再生成した変更のみであり、feature-package.json および全 13 task-specs は sha256 不変のまま無変更であることを独立に確認した。feature-package.json の purpose・背景・goal・scope_in 5 件・scope_out 5 件・acceptance 5 件は前回確認済みの逐語一致を維持しており、意味的矛盾は生じていない。task ID の大文字統一は表記の整合であり、scope_in/scope_out の内容には影響しない。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "前回の C2 判定 (P04→P05→P06→P07 の acceptance item3 owner chain 確立) を維持する。今回の変更は workstream-inventory.json の tasks[].graph_node_registration.graph_node_id の大文字統一のみであり、task-specs/phase-04〜07 の本文 (テスト ID TC-MVP-SCHEMA-REG-01・Automated commands・Phase acceptance) は sha256 不変のまま無変更であることを確認したため、acceptance item3 の owner chain に影響する変更はない。",
+      "evidence": [
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-06-test-run.md",
+        "task-specs/phase-07-acceptance.md",
+        "workstream-inventory.json"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-mvp-first-scheduling を独立実行し exit 0 / violations=[] / validated_digest=sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387 を確認、team-lead 提示の新 canonical digest と完全一致した。今回変更された staging-manifest.json / system-build-handoff.json / workstream-inventory.json の3ファイルの sha256 を現物から独立に再計算し、staging-manifest.json の files 値・system-build-handoff.json の source_inputs 値と完全一致することを確認した。system-build-handoff.json の identity.source_feature_digest は sha256:b0d003254ac6f42d4616dfff30ab605e355c09c9abe642b71559cea6a49e6291 のまま無変更で、feature-package.json 側の値とも一致する。変更3ファイルを絶対 path パターン (/Users, /home, C:\\\\) で grep した結果ゼロ件で、system-build-handoff.json の source_manifest.canonical_digest_before_handoff / sha256_before_handoff は自己参照除外ポリシー通りの中間 bookkeeping 値であり、最終 canonical_digest の判定には影響しない。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "feature-package.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json (無変更、前回評価と同一 sha256) の depends_on は P01 depends_on=[] を起点に完全直列のまま後方参照 0 件を維持する。今回の是正対象だった workstream-inventory.json の tasks[].graph_node_registration.graph_node_id は 13 task 全件で task.id と厳密一致 (大文字 SYS-MVP-FIRST-SCHEDULING-P01〜P13) するよう統一されたことを直接確認した。promote-system-plan.py の _registration_nodes は graph_node_registration.graph_node_id != task.id の場合に ValueError を送出する契約であり、統一前はこの契約に違反していたが今回の是正で解消された。なお task-graph.json 側の各 node には id (大文字) とは別に graph_node_id という小文字表記のフィールド (例: sys-mvp-first-scheduling-p01) が残存し、workstream-inventory.json の 統一後の値と大文字/小文字が食い違っているが、validate-system-plan.py (id を優先し graph_node_id はフォールバックのみ) にも promote-system-plan.py の _registration_nodes (task-graph.json を一切参照せず workstream-inventory.json のみから node を構築) にも一切参照されない死んだフィールドであることをソースコード突合で確認した (findings に low として記録、実行可能性への機能的影響はない)。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-06-test-run.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-mvp-first-scheduling"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387\",\n  \"feature_package_id\": \"feature-package/feat-mvp-first-scheduling\",\n  \"parent_feature\": \"feat-mvp-first-scheduling\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "ad36562740a54b6c41f7a153a6bcf9de9468fe9b105f6703dc22233b636398a7"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "af46ad95d2f0be7d69878ab4b998511f80973a280c729e406e09f5b4299c3266"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "7c99ef5aad54ba0a42abe16b65d60d3381a52c4aa581fc7f98091ba903c1fbf9"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "ee2008f70ef79ebd873ec82f93a3609a5fb675fd6a60444e2f7dc36bbbab883f"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "80899bb29fff3dbb4ec57e6dc2a3af54350f92c88c6b67d14ed066c916553ffa"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "9d5077cc67089e26e294f468d8a58eee0bb5e1bd9a30751ee0ffe0053db1d5fa"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "92dcdcc040520e61847c87fdf057a03fcb040b831003fe19eb79fdfcbedc30a2"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "f788ca0be410fa10efe6c6b2738fdf62546f12b9040b225d9d07b0cdf382cd68"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "d80adee3df7c47eca8b44b31cb38051c74a54b224d43abe11553ecaab0f9d9bc"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "daa937f6144bf6225d4afd6dc735c95af527a35485805ca8070770cfd5ec73f5"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "f5064cd9430a7f7d857df597855bea6b8c4c690987dcba993d95dc95dfae8083"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "61471c446a255fcdcdbd21630c5772b34d10e5fa5766e17646486ea09d71be4d"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "2c045af40c34184ecb503cbbe90af04e088b5a8a458e1e3be6948684bcab2173"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "94748fa98ce6ce0a0d1bfefab15e0f72eafe94c6002091a99bd90d5e61902cd3"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "de17b2b7b7120b4ad10e46a7c6f83910c58519b1a0534e44329b869c8a131f7a"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "b7be141fc5e2ac9b6af66bb165ffc3374e6ad1d7654148fb3a472f84d87e531c"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "224d054273e0db8341a9e4fc61bf8ae3deb60870a4f5856b8c872d243e4aced1"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "a27bc155564b306e6db74c2186dd95b687cc281081fb950bbbb5330b71062a27"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "remediation-verified",
+      "observation": "前回 FAIL の根拠だった high finding (acceptance item3『MVP 判断軸 metadata を持つ node が validate-graph-schema.py PASS で登録できる』の owner phase 不在) は、P04 のテスト ID 追加 (TC-MVP-SCHEMA-REG-01)、P05 の実装・新規テストファイル・Automated commands への validate-graph-schema.py 追加、P06 の同スクリプト実行と結果記録、P07 の判定根拠明記という 4 phase 連鎖で解消されたことを確認した。P05/P06 が追加した `validate-graph-schema.py --graph <path> --repo-root .` は実スクリプトの argparse 定義 (--graph required, --repo-root) と一致し、机上のみの記述ではなく実行可能なコマンドである。",
+      "evidence": [
+        "task-specs/phase-04-test-design.md:89",
+        "task-specs/phase-05-implementation.md:92-96",
+        "task-specs/phase-06-test-run.md:89-92",
+        "task-specs/phase-07-acceptance.md:88-89"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "phase-acceptance-design-note",
+      "observation": "P01/P02/P03/P10/P11/P13 の Phase acceptance は goal-spec acceptance 5 件全てを列挙するが、これらの phase の Automated commands は validate-system-plan.py (計画構造 gate) のみで、独自の機能テストは実行しない。今回の是正で P04 (定義)→P05 (実装)→P06 (実行)→P07 (判定) の一次証跡チェーンが 5 件全てについて閉じたため、review/release 系 phase (P01-03/P10/P11/P13) が上流証跡を根拠に 5 件を再確認する設計は trace rule (『P07/P10 adjudicate only executed evidence』) と整合しており、前回評価時に懸念した『誤った印象を与えうる表記』は実質的な defect ではないと判断する。将来的に review 系 phase の Phase acceptance に『上流 P04/P06/P07 の証跡に基づく』旨の注記を加えると読み手の解釈がより明確になる、という non-blocking な改善余地としてのみ記録する。",
+      "evidence": [
+        "task-specs/phase-10-final-review.md (Phase acceptance)",
+        "task-specs/phase-13-release-deploy.md (Phase acceptance)",
+        "task-specs/phase-07-acceptance.md (参照情報 trace rule)"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "dead-field-consistency-note",
+      "observation": "task-graph.json の各 node は id (大文字、例: SYS-MVP-FIRST-SCHEDULING-P01) と graph_node_id (小文字、例: sys-mvp-first-scheduling-p01) の両方を保持するが、今回 workstream-inventory.json 側で graph_node_registration.graph_node_id を task.id (大文字) へ統一した後も、task-graph.json の graph_node_id フィールドは 小文字のまま更新されておらず、両 artifact 間で大文字/小文字が食い違っている。validate-system-plan.py の node_ids 算出 (id を優先し graph_node_id はフォールバックのみ) と promote-system-plan.py の _registration_nodes (task-graph.json を一切参照せず workstream-inventory.json のみから登録 node を構築) のソースコードを突合した結果、このフィールドはどちらのスクリプトからも参照されない死んだフィールドであり、実行可能性・登録整合性に機能的な影響はない。ただし将来の保守者が誤って参照する可能性があるため、次回 staging 再生成時に大文字へ統一する、または不要なら削除することを推奨する。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
  "original_goal": "仕様書・アーキテクチャをplugins/system-spec-harness/の正規フローで構築し、出典・確定状態・上位目的traceを保ったままdev-graphのspecification/architectureノードへ取り込んだ状態になっている",
  "recorded_at": "2026-07-21T21:17:30Z",
- "run_note": "2026-07-22 wt-10: 追加ヒアリング — 開発管理パイプラインのドキュメント規約 2 概念 (仕組みとナレッジのオン・オフ分離 / ドキュメント粒度規約 約500行) を elicit→compile→evaluator→C02 の正規フローで dev-workflow 章へ追加確定する。既存 qa-066/qa-067 は全面維持"
+ "run_note": "2026-07-23 wt-1: 差分ヒアリング — dev-graph/beads (bd) のタスク優先度選定を目的・背景・MVP の3軸による MVP ファースト基準へ組み替える (qa-069)。dev-workflow.web を R4-reopen→再確定し、compile→evaluator→C02 の正規フローで反映。既存 qa-066/qa-067 の要件は維持"
 }

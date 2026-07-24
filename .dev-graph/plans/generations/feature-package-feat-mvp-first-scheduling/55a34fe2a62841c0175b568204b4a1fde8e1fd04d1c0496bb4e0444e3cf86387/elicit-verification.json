@@ -1,0 +1,32 @@
+{
+  "schema": "elicit-verification/v1",
+  "agent": "system-dev-plan-elicitor",
+  "feature_id": "feat-mvp-first-scheduling",
+  "goal_spec_path": ".dev-graph/staging/feature-package-feat-mvp-first-scheduling/goal-spec.json",
+  "generated_at": "2026-07-23T05:20:00Z",
+  "status": "ok",
+  "verification": {
+    "identity_match": true,
+    "identity_detail": "feature context (features/feat-mvp-first-scheduling.context.json) と feature 文書 (features/feat-mvp-first-scheduling.md) の graph_node_id は共に feat-mvp-first-scheduling で一致。feature 文書は confirmation_status=confirmed, graph rev 383 で C02 登録済み。",
+    "lineage_grounded": true,
+    "lineage_detail": "feature 文書 frontmatter の source_lineage.source_digest と architecture ラッパー (architecture/harness-hub-dev-workflow.md) frontmatter の source_lineage.source_digest はいずれも 43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86 で一致し、依頼指定値とも一致。参照先 system-spec/dev-workflow.md は status: confirmed の qa-069 節に接地している。architecture の evaluation_status=pass も確認済み。",
+    "architecture_refs_resolved": true,
+    "architecture_refs_detail": "architecture/harness-hub-dev-workflow.md と specs/harness-hub-system-specification.md は共に repository 内に実在を確認 (Glob)。主参照は arch-harness-hub-dev-workflow (frontmatter architecture_refs に明示)。specs 側は context.json のみの記載で feature/architecture frontmatter には未記載のため副次参照として保持。",
+    "caveats": [
+      "feature_context_digest (sha256:b0d003254ac6f42d4616dfff30ab605e355c09c9abe642b71559cea6a49e6291) はハッシュ計算ツールが利用できないため、依頼元提供値をそのまま記録した (独自の再計算検証は未実施)。",
+      "同様に system-spec/dev-workflow.md 自体のバイト内容から sha256 を再計算しての検証は未実施。frontmatter 申告値同士のテキスト一致のみ確認した。"
+    ]
+  },
+  "drift_signal_found": true,
+  "drift_signal_detail": "architecture/harness-hub-dev-workflow.md 本文の「正本 (source of truth)」節が古い sha256 断片 (c8f21b091cfc28b2…) と取込日時 2026-07-18T15:40:17Z を記載しており、qa-069 追加後に更新された frontmatter の source_lineage (digest 43336931…, imported_at 2026-07-23T04:45:00Z) と不一致。frontmatter を正本として goal-spec を生成したが、architecture 文書本文側の更新漏れとして別途フォローが必要。",
+  "content_fidelity": "purpose/goal/scope_in/scope_out/acceptance は feature context.json の値を一切改変せず verbatim 転記。background は feature 側で purpose と分離定義されていないため purpose と同一テキストを転記し、その旨を background_source_note に明記した。",
+  "no_expansion": "feature 分割・P01..P13 task 生成・readiness promotion は一切行っていない。",
+  "checklist": {
+    "feature_id_context_digest_match": true,
+    "purpose_goal_scope_acceptance_non_empty": true,
+    "architecture_refs_resolvable_in_repo": true,
+    "system_spec_source_confirmed_or_pass": true,
+    "lineage_has_path_plugin_version_digest": true,
+    "no_feature_split_or_task_generation": true
+  }
+}
