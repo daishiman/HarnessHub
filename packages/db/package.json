@@ -2,31 +2,48 @@
   "name": "@harness-hub/db",
   "version": "0.1.0",
   "private": true,
-  "description": "repository 層の境界と型のみ (docs/shared-layers.md §2)。DB スキーマ実体は feat-domain-model-db の責務",
+  "description": "control-plane DB のスキーマ、接続、repository、backup、R2 registry",
   "type": "module",
   "sideEffects": false,
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./backup": "./backup/index.ts",
+    "./connection": "./connection/index.ts",
+    "./cron/export-daily": "./cron/export-daily.ts",
+    "./cron/verify-audit-chain": "./cron/verify-audit-chain.ts",
+    "./registry": "./registry/index.ts",
+    "./repository": "./repository/index.ts",
+    "./schema": "./schema/index.ts"
   },
   "types": "./src/index.ts",
   "files": [
+    "backup",
+    "connection",
+    "cron",
+    "migrations",
+    "registry",
+    "repository",
+    "schema",
     "src"
   ],
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "pnpm --workspace-root exec biome check packages/db"
+    "lint": "pnpm --workspace-root exec biome check packages/db",
+    "check:ddl": "node scripts/check-ddl.mjs",
+    "check:tenant-isolation-coverage": "tsx scripts/check-tenant-isolation-coverage.ts",
+    "check:connection-isolation": "tsx scripts/check-connection-layer-isolation.ts",
+    "export:control-plane": "tsx scripts/export-control-plane.ts",
+    "restore:control-plane": "tsx scripts/restore-control-plane.ts"
   },
-  "peerDependencies": {
+  "dependencies": {
+    "@libsql/client": "^0.15.0",
     "drizzle-orm": ">=0.36.0"
   },
-  "peerDependenciesMeta": {
-    "drizzle-orm": {
-      "optional": true
-    }
-  },
   "devDependencies": {
-    "drizzle-orm": ">=0.36.0",
+    "@types/node": "^22.10.0",
+    "drizzle-kit": "^0.31.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   }
