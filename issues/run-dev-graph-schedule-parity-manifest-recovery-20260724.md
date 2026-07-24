@@ -49,50 +49,47 @@ implementation_readiness: {"checked_at":"2026-07-24T09:23:39Z","missing_sections
 
 # 概要
 
-Beads に着手可能な dev-graph node が存在しても、schedule 用 parity manifest にその node が無いと、C28 は `parity_manifest_missing` へ分類し、C16 は候補として採用しない。この結果、`run-dev-graph-schedule` の自動選定が空になる。
+<問題または要望を一文で記載>
 
 ## 背景と問題
 
-`run-dev-graph-schedule/SKILL.md` は、manifest が stale / 欠落なら `run-dev-graph-sync` (C03) で作り直すと案内している。しかし `run-dev-graph-sync/SKILL.md` と `sync-graph.py` には parity manifest の生成・出力契約がなく、リポジトリ内検索でも生成実装は見つからない。C28 の分類と C16 の fail-closed 動作は契約どおりだが、正常系の manifest 生成 owner が実装されていないため自己回復できない。
+<誰が、どの状況で、何に困っているか>
 
 ## 現在の挙動
 
-1. `bd ready` には `external_ref=dev-graph:<node>` を持つ候補がある。
-2. parity manifest に対応 node が無い。
-3. C28 receipt の `unmapped` が `reason=parity_manifest_missing` になる。
-4. C16 は unmapped をレポートへ引き継ぐが ready candidate にせず、推薦が空になる。
+<観測事実。再現不能の場合はその旨と理由>
 
 ## 期待する挙動
 
-schedule の平常経路が現行 graph から fresh な provenance 付き manifest を自動生成し、正しく linkage 済みの Beads ready node を C28 parity 確認後に C16 へ渡す。欠落・stale は黙って通さず、正規の再生成手順で回復する。
+<解決後に観測できる状態>
+
+## 再現手順またはユースケース
+
+1. <step>
 
 ## 影響と優先度
 
-- 影響範囲: dev-graph の次タスク自動選定、複数 worktree の並列スケジュール
-- 深刻度: medium — 誤ったタスクを選ぶより安全だが、ready work があるのに『なし』と見える silent starvation が起きる
-- 緊急度: scheduler を通常運用へ使う前に回復経路を実装する必要がある
+- 影響範囲: <users/data/system>
+- 深刻度: <critical|high|medium|low>
+- 緊急度: <理由>
 
 ## スコープ
 
-- In: parity manifest generator、C03/C16/C28 配線、回帰テスト、契約同期
-- Out: provenance 検査の緩和、digest forgery、draft status 写像、merge lifecycle、package contract 被覆
+- In: <対象>
+- Out: <非対象>
 
 ## 関連グラフ
 
-- C03: `run-dev-graph-sync`
-- C16: `schedule-graph.py`
-- C28: `bd-bridge.py --op ready`
-- 近接だが別問題: HarnessHub-57v / HarnessHub-vy0 / HarnessHub-dbb
+- 原因/親ノード: <graph_node_id>
+- 関連仕様: <graph_node_id>
+- 関連アーキテクチャ: <graph_node_id>
+- 解決タスク: <graph_node_id>
 
 ## 受入条件
 
-- [ ] linkage 済み Beads ready node を含む fixture で schedule の ready-set が空にならない
-- [ ] 正しく linkage 済み node の `parity_manifest_missing` が 0 件
-- [ ] manifest の provenance と node/edge exact-set が current graph と一致
-- [ ] stale / missing manifest の回復が正規再生成で成立
-- [ ] SKILL.md・契約・実装・テストの責務記述が一致
+- [ ] <観測可能な結果>
 
 ## 検証証跡
 
-- `plugins/dev-graph/tests/test_parity_manifest_provenance.py`
-- schedule skill の live-trial で、C28 ready receipt と C16 ready-set の候補数が一致すること
+- コマンド/テスト: <how-to-verify>
+- 証跡 path: <path-or-url>

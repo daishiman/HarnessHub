@@ -1,0 +1,86 @@
+{
+  "receipt": "release-receipt",
+  "task": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+  "feature": "feat-doc-governance-portability",
+  "beads": {
+    "epic": "HarnessHub-ik0",
+    "release_task": "HarnessHub-ik0.13",
+    "closed_at_release": "HarnessHub-ik0.1〜ik0.12",
+    "kept_open": "HarnessHub-ik0.13 (merge 後の CI 実測完了まで open 維持。MVP-first 前例では P13 も close したが、本 feature は P13 acceptance に『CI 実環境実証』が明示されるため、事実に一致する状態を優先した)"
+  },
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+  "branch": "devgraph/SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+  "base_branch": "main",
+  "pull_request": {
+    "number": 49,
+    "url": "https://github.com/daishiman/HarnessHub/pull/49",
+    "state": "draft",
+    "created_at": "2026-07-24"
+  },
+  "recorded_at": "2026-07-24T06:30:00Z",
+  "release_head_sha": "61a4f28becba (feature commit。本 receipt commit の直前)",
+  "purpose": "qa-070 ドキュメント規約 2 件 (仕組み-ナレッジ分離・300 行上限) の執行機構 3 検査を main へ反映する前に、品質ゲート実測・迂回遮断の証跡・main 統合状態・仕様反映判断を再現可能な形で固定する",
+
+  "main_integration": {
+    "remote_to_local": {
+      "note": "git fetch 後に origin/main == local main で差分 0 (git rev-list --count main..origin/main = 0)",
+      "origin_main": "8d802c23095c896c0b129708f375d9e341ec8873",
+      "local_main": "8d802c23095c896c0b129708f375d9e341ec8873"
+    },
+    "local_to_branch": {
+      "note": "本ブランチは main tip (8d802c2) から分岐。git merge main = Already up to date (merge commit 不要)",
+      "verification": "git merge-base --is-ancestor origin/main HEAD = true"
+    }
+  },
+
+  "quality_gates": {
+    "pytest_new_tests": {
+      "command": "python3 -m pytest tests/scripts-root/test_root__lint_doc_line_limit.py tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py tests/scripts-root/test_root__lint_portability_knowledge_optin.py -q",
+      "result": "76 passed (7.85s)"
+    },
+    "full_regression": {
+      "command": "python3 -m pytest plugins/dev-graph/tests plugins/spec-drift-guardian/tests plugins/system-dev-planner/tests plugins/harness-creator/tests tests/scripts-root -q",
+      "result": "2634 passed / 0 failed (417.59s)。先行 release-receipt (feat-mvp-first-scheduling P13) 時点の 2615 passed から本 feature の追加テスト分が増加し、退行なし"
+    },
+    "real_repo_lints": {
+      "lint-doc-line-limit --ratchet-base origin/main": "exit 0 (検査 328 文書, 上限 300 行, allowlist 5 件)",
+      "lint-mechanism-knowledge-boundary": "exit 0 (known-existing baseline 0 件)",
+      "lint-portability-knowledge-optin": "exit 0",
+      "lint-artifact-placement": "exit 0",
+      "guard-change-category --base origin/main": "exit 0 (total=18 blocked=0)"
+    },
+    "known_deviation": {
+      "validate-system-plan": "exit 2 / status=fail (27 violations: Inner goal-seek execution loop 等)。package 昇格 (2026-07-22) 後に validator の task-spec 必須 section 契約が強化された遡及不整合で、content-addressed package は digest 不変により編集不可。本 feature 成果物の欠陥ではない。HarnessHub-8vx で追跡。package digest 一致 (sha256:d33c318d…8aee) は確認済み"
+    }
+  },
+
+  "p06_p09_consistency": {
+    "note": "P06 (test-run-p06.json) の pytest 76 件 PASS・3 lint exit 0 と、本 receipt 時点の再実測が一致。P09 (qa-fail-closed-report.json) の悪性 15 ケース全遮断・良性対向 2 ケース誤検出なしは sandbox 実測で、対応する回帰テスト (ratchet-base 6 件・定数畳み込み 11 件・gate 偽装 2 件) が本 branch のテストスイートに固定されている"
+  },
+
+  "spec_reflection": {
+    "spec_impact": "none",
+    "receipt_path": ".git/dev-graph/spec-reflection/devgraph__SYS-DOC-GOVERNANCE-PORTABILITY-P13.json (git 共通ディレクトリ配下・HEAD 61a4f28 束縛)",
+    "reason": "qa-070 の規約本文は不変更。本 diff は既確定規約の執行機構強化と成果物・証跡の記録のみで、正本は feature 層 docs/features/feat-doc-governance-portability/ に反映済み。system-spec/ の qa-070 系譜未登録 (spec-state.json qa_log に qa-070 が無い dangling) は本 feature 以前からの既知課題 (completeness-findings.json 記録済み) で、R4-reopen → 追補確定の正規経路で別途解消する"
+  },
+
+  "pending_after_merge": [
+    {
+      "item": "governance-check.yml の CI 実 run で 3 検査の exit code を実測し、本 receipt へ追記する (P13 acceptance の『CI fail-closed 実効性の実証』)。悪性 diff を投入した検証 run の exit code 確認を含む",
+      "tracker": "HarnessHub-ik0.13"
+    },
+    {
+      "item": "reconcile-github-lifecycle.py で completion_evidence を done へ収束させる (linked_pr_merged_all)。task worktree から実行できない既知制約は issues/sys-devgraph-completion-reconcile-blocked-20260721.md が追跡",
+      "tracker": "HarnessHub-ik0"
+    }
+  ],
+
+  "excluded_from_commit": {
+    "plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-07-24-rubric-update.md": "aggregate-evals (SessionEnd hook) の自動生成ドラフトで本 feature と無関係。受領書記録・PR 作成の間のみ scratchpad へ退避し、完了後に作業ツリーへ復元した"
+  },
+
+  "integrity_notes": {
+    "self_reference": "本 receipt 自身は evidence-manifest.json の digest 対象外 (自己参照になるため)。本 receipt が指す証跡の実体は git 追跡下にあり、第三者が evidence-manifest.json の rerun コマンドで再計算・照合できる",
+    "honest_recording": "既知逸脱 (validate-system-plan exit 2) と merge 後の残項目を隠さず記録し、beads で追跡可能にした"
+  }
+}

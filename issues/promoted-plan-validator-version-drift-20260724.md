@@ -49,48 +49,47 @@ implementation_readiness: {"checked_at":"2026-07-24T09:29:31Z","missing_sections
 
 # 概要
 
-`feature-package/feat-hub-foundation` の promoted digest `8735bb...` は生成時に confirmation pass / readiness complete だったが、現在の `validate-system-plan.py` では後から追加された必須 section を遡及要求され fail する。
+<問題または要望を一文で記載>
 
 ## 背景と問題
 
-P01〜P13 task projection は固定 digest と task-spec SHA を pin し、再検証は current pointer 経由の validator command を正規経路としている。ところが validator の REQUIRED_TASK_SPEC_SECTIONS と P13 writeback marker が強化された後も、generation metadata に契約版が無いため、過去に正しく promoted された不変 package へ新契約がそのまま適用される。
-
-2026-07-24 の実測では 13 task spec すべてに `task-spec-section-missing: Inner goal-seek execution loop` と `inner-goal-seek-contract`、P13 に `p13-spec-architecture-writeback` が出て計 27 violations となる。Hub の実装・テストは `pnpm verify` で pass しており、この failure は成果物不良ではなく plan contract の版管理不在である。
+<誰が、どの状況で、何に困っているか>
 
 ## 現在の挙動
 
-- promoted package: confirmation pass / evaluation pass / readiness complete
-- current validator: exit 2 / status fail / 27 violations
-- package は content-addressed のため section をその場で追記すると digest・receipt・projection の整合を壊す
+<観測事実。再現不能の場合はその旨と理由>
 
 ## 期待する挙動
 
-生成時契約版で過去 package を再現検証できるか、正規 generator を再実行して新 digest へ repromote し、task projection と receipt を一括更新できる。新規 package では強化後の goal-seek / P13 writeback 要件を維持する。
+<解決後に観測できる状態>
+
+## 再現手順またはユースケース
+
+1. <step>
 
 ## 影響と優先度
 
-- 影響範囲: 既存 promoted feature package の再検証、P01〜P13 close-out
-- 深刻度: medium — 実装品質は保たれるが、正規 completion gate が後日理由なく赤へ変わる
-- 緊急度: lifecycle reconcile 前に failure の所有先を分離しないと task 実装の失敗と誤認する
+- 影響範囲: <users/data/system>
+- 深刻度: <critical|high|medium|low>
+- 緊急度: <理由>
 
 ## スコープ
 
-- In: contract versioning、version-aware validation または repromotion、回帰テスト、projection 整合
-- Out: immutable generation の手編集、強化要件の削除、Hub 実装変更
+- In: <対象>
+- Out: <非対象>
 
 ## 関連グラフ
 
-- 対象 feature: `feat-hub-foundation`
-- 旧 drift issue: HarnessHub-p4f（acceptance/QC 件数 drift。今回とは別）
+- 原因/親ノード: <graph_node_id>
+- 関連仕様: <graph_node_id>
+- 関連アーキテクチャ: <graph_node_id>
+- 解決タスク: <graph_node_id>
 
 ## 受入条件
 
-- [ ] 旧 promoted package を生成時契約で再現検証できる、または正規 repromotion が完走する
-- [ ] content-addressed generation を直接手編集しない
-- [ ] 新規 package の goal-seek / P13 writeback gate は維持される
-- [ ] 旧・新 contract の回帰テストが pass する
+- [ ] <観測可能な結果>
 
 ## 検証証跡
 
-- 再現: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hub-foundation`
-- observed: status=fail / 27 violations（13×2 + P13×1）
+- コマンド/テスト: <how-to-verify>
+- 証跡 path: <path-or-url>

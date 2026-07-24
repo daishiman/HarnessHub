@@ -12,14 +12,14 @@ iteration: null
 title: "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線"
 owners: ["daishiman"]
 created_at: "2026-07-22T04:16:31Z"
-updated_at: "2026-07-23T11:18:58.051445Z"
-status: "closed"
+updated_at: "2026-07-24T07:22:00Z"
+status: "done"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P04"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
-resource_scope: ["plugins/dev-graph/scripts/lint-open-residue.py","plugins/dev-graph/scripts/lint-eval-log-layout.py","plugins/dev-graph/scripts/lint-handoff-disposition.py","plugins/dev-graph/schemas/improvement-handoff.schema.json","plugins/dev-graph/tests/test_lint_open_residue.py","plugins/dev-graph/tests/test_lint_eval_log_layout.py","plugins/dev-graph/tests/test_lint_handoff_disposition.py","eval-log/README.md",".dev-graph/templates/task.md",".github/workflows/dev-pipeline-lint.yml","plugins/spec-drift-guardian/"]
+resource_scope: ["plugins/dev-graph/scripts/lint-open-residue.py","plugins/dev-graph/scripts/lint-eval-log-layout.py","plugins/dev-graph/scripts/lint-handoff-disposition.py","plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json","plugins/dev-graph/tests/test_lint_open_residue.py","plugins/dev-graph/tests/test_lint_eval_log_layout.py","plugins/dev-graph/tests/test_lint_handoff_disposition.py","eval-log/README.md",".dev-graph/templates/task.md",".github/workflows/dev-pipeline-lint.yml","plugins/spec-drift-guardian/"]
 purpose: "P02 設計と P04 テスト設計に従い、lint-open-residue.py / lint-eval-log-layout.py / lint-handoff-disposition.py、improvement-handoff.schema.json、eval-log/README.md 配置規約、task template の status 意味論追記、CI への lint 配線を実装する。"
 goal: "P05 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す"
-scope_in: ["plugins/dev-graph/scripts/lint-open-residue.py","plugins/dev-graph/scripts/lint-eval-log-layout.py","plugins/dev-graph/scripts/lint-handoff-disposition.py","plugins/dev-graph/schemas/improvement-handoff.schema.json","plugins/dev-graph/tests/test_lint_open_residue.py","plugins/dev-graph/tests/test_lint_eval_log_layout.py","plugins/dev-graph/tests/test_lint_handoff_disposition.py","eval-log/README.md",".dev-graph/templates/task.md",".github/workflows/dev-pipeline-lint.yml","plugins/spec-drift-guardian/"]
+scope_in: ["plugins/dev-graph/scripts/lint-open-residue.py","plugins/dev-graph/scripts/lint-eval-log-layout.py","plugins/dev-graph/scripts/lint-handoff-disposition.py","plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json","plugins/dev-graph/tests/test_lint_open_residue.py","plugins/dev-graph/tests/test_lint_eval_log_layout.py","plugins/dev-graph/tests/test_lint_handoff_disposition.py","eval-log/README.md",".dev-graph/templates/task.md",".github/workflows/dev-pipeline-lint.yml","plugins/spec-drift-guardian/"]
 scope_out: ["Hub プロダクト本体機能 (Web/API/DB) の変更","dev-graph への新 verb 追加","bd CLI 本体の変更","graph.json 分割の実装 (トリガー記録のみ)","本 phase の責務外の成果物生成 (他 phase の write scope への書込)"]
 acceptance: ["lint script 3 本が P02 の入出力契約どおりに動作し、P04 の MUST_DETECT/MUST_PASS fixture を全件満たす","improvement-handoff.schema.json が disposition 必須の新形式と既存形式の判別 (schema_version) を持つ","spec-drift-guardian の C03/C04 verdict が P02 設計どおり close gate へ配線され、verdict 未着のまま proposal のみで close する経路が fail-closed で遮断される (回帰テスト付き)","eval-log/README.md に配置規約が明文化され、task template に status 意味論が追記され、CI workflow に lint 3 本が fail-closed で配線されている"]
 architecture_refs: ["arch-harness-hub-dev-workflow"]
@@ -103,7 +103,7 @@ P02 設計と P04 テスト設計に従い、lint-open-residue.py / lint-eval-lo
 - plugins/dev-graph/scripts/lint-open-residue.py
 - plugins/dev-graph/scripts/lint-eval-log-layout.py
 - plugins/dev-graph/scripts/lint-handoff-disposition.py
-- plugins/dev-graph/schemas/improvement-handoff.schema.json
+- plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json
 - plugins/dev-graph/tests/test_lint_open_residue.py
 - plugins/dev-graph/tests/test_lint_eval_log_layout.py
 - plugins/dev-graph/tests/test_lint_handoff_disposition.py
@@ -111,7 +111,7 @@ P02 設計と P04 テスト設計に従い、lint-open-residue.py / lint-eval-lo
 - .dev-graph/templates/task.md
 - plugins/spec-drift-guardian の close gate 実装修正 (C03/C04 verdict 配線と proposal-only close の遮断。対象実ファイルは P02 design.md が確定する)
 - Consumed artifacts: goal-spec.json, features/feat-dev-pipeline-improvement.context.json, architecture/harness-hub-dev-workflow.md, system-spec/dev-workflow.md (qa-067)
-- Write scope/touches: plugins/dev-graph/scripts/lint-open-residue.py, plugins/dev-graph/scripts/lint-eval-log-layout.py, plugins/dev-graph/scripts/lint-handoff-disposition.py, plugins/dev-graph/schemas/improvement-handoff.schema.json, plugins/dev-graph/tests/test_lint_open_residue.py, plugins/dev-graph/tests/test_lint_eval_log_layout.py, plugins/dev-graph/tests/test_lint_handoff_disposition.py, eval-log/README.md, .dev-graph/templates/task.md, .github/workflows/dev-pipeline-lint.yml, plugins/spec-drift-guardian/
+- Write scope/touches: plugins/dev-graph/scripts/lint-open-residue.py, plugins/dev-graph/scripts/lint-eval-log-layout.py, plugins/dev-graph/scripts/lint-handoff-disposition.py, plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json, plugins/dev-graph/tests/test_lint_open_residue.py, plugins/dev-graph/tests/test_lint_eval_log_layout.py, plugins/dev-graph/tests/test_lint_handoff_disposition.py, eval-log/README.md, .dev-graph/templates/task.md, .github/workflows/dev-pipeline-lint.yml, plugins/spec-drift-guardian/
 
 ## Tracker publication and completion
 
@@ -126,7 +126,7 @@ P02 設計と P04 テスト設計に従い、lint-open-residue.py / lint-eval-lo
 
 - Branch: dev-graph 登録後に C15 が devgraph/sys-dev-pipeline-improvement-p05 として払い出す。system-dev-planner は事前に branch 名を確定しない
 - Worktree lease: 実装着手前に graph_node_id (sys-dev-pipeline-improvement-p05) の worktree lease を claim し、heartbeat 送出と完了時 release を行う
-- Parallel safety: 直前 phase 完了後にのみ着手する (直列 DAG)。resource_scope (plugins/dev-graph/scripts/lint-open-residue.py, plugins/dev-graph/scripts/lint-eval-log-layout.py, plugins/dev-graph/scripts/lint-handoff-disposition.py, plugins/dev-graph/schemas/improvement-handoff.schema.json, plugins/dev-graph/tests/test_lint_open_residue.py, plugins/dev-graph/tests/test_lint_eval_log_layout.py, plugins/dev-graph/tests/test_lint_handoff_disposition.py, eval-log/README.md, .dev-graph/templates/task.md, .github/workflows/dev-pipeline-lint.yml, plugins/spec-drift-guardian/) が他 task の active lease と重複しないことを確認する
+- Parallel safety: 直前 phase 完了後にのみ着手する (直列 DAG)。resource_scope (plugins/dev-graph/scripts/lint-open-residue.py, plugins/dev-graph/scripts/lint-eval-log-layout.py, plugins/dev-graph/scripts/lint-handoff-disposition.py, plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json, plugins/dev-graph/tests/test_lint_open_residue.py, plugins/dev-graph/tests/test_lint_eval_log_layout.py, plugins/dev-graph/tests/test_lint_handoff_disposition.py, eval-log/README.md, .dev-graph/templates/task.md, .github/workflows/dev-pipeline-lint.yml, plugins/spec-drift-guardian/) が他 task の active lease と重複しないことを確認する
 - Completion projection: feature branch 上の完了は pending event として記録され、default branch (main) へのクリーンな reconciliation で durable done へ確定する
 
 ## スコープ外

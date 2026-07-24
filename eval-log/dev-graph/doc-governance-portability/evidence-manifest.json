@@ -1,0 +1,76 @@
+{
+  "phase": "P11",
+  "kind": "evidence-manifest",
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+  "note": "本 manifest は既存成果物の digest 採取と再実行コマンドの固定のみを行い、新たな実測・判定は行っていない (証跡固定のみ)",
+  "artifacts": [
+    {
+      "path": "scripts/lint-doc-line-limit.py",
+      "sha256": "f2c3453ad6eb164849450d13e592a7e52b898a816c32ee76f4386af46bc5783d",
+      "produced_by": "P05",
+      "rerun": "python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main --json"
+    },
+    {
+      "path": "scripts/lint-mechanism-knowledge-boundary.py",
+      "sha256": "b8c0d38439e2a927ee55b5ac8e3ef90defbee9ad866b4e32bc3c02dce74abf13",
+      "produced_by": "P05",
+      "rerun": "python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root . --json"
+    },
+    {
+      "path": "scripts/lint-portability-knowledge-optin.py",
+      "sha256": "848e374934fc17581475db1c6fbe20561bdda57e0204347ccee6ec2e841a11e6",
+      "produced_by": "P05",
+      "rerun": "python3 scripts/lint-portability-knowledge-optin.py --repo-root . --json"
+    },
+    {
+      "path": "scripts/doc-line-limit-allowlist.json",
+      "sha256": "c1f5d845808b6be567bde568324d17bf1cfc0c0ab609e991353c26b0ab410d47",
+      "produced_by": "P05 (schema スケルトン) + P08 (baseline 遡及付与)",
+      "rerun": "python3 scripts/lint-doc-line-limit.py --repo-root . --json (allowlist 5 件で exit 0)"
+    },
+    {
+      "path": "tests/scripts-root/test_root__lint_doc_line_limit.py",
+      "sha256": "9e50ec09a305b47026cef4348486b8f7cc31df37c0cf73c490d14a2d0703db84",
+      "produced_by": "P05",
+      "rerun": "python3 -m pytest tests/scripts-root/test_root__lint_doc_line_limit.py -q"
+    },
+    {
+      "path": "tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py",
+      "sha256": "893a7600d3f9394366abe5208dd7cb0f35151bdcf73c34d3d772ab433505f52f",
+      "produced_by": "P05",
+      "rerun": "python3 -m pytest tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py -q"
+    },
+    {
+      "path": "tests/scripts-root/test_root__lint_portability_knowledge_optin.py",
+      "sha256": "450d0ff1dd622d92be41d9841a425c781085962fb7f10a12f649464db682363a",
+      "produced_by": "P05",
+      "rerun": "python3 -m pytest tests/scripts-root/test_root__lint_portability_knowledge_optin.py -q"
+    },
+    {
+      "path": ".github/workflows/governance-check.yml",
+      "sha256": "166bfd636ebdb2b0865140b271536de16f859e8f55a717fa15f7de707dceab13",
+      "produced_by": "P05 (change-category-guard job への 3 lint fail-closed 配線)",
+      "rerun": "grep -n 'lint-doc-line-limit\\|lint-mechanism-knowledge-boundary\\|lint-portability-knowledge-optin' .github/workflows/governance-check.yml"
+    },
+    {
+      "path": "eval-log/dev-graph/doc-governance-portability/test-run-p06.json",
+      "sha256": "59b7cc1cc12ed00a50a6fe7370f91a4015ad776fc63340bf1613734b134b654b",
+      "produced_by": "P06",
+      "rerun": "python3 -m pytest tests/scripts-root/test_root__lint_doc_line_limit.py tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py tests/scripts-root/test_root__lint_portability_knowledge_optin.py -q"
+    },
+    {
+      "path": "eval-log/dev-graph/doc-governance-portability/migration-receipt.json",
+      "sha256": "754ce684feaf730f338d5698ed0adcb3e793ecd777d08f832ffcd493e8a6c22d",
+      "produced_by": "P08",
+      "rerun": "python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main (exit 0・再実行差分 0)"
+    },
+    {
+      "path": "eval-log/dev-graph/doc-governance-portability/qa-fail-closed-report.json",
+      "sha256": "385433397cf0c1122c4394b2bd011cac344f4947868a98c10080443b2c351b31",
+      "produced_by": "P09",
+      "rerun": "隔離 sandbox に悪性 fixture を再注入し 3 lint を --repo-root sandbox で実行 (手順は qa-fail-closed-report.json の method に記載)"
+    }
+  ],
+  "idempotency_claim": "各 rerun コマンドは同一入力に対し同一出力へ収束する (P06 で rerun_diff=0 を実測)。manifest の sha256 と再実行結果の突合で将来の検証が可能",
+  "recorded_at": "2026-07-24T06:59:57Z"
+}
