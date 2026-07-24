@@ -1,5 +1,5 @@
 {
-  "graph_revision": 523,
+  "graph_revision": 524,
   "nodes": [
     {
       "acceptance": [
@@ -32212,6 +32212,118 @@
       "title": "MVP-first feature 13 node の completion projection 未実施 (lint-open-residue OR-003 13件)",
       "tracker_binding": "beads",
       "updated_at": "2026-07-24T07:55:00Z"
+    },
+    {
+      "acceptance": [
+        "テンプレート正本とビルド後が一貫し build-plugins-from-harness 再ビルドでも要求が消えない",
+        "test-type マトリクス or カバレッジ閾値を欠くタスク仕様書を validate-system-plan.py が fail-closed で拒否する",
+        "coverage 閾値割れで vitest が exit≠0 になり CI G4 が落ちる",
+        "plugins/system-dev-planner/tests が green"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9hj",
+        "linked_at": "2026-07-24T11:55:20Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-test-coverage-enforcement-20260724.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "feat-domain-model-db (u6q) のテスト品質レビュー中に判明した、タスク仕様書がテスト網羅を機械強制していない harness 横断ギャップの是正 issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T11:51:28Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-test-coverage-enforcement-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "テンプレート正本・C12 validator・カバレッジ実測基盤の3層で、以後の全 feature の P04/P06 が多層テストとカバレッジ閾値を満たさなければ fail-closed になる状態",
+      "graph_node_id": "issue-test-coverage-enforcement-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T11:51:28Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "system-dev-planner が生成するタスク仕様書が、実行者の丁寧さに依存せず、単体+結合+境界+既存回帰+カバレッジ閾値を再現的に機械強制する状態にする",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugin-plans/system-dev-planner/references/system-task-spec-template.md",
+        "plugins/system-dev-planner/references/system-task-spec-template.md",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "packages/db/vitest.config.ts"
+      ],
+      "scope_in": [
+        "system-task-spec-template.md (正本 plugin-plans + ビルド後 plugins) に test-type マトリクス + カバレッジ閾値を必須節化し goal-seek rubric へ束縛",
+        "validate-system-plan.py (C12) に test-type マトリクス・カバレッジ閾値宣言の中身検査を追加 (無ければ fail-closed)",
+        "各パッケージ vitest.config.ts へ coverage.thresholds + @vitest/coverage-v8 を導入",
+        "現 feature packages/db で 80% を実測し不足を補填 (スコープ A の場合)"
+      ],
+      "scope_out": [
+        "個別 feature のテストケース具体設計 (各 feature の P04 が所管)",
+        "E2E ランナー基盤そのものの新規構築"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T11:51:28Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "test-coverage",
+        "system-dev-planner",
+        "dev-graph",
+        "governance"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T11:56:47Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
