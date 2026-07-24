@@ -119,6 +119,63 @@ def test_syntax_error_source_returns_empty():
     assert MOD.find_knowledge_literals("def (: broken\n") == []
 
 
+# ── MUST_DETECT: 分割記述による検出回避の遮断 (定数畳み込み) ─────────────────
+def test_detect_qa_number_split_concat():
+    assert "qa-070" in _tokens('ref = "qa-" + "070"\n')
+
+
+def test_detect_qa_number_split_concat_nested():
+    assert "qa-070" in _tokens('ref = ("qa-" + "07") + "0"\n')
+
+
+def test_detect_qa_number_fstring_constant():
+    assert "qa-70" in _tokens('ref = f"qa-{70}"\n')
+
+
+def test_detect_qa_number_percent_format():
+    assert "qa-70" in _tokens('ref = "qa-%d" % 70\n')
+
+
+def test_detect_knowledge_path_str_format_constant():
+    src = 'p = "features/{}.md".format("feat-hub-foundation")\n'
+    assert "knowledge-path" in _kinds(src)
+
+
+def test_detect_implicit_adjacent_concat():
+    # 隣接リテラル連結は parser が単一 Constant へ畳む (従来から検出)。
+    assert "qa-070" in _tokens('ref = "qa-" "070"\n')
+
+
+# ── MUST_PASS: 入力由来の動的組み立ては検出しない (畳み込みの guard) ────────
+def test_pass_dynamic_fstring_path():
+    src = 'def f(name):\n    return f"tasks/{name}.md"\n'
+    assert MOD.find_knowledge_literals(src) == []
+
+
+def test_pass_dynamic_concat_qa_prefix():
+    src = 'def f(suffix):\n    return "qa-" + suffix\n'
+    assert MOD.find_knowledge_literals(src) == []
+
+
+def test_pass_dynamic_percent_format():
+    src = 'def f(n):\n    return "qa-%d" % n\n'
+    assert MOD.find_knowledge_literals(src) == []
+
+
+def test_pass_composite_in_help_kwarg():
+    src = (
+        'import argparse\n'
+        'p = argparse.ArgumentParser()\n'
+        'p.add_argument("--x", default=None, help="qa-" + "070" + " を参照")\n'
+    )
+    assert MOD.find_knowledge_literals(src) == []
+
+
+def test_pass_composite_bare_expression_citation():
+    src = '"qa-" + "070"\nx = 1\n'
+    assert MOD.find_knowledge_literals(src) == []
+
+
 # ── lint(): baseline は解消後に空へ収束 ───────────────────────────────────
 def test_known_existing_baseline_is_empty():
     assert MOD.KNOWN_EXISTING == set()

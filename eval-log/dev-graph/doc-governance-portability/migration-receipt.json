@@ -1,0 +1,79 @@
+{
+  "phase": "P08",
+  "kind": "migration-receipt",
+  "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+  "migration": "doc-line-limit allowlist baseline 遡及付与 (縮小のみ許す ratchet 初期化)",
+  "allowlist": "scripts/doc-line-limit-allowlist.json",
+  "allowlist_sha256": "c1f5d845808b6be567bde568324d17bf1cfc0c0ab609e991353c26b0ab410d47",
+  "target_docs": [
+    {
+      "path": "docs/security-spec.md",
+      "baseline_2026_07_22": 910,
+      "measured_lines": 910,
+      "baseline_line_count_in_allowlist": 910,
+      "disposition": "baseline-granted",
+      "sha256": "735617fe97d073a742f93a9b711f0a8d758617b8038befbd3d90ea51af596445",
+      "content_modified_by_migration": false
+    },
+    {
+      "path": "docs/backend-spec.md",
+      "baseline_2026_07_22": 434,
+      "measured_lines": 434,
+      "baseline_line_count_in_allowlist": 434,
+      "disposition": "baseline-granted",
+      "sha256": "eeb9bcca0237d386442632e1db30407e18c0810d3f0898b3a4cdc02423299db8",
+      "content_modified_by_migration": false
+    },
+    {
+      "path": "docs/features/feat-hub-foundation/design-review-notes.md",
+      "baseline_2026_07_22": 366,
+      "measured_lines": 366,
+      "baseline_line_count_in_allowlist": 366,
+      "disposition": "baseline-granted",
+      "sha256": "064831b4f1c5c32d7df81ddd6a3fbc897a99edae05dd6bd8e4f230d33bdfa113",
+      "content_modified_by_migration": false
+    },
+    {
+      "path": "docs/features/feat-dev-pipeline-improvement/design.md",
+      "baseline_2026_07_22": 365,
+      "measured_lines": 276,
+      "baseline_line_count_in_allowlist": null,
+      "disposition": "graduated",
+      "disposition_note": "HarnessHub-3d8 側の remediation で 276 行 (≤300) へ縮小済みのためエントリ削除 (卒業)。ratchet の縮小方向のみの変化であり、allowlist description の『300 行以下へ縮小したらエントリを削除する』規約どおり。縮小実施自体は本 feature の scope_out (HarnessHub-3d8 の責務)",
+      "sha256": "3cc8de145adabb65724011e55536e1047c98b57476ae2ac708c71600aeb963b5",
+      "content_modified_by_migration": false
+    },
+    {
+      "path": "docs/features/feat-stage0-distribution-gate/design-review-notes.md",
+      "baseline_2026_07_22": 320,
+      "measured_lines": 320,
+      "baseline_line_count_in_allowlist": 320,
+      "disposition": "baseline-granted",
+      "sha256": "0585038416d3e11ed7ebb4a45ed467e55962c03eaa194bca1a14571336056b0b",
+      "content_modified_by_migration": false
+    },
+    {
+      "path": "docs/features/feat-hub-foundation/final-review-notes.md",
+      "baseline_2026_07_22": 303,
+      "measured_lines": 303,
+      "baseline_line_count_in_allowlist": 303,
+      "disposition": "baseline-granted",
+      "sha256": "a4c5e20ab455ccd879a095bc2ad093e5fceb775ebce3d6a7660e988af5842afe",
+      "content_modified_by_migration": false
+    }
+  ],
+  "summary": {
+    "targets": 6,
+    "baseline_granted": 5,
+    "graduated": 1,
+    "splits_performed": 0,
+    "split_note": "6 文書の分割は一切実施していない (scope_out: issue-doc-granularity-remediation-20260722 / HarnessHub-3d8)"
+  },
+  "verification": {
+    "lint_exit_code": 0,
+    "lint_command": "python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main",
+    "idempotency": "再実行差分 0: allowlist は baseline 付与済み状態で安定し、lint 2 回実行の JSON 出力 diff 0 (eval-log/dev-graph/doc-governance-portability/test-run-p06.json の lint-doc-line-limit-real-repo)",
+    "digest_immutability": "6 文書とも uncommitted_changes=0 (git status clean) で、migration は文書本文へ一切書込んでいない。上記 sha256 は付与後の実測値であり、付与前 (HEAD commit 時点) と同一 blob"
+  },
+  "recorded_at": "2026-07-24T06:23:17Z"
+}

@@ -203,6 +203,80 @@ def test_main_exit2_bad_allowlist(tmp_path):
     assert rc == 2
 
 
+# ── --ratchet-base: allowlist 自体の改ざん検査 (不正追加・拡大の遮断) ────────
+def _rewrite_allowlist(tmp_path, entries, limit=300):
+    al = tmp_path / "scripts" / "doc-line-limit-allowlist.json"
+    al.write_text(json.dumps({
+        "line_limit": limit,
+        "allowlist": [
+            {"path": p, "baseline_line_count": b, "reason": "t"}
+            for p, b in entries
+        ],
+    }), encoding="utf-8")
+
+
+def test_ratchet_base_new_entry_blocked(tmp_path, capsys):
+    _init_repo_with_allowlist(tmp_path, {"docs/big.md": 400}, [("docs/big.md", 400)])
+    # 迂回試行: 新規超過文書を allowlist へ追加して緑化しようとする
+    _write_lines(tmp_path / "docs" / "sneak.md", 400)
+    _git(tmp_path, "add", "docs/sneak.md")
+    _rewrite_allowlist(tmp_path, [("docs/big.md", 400), ("docs/sneak.md", 400)])
+    rc = MOD.main(["--repo-root", str(tmp_path), "--ratchet-base", "HEAD"])
+    assert rc == 1
+    assert "新規エントリ" in capsys.readouterr().err
+
+
+def test_ratchet_base_baseline_increase_blocked(tmp_path, capsys):
+    _init_repo_with_allowlist(tmp_path, {"docs/big.md": 400}, [("docs/big.md", 400)])
+    # 迂回試行: baseline を拡大して文書肥大を許そうとする
+    _write_lines(tmp_path / "docs" / "big.md", 500)
+    _rewrite_allowlist(tmp_path, [("docs/big.md", 500)])
+    rc = MOD.main(["--repo-root", str(tmp_path), "--ratchet-base", "HEAD"])
+    assert rc == 1
+    assert "拡大" in capsys.readouterr().err
+
+
+def test_ratchet_base_limit_increase_blocked(tmp_path, capsys):
+    _init_repo_with_allowlist(tmp_path, {"docs/a.md": 10}, [])
+    _rewrite_allowlist(tmp_path, [], limit=500)  # 迂回試行: 上限自体の拡大
+    rc = MOD.main(["--repo-root", str(tmp_path), "--ratchet-base", "HEAD"])
+    assert rc == 1
+    assert "line_limit" in capsys.readouterr().err
+
+
+def test_ratchet_base_shrink_and_remove_pass(tmp_path):
+    _init_repo_with_allowlist(tmp_path, {"docs/big.md": 400, "docs/b2.md": 350},
+                              [("docs/big.md", 400), ("docs/b2.md", 350)])
+    # 縮小方向: baseline 追随 + 卒業エントリ削除は許す
+    _write_lines(tmp_path / "docs" / "big.md", 380)
+    _write_lines(tmp_path / "docs" / "b2.md", 100)
+    _rewrite_allowlist(tmp_path, [("docs/big.md", 380)])
+    rc = MOD.main(["--repo-root", str(tmp_path), "--ratchet-base", "HEAD"])
+    assert rc == 0
+
+
+def test_ratchet_base_unresolvable_rev_config_error(tmp_path, capsys):
+    _init_repo_with_allowlist(tmp_path, {"docs/a.md": 10}, [])
+    rc = MOD.main(["--repo-root", str(tmp_path), "--ratchet-base", "no-such-rev"])
+    assert rc == 2
+    assert "設定エラー" in capsys.readouterr().err
+
+
+def test_ratchet_base_missing_base_file_is_initial_introduction(tmp_path, capsys):
+    # 基準 rev に allowlist が無い = 初導入。比較 skip の NOTE を出し exit 0。
+    _git(tmp_path, "init", "-q")
+    _git(tmp_path, "config", "user.email", "t@t")
+    _git(tmp_path, "config", "user.name", "t")
+    _write_lines(tmp_path / "docs" / "a.md", 10)
+    _git(tmp_path, "add", "-A")
+    _git(tmp_path, "commit", "-qm", "no allowlist yet")
+    (tmp_path / "scripts").mkdir(exist_ok=True)
+    _rewrite_allowlist(tmp_path, [])
+    rc = MOD.main(["--repo-root", str(tmp_path), "--ratchet-base", "HEAD"])
+    assert rc == 0
+    assert "初導入" in capsys.readouterr().out
+
+
 # ── 実リポジトリ契約 (allowlist 込みで exit 0) ──────────────────────────────
 def test_cli_real_repo_exit_zero():
     res = subprocess.run([sys.executable, str(SCRIPT), "--repo-root", str(ROOT)],
