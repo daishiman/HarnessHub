@@ -1,0 +1,250 @@
+{
+  "schema_version": "1.0.0",
+  "task": "SYS-TASK-SPEC-TEST-STRATEGY-P09",
+  "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+  "package_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "executed_at": "2026-07-25T10:14:06.330022Z",
+  "fail_closed_cases": [
+    {
+      "case": "section-missing",
+      "expected_violation_code": "task-spec-test-strategy-missing",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-missing"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "partial-item-loss",
+      "expected_violation_code": "task-spec-test-strategy-item-missing",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-item-missing"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "item-order-swap",
+      "expected_violation_code": "task-spec-test-strategy-item-order",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-item-order"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "section-placement",
+      "expected_violation_code": "task-spec-test-strategy-placement",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-placement"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "empty-section-body",
+      "expected_violation_code": "task-spec-test-strategy-empty",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-empty"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "empty-item-body",
+      "expected_violation_code": "task-spec-test-strategy-item-empty",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-item-empty"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "duplicate-section",
+      "expected_violation_code": "task-spec-test-strategy-duplicate",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-duplicate"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "missing-required-marker",
+      "expected_violation_code": "task-spec-test-strategy-content",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-content"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "legacy-strict-if-present",
+      "expected_violation_code": "task-spec-test-strategy-item-missing",
+      "exit_code": 2,
+      "status": "fail",
+      "contract_mode": "legacy",
+      "observed_violation_codes": [
+        "task-spec-test-strategy-item-missing"
+      ],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": true,
+      "verdict": "pass"
+    },
+    {
+      "case": "control-conformant",
+      "expected_violation_code": null,
+      "exit_code": 0,
+      "status": "pass",
+      "contract_mode": "enforced",
+      "observed_violation_codes": [],
+      "exact13": {
+        "task_spec_paths": 13,
+        "inventory_tasks": 13,
+        "graph_nodes": 13,
+        "depends_on_edges": 12,
+        "phase_refs_ordered": true,
+        "spec_files_present": 13
+      },
+      "sole_cause_is_test_strategy": false,
+      "verdict": "pass"
+    }
+  ],
+  "summary": {
+    "cases": 10,
+    "rejected_with_exit_2": 9,
+    "control_accepted": 1,
+    "sole_cause_isolated": 9,
+    "verdict": "pass"
+  },
+  "exact13_shape_invariance": {
+    "expected": {
+      "task_spec_paths": 13,
+      "inventory_tasks": 13,
+      "graph_nodes": 13,
+      "depends_on_edges": 12,
+      "phase_refs_ordered": true,
+      "spec_files_present": 13
+    },
+    "all_cases_match": true
+  },
+  "selected_tests": {
+    "command": "python3 -m pytest plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py -k malformed --junitxml=eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-run.xml",
+    "selected": [
+      "test_malformed_empty_item_body_is_rejected",
+      "test_malformed_missing_required_marker_is_rejected",
+      "test_malformed_partial_item_loss_is_rejected",
+      "test_malformed_section_placement_is_rejected",
+      "test_legacy_package_with_malformed_section_is_rejected",
+      "test_malformed_item_order_swap_is_rejected",
+      "test_malformed_empty_section_body_is_rejected",
+      "test_malformed_duplicate_section_is_rejected"
+    ],
+    "failures": []
+  },
+  "exact13_non_regression": {
+    "command": "python3 -m pytest plugins/system-dev-planner/tests -q",
+    "exit_code": 0,
+    "summary": "137 passed in 48.87s"
+  },
+  "notes": [
+    "control-conformant は偽陽性検出用の対照ケース。同じ経路で 4 項目完備の package が exit 0 を返すことを確認し、「何を入れても落ちるから赤い」検査でないことを示す。",
+    "section-missing 以外は 13 件中 P01 のみを悪性化しており、1 件の欠陥で package 全体が拒否される (部分的な緑を認めない) ことも同時に示している。",
+    "悪性本文は C14 handoff 生成より前に書き込んでいる。生成後に書き換えると handoff-source-digest violation が併発し exit 2 の原因を特定できないため、sole_cause_is_test_strategy=true で単一原因であることを実測している。",
+    "exact13_shape_invariance は violation の有無と独立に staging の実形状 (13 spec / 13 node / 12 edge / P01..P13 順) を数えたもの。悪性ケースで検査が早期打切りされ 13 件契約の測定自体が抜ける事態を防ぐ。"
+  ]
+}

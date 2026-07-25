@@ -62,6 +62,48 @@ REQUIRED_TASK_SPEC_SECTIONS = (
     "参照情報",
 )
 
+# --- テスト戦略 section (qa-070 / qa-072 / qa-073 / qa-075) ---------------
+#
+# `REQUIRED_TASK_SPEC_SECTIONS` へは意図的に追加しない。15 section の必須集合を
+# 16 へ広げると、既に promoted 済みの世代が即座に FAIL へ転落し exact-13 契約の
+# 非退行 (goal-spec acceptance 7) を破る。代わりに package 側の
+# `spec_contract_version` 宣言で段階適用する条件付き検査として実装する。
+TEST_STRATEGY_SECTION = "テスト戦略"
+# 4 項目のラベルと出現順序が、再生成冪等性 (acceptance 3) の判定単位そのもの。
+TEST_STRATEGY_ITEMS: tuple[tuple[str, str], ...] = (
+    ("テストレベル選定", "test_levels"),
+    ("カバレッジ目標", "coverage_target"),
+    ("層別方針", "layer_policies"),
+    ("保守性制約", "maintainability_constraints"),
+)
+TEST_STRATEGY_SCHEMA = "task-spec-test-strategy.schema.json"
+# section は「スコープ外」の後、「Verification and evidence」の前に置く。
+# scope が決まってテスト範囲が決まり、その実行手段が Verification へ続く。
+TEST_STRATEGY_PLACEMENT = ("スコープ外", "Verification and evidence")
+# この版以上を宣言した package だけが section 必須 (enforced) になる。
+TEST_STRATEGY_MIN_CONTRACT = (1, 2, 0)
+WORKSTREAM_SECTION = "Workstream applicability"
+# Workstream applicability の各行 -> テスト層。Backend/API/Data は OR で backend 層へ束ねる。
+# Security/Quality/Documentation/Operations は層別テスト方針の対象外 (層を導出しない)。
+LAYER_BY_WORKSTREAM = {
+    "Frontend": "frontend",
+    "Backend": "backend",
+    "API": "backend",
+    "Data": "backend",
+    "Infrastructure": "infrastructure",
+}
+# 各層の層別方針が満たすべき必須マーカー (qa-072 逐語由来)。
+LAYER_MARKERS = {
+    "frontend": ("behavior",),
+    "backend": ("API 契約", "DB 結合"),
+    "infrastructure": ("IaC", "smoke"),
+}
+_ITEM_LABEL = re.compile(
+    r"^[ \t]*[-*][ \t]*(" + "|".join(re.escape(label) for label, _ in TEST_STRATEGY_ITEMS) + r")[ \t]*[:：]",
+    re.MULTILINE,
+)
+_WORKSTREAM_LINE = re.compile(r"^[ \t]*[-*][ \t]*([^:：]+?)[ \t]*[:：][ \t]*(.*)$", re.MULTILINE)
+
 
 def _resolver():
     spec = importlib.util.spec_from_file_location("sdp_context", HERE / "resolve-project-context.py")
@@ -202,6 +244,124 @@ def _load_schema(name: str) -> dict:
     return value
 
 
+def _task_spec_sections(text: str) -> list[tuple[str, str]]:
+    """`## ` 見出しを (見出し名, 本文) の出現順リストへ写す。"""
+    headings = list(TASK_SPEC_HEADING.finditer(text))
+    sections: list[tuple[str, str]] = []
+    for index, heading in enumerate(headings):
+        end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
+        sections.append((heading.group(1).strip(), text[heading.end():end]))
+    return sections
+
+
+def parse_test_strategy(text: str) -> tuple[dict | None, list[tuple[str, str]]]:
+    """`## テスト戦略` を schema 検査可能な中間表現へ写す。
+
+    戻り値は (value, errors)。value が None かつ errors が空のときだけ「section 不在」を
+    意味し、必須か否かの判断は呼び出し側 (契約版によるモード判定) が行う。
+    構造 (見出し・配置・4 項目の有無と順序と空判定) はここで、内容 (必須語) は
+    schema が担当する — 責務を分けることで、語彙の改訂を Python 変更なしに行える。
+    """
+    sections = _task_spec_sections(text)
+    names = [name for name, _ in sections]
+    indices = [i for i, name in enumerate(names) if name == TEST_STRATEGY_SECTION]
+    if not indices:
+        return None, []
+    if len(indices) > 1:
+        return None, [("task-spec-test-strategy-duplicate", f"{len(indices)} occurrences")]
+
+    index = indices[0]
+    errors: list[tuple[str, str]] = []
+    before, after = TEST_STRATEGY_PLACEMENT
+    if before in names and after in names and not names.index(before) < index < names.index(after):
+        errors.append(("task-spec-test-strategy-placement", f"must sit between `{before}` and `{after}`"))
+
+    body = sections[index][1]
+    if not body.strip():
+        errors.append(("task-spec-test-strategy-empty", TEST_STRATEGY_SECTION))
+        return None, errors
+
+    matches = list(_ITEM_LABEL.finditer(body))
+    found = [m.group(1) for m in matches]
+    canonical = [label for label, _ in TEST_STRATEGY_ITEMS]
+    missing = [label for label in canonical if label not in found]
+    for label in missing:
+        errors.append(("task-spec-test-strategy-item-missing", label))
+    # 欠落があるときの順序比較は必ず不一致になるため、原因を一つに絞って報告する。
+    if not missing and found != canonical:
+        errors.append(("task-spec-test-strategy-item-order", f"expected={canonical} actual={found}"))
+
+    keys = dict(TEST_STRATEGY_ITEMS)
+    value: dict = {"schema_version": "1.0.0"}
+    for position, match in enumerate(matches):
+        end = matches[position + 1].start() if position + 1 < len(matches) else len(body)
+        item = body[match.end():end].strip()
+        if not item:
+            errors.append(("task-spec-test-strategy-item-empty", match.group(1)))
+            continue
+        value.setdefault(keys[match.group(1)], item)
+    return value, errors
+
+
+def derive_required_layers(text: str) -> list[str]:
+    """`Workstream applicability` の applicable 宣言から必須テスト層を導出する。
+
+    `N/A` で始まる値は適用外。Backend / API / Data は同一の backend 層へ OR 結合し、
+    Security / Quality / Documentation / Operations は層別テスト方針を導出しない。
+    戻り値は固定順で、同じ入力に対し常に同じ列を返す (冪等性の要件)。
+    """
+    body = dict(_task_spec_sections(text)).get(WORKSTREAM_SECTION)
+    if body is None:
+        return []
+    applicable: set[str] = set()
+    for match in _WORKSTREAM_LINE.finditer(body):
+        layer = LAYER_BY_WORKSTREAM.get(match.group(1).strip())
+        if layer is None or re.match(r"n/?a\b", match.group(2).strip(), re.I):
+            continue
+        applicable.add(layer)
+    return [layer for layer in ("frontend", "backend", "infrastructure") if layer in applicable]
+
+
+def test_strategy_violations(text: str, *, enforced: bool) -> list[tuple[str, str]]:
+    """テスト戦略 section の構造・内容・層別充足を検証する (qa-070/072/073/075)。
+
+    `enforced=False` (legacy package) でも、section が存在する場合は同じ厳格さで
+    検査する (strict-if-present)。緩めるのは「無いことを許すか」だけであり、
+    書かれた内容の妥当性を緩めれば fail-closed が形骸化するため。
+    """
+    value, errors = parse_test_strategy(text)
+    if value is None:
+        if not errors:
+            return [("task-spec-test-strategy-missing", TEST_STRATEGY_SECTION)] if enforced else []
+        return errors
+    if {key for _, key in TEST_STRATEGY_ITEMS} <= set(value):
+        for detail in schema_violations(value, _load_schema(TEST_STRATEGY_SCHEMA)):
+            errors.append(("task-spec-test-strategy-content", detail))
+        policies = value["layer_policies"]
+        for layer in derive_required_layers(text):
+            for marker in LAYER_MARKERS[layer]:
+                if marker not in policies:
+                    errors.append(("task-spec-test-strategy-layer", f"{layer}: missing marker `{marker}`"))
+    return errors
+
+
+def _contract_version(raw: object) -> tuple[int, int, int] | None:
+    if not isinstance(raw, str):
+        return None
+    match = re.fullmatch(r"([0-9]+)\.([0-9]+)\.([0-9]+)", raw)
+    return (int(match.group(1)), int(match.group(2)), int(match.group(3))) if match else None
+
+
+def test_strategy_mode(package: dict) -> str:
+    """package の `spec_contract_version` から enforced / legacy を決める。
+
+    不正形式は legacy へ落とすが、package schema の pattern が別途 violation を出すため
+    「壊れた版宣言で検査を黙って無効化する」抜け道にはならない。
+    """
+    version = _contract_version(package.get("spec_contract_version"))
+    return "enforced" if version is not None and version >= TEST_STRATEGY_MIN_CONTRACT else "legacy"
+
+
 def task_spec_violations(text: str) -> list[tuple[str, str]]:
     """Return structural violations against the canonical task overlay.
 
@@ -273,6 +433,7 @@ def validate(staging: Path, repository_id: str) -> dict:
     if not all(isinstance(x, dict) for x in (package, inventory, graph, handoff, manifest)):
         return {"status": "fail", "violations": violations, "validated_digest": None}
     package_id, parent = package.get("feature_package_id"), package.get("parent_feature")
+    strategy_mode = test_strategy_mode(package)
     for detail in schema_violations(package, _load_schema("feature-execution-package.schema.json")):
         fail("package-schema", "feature-package.json", detail)
     for detail in schema_violations(inventory, _load_schema("workstream-inventory.schema.json")):
@@ -367,6 +528,8 @@ def validate(staging: Path, repository_id: str) -> dict:
                 )
             for code, section in task_spec_violations(text):
                 fail(code, rel, section)
+            for code, detail in test_strategy_violations(text, enforced=strategy_mode == "enforced"):
+                fail(code, rel, detail)
             if METHODOLOGY_MARKER not in text or GOAL_SEEK_PASS_MARKER not in text:
                 fail(
                     "inner-goal-seek-contract",
@@ -464,7 +627,15 @@ def validate(staging: Path, repository_id: str) -> dict:
         fail("handoff-manifest-contract", "staging-manifest.json", "handoff commit-point contract mismatch")
     return {"schema_version": "1.0.0", "status": "pass" if not violations else "fail",
             "validated_digest": digest, "feature_package_id": package_id, "parent_feature": parent,
-            "phase_refs": PHASES, "violations": violations}
+            "phase_refs": PHASES,
+            # 適用モードを常に出力する。silent skip を許すと「検査したのか、
+            # 素通りしたのか」を証跡から区別できず、緑色が意味を失う。
+            "test_strategy_contract": {
+                "mode": strategy_mode,
+                "declared_version": package.get("spec_contract_version"),
+                "enforced_from": ".".join(str(x) for x in TEST_STRATEGY_MIN_CONTRACT),
+            },
+            "violations": violations}
 
 
 def _package_slug(package_id: str) -> str:

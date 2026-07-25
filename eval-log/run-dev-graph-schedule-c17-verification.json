@@ -1,0 +1,34 @@
+{
+  "verdict": "PASS",
+  "scope": "feat-task-spec-test-strategy",
+  "graph_revision": 622,
+  "source_graph_digest": "sha256:0c493eef8534ec42644d42de0e49e421793efab3de327febf2e3827d1d952ea5",
+  "recomputed_ready_set": {
+    "features": [
+      "feat-task-spec-test-strategy"
+    ],
+    "tasks": [
+      "SYS-TASK-SPEC-TEST-STRATEGY-P01"
+    ]
+  },
+  "active_lease_count": 0,
+  "unsafe_pairs": [],
+  "checks": {
+    "canonical_parity_digest": true,
+    "scope_exact": true,
+    "ready_feature_exact": true,
+    "ready_task_exact": true,
+    "status_depends_on_parity": true,
+    "dependency_satisfaction": true,
+    "active_lease_exclusion": true,
+    "batch_resource_safe": true,
+    "feature_task_separation": true,
+    "branch_claim_format": true,
+    "digest_stability": true,
+    "read_only": true,
+    "lease_authority": true
+  },
+  "claim_executed": false,
+  "verified_at": "2026-07-25T04:29:31Z",
+  "verifier": "C17/dev-graph-parallel-safety-verifier"
+}

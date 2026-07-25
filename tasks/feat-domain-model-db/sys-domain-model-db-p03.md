@@ -12,8 +12,8 @@ iteration: null
 title: "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:31:39Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P02"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-domain-model-db/design-review-notes.md"]

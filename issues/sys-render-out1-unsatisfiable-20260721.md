@@ -12,8 +12,8 @@ iteration: null
 title: "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能"
 owners: ["daishiman"]
 created_at: "2026-07-21T18:30:00Z"
-updated_at: "2026-07-23T10:25:46.615020Z"
-status: "draft"
+updated_at: "2026-07-24T09:35:27Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["issues/sys-render-out1-unsatisfiable-20260721.md"]

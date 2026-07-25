@@ -12,8 +12,8 @@ iteration: null
 title: "MVP-first feature 13 node の completion projection 未実施 (lint-open-residue OR-003 13件)"
 owners: ["daishiman"]
 created_at: "2026-07-24T07:45:00Z"
-updated_at: "2026-07-24T07:55:00Z"
-status: "draft"
+updated_at: "2026-07-24T12:06:51Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-mvp-first-scheduling"]
 resource_scope: ["issues/sys-live-trial-closure-stale-mvp-first-20260723.md"]

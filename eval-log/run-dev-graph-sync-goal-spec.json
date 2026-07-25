@@ -1,5 +1,20 @@
 {
- "original_goal": "tracker_binding=beads の authority に従い local graph と Beads を 3-way 突合し、失われた feature 間 blocks 辺 34 件と claim 1 件を export、2 回目 changes=0 の冪等収束を確認する",
- "recorded_at": "2026-07-22T00:32:15Z",
- "run_note": "2026-07-22 wt-10: 新規 issue node 6 件 (hearing-trace/doc-granularity/qa070-implementation/source-freshness/security-web-qaref/既存 d7) の beads 投影。--dry-run → --apply → --dry-run で changes=0 収束を確認"
+ "original_goal": "feat-task-spec-test-strategy と SYS-TASK-SPEC-TEST-STRATEGY-P01..P13 の計 14 node を Beads へ冪等に投影して beads_linkage を確立し、既存 feature/task の graph active vs bd closed 乖離を 3-way plan で reconcile して、同一入力の二回目 sync が changes=0 に 収束した状態にする",
+ "original_goal_hash": "36ce947f86c4190e204d7d314d89e72f42e4855628d4fb68766bf086fe48063b",
+ "verb": "sync",
+ "recorded_at": "2026-07-25T02:52:45Z",
+ "current_directive": "/dev-graph sync (11 verb 一括実行の verb 10)",
+ "receipts": {
+  "projection": "eval-log/dev-graph/run-dev-graph-sync/beads-projection-receipt-feat-task-spec-test-strategy.json",
+  "dry_run_1": "eval-log/dev-graph/run-dev-graph-sync/dryrun-1.json",
+  "apply_1": "eval-log/dev-graph/run-dev-graph-sync/apply-1.json",
+  "dry_run_2": "eval-log/dev-graph/run-dev-graph-sync/dryrun-2.json"
+ },
+ "superseded_goals": [
+  {
+   "original_goal": "tracker_binding=beads の authority に従い local graph と Beads を 3-way 突合し、失われた feature 間 blocks 辺 34 件と claim 1 件を export、2 回目 changes=0 の冪等収束を確認する",
+   "recorded_at": "2026-07-22T00:32:15Z",
+   "run_note": "2026-07-22 wt-10: 新規 issue node 6 件 (hearing-trace/doc-granularity/qa070-implementation/source-freshness/security-web-qaref/既存 d7) の beads 投影。--dry-run → --apply → --dry-run で changes=0 収束を確認"
+  }
+ ]
 }

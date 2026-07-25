@@ -1,0 +1,1703 @@
+{
+  "applied": [
+    {
+      "node": "SYS-AUTH-TENANCY-P01",
+      "receipt": {
+        "artifact_sha256_after": "17c682ab3ea5c70bdfafe34b17a21697a2c23217927d8d7502d4a24c2d51ac55",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p01.md",
+        "graph_node_id": "SYS-AUTH-TENANCY-P01",
+        "graph_revision_after": 556,
+        "graph_revision_before": 555,
+        "graph_sha256_after": "07bbbf146c1d4d9408383a5ddf395f3e10e922c1bc62cf7fec91e8a106b926ac",
+        "graph_sha256_before": "13c53eb5e8f7beb057ffb530885751b0244bc57051014fe9d680a15015c3009f",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-AUTH-TENANCY-P02",
+      "receipt": {
+        "artifact_sha256_after": "e2b196cb507852db809e6605739bea8d96e167794108352fbda9307c2498687e",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p02.md",
+        "graph_node_id": "SYS-AUTH-TENANCY-P02",
+        "graph_revision_after": 557,
+        "graph_revision_before": 556,
+        "graph_sha256_after": "0b318d1b62783d16c0e8e442264c11a23e107d85edddc455d442f62973fcf7ba",
+        "graph_sha256_before": "07bbbf146c1d4d9408383a5ddf395f3e10e922c1bc62cf7fec91e8a106b926ac",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-AUTH-TENANCY-P03",
+      "receipt": {
+        "artifact_sha256_after": "e7d1fa9662bf891c507f074262edced991f1d405a9effa755039bb0538a4ad5a",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p03.md",
+        "graph_node_id": "SYS-AUTH-TENANCY-P03",
+        "graph_revision_after": 558,
+        "graph_revision_before": 557,
+        "graph_sha256_after": "8dec7d9d83be138e255a015b27c24db57b41564d94779827c9723c7f82ba1fe2",
+        "graph_sha256_before": "0b318d1b62783d16c0e8e442264c11a23e107d85edddc455d442f62973fcf7ba",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-AUTH-TENANCY-P04",
+      "receipt": {
+        "artifact_sha256_after": "ad52afa2e29eedba5020786e8af6d98083cf6d50ac59f43246d8ed5fb0cc4951",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p04.md",
+        "graph_node_id": "SYS-AUTH-TENANCY-P04",
+        "graph_revision_after": 559,
+        "graph_revision_before": 558,
+        "graph_sha256_after": "04fa4c5d6e8c43bb1f6facbfb9db6dcf8ce4b6aa84043aa3a2bfbfab0fe00dfb",
+        "graph_sha256_before": "8dec7d9d83be138e255a015b27c24db57b41564d94779827c9723c7f82ba1fe2",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-AUTH-TENANCY-P06",
+      "receipt": {
+        "artifact_sha256_after": "b202a4f64ffb87aecbdbf01bbc073cfff277d357283575113dd41cc8cdb88eda",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p06.md",
+        "graph_node_id": "SYS-AUTH-TENANCY-P06",
+        "graph_revision_after": 560,
+        "graph_revision_before": 559,
+        "graph_sha256_after": "16f8cbbbfe22a617ba9d51f8807ecc960244e670d0c3242646b02ab5e2f65152",
+        "graph_sha256_before": "04fa4c5d6e8c43bb1f6facbfb9db6dcf8ce4b6aa84043aa3a2bfbfab0fe00dfb",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-AUTH-TENANCY-P08",
+      "receipt": {
+        "artifact_sha256_after": "2a3fb1c00f61dee1a3157b90cb65960463fa5f0cc909160e70463f8e8088a425",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p08.md",
+        "graph_node_id": "SYS-AUTH-TENANCY-P08",
+        "graph_revision_after": 561,
+        "graph_revision_before": 560,
+        "graph_sha256_after": "5ca584f83593898c4f2bce9b61fc3171c1ac4f860bcdaa4845c84aea6e3c17ed",
+        "graph_sha256_before": "16f8cbbbfe22a617ba9d51f8807ecc960244e670d0c3242646b02ab5e2f65152",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-AUTH-TENANCY-P11",
+      "receipt": {
+        "artifact_sha256_after": "23762e8ed20a50422e18ad797d7f49c68074196aaf094d8a498dbf54fda9abef",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
+        "graph_node_id": "SYS-AUTH-TENANCY-P11",
+        "graph_revision_after": 562,
+        "graph_revision_before": 561,
+        "graph_sha256_after": "70abd4fbdd2c2c8a8a41f61b290647e4904faddfda51dd11fb00bf47509890b3",
+        "graph_sha256_before": "5ca584f83593898c4f2bce9b61fc3171c1ac4f860bcdaa4845c84aea6e3c17ed",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-AUTH-TENANCY-P12",
+      "receipt": {
+        "artifact_sha256_after": "3af90372e432b6634e2bf2d49a58c1f656e9d14d9cc7a7413f779c89a0c1e3b5",
+        "file_path": "tasks/feat-auth-tenancy/sys-auth-tenancy-p12.md",
+        "graph_node_id": "SYS-AUTH-TENANCY-P12",
+        "graph_revision_after": 563,
+        "graph_revision_before": 562,
+        "graph_sha256_after": "4faa989b1196066c455cc4b33edf7a5fe3676741cb311308875a92f5b1771cae",
+        "graph_sha256_before": "70abd4fbdd2c2c8a8a41f61b290647e4904faddfda51dd11fb00bf47509890b3",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+      "receipt": {
+        "artifact_sha256_after": "7f6b5a732c4ec639e565db2e343d3fd6ced422737947c81366d170221893fb69",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p01.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+        "graph_revision_after": 564,
+        "graph_revision_before": 563,
+        "graph_sha256_after": "c5e9648a8d0f3a14a7c1051cf819a0a08d277e58df652ec0dabc0b8ba3eb20c3",
+        "graph_sha256_before": "4faa989b1196066c455cc4b33edf7a5fe3676741cb311308875a92f5b1771cae",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P02",
+      "receipt": {
+        "artifact_sha256_after": "6cb3b094be8b65e247bbb34ef002e1201b9d1d9159ebfbf069dd62e31de99e48",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p02.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P02",
+        "graph_revision_after": 565,
+        "graph_revision_before": 564,
+        "graph_sha256_after": "42ca9190d60f864522209c78bb4bfe37b66ce643fe4f690e81ade0416ebaa8cd",
+        "graph_sha256_before": "c5e9648a8d0f3a14a7c1051cf819a0a08d277e58df652ec0dabc0b8ba3eb20c3",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+      "receipt": {
+        "artifact_sha256_after": "69583d57833845079fca74a1d5dbac631026238c1b8d507e6ad893d3cc1ff143",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p03.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+        "graph_revision_after": 566,
+        "graph_revision_before": 565,
+        "graph_sha256_after": "71fe1f7b5e3630eec0da5676aedd2761786e6a8e874f4154afa1c3b85d8eabba",
+        "graph_sha256_before": "42ca9190d60f864522209c78bb4bfe37b66ce643fe4f690e81ade0416ebaa8cd",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P04",
+      "receipt": {
+        "artifact_sha256_after": "694ac1d0558d66ea824954c6f6123f39a170de08de0d24f908cbe066686d4324",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p04.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P04",
+        "graph_revision_after": 567,
+        "graph_revision_before": 566,
+        "graph_sha256_after": "fda1b2b91b40cd080d25e290cf7691315cdd28f5eb4406e9d51adba14bc18768",
+        "graph_sha256_before": "71fe1f7b5e3630eec0da5676aedd2761786e6a8e874f4154afa1c3b85d8eabba",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+      "receipt": {
+        "artifact_sha256_after": "394fc6ac292d2c3f50d5b09ad25449b00ff22273abeaa37b0a18ae8d01bfc596",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p05.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+        "graph_revision_after": 568,
+        "graph_revision_before": 567,
+        "graph_sha256_after": "61f46ebb40bf8065ce15474b13e27a34f6ececa9132b9a70cfbd0faecc5045fd",
+        "graph_sha256_before": "fda1b2b91b40cd080d25e290cf7691315cdd28f5eb4406e9d51adba14bc18768",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+      "receipt": {
+        "artifact_sha256_after": "83509f09931b9b6f13f6b8f51f88350575f30eca306ba3541070630ad64e8cc4",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p06.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+        "graph_revision_after": 569,
+        "graph_revision_before": 568,
+        "graph_sha256_after": "7e7889abd5cad48a896078ae1a62731bfce9c692bc481fd07d8725ed0e140efc",
+        "graph_sha256_before": "61f46ebb40bf8065ce15474b13e27a34f6ececa9132b9a70cfbd0faecc5045fd",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+      "receipt": {
+        "artifact_sha256_after": "3a4a662875605e290b45ce7a873cbc6e548e94c93cf373bff2670737e03c44b3",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p07.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+        "graph_revision_after": 570,
+        "graph_revision_before": 569,
+        "graph_sha256_after": "3bfdbc3d68fb4274babfdda4e44196822f1950ffc8a4267afab4ab2b928753a7",
+        "graph_sha256_before": "7e7889abd5cad48a896078ae1a62731bfce9c692bc481fd07d8725ed0e140efc",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+      "receipt": {
+        "artifact_sha256_after": "41f3253310cba2d8351701021a6ef448c0a7de34560e6e4351374ad0b0ff7a8a",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p08.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+        "graph_revision_after": 571,
+        "graph_revision_before": 570,
+        "graph_sha256_after": "41da0f5ec9ff194fe858fad269f75d344b4fe81060204803331f12b37e2d26e9",
+        "graph_sha256_before": "3bfdbc3d68fb4274babfdda4e44196822f1950ffc8a4267afab4ab2b928753a7",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+      "receipt": {
+        "artifact_sha256_after": "4ece5070fc0bd19cd08aea19534a94bddc27cb19b882a9e77a669fe5aea88441",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p09.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+        "graph_revision_after": 572,
+        "graph_revision_before": 571,
+        "graph_sha256_after": "7faec0e5bb7b05d33feaa8b12df3553d4a79dc56f2fcb41888f4be84d327d8b3",
+        "graph_sha256_before": "41da0f5ec9ff194fe858fad269f75d344b4fe81060204803331f12b37e2d26e9",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+      "receipt": {
+        "artifact_sha256_after": "999b645830f65d5cb4918593ac61f2fe6c772519c22ff690665c30f9943befde",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p10.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+        "graph_revision_after": 573,
+        "graph_revision_before": 572,
+        "graph_sha256_after": "eb7a8c181ed29a6bdbaff8603bae2605a153909312b4e1c6b0aa75fe53706006",
+        "graph_sha256_before": "7faec0e5bb7b05d33feaa8b12df3553d4a79dc56f2fcb41888f4be84d327d8b3",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+      "receipt": {
+        "artifact_sha256_after": "ced0ef04877447e176ec7ece82b74b24e72efd59ca374ea6ed01cadaf1215512",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p11.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+        "graph_revision_after": 574,
+        "graph_revision_before": 573,
+        "graph_sha256_after": "a5b81476f8c201df9deee59c03b63ca42228281a2856607185de48958a06cb9a",
+        "graph_sha256_before": "eb7a8c181ed29a6bdbaff8603bae2605a153909312b4e1c6b0aa75fe53706006",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+      "receipt": {
+        "artifact_sha256_after": "01c3513713fa89f2330bc71b45494241edd40bbc55f8a1d4082882835f077c60",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p12.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+        "graph_revision_after": 575,
+        "graph_revision_before": 574,
+        "graph_sha256_after": "f0bb8da487573a8fae1407eb57278348cb124e578265518dcae9655b1c6dd3d4",
+        "graph_sha256_before": "a5b81476f8c201df9deee59c03b63ca42228281a2856607185de48958a06cb9a",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+      "receipt": {
+        "artifact_sha256_after": "27b6a1b9d7c47168e5567c04d97c20f0e3f942920163c9e4b107d9a7d05d2a9e",
+        "file_path": "tasks/feat-doc-governance-portability/sys-doc-governance-portability-p13.md",
+        "graph_node_id": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+        "graph_revision_after": 576,
+        "graph_revision_before": 575,
+        "graph_sha256_after": "0031daa7a5fcdb88d0d753aad5df36bf191bac136ecfdcf464296ba72ad73a1d",
+        "graph_sha256_before": "f0bb8da487573a8fae1407eb57278348cb124e578265518dcae9655b1c6dd3d4",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P01",
+      "receipt": {
+        "artifact_sha256_after": "322dc3266efc1c65f8d930aa2de48d5e2a1f68ebe3c20a21e36b47be1c1d83f6",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p01.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01",
+        "graph_revision_after": 577,
+        "graph_revision_before": 576,
+        "graph_sha256_after": "7e5e85bbe99364d24a04b3753768bc31c8f6a55db2e69d274841031f78cc79c0",
+        "graph_sha256_before": "0031daa7a5fcdb88d0d753aad5df36bf191bac136ecfdcf464296ba72ad73a1d",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P02",
+      "receipt": {
+        "artifact_sha256_after": "30cb9e08a4b5c2047108beeb952f7a9c91c55dc9503110c6ca263a4c6dc8ab4e",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p02.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02",
+        "graph_revision_after": 578,
+        "graph_revision_before": 577,
+        "graph_sha256_after": "3c45bded946716d497738021e6f72db74caf039f350a1aff37810faf769709e1",
+        "graph_sha256_before": "7e5e85bbe99364d24a04b3753768bc31c8f6a55db2e69d274841031f78cc79c0",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P03",
+      "receipt": {
+        "artifact_sha256_after": "6440972bdc14689298064ca79f10881afae8b6ab7d500577f439a7d972a78a45",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p03.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03",
+        "graph_revision_after": 579,
+        "graph_revision_before": 578,
+        "graph_sha256_after": "a1b486dc2ceda268873567f3c9a75650b442407bb2245e3348f0eef904066377",
+        "graph_sha256_before": "3c45bded946716d497738021e6f72db74caf039f350a1aff37810faf769709e1",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P04",
+      "receipt": {
+        "artifact_sha256_after": "8c7917d5107381a7935dd146f4e7323a3ec98446c9e8f47d378df25e22b9e801",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p04.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04",
+        "graph_revision_after": 580,
+        "graph_revision_before": 579,
+        "graph_sha256_after": "601fc9705b9f9d25450bce2a368c3e03bbbcc7ca80f814d2ca5568d010d35baf",
+        "graph_sha256_before": "a1b486dc2ceda268873567f3c9a75650b442407bb2245e3348f0eef904066377",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P05",
+      "receipt": {
+        "artifact_sha256_after": "c758f2c51f88ffd408be0ad97fcb12e9c3beb486a20fe20a773b96aeee9e6bb2",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p05.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05",
+        "graph_revision_after": 581,
+        "graph_revision_before": 580,
+        "graph_sha256_after": "cb235f09aab802c4558c0606339fa1fa1a7b9fef8021ecd375f451a6d916cdb0",
+        "graph_sha256_before": "601fc9705b9f9d25450bce2a368c3e03bbbcc7ca80f814d2ca5568d010d35baf",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P06",
+      "receipt": {
+        "artifact_sha256_after": "e6556e092a34baa9e06ffc5efe5cf50d947d8c6ad20a67aa79f88dfa5604c6bf",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p06.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06",
+        "graph_revision_after": 582,
+        "graph_revision_before": 581,
+        "graph_sha256_after": "51373cc721379c1672fbcf697be53ccafe3c014d8bfbb6fd3c1a6dca5a329666",
+        "graph_sha256_before": "cb235f09aab802c4558c0606339fa1fa1a7b9fef8021ecd375f451a6d916cdb0",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P07",
+      "receipt": {
+        "artifact_sha256_after": "f20e3f7bc234b589514efd1dc1f127aadf04ff69a04704638f4b7a22eedf31ba",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p07.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07",
+        "graph_revision_after": 583,
+        "graph_revision_before": 582,
+        "graph_sha256_after": "3b8a87b7c2bfef53e464b75eb354843219d951174a1c522f1555d4178728bd17",
+        "graph_sha256_before": "51373cc721379c1672fbcf697be53ccafe3c014d8bfbb6fd3c1a6dca5a329666",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P08",
+      "receipt": {
+        "artifact_sha256_after": "97e6aae2496b4762478134b5abd7eeb8fadd973a5682e65620f26d858cc7de27",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p08.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08",
+        "graph_revision_after": 584,
+        "graph_revision_before": 583,
+        "graph_sha256_after": "aa6e617e9b9f1b2ccb18c4fbb270db28ea0cb78a75a2db188013aae50601dded",
+        "graph_sha256_before": "3b8a87b7c2bfef53e464b75eb354843219d951174a1c522f1555d4178728bd17",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P09",
+      "receipt": {
+        "artifact_sha256_after": "fd9c41dbe888555363812c33f12d751173a5b0e93c8f43da09b6599825358253",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p09.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09",
+        "graph_revision_after": 585,
+        "graph_revision_before": 584,
+        "graph_sha256_after": "5686d9e17fd4f3fc460972d104145111bf878191b99f886b298191a9e95c2b6f",
+        "graph_sha256_before": "aa6e617e9b9f1b2ccb18c4fbb270db28ea0cb78a75a2db188013aae50601dded",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P10",
+      "receipt": {
+        "artifact_sha256_after": "9f7f698364fad649cc3188f0b269c941981b1ec34d4e8941f9d32ccdca99c0c5",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p10.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10",
+        "graph_revision_after": 586,
+        "graph_revision_before": 585,
+        "graph_sha256_after": "082424d20a4e28400207a3873ec0a29032184f44265cb39c8110b0d4fd68f3b2",
+        "graph_sha256_before": "5686d9e17fd4f3fc460972d104145111bf878191b99f886b298191a9e95c2b6f",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P11",
+      "receipt": {
+        "artifact_sha256_after": "28b4f27e1032c042f5faff863d28255a46d761b72d1921c2d3bf39d1cf108617",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p11.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11",
+        "graph_revision_after": 587,
+        "graph_revision_before": 586,
+        "graph_sha256_after": "a1eb5b578b492a93ee938cdf9c3a0ad58162519938bd804db3630c46a4f173c5",
+        "graph_sha256_before": "082424d20a4e28400207a3873ec0a29032184f44265cb39c8110b0d4fd68f3b2",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-DOMAIN-MODEL-DB-P12",
+      "receipt": {
+        "artifact_sha256_after": "fcec306afe767b7c53995f064315c7d5217ad0d123c5fbc2487257abc4bac102",
+        "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p12.md",
+        "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12",
+        "graph_revision_after": 588,
+        "graph_revision_before": 587,
+        "graph_sha256_after": "74ae1662fc78ee73b17c423bebadeff8368c97ac3c8ad78055186459ba3c9b0e",
+        "graph_sha256_before": "a1eb5b578b492a93ee938cdf9c3a0ad58162519938bd804db3630c46a4f173c5",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P01",
+      "receipt": {
+        "artifact_sha256_after": "05cb8f598f87626d7b9a9d2c8faaef4a0a4c281e9879103c92b6f6aaba62087e",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p01.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P01",
+        "graph_revision_after": 589,
+        "graph_revision_before": 588,
+        "graph_sha256_after": "2af6aae86e51781d7cb1f397d1e5e22da5ddb8361b633216c06e9135617562de",
+        "graph_sha256_before": "74ae1662fc78ee73b17c423bebadeff8368c97ac3c8ad78055186459ba3c9b0e",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P02",
+      "receipt": {
+        "artifact_sha256_after": "a7245d537d1e9ea37a9902c7acb2623fa046c42e0b78d5b83ef83938446c9f77",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p02.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P02",
+        "graph_revision_after": 590,
+        "graph_revision_before": 589,
+        "graph_sha256_after": "af1b6a25de03d1be5f1acf1095cc948fc2426985336451d68073a3ad3474b069",
+        "graph_sha256_before": "2af6aae86e51781d7cb1f397d1e5e22da5ddb8361b633216c06e9135617562de",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P03",
+      "receipt": {
+        "artifact_sha256_after": "3564c0aaed6cbc7accf95f7ea8d16051326ae6dcafd2d28f089d7c923fe5adca",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p03.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P03",
+        "graph_revision_after": 591,
+        "graph_revision_before": 590,
+        "graph_sha256_after": "eb98c8fdbc343fb9dd57c5bdf5b778d1b194c86514fcfe970de115b5cb86e07c",
+        "graph_sha256_before": "af1b6a25de03d1be5f1acf1095cc948fc2426985336451d68073a3ad3474b069",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P04",
+      "receipt": {
+        "artifact_sha256_after": "5fd2245490a6802203bd5157aa22b466d2eb732479ec661fb87fbbfd5a36ce0d",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p04.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P04",
+        "graph_revision_after": 592,
+        "graph_revision_before": 591,
+        "graph_sha256_after": "3755698183c9712de037b8a42b702d1d4398bd39c60c8a2c6005a5b90dc308ae",
+        "graph_sha256_before": "eb98c8fdbc343fb9dd57c5bdf5b778d1b194c86514fcfe970de115b5cb86e07c",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P05",
+      "receipt": {
+        "artifact_sha256_after": "cbf69f1379986626abf5c3c318804dcdbcd1d579f83dbc7d95b5f1ff0d54cf13",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p05.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P05",
+        "graph_revision_after": 593,
+        "graph_revision_before": 592,
+        "graph_sha256_after": "9e1308501c7ccd107526474f24030f57f7a4ca395b8c3af0245d041e21b7513f",
+        "graph_sha256_before": "3755698183c9712de037b8a42b702d1d4398bd39c60c8a2c6005a5b90dc308ae",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P06",
+      "receipt": {
+        "artifact_sha256_after": "6168712093b6be543cf9e2fe7b89b24a6a03c27b07eb2f9fe2a19d2663ebf523",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p06.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P06",
+        "graph_revision_after": 594,
+        "graph_revision_before": 593,
+        "graph_sha256_after": "47793d226ef2c2a9925bff1f0c817d6f136be97e272f43bd6c644925f0ff67f4",
+        "graph_sha256_before": "9e1308501c7ccd107526474f24030f57f7a4ca395b8c3af0245d041e21b7513f",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P07",
+      "receipt": {
+        "artifact_sha256_after": "c3be41d01d766b30b5a003a780d156a118721d8a6e5846403a84a8cdd5881bf2",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p07.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P07",
+        "graph_revision_after": 595,
+        "graph_revision_before": 594,
+        "graph_sha256_after": "ae94025fcd6f2a8eef88aa3a604c2c214cbeacee03b685bfb0069aa6f212ff96",
+        "graph_sha256_before": "47793d226ef2c2a9925bff1f0c817d6f136be97e272f43bd6c644925f0ff67f4",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P08",
+      "receipt": {
+        "artifact_sha256_after": "1ef8809cc9f143930e0ae375d9a8d58624ddb31537d8ee0db04008089cf3dd40",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p08.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P08",
+        "graph_revision_after": 596,
+        "graph_revision_before": 595,
+        "graph_sha256_after": "6755e123d75c9fb888a0d8ccee49ea7059ca7676ab2bbd8712d2142c1a56b826",
+        "graph_sha256_before": "ae94025fcd6f2a8eef88aa3a604c2c214cbeacee03b685bfb0069aa6f212ff96",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P09",
+      "receipt": {
+        "artifact_sha256_after": "3d31ca9522a9a603ef6479e510d48e2eaa9813d082e956f434e17a784b7fbb0a",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p09.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P09",
+        "graph_revision_after": 597,
+        "graph_revision_before": 596,
+        "graph_sha256_after": "413ecbdb320e8c1202c95fbe680aeece3d019e9d666cdde29e57990ef97f91d8",
+        "graph_sha256_before": "6755e123d75c9fb888a0d8ccee49ea7059ca7676ab2bbd8712d2142c1a56b826",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P10",
+      "receipt": {
+        "artifact_sha256_after": "3a82066675199325bd4ae7b81d6ba6af35c3c224f3a8500faebc131c18e894c7",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p10.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P10",
+        "graph_revision_after": 598,
+        "graph_revision_before": 597,
+        "graph_sha256_after": "298ac84a9c2a4e5ba4a68a99363e1f8e92235805a70b374c99983d790a880fe7",
+        "graph_sha256_before": "413ecbdb320e8c1202c95fbe680aeece3d019e9d666cdde29e57990ef97f91d8",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P11",
+      "receipt": {
+        "artifact_sha256_after": "5273b072ac6434da0c89a5367458d1c9e9e68244cab4c8ab991f086b10a99020",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p11.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P11",
+        "graph_revision_after": 599,
+        "graph_revision_before": 598,
+        "graph_sha256_after": "ea0f7d0db30a713031270eaf8b516c1420e87d80e05f0e9c173fbad510f56636",
+        "graph_sha256_before": "298ac84a9c2a4e5ba4a68a99363e1f8e92235805a70b374c99983d790a880fe7",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-HUB-FOUNDATION-P12",
+      "receipt": {
+        "artifact_sha256_after": "410829c09ba664703c8c164c529350b764225403460f6212e49789ef87f1857e",
+        "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p12.md",
+        "graph_node_id": "SYS-HUB-FOUNDATION-P12",
+        "graph_revision_after": 600,
+        "graph_revision_before": 599,
+        "graph_sha256_after": "0f2b61c082d35e91d0980d75ccad21b9970a75bf78e6658bbb5f27d213f72e41",
+        "graph_sha256_before": "ea0f7d0db30a713031270eaf8b516c1420e87d80e05f0e9c173fbad510f56636",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P01",
+      "receipt": {
+        "artifact_sha256_after": "fdc6aad3c59b508b2bf23f8a72647d7b404fc425f29808c605dae68606412d0b",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p01.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P01",
+        "graph_revision_after": 601,
+        "graph_revision_before": 600,
+        "graph_sha256_after": "0c605162f3ba4856d448fea0615a809ca25e0d1bcb60d941491ead4ee02ea463",
+        "graph_sha256_before": "0f2b61c082d35e91d0980d75ccad21b9970a75bf78e6658bbb5f27d213f72e41",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P02",
+      "receipt": {
+        "artifact_sha256_after": "880f8b1474784de39465ac86554a0e755fc5e5b7ecc75699196f25fddf550b3c",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p02.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P02",
+        "graph_revision_after": 602,
+        "graph_revision_before": 601,
+        "graph_sha256_after": "af0cd2762b8d300993e3a0e198681944db1c34d93cbdfb18278e6436d6212921",
+        "graph_sha256_before": "0c605162f3ba4856d448fea0615a809ca25e0d1bcb60d941491ead4ee02ea463",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P03",
+      "receipt": {
+        "artifact_sha256_after": "962dbc1991a6abf90ee7f8ddc789cfb07530d40796013c8c192e7f2ae5b3d0e4",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p03.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P03",
+        "graph_revision_after": 603,
+        "graph_revision_before": 602,
+        "graph_sha256_after": "0ccfc1974b14d1eb852983b9ba3b98ffef3f3e28d53620166a35cd19dd17b8ba",
+        "graph_sha256_before": "af0cd2762b8d300993e3a0e198681944db1c34d93cbdfb18278e6436d6212921",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P04",
+      "receipt": {
+        "artifact_sha256_after": "a088962d91ca3dc37f910166e71be9a90f5abd25afa11059b07284f43fc88dbe",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p04.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P04",
+        "graph_revision_after": 604,
+        "graph_revision_before": 603,
+        "graph_sha256_after": "e736d450335051a3277ceed4ac7fec717d191e95657d748c17d6d8f450463ab6",
+        "graph_sha256_before": "0ccfc1974b14d1eb852983b9ba3b98ffef3f3e28d53620166a35cd19dd17b8ba",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P05",
+      "receipt": {
+        "artifact_sha256_after": "c04f35606eeb33e1d9c451c7c0c31fc8a2083a99cf8ace45ae61c355c1483318",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p05.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P05",
+        "graph_revision_after": 605,
+        "graph_revision_before": 604,
+        "graph_sha256_after": "cc72c8e352d8016580e137a8c7416f3e67fde052ec5162320c144e85612247e7",
+        "graph_sha256_before": "e736d450335051a3277ceed4ac7fec717d191e95657d748c17d6d8f450463ab6",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P06",
+      "receipt": {
+        "artifact_sha256_after": "e1237ae5b6354c7cdf898a774e8b3f0a2a089a2108319818cdc95d0838aa6df7",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p06.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P06",
+        "graph_revision_after": 606,
+        "graph_revision_before": 605,
+        "graph_sha256_after": "38b237fb1f0af8407c99a03bff31dab3e5ac896ea51188425abdb552531e73f2",
+        "graph_sha256_before": "cc72c8e352d8016580e137a8c7416f3e67fde052ec5162320c144e85612247e7",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P07",
+      "receipt": {
+        "artifact_sha256_after": "306a0a52743a8bf1b3d1bf10faa4aa2c25812713f409f3a05fcb0ef76c344491",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p07.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P07",
+        "graph_revision_after": 607,
+        "graph_revision_before": 606,
+        "graph_sha256_after": "17337d21bf9c837f426696824d234120541c1bbb6ac2c97d7d599cfd756f5123",
+        "graph_sha256_before": "38b237fb1f0af8407c99a03bff31dab3e5ac896ea51188425abdb552531e73f2",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P08",
+      "receipt": {
+        "artifact_sha256_after": "02fa958643883f6da0aa604a2bce7125daca01f7bb09d03e2c543ecc3e1b7fec",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p08.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P08",
+        "graph_revision_after": 608,
+        "graph_revision_before": 607,
+        "graph_sha256_after": "f33b4e55da70606d8a0b9d9a9ac42a48a97cd884c61523510ca39c4b385c0d8c",
+        "graph_sha256_before": "17337d21bf9c837f426696824d234120541c1bbb6ac2c97d7d599cfd756f5123",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P09",
+      "receipt": {
+        "artifact_sha256_after": "f3eb0a5628903376bab2985247d9643d7e316d692b8ce726dc800ccf70916ae6",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p09.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P09",
+        "graph_revision_after": 609,
+        "graph_revision_before": 608,
+        "graph_sha256_after": "06262b44abd6831f899727b3090ecf890f4b264149fa879477c92f19c3112061",
+        "graph_sha256_before": "f33b4e55da70606d8a0b9d9a9ac42a48a97cd884c61523510ca39c4b385c0d8c",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P10",
+      "receipt": {
+        "artifact_sha256_after": "14d6d2bf6dc874bb04aa89ae6c76f5bfc30eee22f03847a4fbc5d0f7fffb687e",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p10.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P10",
+        "graph_revision_after": 610,
+        "graph_revision_before": 609,
+        "graph_sha256_after": "59f0ca2edbe35457cae1ae664148e0aa834dd4632329037d08c67803becc90c8",
+        "graph_sha256_before": "06262b44abd6831f899727b3090ecf890f4b264149fa879477c92f19c3112061",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P11",
+      "receipt": {
+        "artifact_sha256_after": "98f58630c416e071046d10edcefcc3224b812cb59c42c940cff4db34b3458c7d",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p11.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P11",
+        "graph_revision_after": 611,
+        "graph_revision_before": 610,
+        "graph_sha256_after": "e3a4a4aeb80e6157ea364e7c0376e53ca4dd26ddb88ce60ba6ed7e686d5a9a76",
+        "graph_sha256_before": "59f0ca2edbe35457cae1ae664148e0aa834dd4632329037d08c67803becc90c8",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P12",
+      "receipt": {
+        "artifact_sha256_after": "925222ce96f2bc88c00cda3480687651815bf1b80c0e432369aedb86929434e9",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p12.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P12",
+        "graph_revision_after": 612,
+        "graph_revision_before": 611,
+        "graph_sha256_after": "346f35ff500b4892c631fb68692181223f7c44edaef7d61cb2c84c809278b15f",
+        "graph_sha256_before": "e3a4a4aeb80e6157ea364e7c0376e53ca4dd26ddb88ce60ba6ed7e686d5a9a76",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "SYS-MVP-FIRST-SCHEDULING-P13",
+      "receipt": {
+        "artifact_sha256_after": "91c6036fd3a397dd127d032034ea5abdd7f3f10ac813f66c001e3c908323f432",
+        "file_path": "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p13.md",
+        "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P13",
+        "graph_revision_after": 613,
+        "graph_revision_before": 612,
+        "graph_sha256_after": "8b9dde14b9368b30c40725e86dafacbf2b5bbfb7fca3601311aa56cdad98c96a",
+        "graph_sha256_before": "346f35ff500b4892c631fb68692181223f7c44edaef7d61cb2c84c809278b15f",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "feat-doc-governance-portability",
+      "receipt": {
+        "artifact_sha256_after": "7a5b8c768f4c089c0961411cc19c69aea7f775635b97440e3b314fedba4956a8",
+        "file_path": "features/feat-doc-governance-portability.md",
+        "graph_node_id": "feat-doc-governance-portability",
+        "graph_revision_after": 614,
+        "graph_revision_before": 613,
+        "graph_sha256_after": "c3d8ce25e16302a8bb3ba09c58eff1457bf729fefec858b7eeadf086c697870a",
+        "graph_sha256_before": "8b9dde14b9368b30c40725e86dafacbf2b5bbfb7fca3601311aa56cdad98c96a",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "feat-mvp-first-scheduling",
+      "receipt": {
+        "artifact_sha256_after": "8c3d23494e92722c6ac3cf857a1de45e1c498370f15f0093666d1ff7f1c5c36e",
+        "file_path": "features/feat-mvp-first-scheduling.md",
+        "graph_node_id": "feat-mvp-first-scheduling",
+        "graph_revision_after": 615,
+        "graph_revision_before": 614,
+        "graph_sha256_after": "7a2c64d97b2e758814c040bae776dd2fd28b1d1e56f198f0386d28e016e412ba",
+        "graph_sha256_before": "c3d8ce25e16302a8bb3ba09c58eff1457bf729fefec858b7eeadf086c697870a",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "issue-audit-followups-20260717",
+      "receipt": {
+        "artifact_sha256_after": "980ade2329657a6513d9b1fdf4458ea2324e2f69735ff5941fb0741f2a012e17",
+        "file_path": "issues/sys-audit-followups-20260717.md",
+        "graph_node_id": "issue-audit-followups-20260717",
+        "graph_revision_after": 616,
+        "graph_revision_before": 615,
+        "graph_sha256_after": "94386e61d6e136d6be60ad5e6386c501a5fcfc43459bc80d16e97ae35f8d7d67",
+        "graph_sha256_before": "7a2c64d97b2e758814c040bae776dd2fd28b1d1e56f198f0386d28e016e412ba",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "issue-live-trial-closure-stale-mvp-first-20260723",
+      "receipt": {
+        "artifact_sha256_after": "bcd460ec61cb8b086f548bd1cdac409dc4eb9e036439c6a781ed8f223747dfe1",
+        "file_path": "issues/sys-live-trial-closure-stale-mvp-first-20260723.md",
+        "graph_node_id": "issue-live-trial-closure-stale-mvp-first-20260723",
+        "graph_revision_after": 617,
+        "graph_revision_before": 616,
+        "graph_sha256_after": "760629b5132ebd0a8803a0c7cf3ea9f62d4cc994d1ac442e41b0ee446c5c3170",
+        "graph_sha256_before": "94386e61d6e136d6be60ad5e6386c501a5fcfc43459bc80d16e97ae35f8d7d67",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "issue-live-trial-fixture-receipt-forgery-20260721",
+      "receipt": {
+        "artifact_sha256_after": "a120588bddaaa4fc0161722888b3329de87a1741e19879847942bce2b8db1360",
+        "file_path": "issues/sys-live-trial-fixture-receipt-forgery-20260721.md",
+        "graph_node_id": "issue-live-trial-fixture-receipt-forgery-20260721",
+        "graph_revision_after": 618,
+        "graph_revision_before": 617,
+        "graph_sha256_after": "09ac8989a5b013da4047a48ca4e6fa47c105fca94f4b69bd5706e625daf922d8",
+        "graph_sha256_before": "760629b5132ebd0a8803a0c7cf3ea9f62d4cc994d1ac442e41b0ee446c5c3170",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "issue-live-trial-skill-contract-bypass-20260721",
+      "receipt": {
+        "artifact_sha256_after": "8eca9970c44e72071a44b56ea5c244678c467ce9e2be39276ce89d725950b8ab",
+        "file_path": "issues/sys-live-trial-skill-contract-bypass-20260721.md",
+        "graph_node_id": "issue-live-trial-skill-contract-bypass-20260721",
+        "graph_revision_after": 619,
+        "graph_revision_before": 618,
+        "graph_sha256_after": "82e4d5cf76bc7b90015f624a1827095e380d7725b9eb6e920e52f47fd027ac6f",
+        "graph_sha256_before": "09ac8989a5b013da4047a48ca4e6fa47c105fca94f4b69bd5706e625daf922d8",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "issue-mvp-first-scheduling-completion-projection-20260724",
+      "receipt": {
+        "artifact_sha256_after": "03ae2660346aae2723ef2196a5b60f09355135c170549cea83adba35fbc47753",
+        "file_path": "issues/sys-mvp-first-scheduling-completion-projection-20260724.md",
+        "graph_node_id": "issue-mvp-first-scheduling-completion-projection-20260724",
+        "graph_revision_after": 620,
+        "graph_revision_before": 619,
+        "graph_sha256_after": "12b74e5111532b27b7d02f14aefcc139bf7499f156aa1a4b5edc669380856b89",
+        "graph_sha256_before": "82e4d5cf76bc7b90015f624a1827095e380d7725b9eb6e920e52f47fd027ac6f",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "issue-qa070-implementation-feature-20260722",
+      "receipt": {
+        "artifact_sha256_after": "2325763aba4d800872cd2119e1758fa57b0c56f775b5b6b5b33eb70a7142628d",
+        "file_path": "issues/sys-qa070-implementation-feature-20260722.md",
+        "graph_node_id": "issue-qa070-implementation-feature-20260722",
+        "graph_revision_after": 621,
+        "graph_revision_before": 620,
+        "graph_sha256_after": "78c0897c3bad59ce20bb9602786cc13eeb433645061917660e0506c7801ec3bd",
+        "graph_sha256_before": "12b74e5111532b27b7d02f14aefcc139bf7499f156aa1a4b5edc669380856b89",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "issue-render-out1-unsatisfiable-20260721",
+      "receipt": {
+        "artifact_sha256_after": "083f816d02bc7f37b6c1feaccfe5b2439a98a60d24b4c99fe390d9f3f906e5ad",
+        "file_path": "issues/sys-render-out1-unsatisfiable-20260721.md",
+        "graph_node_id": "issue-render-out1-unsatisfiable-20260721",
+        "graph_revision_after": 622,
+        "graph_revision_before": 621,
+        "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+        "graph_sha256_before": "78c0897c3bad59ce20bb9602786cc13eeb433645061917660e0506c7801ec3bd",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    }
+  ],
+  "changes": 67,
+  "conflicts": [],
+  "converged": false,
+  "executed_at": "2026-07-25T02:14:30.823683Z",
+  "exports": [],
+  "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "graph_sha256_before": "13c53eb5e8f7beb057ffb530885751b0244bc57051014fe9d680a15015c3009f",
+  "imports": [
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-audit-followups-20260717",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-qa070-implementation-feature-20260722",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-doc-governance-portability",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-render-out1-unsatisfiable-20260721",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-live-trial-fixture-receipt-forgery-20260721",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-live-trial-skill-contract-bypass-20260721",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-mvp-first-scheduling",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P13",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-live-trial-closure-stale-mvp-first-20260723",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-mvp-first-scheduling-completion-projection-20260724",
+      "to": "closed"
+    }
+  ],
+  "mode": "apply",
+  "ok": true,
+  "pending_retry": [
+    {
+      "binding": "beads",
+      "node": "issue-build-trace-doc-coverage-schema-drift-20260723",
+      "reason": "external_linkage_missing"
+    }
+  ],
+  "remote_sha256_after": null,
+  "remote_sha256_before": null,
+  "snapshot_sha256_after": "2b370eb6a344a4246db5eaf6667bb8063035baa328b6bdb15a4cf0f9a4774d55",
+  "snapshot_sha256_before": "2b370eb6a344a4246db5eaf6667bb8063035baa328b6bdb15a4cf0f9a4774d55",
+  "tombstones": [],
+  "write_count": 67
+}

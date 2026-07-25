@@ -12,8 +12,8 @@ iteration: null
 title: "要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化"
 owners: ["daishiman"]
 created_at: "2026-07-23T07:08:08Z"
-updated_at: "2026-07-23T08:25:00Z"
-status: "active"
+updated_at: "2026-07-23T13:06:33Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-mvp-first-scheduling","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-mvp-first-scheduling/requirements-baseline.md"]
@@ -42,7 +42,7 @@ beads_linkage: {"bd_issue_id":"HarnessHub-6gl.1","linked_at":"2026-07-23T08:22:2
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
-execution_contexts: []
+execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-MVP-FIRST-SCHEDULING-P01","head_sha":"6ab7d593967b2f93ed1c2a5f069719bfe032c71f","last_seen_at":"2026-07-23T13:04:13.437445Z","lease_acquired_at":"2026-07-23T13:04:12.265282Z","released_at":null,"state":"claimed","worktree_id":"wt_f5b59c7488943714"}]
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-23T06:00:00Z","missing_sections":[],"status":"complete"}
 ---

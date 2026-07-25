@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "verb": "sync",
+  "dispatch": "/dev-graph sync",
+  "status": "STOP",
+  "evaluated_at": "2026-07-25T04:48:56Z",
+  "completion_contract": {
+    "required": "apply後に同じ入力でもう一度dry-runし、imports=exports=pending_retry=0かつconverged=true",
+    "source": "plugins/dev-graph/skills/run-dev-graph-sync/SKILL.md#Protocol"
+  },
+  "canonical_sequence": {
+    "dry_run_1": {
+      "path": "eval-log/dev-graph/run-dev-graph-sync/dryrun-1.json",
+      "changes": 71,
+      "imports": 71,
+      "exports": 0,
+      "conflicts": 0,
+      "tombstones": 0,
+      "pending_retry": 1,
+      "write_count": 0
+    },
+    "apply_1": {
+      "path": "eval-log/dev-graph/run-dev-graph-sync/apply-1.json",
+      "changes": 67,
+      "imports": 67,
+      "exports": 0,
+      "conflicts": 0,
+      "tombstones": 0,
+      "pending_retry": 1,
+      "write_count": 67
+    },
+    "dry_run_2": {
+      "path": "eval-log/dev-graph/run-dev-graph-sync/dryrun-2.json",
+      "changes": 0,
+      "imports": 0,
+      "exports": 0,
+      "conflicts": 0,
+      "tombstones": 0,
+      "pending_retry": 1,
+      "write_count": 0,
+      "converged": false,
+      "graph_sha256_before": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+      "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+      "snapshot_sha256_before": "2b370eb6a344a4246db5eaf6667bb8063035baa328b6bdb15a4cf0f9a4774d55",
+      "snapshot_sha256_after": "2b370eb6a344a4246db5eaf6667bb8063035baa328b6bdb15a4cf0f9a4774d55"
+    }
+  },
+  "target_scope": {
+    "feature_id": "feat-task-spec-test-strategy",
+    "feature_epic": "HarnessHub-a4ks",
+    "children": [
+      "HarnessHub-a4ks.1",
+      "HarnessHub-a4ks.2",
+      "HarnessHub-a4ks.3",
+      "HarnessHub-a4ks.4",
+      "HarnessHub-a4ks.5",
+      "HarnessHub-a4ks.6",
+      "HarnessHub-a4ks.7",
+      "HarnessHub-a4ks.8",
+      "HarnessHub-a4ks.9",
+      "HarnessHub-a4ks.10",
+      "HarnessHub-a4ks.11",
+      "HarnessHub-a4ks.12",
+      "HarnessHub-a4ks.13"
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ],
+    "source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+    "parity_confirmed": "13/13",
+    "expected_edges": 12,
+    "target_imports": 0,
+    "target_exports": 0,
+    "target_conflicts": 0,
+    "target_tombstones": 0,
+    "target_pending_retry": 0,
+    "status_mapping": "graph active <-> Beads open",
+    "github_mutations": 0
+  },
+  "blocker": {
+    "graph_node_id": "issue-build-trace-doc-coverage-schema-drift-20260723",
+    "binding": "beads",
+    "reason": "external_linkage_missing",
+    "required_recovery": "正規 C02/C28 投影で beads_linkage を確立してから /dev-graph sync を再実行する"
+  },
+  "validation": {
+    "graph_schema": "PASS",
+    "implementation_readiness": "complete",
+    "goal_intermediate_hash": "PASS",
+    "dry_run_write_zero": true,
+    "github_enabled": false,
+    "github_mutation_count": 0
+  },
+  "next_verb_allowed": false
+}

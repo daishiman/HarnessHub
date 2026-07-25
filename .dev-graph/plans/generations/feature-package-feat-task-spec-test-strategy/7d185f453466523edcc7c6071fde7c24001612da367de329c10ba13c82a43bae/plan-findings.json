@@ -1,0 +1,187 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-task-spec-test-strategy",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "feature-package.json の phase_refs (P01-P13)・task_count=13・task_node_ids・task_spec_paths は相互に矛盾なく、全 13 task-specs の「Current canonical feature baseline」section が purpose・goal・scope_in 7 件・scope_out 7 件・acceptance 7 件を全 phase で同一に re-embed していることを独立に確認した。scope_out 7 件 (テスト実行基盤 scaffold/CI 配線、カバレッジ計測 CI 実装、flaky テスト運用、lint 実装、Hub 本体テスト追加、既存資産一括再生成、exact-13 契約変更) を全 13 task-specs のスコープ外セクションおよび Write scope と個別に突合し、いずれの phase もこれらを取り込んでいないことを確認した。特に P05 (実装) の Backend 欄は「system-dev-planner の dev-tooling script (validate-system-plan.py) の変更であり Hub プロダクト本体の backend ではない」と明示しており、scope_out 違反ではないことを自己証明している。",
+      "evidence": [
+        "feature-package.json",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-09-quality-assurance.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "goal-spec acceptance 7 件それぞれについて trace rule (P04 が実行可能テスト ID を定義し、P05 がその対象を実装し、P06 が実行し、P07/P10 が実行済み証跡のみで判定し、P09 が悪性ケースに対する fail-closed を実測し、P11 が digest と再実行コマンドを保全する) に沿った owner phase chain が 13 task-specs 全体の「参照情報」section に一貫して明記されていることを確認した。P04 (テスト設計) が定義したテスト ID を P05 (実装) が対象実装し、P06 (テスト実行) が実行結果を test-run-p06.json へ記録し、P07 (受入判定) が acceptance との突合を行い、P09 (品質保証) が section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性を実測し、P11 (証跡固定) が evidence-manifest.json として証跡を固定する、という owner 不在のない連鎖を acceptance 7 件全件で確認した。",
+      "evidence": [
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-06-test-run.md",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-09-quality-assurance.md",
+        "task-specs/phase-11-evidence.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-task-spec-test-strategy を独立実行し exit 0 / violations=[] / validated_digest=sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae を確認、team-lead 提示の canonical digest と完全一致した。staging package の staging-manifest.json files 記載 17 ファイルおよび staging-manifest.json 自身の sha256 を shasum -a 256 で独立に再計算し、staging-manifest.json の files 値・system-build-handoff.json の source_inputs 値と完全一致することを確認した。staging ディレクトリ全体を絶対 path パターン (/Users/, /home/, C:\\\\) で grep した結果は 0 件だった。system-build-handoff.json の source_manifest.canonical_digest_before_handoff / sha256_before_handoff は自己参照除外ポリシー (handoff は自身の digest と最終 manifest digest を持たない) 通りの中間 bookkeeping 値であり、最終 canonical_digest の判定には影響しない。",
+      "evidence": [
+        "staging-manifest.json",
+        "system-build-handoff.json",
+        "feature-package.json",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json の depends_on は P01 (depends_on=[]) を起点に P02→P03→...→P13 (depends_on=[P12]) まで完全直列で後方参照・循環は 0 件であることを確認した。workstream-inventory.json の tasks[].graph_node_registration.graph_node_id は 13 件全件で task.id と厳密一致 (例: SYS-TASK-SPEC-TEST-STRATEGY-P01) しており、promote-system-plan.py の _registration_nodes が要求する graph_node_registration.graph_node_id == task.id の契約に違反していない。feature-package.json の task_count=13・task_node_ids (13件)、task-graph.json の nodes (13件)、workstream-inventory.json の tasks (13件) が全て一致し、exact-13 (12件でも14件でもない) であることを確認した。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "feature-package.json"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-task-spec-test-strategy"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae\",\n  \"feature_package_id\": \"feature-package/feat-task-spec-test-strategy\",\n  \"parent_feature\": \"feat-task-spec-test-strategy\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "4482966a211c56950e786485a3eab7dbe72f13fc343fd32e59f9853ebfa570ab"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "4124cf3b0aeb824a37403cc6ea5ad4ba06521cfb3560ff6e90537512d9224fd8"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "fb6c18329213c74182e3ed6b682239052040855dccd5d4707b7b64e756ba3334"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "3fe8f597a7a2405794e923190bab7dedae20ce5c6ebc07a84f4c6a62b4b19392"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "114f3f098dbaaa7627d0ab2e624bd6b2524c646e67b29557cfac69f92f8ea07c"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "4aeaf2dd87da52fbaea6fba0ea82b01cd4d73952e2cc97693858a1c7d40347db"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "a93c713bd9e112387e3b0db867ba2798f69230add1e2052b055b497f1f987393"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "df840dd7a28fe857ed489c19d6542dc44310723627b02279bef415bc5f3fa828"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "6932845c156f7df0887900f52e572022190ad882ea28b841c4fa75eec4a92afd"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "689b5f3660f73ef9964d2196c9602389484e3dd55e1cf03d28990f5f3cb7dc23"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "af51de095208782e1c234d391d394a1058c3d42bb21061ae7e79ce71a5d0761a"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "f4456f8d0efc1e67cc83b0d8927aa241a84b56b2a4e2645362de5352a507c97b"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "824d4a5ffc1710969fc22e5a21abffd00a45b8cdc1f0d4d5dd78fbdc86eb2c1d"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "35bc28974594dc78c22a467620fc4d999921ba05f3d97b1ee9ec30ceb3e18859"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "ab66165efc086298cb66a618ee1690ace8f6c3cd0c19193d96b4617ba9de7f26"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "50b9c82bf3957239582ad9acd0a921dc3109c850d0ce7acd50799a698464c196"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a73f3fc563e03f2468da937eae21bc7a7528207b40eeb10069f091da1a5f646b"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "2820809bc4a757c3853aa537157b84d763f6537fea036d9672bd12c40c41acb0"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "goal-spec-paraphrase-note",
+      "observation": "goal-spec.json の purpose・goal は features/feat-task-spec-test-strategy.context.json の原文とバイト同一ではなく用語解説を加えた paraphrase になっている一方、scope_in 7 件・scope_out 7 件・acceptance 7 件は原文とバイト同一であることを独立比較で確認した。paraphrase 部分についても意味的な矛盾は生じていない。前例 (feature-package-feat-mvp-first-scheduling) でも同様のパターンが許容されており、今回も C1 の PASS 判定を損なうものではない。",
+      "evidence": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.context.json"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "lineage-digest-verification",
+      "observation": "goal-spec.json の lineage に記載された 3 件の参照ファイル (system-spec/testing-qa.md, architecture/harness-hub-testing-qa.md, features/feat-task-spec-test-strategy.md) の sha256 を shasum -a 256 で独立に再計算し、いずれも lineage 記載値と完全一致することを確認した。",
+      "evidence": [
+        "goal-spec.json",
+        "system-spec/testing-qa.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-task-spec-test-strategy.md"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "dead-field-consistency-note",
+      "observation": "task-graph.json の各 node は id (大文字、例: SYS-TASK-SPEC-TEST-STRATEGY-P01) とは別に graph_node_id という小文字表記のフィールド (例: sys-task-spec-test-strategy-p01) を保持しており、workstream-inventory.json 側で統一済みの大文字表記 (graph_node_registration.graph_node_id == task.id) と大文字/小文字が食い違っている。validate-system-plan.py の node_ids 算出 (id を優先し graph_node_id はフォールバックのみ) および promote-system-plan.py の _registration_nodes (task-graph.json を一切参照せず workstream-inventory.json のみから登録 node を構築) のソースコードを突合した結果、このフィールドはどちらのスクリプトからも参照されない死んだフィールドであり、実行可能性・登録整合性に機能的な影響はない (前例 feature-package-feat-mvp-first-scheduling の評価と同型の観察)。将来の保守者が誤って参照する可能性があるため、次回 staging 再生成時に大文字へ統一する、または不要なら削除することを推奨する。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json"
+      ]
+    }
+  ]
+}

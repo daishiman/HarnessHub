@@ -12,8 +12,8 @@ iteration: null
 title: "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:32:59Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P10"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-domain-model-db/evidence-summary.md"]
