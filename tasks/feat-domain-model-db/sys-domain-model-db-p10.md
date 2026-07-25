@@ -12,8 +12,8 @@ iteration: null
 title: "最終独立レビュー — quality_constraints 10 件の充足判定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:32:57Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P09"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-domain-model-db/final-review-record.md"]

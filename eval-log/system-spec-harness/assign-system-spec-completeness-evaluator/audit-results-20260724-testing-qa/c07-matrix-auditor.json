@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS",
+  "component": "C07",
+  "auditor": "system-spec-matrix-auditor",
+  "dispatch": {"tool": "Agent", "subagent_type": "system-spec-matrix-auditor", "session_id": "4e36e2fc-5ee3-4926-b723-71b490e6442b"},
+  "audited_at": "2026-07-24T12:21:00Z",
+  "summary": "決定論ゲート(validate-coverage-matrix.py)をloop/--require-complete/--require-foundationの3モードで実行し全てexit0・VIOLATION 0件。10カテゴリ×6platform=60セル全てが未収集/対象外/確定の3値で埋まり、未収集セル残存0件、対象外32セル全件が非空かつ具体的理由、確定28セル全件のqa_refがqa_log/approval_logに実在しdangling無し、serves_goalsは全件G1-G5内でdrift候補0件、category_aggregateは真理値表と10カテゴリ全て一致、canonical platform 6行の欠落0件。testing-qaの対象外3セルはdev-workflowの前例と同一の論理構造・根拠水準で整合。testing-qa.desktop-windowsのR4-reopen(qa-071→qa-075)はcompleteness-report-20260724-qa074.jsonの該当finding実在を確認のうえ根拠付きの正当な差替えと判定。qa-075の回答はqa-071/qa-070を維持引用しつつqa-073の冪等組込機構を統合しており情報欠落なし。high finding(doctrine anchor未帰属)はregistry pending_exceptions追加で解消、medium finding(testing-library接地欠如)はD8確定で解消済みを確認。loop_pass=PASS、final_ready=PASS。",
+  "findings": [
+    {"severity": "low", "detail": "testing-qaの対象外3セルの理由文はdev-workflow前例と同一根拠構造で具体的だが、platform範囲を確定させたqa-074への明示citationを欠き間接参照のみ。scriptはreason非空のみ検証するため通過。是正提案: 対象外理由文にqa-074への明示参照を追加(compileへの差し戻し候補・非ブロッキング)。"},
+    {"severity": "low", "detail": "testing-qa.desktop-windowsのreopen(from=確定、qa-071→qa-075)は根拠付きで正当と判定。是正不要、検証記録として残すfinding。"}
+  ]
+}

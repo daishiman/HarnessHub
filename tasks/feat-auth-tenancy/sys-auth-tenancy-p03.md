@@ -12,8 +12,8 @@ iteration: null
 title: "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-07-25T00:44:42Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P02"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/design-review-notes.md"]

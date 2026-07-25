@@ -1,0 +1,1195 @@
+{
+  "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+  "p01_entry_gate": {
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ],
+    "selector": "parent_feature.depends_on"
+  },
+  "parent_feature": "feat-task-spec-test-strategy",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "schema_version": "1.0.0",
+  "source_lineage": {
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "confirmed": true,
+    "source_paths": [
+      "goal-spec.json",
+      "features/feat-task-spec-test-strategy.md",
+      "architecture/harness-hub-testing-qa.md",
+      "system-spec/testing-qa.md"
+    ],
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0"
+  },
+  "tasks": [
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p01.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P01 責務 (要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化) を実行する task"
+      },
+      "depends_on": [],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p01.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P01",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P01"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P01",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "goal-spec との逐語一致に齟齬が見つかった場合、requirements-baseline.md を修正し本 task を再実行する",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "docs/features/feat-task-spec-test-strategy/requirements-baseline.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p02.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P02 責務 (設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P01"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p02.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P02",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P02"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P02",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "設計が exact-13 契約または既存 promoted 世代の digest を破る場合、design.md を差し戻し P01 の baseline から再設計する",
+      "secondary_workstreams": [
+        "quality",
+        "operations"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "docs/features/feat-task-spec-test-strategy/design.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p03.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P03 責務 (設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P02"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p03.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P03",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P03"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P03",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "レビューで境界違反が確定した場合、design-review.md に finding を残し P02 へ差し戻す",
+      "secondary_workstreams": [
+        "quality",
+        "security"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "docs/features/feat-task-spec-test-strategy/design-review.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p04.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P04 責務 (テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P03"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p04.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P04",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P04"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P04",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "acceptance 7 件のいずれかが test ID へ写像できない場合、test-plan.md を修正し本 task を再実行する",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "docs/features/feat-task-spec-test-strategy/test-plan.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p05.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P05 責務 (実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P04"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p05.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P05",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P05"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P05",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "validator 追加で既存 promoted 世代の再検証が失敗した場合、validate-system-plan.py の追加検査を revert し P02 の設計から見直す",
+      "secondary_workstreams": [
+        "documentation",
+        "operations"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "plugins/system-dev-planner/schemas/task-spec-test-strategy.schema.json",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "plugins/system-dev-planner/agents/system-dev-plan-architect.md",
+        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py",
+        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p06.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P06 責務 (テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P05"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p06.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P06",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P06"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P06",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "test 失敗が実装欠陥に起因する場合は P05 へ差し戻し、test 定義側の誤りなら P04 へ差し戻す",
+      "secondary_workstreams": [],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.json"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p07.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P07 責務 (受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P06"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p07.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P07",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P07"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P07",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "未達 acceptance が 1 件でもあれば受入を保留し、該当する担当 phase へ差し戻す",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "docs/features/feat-task-spec-test-strategy/acceptance-report.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p08.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P08 責務 (移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P07"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p08.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P08",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P08"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P08",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "旧世代 digest が変化した場合、変更を revert し新検査を新規世代のみへ適用する設計へ戻す",
+      "secondary_workstreams": [
+        "quality",
+        "documentation"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "operations",
+      "write_scope": [
+        "docs/features/feat-task-spec-test-strategy/compatibility-note.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p09.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P09 責務 (品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P08"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p09.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P09",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P09"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P09",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "悪性ケースが素通りした場合、検査条件を P02 の設計へ差し戻して強化する",
+      "secondary_workstreams": [
+        "security"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "quality",
+      "write_scope": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-report.json"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p10.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P09"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p10.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P10",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P10"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P10",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "横断整合の齟齬が見つかった場合、該当 phase へ差し戻し本 task を再実行する",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "docs/features/feat-task-spec-test-strategy/final-review.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p11.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P10"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p11.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P11",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P11"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P11",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "manifest の digest が実ファイルと不一致なら manifest を再生成し、再実行コマンドの世代非依存性を再確認する",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "documentation",
+      "write_scope": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/evidence-manifest.json"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p12.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P12 責務 (運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P11"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p12.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P12",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P12"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P12",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "運用手順が実装と乖離した場合、operations.md を実装実測に合わせて修正する",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "operations",
+      "write_scope": [
+        "docs/features/feat-task-spec-test-strategy/operations.md"
+      ]
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "branch_policy": {
+        "assignment_owner": "dev-graph-scheduler",
+        "completion_projection": "default-branch-reconciliation",
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true
+      },
+      "build_target_kind": "script",
+      "classification": {
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md",
+            "confidence": 0.86
+          }
+        ],
+        "confidence": 0.86,
+        "reason": "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P13 責務 (リリース — main 反映と確定 system spec/architecture への writeback) を実行する task"
+      },
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P12"
+      ],
+      "deploy_unit": "dev-tooling/repository",
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "graph_node_registration": {
+        "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+        "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md",
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P13",
+        "parent_feature": "feat-task-spec-test-strategy",
+        "phase_ref": "P13"
+      },
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P13",
+      "pr_completion_policy": "linked_pr_merged_all",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "rollback": "writeback 後に不整合が見つかった場合、release-receipt.json に失敗理由を記録し spec/architecture の該当追記を revert する",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "source_lineage": [
+        "goal-spec.json",
+        "features/feat-task-spec-test-strategy.md",
+        "system-spec/testing-qa.md"
+      ],
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "リリース — main 反映と確定 system spec/architecture への writeback",
+      "tracker_binding_intent": "beads",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging ."
+      ],
+      "workstream_kind": "operations",
+      "write_scope": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/release-receipt.json"
+      ]
+    }
+  ]
+}

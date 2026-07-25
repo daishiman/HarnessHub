@@ -1,0 +1,48 @@
+{
+  "fixture": "eval-log/dev-graph/live-trial-fixtures/system-spec-pr72-r5",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+  "session_id": "a005a527-765b-4b38-891f-50933dfac921",
+  "checks": [
+    {
+      "name": "canonical_harness_flow_completed",
+      "pass": true,
+      "detail": "root skill was the first action and all four harness stages were invoked as Skills"
+    },
+    {
+      "name": "coverage_and_source_citations_valid",
+      "pass": true,
+      "detail": "48/48 cells resolved, foundation confirmed, 3 official-host targets valid"
+    },
+    {
+      "name": "failed_audits_were_repaired_and_reforked",
+      "pass": true,
+      "detail": "hearing and doc-freshness FAIL results were repaired, then both auditors were actually re-forked to PASS"
+    },
+    {
+      "name": "real_audit_ledger_and_aggregate_valid",
+      "pass": true,
+      "detail": "5 real hook rows have transcript-matching prompt SHA-256 values; aggregate completeness PASS for the trial session"
+    },
+    {
+      "name": "canonical_nodes_registered_through_c02_skills",
+      "pass": true,
+      "detail": "two run-dev-graph-node Skill invocations registered specification and architecture nodes with lineage and evaluator evidence"
+    },
+    {
+      "name": "lineage_evidence_and_goal_seek_valid",
+      "pass": true,
+      "detail": "source-digest, evidence-ref, graph-schema, and 2-row append-only goal-seek checks all pass"
+    },
+    {
+      "name": "registration_lock_absent",
+      "pass": true,
+      "detail": ".dev-graph/state/.graph.json.register.lock is absent and out contains only status.json"
+    },
+    {
+      "name": "self_directed_completion",
+      "pass": true,
+      "detail": "parent tail continued after the second C02 Skill with nudge_count=0 and gate_response_count=0"
+    }
+  ],
+  "all_pass": true
+}

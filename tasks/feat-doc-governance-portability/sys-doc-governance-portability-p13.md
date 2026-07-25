@@ -12,8 +12,8 @@ iteration: null
 title: "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証"
 owners: ["daishiman"]
 created_at: "2026-07-22T02:31:19Z"
-updated_at: "2026-07-22T02:47:44Z"
-status: "active"
+updated_at: "2026-07-24T10:50:29Z"
+status: "closed"
 depends_on: ["SYS-DOC-GOVERNANCE-PORTABILITY-P12"]
 related_nodes: ["feat-doc-governance-portability","arch-harness-hub-dev-workflow"]
 resource_scope: ["eval-log/dev-graph/doc-governance-portability/release-receipt.json"]

@@ -12,8 +12,8 @@ iteration: null
 title: "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:31:33Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-domain-model-db/requirements-baseline.md"]

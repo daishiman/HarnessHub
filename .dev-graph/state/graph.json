@@ -1,5 +1,5 @@
 {
-  "graph_revision": 555,
+  "graph_revision": 610,
   "nodes": [
     {
       "acceptance": [
@@ -28,9 +28,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae",
+        "evaluated_digest": "190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b",
         "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"
+        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -71,7 +71,8 @@
         "arch-harness-hub-dev-workflow",
         "arch-harness-hub-frontend",
         "arch-harness-hub-infrastructure",
-        "arch-harness-hub-security"
+        "arch-harness-hub-security",
+        "arch-harness-hub-testing-qa"
       ],
       "resource_scope": [
         "specs/harness-hub-system-specification.md"
@@ -85,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-23T00:04:07Z",
+        "imported_at": "2026-07-24T12:35:34Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f5e022ed4ad5ae96201a72a25ee82969c9af29aefce9615c8c58fbad1932fbae",
+        "source_digest": "190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b",
         "source_path": "system-spec/00-requirements-definition.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -103,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-23T00:04:30.693628Z"
+      "updated_at": "2026-07-24T12:35:34Z"
     },
     {
       "acceptance": [
@@ -1641,7 +1642,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -1653,7 +1654,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:59:39.662741Z"
+      "updated_at": "2026-07-24T21:00:24Z"
     },
     {
       "acceptance": [
@@ -1767,7 +1768,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -1779,7 +1780,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:00:39Z"
     },
     {
       "acceptance": [
@@ -1879,7 +1880,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -1891,7 +1892,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 独立設計レビュー",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:00:47Z"
     },
     {
       "acceptance": [
@@ -2007,7 +2008,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2019,7 +2020,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 テスト設計 (test-first 受入契約)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:00:53Z"
     },
     {
       "acceptance": [
@@ -2145,7 +2146,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2157,7 +2158,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:06Z"
     },
     {
       "acceptance": [
@@ -2271,7 +2272,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2283,7 +2284,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 テスト実行",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:13Z"
     },
     {
       "acceptance": [
@@ -2383,7 +2384,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2395,7 +2396,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 feature 受入判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:20Z"
     },
     {
       "acceptance": [
@@ -2508,7 +2509,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2520,7 +2521,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:30Z"
     },
     {
       "acceptance": [
@@ -2634,7 +2635,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2646,7 +2647,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 品質・セキュリティ・運用保証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:35Z"
     },
     {
       "acceptance": [
@@ -2746,7 +2747,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2758,7 +2759,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 最終独立レビュー",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:41Z"
     },
     {
       "acceptance": [
@@ -2858,7 +2859,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2870,7 +2871,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 証跡収集",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:50Z"
     },
     {
       "acceptance": [
@@ -2972,7 +2973,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2984,7 +2985,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 運用ドキュメント整備",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:55Z"
     },
     {
       "acceptance": [
@@ -3218,7 +3219,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "audit",
         "system-spec",
@@ -3229,7 +3230,7 @@
       "template_version": "1.0.0",
       "title": "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-17T09:30:00Z"
+      "updated_at": "2026-07-24T11:20:45Z"
     },
     {
       "acceptance": [
@@ -13082,7 +13083,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13094,7 +13095,7 @@
       "template_version": "1.0.0",
       "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:33Z"
     },
     {
       "acceptance": [
@@ -13194,7 +13195,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13206,7 +13207,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:37Z"
     },
     {
       "acceptance": [
@@ -13305,7 +13306,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13317,7 +13318,7 @@
       "template_version": "1.0.0",
       "title": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:39Z"
     },
     {
       "acceptance": [
@@ -13431,7 +13432,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13443,7 +13444,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:52Z"
     },
     {
       "acceptance": [
@@ -13563,7 +13564,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13575,7 +13576,7 @@
       "template_version": "1.0.0",
       "title": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:57Z"
     },
     {
       "acceptance": [
@@ -13689,7 +13690,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13701,7 +13702,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:02Z"
     },
     {
       "acceptance": [
@@ -13801,7 +13802,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13813,7 +13814,7 @@
       "template_version": "1.0.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:10Z"
     },
     {
       "acceptance": [
@@ -13927,7 +13928,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13939,7 +13940,7 @@
       "template_version": "1.0.0",
       "title": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:42Z"
     },
     {
       "acceptance": [
@@ -14053,7 +14054,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14065,7 +14066,7 @@
       "template_version": "1.0.0",
       "title": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:52Z"
     },
     {
       "acceptance": [
@@ -14164,7 +14165,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14176,7 +14177,7 @@
       "template_version": "1.0.0",
       "title": "最終独立レビュー — quality_constraints 10 件の充足判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:57Z"
     },
     {
       "acceptance": [
@@ -14275,7 +14276,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14287,7 +14288,7 @@
       "template_version": "1.0.0",
       "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:59Z"
     },
     {
       "acceptance": [
@@ -14389,7 +14390,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14402,7 +14403,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:33:19Z"
     },
     {
       "acceptance": [
@@ -14622,7 +14623,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -14634,7 +14635,7 @@
       "template_version": "1.0.0",
       "title": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:44:17Z"
     },
     {
       "acceptance": [
@@ -14733,7 +14734,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -14745,7 +14746,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:44:28Z"
     },
     {
       "acceptance": [
@@ -14844,7 +14845,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -14856,7 +14857,7 @@
       "template_version": "1.0.0",
       "title": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:44:42Z"
     },
     {
       "acceptance": [
@@ -14963,7 +14964,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -14975,7 +14976,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:45:03Z"
     },
     {
       "acceptance": [
@@ -15209,7 +15210,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -15221,7 +15222,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:46:04Z"
     },
     {
       "acceptance": [
@@ -15437,7 +15438,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -15449,7 +15450,7 @@
       "template_version": "1.0.0",
       "title": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:46:20Z"
     },
     {
       "acceptance": [
@@ -15778,7 +15779,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -15790,7 +15791,7 @@
       "template_version": "1.0.0",
       "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:47:04Z"
     },
     {
       "acceptance": [
@@ -15889,7 +15890,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -15902,7 +15903,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:47:18Z"
     },
     {
       "acceptance": [
@@ -27236,7 +27237,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-pipeline",
         "qa-070",
@@ -27247,7 +27248,7 @@
       "template_version": "1.0.0",
       "title": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T09:30:00Z"
+      "updated_at": "2026-07-24T08:49:25Z"
     },
     {
       "acceptance": [
@@ -27776,7 +27777,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -27788,7 +27789,7 @@
       "template_version": "1.0.0",
       "title": "要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:24:50Z"
     },
     {
       "acceptance": [
@@ -27887,7 +27888,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -27899,7 +27900,7 @@
       "template_version": "1.0.0",
       "title": "検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:24:54Z"
     },
     {
       "acceptance": [
@@ -27996,7 +27997,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28008,7 +28009,7 @@
       "template_version": "1.0.0",
       "title": "設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:02Z"
     },
     {
       "acceptance": [
@@ -28106,7 +28107,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28118,7 +28119,7 @@
       "template_version": "1.0.0",
       "title": "テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:20Z"
     },
     {
       "acceptance": [
@@ -28230,7 +28231,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28242,7 +28243,7 @@
       "template_version": "1.0.0",
       "title": "実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:25Z"
     },
     {
       "acceptance": [
@@ -28338,7 +28339,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28350,7 +28351,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — 回帰テスト全件と 3 検査の実測記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:35Z"
     },
     {
       "acceptance": [
@@ -28446,7 +28447,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28458,7 +28459,7 @@
       "template_version": "1.0.0",
       "title": "受入判定 — 4 acceptance の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:38Z"
     },
     {
       "acceptance": [
@@ -28559,7 +28560,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28571,7 +28572,7 @@
       "template_version": "1.0.0",
       "title": "移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:55Z"
     },
     {
       "acceptance": [
@@ -28667,7 +28668,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28679,7 +28680,7 @@
       "template_version": "1.0.0",
       "title": "品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:26:02Z"
     },
     {
       "acceptance": [
@@ -28775,7 +28776,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28787,7 +28788,7 @@
       "template_version": "1.0.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:26:06Z"
     },
     {
       "acceptance": [
@@ -28883,7 +28884,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28895,7 +28896,7 @@
       "template_version": "1.0.0",
       "title": "証跡固定 — 実測ログと成果物 digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:26:14Z"
     },
     {
       "acceptance": [
@@ -28992,7 +28993,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -29004,7 +29005,7 @@
       "template_version": "1.0.0",
       "title": "運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:26:49Z"
     },
     {
       "acceptance": [
@@ -29100,7 +29101,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -29112,7 +29113,7 @@
       "template_version": "1.0.0",
       "title": "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T10:50:29Z"
     },
     {
       "acceptance": [],
@@ -29196,7 +29197,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "live-trial",
@@ -29208,7 +29209,7 @@
       "template_version": "1.0.0",
       "title": "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T10:25:46.615020Z"
+      "updated_at": "2026-07-24T09:35:27Z"
     },
     {
       "acceptance": [],
@@ -29292,7 +29293,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "live-trial",
@@ -29304,7 +29305,7 @@
       "template_version": "1.0.0",
       "title": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T10:25:09.866807Z"
+      "updated_at": "2026-07-24T21:00:46Z"
     },
     {
       "acceptance": [],
@@ -29388,7 +29389,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "live-trial",
@@ -29400,7 +29401,7 @@
       "template_version": "1.0.0",
       "title": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T10:25:28.267083Z"
+      "updated_at": "2026-07-24T11:20:29Z"
     },
     {
       "acceptance": [],
@@ -31993,7 +31994,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "live-trial",
         "freshness-gate",
@@ -32006,7 +32007,7 @@
       "template_version": "1.0.0",
       "title": "MVP-first 実装 (P05) で stale 化した 9 skill の live-trial 証跡再取得",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T13:55:28Z"
+      "updated_at": "2026-07-24T02:03:05Z"
     },
     {
       "acceptance": [
@@ -33847,6 +33848,1934 @@
     },
     {
       "acceptance": [
+        "正本章が confirmed かつ evaluator PASS",
+        "source_digest が正本と一致"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "infrastructure"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/harness-hub-testing-qa.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T12:35:34Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "testing-qa",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/harness-hub-testing-qa.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-076/qa-077/qa-078/qa-079/qa-080/qa-081 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・失敗時改善ループの指針を提供する",
+      "graph_node_id": "arch-harness-hub-testing-qa",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T12:35:34Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅 (単体・結合・境界値・回帰)、カバレッジ 80% 品質ゲートと改善ループ、FE/BE/インフラ層別テスト方針、behavior ベースの保守しやすい UI テスト、タスク仕様書へのテスト戦略の冪等組込 — を dev-graph から参照する",
+      "related_nodes": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-data",
+        "arch-harness-hub-security",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "architecture/harness-hub-testing-qa.md"
+      ],
+      "scope_in": [
+        "system-spec/testing-qa.md"
+      ],
+      "scope_out": [
+        "正本章の内容複製",
+        "未確定章の取込"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T12:35:34Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d",
+        "source_path": "system-spec/testing-qa.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec-import",
+        "testing-qa"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-24T12:35:34Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-task-spec-test-strategy.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 testing-qa 章 qa-076/qa-078/qa-079/qa-081 と D8 から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T20:58:52Z",
+      "depends_on": [],
+      "domain": "testing-qa",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-task-spec-test-strategy.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "system-dev-planner が生成する P01..P13 タスク仕様書が、テストレベル選定 (単体・結合・境界値・回帰)・カバレッジ目標 (既定 80%、層別上書き可)・層別方針 (フロント behavior ベース / バックエンド API 契約+ロジック単体+DB 結合 / インフラ IaC 静的検証+デプロイ後 smoke)・保守性制約 (pixel 位置・DOM 構造依存の禁止、過剰テストを作らない線引き) の 4 項目を必須 section として持ち、欠落した仕様書は promotion 前に fail-closed で拒否され、同一入力の再生成で section 構成が冪等に一致する状態",
+      "graph_node_id": "feat-task-spec-test-strategy",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "タスク仕様書がテスト網羅を明記しない、あるいは書き方が実行ごとにぶれるため、実装後に「結合が通らない」「既存機能が壊れた」を後追いで発見している (qa-076/qa-079)。仕様生成の時点でテスト戦略を必須 section 化し欠落を機械的に拒否することで、何度実行しても同じ品質基準の仕様書が出る冪等な仕組みへ移す。あわせて、ボタン配置など見た目の微調整でテストが壊れる保守性崩壊 (qa-078) を、実装ではなく仕様段階の制約として先に封じる",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "feat-doc-governance-portability",
+        "feat-mvp-first-scheduling"
+      ],
+      "resource_scope": [
+        "features/feat-task-spec-test-strategy.md"
+      ],
+      "scope_in": [
+        "タスク仕様書テスト戦略 section のスキーマ定義 (テストレベル選定・カバレッジ目標・層別方針・保守性制約の 4 項目)",
+        "system-dev-planner の task spec テンプレート (P01..P13) への必須 section 組込",
+        "テスト戦略 section 欠落を promotion 前に非0終了で拒否する fail-closed validator",
+        "変更内容の種別 (フロント/バックエンド/インフラ) からテストレベルと層別方針を導出する規則",
+        "層別テスト方針の明文化 (フロント= accessible role/ラベル選択の behavior ベース必須かつ pixel 位置・DOM 構造依存禁止、バックエンド= API 契約テスト+ビジネスロジック単体+DB 結合、インフラ= IaC/設定の静的検証+デプロイ後 smoke)",
+        "「どこまで管理するか」の線引き (実装詳細への密結合となる過剰テストを作らない基準) の仕様記述",
+        "同一 feature context での再生成における section 構成の冪等性検証"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T20:58:52Z",
+        "origin_kind": "generated",
+        "source_digest": "39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d",
+        "source_path": "system-spec/testing-qa.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "macro-feature",
+        "testing-qa",
+        "task-spec",
+        "quality-gate",
+        "qa-076",
+        "qa-078",
+        "qa-079",
+        "qa-081",
+        "decision-d8"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:46:48.794028Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.1",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p01.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P01 責務 (要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p01.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P01 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P01",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "goal-spec.json の purpose/background/goal/scope_in 7 件/scope_out 7 件/acceptance 7 件を machine-verifiable な要件ベースラインとして固定し、P02 以降の全 task が同一の合意事項を参照できる状態にする。特にテスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) が要求する具体的な粒度を、この段階で曖昧さを残さず文書化する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-task-spec-test-strategy/requirements-baseline.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-task-spec-test-strategy/requirements-baseline.md"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-01-requirements.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:47:22.619662Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.2",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p02.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P02 責務 (設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P01"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p02.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P02 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P02",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "P01 が固定した要件ベースラインを入力に、テスト戦略 section の構造 (テストレベル選定・カバレッジ目標・層別方針・保守性制約の 4 項目)、変更内容の種別 (フロント/バックエンド/インフラ) からテストレベルと層別方針を導出する規則、P01..P13 task spec テンプレートへの必須 section 組込位置、および fail-closed validator が検査すべき具体的なチェックポイントを決定論的に設計し、design.md として固定する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-task-spec-test-strategy/design.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-task-spec-test-strategy/design.md"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-02-architecture.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:47:49.578365Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.3",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p03.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P03 責務 (設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P02"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p03.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P03 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P03",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "P02 の design.md が (1) validate-system-plan.py を単一 writer とする既存の書き込み境界を侵さないこと、(2) P01..P13 exact-13 契約を変更・追加・削除しないこと、(3) 既存の promoted 世代 (すでに生成済みの task spec 資産) の digest を破壊しないことの 3 点を review 観点として整合検証し、design-review.md として記録する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-task-spec-test-strategy/design-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-task-spec-test-strategy/design-review.md"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-03-design-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:48:14.781693Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.4",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p04.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P04 責務 (テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P03"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p04.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P04 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P04",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "acceptance 7 件それぞれを実行可能な test ID へ写像し、section 欠落拒否・4 項目完備 PASS・再生成冪等・テストレベル/層別方針導出・カバレッジ 80% 表現・保守性制約明記・exact-13 非退行という 7 観点の回帰テストを test-plan.md として設計する。P05 はこの test ID の実装対象を実装し、P06 が実行する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-task-spec-test-strategy/test-plan.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-task-spec-test-strategy/test-plan.md"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-04-test-design.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:48:38.376341Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.5",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p05.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P05 責務 (実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P04"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p05.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P05 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P05",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "P04 で定義した test ID の実装対象 (テスト戦略 section の JSON Schema 定義・P01..P13 テンプレートへの必須 section 組込・fail-closed validator・変更種別からのテストレベル/層別方針導出規則) を write scope の範囲内で実装する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "plugins/system-dev-planner/schemas/task-spec-test-strategy.schema.json",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "plugins/system-dev-planner/agents/system-dev-plan-architect.md",
+        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py",
+        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py"
+      ],
+      "scope_in": [
+        "plugins/system-dev-planner/schemas/task-spec-test-strategy.schema.json",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "plugins/system-dev-planner/agents/system-dev-plan-architect.md",
+        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py",
+        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-05-implementation.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:49:00.168714Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.6",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p06.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P06 責務 (テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P05"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p06.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P06 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P06",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "P04 で定義したテスト戦略 section 関連の全テスト ID (section 欠落拒否・4 項目完備 PASS・再生成冪等性・exact-13 非退行の回帰) を、P05 で実装したスキーマ・fail-closed validator・テンプレート必須 section 組込に対して実行し、pass/fail の実測結果を記録する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.json"
+      ],
+      "scope_in": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.json"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-06-test-run.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:49:23.079773Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.7",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p07.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P07 責務 (受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P06"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p07.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P07 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P07",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "goal-spec acceptance 7 件それぞれについて P06 の実測結果 (test-run-p06.json) と突合し、成否を acceptance-report.md へ記録する。未達が 1 件でもあれば受入を保留し、該当する担当 phase へ差し戻す。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-task-spec-test-strategy/acceptance-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-task-spec-test-strategy/acceptance-report.md"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-07-acceptance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:49:45.743677Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.8",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p08.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P08 責務 (移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P07"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p08.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P08 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P08",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "P05 で追加したテスト戦略 section 必須化の fail-closed validator が、既存の promoted 世代 (例: feature-package/feat-mvp-first-scheduling) の task spec digest を変えないことを実測確認し、compatibility-note.md へ記録する。scope_out の「既存タスク仕様書資産の一括再生成をしない」方針を実測で裏付ける。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-task-spec-test-strategy/compatibility-note.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-task-spec-test-strategy/compatibility-note.md"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-08-refactoring-migration.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:50:07.417344Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.9",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p09.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P09 責務 (品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P08"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p09.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P09 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P09",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "section 部分欠落・見出し順序入替・空本文などの悪性入力に対し、P05 の fail-closed validator が必ず非0終了で拒否することを実測し、qa-fail-closed-report.json へ記録する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-report.json"
+      ],
+      "scope_in": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-report.json"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-09-quality-assurance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:50:29.087312Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.10",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p10.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P09"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p10.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P10 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P10",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "P01..P09 の全成果物 (要件ベースライン・設計・設計レビュー・テスト設計・実装・テスト実行・受入判定・移行互換性・悪性ケース品質保証) を横断的に突き合わせ、テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約)・fail-closed validator・再生成冪等性・exact-13 非退行の観点に齟齬がないかを確認する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-task-spec-test-strategy/final-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-task-spec-test-strategy/final-review.md"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-10-final-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:50:49.717303Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.11",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p11.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P10"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p11.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P11 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P11",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "P06 のテスト実行ログと P09 の fail-closed 実効性実測ログを digest 付きの evidence manifest として固定し、世代非依存の再実行コマンドとともに再実行可能な形で保存する。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/evidence-manifest.json"
+      ],
+      "scope_in": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/evidence-manifest.json"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-11-evidence.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:51:10.485882Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.12",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p12.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P12 責務 (運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P11"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p12.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P12 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P12",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "テスト戦略 section (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の記述手順と、pixel 位置・DOM 構造依存を禁止する保守性制約の運用ガイドを整備し、system-dev-planner の運用担当者が迷わず一貫した記述を継続できるようにする。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-task-spec-test-strategy/operations.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-task-spec-test-strategy/operations.md"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-12-documentation-operations.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:51:31.539074Z"
+    },
+    {
+      "acceptance": [
+        "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+        "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+        "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+        "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+        "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+        "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+        "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.13",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P13 責務 (リリース — main 反映と確定 system spec/architecture への writeback) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-24T23:09:08Z",
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P12"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "P13 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T21:59:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P13",
+      "priority": null,
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "pull_request_linkages": [],
+      "purpose": "実装 (P05)・テスト実行 (P06)・受入判定 (P07)・証跡固定 (P11)・運用ガイド (P12) が揃った成果を default branch (main) へ反映し、system-spec/testing-qa.md と architecture/harness-hub-testing-qa.md への writeback を行う。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/release-receipt.json"
+      ],
+      "scope_in": [
+        "eval-log/system-dev-planner/task-spec-test-strategy/release-receipt.json"
+      ],
+      "scope_out": [
+        "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+        "カバレッジ計測と未達時マージブロックの CI 実装",
+        "flaky 検出・quarantine・再実行ポリシーの運用実装",
+        "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+        "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+        "既存タスク仕様書資産の一括再生成",
+        "P01..P13 exact-13 契約そのものの変更",
+        "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T23:09:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-13-release-deploy.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-080",
+        "system-dev-planner"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "リリース — main 反映と確定 system spec/architecture への writeback",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:51:51.513097Z"
+    },
+    {
+      "acceptance": [
+        "新規生成される task spec の Verification 節が `--feature-package <feature_package_id>` 形 (または staging 実 path) を持つ",
+        "生成直後の staging 段階と promotion 後の双方で、記載コマンドが無改変で exit 0 になることを実測記録する",
+        "既存 promoted 世代の validated_digest が不変であること (遡及書き換えをしない)"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-task-spec-validate-command-unrunnable-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "feat-task-spec-test-strategy P10 最終レビューが記録済み逸脱 D-2 として申し送った生成側欠陥",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T13:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-task-spec-validate-command-unrunnable-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "R3-emit が出力する検証コマンドが、生成された task spec を読んだだけで無改変に実行でき、promotion 後も有効な世代非依存形になっている",
+      "graph_node_id": "issue-task-spec-validate-command-unrunnable-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T13:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "R3-emit が生成する全 task spec の Verification 節が `validate-system-plan.py --staging .` を列挙するが、`--staging` は staging generation path を要求するためカレントディレクトリ `.` では解決できず、記載どおりに実行すると必ず失敗する。promotion 後は staging path 自体が消滅するため構造的にも不適切。feat-task-spec-test-strategy の P05..P13 実行時に実測で判明し、世代非依存形 `--feature-package <id>` へ読み替えて証跡を取得した (final-review.md D-2)。",
+      "related_nodes": [
+        "feat-task-spec-test-strategy"
+      ],
+      "resource_scope": [
+        "issues/sys-task-spec-validate-command-unrunnable-20260725.md"
+      ],
+      "scope_in": [
+        "plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md",
+        "plugins/system-dev-planner/references/system-task-spec-template.md"
+      ],
+      "scope_out": [
+        "既に promoted 済み世代の task spec 本文の遡及書き換え"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-23T13:51:02Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-dev-planner",
+        "task-spec",
+        "validator"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "R3-emit が生成する task spec の C12 検証コマンド `--staging .` が実行不能",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T13:00:00Z"
+    },
+    {
+      "acceptance": [
         "bd export × graph.json の突合で、status が closed 以外の orphan external_ref が 0 件",
         "`bd-bridge.py --op ready --parity-manifest <manifest>` の unmapped_summary.parity_manifest_missing が棚卸し後の期待値と一致し、根拠が記録されている",
         "3 系統の仕分け結果と判断理由が本 issue または派生 issue に残っている",
@@ -34668,30 +36597,31 @@
     },
     {
       "acceptance": [
-        "pnpm verify から G7 / G7b / G9 が起動し exit code で判定される",
-        "docs/shared-layers.md の「local からの実行」対応表に未結線ゲートが 0 件と記録される"
+        "qa_log に重複 ID を含む入力で validate-coverage-matrix.py が非 0 終了する",
+        "重複が無い現行 system-spec/spec-state.json では従来どおり exit 0 を維持する",
+        "重複検出の回帰テストが plugins/system-spec-harness/tests/ に存在する"
       ],
       "architecture_refs": [],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
-        "bd_issue_id": "HarnessHub-yhc3",
-        "linked_at": "2026-07-25T14:50:44Z",
+        "bd_issue_id": "HarnessHub-33ho",
+        "linked_at": "2026-07-26T00:00:00Z",
         "sync_state": "linked"
       },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
-          "candidate_path": "issues/sys-verify-local-gate-parity-20260725.md",
-          "confidence": 0.9
+          "candidate_path": "issues/sys-qa-log-id-uniqueness-gate-20260726.md",
+          "confidence": 0.95
         }
       ],
-      "classification_confidence": 0.9,
-      "classification_reason": "issue-auth-tenancy-ci-wiring-20260725 の実装中に判明した同型の未結線を追跡する issue",
+      "classification_confidence": 0.95,
+      "classification_reason": "feat-task-spec-test-strategy の origin/main マージ時に観測した qa ID 二重採番の根因分析 (docs/features/feat-task-spec-test-strategy/qa-id-renumbering-20260725.md §残課題 2) から起票した tooling の follow-up",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
-        "policy": "manual",
+        "policy": "linked_pr_merged_all",
         "reconciled_at": null,
         "source": null,
         "status": "open"
@@ -34702,13 +36632,13 @@
         "evidence_ref": null
       },
       "confirmation_status": "draft",
-      "created_at": "2026-07-25T14:49:11.542286Z",
+      "created_at": "2026-07-26T00:00:00Z",
       "depends_on": [],
-      "domain": "dev-workflow",
+      "domain": "tooling",
       "evaluation_status": "pending",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "issues/sys-verify-local-gate-parity-20260725.md",
+      "file_path": "issues/sys-qa-log-id-uniqueness-gate-20260726.md",
       "github_project_linkages": [],
       "github_publication": {
         "labels": [],
@@ -34716,12 +36646,121 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "CI 品質ゲート登録簿の全ゲートが、CI と local の双方から同一実装で起動できる状態",
-      "graph_node_id": "issue-verify-local-gate-parity-20260725",
+      "goal": "qa_log の ID 一意性が fail-closed で検査され、重複採番が commit 前に非 0 終了で止まる",
+      "graph_node_id": "issue-qa-log-id-uniqueness-gate-20260726",
       "implementation_readiness": {
-        "checked_at": null,
+        "checked_at": "2026-07-26T00:00:00Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "validate-coverage-matrix.py は qa_ids を {e.get(\"id\") for e in qa_log} と集合で構築するため、qa_log に同一 ID が複数存在しても例外にならず静かに 1 件へ潰れる。結果として 「qa_ref は全て実在する」と緑を返し、意味の壊れた仕様状態を機械ゲートが通してしまう。feat-task-spec-test-strategy のブランチが main と qa-070/qa-071 を二重採番した事故は、この無検出が原因で 3-way diff を人手で突き合わせるまで表面化しなかった。",
+      "related_nodes": [
+        "spec-harness-hub-requirements",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "plugins/system-spec-harness/tests/"
+      ],
+      "scope_in": [
+        "validate-coverage-matrix.py への qa_log ID 一意性検査の追加 (重複時 exit 非 0)",
+        "重複 ID を含む fixture での回帰テスト追加",
+        "同種の集合化による取りこぼしが requirement_ids など他の ID 集合にも無いかの点検"
+      ],
+      "scope_out": [
+        "既存 qa_log の内容修正 (別課題)",
+        "qa ID の採番規則そのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "system-spec-harness",
+        "fail-closed",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "validate-coverage-matrix が qa_log の ID 重複を検出できない (集合化で静かに潰れる)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-26T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "system-spec/spec-state.json の qa_log に qa-070 の確定エントリが存在する",
+        "復元した内容の出典 (どの実体参照から復元したか) が本 issue に記録されている",
+        "validate-coverage-matrix.py が引き続き exit 0 を返す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-dxfe",
+        "linked_at": "2026-07-26T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-qa070-qa-log-entry-missing-20260726.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "feat-task-spec-test-strategy の origin/main マージ時に観測した qa_log 記録欠落 (docs/features/feat-task-spec-test-strategy/qa-id-renumbering-20260725.md §残課題 1) から起票した仕様記録の follow-up",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-qa070-qa-log-entry-missing-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-070 の確定エントリが qa_log に復元され、実体側の参照と spec-state.json が一致する",
+      "graph_node_id": "issue-qa070-qa-log-entry-missing-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -34733,45 +36772,44 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "ADR §6 R-18 と system-spec/dev-workflow.md【2. CI と local の乖離防止】は、required status checks と同一コマンドを root の pnpm verify から実行できることを求める。2026-07-25 時点で G7 (破壊的 DDL 検査) / G7b (tenant 分離網羅・接続層隔離) / G9 (axe a11y) は .github/workflows/ci.yml にしか結線されておらず local verify に載っていない。CI にしか無いゲートは着手前に気づけず、PR を出して初めて落ちる (issue-auth-tenancy-ci-wiring-20260725 と同型の欠落)",
+      "purpose": "main の qa-070 (ドキュメント規約 — kebab-case 接頭辞体系・1 文書 300 行上限の fail-closed CI lint・仕組みとナレッジのオン/オフ分離) は issues/sys-qa070-implementation-feature-20260722.md・features/feat-doc-governance-portability.md・scripts/lint-doc-line-limit.py が実体として参照しているのに、system-spec/spec-state.json の qa_log に確定エントリが無い。ID が空き番に見えるため後続ブランチが再利用でき、実際に feat-task-spec-test-strategy が二重採番して衝突した。",
       "related_nodes": [
-        "issue-auth-tenancy-ci-wiring-20260725"
+        "spec-harness-hub-requirements"
       ],
       "resource_scope": [
-        "package.json",
-        "docs/shared-layers.md"
+        "system-spec/spec-state.json",
+        "issues/sys-qa070-implementation-feature-20260722.md",
+        "features/feat-doc-governance-portability.md"
       ],
       "scope_in": [
-        "G7 / G7b / G9 の local 入口を root package.json へ追加",
-        "verify チェーンへの結線",
-        "docs/shared-layers.md の「local からの実行」対応表の更新"
+        "qa-070 の確定内容 (question / answer / status / 確定日時) を実体参照元から復元し qa_log へ追記",
+        "同種の記録欠落が他 ID にも無いか (実体参照はあるが qa_log に不在) の点検"
       ],
       "scope_out": [
-        "ゲート自体のロジック変更",
-        "新規ゲートの追加"
+        "feat-task-spec-test-strategy 側の再採番 (qa-076..081) の巻き戻し",
+        "validate-coverage-matrix.py の一意性ゲート追加 (issue-qa-log-id-uniqueness-gate-20260726 の担当)"
       ],
       "source_lineage": {
-        "imported_at": null,
+        "imported_at": "2026-07-26T00:00:00Z",
         "origin_kind": "manual",
         "source_digest": null,
-        "source_path": "issues/sys-auth-tenancy-ci-wiring-20260725.md",
+        "source_path": "system-spec/spec-state.json",
         "source_plugin": null,
         "source_version": null
       },
       "start_date": null,
       "status": "draft",
       "tags": [
-        "follow-up",
-        "ci",
-        "local-parity",
-        "qa-039"
+        "system-spec",
+        "traceability",
+        "follow-up"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "required status checks の G7 / G7b / G9 が local pnpm verify に未結線 (CI にしか無い)",
+      "title": "main 側 qa-070 が spec-state.json の qa_log に不在 (実体は存在する記録欠落)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T15:24:07.483127Z"
+      "updated_at": "2026-07-26T00:00:00Z"
     },
     {
       "acceptance": [
@@ -34879,6 +36917,113 @@
       "title": "governance-check.yml のメタ層 lint (成果物配置・doc 行数) に local 入口が無い",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T15:25:44.708199Z"
+    },
+    {
+      "acceptance": [
+        "pnpm verify から G7 / G7b / G9 が起動し exit code で判定される",
+        "docs/shared-layers.md の「local からの実行」対応表に未結線ゲートが 0 件と記録される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-yhc3",
+        "linked_at": "2026-07-25T14:50:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-verify-local-gate-parity-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "issue-auth-tenancy-ci-wiring-20260725 の実装中に判明した同型の未結線を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T14:49:11.542286Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-verify-local-gate-parity-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "CI 品質ゲート登録簿の全ゲートが、CI と local の双方から同一実装で起動できる状態",
+      "graph_node_id": "issue-verify-local-gate-parity-20260725",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ADR §6 R-18 と system-spec/dev-workflow.md【2. CI と local の乖離防止】は、required status checks と同一コマンドを root の pnpm verify から実行できることを求める。2026-07-25 時点で G7 (破壊的 DDL 検査) / G7b (tenant 分離網羅・接続層隔離) / G9 (axe a11y) は .github/workflows/ci.yml にしか結線されておらず local verify に載っていない。CI にしか無いゲートは着手前に気づけず、PR を出して初めて落ちる (issue-auth-tenancy-ci-wiring-20260725 と同型の欠落)",
+      "related_nodes": [
+        "issue-auth-tenancy-ci-wiring-20260725"
+      ],
+      "resource_scope": [
+        "package.json",
+        "docs/shared-layers.md"
+      ],
+      "scope_in": [
+        "G7 / G7b / G9 の local 入口を root package.json へ追加",
+        "verify チェーンへの結線",
+        "docs/shared-layers.md の「local からの実行」対応表の更新"
+      ],
+      "scope_out": [
+        "ゲート自体のロジック変更",
+        "新規ゲートの追加"
+      ],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "issues/sys-auth-tenancy-ci-wiring-20260725.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "ci",
+        "local-parity",
+        "qa-039"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "required status checks の G7 / G7b / G9 が local pnpm verify に未結線 (CI にしか無い)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T15:24:07.483127Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

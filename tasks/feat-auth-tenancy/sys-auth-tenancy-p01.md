@@ -12,8 +12,8 @@ iteration: null
 title: "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-07-25T00:44:17Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/requirements-baseline.md"]

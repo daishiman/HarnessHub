@@ -1,0 +1,26 @@
+{
+  "edges": 12,
+  "feature_progress": {
+    "aggregate": {
+      "done": 0,
+      "total": 13
+    },
+    "by_feature": {
+      "feat-task-spec-test-strategy": {
+        "done": 0,
+        "total": 13
+      }
+    }
+  },
+  "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "graph_sha256_before": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "input_sha256": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "nodes": 14,
+  "ok": true,
+  "out": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260724-203623-wt-8/.dev-graph/render/feat-task-spec-test-strategy.html",
+  "out_relative": ".dev-graph/render/feat-task-spec-test-strategy.html",
+  "output_sha256": "f71c19f58b527f8b5e71c6fd71ac7f5f647a08649065efa8aad0500bdcbc4327",
+  "registration": null,
+  "scope": "feat-task-spec-test-strategy",
+  "self_contained": true
+}

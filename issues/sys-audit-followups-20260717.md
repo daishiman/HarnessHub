@@ -12,8 +12,8 @@ iteration: null
 title: "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正"
 owners: ["daishiman"]
 created_at: "2026-07-17T09:30:00Z"
-updated_at: "2026-07-21T09:57:21Z"
-status: "draft"
+updated_at: "2026-07-24T11:20:45Z"
+status: "closed"
 depends_on: []
 related_nodes: ["spec-harness-hub-requirements"]
 resource_scope: ["system-spec/spec-state.json","system-spec/fetched-references.json"]

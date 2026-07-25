@@ -1,0 +1,706 @@
+{
+  "bd_version": "1.1.0",
+  "op": "create",
+  "result": {
+    "applied_count": 13,
+    "children": [
+      {
+        "created": {
+          "created_at": "2026-07-25T00:35:43.116988Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P01 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P01",
+          "id": "HarnessHub-a4ks.1",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化",
+          "updated_at": "2026-07-25T00:35:43.116988Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P01",
+        "id": "HarnessHub-a4ks.1",
+        "phase_ref": "P01"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:36:00.310569Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P02 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P02",
+          "id": "HarnessHub-a4ks.2",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計",
+          "updated_at": "2026-07-25T00:36:00.310569Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P02",
+        "id": "HarnessHub-a4ks.2",
+        "phase_ref": "P02"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:36:15.75409Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P03 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P03",
+          "id": "HarnessHub-a4ks.3",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証",
+          "updated_at": "2026-07-25T00:36:15.75409Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P03",
+        "id": "HarnessHub-a4ks.3",
+        "phase_ref": "P03"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:36:25.262834Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P04 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P04",
+          "id": "HarnessHub-a4ks.4",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計",
+          "updated_at": "2026-07-25T00:36:25.262834Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P04",
+        "id": "HarnessHub-a4ks.4",
+        "phase_ref": "P04"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:36:32.005674Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P05 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P05",
+          "id": "HarnessHub-a4ks.5",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則",
+          "updated_at": "2026-07-25T00:36:32.005674Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P05",
+        "id": "HarnessHub-a4ks.5",
+        "phase_ref": "P05"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:36:44.383047Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P06 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P06",
+          "id": "HarnessHub-a4ks.6",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録",
+          "updated_at": "2026-07-25T00:36:44.383047Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P06",
+        "id": "HarnessHub-a4ks.6",
+        "phase_ref": "P06"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:36:57.148219Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P07 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P07",
+          "id": "HarnessHub-a4ks.7",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し",
+          "updated_at": "2026-07-25T00:36:57.148219Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P07",
+        "id": "HarnessHub-a4ks.7",
+        "phase_ref": "P07"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:37:09.10733Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P08 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P08",
+          "id": "HarnessHub-a4ks.8",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)",
+          "updated_at": "2026-07-25T00:37:09.10733Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P08",
+        "id": "HarnessHub-a4ks.8",
+        "phase_ref": "P08"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:37:17.17563Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P09 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P09",
+          "id": "HarnessHub-a4ks.9",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測",
+          "updated_at": "2026-07-25T00:37:17.17563Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P09",
+        "id": "HarnessHub-a4ks.9",
+        "phase_ref": "P09"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:37:27.186067Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P10 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P10",
+          "id": "HarnessHub-a4ks.10",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "最終レビュー — 全 phase 成果の横断整合確認",
+          "updated_at": "2026-07-25T00:37:27.186067Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P10",
+        "id": "HarnessHub-a4ks.10",
+        "phase_ref": "P10"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:37:31.644149Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P11 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P11",
+          "id": "HarnessHub-a4ks.11",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+          "updated_at": "2026-07-25T00:37:31.644149Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P11",
+        "id": "HarnessHub-a4ks.11",
+        "phase_ref": "P11"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:37:37.454868Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P12 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P12",
+          "id": "HarnessHub-a4ks.12",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド",
+          "updated_at": "2026-07-25T00:37:37.454868Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P12",
+        "id": "HarnessHub-a4ks.12",
+        "phase_ref": "P12"
+      },
+      {
+        "created": {
+          "created_at": "2026-07-25T00:37:51.765484Z",
+          "created_by": "daishiman",
+          "description": "dev-graph P13 projection (feature-package/feat-task-spec-test-strategy)\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+          "external_ref": "dev-graph:SYS-TASK-SPEC-TEST-STRATEGY-P13",
+          "id": "HarnessHub-a4ks.13",
+          "issue_type": "task",
+          "metadata": {
+            "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+          },
+          "owner": "daishimanju@gmail.com",
+          "priority": 2,
+          "schema_version": 1,
+          "status": "open",
+          "title": "リリース — main 反映と確定 system spec/architecture への writeback",
+          "updated_at": "2026-07-25T00:37:51.765484Z"
+        },
+        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P13",
+        "id": "HarnessHub-a4ks.13",
+        "phase_ref": "P13"
+      }
+    ],
+    "edges": [
+      {
+        "depends_on": "HarnessHub-a4ks.1",
+        "issue_id": "HarnessHub-a4ks.2",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.1",
+          "issue_id": "HarnessHub-a4ks.2",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.2",
+        "issue_id": "HarnessHub-a4ks.3",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.2",
+          "issue_id": "HarnessHub-a4ks.3",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.3",
+        "issue_id": "HarnessHub-a4ks.4",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.3",
+          "issue_id": "HarnessHub-a4ks.4",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.4",
+        "issue_id": "HarnessHub-a4ks.5",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.4",
+          "issue_id": "HarnessHub-a4ks.5",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.5",
+        "issue_id": "HarnessHub-a4ks.6",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.5",
+          "issue_id": "HarnessHub-a4ks.6",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.6",
+        "issue_id": "HarnessHub-a4ks.7",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.6",
+          "issue_id": "HarnessHub-a4ks.7",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.7",
+        "issue_id": "HarnessHub-a4ks.8",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.7",
+          "issue_id": "HarnessHub-a4ks.8",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.8",
+        "issue_id": "HarnessHub-a4ks.9",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.8",
+          "issue_id": "HarnessHub-a4ks.9",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.9",
+        "issue_id": "HarnessHub-a4ks.10",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.9",
+          "issue_id": "HarnessHub-a4ks.10",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.10",
+        "issue_id": "HarnessHub-a4ks.11",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.10",
+          "issue_id": "HarnessHub-a4ks.11",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.11",
+        "issue_id": "HarnessHub-a4ks.12",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.11",
+          "issue_id": "HarnessHub-a4ks.12",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      },
+      {
+        "depends_on": "HarnessHub-a4ks.12",
+        "issue_id": "HarnessHub-a4ks.13",
+        "operation": "added",
+        "result": {
+          "depends_on_id": "HarnessHub-a4ks.12",
+          "issue_id": "HarnessHub-a4ks.13",
+          "schema_version": 1,
+          "status": "added",
+          "type": "blocks"
+        }
+      }
+    ],
+    "expected_count": 13,
+    "feature_epic": {
+      "created": {
+        "created_at": "2026-07-25T00:35:36.830972Z",
+        "created_by": "daishiman",
+        "description": "テスト戦略 4 項目 (テストレベル選定・カバレッジ 80% 目標・層別方針・保守性制約) を system-dev-planner の task spec テンプレートへ必須 section として組み込み、欠落を fail-closed で拒否する macro feature の beads projection\n\ndev_graph_source_digest: sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+        "external_ref": "dev-graph:feat-task-spec-test-strategy",
+        "id": "HarnessHub-a4ks",
+        "issue_type": "epic",
+        "metadata": {
+          "dev_graph_source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+        },
+        "owner": "daishimanju@gmail.com",
+        "priority": 2,
+        "schema_version": 1,
+        "status": "open",
+        "title": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
+        "updated_at": "2026-07-25T00:35:36.830972Z"
+      },
+      "external_ref": "feat-task-spec-test-strategy",
+      "id": "HarnessHub-a4ks"
+    },
+    "parity": [
+      {
+        "bd_issue_id": "HarnessHub-a4ks.1",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P01"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.2",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.1"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.1"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P02"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.3",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.2"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.2"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P03"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.4",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.3"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.3"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P04"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.5",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.4"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.4"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P05"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.6",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.5"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.5"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P06"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.7",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.6"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.6"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P07"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.8",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.7"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.7"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P08"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.9",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.8"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.8"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P09"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.10",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.9"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.9"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P10"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.11",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.10"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.10"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P11"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.12",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.11"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.11"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P12"
+      },
+      {
+        "bd_issue_id": "HarnessHub-a4ks.13",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-a4ks.12"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-a4ks.12"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P13"
+      }
+    ],
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ],
+    "source_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae"
+  },
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

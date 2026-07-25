@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 証跡収集"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
-status: "active"
+updated_at: "2026-07-24T21:01:50Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P10"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-hub-foundation/evidence/"]
