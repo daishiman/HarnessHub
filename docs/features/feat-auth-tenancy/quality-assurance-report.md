@@ -156,17 +156,20 @@ $ node scripts/ci/check-shared-layer-duplicates.mjs
 | --- | --- | --- |
 | `apps/hub/scripts/check-*.mjs` の実装 | ✅ 完了 | — |
 | 手動実行での pass 確認 | ✅ 完了 | §1 |
-| `apps/hub/package.json` への script 追加 | ❌ 未実施 | task spec が「共有 CI は不可侵。本 task は feature 固有チェックスクリプトの追加のみ」と定めるため write scope 外 |
-| `.github/workflows/` への結線 | ❌ 未実施 | 同上 |
-| root `pnpm verify` への組み込み | ❌ 未実施 | 同上 |
+| `apps/hub/package.json` への script 追加 | ✅ **完了 (2026-07-25)** | P09 時点は write scope 外。`issue-auth-tenancy-ci-wiring-20260725` で `check:auth-gates` / `test:tenant-isolation` を追加 |
+| `.github/workflows/` への結線 | ✅ **完了 (2026-07-25)** | `static-gates` job の G12 と、`build & test` job の「G4 名指し tenant 分離テスト」ステップ |
+| root `pnpm verify` への組み込み | ✅ **完了 (2026-07-25)** | `check:auth` (3 番目) と `check:tenant-isolation` (`test` の直後) |
 
 必要な変更は 1 行 (`"check:auth-gates": "node scripts/check-auth-gates.mjs"` を
 `apps/hub/package.json` の `scripts` へ追加し、root の `verify` から呼ぶ) で、follow-up 課題として起票済み。
 
-**したがって現状は「検査は存在し pass するが、CI が自動で落としてはくれない」状態である。**
+**したがって P09 時点は「検査は存在し pass するが、CI が自動で落としてはくれない」状態であった。**
 D4 の「分離テスト CI 必須ゲート化」および qa-020/qa-036 の「CI で機械検証」という要求は、
 この結線をもって初めて完全に満たされる。P10 final-review-record.md で該当 quality_constraint の
 判定条件として扱う。
+
+> **解消 (2026-07-25 / `issue-auth-tenancy-ci-wiring-20260725`)**: 上表のとおり結線済み。
+> 「CI が自動で落としてくれない」状態は解消し、D4 / qa-020 / qa-036 の CI 機械検証要求を満たす。
 
 ---
 
@@ -177,7 +180,7 @@ D4 の「分離テスト CI 必須ゲート化」および qa-020/qa-036 の「C
 | 該当する品質ゲートがすべて実装され pass しているか | ✅ 6/6 pass |
 | ゲートが「落ちること」を確認したか | ✅ G2 は意図的違反を投入して赤化確認済み。G3 は死んだ allowlist を検出して実際に赤化した |
 | 既存ゲートとの重複を作っていないか | ✅ C2 は既存スクリプトを再利用 |
-| CI への fail-closed 結線が完了しているか | ❌ 未実施 (write scope 外 / follow-up 起票済み) |
+| CI への fail-closed 結線が完了しているか | ✅ **完了 (2026-07-25 / `HarnessHub-1f28`)**。P09 時点は未実施 (write scope 外) |
 
 → P10 の判定材料にはできるが、CI 結線が終わるまで P09 自体は完了扱いにしない
-(`HarnessHub-1f28`)。
+(`HarnessHub-1f28`)。**2026-07-25 に `HarnessHub-1f28` が closed となり、この保留は解除された。**

@@ -105,7 +105,7 @@ qa-041 の R4-reopen で確定し直す申し送りを bd `HarnessHub-l2g9` に�
 |---|---|
 | Auth.js 実結線 | `next-auth` 未導入。依存追加、JWT bridge、dynamic tenant route 結線が必要 |
 | 本番 auth port adapter | DB は land 済みだが Device Flow/Workspace の永続化契約差を schema owner と解消する必要がある |
-| 認証 gate の CI 結線 | 手動 pass。follow-up `HarnessHub-1f28` |
+| ~~認証 gate の CI 結線~~ | ✅ 解消 (2026-07-25)。`ci.yml` G12 + root `pnpm check:auth` / `HarnessHub-1f28` closed |
 | 確定仕様を超えた 2 決定 (§10.2 `workspace_ids` / §10.7 polling 上限・減衰) | 正本は手編集不可。qa-036 / qa-041 の R4-reopen へ送る follow-up `HarnessHub-l2g9` |
 | Workers rate limit | feat-hub-foundation の binding 結線が必要 |
 | 本番 OIDC / deploy | P13。依存・資格情報・commit/push/PR が前提 |

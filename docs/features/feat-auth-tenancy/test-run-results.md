@@ -150,6 +150,7 @@ test-design.md の文言と実装挙動が一致しない箇所を、**実装側
 
 1. **`next-auth` は未インストール**。`apps/hub/src/app/api/auth/[...nextauth]/route.ts` は 501 `auth_provider_not_wired` を返す。`T-BND-01`/`T-BND-02` は「Auth.js 依存が adapter 境界の外に無い」という**構造**を検証しており、この構造は依存を導入した後も同じ検査で維持できる。詳細は P07 acceptance-record.md §AC-3 に明記する。
 2. **CI パイプラインへの結線は未実施**。`check-auth-gates.mjs` は手動実行で pass するが、`package.json` / `.github/` は P08/P09 の write scope 外 (「共有 CI は不可侵」)。結線は follow-up 課題として起票する。
+   → **解消済み (2026-07-25 / `issue-auth-tenancy-ci-wiring-20260725`)**: `ci.yml` の G12 と root `pnpm check:auth` へ結線。あわせて `tenant-isolation.test.ts` を `scripts/ci/check-tenant-isolation-gate.mjs` + `test:tenant-isolation` で名指しゲート化した。
 
 ---
 

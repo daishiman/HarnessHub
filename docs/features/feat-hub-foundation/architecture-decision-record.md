@@ -144,11 +144,14 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 | G9 | axe a11y | `packages/ui` 部品単体 + `apps/hub` 画面結合の 2 段 | 違反 1 件以上で fail | qa-018 |
 | G10 | duplicate implementation detector | 登録共通層の owner package 外の同名 export / 境界迂回 import を検出 | 1 件以上で fail | A4 |
 | G11 | Core Web Vitals 計測 | **main 反映後の定期計測**（Lighthouse）で LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1 を確認 | good を外れたら是正起票 | qa-018, R-05 |
+| G12 | 認証・認可 静的検査 | `apps/hub/scripts/check-auth-gates.mjs` が束ねる 3 検査（Auth.js 境界隔離 / 認可判定の単一集約 + route 例外の厳密一致 / dev 専用 provider の非存在） | 1 本でも違反で非ゼロ終了 | qa-020, SEC2, D3, I7 |
 
 - **G11 を PR 単位に置かない理由 (R-05)**: PR ごとの Lighthouse 実行は GitHub Actions 無料枠 2,000 分/月（infrastructure-spec §11）を圧迫し C2 に反する。CWV は bundle 予算（代理指標）とは別に**実測経路を持つ**必要があるため、main 反映後の定期計測として確保する。R2/edge 配信（`ASSETS` binding）と不要 JS 削減が達成手段（qa-018(2) の 3 手段に対応）。
 - **G6 の consumer 構成 (R-07)**: `packages/inspection` の第 2 consumer は **CI 自身**とする。Publisher（feat-publisher-plugin）は未実装で workspace member でもないため、A4-1「実在する consumer のみを対象にする」規則により Publisher を待つと判定不能になる。qa-038【2】が「CI からも呼ぶ」と確定しているため、CI が実在 consumer として成立する。
-- ゲートの実行順は「静的ゲート（G1・G10）→ install → G2・G3 → build → G4・G6・G7・G8・G9 → G5 → deploy」とし、**deploy は全ゲート通過後にのみ、同一 workflow run 内で実行**する（R-02。A1 の "test→deploy 完走" の定義）。
-- **local 再現 (R-18)**: required status checks と同一コマンドを root の `pnpm verify` で実行できるようにする（qa-039【2】）。
+- ゲートの実行順は「静的ゲート（G1・G10・G12）→ install → G2・G3 → build → G4・G6・G7・G8・G9 → G5 → deploy」とし、**deploy は全ゲート通過後にのみ、同一 workflow run 内で実行**する（R-02。A1 の "test→deploy 完走" の定義）。
+- **G12 の位置づけ (2026-07-25 追記 / issue-auth-tenancy-ci-wiring-20260725)**: feat-auth-tenancy が追加した 3 検査は、共有 CI が当該 feature の write scope 外だったため CI から 1 度も呼ばれていなかった。呼ばれない検査は存在しないのと同じなので、静的ゲート段へ結線する。3 検査はいずれも「名前と参照経路」から決定的に判定でき next-auth の導入有無に依存しないため、install 前に落とせる。G9・G10 と同じく qa-038【2】の「8 種」には数えない横断品質ゲートであり、qa-038【2】の列挙項目を増減させない。
+- **G4 の Tenant 分離を名指しで守る (同上)**: qa-038【2】は Tenant 分離テストを必須ゲートとして名指しするが、`pnpm -r test` に含まれるだけでは分割・`it.skip` で静かに外れる。`scripts/ci/check-tenant-isolation-gate.mjs` で対象実在・T-ISO ID 網羅・無効化の不在を検査したうえで名指し実行する（ゲート数は増えない）。
+- **local 再現 (R-18)**: required status checks と同一コマンドを root の `pnpm verify` で実行できるようにする（qa-039【2】）。**2026-07-25 時点の未結線は G7 / G7b / G9** — 追加ゲートは CI と local 入口を同時に用意すること（CI にしか無いゲートは着手前に気づけず、PR で初めて落ちる）。
 
 ## 7. 監視・SLO 構成（qa-019 / qa-027）
 

@@ -167,8 +167,8 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 
 | 項目 | 状態 | 引き継ぎ先 |
 | --- | --- | --- |
-| `check-auth-gates.mjs` の CI 結線 (`apps/hub/package.json` + root `verify`) | ❌ 未実施 (write scope 外) | bd `HarnessHub-1f28` |
-| 分離テストの CI 必須ゲート指定 | ❌ 未実施 (write scope 外) | bd `HarnessHub-1f28` (同課題に統合) |
+| `check-auth-gates.mjs` の CI 結線 (`apps/hub/package.json` + root `verify`) | ✅ **解消 (2026-07-25)** — `ci.yml` G12 + root `pnpm check:auth` | bd `HarnessHub-1f28` closed |
+| 分離テストの CI 必須ゲート指定 | ✅ **解消 (2026-07-25)** — `check-tenant-isolation-gate.mjs` + `test:tenant-isolation` の名指し実行 | bd `HarnessHub-1f28` closed |
 | `validate-system-plan.py` が `status=fail` (violations 27 件) | ⚠️ plan package 側の記述欠落。実装成果物の欠陥ではない (§9) | bd `HarnessHub-mvdc` |
 | `next-auth` (または Better Auth) の導入と実結線 | ⏳ 別途の意思決定 | P13 / 後続 feature |
 | `AuthPorts` の本番 DB adapter と永続化契約差の解消 | ❌ 未実施 | bd `HarnessHub-b7ng` |
@@ -178,6 +178,9 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 
 → P12 の runbook 成果物は完成。P13 は `HarnessHub-1f28` / `HarnessHub-b7ng` と
 親依存の完了まで実行不可。
+
+> **進捗追記 (2026-07-25 / `issue-auth-tenancy-ci-wiring-20260725`)**: `HarnessHub-1f28` は closed。
+> P13 の残ブロッカーは `HarnessHub-b7ng` (本番 AuthPorts adapter) と親依存に絞られた。
 
 ---
 
