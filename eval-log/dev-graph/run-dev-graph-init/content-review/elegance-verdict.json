@@ -2,27 +2,39 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
-    "skill_md_sha256": "1db7dd6c2cde83fc50e02704fb3e3b725f66dd2209b08521c88a5fc52fc535f0"
+    "skill_md_sha256": "0381d338b69cee76b5ecb300d84b325a33d67d0b5c77cde4c3ed5d588c68bc5b"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "run-elegant-review-subagent-team",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "assign-skill-design-evaluator",
+  "reviewed_at": "2026-07-25",
   "iterations": 1,
   "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 1,
+    "dependency_break": 0,
+    "smell": 2
+  },
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3", "OUT4", "OUT5"],
     "positive_feedback": [
-      "C1 矛盾なし: 『呼出し元 repository を content authority、$CLAUDE_PLUGIN_ROOT を read-only code/template authority として分離』(L90) が Purpose・Execution contract・Gotchas で一貫し、GitHub enabled=false 既定/token・node ID 非永続化/絶対 path 非保存が criteria とも矛盾しない。",
-      "C2 漏れなし: IN1+OUT1..OUT5 の 5 criteria を ## Criteria acceptance で全受入条件化。6 content root・templates 冪等 scaffold・cross-repo 分離・GitHub 雛形・hook 非破壊 merge/rollback まで漏れなく、2 回目 init の変更 0 (冪等性) も明記。",
-      "C4 依存整合: script_refs (resolve-repo-context/validate-graph-schema)、schema_refs (graph-node/repo-config)、reference_refs (repo-config schema・template-contract.json・claude-code-hooks-contract.md)、prompts R1-R5 が全て実在。templates/ 配下の kind 別/subtype 別雛形も実在を確認。"
+      "退避で増えた宣言箇所を同じ変更の中で機械 pin し直している。references/validation-contract.md の新設により 6 root の宣言箇所が『SKILL.md の bash 実行行』と『reference の列挙』の 2 箇所になったが、同じ系列で test_validate_repo_config.py に test_skill_command_requires_exactly_the_init_roots (実行可能行のみ抽出し INIT_ROOTS と全一致、placeholder だけ残る空真を明示的に禁止) と test_reference_contract_lists_exactly_the_init_roots (reference 内の列挙行はちょうど 1 箇所、かつ system_spec の根拠文が残存) が入っている。python3 -m pytest 実測 25 passed。『詳細を references/ へ退避したら、増えた宣言箇所を機械で束ねる』は他 skill の references 化へ横展開すべきパターン。",
+      "skill-local references/ の新設で PD-001 が両枝で成立した。評価器 render-findings-score.py と同じ数え方 (SKILL.md 全文を '---' で maxsplit=2 split した parts[2] の splitlines) で body = 100 行、PD-001 の発火条件は body > 100 なので行数枝では非発火。加えて references/ が非空 (validation-contract.md) なので、body が 100 を超えても PD-001 は成立し続ける。姉妹 skill を同じ scorer にかけると run-dev-graph-node / -sync / -decompose はいずれも score 94 で 'PD-001 body>100 lines but references/ empty' を出すのに対し、本 skill は 97 で PD-001 clean。同じ退避を姉妹 3 skill へ横展開する候補。",
+      "秘密材料 report の二次保管禁止が設計として明文化され、実装と一致している。reference は『値そのものを出さない・prefix 種別だけを出す』と述べ、実測でも github.projects[0].owner_login に ghp_ token を入れた config は detail='ghp_* 形式の token/node ID が保存されている (値は非出力)' を返し値を出さない。eval-log へ残る report が秘密の二次保管場所になる経路を設計段階で塞いでいる。",
+      "実在要求を opt-in にした設計判断が『正常完了直後の恒久 FAIL』を避けており、reference・script docstring・test・CLI 実挙動の 4 者が一致している。実測: 6 root 未作成 + --require-content-roots 6 key → exit 1 / content_root_missing 6 件、6 root 作成後 → exit 0、そこへ system_spec を足すと exit 1 (content_root_missing: system-spec)、未知 key 指定は黙殺せず content_root_key_unknown で exit 1。schema required 7 key と各 skill の生成契約が一致しないという前提が全層で一貫している。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "[low/inconsistency] references/validation-contract.md の『--require-content-roots に渡す root』節が 7 番目の root を『run-dev-graph-system-spec が取込時に用意する別責務の root』と断定するが、当の run-dev-graph-system-spec/SKILL.md は system-spec/ を入力として扱うだけで生成主体を宣言していない (Purpose 入力: 'C24 で caller repo 内に固定した system-spec/'、Execution contract 1: 'C24 で caller repo の system-spec/ を解決し、plugin source/別 repo の content を拒否する')。validate-repo-config.py の docstring も『system_spec は run-dev-graph-system-spec の責務』までで『用意する』とは書いていない。荷重のかかる主張 (init は作らない) は正しく test でも pin 済みなので blocker ではないが、生成主体の断定は現状 plugin 内に裏付けが無い。",
+      "[low/smell] Execution contract 5 は実測 255 字で依然 step 中最長 (step 1=97 / step 2=59 / step 3=106 / step 4=177 字)、かつ Execution contract 内で唯一 bash ブロックを抱える。最長/最短比は 4.3 まで縮み step 4 と同オーダーには収まったが、2 つのゲートコマンドを 1 step が独占する非対称は残る。",
+      "[low/smell] 冪等性の停止条件『二回目の planned changes が 0』が Purpose & Output Contract の完了条件・Execution contract 5・完了チェックリストの 3 箇所に別表現で置かれている。6 root の列挙が 2 箇所 + 機械 pin なのに対し、この主張には pin が無く片側だけの編集が静かに残りうる。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "現 SKILL.md (sha256 1db7dd6c...) を全文 read し 4 条件で genuine 再評価。①矛盾なし: content authority 分離・冪等初期化・token 非保存が description〜Gotchas で終始一貫。②漏れなし: IN1+OUT1..OUT5 を acceptance で網羅し、goal-seek の goal/why/checklist/配線/hash 検証まで完備。③整合性: responsibilities R1-R5 と Execution contract 5 手順・criteria acceptance が齟齬なく対応 (plugin hook 既定/project-fallback 条件付き許可も一致)。④依存整合: 参照 script/schema/reference/prompt/templates 資産の実在を確認済み。重大問題 0 件。PASS。"
+  "notes": "incremental profile の focused combined review を 1 context で実行し、その結果を elegance / rubric の 2 verdict へ分離投影した (content-review-protocol.md『incremental: unresolved semantic batch』)。30 思考法は使用していない。判定軸は (a) 矛盾なし (b) 漏れなし (c) 規約整合 (d) 依存関係整合 (e) rubric high severity 0 の 5 条件。前系列 (sha a493b8a3…) は別系列であり、本 verdict は新しい変更系列の iteration 1 である。実測根拠: SKILL.md sha256 は自身で shasum -a 256 を実行して取得 (0381d338…、coordinator 提示値は使用していない)。reference が挙げる finding code (schema_violation / path_not_repo_relative / declared_path_collision / path_escapes_repository / content_root_missing / content_root_key_unknown / secret_material) は validate-repo-config.py の実装読取と CLI 実走の双方で全件一致。schema 条件制約 execution_tracker.mode∈{github,both}→github.enabled=true は mode=github + enabled=false の config を実走し $.github.enabled: 'True was expected' を確認。graph 検証対象が .dev-graph/state/graph.json である点は repo-config.example.json の local_state.graph と plugin 全体 grep (bare .dev-graph/graph.json 参照 0 件) で確認 (script 自体は graph の置き場所を強制しないため、この節は規約の宣言であり script 挙動の記述ではない)。退避による情報欠落は検出しなかった: 手書き検証禁止と graph path は本文にも残り、変数束縛は Execution contract 5 の参照文が『変数束縛…の根拠は references/validation-contract.md を正本とする』と名指ししている。なお $DEV_GRAPH_PLUGIN は本文 bash で使われ束縛は reference 側にあるが、姉妹 skill (decompose/requirements) は同変数を束縛記述なしで使っており、本 skill だけが束縛を明文化している (退行ではなく改善)。frontmatter が宣言する script_refs 3 件 / schema_refs 2 件 / reference_refs 4 件 / responsibility_refs 5 件は全て実在し、lint-external-refs.py でも本 skill の EXTERNAL は 0 件、lint-skill-tree.py / lint-doc-line-limit.py / lint-skill-description.py はいずれも exit 0。behavioral claim (OUT1 の verify_by=live-trial 等) の受入は Gate D (run-skill-live-trial) の実走証拠が正本であり、本 verdict は design claim のみを判定している。"
 }
