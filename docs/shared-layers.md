@@ -61,12 +61,12 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 
 | 共通機構 | 内容 | 根拠 |
 |---|---|---|
-| CI 品質ゲート | 下記「CI 品質ゲート登録簿 (G1〜G11)」に一覧化。qa-038【2】の required status checks 8 種 (G1〜G8。unit / integration と Tenant 分離は G4 に統合) + 横断品質ゲート (G9・G10) + CWV 定期計測 (G11) を一元管理する | qa-018, qa-020, qa-038, qa-039, D1 |
+| CI 品質ゲート | 下記「CI 品質ゲート登録簿 (G1〜G12)」に一覧化。qa-038【2】の required status checks 8 種 (G1〜G8。unit / integration と Tenant 分離は G4 に統合) + 横断品質ゲート (G9・G10・G12) + CWV 定期計測 (G11) を一元管理する | qa-018, qa-020, qa-038, qa-039, D1 |
 | デプロイ | wrangler CLI (GitHub Actions)。Hub と WebApp 出口で同一ツール系統 | qa-003, D1 |
 | 監視 | /health + Workers logs/analytics + 外部死活監視 + SLO ダッシュボード + エラーバジェットアラート | qa-011, qa-019 |
 | バックアップ | Turso 日次 export → R2。四半期 restore drill (復元できないバックアップは成功と数えない) | qa-019 |
 
-### CI 品質ゲート登録簿 (G1〜G11)
+### CI 品質ゲート登録簿 (G1〜G12)
 
 **設計正本**: [feat-hub-foundation/architecture-decision-record.md](features/feat-hub-foundation/architecture-decision-record.md) §6 / **要件正本**: `system-spec/spec-state.json` の qa-038【2】と `system-spec/dev-workflow.md` / **実装**: `.github/workflows/ci.yml`・`.github/workflows/cwv.yml`。旧登録簿の 5 項目 (pnpm 混入検査 / axe / bundle 予算 / Tenant 分離 / 検査 pipeline 挙動同値) は G1/G4/G5/G9 の 4 ゲートに対応し、G2/G3/G6/G7/G8/G10/G11 が欠落していた (ADR §6 改訂 2 / R-03・R-05、申し送り F-2 の解消)。
 
@@ -83,11 +83,14 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 | G9 | axe a11y | `packages/ui` 部品単体 + `apps/hub` 画面結合の 2 段 | 違反 1 件以上で fail | build & test | qa-018 |
 | G10 | duplicate implementation detector | 登録共通層 (§1〜§2) の owner package 外の同名 export / 境界迂回 import を検出 | 1 件以上で fail | 静的ゲート | A4 |
 | G11 | Core Web Vitals 計測 | main 反映後の定期 Lighthouse 計測で LCP ≤ 2.5s / CLS ≤ 0.1 / TBT ≤ 200ms (INP ≤ 200ms の lab 代理指標) を確認 | good を外れたら是正起票 | main 反映後 定期 | qa-018, R-05 |
+| G12 | client JS 予算 | `next build` 出力から route ごとの First Load JS (page entry + route 固有 client reference manifest の和集合) を gzip 実測。運用値 120 KiB / route (frontend-spec §8 の上限 250KB の内側) | 超過で非ゼロ終了 | build & test | qa-018, R-05 |
 
 - **G11 を PR 単位に置かない理由**: PR ごとの Lighthouse は GitHub Actions 無料枠 (2,000 分/月) を圧迫し C2 に反するため、main 反映後の定期計測で確保する (ADR §6 R-05)。よって G11 は merge ブロック対象の「8 種」に数えない。
+- **G5 と G12 を分けている理由** (2026-07-25 追記, qa-018): 両者は名前が似ているが**測る対象が別物**である。G5 は wrangler が Cloudflare へ上げる Worker (サーバー側実行コード) を 3 MiB で測り、G12 はブラウザへ配る client JS を測る。TBT / INP を悪化させるのは後者であり、G5 では原理的に検知できない。実測 (2026-07-24 の本番初回 CWV): `/` の First Load JS が 159 kB へ膨らみ TBT 926ms (予算 200ms) を出したとき、G5 は 0.96 MiB / 3 MiB で緑のままだった。G11 は main 反映後の定期計測なので PR 段階では止められない。よって PR 段階で client 側の退行を止める G12 を独立に置く。
+- **G12 を PR 単位に置く理由**: Lighthouse 実行を伴わず既存の `next build` 出力を読むだけなので Actions 時間をほぼ消費せず、C2 と衝突しない。G11 (実測・事後) と G12 (静的予算・事前) は代替関係ではなく、事前の退行遮断と事後の実測確認という二段構えである。
 - **G6 の第 2 consumer は CI 自身** (ADR §6 R-07): Publisher が未実装で workspace member でもないため、A4-1「実在 consumer のみ対象」規則により CI を実在 consumer として成立させる。
 
-**CI が 2 系統ある境界** (2026-07-21 追記): 本リポジトリは Hub 本体 (プロダクト) と Claude Code スキルハーネス (`plugins/`) の 2 つを同居させており、CI も 2 系統に分かれる。この登録簿 (G1〜G11) と qa-038【2】の required status checks 8 種が対象とするのは **プロダクト層 (`.github/workflows/ci.yml` / `.github/workflows/cwv.yml`)** のみである。
+**CI が 2 系統ある境界** (2026-07-21 追記): 本リポジトリは Hub 本体 (プロダクト) と Claude Code スキルハーネス (`plugins/`) の 2 つを同居させており、CI も 2 系統に分かれる。この登録簿 (G1〜G12) と qa-038【2】の required status checks 8 種が対象とするのは **プロダクト層 (`.github/workflows/ci.yml` / `.github/workflows/cwv.yml`)** のみである。
 
 | 層 | workflow | 宣言の正本 | 対象 |
 |---|---|---|---|
@@ -96,9 +99,9 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 
 メタ層のゲート (配置規約 lint・skill description lint・live-trial 証跡の検査など) を qa-038 の 8 種へ数え入れないこと。**逆に「8 種に無いから未配線だ」と判断しないこと** — 別の正本が別の workflow で機械強制している。両者はゲートの数を互いに増減させない独立系統であり、片方の変更はもう片方の仕様反映を要さない。
 
-**登録簿 G1〜G11 と「8 種」の対応** (2026-07-24 追記, F-2): qa-038【2】は pnpm 強制 / lint・format / typecheck / unit・integration / bundle 予算 / secret scan / Tenant 分離 / 破壊的 DDL / OpenAPI・zod drift の 9 項目を列挙する。このうち unit・integration と Tenant 分離を同じテスト段 (G4) で実行するため、ゲートとしては **G1〜G8 の 8 種**になる。G9 (axe a11y)・G10 (duplicate detector)・G11 (CWV) は qa-018・A4・R-05 から加わる横断品質ゲートである。
+**登録簿 G1〜G12 と「8 種」の対応** (2026-07-24 追記, F-2 / 2026-07-25 に G12 を追記): qa-038【2】は pnpm 強制 / lint・format / typecheck / unit・integration / bundle 予算 / secret scan / Tenant 分離 / 破壊的 DDL / OpenAPI・zod drift の 9 項目を列挙する。このうち unit・integration と Tenant 分離を同じテスト段 (G4) で実行するため、ゲートとしては **G1〜G8 の 8 種**になる。G9 (axe a11y)・G10 (duplicate detector)・G11 (CWV)・G12 (client JS 予算) は qa-018・A4・R-05 から加わる横断品質ゲートであり、**8 種を増やさない**。qa-038【2】が列挙する「bundle size 予算」は Worker 3MiB (G5) を指し、G12 はそれとは別軸で frontend-spec §8 の First Load JS 予算を機械強制するものである。
 
-**実行段との対応**: `.github/workflows/ci.yml` では G1・G10 を install 前の `static-gates` job、G2〜G9 を `build & test (G2-G9 required status checks)` job で実行し、G11 は `.github/workflows/cwv.yml` で main 反映後に定期実行する。したがって `G2-G9` という job ラベルは**実行段のまとまり**であり、qa-038【2】の要件番号との一対一対応を意味しない。
+**実行段との対応**: `.github/workflows/ci.yml` では G1・G10 を install 前の `static-gates` job、G2〜G9 と G12 を `build & test (G2-G9 required status checks)` job で実行し、G11 は `.github/workflows/cwv.yml` で main 反映後に定期実行する。したがって `G2-G9` という job ラベルは**実行段のまとまり**であり、qa-038【2】の要件番号との一対一対応を意味しない (G12 も同 job 内で走る)。
 
 **不変条件 (数え違いとドリフトの防止)**: ゲートを 1 つでも増減するときは、(1) `.github/workflows/ci.yml` / `.github/workflows/cwv.yml` の対象 job・step、(2) この登録簿の G 番号表と実行段、(3) `system-spec/spec-state.json` qa-038【2】および `system-spec/dev-workflow.md` の CI / local 同値要件、(4) ADR §6 — の 4 者を**必ず同一 PR で揃えて改訂する** (どれか 1 つだけを直すと、この F-2 と同じ「登録簿だけ取り残される」劣化コピーが再発する)。この対応はプロダクト層だけを対象とし、上の「2 系統ある境界」で述べたメタ層 (`governance-check.yml`) のゲート数とは独立である。
 

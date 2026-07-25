@@ -124,6 +124,13 @@ jobs:
         run: pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/hub run test:a11y
       - name: G5 bundle 予算 (Worker gzip 後 3MiB / A2)
         run: pnpm --filter @harness-hub/hub run check:bundle
+      # G5 が測るのは Cloudflare へ上げる Worker (サーバー側) であって、ブラウザへ配る client JS ではない。
+      # 実測 (HarnessHub-aqi): / の First Load JS が 159 KiB へ膨らみ TBT 926ms を出したとき、
+      # G5 は 0.96MiB / 3MiB で緑のままだった。TBT/INP を守るには client 側の予算が別に要る。
+      - name: G12 client JS 予算 (route ごと First Load JS gzip 後 120KiB / qa-018)
+        run: |
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:client-bundle
+          pnpm --filter @harness-hub/hub run check:client-bundle
       - uses: actions/upload-artifact@v4
         with:
           name: test-evidence
