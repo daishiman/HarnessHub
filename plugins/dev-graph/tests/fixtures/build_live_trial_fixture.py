@@ -202,9 +202,39 @@ def _repo_config(repository_id: str, *, tracker_mode: str, projects: list[dict[s
     """repo-config.schema.json の必須 9 key だけを持つ最小 config。
 
     本体 repo の config は plan_roots など追加 key を持つが、fixture は additionalProperties
-    違反を避けて必須集合ちょうどに絞る。beads を選ばないのは、schedulable な beads node が
-    あると C15 schedule が parity manifest の provenance を要求して停止するため。
+    違反を避けて必須集合ちょうどに絞る。
+
+    ``github.enabled`` は引数で受けない。schema の allOf が
+    ``execution_tracker.mode ∈ {github, both}`` → ``github.enabled=true`` →
+    ``projects`` に ``default=true`` がちょうど 1 件、という条件連鎖を張っているため、
+    mode と enabled を独立入力にすると矛盾した config を表現できてしまう (HarnessHub-n88:
+    mode=github と enabled=false を同時に立てた schema 違反 config が live-trial を通っていた)。
+    ここでは mode を唯一の入力とし、enabled はそこから導出する。導出できない組
+    (GitHub トラッカーなのに Projects 定義が無い等) は生成時点で例外にする。
     """
+    github_tracked = tracker_mode in {"github", "both"}
+    if github_tracked and sum(1 for item in projects if item.get("default")) != 1:
+        raise ValueError(
+            f"tracker_mode={tracker_mode} は github.enabled=true を要求し、"
+            "schema は default=true の Projects 定義をちょうど 1 件求める "
+            f"(渡された projects={len(projects)} 件)"
+        )
+    if not github_tracked and projects:
+        raise ValueError(
+            f"tracker_mode={tracker_mode} は github.enabled=false になるため、"
+            "有効化されていない GitHub の Projects 定義を持てない"
+        )
+    execution_tracker: dict[str, Any] = {"mode": tracker_mode}
+    if tracker_mode in {"beads", "both"}:
+        # mode に beads を含むと schema が beads ブロックを required にする。
+        # fixture は外部 tracker へ投影しない (全 node が tracker_binding=none) ので、
+        # ミラーも看板も持たない最小構成を宣言する。
+        execution_tracker["beads"] = {
+            "issue_prefix": "lt",
+            "server_mode": False,
+            "github_mirror": "none",
+            "board": "none",
+        }
     return {
         "schema_version": "1.0.0",
         "repository_id": repository_id,
@@ -215,7 +245,7 @@ def _repo_config(repository_id: str, *, tracker_mode: str, projects: list[dict[s
             "locks": ".dev-graph/locks",
         },
         "github": {
-            "enabled": False,
+            "enabled": github_tracked,
             "issue_repository": "example/dev-graph-live-trial",
             "projects": projects,
             "completion_policy": {
@@ -234,7 +264,7 @@ def _repo_config(repository_id: str, *, tracker_mode: str, projects: list[dict[s
                 },
             },
         },
-        "execution_tracker": {"mode": tracker_mode},
+        "execution_tracker": execution_tracker,
         "worktrees": {
             "enabled": True,
             "lease_ttl_seconds": 1800,
@@ -561,12 +591,14 @@ def build_decompose(out: Path) -> None:
     """C14 run-dev-graph-decompose の --dry-run マクロ分解用 fixture。
 
     分解結果は draft preview として提示されるだけなので graph は空でよい。全 node が
-    tracker_binding=none 前提のため Projects 定義も持たせない。
+    tracker_binding=none 前提のため Projects 定義も持たせない。Projects を持たない以上
+    GitHub トラッカーは宣言できないので、mode は execution-tracker-contract §1 の既定
+    (ソロ + AI エージェント開発の private repo = beads) を採る。
     """
     common = _init_repository(out)
     _write_json(
         out / ".dev-graph" / "config.json",
-        _repo_config(_repository_id(common), tracker_mode="github", projects=[]),
+        _repo_config(_repository_id(common), tracker_mode="beads", projects=[]),
     )
     _write_json(out / ".dev-graph" / "state" / "graph.json", {"graph_revision": 0, "nodes": []})
     _write_json(common / "dev-graph" / "leases.json", {"leases": []})
