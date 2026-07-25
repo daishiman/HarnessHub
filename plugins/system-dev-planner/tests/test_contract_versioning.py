@@ -54,6 +54,30 @@ def make_legacy_fixture(root: Path, repository_id: str) -> tuple[Path, str]:
     return staging, VALIDATOR.canonical_digest(staging, DIGEST_FILES)
 
 
+def add_unregistered_qa_lineage(root: Path, staging: Path) -> None:
+    """QA gate の導入前 package では未検査、現行 package では fail となる lineage を作る。"""
+    (root / "features" / "FEATURE-1.md").write_text(
+        "---\ntags: [\"qa-099\"]\n---\n\n# Feature\n",
+        encoding="utf-8",
+    )
+    (root / "system-spec").mkdir(parents=True, exist_ok=True)
+    (root / "system-spec" / "spec-state.json").write_text(
+        json.dumps({"qa_log": []}),
+        encoding="utf-8",
+    )
+    (staging / "goal-spec.json").write_text(
+        json.dumps({
+            "purpose": "qa-099 を実装する",
+            "goal": "",
+            "scope_in": [],
+            "scope_out": [],
+            "acceptance": [],
+            "quality_constraints": [],
+        }),
+        encoding="utf-8",
+    )
+
+
 class ContractVersionResolutionTests(unittest.TestCase):
     def test_unknown_and_undigestable_targets_resolve_to_latest(self):
         baseline = {"sha256:known": "1.0.0"}
@@ -130,6 +154,41 @@ class LegacyPackageCompatibilityTests(unittest.TestCase):
             self.assertEqual(report["status"], "pass")
             self.assertEqual(report["contract_version"], VALIDATOR.CONTRACT_VERSION_LATEST)
             self.assertFalse(report["contract_baseline_exemption"])
+
+    def test_qa_semantic_gate_is_versioned_without_weakening_current_packages(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            repository_id = runtime.make_repo(root)
+            legacy, legacy_digest = make_legacy_fixture(root, repository_id)
+            add_unregistered_qa_lineage(root, legacy)
+
+            exempt = VALIDATOR.validate(
+                legacy,
+                repository_id,
+                baseline={legacy_digest: "1.0.0"},
+                repo_root=root,
+            )
+            self.assertEqual(exempt["status"], "pass")
+            self.assertEqual(exempt["violations"], [])
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            repository_id = runtime.make_repo(root)
+            current, _ = runtime.make_fixture(root, repository_id)
+            add_unregistered_qa_lineage(root, current)
+
+            strict = VALIDATOR.validate(
+                current,
+                repository_id,
+                baseline={},
+                repo_root=root,
+            )
+            self.assertEqual(strict["contract_version"], VALIDATOR.CONTRACT_VERSION_LATEST)
+            self.assertFalse(strict["contract_baseline_exemption"])
+            self.assertIn(
+                "qa-ref-unregistered",
+                {item["code"] for item in strict["violations"]},
+            )
 
     def test_exemption_is_scoped_to_contract_delta_not_to_violation_codes(self):
         """免除 package でも v1.0.0 が要求する節の欠落は fail する。

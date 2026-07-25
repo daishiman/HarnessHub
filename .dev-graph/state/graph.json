@@ -1,5 +1,5 @@
 {
-  "graph_revision": 629,
+  "graph_revision": 605,
   "nodes": [
     {
       "acceptance": [
@@ -1642,7 +1642,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -1654,7 +1654,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:59:39.662741Z"
+      "updated_at": "2026-07-24T21:00:24Z"
     },
     {
       "acceptance": [
@@ -1768,7 +1768,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -1780,7 +1780,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:00:39Z"
     },
     {
       "acceptance": [
@@ -1880,7 +1880,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -1892,7 +1892,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 独立設計レビュー",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:00:47Z"
     },
     {
       "acceptance": [
@@ -2008,7 +2008,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2020,7 +2020,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 テスト設計 (test-first 受入契約)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:00:53Z"
     },
     {
       "acceptance": [
@@ -2146,7 +2146,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2158,7 +2158,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:06Z"
     },
     {
       "acceptance": [
@@ -2272,7 +2272,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2284,7 +2284,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 テスト実行",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:13Z"
     },
     {
       "acceptance": [
@@ -2384,7 +2384,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2396,7 +2396,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 feature 受入判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:20Z"
     },
     {
       "acceptance": [
@@ -2509,7 +2509,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2521,7 +2521,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:30Z"
     },
     {
       "acceptance": [
@@ -2635,7 +2635,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2647,7 +2647,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 品質・セキュリティ・運用保証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:35Z"
     },
     {
       "acceptance": [
@@ -2747,7 +2747,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2759,7 +2759,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 最終独立レビュー",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:41Z"
     },
     {
       "acceptance": [
@@ -2859,7 +2859,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2871,7 +2871,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 証跡収集",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:50Z"
     },
     {
       "acceptance": [
@@ -2973,7 +2973,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -2985,7 +2985,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 運用ドキュメント整備",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-24T21:01:55Z"
     },
     {
       "acceptance": [
@@ -3219,7 +3219,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "audit",
         "system-spec",
@@ -3230,7 +3230,7 @@
       "template_version": "1.0.0",
       "title": "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-17T09:30:00Z"
+      "updated_at": "2026-07-24T11:20:45Z"
     },
     {
       "acceptance": [
@@ -13083,7 +13083,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13095,7 +13095,7 @@
       "template_version": "1.0.0",
       "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:33Z"
     },
     {
       "acceptance": [
@@ -13195,7 +13195,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13207,7 +13207,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:37Z"
     },
     {
       "acceptance": [
@@ -13306,7 +13306,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13318,7 +13318,7 @@
       "template_version": "1.0.0",
       "title": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:39Z"
     },
     {
       "acceptance": [
@@ -13432,7 +13432,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13444,7 +13444,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:52Z"
     },
     {
       "acceptance": [
@@ -13564,7 +13564,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13576,7 +13576,7 @@
       "template_version": "1.0.0",
       "title": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:31:57Z"
     },
     {
       "acceptance": [
@@ -13690,7 +13690,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13702,7 +13702,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:02Z"
     },
     {
       "acceptance": [
@@ -13802,7 +13802,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13814,7 +13814,7 @@
       "template_version": "1.0.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:10Z"
     },
     {
       "acceptance": [
@@ -13928,7 +13928,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -13940,7 +13940,7 @@
       "template_version": "1.0.0",
       "title": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:42Z"
     },
     {
       "acceptance": [
@@ -14054,7 +14054,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14066,7 +14066,7 @@
       "template_version": "1.0.0",
       "title": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:52Z"
     },
     {
       "acceptance": [
@@ -14165,7 +14165,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14177,7 +14177,7 @@
       "template_version": "1.0.0",
       "title": "最終独立レビュー — quality_constraints 10 件の充足判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:57Z"
     },
     {
       "acceptance": [
@@ -14276,7 +14276,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14288,7 +14288,7 @@
       "template_version": "1.0.0",
       "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:32:59Z"
     },
     {
       "acceptance": [
@@ -14390,7 +14390,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14403,7 +14403,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-24T22:33:19Z"
     },
     {
       "acceptance": [
@@ -14623,7 +14623,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -14635,7 +14635,7 @@
       "template_version": "1.0.0",
       "title": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:44:17Z"
     },
     {
       "acceptance": [
@@ -14734,7 +14734,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -14746,7 +14746,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:44:28Z"
     },
     {
       "acceptance": [
@@ -14845,7 +14845,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -14857,7 +14857,7 @@
       "template_version": "1.0.0",
       "title": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:44:42Z"
     },
     {
       "acceptance": [
@@ -14964,7 +14964,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -14976,7 +14976,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:45:03Z"
     },
     {
       "acceptance": [
@@ -15210,7 +15210,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -15222,7 +15222,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:46:04Z"
     },
     {
       "acceptance": [
@@ -15438,7 +15438,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -15450,7 +15450,7 @@
       "template_version": "1.0.0",
       "title": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:46:20Z"
     },
     {
       "acceptance": [
@@ -15779,7 +15779,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -15791,7 +15791,7 @@
       "template_version": "1.0.0",
       "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:47:04Z"
     },
     {
       "acceptance": [
@@ -15890,7 +15890,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-auth-tenancy",
         "macro-feature",
@@ -15903,7 +15903,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-25T00:47:18Z"
     },
     {
       "acceptance": [
@@ -27237,7 +27237,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-pipeline",
         "qa-070",
@@ -27248,7 +27248,7 @@
       "template_version": "1.0.0",
       "title": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T09:30:00Z"
+      "updated_at": "2026-07-24T08:49:25Z"
     },
     {
       "acceptance": [
@@ -27777,7 +27777,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -27789,7 +27789,7 @@
       "template_version": "1.0.0",
       "title": "要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:24:50Z"
     },
     {
       "acceptance": [
@@ -27888,7 +27888,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -27900,7 +27900,7 @@
       "template_version": "1.0.0",
       "title": "検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:24:54Z"
     },
     {
       "acceptance": [
@@ -27997,7 +27997,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28009,7 +28009,7 @@
       "template_version": "1.0.0",
       "title": "設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:02Z"
     },
     {
       "acceptance": [
@@ -28107,7 +28107,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28119,7 +28119,7 @@
       "template_version": "1.0.0",
       "title": "テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:20Z"
     },
     {
       "acceptance": [
@@ -28231,7 +28231,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28243,7 +28243,7 @@
       "template_version": "1.0.0",
       "title": "実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:25Z"
     },
     {
       "acceptance": [
@@ -28339,7 +28339,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28351,7 +28351,7 @@
       "template_version": "1.0.0",
       "title": "テスト実行 — 回帰テスト全件と 3 検査の実測記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:35Z"
     },
     {
       "acceptance": [
@@ -28447,7 +28447,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28459,7 +28459,7 @@
       "template_version": "1.0.0",
       "title": "受入判定 — 4 acceptance の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:38Z"
     },
     {
       "acceptance": [
@@ -28560,7 +28560,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28572,7 +28572,7 @@
       "template_version": "1.0.0",
       "title": "移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:25:55Z"
     },
     {
       "acceptance": [
@@ -28668,7 +28668,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28680,7 +28680,7 @@
       "template_version": "1.0.0",
       "title": "品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:26:02Z"
     },
     {
       "acceptance": [
@@ -28776,7 +28776,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28788,7 +28788,7 @@
       "template_version": "1.0.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:26:06Z"
     },
     {
       "acceptance": [
@@ -28884,7 +28884,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -28896,7 +28896,7 @@
       "template_version": "1.0.0",
       "title": "証跡固定 — 実測ログと成果物 digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:26:14Z"
     },
     {
       "acceptance": [
@@ -28993,7 +28993,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -29005,7 +29005,7 @@
       "template_version": "1.0.0",
       "title": "運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T08:26:49Z"
     },
     {
       "acceptance": [
@@ -29101,7 +29101,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-doc-governance-portability",
         "macro-feature",
@@ -29113,7 +29113,7 @@
       "template_version": "1.0.0",
       "title": "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-07-24T10:50:29Z"
     },
     {
       "acceptance": [],
@@ -29197,7 +29197,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "live-trial",
@@ -29209,7 +29209,7 @@
       "template_version": "1.0.0",
       "title": "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T10:25:46.615020Z"
+      "updated_at": "2026-07-24T09:35:27Z"
     },
     {
       "acceptance": [],
@@ -29293,7 +29293,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "live-trial",
@@ -29305,7 +29305,7 @@
       "template_version": "1.0.0",
       "title": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T10:25:09.866807Z"
+      "updated_at": "2026-07-24T21:00:46Z"
     },
     {
       "acceptance": [],
@@ -29389,7 +29389,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "live-trial",
@@ -29401,7 +29401,7 @@
       "template_version": "1.0.0",
       "title": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T10:25:28.267083Z"
+      "updated_at": "2026-07-24T11:20:29Z"
     },
     {
       "acceptance": [],
@@ -31994,7 +31994,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "live-trial",
         "freshness-gate",
@@ -32007,7 +32007,7 @@
       "template_version": "1.0.0",
       "title": "MVP-first 実装 (P05) で stale 化した 9 skill の live-trial 証跡再取得",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T13:55:28Z"
+      "updated_at": "2026-07-24T02:03:05Z"
     },
     {
       "acceptance": [
@@ -33074,12 +33074,18 @@
       "classification_confidence": 0.9,
       "classification_reason": "feat-auth-tenancy の最終レビューで検出した、確定仕様を超える実装決定 2 件を R4-reopen へ送る issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-25T11:06:52Z",
+        "evidence_refs": [
+          "system-spec/spec-state.json",
+          "system-spec/auth.md",
+          "system-spec/security.md",
+          "docs/security-spec.md",
+          "docs/features/feat-auth-tenancy/architecture-implementation-notes.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-25T11:06:52Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -33104,9 +33110,9 @@
       "goal": "session claims の確定集合と Device Flow polling の上限・減衰が、実装ではなく確定済み仕様側に記録され、Publisher CLI 実装者が仕様書だけを読んで正しい client を書ける状態",
       "graph_node_id": "issue-auth-tenancy-spec-delta-20260725",
       "implementation_readiness": {
-        "checked_at": "2026-07-25T11:40:00Z",
+        "checked_at": "2026-07-25T11:06:52Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -33147,7 +33153,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "follow-up",
         "spec-drift",
@@ -33161,7 +33167,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の実装が security-spec の確定値を 2 点だけ超えており R4-reopen が要る",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T02:34:26Z"
+      "updated_at": "2026-07-25T12:00:46.215663Z"
     },
     {
       "acceptance": [
@@ -36448,6 +36454,137 @@
       "title": "runbook の export/restore 手動コマンドが pnpm 10.9.0 と cwd 差でそのままでは実行できない",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T06:40:00Z"
+    },
+    {
+      "acceptance": [
+        "planner pytest が全件 PASS し、意味被覆の 4 違反 code それぞれに対する回帰テストが存在する",
+        "既 promote 済み package の再検証が digest 不変のまま status=pass を維持し、最新契約で検証される package も violations 0 で pass する",
+        "lint-live-trial-verdict.py --all が stale-sha 0 で exit 0、--check-provenance origin/main も exit 0",
+        "3 skill の scenario-verdict.json が現行 closure で取得した run を live_trial_verdict_ref に持つ",
+        "変更したファイルがいずれも 500 行以下である"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-1y6",
+        "linked_at": "2026-07-25T11:09:07Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-qa071-tooling-landing-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "確定 QA 要件の宣言と中身の乖離を C12 で検出できない欠陥、およびその修正が引き起こす behavior closure 失効を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T11:09:07Z",
+      "depends_on": [
+        "issue-validator-contract-version-20260724"
+      ],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-qa071-tooling-landing-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-071 を宣言する plan は登録済み qa_log との突合・goal-spec 5 項目の意味被覆・exact-13 task spec 全件への trace が揃わない限り promote できず、既 promote 済み package は digest を変えずに promote 時点の契約で pass を維持し、dev-graph 3 skill の live-trial verdict が現行 behavior closure と一致していること",
+      "graph_node_id": "issue-qa071-tooling-landing-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T11:09:07Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "PR #56 は qa-071 を system-spec/spec-state.json の qa_log へ登録しただけで、その中身が plan 成果物に届いているかを検査する enforcement は分離されたままだった。tag に qa-071 と書けば通る状態では、確定した QA 要件が goal-spec の purpose/goal/scope/acceptance にも 13 task spec にも降りていない plan が promote でき、qa_log が飾りになる。tag 宣言ではなく意味被覆を C12 決定論ゲートで要求し、宣言と中身の乖離を promote 前に落とす",
+      "related_nodes": [
+        "issue-planner-script-line-limit-20260724"
+      ],
+      "resource_scope": [
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "plugins/system-dev-planner/scripts/validate-qa-semantic-coverage.py",
+        "plugins/system-dev-planner/scripts/validate-task-spec-contract.py",
+        "plugins/system-dev-planner/assets/validation-contract-baseline.json",
+        "plugins/system-dev-planner/references/feature-execution-package-contract.md",
+        "plugins/system-dev-planner/agents/system-dev-plan-evaluator.md",
+        "plugins/system-dev-planner/skills/assign-system-dev-plan-evaluator/prompts/R4-evaluate.md",
+        "plugins/system-dev-planner/skills/assign-system-dev-plan-evaluator/references/evaluation-rubric.md",
+        "plugins/system-dev-planner/tests/test_qa_semantic_coverage.py",
+        "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+        "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+        "eval-log/dev-graph/run-dev-graph-decompose/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/criteria-test/scenario-verdict.json"
+      ],
+      "scope_in": [
+        "qa 意味被覆検査の実装 (qa-ref-unregistered / qa-semantic-coverage / qa-task-trace / qa-tags-unparsable の 4 違反 code)",
+        "契約 version 1.2.0 の追加と 1.1.0 の effective_until 確定",
+        "意味被覆検査を version 差分 (免除対象) として台帳 policy へ明記",
+        "evaluator (agent / R4-evaluate prompt / evaluation-rubric) の C2 条件への意味被覆観点の追加",
+        "behavior closure が変わったことによる run-dev-graph-{node,decompose,requirements} の live-trial 再実走と scenario-verdict.json の更新",
+        "監査ヘルパーの 500 行超過に対する責務分割と合成 identity による provenance 維持"
+      ],
+      "scope_out": [
+        "qa-071 本文の feature/task ドキュメントへの伝播 (HarnessHub-8wo で追跡。本 issue は検査機構のみ)",
+        "promote 済み package 本体の編集 (digest 不変性を壊すため受け入れ不可)",
+        "semantic-coverage 宣言を持たない既存 feature への遡及適用 (quality_constraints でのオプトイン方式を維持)",
+        "promote-system-plan.py / build-system-handoff.py の 500 行超過分割 (別 issue)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T11:09:07Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-dev-planner",
+        "c12-validation",
+        "qa-071",
+        "semantic-coverage",
+        "behavior-closure",
+        "live-trial"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "qa-071 の意味被覆 enforcement を landing し dev-graph 3 skill の live-trial を再取得する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T11:09:07Z"
     },
     {
       "acceptance": [

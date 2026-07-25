@@ -89,6 +89,11 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される
 - 陳腐化文書 (解決済み open issue・0-findings handoff) の棚卸し手順が sync verb 運用に組み込まれている
 
+## 品質要件の機械強制状況
+
+- `qa-067`: 上記 8 要件として本 feature で実装済み (完了)
+- `qa-071`: 2026-07-25 以降、tag 宣言だけでは被覆と見なされない。C12 決定論ゲート (契約 version 1.2.0) が goal-spec 5 項目と exact-13 task spec への意味被覆を要求する。契約の正本は `plugins/system-dev-planner/references/feature-execution-package-contract.md` §2.5、判定経緯は [system-dev-planner-qa-semantic-coverage](../docs/plugin-contracts/system-dev-planner-qa-semantic-coverage.md)。本 feature の現行世代 task spec への本文伝播は再 plan 経路 (HarnessHub-8wo) で行い、凍結済み投影を手編集しない
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md)

@@ -13,9 +13,9 @@
  ],
   "current_execution_receipts": [
     "eval-log/run-dev-graph-schedule-execution.json",
-    "eval-log/run-dev-graph-schedule-c17-verification.json"
+    "eval-log/dev-graph/run-dev-graph-schedule/c17-verification.json"
   ],
- "current_parity_manifest": "eval-log/run-dev-graph-schedule-parity-manifest.json",
+ "current_parity_manifest": "eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json",
  "current_ready_json": "eval-log/run-dev-graph-schedule-beads-ready.json",
  "current_source_graph_digest": "sha256:0c493eef8534ec42644d42de0e49e421793efab3de327febf2e3827d1d952ea5",
  "current_claim_executed": false

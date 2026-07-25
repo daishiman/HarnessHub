@@ -80,4 +80,3 @@
 ## P13
 > 🎯 何のため: リリースしてよいか判定する
 - ☐ `SYS-TASK-SPEC-TEST-STRATEGY-P13` リリース — main 反映と確定 system spec/architecture への writeback
-

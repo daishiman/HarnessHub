@@ -12,8 +12,8 @@ iteration: null
 title: "feat-auth-tenancy の実装が security-spec の確定値を 2 点だけ超えており R4-reopen が要る"
 owners: ["daishiman"]
 created_at: "2026-07-25T11:40:00Z"
-updated_at: "2026-07-25T02:34:26Z"
-status: "draft"
+updated_at: "2026-07-25T12:00:46.215663Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security"]
 resource_scope: ["system-spec/spec-state.json","system-spec/auth.md","docs/security-spec.md"]
@@ -43,13 +43,15 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
-implementation_readiness: {"checked_at":"2026-07-25T11:40:00Z","missing_sections":[],"status":"incomplete"}
+completion_evidence: {"completed_at":"2026-07-25T11:06:52Z","evidence_refs":["system-spec/spec-state.json","system-spec/auth.md","system-spec/security.md","docs/security-spec.md","docs/features/feat-auth-tenancy/architecture-implementation-notes.md"],"policy":"manual","reconciled_at":"2026-07-25T11:06:52Z","source":"manual","status":"done"}
+implementation_readiness: {"checked_at":"2026-07-25T11:06:52Z","missing_sections":[],"status":"complete"}
 ---
 
 # 概要
 
-feat-auth-tenancy の実装が、確定済みの security 仕様を **2 点だけ超えている**。どちらも Publisher CLI から観測できる契約なので、実装側のコメントではなく仕様側の確定として記録し直す必要がある。
+feat-auth-tenancy の実装が、確定済みの security 仕様を **2 点だけ超えていた**。どちらも Publisher CLI から観測できる契約なので、実装側のコメントではなく仕様側の確定として記録し直す必要があった。
+
+> **解決済み (2026-07-25)**: R4-reopen → ユーザー確認 (`appr-010`) → `qa-072` / `qa-073` として確定登録し、`system-spec/auth.md`・`system-spec/security.md` の再 compile と `docs/security-spec.md` §2.1/§2.2 の置換まで完了。実装の改修は不要 (両方ともユーザーが現行実装を追認)。経路の詳細は「## 解決の経路」を参照。
 
 ## 背景と問題
 
@@ -57,7 +59,7 @@ feat-auth-tenancy の実装が、確定済みの security 仕様を **2 点だ�
 
 実装 (P05) は、確定値では決まらない 2 箇所で判断を要した。判断そのものは根拠を持つが、**確定値の列挙に対する追加**であるため、実装側で決めきると「仕様書だけを読んだ Publisher CLI 実装者が正しい client を書けない」状態が残る。
 
-## 現在の挙動
+## 検出時の挙動 (2026-07-25 起票時点)
 
 ### D1. session JWT claims に `workspace_ids` が増えている
 
@@ -92,7 +94,7 @@ ADR 追補は上限値について **「backend-spec / security-spec には無�
 - session cookie に `workspace_ids` が載ること (と、それが最小集合の定義に含まれること) を知っている
 - polling interval が server 側で 60 秒に頭打ちし、規約どおり待てば 5 秒まで戻ることを知っている
 
-状態。
+状態。**2026-07-25 時点で達成済み** — `docs/security-spec.md` §2.1 の claims 行と §2.2 の polling 行の両方に、値・根拠・代償が記載されている。
 
 ## 再現手順またはユースケース
 
@@ -106,9 +108,9 @@ ADR 追補は上限値について **「backend-spec / security-spec には無�
 - 深刻度: medium — 現行実装は動作しており、セキュリティ上の穴ではない。壊れるのは「仕様書を信じた下流実装」
 - 緊急度: feat-publisher-plugin の Device Flow client 着手前まで。それ以降は誤実装が実際に発生しうる
 
-## なぜ本 PR で正本を直さなかったか
+## 正本を直接編集できなかった理由 (起票時の制約)
 
-| 反映先 | 直せない理由 |
+| 反映先 | 直接編集できない理由 |
 |---|---|
 | `system-spec/auth.md` | `spec-state.json` の `qa_log` から compile される成果物。手編集は**ユーザーが確認した事実の書き換え**にあたり、再 compile で消える |
 | `specs/` `architecture/` | `source_digest` で正本章を指す wrapper。`arch-harness-hub-security` は `scope_out` に「正本章の内容複製」を明示 |
@@ -116,6 +118,17 @@ ADR 追補は上限値について **「backend-spec / security-spec には無�
 | `docs/backend-spec.md` | 同 ratchet 対象 (baseline 434 行) |
 
 行数を増やさない「置換」なら ratchet は通るが、置換内容の確定自体が R4-reopen の対象であるため、確定を経ずに書き換えることはしない。
+
+## 解決の経路
+
+1. **R4-reopen 起票**: `spec-state.json` の `reopen_log` へ 5 セル (`auth.web` / `auth.desktop-windows` / `auth.desktop-macos` / `security.desktop-windows` / `security.desktop-macos`) を `from: 確定` で登録
+2. **ユーザー確認**: D1 / D2 それぞれ 3 択を `AskUserQuestion` で提示 → D1 は「実装を追認して 7 claim で確定」、D2 は「上限 60 秒・減衰 −5 秒を確定」を選択 (`approval_log` の `appr-010` に逐語記録)
+3. **確定登録**: `qa-072` (auth.web) / `qa-073` (auth・security の desktop-*) を `qa_log` へ追加し、`matrix` の該当 5 セルの `qa_ref` を差し替え
+4. **再 compile**: `system-spec/auth.md` / `system-spec/security.md` の確定質疑節を `qa-072` / `qa-073` へ更新
+5. **実装仕様へ反映**: `docs/security-spec.md` §2.1 の claims 行と §2.2 の polling 行を**行数を増やさない置換**で更新し、frontmatter `qa_ref` と §9 改訂履歴も追随
+6. **実装側の出所コメント更新**: `session.ts` / `config.ts` / `service.ts` / `session-revocation.test.ts` の「仕様書由来ではない」旨の注記を、確定済み仕様 (`qa-072` / `qa-073`) を指す記述へ置換
+
+**実装の値は 1 つも変えていない** (両方ともユーザーが現行実装を追認したため)。変わったのは仕様側の記録と、出所を指すコメントだけである。
 
 ## スコープ
 
@@ -127,16 +140,22 @@ ADR 追補は上限値について **「backend-spec / security-spec には無�
 - 原因/親ノード: `feat-auth-tenancy`
 - 関連仕様: `spec-harness-hub-requirements`
 - 関連アーキテクチャ: `arch-harness-hub-security`
-- 解決タスク: (R4-reopen 実施時に採番)
+- 解決タスク: 本 issue 内で R4-reopen を実施 (別 task ノードは採番せず、`qa-072` / `qa-073` の確定登録をもって完了)
 
 ## 受入条件
 
-- [ ] `spec-state.json` の `qa_log` に、session claims への `workspace_ids` 追加の可否と根拠がユーザー確認付きで登録されている
-- [ ] `spec-state.json` の `qa_log` に、polling interval の上限値 (現行実装は 60 秒) と減衰規則の可否がユーザー確認付きで登録されている
-- [ ] `docs/security-spec.md` §2.1 の claims 行と §2.2 の polling 行が確定内容と一致し、`lint-doc-line-limit.py` が exit 0 のままである
-- [ ] `packages/schemas/auth-tenancy/session.ts` と `apps/hub/src/lib/auth/config.ts` の値が確定内容と一致する
+- [x] `spec-state.json` の `qa_log` に、session claims への `workspace_ids` 追加の可否と根拠がユーザー確認付きで登録されている → `qa-072` / `appr-010`
+- [x] `spec-state.json` の `qa_log` に、polling interval の上限値 (現行実装は 60 秒) と減衰規則の可否がユーザー確認付きで登録されている → `qa-073` / `appr-010`
+- [x] `docs/security-spec.md` §2.1 の claims 行と §2.2 の polling 行が確定内容と一致し、`lint-doc-line-limit.py` が exit 0 のままである → 検査 361 文書 / allowlist 5 件で exit 0
+- [x] `packages/schemas/auth-tenancy/session.ts` と `apps/hub/src/lib/auth/config.ts` の値が確定内容と一致する → 値の変更なし (ユーザーが現行実装を追認)。出所コメントのみ確定仕様を指すよう更新
 
 ## 検証証跡
 
-- コマンド/テスト: `python3 scripts/lint-doc-line-limit.py --repo-root .` / `pnpm --filter @harness-hub/hub run test`
-- 証跡 path: `docs/features/feat-auth-tenancy/architecture-implementation-notes.md` §10.2 / §10.7
+| 検査 | 結果 |
+|---|---|
+| `python3 scripts/lint-doc-line-limit.py --repo-root .` | exit 0 (検査 361 文書 / 上限 300 行 / allowlist 5 件) |
+| `pnpm --filter @harness-hub/hub run test` | 23 files / 260 passed・1 skipped |
+| `validate-graph-schema.py --graph .dev-graph/state/graph.json` | `valid: true` / violations 0 |
+| `validate-evidence-refs.py --repo-root .` | dangling 0 (evidence 保持 259 ノード) |
+
+- 証跡 path: `docs/features/feat-auth-tenancy/architecture-implementation-notes.md` §10.2 / §10.7、`system-spec/spec-state.json` (`qa-072` / `qa-073` / `appr-010` / `reopen_log` 5 セル)

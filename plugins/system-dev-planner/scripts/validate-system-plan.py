@@ -7,7 +7,7 @@
 # contexts: [C, E]
 # network: false
 # write-scope: none
-# dependencies: [resolve-project-context.py, validate-task-spec-contract.py, validate-json-schema-subset.py, ../assets/validation-contract-baseline.json]
+# dependencies: [resolve-project-context.py, validate-task-spec-contract.py, validate-json-schema-subset.py, validate-qa-semantic-coverage.py, ../assets/validation-contract-baseline.json]
 # requires-python: ">=3.10"
 # ///
 """C12 deterministic promotion gate."""
@@ -39,50 +39,6 @@ PLACEHOLDER = re.compile(r"\b(?:TODO|TBD)\b|__PLACEHOLDER__|<[^>]+>", re.I)
 STAGING_RUNTIME_REF = re.compile(r"(?:^|[^A-Za-z0-9_.-])\.dev-graph/staging(?:/|\b)")
 SCHEMAS = HERE.parent / "schemas"
 
-# --- テスト戦略 section (qa-076 / qa-078 / qa-079 / qa-081) ---------------
-#
-# 段階適用は契約 version 台帳 (validate-task-spec-contract.py) が担う。本 section の
-# 必須化は契約 1.2.0 で導入され、それ以前に promote された世代は canonical digest 経由で
-# 当時の契約へ解決されるため FAIL へ転落しない (exact-13 非退行 = goal-spec acceptance 7)。
-# package 側の自己申告 version は採らない。manifest は digest 対象集合の外にあり改ざん可能で、
-# 申告値で免除を決めると台帳の fail-closed が申告一行で無効化されるため。
-# 検査の実装をここに置くのは inner_goal_seek / p13_writeback と同じ配置規則に従う
-# (契約 version の差分 flag は台帳側、本文検査の実装は validator 側)。
-TEST_STRATEGY_SECTION = "テスト戦略"
-# 4 項目のラベルと出現順序が、再生成冪等性 (acceptance 3) の判定単位そのもの。
-TEST_STRATEGY_ITEMS: tuple[tuple[str, str], ...] = (
-    ("テストレベル選定", "test_levels"),
-    ("カバレッジ目標", "coverage_target"),
-    ("層別方針", "layer_policies"),
-    ("保守性制約", "maintainability_constraints"),
-)
-TEST_STRATEGY_SCHEMA = "task-spec-test-strategy.schema.json"
-# section は「スコープ外」の後、「Verification and evidence」の前に置く。
-# scope が決まってテスト範囲が決まり、その実行手段が Verification へ続く。
-TEST_STRATEGY_PLACEMENT = ("スコープ外", "Verification and evidence")
-WORKSTREAM_SECTION = "Workstream applicability"
-# Workstream applicability の各行 -> テスト層。Backend/API/Data は OR で backend 層へ束ねる。
-# Security/Quality/Documentation/Operations は層別テスト方針の対象外 (層を導出しない)。
-LAYER_BY_WORKSTREAM = {
-    "Frontend": "frontend",
-    "Backend": "backend",
-    "API": "backend",
-    "Data": "backend",
-    "Infrastructure": "infrastructure",
-}
-# 各層の層別方針が満たすべき必須マーカー (qa-078 逐語由来)。
-LAYER_MARKERS = {
-    "frontend": ("behavior",),
-    "backend": ("API 契約", "DB 結合"),
-    "infrastructure": ("IaC", "smoke"),
-}
-_ITEM_LABEL = re.compile(
-    r"^[ \t]*[-*][ \t]*(" + "|".join(re.escape(label) for label, _ in TEST_STRATEGY_ITEMS) + r")[ \t]*[:：]",
-    re.MULTILINE,
-)
-_WORKSTREAM_LINE = re.compile(r"^[ \t]*[-*][ \t]*([^:：]+?)[ \t]*[:：][ \t]*(.*)$", re.MULTILINE)
-
-
 def _load_sibling(filename: str, module_name: str):
     spec = importlib.util.spec_from_file_location(module_name, HERE / filename)
     module = importlib.util.module_from_spec(spec)
@@ -109,6 +65,13 @@ REQUIRED_TASK_SPEC_SECTIONS = CONTRACTS.REQUIRED_TASK_SPEC_SECTIONS
 CONTRACT_VERSION_LATEST = CONTRACTS.CONTRACT_VERSION_LATEST
 CONTRACT_VERSIONS = CONTRACTS.CONTRACT_VERSIONS
 TEST_STRATEGY_CONTRACT_FROM = CONTRACTS.TEST_STRATEGY_CONTRACT_FROM
+TEST_STRATEGY_SECTION = CONTRACTS.TEST_STRATEGY_SECTION
+TEST_STRATEGY_ITEMS = CONTRACTS.TEST_STRATEGY_ITEMS
+TEST_STRATEGY_SCHEMA = CONTRACTS.TEST_STRATEGY_SCHEMA
+TEST_STRATEGY_PLACEMENT = CONTRACTS.TEST_STRATEGY_PLACEMENT
+_task_spec_sections = CONTRACTS._task_spec_sections
+parse_test_strategy = CONTRACTS.parse_test_strategy
+derive_required_layers = CONTRACTS.derive_required_layers
 load_contract_baseline = CONTRACTS.load_contract_baseline
 resolve_contract_version = CONTRACTS.resolve_contract_version
 task_spec_violations = CONTRACTS.task_spec_violations
@@ -119,6 +82,31 @@ SCHEMA_SUBSET = _load_sibling("validate-json-schema-subset.py", "sdp_json_schema
 _type_matches = SCHEMA_SUBSET._type_matches
 _resolve_local_ref = SCHEMA_SUBSET._resolve_local_ref
 schema_violations = SCHEMA_SUBSET.schema_violations
+
+# QA semantic coverage は専用 module へ分離し、C12 本体を 500 行以下に保つ。
+# 公開定数と関数は既存テスト/利用者との互換性のため本 module から再公開する。
+QA_COVERAGE = _load_sibling(
+    "validate-qa-semantic-coverage.py",
+    "sdp_qa_semantic_coverage",
+)
+QA_REF_PATTERN = QA_COVERAGE.QA_REF_PATTERN
+FRONTMATTER_TAGS = QA_COVERAGE.FRONTMATTER_TAGS
+GOAL_SPEC_COVERAGE_FIELDS = QA_COVERAGE.GOAL_SPEC_COVERAGE_FIELDS
+QA_REQUIREMENT_HEADING = QA_COVERAGE.QA_REQUIREMENT_HEADING
+SEMANTIC_COVERAGE_CONSTRAINT_ID = QA_COVERAGE.SEMANTIC_COVERAGE_CONSTRAINT_ID
+
+
+def qa_semantic_violations(
+    staging: Path,
+    repo_root: Path,
+    parent: str,
+) -> list[tuple[str, str, str]]:
+    return QA_COVERAGE.qa_semantic_violations(
+        staging,
+        repo_root,
+        parent,
+        TASK_PATHS,
+    )
 
 
 def canonical_digest(root: Path, relative_paths: list[str]) -> str:
@@ -136,91 +124,8 @@ def _load_schema(name: str) -> dict:
     return value
 
 
-def _task_spec_sections(text: str) -> list[tuple[str, str]]:
-    """`## ` 見出しを (見出し名, 本文) の出現順リストへ写す。"""
-    headings = list(TASK_SPEC_HEADING.finditer(text))
-    sections: list[tuple[str, str]] = []
-    for index, heading in enumerate(headings):
-        end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
-        sections.append((heading.group(1).strip(), text[heading.end():end]))
-    return sections
-
-
-def parse_test_strategy(text: str) -> tuple[dict | None, list[tuple[str, str]]]:
-    """`## テスト戦略` を schema 検査可能な中間表現へ写す。
-
-    戻り値は (value, errors)。value が None かつ errors が空のときだけ「section 不在」を
-    意味し、必須か否かの判断は呼び出し側 (契約版によるモード判定) が行う。
-    構造 (見出し・配置・4 項目の有無と順序と空判定) はここで、内容 (必須語) は
-    schema が担当する — 責務を分けることで、語彙の改訂を Python 変更なしに行える。
-    """
-    sections = _task_spec_sections(text)
-    names = [name for name, _ in sections]
-    indices = [i for i, name in enumerate(names) if name == TEST_STRATEGY_SECTION]
-    if not indices:
-        return None, []
-    if len(indices) > 1:
-        return None, [("task-spec-test-strategy-duplicate", f"{len(indices)} occurrences")]
-
-    index = indices[0]
-    errors: list[tuple[str, str]] = []
-    before, after = TEST_STRATEGY_PLACEMENT
-    if before in names and after in names and not names.index(before) < index < names.index(after):
-        errors.append(("task-spec-test-strategy-placement", f"must sit between `{before}` and `{after}`"))
-
-    body = sections[index][1]
-    if not body.strip():
-        errors.append(("task-spec-test-strategy-empty", TEST_STRATEGY_SECTION))
-        return None, errors
-
-    matches = list(_ITEM_LABEL.finditer(body))
-    found = [m.group(1) for m in matches]
-    canonical = [label for label, _ in TEST_STRATEGY_ITEMS]
-    missing = [label for label in canonical if label not in found]
-    for label in missing:
-        errors.append(("task-spec-test-strategy-item-missing", label))
-    # 欠落があるときの順序比較は必ず不一致になるため、原因を一つに絞って報告する。
-    if not missing and found != canonical:
-        errors.append(("task-spec-test-strategy-item-order", f"expected={canonical} actual={found}"))
-
-    keys = dict(TEST_STRATEGY_ITEMS)
-    value: dict = {"schema_version": "1.0.0"}
-    for position, match in enumerate(matches):
-        end = matches[position + 1].start() if position + 1 < len(matches) else len(body)
-        item = body[match.end():end].strip()
-        if not item:
-            errors.append(("task-spec-test-strategy-item-empty", match.group(1)))
-            continue
-        value.setdefault(keys[match.group(1)], item)
-    return value, errors
-
-
-def derive_required_layers(text: str) -> list[str]:
-    """`Workstream applicability` の applicable 宣言から必須テスト層を導出する。
-
-    `N/A` で始まる値は適用外。Backend / API / Data は同一の backend 層へ OR 結合し、
-    Security / Quality / Documentation / Operations は層別テスト方針を導出しない。
-    戻り値は固定順で、同じ入力に対し常に同じ列を返す (冪等性の要件)。
-    """
-    body = dict(_task_spec_sections(text)).get(WORKSTREAM_SECTION)
-    if body is None:
-        return []
-    applicable: set[str] = set()
-    for match in _WORKSTREAM_LINE.finditer(body):
-        layer = LAYER_BY_WORKSTREAM.get(match.group(1).strip())
-        if layer is None or re.match(r"n/?a\b", match.group(2).strip(), re.I):
-            continue
-        applicable.add(layer)
-    return [layer for layer in ("frontend", "backend", "infrastructure") if layer in applicable]
-
-
 def test_strategy_violations(text: str, *, enforced: bool) -> list[tuple[str, str]]:
-    """テスト戦略 section の構造・内容・層別充足を検証する (qa-076/078/079/081)。
-
-    `enforced=False` (legacy package) でも、section が存在する場合は同じ厳格さで
-    検査する (strict-if-present)。緩めるのは「無いことを許すか」だけであり、
-    書かれた内容の妥当性を緩めれば fail-closed が形骸化するため。
-    """
+    """テスト戦略 section の構造・内容・層別充足を検証する。"""
     value, errors = parse_test_strategy(text)
     if value is None:
         if not errors:
@@ -231,13 +136,18 @@ def test_strategy_violations(text: str, *, enforced: bool) -> list[tuple[str, st
             errors.append(("task-spec-test-strategy-content", detail))
         policies = value["layer_policies"]
         for layer in derive_required_layers(text):
-            for marker in LAYER_MARKERS[layer]:
+            for marker in CONTRACTS.LAYER_MARKERS[layer]:
                 if marker not in policies:
                     errors.append(("task-spec-test-strategy-layer", f"{layer}: missing marker `{marker}`"))
     return errors
 
 
-def validate(staging: Path, repository_id: str, baseline: dict[str, str] | None = None) -> dict:
+def validate(
+    staging: Path,
+    repository_id: str,
+    baseline: dict[str, str] | None = None,
+    repo_root: Path | None = None,
+) -> dict:
     violations: list[dict] = []
     resolved_baseline = load_contract_baseline() if baseline is None else baseline
     def fail(code: str, path: str, detail: str) -> None:
@@ -439,6 +349,13 @@ def validate(staging: Path, repository_id: str, baseline: dict[str, str] | None 
     repo_ctx = inventory.get("repo_context", {})
     if repo_ctx.get("repo_identity") != repository_id:
         fail("repo-identity", "workstream-inventory.json", "repo identity differs from C09 context")
+    if (
+        contract["qa_semantic_coverage"]
+        and repo_root is not None
+        and isinstance(parent, str)
+    ):
+        for code, path, detail in qa_semantic_violations(staging, repo_root, parent):
+            fail(code, path, detail)
     manifest_files = manifest.get("files")
     rels: list[str] = []
     if isinstance(manifest_files, dict): rels = sorted(manifest_files)
@@ -547,7 +464,7 @@ def main(argv: list[str] | None = None) -> int:
             c09, Path(context["repo_root"]), context, args.feature_package
         )
         staging = Path(c09.guard_relative_path(Path(context["repo_root"]), target))
-        report = validate(staging, context["repository_id"])
+        report = validate(staging, context["repository_id"], repo_root=Path(context["repo_root"]))
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["status"] == "pass" else 2
     except c09.UsageError as exc: print(f"[validate] {exc}", file=sys.stderr); return 1

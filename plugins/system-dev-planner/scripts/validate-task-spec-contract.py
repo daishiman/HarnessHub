@@ -51,9 +51,41 @@ REQUIRED_TASK_SPEC_SECTIONS = (
     "参照情報",
 )
 
+# --- テスト戦略 section (qa-076 / qa-078 / qa-079 / qa-081) ---------------
+TEST_STRATEGY_SECTION = "テスト戦略"
+TEST_STRATEGY_ITEMS: tuple[tuple[str, str], ...] = (
+    ("テストレベル選定", "test_levels"),
+    ("カバレッジ目標", "coverage_target"),
+    ("層別方針", "layer_policies"),
+    ("保守性制約", "maintainability_constraints"),
+)
+TEST_STRATEGY_SCHEMA = "task-spec-test-strategy.schema.json"
+TEST_STRATEGY_PLACEMENT = ("スコープ外", "Verification and evidence")
+WORKSTREAM_SECTION = "Workstream applicability"
+LAYER_BY_WORKSTREAM = {
+    "Frontend": "frontend",
+    "Backend": "backend",
+    "API": "backend",
+    "Data": "backend",
+    "Infrastructure": "infrastructure",
+}
+LAYER_MARKERS = {
+    "frontend": ("behavior",),
+    "backend": ("API 契約", "DB 結合"),
+    "infrastructure": ("IaC", "smoke"),
+}
+_ITEM_LABEL = re.compile(
+    r"^[ \t]*[-*][ \t]*(" + "|".join(re.escape(label) for label, _ in TEST_STRATEGY_ITEMS) + r")[ \t]*[:：]",
+    re.MULTILINE,
+)
+_WORKSTREAM_LINE = re.compile(
+    r"^[ \t]*[-*][ \t]*([^:：]+?)[ \t]*[:：][ \t]*(.*)$",
+    re.MULTILINE,
+)
+
 CONTRACT_VERSION_LATEST = "1.2.0"
-# テスト戦略 section を必須化した契約 version (qa-076/078/079/081)。証跡へ常時出力する
-# 「いつから強制か」の値をここ一点に持たせ、validator 側の重複定義を作らない。
+# テスト戦略 section と qa semantic coverage は並行ブランチで同じ 1.2.0 として
+# 導入されたため、統合後の 1.2.0 は両方を必須にする。
 TEST_STRATEGY_CONTRACT_FROM = "1.2.0"
 CONTRACT_VERSIONS: dict[str, dict] = {
     # 2026-07-22T13:53:21Z (367ba5c) 以前に promote された content-addressed package が
@@ -63,26 +95,94 @@ CONTRACT_VERSIONS: dict[str, dict] = {
         "inner_goal_seek": False,
         "p13_writeback": False,
         "test_strategy": False,
+        "qa_semantic_coverage": False,
     },
-    # 367ba5c 以降・テスト戦略導入前の契約。
+    # 367ba5c で導入された task-spec 本文契約。qa semantic coverage gate の導入前に
+    # promote された package を再検証できるよう、当時の検査集合を独立 version として残す。
     "1.1.0": {
         "required_sections": REQUIRED_TASK_SPEC_SECTIONS,
         "inner_goal_seek": True,
         "p13_writeback": True,
         "test_strategy": False,
+        "qa_semantic_coverage": False,
     },
-    # 現行契約。新規生成 package は必ずこちらで fail-closed 検証される。
-    #
-    # テスト戦略 section を `required_sections` へ足さず独立 flag にしているのは、
-    # 節の有無だけでなく 4 項目の順序・必須語彙・層別方針の充足まで検査するためで、
-    # `task-spec-section-missing` の一語では違反の所在を報告できないから。
+    # テスト戦略必須化と qa-071 enforcement tooling 導入後の現行契約。新規生成
+    # package はテスト戦略 4 項目に加え、feature tag、spec-state lineage、
+    # goal-spec の意味被覆、exact-13 task trace も fail-closed で検証する。
     "1.2.0": {
         "required_sections": REQUIRED_TASK_SPEC_SECTIONS,
         "inner_goal_seek": True,
         "p13_writeback": True,
         "test_strategy": True,
+        "qa_semantic_coverage": True,
     },
 }
+
+
+def _task_spec_sections(text: str) -> list[tuple[str, str]]:
+    """`## ` 見出しを (見出し名, 本文) の出現順リストへ写す。"""
+    headings = list(TASK_SPEC_HEADING.finditer(text))
+    sections: list[tuple[str, str]] = []
+    for index, heading in enumerate(headings):
+        end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
+        sections.append((heading.group(1).strip(), text[heading.end():end]))
+    return sections
+
+
+def parse_test_strategy(text: str) -> tuple[dict | None, list[tuple[str, str]]]:
+    """`## テスト戦略` を schema 検査可能な中間表現へ写す。"""
+    sections = _task_spec_sections(text)
+    names = [name for name, _ in sections]
+    indices = [i for i, name in enumerate(names) if name == TEST_STRATEGY_SECTION]
+    if not indices:
+        return None, []
+    if len(indices) > 1:
+        return None, [("task-spec-test-strategy-duplicate", f"{len(indices)} occurrences")]
+
+    index = indices[0]
+    errors: list[tuple[str, str]] = []
+    before, after = TEST_STRATEGY_PLACEMENT
+    if before in names and after in names and not names.index(before) < index < names.index(after):
+        errors.append(("task-spec-test-strategy-placement", f"must sit between `{before}` and `{after}`"))
+
+    body = sections[index][1]
+    if not body.strip():
+        errors.append(("task-spec-test-strategy-empty", TEST_STRATEGY_SECTION))
+        return None, errors
+
+    matches = list(_ITEM_LABEL.finditer(body))
+    found = [match.group(1) for match in matches]
+    canonical = [label for label, _ in TEST_STRATEGY_ITEMS]
+    missing = [label for label in canonical if label not in found]
+    for label in missing:
+        errors.append(("task-spec-test-strategy-item-missing", label))
+    if not missing and found != canonical:
+        errors.append(("task-spec-test-strategy-item-order", f"expected={canonical} actual={found}"))
+
+    keys = dict(TEST_STRATEGY_ITEMS)
+    value: dict = {"schema_version": "1.0.0"}
+    for position, match in enumerate(matches):
+        end = matches[position + 1].start() if position + 1 < len(matches) else len(body)
+        item = body[match.end():end].strip()
+        if not item:
+            errors.append(("task-spec-test-strategy-item-empty", match.group(1)))
+            continue
+        value.setdefault(keys[match.group(1)], item)
+    return value, errors
+
+
+def derive_required_layers(text: str) -> list[str]:
+    """Workstream applicability の applicable 宣言から必須テスト層を導出する。"""
+    body = dict(_task_spec_sections(text)).get(WORKSTREAM_SECTION)
+    if body is None:
+        return []
+    applicable: set[str] = set()
+    for match in _WORKSTREAM_LINE.finditer(body):
+        layer = LAYER_BY_WORKSTREAM.get(match.group(1).strip())
+        if layer is None or re.match(r"n/?a\b", match.group(2).strip(), re.I):
+            continue
+        applicable.add(layer)
+    return [layer for layer in ("frontend", "backend", "infrastructure") if layer in applicable]
 
 
 def load_contract_baseline(path: Path = CONTRACT_BASELINE_ASSET) -> dict[str, str]:
