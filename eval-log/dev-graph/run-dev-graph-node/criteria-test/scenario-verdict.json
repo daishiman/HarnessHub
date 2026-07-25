@@ -7,7 +7,7 @@
     "skill_md_sha256": "5a2cf162d207756e8b7f82c03b31f95fd0d9d82a7d53636bdc42f5c8c8d44a10"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-integrity-auditor-fresh-evaluator-20260724T093756Z-node-wt1r3",
+  "reviewer": "dev-graph-node-fresh-evaluator-pj6-r4-20260725",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T093756Z-node-wt1r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T093756Z-node-wt1r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T093756Z-node-wt1r3/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T093756Z-node-wt1r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/out/status.json"
       ],
-      "observed": "2026-07-24 再実走 (run 20260724T093756Z-node-wt1r3, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0, Skill ツール起動 1 件): MVP-first 実装 (graph-node.schema.json への mvp_alignment 追加) で挙動閉包 sha が更新され旧 verdict が stale 化したため再取得。mixed artifacts 5 種 (issue/task/specification/architecture/document) を canonical kind path へ登録し、連続 update 後も frontmatter の artifact_kind と格納 path が graph.json の node entry と一致、features/ への新規 feature 作成 0 件 (C14 macro-feature 契約の遵守) を確認。orchestrator と別個体の fresh evaluator が graph_sha256_after (e4d4d79…662ad590) と artifact_sha256_after を shasum -a 256 で独立再計算して完全一致を確認し、validate-graph-schema.py を自分で再実行して valid=true / violations=[] を再現、graph_revision 0→5 (5 件 add)→6 (1 件 patch) の単調増加も整合。goal-seek 3 点セットは必須 6 キー充足・original_goal hash (eb23c324…) 一致・1 行目 (Skill 起動前の Write) と 2 行目 (約 7 分後の append) で append-only を実証、既存行への Edit 0 件。AskUserQuestion 0 件。blocker 0 で PASS。非 blocker の留意点 (progress.json の completed_at 転記ミス / SKILL.md 記載の Agent fork が実走 0 件) は HarnessHub-dtg で追跡。skill_dir_tree_sha が現行 closure と一致。"
+      "observed": "2026-07-25 再実走 (run 20260724T224206Z-pj6-node-r4, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0): task 読取直後に Skill ツール dev-graph:run-dev-graph-node を起動。fixture 初期 commit に tracked inputs/.gitkeep を置いたことで、最初の fixture mutation は goal-spec、次が intermediate 1 行目、その後にのみ artifact 入力を作る時系列となった。mixed artifacts 5 種 (issue/task/specification/architecture/document) を canonical path へ登録し、graph revision 0→5 の後、同じ issue node を通常 C02 経路で内容差分付き更新して revision 6・operation=updated・ID/kind/path 不変を確認。feature 作成は 0 件。specification の API 契約 5 リテラルを全て保持した。初回 apply の frontmatter 不足は write_count=0 で fail-closed し、不足項目を補って再 dry-run 後に安全に回復。graph schema は valid=true/violations=[]、goal-seek 3 点セットは violations 0・intermediate append-only 2 行。orchestrator と別個体の fresh evaluator は blocker なし PASS。verdict の機械生成 skill_dir_tree_sha は現行 closure と一致し overall=PASS。"
     },
     "OUT2": {
       "status": "PASS",

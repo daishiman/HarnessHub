@@ -1,5 +1,5 @@
 {
-  "graph_revision": 526,
+  "graph_revision": 528,
   "nodes": [
     {
       "acceptance": [
@@ -32220,9 +32220,9 @@
     },
     {
       "acceptance": [
-        "reconcile-github-lifecycle.py が writer-consumer 不在でも完了投影を完走 (completion_event 台帳生成) できる",
-        "MVP-first P01..P13 に対応する completion_event が events 台帳に存在する",
-        "手動 writer-receipt 手書きなしで監査可能な証跡が残る"
+        "reconcile-github-lifecycle.pyが外部writer-consumer指定なしでも完了投影を完走しcompletion_event台帳を生成できる",
+        "MVP-first P01..P13に対応するcompletion_eventがevents台帳に13件存在する",
+        "手動writer-receipt手書きなしで監査可能なtyped transaction receiptが13件すべてに残る"
       ],
       "architecture_refs": [],
       "artifact_kind": "issue",
@@ -32242,12 +32242,18 @@
       "classification_confidence": 0.9,
       "classification_reason": "reconcile writer-consumer 不在の設計ギャップを追跡する issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T12:44:42Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_semantic_c26_completion.py",
+          "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
+          "plugins/dev-graph/scripts/upsert-node.py",
+          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260724T205545Z-pj6-sync-r2/verdict.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-25T00:19:30Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -32292,16 +32298,27 @@
       ],
       "resource_scope": [
         "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
-        "plugins/dev-graph/skills/run-dev-graph-node/SKILL.md"
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/tests/test_semantic_c26_completion.py",
+        "plugins/dev-graph/tests/test_runtime_coverage.py",
+        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py",
+        "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_node.py",
+        "plugins/dev-graph/references/github-lifecycle-contract.md",
+        "plugins/dev-graph/references/git-worktree-contract.md",
+        "plugins/dev-graph/plugin-composition.yaml",
+        "plugin-plans/dev-graph/component-inventory.json",
+        "eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/criteria-test/scenario-verdict.json"
       ],
       "scope_in": [
-        "writer-consumer (apply-lifecycle-request) の実装 もしくは reconcile への統合",
-        "already-done node への冪等 completion_event 後追い emission 経路",
-        "MVP-first 13 / pipeline-improvement の completion_event 台帳の後追い生成"
+        "writer-consumer (apply-lifecycle-request) のC02組み込み実装とreconcile既定統合",
+        "already-done nodeへの冪等completion_event後追いemission経路",
+        "MVP-first P01..P13のcompletion_event台帳とtransaction receipt後追い生成"
       ],
       "scope_out": [
-        "completion_evidence の再投影 (既に done・検証済み)",
-        "別ストリーム (doc-governance/qa070/render-out1) の OR-003 解消"
+        "completion_evidenceの再投影 (既にdone・検証済み)",
+        "別ストリーム (doc-governance/qa070/render-out1) のOR-003解消",
+        "verified PR linkageを持たないmanual policy nodeへのmerge事実の補作"
       ],
       "source_lineage": {
         "imported_at": "2026-07-24T12:08:10Z",
@@ -32312,7 +32329,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "dev-graph",
         "reconcile",
@@ -32325,7 +32342,7 @@
       "template_version": "1.0.0",
       "title": "C26 completion_event 台帳 emission の設計ギャップ (writer-consumer 不在で reconcile 完全経路が未実装)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T12:12:22Z"
+      "updated_at": "2026-07-25T00:19:30Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
