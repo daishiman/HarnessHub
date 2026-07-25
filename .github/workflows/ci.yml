@@ -108,6 +108,14 @@ jobs:
           else
             echo "migrations 未作成 (feat-domain-model-db 未着手) のため対象なし"
           fi
+      # feat-domain-model-db P09 の静的ゲート。動的ゲート (migration apply = DMDB-T13 / tenant 分離 = DMDB-T03 /
+      # export 完全性・別 DB restore round-trip = DMDB-T06/T12) は G4 の `pnpm -r test` 内で packages/db が実行する。
+      - name: G7b テナント分離網羅 + 接続層隔離 (D4 §8.4 / qa-020)
+        run: |
+          node scripts/ci/check-required-package-script.mjs packages/db/package.json check:tenant-isolation-coverage
+          pnpm --filter @harness-hub/db run check:tenant-isolation-coverage
+          node scripts/ci/check-required-package-script.mjs packages/db/package.json check:connection-isolation
+          pnpm --filter @harness-hub/db run check:connection-isolation
       - name: G8 OpenAPI / zod drift 検査
         run: |
           node scripts/ci/check-required-package-script.mjs packages/schemas/package.json check:drift

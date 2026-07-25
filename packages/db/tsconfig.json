@@ -15,5 +15,18 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src", "vitest.config.ts"]
+  "include": [
+    "types",
+    "src",
+    "schema",
+    "connection",
+    "repository",
+    "registry",
+    "backup",
+    "cron",
+    "scripts",
+    "__tests__",
+    "vitest.config.ts",
+    "drizzle.config.ts"
+  ]
 }
