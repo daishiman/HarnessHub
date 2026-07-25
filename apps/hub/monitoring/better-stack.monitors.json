@@ -1,0 +1,88 @@
+{
+  "$comment": "Better Stack Uptime API へ適用する外形監視の正本。API token は保存せず、BETTER_STACK_API_TOKEN などの秘密管理経路から渡す。applied_at と external_id は実環境への適用が確認できるまで null のままにする。",
+  "schema_version": "1.0",
+  "provider": "better-stack",
+  "application_state": "pending_credentials",
+  "applied_at": null,
+  "monitor": {
+    "local_id": "hub-health",
+    "external_id": null,
+    "request": {
+      "method": "POST",
+      "endpoint": "https://uptime.betterstack.com/api/v2/monitors",
+      "payload": {
+        "pronounceable_name": "Harness Hub production /health",
+        "monitor_type": "expected_status_code",
+        "url": "https://harness-hub.daishimanju.workers.dev/health",
+        "http_method": "get",
+        "check_frequency": 180,
+        "request_timeout": 10,
+        "expected_status_codes": [
+          200
+        ],
+        "verify_ssl": true,
+        "follow_redirects": false,
+        "paused": false,
+        "email": true,
+        "sms": false,
+        "call": false
+      }
+    },
+    "$comment": "3 分間隔で production /health の HTTP 200 を確認する。Turso 障害は 503、R2 障害は degraded の 200 なので、down 判定は critical dependency の停止と一致する。"
+  },
+  "heartbeat": {
+    "local_id": "hub-cron-daily",
+    "external_id": null,
+    "request": {
+      "method": "POST",
+      "endpoint": "https://uptime.betterstack.com/api/v2/heartbeats",
+      "payload": {
+        "name": "Harness Hub daily cron",
+        "period": 86400,
+        "grace": 3600,
+        "paused": false,
+        "email": true,
+        "sms": false,
+        "call": false,
+        "push": true
+      }
+    },
+    "secret_binding": "CRON_HEARTBEAT_URL",
+    "$comment": "日次 cron (0 15 * * *) の全ジョブ成功時だけ Worker が heartbeat URL を呼ぶ。URL は Cloudflare Worker secret として投入し、ファイルやログへ保存しない。"
+  },
+  "status_page": {
+    "local_id": "harness-hub-status",
+    "external_id": null,
+    "request": {
+      "method": "POST",
+      "endpoint": "https://uptime.betterstack.com/api/v2/status-pages",
+      "payload": {
+        "company_name": "Harness Hub",
+        "company_url": "https://harness-hub.daishimanju.workers.dev",
+        "subdomain": "harness-hub-daishimanju",
+        "timezone": "Tokyo",
+        "history": 30,
+        "published": true,
+        "automatic_reports": true,
+        "subscribable": false,
+        "hide_from_search_engines": true
+      }
+    },
+    "resource_local_ids": [
+      "hub-health"
+    ],
+    "resource_request": {
+      "method": "POST",
+      "endpoint_template": "https://uptime.betterstack.com/api/v2/status-pages/{status_page_id}/resources",
+      "payload_template": {
+        "resource_id": "{monitor_id}",
+        "resource_type": "Monitor",
+        "public_name": "Harness Hub",
+        "widget_type": "history",
+        "mark_as_down_for": "any_incident",
+        "mark_as_degraded_for": "no_incident"
+      }
+    },
+    "$comment": "monitor 作成後に status page resource API で hub-health を関連付ける。月次の外形監視履歴を SLO ダッシュボードの一面として使う。"
+  }
+}

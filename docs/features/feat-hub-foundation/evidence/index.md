@@ -22,7 +22,7 @@ collected_at: "2026-07-21"
 | E3 duplicate implementation scan（0 件） | [duplicate-scan.json](duplicate-scan.json) | P09 | `node scripts/ci/check-shared-layer-duplicates.mjs --json <path>` |
 | E4 CI（test→deploy 完走） | [ci-run.md](ci-run.md)（**2026-07-25 に確定**。run 30143422049 で deploy まで success） | P06/P13 | `gh run view 30143422049 --json jobs` |
 | E5 bundle サイズ計測 | [bundle-report.json](bundle-report.json)（0.952 MiB / dry-run）／[deploy-2026-07-25.json](deploy-2026-07-25.json)（**1.010 MiB / 本番実デプロイ**） | P06/P13 | `pnpm --filter @harness-hub/hub run build:worker && pnpm --filter @harness-hub/hub run check:bundle` |
-| E6 SLO 計測 / `/health` 稼働 | [health-response.json](health-response.json)（2026-07-21 手動計測）／[deploy-2026-07-25.json](deploy-2026-07-25.json)（本番デプロイ直後の CI 内計測）。**SLO 時系列は未取得** | P06/P13 | 外形監視設定後に月次時系列を取得 |
+| E6 SLO 計測 / `/health` 稼働 | [health-response.json](health-response.json)（2026-07-21 手動計測）／[deploy-2026-07-25.json](deploy-2026-07-25.json)（本番デプロイ直後の CI 内計測）／設定正本 `apps/hub/monitoring/better-stack.monitors.json`・`slo-dashboard.json`（2026-07-25 追記・**未適用**）。**SLO 時系列は未取得** | P06/P13 | 設定の回帰: `pnpm --filter @harness-hub/hub exec vitest run tests/monitoring` / 実測: 外形監視を適用後に月次時系列を取得 |
 | E7 本番デプロイ実績（P13） | [deploy-2026-07-25.json](deploy-2026-07-25.json) | P13 | `gh run view 30143422049` ／ [../release-notes.md](../release-notes.md) |
 | — pnpm 混入検査 | [pnpm-only-scan.json](pnpm-only-scan.json) | P09 | `node scripts/ci/check-pnpm-only.mjs --json <path>` |
 
@@ -58,7 +58,7 @@ collected_at: "2026-07-21"
 | 証跡 | 理由 | 解除条件 |
 |---|---|---|
 | ~~E4 CI deploy~~ | ~~feature branch CI は test まで success だが deploy は main 限定で skip~~ → **2026-07-25 解除**。run 30143422049（`main` / `ec0f3e45`）で 3 job すべて success（[ci-run.md](ci-run.md) §確定 run） | — |
-| E6 月次 SLO | 実 HTTP `/health` は 200 だが、外形監視の時系列が無い | Better Stack 3 分間隔監視を開始し 1 か月集計 |
+| E6 月次 SLO | 実 HTTP `/health` は 200、監視・SLO の設定正本も 2026-07-25 に確定したが、**Better Stack への適用が未実施**（`application_state: pending_credentials`）で時系列が無い | 設定正本を適用して `external_id` / `applied_at` を記録し、3 分間隔監視を開始して 1 か月集計（`HarnessHub-37h.15`） |
 | G11 実 CWV | workflow はあるが production 実測値を未取得 | `HUB_PUBLIC_URL` 設定後の定期 run |
 | restore drill | `backup.yml` と手順は実装済みだが、四半期 drill は未実行 | 一時 DB への復元と整合検査を実施 |
 | ~~cron trigger~~ | ~~Worker handler は実装・テスト済みだが本番登録失敗~~ → **2026-07-25 解除**。上限 5 本が**アカウント単位**（エラー `10072`）と判明し、他プロジェクトの cron を削除して枠を解放。`0 15 * * *` / `0 0 * * 1` の 2 本が登録済み（使用 2/5） | — |
