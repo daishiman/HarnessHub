@@ -523,8 +523,8 @@ export function listSheets(ctx: TenantCtx, cursor?: string): Promise<Sheet[]>  /
 |---|---|---|---|
 | `AUTH_SECRET` | Auth.js JWT 署名鍵 | §2.1 | 年 1 回 (全 session 失効を伴う) |
 | `ENCRYPTION_KEK` | 封筒暗号化の KEK | §4.1 | 年 1 回 (DEK re-wrap のみ) |
-| `TURSO_AUTH_TOKEN` | Turso 接続 | DB | 年 1 回 |
-| `R2_ACCESS_KEY` / `R2_SECRET_KEY` | R2 接続 (Workers binding 利用時は不要) | package/backup | 年 1 回 |
+| `TURSO_AUTH_TOKEN` | Turso **DB 接続** token。CI の migrate/smoke も同名を使う。Platform API token (`TURSO_API_TOKEN`・`backup.yml` 専用) とは別物で相互流用しない | DB | 年 1 回 |
+| ~~`R2_ACCESS_KEY` / `R2_SECRET_KEY`~~ | **2026-07-25 廃止**。R2 は Workers binding + `wrangler` 経路のみとし専用キーを発行しない (infrastructure-spec §7 台帳と同期) | — | — |
 | `RESEND_API_KEY` | メール送信 | §4.6 | 年 1 回 |
 
 - **DB に入る secret**: テナント IdP client_secret のみ (封筒暗号化・§4.3)。

@@ -19,7 +19,7 @@ consumes: [docs/features/feat-domain-model-db/evidence-summary.md, docs/backend-
 - **補完経路 (手動/検証用)**: 本 feature の export CLI。成果物は決定論的 JSONL で、salary / client_secret_enc は**暗号文のまま**転写される (復号処理が export 経路に存在しないため、平文はどの断面にも現れない)。
   ```bash
   # 認証トークンは argv (プロセス一覧に見えるコマンド引数) へ載せず、環境変数で渡す
-  pnpm --filter @harness-hub/db run export:control-plane -- \
+  pnpm --filter @harness-hub/db exec tsx scripts/export-control-plane.ts \
     --url "$TURSO_DATABASE_URL" --out export.jsonl
   ```
 - **Workers cron ジョブ**: `packages/db/cron/export-daily.ts` の `createDailyExportJob()` (feat-hub-foundation の CronJob 契約と構造互換)。apps/hub の cron registry への配線は消費側 feature の統合作業として行う。
@@ -30,19 +30,50 @@ consumes: [docs/features/feat-domain-model-db/evidence-summary.md, docs/backend-
 常設 staging は持たない (qa-038)。**一時 DB を都度作成して使い捨てる**。
 
 ```bash
-# 1) 一時 DB を作成 (本番とは別インスタンス)
-turso db create harness-hub-drill-$(date +%Y%m%d)
-# 2) 最新 export を取得 (backup.yml 経路の場合は R2 から download して展開)
-# 3) restore CLI — migration 適用 → 全行復元 → 行数一致 → audit chain 検証 → 暗号断面検査 を一括実行
-TURSO_AUTH_TOKEN="$DRILL_AUTH_TOKEN" pnpm --filter @harness-hub/db run restore:control-plane -- \
+# 1) backup.yml が作った最新 SQL dump を R2 から取得して展開
+#    LATEST_OBJECT_KEY の日付は R2 一覧で最新の成功日を選ぶ
+LATEST_OBJECT_KEY="db-export/YYYY/YYYY-MM-DD.sql.gz"
+pnpm --filter @harness-hub/hub exec wrangler r2 object get \
+  "harness-hub-backups/$LATEST_OBJECT_KEY" --file latest.sql.gz --remote
+gzip -dc latest.sql.gz > latest.sql
+
+# 2) 一時 DB を作り、SQL dump を標準入力から直接 restore
+#    `turso db create --from-dump` でなく、この経路の完走を成功条件にする
+DRILL_DB_NAME="harness-hub-drill-$(date +%Y%m%d)"
+turso db create "$DRILL_DB_NAME" --wait
+turso db shell "$DRILL_DB_NAME" < latest.sql
+
+# 3) 復元 DB を独立クエリで確認 (baseline は domain table=18 / explicit index=12)
+turso db shell "$DRILL_DB_NAME" \
+  "SELECT count(*) AS domain_tables FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name <> '__drizzle_migrations';
+   SELECT count(*) AS explicit_indexes FROM sqlite_master WHERE type='index' AND sql IS NOT NULL;"
+
+# 4) 復元 DB から JSONL を再 export し、ローカル空 DB への round-trip で
+#    行数一致 / audit chain / salary・secret の暗号断面まで検証
+DRILL_DATABASE_URL="$(turso db show "$DRILL_DB_NAME" --url)"
+DRILL_AUTH_TOKEN="$(turso db tokens create "$DRILL_DB_NAME")"
+TURSO_AUTH_TOKEN="$DRILL_AUTH_TOKEN" pnpm --filter @harness-hub/db exec tsx scripts/export-control-plane.ts \
+  --url "$DRILL_DATABASE_URL" --out drill-export.jsonl
+LOCAL_VERIFY_DB="file:$(mktemp -d)/drill-verify.db"
+pnpm --filter @harness-hub/db exec tsx scripts/restore-control-plane.ts \
+  --url "$LOCAL_VERIFY_DB" \
+  --in drill-export.jsonl
+# exit 0 = drill 成功。いずれか exit 1 ならそのバックアップを成功と数えない
+
+# 5) 一時 DB を破棄
+turso db destroy "$DRILL_DB_NAME" --yes
+```
+
+日次 SQL dump ではなく、§1 の手動 JSONL export だけを単独検証するときは次の短縮経路も使える。
+
+```bash
+TURSO_AUTH_TOKEN="$DRILL_AUTH_TOKEN" pnpm --filter @harness-hub/db exec tsx scripts/restore-control-plane.ts \
   --url "$DRILL_DATABASE_URL" \
-  --in export.jsonl --migrations-dir packages/db/migrations
-# exit 0 = drill 成功。exit 1 = そのバックアップを成功と数えない (原因調査へ)
-# 4) 一時 DB を破棄
-turso db destroy harness-hub-drill-YYYYMMDD --yes
+  --in export.jsonl
 ```
 
 - 検証順序は ADR §9 のとおり CLI 内部で強制される: header 検証 → schema 適用 → insert → 行数一致 → audit chain 全体検証 → salary/secret 暗号断面検査。
+- SQL dump の復元は 2026-07-25 に本番 dump で実走し、直接 `turso db shell <name> < dump.sql` なら 18 table / 12 index を復元できることを確認した。同じ dump を `turso db create --from-dump` へ渡す経路は Turso CLI 1.0.30 で 0 table のまま成功表示になったため採らない。
 - ローカルでの手順予行は `--url file:/tmp/drill.db` で同一コマンドが動く (DMDB-T12 が CI で毎 PR 検証)。
 
 ## 3. migration 積み増し手順 (Studio 拡張 feature 向け)

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 548,
+  "graph_revision": 551,
   "nodes": [
     {
       "acceptance": [
@@ -34158,6 +34158,356 @@
       "title": "OR-003 残置 51 件がローカル品質ゲートで恒常 exit 2 / CI では beads 軸未評価のため素通りする",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T03:04:12.728493Z"
+    },
+    {
+      "acceptance": [
+        "gh api repos/daishiman/HarnessHub/actions/secrets が必要な secret を返す",
+        "hub-backup の直近 run が success で R2 に export が存在する",
+        "main への push で hub-ci の deploy job が migration 適用 → deploy → smoke を完走する",
+        "secret 名が backup.yml / ci.yml / runbook で一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-fnzl",
+        "linked_at": "2026-07-25T00:43:40Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/actions-secrets-missing-20260725.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "SYS-DOMAIN-MODEL-DB-P13 のリリース検証中に実測した F-1 / F-4。feature の実装欠陥ではなくリポジトリ運用設定の欠落であり、独立 issue として切り出す",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [
+          ".github/workflows/backup.yml",
+          ".github/workflows/ci.yml",
+          "docs/features/feat-hub-foundation/runbook.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-25T04:09:04Z",
+        "source": null,
+        "status": "blocked"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T00:41:30Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/actions-secrets-missing-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "hub-ci の deploy job と hub-backup が secret 欠落で中止されず完走し、必要な secret 名の一覧が runbook から一意に引ける状態",
+      "graph_node_id": "issue-actions-secrets-missing-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T00:41:30Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "critical",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "CI が本番へ migration を適用し deploy し、日次 backup が実際に走る前提 (secret / variable) をリポジトリへ投入し、名前の系統を 1 つに揃える",
+      "related_nodes": [
+        "SYS-DOMAIN-MODEL-DB-P13"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/backup.yml",
+        "docs/features/feat-hub-foundation/runbook.md"
+      ],
+      "scope_in": [
+        "GitHub Actions repository secret / variable の投入 (TURSO_*, CLOUDFLARE_*, HUB_HEALTH_URL)",
+        "backup.yml の TURSO_DATABASE_NAME と ci.yml の TURSO_DATABASE_URL の名前系統の統一",
+        "foundation runbook へ GitHub Actions secret 一覧節の追加",
+        "投入後に hub-backup を手動 dispatch し 1 回 green を実測"
+      ],
+      "scope_out": [
+        "Turso / Cloudflare のアカウント設計そのものの変更",
+        "backup 保持世代・cron 時刻の再設計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T00:41:30Z",
+        "origin_kind": "generated",
+        "source_digest": "a3ff8e3653e08fdd5d1f62d199b0b054aedf7a0c31ca8694fb3e3694862f4c22",
+        "source_path": "docs/features/feat-domain-model-db/release-record.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "blocked",
+      "tags": [
+        "ci",
+        "deploy",
+        "backup",
+        "secrets",
+        "turso",
+        "cloudflare",
+        "fail-closed"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "GitHub Actions の Turso secrets が未登録で deploy migration と日次 backup が失敗する (secret 名の系統も二重)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T06:40:00Z"
+    },
+    {
+      "acceptance": [
+        "backup.yml が deploy token を参照しておらず、R2 write 権限のみを持つ token で完走する",
+        "deploy 用 token で R2 バケットへ書き込もうとすると権限エラーになることを実測する",
+        "docs/infrastructure-spec.md §7 の残存リスク節から本 issue の未達記述が消えている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-bda4",
+        "linked_at": "2026-07-25T06:16:36Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ci-token-least-privilege-20260725.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "SYS-DOMAIN-MODEL-DB-P13 の finding F-8。backup.yml の secret 設計は P13 の resource_scope 外であり、かつ docs/infrastructure-spec.md §7 の推奨に対する未達なので別 issue として切り出す",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T05:50:00Z",
+      "depends_on": [
+        "issue-actions-secrets-missing-20260725"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ci-token-least-privilege-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "backup.yml が R2 write 専用 token を使い、ci.yml の deploy token では R2 バケットへ書き込めない状態にして、infrastructure-spec §7 の 2 token 推奨を実装が満たす",
+      "graph_node_id": "issue-ci-token-least-privilege-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T05:50:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "CI/CD の Cloudflare token が漏洩した場合の影響範囲を、Workers deploy と R2 write のどちらか一方に閉じ込める",
+      "related_nodes": [
+        "SYS-DOMAIN-MODEL-DB-P13"
+      ],
+      "resource_scope": [
+        ".github/workflows/backup.yml",
+        "docs/features/feat-hub-foundation/runbook.md"
+      ],
+      "scope_in": [
+        "Cloudflare API token を deploy 用 (Workers Scripts Edit) と backup 用 (R2 Write に限定) の 2 本へ分割発行",
+        "backup.yml の CLOUDFLARE_API_TOKEN 参照を R2 専用 secret 名へ差し替え",
+        "docs/infrastructure-spec.md §7 の secret 台帳と残存リスク節の更新",
+        "docs/features/feat-hub-foundation/runbook.md の secret 投入手順の更新",
+        "分割後に hub-backup を手動 dispatch して 1 回 green を実測"
+      ],
+      "scope_out": [
+        "Turso token の分割 (DB 接続 token と Platform API token は既に分離済み)",
+        "R2 S3 互換アクセスキー方式への差し戻し",
+        "backup / restore の設計そのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T05:50:00Z",
+        "origin_kind": "generated",
+        "source_digest": "a3ff8e3653e08fdd5d1f62d199b0b054aedf7a0c31ca8694fb3e3694862f4c22",
+        "source_path": "docs/features/feat-domain-model-db/release-record.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "security",
+        "secret",
+        "least-privilege",
+        "cloudflare",
+        "github-actions",
+        "r2"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "CLOUDFLARE_API_TOKEN 1 本を deploy と R2 write で共用しており最小権限分離が未達",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T06:40:00Z"
+    },
+    {
+      "acceptance": [
+        "runbook §1/§2 のコマンドをコピー&ペーストで実行して export と restore が成功する",
+        "誤りのある -- --url 形式と相対 --migrations-dir がリポジトリ内の文書から消えている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-0yvi",
+        "linked_at": "2026-07-25T00:44:10Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/runbook-cli-invocation-broken-20260725.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "SYS-DOMAIN-MODEL-DB-P13 の四半期 restore drill 実走中に踏んだ F-2 / F-3。runbook は P13 の resource_scope 外のため別 issue として切り出す",
+      "completion_evidence": {
+        "completed_at": "2026-07-25T03:26:51Z",
+        "evidence_refs": [
+          "docs/features/feat-domain-model-db/runbook.md",
+          "docs/features/feat-domain-model-db/refactoring-migration-note.md",
+          "packages/db/__tests__/backup-restore.test.ts"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-25T03:26:51Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T00:41:30Z",
+      "depends_on": [],
+      "domain": "operations",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/runbook-cli-invocation-broken-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "runbook §1/§2 のコマンドが pnpm 10.9.0 の実環境で 1 回で通り、書かれた手順と実行可能な手順が一致する",
+      "graph_node_id": "issue-runbook-cli-invocation-broken-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T00:41:30Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "四半期 restore drill と障害時の手動 export/restore を、runbook に書かれたコマンドをそのまま貼るだけで実行できる状態にする",
+      "related_nodes": [
+        "SYS-DOMAIN-MODEL-DB-P13"
+      ],
+      "resource_scope": [
+        "docs/features/feat-domain-model-db/runbook.md",
+        "docs/features/feat-domain-model-db/refactoring-migration-note.md"
+      ],
+      "scope_in": [
+        "runbook §1/§2 の pnpm run -- --url 形式を pnpm exec tsx 形式へ修正",
+        "restore の --migrations-dir 相対パス記述の削除または絶対解決への修正",
+        "refactoring-migration-note.md の同形記述の修正",
+        "修正後コマンドの実走確認"
+      ],
+      "scope_out": [
+        "CLI スクリプト側の引数パーサ仕様変更",
+        "backup/restore の設計そのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T00:41:30Z",
+        "origin_kind": "generated",
+        "source_digest": "a3ff8e3653e08fdd5d1f62d199b0b054aedf7a0c31ca8694fb3e3694862f4c22",
+        "source_path": "docs/features/feat-domain-model-db/release-record.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "runbook",
+        "backup",
+        "restore",
+        "pnpm",
+        "cli",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "runbook の export/restore 手動コマンドが pnpm 10.9.0 と cwd 差でそのままでは実行できない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T06:40:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

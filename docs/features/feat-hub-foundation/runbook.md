@@ -31,9 +31,14 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 # 1. Cloudflare 認証
 wrangler login
 
-# 2. GitHub Secrets / Variables（CI の deploy job が参照）
-gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy 権限
+# 2. GitHub Secrets / Variables（CI の deploy job と日次 backup job が参照）
+gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy + R2 Storage 編集権限
 gh secret set CLOUDFLARE_ACCOUNT_ID
+gh secret set TURSO_DATABASE_URL        # migration / 本番 smoke 用
+gh secret set TURSO_AUTH_TOKEN          # migration / 本番 smoke 用の DB 接続 token
+gh secret set TURSO_API_TOKEN           # backup の turso CLI 用 Platform API token
+gh secret set TURSO_DATABASE_NAME       # backup の turso db shell 用（例: harness-hub-prod）
+gh secret set BACKUP_HEARTBEAT_URL      # 任意。未設定なら backup cron 失敗の外形監視なし
 gh variable set HUB_HEALTH_URL --body "https://hub.<domain>/health"
 
 # 3. Worker secret（wrangler 経由。コード・DB に平文を置かない）
@@ -121,9 +126,9 @@ curl -s -X PUT -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
 ## 6. バックアップと restore drill（RPO ≤ 24h / RTO ≤ 4h）
 
 **手順**:
-1. 新 Turso DB を作成
-2. R2 `harness-hub-backups` の最新 dump を restore
-3. secret の URL/token を差し替え
+1. [domain-model DB runbook §2](../feat-domain-model-db/runbook.md#2-四半期-restore-drill-qa-019-復元できないバックアップを成功と数えない) に従い、R2 の最新 SQL dump を新 Turso DB へ標準入力から restore
+2. 18 domain table / 12 explicit index と、JSONL round-trip の行数・audit chain・暗号断面を確認
+3. 障害復旧時だけ Worker secret の URL/token を復元 DB へ差し替え
 4. `/health` で確認
 
 **四半期ごとの restore drill**: 一時 DB へ実際に restore し、**行数・整合検査まで実施する**。
