@@ -1,14 +1,15 @@
 // DMDB-T06 / DMDB-T12: 日次 export → 別 DB restore round-trip (acceptance A3 / qa-019)。
 // salary/secret の暗号断面維持、壊れた artifact の fail-closed、CLI 経由の round-trip を含む。
 
-import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { chmodSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { exportControlPlane, parseExportArtifact, restoreControlPlane } from '@harness-hub/db/backup';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import type { TursoAdapter } from '../connection/turso';
+import { createTursoClient, type TursoAdapter } from '../connection/turso';
 import { ENCRYPTED_COLUMN_PATTERN } from '../repository/crypto';
+import { createTenantsRepo } from '../repository/tenants';
 import { seedTwoTenants, type TwoTenantsFixture } from './fixtures/two-tenants';
 import { schemaDdl } from './support/schema-harness';
 import { asCore, createLibsqlTestDb, testCipher } from './support/test-db';
@@ -161,5 +162,107 @@ describe('DMDB-T12 CLI 経由の round-trip (executable-export-restore-ci-fixtur
     const report = JSON.parse(restoreOut.trim().split('\n').at(-1) as string);
     expect(report.ok).toBe(true);
     expect(report.chainOk).toBe(true);
+  }, 120_000);
+});
+
+describe('P13 production migration / smoke CLI', () => {
+  const runCli = (script: string, args: string[], env: NodeJS.ProcessEnv = process.env) =>
+    execFileSync(process.execPath, ['--import', 'tsx', script, ...args], {
+      cwd: join(import.meta.dirname, '..'),
+      encoding: 'utf8',
+      env,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+  it('migration は dry-run → 初回適用 → 再適用を台帳どおり冪等に処理する', () => {
+    const dbPath = join(workDir, 'p13-migration.db');
+    const url = `file:${dbPath}`;
+    const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 1, applied: 0, pending: 1 });
+
+    const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 1 });
+
+    const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
+    expect(second).toMatchObject({ ok: true, appliedBefore: 1, appliedAfter: 1 });
+    // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
+    // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
+  }, 120_000);
+
+  it('R2 バケット未指定では 6 項目を満たしたことにせず usage error で止まる', () => {
+    const result = spawnSync(
+      process.execPath,
+      ['--import', 'tsx', 'scripts/smoke-production.ts', '--url', `file:${join(workDir, 'missing-r2.db')}`],
+      {
+        cwd: join(import.meta.dirname, '..'),
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    );
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain('--r2-bucket <name>');
+  }, 60_000);
+
+  it('6 項目をローカル DB + R2 CLI stub で完走し、既存データを残して検証データだけを削除する', async () => {
+    const dbPath = join(workDir, 'p13-smoke.db');
+    const url = `file:${dbPath}`;
+    runCli('scripts/migrate-deploy.ts', ['--url', url]);
+
+    const before = createTursoClient({ url });
+    try {
+      await createTenantsRepo(before).create({ slug: 'existing-production-tenant', name: 'existing', plan: 'free' });
+    } finally {
+      before.close();
+    }
+
+    const r2Dir = join(workDir, 'fake-r2');
+    const fakeWrangler = join(workDir, 'wrangler-stub.mjs');
+    writeFileSync(
+      fakeWrangler,
+      `#!/usr/bin/env node
+import { copyFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+const args = process.argv.slice(2);
+const operation = args[2];
+const objectPath = args[3];
+const store = process.env.FAKE_R2_DIR;
+if (!store || !objectPath) process.exit(2);
+mkdirSync(store, { recursive: true });
+const stored = join(store, Buffer.from(objectPath).toString('hex'));
+const fileIndex = args.indexOf('--file');
+const file = fileIndex >= 0 ? args[fileIndex + 1] : undefined;
+if (operation === 'put' && file) copyFileSync(file, stored);
+else if (operation === 'get' && file && existsSync(stored)) copyFileSync(stored, file);
+else if (operation === 'delete') rmSync(stored, { force: true });
+else process.exit(1);
+`,
+      'utf8',
+    );
+    chmodSync(fakeWrangler, 0o755);
+
+    const output = runCli('scripts/smoke-production.ts', ['--url', url, '--r2-bucket', 'p13-test'], {
+      ...process.env,
+      FAKE_R2_DIR: r2Dir,
+      WRANGLER_BIN: fakeWrangler,
+    });
+    const report = JSON.parse(output) as {
+      ok: boolean;
+      checks: { id: string; ok: boolean }[];
+      cleanup: { clean: boolean; remainingRows: number };
+    };
+    expect(report.ok).toBe(true);
+    expect(report.checks.map((check) => check.id)).toStrictEqual(['S1', 'S2', 'S3', 'S4', 'S5', 'S6']);
+    expect(report.checks.every((check) => check.ok)).toBe(true);
+    expect(report.cleanup).toMatchObject({ clean: true, remainingRows: 0 });
+    expect(readdirSync(r2Dir)).toStrictEqual([]);
+
+    const after = createTursoClient({ url });
+    try {
+      expect((await createTenantsRepo(after).list()).map((tenant) => tenant.slug)).toStrictEqual([
+        'existing-production-tenant',
+      ]);
+    } finally {
+      after.close();
+    }
   }, 120_000);
 });

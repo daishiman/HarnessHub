@@ -100,6 +100,12 @@ eval-log/dev-graph/**/.verify-*.json
 # runtime 揮発状態 (期限切れ lock receipt / stderr capture の空残骸)。
 .dev-graph/locks/expired-lock-receipts/
 .dev-graph/cache/projections/*.err
+# upsert-node.py は authority root 外の入力 path を拒否するため、node envelope の一時 JSON /
+# body markdown は repo 内 (.dev-graph/tmp/) に置くしかない。かつ guard-graph-schema.py が
+# .dev-graph 配下の rm/mv を間接 mutation として遮断するので shell 掃除もできない。
+# 追跡対象にすると受領書ビルダー (scripts/build-spec-reflection-receipt.py) の
+# clean-tree 検査を毎回落とすため、揮発スクラッチとして除外する。
+.dev-graph/tmp/
 plugin-plans/*/task-execution-report.html
 plugin-plans/*/.gate/
 

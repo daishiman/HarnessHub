@@ -25,7 +25,7 @@ depends_on: [SYS-HUB-FOUNDATION-P03]
 | HF-A3-HEALTH-001 | integration | A3 | `GET /health` が **200** を返す | local + preview |
 | HF-A3-HEALTH-002 | contract | A3 | `/health` 応答が `{status, version, checkedAt, dependencies[]}` の契約を満たし、`status` は `ok` / `degraded` / `down` のいずれか | local + CI |
 | HF-A3-HEALTH-003 | integration | A3 | 依存先が不通のとき `status` が `ok` 以外になり、HTTP は 200（監視は body で判定）または 503 を返す | local + CI |
-| HF-A3-SLO-001 | integration | A3 | 外形監視（Better Stack Free / 3 分間隔）が `/health` を計測し、月次可用性 99.5% を算定できる時系列が取得できる | **外部サービス** |
+| HF-A3-SLO-001 | integration | A3 | (a) 監視・SLO の設定正本（`apps/hub/monitoring/`）が 3 分間隔・heartbeat・30 日履歴・99.5%・エラーバジェット 70/100% を保持し、**外部適用前に `applied` と月次合格を主張しない**ことを検査する。(b) 外形監視（Better Stack Free / 3 分間隔）が `/health` を実計測し、月次可用性 99.5% を算定できる時系列が取得できる | (a) local + CI / (b) **外部サービス** |
 | HF-A4-OWNER-001 | unit | A4 | shared-layers §1〜§3 の全登録層について、owner package / 公開 API / consumer の一覧が生成でき、owner 未定義の層が 0 件 | local + CI |
 | HF-A4-CONTRACT-001 | contract | A4 | `packages/ui` の公開 API を **2 系統以上の consumer** が参照し、同一実装を指していることを検証 | local + CI |
 | HF-A4-CONTRACT-002 | contract | A4 | `packages/schemas` について同上 | local + CI |
