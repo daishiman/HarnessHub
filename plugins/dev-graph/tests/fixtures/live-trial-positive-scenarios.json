@@ -96,11 +96,16 @@
       "criterion_id": "OUT1",
       "mode": "positive",
       "task_args_template": "--repo-root <contained-fixture-repo> --binding none --dry-run",
-      "fixture_contract": "A contained initialized repository holds the macro decomposition input (the want) and deliberately holds no expected feature, architecture or task node, so every produced node is attributable to the skill rather than to the fixture. At least one produced feature must remain in pre-evaluation draft so the zero-issue-publication rule is exercised rather than holding vacuously.",
+      "fixture_contract": "A contained initialized repository holds the macro decomposition input (the want) and deliberately holds no expected feature, architecture or task node, so every produced node is attributable to the skill rather than to the fixture. At least one produced feature must remain in pre-evaluation draft so the zero-issue-publication rule is exercised rather than holding vacuously. The run must additionally promote at least one produced feature to confirmed with evaluation-pass while its implementation_readiness stays incomplete, so the publication-candidate gate has to evaluate readiness and exclude it; a candidate set that is empty only because every node is draft leaves the readiness condition untested and does not satisfy the contract. Promotion is performed on the produced preview nodes during the run, never seeded by the fixture, so node attribution is preserved.",
+      "declared_granularity_threshold": {
+        "metric": "max_inter_feature_depends_on_per_feature",
+        "max_value": 3,
+        "rationale": "macro 分解の粒度は「1 feature が兄弟 feature へ何本依存するか」で測る。observation 1 の文面 (inter-feature depends_on) に直接対応し、preview graph の node 単位で機械測定できるため、総数や比率のようにグラフ全体へ均されて個別異常が埋もれることがない。値 3 の根拠: macro 分解が生む feature は通常 2-6 件で、ある feature が 4 件以上の兄弟へ依存する状態は「兄弟のほぼ全部に依存している」ことを意味し、feature 境界の切り方が task 粒度まで細かくなった兆候。現行 fixture の正常系は最大 fan-out 1 (feat-dashboard-001 -> feat-user-auth-001 の 1 本のみ) なので 3 なら正常系が余裕で収まり、かつ過剰分解は確実に超える。緩めると閾値が有名無実になり、2 以下にすると正当な macro 分解まで落ちる。"
+      },
       "required_observations": [
-        "the produced feature and architecture nodes form an acyclic DAG whose inter-feature depends_on stays within the declared granularity threshold",
+        "the produced feature and architecture nodes form an acyclic DAG whose inter-feature depends_on stays within declared_granularity_threshold.max_value measured by declared_granularity_threshold.metric",
         "pre-evaluation draft features publish zero issues on every binding",
-        "only features promoted to confirmed, evaluation-pass and readiness-complete become publication candidates",
+        "a produced feature promoted to confirmed and evaluation-pass but left readiness-incomplete is excluded from publication candidates, so only confirmed, evaluation-pass and readiness-complete features become candidates",
         "the dry run reports local, Beads, GitHub and Projects write counts of zero, and the preview graph is validated through the stdin path so no temporary file is created inside the managed repository"
       ]
     },
