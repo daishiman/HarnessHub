@@ -12,8 +12,8 @@ iteration: null
 title: "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化"
 owners: ["daishiman"]
 created_at: "2026-07-22T04:16:31Z"
-updated_at: "2026-07-23T11:17:44.611957Z"
-status: "closed"
+updated_at: "2026-07-24T07:22:00Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"]

@@ -77,9 +77,23 @@
   "pull_request": {
     "number": 41,
     "url": "https://github.com/daishiman/HarnessHub/pull/41",
-    "state": "draft",
-    "merge_commit": null,
-    "note": "2026-07-23 に main 向け draft PR #41 を作成。merge commit・最終 done 確定は人手 merge 後。live-trial 再 trial (kj1/2n6) 完了までは governance-check / harness-creator-kit-ci が赤のため draft"
+    "state": "merged",
+    "merge_commit": "b655e22db768f38fb044cb24482807ce35ec00f5",
+    "merged_at": "2026-07-23T04:02:24Z",
+    "ci_checks": {
+      "verify": "SUCCESS",
+      "dev-pipeline-lint": "SUCCESS",
+      "change-category-guard": "SUCCESS",
+      "check": "SUCCESS"
+    },
+    "note": "2026-07-23 に PR #41 が main へ merge (CI 4 check 全 SUCCESS)。2026-07-24 に C26 reconcile-github-lifecycle を gh:pr gate + C02 apply-lifecycle-request 経由で実走し、SYS-DEV-PIPELINE-IMPROVEMENT-P13 を durable done へ確定 (graph_revision 491)、HarnessHub-k2u.13 を beads close。close-loop 機構の初の実走完了"
+  },
+  "completion_reconciliation": {
+    "reconciled_at": "2026-07-24T07:07:52Z",
+    "event_key": "daishiman/HarnessHub#task:SYS-DEV-PIPELINE-IMPROVEMENT-P13#policy:316a4db9479c8c6cad67e27ec6de26e352280780af370427ec51d6f2729eb54c",
+    "steps": {"c02_writer": "applied", "completion_event": "applied", "system_release": "not_applicable", "beads_close": "applied"},
+    "linkage": "gh:pr gate (bd-bridge gate-add HarnessHub-k2u.13 <-> PR #41)",
+    "worktree": "clean main @ 8d802c23095c896c0b129708f375d9e341ec8873 (synced origin/main)"
   },
   "known_residual": {
     "live_trial_stale": {
@@ -87,10 +101,14 @@
       "cause": "本ブランチの system-dev-planner 変更 (goal-seek: SKILL.md/R3-emit.md/validate-system-plan.py/build-system-handoff.py/promote-system-plan.py) がこれら dev-graph skill の behavior closure に含まれ、live-trial verdict の skill_dir_tree_sha を stale 化",
       "tracked_by": ["HarnessHub-kj1", "HarnessHub-2n6"],
       "resolution": "merge 前に run-skill-live-trial で 3 skill を再 trial (digest 単独書き換えは forge であり禁止)",
-      "ci_impact": "governance-check (lint-live-trial-verdict --all) と harness-creator-kit-ci (criteria pytest) が再 trial まで赤"
+      "ci_impact": "governance-check (lint-live-trial-verdict --all) と harness-creator-kit-ci (criteria pytest) が再 trial まで赤",
+      "resolved": {
+        "resolved_at": "2026-07-24",
+        "evidence": "main 8d802c2 で lint-live-trial-verdict.py --all = 9 verdict verified / 0 stale、test_skill_criteria_evidence.py = 20 passed / 0 failed。PR #38 (2n6: 9 skill live-trial 再取得) と PR #41 統合後の実測で解消を確認"
+      }
     },
     "review_minor": [
-      "sys-dev-pipeline-improvement-p05.md の scope が実在しない schema path を指す (md<->graph 一致・機能/ゲート影響なし・follow-up 予定)"
+      "sys-dev-pipeline-improvement-p05.md の scope が実在しない schema path を指す (md<->graph 一致・機能/ゲート影響なし) — 2026-07-24 に C02 upsert-node patch で正本 path (plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json) へ修正済み"
     ]
   }
 }

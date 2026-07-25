@@ -56,12 +56,14 @@ digest 単独書き換えを「`skill_dir_tree_sha` が変わり `transcript_sha
 | `validate-receipt.py` (検査 SSOT は `register-package.py` を共有) | 任意の registration receipt | 手書き/事後改変 (revision 差が +1 でない、`registered_at` の秒丸め、exact-13 不成立、digest 不一致) |
 | `run-skill-live-trial/scripts/validate-goal-seek-evidence.py` | `goal_seek` 宣言 skill (24 件) | 実行契約の省略 (成果物不在、6 キー欠落、ゴールすり替え、hash 単独書き換え) |
 | `lint-live-trial-verdict.py --check-provenance` (`dst`) | git commit 差分 | digest 単独書き換え |
+| `lint-live-trial-verdict.py` の `check_c02_bypass` (`aoe` 是正案 b / `scripts/receiptguard_helper.py`) | verdict に**束縛済みの** transcript の tool_use (`.gitignore` された fixture 内も含む) | registration receipt を `register-package.py` を通さず書換え/削除する **C02 (単一 graph writer) 迂回** (局面 3 の実手口)。verdict 生成側の最終ゲート (`check_verdict`) から呼ばれる |
 
 ### 2.1 それぞれの限界 (重要)
 
 | 入口 | 効かない範囲 |
 |---|---|
-| `--check-provenance` | **fixture は `.gitignore` されており対象外**。局面 3 の偽造はここを通った |
+| `--check-provenance` | **fixture は `.gitignore` されており対象外**。局面 3 の偽造 (fixture 内 receipt 手書き) が通った経路そのものは `check_c02_bypass` が verdict ゲートで別途塞いだが、`--check-provenance` 自体は依然 fixture を見ない (commit 差分ベース) |
+| `check_c02_bypass` | **列挙式 denylist** (`_RECEIPT_MUTATORS`) と単一指標 (transcript の tool_use) 依存。列挙外の書込み経路 (未知のシェル構文・別スクリプト経由の間接書込み・別名生成後の rename) と、tui 層/transcript 不在の run は素通りする (教訓 A: 経路が 1 本なら盲点も 1 つに集約する)。ただし jsonl 層の transcript 不在・改竄は `check_verdict` の束縛検査が別途 fail-closed で塞ぐ |
 | `validate-receipt` | 手口を知った上での回避は可能 (revision を +1 にし小数秒を付ければ通る)。あくまで**素朴な偽造**の検出 |
 | `validate-goal-seek-evidence` | 成果物ベース。transcript の tool_use までは見ていない |
 

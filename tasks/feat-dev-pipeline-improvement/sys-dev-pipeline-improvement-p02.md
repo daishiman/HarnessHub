@@ -12,8 +12,8 @@ iteration: null
 title: "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計"
 owners: ["daishiman"]
 created_at: "2026-07-22T04:16:31Z"
-updated_at: "2026-07-23T11:18:02.411985Z"
-status: "closed"
+updated_at: "2026-07-24T07:22:00Z"
+status: "done"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P01"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/design.md"]

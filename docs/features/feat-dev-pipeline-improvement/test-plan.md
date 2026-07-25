@@ -97,7 +97,7 @@ python3 -m pytest plugins/dev-graph/tests/test_lint_open_residue.py \
 
 | test ID | 検証内容 |
 |---|---|
-| `EL-C01` | script 内の凍結 allowlist `_FROZEN_RESIDUE` が 40 件であり、全件が実リポジトリの `git ls-files eval-log` 直下に実在する |
+| `EL-C01` | script 内の凍結 allowlist `_FROZEN_RESIDUE` が 32 件 (初回 40 件から揮発投影 8 件を追跡解除) であり、全件が実リポジトリの `git ls-files eval-log` 直下に実在する。追跡解除した 8 件は git index に存在せず `.gitignore` に一致する |
 | `EL-C02` | `--allowlist` でリストを差し替えたとき、差し替え後のリストのみが有効 (テスト用 override が本番リストへ混ざらない) |
 | `EL-C03` | 実リポジトリに対する実行が exit 0 (P08 migration 完了後の到達状態) |
 

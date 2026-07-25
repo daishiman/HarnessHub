@@ -1,0 +1,83 @@
+{
+  "epic_bd_issue_id": "HarnessHub-k2u",
+  "children": [
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+      "phase_ref": "P01",
+      "bd_issue_id": "HarnessHub-k2u.1",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+      "phase_ref": "P02",
+      "bd_issue_id": "HarnessHub-k2u.2",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
+      "phase_ref": "P03",
+      "bd_issue_id": "HarnessHub-k2u.3",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
+      "phase_ref": "P04",
+      "bd_issue_id": "HarnessHub-k2u.4",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+      "phase_ref": "P05",
+      "bd_issue_id": "HarnessHub-k2u.5",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+      "phase_ref": "P06",
+      "bd_issue_id": "HarnessHub-k2u.6",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+      "phase_ref": "P07",
+      "bd_issue_id": "HarnessHub-k2u.7",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
+      "phase_ref": "P08",
+      "bd_issue_id": "HarnessHub-k2u.8",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+      "phase_ref": "P09",
+      "bd_issue_id": "HarnessHub-k2u.9",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
+      "phase_ref": "P10",
+      "bd_issue_id": "HarnessHub-k2u.10",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+      "phase_ref": "P11",
+      "bd_issue_id": "HarnessHub-k2u.11",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+      "phase_ref": "P12",
+      "bd_issue_id": "HarnessHub-k2u.12",
+      "status": "closed"
+    },
+    {
+      "graph_node_id": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+      "phase_ref": "P13",
+      "bd_issue_id": "HarnessHub-k2u.13",
+      "status": "closed"
+    }
+  ]
+}

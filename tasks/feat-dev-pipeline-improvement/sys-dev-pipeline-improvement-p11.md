@@ -12,8 +12,8 @@ iteration: null
 title: "証跡固定 — 実測ログと digest の evidence manifest 化"
 owners: ["daishiman"]
 created_at: "2026-07-22T04:16:31Z"
-updated_at: "2026-07-23T11:20:48.885708Z"
-status: "closed"
+updated_at: "2026-07-24T07:22:00Z"
+status: "done"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P10"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"]

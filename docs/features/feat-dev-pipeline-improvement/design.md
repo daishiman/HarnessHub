@@ -104,7 +104,7 @@ architecture_refs: [arch-harness-hub-dev-workflow]
 
 ### 3.2 既存 91 件への適用方式 — ratchet (凍結 allowlist)
 
-`eval-log/` 直下の git 追跡ファイルは初回 91 件。**49 件**を再配置し、参照が残る **40 件**を凍結 allowlist、`README.md` 等 **2 件**を恒久例外とした。2026-07-22 の実測は allowlist=40、未登録直下残置=0。
+`eval-log/` 直下の git 追跡ファイルは初回 91 件。**49 件**を再配置し、参照が残る **40 件**を凍結 allowlist、`README.md` 等 **2 件**を恒久例外とした。2026-07-22 の実測は allowlist=40、未登録直下残置=0。2026-07-24 に `.gitignore` が揮発投影として除外済みの `run-dev-graph-{init,node,requirements,schedule}-{progress.json,intermediate.jsonl}` 8 件を追跡解除し、現行 allowlist は **32 件**となった (`HarnessHub-ym5`)。
 
 参照ありファイルの移動は `digest-immutability` (promoted package の再ハッシュ) と `single-writer-boundary` (`spec-state.json` の直接編集) に抵触するため、参照ゼロだけを再配置し、参照ありは凍結 allowlist へ登録する。
 
@@ -266,7 +266,7 @@ python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root .
 |---|---|
 | `choke-point-preservation` | §6 が beads mutation を `bd-bridge.py --op close` に限定し `bd close` 直呼び禁止。`guard-graph-schema.py` を緩和しない |
 | `single-writer-boundary` | §6 手順 2 が `upsert-node.py` 経由。eval-log 再配置は `spec-state.json`/graph を触らず、status 意味論は template のみ変更 |
-| `digest-immutability` | §3.2 で参照あり 40 件を凍結し digest 固定物 (`.dev-graph/plans/generations/`) の参照 path を不動。handoff findings 本文を書き換えずキー追加のみ |
+| `digest-immutability` | §3.2 で参照あり 40 件を初回凍結し、依存のない揮発投影 8 件だけを追跡解除して、残る 32 件と digest 固定物 (`.dev-graph/plans/generations/`) の参照 path を不動。handoff findings 本文を書き換えずキー追加のみ |
 | `fail-closed-lint` | §1 で exit 2 規定。§4.2 で `1.0.0` 据置回避を塞ぎ、§8 で判定不能を applied へ倒さない |
 | `no-dual-authority` | §7.1 で `status` を文書ライフサイクルへ限定し実行状態を graph 側へ一元化。§2.2 で 2 軸を別 rule 検査 |
 | `idempotent-migration` | §3.5/§4 は正しい配置・disposition 完備なら no-op。receipt が移動 0/付与 0 を記録し差分 0 に収束 (実測済み) |

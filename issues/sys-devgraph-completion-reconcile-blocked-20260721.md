@@ -12,8 +12,8 @@ iteration: null
 title: "dev-graph: task worktree から completion reconcile が実行できず PR merge が完了判定へ反映されない"
 owners: ["daishiman"]
 created_at: "2026-07-21T00:00:00Z"
-updated_at: "2026-07-21T13:16:05Z"
-status: "active"
+updated_at: "2026-07-24T09:17:34Z"
+status: "done"
 depends_on: []
 related_nodes: ["issue-hub-foundation-progress-reconcile-20260721"]
 resource_scope: ["plugins/dev-graph/scripts/reconcile-github-lifecycle.py","plugins/dev-graph/scripts/resolve-repo-context.py","plugins/dev-graph/scripts/bd-bridge.py","plugins/dev-graph/references/github-lifecycle-contract.md","plugins/dev-graph/references/git-worktree-contract.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-24T09:17:34Z","evidence_refs":["beads:HarnessHub-mhh","beads:HarnessHub-vy0","issues/sys-devgraph-completion-reconcile-blocked-20260721.md"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-24T09:17:34Z","source":"manual (graph 未登録 node のため reconcile-github-lifecycle.py 対象外。C26 live proof は HarnessHub-vy0 で取得)","status":"closed"}
 implementation_readiness: {"checked_at":"2026-07-21T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -91,8 +91,8 @@ merge 済み PR を持つ node について、`--mode check` が identity エラ
 ## 受入条件
 
 - [x] task worktree から `--mode check` が identity エラーなく判定を返す
-- [ ] merge 済み PR を持つ node の `pull_request_linkages` が空でなくなる
-- [ ] reconcile 経由で beads が `closed` へ遷移した実例が 1 件記録されている
+- [x] merge 済み PR を持つ node の `pull_request_linkages` が空でなくなる
+- [x] reconcile 経由で beads が `closed` へ遷移した実例が 1 件記録されている
 
 ## 検証証跡
 
@@ -134,11 +134,22 @@ $ python3 plugins/dev-graph/scripts/reconcile-github-lifecycle.py \
 
 `--mode check` が identity エラーではなく完全な判定を返すこと (受入条件 1)、および 1 PR が複数 task を実装する場合に `gh:pr` gate で linkage を成立させる設計 (本 issue の scope_in) が、いずれも live で成立した。
 
-## 残る外部条件
+## 2026-07-24 close-out (`HarnessHub-vy0`)
+
+`HarnessHub-mhh` の未完了だった受入条件 2・3を、後続 task `HarnessHub-vy0` で live 実証した。
+
+- 対象 node: `SYS-STAGE0-DISTRIBUTION-GATE-P01` / Beads: `HarnessHub-j71.1` / PR: `#3`
+- C28 `gate-add` で marker 無し merged PR 用の `gh:pr` gate (`HarnessHub-xfn`) を登録し、C27 `reclaim` で期限切れ lease を `released` にした。
+- clean かつ `origin/main` と同期済みの `main` で C26 reconciliation を実行し、PR #3 を `state=merged`、`merge_commit_sha=2ec0d78157b466b4af6b2693fcfc6864520160ad` として graph/task projection へ反映した。
+- `completion_evidence.status=done`、`execution_contexts[].state=released`、`HarnessHub-j71.1.status=closed` を同時に確認した。これが「reconcile 経由で Beads が closed へ収束した実例」である。
+- 対象 node 限定の sync dry-run を再実行し、`imports=[]`、`exports=[]`、`conflicts=[]`、`pending_retry=[]`、`changes=0`、`converged=true`、`write_count=0` を確認した。
+- 統合後 graph は `validate-graph-schema.py` で `valid=true`、`violations=[]`。これにより受入条件 2・3を完了とする。
+
+## 2026-07-22 時点で残っていた外部条件
 
 `pull_request_linkages` と Beads close は C02 writer を伴う durable reconcile でのみ更新する。残る条件は **worktree 条件 1 件のみ**に縮小した。
 
 - task worktree は clean だが default branch ではない (`devgraph/issue-devgraph-completion-reconcile-blocked-20260721`)
 - main worktree は `main...origin/main [behind 9]` かつ `.beads/interactions.jsonl` に未コミット変更がある。同ファイルは beads 操作のたびに更新される passive export であり、beads を使いながら clean を保つこと自体に構造的な摩擦がある
 
-既存変更を退避・上書きしてまで reconcile することは禁止し、受入条件 2・3 は未完了のまま維持する。解消手順は「main worktree で `git pull --rebase` して `origin/main` へ同期し、`.beads/interactions.jsonl` の扱いを確定したうえで `--mode reconcile` を実行する」。この操作は利用者の未コミット変更に触れるため、明示的な承認を得てから行う。
+当時は既存変更を退避・上書きしてまで reconcile することを禁止し、受入条件 2・3 を未完了のまま維持した。解消手順は「main worktree で `git pull --rebase` して `origin/main` へ同期し、`.beads/interactions.jsonl` の扱いを確定したうえで `--mode reconcile` を実行する」としていた。この外部条件は上記 `HarnessHub-vy0` の実走で解消済みである。

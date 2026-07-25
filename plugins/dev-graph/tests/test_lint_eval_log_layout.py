@@ -150,11 +150,34 @@ def test_el_evidence_dir_excluded(tmp_path: Path) -> None:
 # --- 契約 (実リポジトリ) ---
 
 def test_el_c01_real_repo_frozen_list_exists() -> None:
+    # shrink-only ratchet: 凍結時 40 件 → 2026-07-24 に run-dev-graph-*-{progress,intermediate}
+    # 8 件を追跡解除して 32 件 (HarnessHub-ym5)。この数字は減る方向にしか動かせない。
     import importlib.util
     spec = importlib.util.spec_from_file_location("lel", SCRIPT)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    assert len(mod._FROZEN_RESIDUE) == 40
+
+    repo = SCRIPT.parents[3]
+    tracked = set(subprocess.run(
+        ["git", "-C", str(repo), "ls-files", "--", "eval-log"],
+        capture_output=True, text=True, check=True,
+    ).stdout.splitlines())
+    volatile = frozenset(
+        f"eval-log/run-dev-graph-{verb}-{suffix}"
+        for verb in ("init", "node", "requirements", "schedule")
+        for suffix in ("intermediate.jsonl", "progress.json")
+    )
+
+    assert len(mod._FROZEN_RESIDUE) == 32
+    assert mod._FROZEN_RESIDUE <= tracked
+    assert mod._FROZEN_RESIDUE.isdisjoint(volatile)
+    assert tracked.isdisjoint(volatile)
+    for rel in volatile:
+        ignored = subprocess.run(
+            ["git", "-C", str(repo), "check-ignore", "--no-index", "--quiet", "--", rel],
+            check=False,
+        )
+        assert ignored.returncode == 0, f"{rel} must remain ignored"
 
 
 def test_el_c02_allowlist_override_replaces_builtin(tmp_path: Path) -> None:
