@@ -41,6 +41,19 @@ const nextConfig: NextConfig = {
       '.js': ['.ts', '.tsx', '.js'],
       '.mjs': ['.mts', '.mjs'],
     };
+    /**
+     * apps/hub は workerd 専用なので、DB package 内の Node 用 factory が同じ barrel から
+     * re-export されていても native libSQL entry を bundle graph へ入れない。
+     *
+     * Linux の clean install では native entry (`libsql/index.js`) の動的 import context が
+     * 依存 package の README/LICENSE まで JavaScript として拾い、Next webpack build が
+     * parse error になった。exact-match alias なら `@libsql/client/web` 自体は書き換えず、
+     * bare entry だけを Web 実装へ固定できる。Node CLI / DB test は Next の外なので影響しない。
+     */
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@libsql/client$': '@libsql/client/web',
+    };
     return config;
   },
   typescript: {
