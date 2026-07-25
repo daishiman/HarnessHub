@@ -26,9 +26,14 @@ def test_graph_and_publication_measurements_are_derived_from_preview() -> None:
             "graph_node_id": "feature-consumer",
             "artifact_kind": "feature",
             "depends_on": ["feature-source"],
-            "confirmation_status": "draft",
-            "evaluation_status": "pending",
-            "implementation_readiness": {"status": "incomplete"},
+            "confirmation_status": "confirmed",
+            "evaluation_status": "pass",
+            "implementation_readiness": {"status": "complete"},
+            "confirmation_evidence": {
+                "evaluator": "live-trial-lifecycle-probe",
+                "evidence_ref": "eval-log/macro-preview.json",
+                "evaluated_digest": "a" * 64,
+            },
         },
     ]
     nodes = [
@@ -57,7 +62,13 @@ def test_graph_and_publication_measurements_are_derived_from_preview() -> None:
         binding: result["count"]
         for binding, result in publication["draft_candidates"].items()
     } == {"none": 0, "beads": 0, "github": 0}
-    assert publication["readiness_probe"]["excluded_only_by_readiness"] is True
+    assert {
+        binding: result["count"]
+        for binding, result in publication["publication_candidates"].items()
+    } == {"none": 1, "beads": 1, "github": 1}
+    assert publication["lifecycle_probe"]["source"] == "actual-preview-nodes"
+    assert publication["lifecycle_probe"]["has_draft_exclusion"] is True
+    assert publication["lifecycle_probe"]["has_positive_candidate"] is True
 
 
 def test_adapter_suppression_requires_real_dry_run_receipt_shape() -> None:

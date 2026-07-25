@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0.0",
+  "task": "SYS-TASK-SPEC-TEST-STRATEGY-P11",
+  "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+  "package_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "feature_context_digest": "sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7",
+  "recorded_at": "2026-07-25T10:48:08.623010Z",
+  "git_head": "abd46e5ac2e2413235b39d77b1c1912a6fd6f262",
+  "evidence": [
+    {
+      "path": "eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.json",
+      "sha256": "sha256:4912c93d7fd965f367ad4408f91af238d74b6ae999e3d61a40cca15d2a919815",
+      "bytes": 11424,
+      "phase": "P06",
+      "description": "27 test の実行結果・カテゴリ・5 コマンドの exit code"
+    },
+    {
+      "path": "eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.xml",
+      "sha256": "sha256:899be71a966e9d25528166a75c25cb5c63a435d213979512aa28a7e0e3b11379",
+      "bytes": 5453,
+      "phase": "P06",
+      "description": "同上の junit 生ログ (test-run-p06.json の一次ソース)"
+    },
+    {
+      "path": "eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-report.json",
+      "sha256": "sha256:542565e4b5b9e849752ca2b08f7703b1ad02f2d008bb9c3df83c5179bab6a99f",
+      "bytes": 8278,
+      "phase": "P09",
+      "description": "悪性 9 ケース + 対照 1 ケースの exit code 実測と exact-13 形状不変性"
+    },
+    {
+      "path": "eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-run.xml",
+      "sha256": "sha256:6e861f7db67e2c386b785075ef11ad4f899ead805d8590fde121dddb370fd5c6",
+      "bytes": 1807,
+      "phase": "P09",
+      "description": "`-k malformed` で選択された 8 test の junit 生ログ"
+    }
+  ],
+  "subjects_under_test": [
+    {
+      "path": "plugins/system-dev-planner/scripts/validate-system-plan.py",
+      "sha256": "sha256:1df054491ebf097be9f02ed6e4a7d8c6fc7dd5dc21a029666e2531ebe770eb9a",
+      "bytes": 36361,
+      "role": "C12 promotion gate (検査の実体)"
+    },
+    {
+      "path": "plugins/system-dev-planner/schemas/task-spec-test-strategy.schema.json",
+      "sha256": "sha256:49018e8dbea8862afe40f6e47fe132bac65732708aedea656791c344897c253f",
+      "bytes": 2307,
+      "role": "4 項目の構造契約 (正本)"
+    },
+    {
+      "path": "plugins/system-dev-planner/schemas/feature-execution-package.schema.json",
+      "sha256": "sha256:41d08950a1fd35bd98022099dffd788c49c53d074c2151c04d6e29f755832efc",
+      "bytes": 2454,
+      "role": "spec_contract_version の宣言先"
+    },
+    {
+      "path": "plugins/system-dev-planner/references/system-task-spec-template.md",
+      "sha256": "sha256:3a0fd2adcd5f974051cda637024483f1f7edd10f9a9679acbeb17555c2d5f69b",
+      "bytes": 9854,
+      "role": "task spec テンプレート正本 (template_version 1.2.0)"
+    },
+    {
+      "path": "plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py",
+      "sha256": "sha256:14770d727dbf8a3e8323494a3fc4f9553e3f324a79ed5228598b5d4197b5ad1b",
+      "bytes": 14354,
+      "role": "TS-A01..A15"
+    },
+    {
+      "path": "plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py",
+      "sha256": "sha256:779d8ae82a74d09a751cc5cb243cc8febd8947b05e58d2f9c1683cdd2068be99",
+      "bytes": 9879,
+      "role": "TS-B01..B12"
+    }
+  ],
+  "source_lineage": [
+    {
+      "path": "system-spec/testing-qa.md",
+      "sha256": "sha256:fd302fb5f8f88147d8a01f02935ab31d335dafbd06cb6b391389bf2e6ab07b19",
+      "bytes": 6545,
+      "role": "仕様正本 qa-070/qa-071/qa-072/qa-073/qa-075"
+    },
+    {
+      "path": "architecture/harness-hub-testing-qa.md",
+      "sha256": "sha256:69767727ffb7185e7dc527908f7dd851d1beabbf33b8872a6c4e86ddb42185d8",
+      "bytes": 5589,
+      "role": "architecture 正本"
+    },
+    {
+      "path": "features/feat-task-spec-test-strategy.context.json",
+      "sha256": "sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7",
+      "bytes": 3996,
+      "role": "feature context (entry gate が束縛する digest)"
+    }
+  ],
+  "rerun": [
+    {
+      "id": "R-P06-tests",
+      "phase": "P06",
+      "command": "python3 -m pytest plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py --junitxml=eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.xml",
+      "expected": "27 passed / exit 0",
+      "produces": "eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.xml"
+    },
+    {
+      "id": "R-P06-regression",
+      "phase": "P06",
+      "command": "python3 -m pytest plugins/system-dev-planner/tests -q",
+      "expected": "137 passed / exit 0",
+      "produces": null
+    },
+    {
+      "id": "R-P06-validate-self",
+      "phase": "P06",
+      "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-task-spec-test-strategy",
+      "expected": "exit 0 / status=pass / violations=0 / test_strategy_contract.mode=legacy",
+      "produces": null
+    },
+    {
+      "id": "R-P06-validate-existing",
+      "phase": "P06/P08",
+      "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-mvp-first-scheduling",
+      "expected": "exit 0 / status=pass / violations=0 / validated_digest=sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387",
+      "produces": null
+    },
+    {
+      "id": "R-P09-malformed",
+      "phase": "P09",
+      "command": "python3 -m pytest plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py -k malformed --junitxml=eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-run.xml",
+      "expected": "8 passed / 7 deselected / exit 0",
+      "produces": "eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-run.xml"
+    }
+  ],
+  "rerun_contract": {
+    "working_directory": "repository root (--repo-root . を明示指定する運用)",
+    "generation_independence": "validator の再実行は `--feature-package <id>` 形を使う。task spec が列挙する `--staging .` は staging generation を指さないため実行不能であり、この読み替えは docs/features/feat-task-spec-test-strategy/final-review.md §7 D-2 に記録済み。",
+    "invalidation": "subjects_under_test のいずれかの sha256 が変化した場合、evidence は stale として扱い R-P06-* / R-P09-* を再実行して再固定する。証跡側だけを pin すると実装変更後も古い緑が残る。"
+  },
+  "known_red": [
+    {
+      "command": "python3 -m pytest plugins/dev-graph/tests -q",
+      "observed": "4 failed / 419 passed (exit 1)",
+      "same_cause_as": "python3 scripts/lint-live-trial-verdict.py --all → 4 violation",
+      "cause": "stale behavior closure digest (live-trial verdict.json の記録値と現在の closure digest の不一致)",
+      "attribution": {
+        "caused_by_this_feature": [
+          "dev-graph/run-dev-graph-decompose",
+          "dev-graph/run-dev-graph-node",
+          "dev-graph/run-dev-graph-requirements"
+        ],
+        "pre_existing": [
+          "dev-graph/run-dev-graph-system-spec"
+        ],
+        "mechanism": "behavior_closure_files() は package-contract.depends_on で宣言された依存 plugin の scripts/ と schemas/ をツリーごと closure へ取り込む。上記 3 skill は system-dev-planner を依存宣言しているため、本 feature の plugin 側変更が closure digest を動かす",
+        "measurement": "closure の各ファイルを `git show HEAD:<path>` のバイト列へ置き換えて digest を再構成すると 3 skill とも verdict.json の記録値と完全一致した (= HEAD 時点では stale でなく、未コミット変更でのみ stale 化)",
+        "pre_existing_cause": "run-dev-graph-system-spec は closure 内の plugins/system-spec-harness/.../doctrine-anchor-registry.json (本 feature 着手前からの作業ツリー差分) が原因"
+      },
+      "impact_on_acceptance": "AC-7 (exact-13 契約・13-node DAG の非退行) への影響なし。exact-13 側の実測は無変更",
+      "handling": "実装の欠陥ではなくガバナンス鮮度ゲート。landing 前に該当 3 skill の run-skill-live-trial 再実行と verdict.json 更新が必要 (P13 release-receipt の landing 前提条件)",
+      "correction_note": "本項の初版は 4 件すべてを『既存不合格・本 feature と無関係』と記録していた。closure が plugin 境界を越える事実を見落とした誤りであり、実測に基づき訂正した"
+    }
+  ]
+}

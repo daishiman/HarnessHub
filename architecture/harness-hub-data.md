@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-07-26T06:10:00Z","origin_kind":"system-spec-harness","source_digest":"e91b32644afd8b5dae47e60f63e0b2244c2f7e9f80846b6d3a42a5ac769979e3","source_path":"system-spec/database.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-26T06:10:00Z","origin_kind":"system-spec-harness","source_digest":"d7a9f64d273d936ae22703ade7edec9080e92afd84f212ed5c480bcadcba838b","source_path":"system-spec/database.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-data.md","confidence":0.95}]

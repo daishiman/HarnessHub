@@ -12,8 +12,8 @@ iteration: null
 title: "証跡固定 — 実測ログと成果物 digest の evidence manifest 化"
 owners: ["daishiman"]
 created_at: "2026-07-22T02:31:19Z"
-updated_at: "2026-07-22T02:47:44Z"
-status: "active"
+updated_at: "2026-07-24T08:26:14Z"
+status: "closed"
 depends_on: ["SYS-DOC-GOVERNANCE-PORTABILITY-P10"]
 related_nodes: ["feat-doc-governance-portability","arch-harness-hub-dev-workflow"]
 resource_scope: ["eval-log/dev-graph/doc-governance-portability/evidence-manifest.json"]

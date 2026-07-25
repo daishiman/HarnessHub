@@ -1,0 +1,37 @@
+{
+  "fixture": "eval-log/dev-graph/live-trial-fixtures/decompose-pr72-r2",
+  "scenario_id": "C14-OUT1-positive-macro-decomposition-r2",
+  "checks": [
+    {
+      "name": "macro_dag_is_acyclic_and_within_granularity",
+      "pass": true,
+      "detail": "feature_count=2, architecture_count=1, task_count=0, measured_max=1, declared_max=3"
+    },
+    {
+      "name": "actual_preview_exercises_publication_gate",
+      "pass": true,
+      "detail": "one produced draft feature is excluded and one produced confirmed/pass/complete feature is the sole candidate"
+    },
+    {
+      "name": "dry_run_suppresses_all_mutations",
+      "pass": true,
+      "detail": "local, beads, github_issue, and github_projects write counts are all zero"
+    },
+    {
+      "name": "stdin_schema_validation_is_structurally_valid",
+      "pass": true,
+      "detail": "stdin_path_used=true and structural_contract_valid=true"
+    },
+    {
+      "name": "audit_provenance_is_valid",
+      "pass": true,
+      "detail": "tracked audit modules match the git index and the pre-state identity"
+    },
+    {
+      "name": "goal_seek_evidence_valid",
+      "pass": true,
+      "detail": "2 append-only rows; violations=[]"
+    }
+  ],
+  "all_pass": true
+}

@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-077 |
+| Web (web) | 確定 | 確定質疑: qa-083 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,7 +24,7 @@ serves_goals: [G1, G2, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-077 (対応セル: web)
+### qa-083 (対応セル: web)
 
 **質問**: HarnessHub-b7ng で確定した認証永続化スキーマと migration 契約を database.web の正本へ反映するか。
 

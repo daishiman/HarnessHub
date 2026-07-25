@@ -90,13 +90,13 @@
       ]
     },
     {
-      "scenario_id": "C14-OUT1-positive-macro-decomposition",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r2",
       "component_id": "C14",
       "skill": "run-dev-graph-decompose",
       "criterion_id": "OUT1",
       "mode": "positive",
       "task_args_template": "--repo-root <contained-fixture-repo> --binding none --dry-run",
-      "fixture_contract": "A contained initialized repository holds the macro decomposition input (the want) and deliberately holds no expected feature, architecture or task node, so every produced node is attributable to the skill rather than to the fixture. At least one produced feature must remain in pre-evaluation draft so the zero-issue-publication rule is exercised rather than holding vacuously. The run must additionally promote at least one produced feature to confirmed with evaluation-pass while its implementation_readiness stays incomplete, so the publication-candidate gate has to evaluate readiness and exclude it; a candidate set that is empty only because every node is draft leaves the readiness condition untested and does not satisfy the contract. Promotion is performed on the produced preview nodes during the run, never seeded by the fixture, so node attribution is preserved.",
+      "fixture_contract": "A contained initialized repository holds the macro decomposition input (the want) and deliberately holds no expected feature, architecture or task node, so every produced node is attributable to the skill rather than to the fixture. At least one produced feature remains in pre-evaluation draft so the zero-issue-publication rule is exercised. During the run, another produced feature is advanced in the preview through the schema-valid confirmed, evaluation-pass, implementation-readiness-complete lifecycle and must become the sole publication candidate. This simultaneously proves the negative draft gate and the positive candidate gate without constructing the schema-invalid pass-plus-incomplete state. The lifecycle advance operates only on a node emitted by the skill and never seeds the fixture, preserving attribution.",
       "declared_granularity_threshold": {
         "metric": "max_inter_feature_depends_on_per_feature",
         "max_value": 3,
@@ -105,7 +105,7 @@
       "required_observations": [
         "the produced feature and architecture nodes form an acyclic DAG whose inter-feature depends_on stays within declared_granularity_threshold.max_value measured by declared_granularity_threshold.metric",
         "pre-evaluation draft features publish zero issues on every binding",
-        "a produced feature promoted to confirmed and evaluation-pass but left readiness-incomplete is excluded from publication candidates, so only confirmed, evaluation-pass and readiness-complete features become candidates",
+        "at least one actual produced draft feature remains excluded while one actual produced feature advanced to confirmed, evaluation-pass and readiness-complete becomes the sole publication candidate",
         "the dry run reports local, Beads, GitHub and Projects write counts of zero, and the preview graph is validated through the stdin path so no temporary file is created inside the managed repository"
       ]
     },

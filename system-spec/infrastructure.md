@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-078 |
+| Web (web) | 確定 | 確定質疑: qa-084 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,7 +24,7 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-078 (対応セル: web)
+### qa-084 (対応セル: web)
 
 **質問**: HarnessHub-b7ng の production 認証に必要な Worker 変数・Secret と rollout 順序を infrastructure.web の正本へ反映するか。
 

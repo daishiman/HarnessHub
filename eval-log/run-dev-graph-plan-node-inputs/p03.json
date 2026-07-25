@@ -1,0 +1,33 @@
+{
+ "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P03",
+ "patch": {
+  "updated_at": "2026-07-24T23:15:00Z",
+  "purpose": "P02 の design.md が (1) validate-system-plan.py を単一 writer とする既存の書き込み境界を侵さないこと、(2) P01..P13 exact-13 契約を変更・追加・削除しないこと、(3) 既存の promoted 世代 (すでに生成済みの task spec 資産) の digest を破壊しないことの 3 点を review 観点として整合検証し、design-review.md として記録する。",
+  "goal": "P03 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す",
+  "scope_in": [
+   "docs/features/feat-task-spec-test-strategy/design-review.md"
+  ],
+  "scope_out": [
+   "テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線",
+   "カバレッジ計測と未達時マージブロックの CI 実装",
+   "flaky 検出・quarantine・再実行ポリシーの運用実装",
+   "pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)",
+   "Hub プロダクト本体機能 (Web/API/DB) のテストケース追加",
+   "既存タスク仕様書資産の一括再生成",
+   "P01..P13 exact-13 契約そのものの変更",
+   "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
+  ],
+  "acceptance": [
+   "テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する",
+   "4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する",
+   "同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する",
+   "生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む",
+   "カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される",
+   "保守性制約に pixel 位置・DOM 構造依存の禁止が明記される",
+   "既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である"
+  ],
+  "architecture_refs": [
+   "arch-harness-hub-testing-qa"
+  ]
+ }
+}

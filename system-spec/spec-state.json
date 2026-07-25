@@ -36,6 +36,10 @@
     {
       "id": "dev-workflow",
       "label": "開発フロー"
+    },
+    {
+      "id": "testing-qa",
+      "label": "テスト戦略・品質保証"
     }
   ],
   "platforms": [
@@ -50,7 +54,7 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-077",
+        "qa_ref": "qa-083",
         "serves_goals": [
           "G1",
           "G2",
@@ -196,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-078",
+        "qa_ref": "qa-084",
         "serves_goals": [
           "G1",
           "G4",
@@ -235,7 +239,7 @@
     "backend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-076",
+        "qa_ref": "qa-082",
         "serves_goals": [
           "G1",
           "G2",
@@ -384,6 +388,45 @@
         "serves_goals": [
           "G1",
           "G4"
+        ]
+      }
+    },
+    "testing-qa": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-076",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-081",
+        "serves_goals": [
+          "G1",
+          "G5"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。dev-workflow の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner 上のテスト実行は CI 実行基盤として web 行の品質ゲート要件でカバーする"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-078",
+        "serves_goals": [
+          "G1",
+          "G5"
         ]
       }
     }
@@ -750,6 +793,36 @@
       "answer": "ユーザー確認 (2026-07-25、AskUserQuestion で「上限 60 秒・減衰 -5 秒を確定」を選択。承認記録 appr-010) により、qa-041 の確定内容を全面維持したうえで polling interval の上限と減衰を追加確定し、auth / security の desktop-windows・desktop-macos の専用正本として再確定する。【本 R4-reopen の唯一の差分】polling interval は 5 秒を初期値とし、interval 未満の polling には slow_down を返して +5 秒を加算、interval を守った polling には -5 秒を減衰させる。server が強制する interval の上限は 60 秒、下限は発行応答で client へ告げた 5 秒とする。根拠: RFC 8628 §3.5 は加算幅しか定めておらず、上限が無いと interval は単調増加して device_code TTL 600 秒を追い越し、client が次に叩いてよい時刻に達する前に code が失効して server 側から flow を詰ませる。上限 60 秒は TTL 600 秒に対し最悪でも 10 回は叩けることを値の選択そのもので担保する。加算幅と減衰幅を同じ 5 秒にするのは、幅が違うと「速く叩いて罰を受け、次の 1 回だけ守って帳消しにする」交互 polling が実質的に罰を免れるためであり、初期値への一括 reset も同じ理由で採らない。下限を告知値 5 秒より下げないのは、告知どおりに叩いている client を後から slow_down にできてしまわないため。限界を明示する: 上限が縛るのは server が強制する間隔だけであり、client が自分側で持つ間隔は RFC どおり slow_down のたびに +5 秒され上限を持たない (client 実装の責務であり server からは是正できない)。実装正本は apps/hub/src/lib/auth/config.ts の AUTH_NUMERIC_CONTRACT (devicePollIntervalSeconds=5 / devicePollBackoffSeconds=5 / devicePollMaxIntervalSeconds=60) と apps/hub/src/lib/auth/device-flow/service.ts の nextPollIntervalSeconds() / relaxedPollIntervalSeconds()、仕様正本は docs/security-spec.md §2.2。【qa-041 から維持する確定内容】docs/security-spec.md §2.2 (Device Flow 数値契約)・§2.2.1 (scope)・§4.4・§8.6 と dev-workflow の qa-039 (ローカル運用規律) を desktop 実仕様として確定する。(1) Publisher / CLI / AI worker の認証 = OAuth Device Authorization Flow (RFC 8628、qa-008 維持): device_code TTL 10 分・SHA-256 ハッシュのみ DB 保存、user_code 8 文字 Crockford Base32 (I/L/O/U 除外)・5 回失敗で denied・照合後即失効。(2) token: access token 15 分 (短命 JWT・サーバ非保存)、refresh token 90 日・rotation 必須・SHA-256 ハッシュのみ保存・再利用検知で同一 family 全失効 + 監査 event token.reuse_detected + admin/本人通知。(3) 保存先 = OS 資格情報域のみ: macOS Keychain / Windows Credential Manager。平文ファイル・環境変数・リポジトリへの保存を禁止し、長命 secret のコピペを非エンジニアに求めない (G1 整合)。(4) scope 最小権限 = publish:write / metrics:write / feedback:write / aijob:process の 4 種。ハーネス実行環境へ渡る token は metrics:write + feedback:write のみで publish 権限を含めない。(5) 失効導線 = Hub Web (S04/S18) から本人・admin が即時失効 (publisher_tokens.revoked_at を毎リクエスト参照)。窃取疑い時は family 全失効 → 監査確認 (§8.6 インシデント最小手順)。(6) ローカル開発の秘密・本番境界 (qa-039 接続): production への wrangler deploy / migration をローカルから日常的に行わない (正本経路は CI。緊急時のみ + 事後記録)、ローカルは preview 用 Turso または local SQLite を binding し本番 DB を指さない、secret scan を local hook でも実行可能にする (正本の遮断は CI)。作者環境は macOS 主・Windows 従で同一 pnpm script が動作すること。"
     },
     {
+      "id": "qa-076",
+      "question": "タスク仕様書が担保すべきテストレベルの網羅方針は何ですか? 単体テストだけで十分ですか?",
+      "answer": "単体テストだけでは不十分。タスク仕様書は、想定できるテストレベルを網羅する: (1) 単体テスト (関数・コンポーネント単位)、(2) 結合テスト (モジュール間・API 連携)、(3) 境界値テスト (入力境界・異常系)、(4) 既存回帰テスト (変更が既存機能を壊していないこと)。各タスク仕様書はテスト戦略セクションを必須で持ち、対象変更に対しどのレベルのテストを追加・実行するかを明記する。この機能がエラーなく使えるかの検証を目的とし、テスト種別の選定はタスクの変更内容から導出する"
+    },
+    {
+      "id": "qa-077",
+      "question": "テストカバレッジの数値基準と、基準未達・テスト失敗時の扱いはどうしますか?",
+      "answer": "カバレッジは 80% 以上を既定閾値とし、CI の品質ゲートで機械検証する (変更対象コードの line/branch カバレッジを既定とし、層別に閾値を調整可能)。テストが失敗またはカバレッジ未達の場合はエラーとして扱い、マージを止め、問題点を改善するループ (失敗分析→修正→再実行) へ回す。エラーが生じないテスト構築を先に行い、問題があれば改善する仕組みを標準フローとする。数値の目的化 (カバレッジだけ満たして重要 behavior 未検証) は maintenance-ops 章の既存方針どおり禁止し、behavior 検証を優先する"
+    },
+    {
+      "id": "qa-078",
+      "question": "フロントエンド・バックエンド・インフラの各層で、どのようなテスト種別と保守性方針を適用しますか?",
+      "answer": "層別に適用する: フロントエンドは component 単体 + ユーザー操作フローの結合テストとし、ボタン配置などの見た目の微調整で壊れない behavior ベース (accessible role / ラベルでの要素選択) を必須とする。pixel 位置や DOM 構造への依存は禁止し、UI 微修正がテストエラーにならない管理しやすい設計に限定する。バックエンドは API 契約テスト + ビジネスロジック単体 + DB 結合テスト。インフラは IaC/設定の静的検証 + デプロイ後の smoke テスト。どこまで管理するかの線引きは各層のテスト設計方針として仕様に明文化し、過剰なテスト (実装詳細への密結合) を作らない"
+    },
+    {
+      "id": "qa-079",
+      "question": "テスト戦略をタスク仕様書へ落とし込む仕組みの再現性はどう担保しますか?",
+      "answer": "タスク仕様書の生成時に、テスト戦略セクション (テストレベル選定・カバレッジ目標・層別方針・保守性制約) をテンプレート必須項目として組み込み、何度実行しても同じ品質基準のタスク仕様書が生成される冪等な仕組みとする。手作業の書き足しに依存せず、仕様生成パイプライン (system-dev-planner の task spec 必須 section 契約) 側で機械検証し、テスト戦略の欠落した仕様書を fail-closed で拒否する"
+    },
+    {
+      "id": "qa-080",
+      "question": "テスト戦略・品質保証カテゴリの対象 platform はどこまでですか?",
+      "answer": "dev-workflow と同じ platform 範囲とする。CI (GitHub Actions) 上のテスト実行とカバレッジゲートは web 行、作者ローカルでのテスト実行環境は desktop-windows / desktop-macos 行でカバーする。mobile / tablet / desktop-linux は開発者クライアント環境として使わないため対象外 (dev-workflow の既存確定と同根拠)"
+    },
+    {
+      "id": "qa-081",
+      "question": "テスト戦略をタスク仕様書へ組み込み、何度実行しても同じ品質基準で再現する仕組みはどう実装しますか? (qa-079 の確定内容の章反映)",
+      "answer": "qa-079 で確定したとおり、タスク仕様書の生成時にテスト戦略セクション (テストレベル選定・カバレッジ目標・層別方針・保守性制約) をテンプレート必須項目として組み込み、何度実行しても同じ品質基準のタスク仕様書が生成される冪等な仕組みとする。手作業の書き足しに依存せず、仕様生成パイプライン (system-dev-planner の task spec 必須 section 契約) 側で機械検証し、テスト戦略の欠落した仕様書を fail-closed で拒否する。カバレッジ基準は qa-077 で確定した 80% 以上の品質ゲートと失敗時の改善ループ (失敗分析→修正→再実行) を維持し、テストレベルの範囲は qa-076 で確定した 4 レベル網羅 (単体・結合・境界値・回帰) を前提とする。UI コンポーネント層の実装ツールは D8 (意思決定) で @testing-library/react + Vitest を正式採用した"
+    },
+    {
       "id": "qa-074",
       "question": "HarnessHub-b7ng の本番 Auth.js / AuthPorts 結線で確定した認証契約を auth.web の正本へ反映するか。",
       "answer": "ユーザーの 2026-07-26 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映」を明示承認として、qa-072 までの auth.web 確定内容を全面維持し、次の実装追補を確定する。Auth endpoint は GET/POST /api/auth/{tenant_slug}/{action} とし、slug から当該 tenant の idp_connections だけを解決する。Auth.js の JWT encode/decode は SessionClaims の署名・検証へ委譲し、edge 認可と cookie が同じ 7 claims 契約を使う。callback origin は要求 Host ではなく AUTH_CANONICAL_ORIGIN へ固定する。JIT provisioning は同一 (tenant_id,idp_subject) の同時初回ログインを UNIQUE 制約後の再読込で 1 user へ収束させ、role=member/status=active 以外を IdP claims から与えない。Workers Secret は session と Publisher access token の blast radius を分離するため AUTH_SESSION_SECRET と AUTH_ACCESS_TOKEN_SECRET に分ける。"
@@ -760,17 +833,17 @@
       "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-061 までの security.web 確定内容を全面維持し、次の実装追補を確定する。device authorization の approve/consume/失敗計数は status と attempts の組を条件にする compare-and-swap (CAS) とし、同じ device_code の token 発行成功は 1 本だけ、user_code の同時失敗は取りこぼさず 5 回で denied とする。refresh rotation は revoked_at IS NULL の CAS で旧枝を先に失効し、新しい枝は 1 本だけ作る。既に失効した refresh token の再提示では family 全体を一括失効して token.reuse_detected を記録する。一方、同時提示で CAS に負けただけの要求は invalid_grant とし、その瞬間に family 失効へ昇格しない。昇格すると勝者の新枝作成との競走で掃討漏れが生じるためであり、同じ旧 token の再提示時に再利用検知へ昇格する。認証 runtime は Worker binding/Secret の値変更を要求ごとに比較し、変更後も旧鍵・旧接続先を使い続けない。"
     },
     {
-      "id": "qa-076",
+      "id": "qa-082",
       "question": "HarnessHub-b7ng の本番 adapter と API 結線を backend.web の正本へ反映するか。",
       "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-059 までの backend.web 確定内容を全面維持し、次の実装追補を確定する。apps/hub の composition root は createDbAuthPorts、createDbAuditSink、createAuthjsHandler、DeviceFlowService を packages/db の CoreRepositories へ結線する。Auth.js 固有 import と型は lib/auth/adapter/ 内だけに閉じ、外部へは Web 標準の (Request)=>Promise<Response> を公開する。/api/v1/device/code・approve・token、/api/v1/token/refresh、/api/v1/tokens の本番経路は同じ AuthPorts を使い、in-memory adapter を production fallback にしない。必要な設定・OIDC 接続・client_secret・DB 接続が欠ける場合は既定 tenant/provider/secret へ落とさず fail-closed で停止する。"
     },
     {
-      "id": "qa-077",
+      "id": "qa-083",
       "question": "HarnessHub-b7ng で確定した認証永続化スキーマと migration 契約を database.web の正本へ反映するか。",
       "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-060 までの database.web 確定内容を全面維持し、次の実装追補を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書込みは guardedWrite を通し、ローカル libSQL の SQLITE_BUSY による未 commit 成功を防ぐ。残る repository write の全量掃き出しは別 Beads 課題で追跡する。"
     },
     {
-      "id": "qa-078",
+      "id": "qa-084",
       "question": "HarnessHub-b7ng の production 認証に必要な Worker 変数・Secret と rollout 順序を infrastructure.web の正本へ反映するか。",
       "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-068 までの infrastructure.web 確定内容を全面維持し、次の実装追補を確定する。production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、ログへ記録しない。rollout は DB backup と migration dry-run、本適用、認証 Secret/変数の存在確認、Worker deploy、2 tenant OIDC・Device Flow smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。"
     }
@@ -1403,6 +1476,12 @@
       "from": "確定"
     },
     {
+      "category": "testing-qa",
+      "platform": "desktop-windows",
+      "reason": "completeness evaluator (completeness-report-20260724-qa074.json) の medium 指摘: qa-079 (タスク仕様書へのテスト戦略の冪等組込) が qa_log に確定記録されているのに章へ描画されていない。qa-079 の内容を統合した qa-081 を本セルの確定質疑へ昇格させ、章反映するため再オープンする (qa-077 のカバレッジ基準は qa-081 の回答中で引用維持)",
+      "from": "確定"
+    },
+    {
       "category": "auth",
       "platform": "web",
       "reason": "HarnessHub-b7ng で Auth.js route、JWT bridge、canonical origin、JIT 同時実行契約、鍵分離が実結線され、実装から仕様への書き戻しが必要になった",
@@ -1442,7 +1521,8 @@
     "backend": "確定",
     "frontend": "確定",
     "maintenance-ops": "確定",
-    "dev-workflow": "確定"
+    "dev-workflow": "確定",
+    "testing-qa": "確定"
   },
   "targets": [
     {
@@ -1497,6 +1577,18 @@
     {
       "target_id": "rehype-sanitize",
       "category": "security"
+    },
+    {
+      "target_id": "vitest",
+      "category": "testing-qa"
+    },
+    {
+      "target_id": "playwright",
+      "category": "testing-qa"
+    },
+    {
+      "target_id": "testing-library",
+      "category": "testing-qa"
     }
   ],
   "requirements_foundation": {
@@ -2557,6 +2649,102 @@
         "option_id": "ephemeral-preview-only",
         "confirmed_at": "2026-07-21T08:00:00+09:00",
         "note": "AskUserQuestion で「qa-038 を正とする (常設 staging なし)」を選択 (2026-07-21)。feat-hub-foundation P03 指摘 R-01 の上位エスカレーションに対する確定。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定した。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12 質疑証跡: qa-067 (2026-07-21 確定質疑の追補登録, 2026-07-22 C05 指摘対応)。infrastructure.web の D7 整合改訂は qa-068。"
+      }
+    },
+    {
+      "id": "D8",
+      "question": "UI コンポーネントテストのツール選定: UI 微調整 (ボタン配置変更等) で壊れず保守しやすい behavior ベーステスト (qa-078 の保守性要件) を何で実装するか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "testing-library-react",
+          "label": "@testing-library/react + Vitest (behavior ベースのコンポーネントテスト)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (MIT)。金銭コスト 0 円。Vitest 環境に @testing-library/react + @testing-library/dom (peer dependency) を追加するのみで、CI 実行時間への影響も component 単位テストのため軽微"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "guiding principle『ソフトウェアの使われ方に近いテストほど信頼できる』が qa-078 の behavior ベース要件 (accessible role/ラベルでの要素選択・実装詳細への密結合禁止) と直接一致し、UI 微調整で壊れないテストを標準化できる",
+          "security_fit": "テスト依存の追加のみで攻撃面への影響なし",
+          "pros": [
+            "ボタン配置・DOM 構造の微修正でテストが壊れない (要素選択が role/ラベル基準)",
+            "コンポーネント単位で高速に実行でき、カバレッジ 80% ゲート (qa-077) の主担体になれる",
+            "React 公式ドキュメントも推奨する事実上の標準で、知見・情報が豊富"
+          ],
+          "cons": [
+            "実ブラウザではなく jsdom/happy-dom 環境のため、レイアウト起因の不具合は検出できない (E2E の Playwright と役割分担が必要)"
+          ],
+          "risks": [
+            "v16 以降 @testing-library/dom の peer dependency 明示が必要 (導入手順に明記して回避)"
+          ],
+          "lock_in": "低 (テストコードは Testing Library API に依存するが、behavior ベースの書き方自体は他ツールへ移植しやすい)",
+          "ops_burden": "低 (追加設定は Vitest 環境への組込のみ)",
+          "evidence_refs": [
+            "https://testing-library.com/docs/react-testing-library/intro/",
+            "https://vitest.dev/blog/vitest-4-1.html"
+          ]
+        },
+        {
+          "id": "playwright-e2e-only",
+          "label": "コンポーネントテストを持たず Playwright E2E のみで UI を検証",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (Apache-2.0)。金銭コスト 0 円。ただし E2E はブラウザ起動を伴い CI 実行時間が component テストより大きい"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "テストツールが 1 つ減り管理は軽いが、UI 不具合の検出が E2E 層まで遅延し、qa-076 のテストレベル網羅 (単体・結合) に UI コンポーネント層の空白が生じる",
+          "security_fit": "テスト依存の追加なし",
+          "pros": [
+            "ツール数が最小で管理が軽い",
+            "実ブラウザでの検証のためレイアウト起因の不具合も検出できる"
+          ],
+          "cons": [
+            "コンポーネント単位の高速なフィードバックループがない",
+            "E2E は実行が重く、カバレッジ 80% ゲートの主担体にすると CI 時間が肥大する",
+            "失敗時の原因切り分けが component テストより粗い"
+          ],
+          "risks": [
+            "UI 層の回帰検出が遅れ、qa-077 の改善ループ (失敗分析→修正→再実行) の回転が遅くなる"
+          ],
+          "lock_in": "低",
+          "ops_burden": "中 (E2E の flake 管理が UI 検証全体を背負う)",
+          "evidence_refs": [
+            "https://playwright.dev/docs/release-notes"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "testing-library-react",
+        "rationale": "qa-078 の確定要件 (behavior ベース・実装詳細への密結合禁止・UI 微修正でテストエラーにならない管理しやすい設計) を最も直接に実現する標準ツールであり、Vitest (単体・結合)・Playwright (E2E) との 3 点構成でテストレベル網羅 (qa-076) の各層に主担体を配置できるため。",
+        "comparison_basis": {
+          "goal_fit": "behavior ベース要件 (qa-078) との一致度と、テストレベル網羅 (qa-076) の空白有無で比較",
+          "tco": "両案とも OSS で金銭コスト 0 円のため、CI 実行時間と管理負荷で比較",
+          "security": "両案ともテスト依存の追加のみで攻撃面への影響なし",
+          "operations": "flake 管理・失敗切り分け・改善ループ (qa-077) の回転速度で比較",
+          "lock_in": "両案とも低。behavior ベースの書き方は他ツールへ移植しやすい"
+        },
+        "confidence": "high",
+        "latest_checked_at": "2026-07-24T12:11:57Z",
+        "caveats": [
+          "jsdom/happy-dom 環境ではレイアウト起因の不具合を検出できないため、実ブラウザ検証は Playwright E2E と役割分担する (component テストの守備範囲を越えた検証を書かない)",
+          "@testing-library/react v16 以降は @testing-library/dom を peer dependency として明示インストールする必要がある",
+          "role/ラベルで特定できない要素に data-testid を乱用すると behavior ベースの利点が失われるため、accessible role を優先する選択規律を維持する"
+        ]
+      },
+      "user_decision": {
+        "option_id": "testing-library-react",
+        "confirmed_at": "2026-07-24T21:11:57+09:00",
+        "note": "AskUserQuestion で「採用する (推奨)」を選択 (2026-07-24)。completeness evaluator (completeness-report-20260724-qa074.json) の medium 指摘『testing-library の接地欠如』への確定対応。Vitest + Playwright + Testing Library の 3 点構成を正式採用"
       }
     }
   ],

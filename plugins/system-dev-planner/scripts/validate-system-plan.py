@@ -39,7 +39,6 @@ PLACEHOLDER = re.compile(r"\b(?:TODO|TBD)\b|__PLACEHOLDER__|<[^>]+>", re.I)
 STAGING_RUNTIME_REF = re.compile(r"(?:^|[^A-Za-z0-9_.-])\.dev-graph/staging(?:/|\b)")
 SCHEMAS = HERE.parent / "schemas"
 
-
 def _load_sibling(filename: str, module_name: str):
     spec = importlib.util.spec_from_file_location(module_name, HERE / filename)
     module = importlib.util.module_from_spec(spec)
@@ -65,6 +64,14 @@ GOAL_SEEK_SECTION = CONTRACTS.GOAL_SEEK_SECTION
 REQUIRED_TASK_SPEC_SECTIONS = CONTRACTS.REQUIRED_TASK_SPEC_SECTIONS
 CONTRACT_VERSION_LATEST = CONTRACTS.CONTRACT_VERSION_LATEST
 CONTRACT_VERSIONS = CONTRACTS.CONTRACT_VERSIONS
+TEST_STRATEGY_CONTRACT_FROM = CONTRACTS.TEST_STRATEGY_CONTRACT_FROM
+TEST_STRATEGY_SECTION = CONTRACTS.TEST_STRATEGY_SECTION
+TEST_STRATEGY_ITEMS = CONTRACTS.TEST_STRATEGY_ITEMS
+TEST_STRATEGY_SCHEMA = CONTRACTS.TEST_STRATEGY_SCHEMA
+TEST_STRATEGY_PLACEMENT = CONTRACTS.TEST_STRATEGY_PLACEMENT
+_task_spec_sections = CONTRACTS._task_spec_sections
+parse_test_strategy = CONTRACTS.parse_test_strategy
+derive_required_layers = CONTRACTS.derive_required_layers
 load_contract_baseline = CONTRACTS.load_contract_baseline
 resolve_contract_version = CONTRACTS.resolve_contract_version
 task_spec_violations = CONTRACTS.task_spec_violations
@@ -115,6 +122,24 @@ def _load_schema(name: str) -> dict:
     if not isinstance(value, dict):
         raise ValueError(f"schema must be object: {name}")
     return value
+
+
+def test_strategy_violations(text: str, *, enforced: bool) -> list[tuple[str, str]]:
+    """テスト戦略 section の構造・内容・層別充足を検証する。"""
+    value, errors = parse_test_strategy(text)
+    if value is None:
+        if not errors:
+            return [("task-spec-test-strategy-missing", TEST_STRATEGY_SECTION)] if enforced else []
+        return errors
+    if {key for _, key in TEST_STRATEGY_ITEMS} <= set(value):
+        for detail in schema_violations(value, _load_schema(TEST_STRATEGY_SCHEMA)):
+            errors.append(("task-spec-test-strategy-content", detail))
+        policies = value["layer_policies"]
+        for layer in derive_required_layers(text):
+            for marker in CONTRACTS.LAYER_MARKERS[layer]:
+                if marker not in policies:
+                    errors.append(("task-spec-test-strategy-layer", f"{layer}: missing marker `{marker}`"))
+    return errors
 
 
 def validate(
@@ -277,6 +302,8 @@ def validate(
                 )
             for code, section in task_spec_violations(text, contract["required_sections"]):
                 fail(code, rel, section)
+            for code, detail in test_strategy_violations(text, enforced=contract["test_strategy"]):
+                fail(code, rel, detail)
             if contract["inner_goal_seek"] and (METHODOLOGY_MARKER not in text or GOAL_SEEK_PASS_MARKER not in text):
                 fail(
                     "inner-goal-seek-contract",
@@ -367,21 +394,30 @@ def validate(
     source_manifest = handoff.get("source_manifest") if isinstance(handoff.get("source_manifest"), dict) else {}
     if source_manifest.get("canonical_digest_before_handoff") != base_digest:
         fail("handoff-source-canonical-digest", HANDOFF_PATH, "pre-handoff canonical digest mismatch")
-    contract = manifest.get("handoff_contract") if isinstance(manifest.get("handoff_contract"), dict) else {}
+    # 契約 version 台帳の `contract` と別物なので名前を分ける。同名にすると後段の
+    # test_strategy_contract 出力が handoff 側を引いてしまう (実際に KeyError で顕在化した)。
+    handoff_contract = manifest.get("handoff_contract") if isinstance(manifest.get("handoff_contract"), dict) else {}
     handoff_sha = hashlib.sha256((staging / HANDOFF_PATH).read_bytes()).hexdigest() if (staging / HANDOFF_PATH).is_file() else None
     if (
-        contract.get("schema_version") != "1.0.0"
-        or contract.get("path") != HANDOFF_PATH
-        or contract.get("sha256") != handoff_sha
-        or contract.get("source_canonical_digest") != base_digest
-        or contract.get("manifest_is_commit_point") is not True
-        or contract.get("self_reference_policy") != "handoff hash and final digest are manifest-only"
+        handoff_contract.get("schema_version") != "1.0.0"
+        or handoff_contract.get("path") != HANDOFF_PATH
+        or handoff_contract.get("sha256") != handoff_sha
+        or handoff_contract.get("source_canonical_digest") != base_digest
+        or handoff_contract.get("manifest_is_commit_point") is not True
+        or handoff_contract.get("self_reference_policy") != "handoff hash and final digest are manifest-only"
     ):
         fail("handoff-manifest-contract", "staging-manifest.json", "handoff commit-point contract mismatch")
     return {"schema_version": "1.0.0", "status": "pass" if not violations else "fail",
             "validated_digest": digest, "feature_package_id": package_id, "parent_feature": parent,
             "phase_refs": PHASES, "contract_version": contract_version,
             "contract_baseline_exemption": contract_version != CONTRACT_VERSION_LATEST,
+            # 適用モードを常に出力する。silent skip を許すと「検査したのか、
+            # 素通りしたのか」を証跡から区別できず、緑色が意味を失う。
+            "test_strategy_contract": {
+                "mode": "enforced" if contract["test_strategy"] else "legacy",
+                "contract_version": contract_version,
+                "enforced_from": TEST_STRATEGY_CONTRACT_FROM,
+            },
             "violations": violations}
 
 

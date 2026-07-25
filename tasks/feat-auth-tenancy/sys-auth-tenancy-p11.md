@@ -13,7 +13,7 @@ title: "エビデンス収集 — テスト結果・受入記録・最終レビ�
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
 updated_at: "2026-07-26T06:12:00Z"
-status: "active"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P10"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/evidence-summary.md"]
@@ -75,6 +75,6 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ## 2026-07-26 追加エビデンス
 
 - 実装 issue: `HarnessHub-b7ng` / dev-graph node: `issue-auth-tenancy-production-adapter-20260725`
-- 仕様反映: system-spec の `qa-074`〜`qa-078`、architecture 4 wrapper、feature node、spec wrapper
+- 仕様反映: system-spec の `qa-074`、`qa-075`、`qa-082`〜`qa-084`、architecture 4 wrapper、feature node、spec wrapper
 - 記録: `docs/features/feat-auth-tenancy/spec-reflection-receipt.md`
 - 検証: task spec validator、認証/DB 集中テスト、`pnpm verify` の結果を最終レビュー記録へ集約する。

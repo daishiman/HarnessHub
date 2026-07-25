@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-07-25T00:45:03Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P03"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/__tests__/auth-tenancy/","apps/hub/src/app/api/v1/device/","apps/hub/src/app/api/v1/token/","docs/features/feat-auth-tenancy/test-design.md","packages/schemas/auth-tenancy/"]

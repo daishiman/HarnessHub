@@ -1,0 +1,37 @@
+{
+  "fixture": "eval-log/dev-graph/live-trial-fixtures/node-pr72",
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "checks": [
+    {
+      "name": "artifacts_routed_to_canonical_kind_paths",
+      "pass": true,
+      "detail": "5 artifacts routed to issues, tasks, specs, architecture, and docs"
+    },
+    {
+      "name": "original_bodies_preserved_byte_for_byte",
+      "pass": true,
+      "detail": "all 5 original bodies remain contiguous in the stored Markdown"
+    },
+    {
+      "name": "frontmatter_kind_agrees_with_stored_path",
+      "pass": true,
+      "detail": "all 5 graph nodes and Markdown paths agree"
+    },
+    {
+      "name": "no_feature_outside_c14_contract",
+      "pass": true,
+      "detail": "feature node count is zero"
+    },
+    {
+      "name": "api_identifiers_intact",
+      "pass": true,
+      "detail": "all 7 required API identifiers remain present"
+    },
+    {
+      "name": "goal_seek_evidence_valid",
+      "pass": true,
+      "detail": "2 append-only rows; violations=[]"
+    }
+  ],
+  "all_pass": true
+}

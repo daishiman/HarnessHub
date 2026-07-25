@@ -47,9 +47,9 @@ in-memory 実装だけだった `AuthPorts` を本番 DB へ結線した。
 |---|---|---|
 | `qa-074` | auth | Auth.js route、session bridge、canonical origin、JIT、署名鍵分離 |
 | `qa-075` | security | CAS、refresh race の境界、Secret 更新時の runtime 再生成 |
-| `qa-076` | backend | 本番 composition root と DB ports |
-| `qa-077` | database | schema・migration・guarded write |
-| `qa-078` | infrastructure | Workers Secret/var と migration rollout |
+| `qa-082` | backend | 本番 composition root と DB ports |
+| `qa-083` | database | schema・migration・guarded write |
+| `qa-084` | infrastructure | Workers Secret/var と migration rollout |
 
 反映先:
 
@@ -67,7 +67,7 @@ in-memory 実装だけだった `AuthPorts` を本番 DB へ結線した。
 - `features/feat-auth-tenancy.md`
 - `tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md`
 - `docs/backend-spec.md`
-- `docs/security-spec.md`
+- `docs/security-spec.md` と責務別 6 分冊
 - `docs/infrastructure-spec.md`
 - `docs/features/feat-auth-tenancy/` の履歴・受入・リリース証跡
 
@@ -120,10 +120,15 @@ refresh token も active 行だけを CAS 失効してから次の枝を発行�
 ## 7. 500 行超の扱い
 
 今回編集した手書き TypeScript のうち 500 行を超えた Device Flow service は、
-型契約を `device-flow/contracts.ts` へ分離して `service.ts` を 497 行にした。
+型契約を `device-flow/contracts.ts` へ分離して `service.ts` を 496 行にした。
+609 行だった Device Flow test も発行・承認と token lifecycle に分け、
+共有 harness を独立させた（305 / 258 / 64 行）。
+910 行だった `docs/security-spec.md` は旧節番号を維持した索引と、
+foundation / authentication / authorization / data-integrity /
+request-controls / assurance の 6 分冊へ分け、全分冊を 300 行以下にした。
+これにより line-limit allowlist から `docs/security-spec.md` を除外した。
 `graph.json`、migration snapshot、lockfile、system-spec state は各 writer/tool の
-機械生成物なので人手分割しない。既存の大規模仕様文書は行数 ratchet（増加禁止）を守り、
-新規受領書を独立ファイルにした。
+機械生成物なので人手分割しない。新規受領書も独立ファイルにした。
 
 ## 8. 残課題
 

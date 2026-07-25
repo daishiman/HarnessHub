@@ -75,7 +75,19 @@ def task(index: int, package_id: str, parent: str) -> dict:
     }
 
 
-def task_spec_text(phase: str) -> str:
+# 現行 generator (R3-emit v1.2.0) が全 task spec へ埋める テスト戦略 の既定本文。
+# fixture は「いま生成される package」を表すため、既定で本 section を含める。
+# `strategy=None` を渡した fixture は契約 1.2.0 未満の世代 (section 不在) を表す。
+DEFAULT_TEST_STRATEGY = "\n".join((
+    "- テストレベル選定: 単体・結合・境界値・回帰の4レベルを適用する。",
+    "- カバレッジ目標: 既定 80% を維持する。",
+    "- 層別方針: N/A: 実行基盤の層を触らない変更である。",
+    "- 保守性制約: pixel 位置依存と DOM 構造依存のテストを禁止する。",
+))
+TEST_STRATEGY_AFTER = "スコープ外"
+
+
+def task_spec_text(phase: str, *, strategy: str | None = DEFAULT_TEST_STRATEGY) -> str:
     sections = {
         "Machine-readable registration fields": f"- phase_ref: {phase}\n- feature_package_id: feature-package/feat",
         "目的": f"Complete the single responsibility assigned to {phase}.",
@@ -108,6 +120,8 @@ def task_spec_text(phase: str) -> str:
     body = [f"# {phase}"]
     for heading in VALIDATOR.REQUIRED_TASK_SPEC_SECTIONS:
         body.extend(("", f"## {heading}", "", sections[heading]))
+        if strategy is not None and heading == TEST_STRATEGY_AFTER:
+            body.extend(("", f"## {VALIDATOR.TEST_STRATEGY_SECTION}", "", strategy))
     return "\n".join(body) + "\n"
 
 

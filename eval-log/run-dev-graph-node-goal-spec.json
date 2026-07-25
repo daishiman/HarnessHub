@@ -1,4 +1,14 @@
 {
-  "original_goal": "tasks/ 直下の旧世代重複タスクファイル sys-hub-foundation-p01〜p13.md (graph 未登録・2026-07-17 生成) を削除し、正規 path tasks/feat-hub-foundation/ 配下のみを残して graph/content 整合を検証する",
-  "recorded_at": "2026-07-19T00:00:00Z"
+ "original_goal": "11 verb 一括実行 (spec → decompose → plan → requirements) で上位 command が自動登録しなかった成果物を棚卸しし、対象があれば C02 単一 writer (upsert-node.py / register-package.py) 経由で --dry-run → 本実行 の順に atomic 登録する。対象が 0 件であることを実測で示せた場合は write を行わず skip と報告する。",
+ "original_goal_hash": "a5542164c097fc1beacc58d49bb3d8534b23ebb8015ed98358bdecf024319af9",
+ "verb": "node",
+ "recorded_at": "2026-07-25T00:00:54Z",
+ "current_directive": "/dev-graph node (11 verb 一括実行の verb 6)",
+ "outcome": "skip",
+ "superseded_goals": [
+  {
+   "original_goal": "tasks/ 直下の旧世代重複タスクファイル sys-hub-foundation-p01〜p13.md (graph 未登録・2026-07-17 生成) を削除し、正規 path tasks/feat-hub-foundation/ 配下のみを残して graph/content 整合を検証する",
+   "recorded_at": "2026-07-19T00:00:00Z"
+  }
+ ]
 }

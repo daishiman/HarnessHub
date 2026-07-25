@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 品質・セキュリティ・運用保証"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
-status: "active"
+updated_at: "2026-07-24T21:01:35Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P08"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/src/middleware/","apps/hub/src/shared/","docs/features/feat-hub-foundation/quality-assurance-report.md","packages/estimation/","packages/inspection/","packages/schemas/","packages/ui/"]
