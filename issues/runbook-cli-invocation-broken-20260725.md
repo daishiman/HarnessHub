@@ -12,7 +12,7 @@ iteration: null
 title: "runbook の export/restore 手動コマンドが pnpm 10.9.0 と cwd 差でそのままでは実行できない"
 owners: ["daishiman"]
 created_at: "2026-07-25T00:41:30Z"
-updated_at: "2026-07-25T06:20:00Z"
+updated_at: "2026-07-25T06:40:00Z"
 status: "closed"
 depends_on: []
 related_nodes: ["SYS-DOMAIN-MODEL-DB-P13"]
@@ -33,7 +33,7 @@ template_version: "1.0.0"
 confirmation_status: "draft"
 evaluation_status: "pending"
 confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
-source_lineage: {"imported_at":"2026-07-25T00:41:30Z","origin_kind":"generated","source_digest":"df2069389627bfd0fee32914b5ec7bbeb83a1c5c97e199b5afe000b88d9bf38e","source_path":"docs/features/feat-domain-model-db/release-record.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-25T00:41:30Z","origin_kind":"generated","source_digest":"a3ff8e3653e08fdd5d1f62d199b0b054aedf7a0c31ca8694fb3e3694862f4c22","source_path":"docs/features/feat-domain-model-db/release-record.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.95
 classification_reason: "SYS-DOMAIN-MODEL-DB-P13 の四半期 restore drill 実走中に踏んだ F-2 / F-3。runbook は P13 の resource_scope 外のため別 issue として切り出す"
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/runbook-cli-invocation-broken-20260725.md","confidence":0.95}]

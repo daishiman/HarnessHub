@@ -12,7 +12,7 @@ iteration: null
 title: "CLOUDFLARE_API_TOKEN 1 本を deploy と R2 write で共用しており最小権限分離が未達"
 owners: ["daishiman"]
 created_at: "2026-07-25T05:50:00Z"
-updated_at: "2026-07-25T06:25:00Z"
+updated_at: "2026-07-25T06:40:00Z"
 status: "draft"
 depends_on: ["issue-actions-secrets-missing-20260725"]
 related_nodes: ["SYS-DOMAIN-MODEL-DB-P13"]
@@ -33,7 +33,7 @@ template_version: "1.0.0"
 confirmation_status: "draft"
 evaluation_status: "pending"
 confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
-source_lineage: {"imported_at":"2026-07-25T05:50:00Z","origin_kind":"generated","source_digest":"df2069389627bfd0fee32914b5ec7bbeb83a1c5c97e199b5afe000b88d9bf38e","source_path":"docs/features/feat-domain-model-db/release-record.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-25T05:50:00Z","origin_kind":"generated","source_digest":"a3ff8e3653e08fdd5d1f62d199b0b054aedf7a0c31ca8694fb3e3694862f4c22","source_path":"docs/features/feat-domain-model-db/release-record.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.95
 classification_reason: "SYS-DOMAIN-MODEL-DB-P13 の finding F-8。backup.yml の secret 設計は P13 の resource_scope 外であり、かつ docs/infrastructure-spec.md §7 の推奨に対する未達なので別 issue として切り出す"
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/ci-token-least-privilege-20260725.md","confidence":0.95}]

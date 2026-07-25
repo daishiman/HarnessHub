@@ -20,7 +20,8 @@ consumes: [docs/features/feat-domain-model-db/runbook.md, docs/features/feat-dom
 - R2 content-addressed registry の有効化: **成功**
 - スモークテスト 6 項目: **6/6 pass**
 - 四半期 restore drill の実行可能性: **確認済み** (本番 export → 使い捨て Turso へ復元まで実走)
-- finding: **8 件** (§8)。F-2 / F-3 / F-7 は解消して `HarnessHub-0yvi` を close、F-4 は設定名と runbook を同期済み。F-1 は Secrets 登録まで完了し、未 push の workflow を GitHub 上で実走する工程だけを残す。F-5 は現行設計どおりの制約、F-6 は既存の全域課題、F-8 は最小権限の未達を明示記録した残存リスク。
+- finding: **8 件** (§8)。F-2 / F-3 / F-7 は解消して `HarnessHub-0yvi` を close、F-4 は設定名と runbook を同期済み、F-6 は main 取り込みで解消。F-1 は Secrets 登録まで完了し、未 push の workflow を GitHub 上で実走する工程だけを残す。F-5 は現行設計どおりの制約、F-8 は最小権限の未達を明示記録した残存リスク。
+- task 仕様書の品質ゲート: `validate-system-plan.py` **`status: pass` / `violations: []`** (§8 F-6)
 - 仕様・設計への反映: **あり** (§14)。`docs/infrastructure-spec.md` §7/§10・`docs/security-spec.md` §4.5・`architecture/harness-hub-infrastructure.md`・`specs/harness-hub-system-specification.md` を実装確定内容へ同期した。
 
 ## 1. リリース対象と環境
@@ -127,7 +128,7 @@ qa-038【3】により本番と同一構成を 2 系統常設しない。よっ�
 | F-3 | 同 §2 の `--migrations-dir packages/db/migrations` が解決不能 | 誤った二重相対 path を削除し、CLI が `import.meta.dirname` から解決する既定 migration directory を利用。restore exit 0 | **解消**。HarnessHub-0yvi close |
 | F-4 | GitHub Actions secret 一覧が不完全で、Turso / R2 の token 種別も曖昧 | runbook に deploy / backup の全 secret を列挙。DB 接続 token (`TURSO_AUTH_TOKEN`) と Platform API token (`TURSO_API_TOKEN`) を分離し、backup の R2 側は既存 Cloudflare API token + Wrangler put/get へ統一して専用 key 3 件を不要化 | **実装解消**。GitHub Actions 実走は F-1 と同じく待機 |
 | F-5 | `apps/hub/wrangler.jsonc` に D1 binding が無い | hedge へ切り替える際は binding 追加が必要。現状は「切替可能性の確認」まで (§3) | 設計どおり。切替判断時に対応 |
-| F-6 | `validate-system-plan.py` が 27 violations で red | `task-spec-section-missing` (Inner goal-seek execution loop) 13 件 + `inner-goal-seek-contract` 13 件 + `p13-spec-architecture-writeback` 1 件。ただし `feat-hub-foundation` / `feat-doc-governance-portability` も同一の 27 件を返す既存かつリポジトリ全域の状態で、本タスクは `.dev-graph/plans/` も `tasks/` も変更していない | 別 draft PR #60 (`devgraph/issue-validator-contract-version-20260724`) が open / DIRTY。ユーザーの「PR は実行しない」に従い本作業へ取り込まない |
+| F-6 | `validate-system-plan.py` が 27 violations で red | `task-spec-section-missing` (Inner goal-seek execution loop) 13 件 + `inner-goal-seek-contract` 13 件 + `p13-spec-architecture-writeback` 1 件。`feat-hub-foundation` / `feat-doc-governance-portability` も同一の 27 件を返す既存かつリポジトリ全域の状態で、本タスクは `.dev-graph/plans/` も `tasks/` も変更していない | **解消**。2026-07-25 の main 取り込みで validator 契約版管理 (`validate-task-spec-contract.py` + `validation-contract-baseline.json`) が landed し、`status: pass` / `violations: []` / `contract_baseline_exemption: true` になった。本 task 側の是正は不要だった |
 | F-7 | runbook の四半期 drill が JSONL CLI だけを案内し、日次 SQL dump の復元経路と不一致 | R2 SQL dump の取得 → 新 Turso へ標準入力 restore → 18 table / 12 index → JSONL semantic round-trip の 2 段検証へ修正。Turso `--from-dump` の偽成功経路を明示的に不採用 | **解消**。HarnessHub-0yvi の追補として実走済み |
 | F-8 | R2 write を `CLOUDFLARE_API_TOKEN` 1 本へ統合したため、infrastructure-spec §7 が推奨する「Workers deploy 権限と R2 write 権限を分離した 2 token」が未達 | secret 台帳は 3 件減ったが、token 漏洩時の影響範囲は deploy + R2 write の両方へ広がる (最小権限の後退)。ただし §4.5 は「Workers binding 利用時は R2 専用キー不要」を既に確定しており、キー削除自体は確定範囲内 | **未達として明示記録**。`issue-ci-token-least-privilege-20260725` (**HarnessHub-bda4**) で追跡 |
 
@@ -184,7 +185,7 @@ published task spec の `Write scope/touches` は本ファイルのみだが、`
 - CI deploy job: 7 個の shell block が `bash -n` と ShellCheck を pass
 - dev-graph schema: `valid: true`、文書行数ゲート: 359 文書を検査して pass
 
-`validate-system-plan.py` の 27 violations は §8 F-6 の既存状態のままであり、green として扱っていない。
+この時点の `validate-system-plan.py` は §8 F-6 の 27 violations が残っており、green として扱っていない (解消は §15)。
 
 ## 13. main 取り込み後の残課題対応
 
@@ -213,3 +214,20 @@ P13 の実装は、確定済み仕様が前提としていた運用手順を 3 �
 **`system-spec/spec-state.json` は変更していない。** `qa_log` はユーザー確認済み Q&A の記録であり、qa-071【9】が「確定済み qa entry を AI が単独で書き換えること」を禁じている。本反映は確定済み qa (qa-011 / qa-019 / qa-038【5】) の**実装手順レベルの具体化**であって決定の変更ではないため、詳細正本 `docs/*-spec.md` への反映で足り、新規 qa entry の捏造は行わない。R2 キー削除も §4.5 が既に「Workers binding 利用時は不要」と確定した範囲内。
 
 **未達として持ち越す設計差**: `CLOUDFLARE_API_TOKEN` の 1 本共用 (F-8)。`issue-ci-token-least-privilege-20260725` (**HarnessHub-bda4**) で追跡し、infrastructure-spec §7 の残存リスク節にも明記した。
+
+## 15. 最終レビューと main 取り込み後の再検証 (2026-07-25)
+
+commit 前の最終レビューとして、`origin/main` (`9e39e96`) を本ブランチへ取り込んだ上で全ゲートを再実行した。
+
+| ゲート | 結果 |
+| --- | --- |
+| `validate-system-plan.py` (feat-domain-model-db) | **pass / violations: []** — F-6 が main 取り込みで解消 |
+| `@harness-hub/db` テスト | **13 files / 65 tests pass** (21.2s) |
+| `validate-graph-schema.py` | `valid: true` / `violations: []` |
+| `validate-source-digest.py` (本 task の 3 issue node) | `checked: 3` / `registered_mismatch: []` |
+| `lint-doc-line-limit.py` | 362 文書 pass (上限 300 行) |
+| `lint-artifact-placement.py` | pass |
+
+**最終レビューで見つけて直した実欠陥 1 件**: `packages/db/__tests__/backup-restore.test.ts` の P13 新規 2 test に vitest の明示 timeout が無く、既定 5s のまま `tsx` 子プロセスを最大 3 回起動していた。実装が正しくても timeout で赤くなる = 「落ちたら再実行」を招いてゲートの信頼性を失う構造だったため、同ファイルの既存規約に合わせて 120s / 60s を明示した。**§12 の「65 tests pass」はこの修正後に成立した主張である。**
+
+**graph.json の競合解決**: main 側 (`revision 545` / 293 node) を採用し、本 task の 3 issue node のみを C02 writer (`upsert-node.py`) で再投入して `revision 548` / 296 node とした。JSON を直接 merge していない。
