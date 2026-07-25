@@ -33,8 +33,8 @@ export interface AuthNumericContract {
    *
    * RFC 8628 §3.5 は加算幅しか定めていないため、上限が無いと間隔は単調増加し
    * `deviceCodeTtlSeconds` を追い越す。そうなると client は次に叩いてよい時刻の前に
-   * code が失効し、自分の flow を詰ませる。上限の出所は仕様書ではなく本 feature の判断
-   * (ADR 実装追補 §10.7)。
+   * code が失効し、自分の flow を詰ませる。出所は docs/security-spec.md §2.2
+   * (qa-073 の R4-reopen で確定。起点は ADR 実装追補 §10.7)。
    */
   readonly devicePollMaxIntervalSeconds: number;
   /** user_code の桁数。 */

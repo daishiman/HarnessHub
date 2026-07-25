@@ -383,7 +383,7 @@ export function normalizeUserCode(input: string): string {
 }
 
 /**
- * polling 間隔の増減 (ADR 実装追補 §10.7)。
+ * polling 間隔の増減 (docs/security-spec.md §2.2 = qa-073 で確定。起点は ADR 実装追補 §10.7)。
  *
  * RFC 8628 §3.5 が定めているのは「`slow_down` を返したら interval を **5 秒増やす**」までで、
  * **上限も、素直に待った client への減衰も規定していない**。

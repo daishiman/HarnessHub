@@ -174,7 +174,7 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 | `AuthPorts` の本番 DB adapter と永続化契約差の解消 | ❌ 未実施 | bd `HarnessHub-b7ng` |
 | 本番 `idp_connections` への OIDC provider 登録 | ⏳ control-plane DB 確立が前提 | P13 |
 | `test-design.md` の `T-SESS-05` 文言を実装へ追随 | ⏳ 次回改訂 | P04 改訂時 |
-| 確定仕様を超えた 2 決定 (session claims の `workspace_ids` / polling 上限 60 秒・減衰) の仕様側確定 | ⚠️ 正本が compile 成果物 + doc-line-limit ratchet 対象のため手編集不可 | bd `HarnessHub-l2g9` (qa-036 / qa-041 の R4-reopen) |
+| ~~確定仕様を超えた 2 決定 (session claims の `workspace_ids` / polling 上限 60 秒・減衰) の仕様側確定~~ | ✅ R4-reopen とユーザー確認 `appr-010` を経て `qa-072` / `qa-073` として確定済み | bd `HarnessHub-l2g9` (closed) |
 
 → P12 の runbook 成果物は完成。P13 は `HarnessHub-1f28` / `HarnessHub-b7ng` と
 親依存の完了まで実行不可。

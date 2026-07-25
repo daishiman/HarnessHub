@@ -7,7 +7,7 @@
 # contexts: [C, E]
 # network: false
 # write-scope: none
-# dependencies: [resolve-project-context.py, validate-task-spec-contract.py, validate-json-schema-subset.py, ../assets/validation-contract-baseline.json]
+# dependencies: [resolve-project-context.py, validate-task-spec-contract.py, validate-json-schema-subset.py, validate-qa-semantic-coverage.py, ../assets/validation-contract-baseline.json]
 # requires-python: ">=3.10"
 # ///
 """C12 deterministic promotion gate."""
@@ -76,6 +76,31 @@ _type_matches = SCHEMA_SUBSET._type_matches
 _resolve_local_ref = SCHEMA_SUBSET._resolve_local_ref
 schema_violations = SCHEMA_SUBSET.schema_violations
 
+# QA semantic coverage は専用 module へ分離し、C12 本体を 500 行以下に保つ。
+# 公開定数と関数は既存テスト/利用者との互換性のため本 module から再公開する。
+QA_COVERAGE = _load_sibling(
+    "validate-qa-semantic-coverage.py",
+    "sdp_qa_semantic_coverage",
+)
+QA_REF_PATTERN = QA_COVERAGE.QA_REF_PATTERN
+FRONTMATTER_TAGS = QA_COVERAGE.FRONTMATTER_TAGS
+GOAL_SPEC_COVERAGE_FIELDS = QA_COVERAGE.GOAL_SPEC_COVERAGE_FIELDS
+QA_REQUIREMENT_HEADING = QA_COVERAGE.QA_REQUIREMENT_HEADING
+SEMANTIC_COVERAGE_CONSTRAINT_ID = QA_COVERAGE.SEMANTIC_COVERAGE_CONSTRAINT_ID
+
+
+def qa_semantic_violations(
+    staging: Path,
+    repo_root: Path,
+    parent: str,
+) -> list[tuple[str, str, str]]:
+    return QA_COVERAGE.qa_semantic_violations(
+        staging,
+        repo_root,
+        parent,
+        TASK_PATHS,
+    )
+
 
 def canonical_digest(root: Path, relative_paths: list[str]) -> str:
     digest = hashlib.sha256()
@@ -92,7 +117,12 @@ def _load_schema(name: str) -> dict:
     return value
 
 
-def validate(staging: Path, repository_id: str, baseline: dict[str, str] | None = None) -> dict:
+def validate(
+    staging: Path,
+    repository_id: str,
+    baseline: dict[str, str] | None = None,
+    repo_root: Path | None = None,
+) -> dict:
     violations: list[dict] = []
     resolved_baseline = load_contract_baseline() if baseline is None else baseline
     def fail(code: str, path: str, detail: str) -> None:
@@ -292,6 +322,13 @@ def validate(staging: Path, repository_id: str, baseline: dict[str, str] | None 
     repo_ctx = inventory.get("repo_context", {})
     if repo_ctx.get("repo_identity") != repository_id:
         fail("repo-identity", "workstream-inventory.json", "repo identity differs from C09 context")
+    if (
+        contract["qa_semantic_coverage"]
+        and repo_root is not None
+        and isinstance(parent, str)
+    ):
+        for code, path, detail in qa_semantic_violations(staging, repo_root, parent):
+            fail(code, path, detail)
     manifest_files = manifest.get("files")
     rels: list[str] = []
     if isinstance(manifest_files, dict): rels = sorted(manifest_files)
@@ -391,7 +428,7 @@ def main(argv: list[str] | None = None) -> int:
             c09, Path(context["repo_root"]), context, args.feature_package
         )
         staging = Path(c09.guard_relative_path(Path(context["repo_root"]), target))
-        report = validate(staging, context["repository_id"])
+        report = validate(staging, context["repository_id"], repo_root=Path(context["repo_root"]))
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["status"] == "pass" else 2
     except c09.UsageError as exc: print(f"[validate] {exc}", file=sys.stderr); return 1

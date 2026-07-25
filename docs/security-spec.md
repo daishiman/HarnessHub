@@ -1,6 +1,6 @@
 ---
 status: confirmed
-qa_ref: [qa-036, qa-037, qa-041, qa-042, qa-045, qa-046, qa-048, qa-050, qa-061]
+qa_ref: [qa-037, qa-042, qa-045, qa-046, qa-048, qa-050, qa-061, qa-072, qa-073]
 layer: implementation-spec
 sources:
   - system-spec/security.md
@@ -18,7 +18,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 >
 > **重複回避の原則**: テーブル定義・endpoint 一覧の**正本は backend-spec.md** 側にあり、本書はそれを**参照**する。本書が正本を持つのは security 固有の関心 — 脅威モデル・認証/認可の判定契約と数値・鍵管理・監査の完全性・入力検査・Web 基本防御・検証手順 — に限る。両者が同じ事実を二重に書かない。
 >
-> **確定根拠**: 2026-07-17 ユーザー確認 (`/spec-hearing-start` 往復ヒアリング)。8 件の設計判断を確定 (§0.3)。
+> **確定根拠**: 2026-07-17 ユーザー確認 (`/spec-hearing-start` 往復ヒアリング) で 8 件の設計判断を確定 (§0.3)。2026-07-25 の R4-reopen (`appr-010`) で session claims と Device Flow polling を `qa-072` / `qa-073` として再確定。
 
 ## 0. 前提と確定根拠
 
@@ -129,7 +129,7 @@ OWASP ASVS + Secrets Management Cheat Sheet (`https://owasp.org/www-project-appl
 | session `maxAge` | **8 時間** | 業務日 1 日の連続利用を許し、翌日は再認証 |
 | session `updateAge` | **15 分** | JWT 再発行の間隔 |
 | **失効許容時間** | **最大 15 分** | JWT は stateless のため role/status 変更は次の再発行まで反映されない |
-| JWT claims | `sub`(user_id) / `tenant_id` / `role` / `status` / `iat` / `exp` | 認可 MW が DB 往復なしで判定できる最小集合 (Turso 読取を節約) |
+| JWT claims | `sub`(user_id) / `tenant_id` / `role` / `status` / `workspace_ids` / `iat` / `exp` | 認可 MW が DB 往復なしで判定できる最小集合 (Turso 読取を節約)。`workspace_ids` は edge が Workspace 越境を DB 往復なしで弾くため (qa-072)。代償は cookie が所属数に比例して膨らむことと membership 変更の 15 分遅延 |
 | 署名鍵 | `AUTH_SECRET` (Workers Secret binding) | §4.5 |
 
 **失効の意味論 (重要)**: `updateAge=15分` ごとの JWT 再発行時に、Auth.js の `jwt` callback で `users.role` / `users.status` を DB から再読込して claims を更新する。したがって **role 剥奪・ユーザー無効化の反映は最大 15 分遅延する**。これを受容する代わりに、以下は**即時失効**とする。
@@ -153,7 +153,7 @@ OWASP ASVS + Secrets Management Cheat Sheet (`https://owasp.org/www-project-appl
 | `user_code` | **8 文字 / Crockford Base32** (`0-9A-HJKMNP-TV-Z`、`I/L/O/U` 除外) ≒ 40 bit | 人が読み上げ・打鍵できる範囲で総当たりに耐える |
 | `user_code` 試行制限 | **5 回失敗で当該 authorization を `denied`** + rate limit (§7.2) | 40 bit でもオンライン総当たりを許さない |
 | `user_code` 有効期間 | device_code と同一 (10 分)。**照合後即失効** | 再利用不可 |
-| polling `interval` | **5 秒** (`slow_down` 受信時は **+5 秒**) | RFC 8628 §3.5 |
+| polling `interval` | **5 秒** (`slow_down` 受信時は **+5 秒**、server 強制の上限 **60 秒**。interval を守った polling では **−5 秒** 減衰・下限 5 秒) | RFC 8628 §3.5 + qa-073。上限なしでは interval が単調増加して `device_code` TTL 600 秒を追い越し server 側から flow を詰ませる (60 秒なら最悪でも 10 回叩ける)。減衰幅を加算と同幅にして交互 polling の罰逃れを防ぐ |
 | access token TTL | **15 分** | 窃取時の悪用窓を最小化 |
 | access token 保存 | **保存しない** (短命 JWT として発行のみ) | `backend-spec.md` §2.2 の既存確定を維持 |
 | refresh token TTL | **90 日** (`publisher_tokens.expires_at`) | 作者に再認証を頻繁に求めない (G1: 非エンジニアの自走) |
@@ -907,4 +907,4 @@ C1 (1 名 + AI) 下で実行可能な最小手順のみを定める。
 - **2026-07-17**: `/spec-hearing-start` の往復ヒアリング (R4-reopen → R2-interview) で S-D1〜S-D8 をユーザー確認により確定。対象セル: `security.{web,desktop-windows,desktop-macos}` / `auth.{web,desktop-windows,desktop-macos}` / `database.web` / `backend.web`。
 - **2026-07-18**: 継続ヒアリング (qa-036/qa-037) で 4 論点 — ASVS 到達目標 (L1 全面 + 重点領域 L2 = §8.1)・セッション/トークンの失効反映 ≤15 分 (§2.1/§2.2)・rate limit 確定テーブル (§7.2)・nonce ベース strict CSP (§7.1) — を AskUserQuestion で再提示し、ユーザーが再確認 (いずれも本書の確定内容と一致)。spec-state の確定登録: `auth.web` = qa-036、`database.web`/`backend.web` = qa-037 (並行セッション登録)、`auth/security の desktop-windows・desktop-macos` = qa-041、`security.web` = qa-042 (並行ヒアリングとの qa 採番衝突を修復して再登録)。本書 frontmatter を `status: confirmed` へ更新。
 - **2026-07-18 (C4 改訂追従)**: qa-050 で確定済みの C4 改訂 delta (qa-045/qa-046・appr-007) を本文へ転記 — §1.2 に業務データ 2 種 (最高機密区分) を追加、§1.3 に T14 (保持業務データのテナント越境読取)・T15 (削除不完全による残存) を追加、§1.4 の旧 N2 を撤回済へ更新。新規の内容変更ではなく確定済み qa の転記漏れ是正 (R4-reopen 不要)。業務データ delta の DDL・検証手順の全面展開は qa-046 の据置どおり feature P02 前の security 深掘りで実施する。
-- 本書の変更は `system-spec/spec-state.json` の確定セルに紐づく。**内容変更には R4-reopen (根拠付き) が必要**。
+- **2026-07-25**: `HarnessHub-l2g9` の R4-reopen とユーザー確認 (`appr-010`) により、session claims の `workspace_ids` を `qa-072`、Device Flow polling の上限 60 秒・−5 秒減衰を `qa-073` として再確定。今後も本書の内容変更には `system-spec/spec-state.json` の確定セルに紐づく R4-reopen (根拠付き) が必要。
