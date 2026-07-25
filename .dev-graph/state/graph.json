@@ -1,5 +1,5 @@
 {
-  "graph_revision": 541,
+  "graph_revision": 548,
   "nodes": [
     {
       "acceptance": [
@@ -33260,6 +33260,564 @@
       "title": ".beads/interactions.jsonl の stash pop コンフリクト解消と JSONL 運用 runbook 整備",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T02:35:37Z"
+    },
+    {
+      "acceptance": [
+        "source=project かつ project_plugin_link が不在の config が exit 非 0 で落ちる",
+        "source=plugin のとき現行の正常 config が引き続き通る",
+        "fixture が declared-but-absent な link を持たない、または持つ理由が明示される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-7tn1",
+        "linked_at": "2026-07-25T03:19:04Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-claude-hooks-project-link-unverified-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "live-trial の fresh evaluator が宣言 path と実体の乖離として申し送り、schema と validator の実装を追って条件付き検査の欠落と確定した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T03:25:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-claude-hooks-project-link-unverified-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "source=project かつ project_plugin_link が不在または非 plain-symlink の config が、validate-repo-config.py で確実に落ちる状態",
+      "graph_node_id": "issue-claude-hooks-project-link-unverified-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T03:25:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "hook fallback 経路の前提 (link が実在し plain symlink である) を、config を検証する決定論経路で機械的に保証する",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/schemas/repo-config.schema.json",
+        "plugins/dev-graph/scripts/validate-repo-config.py",
+        "plugins/dev-graph/skills/run-dev-graph-init/prompts/R5-hooks.md"
+      ],
+      "scope_in": [
+        "repo-config.schema.json へ claude_hooks の条件付き制約を追加するか、validate-repo-config.py の path 層で source=project 時の実在検査を行う",
+        "source が plugin/disabled のとき project_plugin_link を必須にし続けるかを決める",
+        "plain-symlink 要求を機械検査へ落とすか、検査対象外と明示する"
+      ],
+      "scope_out": [
+        "hook 適用そのもの (R5-hooks の deep-merge/rollback 実装)",
+        "guard-graph-schema の fail-open 修正 (issue-guard-graph-schema-timeout-fail-open-20260725)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T03:25:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "schema",
+        "validation",
+        "claude-hooks",
+        "run-dev-graph-init"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "claude_hooks.source=project でも project_plugin_link の実在と plain-symlink 性が機械検査されない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T03:19:13.592819Z"
+    },
+    {
+      "acceptance": [
+        "Bash で `.dev-graph/config.json` へ heredoc 書込みする入力が、graph サイズに依らず 1 秒未満で exit 2 になる",
+        "run-dev-graph-init が fail-open に依存せず config.json を生成できる",
+        "再取得した live-trial verdict の transcript に guard 迂回 (Write 遮断→Bash heredoc) が現れない"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-6in4",
+        "linked_at": "2026-07-25T03:05:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-guard-graph-schema-timeout-fail-open-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "run-dev-graph-init の live-trial 実走 transcript で guard 迂回を観測し、hook を直接計測して原因を確定した実挙動欠陥",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T03:05:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-guard-graph-schema-timeout-fail-open-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph authority への Bash 書込みが graph サイズや負荷に依存せず常に遮断され、かつ run-dev-graph-init が sanctioned な経路で config.json を生成できる状態",
+      "graph_node_id": "issue-guard-graph-schema-timeout-fail-open-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T03:05:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "「単一 fail-closed guard」を名乗る hook が実際には遅延起因で迂回可能である状態を解消し、同時に init が config.json を書く正規経路を与える",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/hooks/guard-graph-schema.py",
+        "plugins/dev-graph/skills/run-dev-graph-init/SKILL.md",
+        "plugins/dev-graph/scripts/upsert-node.py"
+      ],
+      "scope_in": [
+        "guard-graph-schema.py の Bash 破壊操作枝から、遮断判定に寄与しない schema_ok() 呼出しを外す",
+        "`.dev-graph/config.json` に対する C02 相当の atomic writer を用意し guard が allowlist する",
+        "変更後に run-dev-graph-init の live-trial を再取得する"
+      ],
+      "scope_out": [
+        "GRAPH_AUTHORITY_PATH から config.json を単に除外する案 (config は routing authority であり保護を外すのは退行)",
+        "他 plugin の guard hook",
+        "live-trial verdict 不在 6 skill の解消"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T03:05:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "hook",
+        "fail-open",
+        "guard-graph-schema",
+        "run-dev-graph-init"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "guard-graph-schema の Bash 破壊操作枝が決定に無関係な graph 全検証を挟み hook timeout で fail-open する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T03:08:27.024482Z"
+    },
+    {
+      "acceptance": [
+        "`system_spec` の記述が run-dev-graph-system-spec の SKILL.md と矛盾しない",
+        "初期 graph.json の shape が closure 内文書に書かれている",
+        "live-trial 再取得後の transcript で C11 が初回から exit 0 になる"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-0jzd",
+        "linked_at": "2026-07-25T03:10:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-init-closure-doc-debts-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "独立 content-review 2 者が一致して指摘した low/inconsistency と、fresh evaluator が live-trial transcript から検出した未文書化の初期 shape",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T03:10:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-init-closure-doc-debts-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "system_spec の責務記述が姉妹 skill の実装と一致し、初期 graph.json の shape が実行者に推測させない形で明記された状態",
+      "graph_node_id": "issue-init-closure-doc-debts-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T03:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "init の closure 内文書が持つ 2 件の debt を、live-trial 再取得 1 回で同時に解消できる形にまとめておく",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/skills/run-dev-graph-init/references/validation-contract.md",
+        "plugins/dev-graph/scripts/validate-repo-config.py",
+        "plugins/dev-graph/skills/run-dev-graph-init/prompts/R3-init.md"
+      ],
+      "scope_in": [
+        "`system_spec` の生成主体に関する断定を、run-dev-graph-system-spec の実際の責務 (解決と containment 検証) へ合わせる",
+        "初期 graph.json の shape を R3-init.md か references/validation-contract.md へ明記する"
+      ],
+      "scope_out": [
+        "SKILL.md 本文の再構成 (PD-001 の余裕が 1 行しか無く別課題)",
+        "guard-graph-schema の fail-open 修正 (issue-guard-graph-schema-timeout-fail-open-20260725)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T03:10:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "documentation",
+        "run-dev-graph-init",
+        "behavior-closure"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-dev-graph-init の closure 内文書に裏付けなき断定と未文書化の初期 shape が残る",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T03:08:51.801112Z"
+    },
+    {
+      "acceptance": [
+        "lint-live-trial-verdict.py --all が dev-graph/run-dev-graph-init について stale-sha を報告しない",
+        "eval-log/dev-graph/run-dev-graph-init/criteria-test/scenario-verdict.json の target.skill_md_sha256 が現行 SKILL.md の実測 sha と一致する",
+        "pytest plugins/dev-graph/tests/test_skill_criteria_evidence.py が C01 について pass する",
+        "scenario receipt の OUT1 が新 run-id の live-trial verdict を参照する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-5pdc",
+        "linked_at": "2026-07-25T00:29:18Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-init-live-trial-scenario-refresh-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-sgt の実装中に behavior closure digest の失効として機械検出された、挙動面証跡の追随作業",
+      "completion_evidence": {
+        "completed_at": "2026-07-25T03:09:54Z",
+        "evidence_refs": [
+          "eval-log/dev-graph/run-dev-graph-init/live-trial/20260725T014705Z-init-wt9/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-init/live-trial/20260725T014705Z-init-wt9/transcript.jsonl",
+          "eval-log/dev-graph/run-dev-graph-init/criteria-test/scenario-verdict.json",
+          "plugins/dev-graph/tests/test_skill_criteria_evidence.py"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-25T03:09:54Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T00:29:18Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-init-live-trial-scenario-refresh-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "lint-live-trial-verdict.py --all が exit0 になり、test_skill_criteria_evidence.py の C01 2 test が pass する状態",
+      "graph_node_id": "issue-init-live-trial-scenario-refresh-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T00:29:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-sgt の SKILL.md 変更で失効した挙動面の証跡 2 件を genuine な再取得で回復し、run-dev-graph-init の受入証跡チェーンを緑へ戻す",
+      "related_nodes": [],
+      "resource_scope": [
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/criteria-test/scenario-verdict.json",
+        "plugins/dev-graph/skills/run-dev-graph-init/SKILL.md"
+      ],
+      "scope_in": [
+        "run-skill-live-trial を run-dev-graph-init に対して再実行し新 run-id の verdict.json を保存する",
+        "再取得した live-trial verdict を参照する criteria scenario receipt (OUT1) を独立レビューで再取得する",
+        "scenario receipt の target.skill_md_sha256 を再取得時点の実測値へ更新する"
+      ],
+      "scope_out": [
+        "SKILL.md の追加変更 (sgt で確定済み)",
+        "content-review verdict の再取得 (sgt 内で完了済み)",
+        "live-trial verdict 不在 6 skill の解消 (D13 パイロットゲートの record-only 範囲)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T00:29:18Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "live-trial",
+        "evidence-freshness",
+        "run-dev-graph-init"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-dev-graph-init の live-trial verdict と criteria scenario receipt を HarnessHub-sgt の SKILL.md 変更へ追随させる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T11:02:35.378890Z"
+    },
+    {
+      "acceptance": [
+        "Execution contract 5 が step 1-4 と同程度の粒度になっている",
+        "PD-001 が skill-local references/ の存在枝で充足する",
+        "elegance と rubric の両 verdict が移設後の sha で PASS する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-5tp8",
+        "linked_at": "2026-07-25T00:29:18Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-init-skill-body-headroom-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-sgt の content-review で rubric が low として継続指摘し、恒久解として references/ 新設を提案した構造課題",
+      "completion_evidence": {
+        "completed_at": "2026-07-25T03:10:14Z",
+        "evidence_refs": [
+          "plugins/dev-graph/skills/run-dev-graph-init/references/validation-contract.md",
+          "plugins/dev-graph/skills/run-dev-graph-init/SKILL.md",
+          "plugins/dev-graph/tests/test_validate_repo_config.py",
+          "eval-log/dev-graph/run-dev-graph-init/content-review/elegance-verdict.json",
+          "eval-log/dev-graph/run-dev-graph-init/content-review/rubric-verdict.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-25T03:10:14Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T00:29:18Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-init-skill-body-headroom-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Execution contract 5 が 2 コマンドと停止条件だけを述べ、詳細は skill-local references/ が持ち、PD-001 が references 枝でも充足する状態",
+      "graph_node_id": "issue-init-skill-body-headroom-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T00:29:18Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "本文行数の上限に張り付いた状態を解消し、以後の run-dev-graph-init への追記が PD-001 違反や過積載を招かない構造にする",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/skills/run-dev-graph-init/SKILL.md"
+      ],
+      "scope_in": [
+        "skill-local references/ の新設と検証契約詳細の退避",
+        "Execution contract 5 の主張数の削減",
+        "移設後の content-review 再評価 (elegance/rubric 両方)"
+      ],
+      "scope_out": [
+        "validate-repo-config.py の挙動変更 (HarnessHub-sgt で確定済み)",
+        "live-trial / criteria scenario receipt の再取得 (HarnessHub-5pdc の担当)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T00:29:18Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "skill-design",
+        "pd-001",
+        "run-dev-graph-init"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-dev-graph-init に skill-local references/ を新設し Execution contract 5 の過積載と PD-001 の残 1 行を同時に解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T11:01:51.664887Z"
     },
     {
       "acceptance": [

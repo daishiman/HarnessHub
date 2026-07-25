@@ -29,7 +29,7 @@
 
 ## Layer 3: インフラ層
 
-- 使用資産: Write/Edit、`validate-graph-schema.py`。
+- 使用資産: Write/Edit、`validate-repo-config.py` (生成 config)、`validate-graph-schema.py` (初期 graph)。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
