@@ -1,0 +1,74 @@
+{
+  "graph_node_id": "issue-auth-tenancy-spec-delta-20260725",
+  "artifact_kind": "issue",
+  "artifact_subtypes": [],
+  "title": "feat-auth-tenancy の実装が security-spec の確定値を 2 点だけ超えており R4-reopen が要る",
+  "project_id": "harness-hub",
+  "domain": "security",
+  "status": "draft",
+  "owners": ["daishiman"],
+  "tags": ["follow-up", "spec-drift", "auth-tenancy", "qa-036", "qa-041", "r4-reopen"],
+  "priority": "medium",
+  "start_date": null,
+  "target_date": null,
+  "iteration": null,
+  "created_at": "2026-07-25T11:40:00Z",
+  "updated_at": "2026-07-25T11:40:00Z",
+  "depends_on": [],
+  "related_nodes": ["feat-auth-tenancy", "arch-harness-hub-security"],
+  "resource_scope": [
+    "system-spec/spec-state.json",
+    "system-spec/auth.md",
+    "docs/security-spec.md"
+  ],
+  "purpose": "feat-auth-tenancy の実装は security-spec / auth.md の確定値を 2 点だけ超えている。(1) session JWT claims: docs/security-spec.md §2.1 の表と system-spec/auth.md qa-036 は claims を sub/tenant_id/role/status/iat/exp の『最小集合』と列挙して確定しているが、実装 (packages/schemas/auth-tenancy/session.ts) は edge が Workspace 越境を DB 往復なしで弾けるよう workspace_ids を追加している。列挙で確定した集合に対する追加であり、cookie 肥大と membership 変更の 15 分遅延という代償を伴う。(2) Device Flow polling interval: docs/security-spec.md §2.2 の数値契約は『5 秒 (slow_down 受信時は +5 秒)』までで、上限も減衰も確定していない。実装は server 強制の上限 60 秒と、interval を守った polling に対する -5 秒の減衰を導入した (ADR 追補 §10.7)。上限が無いと単調増加した interval が device_code TTL 600 秒を追い越し、server 側から flow を詰ませるため導入した決定である。いずれも Publisher CLI から観測できる契約であり、実装側のリファクタでは消えない。正本 (system-spec/ は spec-state.json の qa_log からの compile 成果物、docs/security-spec.md は本文に『内容変更には R4-reopen が必要』と明記) を手編集すると確定ヒアリング記録の改竄になり、かつ docs/security-spec.md は doc-line-limit allowlist の縮小のみ許す ratchet 対象 (baseline 910 行) のため加筆が CI で落ちる。よって正規フローは R4-reopen による再確認である",
+  "goal": "session claims の確定集合と Device Flow polling の上限・減衰が、実装ではなく確定済み仕様側に記録され、Publisher CLI 実装者が仕様書だけを読んで正しい client を書ける状態",
+  "scope_in": [
+    "qa-036 (auth.web: session/token 失効反映) の R4-reopen で session claims へ workspace_ids を追加するか、edge の Workspace 判定を別手段へ変えるかを確定する",
+    "qa-041 (auth/security の desktop-*: Device Flow 数値契約) の R4-reopen で polling interval の上限値と減衰規則を確定する",
+    "確定後に system-spec/spec-state.json へ登録し system-spec/auth.md を再 compile、docs/security-spec.md §2.1/§2.2 の該当行を置換 (行数を増やさない置換に留める)"
+  ],
+  "scope_out": [
+    "実装の変更 (現行実装は動作しており、確定の結果が現行と異なる場合にのみ改修する)",
+    "docs/security-spec.md の 300 行分割 (HarnessHub-3d8 が所有)",
+    "feat-auth-tenancy の他の未達 (CI 結線=HarnessHub-1f28 / Auth.js 実結線=HarnessHub-b7ng)"
+  ],
+  "acceptance": [
+    "spec-state.json の qa_log に、session claims への workspace_ids 追加の可否と根拠がユーザー確認付きで登録されている",
+    "spec-state.json の qa_log に、polling interval の上限値 (現行実装は 60 秒) と減衰規則の可否がユーザー確認付きで登録されている",
+    "docs/security-spec.md §2.1 の claims 行と §2.2 の polling 行が確定内容と一致し、lint-doc-line-limit.py が exit 0 のままである",
+    "packages/schemas/auth-tenancy/session.ts と apps/hub/src/lib/auth/config.ts の値が確定内容と一致する (差がある場合は実装を改修する)"
+  ],
+  "architecture_refs": ["arch-harness-hub-security"],
+  "parent_feature": null,
+  "feature_package_id": null,
+  "phase_ref": null,
+  "file_path": "issues/sys-auth-tenancy-spec-delta-20260725.md",
+  "template_id": "issue",
+  "template_version": "1.0.0",
+  "confirmation_status": "draft",
+  "evaluation_status": "pending",
+  "confirmation_evidence": {"evaluated_digest": null, "evaluator": null, "evidence_ref": null},
+  "source_lineage": {
+    "imported_at": "2026-07-25T11:40:00Z",
+    "origin_kind": "manual",
+    "source_digest": null,
+    "source_path": "docs/features/feat-auth-tenancy/architecture-implementation-notes.md",
+    "source_plugin": null,
+    "source_version": null
+  },
+  "classification_confidence": 0.9,
+  "classification_reason": "feat-auth-tenancy の最終レビューで検出した、確定仕様を超える実装決定 2 件を R4-reopen へ送る issue",
+  "classification_candidates": [
+    {"artifact_kind": "issue", "candidate_path": "issues/sys-auth-tenancy-spec-delta-20260725.md", "confidence": 0.9}
+  ],
+  "github_publication": {"labels": [], "milestone": null, "mode": "local_only", "project_aliases": []},
+  "issue_linkage": null,
+  "tracker_binding": "beads",
+  "beads_linkage": null,
+  "github_project_linkages": [],
+  "pull_request_linkages": [],
+  "execution_contexts": [],
+  "completion_evidence": {"completed_at": null, "evidence_refs": [], "policy": "manual", "reconciled_at": null, "source": null, "status": "open"},
+  "implementation_readiness": {"checked_at": "2026-07-25T11:40:00Z", "missing_sections": [], "status": "incomplete"}
+}
