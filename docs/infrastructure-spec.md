@@ -89,6 +89,10 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 
 backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turso dump) を考慮して 3 系統に集約する。時刻は UTC (JST = UTC+9)。
 
+> **上限の単位 (2026-07-25 実測で確定)**: Cloudflare Free プランの cron trigger 上限 **5 本は Worker 単位ではなくアカウント単位**である。**同一 Cloudflare アカウントに載る全プロジェクトで枠を共有する**ため、本 Worker の cron 本数だけでは登録可否が決まらない。上限超過時の API 応答は `{"code":10072,"message":"You have exceeded the limit of 5 cron triggers."}` だが、**`wrangler` はこの本文を出力せず「A request to the Cloudflare API failed.」としか表示しない**。切り分けは Cloudflare API を直接叩くこと (手順は [features/feat-hub-foundation/runbook.md](features/feat-hub-foundation/runbook.md) §4.1)。
+>
+> この制約は「3 系統への集約」という上の設計判断を**強める**。Hub 単独では 2 本で収まっていても、アカウント側の空き枠が無ければ登録できないためである。cron を増やす変更は、本 Worker の本数ではなく**アカウント全体の残枠**を先に数えてから設計する。
+
 | cron 式 (UTC) | 実行主体 | ジョブ (順次実行・ジョブ単位 try/catch) |
 |---|---|---|
 | `0 15 * * *` (JST 0:00) | Workers scheduled handler | ① metrics rollup (日次) → ② Turso 使用量監視 → ③ orphan_candidate 通知 → ④ token/認可コード掃除 |
@@ -188,6 +192,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | サービス | 無料枠 (確認 2026-07-17) | 監視方法 / 閾値 |
 |---|---|---|
 | Workers | 10 万 req/日・CPU 10ms/呼出・bundle 3MiB | Cloudflare analytics 月次レビュー。req 70% で警告 |
+| **Workers cron trigger** | **5 本 / Cloudflare アカウント全体**（Worker 単位ではない = §5。他プロジェクトと枠を共有する） | TODO(human) |
 | R2 | 10GB・Class A 100万/月・Class B 1,000万/月 | 同上 + backup lifecycle (§3) で増加抑制 |
 | Turso | 5GB・読取 5 億行/月・書込 1,000 万行/月 | **日次 cron 監視 (§5)。70% 警告 / 90% で R4-reopen** |
 | Resend | 3,000 通/月・100 通/日 | 送信キューのバッチ分割 (D6)。失敗ログ月次レビュー |

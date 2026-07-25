@@ -12,6 +12,20 @@ measured_at: "2026-07-21"
 # feat-hub-foundation 受入判定 (P07)
 
 > **裁定規約**: requirements-baseline.md §9.3 に従い、**実行済み証跡のみ**を裁定対象とする。「実装予定」「文書化済み」は pass 根拠にしない。未実行は「未実行」として報告する（test-design.md §5 fail-closed）。
+>
+> **本文は 2026-07-21 の P07 裁定時点の記録である。** 以降に状態が変わった acceptance は §0 に追記する。当時 blocked だった事実を消さないため、本文の判定は書き換えない。
+
+## 0. P07 裁定後の状態変化（追記）
+
+| acceptance | P07 時点 | 現在 | 変化の根拠 |
+|---|---|---|---|
+| A1 CI が test→deploy を完走 | blocked | **合格（2026-07-25 / P13）** | main への push で run **[30143422049](https://github.com/daishiman/HarnessHub/actions/runs/30143422049)**（`ec0f3e45`）が 3 job すべて success。deploy job は `needs: [static-gates, test]` により両ゲート success を経由しなければ起動しないため、「同一 run 内で test → deploy が success」を満たす。証跡 `evidence/ci-run.md` §確定 run / `evidence/deploy-2026-07-25.json` |
+| A2 bundle 3MiB 以内 | 合格 | **合格（維持）** | 本番アップロード時の実測は gzip **1034.27 KiB（約 1.010 MiB）**。P07 時点の dry-run 実測 0.952 MiB より約 6% 大きいが、いずれも 3 MiB 予算内。CI の G5 ゲートも success |
+| A3 SLO 99.5% の計測と /health 稼働 | 部分達成（blocked） | **部分達成（未達のまま）** | `/health` は本番稼働を再確認（CI の post-deploy 疎通で HTTP 200・依存 3 件 ok）。監視・SLO の**設定正本**（`apps/hub/monitoring/`）は 2026-07-25 に確定し `HF-A3-SLO-001` で回帰固定したが、**Better Stack への適用が未実施**（`application_state: pending_credentials`）で時系列が無い。フォローアップ `HarnessHub-37h.15` で追跡する |
+| A4 共通層の単一実装 | 条件付き合格 | **条件付き合格（維持）** | 実 consumer 未結線 5 層の状態は変わっていない（§2.1） |
+
+- A1 の証跡には限定条件がある。**deploy job のみ再実行しており、3 job を一度の連続実行で通したわけではない**（同一 sha に対する再実行のため検査対象コードは同一）。詳細は `evidence/ci-run.md` §証跡の性質。
+- **A3 が未達である以上、feature の acceptance 4 件は全件充足していない。** P13（デプロイ作業）は完了だが、それは epic `HarnessHub-37h` の完了を意味しない。
 
 ## 1. 判定サマリ
 
