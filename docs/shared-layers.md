@@ -61,12 +61,12 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 
 | 共通機構 | 内容 | 根拠 |
 |---|---|---|
-| CI 品質ゲート | 下記「CI 品質ゲート登録簿 (G1〜G11)」に一覧化。qa-038【2】の required status checks 8 種 (G1〜G8。unit / integration と Tenant 分離は G4 に統合) + 横断品質ゲート (G9・G10) + CWV 定期計測 (G11) を一元管理する | qa-018, qa-020, qa-038, qa-039, D1 |
+| CI 品質ゲート | 下記「CI 品質ゲート登録簿 (G1〜G12)」に一覧化。qa-038【2】の required status checks 8 種 (G1〜G8。unit / integration と Tenant 分離は G4 に統合) + 横断品質ゲート (G9・G10・G12) + CWV 定期計測 (G11) を一元管理する | qa-018, qa-020, qa-038, qa-039, D1 |
 | デプロイ | wrangler CLI (GitHub Actions)。Hub と WebApp 出口で同一ツール系統 | qa-003, D1 |
 | 監視 | /health + Workers logs/analytics + 外部死活監視 + SLO ダッシュボード + エラーバジェットアラート。外形監視と SLO の設定正本は `apps/hub/monitoring/` (config as code。外部適用状態は `application_state` で分離し、設定の存在を稼働と読み替えない = infrastructure-spec §9) | qa-011, qa-019 |
 | バックアップ | Turso 日次 export → R2。四半期 restore drill (復元できないバックアップは成功と数えない) | qa-019 |
 
-### CI 品質ゲート登録簿 (G1〜G11)
+### CI 品質ゲート登録簿 (G1〜G12)
 
 **設計正本**: [feat-hub-foundation/architecture-decision-record.md](features/feat-hub-foundation/architecture-decision-record.md) §6 / **要件正本**: `system-spec/spec-state.json` の qa-038【2】と `system-spec/dev-workflow.md` / **実装**: `.github/workflows/ci.yml`・`.github/workflows/cwv.yml`。旧登録簿の 5 項目 (pnpm 混入検査 / axe / bundle 予算 / Tenant 分離 / 検査 pipeline 挙動同値) は G1/G4/G5/G9 の 4 ゲートに対応し、G2/G3/G6/G7/G8/G10/G11 が欠落していた (ADR §6 改訂 2 / R-03・R-05、申し送り F-2 の解消)。
 
@@ -75,7 +75,7 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 | G1 | pnpm 強制 | corepack pin (正本機構) + `packageManager` 検証 + `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` / `bun.lockb` の混入検出 | 検出で非ゼロ終了 | 静的ゲート | qa-038【2】, qa-039, A1 |
 | G2 | lint / format | リポジトリ規約に沿った静的整形検査 (Biome) | 違反で fail | build & test | qa-038【2】 |
 | G3 | typecheck | `pnpm -r typecheck` (TypeScript strict) | 型エラーで fail | build & test | qa-038【2】 |
-| G4 | unit / integration / contract test | `pnpm -r test` (Tenant 分離・検査 pipeline 挙動同値・contract を含む) | 失敗で fail | build & test | A1, A4, qa-006, qa-010, qa-038【2】 |
+| G4 | unit / integration / contract test | `pnpm -r test` (Tenant 分離・検査 pipeline 挙動同値・contract を含む)。うち Tenant 分離は下記「G4 の名指し部分」で対象実在・ケース無効化を検査したうえで名指し実行する | 失敗で fail | build & test | A1, A4, qa-006, qa-010, qa-038【2】 |
 | G5 | bundle 予算 | OpenNext build 出力の gzip 後サイズ ≤ 3 MiB (Worker) | 超過で非ゼロ終了 | build & test | A2, qa-018, qa-038【2】 |
 | G6 | secret scan | `packages/inspection` の secret scan を CI からも呼ぶ (publish pipeline と同一実装) | 検出で fail | build & test | A4, SEC, qa-038【2】 |
 | G7 | 破壊的 DDL 検査 | drizzle migration の expand/contract 3 段階違反を検出 | 違反で fail | build & test | qa-038【2】【5】 |
@@ -83,11 +83,14 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 | G9 | axe a11y | `packages/ui` 部品単体 + `apps/hub` 画面結合の 2 段 | 違反 1 件以上で fail | build & test | qa-018 |
 | G10 | duplicate implementation detector | 登録共通層 (§1〜§2) の owner package 外の同名 export / 境界迂回 import を検出 | 1 件以上で fail | 静的ゲート | A4 |
 | G11 | Core Web Vitals 計測 | main 反映後の定期 Lighthouse 計測で LCP ≤ 2.5s / CLS ≤ 0.1 / TBT ≤ 200ms (INP ≤ 200ms の lab 代理指標) を確認 | good を外れたら是正起票 | main 反映後 定期 | qa-018, R-05 |
+| G12 | 認証・認可 静的検査 | `apps/hub/scripts/check-auth-gates.mjs` が束ねる 3 検査 — Auth.js 境界隔離 (D3 / T-BND-01・02) / 認可判定の単一集約 + route 例外の厳密一致 (SEC2 / AD-4) / dev 専用 provider の非存在 (I7 / T-BND-03・04) | 1 本でも違反で非ゼロ終了 | 静的ゲート | qa-020, SEC2, D3, I7 |
 
 - **G11 を PR 単位に置かない理由**: PR ごとの Lighthouse は GitHub Actions 無料枠 (2,000 分/月) を圧迫し C2 に反するため、main 反映後の定期計測で確保する (ADR §6 R-05)。よって G11 は merge ブロック対象の「8 種」に数えない。
 - **G6 の第 2 consumer は CI 自身** (ADR §6 R-07): Publisher が未実装で workspace member でもないため、A4-1「実在 consumer のみ対象」規則により CI を実在 consumer として成立させる。
+- **G12 を install 前の静的ゲート段に置く理由** (2026-07-25 追記): 3 検査はいずれも「名前と参照経路」から決定的に判定でき、next-auth のインストール有無にも実行環境にも依存しない。依存インストール前に落とせるため、G1・G10 と同じ段に置く。local 側の同一入口は root の `pnpm check:auth` (ADR §6 R-18)。
+- **G4 の名指し部分** (2026-07-25 追記): qa-038【2】は Tenant 分離テストを必須ゲートとして名指しするが、`pnpm -r test` に含まれているだけでは、ファイル分割や `it.skip` で 1 件も実行されなくなっても緑のまま通る。そこで `scripts/ci/check-tenant-isolation-gate.mjs` が (1) 対象ファイル `apps/hub/tests/auth-tenancy/tenant-isolation.test.ts` の実在、(2) T-ISO-01〜07 の ID 網羅、(3) skip / todo / only による無効化の不在 を検査したうえで、`apps/hub` の `test:tenant-isolation` を名指し実行する。**これは G4 の内訳を明示するものでゲート数を増やさない** (qa-038【2】の「8 種」の数え方は変わらない)。`packages/db` 側の schema 駆動な網羅検査 (G7b `check:tenant-isolation-coverage`) が「どのテーブルを覆うか」を守るのに対し、こちらは「そのテストが実際に走り続けるか」を守る。
 
-**CI が 2 系統ある境界** (2026-07-21 追記): 本リポジトリは Hub 本体 (プロダクト) と Claude Code スキルハーネス (`plugins/`) の 2 つを同居させており、CI も 2 系統に分かれる。この登録簿 (G1〜G11) と qa-038【2】の required status checks 8 種が対象とするのは **プロダクト層 (`.github/workflows/ci.yml` / `.github/workflows/cwv.yml`)** のみである。
+**CI が 2 系統ある境界** (2026-07-21 追記): 本リポジトリは Hub 本体 (プロダクト) と Claude Code スキルハーネス (`plugins/`) の 2 つを同居させており、CI も 2 系統に分かれる。この登録簿 (G1〜G12) と qa-038【2】の required status checks 8 種が対象とするのは **プロダクト層 (`.github/workflows/ci.yml` / `.github/workflows/cwv.yml`)** のみである。
 
 | 層 | workflow | 宣言の正本 | 対象 |
 |---|---|---|---|
@@ -96,9 +99,11 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 
 メタ層のゲート (配置規約 lint・skill description lint・live-trial 証跡の検査など) を qa-038 の 8 種へ数え入れないこと。**逆に「8 種に無いから未配線だ」と判断しないこと** — 別の正本が別の workflow で機械強制している。両者はゲートの数を互いに増減させない独立系統であり、片方の変更はもう片方の仕様反映を要さない。
 
-**登録簿 G1〜G11 と「8 種」の対応** (2026-07-24 追記, F-2): qa-038【2】は pnpm 強制 / lint・format / typecheck / unit・integration / bundle 予算 / secret scan / Tenant 分離 / 破壊的 DDL / OpenAPI・zod drift の 9 項目を列挙する。このうち unit・integration と Tenant 分離を同じテスト段 (G4) で実行するため、ゲートとしては **G1〜G8 の 8 種**になる。G9 (axe a11y)・G10 (duplicate detector)・G11 (CWV) は qa-018・A4・R-05 から加わる横断品質ゲートである。
+**登録簿 G1〜G12 と「8 種」の対応** (2026-07-24 追記, F-2 / 2026-07-25 に G12 を追記): qa-038【2】は pnpm 強制 / lint・format / typecheck / unit・integration / bundle 予算 / secret scan / Tenant 分離 / 破壊的 DDL / OpenAPI・zod drift の 9 項目を列挙する。このうち unit・integration と Tenant 分離を同じテスト段 (G4) で実行するため、ゲートとしては **G1〜G8 の 8 種**になる。G9 (axe a11y)・G10 (duplicate detector)・G11 (CWV)・G12 (認証・認可 静的検査) は qa-018・A4・R-05・qa-020 から加わる横断品質ゲートであり、**8 種には数えない**。したがって G12 の追加は qa-038【2】が列挙する 9 項目を増減させず、`system-spec/spec-state.json` の改訂を要さない (G9・G10 を追加したときと同じ扱い)。
 
-**実行段との対応**: `.github/workflows/ci.yml` では G1・G10 を install 前の `static-gates` job、G2〜G9 を `build & test (G2-G9 required status checks)` job で実行し、G11 は `.github/workflows/cwv.yml` で main 反映後に定期実行する。したがって `G2-G9` という job ラベルは**実行段のまとまり**であり、qa-038【2】の要件番号との一対一対応を意味しない。
+**実行段との対応**: `.github/workflows/ci.yml` では G1・G10・G12 を install 前の `static-gates` job、G2〜G9 を `build & test (G2-G9 required status checks)` job で実行し、G11 は `.github/workflows/cwv.yml` で main 反映後に定期実行する。したがって `G2-G9` という job ラベルは**実行段のまとまり**であり、qa-038【2】の要件番号との一対一対応を意味しない。
+
+**local からの実行 (ADR §6 R-18 / qa-039【2】)**: required status checks と同一の実装を root の `pnpm verify` から呼べる状態を保つ。現在の対応は G1=`check:pnpm` / G10=`check:duplicates` / G12=`check:auth` / G2=`lint` / G3=`typecheck` / G4=`test` + `check:tenant-isolation` / G6=`check:secrets` / G8=`check:drift` / G5=`check:bundle`。**未結線 (CI にのみ存在する) のは G7 (破壊的 DDL) / G7b (tenant 分離網羅・接続層隔離) / G9 (axe a11y)** であり、これらは着手前に local で気づけない。ゲートを追加するときは CI と同時に local 入口も用意すること。
 
 **不変条件 (数え違いとドリフトの防止)**: ゲートを 1 つでも増減するときは、(1) `.github/workflows/ci.yml` / `.github/workflows/cwv.yml` の対象 job・step、(2) この登録簿の G 番号表と実行段、(3) `system-spec/spec-state.json` qa-038【2】および `system-spec/dev-workflow.md` の CI / local 同値要件、(4) ADR §6 — の 4 者を**必ず同一 PR で揃えて改訂する** (どれか 1 つだけを直すと、この F-2 と同じ「登録簿だけ取り残される」劣化コピーが再発する)。この対応はプロダクト層だけを対象とし、上の「2 系統ある境界」で述べたメタ層 (`governance-check.yml`) のゲート数とは独立である。
 

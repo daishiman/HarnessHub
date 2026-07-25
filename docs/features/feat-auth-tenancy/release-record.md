@@ -83,8 +83,9 @@ P12 runbook-oidc-provider-onboarding.md §1 の手順に従う。テナントご
 ### Step 3: `apps/hub` のデプロイ (R2)
 
 ```bash
-pnpm verify        # 全ゲート (lint / typecheck / build / build:worker / test / secrets / drift / bundle)
-node apps/hub/scripts/check-auth-gates.mjs   # ⚠️ verify に含まれていない (§5 参照)
+pnpm verify        # 全ゲート (pnpm / duplicates / auth / lint / typecheck / build / build:worker / test / tenant-isolation / secrets / drift / bundle)
+# 2026-07-25 以降、auth 3 ゲートと tenant 分離の名指しゲートは verify に含まれる (§5 参照)。
+# 個別に確かめたいときのみ: pnpm check:auth / pnpm check:tenant-isolation
 # デプロイは既存の Cloudflare Workers (OpenNext) 手順に従う
 ```
 
@@ -130,13 +131,13 @@ P10 / P11 から引き継いだもの。**リリース前に解消すること�
 
 | 項目 | 影響 | 引き継ぎ |
 | --- | --- | --- |
-| `check-auth-gates.mjs` が CI へ未結線 | 境界検査・単一集約検査・dev provider 検査が**自動では走らない**。人間が忘れれば検査は動かない | bd `HarnessHub-1f28` (`apps/hub/package.json` へ 1 行追加 + root `verify` から呼ぶ) |
-| 分離テストが CI 必須ゲートとして名指しされていない | hub テストスイート内では実行されるが、将来テストが分割・スキップされたとき静かに外れうる | bd `HarnessHub-1f28` (同課題に統合) |
+| ~~`check-auth-gates.mjs` が CI へ未結線~~ | ✅ **解消 (2026-07-25)** | bd `HarnessHub-1f28` closed。`ci.yml` G12 + root `pnpm check:auth` |
+| ~~分離テストが CI 必須ゲートとして名指しされていない~~ | ✅ **解消 (2026-07-25)** | bd `HarnessHub-1f28` closed。`scripts/ci/check-tenant-isolation-gate.mjs` + `test:tenant-isolation` |
 | `validate-system-plan.py` が `status=fail` (27 件) | plan package の task-spec 側の記述欠落。実装成果物の欠陥ではない (P11 §9) | bd `HarnessHub-mvdc` |
 | `next-auth` 未導入 | 実ログインが通らない | 別途の意思決定 |
 | 本番 AuthPorts adapter 未結線 | Device/Token API の composition root が例外になる | bd `HarnessHub-b7ng` |
 | `test-design.md` の `T-SESS-05` 文言が実装と不一致 | 文書の齟齬のみ (実装は安全側で正しい) | P04 改訂時 |
-| 実装が確定仕様を 2 点超えている (session claims の `workspace_ids` / polling 上限 60 秒・減衰) | 仕様書だけを読んだ Publisher CLI 実装者が誤った client を書きうる。実装は安全側で正しい | bd `HarnessHub-l2g9` (qa-036 / qa-041 の R4-reopen) |
+| ~~実装が確定仕様を 2 点超えている (session claims の `workspace_ids` / polling 上限 60 秒・減衰)~~ | 解消済み。R4-reopen とユーザー確認 `appr-010` を経て `qa-072` / `qa-073` として仕様へ反映 | bd `HarnessHub-l2g9` (closed) |
 
 ---
 

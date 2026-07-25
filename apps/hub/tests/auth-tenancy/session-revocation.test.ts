@@ -46,7 +46,7 @@ describe('T-SESS-01〜03: 数値・cookie・claims の契約 (QC-7)', () => {
       deviceCodeTtlSeconds: 600, // 10 分
       devicePollIntervalSeconds: 5,
       devicePollBackoffSeconds: 5,
-      devicePollMaxIntervalSeconds: 60, // 仕様書ではなく ADR 実装追補 §10.7 の決定
+      devicePollMaxIntervalSeconds: 60, // security-spec §2.2 (qa-073 で確定)
       userCodeLength: 8,
       userCodeMaxAttempts: 5,
       accessTokenTtlSeconds: 900, // 15 分
@@ -77,7 +77,7 @@ describe('T-SESS-01〜03: 数値・cookie・claims の契約 (QC-7)', () => {
     expect(serializeClearedSessionCookie()).toContain('Max-Age=0');
   });
 
-  it('T-SESS-03: session claims が sub / tenant_id / role / status / iat / exp を持つ', () => {
+  it('T-SESS-03: session claims が sub / tenant_id / role / status / workspace_ids / iat / exp を持つ', () => {
     const claims = buildSessionClaims(USER, NOW);
     expect(claims).toEqual({
       sub: 'user-1',

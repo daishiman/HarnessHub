@@ -49,3 +49,11 @@ python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root .
 ## 4. P13 の仕様書・アーキテクチャ書き戻し
 
 P13 は qa-071 を実装する `system-task-goal-seek/v1` に従い、実行結果・判断・改善点を `system-spec/dev-workflow.md` と `architecture/harness-hub-dev-workflow.md` へ writer/正規生成経路で反映する。rubric verdict が PASS になる前、または commit/push/PR が未実行の時点では release receipt と epic を完了扱いにしない。
+
+## 5. qa-071 の意味被覆は C12 で機械強制される (2026-07-25 以降)
+
+本 feature の frontmatter `tags` にある `qa-071` は、2026-07-25 の契約 version 1.2.0 以降 **宣言だけでは被覆と見なされない**。plan を再生成するときは、確定 QA の内容が goal-spec の `purpose` / `goal` / `scope_in` / `scope_out` / `acceptance` と exact-13 task spec の全件に降りている必要がある。
+
+手順と違反 code (`qa-ref-unregistered` / `qa-semantic-coverage` / `qa-task-trace` / `qa-tags-unparsable`) の正本は `plugins/system-dev-planner/references/feature-execution-package-contract.md` §2.5 で、判定経緯は [docs/plugin-contracts/system-dev-planner-qa-semantic-coverage.md](../../plugin-contracts/system-dev-planner-qa-semantic-coverage.md) に記録した。ここに手順を複写しない (正本が 2 つになる)。
+
+**現行世代の `tasks/feat-dev-pipeline-improvement/*.md` は手編集しない。** これらは `source_digest: 9be3809d…` で凍結済み promoted package に束縛された投影であり、本文へ qa-071 を手で足すと `published_digest` との乖離を生む。本文伝播は契約 1.2.0 下での再 plan で行い、HarnessHub-8wo で追跡する。

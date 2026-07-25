@@ -203,11 +203,13 @@ D4 の決定により、テナント分離は **row-level-scope 方式** (1 つ�
 ## 付録: 参照コマンド
 
 ```bash
-# 認可・境界の静的検査を一括実行
-node apps/hub/scripts/check-auth-gates.mjs
+# 認可・境界の静的検査を一括実行 (CI の G12 と同一実装。2026-07-25 に verify へ結線)
+pnpm check:auth
+node apps/hub/scripts/check-auth-gates.mjs   # 束ね役を直接叩く場合
 
-# テナント分離テストのみ実行
-cd apps/hub && pnpm exec vitest run tests/auth-tenancy/tenant-isolation.test.ts
+# テナント分離テスト (CI の「G4 名指し」と同一実装。対象実在・ID 網羅・skip 不在も検査する)
+pnpm check:tenant-isolation
+cd apps/hub && pnpm exec vitest run tests/auth-tenancy/tenant-isolation.test.ts   # テストのみ
 
 # 認証・認可の全テスト
 cd apps/hub && pnpm exec vitest run tests/auth-tenancy

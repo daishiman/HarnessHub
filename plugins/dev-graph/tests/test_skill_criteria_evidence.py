@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import re
 from pathlib import Path
 
 import jsonschema
@@ -250,3 +251,28 @@ def test_positive_scenarios_are_not_vacuous_by_contract() -> None:
             f"{scenario['scenario_id']}: required_observations must assert on a case that is "
             "excluded, rejected or converges to zero; otherwise the criterion can hold vacuously"
         )
+
+
+def test_declared_thresholds_are_resolvable():
+    """observation が参照する閾値が実際に数値として宣言されていることを要求する。
+
+    2026-07-25 live-trial 再取得で、C14 の observation 1 が「declared granularity
+    threshold」を参照しているのに、その閾値が scenario にも SKILL.md にも数値として
+    存在しないことが判明した。上の exclusion_markers 検査は observation の「文言」に
+    zero/no が含まれるかしか見ないため、参照先が存在しない観測を通してしまう。
+    評価者は検証不能な観測を代替検査で読み替えるか、空虚に成立させるしかなくなる。
+    """
+    suite = json.loads(POSITIVE_SCENARIOS.read_text(encoding="utf-8"))
+    for scenario in suite["scenarios"]:
+        for observation in scenario["required_observations"]:
+            for field in sorted(set(re.findall(r"\b([a-z_]+_threshold)\.", observation))):
+                declared = scenario.get(field)
+                assert isinstance(declared, dict), (
+                    f"{scenario['scenario_id']}: observation references {field} but the "
+                    f"scenario declares no such object"
+                )
+                for key in ("metric", "max_value"):
+                    assert declared.get(key) is not None, (
+                        f"{scenario['scenario_id']}: {field}.{key} is unset, so the "
+                        f"observation referencing it cannot be verified"
+                    )
