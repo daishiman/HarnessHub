@@ -1,0 +1,26 @@
+{
+  "applied": [],
+  "changes": 0,
+  "conflicts": [],
+  "converged": false,
+  "executed_at": "2026-07-25T02:45:36.810795Z",
+  "exports": [],
+  "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "graph_sha256_before": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "imports": [],
+  "mode": "dry-run",
+  "ok": true,
+  "pending_retry": [
+    {
+      "binding": "beads",
+      "node": "issue-build-trace-doc-coverage-schema-drift-20260723",
+      "reason": "external_linkage_missing"
+    }
+  ],
+  "remote_sha256_after": null,
+  "remote_sha256_before": null,
+  "snapshot_sha256_after": "2b370eb6a344a4246db5eaf6667bb8063035baa328b6bdb15a4cf0f9a4774d55",
+  "snapshot_sha256_before": "2b370eb6a344a4246db5eaf6667bb8063035baa328b6bdb15a4cf0f9a4774d55",
+  "tombstones": [],
+  "write_count": 0
+}

@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-07-25T00:46:20Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P07"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security"]
 resource_scope: ["apps/hub/src/app/api/v1/device/","apps/hub/src/app/api/v1/token/","apps/hub/src/lib/auth/","docs/features/feat-auth-tenancy/refactoring-migration-note.md","packages/schemas/auth-tenancy/"]

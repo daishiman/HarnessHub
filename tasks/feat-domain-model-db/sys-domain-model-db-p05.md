@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:31:57Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P04"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: [".github/workflows/ci.yml","packages/db/__tests__/backup-restore.test.ts","packages/db/__tests__/fixtures/two-tenants.ts","packages/db/backup/","packages/db/connection/","packages/db/registry/","packages/db/repository/","packages/db/schema/core/","packages/db/schema/index.ts","packages/db/scripts/export-control-plane.ts","packages/db/scripts/restore-control-plane.ts"]

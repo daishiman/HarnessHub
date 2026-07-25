@@ -1,5 +1,5 @@
 {
  "original_goal": "仕様書・アーキテクチャをplugins/system-spec-harness/の正規フローで構築し、出典・確定状態・上位目的traceを保ったままdev-graphのspecification/architectureノードへ取り込んだ状態になっている",
  "recorded_at": "2026-07-21T21:17:30Z",
- "run_note": "2026-07-23 wt-1: 差分ヒアリング — dev-graph/beads (bd) のタスク優先度選定を目的・背景・MVP の3軸による MVP ファースト基準へ組み替える (qa-069)。dev-workflow.web を R4-reopen→再確定し、compile→evaluator→C02 の正規フローで反映。既存 qa-066/qa-067 の要件は維持"
+ "run_note": "2026-07-24 wt-8: 差分ヒアリング — テスト戦略・品質保証カテゴリ testing-qa を新設 (qa-070〜qa-075, D8)。elicit(add-category+chunk)→doc-fetch(vitest/playwright/testing-library)→compile→evaluator 2周目 PASS→C02 (arch-harness-hub-testing-qa 新規 + spec-harness-hub-requirements patch) の正規フローで反映。前回 run (2026-07-23 wt-1: qa-069 MVP ファースト優先度) の確定は維持"
 }

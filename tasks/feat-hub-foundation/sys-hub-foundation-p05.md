@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
-status: "active"
+updated_at: "2026-07-24T21:01:06Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P04"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: [".github/workflows/ci.yml","README.md","apps/hub/","apps/hub/src/middleware/","apps/hub/src/shared/","open-next.config.ts","package.json","packages/db/","packages/estimation/","packages/inspection/","packages/schemas/","packages/ui/","pnpm-workspace.yaml","wrangler.jsonc"]

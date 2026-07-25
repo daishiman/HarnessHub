@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 テスト設計 (test-first 受入契約)"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
-status: "active"
+updated_at: "2026-07-24T21:00:53Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P03"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/src/middleware/","apps/hub/src/shared/","apps/hub/tests/","docs/features/feat-hub-foundation/test-design.md","packages/estimation/","packages/inspection/","packages/schemas/","packages/ui/"]

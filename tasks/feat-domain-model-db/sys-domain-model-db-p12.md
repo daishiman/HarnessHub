@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:33:19Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P11"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-domain-model-db/runbook.md","packages/db/cron/"]

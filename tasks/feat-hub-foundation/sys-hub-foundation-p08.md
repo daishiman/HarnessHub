@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 リファクタリング・データ移行 (N/A 判定)"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
-status: "active"
+updated_at: "2026-07-24T21:01:30Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P07"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/src/middleware/","apps/hub/src/shared/","docs/features/feat-hub-foundation/refactoring-migration-note.md","packages/estimation/","packages/inspection/","packages/schemas/","packages/ui/"]

@@ -12,8 +12,8 @@ iteration: null
 title: "受入 — goal-spec acceptance 3 項目の確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:32:10Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P06"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-domain-model-db/acceptance-record.md"]

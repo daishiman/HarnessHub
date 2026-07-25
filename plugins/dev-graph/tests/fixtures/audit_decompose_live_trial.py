@@ -24,7 +24,6 @@ provenance は両 module の合成 identity で測るため、どちらを試験
 from __future__ import annotations
 
 import argparse
-import copy
 import importlib.util
 import json
 import os
@@ -54,7 +53,7 @@ _git_status = STATE.git_status
 _content_inventory = STATE.content_inventory
 _state_comparison = STATE.state_comparison
 
-SCENARIO_ID = "C14-OUT1-positive-macro-decomposition"
+SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r2"
 BINDINGS = ("none", "beads", "github")
 AUDIT_MODULES = (Path(__file__).resolve(), HERE / STATE_MODULE)
 
@@ -145,42 +144,68 @@ def _is_publication_candidate(node: dict[str, Any]) -> bool:
 
 
 def _publication_measurements(features: list[dict[str, Any]]) -> dict[str, Any]:
-    draft = {
+    if not features:
+        raise AuditError("preview must contain at least one produced feature")
+    draft_features = [
+        node
+        for node in features
+        if node.get("confirmation_status") == "draft"
+    ]
+    candidates = [
+        node["graph_node_id"]
+        for node in features
+        if _is_publication_candidate(node)
+    ]
+    lifecycle_candidates = [
+        node["graph_node_id"]
+        for node in features
+        if (
+            _is_publication_candidate(node)
+            and (node.get("confirmation_evidence") or {}).get("evaluator")
+            == "live-trial-lifecycle-probe"
+        )
+    ]
+    draft_candidates = {
         binding: [
             node["graph_node_id"]
-            for node in features
+            for node in draft_features
             if _is_publication_candidate(node)
         ]
         for binding in BINDINGS
     }
-    if not features:
-        raise AuditError("preview must contain at least one produced feature")
-    probe = copy.deepcopy(features[0])
-    probe["confirmation_status"] = "confirmed"
-    probe["evaluation_status"] = "pass"
-    readiness = probe.setdefault("implementation_readiness", {})
-    if not isinstance(readiness, dict):
-        raise AuditError("feature implementation_readiness must be an object")
-    readiness["status"] = "incomplete"
-    conditions = {
-        "confirmation_confirmed": probe.get("confirmation_status") == "confirmed",
-        "evaluation_pass": probe.get("evaluation_status") == "pass",
-        "readiness_complete": readiness.get("status") == "complete",
+    candidate_conditions = {
+        node["graph_node_id"]: {
+            "confirmation_confirmed": node.get("confirmation_status") == "confirmed",
+            "evaluation_pass": node.get("evaluation_status") == "pass",
+            "readiness_complete": (
+                (node.get("implementation_readiness") or {}).get("status") == "complete"
+            ),
+            "candidate": _is_publication_candidate(node),
+        }
+        for node in features
     }
     return {
         "draft_candidates": {
             binding: {"ids": ids, "count": len(ids)}
-            for binding, ids in draft.items()
+            for binding, ids in draft_candidates.items()
         },
-        "readiness_probe": {
-            "graph_node_id": probe["graph_node_id"],
-            "conditions": conditions,
-            "candidate": _is_publication_candidate(probe),
-            "excluded_only_by_readiness": (
-                conditions["confirmation_confirmed"]
-                and conditions["evaluation_pass"]
-                and not conditions["readiness_complete"]
-                and not _is_publication_candidate(probe)
+        "publication_candidates": {
+            binding: {"ids": candidates, "count": len(candidates)}
+            for binding in BINDINGS
+        },
+        "lifecycle_probe": {
+            "source": "actual-preview-nodes",
+            "draft_feature_ids": [node["graph_node_id"] for node in draft_features],
+            "candidate_conditions": candidate_conditions,
+            "candidate_ids": candidates,
+            "lifecycle_candidate_ids": lifecycle_candidates,
+            "has_draft_exclusion": bool(draft_features) and not any(
+                _is_publication_candidate(node)
+                for node in draft_features
+            ),
+            "has_positive_candidate": (
+                bool(lifecycle_candidates)
+                and set(candidates) == set(lifecycle_candidates)
             ),
         },
     }
@@ -334,6 +359,7 @@ def audit(
         not result["ids"]
         for result in publication["draft_candidates"].values()
     )
+    lifecycle = publication["lifecycle_probe"]
     passed = all([
         bool(nodes),
         bool(features),
@@ -342,7 +368,8 @@ def audit(
         graph["threshold_pass"],
         not bool(graph["task_count"]),
         draft_empty,
-        publication["readiness_probe"]["excluded_only_by_readiness"],
+        lifecycle["has_draft_exclusion"],
+        lifecycle["has_positive_candidate"],
         all(suppression.values()),
         not structural_violations,
         helper_provenance_valid,
@@ -365,7 +392,10 @@ def audit(
         "mutation_suppression": suppression,
         "derived_write_counts": write_counts,
         "schema_validation": {
-            "stdin_path_used": True,
+            "stdin_path_used": (
+                "--graph" in schema["argv"]
+                and schema["argv"][schema["argv"].index("--graph") + 1] == "-"
+            ),
             "receipt": schema,
             "violation_count": len(violations),
             "structural_violations": structural_violations,
