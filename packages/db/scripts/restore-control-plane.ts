@@ -1,5 +1,5 @@
 // restore CLI (qa-019: 復元できないバックアップを成功と数えない)。
-//   pnpm --filter @harness-hub/db run restore:control-plane -- --url <target-libsql-url> --in <artifact> \
+//   pnpm --filter @harness-hub/db exec tsx scripts/restore-control-plane.ts --url <target-libsql-url> --in <artifact> \
 //     [--migrations-dir <dir> | --ddl <sql-file>]
 // 空の target DB へ schema を適用してから復元し、行数・audit chain・暗号断面の整合検査まで行う。
 // いずれか失敗で exit 1 (fail-closed)。

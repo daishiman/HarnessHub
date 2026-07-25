@@ -119,9 +119,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**差分追記 (2026-07-25 / feat-domain-model-db P13 / `SYS-DOMAIN-MODEL-DB-P13`)** — 詳細正本は [docs/infrastructure-spec.md](../docs/infrastructure-spec.md) §7 / §10、実測証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
+
+- **リリースの成立条件**: production migration の台帳一致 → deploy → `/health` → 本番スモーク 6 項目 (接続 / ULID / release 不変性 / R2 往復 / audit chain / export-restore dry-run) の全 pass。1 項目でも欠ければリリース成功と数えない。
+- **前方互換の約束**: schema 変更は expand-only。旧 code が新 schema 上で動作することを前提に、障害時は **code のみ巻き戻し DB は前進させたまま**とする。
+- **バックアップの成功定義**: 「upload できた」ではなく「取り直したバイト列が一致した」。復元手順の正本は Turso CLI への標準入力 restore で、`--from-dump` は偽成功を作るため不採用。
+
 ## テストと受入条件
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**差分追記 (2026-07-25 / feat-domain-model-db P13)**: P13 の受入 6 項目は文書上のチェックリストではなく `packages/db/scripts/smoke-production.ts` の exit code に係留する。検証で作成した行と R2 オブジェクトは `finally` で必ず削除し、**削除失敗自体をテスト失敗**として扱う (本番へ検証ゴミを残したまま緑にしない)。CLI の結合検査は `packages/db/__tests__/backup-restore.test.ts` が R2 CLI stub で機械検証する。
 
 ## 未決事項
 
