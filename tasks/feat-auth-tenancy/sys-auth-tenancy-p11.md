@@ -75,6 +75,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ## 2026-07-26 追加エビデンス
 
 - 実装 issue: `HarnessHub-b7ng` / dev-graph node: `issue-auth-tenancy-production-adapter-20260725`
-- 仕様反映: system-spec の `qa-074`、`qa-075`、`qa-082`〜`qa-084`、architecture 4 wrapper、feature node、spec wrapper
+- 仕様反映: system-spec の `qa-074`、`qa-075`、`qa-082`〜`qa-086`、architecture 4 wrapper、feature node、spec wrapper
 - 記録: `docs/features/feat-auth-tenancy/spec-reflection-receipt.md`
 - 検証: task spec validator、認証/DB 集中テスト、`pnpm verify` の結果を最終レビュー記録へ集約する。
+- 最終レビュー補正: Auth.js request body の stream 維持と DB write scope の要求分離を回帰テストへ追加した。

@@ -39,7 +39,8 @@ function toClientConfig(env: TursoEnv): { url: string; authToken?: string } {
 
 /** libSQL 接続を生成する。スキーマは常に barrel (schema/index.ts) を束ねる。 */
 export function createTursoClient(env: TursoEnv): TursoAdapter {
-  return buildTursoAdapter(createClient(toClientConfig(env)));
+  const scope = /^(?:file:|:memory:)/i.test(env.url) ? 'process-local' : 'request-bound';
+  return buildTursoAdapter(createClient(toClientConfig(env)), scope);
 }
 
 /**
@@ -56,24 +57,34 @@ export function createTursoWebClient(env: TursoEnv): TursoAdapter {
         'file: / :memory: は Node 経路 (createTursoClient) 専用です。',
     );
   }
-  return buildTursoAdapter(createWebClient(toClientConfig(env)));
+  return buildTursoAdapter(createWebClient(toClientConfig(env)), 'request-bound');
 }
 
 /** 生 client を adapter 境界へ包む。entry (Node / Web) が違っても境界の挙動は同一に保つ。 */
-function buildTursoAdapter(raw: Client): TursoAdapter {
+function buildTursoAdapter(raw: Client, writeConcurrencyScope: TursoAdapter['writeConcurrencyScope']): TursoAdapter {
   const db = drizzle(raw, { schema });
 
   const adapter: TursoAdapter = {
     driver: 'turso',
+    writeConcurrencyScope,
     schema,
     client: db,
     async transaction<TResult>(
       run: (tx: DatabaseAdapter<CoreSchema, TursoDatabase>) => Promise<TResult>,
     ): Promise<TResult> {
       // 監査 append 等の read-modify-write を直列化するため immediate で begin する (ADR §7)。
-      return db.transaction(async (tx) => run({ driver: 'turso', schema, client: tx as unknown as TursoDatabase }), {
-        behavior: 'immediate',
-      });
+      return db.transaction(
+        async (tx) =>
+          run({
+            driver: 'turso',
+            writeConcurrencyScope,
+            schema,
+            client: tx as unknown as TursoDatabase,
+          }),
+        {
+          behavior: 'immediate',
+        },
+      );
     },
     close(): void {
       raw.close();

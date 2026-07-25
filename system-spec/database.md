@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-083 |
+| Web (web) | 確定 | 確定質疑: qa-086 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-083 (対応セル: web)
+### qa-086 (対応セル: web)
 
-**質問**: HarnessHub-b7ng で確定した認証永続化スキーマと migration 契約を database.web の正本へ反映するか。
+**質問**: HarnessHub-b7ng の database.web 正本を、schema・migration・書き込みゲートの共有範囲を失わない単独で完結した契約としてどう確定するか。
 
-**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-060 までの database.web 確定内容を全面維持し、次の実装追補を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書込みは guardedWrite を通し、ローカル libSQL の SQLITE_BUSY による未 commit 成功を防ぐ。残る repository write の全量掃き出しは別 Beads 課題で追跡する。
+**回答**: ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 と qa-085 を統合した次の database.web 契約を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は Workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書き込みは guardedWrite を通す。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。残る repository write の全量掃き出しは HarnessHub-mb7c で追跡する。
 
 ## 上流指針 (doctrine anchor)
 

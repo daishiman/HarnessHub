@@ -54,7 +54,7 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-083",
+        "qa_ref": "qa-086",
         "serves_goals": [
           "G1",
           "G2",
@@ -846,6 +846,16 @@
       "id": "qa-084",
       "question": "HarnessHub-b7ng の production 認証に必要な Worker 変数・Secret と rollout 順序を infrastructure.web の正本へ反映するか。",
       "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-068 までの infrastructure.web 確定内容を全面維持し、次の実装追補を確定する。production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、ログへ記録しない。rollout は DB backup と migration dry-run、本適用、認証 Secret/変数の存在確認、Worker deploy、2 tenant OIDC・Device Flow smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。"
+    },
+    {
+      "id": "qa-085",
+      "question": "HarnessHub-b7ng の最終レビューで確定した DB 書き込みゲートの実行環境別共有範囲を database.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 のスキーマ、migration、guardedWrite 契約を全面維持し、実行環境別の共有範囲を追補する。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。"
+    },
+    {
+      "id": "qa-086",
+      "question": "HarnessHub-b7ng の database.web 正本を、schema・migration・書き込みゲートの共有範囲を失わない単独で完結した契約としてどう確定するか。",
+      "answer": "ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 と qa-085 を統合した次の database.web 契約を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は Workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書き込みは guardedWrite を通す。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。残る repository write の全量掃き出しは HarnessHub-mb7c で追跡する。"
     }
   ],
   "approval_log": [
@@ -1509,6 +1519,18 @@
       "category": "infrastructure",
       "platform": "web",
       "reason": "HarnessHub-b7ng の本番結線で必要な Secret/変数名、migration と deploy の順序、既存 token 再認証が release contract になった",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng の最終レビューで、ローカル接続用の module-scope 書き込み待ち行列を Workers の要求間で共有し得る設計差分が判明し、実行環境別の共有範囲を正本へ明示する必要が生じた",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "qa-085 は qa-083 の維持を参照で表したため、compile 後の database.md 単独では schema と migration の詳細が展開されない。情報を落とさない自己完結した契約へ統合する",
       "from": "確定"
     }
   ],
@@ -2750,7 +2772,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 5,
+    "loop_count": 1,
     "next_question": null,
     "complete": true
   }

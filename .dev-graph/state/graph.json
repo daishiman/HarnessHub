@@ -1,5 +1,5 @@
 {
-  "graph_revision": 623,
+  "graph_revision": 625,
   "nodes": [
     {
       "acceptance": [
@@ -405,9 +405,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-26T06:10:00Z",
+        "imported_at": "2026-07-26T08:35:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "d7a9f64d273d936ae22703ade7edec9080e92afd84f212ed5c480bcadcba838b",
+        "source_digest": "44731a240f143b9e386d165ca8706ebda887262bbd634d02681d2f06ec3a6239",
         "source_path": "system-spec/database.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -423,7 +423,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub data アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-26T06:10:00Z"
+      "updated_at": "2026-07-26T08:35:00Z"
     },
     {
       "acceptance": [

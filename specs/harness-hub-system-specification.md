@@ -105,8 +105,8 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 **実装反映 (2026-07-26 / HarnessHub-b7ng)**:
 
-- `qa-074`、`qa-075`、`qa-082`〜`qa-084` として auth / security / backend / database / infrastructure の web セルを R4 reopen →再確定した。
-- Auth.js 本番 route、DB-backed AuthPorts、CAS 一回性、テナント付き所属主キー、Worker Secret と rollout 順序を正本へ書き戻した。
+- `qa-074`、`qa-075`、`qa-082`〜`qa-086` として auth / security / backend / database / infrastructure の web セルを R4 reopen →再確定した。
+- Auth.js 本番 route、DB-backed AuthPorts、CAS 一回性、テナント付き所属主キー、Worker Secret、要求間 write 分離と rollout 順序を正本へ書き戻した。
 - 反映先と検証の対応は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) を正とする。
 
 ## エラー・例外・回復

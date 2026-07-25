@@ -33,6 +33,7 @@ export {
   isDatabaseDriver,
   isTransactionalAdapter,
   type TransactionalAdapter,
+  type WriteConcurrencyScope,
 } from './adapter';
 export { createRepositoryContext, type RepositoryContextInput } from './context';
 export type { DrizzleSchema, QueryFilter } from './drizzle';

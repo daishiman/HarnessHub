@@ -37,6 +37,8 @@ in-memory 実装だけだった `AuthPorts` を本番 DB へ結線した。
 | concurrency | approve・consume・user-code 失敗回数・refresh rotation を CAS で競合拒否する |
 | tenant isolation | `user_workspaces` の主キーへ `tenant_id` を含め、同じ user/workspace ID をテナント間で許す |
 | runtime | Secret・DB binding 値が変わった場合は isolate 内キャッシュを再構築する |
+| request handling | 未認証 Auth.js POST の本文を全量展開せず stream のまま正規 origin へ渡す |
+| write scope | ローカル DB だけを process 内直列化し、Workers の要求間で I/O Promise を共有しない |
 
 ## 3. 正規フローによる反映
 
@@ -50,6 +52,7 @@ in-memory 実装だけだった `AuthPorts` を本番 DB へ結線した。
 | `qa-082` | backend | 本番 composition root と DB ports |
 | `qa-083` | database | schema・migration・guarded write |
 | `qa-084` | infrastructure | Workers Secret/var と migration rollout |
+| `qa-086` | database | schema・migration と実行環境別 write scope の自己完結した統合契約 |
 
 反映先:
 
@@ -83,6 +86,12 @@ Device Flow は状態と `attempts` を一緒に比較する CAS を採用した
 approve と consume の競合で二重発行を作らない。
 refresh token も active 行だけを CAS 失効してから次の枝を発行する。
 
+最終レビューで、未認証 Auth.js endpoint の本文全量バッファと、module scope の
+書き込み待ち Promise を Workers の要求間で共有し得る点を修正した。
+Auth.js の Request は body stream を維持し、DB adapter は
+`process-local` / `request-bound` を型で必須化した。前者だけを直列化し、
+後者は DB の排他・CAS と競合再試行へ委ねる。
+
 ## 5. migration と運用上の注意
 
 `0001_auth-tenancy-device-flow-contract.sql` は、既存の
@@ -94,9 +103,9 @@ refresh token も active 行だけを CAS 失効してから次の枝を発行�
 必要な認証設定:
 
 - Secret: `AUTH_SESSION_SECRET`, `AUTH_ACCESS_TOKEN_SECRET`,
-  `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `ENCRYPTION_KEK`
+  `TURSO_AUTH_TOKEN`, `ENCRYPTION_KEK`
 - var: `AUTH_ALLOWED_ORIGINS`, `AUTH_DEVICE_VERIFICATION_URI`,
-  `AUTH_CANONICAL_ORIGIN`
+  `AUTH_CANONICAL_ORIGIN`, `TURSO_DATABASE_URL`
 
 ## 6. 反映検証
 
@@ -104,14 +113,15 @@ refresh token も active 行だけを CAS 失効してから次の枝を発行�
 
 - system-spec coverage: complete/foundation ともに pass
 - source citation validation: pass
-- system-spec compile: pass（11 成果物生成）
+- system-spec compile: pass（12 成果物生成）
 - dev-graph schema validation: pass
 - task specification quality gate: pass（13 phase、違反 0、digest `98fd3cc3…`）
 
 実装ゲート:
 
 - Auth.js handler、DB ports、Device Flow の対象テスト: 50 cases pass
-- DB 全 test: 68 cases pass（schema、migration lineage、write conflict を含む）
+- write conflict / write scope の集中テスト: 4 cases pass
+- DB 全 test: 70 cases pass（schema、migration lineage、write conflict / scope を含む）
 - hub 全 test: 288 cases pass、全 workspace test pass
 - typecheck、Next build、OpenNext Workers build: pass
 - repository 全体 `pnpm verify`: pass

@@ -67,6 +67,7 @@ in-memory E2E を、本番 Cloudflare Workers の composition root まで到達�
 - Device Flow の approve / consume / 失敗回数と refresh rotation は CAS で競合を拒否する。
 - `user_workspaces` は `(tenant_id,user_id,workspace_id)` を主キーにし、テナント間で同じ ID を許す。
 - Secret・DB binding 値が変わった場合、isolate 内の runtime cache を再構築する。
+- 未認証 Auth.js POST は本文を全量バッファせず、Workers の DB write は要求間 Promise を共有しない。
 
 ## 期待する挙動
 

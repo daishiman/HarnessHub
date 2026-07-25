@@ -87,20 +87,14 @@ function tenantSlugFrom(pathname: string, prefix: string): string | null {
 /**
  * 要求 URL の origin を正規値へ差し替えた Request を作る。
  *
- * body を読み直して渡している (stream をそのまま移すと `duplex: 'half'` 指定が必要になり、
- * ランタイム差で落ちる)。Auth.js が扱う POST は form 1 件ぶんなので読み切りで問題ない。
+ * `Request` 自体を init に使うことで body stream を保つ。ここは未認証で到達できる入口なので、
+ * `arrayBuffer()` で全量をメモリへ展開してはならない。
  */
-async function pinCanonicalOrigin(request: Request, canonicalOrigin: string): Promise<Request> {
+function pinCanonicalOrigin(request: Request, canonicalOrigin: string): Request {
   const requested = new URL(request.url);
   const pinned = new URL(`${requested.pathname}${requested.search}`, canonicalOrigin);
   if (pinned.toString() === request.url) return request;
-
-  const method = request.method.toUpperCase();
-  if (method === 'GET' || method === 'HEAD') {
-    return new Request(pinned.toString(), { method, headers: request.headers });
-  }
-  const body = await request.arrayBuffer();
-  return new Request(pinned.toString(), { method, headers: request.headers, body });
+  return new Request(pinned.toString(), request);
 }
 
 /** token に載っている `SessionClaims` を取り出す。形が合わなければ null (推測で補完しない)。 */
@@ -282,6 +276,6 @@ export function createAuthjsHandler(deps: AuthjsHandlerDeps): AuthRouteHandler {
       },
     };
 
-    return Auth(await pinCanonicalOrigin(request, deps.canonicalOrigin), authConfig);
+    return Auth(pinCanonicalOrigin(request, deps.canonicalOrigin), authConfig);
   };
 }

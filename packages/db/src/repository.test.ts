@@ -57,7 +57,12 @@ describe('Repository 境界', () => {
     delete: async () => undefined,
   }));
 
-  const repository = createStubRepository({ driver: 'turso', schema: {}, client: null });
+  const repository = createStubRepository({
+    driver: 'turso',
+    writeConcurrencyScope: 'process-local',
+    schema: {},
+    client: null,
+  });
 
   it('全メソッドが RepositoryContext を必須で受け取る', async () => {
     await expect(repository.findById(context, 'a')).resolves.toStrictEqual({ id: 'a', name: 'A' });

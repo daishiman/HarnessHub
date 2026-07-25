@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub data アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:10:00Z"
+updated_at: "2026-07-26T08:35:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-07-26T06:10:00Z","origin_kind":"system-spec-harness","source_digest":"d7a9f64d273d936ae22703ade7edec9080e92afd84f212ed5c480bcadcba838b","source_path":"system-spec/database.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-26T08:35:00Z","origin_kind":"system-spec-harness","source_digest":"44731a240f143b9e386d165ca8706ebda887262bbd634d02681d2f06ec3a6239","source_path":"system-spec/database.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-data.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/database.md](../system-spec/database.md) (sha256: `e91b32644afd8b5d…`)
+- [system-spec/database.md](../system-spec/database.md) (sha256: `44731a240f143b9e…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 再取込日時: 2026-07-26T06:10:00Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-07-26T08:35:00Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -94,6 +94,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 - `user_workspaces` の主キーを `(tenant_id,user_id,workspace_id)` とし、別 tenant の同一 ID 組を許容する。
 - Device Flow / refresh token の状態遷移は DB の CAS へ集約し、新規認証 write は競合ゲートを通す。
+- ローカル libSQL のゲートは process 内だけで共有し、Workers の Turso/D1 は要求間 Promise を共有しない。
 - 旧 publisher token は Workspace 帰属を復元できないため移送せず、Device Flow 再認証で再発行する。
 
 ## Delivery, migration and rollback

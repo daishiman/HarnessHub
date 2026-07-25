@@ -85,6 +85,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 501 placeholder を実 Auth.js route へ置換し、テナント別 OIDC 設定と SessionClaims JWT を橋渡しした。
 - AuthPorts を `packages/db` へ結線し、Device Flow / refresh rotation / revocation を永続化した。
 - token の一回性、同時失敗 5 回、別 tenant の同一 Workspace 所属 ID を実 DB の並行テストで確認した。
+- 未認証 POST を stream のまま処理し、Workers の要求間では DB write の Promise 待ち行列を共有しない。
 - 詳細は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) と [最終レビュー記録](../docs/features/feat-auth-tenancy/final-review-record.md) を参照する。
 
 ## アーキテクチャ参照

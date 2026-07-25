@@ -268,3 +268,15 @@ test-design.md §`T-SESS-05` の文言は次回改訂時に実装へ追随させ
 どちらも follow-up として起票し、P11 evidence-summary.md / P13 release-record.md に引き継ぐ。
 
 → P11 の証跡集約は実施できるが、P10 は follow-up 完了後に再レビューする。
+
+## 2026-07-26 本番結線の最終再レビュー
+
+`HarnessHub-b7ng` で Auth.js・本番 DB ports・CAS 永続化を結線した後、branch 全差分を
+Cloudflare Workers の要求分離と stream 処理の観点で再レビューした。
+未認証 Auth.js POST の全量メモリ化と、DB write の module-scope Promise を要求間で
+共有し得る 2 点を検出し、いずれも commit 前に修正した。
+
+- Request body は buffer 化せず、正規 origin へ stream のまま引き継ぐ。
+- DB adapter は `process-local` / `request-bound` を型で明示し、ローカルだけを直列化する。
+- system-spec は `qa-086` で自己完結した契約へ再確定し、反映受領書へ判断と検証を追記した。
+- Draft PR の default branch merge と lifecycle reconciliation だけを残し、実装上の blocker は 0 件と判定する。

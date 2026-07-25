@@ -94,9 +94,12 @@ export async function retryOnConflict<TResult>(
 }
 
 /**
- * adapter ごとの書き込み待ち行列。**adapter の同一性で引く**ので、同じ adapter から作られた
- * repository 群は 1 本の行列を共有し、別 adapter (別 DB / 別テスト) は互いに干渉しない。
+ * ローカル adapter ごとの書き込み待ち行列。**adapter の同一性で引く**ので、同じ adapter から
+ * 作られた repository 群は 1 本の行列を共有し、別 adapter (別 DB / 別テスト) は互いに干渉しない。
  * WeakMap なので adapter が捨てられれば行列も一緒に消える。
+ *
+ * Workers の request-bound adapter はこの行列へ入れない。module scope の Promise を要求間で
+ * 共有すると、別要求に属する I/O の完了を待つことになり workerd の要求分離に違反するため。
  */
 const writeQueues = new WeakMap<object, Promise<unknown>>();
 
@@ -109,7 +112,7 @@ function settled(promise: Promise<unknown>): Promise<unknown> {
 }
 
 /**
- * 書き込みを **プロセス内で直列化** しつつ、外部要因の競合だけ再試行する。
+ * ローカル書き込みを **プロセス内で直列化** しつつ、外部要因の競合だけ再試行する。
  *
  * SQLite の writer は元々 1 本しか居ない (WAL でも writer は排他)。だから直列化で失う並行性は
  * 最初から存在せず、代わりに「同一プロセス内で自分の監査トランザクションと衝突して
@@ -119,14 +122,20 @@ function settled(promise: Promise<unknown>): Promise<unknown> {
  * 自己デッドロックする。repository の書き込み関数は互いを呼ばないこと
  * (監査 append はトランザクション内で自分の SQL しか実行しない)。
  *
+ * `request-bound` (Workers の Turso/D1) は直列化せず、競合再試行だけを行う。要求をまたぐ
+ * Promise 共有を避け、DB 側の排他/CAS に並行制御を委ねるためである。
+ *
  * 現状ゲートを通しているのは監査 append、device flow、users.insert、
  * user-workspaces.add/remove。残る repository 書き込みの掃き出しは HarnessHub-mb7c で行う。
  */
 export function guardedWrite<TResult>(
-  owner: object,
+  owner: { readonly writeConcurrencyScope: 'process-local' | 'request-bound' },
   run: () => Promise<TResult>,
   isRetryable: (error: unknown) => boolean = isLockConflict,
 ): Promise<TResult> {
+  if (owner.writeConcurrencyScope === 'request-bound') {
+    return retryOnConflict(run, isRetryable);
+  }
   const previous = writeQueues.get(owner) ?? Promise.resolve();
   const result = previous.then(() => retryOnConflict(run, isRetryable));
   writeQueues.set(owner, settled(result));
