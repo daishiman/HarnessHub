@@ -40,7 +40,12 @@ const LAYERS = {
  * 残りは境界だけ用意されていて本体側の呼び出し元がまだ無く、**consumer は fixture 系統のみ**である。
  * ここを固定しておくと、結線が進んだとき (= この一覧が古くなったとき) にテストが落ちて更新を強制できる。
  */
-const WIRED_IN_APP_LAYERS: readonly (keyof typeof LAYERS)[] = ['authz-middleware', 'auth-adapter'];
+const WIRED_IN_APP_LAYERS: readonly (keyof typeof LAYERS)[] = [
+  'authz-middleware',
+  'auth-adapter',
+  // feat-auth-tenancy が結線: 越境要求の監査 (lib/authz/with-authz.ts) と device flow の token 記録
+  'audit-event-logger',
+];
 
 const REGISTRY_PATH = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
