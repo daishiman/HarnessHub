@@ -1,5 +1,9 @@
 /** @harness-hub/schemas の公開 API 単一入口。consumer は必ずここ経由で参照する (deep import 禁止)。 */
 
+// feat-auth-tenancy の契約 schema。deep import が detector で禁止されているため、
+// 業務ドメイン固有の schema であってもこの単一入口から再エクスポートする以外に経路が無い。
+// contract-registry (OpenAPI drift 検査の入力) には登録しない — 登録簿の責務は共通契約までのため。
+export * from '../auth-tenancy/index.js';
 export type { ContractSchemaName } from './contract-registry.js';
 export {
   buildContractComponents,

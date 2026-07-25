@@ -26,10 +26,19 @@ export const PUBLIC_PATH_PREFIXES: readonly string[] = [
   '/',
   // サインイン経路。provider 実体は feat-auth-tenancy
   '/api/auth',
+  // RFC 8628 device flow のうち、認証前に client が叩く 2 経路。
+  // prefix を '/api/v1/device' にすると承認 (approve) まで公開になるため、末端まで書く
+  '/api/v1/device/code',
+  '/api/v1/device/token',
+  // refresh token 自体が資格情報になる経路 (RFC 6749 §6)
+  '/api/v1/token/refresh',
   // Next.js のビルド成果物・静的アセット
   '/_next',
   '/favicon.ico',
 ];
+
+/** tenant slug を先に確定するサインイン画面。API 配下などへ広がらないよう 1 segment に限定する。 */
+const TENANT_SIGNIN_PATH = /^\/[A-Za-z0-9][A-Za-z0-9_-]*\/signin$/;
 
 export interface AuthzInput {
   readonly pathname: string;
@@ -40,8 +49,11 @@ export interface AuthzInput {
 
 export function isPublicPath(pathname: string): boolean {
   const normalized = normalize(pathname);
-  return PUBLIC_PATH_PREFIXES.some((prefix) =>
-    prefix === '/' ? normalized === '/' : normalized === prefix || normalized.startsWith(`${prefix}/`),
+  return (
+    TENANT_SIGNIN_PATH.test(normalized) ||
+    PUBLIC_PATH_PREFIXES.some((prefix) =>
+      prefix === '/' ? normalized === '/' : normalized === prefix || normalized.startsWith(`${prefix}/`),
+    )
   );
 }
 
