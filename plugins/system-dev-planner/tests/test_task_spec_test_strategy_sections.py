@@ -26,7 +26,12 @@ VALIDATOR = fx.VALIDATOR
 HANDOFF = fx.HANDOFF
 PLUGIN = fx.PLUGIN
 TEMPLATE = PLUGIN / "references" / "system-task-spec-template.md"
-CONTRACT_VERSION = "1.2.0"
+# テスト戦略 section を必須化した契約版と、その直前版。段階適用は package の自己申告では
+# なく契約 version 台帳 (canonical digest -> version) が決めるため、テスト側も
+# 「台帳に登録されているか」で enforced / legacy を作り分ける。
+CONTRACT_VERSION = VALIDATOR.TEST_STRATEGY_CONTRACT_FROM
+LEGACY_CONTRACT_VERSION = "1.1.0"
+DIGEST_FILES = [*VALIDATOR.BASE_DIGEST_FILES, VALIDATOR.HANDOFF_PATH]
 
 # 4 項目の正本ラベルと、必須語をすべて満たす良性の本文。
 ITEMS: dict[str, str] = {
@@ -53,8 +58,12 @@ def spec_with_strategy(
     anchor: str = "## Verification and evidence",
     workstream: str | None = None,
 ) -> str:
-    """base task spec の指定 anchor 直前へ `## テスト戦略` を差し込む。"""
-    text = fx.task_spec_text(phase)
+    """base task spec の指定 anchor 直前へ `## テスト戦略` を差し込む。
+
+    共有 fixture は既定で section を含むため、差し込み対象は `strategy=None` で
+    section を落とした本文を使う。そうしないと重複違反が混ざって検査対象がぼやける。
+    """
+    text = fx.task_spec_text(phase, strategy=None)
     if workstream is not None:
         text = text.replace(BASE_WORKSTREAM, workstream, 1)
     section = f"## テスト戦略\n\n{strategy_block() if block is None else block}\n\n"
@@ -63,14 +72,19 @@ def spec_with_strategy(
     return text.replace(anchor, section + anchor, 1)
 
 
-def set_contract_version(staging: Path, version: str | None) -> None:
-    path = staging / "feature-package.json"
-    package = json.loads(path.read_text(encoding="utf-8"))
-    if version is None:
-        package.pop("spec_contract_version", None)
-    else:
-        package["spec_contract_version"] = version
-    fx.dump(path, package)
+def legacy_baseline(staging: Path) -> dict[str, str]:
+    """当該 staging 実体を契約 1.1.0 (テスト戦略 導入前) へ解決させる台帳を返す。
+
+    digest は staging-manifest.json の申告値ではなく実ファイル群から再計算する。
+    validator が免除判定に使うのと同じ経路でなければ、テストが実際の解決規則ではなく
+    申告値を検証してしまう。
+    """
+    return {VALIDATOR.canonical_digest(staging, DIGEST_FILES): LEGACY_CONTRACT_VERSION}
+
+
+def baseline_for(staging: Path, contract_version: str) -> dict[str, str]:
+    """enforced は空台帳 (未知 digest -> latest)、legacy は当該 digest の登録で表す。"""
+    return {} if contract_version == CONTRACT_VERSION else legacy_baseline(staging)
 
 
 def rebuild(root: Path, staging: Path, repository_id: str) -> str:
@@ -96,13 +110,15 @@ def rebuild(root: Path, staging: Path, repository_id: str) -> str:
 
 
 def enforced_fixture(root: Path, repository_id: str, *, with_section: bool = True) -> Path:
-    """13 件すべてに section を持ち `spec_contract_version` を宣言した package。"""
+    """13 件すべてに section を持つ (または全件から落とした) 台帳未登録 package。
+
+    台帳未登録 = 未知 digest なので、validator は latest (テスト戦略 必須) で検証する。
+    """
     staging, _ = fx.make_fixture(root, repository_id)
-    if with_section:
+    if not with_section:
         for rel, phase in zip(VALIDATOR.TASK_PATHS, VALIDATOR.PHASES):
-            (staging / rel).write_text(spec_with_strategy(phase), encoding="utf-8")
-    set_contract_version(staging, CONTRACT_VERSION)
-    rebuild(root, staging, repository_id)
+            (staging / rel).write_text(fx.task_spec_text(phase, strategy=None), encoding="utf-8")
+        rebuild(root, staging, repository_id)
     return staging
 
 
@@ -114,20 +130,24 @@ class TestStrategySectionContractTests(unittest.TestCase):
     """契約版で段階適用される section 検査の受理/拒否境界。"""
 
     def test_legacy_package_without_section_passes(self):
-        """TS-A01: 版未宣言 + section 無し = 既存世代の形状。violation 0 のまま。"""
-        with tempfile.TemporaryDirectory() as td:
-            root = Path(td); repository_id = fx.make_repo(root)
-            staging, _ = fx.make_fixture(root, repository_id)
-            report = VALIDATOR.validate(staging, repository_id)
-            self.assertEqual(report["status"], "pass")
-            self.assertEqual(report["test_strategy_contract"]["mode"], "legacy")
+        """TS-A01: 台帳で 1.1.0 へ免除 + section 無し = 既存 promoted 世代の形状。
 
-    def test_enforced_package_without_section_is_rejected(self):
-        """TS-A02: 版 1.2.0 を宣言した package は section 欠落を 13 件全件で拒否する。"""
+        テスト戦略 導入前に promote された package は digest 不変ゆえ section を後から
+        足せない。台帳経由の免除でしか非退行 (exact-13 acceptance 7) を守れない。
+        """
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); repository_id = fx.make_repo(root)
             staging = enforced_fixture(root, repository_id, with_section=False)
-            report = VALIDATOR.validate(staging, repository_id)
+            report = VALIDATOR.validate(staging, repository_id, baseline=legacy_baseline(staging))
+            self.assertEqual(report["status"], "pass", report["violations"])
+            self.assertEqual(report["test_strategy_contract"]["mode"], "legacy")
+
+    def test_enforced_package_without_section_is_rejected(self):
+        """TS-A02: 台帳未登録 (= 現行契約) の package は section 欠落を 13 件全件で拒否する。"""
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td); repository_id = fx.make_repo(root)
+            staging = enforced_fixture(root, repository_id, with_section=False)
+            report = VALIDATOR.validate(staging, repository_id, baseline={})
             self.assertEqual(report["status"], "fail")
             missing = [x for x in report["violations"] if x["code"] == "task-spec-test-strategy-missing"]
             self.assertEqual(len(missing), 13)
@@ -138,18 +158,17 @@ class TestStrategySectionContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); repository_id = fx.make_repo(root)
             staging = enforced_fixture(root, repository_id)
-            report = VALIDATOR.validate(staging, repository_id)
+            report = VALIDATOR.validate(staging, repository_id, baseline={})
             self.assertEqual(report["status"], "pass", report["violations"])
             self.assertEqual(report["test_strategy_contract"]["mode"], "enforced")
 
-    def _reject(self, text: str, expected: str, *, version: str | None = CONTRACT_VERSION) -> None:
+    def _reject(self, text: str, expected: str, *, version: str = CONTRACT_VERSION) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); repository_id = fx.make_repo(root)
             staging = enforced_fixture(root, repository_id)
-            set_contract_version(staging, version)
             (staging / VALIDATOR.TASK_PATHS[0]).write_text(text, encoding="utf-8")
             fx.refresh_manifest(staging)
-            report = VALIDATOR.validate(staging, repository_id)
+            report = VALIDATOR.validate(staging, repository_id, baseline=baseline_for(staging, version))
             self.assertEqual(report["status"], "fail")
             self.assertIn(expected, codes(report))
 
@@ -211,12 +230,12 @@ class TestStrategySectionContractTests(unittest.TestCase):
         self._reject(spec_with_strategy("P01", anchor="END"), "task-spec-test-strategy-placement")
 
     def test_legacy_package_with_malformed_section_is_rejected(self):
-        """TS-A11: strict-if-present。版未宣言でも書いた以上は 4 項目検査が発火する。"""
+        """TS-A11: strict-if-present。台帳で免除された世代でも書いた以上は検査が発火する。"""
         order = ["テストレベル選定", "カバレッジ目標", "層別方針"]
         self._reject(
             spec_with_strategy("P01", block=strategy_block(order=order)),
             "task-spec-test-strategy-item-missing",
-            version=None,
+            version=LEGACY_CONTRACT_VERSION,
         )
 
     def test_cli_exit_code_is_two_on_missing_section(self):
@@ -236,15 +255,22 @@ class TestStrategySectionContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); repository_id = fx.make_repo(root)
             staging, _ = fx.make_fixture(root, repository_id)
-            contract = VALIDATOR.validate(staging, repository_id)["test_strategy_contract"]
-            self.assertEqual(
-                contract, {"mode": "legacy", "declared_version": None, "enforced_from": CONTRACT_VERSION}
-            )
-            set_contract_version(staging, CONTRACT_VERSION)
-            fx.refresh_manifest(staging)
-            contract = VALIDATOR.validate(staging, repository_id)["test_strategy_contract"]
-            self.assertEqual(contract["mode"], "enforced")
-            self.assertEqual(contract["declared_version"], CONTRACT_VERSION)
+            legacy = VALIDATOR.validate(
+                staging, repository_id, baseline=legacy_baseline(staging)
+            )["test_strategy_contract"]
+            self.assertEqual(legacy, {
+                "mode": "legacy",
+                "contract_version": LEGACY_CONTRACT_VERSION,
+                "enforced_from": CONTRACT_VERSION,
+            })
+            enforced = VALIDATOR.validate(
+                staging, repository_id, baseline={}
+            )["test_strategy_contract"]
+            self.assertEqual(enforced, {
+                "mode": "enforced",
+                "contract_version": VALIDATOR.CONTRACT_VERSION_LATEST,
+                "enforced_from": CONTRACT_VERSION,
+            })
 
 
 class TemplateAndParityTests(unittest.TestCase):

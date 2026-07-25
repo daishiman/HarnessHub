@@ -16,11 +16,11 @@ architecture_refs: [arch-harness-hub-testing-qa]
 
 ## 1. 目的 (purpose)
 
-タスク仕様書がテストレベルの網羅やカバレッジ基準を明記しない、あるいは書き方が実行ごとにぶれるため、実装後に「結合が通らない」「既存機能が壊れた」を後追いで発見している状態 (qa-070/qa-073) を解消する。仕様生成の時点でテスト戦略 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を必須 section 化し、欠落を fail-closed (条件を満たさないときは通さずに止める) で機械的に拒否することで、何度実行しても同じ品質基準の仕様書が出る冪等 (べきとう=何回実行しても結果が同じ) な仕組みへ移す。あわせて、ボタン配置など見た目の微調整でテストが壊れる保守性崩壊 (qa-072) を、実装後の努力目標ではなく仕様段階の制約として先に封じる。
+タスク仕様書がテストレベルの網羅やカバレッジ基準を明記しない、あるいは書き方が実行ごとにぶれるため、実装後に「結合が通らない」「既存機能が壊れた」を後追いで発見している状態 (qa-076/qa-079) を解消する。仕様生成の時点でテスト戦略 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を必須 section 化し、欠落を fail-closed (条件を満たさないときは通さずに止める) で機械的に拒否することで、何度実行しても同じ品質基準の仕様書が出る冪等 (べきとう=何回実行しても結果が同じ) な仕組みへ移す。あわせて、ボタン配置など見た目の微調整でテストが壊れる保守性崩壊 (qa-078) を、実装後の努力目標ではなく仕様段階の制約として先に封じる。
 
 ## 2. 背景 (background)
 
-本 feature は、system-spec/testing-qa.md で確定した qa-070 (テストレベル4種網羅: 単体・結合・境界値・回帰)・qa-072 (層別テスト方針と behavior ベースの保守性要件)・qa-073 (テスト戦略のタスク仕様書への冪等組込、qa-075 で章反映) の内容を、system-dev-planner の task spec テンプレート契約へ機械的に反映するものである。qa-069 で確定した MVP ファースト方針は「品質・再現性強化系タスクは MVP 成立後へ繰り延べる」ことを求めるが、本 feature は Hub プロダクト本体の実装ではなく system-dev-planner の仕様生成契約 (P01..P13 テンプレート) という外側ループの改修であり、depends_on を持たず P01..P13 exact-13 契約自体も変更しないため、Hub 側 MVP 機能の着手を妨げず並行して進められる位置づけにある。
+本 feature は、system-spec/testing-qa.md で確定した qa-076 (テストレベル4種網羅: 単体・結合・境界値・回帰)・qa-078 (層別テスト方針と behavior ベースの保守性要件)・qa-079 (テスト戦略のタスク仕様書への冪等組込、qa-081 で章反映) の内容を、system-dev-planner の task spec テンプレート契約へ機械的に反映するものである。qa-069 で確定した MVP ファースト方針は「品質・再現性強化系タスクは MVP 成立後へ繰り延べる」ことを求めるが、本 feature は Hub プロダクト本体の実装ではなく system-dev-planner の仕様生成契約 (P01..P13 テンプレート) という外側ループの改修であり、depends_on を持たず P01..P13 exact-13 契約自体も変更しないため、Hub 側 MVP 機能の着手を妨げず並行して進められる位置づけにある。
 
 ## 3. ゴール (goal)
 
@@ -72,12 +72,12 @@ goal-spec が「4 項目」とだけ述べる部分を、機械検証可能な�
 
 | 項目 | 必須内容 | 機械検証可能な最小条件 | 由来 |
 |---|---|---|---|
-| TS-1 テストレベル選定 | 単体・結合・境界値・回帰の 4 レベルについて、当該 task で追加/実行するものと適用外を判別できる記述 | 4 レベル名が全て出現し、各レベルに適用可否の判定語が伴う | qa-070 |
-| TS-2 カバレッジ目標 | 既定 80% を数値で明示し、層別上書きが可能であることを記述 | `80%` の数値表現が存在する | qa-071 / qa-075 |
-| TS-3 層別方針 | 当該 task が触る層 (フロント/バックエンド/インフラ) に対応する方針を明示。触らない層は適用外を明示 | Workstream applicability で applicable な層に対応する方針語が出現する | qa-072 |
-| TS-4 保守性制約 | pixel 位置依存の禁止・DOM 構造依存の禁止・過剰テストを作らない線引きを明示 | `pixel` と `DOM` の禁止表現が存在する | qa-072 |
+| TS-1 テストレベル選定 | 単体・結合・境界値・回帰の 4 レベルについて、当該 task で追加/実行するものと適用外を判別できる記述 | 4 レベル名が全て出現し、各レベルに適用可否の判定語が伴う | qa-076 |
+| TS-2 カバレッジ目標 | 既定 80% を数値で明示し、層別上書きが可能であることを記述 | `80%` の数値表現が存在する | qa-077 / qa-081 |
+| TS-3 層別方針 | 当該 task が触る層 (フロント/バックエンド/インフラ) に対応する方針を明示。触らない層は適用外を明示 | Workstream applicability で applicable な層に対応する方針語が出現する | qa-078 |
+| TS-4 保守性制約 | pixel 位置依存の禁止・DOM 構造依存の禁止・過剰テストを作らない線引きを明示 | `pixel` と `DOM` の禁止表現が存在する | qa-078 |
 
-### 6.1 層別方針の確定内容 (qa-072 逐語由来)
+### 6.1 層別方針の確定内容 (qa-078 逐語由来)
 
 - **フロント**: component 単体 + ユーザー操作フローの結合テスト。要素選択は accessible role / ラベルによる behavior ベースを必須とし、pixel 位置・DOM 構造への依存を禁止する。
 - **バックエンド**: API 契約テスト + ビジネスロジック単体テスト + DB 結合テスト。
@@ -86,26 +86,26 @@ goal-spec が「4 項目」とだけ述べる部分を、機械検証可能な�
 
 ## 7. qa 質疑との対応表
 
-正本: `system-spec/testing-qa.md` (`sha256:fd302fb5f8f88147d8a01f02935ab31d335dafbd06cb6b391389bf2e6ab07b19`)。qa-071 は同正本の直接収録質疑ではなく、`architecture/harness-hub-testing-qa.md` の要点整理経由で参照する派生根拠として扱う。
+正本: `system-spec/testing-qa.md` (`sha256:39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d`)。qa-077 は同正本の直接収録質疑ではなく、`architecture/harness-hub-testing-qa.md` の要点整理経由で参照する派生根拠として扱う。
 
 | qa 回答の要素 | 出典 | scope_in | acceptance |
 |---|---|---|---|
-| テストレベル 4 種 (単体・結合・境界値・回帰) をタスク仕様書のテスト戦略セクションで必須明記する | qa-070 | SI-1 / SI-2 | AC-2 |
-| テスト種別の選定はタスクの変更内容から導出する | qa-070 | SI-4 | AC-4 |
-| 層別方針 (FE behavior ベース / BE API 契約+ロジック単体+DB 結合 / インフラ IaC 静的検証+smoke) を適用する | qa-072 | SI-5 | AC-4 |
-| pixel 位置・DOM 構造依存を禁止し、UI 微修正でテストが壊れない設計に限定する | qa-072 | SI-5 | AC-6 |
-| 過剰テスト (実装詳細への密結合) を作らない線引きを仕様へ明文化する | qa-072 | SI-6 | AC-6 |
-| テスト戦略セクションをテンプレート必須項目として組み込み、冪等に再現する | qa-073 / qa-075 | SI-2 / SI-7 | AC-3 |
-| 仕様生成パイプライン側で機械検証し、欠落を fail-closed で拒否する | qa-073 / qa-075 | SI-3 | AC-1 |
-| カバレッジ基準 80% 以上を維持する | qa-071 (architecture 要点経由) / qa-075 | SI-1 | AC-5 |
-| CI 実行=web 行 / 作者ローカル=desktop-windows・macos 行という platform 境界 | qa-074 | (scope_out 2 の前提) | — |
+| テストレベル 4 種 (単体・結合・境界値・回帰) をタスク仕様書のテスト戦略セクションで必須明記する | qa-076 | SI-1 / SI-2 | AC-2 |
+| テスト種別の選定はタスクの変更内容から導出する | qa-076 | SI-4 | AC-4 |
+| 層別方針 (FE behavior ベース / BE API 契約+ロジック単体+DB 結合 / インフラ IaC 静的検証+smoke) を適用する | qa-078 | SI-5 | AC-4 |
+| pixel 位置・DOM 構造依存を禁止し、UI 微修正でテストが壊れない設計に限定する | qa-078 | SI-5 | AC-6 |
+| 過剰テスト (実装詳細への密結合) を作らない線引きを仕様へ明文化する | qa-078 | SI-6 | AC-6 |
+| テスト戦略セクションをテンプレート必須項目として組み込み、冪等に再現する | qa-079 / qa-081 | SI-2 / SI-7 | AC-3 |
+| 仕様生成パイプライン側で機械検証し、欠落を fail-closed で拒否する | qa-079 / qa-081 | SI-3 | AC-1 |
+| カバレッジ基準 80% 以上を維持する | qa-077 (architecture 要点経由) / qa-081 | SI-1 | AC-5 |
+| CI 実行=web 行 / 作者ローカル=desktop-windows・macos 行という platform 境界 | qa-080 | (scope_out 2 の前提) | — |
 
 ## 8. 転記元 lineage (digest 実測・2026-07-25 時点)
 
 | path | sha256 | status |
 |---|---|---|
 | `features/feat-task-spec-test-strategy.context.json` | `eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7` | verified (goal-spec の feature_context_digest pin と一致) |
-| `system-spec/testing-qa.md` | `fd302fb5f8f88147d8a01f02935ab31d335dafbd06cb6b391389bf2e6ab07b19` | verified (goal-spec lineage pin と一致) |
+| `system-spec/testing-qa.md` | `39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d` | verified (goal-spec lineage pin と一致) |
 | `architecture/harness-hub-testing-qa.md` | `69767727ffb7185e7dc527908f7dd851d1beabbf33b8872a6c4e86ddb42185d8` | verified (goal-spec lineage pin と一致) |
 | `features/feat-task-spec-test-strategy.md` | `b0b8b2a17dbda1c6636e7e70cab78ce2da3ff58a43cbc94b90a79204d68ad5c2` | **drift**: goal-spec lineage pin は `b93305ca2d7fb74a14ba25d6aa80f24b92420d7232bf16c515c0af88ab1a7761` |
 | `specs/harness-hub-system-specification.md` | `326b75ad9b2f245662b498f51bb027f45bbb0757a3a9102f40bcde4e75d2cf29` | 実測 (第2参照。goal-spec lineage 非収録) |

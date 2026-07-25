@@ -84,9 +84,11 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 
 ## テスト戦略
 
-> 4 項目はこの順序・このラベルで固定する。`spec_contract_version >= 1.2.0` を宣言した package では
+> 4 項目はこの順序・このラベルで固定する。契約 version が `1.2.0` 以上に解決される package では
 > 本 section の欠落・順序入替・空本文を `validate-system-plan.py` (C12) が fail-closed で拒否する。
-> 版を宣言しない legacy package でも、本 section を書いた場合は同じ厳格さで検査される。
+> 契約 version は package の canonical digest から `assets/validation-contract-baseline.json` を
+> 引いて決まり、未登録 digest は最新契約へ倒れる。`1.1.0` 以前で登録された legacy 世代でも、
+> 本 section を書いた場合は同じ厳格さで検査される。
 
 - テストレベル選定: <単体・結合・境界値・回帰の4レベルすべてに言及し、当該taskでの適用可否を示す。適用外は `N/A: reason` で明示する>
 - カバレッジ目標: <既定80%を数値で明示。層別に上書きする場合は上書き値と理由を併記する>
@@ -136,7 +138,7 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 - runtime outputは本テンプレートを使う実行task spec 13件だけで構成し、別の13 lifecycle文書や14件目のcanonical taskを生成しない。正本=`references/feature-execution-package-contract.md`。
 - 上記全 section が placeholder (`<...>`) のまま残っていないこと。
 - 標準15 section (最低限 `Machine-readable registration fields`/`前提条件`/`成果物`/`Tracker publication and completion`/`Branch and worktree execution`/`Verification and evidence`/`Inner goal-seek execution loop`/`Handoff` の8 sectionを含む) は必須充足とし、空・重複・TODO・未解決 `<...>` を禁止する。1件でも残る場合、`validate-system-plan.py` (system-dev-planner C12) が promotion 前に fail-closed で拒否する。C08 は upstream の confirmed system-spec と completeness evaluation を検査し、task spec 本文の検査は C12 が所有する。
-- `テスト戦略` は 16 番目の section であり、適用は `feature-package.json` の `spec_contract_version` で段階化する。`1.2.0` 以上を宣言した package では 13 件すべてに必須で、欠落・重複・空本文・4 項目の欠落/順序入替/空本文・必須語 (4レベル語・`80%`・`pixel`・`DOM`) の欠落・applicable な層の方針欠落を C12 が非0終了で拒否する。版を宣言しない legacy package では section の**不在だけ**を許し、書かれている場合は同じ厳格さで検査する (strict-if-present)。既存 promoted 世代の再検証結果は変わらない。
+- `テスト戦略` は 16 番目の section であり、適用は package の canonical digest から解決される契約 version で段階化する (解決正本: `assets/validation-contract-baseline.json`)。`1.2.0` 以上に解決される package (= 台帳未登録の現行世代) では 13 件すべてに必須で、欠落・重複・空本文・4 項目の欠落/順序入替/空本文・必須語 (4レベル語・`80%`・`pixel`・`DOM`) の欠落・applicable な層の方針欠落を C12 が非0終了で拒否する。`1.1.0` 以前で台帳登録済みの legacy 世代では section の**不在だけ**を許し、書かれている場合は同じ厳格さで検査する (strict-if-present)。既存 promoted 世代の再検証結果は変わらない。
 - `Workstream applicability` は該当しない workstream を `N/A: reason` で明示し、空欄のまま省略しない (適用外の理由を機械可読に残す)。
 - 全pathはcaller repository相対でC09 containment済みであること。`/absolute`、drive-letter、`..`、root外symlinkはincomplete。
 - task spec本文かruntime時に読むgoal/manifest/validator/evidenceはpackage-relative pathまたはcanonical published pathで参照する。C11のatomic rename後に消滅する`.dev-graph/staging`参照は禁止し、C12がpromotion前にfail-closedで拒否する。

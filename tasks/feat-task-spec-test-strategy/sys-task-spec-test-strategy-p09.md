@@ -4,7 +4,7 @@ artifact_kind: "task"
 artifact_subtypes: []
 project_id: "feature-package-feat-task-spec-test-strategy"
 domain: "quality"
-tags: ["feat-task-spec-test-strategy","macro-feature","test-strategy","quality-gate","qa-074","system-dev-planner"]
+tags: ["feat-task-spec-test-strategy","macro-feature","test-strategy","quality-gate","qa-080","system-dev-planner"]
 priority: null
 start_date: null
 target_date: null
@@ -34,7 +34,7 @@ evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"}
 source_lineage: {"imported_at":"2026-07-24T23:09:08Z","origin_kind":"system-dev-planner","source_digest":"7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae","source_path":".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/task-specs/phase-09-quality-assurance.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.86
-classification_reason: "system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P09 責務 (品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測) を実行する task"
+classification_reason: "system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P09 責務 (品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測) を実行する task"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p09.md","confidence":0.86}]
 issue_linkage: null
 tracker_binding: "beads"
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-24T21:59:18Z","missing_sections
 
 - feature_package_id: feature-package/feat-task-spec-test-strategy (13 task で共有)
 - owners: ["daishiman"]
-- tags: ["feat-task-spec-test-strategy", "macro-feature", "test-strategy", "quality-gate", "qa-074", "system-dev-planner"]
+- tags: ["feat-task-spec-test-strategy", "macro-feature", "test-strategy", "quality-gate", "qa-080", "system-dev-planner"]
 - related_nodes: ["feat-task-spec-test-strategy", "arch-harness-hub-testing-qa"]
 - parent_feature: feat-task-spec-test-strategy
 - phase_ref: P09
-- classification: confidence=0.86, reason="system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P09 責務 (品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測) を実行する task", candidates=[{artifact_kind: task, confidence: 0.86, candidate_path: tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p09.md}]
+- classification: confidence=0.86, reason="system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 のタスク仕様書テスト戦略必須化要求のうち P09 責務 (品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測) を実行する task", candidates=[{artifact_kind: task, confidence: 0.86, candidate_path: tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p09.md}]
 - tracker_binding_intent: beads
 - github_publication: mode=local_only, project_aliases=[], labels=[], milestone=なし (.dev-graph/config.json の execution_tracker.mode=beads、github.enabled=false に従う)
 - pr_completion_policy: linked_pr_merged_all (.dev-graph/config.json github.completion_policy.required_pull_requests=all に従う)
@@ -164,7 +164,7 @@ acceptance の「テスト戦略 section を欠いた task spec 入力に対し 
 
 - Feature: `features/feat-task-spec-test-strategy.md` (source_feature_digest `sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7`)
 - Phase responsibility: 現行 feature の purpose・goal・scope・acceptance のうち本 phase 責務の部分集合を所有する。
-- Purpose: タスク仕様書がテスト網羅を明記しない、あるいは書き方が実行ごとにぶれるため、実装後に「結合が通らない」「既存機能が壊れた」を後追いで発見している (qa-070/qa-073)。仕様生成の時点でテスト戦略を必須 section 化し欠落を機械的に拒否することで、何度実行しても同じ品質基準の仕様書が出る冪等な仕組みへ移す。あわせて、ボタン配置など見た目の微調整でテストが壊れる保守性崩壊 (qa-072) を、実装ではなく仕様段階の制約として先に封じる
+- Purpose: タスク仕様書がテスト網羅を明記しない、あるいは書き方が実行ごとにぶれるため、実装後に「結合が通らない」「既存機能が壊れた」を後追いで発見している (qa-076/qa-079)。仕様生成の時点でテスト戦略を必須 section 化し欠落を機械的に拒否することで、何度実行しても同じ品質基準の仕様書が出る冪等な仕組みへ移す。あわせて、ボタン配置など見た目の微調整でテストが壊れる保守性崩壊 (qa-078) を、実装ではなく仕様段階の制約として先に封じる
 - Goal: system-dev-planner が生成する P01..P13 タスク仕様書が、テストレベル選定 (単体・結合・境界値・回帰)・カバレッジ目標 (既定 80%、層別上書き可)・層別方針 (フロント behavior ベース / バックエンド API 契約+ロジック単体+DB 結合 / インフラ IaC 静的検証+デプロイ後 smoke)・保守性制約 (pixel 位置・DOM 構造依存の禁止、過剰テストを作らない線引き) の 4 項目を必須 section として持ち、欠落した仕様書は promotion 前に fail-closed で拒否され、同一入力の再生成で section 構成が冪等に一致する状態
 - Scope in (all items are in-scope for the package; this phase owns the subset matching its responsibility):
   - タスク仕様書テスト戦略 section のスキーマ定義 (テストレベル選定・カバレッジ目標・層別方針・保守性制約の 4 項目)
@@ -210,7 +210,7 @@ This section is the current source closure and supersedes older counts or wordin
 ## 参照情報
 
 - goal-spec: goal-spec.json (parent_feature=feat-task-spec-test-strategy, source_feature_digest=sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7)
-- 仕様正本: system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 (タスク仕様書テスト戦略必須化要求)
+- 仕様正本: system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 (タスク仕様書テスト戦略必須化要求)
 - trace rule: P04 defines executable test IDs; P05 implements their subjects; P06 executes them; P07/P10 adjudicate only executed evidence; P09 makes applicable checks fail-closed; P11 preserves source digest and rerun commands; P12/P13 cannot substitute documentation or planned work for missing implementation/evidence.
 
 ## 依存

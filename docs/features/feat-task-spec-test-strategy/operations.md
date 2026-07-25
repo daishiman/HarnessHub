@@ -16,7 +16,7 @@ consumes: [docs/features/feat-task-spec-test-strategy/final-review.md, eval-log/
 
 1. `## テスト戦略` を `## スコープ外` と `## Verification and evidence` の**間**に置く。
 2. 4 項目を **`テストレベル選定` → `カバレッジ目標` → `層別方針` → `保守性制約` の順**で、`- ラベル: 本文` の形で書く。
-3. `feature-package.json` に `"spec_contract_version": "1.2.0"` を宣言すると、欠落が promotion 前に **exit 2** で止まる。
+3. 契約 version は package の canonical digest から台帳解決される。新規 package は未登録 = `1.2.0` なので、欠落は promotion 前に **exit 2** で止まる。
 
 ## 2. 記述手順 (5 ステップ)
 
@@ -84,7 +84,7 @@ consumes: [docs/features/feat-task-spec-test-strategy/final-review.md, eval-log/
 
 ### 3.1 なぜ仕様段階で縛るか
 
-ボタンを 8px ずらす、`<div>` を `<section>` に変える — こうした**振る舞いが変わらない変更**でテストが赤くなると、チームは「テストを直す」ではなく「テストを消す」方向へ流れる。実装後の努力目標では守れないので、タスク仕様書の必須項目として先に固定する (qa-072)。
+ボタンを 8px ずらす、`<div>` を `<section>` に変える — こうした**振る舞いが変わらない変更**でテストが赤くなると、チームは「テストを直す」ではなく「テストを消す」方向へ流れる。実装後の努力目標では守れないので、タスク仕様書の必須項目として先に固定する (qa-078)。
 
 ### 3.2 判断基準 (レビュー時のチェック)
 
@@ -105,15 +105,17 @@ consumes: [docs/features/feat-task-spec-test-strategy/final-review.md, eval-log/
 
 > 本 feature が実装するのは**仕様への明記まで**である。pixel / DOM 依存を静的に検出する lint は goal-spec scope_out 4 として明示的に範囲外であり、現時点ではレビュー時の人手判断で運用する。
 
-## 4. 契約版 (`spec_contract_version`) の運用
+## 4. 契約 version の運用
 
-| 状態 | モード | section の扱い |
-|---|---|---|
-| 未宣言 | `legacy` | 任意。**ただし書いた場合は 4 項目検査が同じ厳格さで発火する** (strict-if-present) |
-| `1.2.0` 以上 | `enforced` | 13 task spec 全件で必須。欠落は exit 2 |
-| `1.2.0` 未満 / 不正形式 | `legacy` / schema violation | 前者は legacy 扱い、後者は package schema で拒否 |
+契約 version は package が自己申告するのではなく、**canonical digest から台帳 `plugins/system-dev-planner/assets/validation-contract-baseline.json` を引いて**解決する。
 
-新規 feature package は `1.2.0` を宣言する (テンプレート正本と R3-emit がそう指示する)。既存 package を上げる手順は `compatibility-note.md` §5 を参照。
+| 台帳の登録状態 | 解決される版 | モード | section の扱い |
+|---|---|---|---|
+| 未登録 (新規 package はこれ) | `1.2.0` | `enforced` | 13 task spec 全件で必須。欠落は exit 2 |
+| `1.1.0` / `1.0.0` で登録済み | 登録値 | `legacy` | 任意。**ただし書いた場合は 4 項目検査が同じ厳格さで発火する** (strict-if-present) |
+| digest 再計算不能 | `1.2.0` | `enforced` | fail-closed。緩い側へは倒れない |
+
+新規 feature package は何も宣言しなくても `1.2.0` で検証される。台帳への追記は 「現行契約で pass しない promoted 世代の救済」に限る (受入条件は台帳の `policy.amendment` に明文化)。既存 package を上げる手順は `compatibility-note.md` §5 を参照。
 
 **確認方法**: validator の出力 JSON に必ず `test_strategy_contract` が出る。
 
@@ -123,7 +125,7 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 ```
 
 ```json
-"test_strategy_contract": { "mode": "enforced", "declared_version": "1.2.0", "enforced_from": "1.2.0" }
+"test_strategy_contract": { "mode": "enforced", "contract_version": "1.2.0", "enforced_from": "1.2.0" }
 ```
 
 > `mode` を常に出力するのは、**「検査した結果 OK」と「そもそも検査していない」を証跡から区別できるようにする**ためである。ここが `legacy` のまま緑になっているのを見たら、それは「合格した」ではなく「まだ効いていない」と読む。

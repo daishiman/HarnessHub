@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/provenance_helper.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 87,
+    "notes": "genuine code-review + py_compile OK / `# /// script` frontmatter を本レビューで補完 (network:false, write-scope:none, import 専用で CLI なし)。lint-live-trial-verdict.py から責務分離した digest-provenance 検査 module (HarnessHub-dst 系)。soundness: 検出対象は「skill_dir_tree_sha が base から変化しているのに transcript が変わっていない」差分 = 実走せずに記録を現在の closure へ合わせた証跡で、書き換え後は digest が現在値と一致するため check_verdict の stale-sha も closure 突合も緑になり plan-live-trials が reuse と判定してしまう (証拠の失効が『検証済み』に化ける) という、履歴を見ないと原理的に検出できない経路を担う。_has_rerun_evidence が肯定形 (実体確認) で書かれているのが要点 — 『変化したか』で書くと transcript 削除も変化として通り、transcript_sha256 を null にする 2 行編集で遮断を無効化できた (2026-07-21 実測) ため、transcript_exists の現存確認を必ず伴わせ、証拠 2 も `new_sha and new_sha != old_sha` で非 null→null の降格を足切りしている。path 同一性を鍵にする構造上の穴 (run ディレクトリ改名・証跡削除) を evidence-removed として別途報告し、履歴束縛の剥がしも塞ぐ。_provenance_base の merge-base 基準化は ys3 偽陽性 (base_ref 側で分岐後に追加された証跡を『現ツリーから消えた』と誤判定) の修正で、CI の push-to-main では HEAD==base_ref ゆえ merge-base==base_ref となり無回帰。responsibility: 単一 (git 履歴突合による provenance 検査のみ。fixture 内の C02 迂回は receiptguard_helper が持つ)。error-handling: base_ref 未解決は base-ref-unresolvable、git diff 失敗は git-diff-failed、verdict の JSON 破損は invalid-json として、いずれも空を返さず violation に積む fail-closed 設計。merge-base が引けない場合 (無関係履歴・shallow clone) のフォールバックが厳格側の base_ref である点も正しい — 偽陽性は人手調査で回復できるが真の証跡削除の見逃しは不可逆、という非対称性を明示的に文書化している。side-effect-safety: subprocess は git のみ (network なし=network:false 裏付け)、書込みは一切なし = read-only、repo_root 引数でテストから合成 repo に向けられる (ROOT へのハードコード依存を持たない)。MINOR: json 解析の except が Exception と広いが、捕捉後は violation として報告するため fail-open にはならず、検査器としては安全側。TESTS: tests/test_provenance_helper.py の 11 件が合成 git repo 上で digest 単独書換え・正当な再走・新規 run・無変更・base_ref 未解決・transcript 削除迂回・run 改名・証跡削除・null 降格・ys3 偽陽性回避・遅れたツリーでの真の削除検出を exercise (42 passed)。"
+  },
+  "reviewed_by": "harness-ratchet-recovery-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

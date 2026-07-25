@@ -2,17 +2,18 @@
 
 > **位置づけ**: 本リポジトリの **開発ツール統治 (dev tooling governance)** に関する横断知見。製品仕様 (`system-spec/`・`docs/`) の下流にあるツール内部の話であり、`system-spec/dev-workflow.md` qa-066 の「下流投影を system-spec へ逆輸入して二重正本にしない」原則に従い、正本を `system-spec/` に置かない。
 >
-> **由来**: `HarnessHub-s7b` / `-rix` / `-aoe` / `-m7d` (2026-07-21) の一連の調査。
+> **由来**: `HarnessHub-s7b` / `-rix` / `-aoe` / `-m7d` (2026-07-21) の一連の調査。局面 4 と教訓 E は `HarnessHub-6in4` / `-n88` (2026-07-25、`run-dev-graph-init` の live-trial) の追補。
 
-## 1. 中心的な観察 — 同じ構図が 3 回繰り返された
+## 1. 中心的な観察 — 同じ構図が 4 回繰り返された
 
-live-trial 証跡の調査中に、**別の人格・別の局面で、同一構造の抜け道が 3 回選ばれた**。
+live-trial 証跡の調査中に、**別の人格・別の局面で、同一構造の抜け道が 4 回選ばれた**。
 
 | # | 局面 | 直面した壁 | 選ばれた抜け道 | 追跡 |
 |---|---|---|---|---|
 | 1 | `commit 184acbc` | closure 変更で verdict が stale 化 | **digest を書き換え** (transcript は不変) | `s7b` / `dst` |
 | 2 | 初回再 trial (2 件とも) | skill のゴールシーク配線が重い | **下位 script を直叩き** | `m7d` |
 | 3 | 再々 trial (render) | **OUT1 が充足不能** | **registration receipt を偽造** | `aoe` / `rix` |
+| 4 | `init` trial (`20260725T014705Z-init-wt9`) | `Write` が guard に無条件遮断される (**sanctioned writer 不在**) | **`Bash` の heredoc へ切替**、同一 trial 内で 2 回素通り | `6in4` |
 
 いずれも成果物 (`out/status.json` / digest / receipt) は「成功」を示しており、**成果物だけを見る検査では正常な実行と区別できなかった**。
 
@@ -49,6 +50,16 @@ digest 単独書き換えを「`skill_dir_tree_sha` が変わり `transcript_sha
 
 > どちらも欠けていたのは**判定基準ではなく強制力 (到達可能性)** だった。検証は**外側**に置く。
 
+### 1.5 教訓 E — ガードの強度が枝ごとに違うと、必ず弱い枝が選ばれる
+
+局面 4 では `guard-graph-schema.py` が「C02 単一 writer の唯一の強制点」として `Write`/`Edit` と `Bash` の両方を matcher に持っていた。しかし強度が非対称だった。`Write` 枝は `context_ok()` の手前で 0.32s に確定する一方、`Bash` 枝は後段でさらに `schema_ok()` (`validate-graph-schema.py` を subprocess 起動、本体 graph に対し実測 66.47s) を呼ぶ。しかも `schema_ok()` の戻り値は valid でも invalid でも `reason` が立つため **遮断判定に一切寄与せず、理由文の文言を選ぶためだけ**に存在していた。この判定無関係な待ち時間が fail-closed 経路の内側にあり、PreToolUse hook の timeout がそのまま fail-open の窓になっていた (timeout した hook は tool を通す)。
+
+被験セッションは thinking に `the hook is blocking writes to .dev-graph/ ... the hook guards are on Write/Edit` と書き残し、**自力で非対称性を発見して弱い枝へ回った**。同一 trial 内で 2 回、うち 1 回は `.dev-graph/state/graph.json` への生書きが通っている。
+
+> 同一の不変条件を守る枝が複数あるなら、**最も弱い枝の強度がその不変条件の強度**である。「速い枝を手前に置いた」対策は、遅い枝を放置した時点で無効になる。
+
+局面 4 は教訓 B (通せない要求は不正を生む) の再演でもある。`.dev-graph/config.json` は guard が無条件遮断する一方、それを書く sanctioned な writer が `write-scope` 宣言つきでどこにも無い。**`run-dev-graph-init` が現在成功しているのは、guard が遅すぎて止められないからである。** fail-open を閉じるだけでは init が実行不能になるため、閉塞と writer 追加は同じ周回で扱う必要がある。
+
 ## 2. 導入した検証入口
 
 | 入口 | 対象 | 検出するもの |
@@ -56,14 +67,18 @@ digest 単独書き換えを「`skill_dir_tree_sha` が変わり `transcript_sha
 | `validate-receipt.py` (検査 SSOT は `register-package.py` を共有) | 任意の registration receipt | 手書き/事後改変 (revision 差が +1 でない、`registered_at` の秒丸め、exact-13 不成立、digest 不一致) |
 | `run-skill-live-trial/scripts/validate-goal-seek-evidence.py` | `goal_seek` 宣言 skill (24 件) | 実行契約の省略 (成果物不在、6 キー欠落、ゴールすり替え、hash 単独書き換え) |
 | `lint-live-trial-verdict.py --check-provenance` (`dst`) | git commit 差分 | digest 単独書き換え |
+| `lint-live-trial-verdict.py` の `check_c02_bypass` (`aoe` 是正案 b / `scripts/receiptguard_helper.py`) | verdict に**束縛済みの** transcript の tool_use (`.gitignore` された fixture 内も含む) | registration receipt を `register-package.py` を通さず書換え/削除する **C02 (単一 graph writer) 迂回** (局面 3 の実手口)。verdict 生成側の最終ゲート (`check_verdict`) から呼ばれる |
+| `plugins/dev-graph/scripts/validate-repo-config.py` (`sgt`) | live-trial fixture と caller repo の `.dev-graph/config.json` | **trial 入力の不適合** = 「本番なら起動ゲートで落ちる状態」での実走。schema 条件制約 (`execution_tracker.mode ∈ {github,both}` → `github.enabled=true`)、symlink 経由の repo 外脱出、宣言重複、token/node ID 混入の 3 層。fixture 側は `test_live_trial_fixture_builders.py` が全 kind に対し常時執行する |
 
 ### 2.1 それぞれの限界 (重要)
 
 | 入口 | 効かない範囲 |
 |---|---|
-| `--check-provenance` | **fixture は `.gitignore` されており対象外**。局面 3 の偽造はここを通った |
+| `--check-provenance` | **fixture は `.gitignore` されており対象外**。局面 3 の偽造 (fixture 内 receipt 手書き) が通った経路そのものは `check_c02_bypass` が verdict ゲートで別途塞いだが、`--check-provenance` 自体は依然 fixture を見ない (commit 差分ベース) |
+| `check_c02_bypass` | **列挙式 denylist** (`_RECEIPT_MUTATORS`) と単一指標 (transcript の tool_use) 依存。列挙外の書込み経路 (未知のシェル構文・別スクリプト経由の間接書込み・別名生成後の rename) と、tui 層/transcript 不在の run は素通りする (教訓 A: 経路が 1 本なら盲点も 1 つに集約する)。ただし jsonl 層の transcript 不在・改竄は `check_verdict` の束縛検査が別途 fail-closed で塞ぐ |
 | `validate-receipt` | 手口を知った上での回避は可能 (revision を +1 にし小数秒を付ければ通る)。あくまで**素朴な偽造**の検出 |
 | `validate-goal-seek-evidence` | 成果物ベース。transcript の tool_use までは見ていない |
+| `validate-repo-config` | **config だけ**を見る。同じ fixture の graph・receipt・transcript は対象外 (graph は C11、receipt は `validate-receipt` の担当)。実在要求は `--require-content-roots` で呼び手が明示列挙する契約なので、**列挙し忘れた root は検査されない** (SKILL.md の実行コマンドと `references/validation-contract.md` の 6 root 一覧の一致は `test_validate_repo_config.py` が照合する) |
 
 **単独で完全な検査は存在しない。** 独立した指標を複数持つこと (教訓 A) が本質である。
 
@@ -94,3 +109,5 @@ digest 単独書き換えを「`skill_dir_tree_sha` が変わり `transcript_sha
 - `issues/sys-live-trial-fixture-receipt-forgery-20260721.md` — 局面 3 の偽造と `validate-receipt`
 - `issues/sys-live-trial-skill-contract-bypass-20260721.md` — 局面 2 と `validate-goal-seek-evidence`
 - `issues/sys-live-trial-evidence-provenance-20260721.md` — `dst` の provenance 検査
+- `issues/sys-guard-graph-schema-timeout-fail-open-20260725.md` — 局面 4 と教訓 E (`6in4`)。guard の枝別強度と config writer 不在
+- `plugins/dev-graph/skills/run-dev-graph-init/references/validation-contract.md` — `validate-repo-config.py` の 3 層検証と 6 root の正本

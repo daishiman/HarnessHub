@@ -7,7 +7,7 @@
 # contexts: [C, E]
 # network: false
 # write-scope: none
-# dependencies: [resolve-project-context.py]
+# dependencies: [resolve-project-context.py, validate-task-spec-contract.py, validate-json-schema-subset.py, ../assets/validation-contract-baseline.json]
 # requires-python: ">=3.10"
 # ///
 """C12 deterministic promotion gate."""
@@ -20,7 +20,6 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -38,36 +37,17 @@ BASE_DIGEST_FILES = ["feature-package.json", "workstream-inventory.json", "task-
 HANDOFF_PATH = "system-build-handoff.json"
 PLACEHOLDER = re.compile(r"\b(?:TODO|TBD)\b|__PLACEHOLDER__|<[^>]+>", re.I)
 STAGING_RUNTIME_REF = re.compile(r"(?:^|[^A-Za-z0-9_.-])\.dev-graph/staging(?:/|\b)")
-P01_ENTRY_GATE_MARKER = "parent_feature.depends_on all done|closed"
-METHODOLOGY_MARKER = "system-task-goal-seek/v1"
-GOAL_SEEK_PASS_MARKER = "rubric verdict=PASS"
-P13_WRITEBACK_MARKER = "P13 spec/architecture writeback: required"
 SCHEMAS = HERE.parent / "schemas"
-TASK_SPEC_HEADING = re.compile(r"^##[ \t]+(.+?)[ \t]*#*[ \t]*$", re.MULTILINE)
-REQUIRED_TASK_SPEC_SECTIONS = (
-    "Machine-readable registration fields",
-    "目的",
-    "背景",
-    "前提条件",
-    "Workstream applicability",
-    "Architecture and deploy unit",
-    "成果物",
-    "Tracker publication and completion",
-    "Branch and worktree execution",
-    "スコープ外",
-    "Verification and evidence",
-    "Inner goal-seek execution loop",
-    "Rollout and rollback",
-    "Handoff",
-    "参照情報",
-)
 
-# --- テスト戦略 section (qa-070 / qa-072 / qa-073 / qa-075) ---------------
+# --- テスト戦略 section (qa-076 / qa-078 / qa-079 / qa-081) ---------------
 #
-# `REQUIRED_TASK_SPEC_SECTIONS` へは意図的に追加しない。15 section の必須集合を
-# 16 へ広げると、既に promoted 済みの世代が即座に FAIL へ転落し exact-13 契約の
-# 非退行 (goal-spec acceptance 7) を破る。代わりに package 側の
-# `spec_contract_version` 宣言で段階適用する条件付き検査として実装する。
+# 段階適用は契約 version 台帳 (validate-task-spec-contract.py) が担う。本 section の
+# 必須化は契約 1.2.0 で導入され、それ以前に promote された世代は canonical digest 経由で
+# 当時の契約へ解決されるため FAIL へ転落しない (exact-13 非退行 = goal-spec acceptance 7)。
+# package 側の自己申告 version は採らない。manifest は digest 対象集合の外にあり改ざん可能で、
+# 申告値で免除を決めると台帳の fail-closed が申告一行で無効化されるため。
+# 検査の実装をここに置くのは inner_goal_seek / p13_writeback と同じ配置規則に従う
+# (契約 version の差分 flag は台帳側、本文検査の実装は validator 側)。
 TEST_STRATEGY_SECTION = "テスト戦略"
 # 4 項目のラベルと出現順序が、再生成冪等性 (acceptance 3) の判定単位そのもの。
 TEST_STRATEGY_ITEMS: tuple[tuple[str, str], ...] = (
@@ -80,8 +60,6 @@ TEST_STRATEGY_SCHEMA = "task-spec-test-strategy.schema.json"
 # section は「スコープ外」の後、「Verification and evidence」の前に置く。
 # scope が決まってテスト範囲が決まり、その実行手段が Verification へ続く。
 TEST_STRATEGY_PLACEMENT = ("スコープ外", "Verification and evidence")
-# この版以上を宣言した package だけが section 必須 (enforced) になる。
-TEST_STRATEGY_MIN_CONTRACT = (1, 2, 0)
 WORKSTREAM_SECTION = "Workstream applicability"
 # Workstream applicability の各行 -> テスト層。Backend/API/Data は OR で backend 層へ束ねる。
 # Security/Quality/Documentation/Operations は層別テスト方針の対象外 (層を導出しない)。
@@ -92,7 +70,7 @@ LAYER_BY_WORKSTREAM = {
     "Data": "backend",
     "Infrastructure": "infrastructure",
 }
-# 各層の層別方針が満たすべき必須マーカー (qa-072 逐語由来)。
+# 各層の層別方針が満たすべき必須マーカー (qa-078 逐語由来)。
 LAYER_MARKERS = {
     "frontend": ("behavior",),
     "backend": ("API 契約", "DB 結合"),
@@ -105,12 +83,42 @@ _ITEM_LABEL = re.compile(
 _WORKSTREAM_LINE = re.compile(r"^[ \t]*[-*][ \t]*([^:：]+?)[ \t]*[:：][ \t]*(.*)$", re.MULTILINE)
 
 
-def _resolver():
-    spec = importlib.util.spec_from_file_location("sdp_context", HERE / "resolve-project-context.py")
+def _load_sibling(filename: str, module_name: str):
+    spec = importlib.util.spec_from_file_location(module_name, HERE / filename)
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)  # type: ignore[union-attr]
     return module
+
+
+def _resolver():
+    return _load_sibling("resolve-project-context.py", "sdp_context")
+
+
+# 契約 version の正本は validate-task-spec-contract.py に置く (責務分離)。ここでは module
+# 属性として再公開し、promoter/テストが validator 経由で契約定数を参照する既存の形を保つ。
+CONTRACTS = _load_sibling("validate-task-spec-contract.py", "sdp_task_spec_contract")
+CONTRACT_BASELINE_ASSET = CONTRACTS.CONTRACT_BASELINE_ASSET
+TASK_SPEC_HEADING = CONTRACTS.TASK_SPEC_HEADING
+P01_ENTRY_GATE_MARKER = CONTRACTS.P01_ENTRY_GATE_MARKER
+METHODOLOGY_MARKER = CONTRACTS.METHODOLOGY_MARKER
+GOAL_SEEK_PASS_MARKER = CONTRACTS.GOAL_SEEK_PASS_MARKER
+P13_WRITEBACK_MARKER = CONTRACTS.P13_WRITEBACK_MARKER
+GOAL_SEEK_SECTION = CONTRACTS.GOAL_SEEK_SECTION
+REQUIRED_TASK_SPEC_SECTIONS = CONTRACTS.REQUIRED_TASK_SPEC_SECTIONS
+CONTRACT_VERSION_LATEST = CONTRACTS.CONTRACT_VERSION_LATEST
+CONTRACT_VERSIONS = CONTRACTS.CONTRACT_VERSIONS
+TEST_STRATEGY_CONTRACT_FROM = CONTRACTS.TEST_STRATEGY_CONTRACT_FROM
+load_contract_baseline = CONTRACTS.load_contract_baseline
+resolve_contract_version = CONTRACTS.resolve_contract_version
+task_spec_violations = CONTRACTS.task_spec_violations
+
+# JSON Schema サブセット検証器の正本は validate-json-schema-subset.py (責務分離)。C14 が
+# 同等実装を別に持つ理由は当該 module の docstring を参照する。
+SCHEMA_SUBSET = _load_sibling("validate-json-schema-subset.py", "sdp_json_schema_subset")
+_type_matches = SCHEMA_SUBSET._type_matches
+_resolve_local_ref = SCHEMA_SUBSET._resolve_local_ref
+schema_violations = SCHEMA_SUBSET.schema_violations
 
 
 def canonical_digest(root: Path, relative_paths: list[str]) -> str:
@@ -119,122 +127,6 @@ def canonical_digest(root: Path, relative_paths: list[str]) -> str:
         path = root / rel
         digest.update(rel.encode()); digest.update(b"\0"); digest.update(path.read_bytes()); digest.update(b"\0")
     return "sha256:" + digest.hexdigest()
-
-
-def _type_matches(value: object, expected: object) -> bool:
-    choices = expected if isinstance(expected, list) else [expected]
-    mapping = {
-        "object": lambda x: isinstance(x, dict),
-        "array": lambda x: isinstance(x, list),
-        "string": lambda x: isinstance(x, str),
-        "integer": lambda x: isinstance(x, int) and not isinstance(x, bool),
-        "number": lambda x: isinstance(x, (int, float)) and not isinstance(x, bool),
-        "boolean": lambda x: isinstance(x, bool),
-        "null": lambda x: x is None,
-    }
-    return any(kind in mapping and mapping[kind](value) for kind in choices)
-
-
-def _resolve_local_ref(root_schema: dict, ref: str) -> dict:
-    if not ref.startswith("#/"):
-        raise ValueError(f"unsupported non-local schema ref: {ref}")
-    value: object = root_schema
-    for raw in ref[2:].split("/"):
-        key = raw.replace("~1", "/").replace("~0", "~")
-        if not isinstance(value, dict) or key not in value:
-            raise ValueError(f"unresolved local schema ref: {ref}")
-        value = value[key]
-    if not isinstance(value, dict):
-        raise ValueError(f"schema ref does not resolve to object: {ref}")
-    return value
-
-
-def schema_violations(value: object, schema: dict, path: str = "$", root_schema: dict | None = None) -> list[str]:
-    """Validate the JSON-Schema subset used by the bundled runtime schemas.
-
-    Supported constraints intentionally include every keyword used by
-    feature-execution-package and workstream-inventory: local refs, type,
-    required, properties/additionalProperties, const/enum/pattern, bounds,
-    array prefix/items/uniqueness, allOf and if/then.
-    """
-    root = root_schema or schema
-    if "$ref" in schema:
-        return schema_violations(value, _resolve_local_ref(root, schema["$ref"]), path, root)
-    errors: list[str] = []
-    expected = schema.get("type")
-    if expected is not None and not _type_matches(value, expected):
-        return [f"{path}: type must be {expected!r}"]
-    if "const" in schema and value != schema["const"]:
-        errors.append(f"{path}: const mismatch")
-    if "enum" in schema and value not in schema["enum"]:
-        errors.append(f"{path}: value is outside enum")
-    if isinstance(value, str):
-        if "minLength" in schema and len(value) < schema["minLength"]:
-            errors.append(f"{path}: shorter than minLength")
-        if "maxLength" in schema and len(value) > schema["maxLength"]:
-            errors.append(f"{path}: longer than maxLength")
-        if "pattern" in schema and re.search(schema["pattern"], value) is None:
-            errors.append(f"{path}: pattern mismatch")
-        if schema.get("format") == "date-time":
-            try:
-                parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-                if parsed.tzinfo is None:
-                    raise ValueError
-            except ValueError:
-                errors.append(f"{path}: invalid date-time")
-    if isinstance(value, (int, float)) and not isinstance(value, bool):
-        if "minimum" in schema and value < schema["minimum"]:
-            errors.append(f"{path}: below minimum")
-        if "maximum" in schema and value > schema["maximum"]:
-            errors.append(f"{path}: above maximum")
-    if isinstance(value, dict):
-        required = schema.get("required", [])
-        for key in required:
-            if key not in value:
-                errors.append(f"{path}: required property missing: {key}")
-        properties = schema.get("properties", {})
-        for key, child in properties.items():
-            if key in value:
-                errors.extend(schema_violations(value[key], child, f"{path}.{key}", root))
-        extras = set(value) - set(properties)
-        additional = schema.get("additionalProperties", True)
-        if additional is False:
-            for key in sorted(extras):
-                errors.append(f"{path}: additional property forbidden: {key}")
-        elif isinstance(additional, dict):
-            for key in sorted(extras):
-                errors.extend(schema_violations(value[key], additional, f"{path}.{key}", root))
-        if "minProperties" in schema and len(value) < schema["minProperties"]:
-            errors.append(f"{path}: fewer than minProperties")
-        if "maxProperties" in schema and len(value) > schema["maxProperties"]:
-            errors.append(f"{path}: more than maxProperties")
-    if isinstance(value, list):
-        if "minItems" in schema and len(value) < schema["minItems"]:
-            errors.append(f"{path}: fewer than minItems")
-        if "maxItems" in schema and len(value) > schema["maxItems"]:
-            errors.append(f"{path}: more than maxItems")
-        if schema.get("uniqueItems"):
-            encoded = [json.dumps(item, ensure_ascii=False, sort_keys=True) for item in value]
-            if len(encoded) != len(set(encoded)):
-                errors.append(f"{path}: items are not unique")
-        prefix = schema.get("prefixItems", [])
-        for index, child in enumerate(prefix[:len(value)]):
-            errors.extend(schema_violations(value[index], child, f"{path}[{index}]", root))
-        items = schema.get("items")
-        start = len(prefix) if prefix else 0
-        if items is False and len(value) > start:
-            errors.append(f"{path}: additional array items forbidden")
-        elif isinstance(items, dict):
-            for index in range(start, len(value)):
-                errors.extend(schema_violations(value[index], items, f"{path}[{index}]", root))
-    for child in schema.get("allOf", []):
-        errors.extend(schema_violations(value, child, path, root))
-    condition = schema.get("if")
-    if isinstance(condition, dict) and not schema_violations(value, condition, path, root):
-        then = schema.get("then")
-        if isinstance(then, dict):
-            errors.extend(schema_violations(value, then, path, root))
-    return errors
 
 
 def _load_schema(name: str) -> dict:
@@ -323,7 +215,7 @@ def derive_required_layers(text: str) -> list[str]:
 
 
 def test_strategy_violations(text: str, *, enforced: bool) -> list[tuple[str, str]]:
-    """テスト戦略 section の構造・内容・層別充足を検証する (qa-070/072/073/075)。
+    """テスト戦略 section の構造・内容・層別充足を検証する (qa-076/078/079/081)。
 
     `enforced=False` (legacy package) でも、section が存在する場合は同じ厳格さで
     検査する (strict-if-present)。緩めるのは「無いことを許すか」だけであり、
@@ -345,58 +237,19 @@ def test_strategy_violations(text: str, *, enforced: bool) -> list[tuple[str, st
     return errors
 
 
-def _contract_version(raw: object) -> tuple[int, int, int] | None:
-    if not isinstance(raw, str):
-        return None
-    match = re.fullmatch(r"([0-9]+)\.([0-9]+)\.([0-9]+)", raw)
-    return (int(match.group(1)), int(match.group(2)), int(match.group(3))) if match else None
-
-
-def test_strategy_mode(package: dict) -> str:
-    """package の `spec_contract_version` から enforced / legacy を決める。
-
-    不正形式は legacy へ落とすが、package schema の pattern が別途 violation を出すため
-    「壊れた版宣言で検査を黙って無効化する」抜け道にはならない。
-    """
-    version = _contract_version(package.get("spec_contract_version"))
-    return "enforced" if version is not None and version >= TEST_STRATEGY_MIN_CONTRACT else "legacy"
-
-
-def task_spec_violations(text: str) -> list[tuple[str, str]]:
-    """Return structural violations against the canonical task overlay.
-
-    The template's prose says every standard section must be populated and
-    names seven sections as the minimum readiness gate.  Treating all standard
-    sections as required keeps C12 fail-closed and prevents a title plus one
-    sentence from being promoted as an executable task specification.
-    """
-    headings = list(TASK_SPEC_HEADING.finditer(text))
-    by_name: dict[str, list[int]] = {}
-    for index, heading in enumerate(headings):
-        by_name.setdefault(heading.group(1).strip(), []).append(index)
-
-    errors: list[tuple[str, str]] = []
-    for name in REQUIRED_TASK_SPEC_SECTIONS:
-        occurrences = by_name.get(name, [])
-        if not occurrences:
-            errors.append(("task-spec-section-missing", name))
-            continue
-        if len(occurrences) > 1:
-            errors.append(("task-spec-section-duplicate", name))
-            continue
-        heading_index = occurrences[0]
-        start = headings[heading_index].end()
-        end = headings[heading_index + 1].start() if heading_index + 1 < len(headings) else len(text)
-        body = text[start:end].strip()
-        if not body:
-            errors.append(("task-spec-section-empty", name))
-    return errors
-
-
-def validate(staging: Path, repository_id: str) -> dict:
+def validate(staging: Path, repository_id: str, baseline: dict[str, str] | None = None) -> dict:
     violations: list[dict] = []
+    resolved_baseline = load_contract_baseline() if baseline is None else baseline
     def fail(code: str, path: str, detail: str) -> None:
         violations.append({"code": code, "path": path, "detail": detail})
+    def plain_file(rel: str) -> bool:
+        """副作用なしで symlink 成分を排した実在判定を返す (契約 version 解決の前段用)。"""
+        cursor = staging
+        for part in Path(rel).parts:
+            cursor = cursor / part
+            if cursor.is_symlink():
+                return False
+        return (staging / rel).is_file()
     def safe_path(rel: str) -> Path | None:
         candidate = staging / rel
         try:
@@ -425,15 +278,26 @@ def validate(staging: Path, repository_id: str) -> dict:
         try: return json.loads(p.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc: fail("invalid-json", rel, str(exc)); return None
 
+    required_digest_files = [*BASE_DIGEST_FILES, HANDOFF_PATH]
+    # 免除判定は manifest の申告値ではなく実体から再計算した digest で行う。
+    # staging-manifest.json 自身は digest 対象集合の外にあり書き換え可能なため。
+    actual_digest = (
+        canonical_digest(staging, required_digest_files)
+        if all(plain_file(rel) for rel in required_digest_files) else None
+    )
+    contract_version = resolve_contract_version(actual_digest, resolved_baseline)
+    contract = CONTRACT_VERSIONS[contract_version]
+
     package = load("feature-package.json")
     inventory = load("workstream-inventory.json")
     graph = load("task-graph.json")
     handoff = load(HANDOFF_PATH)
     manifest = load("staging-manifest.json")
     if not all(isinstance(x, dict) for x in (package, inventory, graph, handoff, manifest)):
-        return {"status": "fail", "violations": violations, "validated_digest": None}
+        return {"status": "fail", "violations": violations, "validated_digest": None,
+                "contract_version": contract_version,
+                "contract_baseline_exemption": contract_version != CONTRACT_VERSION_LATEST}
     package_id, parent = package.get("feature_package_id"), package.get("parent_feature")
-    strategy_mode = test_strategy_mode(package)
     for detail in schema_violations(package, _load_schema("feature-execution-package.schema.json")):
         fail("package-schema", "feature-package.json", detail)
     for detail in schema_violations(inventory, _load_schema("workstream-inventory.schema.json")):
@@ -526,17 +390,17 @@ def validate(staging: Path, repository_id: str) -> dict:
                     rel,
                     f"P01 must declare machine-verifiable gate: {P01_ENTRY_GATE_MARKER}",
                 )
-            for code, section in task_spec_violations(text):
+            for code, section in task_spec_violations(text, contract["required_sections"]):
                 fail(code, rel, section)
-            for code, detail in test_strategy_violations(text, enforced=strategy_mode == "enforced"):
+            for code, detail in test_strategy_violations(text, enforced=contract["test_strategy"]):
                 fail(code, rel, detail)
-            if METHODOLOGY_MARKER not in text or GOAL_SEEK_PASS_MARKER not in text:
+            if contract["inner_goal_seek"] and (METHODOLOGY_MARKER not in text or GOAL_SEEK_PASS_MARKER not in text):
                 fail(
                     "inner-goal-seek-contract",
                     rel,
                     "portable methodology marker and rubric verdict=PASS feedback loop are required",
                 )
-            if rel == TASK_PATHS[-1] and P13_WRITEBACK_MARKER not in text:
+            if contract["p13_writeback"] and rel == TASK_PATHS[-1] and P13_WRITEBACK_MARKER not in text:
                 fail(
                     "p13-spec-architecture-writeback",
                     rel,
@@ -579,7 +443,6 @@ def validate(staging: Path, repository_id: str) -> dict:
     rels: list[str] = []
     if isinstance(manifest_files, dict): rels = sorted(manifest_files)
     elif isinstance(manifest_files, list): rels = sorted(x.get("path") for x in manifest_files if isinstance(x, dict) and isinstance(x.get("path"), str))
-    required_digest_files = [*BASE_DIGEST_FILES, HANDOFF_PATH]
     if sorted(rels) != sorted(required_digest_files):
         fail("manifest-exact-set", "staging-manifest.json", "manifest must cover package/inventory/graph/exact 13 task specs/system handoff")
     for rel in rels:
@@ -614,26 +477,29 @@ def validate(staging: Path, repository_id: str) -> dict:
     source_manifest = handoff.get("source_manifest") if isinstance(handoff.get("source_manifest"), dict) else {}
     if source_manifest.get("canonical_digest_before_handoff") != base_digest:
         fail("handoff-source-canonical-digest", HANDOFF_PATH, "pre-handoff canonical digest mismatch")
-    contract = manifest.get("handoff_contract") if isinstance(manifest.get("handoff_contract"), dict) else {}
+    # 契約 version 台帳の `contract` と別物なので名前を分ける。同名にすると後段の
+    # test_strategy_contract 出力が handoff 側を引いてしまう (実際に KeyError で顕在化した)。
+    handoff_contract = manifest.get("handoff_contract") if isinstance(manifest.get("handoff_contract"), dict) else {}
     handoff_sha = hashlib.sha256((staging / HANDOFF_PATH).read_bytes()).hexdigest() if (staging / HANDOFF_PATH).is_file() else None
     if (
-        contract.get("schema_version") != "1.0.0"
-        or contract.get("path") != HANDOFF_PATH
-        or contract.get("sha256") != handoff_sha
-        or contract.get("source_canonical_digest") != base_digest
-        or contract.get("manifest_is_commit_point") is not True
-        or contract.get("self_reference_policy") != "handoff hash and final digest are manifest-only"
+        handoff_contract.get("schema_version") != "1.0.0"
+        or handoff_contract.get("path") != HANDOFF_PATH
+        or handoff_contract.get("sha256") != handoff_sha
+        or handoff_contract.get("source_canonical_digest") != base_digest
+        or handoff_contract.get("manifest_is_commit_point") is not True
+        or handoff_contract.get("self_reference_policy") != "handoff hash and final digest are manifest-only"
     ):
         fail("handoff-manifest-contract", "staging-manifest.json", "handoff commit-point contract mismatch")
     return {"schema_version": "1.0.0", "status": "pass" if not violations else "fail",
             "validated_digest": digest, "feature_package_id": package_id, "parent_feature": parent,
-            "phase_refs": PHASES,
+            "phase_refs": PHASES, "contract_version": contract_version,
+            "contract_baseline_exemption": contract_version != CONTRACT_VERSION_LATEST,
             # 適用モードを常に出力する。silent skip を許すと「検査したのか、
             # 素通りしたのか」を証跡から区別できず、緑色が意味を失う。
             "test_strategy_contract": {
-                "mode": strategy_mode,
-                "declared_version": package.get("spec_contract_version"),
-                "enforced_from": ".".join(str(x) for x in TEST_STRATEGY_MIN_CONTRACT),
+                "mode": "enforced" if contract["test_strategy"] else "legacy",
+                "contract_version": contract_version,
+                "enforced_from": TEST_STRATEGY_CONTRACT_FROM,
             },
             "violations": violations}
 

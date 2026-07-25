@@ -1,0 +1,11 @@
+{
+  "patch": {
+    "graph_node_id": "issue-devgraph-completion-event-ledger-gap-20260724",
+    "updated_at": "2026-07-24T12:12:22Z",
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-eg0",
+      "linked_at": "2026-07-24T12:12:22Z",
+      "sync_state": "linked"
+    }
+  }
+}

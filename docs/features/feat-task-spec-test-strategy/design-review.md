@@ -75,7 +75,7 @@ P01..P13 の phase 数・依存 chain・見出し構成に変更が生じない�
 
 既存世代が新検査の評価対象から外れる条件は独立に 2 つある。
 
-1. `feature-package.json` に `spec_contract_version` が無い → `legacy` モード → 欠落を violation にしない
+1. canonical digest が台帳へ `1.1.0` で登録済み → `legacy` モード → 欠落を violation にしない
 2. task spec 本文に `## テスト戦略` 見出しが無い → strict-if-present の検査も発火しない
 
 片方が破れてももう片方が残るため、非破壊性は単一条件に依存しない。
@@ -104,7 +104,7 @@ P01..P13 の phase 数・依存 chain・見出し構成に変更が生じない�
 |---|---|
 | `references/system-task-spec-template.md` | scope_in SI-2 が名指しする「task spec テンプレート」の正本そのもの |
 | `skills/run-system-dev-plan/prompts/R3-emit.md` | 上記テンプレートの section 数・版を宣言する生成側指示。据え置くと正本と矛盾する |
-| `schemas/feature-execution-package.schema.json` | `spec_contract_version` の宣言先。schema なしでは additionalProperties=false により package が schema violation となる |
+| `assets/validation-contract-baseline.json` | 契約 version の解決正本。bootstrap 2 世代をここへ登録しないと既存 promoted 世代が新契約で FAIL する |
 
 - **境界の上限**: `plugins/dev-graph/templates/system-task-spec.md` (draft コピー) は**変更しない**。テンプレート正本の冒頭注記が「P08/P12 で本正本への pointer 化予定」と述べており、本 feature の scope ではない。P13 の申し送り対象とする。
 - **記録義務**: P05 は resource_scope 外の 3 ファイルを変更した事実と本 finding への参照を実装記録に残す。P07 / P10 はこの逸脱を承認済み逸脱として扱い、未申告の scope 逸脱と区別する。

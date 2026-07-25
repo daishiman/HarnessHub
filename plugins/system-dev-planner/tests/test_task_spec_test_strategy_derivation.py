@@ -13,6 +13,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import test_runtime as fx
 from test_task_spec_test_strategy_sections import (
@@ -30,6 +31,8 @@ SCHEMA = json.loads(
 PACKAGE_SCHEMA = json.loads(
     (fx.PLUGIN / "schemas" / "feature-execution-package.schema.json").read_text(encoding="utf-8")
 )
+# patch 差し替え後に module 属性を引くと自分自身を呼んで再帰するため、import 時に束縛する。
+_CURRENT_TASK_SPEC_TEXT = fx.task_spec_text
 
 
 def spec(workstream: str, policies: str = ITEMS["層別方針"]) -> str:
@@ -46,7 +49,7 @@ class LayerDerivationTests(unittest.TestCase):
     """applicable な workstream から必須層を導き、方針の欠落を拒否する。"""
 
     def test_frontend_applicable_requires_behavior_policy(self):
-        """TS-B01: フロントが applicable なら behavior ベースの方針が要る (qa-072)。"""
+        """TS-B01: フロントが applicable なら behavior ベースの方針が要る (qa-078)。"""
         text = spec("- Frontend: applicable; 画面を追加する")
         self.assertEqual(VALIDATOR.derive_required_layers(text), ["frontend"])
         self.assertIn("task-spec-test-strategy-layer", violation_codes(text))
@@ -146,43 +149,45 @@ class IdempotencyAndContractTests(unittest.TestCase):
         self.assertEqual(set(SCHEMA["properties"]), set(SCHEMA["required"]))
 
     def test_contract_version_threshold_boundaries(self):
-        """TS-B09: 1.1.0=legacy / 1.2.0=enforced / 2.0.0=enforced / 不正形式=legacy+schema violation。
+        """TS-B09: 契約 version 台帳が enforced / legacy の境界を決める。
 
-        不正形式を legacy へ落としても、package schema の pattern が別途 violation を
-        出すため「壊れた版宣言で検査を黙って無効化する」抜け道にはならない。
+        段階適用の鍵は package の自己申告ではなく canonical digest である。台帳未登録
+        (= 未知 digest) と digest 不能は latest へ倒れ、免除は台帳登録済みの digest に
+        だけ与えられる。台帳の欠落・削除は「免除なし = より厳格」へ倒れる。
         """
-        for version, expected in (("1.1.0", "legacy"), ("1.2.0", "enforced"), ("2.0.0", "enforced"),
-                                  ("1.2", "legacy"), (None, "legacy")):
+        for version, expected in (("1.0.0", False), ("1.1.0", False), (CONTRACT_VERSION, True)):
             with self.subTest(version=version):
-                package = {} if version is None else {"spec_contract_version": version}
-                self.assertEqual(VALIDATOR.test_strategy_mode(package), expected)
-        malformed_schema = {
-            "type": "object",
-            "properties": {
-                "spec_contract_version": PACKAGE_SCHEMA["properties"]["spec_contract_version"]
-            },
-        }
-        self.assertTrue(VALIDATOR.schema_violations({"spec_contract_version": "1.2"}, malformed_schema))
-        self.assertFalse(VALIDATOR.schema_violations({"spec_contract_version": "1.2.0"}, malformed_schema))
+                self.assertEqual(VALIDATOR.CONTRACT_VERSIONS[version]["test_strategy"], expected)
+        self.assertEqual(VALIDATOR.CONTRACT_VERSION_LATEST, CONTRACT_VERSION)
+        baseline = {"sha256:known": "1.1.0"}
+        self.assertEqual(VALIDATOR.resolve_contract_version("sha256:known", baseline), "1.1.0")
+        for unknown in ("sha256:" + "0" * 64, None):
+            with self.subTest(digest=unknown):
+                self.assertEqual(
+                    VALIDATOR.resolve_contract_version(unknown, baseline), CONTRACT_VERSION
+                )
+        self.assertEqual(VALIDATOR.resolve_contract_version("sha256:known", {}), CONTRACT_VERSION)
 
     def test_existing_generation_shape_stays_passing(self):
-        """TS-B10: 15 section のみの既存形状は pass のまま (AC-7 の実装側根拠)。"""
+        """TS-B10: 15 section のみの既存形状は台帳免除下で pass のまま (AC-7 の実装側根拠)。"""
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); repository_id = fx.make_repo(root)
-            staging, digest = fx.make_fixture(root, repository_id)
-            before = VALIDATOR.validate(staging, repository_id)
-            self.assertEqual(before["status"], "pass")
+            with mock.patch.object(
+                fx, "task_spec_text", lambda phase: _CURRENT_TASK_SPEC_TEXT(phase, strategy=None)
+            ):
+                staging, digest = fx.make_fixture(root, repository_id)
+            before = VALIDATOR.validate(staging, repository_id, baseline={digest: "1.1.0"})
+            self.assertEqual(before["status"], "pass", before["violations"])
             self.assertEqual(before["validated_digest"], digest)
             self.assertEqual(before["violations"], [])
             self.assertEqual(before["phase_refs"], VALIDATOR.PHASES)
+            self.assertEqual(before["test_strategy_contract"]["mode"], "legacy")
             self.assertEqual(
                 VALIDATOR.test_strategy_violations(
                     fx.task_spec_text("P01"), enforced=False
                 ),
                 [],
             )
-            self.assertEqual(CONTRACT_VERSION, ".".join(
-                str(x) for x in VALIDATOR.TEST_STRATEGY_MIN_CONTRACT))
 
 
 if __name__ == "__main__":

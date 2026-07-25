@@ -44,7 +44,7 @@ task spec (Markdown)
 |---|---|---|
 | `plugins/system-dev-planner/references/system-task-spec-template.md` | 変更 (`template_version` 1.1.0→1.2.0、`## テスト戦略` 追加、正本追記に契約説明を追加) | goal-spec scope_in SI-2 が名指しする「task spec テンプレート」の正本そのもの |
 | `plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md` | 変更 (制約 1 件・完了チェック 1 件・参照リソース 1 行を追加、v1.1.0→v1.2.0) | テンプレートの section 数と版を宣言する生成側指示。据え置くと正本と矛盾し、validator だけが要求して生成器が永久に出力しない空洞化を招く |
-| `plugins/system-dev-planner/schemas/feature-execution-package.schema.json` | 変更 (optional `spec_contract_version` を追加) | `additionalProperties: false` のため、schema へ足さない限り package が版を宣言できない |
+| `plugins/system-dev-planner/assets/validation-contract-baseline.json` | 変更 (`1.2.0` 契約の定義と bootstrap 2 世代の `1.1.0` 登録を追加) | 契約 version の解決正本。ここへ登録しない限り既存 promoted 世代が新契約で FAIL する |
 
 ### 2.3 記録目的の追加 (本ファイル)
 
@@ -85,3 +85,25 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 | 契約版に関係なく無条件必須化 | 同上。段階適用の無効化条件を 1 つも持たない設計になる |
 | 版未宣言なら section 内容も検査しない | 「書いたが壊れている」を素通りさせ fail-closed が形骸化する。strict-if-present を採用 |
 | `layer_policies` の必須語を schema の `pattern` で表現 | どの層が必須かは `Workstream applicability` 依存であり、JSON Schema では文脈を参照できない |
+
+## 6. 設計からの差分: 版の自己申告 → canonical digest 台帳
+
+P02 設計は `feature-package.json` の optional な `spec_contract_version` を判定キーに置いていた。実装
+時点でこれを **canonical digest → contract_version の台帳**
+(`plugins/system-dev-planner/assets/validation-contract-baseline.json`) 方式へ差し替えている。
+
+| 論点 | 自己申告方式 | 台帳方式 (採用) |
+|---|---|---|
+| 判定キーの改竄耐性 | 宣言値は digest 対象集合の外にあり、1 行足すだけで免除を取れる | digest は再計算値であり、書き換えれば digest 自体が変わって免除が外れる |
+| 既定値の倒れる向き | 宣言の**省略**が免除を意味する = fail-open | 未登録が最厳格の `CONTRACT_VERSION_LATEST` = fail-closed |
+| 台帳の欠落・削除 | — | すべて厳格側へ倒れる (緩和経路にならない) |
+| package schema | optional プロパティの追加が必要 | package 側に追加フィールド不要 (`feature-execution-package.schema.json` は無変更) |
+
+差し替えは AC / acceptance の文言を変えない。**「既存 promoted 世代の再検証結果を変えない」という
+性質の実現手段を、Goodhart 耐性の高い側へ移しただけ**である。免除の受入条件は台帳の
+`policy.amendment` に明文化し、「現行契約で pass する package は登録しない」を条件に置いた。
+
+設計文書側の記述 (`design.md` §3、`design-review.md` §3.2、`operations.md` §4、
+`compatibility-note.md` §4-§6、テンプレート正本、R3-emit、architect agent) は本方式へ同期済み。
+凍結証跡 (`eval-log/system-dev-planner/task-spec-test-strategy/`) は当時の判断記録として
+旧記述のまま残す。

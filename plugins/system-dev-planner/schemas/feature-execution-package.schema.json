@@ -7,11 +7,6 @@
   "required": ["schema_version", "feature_package_id", "parent_feature", "source_feature_digest", "task_count", "phase_refs", "task_spec_paths", "task_node_ids"],
   "properties": {
     "schema_version": {"const": "1.0.0"},
-    "spec_contract_version": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "description": "task spec テンプレート契約の版。system-task-spec-template.md の template_version と対応する。1.2.0 以上を宣言した package は全 task spec に `## テスト戦略` section (4 項目) を必須とし、欠落を C12 が非0終了で拒否する。未宣言の package は legacy 扱いで、既存 promoted 世代の再検証結果を変えない。"
-    },
     "feature_package_id": {"type": "string", "pattern": "^feature-package/[A-Za-z0-9._/-]+$"},
     "parent_feature": {"type": "string", "minLength": 1},
     "source_feature_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},

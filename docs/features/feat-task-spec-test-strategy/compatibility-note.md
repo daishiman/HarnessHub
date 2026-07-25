@@ -48,7 +48,7 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 | depends_on edge 数 | 12 / 12 | 12 (P01→…→P13 の前方 chain) | 非退行 |
 | `phase_refs` | P01..P13 順 | P01..P13 順 | 非退行 |
 | `REQUIRED_TASK_SPEC_SECTIONS` 件数 | 15 | 15 (16 へ増やさない) | 非退行 (TS-A13) |
-| `spec_contract_version` | 未宣言 / 未宣言 | 未宣言 = legacy | 非退行 |
+| 解決される契約 version | 1.1.0 / 1.1.0 (台帳登録済み) | legacy | 非退行 |
 
 回帰スイート: `pytest plugins/system-dev-planner/tests -q` → **137 passed (exit 0)**。導入前の 110 件は全て pass のまま、新規 27 件が加わった数である。
 
@@ -58,7 +58,7 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 
 | # | 条件 | 実装上の所在 | 実測 |
 |---|---|---|---|
-| 1 | `feature-package.json` に `spec_contract_version` が無い → `legacy` モードで section 欠落を violation にしない | `test_strategy_mode()` / `test_strategy_violations(enforced=False)` | 既存 2 世代とも未宣言 (§3) |
+| 1 | canonical digest が台帳へ `1.1.0` で登録済み → `legacy` モードで section 欠落を violation にしない | `resolve_contract_version()` / `test_strategy_violations(enforced=False)` | 既存 2 世代とも登録済み (§3) |
 | 2 | 本文に `## テスト戦略` 見出しが無い → strict-if-present の検査自体が発火しない | `parse_test_strategy()` が `(None, [])` を返す | 既存世代の task spec に当該見出しなし |
 
 **緩めたのは「無いことを許すか」だけ**であり、書かれた内容の妥当性は legacy でも同じ厳格さで検査する (TS-A11)。これがないと「section を書いたが壊れている」世代を素通りさせ、fail-closed が形骸化する。
@@ -66,7 +66,7 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 ## 5. 移行手順 (既存 package を enforced へ上げるとき)
 
 1. 13 件の task spec の `スコープ外` と `Verification and evidence` の間に `## テスト戦略` を追加し、4 項目をラベル固定順で埋める。
-2. `feature-package.json` に `"spec_contract_version": "1.2.0"` を追加する。
+2. 台帳 `validation-contract-baseline.json` から当該 canonical digest の `1.1.0` 登録を外す。再生成すると digest 自体が変わるため、新 digest は未登録 = `1.2.0` へ自動的に解決される。
 3. `staging-manifest.json` の digest を再計算し、C14 `build-system-handoff.py` を再実行する (handoff の source digest は入力バイト列に束縛されているため必須)。
 4. `validate-system-plan.py --feature-package <id>` が exit 0 を返すことを確認する。report の `test_strategy_contract.mode` が `enforced` に変わることが移行完了の機械可読な証跡になる。
 
@@ -74,4 +74,4 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 
 ## 6. ロールバック
 
-`spec_contract_version` を package から外すだけで、その package は legacy へ戻る (validator 側の変更は不要)。検査自体を止める場合は `validate-system-plan.py` の `validate()` 内 1 行 (`test_strategy_violations` の呼び出し) を外せばよく、既存 15 section 契約とは疎結合である。
+台帳 `validation-contract-baseline.json` へ当該 package の canonical digest を `1.1.0` で登録すれば、その世代は legacy へ戻る (validator 側の変更は不要)。検査自体を止める場合は `CONTRACT_VERSIONS["1.2.0"]["test_strategy"]` を `False` に戻せばよく、既存 15 section 契約とは疎結合である。

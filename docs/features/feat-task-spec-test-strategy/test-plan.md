@@ -20,7 +20,7 @@ consumes: [docs/features/feat-task-spec-test-strategy/design.md, docs/features/f
 |---|---|---|
 | 単体 | 適用 | `parse_test_strategy()` / `test_strategy_violations()` / `derive_required_layers()` / schema 整合 |
 | 結合 | 適用 | `validate()` 全体経路 + `main()` の exit code + 既存 promoted 世代の再検証 |
-| 境界値 | 適用 | `spec_contract_version` の閾値 (1.1.0 / 1.2.0 / 2.0.0 / 不正形式)、項目 0 件・空文字 |
+| 境界値 | 適用 | 契約 version 解決の境界 (台帳登録済み digest / 未登録 digest / digest 再計算不能)、項目 0 件・空文字 |
 | 既存回帰 | 適用 | 既存 110 テストの全件 PASS 維持、C12↔C14 定数 parity |
 
 - **カバレッジ目標**: 既定 80%。本 feature の実測対象は追加 Python 関数群 (`parse_test_strategy` / `test_strategy_violations` / `derive_required_layers`) とし、R-1..R-9 の全分岐に到達する test ID を割り当てることで分岐網羅として満たす。
