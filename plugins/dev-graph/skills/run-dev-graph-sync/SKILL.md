@@ -10,7 +10,7 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] (--dry-run|--apply) [--confirm NODE:FIELD=local|remote]"
 allowed-tools: [Read, Write, Edit, Bash, AskUserQuestion, Skill, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/sync-graph.py, ../../scripts/gh-bridge.py, ../../scripts/bd-bridge.py, ../../scripts/reconcile-github-lifecycle.py, ../../scripts/manage-worktree-lease.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/sync-graph.py, ../../scripts/gh-bridge.py, ../../scripts/bd-bridge.py, ../../scripts/reconcile-github-lifecycle.py, ../../scripts/manage-worktree-lease.py, ../../scripts/build-parity-manifest.py]
 schema_refs: [../../schemas/graph-node.schema.json, ../../schemas/repo-config.schema.json]
 reference_refs: [../../references/execution-tracker-contract.md, ../../references/github-lifecycle-contract.md]
 responsibility_refs:
@@ -133,8 +133,16 @@ local graph が正本。`tracker_binding=beads` は C28 の status/depends_on ex
 
 ```bash
 python3 ../../scripts/sync-graph.py --repo-root "$DEV_GRAPH_ROOT" --dry-run
-python3 ../../scripts/sync-graph.py --repo-root "$DEV_GRAPH_ROOT" --apply
+python3 ../../scripts/sync-graph.py --repo-root "$DEV_GRAPH_ROOT" --apply \
+  --parity-manifest "$DEV_GRAPH_ROOT/eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json"
 python3 ../../scripts/sync-graph.py --repo-root "$DEV_GRAPH_ROOT" --dry-run
+```
+
+`--parity-manifest`を渡した`--apply`は、収束後のgraphから`build-parity-manifest.py`でC28 parity manifestを作り直す (execution-tracker-contract §10 が C03 に課す回復手順)。C28が`parity_manifest_missing`を報告した場合の対処もこれで、`source_graph_digest`だけを現在値へ書き換える修正はstale検出を恒久的に無効化するため禁止する。生成が失敗したら`pending_retry`へ載せ`ok=false`とし、last-synced snapshotを進めない。「同期は成功したがready-setは空のまま」を作らないための停止であり、次回syncで同じ差分から再試行する。sync全体を回さずmanifestだけ作り直す場合は、read-onlyな単独generatorを直接呼ぶ。`--out`は`--repo-root`基準で解決するため、C03が書きC16が読む同一pathを両skillで同じ表記に保つ。
+
+```bash
+python3 ../../scripts/build-parity-manifest.py --repo-root "$DEV_GRAPH_ROOT" \
+  --out "$DEV_GRAPH_ROOT/eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json"
 ```
 
 Beads dependencyは`dep-add`/`dep-remove`でexact-setへ収束する。GitHub Projectsはfield valueの`updatedAt`とlast-synced snapshotで3-way判定し、aliasごとにitemを1件だけ保持する。permission/rate-limit/field削除/option renameはlocal nodeをrollbackせず、該当linkageを`pending_retry`にする。PR lifecycleは全linked PRを列挙し、configの`required_pull_requests=all|any`を満たすまでdone requestを作らない。Beads linkageはexact markerまたは同番号`gh:pr` gateのどちらかを要求する。

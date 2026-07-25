@@ -12,7 +12,9 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 > **前提**: 提供者 1 名 + AI 運用（C1）・固定費ゼロ（C2）。手順は「迷わず実行できる」ことを優先し、判断が要る箇所は判断基準を併記する。
 > **注意**: 本 runbook は**手順**であり、未実装の仕組みを手順で代替しない（requirements-baseline §9.5）。未実装項目は §7 に明示する。
 
-## 1. 初回セットアップ（未実施。ユーザー作業）
+## 1. 初回セットアップ（**2026-07-25 実施済み**。残 2 項目）
+
+> **実施状況**: 手順 1〜4 と GitHub Secrets / Variables は完了し、CI 経由の自動デプロイ（手順 6）へ移行済み。**未実施は手順 5（Better Stack 外形監視）と `CRON_HEARTBEAT_URL` の投入**のみ。証跡は [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。以下の手順は再構築時のために残す。
 
 > **順序制約（重要）**: `wrangler secret put` は **Worker が存在しないと実行できない**ため、初回だけは「deploy → secret 投入」の順になり、その間 `/health` は 503 を返します。`ci.yml` の post-deploy `/health` チェックは 200 必須なので、**初回は CI に任せず手動 bootstrap を行ってください**（CI 側のチェックを緩めるとゲートが恒久的に甘くなるため、この方式を採ります）。
 >
@@ -29,9 +31,14 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 # 1. Cloudflare 認証
 wrangler login
 
-# 2. GitHub Secrets / Variables（CI の deploy job が参照）
-gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy 権限
+# 2. GitHub Secrets / Variables（CI の deploy job と日次 backup job が参照）
+gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy + R2 Storage 編集権限
 gh secret set CLOUDFLARE_ACCOUNT_ID
+gh secret set TURSO_DATABASE_URL        # migration / 本番 smoke 用
+gh secret set TURSO_AUTH_TOKEN          # migration / 本番 smoke 用の DB 接続 token
+gh secret set TURSO_API_TOKEN           # backup の turso CLI 用 Platform API token
+gh secret set TURSO_DATABASE_NAME       # backup の turso db shell 用（例: harness-hub-prod）
+gh secret set BACKUP_HEARTBEAT_URL      # 任意。未設定なら backup cron 失敗の外形監視なし
 gh variable set HUB_HEALTH_URL --body "https://hub.<domain>/health"
 
 # 3. Worker secret（wrangler 経由。コード・DB に平文を置かない）
@@ -42,9 +49,11 @@ wrangler secret put AUTH_SECRET
 wrangler secret put CRON_HEARTBEAT_URL   # Better Stack の heartbeat URL (未設定なら ping しない)
 ```
 
-4. **Better Stack Free** で以下を登録
+4. **Better Stack Free** で以下を登録（**要求内容の正本は [`apps/hub/monitoring/better-stack.monitors.json`](../../../apps/hub/monitoring/better-stack.monitors.json)**。ダッシュボードで独自に値を決めない）
    - production `/health` を **3 分間隔**で監視（SLO 99.5% の一次計測源）
-   - cron heartbeat（日次バッチ完了 ping 用）
+   - cron heartbeat（日次バッチ完了 ping 用。period 86,400s / 猶予 3,600s。発行された URL は `wrangler secret put CRON_HEARTBEAT_URL` で投入し、ファイル・ログへ残さない）
+   - status page（履歴 30 日。上記 monitor を resource として関連付ける）
+   - 適用後に設定ファイルへ `external_id` / `applied_at` を書き戻し、`application_state` を `applied` にする。**書き戻すまで SLO は「計測開始前」として扱う**（`apps/hub/monitoring/slo-dashboard.json` の `verdict.status`）
 
 > secret / binding の**内容正本**は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §2。本 runbook は手順のみを持つ。
 
@@ -79,7 +88,34 @@ curl -s https://hub.<domain>/health | jq .   # 復旧確認
 | `/health` が 503 | 応答 body の `db` / `r2` を見る | Turso 障害 → 縮退バナー表示。R2 障害 → publish/install を一時停止表示（infrastructure-spec §10 の縮退マトリクス） |
 | 応答は 200 だが機能不全 | Workers analytics の 5xx 率 | エラーバジェット算定に 5xx も含まれる。原因の Worker version を特定しロールバック |
 | cron が動かない | heartbeat 未達アラート | scheduled handler のログを確認。ジョブ単位 try/catch のため 1 ジョブ失敗でも後続は継続する |
+| **cron の登録に失敗する** | `wrangler` は「A request to the Cloudflare API failed.」としか出さないので、**Cloudflare API を直接叩いてエラーコードを取る**（下記 §4.1） | コード `10072` なら**アカウント全体の cron 枠が上限 5 本に達している**。他 Worker の cron を減らす。詳細は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §5 |
 | デプロイ失敗 | Actions のログ | ゲートで落ちたなら是正して再 push。deploy 中失敗なら §3 |
+
+### 4.1 cron 枠の確認と操作（2026-07-25 の実障害から）
+
+**上限 5 本は Worker 単位ではなくアカウント単位である。** 本 Worker の cron を減らしても、他プロジェクトが枠を埋めていれば登録できない。
+
+```bash
+# 現在の登録内容を確認（Worker ごとに実行）
+curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/<script>/schedules"
+
+# 更新は宣言的。残したい cron を配列で丸ごと送る（個別 DELETE は存在しない）
+curl -s -X PUT -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/<script>/schedules" \
+  --data '[{"cron":"0 15 * * *"}]'
+```
+
+- **枠を空ける前に、削除する cron の内容を控える。** 配列を丸ごと置き換える方式のため、送信内容が新しい全量になる。復元用ペイロードは [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json) の `cron_triggers.prior_failure.restore_payloads` に保全してある。
+- Hub の現在の使用数は **2 / 5**（`0 15 * * *` / `0 0 * * 1`）。新規 cron を足す前に、アカウント全体の残枠を数えること。
+
+### 4.2 CI デプロイ運用の注意（同上）
+
+- **古い run の再実行は本番を巻き戻しうる。** `concurrency` グループは `github.ref` 単位で新規 run を直列化するが、**過去 run の再実行はその制御外**にある。失敗 run を再実行するときは、それが main の最新 sha であることを確認する。
+- **GitHub Actions は未設定の secret / variable をエラーではなく空文字として渡す。** 設定漏れは「認証情報が無い」ではなく「認証に失敗した」形で deploy 途中に現れ、切り分けが遅れる。必要な値は `.github/workflows/ci.yml` 冒頭のコメントに列挙してある。
+- **GitHub Secrets の値は登録後に読み出せない**（API も Web 画面も名前と更新日時のみ返す）。登録時に原本をパスワードマネージャへ保存する。
+- **デプロイ直後の `/health` は 1 つ前の版を返しうる。** エッジへの伝播に時間差があるため、`version` フィールドで版を確認するときは数十秒おいて再取得する。
 
 ## 5. エラーバジェット運用（qa-019）
 
@@ -92,9 +128,9 @@ curl -s https://hub.<domain>/health | jq .   # 復旧確認
 ## 6. バックアップと restore drill（RPO ≤ 24h / RTO ≤ 4h）
 
 **手順**:
-1. 新 Turso DB を作成
-2. R2 `harness-hub-backups` の最新 dump を restore
-3. secret の URL/token を差し替え
+1. [domain-model DB runbook §2](../feat-domain-model-db/runbook.md#2-四半期-restore-drill-qa-019-復元できないバックアップを成功と数えない) に従い、R2 の最新 SQL dump を新 Turso DB へ標準入力から restore
+2. 18 domain table / 12 explicit index と、JSONL round-trip の行数・audit chain・暗号断面を確認
+3. 障害復旧時だけ Worker secret の URL/token を復元 DB へ差し替え
 4. `/health` で確認
 
 **四半期ごとの restore drill**: 一時 DB へ実際に restore し、**行数・整合検査まで実施する**。

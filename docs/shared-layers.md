@@ -63,7 +63,7 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 |---|---|---|
 | CI 品質ゲート | 下記「CI 品質ゲート登録簿 (G1〜G11)」に一覧化。qa-038【2】の required status checks 8 種 (G1〜G8。unit / integration と Tenant 分離は G4 に統合) + 横断品質ゲート (G9・G10) + CWV 定期計測 (G11) を一元管理する | qa-018, qa-020, qa-038, qa-039, D1 |
 | デプロイ | wrangler CLI (GitHub Actions)。Hub と WebApp 出口で同一ツール系統 | qa-003, D1 |
-| 監視 | /health + Workers logs/analytics + 外部死活監視 + SLO ダッシュボード + エラーバジェットアラート | qa-011, qa-019 |
+| 監視 | /health + Workers logs/analytics + 外部死活監視 + SLO ダッシュボード + エラーバジェットアラート。外形監視と SLO の設定正本は `apps/hub/monitoring/` (config as code。外部適用状態は `application_state` で分離し、設定の存在を稼働と読み替えない = infrastructure-spec §9) | qa-011, qa-019 |
 | バックアップ | Turso 日次 export → R2。四半期 restore drill (復元できないバックアップは成功と数えない) | qa-019 |
 
 ### CI 品質ゲート登録簿 (G1〜G11)

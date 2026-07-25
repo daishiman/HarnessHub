@@ -89,6 +89,10 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 
 backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turso dump) を考慮して 3 系統に集約する。時刻は UTC (JST = UTC+9)。
 
+> **上限の単位 (2026-07-25 実測で確定)**: Cloudflare Free プランの cron trigger 上限 **5 本は Worker 単位ではなくアカウント単位**である。**同一 Cloudflare アカウントに載る全プロジェクトで枠を共有する**ため、本 Worker の cron 本数だけでは登録可否が決まらない。上限超過時の API 応答は `{"code":10072,"message":"You have exceeded the limit of 5 cron triggers."}` だが、**`wrangler` はこの本文を出力せず「A request to the Cloudflare API failed.」としか表示しない**。切り分けは Cloudflare API を直接叩くこと (手順は [features/feat-hub-foundation/runbook.md](features/feat-hub-foundation/runbook.md) §4.1)。
+>
+> この制約は「3 系統への集約」という上の設計判断を**強める**。Hub 単独では 2 本で収まっていても、アカウント側の空き枠が無ければ登録できないためである。cron を増やす変更は、本 Worker の本数ではなく**アカウント全体の残枠**を先に数えてから設計する。
+
 | cron 式 (UTC) | 実行主体 | ジョブ (順次実行・ジョブ単位 try/catch) |
 |---|---|---|
 | `0 15 * * *` (JST 0:00) | Workers scheduled handler | ① metrics rollup (日次) → ② Turso 使用量監視 → ③ orphan_candidate 通知 → ④ token/認可コード掃除 |
@@ -117,7 +121,9 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | workflow | trigger | 内容 |
 |---|---|---|
 | `ci.yml` | PR / push (main・feature branch) | **静的ゲート → install → test → bundle → deploy を単一 workflow 内で連鎖**（下記）。deploy job は main への push のみで実行され、全ゲート通過が前提 |
-| `backup.yml` | cron `0 17 * * *` | Turso CLI で dump → gzip → R2 へ S3 API で upload → 成功を heartbeat 通知 |
+| `backup.yml` | cron `0 17 * * *` | Turso CLI で dump → gzip → R2 へ **`wrangler r2 object put --remote` で upload → 再 download + `cmp` で往復検証** → 成功を heartbeat 通知 |
+
+- **backup.yml の upload 経路は wrangler を正本とする (2026-07-25 / P13 実装確定)**。当初は S3 互換 API (`aws s3 cp`) + `head-object` の ContentLength 比較を前提としていたが、(a) R2 アクセスキーを追加発行せず §4.5 の secret 台帳を増やさない、(b) ContentLength 一致は「同じ長さの別バイト列」を検出できず**復元できないバックアップを成功と数えない** (§10 / qa-019) を満たせない、の 2 点で `wrangler` + 再 download `cmp` へ改めた。job は `pnpm/action-setup` + `actions/setup-node` + `pnpm install --frozen-lockfile` で wrangler を解決する。
 
 **`ci.yml` の品質ゲート（qa-038【2】の required status checks に対応）**
 
@@ -141,9 +147,26 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - `pnpm --filter <pkg> run <script>` は **script 不在でも exit 0 になり得る**ため、G6 / G7 / G8 は実行前に `scripts/ci/check-required-package-script.mjs` で package.json 上の script 実在を fail-closed 検査する。ゲートの「緑」が「検査した結果の緑」であることを構造的に担保する。
 
 - **`deploy.yml` への分離は行わない (2026-07-21 改訂)**。理由: feat-hub-foundation の acceptance「CI が test→deploy を完走する」は**単一 workflow run 内での連鎖**を判定条件としており、2 workflow に分けると別 run になって構造的に判定不能になる。ユーザー確認により `ci.yml` への統合を確定した。
-- deploy job の内容: production へ drizzle migrate → `wrangler deploy` → post-deploy `GET /health` 確認 → 失敗時 `wrangler rollback` (直前 version へ)。**常設 staging を経由しない** (§6 / qa-038【5】)。
-- デプロイは main merge で全自動 (qa-034 確定)。手動 gate は置かず、post-deploy health + rollback を防波堤とする。
-- GitHub Secrets 台帳: `CLOUDFLARE_API_TOKEN` (Workers deploy + R2 write 権限を分離した 2 token 推奨)・`CLOUDFLARE_ACCOUNT_ID`・`TURSO_AUTH_TOKEN` (環境別)・R2 アクセスキー (backup 専用・backups バケット限定)。
+- deploy job の内容: production へ drizzle migrate → `wrangler deploy` → post-deploy `GET /health` 確認 → **本番スモークテスト 6 項目** → 失敗時 `wrangler rollback` (直前 version へ)。**常設 staging を経由しない** (§6 / qa-038【5】)。
+- **migrate step の契約 (2026-07-25 / P13 実装確定)**: `packages/db/scripts/migrate-deploy.ts` を `--dry-run` → 本適用の 2 段で呼ぶ。`TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` が空なら step を **exit 1 で止める** (未投入のまま deploy へ進むと「migrate 済み」の緑が意味を失うため)。台帳は drizzle 公式の `__drizzle_migrations` を単一の正とし、`__drizzle_migrations` 不在のみ applied=0 と解釈して他の SQL 例外は再送出する (接続不能を「未適用」と誤読しないため)。適用後件数が journal 件数と一致しない場合は exit 1。
+- **本番スモークテスト (2026-07-25 / P13 実装確定)**: `packages/db/scripts/smoke-production.ts --url <turso> --r2-bucket <name>` が S1 接続 / S2 ULID 単調性 / S3 release 不変性 / S4 R2 往復 / S5 audit chain / S6 export→restore dry-run を検査し、**6 項目すべての ok** と検証データ cleanup 成功を満たさない限り exit≠0。検証で作成した行と R2 オブジェクトは `finally` で必ず削除し、削除失敗自体をスモーク失敗として扱う (本番に検証ゴミを残したまま緑にしない)。
+- デプロイは main merge で全自動 (qa-034 確定)。手動 gate は置かず、post-deploy health + smoke + rollback を防波堤とする。
+- **rollback step の契約 (2026-07-25 / P13 実装確定)**: `if: failure()` で起動し、**`wrangler rollback` は deploy step が success のときだけ**実行する (deploy 前に落ちた失敗で直前 version を巻き戻すと、無関係な回帰を持ち込むため)。**DB は自動 rollback しない** — migration は expand-only (§7 G7) で前方互換なので、旧 code は新 schema 上で動作する。step の exit code は rollback 自体の成否のみを表し、元の失敗を打ち消さない。
+- **GitHub Secrets 台帳 (2026-07-25 実登録内容で更新)**:
+
+| secret | 用途 | 利用 workflow |
+|---|---|---|
+| `CLOUDFLARE_API_TOKEN` | Workers deploy + R2 write | `ci.yml` / `backup.yml` |
+| `CLOUDFLARE_ACCOUNT_ID` | account 指定 | `ci.yml` / `backup.yml` |
+| `TURSO_DATABASE_URL` | production DB 接続先 (migrate / smoke) | `ci.yml` |
+| `TURSO_AUTH_TOKEN` | **DB 接続** token (環境別) | `ci.yml` |
+| `TURSO_API_TOKEN` | **Turso Platform API** token (`turso db shell` 用・DB 接続 token とは別物) | `backup.yml` |
+| `TURSO_DATABASE_NAME` | dump 対象の DB 名 | `backup.yml` |
+| `HUB_HEALTH_URL` | post-deploy `/health` 疎通先 | `ci.yml` |
+| `BACKUP_HEARTBEAT_URL` | 外形監視 heartbeat (§9) | `backup.yml` |
+
+- **R2 専用アクセスキーは発行しない (2026-07-25 確定)**。`R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ACCOUNT_ID` の 3 件は wrangler 経路へ統一したため台帳から削除した (§4.5 が「Workers binding 利用時は不要」としていた線に実装を寄せた)。
+- **残存リスク**: 上表では `CLOUDFLARE_API_TOKEN` 1 本を deploy と R2 write で共用しており、本節が推奨する「Workers deploy 権限と R2 write 権限を分離した 2 token」は **2026-07-25 現在未達**。最小権限 (least privilege) への分割は `issue-ci-token-least-privilege-20260725` (`HarnessHub-bda4`) で追跡する。
 - GitHub Actions 無料枠 (private repo 2,000 分/月) は §11 の予算表で管理。
 
 ## 8. ドメイン・DNS・TLS・メール (qa-034 確定: 既存保有ドメイン流用)
@@ -160,7 +183,10 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
   - **critical の区分 (2026-07-21 確定)**: **Turso 失敗のみ down (HTTP 503)**、**R2 失敗は degraded (HTTP 200 + body で通知)** とする。本節は当初「失敗時 503」と一括していたが、§10 の縮退マトリクスが「R2 停止 → catalog 閲覧は継続。publish/install のみ停止」と定めており、応答できている時間まで 503 にすると SLO のエラーバジェットを過剰消費する (誤計測) ため区分する。§10 を正とした調停。
   - **未プロビジョニング時**: secret 未投入は `down` (503) とする。200 を返すと外形監視が可用性ありと誤計測し SLO 計測そのものが壊れるため。初回構築の順序制約は runbook §1 を参照。
 - **外形監視 (Better Stack Free, qa-034)**: production `/health` を 3 分間隔で監視 + cron heartbeat (§5) + status page (常設 staging monitor は不要 = §6)。無料枠 10 monitors・heartbeat 10 本・商用利用可 (公式確認 2026-07-17)。SLO 99.5%/月の一次計測源。
-- **SLO 運用**: 可用性 99.5%/月 (許容停止 約 3.6 時間/月)。エラーバジェット消費は外形監視の downtime + Workers analytics の 5xx 率で算定し、**バジェット消費 100% で新機能の変更を凍結し信頼性回復を優先** (qa-019)。
+- **SLO 運用**: 可用性 99.5%/月 (許容停止 約 3.6 時間/月 = 30 日あたり 12,960 秒)。エラーバジェット消費は外形監視の downtime + Workers analytics の 5xx 率で算定し、**消費 70% で警告し信頼性作業を優先・消費 100% で公開機能の変更を凍結** (qa-019)。本節は当初 100% の凍結のみを定めていたが、凍結まで無反応だと是正が間に合わないため、§4 の Turso 使用量監視と同じ 70% 警告段を 2026-07-25 に追加した。
+- **監視設定の正本 (config as code, 2026-07-25 確定)**: Better Stack へ投入する monitor / heartbeat / status page の要求内容は [`apps/hub/monitoring/better-stack.monitors.json`](../apps/hub/monitoring/better-stack.monitors.json)、SLO 算定規則とエラーバジェット方針は [`apps/hub/monitoring/slo-dashboard.json`](../apps/hub/monitoring/slo-dashboard.json) を機械可読な正本とする。**ダッシュボード上の手動設定を正本にしない** (レビュー・再現・差分追跡ができず、設定が消えたことを検知できないため)。設定値の回帰は `apps/hub/tests/monitoring/monitoring-config.test.ts` (HF-A3-SLO-001) が固定する。
+  - **適用状態の分離 (fail-closed)**: 「設定を書いた」ことと「外部へ適用した」ことを `application_state` / `applied_at` / `external_id` で区別し、実適用まで `pending_credentials` / `null` を保つ。SLO 側も観測開始前は `verdict.status = collecting_not_started` とし、**設定ファイルの存在を「監視稼働」「99.5% 達成」と読み替えない** (§9 の計測が動いていないのに受入条件 A3 を合格にしてしまうのを防ぐ)。
+  - **秘密の扱い**: Better Stack API token と heartbeat URL は設定ファイルへ保存せず、API token は投入時のみ環境変数 (`BETTER_STACK_API_TOKEN`)、heartbeat URL は Worker secret `CRON_HEARTBEAT_URL` として渡す (§2 secret 台帳と同じ規律)。設定ファイルが保持するのは binding 名だけ。
 - **Workers 側**: observability logs 有効化 + Workers analytics (p95 レイテンシ・エラー率)。SLO ダッシュボードは Cloudflare dashboard + 外形監視の status page で代替 (追加サービスなし)。
 - **アプリ内運用通知 (インフラ追加なし、qa-027)**: AI キュー滞留・Resend 送信失敗・ingest 異常値・Turso 使用量閾値は notifications (アプリ内) で provider-admin へ通知。
 - **ポストモーテム**: ユーザー影響のある障害は blame-free 振り返りを issue 化し、再発防止を自動化候補へ接続 (qa-019)。
@@ -169,7 +195,11 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 - **RPO ≤ 24h**: 日次 export (backup.yml)。export は Turso dump (SQL) を gzip し R2 へ。salary は暗号文のまま (qa-032)。
 - **RTO ≤ 4h (目標)**: runbook — (1) 新 Turso DB 作成 → (2) dump restore → (3) secret の URL/token 差替 → (4) `/health` 確認。SLO 99.5% の月間許容停止内に収める。
+  - **(2) の正本手順 (2026-07-25 / P13 実走で確定)**: `turso db shell <new-db> < production.sql` (**標準入力から直接投入**)。`turso db create --from-dump <file>` は**使わない** — CLI 1.0.30 で同じ dump に対し成功表示を返しながら 20 秒後も table 0 件だったため、「復元したつもり」を作る経路として排除する。
 - **restore drill**: 四半期ごとに**一時 DB** へ実 restore し、行数・整合検査まで実施 (常設 staging は持たない = §6)。**復元できないバックアップを成功と数えない** (qa-019)。
+  - **2 段検証を必須とする (2026-07-25 / P13 実走で確定)**: (a) backup.yml が実際に保存する形式 = **SQL dump** を新 Turso へ復元して table / index 数を照合、(b) その復元 DB を JSONL へ再 export し空 DB へ `restore-control-plane.ts` で戻して `chainOk: true` / `errors: []` を確認する。(a) だけでは行の意味的整合 (audit hash chain) を確かめられず、(b) だけでは日次バックアップ形式そのものを検証できないため、片方では drill を pass としない。
+  - **空 DB の復元は drill 成立の根拠にしない**。実データを含む断面で実走する (P13 は本番の実データ 7 行断面で実施)。
+  - **既存 DB への誤上書きは fail-closed で止まる**: スキーマ適用済み DB へ再 restore すると `CREATE TABLE` 衝突で exit 1 となることを実測済み。
 - **縮退マトリクス (§6.1 の実装形)**:
 
 | 依存障害 | 影響 | 縮退動作 |
@@ -185,6 +215,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | サービス | 無料枠 (確認 2026-07-17) | 監視方法 / 閾値 |
 |---|---|---|
 | Workers | 10 万 req/日・CPU 10ms/呼出・bundle 3MiB | Cloudflare analytics 月次レビュー。req 70% で警告 |
+| **Workers cron trigger** | **5 本 / Cloudflare アカウント全体**（Worker 単位ではない = §5。他プロジェクトと枠を共有する） | TODO(human) |
 | R2 | 10GB・Class A 100万/月・Class B 1,000万/月 | 同上 + backup lifecycle (§3) で増加抑制 |
 | Turso | 5GB・読取 5 億行/月・書込 1,000 万行/月 | **日次 cron 監視 (§5)。70% 警告 / 90% で R4-reopen** |
 | Resend | 3,000 通/月・100 通/日 | 送信キューのバッチ分割 (D6)。失敗ログ月次レビュー |

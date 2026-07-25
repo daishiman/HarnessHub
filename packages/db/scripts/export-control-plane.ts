@@ -1,5 +1,5 @@
 // 日次 export CLI (qa-019)。GitHub Actions (backup.yml)・restore drill・ローカル検証から呼ぶ。
-//   TURSO_AUTH_TOKEN=<secret> pnpm --filter @harness-hub/db run export:control-plane -- --url <libsql-url> --out <file>
+//   TURSO_AUTH_TOKEN=<secret> pnpm --filter @harness-hub/db exec tsx scripts/export-control-plane.ts --url <libsql-url> --out <file>
 // 成果物は決定論的 JSONL。salary / client_secret_enc は暗号文のまま転写される (平文は断面に存在しない)。
 
 import { writeFileSync } from 'node:fs';
