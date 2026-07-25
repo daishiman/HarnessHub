@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-schedule",
+  "args": "--repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260725-071755-wt-4/eval-log/dev-graph/live-trial-fixtures/schedule --max-parallel 2",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-schedule"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "80ed4198b286b00c91be1fdeaa11ff21a26787ffad1f18a8cdf3124aa5269926",
+  "transcript_sha256": "1f7a8ebb93843af6ebd918900bfa5819ea288c2ee51a497503ab9c0b332ab5e8",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 420.0
+  },
+  "scenario_id": "C15-OUT1-positive-ready-set-r16"
+}

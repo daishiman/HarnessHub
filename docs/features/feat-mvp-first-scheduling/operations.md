@@ -78,23 +78,37 @@ mvp_alignment 付与 (C02) → graph digest 変化 → parity manifest 再生成
 
 古い manifest のまま `schedule-graph --ready-json` を実行すると `beads parity snapshot is stale` で **exit 2 (全体停止)** になる。これは故障ではなく設計どおりの fail-closed (異常時に安全側で止まる動作) であり、P09 プローブ C で実測済み。対処は manifest の再生成のみ。ゲート緩和で回避しない。
 
-再生成は **C03 (`run-dev-graph-sync`) の正規経路**で行い、現行 graph から
-`generated_at` / `source_graph_digest` / `nodes[]` を一体で作り直す。`source_graph_digest`
-だけを手書きで現行値へ合わせると stale 検出が働かなくなるため禁止する。また、変更した
-node の `mvp_alignment.mvp_fit` が parity manifest の同じ node の `mvp_fit` へ転写されて
-いることを確認する。キー欠落・null のままでは C28 は後方互換 rank 2 として扱うため、
-`bd-bridge ready` の表示順が MVP-first にならない。
+再生成の**唯一の生成経路**は `plugins/dev-graph/scripts/build-parity-manifest.py` で、現行
+graph から `generated_at` / `source_graph_digest` / `nodes[]` を一体で作り直す。生成先は
+`eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json` (graph digest に束縛された
+揮発 snapshot ゆえ `.gitignore` 済み。追跡すると commit 時点で即 stale になる)。
+`source_graph_digest` だけを手書きで現行値へ合わせると stale 検出が恒久的に働かなくなる
+ため禁止する。また、変更した node の `mvp_alignment.mvp_fit` が parity manifest の同じ
+node の `mvp_fit` へ転写されていることを確認する。キー欠落・null のままでは C28 は
+後方互換 rank 2 として扱うため、`bd-bridge ready` の表示順が MVP-first にならない。
 
-C03 が `eval-log/run-dev-graph-schedule-parity-manifest.json` を再生成した後は、C28 ready
-receipt を一時ファイルへ出してから置き換え、続けて C16 schedule を実行する。直接 `>`
-で既存 receipt を開くと、C28 が失敗した時に正常な旧 receipt を 0 byte へ切り詰めるため
-避ける。
+呼び出し方は 2 つあり、どちらも同じ generator を通る (契約: `plugins/dev-graph/references/execution-tracker-contract.md` §10)。
+
+| 経路 | コマンド | 使いどころ |
+|---|---|---|
+| C03 sync に付随 | `run-dev-graph-sync` の `sync-graph.py --apply --parity-manifest <path>` | tracker と収束させたうえで作り直すとき (収束直後の graph が入力になる) |
+| 単独再生成 | `build-parity-manifest.py --repo-root . --out <path>` | graph だけ変えた (mvp_alignment 付与など) 直後。read-only な投影で sync を回さない |
+
+```bash
+# 単独再生成 (mvp_alignment 付与直後はこちらで足りる)
+python3 plugins/dev-graph/scripts/build-parity-manifest.py --repo-root . \
+  --out eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json
+```
+
+manifest を作り直した後は、C28 ready receipt を一時ファイルへ出してから置き換え、続けて
+C16 schedule を実行する。直接 `>` で既存 receipt を開くと、C28 が失敗した時に正常な旧
+receipt を 0 byte へ切り詰めるため避ける。
 
 ```bash
 # C28: 現行 parity manifest と bd ready を突合する
 ready_tmp="$(mktemp .dev-graph/cache/mvp-ready.XXXXXX)"
 if python3 plugins/dev-graph/scripts/bd-bridge.py --op ready --repo-root . \
-  --parity-manifest eval-log/run-dev-graph-schedule-parity-manifest.json \
+  --parity-manifest eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json \
   > "$ready_tmp"; then
   mv -f "$ready_tmp" eval-log/run-dev-graph-schedule-beads-ready.json
 else
@@ -161,8 +175,8 @@ rank 2 へ fallback するため、MVP-first の表示順を得るには §2.3 �
 先に実 graph の schema 検証を行う。
 
 - graph が invalid: C02 で当該 node の `mvp_alignment` を修正し、C03 から再実行する。
-- graph が valid: parity manifest が stale または破損している。node を変更せず C03 で
-  manifest 全体を再生成する。
+- graph が valid: parity manifest が stale または破損している。node を変更せず
+  `build-parity-manifest.py` (§2.3) で manifest 全体を再生成する。
 
 どちらの場合も manifest の `mvp_fit` や `source_graph_digest` を直接修正しない。
 
@@ -172,7 +186,8 @@ rank 2 へ fallback するため、MVP-first の表示順を得るには §2.3 �
 |---|---|---|
 | schedule-graph が exit 2 `unsupported mvp_fit '...'` | graph 正本の node に enum 外の mvp_fit | C02 で当該 node の mvp_alignment を修正 (全体停止は契約どおり) |
 | schedule-graph が exit 2 `beads parity snapshot is stale` | graph 変更後に古い manifest/receipt を使用 | parity manifest を再生成 (§2.3 の順序) |
-| bd-bridge の conflicts[] に `unsupported mvp_fit` | manifest 行に enum 外の値 | graph schema を検証。invalid なら C02 修正、valid なら node は変えず C03 で manifest 全体を再生成。他候補は影響なし |
+| bd-bridge の conflicts[] に `unsupported mvp_fit` | manifest 行に enum 外の値 | graph schema を検証。invalid なら C02 修正、valid なら node は変えず `build-parity-manifest.py` で manifest 全体を再生成。他候補は影響なし |
+| `bd-bridge ready` の `unmapped_summary.parity_manifest_missing` が候補数と同数 | manifest が未生成 (生成経路を回していない) | §2.3 の generator を実行してから C28 を再実行。ready-set の空を「着手可能なし」と読み替えない |
 | 未設定 node が候補から消えた気がする | mvp とは無関係 (未設定は rank 2 で残る仕様) | receipt に行があるか確認。無ければ依存・lease 等 receipt 外の事由 |
 
 schedule-graph (graph 正本の汚染) は**全体停止**、bd-bridge (manifest 行の汚染) は**行単位隔離** — この非対称は design F-6/SI-3 の契約で、P09 (qa-fail-closed-report.json) が実測固定している。

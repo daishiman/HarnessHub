@@ -43,6 +43,7 @@ repository rootで次を実行できます。
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/resolve-repo-context.py" --repo-root "$PWD" --mode read
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/validate-graph-schema.py" --repo-root "$PWD" --graph .dev-graph/state/graph.json
+python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/build-parity-manifest.py" --repo-root "$PWD" --out eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/schedule-graph.py" --repo-root "$PWD" --graph .dev-graph/state/graph.json --leases "$(git rev-parse --git-common-dir)/dev-graph/leases.json" --eval-log eval-log/run-dev-graph-schedule-execution.json
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/status-graph.py" --repo-root "$PWD" --status active
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/manage-worktree-lease.py" --repo-root "$PWD" --op list
@@ -72,7 +73,8 @@ python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/upsert-node.py" \
 - `node`だけが通常のgraph/content writerです。package登録とlifecycle更新もC02 writer契約を経由します。
 - `node`はWAL（先行書込みログ）を使い、割込み後は次の`node`実行でrollbackしてから再実行します。pending中はread-only consumerがfail-closedで停止します。
 - `next`と`status`はgraph/content/tracker/leaseを変更しません。許可する書込みは`eval-log/`だけです。
-- `next`のBeads経路は、parity manifestの由来（`generated_at`／`source_graph_digest`）を必須にします。`source_graph_digest`がgraphのcanonical digestと一致しないsnapshotはstaleとして停止します。回復手順はmanifestの再生成であり、digestを現在値へ書き換えることではありません（正本: `references/execution-tracker-contract.md` §10）。
+- `next`のBeads経路は、parity manifestの由来（`generated_at`／`source_graph_digest`）を必須にします。`source_graph_digest`がgraphのcanonical digestと一致しないsnapshotはstaleとして停止します。回復手順は`scripts/build-parity-manifest.py`によるmanifestの再生成であり、digestを現在値へ書き換えることではありません（正本: `references/execution-tracker-contract.md` §10）。
+- parity manifestの生成は`build-parity-manifest.py`の単一writerに限ります。graphだけを読みtrackerを読まないため、C28の突合が「自分で作った答えを自分で採点する」形になりません。`sync --apply --parity-manifest <path>`は同じgeneratorを収束直後に呼びます。
 - worktree leaseは`.dev-graph/locks/`へ保存しません。git共通ディレクトリ配下の`dev-graph/`を使います。
 - `sync --dry-run`はlocal/Beads/GitHub/Projects writeを0件にします。
 - `sync-graph.py --apply`後は同じ入力で`--dry-run`を再実行し、`changes=0`と`pending_retry=[]`を確認します。fixture adapterは`--remote-state <repo内JSON>`で決定論的に試験できます。

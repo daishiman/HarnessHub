@@ -89,6 +89,14 @@ plugin-plans/*/task-progress.md
 # dev-graph も同ポリシー: verb ごとの progress/intermediate は周回・buildごとの揮発投影ゆえ除外する。
 eval-log/run-dev-graph-*-progress.json
 eval-log/run-dev-graph-*-intermediate.jsonl
+# parity manifest は graph の canonical digest に束縛された揮発 snapshot。追跡すると
+# commit 時点で即 stale になり、C16 が「古い snapshot を掴んだ停止」を繰り返す。
+# 生成経路は build-parity-manifest.py の単一 writer (execution-tracker-contract §10)。
+eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json
+# 検証時の手動 smoke 出力 (`--eval-log` / `--ready-json` の書込先は repository 内に
+# 限られるため scratchpad へ逃がせない)。証跡は live-trial/ 配下が正本なので、
+# dot 始まりの一時受け皿は追跡しない。
+eval-log/dev-graph/**/.verify-*.json
 # runtime 揮発状態 (期限切れ lock receipt / stderr capture の空残骸)。
 .dev-graph/locks/expired-lock-receipts/
 .dev-graph/cache/projections/*.err

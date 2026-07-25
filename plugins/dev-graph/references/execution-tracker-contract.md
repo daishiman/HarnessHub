@@ -206,6 +206,10 @@ C28 `bd-bridge.py --op ready --parity-manifest` が受け取る manifest は gra
 
 - `source_graph_digest` の算出式は C05 render-graph-html の `graph_digest_after` と同一 (`json.dumps(graph, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` の sha256)。整形差で stale 判定が揺れないよう、バイト列 digest ではなく canonical digest を使う。
 - 由来欠落・形式違反は C28 が fail-closed で拒否する。素性のない snapshot を流通させない。
+- manifest の生成 authority は `scripts/build-parity-manifest.py` の単一経路とする。手書き・部分編集・他 script からの直接書込は認めない。generator は canonical graph だけを読み tracker を読まない。tracker を読んで manifest を作ると、C28 は「自分で作った答え」を採点することになり parity 検査が空虚になる。
+- generator は `tracker_binding=beads` かつ `beads_linkage.bd_issue_id` を持つ node を **status で間引かず全件** 投影する。`done`/`closed` を省くと、それらを依存に持つ `active` node が `parity manifest dependency lacks a Beads linkage` で conflicts へ落ち、ready-set が再び空になる。作業候補の絞り込みは C16 `is_schedulable` が graph 側の事実として独立に行う。
+- 投影できなかった node は receipt の `unlinked` (起票前 = `beads_linkage` 不在) と `dependency_gaps` (依存先が manifest 外) に理由つきで残す。件数だけで「起票前」と「Beads 未束縛依存」を判別できるようにするため。`BRIDGE_STATUS_MAP` が写せない status は黙って除外せず fail-closed で停止する (除外すると下流で `parity_manifest_missing` という誤った owner の札が付く)。
+- C03 sync は `--apply --parity-manifest <path>` で収束直後に同 generator を呼ぶ。生成失敗時は sync snapshot を進めず `pending_retry` に残す (同期成功・下流 ready-set 空という silent な不整合を作らない)。
 - C28 は検証した由来を receipt の `parity_provenance` に載せ、C16 schedule-graph が graph 実体の canonical digest と突合する。不一致は「stale snapshot」として schedule を停止する (node 単位の parity 再照合は manifest に載った node しか見ないため、snapshot 生成後に追加/削除された node は原理的に捕まらない)。
 - 停止時の回復手順は manifest の再生成であり、`source_graph_digest` の書き換えではない。digest だけを現在値へ合わせる修正は stale 検出を恒久的に無効化するため禁止する。
 
@@ -214,7 +218,7 @@ C28 `bd-bridge.py --op ready --parity-manifest` が受け取る manifest は gra
 | reason | 意味 | 対処 owner |
 |---|---|---|
 | `external_ref_absent` | `bd ready` 候補が dev-graph の `external_ref` を持たない = graph 管理外の bd 課題 | 対処不要 (可視化のみ)。graph 管理下へ移すなら C02 で node 化する |
-| `parity_manifest_missing` | `external_ref` を持つのに manifest に対応 node が無い = graph 管理下の取りこぼし | C03 sync (manifest 再生成 / linkage 修復) |
+| `parity_manifest_missing` | `external_ref` を持つのに manifest に対応 node が無い = graph 管理下の取りこぼし | C03 sync の `--parity-manifest` (= `build-parity-manifest.py`) で manifest 再生成 / linkage 修復 |
 
 - C28 は理由別件数を `unmapped_summary` として receipt に載せる。件数だけで「管理外が何件・取りこぼしが何件」を判別できるようにするため。
 - C16 schedule-graph は C28 の `unmapped` / `conflicts` を自身の `unmapped` へ `source: "bd-bridge"` 付きで引き継ぐ。schedule の判定には使わないが、report から消すことは silent drop にあたるため禁止する。

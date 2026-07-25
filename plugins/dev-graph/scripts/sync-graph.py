@@ -2,13 +2,13 @@
 # /// script
 # name: sync-graph
 # purpose: Plan and apply idempotent three-way convergence between dev-graph and Beads/GitHub projections.
-# inputs: ["argv: --repo-root PATH [--graph FILE] [--remote-state FILE] [--snapshot FILE] --dry-run|--apply"]
+# inputs: ["argv: --repo-root PATH [--graph FILE] [--remote-state FILE] [--snapshot FILE] [--parity-manifest FILE] --dry-run|--apply"]
 # outputs: ["stdout and optional eval-log: imports, exports, conflicts, tombstones, pending_retry and snapshot receipt"]
 # requires-python = ">=3.10"
-# dependencies: ["upsert-node.py", "bd-bridge.py", "gh-bridge.py", "reconcile-github-lifecycle.py"]
+# dependencies: ["upsert-node.py", "bd-bridge.py", "gh-bridge.py", "reconcile-github-lifecycle.py", "build-parity-manifest.py"]
 # contexts: [A, B, C, E]
 # network: true
-# write-scope: C02 node patches, approved external bridges, sync snapshot and eval-log
+# write-scope: C02 node patches, approved external bridges, sync snapshot, parity manifest and eval-log
 # ///
 from __future__ import annotations
 
@@ -737,6 +737,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--bd-bridge")
     parser.add_argument("--gh-bridge")
     parser.add_argument("--upsert-node")
+    parser.add_argument("--parity-manifest")
+    parser.add_argument("--build-parity-manifest")
     args = parser.parse_args(argv)
 
     root = Path(args.repo_root).expanduser().resolve(strict=True)
@@ -756,6 +758,10 @@ def main(argv: list[str] | None = None) -> int:
     bd_bridge = Path(args.bd_bridge).resolve() if args.bd_bridge else Path(__file__).with_name("bd-bridge.py")
     gh_bridge = Path(args.gh_bridge).resolve() if args.gh_bridge else Path(__file__).with_name("gh-bridge.py")
     upsert = Path(args.upsert_node).resolve() if args.upsert_node else Path(__file__).with_name("upsert-node.py")
+    builder = (
+        Path(args.build_parity_manifest).resolve() if args.build_parity_manifest
+        else Path(__file__).with_name("build-parity-manifest.py")
+    )
 
     remote_path: Path | None = None
     if args.remote_state:
@@ -770,6 +776,10 @@ def main(argv: list[str] | None = None) -> int:
     plan = _plan(nodes, remote, snapshot, config, _confirmations(args.confirm))
     applied: list[dict[str, Any]] = []
     failed: list[dict[str, Any]] = []
+    parity_manifest: dict[str, Any] | None = (
+        None if not args.parity_manifest
+        else {"regenerated": False, "reason": "dry-run"} if args.dry_run else None
+    )
     if args.apply:
         for node_id, patch in sorted(plan["patches"].items()):
             try:
@@ -846,6 +856,26 @@ def main(argv: list[str] | None = None) -> int:
                     "type": "local_pending_retry", "node": pending_item["node"],
                     "alias": pending_item["alias"], "receipt": projection_receipt,
                 })
+        if args.parity_manifest:
+            # 収束後の graph から C28 parity manifest を作り直す (契約 §10 の回復手順)。
+            # apply でだけ回すのは、生成が graph の *結果* の投影であり、dry-run は
+            # 「何も書かない」ことそのものが契約だから。dry-run で manifest だけ欲しい場合は
+            # build-parity-manifest.py を直接呼ぶ (read-only な単独 generator)。
+            try:
+                parity_manifest = _invoke(
+                    [
+                        sys.executable, str(builder), "--repo-root", str(root),
+                        "--graph", str(graph_path), "--out", str(args.parity_manifest),
+                    ],
+                    root,
+                    "parity manifest regeneration",
+                )
+            except ContractError as exc:
+                # 失敗を握り潰すと「同期は成功したが下流の ready-set は空のまま」という
+                # 本 issue そのものの状態へ戻る。snapshot も進めない。
+                failed.append({"type": "parity_manifest", "reason": str(exc)})
+            else:
+                applied.append({"type": "parity_manifest", "receipt": parity_manifest})
         if remote_path is not None and any(item["type"] == "external" for item in applied):
             atomic_json(remote_path, remote)
         if not plan["conflicts"] and not plan["pending_retry"] and not failed:
@@ -878,6 +908,7 @@ def main(argv: list[str] | None = None) -> int:
         "snapshot_sha256_before": _sha(snapshot_before),
         "snapshot_sha256_after": _sha(snapshot_after),
         "converged": not plan["imports"] and not plan["exports"] and not plan["conflicts"] and not plan["pending_retry"] and not failed,
+        "parity_manifest": parity_manifest,
         "executed_at": utc_now(),
     }
     if not args.no_eval_log and args.eval_log:

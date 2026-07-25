@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-sync",
     "component_id": "C03",
-    "skill_md_sha256": "e21ba72e1027459544a9dc81bd2084fa76494472c4804ca99c0bbac707157fd6"
+    "skill_md_sha256": "29baae336110074cb542880cb8641858eab6fa9f0f25edade6c227e0896e8fa0"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-sync-conflict-verifier-fresh-goal-evaluator-wt1r3-20260724",
+  "reviewer": "dev-graph-sync-conflict-verifier-fresh-goal-evaluator-i07-20260725",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260724T075011Z-sync-wt1r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T004437Z-i07-sync/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260724T075011Z-sync-wt1r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260724T075011Z-sync-wt1r3/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260724T075011Z-sync-wt1r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T004437Z-i07-sync/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T004437Z-i07-sync/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T004437Z-i07-sync/out/status.json"
       ],
-      "observed": "2026-07-24 再実走 (run 20260724T075011Z-sync-wt1r3, fresh claude session opus-4-6, 自走完走 nudge=0/gate=0, Skill ツール起動): closure 更新後の behavior digest へ整合させるため fixture を committed 未収束状態へ git reset してからクリーン再取得。dry-run→apply→確認 dry-run の 3 パスを単一セッション内で実行し、初回 apply が title import 1/status export 1 を実適用 (fixture git diff で裏取り)、確認 dry-run は changes=0/converged=true/write_count=0、graph・snapshot・remote digest 不変。apply の副作用がこのセッション自身の出力と一致し先行 run 残存でないこと (self-contained) を独立 fresh evaluator (dev-graph-sync-conflict-verifier) が fixture reflog・SHA 再計算つきで確認。goal-seek 3 点セット violations 0・intermediate append-only 2 行・original_goal hash 一致。skill_dir_tree_sha が現行 closure と一致、overall=PASS。"
+      "observed": "2026-07-25 再実走 (run 20260725T004437Z-i07-sync, fresh claude session opus-4-6, 自走完走 nudge=0/gate=0, Skill ツール起動): i07 の parity manifest 再生成配線追加で SKILL.md sha と behavior closure sha がともに更新されたため、build_live_trial_fixture.py --kind sync のクリーン fixture (単一初期化 commit 435d9e8) に対して再取得。dry-run→apply→確認 dry-run の 3 パスを単一セッション内で実行し、初回 apply が title import 1/status export 1 を実適用 (graph_revision 1→3、fixture 実ファイル tasks/LT-TASK-001.md と remote.json の Status=In Progress で裏取り)、確認 dry-run は imports=[]/exports=[]/changes=0/converged=true/write_count=0、graph sha d512c86f…/snapshot sha ae94bd6d…/remote sha 3f0fb456… が前後不変、Project item_id PVTI_lADOFixture001 も不変。本 run 固有の新配線も実行済み: dry-run 2 パスはいずれも --parity-manifest 未指定で report の parity_manifest=null (dry-run write 0 契約に穴なし)、apply パスのみ SKILL.md 記載どおり --parity-manifest を渡して applied[].type=parity_manifest (write_count=1, generated_at=2026-07-25T00:48:12Z) を生成し、独立 fresh evaluator (dev-graph-sync-conflict-verifier) が source_graph_digest sha256:ed52ecb5… を canonical 規則で再計算して一致を確認。apply の副作用がこのセッション自身の出力であり先行 run 残存でないことを reflog (init commit 1 件のみ) と mtime 一致で self-contained 裏取り。goal-seek 3 点セット violations 0・intermediate append-only 2 行 (Write 1 行目 → Skill 実行 → printf >> 追記)・original_goal hash ab2f296e… 一致。skill_dir_tree_sha c741b079… が現行 closure と一致、overall=PASS。"
     },
     "OUT2": {
       "status": "PASS",

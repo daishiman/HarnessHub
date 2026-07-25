@@ -369,7 +369,15 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
     by_graph = {str(row.get("graph_node_id")): str(row.get("bd_issue_id")) for row in entries if row.get("graph_node_id") and row.get("bd_issue_id")}
     if len(by_graph) != len(entries):
         raise ContractError("parity manifest requires unique graph_node_id and bd_issue_id for every node")
-    status_map = {"active": "open", "blocked": "blocked", "done": "closed", "closed": "closed", "tombstoned": "closed"}
+    # graph status → Beads 側の期待 status。graph-node.schema.json の status enum を漏れなく覆う。
+    # draft を欠くと、起票済みだが未確定の node が全て conflicts へ落ち、「parity が壊れている」
+    # という誤った信号になる。draft が schedule 対象外なのは C16 の is_schedulable が判定する
+    # graph 側の事実であって、tracker との突合結果ではない。draft→open は C03 sync
+    # (_status_to_remote) の投影と同一で、build-parity-manifest.py の BRIDGE_STATUS_MAP と一致必須。
+    status_map = {
+        "draft": "open", "active": "open", "blocked": "blocked",
+        "done": "closed", "closed": "closed", "tombstoned": "closed",
+    }
     ready_set: list[dict[str, Any]] = []
     unmapped: list[dict[str, Any]] = []
     conflicts: list[dict[str, Any]] = []

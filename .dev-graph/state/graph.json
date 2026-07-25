@@ -1,5 +1,5 @@
 {
-  "graph_revision": 524,
+  "graph_revision": 529,
   "nodes": [
     {
       "acceptance": [
@@ -32324,6 +32324,232 @@
       "title": "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築",
       "tracker_binding": "beads",
       "updated_at": "2026-07-24T11:56:47Z"
+    },
+    {
+      "acceptance": [
+        "Dolt DB のあるローカル環境で `python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . --no-require-beads` が exit 0 (beads_axis=resolved であることを JSON で確認)",
+        "violations が 0 件、かつ scanned が減っていない (黙って対象を外していない)",
+        "_BASELINE_RESIDUE が増えていない (shrink-only)",
+        "再発経路を特定した場合は、その修正か、修正 issue の起票のいずれかが行われている",
+        "CI で OR-003 が未評価であることの扱い (許容する / beads 軸を CI へ供給する / 別ゲートを置く) が判断され記録されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-wdpq",
+        "linked_at": "2026-07-25T02:59:35Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-lint-open-residue-ci-red-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-57v (C28 draft status) の最終レビュー中に品質ゲートを再実行して判明した、本変更とは独立の既存 CI red。main でも同様に落ちることを確認済み",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T02:55:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-lint-open-residue-ci-red-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "OR-003 残置が 0 件になり、かつ残置が再び増えたときに merge 前に気づける状態",
+      "graph_node_id": "issue-lint-open-residue-ci-red-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T02:55:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "OR-003 を検出できる唯一のゲートが merge をブロックしない位置にあるため、md/graph と beads の乖離が CI からは見えないまま積み上がる。この検出と遮断のズレを解消する",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/lint-open-residue.py",
+        ".github/workflows/dev-pipeline-lint.yml",
+        "tasks/",
+        "issues/"
+      ],
+      "scope_in": [
+        "OR-003 違反 51 件 (tasks/ 45 件・issues/ 6 件) の completion_evidence.status を beads の終了状態へ整合させる",
+        "整合を C02 (upsert-node.py) 経由で行い、graph と markdown の同時更新を保つ",
+        "close 時に completion_evidence を進める経路の欠落を特定する (51 件が全て同一 detail のため個別ミスではなく経路の問題)",
+        "検出と遮断のズレ (CI では OR-003 未評価) をどう埋めるかを決める"
+      ],
+      "scope_out": [
+        "OR-003 以外のルール追加や lint-open-residue 自体の仕様変更",
+        "CI ワークフローの continue-on-error 化 (ゲートの無効化は本 issue の解ではない)",
+        "_BASELINE_RESIDUE への 51 件の追加 (shrink-only ratchet の趣旨に反する)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T02:55:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "ci",
+        "dev-graph",
+        "governance",
+        "completion-evidence"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "OR-003 残置 51 件がローカル品質ゲートで恒常 exit 2 / CI では beads 軸未評価のため素通りする",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T03:04:12.728493Z"
+    },
+    {
+      "acceptance": [
+        "bd export × graph.json の突合で、status が closed 以外の orphan external_ref が 0 件",
+        "`bd-bridge.py --op ready --parity-manifest <manifest>` の unmapped_summary.parity_manifest_missing が棚卸し後の期待値と一致し、根拠が記録されている",
+        "3 系統の仕分け結果と判断理由が本 issue または派生 issue に残っている",
+        "orphan の発生経路が特定され、修正または派生 issue が起票されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-mfh7",
+        "linked_at": "2026-07-25T02:59:53Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-bd-external-ref-orphan-nodes-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-57v (C28 draft status) の検証で C28 ready を実行した際、conflicts=0 になった一方で unmapped が 31 件残り、その内訳調査で判明した独立の既存ドリフト",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T02:57:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-bd-external-ref-orphan-nodes-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "非クローズの orphan external_ref が 0 件になり、C28 の unmapped_summary.parity_manifest_missing が実際の取りこぼしだけを指す状態",
+      "graph_node_id": "issue-bd-external-ref-orphan-nodes-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T02:57:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "graph 側に実体の無い external_ref が大量に残っていると、C28 の unmapped が恒常的に膨らみ「取りこぼしが 22 件ある」という警告が常態化して読まれなくなる。参照の実体を回復し、警告を信号として使える状態に戻す",
+      "related_nodes": [],
+      "resource_scope": [
+        ".dev-graph/state/graph.json",
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "plugins/dev-graph/scripts/build-parity-manifest.py",
+        "issues/"
+      ],
+      "scope_in": [
+        "bd export と graph.json を突合し orphan external_ref を全数棚卸しする",
+        "非クローズ 39 件を 3 系統に仕分ける: (a) graph node を C02 で復元すべきもの、(b) external_ref を実在 node へ張り替えるべきもの、(c) bd 側を close すべきもの",
+        "feature package 系 14 件 (feat-task-spec-test-strategy + SYS-TASK-SPEC-TEST-STRATEGY-P01..P13) は package 単位で扱う",
+        "orphan を作った経路 (bd create が先行し node 登録が漏れる等) の特定"
+      ],
+      "scope_out": [
+        "closed 済み 35 件の遡及復元 (履歴証跡であり、可視化されないため実害が無い)",
+        "C28 側で orphan を黙って除外する変更 (silent drop になるため禁止)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T02:57:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "parity",
+        "governance"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T03:00:44.850804Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
