@@ -74,6 +74,7 @@ reviewer: daishiman
 | `feat-doc-governance-portability` 再検証 (通常経路) | `status=pass` / `contract_version=1.0.0` / `exemption=true` / violations 0 |
 | **ゲート発火の実測** (`baseline={}` = 免除無効) | `feat-dev-pipeline-improvement` が 1.2.0 で `qa-semantic-coverage` 1 件 + `qa-task-trace` 1 件 (13 task spec 全件で未伝播) を検出。`feat-mvp-first-scheduling` は免除無効でも violations 0 |
 | `validate-graph-schema.py` | `valid=true` / violations 0 / node 289 (rev 536) |
+| `make harness-ratchet` | 当初 **FAIL** (`scripts/llm_eval` 63.9% < floor 64.1%) → verdict 添付後 **RATCHET OK** (64.1%)。後述「新規 script と harness-ratchet」参照 |
 
 `feat-mvp-first-scheduling` を台帳へ登録しないという 8vx の方針を維持しており、**免除に頼らず最新契約 1.2.0 で通ること**を毎回の検証で示す対照になっている。
 
@@ -88,6 +89,16 @@ reviewer: daishiman
 | `run-dev-graph-requirements` | 54 | `20260725T110515Z-requirements-wt2v13` |
 
 共通して closure に入る改変ファイルは `agents/system-dev-plan-evaluator.md` / `references/feature-execution-package-contract.md` / `scripts/{promote-system-plan,validate-system-plan,validate-task-spec-contract}.py` / `skills/assign-system-dev-plan-evaluator/{prompts/R4-evaluate.md,references/evaluation-rubric.md}` の 7 本。`tests/` と `assets/` は closure 外なので、回帰テストと台帳の編集では失効しない。
+
+### 新規 script と harness-ratchet (CI 実測で判明した契約)
+
+`scripts/llm_eval` 軸は行カバレッジではなく **`eval-log/coverage/scripts/<slug>.json` に `llm_eval.verdict=PASS` を持つ script の割合**である (`validate-harness-coverage.py:measure_scripts`)。したがって verdict レコードを伴わない script を 1 本足すだけで分母だけが増え、率が下がって `--ratchet` が exit 1 する。**新規 script は code-review verdict の同梱まで含めて 1 単位**という契約になっている。
+
+`--update-floor` は救済にならない。`merge_floor_up()` は現値が旧 floor 未満の軸を**据え置く** (`new["floors"][t][axis] = old_v`) ため floor は下がらず、ratchet は落ち続ける。floor を下げるには台帳の手編集が必要で、それは回帰の焼き付け (Goodhart) にあたる。よって正しい対処は分子を 1 増やす = 実際にレビューして verdict を残すことだけである。
+
+本件では `plugins/system-dev-planner/scripts/validate-qa-semantic-coverage.py` の verdict を実バイト読解で作成した (score 85 / `reviewed_by=harness-ratchet-recovery-code-review`)。捏造を避けるため減点 2 点を `notes` に明記している: (a) goal-spec 側の被覆判定が 5 フィールドの JSON dump への部分文字列一致なので qa id を否定文脈で書いても通る (見出し単位の深い照合は `quality_constraints[].id=semantic-coverage-not-tag-only` 宣言時のみ発火)、(b) task spec 欠落の `qa-task-trace` 違反が declared qa id ごとに重複計上される。
+
+なお main 側は 258/403 = 64.02% で floor 64.1% を tolerance 0.1 の境界上で通過していた。**母数が 400 本規模だと 1 本の追加が約 0.16pt に相当し、境界上では常に次の 1 本が赤化する**。
 
 ## 6. 500 行上限への対応
 
