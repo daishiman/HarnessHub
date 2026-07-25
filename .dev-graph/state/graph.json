@@ -1,5 +1,5 @@
 {
-  "graph_revision": 625,
+  "graph_revision": 629,
   "nodes": [
     {
       "acceptance": [
@@ -36448,6 +36448,222 @@
       "title": "runbook の export/restore 手動コマンドが pnpm 10.9.0 と cwd 差でそのままでは実行できない",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T06:40:00Z"
+    },
+    {
+      "acceptance": [
+        "qa_log に重複 ID を含む入力で validate-coverage-matrix.py が非 0 終了する",
+        "重複が無い現行 system-spec/spec-state.json では従来どおり exit 0 を維持する",
+        "重複検出の回帰テストが plugins/system-spec-harness/tests/ に存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-33ho",
+        "linked_at": "2026-07-26T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-qa-log-id-uniqueness-gate-20260726.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "feat-task-spec-test-strategy の origin/main マージ時に観測した qa ID 二重採番の根因分析 (docs/features/feat-task-spec-test-strategy/qa-id-renumbering-20260725.md §残課題 2) から起票した tooling の follow-up",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "tooling",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-qa-log-id-uniqueness-gate-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa_log の ID 一意性が fail-closed で検査され、重複採番が commit 前に非 0 終了で止まる",
+      "graph_node_id": "issue-qa-log-id-uniqueness-gate-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "validate-coverage-matrix.py は qa_ids を {e.get(\"id\") for e in qa_log} と集合で構築するため、qa_log に同一 ID が複数存在しても例外にならず静かに 1 件へ潰れる。結果として 「qa_ref は全て実在する」と緑を返し、意味の壊れた仕様状態を機械ゲートが通してしまう。feat-task-spec-test-strategy のブランチが main と qa-070/qa-071 を二重採番した事故は、この無検出が原因で 3-way diff を人手で突き合わせるまで表面化しなかった。",
+      "related_nodes": [
+        "spec-harness-hub-requirements",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "plugins/system-spec-harness/tests/"
+      ],
+      "scope_in": [
+        "validate-coverage-matrix.py への qa_log ID 一意性検査の追加 (重複時 exit 非 0)",
+        "重複 ID を含む fixture での回帰テスト追加",
+        "同種の集合化による取りこぼしが requirement_ids など他の ID 集合にも無いかの点検"
+      ],
+      "scope_out": [
+        "既存 qa_log の内容修正 (別課題)",
+        "qa ID の採番規則そのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "system-spec-harness",
+        "fail-closed",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "validate-coverage-matrix が qa_log の ID 重複を検出できない (集合化で静かに潰れる)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-26T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "system-spec/spec-state.json の qa_log に qa-070 の確定エントリが存在する",
+        "復元した内容の出典 (どの実体参照から復元したか) が本 issue に記録されている",
+        "validate-coverage-matrix.py が引き続き exit 0 を返す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-dxfe",
+        "linked_at": "2026-07-26T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-qa070-qa-log-entry-missing-20260726.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "feat-task-spec-test-strategy の origin/main マージ時に観測した qa_log 記録欠落 (docs/features/feat-task-spec-test-strategy/qa-id-renumbering-20260725.md §残課題 1) から起票した仕様記録の follow-up",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-qa070-qa-log-entry-missing-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-070 の確定エントリが qa_log に復元され、実体側の参照と spec-state.json が一致する",
+      "graph_node_id": "issue-qa070-qa-log-entry-missing-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "main の qa-070 (ドキュメント規約 — kebab-case 接頭辞体系・1 文書 300 行上限の fail-closed CI lint・仕組みとナレッジのオン/オフ分離) は issues/sys-qa070-implementation-feature-20260722.md・features/feat-doc-governance-portability.md・scripts/lint-doc-line-limit.py が実体として参照しているのに、system-spec/spec-state.json の qa_log に確定エントリが無い。ID が空き番に見えるため後続ブランチが再利用でき、実際に feat-task-spec-test-strategy が二重採番して衝突した。",
+      "related_nodes": [
+        "spec-harness-hub-requirements"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json",
+        "issues/sys-qa070-implementation-feature-20260722.md",
+        "features/feat-doc-governance-portability.md"
+      ],
+      "scope_in": [
+        "qa-070 の確定内容 (question / answer / status / 確定日時) を実体参照元から復元し qa_log へ追記",
+        "同種の記録欠落が他 ID にも無いか (実体参照はあるが qa_log に不在) の点検"
+      ],
+      "scope_out": [
+        "feat-task-spec-test-strategy 側の再採番 (qa-076..081) の巻き戻し",
+        "validate-coverage-matrix.py の一意性ゲート追加 (issue-qa-log-id-uniqueness-gate-20260726 の担当)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec",
+        "traceability",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "main 側 qa-070 が spec-state.json の qa_log に不在 (実体は存在する記録欠落)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-26T00:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

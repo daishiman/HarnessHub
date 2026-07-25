@@ -135,8 +135,13 @@ ID 以外の改変が混入しているので、評価者の再実行が必要�
 
 ## 残課題
 
-1. **`main` 側 `qa-070` が `qa_log` に不在** — 実体 (issue・feature・lint) は存在するのに
-   `spec-state.json` の `qa_log` に確定エントリが無い。今回の誤採番の根因であり、`main` 側の
-   記録欠落として別途 issue 化する。本 PR では `main` の状態をそのまま保全し、修復しない。
-2. **`validate-coverage-matrix.py` の ID 重複が無検出** — `qa_ids` の集合化により重複が
-   静かに潰れる。`qa_log` の ID 一意性を fail-closed で検査する追加ゲートを別 issue で起票する。
+いずれも起票済みで、本 PR では対応しない (`main` の状態をそのまま保全する)。
+
+| issue node | Beads ID | 内容 |
+| --- | --- | --- |
+| `issue-qa070-qa-log-entry-missing-20260726` | `HarnessHub-dxfe` | **`main` 側 `qa-070` が `qa_log` に不在** — 実体 (issue・feature・lint) は存在するのに `spec-state.json` の `qa_log` に確定エントリが無い。今回の誤採番の根因 |
+| `issue-qa-log-id-uniqueness-gate-20260726` | `HarnessHub-33ho` | **`validate-coverage-matrix.py` の ID 重複が無検出** — `qa_ids` の集合化により重複が静かに潰れる。`qa_log` の ID 一意性を fail-closed で検査する追加ゲートが要る |
+
+2 件は独立ではなく、前者が「台帳の欠落」、後者が「欠落があっても気づけないこと」に対応する。
+後者だけを直すと再発時に検出はできるが台帳は欠けたままで、前者だけを直すと同じ欠落が別 ID で
+再発する。両方揃って初めて再発経路が閉じる。
