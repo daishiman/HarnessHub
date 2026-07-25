@@ -32,7 +32,7 @@ session `maxAge` 8h / `updateAge` 15 分 / device code TTL 10 分 / user code 8 
 edge scope gate が DB 往復なしで所属を判定できるよう、session claims に `workspace_ids` を加える。
 access token は発行時の `workspace_id` 1 件だけへ束縛し、被害範囲を session より狭くする。
 
-これは `docs/security-spec.md` §2.1 と `system-spec/auth.md` qa-036 が **6 claim を列挙して「最小集合」と確定した値に対する追加**である。正本は spec-state.json からの compile 成果物であり、確定の書き換えには R4-reopen が要る。bd `HarnessHub-l2g9` で追跡する。
+これは `docs/security-spec.md` §2.1 と `system-spec/auth.md` qa-036 が **6 claim を列挙して「最小集合」と確定した値に対する追加**だった。bd `HarnessHub-l2g9` の **R4-reopen で解消済み** — 2026-07-25 のユーザー確認 (`appr-010`) を経て `qa-072` として 7 claim を再確定し、`docs/security-spec.md` §2.1 と `system-spec/auth.md` が実装と一致している。
 
 ### 10.3 認証前 3 経路は `tenant_slug` を要求する
 
@@ -91,13 +91,11 @@ RFC 8628 §3.5 が定めているのは「`slow_down` を返したら `interval`
   知らずに増やし続けて TTL 内に叩かなくなる可能性は残るが、これは client 実装の責務であり
   server からは是正できない。
 
-上限値は backend-spec / security-spec には無い**本 feature の決定**である。`config.ts` の
-`devicePollMaxIntervalSeconds` にコメントで出所を明記し、`T-SESS-01` の期待値表にも
-仕様書由来でない旨を書いた。実装は `apps/hub/src/lib/auth/device-flow/service.ts` の
+上限値は当初 backend-spec / security-spec には無い**本 feature の決定**だった。bd `HarnessHub-l2g9` の
+**R4-reopen で解消済み** — 2026-07-25 のユーザー確認 (`appr-010`) を経て `qa-073` として
+上限 60 秒と −5 秒減衰を再確定し、`docs/security-spec.md` §2.2 の polling 行に反映した。
+実装は `apps/hub/src/lib/auth/device-flow/service.ts` の
 `nextPollIntervalSeconds()` / `relaxedPollIntervalSeconds()`、検査は `T-DEV-04` と補 1〜3。
-
-上限と減衰は Publisher CLI から観測できる契約なので、実装コメントのままにはしない。
-qa-041 の R4-reopen で確定し直す申し送りを bd `HarnessHub-l2g9` に起票済み。
 
 ## 11. 未解決事項
 
@@ -105,8 +103,8 @@ qa-041 の R4-reopen で確定し直す申し送りを bd `HarnessHub-l2g9` に�
 |---|---|
 | Auth.js 実結線 | `next-auth` 未導入。依存追加、JWT bridge、dynamic tenant route 結線が必要 |
 | 本番 auth port adapter | DB は land 済みだが Device Flow/Workspace の永続化契約差を schema owner と解消する必要がある |
-| ~~認証 gate の CI 結線~~ | ✅ 解消 (2026-07-25)。`ci.yml` G12 + root `pnpm check:auth` / `HarnessHub-1f28` closed |
-| 確定仕様を超えた 2 決定 (§10.2 `workspace_ids` / §10.7 polling 上限・減衰) | 正本は手編集不可。qa-036 / qa-041 の R4-reopen へ送る follow-up `HarnessHub-l2g9` |
+| 認証 gate の CI 結線 | 手動 pass。follow-up `HarnessHub-1f28` |
+| ~~確定仕様を超えた 2 決定 (§10.2 `workspace_ids` / §10.7 polling 上限・減衰)~~ | **解消済み** (`HarnessHub-l2g9`)。R4-reopen → `appr-010` → `qa-072` / `qa-073` として再確定し、security-spec §2.1/§2.2 と system-spec/auth.md が実装と一致 |
 | Workers rate limit | feat-hub-foundation の binding 結線が必要 |
 | 本番 OIDC / deploy | P13。依存・資格情報・commit/push/PR が前提 |
 

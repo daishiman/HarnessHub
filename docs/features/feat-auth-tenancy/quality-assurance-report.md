@@ -113,7 +113,7 @@ P08 refactoring-migration-note.md §2。走査範囲から外している場所�
 | device_code TTL | 10 分 |
 | polling interval | 5 秒 |
 | `slow_down` の加算幅 | 5 秒 |
-| polling interval の上限 | 60 秒 (仕様書由来ではなく ADR 実装追補 §10.7 の決定) |
+| polling interval の上限 | 60 秒 (`docs/security-spec.md` §2.2 = `qa-073` で確定。起点は ADR 実装追補 §10.7) |
 | user_code 桁数 | 8 |
 | user_code 最大試行 | 5 回 |
 | access token TTL | 15 分 |

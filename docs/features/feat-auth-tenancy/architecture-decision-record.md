@@ -249,7 +249,7 @@ refresh token は使い捨てとし、交換のたびに新しい値を発行す
 | cookie 属性 | `HttpOnly` / `Secure` / `SameSite=Lax` / `Path=/` |
 | `maxAge` | 8 時間 |
 | `updateAge` | 15 分 |
-| claims | `sub` / `tenant_id` / `role` / `status` / `iat` / `exp` + **`workspace_ids`** (認可 MW が DB 往復なしで判定できる最小集合。`workspace_ids` は edge の Workspace 越境判定のため P05 で追加した確定値超過 — 追補 §10.2 / bd `HarnessHub-l2g9`) |
+| claims | `sub` / `tenant_id` / `role` / `status` / **`workspace_ids`** / `iat` / `exp` (認可 MW が DB 往復なしで判定できる最小集合。`workspace_ids` は edge の Workspace 越境判定のため追加し、R4-reopen で `qa-072` として確定済み — 追補 §10.2 / bd `HarnessHub-l2g9`) |
 | 署名鍵 | `AUTH_SECRET` (Workers Secret binding) |
 
 ### 失効の 2 段構え

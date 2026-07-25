@@ -51,7 +51,7 @@ REQUIRED_TASK_SPEC_SECTIONS = (
     "参照情報",
 )
 
-CONTRACT_VERSION_LATEST = "1.1.0"
+CONTRACT_VERSION_LATEST = "1.2.0"
 CONTRACT_VERSIONS: dict[str, dict] = {
     # 2026-07-22T13:53:21Z (367ba5c) 以前に promote された content-addressed package が
     # 準拠していた検査集合。digest 不変ゆえ後追い修正できないため、当時の契約で再検証する。
@@ -59,12 +59,23 @@ CONTRACT_VERSIONS: dict[str, dict] = {
         "required_sections": tuple(s for s in REQUIRED_TASK_SPEC_SECTIONS if s != GOAL_SEEK_SECTION),
         "inner_goal_seek": False,
         "p13_writeback": False,
+        "qa_semantic_coverage": False,
     },
-    # 367ba5c 以降の現行契約。新規生成 package は必ずこちらで fail-closed 検証される。
+    # 367ba5c で導入された task-spec 本文契約。qa semantic coverage gate の導入前に
+    # promote された package を再検証できるよう、当時の検査集合を独立 version として残す。
     "1.1.0": {
         "required_sections": REQUIRED_TASK_SPEC_SECTIONS,
         "inner_goal_seek": True,
         "p13_writeback": True,
+        "qa_semantic_coverage": False,
+    },
+    # qa-071 enforcement tooling 導入後の現行契約。新規生成 package は feature tag、
+    # spec-state lineage、goal-spec の意味被覆、exact-13 task trace も fail-closed で検証する。
+    "1.2.0": {
+        "required_sections": REQUIRED_TASK_SPEC_SECTIONS,
+        "inner_goal_seek": True,
+        "p13_writeback": True,
+        "qa_semantic_coverage": True,
     },
 }
 
