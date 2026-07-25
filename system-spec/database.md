@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-060 |
+| Web (web) | 確定 | 確定質疑: qa-077 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-060 (対応セル: web)
+### qa-077 (対応セル: web)
 
-**質問**: builds/feedbacks/projects のスキーマ改訂 (docs/backend-spec.md §2 の 2026-07-18 追記) を database 仕様へ反映するか。 (訂正再登録: qa-053 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-060 として登録し直す)
+**質問**: HarnessHub-b7ng で確定した認証永続化スキーマと migration 契約を database.web の正本へ反映するか。
 
-**回答**: qa-045 の確定内容 (C4 改訂の業務データ保持 tenant_data_objects・封筒暗号化・即時完全削除を含む確定スキーマ) を全面維持しつつ、次の delta を確定する。builds へ sheet_id (NULL 可) と feedback_id (NULL 可) を持たせ、起点は Sheet/Feedback のどちらか一方 (CHECK 制約 + 非 NULL 値の partial UNIQUE で各起点=1 Build を保証)。feedbacks の type を improvement/review/bug の 3 値へ改訂し priority (high/medium/low) 列を追加。projects は owner_user_id を作成時の principal に固定し slug/name は Workspace 内一意。1 Workspace に複数 Project、各 Project は skill/web_app の複数 TargetChannel を持てる (マルチシステム前提)。全テーブルの tenant_id スコープ (D4) は P0 の最初の migration から必須で後付けしない。
+**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-060 までの database.web 確定内容を全面維持し、次の実装追補を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書込みは guardedWrite を通し、ローカル libSQL の SQLITE_BUSY による未 commit 成功を防ぐ。残る repository write の全量掃き出しは別 Beads 課題で追跡する。
 
 ## 上流指針 (doctrine anchor)
 

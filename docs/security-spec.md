@@ -130,7 +130,7 @@ OWASP ASVS + Secrets Management Cheat Sheet (`https://owasp.org/www-project-appl
 | session `updateAge` | **15 分** | JWT 再発行の間隔 |
 | **失効許容時間** | **最大 15 分** | JWT は stateless のため role/status 変更は次の再発行まで反映されない |
 | JWT claims | `sub`(user_id) / `tenant_id` / `role` / `status` / `workspace_ids` / `iat` / `exp` | 認可 MW が DB 往復なしで判定できる最小集合 (Turso 読取を節約)。`workspace_ids` は edge が Workspace 越境を DB 往復なしで弾くため (qa-072)。代償は cookie が所属数に比例して膨らむことと membership 変更の 15 分遅延 |
-| 署名鍵 | `AUTH_SECRET` (Workers Secret binding) | §4.5 |
+| 署名鍵 | `AUTH_SESSION_SECRET` (Workers Secret binding) | §4.5。Publisher access token は別鍵 `AUTH_ACCESS_TOKEN_SECRET` で用途分離 |
 
 **失効の意味論 (重要)**: `updateAge=15分` ごとの JWT 再発行時に、Auth.js の `jwt` callback で `users.role` / `users.status` を DB から再読込して claims を更新する。したがって **role 剥奪・ユーザー無効化の反映は最大 15 分遅延する**。これを受容する代わりに、以下は**即時失効**とする。
 
@@ -500,7 +500,7 @@ export function listSheets(ctx: TenantCtx, cursor?: string): Promise<Sheet[]>  /
 | 保存 | **DB へ封筒暗号化保存** (§4.1、purpose=`idp_secret`)。`idp_connections.client_secret_enc` |
 | **既存確定からの変更** | `backend-spec.md` §2.2 の「secret は Workers Secret の参照名のみ (`client_secret_ref`)。暗号化方式は feature P02」を**本節で置換**する (qa-032 の再オープン理由) |
 | 変更根拠 | テナント IdP secret は**顧客ごとに動的に増えるデータ**であり、環境 binding では追加のたびに `wrangler secret put` + 再デプロイが必要になる。これは C1 (提供者 1 名の運用負荷) と C2 (顧客数に固定費・手間が比例しない) に反する。Workers の secret 数上限にも到達しうる |
-| **「secret は環境 binding のみ」原則との関係** | 当該原則 (qa-020/qa-025) は **Hub 自身の静的 secret** (Turso token・R2 key・Resend key・AUTH_SECRET・KEK) を対象とする。**テナント由来の動的 secret はこの原則の適用外**とし、封筒暗号化 + 認可 + 監査で保護する。この境界を §4.5 の表で明示する |
+| **「secret は環境 binding のみ」原則との関係** | 当該原則 (qa-020/qa-025) は **Hub 自身の静的 secret** (Turso token・R2 key・Resend key・AUTH_SESSION_SECRET・AUTH_ACCESS_TOKEN_SECRET・KEK) を対象とする。**テナント由来の動的 secret はこの原則の適用外**とし、封筒暗号化 + 認可 + 監査で保護する。この境界を §4.5 の表で明示する |
 | 読取 | **復号は OIDC 認可要求の組立時のみ**。API レスポンス・ログ・エラーメッセージへ出さない (マスク済み `***` を返す) |
 | 書込 | `provider-admin` のみ (テナント IdP 設定は提供者が顧客と合意して登録する)。監査 event `idp.connection_change` (値は記録しない) |
 
@@ -521,7 +521,7 @@ export function listSheets(ctx: TenantCtx, cursor?: string): Promise<Sheet[]>  /
 
 | binding 名 | 内容 | 用途 | ローテーション |
 |---|---|---|---|
-| `AUTH_SECRET` | Auth.js JWT 署名鍵 | §2.1 | 年 1 回 (全 session 失効を伴う) |
+| `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` | Auth.js session / Publisher access token の用途分離 JWT 署名鍵 | §2.1 / §2.2 | 年 1 回 (前者は全 session 失効、後者は全 Publisher access token の再発行を伴う) |
 | `ENCRYPTION_KEK` | 封筒暗号化の KEK | §4.1 | 年 1 回 (DEK re-wrap のみ) |
 | `TURSO_AUTH_TOKEN` | Turso **DB 接続** token。CI の migrate/smoke も同名を使う。Platform API token (`TURSO_API_TOKEN`・`backup.yml` 専用) とは別物で相互流用しない | DB | 年 1 回 |
 | ~~`R2_ACCESS_KEY` / `R2_SECRET_KEY`~~ | **2026-07-25 廃止**。R2 は Workers binding + `wrangler` 経路のみとし専用キーを発行しない (infrastructure-spec §7 台帳と同期) | — | — |
@@ -870,7 +870,7 @@ C1 (1 名 + AI) 下で実行可能な最小手順のみを定める。
 | 事象 | 手順 |
 |---|---|
 | Publisher token 窃取の疑い | Hub Web から該当 token を失効 (即時) → `publisher_tokens` の family 全失効 → 監査確認 |
-| KEK/DEK 侵害の疑い | KEK ローテーション (§4.1.2) → DEK ローテーション → 全 session 失効 (`AUTH_SECRET` 更新) |
+| KEK/DEK 侵害の疑い | KEK ローテーション (§4.1.2) → DEK ローテーション → 全 session 失効 (`AUTH_SESSION_SECRET` 更新) |
 | テナント IdP secret 漏洩 | 顧客と合意して IdP 側で secret 再発行 → Hub の `idp_connections` 更新 (監査 event) |
 | 監査 chain 不一致検出 | 該当テナントの監査画面に警告表示 → 提供者が原因調査 → 顧客管理者へ通知 |
 | 不正 package の公開判明 | `release.suspend` (即時) → `channel.rollback` → 監査 event → 影響 Workspace へ通知 |

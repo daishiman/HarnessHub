@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-068 |
+| Web (web) | 確定 | 確定質疑: qa-078 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-068 (対応セル: web)
+### qa-078 (対応セル: web)
 
-**質問**: matrix.infrastructure.web の確定根拠 qa-064 は「qa-034 の確定内容 (production + staging の 2 環境を含む意思決定 4 論点) を全面維持」および「P0: production/staging」と記述しており、D7 (ephemeral-preview-only, qa-067) と矛盾する stale reference になっている。qa-064 の R2 配布境界・§13 段階有効化順は維持しつつ、環境構成の記述だけを D7 整合へ改訂して qa_ref を差し替えるか。(2026-07-22 AskUserQuestion でユーザーが「D7 どおり改訂する」を選択)
+**質問**: HarnessHub-b7ng の production 認証に必要な Worker 変数・Secret と rollout 順序を infrastructure.web の正本へ反映するか。
 
-**回答**: D7 どおり改訂する。qa-064 の delta (R2 配布境界・§13 段階有効化順 P0-P5) は次の 2 点を除き一言一句維持する: (1) 冒頭の「qa-034 の確定内容を全面維持」は「qa-034 の確定内容のうち論点(1) 環境構成のみ D7 (ephemeral-preview-only, qa-067) が上書きし、残る論点 (独自ドメイン・CI/CD 3 workflow・監視/バックアップ) は維持」と読み替える。(2) P0 の「production/staging」は「production (1 組のみ)」へ改訂し、常設 staging は構築しない。環境は production 1 組 + PR ごとの使い捨て preview (Workers preview URL) とし、migration 検証と restore drill は PR preview と production 反映前チェックで受ける。R2 配布境界 (staging prefix への upload 収束・公開 write URL 不発行・install/download の Worker 経由・短命 URL 規則) の「staging prefix」は R2 バケット内の検査待ち prefix の名称であり環境としての staging とは無関係のため変更しない。P1-P5 の段階有効化・migration の tenant_id/workspace_id 必須・2 tenant fixture 分離テスト・1 tenant/1 Project 固定環境変数の禁止も全て維持する。
+**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-068 までの infrastructure.web 確定内容を全面維持し、次の実装追補を確定する。production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、ログへ記録しない。rollout は DB backup と migration dry-run、本適用、認証 Secret/変数の存在確認、Worker deploy、2 tenant OIDC・Device Flow smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

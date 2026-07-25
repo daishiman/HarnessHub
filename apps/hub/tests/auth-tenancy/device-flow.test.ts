@@ -279,11 +279,41 @@ describe('T-DEV-06/07: user_code の照合 (QC-3)', () => {
     expect(fifth).toEqual({ ok: false, reason: 'denied' });
     expect(harness.ports.deviceAuthorizations.all()[0]?.status).toBe('denied');
 
+    // denied は終端。上限後の再試行で attempts が 6, 7… と増え続けない
+    expect(
+      await harness.service.approve({
+        tenantId: TENANT_A,
+        userCode: issued.user_code,
+        userId: USER_ID,
+        workspaceId: WORKSPACE_A1,
+      }),
+    ).toEqual({ ok: false, reason: 'denied' });
+    expect(harness.ports.deviceAuthorizations.all()[0]?.attempts).toBe(5);
+
     // denied へ落ちた認可は polling 側にも access_denied として現れる
     expect(await harness.service.exchangeToken({ tenantId: TENANT_A, deviceCode: issued.device_code })).toEqual({
       ok: false,
       error: { error: 'access_denied' },
     });
+  });
+
+  it('T-DEV-06 補: 5 回の失敗が同時到着しても全件を数え、denied へ遷移する', async () => {
+    const harness = createHarness();
+    const issued = await approvedDeviceCode(harness);
+
+    const results = await Promise.all(
+      Array.from({ length: 5 }, () =>
+        harness.service.approve({
+          tenantId: TENANT_A,
+          userCode: issued.user_code,
+          userId: 'user-another',
+          workspaceId: WORKSPACE_A1,
+        }),
+      ),
+    );
+
+    expect(results.some((result) => !result.ok && result.reason === 'denied')).toBe(true);
+    expect(harness.ports.deviceAuthorizations.all()[0]).toMatchObject({ attempts: 5, status: 'denied' });
   });
 
   it('T-DEV-06 補: 存在しない user_code は試行回数を増やさない (他人の認可を潰せないため)', async () => {

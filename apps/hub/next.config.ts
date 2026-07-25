@@ -14,6 +14,25 @@ const nextConfig: NextConfig = {
   ],
   // Worker bundle 3MiB (gzip 後) 予算のため、production build では source map を出力しない
   productionBrowserSourceMaps: false,
+  /**
+   * libSQL driver の **workerd 版実体**を trace 対象へ足す (HarnessHub-b7ng)。
+   *
+   * Next の file tracing は Node の解決条件で module graph を辿るので、package の exports が
+   * `workerd` 条件で別ファイルを指している場合その実体は複写されない。一方 opennextjs-cloudflare の
+   * esbuild は workerd 条件で解決するため、複写されなかった側を要求して
+   * `Could not resolve "@libsql/isomorphic-ws"` で落ちる (両者が違う条件で同じ package を見る)。
+   *
+   * 対象はチェーン中で `workerd` 条件を持つ 3 package のみ (client / isomorphic-ws / isomorphic-fetch)。
+   * どれも pure JS で、native binding を含む @libsql/darwin-* は意図的に外してある。
+   * ここに列挙しても bundle には esbuild が到達した分しか入らない (複写 = 同梱ではない)。
+   */
+  outputFileTracingIncludes: {
+    '**/*': [
+      '../../node_modules/@libsql/client/**/*.{js,mjs,cjs,json}',
+      '../../node_modules/@libsql/isomorphic-ws/**/*.{js,mjs,cjs,json}',
+      '../../node_modules/@libsql/isomorphic-fetch/**/*.{js,mjs,cjs,json}',
+    ],
+  },
   // 共通層は ESM 流儀で `./x.js` と相対 import するが実体は .ts のため、webpack に読み替えを教える。
   // これが無いと `Module not found: Can't resolve './primitives.js'` で build が落ちる (2026-07-21 実測)。
   webpack: (config) => {

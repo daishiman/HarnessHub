@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-059 |
+| Web (web) | 確定 | 確定質疑: qa-076 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-010 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-059 (対応セル: web)
+### qa-076 (対応セル: web)
 
-**質問**: docs/backend-spec.md の 2026-07-18 additive 追記 (install/download descriptor・Project 管理 API・sheets/builds/feedbacks 契約詳細化・publish session 認証拡張・§10 API 実装順) を backend 仕様へ反映するか。 (訂正再登録: qa-052 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-059 として登録し直す)
+**質問**: HarnessHub-b7ng の本番 adapter と API 結線を backend.web の正本へ反映するか。
 
-**回答**: qa-048 の確定内容 (AiJob pull 権限開放・業務データ保持 API 方針。qa-048 が全面維持する qa-037 系譜を含む) を全面維持しつつ、次の delta を確定する。(1) §4.5.1 install/download: POST /api/v1/harnesses/:projectId/install (member) が安定版だけをサーバ解決し target 判別 union descriptor を返す — skill は Stage 0 採用の marketplace/Bootstrap Installer コマンド (raw ZIP は Gate 採用時のみ TTL 5 分以内・単回の短命 URL、それまで null)、web_app は健全性確認済み deployment の launch_url。suspended/非 stable/別 tenant は 404、member の release id/R2 key 指定は不受理。Idempotency-Key で download count 重複加算防止。(2) §4.5.2 Project 管理: POST /api/v1/projects (member。owner_user_id=principal 固定・slug/name は Workspace 内一意)・PATCH /api/v1/projects/:id (owner。tenant/workspace/owner は変更不可)。project.create/project.update を監査 action へ追加し、監査 action は固定数管理をやめ §3.8 の列挙を正本化。(3) sheets: GET 一覧は member/owner=自分のみ・admin=自テナント全件 + item DTO 契約、GET 詳細は form/estimate snapshot・generated_sections・build_ref 等の DTO 契約 (salary 原値は返さない)。所有者判定は改ざん可能な form の applicant でなく session principal.user_id を applicant_user_id へ固定。received の統一表示ラベルは「受付」。PDF は独立非認可 API を作らず認可済み詳細 DTO を print 表示へ再利用。(4) builds: sheet_id/feedback_id の起点二元化 (CHECK + 非 NULL 値の partial UNIQUE、各起点=1 Build)。POST /builds は手動復旧/例外用で、通常経路は AiJob complete 時の冪等自動作成 (sheet_generation→hearing、feedback improvement/review→design・bug→test。初期配置は遷移でなく stage_change 監査対象外)。P1 の間は Build 導線非表示、P2 有効化 migration で既存 Sheet を 1 回だけ backfill。(5) feedbacks: type=improvement/review/bug + priority=high/medium/low (mock の改善要望/レビュー依頼/バグ報告と優先度に対応)。(6) publish 系 (POST /publish・PUT package・POST submit) を session (S01/S02 Web ウィザード + CSRF) or Bearer (Publisher CLI) の 2 経路へ拡張 (状態機械・直列化 qa-009 は不変)。(7) §10 構築優先順位による API 実装順 P0-P5 (着手順のみ。認可 MW・テナント分離 D4・zod 単一ソースは P0 から全 endpoint 適用で後付け不可)。
+**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-059 までの backend.web 確定内容を全面維持し、次の実装追補を確定する。apps/hub の composition root は createDbAuthPorts、createDbAuditSink、createAuthjsHandler、DeviceFlowService を packages/db の CoreRepositories へ結線する。Auth.js 固有 import と型は lib/auth/adapter/ 内だけに閉じ、外部へは Web 標準の (Request)=>Promise<Response> を公開する。/api/v1/device/code・approve・token、/api/v1/token/refresh、/api/v1/tokens の本番経路は同じ AuthPorts を使い、in-memory adapter を production fallback にしない。必要な設定・OIDC 接続・client_secret・DB 接続が欠ける場合は既定 tenant/provider/secret へ落とさず fail-closed で停止する。
 
 ### qa-010 (対応セル: desktop-windows, desktop-macos)
 
