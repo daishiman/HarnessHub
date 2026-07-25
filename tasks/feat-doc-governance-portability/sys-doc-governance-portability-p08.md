@@ -12,8 +12,8 @@ iteration: null
 title: "移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)"
 owners: ["daishiman"]
 created_at: "2026-07-22T02:31:19Z"
-updated_at: "2026-07-22T02:47:44Z"
-status: "active"
+updated_at: "2026-07-24T08:25:55Z"
+status: "closed"
 depends_on: ["SYS-DOC-GOVERNANCE-PORTABILITY-P07"]
 related_nodes: ["feat-doc-governance-portability","arch-harness-hub-dev-workflow","issue-doc-granularity-remediation-20260722"]
 resource_scope: ["scripts/doc-line-limit-allowlist.json","eval-log/dev-graph/doc-governance-portability/migration-receipt.json"]

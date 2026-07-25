@@ -1,0 +1,133 @@
+{
+  "node": {
+    "acceptance": [
+      "planner pytest が全件 PASS し、意味被覆の 4 違反 code それぞれに対する回帰テストが存在する",
+      "既 promote 済み package の再検証が digest 不変のまま status=pass を維持し、最新契約で検証される package も violations 0 で pass する",
+      "lint-live-trial-verdict.py --all が stale-sha 0 で exit 0、--check-provenance origin/main も exit 0",
+      "3 skill の scenario-verdict.json が現行 closure で取得した run を live_trial_verdict_ref に持つ",
+      "変更したファイルがいずれも 500 行以下である"
+    ],
+    "architecture_refs": [],
+    "artifact_kind": "issue",
+    "artifact_subtypes": [],
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-1y6",
+      "linked_at": "2026-07-25T11:09:07Z",
+      "sync_state": "linked"
+    },
+    "classification_candidates": [
+      {
+        "artifact_kind": "issue",
+        "candidate_path": "issues/sys-qa071-tooling-landing-20260725.md",
+        "confidence": 0.9
+      }
+    ],
+    "classification_confidence": 0.9,
+    "classification_reason": "確定 QA 要件の宣言と中身の乖離を C12 で検出できない欠陥、およびその修正が引き起こす behavior closure 失効を追跡する issue",
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "open"
+    },
+    "confirmation_evidence": {
+      "evaluated_digest": null,
+      "evaluator": null,
+      "evidence_ref": null
+    },
+    "confirmation_status": "draft",
+    "created_at": "2026-07-25T11:09:07Z",
+    "depends_on": [
+      "issue-validator-contract-version-20260724"
+    ],
+    "domain": "dev-workflow",
+    "evaluation_status": "pending",
+    "execution_contexts": [],
+    "feature_package_id": null,
+    "file_path": "issues/sys-qa071-tooling-landing-20260725.md",
+    "github_project_linkages": [],
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "goal": "qa-071 を宣言する plan は登録済み qa_log との突合・goal-spec 5 項目の意味被覆・exact-13 task spec 全件への trace が揃わない限り promote できず、既 promote 済み package は digest を変えずに promote 時点の契約で pass を維持し、dev-graph 3 skill の live-trial verdict が現行 behavior closure と一致していること",
+    "graph_node_id": "issue-qa071-tooling-landing-20260725",
+    "implementation_readiness": {
+      "checked_at": "2026-07-25T11:09:07Z",
+      "missing_sections": [],
+      "status": "complete"
+    },
+    "issue_linkage": null,
+    "iteration": null,
+    "owners": [
+      "daishiman"
+    ],
+    "parent_feature": null,
+    "phase_ref": null,
+    "priority": "high",
+    "project_id": "harness-hub",
+    "pull_request_linkages": [],
+    "purpose": "PR #56 は qa-071 を system-spec/spec-state.json の qa_log へ登録しただけで、その中身が plan 成果物に届いているかを検査する enforcement は分離されたままだった。tag に qa-071 と書けば通る状態では、確定した QA 要件が goal-spec の purpose/goal/scope/acceptance にも 13 task spec にも降りていない plan が promote でき、qa_log が飾りになる。tag 宣言ではなく意味被覆を C12 決定論ゲートで要求し、宣言と中身の乖離を promote 前に落とす",
+    "related_nodes": [
+      "issue-planner-script-line-limit-20260724"
+    ],
+    "resource_scope": [
+      "plugins/system-dev-planner/scripts/validate-system-plan.py",
+      "plugins/system-dev-planner/scripts/validate-qa-semantic-coverage.py",
+      "plugins/system-dev-planner/scripts/validate-task-spec-contract.py",
+      "plugins/system-dev-planner/assets/validation-contract-baseline.json",
+      "plugins/system-dev-planner/references/feature-execution-package-contract.md",
+      "plugins/system-dev-planner/agents/system-dev-plan-evaluator.md",
+      "plugins/system-dev-planner/skills/assign-system-dev-plan-evaluator/prompts/R4-evaluate.md",
+      "plugins/system-dev-planner/skills/assign-system-dev-plan-evaluator/references/evaluation-rubric.md",
+      "plugins/system-dev-planner/tests/test_qa_semantic_coverage.py",
+      "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+      "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+      "eval-log/dev-graph/run-dev-graph-decompose/criteria-test/scenario-verdict.json",
+      "eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json",
+      "eval-log/dev-graph/run-dev-graph-requirements/criteria-test/scenario-verdict.json"
+    ],
+    "scope_in": [
+      "qa 意味被覆検査の実装 (qa-ref-unregistered / qa-semantic-coverage / qa-task-trace / qa-tags-unparsable の 4 違反 code)",
+      "契約 version 1.2.0 の追加と 1.1.0 の effective_until 確定",
+      "意味被覆検査を version 差分 (免除対象) として台帳 policy へ明記",
+      "evaluator (agent / R4-evaluate prompt / evaluation-rubric) の C2 条件への意味被覆観点の追加",
+      "behavior closure が変わったことによる run-dev-graph-{node,decompose,requirements} の live-trial 再実走と scenario-verdict.json の更新",
+      "監査ヘルパーの 500 行超過に対する責務分割と合成 identity による provenance 維持"
+    ],
+    "scope_out": [
+      "qa-071 本文の feature/task ドキュメントへの伝播 (HarnessHub-8wo で追跡。本 issue は検査機構のみ)",
+      "promote 済み package 本体の編集 (digest 不変性を壊すため受け入れ不可)",
+      "semantic-coverage 宣言を持たない既存 feature への遡及適用 (quality_constraints でのオプトイン方式を維持)",
+      "promote-system-plan.py / build-system-handoff.py の 500 行超過分割 (別 issue)"
+    ],
+    "source_lineage": {
+      "imported_at": "2026-07-25T11:09:07Z",
+      "origin_kind": "manual",
+      "source_digest": null,
+      "source_path": null,
+      "source_plugin": null,
+      "source_version": null
+    },
+    "start_date": null,
+    "status": "draft",
+    "tags": [
+      "system-dev-planner",
+      "c12-validation",
+      "qa-071",
+      "semantic-coverage",
+      "behavior-closure",
+      "live-trial"
+    ],
+    "target_date": null,
+    "template_id": "issue",
+    "template_version": "1.0.0",
+    "title": "qa-071 の意味被覆 enforcement を landing し dev-graph 3 skill の live-trial を再取得する",
+    "tracker_binding": "beads",
+    "updated_at": "2026-07-25T11:09:07Z"
+  }
+}

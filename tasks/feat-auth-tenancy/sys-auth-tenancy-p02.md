@@ -12,8 +12,8 @@ iteration: null
 title: "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-07-25T00:44:28Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P01"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/architecture-decision-record.md"]

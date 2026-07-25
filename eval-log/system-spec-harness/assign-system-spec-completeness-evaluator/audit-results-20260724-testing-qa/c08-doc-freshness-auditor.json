@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS",
+  "component": "C08",
+  "auditor": "system-spec-doc-freshness-auditor",
+  "dispatch": {"tool": "Agent", "subagent_type": "system-spec-doc-freshness-auditor", "session_id": "4e36e2fc-5ee3-4926-b723-71b490e6442b"},
+  "audited_at": "2026-07-24T12:22:00Z",
+  "summary": "fetched-references.jsonの20件を独立contextで監査。層1(形式)はvalidate-source-citation.pyがexit0。層2(内容鮮度)はWebFetch非搭載環境のためWebSearch(公式ドメイン限定)で20件中16件を個別再照合。重点3件(vitest 4.1.10 / playwright 1.61.1 / @testing-library/react 16.3.2)は全てnpm latestまたは公式リリースノートと一致する現行安定版を確認(vitest 5.0はbeta止まり、playwright 1.62はalpha止まり、testing-library/react v17未存在)。他13件も公式ソースと整合し乖離なし。対象一覧20件とreferences 20件は1:1で欠落・重複ゼロ、非公式host混入ゼロ、時刻は全件2026-07-16〜07-24の範囲で異常なし。",
+  "findings": [
+    {"severity": "low", "detail": "opennext-cloudflare: 記録はversion 1.20.2。本監査のWebSearchではnpm latest 1.20.1と表示され1.20.2への言及が見当たらず、WebFetch不搭載のため一次GETで再確認できずこの1点は鮮度未確認として報告(記録側は生API応答引用でWebSearchより強い一次証跡。WebFetch可能環境での再照合を推奨)。"},
+    {"severity": "low", "detail": "github-actions, wrangler, cloudflare-r2, cloudflare-d1の4件は個別のWebSearch内容鮮度再照合を未実施(未照合と正直に報告)。いずれもversion番号を持たないreference/pricingページでlatest_checked_atは監査日2日前と直近。同ファミリのcloudflare-workers pricingは数値一致確認済みでリスク低と判断。"},
+    {"severity": "low", "detail": "zod: versionフィールドが\"4\"(メジャーのみ)。現行npm latestは4.4.3。記録の主張自体は乖離ではないが、patch世代落ち検知のためpatchバージョンまで具体化した記録を推奨。"}
+  ]
+}

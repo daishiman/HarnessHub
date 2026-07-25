@@ -1,0 +1,257 @@
+{
+  "schema_version": "1.0.0",
+  "task": "SYS-TASK-SPEC-TEST-STRATEGY-P13",
+  "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P13",
+  "beads_issue_id": "HarnessHub-a4ks.13",
+  "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+  "package_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "feature_context_digest": "sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7",
+  "recorded_at": "2026-07-25T12:33:22Z",
+  "release_status": {
+    "verdict": "IMPLEMENTATION-COMPLETE / LANDING-BLOCKED",
+    "summary": "P01..P12 の成果物と証跡は全て生成済みで、fail-closed validator ゲート (G-1..G-3) は リリース時点で再実測して非退行を確認した。main 反映・spec writeback・beads close は いずれも外部条件が未成立のため実行していない。未実行項目は本受領書で明示的に blocked として記録する。",
+    "completed": [
+      "fail_closed_gate_non_regression",
+      "evidence_chain_fixed",
+      "operations_doc_published"
+    ],
+    "blocked": [
+      "main_reflection",
+      "spec_architecture_writeback",
+      "beads_durable_done"
+    ]
+  },
+  "git": {
+    "head": "abd46e5ac2e2413235b39d77b1c1912a6fd6f262",
+    "head_short": "abd46e5",
+    "branch": "HEAD",
+    "worktree": ".worktrees/task-20260724-203623-wt-8",
+    "note": "detached HEAD の worktree 上で実行。branch 払い出しは C15 の責務で本 phase は行わない"
+  },
+  "main_reflection": {
+    "status": "blocked",
+    "reason": "実行指示が commit・push・PR 作成を明示的に禁止している (「commit、push、PR作成はまだ行わず、変更内容と検証結果を報告してください」)。本 phase の権限で default branch へ反映することはできない。",
+    "current_state": "全変更は worktree 上の未コミット差分として保持されている",
+    "required_sequence_when_unblocked": [
+      "LP-1..LP-3 (landing_preconditions) を全て満たす",
+      "git switch -c devgraph/sys-task-spec-test-strategy-p13",
+      "git add + git commit (仕様反映受領書ゲートの要求を満たすこと)",
+      "gh pr create --base main (本文に Closes HarnessHub-a4ks.13 と graph_node_id を明記)",
+      "PR merge 後、default branch 上で dev-graph reconciliation を実行し durable done へ確定する"
+    ]
+  },
+  "fail_closed_gate_non_regression": {
+    "verdict": "pass (G-1..G-3)",
+    "measurements": [
+      {
+        "id": "G-1",
+        "purpose": "本 feature の package が fail-closed validator を通過する (自己整合)",
+        "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-task-spec-test-strategy",
+        "exit_code": 0,
+        "observed": "status=pass / violations=0 / validated_digest=sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae / test_strategy_contract={mode: legacy, declared_version: null, enforced_from: 1.2.0}",
+        "verdict": "pass"
+      },
+      {
+        "id": "G-2",
+        "purpose": "既存 promoted 世代が非退行である (契約版未宣言 = legacy 経路の後方互換)",
+        "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-mvp-first-scheduling",
+        "exit_code": 0,
+        "observed": "status=pass / violations=0 / validated_digest=sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387 (P08 記録値と一致 = digest 不変)",
+        "verdict": "pass"
+      },
+      {
+        "id": "G-3",
+        "purpose": "exact-13 契約・13-node DAG を含む plugin 全回帰",
+        "command": "python3 -m pytest plugins/system-dev-planner/tests -q",
+        "exit_code": 0,
+        "observed": "137 passed in 198.43s",
+        "verdict": "pass"
+      },
+      {
+        "id": "G-4",
+        "purpose": "live-trial 受領書の鮮度 (ガバナンスゲート)",
+        "command": "python3 scripts/lint-live-trial-verdict.py --all",
+        "exit_code": 1,
+        "observed": "3 violation + 6 WARN (verdict 不在・record-only)。本 feature 起因の node / requirements は fresh live-trial PASS で stale を解消。decompose は fresh live-trial が goal_fit=FAIL / DEGRADED のため 2 violation、system-spec は本 feature 外の既存差分により stale-sha 1 violation",
+        "verdict": "fail (landing 前提条件として未達。詳細は landing_preconditions.LP-1 / LP-2)"
+      },
+      {
+        "id": "G-5",
+        "purpose": "criteria-test の独立評価受領書が現行 behavior closure と一致すること",
+        "command": "python3 -m pytest plugins/dev-graph/tests/test_skill_criteria_evidence.py -q",
+        "exit_code": 1,
+        "observed": "4 failed / 16 passed。criteria-test/scenario-verdict.json が decompose / node / requirements / system-spec の旧 live-trial receipt を参照しており、fresh PASS を取得した node / requirements も criteria receipt の独立再審査が未実施",
+        "verdict": "fail (live-trial verdict 自体を書き換えず、criteria receipt の独立再審査が必要)"
+      }
+    ],
+    "note": "G-4/G-5 は fail-closed validator ゲートではなく live-trial 受領書の鮮度ゲートである。acceptance AC-7 (exact-13 契約・13-node DAG の非退行) の判定対象には含まれない。"
+  },
+  "writeback": {
+    "status": "deferred",
+    "declared_requirement": "task spec の Inner goal-seek execution loop が 「P13 spec/architecture writeback: required」を宣言している",
+    "targets": [
+      {
+        "path": "system-spec/testing-qa.md",
+        "role": "仕様正本 (qa-070/qa-071/qa-072/qa-073/qa-075 の質疑録)",
+        "current_digest": "sha256:fd302fb5f8f88147d8a01f02935ab31d335dafbd06cb6b391389bf2e6ab07b19",
+        "git_state": "untracked (?? — main 未着地の未コミット成果物)"
+      },
+      {
+        "path": "architecture/harness-hub-testing-qa.md",
+        "role": "architecture 正本 (system-spec/testing-qa.md を参照する wrapper)",
+        "current_digest": "sha256:69767727ffb7185e7dc527908f7dd851d1beabbf33b8872a6c4e86ddb42185d8",
+        "git_state": "untracked (?? — main 未着地の未コミット成果物)"
+      }
+    ],
+    "blockers": [
+      {
+        "id": "WB-1",
+        "kind": "write-scope",
+        "detail": "P13 の frontmatter resource_scope と published task spec の Write scope/touches は eval-log/system-dev-planner/task-spec-test-strategy/release-receipt.json の 1 件のみ。2 つの writeback 対象は宣言された write scope の外にある (prose の Documentation workstream と frontmatter の resource_scope が食い違う内部矛盾)。"
+      },
+      {
+        "id": "WB-2",
+        "kind": "execution-directive",
+        "detail": "実行指示が「既存の未コミット変更を保持し、対象外ファイルを変更せず」を要求している。2 つの対象は untracked (??) の未コミット成果物であり、本 feature ではなく上流の system-spec-harness ワークストリームが生成した進行中の作業である。"
+      },
+      {
+        "id": "WB-3",
+        "kind": "digest-binding",
+        "detail": "architecture/harness-hub-testing-qa.md は frontmatter で source_lineage.source_digest = confirmation_evidence.evaluated_digest = sha256:fd302fb5f8f88147d8a01f02935ab31d335dafbd06cb6b391389bf2e6ab07b19 (= system-spec/testing-qa.md の現在の digest) を束縛している。仕様正本を編集すると両フィールドが stale になり、assign-system-spec-completeness-evaluator を再実行せずに digest だけ書き換えると evaluation_status: pass が実測に裏付けられない記載になる (証跡の偽装)。",
+        "cross_reference": "同型の禁止事項が beads memory `behavior-closure-merge-stale` に記録されている: 「digest を現在値へ書き換えるのは stale 検出の恒久無効化にあたるので禁止」"
+      },
+      {
+        "id": "WB-4",
+        "kind": "sequencing",
+        "detail": "2 つの対象は main に未着地 (git status = ??) である。P01..P11 は system-spec/testing-qa.md = sha256:fd302fb5… を source lineage として pin しており、着地前に仕様正本を編集すると本 feature 全 phase の lineage pin が遡って不一致になる。仕様正本の着地 → writeback → 再評価、の順序でなければ整合が取れない。"
+      }
+    ],
+    "required_procedure_when_unblocked": [
+      "system-spec/testing-qa.md に本 feature の実装結果 (テスト戦略 4 項目の必須 section 化・fail-closed validator・spec_contract_version による段階適用) を追記する",
+      "architecture/harness-hub-testing-qa.md の source_lineage.source_digest を追記後の実 digest へ更新する",
+      "assign-system-spec-completeness-evaluator を再実行し、confirmation_evidence.evaluated_digest と evaluation_status を実測で更新する",
+      "system-spec/spec-state.json と system-spec/index.md の整合を確認する",
+      "evidence-manifest.json の source_lineage を再固定する (subjects/sources の digest が動くため)"
+    ],
+    "content_ready_for_writeback": {
+      "実装結果": "テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を task spec の必須 section 化し、9 種の violation code で fail-closed 拒否する (exit 2)",
+      "設計判断": "検査の単一 writer を validate-system-plan.py に置き、spec_contract_version (>=1.2.0 で enforced) による版ゲート方式で既存 promoted 世代を再生成せずに段階適用する",
+      "改善知見": "strict-if-present (契約版未宣言でも section を書いた場合は同じ厳格さで検査) が 「書いたのに検査されない」死角を消す。validator の出力に test_strategy_contract.mode を必ず出し、「検査して OK」と「そもそも検査していない」を証跡から区別できるようにした",
+      "残課題": "pixel/DOM 依存の静的 lint は goal-spec scope_out 4 として未実装であり、現時点ではレビュー時の人手判断で運用する (operations.md §3.2 の判断基準表)"
+    }
+  },
+  "landing_preconditions": [
+    {
+      "id": "LP-1",
+      "requirement": "本 feature 起因で stale 化した live-trial 受領書 3 件の再取得と独立評価",
+      "blocking_gate": "G-4 / G-5",
+      "detail": "run-dev-graph-{decompose,node,requirements} は package-contract.depends_on: system-dev-planner を宣言しており、behavior closure に plugins/system-dev-planner/{scripts,schemas,agents,skills} が含まれる。本 feature の plugin 側変更が closure digest を動かしたため受領書が stale になった。2026-07-25 の fresh session で 3 skill を再 trial し、node / requirements は PASS、decompose は構造的な scenario / fixture / validator 契約矛盾を検出して DEGRADED となった。",
+      "action": "decompose の scenario が要求する dry-run preview と validate-graph-schema.py の artifact existence 検査を整合させ、build_live_trial_fixture.py が macro input want を fixture に生成するよう、当該 dev-graph ワークストリームで契約を修正して再 trial する。node / requirements は再 trial 済み。",
+      "prohibited": "verdict.json の記録 sha を現在値へ書き換えること (stale 検出の恒久無効化にあたる)",
+      "targets": [
+        {
+          "skill": "dev-graph/run-dev-graph-decompose",
+          "verdict": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T121428Z-decompose-wt8c/verdict.json",
+          "recorded_sha": "0e01aa8d2dbf2b8f02586e4fe7085ba45154ca2db5795d1501a902d9fcc3d4b4",
+          "current_sha": "b30107b507ee0e99b18dea12a5b2290d599097dd05e5fb7baf13027f79c680b9",
+          "attribution": "本 feature 起因の stale は fresh trial で解消したが、trial 自体は dev-graph 側の契約矛盾を検出",
+          "fresh_trial_verdict": "DEGRADED",
+          "blockers": [
+            "stdin validator が dry-run preview の未作成 artifact を artifact_missing として valid:false にする一方、scenario は managed repo への一時書込を禁止している",
+            "canonical fixture builder が scenario 必須の macro input want を生成しない",
+            "trial 実行が必須 Agent fork を行わず、intermediate.jsonl の追記を Edit で実施した"
+          ]
+        },
+        {
+          "skill": "dev-graph/run-dev-graph-node",
+          "verdict": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260725T121428Z-node-wt8c-r2/verdict.json",
+          "recorded_sha": "8d0fec394ad2086cb8f6227c8c934f711ac38655b42f7b32d3f1f02f006f787b",
+          "current_sha": "32914025428ed071284bed13a3a2c9408639f55f3c339a43937284375e2fb705",
+          "attribution": "本 feature 起因の stale を fresh trial で解消",
+          "fresh_trial_verdict": "PASS"
+        },
+        {
+          "skill": "dev-graph/run-dev-graph-requirements",
+          "verdict": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T115958Z-requirements-wt8c/verdict.json",
+          "recorded_sha": "9c8a4673e383bb50b3edd9bfb4a9f3036532f2736c2f6300f9d26fdb42c6b382",
+          "current_sha": "5c4b0f8a516cb3202b1540d4f49d9e6aff4db509cfb372908af00958c3cc4152",
+          "attribution": "本 feature 起因の stale を fresh trial で解消",
+          "fresh_trial_verdict": "PASS"
+        },
+        {
+          "skill": "dev-graph/run-dev-graph-system-spec",
+          "verdict": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260724T095200Z-system-spec-wt1r3/verdict.json",
+          "recorded_sha": "1aea7d05fbdc7138efcfa1e2ab4286beda5f4faaaf9f2101c1cf6547334eaa97",
+          "current_sha": "8d57f96c0f025376325c1e7d6a2fc43d8abd7c185af57df414907a487e43c8b1",
+          "attribution": "既存差分起因 (plugins/system-spec-harness/.../doctrine-anchor-registry.json)"
+        }
+      ]
+    },
+    {
+      "id": "LP-2",
+      "requirement": "run-dev-graph-system-spec の stale 解消 (本 feature 起因ではない)",
+      "blocking_gate": "G-4 / G-5",
+      "detail": "closure 内の plugins/system-spec-harness/.../doctrine-anchor-registry.json が本 feature 着手前から作業ツリー差分として存在するために stale。本 feature の landing とは独立に解消が必要。",
+      "action": "当該差分の帰属ワークストリームで live-trial を再取得する"
+    },
+    {
+      "id": "LP-3",
+      "requirement": "仕様反映受領書ゲートの充足",
+      "blocking_gate": "gh pr create",
+      "detail": "PR 作成は受領書必須・HEAD 束縛・クリーンツリーを要求する。commit 後に HEAD を固定して受領書を発行する必要がある",
+      "action": "commit → 受領書発行 → PR 作成 の順で実行する"
+    }
+  ],
+  "consumed_artifacts": [
+    {
+      "path": "docs/features/feat-task-spec-test-strategy/final-review.md",
+      "sha256": "sha256:d212caaae67329f10bd400e5311ef8beb1f3c85741045eef6e6b2a39a4b461d7"
+    },
+    {
+      "path": "eval-log/system-dev-planner/task-spec-test-strategy/evidence-manifest.json",
+      "sha256": "sha256:8fe2a88eacaba9511bdb88d36ce0fb2ed8921de885f9d1db1396ddcb1c2f4375"
+    },
+    {
+      "path": "docs/features/feat-task-spec-test-strategy/operations.md",
+      "sha256": "sha256:b1f48a6f2bcff04bec5d4c90492777262887b82bc105f0c9f61d96f67f39490a"
+    }
+  ],
+  "produced_artifacts": [
+    {
+      "path": "eval-log/system-dev-planner/task-spec-test-strategy/release-receipt.json",
+      "note": "本ファイル (self-referential のため digest は記載しない)"
+    }
+  ],
+  "acceptance_carry_forward": {
+    "adjudicated_by": "docs/features/feat-task-spec-test-strategy/acceptance-report.md (P07)",
+    "verdict": "ACCEPTED (7/7)",
+    "revalidated_at_release": "AC-7 の非退行のみリリース時点で再実測した (G-2/G-3)。AC-1..AC-6 は P06 の 27 test と P09 の 10 ケース実測に依拠し、subjects_under_test の digest が evidence-manifest.json と一致することで有効性を担保する"
+  },
+  "rollback": {
+    "trigger": "writeback 後に system-spec/architecture との不整合が見つかった場合",
+    "steps": [
+      "本受領書に失敗理由を追記する",
+      "system-spec/testing-qa.md と architecture/harness-hub-testing-qa.md の該当追記を revert する",
+      "architecture wrapper の source_digest を revert 後の実 digest へ戻す",
+      "evidence-manifest.json の source_lineage を再固定する"
+    ],
+    "note": "現時点では writeback を実行していないため rollback 対象は存在しない"
+  },
+  "open_followups": [
+    {
+      "id": "FU-1",
+      "title": "decompose live-trial の scenario / fixture / validator 契約矛盾を修正し fresh PASS を再取得 (LP-1。node / requirements は PASS 済み)",
+      "blocks": "main landing"
+    },
+    {
+      "id": "FU-2",
+      "title": "system-spec/testing-qa.md + architecture/harness-hub-testing-qa.md への writeback と completeness 再評価 (WB-1..WB-4)",
+      "blocks": "P13 acceptance の writeback 要求の完全充足"
+    },
+    {
+      "id": "FU-3",
+      "title": "生成される task spec の Verification 節が実行不能な `--staging .` 形を出す問題の修正",
+      "blocks": "なし (再実行時の読み替え運用で回避中。final-review.md §7 D-2 / operations.md §6 に記録)"
+    }
+  ]
+}

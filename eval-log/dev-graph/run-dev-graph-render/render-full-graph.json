@@ -1,0 +1,98 @@
+{
+  "edges": 271,
+  "feature_progress": {
+    "aggregate": {
+      "done": 84,
+      "total": 247
+    },
+    "by_feature": {
+      "feat-auth-tenancy": {
+        "done": 8,
+        "total": 13
+      },
+      "feat-build-pipeline-board": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-dev-pipeline-improvement": {
+        "done": 13,
+        "total": 13
+      },
+      "feat-doc-governance-portability": {
+        "done": 13,
+        "total": 13
+      },
+      "feat-docs-cms": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-domain-model-db": {
+        "done": 12,
+        "total": 13
+      },
+      "feat-dual-catalog-web": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-feedback-loop": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-hearing-intake": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-hub-foundation": {
+        "done": 12,
+        "total": 13
+      },
+      "feat-metrics-tracking": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-mvp-first-scheduling": {
+        "done": 13,
+        "total": 13
+      },
+      "feat-publish-pipeline": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-publisher-plugin": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-stage0-distribution-gate": {
+        "done": 13,
+        "total": 13
+      },
+      "feat-task-spec-test-strategy": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-tenant-data-retention": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-user-org-admin": {
+        "done": 0,
+        "total": 13
+      },
+      "feat-workspace-governance": {
+        "done": 0,
+        "total": 13
+      }
+    }
+  },
+  "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "graph_sha256_before": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "input_sha256": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "nodes": 294,
+  "ok": true,
+  "out": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260724-203623-wt-8/.dev-graph/render/index.html",
+  "out_relative": ".dev-graph/render/index.html",
+  "output_sha256": "a60327080f00cb2d1ff0380956392d2974b7aa8354f3b6d5ef5c30a93059354c",
+  "registration": null,
+  "scope": null,
+  "self_contained": true
+}

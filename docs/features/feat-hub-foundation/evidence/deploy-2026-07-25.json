@@ -1,0 +1,100 @@
+{
+  "evidence_id": "E7",
+  "phase": "P13",
+  "purpose": "本番デプロイ (CI 経由) の実測証跡。A1 (CI が test→deploy を完走) と A2 (bundle 3MiB 以内) の一次根拠であり、A3 の前提『/health が本番稼働』を再確認する。A3 そのもの (SLO 99.5% の月次算定) はここでは判定しない。",
+  "measured_at": "2026-07-25T09:59:09Z",
+  "deployment": {
+    "worker_name": "harness-hub",
+    "public_url": "https://harness-hub.daishimanju.workers.dev",
+    "cloudflare_account_id": "b3dde7be1cd856788fc47595ac455475",
+    "worker_version_uploaded": "18c0d6f3-acb7-4113-b302-18949f526ee7",
+    "executor": "github-actions",
+    "executor_note": "手動 wrangler deploy ではない。workflow hub-ci の job 'wrangler deploy (Cloudflare Workers)' が実行主体。"
+  },
+  "ci_run": {
+    "workflow": "hub-ci (.github/workflows/ci.yml)",
+    "run_id": 30143422049,
+    "run_url": "https://github.com/daishiman/HarnessHub/actions/runs/30143422049",
+    "branch": "main",
+    "head_sha": "ec0f3e45dfa2e72da6d6a24c082046b931eefa59",
+    "event": "push",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "静的ゲート (pnpm 混入検査 / 共通層 duplicate detector)",
+        "conclusion": "success",
+        "completed_at": "2026-07-25T04:06:03Z"
+      },
+      {
+        "name": "build & test (G2-G9 required status checks)",
+        "conclusion": "success",
+        "completed_at": "2026-07-25T04:08:38Z"
+      },
+      {
+        "name": "wrangler deploy (Cloudflare Workers)",
+        "conclusion": "success",
+        "completed_at": "2026-07-25T09:59:09Z"
+      }
+    ],
+    "reexecution_note": "deploy job のみ 09:59 に再実行している (cron 上限解消前に一度失敗したため)。static-gates と test は 04:06-04:08 の初回実行結果を引き継ぐ。run conclusion は success、run 内の全 job も success であり『同一 run 内で全 job success』は満たすが、『全 job を一度の連続実行で通した』わけではない。再実行は同一 sha に対するため 3 job の検査対象コードは同一。",
+    "verify_command": "gh run view 30143422049 --json databaseId,conclusion,headBranch,headSha,event,jobs"
+  },
+  "bundle": {
+    "total_upload_kib": 5122.55,
+    "gzip_kib": 1034.27,
+    "gzip_mib": 1.0101,
+    "budget_mib": 3.0,
+    "within_budget": true,
+    "measurement_mode": "wrangler-deploy (本番アップロード時の実測)",
+    "comparison_note": "P06 の dry-run 実測 (bundle-report.json) は gzip 998715 bytes = 0.952 MiB。本番アップロード時の値はこれより約 6% 大きいが、いずれも 3 MiB 予算内。"
+  },
+  "health": {
+    "measured_in": "CI deploy job 内の post-deploy 疎通確認",
+    "http_status": 200,
+    "body": {
+      "status": "ok",
+      "version": "a60cf46d-1bac-4ff5-a887-b758fd6fed49",
+      "checkedAt": "2026-07-25T09:59:06.247Z",
+      "dependencies": [
+        { "name": "runtime-config", "status": "ok", "latencyMs": 0 },
+        { "name": "db", "status": "ok", "latencyMs": 595 },
+        { "name": "r2", "status": "ok", "latencyMs": 405 }
+      ]
+    },
+    "version_mismatch_note": "応答の version (a60cf46d-…) は本 run がアップロードした 18c0d6f3-… ではない。09:56 に別 run (30140716148 / sha 8c179ab) が a60cf46d-… を配信しており、09:59 の疎通確認時点でエッジにその版が残っていたため。デプロイ直後の /health は 1 つ前の版を返しうる。最終的に配信されるのは 18c0d6f3-…。"
+  },
+  "cron_triggers": {
+    "registered": ["0 15 * * *", "0 0 * * 1"],
+    "registration_result": "success",
+    "wrangler_output": "Deployed harness-hub triggers (0.59 sec)",
+    "account_usage_after": "2 / 5",
+    "prior_failure": {
+      "api_error_code": 10072,
+      "api_error_message": "You have exceeded the limit of 5 cron triggers.",
+      "root_cause": "Cloudflare Free プランの cron trigger 上限 5 本は Worker 単位ではなくアカウント単位。同一アカウントの他プロジェクト (ubm-hyogo-api: 2 本 / ubm-hyogo-api-staging: 3 本) が 5 枠すべてを消費していた。harness-hub の cron を 2 本から 1 本に減らしても解消しなかったのはこのため。",
+      "resolution": "他プロジェクトの cron を全削除して 5 枠を解放した。cron 更新 API は宣言的で、残したい cron を配列で丸ごと送る方式 (個別 DELETE は存在しない)。",
+      "restore_payloads": {
+        "ubm-hyogo-api": "[{\"cron\":\"0 18 * * *\"},{\"cron\":\"*/15 * * * *\"}]",
+        "ubm-hyogo-api-staging": "[{\"cron\":\"0 18 * * *\"},{\"cron\":\"*/15 * * * *\"},{\"cron\":\"*/5 * * * *\"}]"
+      },
+      "diagnosis_note": "エラー本文が wrangler のログに出ず『A request to the Cloudflare API failed.』としか表示されなかった。Cloudflare API を直接叩いてコード 10072 を得たことが特定の決め手になった。"
+    }
+  },
+  "assertions": {
+    "A1_ci_test_to_deploy": "pass (run 30143422049 の全 job success。deploy job は needs: [static-gates, test] により両ゲート success を経由しなければ起動しない)",
+    "A2_bundle_within_3mib": "pass (gzip 1034.27 KiB = 約 1.010 MiB / 予算 3.000 MiB。CI の G5 bundle 予算ゲートも success)",
+    "A3_slo_and_health": "partial (本番 /health は HTTP 200・依存 3 件すべて ok。ただし SLO 99.5% の算定に必要な外部死活監視の時系列が未取得のため未達)",
+    "cron_trigger_registration": "pass (2 本登録済み。アカウント使用数 2/5)"
+  },
+  "not_established_by_this_evidence": [
+    "SLO 99.5% の月次可用性 (外部死活監視 3 分間隔・1 ヶ月分の時系列が必要)",
+    "cron ジョブ本体の動作 (handler は実装済みだがジョブ実体は空。各ドメイン feature が実装する)",
+    "cron 実行監視 (CRON_HEARTBEAT_URL secret 未投入のため heartbeat が飛ばない)"
+  ],
+  "related_documents": {
+    "release_notes": "docs/features/feat-hub-foundation/release-notes.md",
+    "ci_run_evidence": "docs/features/feat-hub-foundation/evidence/ci-run.md",
+    "runbook": "docs/features/feat-hub-foundation/runbook.md",
+    "infrastructure_spec": "docs/infrastructure-spec.md"
+  }
+}

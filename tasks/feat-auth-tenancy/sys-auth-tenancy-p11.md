@@ -12,8 +12,8 @@ iteration: null
 title: "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-07-25T00:47:04Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P10"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/evidence-summary.md"]

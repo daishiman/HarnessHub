@@ -1,0 +1,217 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec/",
+  "verdict": "FAIL",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "U1-U9 は requirements_foundation で confirmed (approval_ref=appr-007)、00-requirements-definition.md に全項が実在し、index.md の章一覧が serves_goals で G1-G5 へ anchor する。今回追加の testing-qa 章も frontmatter serves_goals [G1,G2,G5] が確定セルの serves_goals の和集合と一致し dangling なし。validate-coverage-matrix.py --require-foundation exit0。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-foundation: exit0 (OK: loop+foundation(上位概念トレース))",
+        "spec-state.json requirements_foundation.confirmed=true / approval_ref=appr-007 (approval_log 7 件に実在)",
+        "testing-qa.md frontmatter serves_goals [G1,G2,G5] = matrix testing-qa 確定セル (web=[G1,G2,G5], desktop-windows=[G1,G5], desktop-macos=[G1,G5]) の和集合と一致",
+        "index.md 章一覧に testing-qa 行が追加され、集約状態サマリの確定 10 カテゴリと category_aggregate が一致"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "decisions D1-D7 全件 confirmed。各 decision は 2〜3 案 + 無料/低コスト案 + cost_model(TCO)/free_tier_limits/goal_fit/security_fit/lock_in/ops_burden/evidence_refs を持ち、00-requirements-definition.md の意思決定表に AI推奨とユーザー決定が分離して記録される。今回差分 (testing-qa) は新規 decision を追加していない。ただし targets へ追加された testing-library は qa_log/decisions のどこにも名指しされず確定接地が弱い (medium finding)。",
+      "evidence": [
+        "spec-state.json decisions: D1-D6 各 3 options / D7 2 options、全件 status=confirmed、全 option に cost_model.tco と evidence_refs (公式 URL) あり",
+        "00-requirements-definition.md 意思決定支援 (decisions) 表: 選択肢 (費用・適合・注意点) / AI推奨 / ユーザー決定 列が分離",
+        "vitest は qa-038 (CI 品質ゲート: unit/integration test (vitest))、playwright は qa-035/qa-040 (2 viewport + axe CI) の確定回答に名指しの根拠あり",
+        "testing-library は targets[] にのみ出現し qa_log/decisions に名指しなし (qa-072 の behavior ベース要件からの含意止まり)"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "INDETERMINATE",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "決定論ゲートは全て exit0 (validate-coverage-matrix.py --require-complete: 未収集 0 / validate-knowledge-graph.py --profile required-info: exit0)。testing-qa 行は確定 3 セル (qa-070/071/072) + 対象外 3 セル (dev-workflow 同根拠の具体的理由) で C05 の現物確認上は健全。しかし本観点の一次根拠である C07 (matrix-auditor) と sub-input C06 (hearing-auditor) の独立監査を、本実行コンテキストに Task/Agent ツールが存在しないため fork できなかった。独立監査の裏取りが 0 件のため fail-closed で INDETERMINATE とする (機械ゲート exit0 だけで PASS を名乗らない)。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-complete: exit0 (OK: 収集マトリクス網羅性 (final(未収集0)))",
+        "validate-knowledge-graph.py --profile required-info: exit0 (C16 機械層)",
+        "testing-qa 確定セル 3 件の qa_ref (qa-070/071/072) は qa_log に実在し回答内容がセル確定を裏付ける (C05 現物確認、C07 の代替ではない)",
+        "ToolSearch で Task/Agent ツール不検出 → C07/C06 の fork 不能。audit-fork-ledger.jsonl に本 session の行なし (直近行は 2026-07-24T01:15:15Z の別 worktree/session)"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "FAIL",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "C13/C14/C15 の機械層ゲート (validate-knowledge-graph.py knowledge/doctrine/required-info/cross 4 profile) は全て exit0。しかし意味層で、今回追加の testing-qa.md の「上流指針 (doctrine anchor)」節が『category_concern_map に未帰属。pending 例外を registry 側で解決すること』という未解決 placeholder のまま status: confirmed で出荷されている。同章の「適用された設計知識」節は fallback 正本を『上流指針節の authority』と宣言しており、その fallback が dangling (deep card も doctrine authority も無い)。doctrine 機械ゲートは registry を単体検証するため live カテゴリ集合 (testing-qa を含む 10 カテゴリ) への写像全射の崩れを検出できず、まさに意味層で拾うべき C15 違反 (high finding)。加えて backend.md の知識カード順の topo_order 不整合 (C14) が継続。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph: exit0 (knowledge/doctrine/required-info/cross 全 profile)",
+        "doctrine-anchor-registry.json: category_concern_map は 8 seed カテゴリのみ、pending_exceptions は dev-workflow 1 件 (approved) のみ。testing-qa はいずれにも無い",
+        "system-spec/testing-qa.md 上流指針節: '(doctrine-anchor-registry の category_concern_map に未帰属。pending 例外の owner/reason/approval_state を registry 側で解決すること)' が確定章に残存",
+        "対比: dev-workflow.md は approved pending 例外により authority (Google SRE / operations) を確定済み。ui-ux/infrastructure も doctrine 表を持ち、汎用ポインタ章でも authority が fallback 正本として機能している",
+        "backend.md 知識カード順 Clean Architecture(L50)→API Design Patterns(L91)→DDD(L134) が topo_order [clean-code, ddd, design-patterns, clean-architecture, api-design-patterns, secure-by-design] と不一致 (継続・未是正)"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "INDETERMINATE",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "形式層は健全: validate-source-citation.py exit0 (20 targets 全件対応・必須フィールド充足・公式 host 一致)。今回追加 3 target (vitest 4.1.10 / playwright 1.61.1 / @testing-library/react 16.3.2) は公式 host (vitest.dev / playwright.dev / testing-library.com) で latest_checked_at=2026-07-24 (当日)。しかし本観点の一次根拠である C08 (doc-freshness-auditor) の内容鮮度層 (公式サイト再照合) を Task/Agent ツール不在で fork できず、fail-closed で INDETERMINATE とする。",
+      "evidence": [
+        "validate-source-citation.py --targets (20件) --references fetched-references.json --state spec-state.json: exit0",
+        "fetched-references.json: vitest/playwright/testing-library の official_host は各 publisher の公式ドキュメントホスト、latest_checked_at=2026-07-24T11:48:06Z",
+        "ToolSearch で Task/Agent ツール不検出 → C08 の fork 不能。内容鮮度層 (世代落ち判定の公式再照合) は未実施のため PASS を名乗らない"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "plugins/system-spec-harness/skills/*/prompts/*.md 全 18 prompt に対し prompt-creator の verify-completeness.py (7層網羅 + l5-contract) と validate-prompt.py を実行し全て exit0。C05 の意味層確認 (R1-score/R2-delegate の現物 Read) でも L1-L7 の層役割・客観的停止条件 (5.3 チェックリスト)・fail-closed 帰属設計が実質を伴う。独立 design findings に high なし。",
+      "evidence": [
+        "verify-completeness.py + validate-prompt.py: 18 prompts × 2 validators = 36 実行全て exit0 (依存 plugin prompt-creator は repo 内に解決可能なため機械ゲート skip 例外は不適用)",
+        "R1-score.md / R2-delegate.md の現物確認: L5 に成果状態・原子的停止条件・動的実行方式、帰属 receipt の単一 session 収束規則まで記載"
+      ]
+    }
+  },
+  "audit_delegations": [],
+  "gate_results": [
+    {
+      "id": "G-matrix-complete",
+      "name": "validate-coverage-matrix",
+      "conditions": ["matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-complete"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)) を満たす"
+    },
+    {
+      "id": "G-matrix-foundation",
+      "name": "validate-coverage-matrix",
+      "conditions": ["foundation_trace", "decision_guidance"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-foundation"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-source-citation",
+      "name": "validate-source-citation",
+      "conditions": ["doc_freshness"],
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-source-citation.py", "--targets", "<targets 20件>", "--references", "system-spec/fetched-references.json", "--state", "system-spec/spec-state.json"],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす"
+    },
+    {
+      "id": "G-knowledge-graph",
+      "name": "validate-knowledge-graph",
+      "conditions": ["design_knowledge_reflection", "matrix_coverage"],
+      "command": ["python3", "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py", "--knowledge-graph"],
+      "exit_code": 0,
+      "stdout": "knowledge/doctrine/required-info/cross 4 profile 全て exit0"
+    },
+    {
+      "id": "G-prompt-validators",
+      "name": "verify-completeness + validate-prompt",
+      "conditions": ["prompt_quality"],
+      "command": ["python3", "plugins/prompt-creator/skills/run-prompt-creator-7layer/scripts/{verify-completeness,validate-prompt}.py", "--input", "plugins/system-spec-harness/skills/*/prompts/*.md"],
+      "exit_code": 0,
+      "stdout": "TOTAL=18 FAIL=0 (36 実行全て exit0)"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "doctrine-anchor-unmapped-testing-qa",
+      "observation": "今回追加の testing-qa カテゴリが doctrine-anchor-registry.json の category_concern_map (8 seed カテゴリ) にも pending_exceptions (dev-workflow 1 件のみ) にも帰属せず、system-spec/testing-qa.md の「上流指針 (doctrine anchor)」節が『pending 例外の owner/reason/approval_state を registry 側で解決すること』という未解決 placeholder のまま status: confirmed で出荷されている。同章の「適用された設計知識」節は fallback 正本を『上流指針節の authority』と宣言するため、deep card 無し + doctrine authority 無しで設計知識の接地が二重に dangling。C15 の全射要件は live カテゴリ集合上で崩れているが、doctrine 機械ゲートは registry 単体検証のため検出できない (意味層でのみ検出可能な違反)。",
+      "suggested_fix": "dev-workflow の前例に倣い、doctrine-anchor-registry.json の pending_exceptions へ testing-qa を owner/reason/approval_state=approved で追加し (concern は品質ゲート/リリース工学の観点から operations ないし reliability への帰属が有力)、run-system-spec-compile を再実行して testing-qa.md の doctrine 節を authority 表へ再生成する。差し戻し先: registry 保守 + compile (仕様内容の変更は不要)。",
+      "evidence": [
+        "doctrine-anchor-registry.json category_concern_map keys: database/auth/ui-ux/security/infrastructure/backend/frontend/maintenance-ops (testing-qa 無し)",
+        "pending_exceptions: dev-workflow (approved) のみ",
+        "system-spec/testing-qa.md L45-47 上流指針節の placeholder 文言"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "qa-073-not-reflected-in-chapter",
+      "observation": "qa-073 (テスト戦略セクションをタスク仕様書テンプレート必須項目とし、仕様生成パイプライン側で機械検証して欠落を fail-closed で拒否する冪等な仕組み) が qa_log に確定記録される一方、system-spec/*.md のどの章にも反映されていない (grep で qa-073 の出現 0 件)。testing-qa.md の確定内容 (質疑録) はセル束縛のある qa-070/071/072 のみを掲載し、セル非束縛の確定回答 qa-073 の実質 (再現性担保の仕組み) が仕様書から欠落している。",
+      "suggested_fix": "compile へ差し戻し、testing-qa.md の確定内容へ qa-073 を追記する (またはセル束縛の扱いを elicit で明確化する)。qa-074 と同様のセル非束縛 QA の章反映規則を compile 側で確認する。",
+      "evidence": [
+        "spec-state.json qa_log に qa-073 実在 (answer: テンプレート必須項目化・fail-closed 機械検証・冪等)",
+        "grep -rn 'qa-073' system-spec/*.md → 0 件"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "target-grounding-testing-library",
+      "observation": "targets へ追加された testing-library (@testing-library/react 16.3.2) が qa_log・decisions のどこにも名指しされず、採用の明示確定に遡れない。vitest は qa-038、playwright は qa-035/qa-040 の確定回答に名指しの根拠があるのと対照的。qa-072 の behavior ベース要件 (accessible role/ラベルでの要素選択) から強く含意されるが、含意止まりで確定接地が無いままターゲット化 + 章の出典表掲載により実質的に技術採用が確定扱いになっている (AI 推奨のみで confirmed にしない原則との緊張)。",
+      "suggested_fix": "elicit で qa 追記 (qa-072 の具体化として testing-library 採用をユーザーへ明示確認) するか、decision 化して確定接地する。差し戻し先: elicit (または doc-fetch の target 追加根拠の明記)。",
+      "evidence": [
+        "spec-state.json 全文で 'testing-library' の出現は targets[] の 1 箇所のみ",
+        "qa-072 answer: 'behavior ベース (accessible role / ラベルでの要素選択) を必須とする' (ツール名の言及なし)"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "knowledge-order",
+      "observation": "(継続・未是正再確認) backend.md の設計知識カード表示順 (Clean Architecture L50 → API Design Patterns L91 → DDD L134) が knowledge-catalog の topo_order (clean-code → ddd → design-patterns → clean-architecture → api-design-patterns → secure-by-design) と一致しない。C14 (elicit/compile の同一位相順消費) の意味層指摘で、qa-070〜074 追加後も未是正。",
+      "suggested_fix": "compile へ差し戻し、render_design_refs のカード出力順を topo_order に整合させる。",
+      "evidence": [
+        "validate-knowledge-graph.py --profile knowledge --order: [clean-code, ddd, design-patterns, clean-architecture, api-design-patterns, secure-by-design]",
+        "grep -n 'deep knowledge card' system-spec/backend.md: L50 Clean Architecture / L91 API Design Patterns / L134 DDD"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "qa-074-citation-implicit",
+      "observation": "testing-qa.md の対象外 3 行 (mobile/tablet/desktop-linux) の理由文は qa-074 の確定内容 (dev-workflow と同じ platform 範囲) を反映しているが、qa-074 への citation を持たず遡行が暗黙 ('dev-workflow の〜行と同根拠' の言及のみ)。matrix スキーマ上、対象外セルは reason のみで qa_ref を持たない設計だが、platform 範囲を確定させた qa-074 が章のどこにも現れないため監査時の遡行コストが高い。",
+      "suggested_fix": "compile で対象外理由に qa-074 参照を添えるか、章のカテゴリ別収集状態の欄外注記に qa-074 を記す。",
+      "evidence": [
+        "spec-state.json qa_log qa-074 (platform 範囲の確定回答) / grep -rn 'qa-074' system-spec/*.md → 0 件"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "required-info-catalog-not-extended",
+      "observation": "required-info-catalog.json の in_scope_domains (9 domain) に testing-qa (および dev-workflow) が無く、新カテゴリに missing_effect=block の item が存在しない。open-world 設計 (taxonomy seed 非網羅) 上は許容だが、C16 の必須情報 block ゲートの保護が新カテゴリへ及ばない状態が固定化しつつある (機械ゲートは catalog 単体の整合しか見ない)。",
+      "suggested_fix": "follow-up として required-info-catalog へ testing-qa domain の必須 item (テストレベル選定・カバレッジ閾値・層別方針など qa-070〜072 で実際に収集された軸) を追加する。差し戻し先: elicit の catalog 保守。",
+      "evidence": [
+        "required-info-catalog.json in_scope_domains: [ui-ux, frontend, backend, api, database, auth, security, infrastructure, maintenance-ops]"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "audit-fork-unavailable",
+      "observation": "本評価の実行コンテキストに Task/Agent (subagent 起動) ツールが存在せず (ToolSearch で不検出)、C07 (matrix-auditor)・C06 (hearing-auditor sub-input)・C08 (doc-freshness-auditor) の独立監査を fork できなかった。audit-fork-ledger.jsonl に本 session の行は無く (直近行は 2026-07-24T01:15:15Z・別 worktree の session 2b294931)、fork していない監査の receipt は虚偽帰属となるため audit_delegations は空とした。この結果 matrix_coverage / doc_freshness は fail-closed で INDETERMINATE、総合 FAIL。仕様書修正ではなく監査再実行 (Task tool の使える評価 context での再評価) への差し戻しが必要。",
+      "evidence": [
+        "ToolSearch 'select:Task,Agent' → No matching deferred tools found",
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl 末尾: session 2b294931-1fba-43ce-b2b0-8cd141131043 (2026-07-24T01:15:15Z、cwd=task-20260723-130657-wt-1)"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "gates-verified",
+      "observation": "決定論ゲート全 5 系統を C05 が独立実行し全て exit0 を確認した: validate-coverage-matrix (--require-complete / --require-foundation)、validate-source-citation (20 targets)、validate-knowledge-graph 4 profiles (knowledge/doctrine/required-info/cross)、prompt validators (verify-completeness + validate-prompt、18 prompts × 2 = 36 実行)。",
+      "evidence": [
+        "gate_results 参照 (全 exit_code=0)"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "delta-verified",
+      "observation": "今回差分の現物確認: (1) testing-qa.md 新章 (status: confirmed、確定 3 セル + 対象外 3 セル、質疑録 qa-070/071/072 掲載、出典表 3 target)。(2) qa_log 末尾に qa-070〜074 追加 (テストレベル網羅 / カバレッジ 80% 閾値と fail-closed ループ / 層別テスト方針と behavior ベース保守性 / タスク仕様書テンプレート冪等組込 / platform 範囲)。(3) targets へ vitest/playwright/testing-library (category=testing-qa) 追加、fetched-references.json に対応 3 件 (latest_checked_at=2026-07-24)。(4) index.md に testing-qa 行と確定サマリ反映、category_aggregate=確定 10/10。",
+      "evidence": [
+        "system-spec/testing-qa.md / system-spec/index.md / spec-state.json qa_log 74 件 / targets 20 件 / fetched-references.json 20 件"
+      ]
+    }
+  ],
+  "gaps": [
+    "監査 fork の再実行 (最優先・本レポートの INDETERMINATE 2 観点の解消): Task/Agent ツールが使える評価 context で本 skill を再実行し、C07 (system-spec-matrix-auditor) / C06 (system-spec-hearing-auditor, matrix sub-input) / C08 (system-spec-doc-freshness-auditor) を実 fork して receipt + fork 台帳の裏取り付きで matrix_coverage / doc_freshness を確定させる。仕様書の修正は不要 (差し戻し先: 監査再実行)。",
+    "doctrine-anchor-registry.json へ testing-qa の concern 帰属を追加する (dev-workflow 前例に倣い pending_exceptions へ owner/reason/approval_state=approved で登録、concern は operations/reliability が有力)。その後 run-system-spec-compile を再実行し testing-qa.md の「上流指針 (doctrine anchor)」節を authority 表へ再生成する (差し戻し先: registry 保守 + compile)。",
+    "qa-073 (テスト戦略のタスク仕様書テンプレート冪等組込・fail-closed 機械検証) を testing-qa.md の確定内容へ反映する (差し戻し先: compile)。",
+    "testing-library target の採用根拠を qa_log または decisions へ明示確定する (qa-072 の含意を elicit でユーザー確認に格上げする。差し戻し先: elicit / doc-fetch)。",
+    "backend.md の設計知識カード順を knowledge-catalog topo_order (ddd → clean-architecture → api-design-patterns) に整合させる (継続指摘。差し戻し先: compile)。"
+  ]
+}

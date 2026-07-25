@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント規約とポータビリティ検査 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植 opt-in 検査)"
 owners: ["daishiman"]
 created_at: "2026-07-22T01:25:08Z"
-updated_at: "2026-07-22T02:47:44Z"
-status: "active"
+updated_at: "2026-07-24T21:00:03Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-qa070-implementation-feature-20260722","feat-dev-pipeline-improvement"]
 resource_scope: ["features/feat-doc-governance-portability.md"]

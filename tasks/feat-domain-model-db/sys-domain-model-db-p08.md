@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:32:42Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P07"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data"]
 resource_scope: [".github/workflows/ci.yml","docs/features/feat-domain-model-db/refactoring-migration-note.md","packages/db/__tests__/backup-restore.test.ts","packages/db/__tests__/fixtures/two-tenants.ts","packages/db/backup/","packages/db/drizzle.config.ts","packages/db/migrations/","packages/db/scripts/export-control-plane.ts","packages/db/scripts/restore-control-plane.ts"]

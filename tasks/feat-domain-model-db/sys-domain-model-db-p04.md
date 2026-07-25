@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
-status: "active"
+updated_at: "2026-07-24T22:31:52Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P03"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: [".github/workflows/ci.yml","docs/features/feat-domain-model-db/test-design.md","packages/db/__tests__/","packages/db/__tests__/backup-restore.test.ts","packages/db/__tests__/fixtures/two-tenants.ts","packages/db/backup/","packages/db/scripts/export-control-plane.ts","packages/db/scripts/restore-control-plane.ts"]

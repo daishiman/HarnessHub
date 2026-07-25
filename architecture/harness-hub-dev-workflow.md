@@ -114,5 +114,20 @@ live-trial 証跡の調査 (`HarnessHub-s7b`/`-rix`/`-aoe`/`-m7d`) で、**成�
 | `run-skill-live-trial/scripts/validate-goal-seek-evidence.py` | `goal_seek` 実行契約の省略 |
 | `lint-live-trial-verdict.py --check-provenance` | commit 差分での digest 単独書き換え |
 | `lint-live-trial-verdict.py` の `check_c02_bypass` (`scripts/receiptguard_helper.py`) | `.gitignore` された fixture 内で registration receipt を `register-package.py` を通さず書換え/削除する C02 迂回 (束縛済み transcript を走査) |
+| `plugins/dev-graph/scripts/validate-repo-config.py` | live-trial fixture および caller repo の `.dev-graph/config.json` が「本番なら起動ゲートで落ちる」不適合入力であること (schema 条件制約・repo 外脱出・秘密材料混入) |
 
 > **差分追記 (2026-07-24):** `check_c02_bypass` を追加し、`--check-provenance` が届かない fixture 内 receipt 偽造 (局面 3 の実手口) を verdict 生成側の最終ゲートで塞いだ。実装は責務分離のため `scripts/lint-live-trial-verdict.py` から `receiptguard_helper.py` (C02 迂回検出) と `provenance_helper.py` (digest provenance) へ抽出済み (各ファイル ≤500 行)。
+
+> **差分追記 (2026-07-25):** 検証入口を「証跡の真正性」から **trial 入力の適合性** へ 1 軸広げた (`validate-repo-config.py`)。成果物が真正でも、**入力が本番の起動ゲートを通らない状態**なら PASS は挙動の保証にならない。実測として 8 kind 全ての live-trial fixture が schema 違反 config で走っていたことが本入口で初めて機械検出された (`HarnessHub-n88`)。
+>
+> 同時に、C02 単一 writer の強制点である `guard-graph-schema.py` が **Bash 破壊操作枝のみ hook timeout で fail-open する**ことが実測された。判定に寄与しない `schema_ok()` (実測 66.47s) が fail-closed 経路の内側にあり、`Write` 0.32s に対し `Bash` は 23.88s。live-trial 中に被験セッションが自力でこの窓を発見し、`.dev-graph/state/graph.json` への生書きまで通している。**C02 の不変条件は現状「guard が遅すぎて止められない」ことに依存しており、保証ではない。** 併発して `.dev-graph/config.json` を書く sanctioned な writer が不在であり、fail-open を閉じるだけでは init が実行不能になる。是正は `HarnessHub-6in4` (`issues/sys-guard-graph-schema-timeout-fail-open-20260725.md`) で追跡する。
+
+### 差分追記 (2026-07-25): CI にしか存在しないゲートは「着手前に気づけない」
+
+出典: `issue-auth-tenancy-ci-wiring-20260725` (bd `HarnessHub-1f28`)。
+
+qa-039【2】(CI と local の乖離防止) は required status check を local から同一実装で実行できることを求める。実測で、feat-auth-tenancy が追加した認証・認可の静的検査 3 件が **CI からも local `pnpm verify` からも 1 度も呼ばれていない**状態が見つかった。原因は feature の write scope が共有 CI を含まないことで、**検査を実装した本人が結線できない構造**にある。呼ばれない検査は存在しないのと同じで、手動 pass の記録は挙動の保証にならない。「検査を書いた」と「検査が走り続ける」は別の達成である。
+
+是正として `.github/workflows/ci.yml` の静的ゲート段へ **G12** を、root には `pnpm check:auth` を同時に用意した。あわせて、必須ゲートとして名指しされている tenant 分離テストが `pnpm -r test` に紛れて実行されるだけの状態を、`scripts/ci/check-tenant-isolation-gate.mjs` (対象実在 / ケース ID 網羅 / `skip`・`only` の不在を fail-closed で検査) で名指し化した。ゲート数は増やしていない。
+
+この作業中に **同型の未結線が G7 / G7b / G9 に残っている**ことが判明した (`HarnessHub-yhc3`)。またメタ層 lint (`governance-check.yml`) には local 入口そのものが無く、プロダクト層 `verify` へ混ぜると層分離を壊すため設計判断を要する (`HarnessHub-11qt`)。ゲート登録簿と local 入口の対応表は `docs/shared-layers.md` §3 (下流投影) が持ち、本節は「乖離が構造的に再発する」というリスクの記録に留める。

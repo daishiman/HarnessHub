@@ -12,8 +12,8 @@ iteration: null
 title: "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)"
 owners: ["daishiman"]
 created_at: "2026-07-21T23:30:33Z"
-updated_at: "2026-07-22T09:30:00Z"
-status: "draft"
+updated_at: "2026-07-24T08:49:25Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement"]
 resource_scope: ["system-spec/dev-workflow.md"]

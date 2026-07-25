@@ -12,8 +12,8 @@ iteration: null
 title: "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない"
 owners: ["daishiman"]
 created_at: "2026-07-21T18:30:00Z"
-updated_at: "2026-07-23T10:25:09.866807Z"
-status: "draft"
+updated_at: "2026-07-24T21:00:46Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["issues/sys-live-trial-fixture-receipt-forgery-20260721.md"]

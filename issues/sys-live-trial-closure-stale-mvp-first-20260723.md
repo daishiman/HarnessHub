@@ -12,8 +12,8 @@ iteration: null
 title: "MVP-first 実装 (P05) で stale 化した 9 skill の live-trial 証跡再取得"
 owners: ["daishiman"]
 created_at: "2026-07-23T13:51:02Z"
-updated_at: "2026-07-23T13:55:28Z"
-status: "draft"
+updated_at: "2026-07-24T02:03:05Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-mvp-first-scheduling"]
 resource_scope: ["issues/sys-live-trial-closure-stale-mvp-first-20260723.md"]

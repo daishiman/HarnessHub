@@ -36,6 +36,10 @@
     {
       "id": "dev-workflow",
       "label": "開発フロー"
+    },
+    {
+      "id": "testing-qa",
+      "label": "テスト戦略・品質保証"
     }
   ],
   "platforms": [
@@ -82,7 +86,7 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-036",
+        "qa_ref": "qa-072",
         "serves_goals": [
           "G2",
           "G4"
@@ -98,7 +102,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-041",
+        "qa_ref": "qa-073",
         "serves_goals": [
           "G1",
           "G4"
@@ -110,7 +114,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-041",
+        "qa_ref": "qa-073",
         "serves_goals": [
           "G1",
           "G4"
@@ -174,7 +178,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-041",
+        "qa_ref": "qa-073",
         "serves_goals": [
           "G1",
           "G4"
@@ -186,7 +190,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-041",
+        "qa_ref": "qa-073",
         "serves_goals": [
           "G1",
           "G4"
@@ -384,6 +388,45 @@
         "serves_goals": [
           "G1",
           "G4"
+        ]
+      }
+    },
+    "testing-qa": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-076",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-081",
+        "serves_goals": [
+          "G1",
+          "G5"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。dev-workflow の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner 上のテスト実行は CI 実行基盤として web 行の品質ゲート要件でカバーする"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-078",
+        "serves_goals": [
+          "G1",
+          "G5"
         ]
       }
     }
@@ -738,6 +781,46 @@
       "id": "qa-071",
       "question": "既存確定 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 を全面維持したまま、開発管理パイプラインの方法論 (methodology) として次の 8 要件を追加確定する: (1) マクロ構造、(2) exact-13、(3) 外側ループ、(4) 内側ループ、(5) スコープ分離、(6) 情報配置、(8) 書き戻し、(9) 既存保全と更新統制。ユーザー提供の要件定義 (2026-07-22 /dev-graph spec --resume 引数) に基づき、仕様確定に不可欠な情報が既に揃っているため追加ヒアリングなしで確定する。(要件 7 の命名規則/doc 粒度は qa-070 で確定済み。要件 10 の portable separation は qa-070 で確定済み。要件 11 の Git 差分照合は completeness evaluator の responsibilities に帰属)",
       "answer": "既存 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 の確定内容は全面維持し、本 qa は以下 8 要件をユーザー提供の回答として確定する。出典: ユーザー逐語 (2026-07-22 /dev-graph spec --resume 引数。追加ヒアリング不要として明示)。\n【1. マクロ構造 (macro-structure)】小さな task と依存関係を積み上げて feature にし、複数 feature を system にする。グラフには依存関係のある実行タスクだけを載せる (仕様本文・architecture 本文は正規文書に集約し、task/feature は参照と lineage だけを持つ)。実行タスクの最小単位は feature 内の 1 フェーズ相当作業であり、feature 間の依存は feature 粒度で表現する。\n【2. exact-13 (13フェーズ固定)】1 feature は P01..P13 の 13 フェーズで構成し、13 フェーズは直列依存 (前フェーズ完了が次フェーズの開始条件)。各フェーズ内の子タスク数は固定せず、達成に必要な粒度で分解し、並列実行可能なものは並列化する。小さい機能でも 13 フェーズを省略しない。1 feature → 13 task への分解は system-dev-planner (/dev-graph plan) が担う。\n【3. 外側ループ (outer loop)】feature 全体の改善とフィードバックを回す外側ループを持つ。中心には目的・背景・ゴールを置き、これらを確定してから 13 フェーズを進める。feature の目的・背景・ゴールが未確定のまま実装フェーズへ進まない。\n【4. 内側ループ (inner loop)】各フェーズに汎用 task prompt・goal-seek・rubric・feedback loop を持たせ、各フェーズの目的達成まで反復する。フェーズ内の達成基準 (rubric) が PASS するまでループを回す。\n【5. スコープ分離 (scope separation)】量が多い・1 task で完結しない・目的・背景から外れる問題は別 task または別 feature に切り出す。切り出した feature も同じ 13 フェーズと品質ゲートを通す。スコープ拡大の誘惑に負けず、切り出しを先行させる。\n【6. 情報配置 (information placement)】task graph に仕様本文や architecture 本文を詰め込まない。仕様・architecture・task-spec・docs は正規文書に集約し、task/feature は参照と lineage だけを持つ (内容を複製しない)。正規文書への参照は source_lineage と architecture_refs で追跡する。\n【8. 書き戻し (write-back)】実装完了後、結果・判断・改善点を仕様書と architecture へ反映し、次の task/feature が再利用できるようにする。一方通行にしない: 実装→仕様書→次の feature というフィードバックループを確立する。書き戻しの責務は feature の P13 (保守・運用移行) フェーズに含める。\n【9. 既存保全と更新統制 (preservation and update control)】AI の追加偏重による重複・矛盾を防ぎ、既存情報を消さずに差分更新する。不要情報の削除や置換は仕組み化された gate (reopen → re-confirm フロー・CI lint) で管理する。既存確定 qa 項目を AI が単独で書き換えない。変更は必ず reopen → 確認 → re-confirm の経路を通す。\n要件 7 (命名規則と検索可能性・文書粒度): qa-070 の確定内容 (kebab-case 接頭辞体系・300 行上限 fail-closed CI lint・責務単位分割) が実効値として包含する。要件 10 (portable separation): qa-070 の仕組みとナレッジのオン・オフ分離で確定済み。以上 8 要件 + qa-070 の 2 要件 (portable separation / doc 粒度) + qa-067 の 8 要件 (lifecycle close-loop 他) がG1 (仕組みの持ち出しによる配布・運用効率)・G4 (fail-closed 品質ゲート)・G5 (ドキュメント管理の持続性) に資する。実装は関連 feature (feat-dev-pipeline-improvement の 13 フェーズ・issue-qa070-implementation-feature-20260722) を通じて行う。"
+    },
+    {
+      "id": "qa-072",
+      "question": "qa-036 (auth.web) の R4-reopen: session JWT claims の確定集合へ workspace_ids を追加するか、edge の Workspace 判定を別手段 (DB 往復 / KV キャッシュ) へ変えるか? (follow-up HarnessHub-l2g9 / issue-auth-tenancy-spec-delta-20260725。qa-036 は claims を sub/tenant_id/role/status/iat/exp の 6 種で『最小集合』と列挙して確定したが、feat-auth-tenancy 実装 packages/schemas/auth-tenancy/session.ts は 7 種目に workspace_ids を載せており、Publisher CLI から観測できる契約であるため実装側の判断のままにできない)",
+      "answer": "ユーザー確認 (2026-07-25、AskUserQuestion で「実装を追認して 7 claim で確定」を選択。承認記録 appr-010) により、qa-036 の確定内容を全面維持したうえで session JWT claims の確定集合のみを改定し、auth.web の専用正本として再確定する。【本 R4-reopen の唯一の差分】session JWT claims = sub(user_id) / tenant_id / role / status / workspace_ids / iat / exp の 7 種(qa-036 の 6 種 + workspace_ids) を、認可 MW が DB 往復なしで判定できる最小集合とする。workspace_ids は所属 Workspace id の配列で、edge の認可 MW が Workspace 越境を DB 往復なしで拒否するために載せる(載せない場合 edge は membership を判定できず、全 Workspace スコープ要求が落ちる)。代償は 2 点あり、いずれも受容する: (a) cookie が所属 Workspace 数に比例して膨らむ、(b) membership 変更の反映が最大 updateAge (15 分) 遅れる — これは role/status と同じ陳腐化として扱い、緊急時は session_revocations による即時失効で回避する。access token 側は発行時の workspace_id 1 件だけへ束縛し、被害範囲を session より狭く保つ (claims をそのまま写さない)。実装正本は packages/schemas/auth-tenancy/session.ts の sessionClaimsSchema、仕様正本は docs/security-spec.md §2.1。【qa-036 から維持する確定内容】qa-005 の Auth.js + テナント別 OIDC (顧客既存 IdP 委譲・Hub 独自アカウント基盤なし・署名付き JWT cookie・role 4 種) を全面維持し、docs/security-spec.md §2.1/§2.3/§2.5 で確定する。session 数値: strategy=JWT、cookie は __Host-harness-hub.session (HttpOnly/Secure/SameSite=Lax/Path=/、Domain 設定なし)、maxAge 8 時間 (業務日 1 日)、updateAge 15 分、署名鍵は AUTH_SECRET (Workers Secret binding)。失効の意味論: JWT は stateless のため role/status 変更の反映は最大 15 分遅延する(updateAge ごとの再発行時に jwt callback で DB 再読込)。これを受容する代わりに、Publisher/ingest token 失効は即時 (publisher_tokens.revoked_at を毎リクエスト参照)、緊急失効 (退職・侵害) は session_revocations テーブル (テナント単位の最終失効時刻・KV/メモリキャッシュ TTL 60 秒) により即時とし、認可 MW が iat < revoked_at の JWT を拒否する。OIDC 検証契約 (T1 対策): issuer は idp_connections.issuer_url と厳密一致 (discovery の issuer とも一致)、aud は当該テナントの client_id、nonce/state 検証、PKCE S256 を confidential client でも併用、tenant 束縛はログイン URL /{tenant_slug}/signin で tenant を先に確定し当該テナントの idp_connections のみを候補にする、email_verified=true のみ受理し email はテナント跨ぎの識別子に使わない(同一 email が複数テナントに存在しうるため識別子は idp_subject。UNIQUE(tenant_id, idp_subject) で束縛)、JIT provisioning は role=member/status=active で作成し自動昇格しない。パスワード/2FA/リセットは実装せず IdP 責務とする (D3 維持・scope out)。mockup の login 画面は IdP redirect へ、account 画面のセキュリティ節は IdP 設定への外部リンク + Publisher token 一覧・失効ボタンへ置換する。開発・デモ環境の認証 (ユーザー確認による確定 2026-07-17): 提供者の Google Workspace を dev tenant の OIDC provider として登録し、本番と同一経路で認証する。dev 専用 provider (Credentials/mock login/SKIP_AUTH) をコードに存在させず CI で文字列出現を禁止検査する(認証経路を 1 本に保てば dev 専用コードの本番混入という事故クラスが構造的に発生しない)。ネット接続と dev tenant IdP 設定が開発の前提条件になることを受容する。CSRF は SameSite=Lax + 全 state-changing リクエストの Origin 検査 + Auth.js 既定の CSRF token、CORS は不許可。"
+    },
+    {
+      "id": "qa-073",
+      "question": "qa-041 (auth / security の desktop-windows・desktop-macos) の R4-reopen: Device Flow の polling interval に server 強制の上限値と、interval を守った client への減衰規則を確定するか? (follow-up HarnessHub-l2g9 / issue-auth-tenancy-spec-delta-20260725。qa-041 は interval 5 秒・slow_down 受信時 +5 秒までしか確定しておらず、RFC 8628 §3.5 自体も加算幅までしか規定していない。feat-auth-tenancy 実装は上限 60 秒と -5 秒の減衰を導入済みで、Publisher CLI から観測できる契約である)",
+      "answer": "ユーザー確認 (2026-07-25、AskUserQuestion で「上限 60 秒・減衰 -5 秒を確定」を選択。承認記録 appr-010) により、qa-041 の確定内容を全面維持したうえで polling interval の上限と減衰を追加確定し、auth / security の desktop-windows・desktop-macos の専用正本として再確定する。【本 R4-reopen の唯一の差分】polling interval は 5 秒を初期値とし、interval 未満の polling には slow_down を返して +5 秒を加算、interval を守った polling には -5 秒を減衰させる。server が強制する interval の上限は 60 秒、下限は発行応答で client へ告げた 5 秒とする。根拠: RFC 8628 §3.5 は加算幅しか定めておらず、上限が無いと interval は単調増加して device_code TTL 600 秒を追い越し、client が次に叩いてよい時刻に達する前に code が失効して server 側から flow を詰ませる。上限 60 秒は TTL 600 秒に対し最悪でも 10 回は叩けることを値の選択そのもので担保する。加算幅と減衰幅を同じ 5 秒にするのは、幅が違うと「速く叩いて罰を受け、次の 1 回だけ守って帳消しにする」交互 polling が実質的に罰を免れるためであり、初期値への一括 reset も同じ理由で採らない。下限を告知値 5 秒より下げないのは、告知どおりに叩いている client を後から slow_down にできてしまわないため。限界を明示する: 上限が縛るのは server が強制する間隔だけであり、client が自分側で持つ間隔は RFC どおり slow_down のたびに +5 秒され上限を持たない (client 実装の責務であり server からは是正できない)。実装正本は apps/hub/src/lib/auth/config.ts の AUTH_NUMERIC_CONTRACT (devicePollIntervalSeconds=5 / devicePollBackoffSeconds=5 / devicePollMaxIntervalSeconds=60) と apps/hub/src/lib/auth/device-flow/service.ts の nextPollIntervalSeconds() / relaxedPollIntervalSeconds()、仕様正本は docs/security-spec.md §2.2。【qa-041 から維持する確定内容】docs/security-spec.md §2.2 (Device Flow 数値契約)・§2.2.1 (scope)・§4.4・§8.6 と dev-workflow の qa-039 (ローカル運用規律) を desktop 実仕様として確定する。(1) Publisher / CLI / AI worker の認証 = OAuth Device Authorization Flow (RFC 8628、qa-008 維持): device_code TTL 10 分・SHA-256 ハッシュのみ DB 保存、user_code 8 文字 Crockford Base32 (I/L/O/U 除外)・5 回失敗で denied・照合後即失効。(2) token: access token 15 分 (短命 JWT・サーバ非保存)、refresh token 90 日・rotation 必須・SHA-256 ハッシュのみ保存・再利用検知で同一 family 全失効 + 監査 event token.reuse_detected + admin/本人通知。(3) 保存先 = OS 資格情報域のみ: macOS Keychain / Windows Credential Manager。平文ファイル・環境変数・リポジトリへの保存を禁止し、長命 secret のコピペを非エンジニアに求めない (G1 整合)。(4) scope 最小権限 = publish:write / metrics:write / feedback:write / aijob:process の 4 種。ハーネス実行環境へ渡る token は metrics:write + feedback:write のみで publish 権限を含めない。(5) 失効導線 = Hub Web (S04/S18) から本人・admin が即時失効 (publisher_tokens.revoked_at を毎リクエスト参照)。窃取疑い時は family 全失効 → 監査確認 (§8.6 インシデント最小手順)。(6) ローカル開発の秘密・本番境界 (qa-039 接続): production への wrangler deploy / migration をローカルから日常的に行わない (正本経路は CI。緊急時のみ + 事後記録)、ローカルは preview 用 Turso または local SQLite を binding し本番 DB を指さない、secret scan を local hook でも実行可能にする (正本の遮断は CI)。作者環境は macOS 主・Windows 従で同一 pnpm script が動作すること。"
+    },
+    {
+      "id": "qa-076",
+      "question": "タスク仕様書が担保すべきテストレベルの網羅方針は何ですか? 単体テストだけで十分ですか?",
+      "answer": "単体テストだけでは不十分。タスク仕様書は、想定できるテストレベルを網羅する: (1) 単体テスト (関数・コンポーネント単位)、(2) 結合テスト (モジュール間・API 連携)、(3) 境界値テスト (入力境界・異常系)、(4) 既存回帰テスト (変更が既存機能を壊していないこと)。各タスク仕様書はテスト戦略セクションを必須で持ち、対象変更に対しどのレベルのテストを追加・実行するかを明記する。この機能がエラーなく使えるかの検証を目的とし、テスト種別の選定はタスクの変更内容から導出する"
+    },
+    {
+      "id": "qa-077",
+      "question": "テストカバレッジの数値基準と、基準未達・テスト失敗時の扱いはどうしますか?",
+      "answer": "カバレッジは 80% 以上を既定閾値とし、CI の品質ゲートで機械検証する (変更対象コードの line/branch カバレッジを既定とし、層別に閾値を調整可能)。テストが失敗またはカバレッジ未達の場合はエラーとして扱い、マージを止め、問題点を改善するループ (失敗分析→修正→再実行) へ回す。エラーが生じないテスト構築を先に行い、問題があれば改善する仕組みを標準フローとする。数値の目的化 (カバレッジだけ満たして重要 behavior 未検証) は maintenance-ops 章の既存方針どおり禁止し、behavior 検証を優先する"
+    },
+    {
+      "id": "qa-078",
+      "question": "フロントエンド・バックエンド・インフラの各層で、どのようなテスト種別と保守性方針を適用しますか?",
+      "answer": "層別に適用する: フロントエンドは component 単体 + ユーザー操作フローの結合テストとし、ボタン配置などの見た目の微調整で壊れない behavior ベース (accessible role / ラベルでの要素選択) を必須とする。pixel 位置や DOM 構造への依存は禁止し、UI 微修正がテストエラーにならない管理しやすい設計に限定する。バックエンドは API 契約テスト + ビジネスロジック単体 + DB 結合テスト。インフラは IaC/設定の静的検証 + デプロイ後の smoke テスト。どこまで管理するかの線引きは各層のテスト設計方針として仕様に明文化し、過剰なテスト (実装詳細への密結合) を作らない"
+    },
+    {
+      "id": "qa-079",
+      "question": "テスト戦略をタスク仕様書へ落とし込む仕組みの再現性はどう担保しますか?",
+      "answer": "タスク仕様書の生成時に、テスト戦略セクション (テストレベル選定・カバレッジ目標・層別方針・保守性制約) をテンプレート必須項目として組み込み、何度実行しても同じ品質基準のタスク仕様書が生成される冪等な仕組みとする。手作業の書き足しに依存せず、仕様生成パイプライン (system-dev-planner の task spec 必須 section 契約) 側で機械検証し、テスト戦略の欠落した仕様書を fail-closed で拒否する"
+    },
+    {
+      "id": "qa-080",
+      "question": "テスト戦略・品質保証カテゴリの対象 platform はどこまでですか?",
+      "answer": "dev-workflow と同じ platform 範囲とする。CI (GitHub Actions) 上のテスト実行とカバレッジゲートは web 行、作者ローカルでのテスト実行環境は desktop-windows / desktop-macos 行でカバーする。mobile / tablet / desktop-linux は開発者クライアント環境として使わないため対象外 (dev-workflow の既存確定と同根拠)"
+    },
+    {
+      "id": "qa-081",
+      "question": "テスト戦略をタスク仕様書へ組み込み、何度実行しても同じ品質基準で再現する仕組みはどう実装しますか? (qa-079 の確定内容の章反映)",
+      "answer": "qa-079 で確定したとおり、タスク仕様書の生成時にテスト戦略セクション (テストレベル選定・カバレッジ目標・層別方針・保守性制約) をテンプレート必須項目として組み込み、何度実行しても同じ品質基準のタスク仕様書が生成される冪等な仕組みとする。手作業の書き足しに依存せず、仕様生成パイプライン (system-dev-planner の task spec 必須 section 契約) 側で機械検証し、テスト戦略の欠落した仕様書を fail-closed で拒否する。カバレッジ基準は qa-077 で確定した 80% 以上の品質ゲートと失敗時の改善ループ (失敗分析→修正→再実行) を維持し、テストレベルの範囲は qa-076 で確定した 4 レベル網羅 (単体・結合・境界値・回帰) を前提とする。UI コンポーネント層の実装ツールは D8 (意思決定) で @testing-library/react + Vitest を正式採用した"
     }
   ],
   "approval_log": [
@@ -772,6 +855,10 @@
     {
       "id": "appr-009",
       "note": "ユーザー逐語提供 (/dev-graph spec --resume 引数 2026-07-22): dev-graph 方法論 8 要件 (マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を qa-071 として確定。ユーザーは「ヒアリングには、まず以下を今回の対象機能の回答として使用してください」と明示し、仕様確定に不可欠な情報が既に揃っているため追加ヒアリングなしで確定することを明示した。要件 7 (500行目安) は既存 qa-070 の 300 行上限 fail-closed が実効値として包含するため保全。要件 10 (portable separation) は qa-070 で確定済みのため保全。"
+    },
+    {
+      "id": "appr-010",
+      "note": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725) の R4-reopen 2 件を 1 往復で確認・承認 (2026-07-25、AskUserQuestion)。D1 (session JWT claims): 選択肢「実装を追認して 7 claim で確定」「6 claim を維持し実装を改修」「7 claim で確定 + 所属数上限で DB 判定へフォールバック」を提示し、ユーザーは **「実装を追認して 7 claim で確定」** を選択。→ qa-072 として確定登録。D2 (Device Flow polling interval): 選択肢「上限 60 秒・減衰 -5 秒を確定」「上限のみ確定し減衰は削除」「上限値を変更して確定」を提示し、ユーザーは **「上限 60 秒・減衰 -5 秒を確定」** を選択。→ qa-073 として確定登録。いずれも現行実装 (packages/schemas/auth-tenancy/session.ts / apps/hub/src/lib/auth/config.ts) の追認であり、本承認により実装改修は不要、仕様側 (docs/security-spec.md §2.1/§2.2) を確定内容へ合わせる。"
     }
   ],
   "reopen_log": [
@@ -1332,6 +1419,42 @@
       "platform": "web",
       "reason": "利用者要望による仕様変更: dev-graph/beads (bd) のタスク優先度選定が品質・本質・再現性を先回りする基準になっており、依存グラフ上で本質的なシステム構築タスクが最優先されて『いちばん作りたいもの (MVP)』から離れる。判断軸を目的・背景・MVP の3軸へ組み替えるため dev-workflow.web を再オープンする",
       "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-036 は session JWT claims を sub/tenant_id/role/status/iat/exp の 6 種で「最小集合」と列挙して確定したが、feat-auth-tenancy 実装 (packages/schemas/auth-tenancy/session.ts) は edge の認可 MW が Workspace 越境を DB 往復なしで弾くために workspace_ids を加えている。列挙確定値への追加であり Publisher CLI から観測できる契約のため、claims の確定集合と代償 (cookie 肥大・membership 変更の最大 15 分遅延) を再確認する。",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-041 の Device Flow 数値契約は polling interval 5 秒 (slow_down 受信時 +5 秒) までしか確定しておらず、上限も減衰も未確定。実装 (apps/hub/src/lib/auth/config.ts・device-flow/service.ts) は server 強制の上限 60 秒と、interval を守った polling への -5 秒減衰 (下限 5 秒) を導入している。上限が無いと interval が単調増加して device_code TTL 600 秒を追い越し server 側から flow を詰ませるため、上限値と減衰規則を確定し直す。",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-041 の Device Flow 数値契約は polling interval 5 秒 (slow_down 受信時 +5 秒) までしか確定しておらず、上限も減衰も未確定。実装 (apps/hub/src/lib/auth/config.ts・device-flow/service.ts) は server 強制の上限 60 秒と、interval を守った polling への -5 秒減衰 (下限 5 秒) を導入している。上限が無いと interval が単調増加して device_code TTL 600 秒を追い越し server 側から flow を詰ませるため、上限値と減衰規則を確定し直す。",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-041 の Device Flow 数値契約は polling interval 5 秒 (slow_down 受信時 +5 秒) までしか確定しておらず、上限も減衰も未確定。実装 (apps/hub/src/lib/auth/config.ts・device-flow/service.ts) は server 強制の上限 60 秒と、interval を守った polling への -5 秒減衰 (下限 5 秒) を導入している。上限が無いと interval が単調増加して device_code TTL 600 秒を追い越し server 側から flow を詰ませるため、上限値と減衰規則を確定し直す。",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-041 の Device Flow 数値契約は polling interval 5 秒 (slow_down 受信時 +5 秒) までしか確定しておらず、上限も減衰も未確定。実装 (apps/hub/src/lib/auth/config.ts・device-flow/service.ts) は server 強制の上限 60 秒と、interval を守った polling への -5 秒減衰 (下限 5 秒) を導入している。上限が無いと interval が単調増加して device_code TTL 600 秒を追い越し server 側から flow を詰ませるため、上限値と減衰規則を確定し直す。",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "desktop-windows",
+      "reason": "completeness evaluator (completeness-report-20260724-qa074.json) の medium 指摘: qa-079 (タスク仕様書へのテスト戦略の冪等組込) が qa_log に確定記録されているのに章へ描画されていない。qa-079 の内容を統合した qa-081 を本セルの確定質疑へ昇格させ、章反映するため再オープンする (qa-077 のカバレッジ基準は qa-081 の回答中で引用維持)",
+      "from": "確定"
     }
   ],
   "category_aggregate": {
@@ -1343,7 +1466,8 @@
     "backend": "確定",
     "frontend": "確定",
     "maintenance-ops": "確定",
-    "dev-workflow": "確定"
+    "dev-workflow": "確定",
+    "testing-qa": "確定"
   },
   "targets": [
     {
@@ -1398,6 +1522,18 @@
     {
       "target_id": "rehype-sanitize",
       "category": "security"
+    },
+    {
+      "target_id": "vitest",
+      "category": "testing-qa"
+    },
+    {
+      "target_id": "playwright",
+      "category": "testing-qa"
+    },
+    {
+      "target_id": "testing-library",
+      "category": "testing-qa"
     }
   ],
   "requirements_foundation": {
@@ -2459,11 +2595,107 @@
         "confirmed_at": "2026-07-21T08:00:00+09:00",
         "note": "AskUserQuestion で「qa-038 を正とする (常設 staging なし)」を選択 (2026-07-21)。feat-hub-foundation P03 指摘 R-01 の上位エスカレーションに対する確定。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定した。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12 質疑証跡: qa-067 (2026-07-21 確定質疑の追補登録, 2026-07-22 C05 指摘対応)。infrastructure.web の D7 整合改訂は qa-068。"
       }
+    },
+    {
+      "id": "D8",
+      "question": "UI コンポーネントテストのツール選定: UI 微調整 (ボタン配置変更等) で壊れず保守しやすい behavior ベーステスト (qa-078 の保守性要件) を何で実装するか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "testing-library-react",
+          "label": "@testing-library/react + Vitest (behavior ベースのコンポーネントテスト)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (MIT)。金銭コスト 0 円。Vitest 環境に @testing-library/react + @testing-library/dom (peer dependency) を追加するのみで、CI 実行時間への影響も component 単位テストのため軽微"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "guiding principle『ソフトウェアの使われ方に近いテストほど信頼できる』が qa-078 の behavior ベース要件 (accessible role/ラベルでの要素選択・実装詳細への密結合禁止) と直接一致し、UI 微調整で壊れないテストを標準化できる",
+          "security_fit": "テスト依存の追加のみで攻撃面への影響なし",
+          "pros": [
+            "ボタン配置・DOM 構造の微修正でテストが壊れない (要素選択が role/ラベル基準)",
+            "コンポーネント単位で高速に実行でき、カバレッジ 80% ゲート (qa-077) の主担体になれる",
+            "React 公式ドキュメントも推奨する事実上の標準で、知見・情報が豊富"
+          ],
+          "cons": [
+            "実ブラウザではなく jsdom/happy-dom 環境のため、レイアウト起因の不具合は検出できない (E2E の Playwright と役割分担が必要)"
+          ],
+          "risks": [
+            "v16 以降 @testing-library/dom の peer dependency 明示が必要 (導入手順に明記して回避)"
+          ],
+          "lock_in": "低 (テストコードは Testing Library API に依存するが、behavior ベースの書き方自体は他ツールへ移植しやすい)",
+          "ops_burden": "低 (追加設定は Vitest 環境への組込のみ)",
+          "evidence_refs": [
+            "https://testing-library.com/docs/react-testing-library/intro/",
+            "https://vitest.dev/blog/vitest-4-1.html"
+          ]
+        },
+        {
+          "id": "playwright-e2e-only",
+          "label": "コンポーネントテストを持たず Playwright E2E のみで UI を検証",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (Apache-2.0)。金銭コスト 0 円。ただし E2E はブラウザ起動を伴い CI 実行時間が component テストより大きい"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "テストツールが 1 つ減り管理は軽いが、UI 不具合の検出が E2E 層まで遅延し、qa-076 のテストレベル網羅 (単体・結合) に UI コンポーネント層の空白が生じる",
+          "security_fit": "テスト依存の追加なし",
+          "pros": [
+            "ツール数が最小で管理が軽い",
+            "実ブラウザでの検証のためレイアウト起因の不具合も検出できる"
+          ],
+          "cons": [
+            "コンポーネント単位の高速なフィードバックループがない",
+            "E2E は実行が重く、カバレッジ 80% ゲートの主担体にすると CI 時間が肥大する",
+            "失敗時の原因切り分けが component テストより粗い"
+          ],
+          "risks": [
+            "UI 層の回帰検出が遅れ、qa-077 の改善ループ (失敗分析→修正→再実行) の回転が遅くなる"
+          ],
+          "lock_in": "低",
+          "ops_burden": "中 (E2E の flake 管理が UI 検証全体を背負う)",
+          "evidence_refs": [
+            "https://playwright.dev/docs/release-notes"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "testing-library-react",
+        "rationale": "qa-078 の確定要件 (behavior ベース・実装詳細への密結合禁止・UI 微修正でテストエラーにならない管理しやすい設計) を最も直接に実現する標準ツールであり、Vitest (単体・結合)・Playwright (E2E) との 3 点構成でテストレベル網羅 (qa-076) の各層に主担体を配置できるため。",
+        "comparison_basis": {
+          "goal_fit": "behavior ベース要件 (qa-078) との一致度と、テストレベル網羅 (qa-076) の空白有無で比較",
+          "tco": "両案とも OSS で金銭コスト 0 円のため、CI 実行時間と管理負荷で比較",
+          "security": "両案ともテスト依存の追加のみで攻撃面への影響なし",
+          "operations": "flake 管理・失敗切り分け・改善ループ (qa-077) の回転速度で比較",
+          "lock_in": "両案とも低。behavior ベースの書き方は他ツールへ移植しやすい"
+        },
+        "confidence": "high",
+        "latest_checked_at": "2026-07-24T12:11:57Z",
+        "caveats": [
+          "jsdom/happy-dom 環境ではレイアウト起因の不具合を検出できないため、実ブラウザ検証は Playwright E2E と役割分担する (component テストの守備範囲を越えた検証を書かない)",
+          "@testing-library/react v16 以降は @testing-library/dom を peer dependency として明示インストールする必要がある",
+          "role/ラベルで特定できない要素に data-testid を乱用すると behavior ベースの利点が失われるため、accessible role を優先する選択規律を維持する"
+        ]
+      },
+      "user_decision": {
+        "option_id": "testing-library-react",
+        "confirmed_at": "2026-07-24T21:11:57+09:00",
+        "note": "AskUserQuestion で「採用する (推奨)」を選択 (2026-07-24)。completeness evaluator (completeness-report-20260724-qa074.json) の medium 指摘『testing-library の接地欠如』への確定対応。Vitest + Playwright + Testing Library の 3 点構成を正式採用"
+      }
     }
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 2,
+    "loop_count": 1,
     "next_question": null,
     "complete": true
   }

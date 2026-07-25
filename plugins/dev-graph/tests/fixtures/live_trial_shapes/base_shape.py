@@ -88,7 +88,7 @@ def scaffold(
     *,
     kind: str,
     graph: dict[str, Any] | None = None,
-    tracker_mode: str = "github",
+    tracker_mode: str = "beads",
     projects: list[dict[str, Any]] | None = None,
 ) -> tuple[Path, str]:
     """dev-graph 初期化済みの repo 骨格を作り ``(git common dir, repository_id)`` を返す。
@@ -96,6 +96,11 @@ def scaffold(
     ``graph`` を省略すると空 graph (revision 0) になる。node を先に置く shape は
     自分で revision と nodes を渡すか、生成後に graph.json を読み直して追記する。
     commit はまだ打たない (shape 固有の成果物を置いてから ``finalize`` で打つ)。
+
+    ``tracker_mode`` の既定が beads なのは、本 helper が Projects 定義を持たない骨格を
+    作るため。GitHub トラッカーを宣言すると schema が default Projects を 1 件要求し、
+    fixture が使いもしない Projects v2 定義を抱えることになる (HarnessHub-n88)。
+    GitHub 同期そのものが被験対象の shape だけが ``projects`` を伴って github を選ぶ。
     """
     base = load_base()
     common = init_repository(out, kind=kind)

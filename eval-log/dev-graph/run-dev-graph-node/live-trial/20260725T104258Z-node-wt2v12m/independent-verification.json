@@ -1,0 +1,36 @@
+{
+  "fixture": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260725-054631-wt-2/eval-log/dev-graph/live-trial-fixtures/node-wt2-v12m",
+  "checks": [
+    {
+      "name": "artifacts_routed_to_canonical_kind_paths",
+      "pass": true,
+      "detail": "5 files in ['architecture', 'docs', 'issues', 'specs', 'tasks']"
+    },
+    {
+      "name": "original_bodies_preserved_byte_for_byte",
+      "pass": true,
+      "detail": "[0]OK issues/login-session-timeout-not-enforced.md; [1]OK tasks/implement-rate-limiting.md; [2]OK specs/rest-api-v2-migration.md; [3]OK architecture/order-processing-backend.md; [4]OK docs/development-setup-guide.md"
+    },
+    {
+      "name": "frontmatter_kind_agrees_with_stored_path",
+      "pass": true,
+      "detail": "all agree"
+    },
+    {
+      "name": "no_feature_outside_c14_contract",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "api_identifiers_intact",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "goal_seek_evidence_valid",
+      "pass": true,
+      "detail": "rows=2 violations=[]"
+    }
+  ],
+  "all_pass": true
+}

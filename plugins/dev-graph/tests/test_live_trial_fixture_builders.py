@@ -1,6 +1,6 @@
 """live-trial fixture 生成器 (--kind レジストリ) の契約テスト。
 
-固定する契約は 3 つある。
+固定する契約は 4 つある。
 
 1. **決定論**: 同じ ``--kind`` と同じ ``--out`` からは、何度生成しても同じ内容になる。
    fixture の実体は ``eval-log/dev-graph/live-trial-fixtures/`` (.gitignore 対象) にしか
@@ -11,6 +11,11 @@
 3. **repository_id の実測**: config の repository_id は生成先の git common dir から
    導出した値でなければならない (C24 resolve-repo-context.py の fail-closed 条件)。
    ハードコードすると起動ゲートを迂回した偽 PASS を生む。
+4. **repo-config 適合**: 生成した config が validate-repo-config.py を violation 0 で
+   通る。2 の graph 側と対になる契約で、これが無かったために HarnessHub-n88
+   (execution_tracker.mode=github と github.enabled=false の同時宣言) が 8 kind 全ての
+   fixture で気づかれずに live-trial を通っていた。schema 違反 config を渡された被験
+   skill は「本番なら起動ゲートで落ちる入力」で実走したことになり、trial の意味が失われる。
 
 kind の一覧は生成器の ``BUILDERS`` から採るので、新しい kind を登録して本テストを
 足し忘れても自動的に検査対象へ入る。
@@ -30,6 +35,7 @@ import pytest
 PLUGIN = Path(__file__).resolve().parents[1]
 BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 VALIDATOR = PLUGIN / "scripts" / "validate-graph-schema.py"
+CONFIG_VALIDATOR = PLUGIN / "scripts" / "validate-repo-config.py"
 
 
 def _load_builder():
@@ -48,9 +54,11 @@ def _load_builder():
 
 BUILDER_MODULE = _load_builder()
 KINDS = sorted(BUILDER_MODULE.BUILDERS)
-# C01 init の被験対象は「dev-graph 未初期化の repository」なので graph を持たない。
-# 検証すべき graph が無いことがこの kind の正しい初期状態であり、C11 の対象外になる。
+# C01 init の被験対象は「dev-graph 未初期化の repository」なので graph も config も
+# 持たない。検証すべき state が無いことがこの kind の正しい初期状態であり、C11 と
+# repo-config 検証の双方から外れる (config を先に置くと init が何を作ったか判別できない)。
 KINDS_WITHOUT_GRAPH = {"init"}
+KINDS_WITHOUT_CONFIG = {"init"}
 
 
 def _build(kind: str, out: Path) -> dict:
@@ -114,6 +122,49 @@ def test_graph_passes_c11(kind: str, built: dict[str, Path]) -> None:
         capture_output=True, text=True, check=False,
     )
     assert proc.returncode == 0, f"C11 failed for --kind {kind}:\n{proc.stdout}{proc.stderr}"
+
+
+@pytest.mark.parametrize("kind", sorted(set(KINDS) - KINDS_WITHOUT_CONFIG))
+def test_config_passes_repo_config_validation(kind: str, built: dict[str, Path]) -> None:
+    """生成した config が validate-repo-config.py を violation 0 で通る。
+
+    graph 側 (C11) と対になる契約。fixture の config は被験 skill が起動時に読む入力
+    そのものなので、schema 違反のまま trial を回すと「本番なら起動ゲートで落ちる条件」
+    での実走になり、PASS が挙動の保証にならない。
+    """
+    out = built[kind]
+    proc = subprocess.run(
+        [sys.executable, str(CONFIG_VALIDATOR),
+         "--config", str(out / ".dev-graph" / "config.json"),
+         "--repo-root", str(out)],
+        capture_output=True, text=True, check=False,
+    )
+    assert proc.returncode == 0, (
+        f"repo-config validation failed for --kind {kind}:\n{proc.stdout}{proc.stderr}"
+    )
+    assert json.loads(proc.stdout)["violations"] == []
+
+
+def test_repo_config_builder_rejects_incoherent_tracker_and_projects() -> None:
+    """mode と Projects 定義の矛盾を、config を組み立てる時点で拒否する。
+
+    schema の条件連鎖 (mode ∈ {github, both} → github.enabled=true → default Projects
+    ちょうど 1 件) を builder 側の不変条件として持つ。ここが素通りすると
+    HarnessHub-n88 と同じく「schema 違反 config が全 kind へ静かに配られる」再発になる。
+    """
+    module = BUILDER_MODULE
+    with pytest.raises(ValueError):
+        # GitHub トラッカー宣言に対して Projects 定義が無い。
+        module._repo_config("local:sha256:" + "0" * 64, tracker_mode="github", projects=[])
+    with pytest.raises(ValueError):
+        # default=true が 2 件 (schema は maxContains=1)。
+        duplicated = [module._planning_project(), {**module._planning_project(), "alias": "second"}]
+        module._repo_config("local:sha256:" + "0" * 64, tracker_mode="github", projects=duplicated)
+    with pytest.raises(ValueError):
+        # GitHub 無効なのに Projects 定義を持つ (使われない設定の持ち込み)。
+        module._repo_config(
+            "local:sha256:" + "0" * 64, tracker_mode="beads", projects=[module._planning_project()]
+        )
 
 
 @pytest.mark.parametrize("kind", sorted(set(KINDS) - KINDS_WITHOUT_GRAPH))
