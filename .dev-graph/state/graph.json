@@ -1,5 +1,5 @@
 {
-  "graph_revision": 614,
+  "graph_revision": 618,
   "nodes": [
     {
       "acceptance": [
@@ -36143,10 +36143,13 @@
         "evidence_refs": [
           ".github/workflows/backup.yml",
           ".github/workflows/ci.yml",
+          "scripts/ci/actions-secrets-registry.json",
+          "scripts/ci/check-actions-secrets.mjs",
+          "apps/hub/tests/ci/actions-secrets.test.ts",
           "docs/features/feat-hub-foundation/runbook.md"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-07-25T04:09:04Z",
+        "reconciled_at": "2026-07-26T06:20:00Z",
         "source": null,
         "status": "blocked"
       },
@@ -36195,12 +36198,16 @@
       "resource_scope": [
         ".github/workflows/ci.yml",
         ".github/workflows/backup.yml",
+        "scripts/ci/actions-secrets-registry.json",
+        "scripts/ci/check-actions-secrets.mjs",
+        "apps/hub/tests/ci/actions-secrets.test.ts",
         "docs/features/feat-hub-foundation/runbook.md"
       ],
       "scope_in": [
-        "GitHub Actions repository secret / variable の投入 (TURSO_*, CLOUDFLARE_*, HUB_HEALTH_URL)",
-        "backup.yml の TURSO_DATABASE_NAME と ci.yml の TURSO_DATABASE_URL の名前系統の統一",
-        "foundation runbook へ GitHub Actions secret 一覧節の追加",
+        "GitHub Actions repository secret / variable の投入 (TURSO_*, CLOUDFLARE_*, HUB_HEALTH_URL, HUB_PUBLIC_URL)",
+        "workflow 実参照と機械可読台帳の双方向突合",
+        "backup.yml の日次形式を restore CLI と同じ JSONL へ統一",
+        "foundation runbook へ投入・live 検査手順を追加",
         "投入後に hub-backup を手動 dispatch し 1 回 green を実測"
       ],
       "scope_out": [
@@ -36231,7 +36238,7 @@
       "template_version": "1.0.0",
       "title": "GitHub Actions の Turso secrets が未登録で deploy migration と日次 backup が失敗する (secret 名の系統も二重)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T06:40:00Z"
+      "updated_at": "2026-07-26T06:20:00Z"
     },
     {
       "acceptance": [
@@ -36376,10 +36383,11 @@
         "evidence_refs": [
           "docs/features/feat-domain-model-db/runbook.md",
           "docs/features/feat-domain-model-db/refactoring-migration-note.md",
-          "packages/db/__tests__/backup-restore.test.ts"
+          "packages/db/__tests__/backup-restore.test.ts",
+          "packages/db/__tests__/runbook-invocation.test.ts"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-07-25T03:26:51Z",
+        "reconciled_at": "2026-07-26T06:20:00Z",
         "source": "manual",
         "status": "done"
       },
@@ -36427,12 +36435,14 @@
       ],
       "resource_scope": [
         "docs/features/feat-domain-model-db/runbook.md",
-        "docs/features/feat-domain-model-db/refactoring-migration-note.md"
+        "docs/features/feat-domain-model-db/refactoring-migration-note.md",
+        "packages/db/__tests__/runbook-invocation.test.ts"
       ],
       "scope_in": [
         "runbook §1/§2 の pnpm run -- --url 形式を pnpm exec tsx 形式へ修正",
         "restore の --migrations-dir 相対パス記述の削除または絶対解決への修正",
-        "refactoring-migration-note.md の同形記述の修正",
+        "filter 実行時の path 引数を絶対パスへ統一",
+        "runbook 記載コマンドをそのまま実走する regression test",
         "修正後コマンドの実走確認"
       ],
       "scope_out": [
@@ -36462,7 +36472,7 @@
       "template_version": "1.0.0",
       "title": "runbook の export/restore 手動コマンドが pnpm 10.9.0 と cwd 差でそのままでは実行できない",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T06:40:00Z"
+      "updated_at": "2026-07-26T06:20:00Z"
     },
     {
       "acceptance": [
