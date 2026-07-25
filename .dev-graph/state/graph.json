@@ -1,5 +1,5 @@
 {
-  "graph_revision": 529,
+  "graph_revision": 531,
   "nodes": [
     {
       "acceptance": [
@@ -32681,6 +32681,117 @@
       "title": "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T03:00:44.850804Z"
+    },
+    {
+      "acceptance": [
+        "`python3 -m pytest plugins/dev-graph/tests/test_skill_criteria_evidence.py -q` が緑",
+        "再取得した live-trial verdict の skill_dir_tree_sha が現行 closure と一致する",
+        "verdict は fresh session の実走で取得されており、手編集されていない",
+        "他 skill で同種の stale が無いことを確認した記録がある"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-hwlm",
+        "linked_at": "2026-07-25T03:23:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c03-live-trial-closure-stale-after-merge-20260725.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-57v のブランチへ main をマージした結果、両親のどちらでも緑だった C03 の live-trial 受領書が stale 判定になったことで判明した構造的ギャップ",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T03:20:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-c03-live-trial-closure-stale-after-merge-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "マージ後の木で C03 の live-trial 受領書が現行 closure digest と一致し、test_skill_criteria_evidence が緑になる状態",
+      "graph_node_id": "issue-c03-live-trial-closure-stale-after-merge-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T03:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "behavior closure に触れる 2 本のブランチをマージすると、どちらの親でも緑だった live-trial 受領書がマージ後に必ず stale になる。この構造的な取りこぼしを塞ぐ",
+      "related_nodes": [],
+      "resource_scope": [
+        "eval-log/dev-graph/run-dev-graph-sync/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/",
+        "plugins/dev-graph/skills/run-dev-graph-sync/SKILL.md",
+        "plugins/dev-graph/tests/test_skill_criteria_evidence.py"
+      ],
+      "scope_in": [
+        "マージ後の木 (devgraph/issue-c28-draft-status-unmappable-20260722) に対する C03 run-dev-graph-sync の live-trial 再取得",
+        "再取得した verdict / transcript で scenario-verdict.json の live_trial_verdict_ref と test_refs を差し替え",
+        "同じ構造の取りこぼしが C05/C16 等の他 skill でも起きるかの確認"
+      ],
+      "scope_out": [
+        "verdict の skill_dir_tree_sha を現在値へ手で書き換えること (stale 検出の恒久無効化にあたるため禁止)",
+        "test_skill_criteria_evidence の digest 検査そのものの緩和"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T03:20:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "live-trial",
+        "behavior-closure",
+        "merge"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "main マージで C03 の behavior closure digest が両親のどちらとも異なり live-trial 受領書が stale になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T03:23:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
