@@ -118,7 +118,9 @@ function inspectRouteHandlers(files, root, policy) {
   const routeRoot = join(root, policy.root);
   const exemptions = new Map((policy.exemptions ?? []).map((entry) => [entry.path, entry.reason]));
   const httpMethodExport = /export\s+(?:async\s+function|const)\s+(?:GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD)\b/;
-  const wrapperCall = new RegExp(`\\b${policy.wrapper}\\s*\\(`);
+  // 型引数つきの呼び出し (`withAuthz<Params>(...)`) も wrapper 経由とみなす。
+  // `<...>` を許さないと、route params に型を付けただけで未経由と誤検出する (feat-auth-tenancy で顕在化)。
+  const wrapperCall = new RegExp(`\\b${policy.wrapper}\\s*(?:<[^<>()]*>)?\\s*\\(`);
   const findings = [];
 
   for (const file of files) {
