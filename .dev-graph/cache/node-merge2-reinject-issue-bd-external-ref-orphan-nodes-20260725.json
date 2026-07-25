@@ -1,0 +1,115 @@
+{
+  "node": {
+    "acceptance": [
+      "bd export × graph.json の突合で、status が closed 以外の orphan external_ref が 0 件",
+      "`bd-bridge.py --op ready --parity-manifest <manifest>` の unmapped_summary.parity_manifest_missing が棚卸し後の期待値と一致し、根拠が記録されている",
+      "3 系統の仕分け結果と判断理由が本 issue または派生 issue に残っている",
+      "orphan の発生経路が特定され、修正または派生 issue が起票されている"
+    ],
+    "architecture_refs": [],
+    "artifact_kind": "issue",
+    "artifact_subtypes": [],
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-mfh7",
+      "linked_at": "2026-07-25T02:59:53Z",
+      "sync_state": "linked"
+    },
+    "classification_candidates": [
+      {
+        "artifact_kind": "issue",
+        "candidate_path": "issues/sys-bd-external-ref-orphan-nodes-20260725.md",
+        "confidence": 0.9
+      }
+    ],
+    "classification_confidence": 0.9,
+    "classification_reason": "HarnessHub-57v (C28 draft status) の検証で C28 ready を実行した際、conflicts=0 になった一方で unmapped が 31 件残り、その内訳調査で判明した独立の既存ドリフト",
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "open"
+    },
+    "confirmation_evidence": {
+      "evaluated_digest": null,
+      "evaluator": null,
+      "evidence_ref": null
+    },
+    "confirmation_status": "draft",
+    "created_at": "2026-07-25T02:57:00Z",
+    "depends_on": [],
+    "domain": "quality",
+    "evaluation_status": "pending",
+    "execution_contexts": [],
+    "feature_package_id": null,
+    "file_path": "issues/sys-bd-external-ref-orphan-nodes-20260725.md",
+    "github_project_linkages": [],
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "goal": "非クローズの orphan external_ref が 0 件になり、C28 の unmapped_summary.parity_manifest_missing が実際の取りこぼしだけを指す状態",
+    "graph_node_id": "issue-bd-external-ref-orphan-nodes-20260725",
+    "implementation_readiness": {
+      "checked_at": "2026-07-25T02:57:00Z",
+      "missing_sections": [],
+      "status": "complete"
+    },
+    "issue_linkage": null,
+    "iteration": null,
+    "mvp_alignment": null,
+    "owners": [
+      "daishiman"
+    ],
+    "parent_feature": null,
+    "phase_ref": null,
+    "priority": "high",
+    "project_id": "harness-hub",
+    "pull_request_linkages": [],
+    "purpose": "graph 側に実体の無い external_ref が大量に残っていると、C28 の unmapped が恒常的に膨らみ「取りこぼしが 22 件ある」という警告が常態化して読まれなくなる。参照の実体を回復し、警告を信号として使える状態に戻す",
+    "related_nodes": [],
+    "resource_scope": [
+      ".dev-graph/state/graph.json",
+      "plugins/dev-graph/scripts/bd-bridge.py",
+      "plugins/dev-graph/scripts/build-parity-manifest.py",
+      "issues/"
+    ],
+    "scope_in": [
+      "bd export と graph.json を突合し orphan external_ref を全数棚卸しする",
+      "非クローズ 39 件を 3 系統に仕分ける: (a) graph node を C02 で復元すべきもの、(b) external_ref を実在 node へ張り替えるべきもの、(c) bd 側を close すべきもの",
+      "feature package 系 14 件 (feat-task-spec-test-strategy + SYS-TASK-SPEC-TEST-STRATEGY-P01..P13) は package 単位で扱う",
+      "orphan を作った経路 (bd create が先行し node 登録が漏れる等) の特定"
+    ],
+    "scope_out": [
+      "closed 済み 35 件の遡及復元 (履歴証跡であり、可視化されないため実害が無い)",
+      "C28 側で orphan を黙って除外する変更 (silent drop になるため禁止)"
+    ],
+    "source_lineage": {
+      "imported_at": "2026-07-25T02:57:00Z",
+      "origin_kind": "generated",
+      "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+      "source_path": "system-spec/dev-workflow.md",
+      "source_plugin": "dev-graph",
+      "source_version": null
+    },
+    "start_date": null,
+    "status": "draft",
+    "tags": [
+      "quality",
+      "dev-graph",
+      "beads",
+      "parity",
+      "governance"
+    ],
+    "target_date": null,
+    "template_id": "issue",
+    "template_version": "1.0.0",
+    "title": "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる",
+    "tracker_binding": "beads",
+    "updated_at": "2026-07-25T03:00:44.850804Z"
+  },
+  "body": "# 概要\n\n多数の bd issue が `external_ref: dev-graph:<node-id>` を持つのに、その `<node-id>` が `.dev-graph/state/graph.json` に存在しない。参照が宙に浮いた状態 (dangling reference) である。\n\n## 実測 (2026-07-25)\n\n`bd export --format jsonl` (475 行) と graph の node 集合 (280 件) を突合した結果:\n\n| 指標 | 実測値 |\n|---|---|\n| orphan external_ref 合計 | **74** |\n| うち closed | 35 |\n| うち open | 34 |\n| うち in_progress | 5 |\n| **非クローズ小計** | **39** |\n\n非クローズ 39 件の内訳:\n\n| 系統 | 件数 | 内容 |\n|---|---|---|\n| feature package 系 | 14 | `feat-task-spec-test-strategy` (epic) + `SYS-TASK-SPEC-TEST-STRATEGY-P01..P13` |\n| 単発 issue 系 | 25 | `issue-*-2026MMDD` 形式 |\n\n## C28 から見える影響\n\n```bash\npython3 plugins/dev-graph/scripts/build-parity-manifest.py --repo-root . \\\n  --out eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json\npython3 plugins/dev-graph/scripts/bd-bridge.py --op ready --repo-root . \\\n  --parity-manifest eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json\n```\n\n実測 (2026-07-25T02:56Z):\n\n```json\n{\"ready_set\": 8, \"conflicts\": 0, \"unmapped\": 31,\n \"unmapped_summary\": {\"external_ref_absent\": 9, \"parity_manifest_missing\": 22}}\n```\n\n`parity_manifest_missing` **22 件**が本 issue の対象。これは「`bd ready` 候補になった orphan」だけの数で、全数 74 件のうち候補集合に入ってきた分である。\n\n`external_ref_absent` 9 件は別事象 (graph 管理外の bd 課題) で、execution-tracker-contract §10 のとおり対処不要。\n\n## なぜ放置できないか\n\n`parity_manifest_missing` は本来「graph 管理下なのに manifest から取りこぼした」= **manifest 生成側の異常**を指す札である。実体の無い参照が 22 件も常駐すると、この札が恒常的に立ち続け、本物の取りこぼしが発生しても区別できない。警告の意味が摩耗する。\n\n## 本変更 (HarnessHub-57v) との関係\n\n無関係。57v は `draft` status の写像欠落を直したもので、`conflicts` は 0 になった。`unmapped` の 31 件は **57v の前から存在する独立のドリフト**であり、57v の検証中に可視化されただけである。\n\n## 対処方針\n\n非クローズ 39 件を 3 系統へ仕分ける。\n\n1. **node を復元すべきもの** — `issues/sys-*.md` 実体があるのに graph 未登録なら C02 (`upsert-node.py`) で登録する。\n2. **参照を張り替えるべきもの** — node がリネーム/統合されていれば `external_ref` を実在 node へ更新する。\n3. **bd 側を閉じるべきもの** — 課題自体が失効しているなら `bd-bridge.py --op close` で閉じる。\n\n並行して、**なぜ orphan が生まれたか**を特定する。`--op create` は `--graph-node-id` を必須にしているため、node 未登録のまま bd issue だけが作られる経路が存在するはずで、そこを塞がないと再発する。\n\n## 再現コマンド\n\n```bash\npython3 - <<'PY'\nimport json, subprocess\ng = json.load(open('.dev-graph/state/graph.json'))\nids = set(g['nodes'].keys())\nrows = [json.loads(l) for l in subprocess.run(\n    ['bd', 'export', '--format', 'jsonl'], capture_output=True, text=True\n).stdout.splitlines() if l.strip()]\norph = [r for r in rows\n        if (r.get('external_ref') or '').startswith('dev-graph:')\n        and r['external_ref'].split(':', 1)[1] not in ids]\nprint('orphan:', len(orph))\nPY\n```\n"
+}

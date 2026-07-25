@@ -47,7 +47,6 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-25T11:09:07Z","missing_sections":[],"status":"complete"}
 ---
 
-
 # 概要
 
 `system-spec/spec-state.json` の `qa_log` へ確定登録した QA 要件が、plan 成果物の本文へ降りていなくても promote できてしまう。宣言 (tag) と中身 (goal-spec / task spec) の乖離を C12 決定論ゲートが検出しない。

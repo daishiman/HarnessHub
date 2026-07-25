@@ -9,8 +9,8 @@ trigger: aggregate-evals (SessionEnd)
 
 ## 集計サマリ
 
-- 評価件数: 315
-- FAIL 率: 3.81%
+- 評価件数: 325
+- FAIL 率: 3.69%
 - 平均スコア: 85.692
 
 ## 検出された異常
@@ -43,10 +43,10 @@ trigger: aggregate-evals (SessionEnd)
 ## 主要 finding カテゴリ (top5)
 
 - tmux session exited before completion marker; transcript ended after tool_result without turn_duration: 2 件
+- the target Skill was not the first execution action: 2 件
 - preview nodes omit required created_at and updated_at; independent schema validation reports six violations: 1 件
 - validation fields remain pending and required publication preview fields are absent: 1 件
 - required Agent fork and independent macro auditor were not executed: 1 件
-- The transcript has no Skill invocation or read of the target SKILL.md; the workflow was manually reproduced.: 1 件
 
 ## 提案アクション (要 human review)
 

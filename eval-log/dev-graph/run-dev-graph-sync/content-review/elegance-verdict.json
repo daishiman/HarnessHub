@@ -2,27 +2,42 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-sync",
-    "skill_md_sha256": "e21ba72e1027459544a9dc81bd2084fa76494472c4804ca99c0bbac707157fd6"
+    "skill_md_sha256": "29baae336110074cb542880cb8641858eab6fa9f0f25edade6c227e0896e8fa0"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "audit-sync-render-20260720",
-  "reviewed_at": "2026-07-20",
-  "iterations": 1,
+  "reviewer": "assign-skill-design-evaluator-inline-20260724",
+  "reviewed_at": "2026-07-24T23:31:17Z",
+  "iterations": 2,
   "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 1,
+    "inconsistency": 1,
+    "dependency_break": 0,
+    "smell": 1
+  },
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3", "OUT4", "OUT5", "OUT6", "OUT7", "OUT8", "OUT9"],
     "positive_feedback": [
-      "binding 別の mutation authority 一意化 (beads=C28 exact-set parity + push-only mirror / github=C12 / none=external write なし) が frontmatter R3・Purpose・Protocol step2・Gotchas で完全一致し authority 混在拒否が矛盾なく貫かれている",
-      "Status を local→Project 一方向投影に固定し remote Status を done authority に逆流させない規則が R2/Why/Protocol3/OUT9/Gotchas で整合、PR merge evidence 経由の done 判定 (C26/C27 reconcile) と衝突しない",
-      "OUT1-OUT9 の各契約 (冪等 changes=0/tie-break/tombstone/dry-run write0/manual flag 解消/Project item 安定/3-way manual conflict/pending_retry/merge evidence) が Criteria acceptance と Gotchas に 1:1 で漏れなく対応している"
+      "(a) 矛盾なし / OUT4 接地: 新設の manifest 再生成を `if args.apply:` ブロック内だけに置き、--dry-run 経路からは一切呼ばない。OUT4 の『--dry-run では local/Beads/GitHub/Projects write を 0』という契約に穴を開けていない。この配線は文面だけでなく test_build_parity_manifest.py の AST 検査 (main 全体の generator 起動回数と apply 配下の起動回数が共に 1 で一致) で機械的に固定されており、将来 dry-run 側へ起動が増えれば test が落ちる",
+      "(a) 矛盾なし / OUT1 接地: manifest 再生成は imports/exports/tombstones のいずれにも計上されず、converged 判定 (imports/exports/conflicts/pending_retry/failed が全て空) にも影響しない。『同一状態の二回目は changes=0』という冪等契約を崩していない",
+      "(b) 漏れなし: 失敗時の fail-closed 挙動を本文へ明記した。生成失敗は握り潰さず pending_retry へ載り ok=false となり、last-synced snapshot を前進させない (sync-graph.py の `if not conflicts and not pending_retry and not failed:` で snapshot 書込を守っている)。この停止がないと『同期は成功したが下流の ready-set は空のまま』という本 issue の状態へ静かに戻る",
+      "(c) 規約整合: 章を新設せず既存の CLI 例示ブロック直後へ追記し、220 行 (上限 300) を維持。生成先 path も lint-eval-log-layout.py EL-001 (eval-log 直下の新規追跡禁止) を満たす eval-log/dev-graph/run-dev-graph-schedule/ 配下に置いた",
+      "(d) 依存関係整合: script_refs へ ../../scripts/build-parity-manifest.py を追加し、plugin-composition.yaml にも components エントリと skills/run-dev-graph-sync → scripts/build-parity-manifest.py の calls edge を対で追加した。lint-plugin-composition.py rule (e) の script_refs ↔ dependencies(type=calls) parity が片側追記で崩れていない",
+      "(d) 依存関係整合: manifest 生成を sync 本体へ inline 実装せず、read-only な単独 generator を subprocess として呼ぶ形にしたため、sync 全体を回さず manifest だけ作り直す経路 (本文の第 2 コードブロック) が同一実装を共有する。C03 経由と単独実行で別実装が育つ drift を構造的に防いでいる",
+      "IN1/OUT2/OUT3/OUT5-OUT9 接地: 送信前検証・tie-break・tombstone・manual flag・Project item 安定性・3-way conflict・pending_retry・PR merge evidence の各記述は本差分で一切変更していない。影響範囲は apply 収束後の投影 1 ステップに閉じている"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "negative_feedback": [
+      "(iteration 1 で検出 → iteration 2 で解消) inconsistency (severity=low): C03 が書き C16 が読む同一 1 ファイルを指す path が、run-dev-graph-sync 側は相対表記、run-dev-graph-schedule 側は $DEV_GRAPH_ROOT/ 前置の絶対表記で二重表記になっていた。build-parity-manifest.py は --out を --repo-root 基準で解決するため実害は無いが、同一実体を 2 通りで書くと片方だけ改名した際に無言で別 file を指す。→ sync 側を $DEV_GRAPH_ROOT/ 前置へ統一し、--out が --repo-root 基準で解決する旨を 1 文添えた",
+      "(iteration 1 で検出 → iteration 2 で解消) omission (severity=low): manifest 生成が失敗したときの挙動 (pending_retry へ載る / ok=false / snapshot を進めない) が本文に無く、実装の fail-closed 設計を読者が知る手段が無かった。既存の『imports=exports=pending_retry=0 まで繰り返す』で結果的には拾えるが、manifest 失敗が pending_retry に現れることは読み取れない。→ 該当段落へ明示的に追記した",
+      "smell (severity=low / 非ブロッキング / 未修正): manifest の generated_at は毎回の実行時刻なので、収束済み graph に対して --apply を 2 回続けても parity-manifest.json のバイト列は変わり、report の write_count は 0 にならない。ただし OUT1 が要求するのは imports/exports/Project item add の 0 件であって write_count ではなく、source_graph_digest は不変で C28/C16 の判定は安定し、当該ファイルは .gitignore 済みで stale commit も生まない。生成時刻の記録という generated_at の意味を保つ方が価値が高いため、digest 一致時のスキップは導入しない"
+    ],
+    "iteration": 2,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "Stop",
     "next_action": "none"
   },
-  "notes": "独立監査で現SKILL.md (sha256 e21ba72e...) と実装を再評価。3-way、二回目差分0、tombstone、Projects安定ID/全field型/pending retry、all|any PR policy、Beads gate、dry-run write0がOUT1..OUT9とCLI hintに一致する。focused 46件PASS、重大問題0件。PASS。"
+  "notes": "incremental profile の focused combined review (1 context・再評価 1 回)。30思考法 (run-elegant-review) は未使用であり、その旨を明示的に申告する。assign-skill-design-evaluator は .claude/agents/ に未登録で SubAgent 起動経路が存在しないため、protocol の incremental 既定に従い同一 context で 4 条件と rubric を一括評価し、compat のため elegance/rubric の 2 verdict へ分割記録した。iteration 1 で low 2 件 (inconsistency/omission) を検出し SKILL.md を修正、iteration 2 の再評価で新規 finding 0 のため PASS。修正により skill_md_sha256 は 5d5ac128... から 29baae33... へ更新済み。\n\n評価 slice: HEAD 比の SKILL.md 差分 (frontmatter script_refs 1 行 / --apply の --parity-manifest 付与 / 再生成の説明段落 / 単独 generator の実行ブロック) と、その主張の接地先である sync-graph.py の apply 配下 regeneration ブロックと snapshot 前進条件・build-parity-manifest.py の --out 解決と eval-log containment・references/execution-tracker-contract.md §10・plugin-composition.yaml。裏づけ実行: pytest plugins/dev-graph/tests/test_build_parity_manifest.py 13 passed (うち C03 配線の apply-only 検査 2 件)、lint-doc-line-limit・lint-eval-log-layout・lint-script-naming いずれも違反 0。\n\nslice 外の pending 事項 (本 verdict に未算入、報告のみ): (1) criteria-test/scenario-verdict.json が本変更による skill_md_sha256 変化で stale。再生成には live-trial 再実走が必要で pytest test_skill_criteria_evidence の失敗として顕在化している。(2) 実 repository に対する sync-graph.py --dry-run --parity-manifest の通し実行は 240s で timeout し未完 (280 node に対する gh/bd 呼び出しが支配的)。apply-only 配線の担保は AST 検査で代替している。"
 }

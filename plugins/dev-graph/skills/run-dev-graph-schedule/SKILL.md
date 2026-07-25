@@ -10,7 +10,7 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--scope ID] [--max-parallel N]"
 allowed-tools: [Read, Bash, AskUserQuestion, Task, Skill, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/schedule-graph.py, ../../scripts/manage-worktree-lease.py, ../../scripts/bd-bridge.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/schedule-graph.py, ../../scripts/manage-worktree-lease.py, ../../scripts/bd-bridge.py, ../../scripts/build-parity-manifest.py]
 schema_refs: [../../schemas/graph-node.schema.json]
 responsibility_refs:
   - prompts/R1-elicit.md
@@ -75,11 +75,20 @@ feedback_contract:
 
 出力は ready sets、parallel batches、conflict pairs、各 task の `devgraph/<graph_node_id>` branch と `dev-graph worktree claim <id>` command。read-only で graph/tracker/lease を変更せず、実行receiptだけを`eval-log/run-dev-graph-schedule-execution.json`へ保存する。
 
-平常経路は **ready-json 生成 (C28) → schedule 算出 (C16)** の順で実行する。`--ready-json`は毎回この生成ステップで作り直す成果物で、`parity_provenance`を持たない古い committed receipt (例: eval-log 配下の 2026-07-18 実行分) をそのまま渡すと`schedule-graph.py`が即`ContractError`で止まる。生成は`bd-bridge.py --op ready`が`bd ready --json`候補を由来必須の`--parity-manifest`(`generated_at`/`source_graph_digest`、契約 §10) と突合し、`parity_provenance`つき receipt を stdout へ出すので、これを`--ready-json`のパスへ書き出す (`github`/`none` binding は ready-json 不要)。manifest が stale/欠落なら`run-dev-graph-sync` (C03) で作り直す。
+平常経路は **parity manifest 生成 → ready-json 生成 (C28) → schedule 算出 (C16)** の順で実行する。3 ステップとも毎回作り直す揮発成果物で、committed 済みの古い receipt を再利用しない。`parity_provenance`を持たない古い receipt (例: eval-log 配下の 2026-07-18 実行分) をそのまま渡すと`schedule-graph.py`が即`ContractError`で止まる。
+
+parity manifest は`build-parity-manifest.py`が canonical graph から作る唯一の生成経路である。tracker (Beads) を読まず graph だけを投影するので、C28 の突合が「自分で作った答えを自分で採点する」形にならない。manifest が欠落したまま C28 を回すと、graph 管理下の node が全て`parity_manifest_missing`へ落ちて ready-set が空になる。
+
+```bash
+python3 ../../scripts/build-parity-manifest.py --repo-root "$DEV_GRAPH_ROOT" \
+  --out "$DEV_GRAPH_ROOT/eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json"
+```
+
+次に`bd-bridge.py --op ready`が`bd ready --json`候補を由来必須の`--parity-manifest`(`generated_at`/`source_graph_digest`、契約 §10) と突合し、`parity_provenance`つき receipt を stdout へ出すので、これを`--ready-json`のパスへ書き出す (`github`/`none` binding は ready-json 不要)。
 
 ```bash
 python3 ../../scripts/bd-bridge.py --op ready --repo-root "$DEV_GRAPH_ROOT" \
-  --parity-manifest "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-parity-manifest.json" \
+  --parity-manifest "$DEV_GRAPH_ROOT/eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json" \
   > "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-beads-ready.json"
 ```
 
@@ -92,7 +101,7 @@ python3 ../../scripts/schedule-graph.py \
   --eval-log "$DEV_GRAPH_ROOT/eval-log/run-dev-graph-schedule-execution.json"
 ```
 
-`--leases`を明示したのにsnapshotが存在しない場合は空扱いせず停止する。binding混在時は、`beads`だけを`--ready-json`の`edge_parity.confirmed=true`との積集合にし、`github/none`はlocal gateから計算する。`--ready-json`のC28 receiptは`parity_provenance`(`generated_at`/`source_graph_digest`)を必須とし、`source_graph_digest`が現graphのcanonical digestと一致しない場合はstale snapshotとして停止する (execution-tracker-contract §10)。回復手順はparity manifestの再生成であり、digestの書き換えではない。C28の`unmapped`/`conflicts`は判定に使わず`source: "bd-bridge"`付きでreportへ引き継ぐ。`--scope`は指定nodeのsubtree、`--max-parallel`は1 batchの上限として適用する。期限切れleaseはactive扱いせず、graph/tracker/leaseの実行前後digestが1つでも変われば結果を破棄する。`--eval-log`はrepositoryの`eval-log/`配下だけを許可する。
+`--leases`を明示したのにsnapshotが存在しない場合は空扱いせず停止する。binding混在時は、`beads`だけを`--ready-json`の`edge_parity.confirmed=true`との積集合にし、`github/none`はlocal gateから計算する。`--ready-json`のC28 receiptは`parity_provenance`(`generated_at`/`source_graph_digest`)を必須とし、`source_graph_digest`が現graphのcanonical digestと一致しない場合はstale snapshotとして停止する (execution-tracker-contract §10)。回復手順は`build-parity-manifest.py`によるparity manifestの再生成であり、digestの書き換えではない。`run-dev-graph-sync` (C03) の`--apply --parity-manifest <path>`も同じgeneratorを呼び、収束直後のgraphでmanifestを更新する。C28の`unmapped`/`conflicts`は判定に使わず`source: "bd-bridge"`付きでreportへ引き継ぐ。`--scope`は指定nodeのsubtree、`--max-parallel`は1 batchの上限として適用する。期限切れleaseはactive扱いせず、graph/tracker/leaseの実行前後digestが1つでも変われば結果を破棄する。`--eval-log`はrepositoryの`eval-log/`配下だけを許可する。
 
 ## ゴールシーク実行
 
@@ -155,6 +164,8 @@ PY
 ## Gotchas
 
 - `blocked/draft/unconfirmed/evaluation!=pass/readiness!=complete` のどれかを ready に混入させない。
+- parity manifest を手書きしない。`build-parity-manifest.py` が唯一の生成経路で、`source_graph_digest` だけを現在値へ書き換える修正は stale 検出を恒久的に無効化する。
+- `unmapped_summary.parity_manifest_missing` が候補数と同数なら、判定の前に manifest 生成が失敗/未実行である。ready-set の空を「着手可能なし」と読み替えない。
 - 直接依存だけでなく全 `depends_on` の done を確認する。
 - 同一 batch の `resource_scope.touches` と active lease の両方を衝突判定に使う。
 - feature planning 候補と task 実行候補を同一 batch に混ぜない。
