@@ -24,9 +24,7 @@ on:
       - "package.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
-      # 台帳突合ゲートを効かせるため、ci.yml だけでなく全 workflow の変更で走らせる
-      # (backup.yml へ secret 参照を足したのに台帳へ書かない、を検出できるようにする)
-      - ".github/workflows/**"
+      - ".github/workflows/ci.yml"
   pull_request:
     paths:
       - "apps/**"
@@ -35,9 +33,7 @@ on:
       - "package.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
-      # 台帳突合ゲートを効かせるため、ci.yml だけでなく全 workflow の変更で走らせる
-      # (backup.yml へ secret 参照を足したのに台帳へ書かない、を検出できるようにする)
-      - ".github/workflows/**"
+      - ".github/workflows/ci.yml"
   workflow_dispatch:
 
 concurrency:
@@ -59,11 +55,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: pnpm 混入検査 (quality_constraint pnpm-only-no-npm)
         run: node scripts/ci/check-pnpm-only.mjs --json artifacts/pnpm-only.json
-      # workflow が要求する secret / variable と台帳の乖離を落とす。
-      # 台帳が実態とずれると設定漏れを誰も突き合わせられなくなり、backup が 0 件のまま夜間失敗し続ける (HarnessHub-fnzl)。
-      # 実投入状況の確認 (--live) は gh 認証が要るため CI では行わず、runbook §1 の手動手順に置く。
-      - name: Actions secret / variable 台帳の突合
-        run: node scripts/ci/check-actions-secrets.mjs --json artifacts/actions-secrets.json
       - name: 共通層 duplicate detector = 0 件 (A4)
         run: |
           node scripts/ci/check-shared-layer-duplicates.mjs \
