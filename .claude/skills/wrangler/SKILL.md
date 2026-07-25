@@ -1,6 +1,6 @@
 ---
 name: wrangler
-description: Cloudflare Workers CLI for deploying, developing, and managing Workers, KV, R2, D1, Vectorize, Hyperdrive, Workers AI, Containers, Queues, Workflows, Pipelines, and Secrets Store. Load before running wrangler commands to ensure correct syntax and best practices. Biases towards retrieval from Cloudflare docs over pre-trained knowledge.
+description: Cloudflare Workers の CLI である wrangler のコマンドを打つ前に読む。Workers、KV、R2、D1、Vectorize、Hyperdrive、Workers AI、Containers、Queues、Workflows、Pipelines、Secrets Store を対象とし、フラグや設定項目や binding 形状を記憶に頼らず公式ドキュメントで確かめるときに使う。
 ---
 
 # Wrangler CLI

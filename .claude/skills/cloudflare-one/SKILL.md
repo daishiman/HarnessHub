@@ -1,6 +1,6 @@
 ---
 name: cloudflare-one
-description: "Guides Cloudflare One Zero Trust and SASE work across Access, Gateway, WARP, Tunnel, Cloudflare WAN, DLP, CASB, device posture, and identity. Use when designing, configuring, troubleshooting, or reviewing Cloudflare One deployments. Retrieval-first: use current Cloudflare docs/API schemas instead of embedded product docs."
+description: Cloudflare One の Zero Trust と SASE を設計・設定・調査する。Access、Gateway、WARP、Tunnel、Cloudflare WAN、DLP、CASB、デバイス姿勢、ID 連携を対象とする。埋め込み資料ではなく最新の公式ドキュメントと API スキーマを参照する方針で、これらの構成を検討するときに使う。
 ---
 
 # Cloudflare One

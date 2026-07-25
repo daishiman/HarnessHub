@@ -1,6 +1,6 @@
 ---
 name: cloudflare
-description: Comprehensive Cloudflare platform skill covering Workers, Pages, storage (KV, D1, R2), AI (Workers AI, Vectorize, Agents SDK), feature flags (Flagship), networking (Tunnel, Spectrum), security (WAF, DDoS), and infrastructure-as-code (Terraform, Pulumi). Use for any Cloudflare development task. Biases towards retrieval from Cloudflare docs over pre-trained knowledge.
+description: Cloudflare プラットフォーム全般の横断参照。Workers・Pages、ストレージの KV・D1・R2、AI の Workers AI・Vectorize、ネットワークの Tunnel・Spectrum、セキュリティの WAF・DDoS、IaC の Terraform・Pulumi を対象とし、製品を特定できない調べ物や複数製品にまたがる設計を進めるときに使う。
 references:
   - workers
   - pages
