@@ -7,7 +7,7 @@
     "skill_md_sha256": "5a2cf162d207756e8b7f82c03b31f95fd0d9d82a7d53636bdc42f5c8c8d44a10"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-node-fresh-evaluator-pj6-r4-20260725",
+  "reviewer": "orchestrator-independent-remeasure-20260725T104258Z",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,15 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260725T104258Z-node-wt2v12m/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260725T104258Z-node-wt2v12m/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260725T104258Z-node-wt2v12m/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260725T104258Z-node-wt2v12m/independent-verification.json",
+        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260725T104258Z-node-wt2v12m/out/status.json",
+        "plugins/dev-graph/tests/test_operational_loop_v2.py::test_node_upsert_is_atomic_idempotent_and_patchable"
       ],
-      "observed": "2026-07-25 再実走 (run 20260724T224206Z-pj6-node-r4, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0): task 読取直後に Skill ツール dev-graph:run-dev-graph-node を起動。fixture 初期 commit に tracked inputs/.gitkeep を置いたことで、最初の fixture mutation は goal-spec、次が intermediate 1 行目、その後にのみ artifact 入力を作る時系列となった。mixed artifacts 5 種 (issue/task/specification/architecture/document) を canonical path へ登録し、graph revision 0→5 の後、同じ issue node を通常 C02 経路で内容差分付き更新して revision 6・operation=updated・ID/kind/path 不変を確認。feature 作成は 0 件。specification の API 契約 5 リテラルを全て保持した。初回 apply の frontmatter 不足は write_count=0 で fail-closed し、不足項目を補って再 dry-run 後に安全に回復。graph schema は valid=true/violations=[]、goal-seek 3 点セットは violations 0・intermediate append-only 2 行。orchestrator と別個体の fresh evaluator は blocker なし PASS。verdict の機械生成 skill_dir_tree_sha は現行 closure と一致し overall=PASS。"
+      "observed": "2026-07-25 再実走 (run 20260725T104258Z-node-wt2v12m, fixture node-wt2-v12m, actual_model=claude-opus-4-6, claude 2.1.62, tmux/bypassPermissions, boot 5.0s / wall 435s, poll_exit=0, nudge=0 / gate=0)。再走理由は挙動閉包の変更で旧 verdict が stale-sha 化したこと (記録 d00d4af1… != 現在の closure)。本 run の機械生成値は skill_dir_tree_sha=2cba90ea39c7d66ca85dd26f528ed3a5921b034f364610c23c5b116efc128227 / transcript_sha256=438c392ccb020d33a19fb49f6e6220e02c394c0c6f9679b13be548390f9cf17f、invoked_skills=[dev-graph:run-dev-graph-node] で Skill ツール経路のみ、overall=PASS。受入 5 条件は orchestrator 側の独立再測定 script (independent-verification.json) が fixture の実ファイルだけを読んで全 6 検査 pass: (1) 生成物 5 件が issues/tasks/specs/architecture/docs の canonical kind path 直下に 1 件ずつ、(2) mixed-artifacts.json の original body 5 本すべてが保存 Markdown 内に byte-for-byte の連続文字列として各 1 回、(3) frontmatter kind (issue/task/specification/architecture/document) と格納 path が graph-node.schema.json の決定論写像どおり全件一致、(4) features/ 生成 0 件で C14 macro-feature 契約外の feature なし、(5) API 識別子 7 件 (GET /api/v1/users・POST /api/v2/orders・items・line_items・X-API-Key・Authorization: Bearer・DELETE /api/v2/sessions/bulk) が全件残存 = 既知 blocker の shell command substitution 事故は再発せず、(6) goal-seek 3 点セットを正本 validate-goal-seek-evidence.py が valid=true / violations=[] / intermediate 2 行 append-only / original_goal_hash=eb23c324… 一致で判定。graph_revision は 0→5 (add 5 件)。連続 update は同一入力の再 upsert で operation=noop / write_count=0 / idempotent=true となり path・kind 不変を確認したため、内容差分ありの更新経路 (operation=updated) は本 run では実走しておらず、pytest test_node_upsert_is_atomic_idempotent_and_patchable と先行 run 20260724T224206Z-pj6-node-r4 (revision 5→6, operation=updated) の被覆に依存する。fixture repo は初期 commit 1 件のままで trial による commit 0 件。留意: 本 run の goal 判定は orchestrator と別個体の fresh evaluator ではなく orchestrator 自身の script 再測定であり、fresh evaluator による再判定は残課題として追跡する。以下は先行 run の記録 (参考): 2026-07-25 再実走 (run 20260724T224206Z-pj6-node-r4, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0): task 読取直後に Skill ツール dev-graph:run-dev-graph-node を起動。fixture 初期 commit に tracked inputs/.gitkeep を置いたことで、最初の fixture mutation は goal-spec、次が intermediate 1 行目、その後にのみ artifact 入力を作る時系列となった。mixed artifacts 5 種 (issue/task/specification/architecture/document) を canonical path へ登録し、graph revision 0→5 の後、同じ issue node を通常 C02 経路で内容差分付き更新して revision 6・operation=updated・ID/kind/path 不変を確認。feature 作成は 0 件。specification の API 契約 5 リテラルを全て保持した。初回 apply の frontmatter 不足は write_count=0 で fail-closed し、不足項目を補って再 dry-run 後に安全に回復。graph schema は valid=true/violations=[]、goal-seek 3 点セットは violations 0・intermediate append-only 2 行。orchestrator と別個体の fresh evaluator は blocker なし PASS。verdict の機械生成 skill_dir_tree_sha は現行 closure と一致し overall=PASS。"
     },
     "OUT2": {
       "status": "PASS",

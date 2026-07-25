@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0.0",
   "purpose": "promote 済み content-addressed package へ適用する C12 契約 version の台帳。digest 不変により後追い修正できない既存 generation を、promote 時点で妥当だった契約で再検証するために使う。",
-  "latest_contract_version": "1.1.0",
+  "latest_contract_version": "1.2.0",
   "policy": {
     "resolution": "canonical_digest は staging-manifest.json の申告値ではなく実ファイル群から再計算した値で照合する (manifest は digest 対象集合の外にあり改ざん可能)。",
     "fail_closed": "台帳に無い digest、および digest を再計算できない対象は latest_contract_version で検証する。台帳の欠落・削除・改変は緩和経路にならない。",
-    "scope": "免除は契約 version 間で差のある検査 (必須節集合・inner goal-seek marker・P13 writeback) にのみ及ぶ。その他の検査は version に関係なく全て実行される。",
+    "scope": "免除は契約 version 間で差のある検査 (必須節集合・inner goal-seek marker・P13 writeback・qa semantic coverage) にのみ及ぶ。その他の検査は version に関係なく全て実行される。",
     "amendment": "新規エントリの追加は、当該 digest が (a) 既に promote 済みで、(b) 記載 contract_version で残違反ゼロの pass となることを確認したうえでレビューする。現行契約で pass する package は登録しない。"
   },
   "contract_versions": {
@@ -15,8 +15,13 @@
     },
     "1.1.0": {
       "effective_from": "2026-07-22T13:53:21Z",
+      "effective_until": "2026-07-25T00:00:00Z",
       "introduced_by": "367ba5c",
-      "description": "現行 C12 契約。必須節 15 件に加え、全 13 task spec へ portable methodology marker と rubric verdict=PASS の feedback loop、P13 へ spec/architecture writeback を fail-closed で要求する。"
+      "description": "必須節 15 件に加え、全 13 task spec へ portable methodology marker と rubric verdict=PASS の feedback loop、P13 へ spec/architecture writeback を fail-closed で要求する。qa semantic coverage 導入前の契約。"
+    },
+    "1.2.0": {
+      "effective_from": "2026-07-25T00:00:00Z",
+      "description": "現行 C12 契約。v1.1.0 の検査に加え、feature の qa tag を spec-state lineage、goal-spec の意味被覆、exact-13 task trace と照合する qa semantic coverage を fail-closed で要求する。"
     }
   },
   "packages": [

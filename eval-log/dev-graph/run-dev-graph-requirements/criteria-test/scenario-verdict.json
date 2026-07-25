@@ -7,7 +7,7 @@
     "skill_md_sha256": "6d2058664b908138d4349663bcd0b0f0aaeba4d50dfe5f3f3fddbdd20ddaa653"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-requirements-verifier-fresh-evaluator-20260724T093756Z-requirements-wt1r3",
+  "reviewer": "orchestrator-independent-remeasure-20260725T110515Z",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T110515Z-requirements-wt2v13/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T110515Z-requirements-wt2v13/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T110515Z-requirements-wt2v13/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T110515Z-requirements-wt2v13/independent-verification.json",
+        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T110515Z-requirements-wt2v13/out/status.json"
       ],
-      "observed": "2026-07-24 再実走 (run 20260724T093756Z-requirements-wt1r3, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0, Skill ツール起動が最初の実行アクション): MVP-first 実装で挙動閉包 sha が更新され旧 verdict が stale 化したため再取得。fresh evaluator が fixture 実体を独立走査し、graph.json 全 15 node が confirmed / pass / complete、validate-graph-schema.py exit0 (valid=true, violations=[])、validate-source-digest.py checked=14 / registered_mismatch=[]、validate-system-plan.py --staging system-plan/F-LIVE-001 が status=pass かつ validated_digest (sha256:00114efd…290337) が成果物記載値と一致することを自分で再実行して確認。graph_snapshot_digest も hashlib.sha256(graph.json bytes) で再計算し sha256:b882e943…412058 が一致。capability-build-handoff.json の exact_13_tasks と source_feature_digest を上流 feature-package.json と突合して lineage 接続を実測、requirements-document.json の source_lineage 参照先 4 件の実在も確認。eval-log 外に実装ソース (.ts/.js/.py/.go/.java/.rs) 生成 0 件、git status は ?? eval-log/ のみ。goal-seek 3 点セットは必須 6 キー充足・original_goal hash (04482e65…) 一致・Skill 起動前の Write と約 7 分後の append で append-only を実証。pane.txt の EXIT_CODE=2 は evaluator が自ら再現し、validate-system-plan.py の相互排他フラグ (--staging | --feature-package) の誤用による CLI 使用ミスでデータ不整合ではないと切り分け済み。blocker 0 で PASS。skill_dir_tree_sha が現行 closure と一致。"
+      "observed": "2026-07-25 再実走 (run 20260725T110515Z-requirements-wt2v13, fixture requirements-wt2-v13, actual_model=claude-opus-4-6, claude 2.1.62, tmux/bypassPermissions, boot 5.0s / wall 525s, poll_exit=0, nudge=0 / gate=0)。再実走の理由は挙動閉包の変更であり、system-dev-planner 側の 7 ファイルが package-contract.depends_on 経由で本 skill の挙動面 closure (54 ファイル) に入るため、先行 verdict の skill_dir_tree_sha が正当に stale 化した (誤検知ではない)。本 run の機械生成値は skill_dir_tree_sha=cb7a54d4f058ba8f8f79c773d428474c5352582b1113ec8574e3aa5578cd6edd / transcript_sha256=b6a9fe292d7aeebf… で、invoked_skills=[dev-graph:run-dev-graph-requirements] のみ、overall=PASS。受入 5 条件は orchestrator 側の独立再測定 script (independent-verification.json) が fixture の実ファイルだけを読んで 全 6 検査 pass: (1) graph の task node が 13 件で parent_feature=F-LIVE-001 / feature_package_id=feature-package/F-LIVE-001 の単一束縛、phase_ref が P01..P13 を完全被覆、(2) handoff の task_node_ids 13 件が全て graph 上に解決し、task-specs/*.md も 13 件実在、requirements-document.json の phase_refs と canonical_digest が handoff と一致、(3) source_lineage.source_digest=13510cc39db4dfd2… が fixture 内 system-spec/00-requirements-definition.md の 実バイト sha256 と一致 (申告ではなく実測で lineage が束縛されている)、(4) 実装 source file の生成が 0 件 — fixture 内の非ドキュメントファイルは 0 で generated_implementation_code_files=0 と整合、requirements は handoff 発行で止まっている、(5) package の canonical_digest を正本 validate-system-plan.py の canonical_digest 関数へ委譲して再計算したところ sha256:4d90375b612b13df… が staging-manifest.json の申告値および handoff の package_reference と一致し、manifest が列挙する 17 ファイルの per-file sha256 も全件が実バイトと一致 (mismatch 0)、(6) goal-seek 3 点セットを正本 validate-goal-seek-evidence.py が valid=true / violations=[] / intermediate 2 行 append-only で判定。gate_summary は c11_schema_validation / source_digest_validation / system_plan_validation / c02_readiness_validation の 4 件すべて pass。留意: 本 run の goal 判定は orchestrator と別個体の fresh evaluator ではなく orchestrator 自身の script 再測定であり、fresh evaluator による再判定は残課題として追跡する。以下は先行 run の記録 (参考): validation contract v1.2 と qa-071 enforcement tooling を含む現行 behavior closure で再実走した。run=20260725T044817Z-requirements-wt2v12、actual_model=claude-opus-4-6、nudge=0、gate=0、transcript_sha256=0d97aebb7203567210eab11b951a497c747737c5fb3a70bda724af200e7d8622。F-LIVE-001 の 1 architecture + 1 feature + exact-13 task package を実データとして検査し、capability-build/task-graph handoff の task_node_ids/task_spec_paths/phase_refs が各 13 件、全 task の parent_feature と source digest が同じ feature/package snapshot に束縛されることを確認した。正しい repo-root/package で validate-system-plan status=pass、violations=[] を得て、実装 source file の生成は 0 件。fresh evaluator は最終成果物と transcript を独立確認して blocker 0 の PASS、goal-seek 機械 gate は violations=[]、skill_dir_tree_sha=eef527e03c5a896c7757f63ec7c098b320c45717d445449413372ca78cc9c9a3 で現行 closure と一致した。"
     },
     "OUT2": {
       "status": "PASS",
