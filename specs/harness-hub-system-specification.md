@@ -123,13 +123,21 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 - **リリースの成立条件**: production migration の台帳一致 → deploy → `/health` → 本番スモーク 6 項目 (接続 / ULID / release 不変性 / R2 往復 / audit chain / export-restore dry-run) の全 pass。1 項目でも欠ければリリース成功と数えない。
 - **前方互換の約束**: schema 変更は expand-only。旧 code が新 schema 上で動作することを前提に、障害時は **code のみ巻き戻し DB は前進させたまま**とする。
-- **バックアップの成功定義**: 「upload できた」ではなく「取り直したバイト列が一致した」。復元手順の正本は Turso CLI への標準入力 restore で、`--from-dump` は偽成功を作るため不採用。
+- **バックアップの成功定義**: 「upload できた」ではなく「取り直したバイト列が一致し、その日次成果物を restore CLI が検証付きで復元できた」。保存形式・四半期 drill・障害復旧を control-plane JSONL の単一経路へ揃える。
+
+**差分追記 (2026-07-26 / `HarnessHub-fnzl`・`HarnessHub-0yvi`)**
+
+- **設定契約**: GitHub Actions の secret / variable は `scripts/ci/actions-secrets-registry.json` を機械可読な正本とし、workflow 実参照との双方向突合を CI の静的ゲートで実行する。実投入状況は同じ検査の `--live` で確認する。
+- **復元契約**: `backup.yml` は `export-control-plane.ts` の JSONL を gzip して R2 に保存し、`restore-control-plane.ts` が header・行数・audit chain・暗号断面を fail-closed で検査する。日次形式と drill の不一致を許容しない。
+- **仕様影響判定**: qa-011 / qa-019 の RPO・RTO・復元可能性要件を具体化した実装反映であり、外部 API・データモデル・確定 QA の変更はない。
 
 ## テストと受入条件
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
 **差分追記 (2026-07-25 / feat-domain-model-db P13)**: P13 の受入 6 項目は文書上のチェックリストではなく `packages/db/scripts/smoke-production.ts` の exit code に係留する。検証で作成した行と R2 オブジェクトは `finally` で必ず削除し、**削除失敗自体をテスト失敗**として扱う (本番へ検証ゴミを残したまま緑にしない)。CLI の結合検査は `packages/db/__tests__/backup-restore.test.ts` が R2 CLI stub で機械検証する。
+
+**差分追記 (2026-07-26)**: `packages/db/__tests__/runbook-invocation.test.ts` は runbook に記載した `pnpm --filter ... exec` コマンドをそのまま実走し、引数区切りと cwd (実行時の基準ディレクトリ) の回帰を検出する。`apps/hub/tests/ci/actions-secrets.test.ts` は台帳の 4 方向突合と live 設定検査の fail-closed 性を固定する。
 
 ## 未決事項
 

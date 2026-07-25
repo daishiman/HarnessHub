@@ -1,5 +1,5 @@
 {
-  "graph_revision": 555,
+  "graph_revision": 557,
   "nodes": [
     {
       "acceptance": [
@@ -840,9 +840,9 @@
         "テナント固有の OIDC/role/Device Flow policy (共通 auth adapter・認可 MW の package 境界のみ対象)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T22:35:48Z",
+        "imported_at": "2026-07-26T06:20:00Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "83b1598f165cfa28a73eb7f1641e94f879a32644fba2150f896dd8abc1718c81",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -859,7 +859,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-26T06:20:00Z"
     },
     {
       "acceptance": [
@@ -952,9 +952,9 @@
         "UI"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T22:35:48Z",
+        "imported_at": "2026-07-26T06:20:00Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "83b1598f165cfa28a73eb7f1641e94f879a32644fba2150f896dd8abc1718c81",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -971,7 +971,7 @@
       "template_version": "1.0.0",
       "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:12:28Z"
+      "updated_at": "2026-07-26T06:20:00Z"
     },
     {
       "acceptance": [

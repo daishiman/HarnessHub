@@ -12,9 +12,11 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 > **前提**: 提供者 1 名 + AI 運用（C1）・固定費ゼロ（C2）。手順は「迷わず実行できる」ことを優先し、判断が要る箇所は判断基準を併記する。
 > **注意**: 本 runbook は**手順**であり、未実装の仕組みを手順で代替しない（requirements-baseline §9.5）。未実装項目は §7 に明示する。
 
-## 1. 初回セットアップ（**2026-07-25 実施済み**。残 2 項目）
+## 1. 初回セットアップ（**2026-07-25 実施済み**。残項目は下記）
 
-> **実施状況**: 手順 1〜4 と GitHub Secrets / Variables は完了し、CI 経由の自動デプロイ（手順 6）へ移行済み。**未実施は手順 5（Better Stack 外形監視）と `CRON_HEARTBEAT_URL` の投入**のみ。証跡は [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。以下の手順は再構築時のために残す。
+> **投入状況の正本は本文ではなく `node scripts/ci/check-actions-secrets.mjs --live` の出力**。散文で書いた一覧は書いた翌日には古くなるため、判断前に必ずコマンドを叩く（未投入・用途不明・台帳との食い違いを一度に出す）。
+
+> **実施状況**: 手順 1〜4 と GitHub Secrets / Variables は完了し、CI 経由の自動デプロイ（手順 6）へ移行済み。`HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**未実施は手順 5（Better Stack 外形監視）と `CRON_HEARTBEAT_URL` の投入**。あわせて `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は参照する workflow が無くなったため**削除待ち**（残すと用途不明の認証情報が有効なまま残る）。証跡は [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。以下の手順は再構築時のために残す。
 
 > **順序制約（重要）**: `wrangler secret put` は **Worker が存在しないと実行できない**ため、初回だけは「deploy → secret 投入」の順になり、その間 `/health` は 503 を返します。`ci.yml` の post-deploy `/health` チェックは 200 必須なので、**初回は CI に任せず手動 bootstrap を行ってください**（CI 側のチェックを緩めるとゲートが恒久的に甘くなるため、この方式を採ります）。
 >
@@ -32,14 +34,14 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 wrangler login
 
 # 2. GitHub Secrets / Variables（CI の deploy job と日次 backup job が参照）
+#    用途・必須/任意の正本は scripts/ci/actions-secrets-registry.json（ci.yml が workflow と突合する）
 gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy + R2 Storage 編集権限
 gh secret set CLOUDFLARE_ACCOUNT_ID
-gh secret set TURSO_DATABASE_URL        # migration / 本番 smoke 用
-gh secret set TURSO_AUTH_TOKEN          # migration / 本番 smoke 用の DB 接続 token
-gh secret set TURSO_API_TOKEN           # backup の turso CLI 用 Platform API token
-gh secret set TURSO_DATABASE_NAME       # backup の turso db shell 用（例: harness-hub-prod）
+gh secret set TURSO_DATABASE_URL        # migration / 本番 smoke / 日次 export 用
+gh secret set TURSO_AUTH_TOKEN          # 同上の DB 接続 token（Platform API token とは別物）
 gh secret set BACKUP_HEARTBEAT_URL      # 任意。未設定なら backup cron 失敗の外形監視なし
 gh variable set HUB_HEALTH_URL --body "https://hub.<domain>/health"
+gh variable set HUB_PUBLIC_URL --body "https://hub.<domain>"   # cwv.yml の計測対象
 
 # 3. Worker secret（wrangler 経由。コード・DB に平文を置かない）
 cd apps/hub
@@ -128,8 +130,8 @@ curl -s -X PUT -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
 ## 6. バックアップと restore drill（RPO ≤ 24h / RTO ≤ 4h）
 
 **手順**:
-1. [domain-model DB runbook §2](../feat-domain-model-db/runbook.md#2-四半期-restore-drill-qa-019-復元できないバックアップを成功と数えない) に従い、R2 の最新 SQL dump を新 Turso DB へ標準入力から restore
-2. 18 domain table / 12 explicit index と、JSONL round-trip の行数・audit chain・暗号断面を確認
+1. [domain-model DB runbook §2](../feat-domain-model-db/runbook.md#2-四半期-restore-drill-qa-019-復元できないバックアップを成功と数えない) に従い、R2 の最新 JSONL export を使い捨ての一時 DB へ restore CLI で流し込む
+2. restore report の `ok` / `chainOk` に加え、18 domain table / 12 explicit index を確認（行数一致・audit chain・暗号断面は CLI が内部で強制する）
 3. 障害復旧時だけ Worker secret の URL/token を復元 DB へ差し替え
 4. `/health` で確認
 
