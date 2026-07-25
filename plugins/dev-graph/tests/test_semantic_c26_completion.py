@@ -4,11 +4,15 @@ import hashlib
 import importlib.util
 import io
 import json
+import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+
+from test_operational_loop_v2 import args as upsert_args
+from test_operational_loop_v2 import node_fixture, workspace
 
 PLUGIN = Path(__file__).resolve().parents[1]
 SCRIPTS = PLUGIN / "scripts"
@@ -74,6 +78,115 @@ def git_context(monkeypatch, module, common: Path) -> None:
         "head_sha": "1" * 40,
         "coordination_paths": {"root": str(common / "dev-graph")},
     })
+
+
+def lifecycle_workspace(tmp_path: Path) -> tuple[Path, Path, Path]:
+    root, graph, input_path = workspace(tmp_path)
+    subprocess.run(["git", "init", "-q", str(root)], check=True)
+    node = node_fixture("G")
+    node.update(
+        {
+            "artifact_kind": "task",
+            "title": "Lifecycle task",
+            "status": "active",
+            "file_path": "tasks/G.md",
+            "resource_scope": ["tasks/G.md"],
+            "template_id": "task",
+            "confirmation_status": "confirmed",
+            "evaluation_status": "pass",
+            "confirmation_evidence": {
+                "evaluator": "test",
+                "evidence_ref": "eval-log/test.json",
+                "evaluated_digest": "a" * 64,
+            },
+            "implementation_readiness": {
+                "status": "complete",
+                "missing_sections": [],
+                "checked_at": "2026-01-01T00:00:00Z",
+            },
+            "completion_evidence": {
+                "policy": "linked_pr_merged_all",
+                "status": "in_progress",
+                "source": None,
+                "completed_at": None,
+                "reconciled_at": None,
+                "evidence_refs": [],
+            },
+        }
+    )
+    input_path.write_text(
+        json.dumps(
+            {
+                "node": node,
+                "body": (
+                    "# Task\n\n"
+                    "## Verification and evidence\n\n"
+                    "- Automated commands: `python3 -m pytest`\n"
+                ),
+            }
+        ),
+        encoding="utf-8",
+    )
+    upsert = load(SCRIPTS / "upsert-node.py", f"seed_lifecycle_{id(tmp_path)}")
+    upsert._perform(upsert_args(root, input_path))
+    return root, graph, root / "tasks" / "G.md"
+
+
+def lifecycle_request(graph: Path, artifact: Path) -> dict:
+    saved = json.loads(graph.read_text(encoding="utf-8"))
+    completion = {
+        "policy": "linked_pr_merged_all",
+        "status": "done",
+        "source": "github_pr_merge",
+        "completed_at": "2026-01-01T00:00:00Z",
+        "reconciled_at": "2026-01-01T00:00:01Z",
+        "evidence_refs": ["https://example.test/o/r/pull/1"],
+    }
+    linkages = [
+        {
+            "repo": "o/r",
+            "pr_number": 1,
+            "url": "https://example.test/o/r/pull/1",
+            "base_branch": "main",
+            "head_branch": "devgraph/G",
+            "state": "merged",
+            "merged_at": "2026-01-01T00:00:00Z",
+            "merge_commit_sha": "2" * 40,
+            "linked_at": "2026-01-01T00:00:01Z",
+            "closing_reference_verified": True,
+        }
+    ]
+    request = {
+        "schema_version": "1.1",
+        "owner": "C02/run-dev-graph-node",
+        "operation": "apply-lifecycle-request",
+        "event_key": "o/r#task:G#policy:test",
+        "status": "pending",
+        "graph_path": ".dev-graph/state/graph.json",
+        "graph_revision_before": saved["graph_revision"],
+        "graph_sha256_before": hashlib.sha256(graph.read_bytes()).hexdigest(),
+        "task_patch": {
+            "graph_node_id": "G",
+            "file_path": "tasks/G.md",
+            "artifact_sha256_before": hashlib.sha256(artifact.read_bytes()).hexdigest(),
+            "set": {
+                "status": "done",
+                "updated_at": "2026-01-01T00:00:01Z",
+                "completion_evidence": completion,
+                "pull_request_linkages": linkages,
+            },
+        },
+        "feature_patch": None,
+    }
+    request["request_digest"] = hashlib.sha256(
+        json.dumps(
+            request,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode()
+    ).hexdigest()
+    return request
 
 
 def test_c12_lifecycle_facts_returns_default_oid_and_exact_pr_snapshot(monkeypatch):
@@ -238,6 +351,208 @@ def test_c26_writer_consumer_cli_route_creates_receipt(tmp_path):
     assert value["operation"] == "apply-lifecycle-request"
 
 
+def test_c02_apply_lifecycle_request_is_typed_and_crash_retry_idempotent(
+    tmp_path, monkeypatch, capsys
+):
+    root, graph, artifact = lifecycle_workspace(tmp_path)
+    module = load(SCRIPTS / "upsert-node.py", "c02_lifecycle_consumer")
+    coordination = root / ".git" / "dev-graph" / "completion-receipts"
+    coordination.mkdir(parents=True)
+    request_path = coordination / "request.json"
+    receipt_path = coordination / "receipt.json"
+    request_path.write_text(
+        json.dumps(lifecycle_request(graph, artifact)),
+        encoding="utf-8",
+    )
+
+    code, receipt = call_main(
+        module,
+        monkeypatch,
+        capsys,
+        "--repo-root",
+        root,
+        "--operation",
+        "apply-lifecycle-request",
+        "--request",
+        request_path,
+        "--receipt",
+        receipt_path,
+    )
+    assert code == 0
+    assert receipt["owner"] == "C02/run-dev-graph-node"
+    assert receipt["operation"] == "apply-lifecycle-request"
+    assert receipt["status"] == "applied"
+    assert receipt["graph_revision_after"] == 2
+    saved = json.loads(graph.read_text(encoding="utf-8"))
+    assert saved["nodes"][0]["status"] == "done"
+    assert saved["nodes"][0]["completion_evidence"]["status"] == "done"
+    assert '"done"' in artifact.read_text(encoding="utf-8")
+
+    receipt_path.unlink()
+    code, repeated = call_main(
+        module,
+        monkeypatch,
+        capsys,
+        "--repo-root",
+        root,
+        "--operation",
+        "apply-lifecycle-request",
+        "--request",
+        request_path,
+        "--receipt",
+        receipt_path,
+    )
+    assert code == 0
+    assert repeated["idempotent"] is True
+    assert json.loads(graph.read_text(encoding="utf-8"))["graph_revision"] == 2
+
+
+def test_c26_uses_default_c02_consumer_without_cli_injection(
+    tmp_path, monkeypatch, capsys
+):
+    root, graph, _ = lifecycle_workspace(tmp_path)
+    module = load(SCRIPTS / "reconcile-github-lifecycle.py", "c26_default_consumer")
+    common = root / ".git"
+    actual_run = module.run
+    git_context(monkeypatch, module, common)
+    monkeypatch.setattr(
+        module,
+        "run",
+        lambda argv, *args, **kwargs: (
+            actual_run(argv, *args, **kwargs)
+            if len(argv) > 1 and str(argv[1]).endswith("upsert-node.py")
+            else SimpleNamespace(returncode=0, stdout="", stderr="")
+        ),
+    )
+    monkeypatch.setattr(module, "c12_lifecycle_facts", lambda *args: facts())
+    args = (
+        "--repo-root",
+        root,
+        "--graph",
+        graph,
+        "--graph-node-id",
+        "G",
+        "--repo",
+        "o/r",
+        "--pr",
+        "1",
+    )
+
+    code, completed = call_main(module, monkeypatch, capsys, *args)
+    assert code == 0
+    assert completed["policy_decision"] == "complete"
+    assert completed["completion_step_ledger"]["c02_writer"] == "applied"
+    assert completed["completion_step_ledger"]["completion_event"] == "applied"
+    assert completed["local_patch"]["operation"] == "apply-lifecycle-request"
+    assert completed["completion_event"]["graph_node_id"] == "G"
+
+    revision = json.loads(graph.read_text(encoding="utf-8"))["graph_revision"]
+    code, repeated = call_main(module, monkeypatch, capsys, *args)
+    assert code == 0
+    assert repeated["policy_decision"] == "complete"
+    assert json.loads(graph.read_text(encoding="utf-8"))["graph_revision"] == revision
+
+
+def test_c26_backfill_done_uses_stored_verified_merge_and_is_idempotent(
+    tmp_path, monkeypatch, capsys
+):
+    root, graph, artifact = lifecycle_workspace(tmp_path)
+    upsert = load(SCRIPTS / "upsert-node.py", "c02_lifecycle_backfill_seed")
+    coordination = root / ".git" / "dev-graph" / "completion-receipts"
+    coordination.mkdir(parents=True)
+    request_path = coordination / "request.json"
+    receipt_path = coordination / "receipt.json"
+    request_path.write_text(
+        json.dumps(lifecycle_request(graph, artifact)),
+        encoding="utf-8",
+    )
+    assert (
+        upsert.main(
+            [
+                "--repo-root",
+                str(root),
+                "--operation",
+                "apply-lifecycle-request",
+                "--request",
+                str(request_path),
+                "--receipt",
+                str(receipt_path),
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
+
+    module = load(SCRIPTS / "reconcile-github-lifecycle.py", "c26_backfill_done")
+    common = root / ".git"
+    monkeypatch.setattr(
+        module,
+        "c24_context",
+        lambda root_path, resolver: {
+            "repo_root": str(root_path),
+            "repository_id": "github:o/r",
+            "git_common_dir": str(common),
+            "branch": None,
+            "head_sha": "3" * 40,
+            "coordination_paths": {"root": str(common / "dev-graph")},
+        },
+    )
+    args = (
+        "--repo-root",
+        root,
+        "--graph",
+        graph,
+        "--graph-node-id",
+        "G",
+        "--mode",
+        "backfill-done",
+        "--repo",
+        "o/r",
+        "--pr",
+        "1",
+    )
+    code, result = call_main(module, monkeypatch, capsys, *args)
+    assert code == 0
+    assert result["backfill_mode"] == "verified_existing_done"
+    assert result["completion_step_ledger"]["c02_writer"] == "verified_existing"
+    assert result["completion_event"]["backfilled_from_durable_completion"] is True
+    event_ledger = json.loads(
+        (common / "dev-graph" / "events.json").read_text(encoding="utf-8")
+    )
+    assert len(
+        [
+            event
+            for event in event_ledger["events"]
+            if event.get("graph_node_id") == "G"
+        ]
+    ) == 1
+    code, repeated = call_main(module, monkeypatch, capsys, *args)
+    assert code == 0
+    assert repeated["completion_event"]["event_key"] == result["completion_event"]["event_key"]
+    event_ledger = json.loads(
+        (common / "dev-graph" / "events.json").read_text(encoding="utf-8")
+    )
+    assert len(
+        [
+            event
+            for event in event_ledger["events"]
+            if event.get("graph_node_id") == "G"
+        ]
+    ) == 1
+    (common / "dev-graph" / "leases.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.1",
+                "leases": [{"graph_node_id": "G", "state": "pending_merge"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sys, "argv", [str(module.__file__), *map(str, args)])
+    with pytest.raises(module.ContractError, match="active common-dir lease"):
+        module.main()
+
+
 def test_c26_local_first_transaction_calls_c27_before_beads_and_is_idempotent(tmp_path, monkeypatch, capsys):
     module = load(SCRIPTS / "reconcile-github-lifecycle.py", "c26_transaction")
     common = tmp_path / "common"
@@ -257,7 +572,13 @@ def test_c26_local_first_transaction_calls_c27_before_beads_and_is_idempotent(tm
     graph.write_text(json.dumps({"graph_revision": 4, "nodes": [node]}), encoding="utf-8")
     original = graph.read_bytes()
     args = ("--repo-root", tmp_path, "--graph", graph, "--graph-node-id", "G", "--repo", "o/r", "--pr", "1")
-    code, pending = call_main(module, monkeypatch, capsys, *args)
+    code, pending = call_main(
+        module,
+        monkeypatch,
+        capsys,
+        *args,
+        "--writer-request-only",
+    )
     assert code == 0 and pending["policy_decision"] == "writer_pending"
     assert graph.read_bytes() == original
     request = pending["writer_request"]

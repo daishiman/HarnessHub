@@ -528,17 +528,247 @@ def _needs_system_release(node: dict[str, Any]) -> bool:
     return any(item.get("state") in {"pending_review", "pending_merge"} for item in (node.get("execution_contexts") or []) if isinstance(item, dict))
 
 
+def _backfill_done(
+    *,
+    root: Path,
+    context: dict[str, Any],
+    coord: Path,
+    events_path: Path,
+    events: dict[str, Any],
+    graph_path: Path,
+    graph: dict[str, Any],
+    node: dict[str, Any],
+    task_artifact: dict[str, Any],
+    requested_repo: str | None,
+    requested_pr: int | None,
+    bd_bridge: Path,
+    expected_workspace_id: str | None,
+) -> dict[str, Any]:
+    node_id = str(_node_id(node))
+    completion = node.get("completion_evidence") or {}
+    if node.get("status") != "done" or completion.get("status") != "done":
+        raise ContractError("backfill-done requires an already-done graph node")
+    frontmatter, _ = _frontmatter(_artifact_path(root, node).read_text(encoding="utf-8"))
+    if frontmatter.get("status") != "done":
+        raise ContractError("backfill-done requires done task Markdown frontmatter")
+    if _needs_system_release(node):
+        raise ContractError("backfill-done refuses a node with an unreleased execution context")
+    leases_path = coord / "leases.json"
+    if leases_path.exists():
+        lease_ledger = load_json(leases_path)
+        active_leases = [
+            item
+            for item in lease_ledger.get("leases", [])
+            if isinstance(item, dict)
+            and item.get("graph_node_id") == node_id
+            and item.get("state") != "released"
+        ]
+        if active_leases:
+            raise ContractError(
+                "backfill-done refuses a node with an active common-dir lease"
+            )
+    raw_policy = completion.get("policy")
+    match = re.fullmatch(r"linked_pr_merged_(all|any)", str(raw_policy))
+    if not match:
+        raise ContractError(
+            "backfill-done requires linked_pr_merged_all|any completion policy"
+        )
+    completion_policy = match.group(1)
+    raw_linkages = node.get("pull_request_linkages") or []
+    if not isinstance(raw_linkages, list) or not raw_linkages:
+        raise ContractError("backfill-done requires stored pull_request_linkages")
+    linkages: list[dict[str, Any]] = []
+    for linkage in raw_linkages:
+        if not isinstance(linkage, dict):
+            raise ContractError("backfill-done pull request linkage must be an object")
+        repo = linkage.get("repo")
+        number = linkage.get("pr_number")
+        merge_sha = linkage.get("merge_commit_sha")
+        if (
+            not isinstance(repo, str)
+            or not repo
+            or not isinstance(number, int)
+            or number < 1
+            or not isinstance(merge_sha, str)
+            or not re.fullmatch(r"[0-9a-f]{40}", merge_sha)
+            or str(linkage.get("state", "")).casefold() != "merged"
+            or not linkage.get("merged_at")
+            or linkage.get("closing_reference_verified") is not True
+        ):
+            raise ContractError(
+                "backfill-done requires verified merged PR linkage facts"
+            )
+        linkages.append(linkage)
+    linkages.sort(key=lambda item: (str(item["repo"]).casefold(), int(item["pr_number"])))
+    if requested_repo is not None or requested_pr is not None:
+        if not requested_repo or not requested_pr:
+            raise ContractError("backfill-done accepts --repo and --pr only together")
+        selected = next(
+            (
+                item
+                for item in linkages
+                if str(item["repo"]).casefold() == requested_repo.casefold()
+                and item["pr_number"] == requested_pr
+            ),
+            None,
+        )
+        if selected is None:
+            raise ContractError(
+                "backfill-done requested PR does not match stored linkage"
+            )
+    else:
+        selected = max(linkages, key=lambda item: str(item["merged_at"]))
+    policy_material = [
+        completion_policy,
+        *[
+            f"{item['repo']}#{item['pr_number']}#{item['merge_commit_sha']}#True"
+            for item in linkages
+        ],
+    ]
+    policy_digest = hashlib.sha256("\0".join(policy_material).encode()).hexdigest()
+    event_key = (
+        f"{selected['repo']}#task:{node_id}#policy:{policy_digest}"
+    )
+    existing_event = next(
+        (
+            item
+            for item in events.get("events", [])
+            if item.get("event_key") == event_key
+        ),
+        None,
+    )
+    if existing_event is not None and existing_event.get("graph_node_id") != node_id:
+        raise ContractError("backfill-done event key is bound to another graph node")
+    event = existing_event or {
+        "type": "completion",
+        "event_key": event_key,
+        "repository_id": context["repository_id"],
+        "graph_node_id": node_id,
+        "merge_commit_sha": selected["merge_commit_sha"],
+        "policy_digest": policy_digest,
+        "default_branch": selected.get("base_branch"),
+        "remote_default_oid": None,
+        "created_at": utc_now(),
+        "backfilled_from_durable_completion": True,
+    }
+    writer_receipt = {
+        "schema_version": "1.0",
+        "owner": "C02/run-dev-graph-node",
+        "operation": "verify-existing-lifecycle-completion",
+        "status": "applied",
+        "event_key": event_key,
+        "graph_node_id": node_id,
+        "graph_sha256_after": _sha256(graph_path),
+        "graph_revision_after": graph.get("graph_revision"),
+        "task_artifact_sha256_after": task_artifact["sha256"],
+        "completion_evidence": copy.deepcopy(completion),
+        "verified_at": utc_now(),
+    }
+    beads_reflux: Any = "not_applicable"
+    beads_step = "not_applicable"
+    if node.get("tracker_binding") == "beads":
+        issue_id = (node.get("beads_linkage") or {}).get("bd_issue_id")
+        if not issue_id:
+            raise ContractError("backfill-done beads node has no bd_issue_id")
+        argv = [
+            sys.executable,
+            str(bd_bridge),
+            "--repo-root",
+            str(root),
+            "--op",
+            "show",
+            "--bd-issue-id",
+            str(issue_id),
+        ]
+        if expected_workspace_id:
+            argv += ["--expected-workspace-id", expected_workspace_id]
+        beads_reflux = _invoke_json(argv, root, "C28 show for completion backfill")
+        result = beads_reflux.get("result") or {}
+        if not isinstance(result, dict) or result.get("status") != "closed":
+            raise ContractError("backfill-done requires the bound Beads task to be closed")
+        beads_step = "verified_existing"
+    steps = {
+        "event_key": event_key,
+        "c02_writer": "verified_existing",
+        "completion_event": "applied",
+        "system_release": "not_applicable",
+        "beads_close": beads_step,
+    }
+    digest = hashlib.sha256(event_key.encode()).hexdigest()
+    transaction_path = coord / "completion-receipts" / f"{digest}.json"
+    transaction = {
+        "schema_version": "1.1",
+        "event_key": event_key,
+        "graph_node_id": node_id,
+        "status": "complete",
+        "writer_request": None,
+        "writer_receipt": writer_receipt,
+        "steps": steps,
+        "backfill_mode": "verified_existing_done",
+        "beads_reflux": beads_reflux,
+        "created_at": event["created_at"],
+        "completed_at": utc_now(),
+    }
+    if transaction_path.exists():
+        existing_transaction = load_json(transaction_path)
+        if (
+            existing_transaction.get("event_key") != event_key
+            or existing_transaction.get("graph_node_id") != node_id
+        ):
+            raise ContractError("backfill-done transaction identity mismatch")
+        if existing_transaction.get("status") != "complete":
+            raise ContractError("backfill-done found an incomplete transaction")
+        transaction = existing_transaction
+    else:
+        atomic_json(transaction_path, transaction)
+    if existing_event is None:
+        events.setdefault("events", []).append(event)
+        atomic_json(events_path, events)
+    return {
+        "policy_decision": "complete",
+        "backfill_mode": "verified_existing_done",
+        "remote_default_oid": None,
+        "ancestor_verified": True,
+        "remote_facts": None,
+        "required_pull_requests": completion_policy,
+        "required_pr_decisions": [],
+        "linkage_decision": {
+            "stored_linkages_verified": True,
+            "eligible": True,
+        },
+        "worktree_decision": {
+            "branch": context["branch"],
+            "head_oid": context["head_sha"],
+            "durable_graph_write": False,
+        },
+        "feature_rollup": None,
+        "completion_step_ledger": transaction["steps"],
+        "writer_request": None,
+        "local_patch": transaction["writer_receipt"],
+        "completion_event": event,
+        "system_release": "not_applicable",
+        "beads_reflux": transaction.get("beads_reflux", beads_reflux),
+        "pending_events": [],
+        "conflicts": [],
+    }
+
+
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--repo-root", default=".")
     p.add_argument("--graph")
     p.add_argument("--graph-node-id")
-    p.add_argument("--mode", choices=("reconcile", "check", "drain-pending"), default="reconcile")
+    p.add_argument(
+        "--mode",
+        choices=("reconcile", "check", "drain-pending", "backfill-done"),
+        default="reconcile",
+    )
     p.add_argument("--repo")
     p.add_argument("--pr", type=int)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--writer-receipt")
     p.add_argument("--writer-consumer")
+    p.add_argument("--writer-request-only", action="store_true")
     p.add_argument("--registration-receipt")
     p.add_argument("--gh-bridge")
     p.add_argument("--context-resolver")
@@ -561,10 +791,17 @@ def main() -> int:
     if a.mode == "drain-pending":
         dump({"pending_events": [item for item in events["events"] if not item.get("consumed_at")], "pending_transactions": [load_json(path) for path in transactions if load_json(path).get("status") != "complete"]})
         return 0
-    if not all((a.graph, a.graph_node_id, a.repo, a.pr)):
+    if a.mode == "backfill-done":
+        if not all((a.graph, a.graph_node_id)):
+            raise ContractError("backfill-done requires graph and graph-node-id")
+    elif not all((a.graph, a.graph_node_id, a.repo, a.pr)):
         raise ContractError("check/reconcile require graph, graph-node-id, repo and pr")
     if a.writer_receipt and a.writer_consumer:
         raise ContractError("use either --writer-receipt or --writer-consumer, not both")
+    if a.writer_request_only and (a.writer_receipt or a.writer_consumer):
+        raise ContractError(
+            "--writer-request-only cannot be combined with a writer receipt/consumer"
+        )
     graph_path = Path(a.graph).resolve(strict=True)
     try:
         graph_relative = graph_path.relative_to(root)
@@ -579,6 +816,30 @@ def main() -> int:
     if not node:
         raise ContractError("graph node not found")
     task_artifact = _validate_task_artifact(root, node)
+    if a.mode == "backfill-done":
+        if a.dry_run or a.writer_receipt or a.writer_consumer or a.writer_request_only:
+            raise ContractError(
+                "backfill-done cannot be combined with writer or dry-run options"
+            )
+        bridge = Path(a.bd_bridge).resolve() if a.bd_bridge else Path(__file__).with_name("bd-bridge.py")
+        dump(
+            _backfill_done(
+                root=root,
+                context=context,
+                coord=coord,
+                events_path=events_path,
+                events=events,
+                graph_path=graph_path,
+                graph=data,
+                node=node,
+                task_artifact=task_artifact,
+                requested_repo=a.repo,
+                requested_pr=a.pr,
+                bd_bridge=bridge,
+                expected_workspace_id=a.expected_workspace_id,
+            )
+        )
+        return 0
     gh_bridge = Path(a.gh_bridge).resolve() if a.gh_bridge else Path(__file__).with_name("gh-bridge.py")
     requested_facts = c12_lifecycle_facts(root, gh_bridge, a.repo, a.pr)
     requested_pr = requested_facts.get("pull_request") or {}
@@ -735,8 +996,13 @@ def main() -> int:
     atomic_json(request_path, writer_request)
     atomic_json(transaction_path, transaction)
     writer_path: str | Path | None = a.writer_receipt or transaction.get("writer_receipt_path")
-    if not writer_path and a.writer_consumer:
-        _consume_writer(root, Path(a.writer_consumer).resolve(), request_path, generated_receipt_path)
+    if not writer_path and not a.writer_request_only:
+        consumer = (
+            Path(a.writer_consumer).resolve()
+            if a.writer_consumer
+            else Path(__file__).with_name("upsert-node.py")
+        )
+        _consume_writer(root, consumer, request_path, generated_receipt_path)
         writer_path = generated_receipt_path
     writer_receipt = _writer_applied(writer_path, writer_request, graph_path, root)
     if writer_receipt is None:

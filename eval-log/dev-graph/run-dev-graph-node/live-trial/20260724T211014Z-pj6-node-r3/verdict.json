@@ -1,0 +1,44 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "add --repo-root eval-log/dev-graph/live-trial-fixtures/node-wt10-pj6-r3 --input eval-log/dev-graph/live-trial-fixtures/node-wt10-pj6-r3/mixed-artifacts.json",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "goal-seek evidence was recorded after the fixture's inputs directory was created"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "f2146865c48bbd86b57d831e9b74ac033e788d32d21fbe1ffc0e5c1c69f1571e",
+  "transcript_sha256": "0752cc493aec240d2728bcbf2105d276dffb8832002b5a25f1a6391ac0eaa688",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 585.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts"
+}
