@@ -5,7 +5,8 @@ fixture 契約 (live-trial-positive-scenarios.json):
   "A contained initialized repository supplies one valid issue, task, specification,
    architecture, and document artifact in a single input batch."
 
-置くもの: fixture repo 直下の ``mixed-artifacts.json`` 1 本だけ。
+置くもの: fixture repo 直下の ``mixed-artifacts.json`` と、入力を安全に複製するための
+空の ``inputs/`` staging directory。
 
 入力スキーマの根拠 (推測ではなく実装から確定した事実):
   - ``scripts/upsert-node.py`` の ``_input`` は「JSON object 1 個」しか受けず (payload が
@@ -51,6 +52,11 @@ SHAPE = "node"
 # 入力バッチの置き場所。scenario の task_args_template
 # ``--input <contained-fixture-repo>/mixed-artifacts.json`` と 1 対 1 で対応する。
 BATCH_FILENAME = "mixed-artifacts.json"
+
+# live trial が元の素材を shell 展開で壊さず複製できる、安全な入力 staging directory。
+# 空 directory は git が追跡しないため .gitkeep を含め、trial 開始前の fixture commit に
+# 存在させる。これにより goal-seek evidence を記録する前の mkdir mutation が不要になる。
+INPUT_STAGING_DIR = "inputs"
 
 # 5 種の素材。kind は宣言せず本文だけで一意に決まるようにする。
 # 各 body の見出しは template-contract.json の required_sections の部分集合であり、
@@ -279,11 +285,15 @@ def build(out: Path) -> None:
     graph は空 (revision 0 / nodes 0 件) にする。content root
     (issues/tasks/specs/architecture/docs) にも何も置かない。scenario は
     「skill が 5 種を分類して正規 path へ登録できるか」を観測するものなので、登録結果を
-    先に置いてしまうと観測対象が消える。素材だけを repo 直下へ 1 本置く。
+    先に置いてしまうと観測対象が消える。素材を repo 直下へ 1 本置き、trial が
+    goal-seek evidence の記録後に安全な入力コピーを書ける空 staging directory も用意する。
     """
     scaffold(out, kind=SHAPE)
     (out / BATCH_FILENAME).write_text(
         json.dumps(ARTIFACTS, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    staging = out / INPUT_STAGING_DIR
+    staging.mkdir(parents=True, exist_ok=True)
+    (staging / ".gitkeep").write_text("", encoding="utf-8")
     finalize(out)

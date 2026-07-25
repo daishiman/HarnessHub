@@ -1,0 +1,44 @@
+{
+  "patch": {
+    "graph_node_id": "issue-devgraph-completion-event-ledger-gap-20260724",
+    "status": "done",
+    "updated_at": "2026-07-24T12:44:42Z",
+    "resource_scope": [
+      "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
+      "plugins/dev-graph/scripts/upsert-node.py",
+      "plugins/dev-graph/tests/test_semantic_c26_completion.py",
+      "plugins/dev-graph/tests/test_runtime_coverage.py",
+      "plugins/dev-graph/references/github-lifecycle-contract.md",
+      "plugins/dev-graph/references/git-worktree-contract.md",
+      "plugins/dev-graph/plugin-composition.yaml",
+      "plugin-plans/dev-graph/component-inventory.json"
+    ],
+    "scope_in": [
+      "writer-consumer (apply-lifecycle-request) のC02組み込み実装とreconcile既定統合",
+      "already-done nodeへの冪等completion_event後追いemission経路",
+      "MVP-first P01..P13のcompletion_event台帳とtransaction receipt後追い生成"
+    ],
+    "scope_out": [
+      "completion_evidenceの再投影 (既にdone・検証済み)",
+      "別ストリーム (doc-governance/qa070/render-out1) のOR-003解消",
+      "verified PR linkageを持たないmanual policy nodeへのmerge事実の補作"
+    ],
+    "acceptance": [
+      "reconcile-github-lifecycle.pyが外部writer-consumer指定なしでも完了投影を完走しcompletion_event台帳を生成できる",
+      "MVP-first P01..P13に対応するcompletion_eventがevents台帳に13件存在する",
+      "手動writer-receipt手書きなしで監査可能なtyped transaction receiptが13件すべてに残る"
+    ],
+    "completion_evidence": {
+      "status": "done",
+      "policy": "manual",
+      "source": "reconciliation",
+      "completed_at": "2026-07-24T12:44:42Z",
+      "reconciled_at": "2026-07-24T12:44:42Z",
+      "evidence_refs": [
+        "plugins/dev-graph/tests/test_semantic_c26_completion.py",
+        "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
+        "plugins/dev-graph/scripts/upsert-node.py"
+      ]
+    }
+  }
+}
