@@ -1,0 +1,11 @@
+{
+  "graph_node_id": "issue-auth-tenancy-spec-delta-20260725",
+  "patch": {
+    "updated_at": "2026-07-25T02:34:26Z",
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-l2g9",
+      "linked_at": "2026-07-25T02:34:26Z",
+      "sync_state": "linked"
+    }
+  }
+}
