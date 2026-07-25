@@ -136,7 +136,7 @@ P10 / P11 から引き継いだもの。**リリース前に解消すること�
 | `next-auth` 未導入 | 実ログインが通らない | 別途の意思決定 |
 | 本番 AuthPorts adapter 未結線 | Device/Token API の composition root が例外になる | bd `HarnessHub-b7ng` |
 | `test-design.md` の `T-SESS-05` 文言が実装と不一致 | 文書の齟齬のみ (実装は安全側で正しい) | P04 改訂時 |
-| 実装が確定仕様を 2 点超えている (session claims の `workspace_ids` / polling 上限 60 秒・減衰) | 仕様書だけを読んだ Publisher CLI 実装者が誤った client を書きうる。実装は安全側で正しい | bd `HarnessHub-l2g9` (qa-036 / qa-041 の R4-reopen) |
+| ~~実装が確定仕様を 2 点超えている (session claims の `workspace_ids` / polling 上限 60 秒・減衰)~~ | 解消済み。R4-reopen とユーザー確認 `appr-010` を経て `qa-072` / `qa-073` として仕様へ反映 | bd `HarnessHub-l2g9` (closed) |
 
 ---
 

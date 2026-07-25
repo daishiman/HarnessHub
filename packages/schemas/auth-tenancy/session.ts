@@ -18,7 +18,8 @@ export const sessionClaimsSchema = z.object({
   role: sessionRoleSchema,
   status: userStatusSchema,
   /**
-   * 所属 Workspace。edge の認可 MW が Workspace 越境を DB 往復なしで弾くために載せる (AD-7 追補)。
+   * 所属 Workspace。edge の認可 MW が Workspace 越境を DB 往復なしで弾くために載せる
+   * (docs/security-spec.md §2.1 = qa-072 で確定。起点は AD-7 追補)。
    * 載せない場合、edge が membership を判定できず全 Workspace スコープ要求が落ちる。
    * 代償: cookie が所属数に比例して膨らむ / membership 変更が最大 `updateAge` (15 分) 反映されない。
    */

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 545,
+  "graph_revision": 546,
   "nodes": [
     {
       "acceptance": [
@@ -33062,12 +33062,18 @@
       "classification_confidence": 0.9,
       "classification_reason": "feat-auth-tenancy の最終レビューで検出した、確定仕様を超える実装決定 2 件を R4-reopen へ送る issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-25T11:06:52Z",
+        "evidence_refs": [
+          "system-spec/spec-state.json",
+          "system-spec/auth.md",
+          "system-spec/security.md",
+          "docs/security-spec.md",
+          "docs/features/feat-auth-tenancy/architecture-implementation-notes.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-25T11:06:52Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -33092,9 +33098,9 @@
       "goal": "session claims の確定集合と Device Flow polling の上限・減衰が、実装ではなく確定済み仕様側に記録され、Publisher CLI 実装者が仕様書だけを読んで正しい client を書ける状態",
       "graph_node_id": "issue-auth-tenancy-spec-delta-20260725",
       "implementation_readiness": {
-        "checked_at": "2026-07-25T11:40:00Z",
+        "checked_at": "2026-07-25T11:06:52Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -33135,7 +33141,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "follow-up",
         "spec-drift",
@@ -33149,7 +33155,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の実装が security-spec の確定値を 2 点だけ超えており R4-reopen が要る",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T02:34:26Z"
+      "updated_at": "2026-07-25T12:00:46.215663Z"
     },
     {
       "acceptance": [
