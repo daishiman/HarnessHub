@@ -47,6 +47,7 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":null,"missing_sections":[],"status":"incomplete"}
 ---
 
+
 ## 概要
 
 `governance-check.yml` が回すメタ層 lint (`lint-artifact-placement.py` / `lint-doc-line-limit.py`) に

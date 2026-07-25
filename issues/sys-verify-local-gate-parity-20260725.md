@@ -47,6 +47,7 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":null,"missing_sections":[],"status":"incomplete"}
 ---
 
+
 ## 概要
 
 required status checks のうち **G7 (破壊的 DDL 検査) / G7b (tenant 分離網羅・接続層隔離) / G9 (axe a11y)** が

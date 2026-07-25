@@ -48,6 +48,7 @@ implementation_readiness: {"checked_at":"2026-07-25T15:33:17Z","missing_sections
 ---
 
 
+
 # 概要
 
 feat-auth-tenancy が追加した認証・認可の静的検査 3 件と tenant 分離テストが CI から呼ばれておらず、手動実行でしか走っていなかったため、CI と root `pnpm verify` の両方へ結線した。
