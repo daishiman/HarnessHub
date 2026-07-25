@@ -48,9 +48,9 @@ env:
   NODE_VERSION: "22"
 
 jobs:
-  # ゲート 1: 静的検査。依存インストール前に走らせ、npm 混入と共通層の重複実装を最速で落とす
+  # ゲート 1: 静的検査。依存インストール前に走らせ、npm 混入・共通層の重複実装・認証構造違反を最速で落とす
   static-gates:
-    name: 静的ゲート (pnpm 混入検査 / 共通層 duplicate detector)
+    name: 静的ゲート (pnpm / duplicate detector / auth)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -69,6 +69,14 @@ jobs:
           node scripts/ci/check-shared-layer-duplicates.mjs \
             --json artifacts/duplicate-scan.json \
             --report artifacts/shared-layer-ownership.json
+      # G12: feat-auth-tenancy が追加した 3 つの静的検査 (Auth.js 境界隔離 / 認可判定の単一集約 /
+      # dev 専用 provider の非存在) を束ね役経由で呼ぶ。1 本でも fail すれば非ゼロ終了する。
+      # 依存インストール不要 (node のみ) のため静的ゲート段に置き、最速で落とす。
+      # local 側の同一入口は root の `pnpm check:auth` (ADR §6 R-18 / qa-039【2】)。
+      - name: G12 認証・認可 静的検査 (auth gates 3 種 / qa-020, SEC2, D3)
+        run: |
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:auth-gates
+          node apps/hub/scripts/check-auth-gates.mjs --json artifacts/auth-gates.json
       - name: detector 実効性の検証 (HF-A4-DUP-002 / 意図的違反を検出できること)
         run: |
           set +e
@@ -114,6 +122,15 @@ jobs:
         run: pnpm --filter @harness-hub/hub run build:worker
       - name: G4 unit / integration / contract test (Tenant 分離・検査 pipeline 挙動同値を含む)
         run: pnpm -r test
+      # G4 の名指し部分。qa-038【2】は tenant 分離テストを必須ゲートとして名指ししているが、
+      # `pnpm -r test` に含まれているだけでは、ファイル分割や it.skip で 1 件も実行されなくなっても
+      # 緑のまま通る。対象の実在とケースの無効化を静的に確かめてから、名指しで実行する。
+      # ゲート数は増えない (G4 の内訳を明示するだけ) ため qa-038【2】の「8 種」の数え方は変わらない。
+      - name: G4 名指し tenant 分離テスト (SEC3 / D4 row-level-scope / apps/hub)
+        run: |
+          node scripts/ci/check-tenant-isolation-gate.mjs --json artifacts/tenant-isolation-gate.json
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json test:tenant-isolation
+          pnpm --filter @harness-hub/hub run test:tenant-isolation
       - name: G6 secret scan (packages/inspection を CI からも呼ぶ / qa-038【2】)
         run: |
           node scripts/ci/check-required-package-script.mjs packages/inspection/package.json scan:secrets

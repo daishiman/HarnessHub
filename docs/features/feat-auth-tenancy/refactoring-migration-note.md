@@ -150,7 +150,13 @@ $ node apps/hub/scripts/check-auth-gates.mjs
 [auth-gates] OK: 3 ゲート全て pass
 ```
 
-### 2.6 CI への結線 (未実施 / follow-up)
+### 2.6 CI への結線 (P09 時点は未実施 / 2026-07-25 に解消済み)
+
+> **解消追記 (2026-07-25 / `issue-auth-tenancy-ci-wiring-20260725` = bd `HarnessHub-1f28`)**
+> 本節が「未実施」と記録した結線は完了した。`apps/hub/package.json` に `check:auth-gates` を追加し、
+> root `package.json` の `check:auth` 経由で `verify` チェーンへ、`.github/workflows/ci.yml` の
+> `static-gates` job へ **G12** として結線した (登録簿は `docs/shared-layers.md` §3、設計正本は
+> feat-hub-foundation ADR §6)。以下は P09 時点の記録として保存する。
 
 `check-auth-gates.mjs` は**手動実行では pass しているが、CI パイプラインへは未結線である**。
 `apps/hub/package.json` の scripts 追加も、`.github/workflows/` の変更も、
