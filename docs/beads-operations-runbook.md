@@ -1,3 +1,13 @@
+---
+status: draft
+layer: operations
+graph_node_id: issue-beads-jsonl-stash-conflict-20260725
+sources:
+  - .beads/README.md
+  - plugins/dev-graph/hooks/guard-graph-schema.py
+  - plugins/dev-graph/scripts/bd-bridge.py
+---
+
 # Beads 運用 runbook
 
 本リポジトリにおける Beads（課題トラッカー）の運用手順書。とくに **`.beads/*.jsonl` のコンフリクト解消** と **beads 変更操作の許可経路** を扱う。
