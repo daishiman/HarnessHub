@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-integrity-auditor-fresh-evaluator-20260724T095200Z-decompose-wt1r3",
+  "reviewer": "dev-graph-integrity-auditor-fresh-evaluator-20260725T011928Z-decompose-wt5",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T011928Z-decompose-wt5/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T011928Z-decompose-wt5/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T011928Z-decompose-wt5/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T011928Z-decompose-wt5/out/status.json"
       ],
-      "observed": "2026-07-24 再実走 (run 20260724T095200Z-decompose-wt1r3, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0, Skill ツール起動, --binding none --dry-run): MVP-first 実装で挙動閉包 sha が更新され旧 verdict (wt1r2) が stale 化したため、fixture を git reset --hard + clean -fdx で baseline (1f33d07) へ戻してから再取得。fresh evaluator が transcript のコマンドを そのまま再実行して同一 JSON 出力 (valid=false, artifact_missing 3 件のみ、schema_violation / dependency_cycle / binding_collision は 0 件) を再現し、fabrication でないことを裏取り。DAG を独自再計算し node_count=3 (architecture 1 + feature 2)、feat-dashboard depends_on feat-user-auth、cycles=[]、kinds={architecture, feature} (task 粒度の混入なし)、orphan なしを確認。git status は ?? eval-log/ のみで graph.json / config.json に差分なし、leases は空、transcript 中の gh-bridge / bd-bridge 呼出し 0 件により local / beads / github / projects の write_count=0 を独立裏取り。resolve-repo-context.py --mode write の receipt で repo_root == content_roots.repository を確認。goal-seek 3 点セットは必須 6 キー充足・original_goal hash (ceef75f3…) 一致・1 行目 (Skill 起動 00:59:10Z より前の 00:58:49Z) と 2 行目 (01:03:48Z) で約 5 分差の append-only を実証。AskUserQuestion 0 件。blocker 0 で PASS。非 blocker の scope 留意点 (本 scenario は --binding none --dry-run のみを被覆) は HarnessHub-vnr で追跡。skill_dir_tree_sha が現行 closure と一致。"
+      "observed": "2026-07-25 再実走 (run 20260725T011928Z-decompose-wt5, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0/stall=0, Skill ツール起動 1 件のみで script 直叩き代替なし, --binding none --dry-run)。再実走理由: system-dev-planner の C12 contract versioning (validate-system-plan.py の 601→401 行分割 + validate-task-spec-contract.py / validate-json-schema-subset.py 追加) が本 skill の宣言済み挙動閉包 (dependency scripts tree) に含まれるため旧 verdict (wt1r3) が stale 化した。SKILL.md 自体は不変 (sha 2652930f… 一致) で、閉包 digest のみ 0e01aa8d… → 7d300266… へ更新。fixture は committed な決定論 builder (plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py --kind decompose) で再生成し、repository_id は build 時に git common dir realpath から実測 (local:sha256:69b11b04…, head_sha d4f768d1…)。fresh evaluator (独立個体, read-only) の判定は blocker 0 で PASS: preview graph は nodes=3 (architecture A-001-rest-api 1 + feature F-001-auth / F-002-profile 2)、dag_edges=[F-002-profile→F-001-auth]、cycles=0、task 粒度の混入 0 で depends_on を独自に辿り非循環を再検証。transcript 全 193 entry を走査し gh-bridge.py / bd-bridge.py / gh issue / bd issue の呼出し 0 件により publish 0 件を裏取り。.dev-graph/state/graph.json は実行前後で {graph_revision:0, nodes:[]} のまま byte 不変、fixture の git status --porcelain は task.md が指定した goal-seek 配線先 ?? eval-log/ のみ、find -iname '*tmp*' 0 件、artifact ディレクトリは .gitkeep のみで管理対象 repository 内への一時ファイル生成なし。preview graph の検証は printf | validate-graph-schema.py --graph - の stdin 経路で行われ、同 script の --graph - 分岐 (plugins/dev-graph/scripts/validate-graph-schema.py:371-378) が書込みなしで stdin を読むことをコード上も確認。検証結果 valid=false の違反は全て artifact_missing (dry-run では readiness gap であり containment failure ではない) で schema_violation / dependency_cycle / invalid_dependencies は 0 件。goal-seek 3 点セットは必須 6 キー充足、original_goal が SKILL.md 本文 132 行目の原文と完全一致し、その UTF-8 SHA-256 を evaluator が独自再計算して両行の original_goal_hash と一致 (ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795)、transcript の書込順序 (1 行目 Write → Skill 起動 → 2 行目 append) から時系列どおりの append-only を実証。out/ 配下は status.json 1 件のみ。非 blocker の scope 留意点 (本 scenario は --binding none --dry-run の 1 通りのみを被覆するため『どの binding でも publish 0』は binding=none の範囲での確認であり、昇格イベントを伴う publication candidate 判定は本 run では vacuously true) は HarnessHub-vnr で追跡。skill_dir_tree_sha 7d300266… が現行 closure と一致。"
     },
     "OUT2": {
       "status": "PASS",

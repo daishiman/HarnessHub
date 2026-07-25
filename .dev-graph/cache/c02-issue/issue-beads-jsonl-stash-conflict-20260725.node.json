@@ -1,0 +1,112 @@
+{
+ "node": {
+  "graph_node_id": "issue-beads-jsonl-stash-conflict-20260725",
+  "artifact_kind": "issue",
+  "artifact_subtypes": [],
+  "project_id": "harness-hub",
+  "domain": "dev-workflow",
+  "tags": [
+   "beads",
+   "conflict-resolution",
+   "runbook",
+   "ops"
+  ],
+  "priority": "medium",
+  "start_date": null,
+  "target_date": null,
+  "iteration": null,
+  "title": ".beads/interactions.jsonl の stash pop コンフリクト解消と JSONL 運用 runbook 整備",
+  "owners": [
+   "daishiman"
+  ],
+  "created_at": "2026-07-25T02:35:37Z",
+  "updated_at": "2026-07-25T02:35:37Z",
+  "status": "draft",
+  "depends_on": [],
+  "related_nodes": [
+   "feat-dev-pipeline-improvement"
+  ],
+  "resource_scope": [
+   "issues/sys-beads-jsonl-stash-conflict-20260725.md",
+   "docs/beads-operations-runbook.md",
+   ".beads/README.md",
+   ".beads/interactions.jsonl"
+  ],
+  "purpose": "git stash pop の中断で .beads/interactions.jsonl に残置したコンフリクトを、append-only ログの性質に沿って欠落なく解消し、同種事故の再発時に調査コストを払わずに済む手順を確立する",
+  "goal": "コンフリクトが和集合で解消され JSONL 構文と id 一意性が機械検証されており、かつ append-only JSONL の解消手順と bd-bridge 経由の beads 書込規約が docs から辿れる状態になっている",
+  "scope_in": [
+   ".beads/interactions.jsonl のコンフリクト解消と検証",
+   "append-only JSONL コンフリクト解消手順の runbook 化",
+   "beads 書込が bd-bridge.py 単一経路である旨の明文化",
+   ".beads/README.md のリポジトリ実態への追随"
+  ],
+  "scope_out": [
+   "滞留 stash 12 件の棚卸し",
+   "Dolt リモート同期 (bd dolt push) の実行",
+   ".gitattributes merge driver による自動解消の実装"
+  ],
+  "acceptance": [
+   "interactions.jsonl からコンフリクトマーカーが除去され全レコードが JSON として解析できる",
+   "stash 側と HEAD 側の行が欠落なく保持され id 重複が 0 件である",
+   "append-only JSONL の解消手順が runbook として文書化されている",
+   "beads 変更が bd-bridge.py 経由に限定される旨が .beads/README.md から辿れる",
+   "lint-doc-line-limit.py の 300 行規約に適合している"
+  ],
+  "architecture_refs": [],
+  "parent_feature": null,
+  "feature_package_id": null,
+  "phase_ref": null,
+  "file_path": "issues/sys-beads-jsonl-stash-conflict-20260725.md",
+  "template_id": "issue",
+  "template_version": "1.0.0",
+  "confirmation_status": "draft",
+  "evaluation_status": "pending",
+  "confirmation_evidence": {
+   "evaluated_digest": null,
+   "evaluator": null,
+   "evidence_ref": null
+  },
+  "source_lineage": {
+   "imported_at": "2026-07-25T02:35:37Z",
+   "origin_kind": "manual",
+   "source_digest": null,
+   "source_path": null,
+   "source_plugin": null,
+   "source_version": null
+  },
+  "classification_confidence": 0.95,
+  "classification_reason": "2026-07-25 の stash pop 中断で発生した .beads/interactions.jsonl コンフリクトの解消と、再発防止のための運用 runbook 整備を追跡する issue",
+  "classification_candidates": [
+   {
+    "artifact_kind": "issue",
+    "candidate_path": "issues/sys-beads-jsonl-stash-conflict-20260725.md",
+    "confidence": 0.95
+   }
+  ],
+  "issue_linkage": null,
+  "tracker_binding": "beads",
+  "beads_linkage": null,
+  "github_publication": {
+   "labels": [],
+   "milestone": null,
+   "mode": "local_only",
+   "project_aliases": []
+  },
+  "github_project_linkages": [],
+  "pull_request_linkages": [],
+  "execution_contexts": [],
+  "completion_evidence": {
+   "completed_at": null,
+   "evidence_refs": [],
+   "policy": "manual",
+   "reconciled_at": null,
+   "source": null,
+   "status": "open"
+  },
+  "implementation_readiness": {
+   "checked_at": "2026-07-25T02:35:37Z",
+   "missing_sections": [],
+   "status": "complete"
+  }
+ }
+}

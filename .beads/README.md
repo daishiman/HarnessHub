@@ -8,12 +8,28 @@ Beads はリポジトリ内で動く課題管理ツールで、AI コーディ�
 
 **詳しく知る:** [github.com/steveyegge/beads](https://github.com/steveyegge/beads)
 
+## ⚠️ 本リポジトリ固有の制約
+
+**課題を変更する操作（create / update / close）は `bd` を直接実行できません。**
+`plugins/dev-graph/hooks/guard-graph-schema.py` が、変更操作を `plugins/dev-graph/scripts/bd-bridge.py` の単一経路に強制しているためです。直接実行すると BLOCK されます。
+
+```bash
+# ✅ 変更操作はこちら（--graph-node-id は必須: 課題は dev-graph node と 1 対 1 で紐づく）
+python3 plugins/dev-graph/scripts/bd-bridge.py --op create --repo-root . \
+  --graph-node-id <graph-node-id> --title "<タイトル>"
+
+# ✅ 読み取り操作は bd を直接実行してよい（guard 対象外）
+bd list / bd show <id> / bd ready / bd stats
+```
+
+コンフリクト解消・書込経路・事故時の復旧手順は **[docs/beads-operations-runbook.md](../docs/beads-operations-runbook.md)** を参照してください。以下は Beads 一般の説明です。
+
 ## クイックスタート
 
 ### 基本コマンド
 
 ```bash
-# 新しい課題を作成する
+# 新しい課題を作成する（※本リポジトリでは bd-bridge.py 経由。上記の制約を参照）
 bd create "Add user authentication"
 
 # 全課題を表示する
@@ -22,7 +38,7 @@ bd list
 # 課題の詳細を表示する
 bd show <issue-id>
 
-# 課題ステータスを更新する
+# 課題ステータスを更新する（※本リポジトリでは bd-bridge.py 経由）
 bd update <issue-id> --claim
 bd update <issue-id> --status done
 

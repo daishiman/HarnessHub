@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "--repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260724-201121-wt-5/eval-log/dev-graph/live-trial-fixtures/decompose --binding none --dry-run",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "7d300266759e9671efab3a532a58412af57f307bdbe6908f3779f545c2cc1429",
+  "transcript_sha256": "811dc640215590a7713999074857df0c938e8a6e1c275a7f2c704f2de042b08c",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 600.0
+  },
+  "scenario_id": "C14-OUT1-positive-macro-decomposition"
+}
