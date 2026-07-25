@@ -12,8 +12,8 @@ iteration: null
 title: "validate-system-plan の promoted package 遡及契約を契約 version 台帳で互換化する"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:20:15Z"
-updated_at: "2026-07-24T23:45:00Z"
-status: "draft"
+updated_at: "2026-07-25T04:58:43.709941Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/system-dev-planner/scripts/validate-system-plan.py","plugins/system-dev-planner/scripts/validate-task-spec-contract.py","plugins/system-dev-planner/scripts/validate-json-schema-subset.py","plugins/system-dev-planner/scripts/promote-system-plan.py","plugins/system-dev-planner/assets/validation-contract-baseline.json","plugins/system-dev-planner/references/feature-execution-package-contract.md","plugins/system-dev-planner/tests/test_contract_versioning.py"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-24T23:39:55Z","evidence_refs":["plugins/system-dev-planner/tests/test_contract_versioning.py","plugins/system-dev-planner/assets/validation-contract-baseline.json","plugins/system-dev-planner/references/feature-execution-package-contract.md","docs/plugin-contracts/system-dev-planner-c12-contract-versioning.md","https://github.com/daishiman/HarnessHub/pull/60"],"policy":"manual","reconciled_at":"2026-07-25T04:57:48Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-24T23:20:15Z","missing_sections":[],"status":"complete"}
 ---
 
