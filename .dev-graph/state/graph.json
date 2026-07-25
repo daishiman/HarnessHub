@@ -1,5 +1,5 @@
 {
-  "graph_revision": 531,
+  "graph_revision": 532,
   "nodes": [
     {
       "acceptance": [
@@ -32707,23 +32707,26 @@
       "classification_confidence": 0.95,
       "classification_reason": "HarnessHub-57v のブランチへ main をマージした結果、両親のどちらでも緑だった C03 の live-trial 受領書が stale 判定になったことで判明した構造的ギャップ",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-25T04:45:00Z",
+        "evidence_refs": [
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/criteria-test/scenario-verdict.json"
+        ],
         "policy": "manual",
         "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "72cc7c43cd72eac2027c742fb703dfbb836de5ca5bbd112ee2fde4088fa75953",
+        "evaluator": "dev-graph-sync-conflict-verifier-fresh-goal-evaluator-i08-merged-20260725",
+        "evidence_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/verdict.json"
       },
-      "confirmation_status": "draft",
+      "confirmation_status": "confirmed",
       "created_at": "2026-07-25T03:20:00Z",
       "depends_on": [],
       "domain": "quality",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/sys-c03-live-trial-closure-stale-after-merge-20260725.md",
@@ -32778,7 +32781,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "quality",
         "dev-graph",
@@ -32791,7 +32794,7 @@
       "template_version": "1.0.0",
       "title": "main マージで C03 の behavior closure digest が両親のどちらとも異なり live-trial 受領書が stale になる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T03:23:00Z"
+      "updated_at": "2026-07-25T04:45:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

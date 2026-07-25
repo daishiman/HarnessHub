@@ -12,8 +12,8 @@ iteration: null
 title: "main マージで C03 の behavior closure digest が両親のどちらとも異なり live-trial 受領書が stale になる"
 owners: ["daishiman"]
 created_at: "2026-07-25T03:20:00Z"
-updated_at: "2026-07-25T03:23:00Z"
-status: "draft"
+updated_at: "2026-07-25T04:45:00Z"
+status: "done"
 depends_on: []
 related_nodes: []
 resource_scope: ["eval-log/dev-graph/run-dev-graph-sync/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-sync/live-trial/","plugins/dev-graph/skills/run-dev-graph-sync/SKILL.md","plugins/dev-graph/tests/test_skill_criteria_evidence.py"]
@@ -30,9 +30,9 @@ phase_ref: null
 file_path: "issues/sys-c03-live-trial-closure-stale-after-merge-20260725.md"
 template_id: "issue"
 template_version: "1.0.0"
-confirmation_status: "draft"
-evaluation_status: "pending"
-confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"72cc7c43cd72eac2027c742fb703dfbb836de5ca5bbd112ee2fde4088fa75953","evaluator":"dev-graph-sync-conflict-verifier-fresh-goal-evaluator-i08-merged-20260725","evidence_ref":"eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/verdict.json"}
 source_lineage: {"imported_at":"2026-07-25T03:20:00Z","origin_kind":"generated","source_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.95
 classification_reason: "HarnessHub-57v のブランチへ main をマージした結果、両親のどちらでも緑だった C03 の live-trial 受領書が stale 判定になったことで判明した構造的ギャップ"
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-25T04:45:00Z","evidence_refs":["eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/verdict.json","eval-log/dev-graph/run-dev-graph-sync/criteria-test/scenario-verdict.json"],"policy":"manual","reconciled_at":null,"source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T03:20:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -94,3 +94,27 @@ C03 `run-dev-graph-sync` の behavior closure は 25 ファイル。ここへ両
 ## 構造的な論点 (要検討)
 
 この失敗はマージのたびに起きうる。「closure に触れた PR は merge 直前に live-trial を再取得する」という運用で吸収するのか、closure digest の粒度を見直すのか、どちらを取るかは本 issue で判断して記録する。
+
+## 解消 (2026-07-25)
+
+マージ後の木 (HEAD `db569a8`) で C03 `run-dev-graph-sync` の live-trial を fresh session で再取得し、解消した。
+
+- run: `eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/`
+- `overall=PASS` (launch / completion / goal_fit すべて PASS)、nudge 0 / gate 応答 0 の自走完走、Skill ツール起動、wall_clock 360s
+- verdict の `skill_dir_tree_sha` = `718a9c065c6f9e81502ee4fc693d3e29ac06cac44a5e486b02e0b375dd7cf7ef` で**現行 closure と一致**
+- 独立 fresh evaluator (`dev-graph-sync-conflict-verifier`) が fixture を複製して 3 パスを自力再現し、graph / snapshot / remote の digest を `shasum` で再計算して一致を確認 (被験 fixture は read-only)
+- `scenario-verdict.json` の OUT1 `live_trial_verdict_ref` / `test_refs` / `observed` を新 run へ差し替え
+
+検証: `pytest plugins/dev-graph/tests` **441 passed (0 failed)**、`lint-live-trial-verdict.py --all` は 9 verdict verified で緑。CI の `verify` / `change-category-guard` 両ジョブの失敗要因が解消。
+
+`skill_dir_tree_sha` の手書き換えは行っていない (scope_out どおり)。
+
+**対処 3 (他 skill の同種 stale) の確認結果**: `lint-live-trial-verdict.py --all` が全 9 verdict を検査して stale 0 件。不在 6 skill は D13 パイロット中の record-only WARN で、本件とは別軸。
+
+## 構造的な論点の扱い
+
+「closure に触れた PR は merge 直前に live-trial を再取得する」運用で吸収するか、closure digest の粒度を見直すかは**本 run では判断していない**。今回は再取得 (前者) で通したが、恒久方針としては未決。再発時に本 issue を参照して決める。
+
+## 副次的な所見: 並行 live-trial の相互 kill
+
+初回試行 (`20260725T033500Z-i08-merged`) は tmux セッションが起動 10 秒後に消失して失敗した。`live-trial-backend.py reap` は `lt-*` を一括 kill するため、**別 worktree で並行実行中の live-trial が互いのセッションを殺す**。今回は `reap` を実行せず `kill-session` のみで終了した。運用上の注意として記録する。
