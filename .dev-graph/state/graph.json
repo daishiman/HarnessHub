@@ -1,5 +1,5 @@
 {
-  "graph_revision": 527,
+  "graph_revision": 532,
   "nodes": [
     {
       "acceptance": [
@@ -32455,6 +32455,465 @@
       "title": "C26 completion_event 台帳 emission の設計ギャップ (writer-consumer 不在で reconcile 完全経路が未実装)",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T00:19:30Z"
+    },
+    {
+      "acceptance": [
+        "root の verify (または hub の同等スクリプト) から check-auth-gates.mjs が起動し、3 検査が exit code で判定される",
+        "検査を意図的に赤化させた状態で verify が fail することを 1 回実測する",
+        "tests/auth-tenancy/tenant-isolation.test.ts が CI 必須ゲートとして名指しで記録される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-1f28",
+        "linked_at": "2026-07-25T00:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-auth-tenancy-ci-wiring-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "feat-auth-tenancy P09/P10/P11 が未達として記録した CI 結線を追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T00:37:03Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-auth-tenancy-ci-wiring-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "認証・認可の 3 検査と分離テストが、人間の記憶ではなく CI の exit code で守られている状態",
+      "graph_node_id": "issue-auth-tenancy-ci-wiring-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T00:37:03Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "feat-auth-tenancy が追加した 3 つの静的検査 (check-auth-adapter-boundary.mjs = Auth.js 境界隔離 / check-single-authz-middleware.mjs = 認可判定の単一集約 + route 例外の厳密一致 / check-dev-auth-provider-absence.mjs = dev 専用 provider の非存在) は、束ね役の check-auth-gates.mjs 経由で手動実行すれば緑になるが、CI からは 1 度も呼ばれていない。呼ばれない検査は存在しないのと同じで、Auth.js 型の境界外流出・authz 例外の増殖・dev バイパスの混入が無検出で通る。apps/hub/package.json と root の verify は本 feature の write scope 外のため P09/P10/P11/P13 で未達として記録済み。あわせて tests/auth-tenancy/tenant-isolation.test.ts (D4 の row-level-scope を守る 12 ケース) が hub テストスイート内で走るだけで CI 必須ゲートとして名指しされておらず、将来テストが分割・skip されたとき静かに外れうる",
+      "related_nodes": [
+        "feat-auth-tenancy"
+      ],
+      "resource_scope": [
+        "apps/hub/package.json",
+        "package.json",
+        "scripts/ci/"
+      ],
+      "scope_in": [
+        "apps/hub/package.json へ検査スクリプト起動用の script を追加",
+        "root verify から当該 script を呼ぶ結線",
+        "分離テストの CI 必須ゲート指定"
+      ],
+      "scope_out": [
+        "検査スクリプト自体のロジック変更 (feat-auth-tenancy で確定済み)",
+        "next-auth の導入判断"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T00:37:03Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/features/feat-auth-tenancy/quality-assurance-report.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "ci",
+        "auth-tenancy",
+        "qa-020",
+        "sec2"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "feat-auth-tenancy の認証・認可 CI 検査 3 件が CI 未結線 (手動実行でしか走らない)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:40:00Z"
+    },
+    {
+      "acceptance": [
+        "validate-system-plan.py --feature-package feature-package/feat-auth-tenancy が status=pass を返す",
+        "13 task-spec すべてに Inner goal-seek execution loop 節が存在する",
+        "phase-13 に spec write-back の節が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-mvdc",
+        "linked_at": "2026-07-25T00:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-auth-tenancy-plan-goalseek-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "plan package 側の schema drift を追跡する issue (実装側の欠陥ではない)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T00:37:03Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-auth-tenancy-plan-goalseek-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "feat-auth-tenancy の plan package が現行 validator で status=pass に収束している",
+      "graph_node_id": "issue-auth-tenancy-plan-goalseek-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T00:37:03Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "P01-P13 実装完了後に validate-system-plan.py を走らせたところ status=fail / violations 27 件 (task-spec-section-missing 13 + inner-goal-seek-contract 13 + p13-spec-architecture-writeback 1) が出た。違反はすべて feature-package/feat-auth-tenancy/task-specs/*.md 側の記述欠落であり、実装成果物 (apps/hub 配下) の欠陥ではない。package digest sha256:98fd3cc3... は一致しており、13 task-spec は本作業で一切変更していない (git status clean) ため、plan 生成時点の planner 版と現行 validator 版の drift と判断する。fail のまま放置すると、実装側に本物の違反が出たときに 27 件のノイズへ埋もれる",
+      "related_nodes": [
+        "feat-auth-tenancy"
+      ],
+      "resource_scope": [
+        "feature-package/feat-auth-tenancy/task-specs/"
+      ],
+      "scope_in": [
+        "13 task-spec への Inner goal-seek execution loop 節の追記",
+        "phase-13 への spec write-back 節の追記",
+        "追記後の package digest 再計算と inventory 更新"
+      ],
+      "scope_out": [
+        "validator 側の検査緩和・skip 追加 (ゲートを弱める操作)",
+        "実装成果物 (apps/hub / packages) の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T00:37:03Z",
+        "origin_kind": "manual",
+        "source_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "source_path": "feature-package/feat-auth-tenancy",
+        "source_plugin": "system-dev-planner",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "plan-drift",
+        "auth-tenancy",
+        "validator"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "feature-package/feat-auth-tenancy の 13 task-spec が validate-system-plan.py で fail (inner goal-seek 節の欠落 27 件)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:40:00Z"
+    },
+    {
+      "acceptance": [
+        "Auth.js または承認済み後継を adapter 境界内へ導入し、/api/auth が 501 ではなく tenant 別 OIDC を処理する",
+        "Auth.js が発行する session と lib/auth の SessionClaims が同じ検証経路で認識される",
+        "AuthPorts の本番 adapter が packages/db repository へ結線され、Device Flow の永続化契約差が解消される",
+        "実 DB adapter を使う 2 tenant OIDC・Device Flow・refresh rotation・revocation の統合テストが pass する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-b7ng",
+        "linked_at": "2026-07-25T01:05:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-auth-tenancy-production-adapter-20260725.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "feat-auth-tenancy のローカル core 実装と本番実行経路の間に残る単一の結線課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T01:05:00Z",
+      "depends_on": [],
+      "domain": "security",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-auth-tenancy-production-adapter-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "テナント別 OIDC と Device Flow が in-memory テストだけでなく本番 repository と Auth.js を通って動く",
+      "graph_node_id": "issue-auth-tenancy-production-adapter-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T01:05:00Z",
+        "missing_sections": [
+          "Auth.js と custom session claims の bridge 詳細",
+          "DB schema owner と合意した Device Flow 列 migration"
+        ],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "現行実装は OIDC 検証・session claims・認可・Device Flow の pure core と in-memory E2E を持つ一方、next-auth が未導入で /api/auth は 501、authRuntime() は常に例外を投げる。本番 DB は main に存在するが、AuthPorts が要求する device_authorizations の scope/deviceLabel/attempts/last poll/workspace と publisher_tokens の workspace、利用者 workspace 所属が現行 schema/repository に無い。この状態では本番認証や Device API は稼働しないため、依存追加と schema owner をまたぐ契約調整を独立 follow-up として追跡する",
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "feat-domain-model-db",
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "apps/hub/package.json",
+        "pnpm-lock.yaml",
+        "apps/hub/src/lib/auth/",
+        "apps/hub/src/lib/authz/runtime.ts",
+        "apps/hub/src/app/api/auth/",
+        "packages/db/schema/",
+        "packages/db/repository/"
+      ],
+      "scope_in": [
+        "Auth.js 依存と route handler の実結線",
+        "Auth.js session と独自 claims/revocation の bridge",
+        "AuthPorts の packages/db adapter 実装",
+        "Device Flow に必要な永続化契約の schema owner 合意と migration",
+        "実 DB adapter を使う統合テスト"
+      ],
+      "scope_out": [
+        "dev 専用 provider や password login の追加",
+        "本番資格情報の平文保存",
+        "認証 gate の CI 結線 (HarnessHub-1f28)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T01:05:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/features/feat-auth-tenancy/release-record.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "auth-tenancy",
+        "authjs",
+        "database",
+        "production-blocker"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T01:05:00Z"
+    },
+    {
+      "acceptance": [
+        "spec-state.json の qa_log に、session claims への workspace_ids 追加の可否と根拠がユーザー確認付きで登録されている",
+        "spec-state.json の qa_log に、polling interval の上限値 (現行実装は 60 秒) と減衰規則の可否がユーザー確認付きで登録されている",
+        "docs/security-spec.md §2.1 の claims 行と §2.2 の polling 行が確定内容と一致し、lint-doc-line-limit.py が exit 0 のままである",
+        "packages/schemas/auth-tenancy/session.ts と apps/hub/src/lib/auth/config.ts の値が確定内容と一致する (差がある場合は実装を改修する)"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-l2g9",
+        "linked_at": "2026-07-25T02:34:26Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-auth-tenancy-spec-delta-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "feat-auth-tenancy の最終レビューで検出した、確定仕様を超える実装決定 2 件を R4-reopen へ送る issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T11:40:00Z",
+      "depends_on": [],
+      "domain": "security",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-auth-tenancy-spec-delta-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "session claims の確定集合と Device Flow polling の上限・減衰が、実装ではなく確定済み仕様側に記録され、Publisher CLI 実装者が仕様書だけを読んで正しい client を書ける状態",
+      "graph_node_id": "issue-auth-tenancy-spec-delta-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T11:40:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "feat-auth-tenancy の実装は security-spec / auth.md の確定値を 2 点だけ超えている。(1) session JWT claims: docs/security-spec.md §2.1 の表と system-spec/auth.md qa-036 は claims を sub/tenant_id/role/status/iat/exp の『最小集合』と列挙して確定しているが、実装 (packages/schemas/auth-tenancy/session.ts) は edge が Workspace 越境を DB 往復なしで弾けるよう workspace_ids を追加している。列挙で確定した集合に対する追加であり、cookie 肥大と membership 変更の 15 分遅延という代償を伴う。(2) Device Flow polling interval: docs/security-spec.md §2.2 の数値契約は『5 秒 (slow_down 受信時は +5 秒)』までで、上限も減衰も確定していない。実装は server 強制の上限 60 秒と、interval を守った polling に対する -5 秒の減衰を導入した (ADR 追補 §10.7)。上限が無いと単調増加した interval が device_code TTL 600 秒を追い越し、server 側から flow を詰ませるため導入した決定である。いずれも Publisher CLI から観測できる契約であり、実装側のリファクタでは消えない。正本 (system-spec/ は spec-state.json の qa_log からの compile 成果物、docs/security-spec.md は本文に『内容変更には R4-reopen が必要』と明記) を手編集すると確定ヒアリング記録の改竄になり、かつ docs/security-spec.md は doc-line-limit allowlist の縮小のみ許す ratchet 対象 (baseline 910 行) のため加筆が CI で落ちる。よって正規フローは R4-reopen による再確認である",
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json",
+        "system-spec/auth.md",
+        "docs/security-spec.md"
+      ],
+      "scope_in": [
+        "qa-036 (auth.web: session/token 失効反映) の R4-reopen で session claims へ workspace_ids を追加するか、edge の Workspace 判定を別手段へ変えるかを確定する",
+        "qa-041 (auth/security の desktop-*: Device Flow 数値契約) の R4-reopen で polling interval の上限値と減衰規則を確定する",
+        "確定後に system-spec/spec-state.json へ登録し system-spec/auth.md を再 compile、docs/security-spec.md §2.1/§2.2 の該当行を置換 (行数を増やさない置換に留める)"
+      ],
+      "scope_out": [
+        "実装の変更 (現行実装は動作しており、確定の結果が現行と異なる場合にのみ改修する)",
+        "docs/security-spec.md の 300 行分割 (HarnessHub-3d8 が所有)",
+        "feat-auth-tenancy の他の未達 (CI 結線=HarnessHub-1f28 / Auth.js 実結線=HarnessHub-b7ng)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T11:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/features/feat-auth-tenancy/architecture-implementation-notes.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "spec-drift",
+        "auth-tenancy",
+        "qa-036",
+        "qa-041",
+        "r4-reopen"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "feat-auth-tenancy の実装が security-spec の確定値を 2 点だけ超えており R4-reopen が要る",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T02:34:26Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
