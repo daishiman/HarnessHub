@@ -43,6 +43,7 @@ repository rootで次を実行できます。
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/resolve-repo-context.py" --repo-root "$PWD" --mode read
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/validate-graph-schema.py" --repo-root "$PWD" --graph .dev-graph/state/graph.json
+python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/validate-repo-config.py" --repo-root "$PWD" --config .dev-graph/config.json
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/schedule-graph.py" --repo-root "$PWD" --graph .dev-graph/state/graph.json --leases "$(git rev-parse --git-common-dir)/dev-graph/leases.json" --eval-log eval-log/run-dev-graph-schedule-execution.json
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/status-graph.py" --repo-root "$PWD" --status active
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/manage-worktree-lease.py" --repo-root "$PWD" --op list

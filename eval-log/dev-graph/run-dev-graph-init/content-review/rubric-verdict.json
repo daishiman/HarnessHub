@@ -2,27 +2,39 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
-    "skill_md_sha256": "1db7dd6c2cde83fc50e02704fb3e3b725f66dd2209b08521c88a5fc52fc535f0"
+    "skill_md_sha256": "0381d338b69cee76b5ecb300d84b325a33d67d0b5c77cde4c3ed5d588c68bc5b"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "assign-skill-design-evaluator",
+  "reviewed_at": "2026-07-25",
   "iterations": 1,
   "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 1,
+    "dependency_break": 0,
+    "smell": 2
+  },
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3", "OUT4", "OUT5"],
     "positive_feedback": [
-      "NM 命名: name=run-dev-graph-init が dir 名/prefix=run と一致、description は冪等初期化という発火条件を trigger 型で明示。",
-      "BD 出力契約: Purpose & Output Contract に入力/出力 (6 root+.dev-graph 配下)/完了条件を明記し、別に Input/output・Execution contract・Gotchas 節を具備。",
-      "RG/責務: init という単一責務に収束し、goal_seek/feedback_contract を frontmatter で明示。GitHub 設定は雛形生成に限定し token/node ID を保存しない境界が明確。"
+      "PD-001 が『body ≤ 100』の片枝依存から両枝成立へ変わった。render-findings-score.py L137-142 と同じ数え方で body = 100 行 (発火条件は > 100 なので非発火)、加えて references/validation-contract.md により references/ が非空になったため、以後 body が 100 行を超えても PD-001 は成立し続ける。閾値まで残り 1 行という制約が構造的に解消されており、次の追記が rubric を割る心配は無くなった。",
+      "reference の記述が実装と全点一致していることを実走で確認した。config 検証 3 層 (schema / path / 秘密材料) と finding code 7 種は validate-repo-config.py の実装と完全一致。--require-content-roots の挙動も 5 シナリオ実走で一致 (6 root 未作成→exit 1 content_root_missing×6 / 6 root 作成→exit 0 / +system_spec→exit 1 / フラグ無し→exit 0 / 未知 key→exit 1 content_root_key_unknown)。『重複判定は完全一致だけ、入れ子は正当 (plan_roots.state は local_state.graph の祖先)』も test_nested_declared_paths_are_allowed と一致。『秘密材料の report は値そのものを出さない』も実走で prefix 表記のみを確認。文書が実装の言い換えではなく検証済みの契約になっている。",
+      "退避で増えた宣言箇所に同系列で機械 pin を追加している。test_skill_command_requires_exactly_the_init_roots は placeholder 行を除いた実行可能行のみを INIT_ROOTS と照合し空真を明示禁止、test_reference_contract_lists_exactly_the_init_roots は reference 側の列挙をちょうど 1 箇所に固定し system_spec の根拠文の残存まで要求する。pytest 実測 25 passed。文書分割の副作用 (片側だけ更新される drift) を prose ではなく test で閉じている。",
+      "frontmatter の依存宣言が実体と一致している。script_refs 3 件 (resolve-repo-context.py / validate-graph-schema.py / validate-repo-config.py)、schema_refs 2 件、reference_refs 4 件 (先頭に新設 references/validation-contract.md)、responsibility_refs 5 件をすべて実在確認。scripts/lint-external-refs.py の出力に本 skill の EXTERNAL は 0 件、lint-skill-tree.py は 'ok: run-dev-graph-init'、lint-doc-line-limit.py は 346 文書検査で上限 300 行適合、lint-skill-description.py は VIOLATION=0。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "[low/FM-005] 機械採点で FM-005 が 1 件発火した (description first phrase 'dev-graph' is not a verb, loc=frontmatter.description)。score 97 / threshold 80 / passed=true、high severity 0 件。本変更が触っていない description に対する既存指摘であり、姉妹 skill を同 scorer にかけると run-dev-graph-node ('dev-graph')・run-dev-graph-sync ('tracker_binding')・run-dev-graph-decompose ('大きな自然文構想を') も同じ FM-005 を出す plugin 横断の事象。かつ本 repository の正本 lint である scripts/lint-skill-description.py は 192 件検査で VIOLATION=0 を返すため、FM-005 の日本語動詞ヒューリスティックと repo 規約の乖離であり本 skill 固有の欠陥ではないと判定した。減点は反映済み (100-3=97)。",
+      "[low/inconsistency] references/validation-contract.md が 7 番目の root を『run-dev-graph-system-spec が取込時に用意する別責務の root』と断定するが、run-dev-graph-system-spec/SKILL.md は system-spec/ を入力として解決・検証するとしか書いておらず生成主体を宣言していない。validate-repo-config.py docstring も『run-dev-graph-system-spec の責務』止まりで『用意する』とは書いていない。init が作らないという荷重部分は正しく test で pin 済みのため PASS を妨げないが、生成主体の断定には plugin 内の裏付けが無い。",
+      "[low/smell] Execution contract 5 は実測 255 字で step 中最長のまま (step 1=97 / 2=59 / 3=106 / 4=177 字)、かつ Execution contract で唯一 bash ブロックを持つ。3 文 6 主張へ縮約され最長/最短比は 4.3 まで下がったので粒度非対称は大幅に改善しているが、完全解消ではない。あわせて『二回目の planned changes が 0』が Purpose 完了条件・step 5・完了チェックリストの 3 箇所に重複しており、6 root と違い機械 pin が無い。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "ref-skill-design-rubric 規範で現 SKILL.md (sha256 1db7dd6c...) を採点。FM: name/description/trigger 適合、allowed-tools 明示。BD: Output contract+Gotchas 具備、body<300行。NM: dir 名一致。PD: 本文簡潔で prompts/templates/references へ分離。RG: goal_seek/feedback_contract 明示。責務は『caller repo 内への dev-graph 冪等初期化』に単一収束し、hook 配線も plugin 既定/fallback の非破壊 merge に限定され越境なし。high severity 0 件。PASS。"
+  "notes": "ref-skill-design-rubric 1.3.0 + assign-skill-design-evaluator/references/rubric.json の L0→L2 合成で採点した。rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d、composition_hash=sha256:6116a41e20d56745228875a07b19ebdb3b33834091a502d8e56bc8981f766ae0 (RG-001 は verdict JSON への rubric_hash 埋込を要求するが content-review-verdict.schema.json が additionalProperties:false のため notes へ記録)。target sha256 は自分で shasum -a 256 を実行して取得 (0381d338…)。機械採点の実測出力: score=97 / threshold=80 / passed=true / findings=[FM-005 low] / required_fixes=[] / pending_human=[]。軸別: FM-001 PASS / FM-002 PASS (『〜たいとき』2 回) / FM-003 PASS (trigger 2) / FM-004 PASS / FM-005 low (上記 negative 参照) / BD-001 PASS / BD-002 PASS (## Gotchas 174 行目) / BD-003 PASS (body 100 ≤ 300) / BD-004 non-scoring / NM-001 PASS / NM-002 PASS / NM-003 PASS / PD-001 PASS (両枝成立: body 100 は > 100 で非発火、かつ references/ 非空) / RG-001 non-scoring。high severity rule に違反 0 件。criteria 突合: 量産先 frontmatter feedback_contract.criteria[].id を機械抽出し IN1/OUT1/OUT2/OUT3/OUT4/OUT5 の 6 件と確認、criteria_evaluated と全件一致。IN1 (validate-graph-schema.py で必須キー欠落 0) は空 graph を state/graph.json に置いて実走し exit 0 / valid=true を確認。OUT4 (token・node ID を保存しない) は ghp_ token 混入 config を実走し secret_material 検出かつ値非出力を確認。OUT1/OUT2/OUT3/OUT5 は verify_by が test / live-trial であり、本 verdict では『受入条件が Criteria acceptance と完了チェックリストへ写像され検証手段が特定されているか』という design claim のみを判定した — 実行挙動の受入は Gate D (run-skill-live-trial) の実走証跡が正本であり、本 verdict を流用してはならない。本 verdict は前系列 (sha a493b8a3…、iteration 3/3 で収束済み) とは別の変更系列に対する iteration 1 であり、残課題は low 3 件のみ・high/medium 0 件のため next_action=none とした。"
 }
