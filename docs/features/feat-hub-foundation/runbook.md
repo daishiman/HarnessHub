@@ -42,9 +42,11 @@ wrangler secret put AUTH_SECRET
 wrangler secret put CRON_HEARTBEAT_URL   # Better Stack の heartbeat URL (未設定なら ping しない)
 ```
 
-4. **Better Stack Free** で以下を登録
+4. **Better Stack Free** で以下を登録（**要求内容の正本は [`apps/hub/monitoring/better-stack.monitors.json`](../../../apps/hub/monitoring/better-stack.monitors.json)**。ダッシュボードで独自に値を決めない）
    - production `/health` を **3 分間隔**で監視（SLO 99.5% の一次計測源）
-   - cron heartbeat（日次バッチ完了 ping 用）
+   - cron heartbeat（日次バッチ完了 ping 用。period 86,400s / 猶予 3,600s。発行された URL は `wrangler secret put CRON_HEARTBEAT_URL` で投入し、ファイル・ログへ残さない）
+   - status page（履歴 30 日。上記 monitor を resource として関連付ける）
+   - 適用後に設定ファイルへ `external_id` / `applied_at` を書き戻し、`application_state` を `applied` にする。**書き戻すまで SLO は「計測開始前」として扱う**（`apps/hub/monitoring/slo-dashboard.json` の `verdict.status`）
 
 > secret / binding の**内容正本**は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §2。本 runbook は手順のみを持つ。
 

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 538,
+  "graph_revision": 540,
   "nodes": [
     {
       "acceptance": [
@@ -3033,7 +3033,18 @@
       ],
       "domain": "infrastructure",
       "evaluation_status": "pass",
-      "execution_contexts": [],
+      "execution_contexts": [
+        {
+          "base_branch": "main",
+          "branch": "devgraph/SYS-HUB-FOUNDATION-P13",
+          "head_sha": "f055796a5412a8f1ec9b59e9cb2f589663650ffa",
+          "last_seen_at": "2026-07-25T11:07:45.666064Z",
+          "lease_acquired_at": "2026-07-25T11:01:35.019032Z",
+          "released_at": "2026-07-25T11:07:45.665778Z",
+          "state": "released",
+          "worktree_id": "wt_34e5e34b31310b4a"
+        }
+      ],
       "feature_package_id": "feature-package/feat-hub-foundation",
       "file_path": "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
       "github_project_linkages": [],
@@ -3110,7 +3121,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 本番リリース・デプロイ",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:15:47Z"
+      "updated_at": "2026-07-25T11:07:45.666064Z"
     },
     {
       "acceptance": [

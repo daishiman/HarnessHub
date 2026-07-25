@@ -48,7 +48,7 @@ measured_at: "2026-07-21"
 | HF-A2-BUNDLE-001 | 実 bundle ≤ 3 MiB | pass（0.952 MiB） | `evidence/bundle-report.json` |
 | HF-A2-BUNDLE-002 | 予算超過で非ゼロ終了 | pass | `evidence/test-run.log` |
 | HF-A3-HEALTH-001/002/003 | /health 200・契約・異常時 status | pass（8 件）＋**本番実測でも 200 / 全依存 ok** | `evidence/test-run.log` / `evidence/health-response.json` |
-| HF-A3-SLO-001 | 外形監視で 99.5% 算定 | **未実行（外部依存）** | — |
+| HF-A3-SLO-001 | 外形監視で 99.5% 算定 | **設定正本の回帰は pass（6 件 / 2026-07-25）。実測は未実行（外部依存）** | `apps/hub/tests/monitoring/monitoring-config.test.ts` / 設定正本 `apps/hub/monitoring/*.json`（`application_state: pending_credentials`） |
 | HF-A4-OWNER-001 | owner 未定義 0 件 | pass | `evidence/shared-layer-ownership.json` |
 | HF-A4-CONTRACT-001〜004 ほか | 全 12 層の consumer contract（§2.1 の 5 層は fixture 1 系統のため未達扱い） | pass（実行分は全件） | `evidence/test-run.log` |
 | HF-A4-DUP-001 | 重複・境界違反 0 件 | pass（200 ファイル走査、登録 12 層 + 4 運用機構） | `evidence/duplicate-scan.json` |
@@ -73,7 +73,7 @@ measured_at: "2026-07-21"
 ## 4. A1 / A3 を pass にしない理由（fail-closed の適用）
 
 - **A1**: feature branch の CI は test まで成功しているが、acceptance の判定条件は「**GitHub Actions の単一 workflow run 内で** test job → deploy job が success 終了」。deploy は main push 限定で skip のため、条件を満たした証跡がない。
-- **A3**: `/health` の production 稼働とテストは完了しているが、判定条件は「外形監視が 3 分間隔で計測し **月次可用性 99.5% を算定できる時系列**が取得できること」。Better Stack の時系列が存在しない。
+- **A3**: `/health` の production 稼働とテストは完了し、2026-07-25 に監視・SLO の**設定正本**（`apps/hub/monitoring/`）と回帰テストも揃ったが、判定条件は「外形監視が 3 分間隔で計測し **月次可用性 99.5% を算定できる時系列**が取得できること」。Better Stack への適用自体が未実施（`application_state: pending_credentials`）で時系列が存在しないため、**設定の完備を計測の稼働に読み替えない**。
 
 いずれも **P13（本番リリース）完了後に再判定が必要**。本報告は P13 前の中間裁定である。
 
@@ -84,7 +84,7 @@ measured_at: "2026-07-21"
 | 1 | ~~`feat/wt-2` を push し GitHub Actions を起動~~ → **完了**（最新確認済み run 29795485968 success） | 完了 |
 | 2 | GitHub Secrets: `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`、variable `HUB_HEALTH_URL` | **ユーザー** |
 | 3 | `wrangler login` と Cloudflare アカウント準備 | **ユーザー** |
-| 4 | Better Stack Free で production `/health` の 3 分間隔監視 + cron heartbeat を登録 | **ユーザー** |
+| 4 | Better Stack Free で production `/health` の 3 分間隔監視 + cron heartbeat + status page を登録（要求内容は `apps/hub/monitoring/better-stack.monitors.json` が正本。追跡 `HarnessHub-37h.15`） | **ユーザー** |
 | 5 | 上記完了後に P13 デプロイ → 1 ヶ月分の可用性時系列で A3 を確定 | 実施可能 |
 
 ## 6. 裁定の限界

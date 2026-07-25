@@ -51,7 +51,7 @@ deployed_at: "2026-07-21T03:46:26Z"
 | 1 | Worker secret | **3/4 投入済み**（`CRON_HEARTBEAT_URL` のみ未投入） | `/health` は production で HTTP 200・全依存 ok を再確認済み |
 | 2 | cron トリガー登録 | **失敗** | 日次・週次バッチが起動しない（§3） |
 | ~~3~~ | ~~`/health` の 200 確認~~ → **完了**（2026-07-21 04:45 UTC / HTTP 200・db 365ms・r2 1114ms すべて ok。証跡: `evidence/health-response.json`） | **外形監視を有効化してよい状態になった** |
-| 4 | 外部死活監視（Better Stack） | **未設定**（前提は満たしたので登録可能） | A3 が blocked のまま。SLO 算定には 1 ヶ月の時系列が要る |
+| 4 | 外部死活監視（Better Stack） | **設定正本は用意済み・外部適用は未実施**（`apps/hub/monitoring/better-stack.monitors.json` / `slo-dashboard.json`。`application_state: pending_credentials`・`external_id: null`） | A3 は blocked のまま。適用は `HarnessHub-37h.15` で実施し、SLO 算定には適用後 1 ヶ月の時系列が要る |
 | 5 | GitHub Secrets / Variables | **未確認**（`gh` token 失効により API 401。以前の記録では未設定） | CI の deploy job 完走証跡が無く、A1 は blocked のまま |
 | 6 | 独自ドメイン（`hub.<domain>`） | **未設定** | 現状は workers.dev サブドメイン |
 
@@ -91,7 +91,17 @@ API のレスポンス本文が wrangler ログに残らないため**エラー�
 ## 4. A1 / A3 の状態
 
 - **A1（CI が test→deploy を完走）**: 今回のデプロイは**手動実行**であり CI run 内の deploy job ではない。A1 の判定条件は「単一 workflow run 内で test job → deploy job が success」なので、**blocked のまま**。GitHub Secrets 設定 + main merge で解除される。
-- **A3（SLO 99.5% 計測と /health 稼働）**: **`/health` の稼働は再実測で確認済み**（2026-07-21 09:07 UTC、200 / 全依存 ok）。ただし SLO 99.5% の算定には**外形監視による 3 分間隔・1 ヶ月分の時系列**が必要で、これが未取得のため **blocked のまま**。runbook §1 の順序制約は満たしたので、外形監視は有効化してよい。
+- **A3（SLO 99.5% 計測と /health 稼働）**: **`/health` の稼働は再実測で確認済み**（2026-07-21 09:07 UTC、200 / 全依存 ok）。2026-07-25 に**外形監視と SLO 算定の設定正本**（`apps/hub/monitoring/`）と回帰テスト `HF-A3-SLO-001`（6 件 pass）を追加し、監視項目・SLO 式・エラーバジェット方針をリポジトリ側で確定した。ただし **Better Stack への実適用と時系列取得は未了**（`application_state: pending_credentials`）であり、SLO 99.5% の算定には**適用後 3 分間隔・1 ヶ月分の時系列**が要るため **blocked のまま**。設定ファイルの存在を「監視稼働」と読み替えない（テストが `applied_at: null` を強制している）。
+
+### 監視設定の正本（2026-07-25 追加）
+
+| ファイル | 役割 | 適用状態 |
+|---|---|---|
+| `apps/hub/monitoring/better-stack.monitors.json` | `/health` 3 分監視・日次 cron heartbeat（86,400s / 猶予 3,600s）・30 日履歴 status page の API 要求内容 | `pending_credentials`（`external_id` すべて null） |
+| `apps/hub/monitoring/slo-dashboard.json` | 月次可用性 99.5%・許容停止 12,960 秒/30 日・算定式（外形 downtime + Worker 5xx）・エラーバジェット 70% 警告 / 100% 凍結 | `verdict: collecting_not_started` |
+| `apps/hub/tests/monitoring/monitoring-config.test.ts` | 上記の回帰固定と「適用前に合格を主張しない」検査 | 6 件 pass |
+
+> API token と heartbeat URL は設定ファイルに保存しない。token は投入時のみ環境変数、heartbeat URL は Worker secret `CRON_HEARTBEAT_URL` として渡す。
 
 ## 5. 次の手順（runbook §1 の続き）
 
@@ -99,5 +109,5 @@ API のレスポンス本文が wrangler ログに残らないため**エラー�
 2. `wrangler secret put TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` / `AUTH_SECRET` / `CRON_HEARTBEAT_URL`
 3. `curl https://harness-hub.daishimanju.workers.dev/health` が **200** を返すことを確認
 4. cron トリガーの失敗を §3 の手順で解消
-5. Better Stack で `/health` の 3 分間隔監視 + cron heartbeat を登録（**3 の確認後**）
+5. Better Stack で `/health` の 3 分間隔監視 + cron heartbeat + status page を登録（**3 の確認後**。要求内容は `apps/hub/monitoring/better-stack.monitors.json` を正本とし、適用後に `external_id` / `applied_at` / `application_state: applied` を書き戻す。実施は `HarnessHub-37h.15`）
 6. GitHub Secrets / Variables を設定し、PR を main へ merge して CI 経由デプロイで A1 を確定
