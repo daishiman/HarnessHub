@@ -418,7 +418,7 @@ def test_reconcile_lifecycle_modes(common, tmp_path, monkeypatch, capsys):
     args = ("--repo-root", tmp_path, "--graph", graph, "--graph-node-id", "G", "--repo", "o/r", "--pr", "1")
     code, out = call_main(mod, monkeypatch, capsys, *args, "--mode", "check")
     assert code == 0 and out["policy_decision"] == "complete"
-    code, out = call_main(mod, monkeypatch, capsys, *args)
+    code, out = call_main(mod, monkeypatch, capsys, *args, "--writer-request-only")
     assert code == 0 and out["policy_decision"] == "writer_pending"
     assert json.loads(graph.read_text())["nodes"][0]["status"] == "active"
     bad = {**remote, "pull_request": {**remote["pull_request"], "state": "CLOSED", "merged": False, "mergedAt": None}}

@@ -91,6 +91,7 @@ dependencies:
   - {from: skills/run-dev-graph-sync, to: scripts/gh-bridge.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/bd-bridge.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/reconcile-github-lifecycle.py, type: calls}
+  - {from: scripts/reconcile-github-lifecycle.py, to: scripts/upsert-node.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/validate-graph-schema.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/manage-worktree-lease.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/build-parity-manifest.py, type: calls}

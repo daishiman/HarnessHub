@@ -152,6 +152,11 @@ def test_node_fixture_declares_no_artifact_kind(built: dict[str, Path]) -> None:
     assert len(batch) == 5
     for artifact in batch:
         assert set(artifact) == {"title", "body", "tags"}
+    # shell 展開を避けた入力コピーを goal-seek evidence 記録後に置けるよう、空の staging
+    # directory は fixture commit に含める。分類済み成果物を先取りしてはいけない。
+    staging = built["node"] / "inputs"
+    assert staging.is_dir()
+    assert [path.name for path in staging.iterdir()] == [".gitkeep"]
     # 分類先の content root も空のままであること (登録結果を先に置いていない)。
     graph = json.loads((built["node"] / ".dev-graph" / "state" / "graph.json").read_text(encoding="utf-8"))
     assert graph["nodes"] == []

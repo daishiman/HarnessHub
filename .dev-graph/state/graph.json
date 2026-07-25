@@ -32106,9 +32106,10 @@
     },
     {
       "acceptance": [
-        "test_skill_criteria_evidence.py の stale behavior closure digest 起因の FAIL が 0 件になる",
-        "各 verdict の skill_dir_tree_sha が現行 closure と一致する",
-        "live-trial は tier=live で取得され downgrade_reason が null である"
+        "SYS-MVP-FIRST-SCHEDULING-P01..P13 が status=done かつ completion_evidence.status=done へ収束している",
+        "lint-open-residue.py の MVP-first (OR-003) 違反が 0 件になっている",
+        "validate-graph-schema が valid=true (violations=0) である",
+        "各 node の completion_evidence が PR #47 の検証済み merge 事実 (closing_reference_verified=true) に接地している"
       ],
       "architecture_refs": [],
       "artifact_kind": "issue",
@@ -32128,12 +32129,15 @@
       "classification_confidence": 0.9,
       "classification_reason": "PR #47 merge 後の close-loop 未投影 (OR-003) を追跡する issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-24T12:04:39Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/pull/47",
+          ".dev-graph/state/graph.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-24T12:04:39Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -32177,17 +32181,18 @@
         "feat-mvp-first-scheduling"
       ],
       "resource_scope": [
-        "issues/sys-live-trial-closure-stale-mvp-first-20260723.md"
+        ".dev-graph/state/graph.json",
+        "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p01.md",
+        "tasks/feat-mvp-first-scheduling/sys-mvp-first-scheduling-p13.md"
       ],
       "scope_in": [
-        "dev-graph 9 skill (init/node/sync/requirements/render/decompose/schedule/status/system-spec) の live-trial 再実行",
-        "scenario-verdict.json / live-trial verdict.json の再生成",
-        "test_skill_criteria_evidence.py 全件 PASS の確認"
+        "SYS-MVP-FIRST-SCHEDULING-P01..P13 の graph node completion projection (status=done / completion_evidence=done)",
+        "13 task Markdown frontmatter の done 同期",
+        "PR #47 検証済み merge 事実 (closing_reference_verified=true) の pull_request_linkages 投影"
       ],
       "scope_out": [
-        "鮮度ゲート (test_skill_criteria_evidence.py) 自体の緩和・skip 追加",
-        "証跡 receipt の手書き修正 (受け入れ不可: 証跡改ざん)",
-        "P05 実装コードの変更"
+        "doc-governance-portability / qa070 / render-out1 等の別ストリーム OR-003 (別途判断)",
+        "C26 completion_event 台帳の emission (writer-consumer 不在の設計ギャップ・follow-up)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-23T13:51:02Z",
@@ -32198,7 +32203,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "close-loop",
         "open-residue",
@@ -32211,7 +32216,7 @@
       "template_version": "1.0.0",
       "title": "MVP-first feature 13 node の completion projection 未実施 (lint-open-residue OR-003 13件)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:55:00Z"
+      "updated_at": "2026-07-24T12:04:39Z"
     },
     {
       "acceptance": [
@@ -32324,6 +32329,132 @@
       "title": "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築",
       "tracker_binding": "beads",
       "updated_at": "2026-07-24T11:56:47Z"
+    },
+    {
+      "acceptance": [
+        "reconcile-github-lifecycle.pyが外部writer-consumer指定なしでも完了投影を完走しcompletion_event台帳を生成できる",
+        "MVP-first P01..P13に対応するcompletion_eventがevents台帳に13件存在する",
+        "手動writer-receipt手書きなしで監査可能なtyped transaction receiptが13件すべてに残る"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-eg0",
+        "linked_at": "2026-07-24T12:12:22Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-devgraph-completion-event-ledger-gap-20260724.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "reconcile writer-consumer 不在の設計ギャップを追跡する issue",
+      "completion_evidence": {
+        "completed_at": "2026-07-24T12:44:42Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_semantic_c26_completion.py",
+          "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
+          "plugins/dev-graph/scripts/upsert-node.py",
+          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260724T205545Z-pj6-sync-r2/verdict.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-25T00:19:30Z",
+        "source": "reconciliation",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T12:08:10Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-devgraph-completion-event-ledger-gap-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "reconcile の完全経路 (writer_request -> C02 apply -> writer-receipt 検証 -> completion_event/system_release/beads close) が単一コマンドで完走できる。もしくは already-done node に対する冪等 bless 経路で監査台帳を後追い生成できる。",
+      "graph_node_id": "issue-devgraph-completion-event-ledger-gap-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-24T12:08:10Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "reconcile-github-lifecycle.py は完了投影の際 --writer-consumer (apply-lifecycle-request handler) を呼んで C02 へ writer_request を適用し completion_event 台帳/transaction receipt を生成する設計だが、該当する writer-consumer スクリプトがリポジトリに存在せず SKILL にもハンドラが無い。このため MVP-first (xjv) / pipeline-improvement (PR#50) の完了投影は『C26 --mode check で PR merge 事実を検証 + C02 upsert-node.py で適用』の手動多段で確定しており、C26 の completion_event 台帳が emit されていない。",
+      "related_nodes": [
+        "issue-mvp-first-scheduling-completion-projection-20260724"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/tests/test_semantic_c26_completion.py",
+        "plugins/dev-graph/tests/test_runtime_coverage.py",
+        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py",
+        "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_node.py",
+        "plugins/dev-graph/references/github-lifecycle-contract.md",
+        "plugins/dev-graph/references/git-worktree-contract.md",
+        "plugins/dev-graph/plugin-composition.yaml",
+        "plugin-plans/dev-graph/component-inventory.json",
+        "eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/criteria-test/scenario-verdict.json"
+      ],
+      "scope_in": [
+        "writer-consumer (apply-lifecycle-request) のC02組み込み実装とreconcile既定統合",
+        "already-done nodeへの冪等completion_event後追いemission経路",
+        "MVP-first P01..P13のcompletion_event台帳とtransaction receipt後追い生成"
+      ],
+      "scope_out": [
+        "completion_evidenceの再投影 (既にdone・検証済み)",
+        "別ストリーム (doc-governance/qa070/render-out1) のOR-003解消",
+        "verified PR linkageを持たないmanual policy nodeへのmerge事実の補作"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T12:08:10Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "dev-graph",
+        "reconcile",
+        "design-gap",
+        "completion-event",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C26 completion_event 台帳 emission の設計ギャップ (writer-consumer 不在で reconcile 完全経路が未実装)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T00:19:30Z"
     },
     {
       "acceptance": [

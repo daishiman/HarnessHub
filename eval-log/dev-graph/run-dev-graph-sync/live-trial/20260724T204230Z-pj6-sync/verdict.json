@@ -1,0 +1,44 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/sync-wt10-pj6; dry-run, apply, verification dry-run against fixture adapter",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "the target Skill was not the first execution action"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-sync"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "3a33eb8f7bba76f13c8ffb8fb4884db9e02a42c5d2f94df4c6263c683efde267",
+  "transcript_sha256": "6447a0048f0a3a3f0eed938e18542b198f88f86577e450b07abbc373a0d3e65d",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 285.0
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero"
+}
