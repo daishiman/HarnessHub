@@ -1,0 +1,19 @@
+{
+    "artifact": "plugins/dev-graph/scripts/build-parity-manifest.py",
+    "type": "scripts",
+    "mechanical": true,
+    "llm_eval": {
+        "verdict": "PASS",
+        "score": 92,
+        "notes": "genuine code-review + py_compile OK / `# /// script` frontmatter 完備 (name/purpose/inputs/outputs/requires-python/dependencies/contexts/network:false/write-scope='parity manifest under repository eval-log only')。C28 parity manifest を canonical graph から生成する単一 writer。soundness: `_canonical_digest` は C16 schedule-graph.py と同一式 (json.dumps sort_keys=True, separators=(',',':') の canonical JSON digest) で、整形差による偽 stale を避ける設計理由を docstring に明記。graph_operation_lock(exclusive=False) の read lock を取り、`ensure_no_pending_transaction` で WAL pending 中の中間状態読取を排除、さらに build 前後で `graph_path.read_bytes()` を突合し torn read (生成中の graph 変化) を ContractError で検出する二重防御。tracker (Beads) を一切読まない投影に徹する設計を docstring 冒頭で宣言しており、C28 の突合が『自分で作った答え合わせ用紙を自分で採点する』形になるのを構造的に防いでいる。responsibility: 単一 (graph→manifest 投影のみ)。status による間引きを行わない判断を 3 点の根拠 (依存の巻き添え / 下流理由コードの汚染 / 絞り込みは C16 is_schedulable の責務) つきで明文化し、代わりに BRIDGE_STATUS_MAP へ写せない status のみ fail-closed で停止する。error-handling: ContractError/OSError/JSONDecodeError/TypeError/ValueError を捕捉し stderr へ出力して exit 2 (fail-closed)。`_mvp_fit` は enum 外の非 null を黙って未設定へ丸めず raise し、C28 側 per-candidate 検査の空振りを防ぐ。重複 bd_issue_id は生成時点で ContractError にし壊れた manifest を書き出さない。beads_linkage 未設定 node は握り潰さず diagnostics.unlinked へ理由コード付きで残す。side-effect-safety: 出力先を `contained(target, repository_eval_root(root), must_exist=False)` で eval-log 配下へ拘束し、graph/tracker state を上書きする path を受け取れない。書込は `atomic_json` の 1 件のみで write-scope 宣言と一致、receipt に write_count=1 と graph_sha256 を申告。TESTS: test_build_parity_manifest.py 15 passed。うち builder._canonical_digest == schedule._canonical_digest (digest 式の同一性)、builder.BRIDGE_STATUS_MAP == bd-bridge.py の status_map、および set(BRIDGE_STATUS_MAP) == graph-node.schema.json の status enum 集合一致を固定しており、schema へ status を足して C28 を更新し忘れると必ず RED になる。test_parity_manifest_provenance.py も併走。実行スモーク: 本 repository の 296 node graph に対し node_count=287 / write_count=1 / ok=true。",
+        "threshold": 80
+    },
+    "reviewed_by": "workflow-code-review",
+    "checked": [
+        "soundness",
+        "responsibility",
+        "error-handling",
+        "side-effect-safety",
+        "frontmatter"
+    ]
+}

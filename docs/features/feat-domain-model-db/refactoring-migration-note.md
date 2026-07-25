@@ -45,5 +45,5 @@ consumes: [packages/db/schema/core/, packages/db/schema/index.ts, docs/features/
 
 ## 5. 適用手順 (参照)
 
-- ローカル/検証: `pnpm --filter @harness-hub/db run restore:control-plane -- --url file:<path> --in <artifact> --migrations-dir packages/db/migrations` が「migration 適用 → データ復元 → 整合検査」を一括で行う。スキーマ適用のみ必要な場合も同 CLI の DDL 適用部 (`--migrations-dir`) が正本。
+- ローカル/検証: `pnpm --filter @harness-hub/db exec tsx scripts/restore-control-plane.ts --url file:<path> --in <artifact>` が「既定の `packages/db/migrations` 適用 → データ復元 → 整合検査」を一括で行う。別の migration を検証するときだけ `--migrations-dir <dir>` を明示する。
 - 本番適用は P13 (リリース/デプロイ) の手順に従う。

@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-schedule",
-    "skill_md_sha256": "6f6563a5205fc63a6a8f071d632307222853be988ac40ed51bf33b2b71c79085"
+    "skill_md_sha256": "8c6f7de616403cf3664b6332a66f082a6b6e903213c7de2254da06808c852641"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "assign-skill-design-evaluator-20260722",
-  "reviewed_at": "2026-07-22",
+  "reviewer": "assign-skill-design-evaluator-inline-20260724",
+  "reviewed_at": "2026-07-24T23:31:17Z",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
@@ -15,26 +15,29 @@
     "omission": 1,
     "inconsistency": 0,
     "dependency_break": 0,
-    "smell": 0
+    "smell": 1
   },
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "(a) 矛盾なし: 追記した『ready-json 生成 (C28) → schedule 算出 (C16)』の平常経路が実装と逐語一致する。生成コマンド bd-bridge.py --op ready --parity-manifest > ready-json は bd-bridge.py の _ready_with_parity が parity_provenance を receipt へ載せて stdout 出力する挙動に、`parity_provenance` 必須化は schedule-graph.py の ContractError に、`source_graph_digest` 不一致停止は同 _canonical_digest(data) 比較に 1:1 対応する",
-      "(b→改善) 未文書だった生成手順の充足: 従来 SKILL.md は --ready-json を消費する schedule-graph.py 呼び出しのみを示し、その JSON を作る生成ステップが本文に無かった。provenance を持たない 2026-07-18 の committed receipt を平常経路の初回実行が掴むと schedule-graph.py が即 ContractError で停止する退行を、生成→消費の順序と C03 sync 再生成の明記で塞いだ (本課題 HarnessHub-hiu の目的)",
-      "(d) 依存関係整合: 契約正本 §10 の『canonical digest 式は render-graph-html の graph_digest_after と同一』が実装で裏づけられ (同一式 json.dumps(ensure_ascii=False, sort_keys=True, separators=(',',':')) の sha256)、整形差で stale 判定が揺れる経路が閉じている",
-      "権限分割が契約どおり: 由来の形式検証 (generated_at=RFC3339 UTC / source_graph_digest=sha256:<64hex>) は C28 bd-bridge.py が fail-closed で担い、C16 は graph 実体との digest 突合だけを担う。§10 の owner 分担と一致し二重実装 drift を作らない",
-      "(c) 規約整合: 回復手順を『manifest が stale/欠落なら run-dev-graph-sync (C03) で作り直す』と明記し、digest だけを現在値へ書き換える抜け道を残さない。Goodhart 的な検出恒久無効化を文面で塞いでいる",
-      "重複除去による簡潔化: 2026-07-22 の初版追記で L94 と重複していた由来説明段落を削除し、生成手順は 1 段落 + 1 コード塊へ集約。SKILL.md / commands / references / 実装の 4 層で停止条件の表現が割れていない"
+      "(a) 矛盾なし: 平常経路を『parity manifest 生成 → ready-json 生成 (C28) → schedule 算出 (C16)』へ改めた記述が 3 段とも実装に接地する。build-parity-manifest.py は canonical graph だけを読む単一 writer、bd-bridge.py --op ready は --parity-manifest を由来必須で突合、schedule-graph.py は source_graph_digest 不一致で停止。L76 の read-only 宣言も対象を graph/tracker/lease に限定しており、eval-log 配下へ manifest を書く新ステップと背反しない",
+      "(a) 前版の未接地記述の解消: 旧本文は『manifest が stale/欠落なら run-dev-graph-sync (C03) で作り直す』と書いていたが、当時の sync-graph.py に manifest 生成コードは存在せず、--parity-manifest が指す eval-log 直下の path も実在しなかった。本差分で generator の新設と C03 配線を伴って初めて記述が真になった",
+      "(b) 漏れの充足: 本 issue の 2 大 Goodhart 経路を Gotchas で名指しした。『source_graph_digest だけを現在値へ書き換える』は stale 検出の恒久無効化、『unmapped_summary.parity_manifest_missing が候補数と同数』を『着手可能なし』と読み替える誤読は今回 ready-set が空になった症状そのもので、どちらも停止条件の記述だけでは読者が回避できなかった",
+      "(c) 規約整合: 章構成 (Purpose & Output Contract / ゴールシーク実行 / Criteria acceptance / Gotchas) を増殖させず既存節への追記に留め 171 行 (上限 300) を維持。--parity-manifest の指す先を eval-log 直下から eval-log/dev-graph/run-dev-graph-schedule/ 配下へ移し lint-eval-log-layout.py EL-001 (eval-log 直下の新規追跡禁止) に適合させた",
+      "(d) 依存関係整合: script_refs へ ../../scripts/build-parity-manifest.py を追加し、plugin-composition.yaml にも components エントリと skills/run-dev-graph-schedule → scripts/build-parity-manifest.py の calls edge を対で追加した。lint-plugin-composition.py rule (e) の script_refs ↔ dependencies(type=calls) parity が片側追記で崩れていない",
+      "権限分割の維持: 由来の形式検証 (generated_at=RFC3339 UTC / source_graph_digest=sha256:<64hex>) は C28、graph 実体との digest 突合は C16、manifest 生成は C03/generator という §10 の owner 分担が、writer 追加後も一意のままである",
+      "IN1 接地: ready-set 純度の停止条件 (blocked/draft/unconfirmed/evaluation非pass/readiness非complete の 0 件と Beads receipt の exact-set 一致) を本変更で緩めていない。manifest を全 beads-linked node へ広げたのは C28 の写像対象であって C16 の採用条件ではなく、絞り込みは is_schedulable が graph 側の事実として独立に行う二層構造が保たれている",
+      "OUT1/OUT2/OUT3 接地: depends_on 充足・resource_scope 非重複・suggested_branch/claim command の 3 契約に触れる記述を変更していない。本差分の影響は『候補が C28 まで到達するか』という入口だけに閉じており、受入テストの評価軸を書き換えていない"
     ],
     "negative_feedback": [
-      "(b) 漏れ (severity=low / 非ブロッキング): 新設した停止条件が『## ゴールシーク実行』の完了チェックリストと criteria IN1 のテキストへ写像されていない。IN1 は node 単位 exact-set parity のみを述べるが、§10 は node 単位検査が snapshot 生成後に追加/削除された node を捕まえられないと明言しており、graph 全体 digest 突合はその穴を埋める別条件である。ただし schedule-graph.py が beads_present 時に fail-closed で例外送出するため stale snapshot 由来の ready-set が出力される実行経路は存在せず、script 検証 (test_parity_manifest_provenance.py 4 件 + test_schedule_ready_json_generation_documented.py) も通っているため PASS を妨げない"
+      "(b) 漏れ (severity=low / 非ブロッキング / 前版から継続): 新設の停止条件が『## ゴールシーク実行』の完了チェックリストと criteria IN1 のテキストへ写像されていない。IN1 は node 単位 exact-set parity のみを述べるが、§10 は node 単位検査が snapshot 生成後に追加/削除された node を捕まえられないと明言しており、graph 全体 digest 突合はその穴を埋める別条件である。schedule-graph.py が beads_present 時に fail-closed で例外送出するため stale snapshot 由来の ready-set が出力される実行経路は存在せず、PASS を妨げない",
+      "smell (severity=low / 非ブロッキング): parity manifest の置き場が eval-log/dev-graph/run-dev-graph-schedule/ という *消費側 skill 名* のディレクトリでありながら、writer は C16 平常経路と C03 apply の 2 経路ある。plugin 横断成果物として eval-log/dev-graph/_plugin/ 配下に置く選択肢もあった。現状は (1) lint-eval-log-layout EL-001 が eval-log 直下を禁じる (2) 平常経路の第 1 ステップが schedule 自身の実行である (3) .gitignore で追跡除外済みで stale commit を作らない、の 3 点で規約違反ではなく減点しない。将来 C03 以外の writer が増える場合は _plugin/ への移設を推奨する"
     ],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "Stop",
     "next_action": "none"
   },
-  "notes": "incremental profile の focused combined review (30思考法は未使用)。評価 slice は 2026-07-22 に変更された意味 obligation のみ: SKILL.md 本文『ready-json 生成 (C28) → schedule 算出 (C16)』節 (HEAD 比 +8 行) / execution-tracker-contract.md §10 / schedule-graph.py / bd-bridge.py。現 SKILL.md を実測 (shasum -a 256) した sha256=6f6563a5... で再評価し、(a)矛盾0 (b)漏れ1(low) (c)規約整合 (d)依存関係整合 (e)high severity 0。裏づけ実行: pytest test_parity_manifest_provenance.py 4 passed / test_schedule_ready_json_generation_documented.py 1 passed / test_skill_mass_production_contracts.py。\n\nslice 外の既知条件 (本 verdict の判定には未算入): scripts/validate-build-trace.py が eval-log/dev-graph/_plugin/build-evidence/20260713/build-trace.json に対し doc_coverage 欠落で exit 1。初期構築 commit 6a46c39 以来の状態で本変更起因ではなく repository 全体の schema 乖離。run-skill-rubric-governance へのエスカレーション対象。\n\n重要 (behavior-closure): 本 SKILL.md 変更で skill_dir_tree_sha が 3c921b8f→a78faf60 へ変化したため OUT1 の live-trial 証跡 (live-trial/20260722T043419/verdict.json) は stale。offline の内容 adequacy (本 elegance/rubric) は再発行済みだが、OUT1 の挙動証跡再生成には live-trial 再実走が必要 (別途 blocker として報告)。"
+  "notes": "incremental profile の focused combined review (1 context)。30思考法 (run-elegant-review) は未使用であり、その旨を明示的に申告する。assign-skill-design-evaluator は .claude/agents/ に未登録で SubAgent 起動経路が存在しないため、protocol の incremental 既定 (1 context・再評価 1 回まで) に従い同一 context で 4 条件と rubric を一括評価し、compat のため elegance/rubric の 2 verdict へ分割記録した。\n\n評価 slice: HEAD 比の SKILL.md 差分 (frontmatter script_refs 1 行 / 平常経路段落の書き換え + generator 実行ブロック新設 / --parity-manifest path 変更 / 停止条件段落の回復手順明記 / Gotchas 2 行追加) と、その主張の接地先である build-parity-manifest.py・bd-bridge.py (_ready_with_parity の status_map)・sync-graph.py の apply 配下 regeneration ブロック・references/execution-tracker-contract.md §10・plugin-composition.yaml。裏づけ実行: pytest plugins/dev-graph/tests/test_build_parity_manifest.py 13 passed、実 repository での generator→C28→C16 通し (node_count 272 / ready_set 8 / conflicts 0)、lint-doc-line-limit・lint-eval-log-layout・lint-script-naming いずれも違反 0。\n\nslice 外の pending 事項 (本 verdict に未算入、報告のみ): (1) criteria-test/scenario-verdict.json が本変更による skill_md_sha256 変化で stale。再生成には live-trial 再実走が必要で、pytest test_skill_criteria_evidence の失敗として顕在化している。(2) HarnessHub-rzc part(2) の `bd-bridge.py ... > file` overwrite-redirect 切り詰め危険は本 skill の生成ブロックにも同型で残るが、別 issue の担当範囲として本差分では触れていない。"
 }

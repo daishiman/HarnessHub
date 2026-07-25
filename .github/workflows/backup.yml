@@ -25,16 +25,23 @@ jobs:
       - name: 前提 secret の存在確認
         run: |
           missing=""
-          [ -n "${{ secrets.TURSO_AUTH_TOKEN }}" ] || missing="$missing TURSO_AUTH_TOKEN"
+          [ -n "${{ secrets.TURSO_API_TOKEN }}" ] || missing="$missing TURSO_API_TOKEN"
           [ -n "${{ secrets.TURSO_DATABASE_NAME }}" ] || missing="$missing TURSO_DATABASE_NAME"
-          [ -n "${{ secrets.R2_ACCESS_KEY_ID }}" ] || missing="$missing R2_ACCESS_KEY_ID"
-          [ -n "${{ secrets.R2_SECRET_ACCESS_KEY }}" ] || missing="$missing R2_SECRET_ACCESS_KEY"
-          [ -n "${{ secrets.R2_ACCOUNT_ID }}" ] || missing="$missing R2_ACCOUNT_ID"
+          [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] || missing="$missing CLOUDFLARE_API_TOKEN"
+          [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ] || missing="$missing CLOUDFLARE_ACCOUNT_ID"
           if [ -n "$missing" ]; then
             echo "::error::backup に必要な secret が未設定です:$missing"
             echo "docs/features/feat-hub-foundation/runbook.md §1 の手順で設定してください"
             exit 1
           fi
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      - name: install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
 
       - name: Turso CLI の導入
         run: |
@@ -43,7 +50,8 @@ jobs:
 
       - name: DB dump → gzip
         env:
-          TURSO_API_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          # turso db shell は DB 接続 token ではなく Turso Platform API token を使う。
+          TURSO_API_TOKEN: ${{ secrets.TURSO_API_TOKEN }}
         run: |
           set -euo pipefail
           stamp="$(date -u +%Y-%m-%d)"
@@ -61,30 +69,27 @@ jobs:
           echo "OBJECT_KEY=db-export/${year}/${stamp}.sql.gz" >> "$GITHUB_ENV"
           echo "LOCAL_PATH=backup/${stamp}.sql.gz" >> "$GITHUB_ENV"
 
-      - name: R2 へ upload (S3 互換 API)
+      - name: R2 へ upload (Wrangler)
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          endpoint="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
-          aws s3 cp "$LOCAL_PATH" "s3://harness-hub-backups/$OBJECT_KEY" --endpoint-url "$endpoint"
+          pnpm --filter @harness-hub/hub exec wrangler r2 object put \
+            "harness-hub-backups/$OBJECT_KEY" --file "$LOCAL_PATH" --remote
 
-      # upload しただけでは「復元できる」ことの根拠にならないため、実体の存在とサイズを取り直す
+      # upload しただけでは「復元できる」ことの根拠にならないため、実体を取り直して byte 単位で照合する
       - name: upload 結果の検証
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          endpoint="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
-          remote=$(aws s3api head-object --bucket harness-hub-backups --key "$OBJECT_KEY" \
-            --endpoint-url "$endpoint" --query ContentLength --output text)
-          local_size=$(wc -c < "$LOCAL_PATH")
-          echo "remote=${remote} local=${local_size}"
-          [ "$remote" = "$local_size" ]
+          verify_path="backup/verify-${GITHUB_RUN_ID}.sql.gz"
+          pnpm --filter @harness-hub/hub exec wrangler r2 object get \
+            "harness-hub-backups/$OBJECT_KEY" --file "$verify_path" --remote
+          cmp "$LOCAL_PATH" "$verify_path"
+          echo "upload 後に再取得した backup は元ファイルと一致しました"
 
       # 全て成功したときだけ heartbeat を打つ。「cron が動かなかった」と
       # 「動いたが失敗した」の両方を外形監視側で検知させる (qa-027)。

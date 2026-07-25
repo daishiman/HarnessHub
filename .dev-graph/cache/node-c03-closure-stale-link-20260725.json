@@ -1,0 +1,12 @@
+{
+  "graph_node_id": "issue-c03-live-trial-closure-stale-after-merge-20260725",
+  "patch": {
+    "graph_node_id": "issue-c03-live-trial-closure-stale-after-merge-20260725",
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-hwlm",
+      "linked_at": "2026-07-25T03:23:00Z",
+      "sync_state": "linked"
+    },
+    "updated_at": "2026-07-25T03:23:00Z"
+  }
+}
