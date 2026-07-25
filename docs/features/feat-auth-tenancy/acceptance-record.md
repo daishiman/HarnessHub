@@ -1,3 +1,12 @@
+---
+status: approved-with-conditions
+layer: feature-design
+task: SYS-AUTH-TENANCY-P07
+parent_feature: feat-auth-tenancy
+feature_package_id: feature-package/feat-auth-tenancy
+feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5
+---
+
 # feat-auth-tenancy P07 受入記録
 
 - graph_node_id: `sys-auth-tenancy-p07`

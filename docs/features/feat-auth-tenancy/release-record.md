@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-design
+task: SYS-AUTH-TENANCY-P13
+parent_feature: feat-auth-tenancy
+feature_package_id: feature-package/feat-auth-tenancy
+feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5
+---
+
 # feat-auth-tenancy P13 リリース記録
 
 - graph_node_id: `sys-auth-tenancy-p13`
@@ -22,7 +31,7 @@ task spec の Trace rule が定めるとおり、**P13 は文書や計画で実�
 | --- | --- | --- | --- |
 | R1 | 本番 `idp_connections` への OIDC provider 設定登録 | ❌ 未実施 | control-plane DB が未確立。前提となる `feat-domain-model-db` の P13 が完了していない |
 | R2 | `apps/hub` の本番 Cloudflare Workers 環境へのデプロイ | ❌ 未実施 | 本番資格情報を保持していない。また現行の作業指示で commit / push が禁止されており、デプロイ対象のコミットが存在しない |
-| R3 | Dev tenant の Google Workspace OIDC provider 登録確認 | ❌ 未実施 | dev 環境の control-plane DB が未確立 (手順は P12 runbook §4 に確定済み) |
+| R3 | Dev tenant の Google Workspace OIDC provider 登録確認 | ❌ 未実施 | dev 環境の control-plane DB が未確立 (手順は P12 runbook-oidc-provider-onboarding.md §2 に確定済み) |
 | R4 | 本番スモークテスト (2 テナントログイン / role 4 種 / Device Flow E2E / 緊急失効 / dev provider 非存在の本番ビルド確認) | ❌ 未実施 | R1〜R3 がすべて前提 |
 | R5 | acceptance 3 項目の**本番環境での**再確認 | ❌ 未実施 | R4 が前提 |
 
@@ -68,7 +77,7 @@ R1〜R5 を実施できる条件が揃った時点で、次の順序で行う。
 
 ### Step 2: 本番テナントの OIDC provider 登録 (R1)
 
-P12 runbook §3 の手順に従う。テナントごとに繰り返す。
+P12 runbook-oidc-provider-onboarding.md §1 の手順に従う。テナントごとに繰り返す。
 `client_secret` は Workers Secret へ格納し、リポジトリへ平文で置かない。
 
 ### Step 3: `apps/hub` のデプロイ (R2)
@@ -81,7 +90,7 @@ node apps/hub/scripts/check-auth-gates.mjs   # ⚠️ verify に含まれてい�
 
 ### Step 4: Dev tenant の登録確認 (R3)
 
-P12 runbook §4 の手順に従う。
+P12 runbook-oidc-provider-onboarding.md §2 の手順に従う。
 
 ### Step 5: スモークテスト (R4)
 

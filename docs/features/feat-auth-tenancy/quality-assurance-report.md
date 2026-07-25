@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-design
+task: SYS-AUTH-TENANCY-P09
+parent_feature: feat-auth-tenancy
+feature_package_id: feature-package/feat-auth-tenancy
+feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5
+---
+
 # feat-auth-tenancy P09 品質保証レポート
 
 - graph_node_id: `sys-auth-tenancy-p09`
@@ -42,7 +51,7 @@ D4 の revisit 条件確認の前提になる。
 (「越境 0 件」の正確な意味は P07 acceptance-record.md §AC-1 参照)。
 
 **revisit トリガー**: テナント数が 10 を超過した場合、または分離テスト失敗が頻発した場合に
-DB-per-tenant を再評価する。監視手順は P12 runbook.md §5。
+DB-per-tenant を再評価する。監視手順は P12 runbook.md §3。
 
 ### G2 Auth.js adapter 境界隔離 (D3 caveat / qa-020)
 

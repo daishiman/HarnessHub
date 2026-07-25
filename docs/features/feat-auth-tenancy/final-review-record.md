@@ -1,3 +1,12 @@
+---
+status: approved-with-conditions
+layer: feature-design
+task: SYS-AUTH-TENANCY-P10
+parent_feature: feat-auth-tenancy
+feature_package_id: feature-package/feat-auth-tenancy
+feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5
+---
+
 # feat-auth-tenancy P10 最終レビュー記録
 
 - graph_node_id: `sys-auth-tenancy-p10`
@@ -154,7 +163,7 @@ root の `pnpm verify` から呼ぶこと (follow-up 起票済み)。
 | 404 (存在秘匿) と 403 (権限不足) の区別 | ✅ | `T-ISO-06` |
 | tenant 跨ぎの device_code / refresh token 流用拒否 | ✅ | `T-ISO-07` |
 | **分離テストの CI 必須ゲート化** | ⚠️ **部分的** | `tests/auth-tenancy/` は `pnpm --filter @harness-hub/hub test` に含まれ CI で走る。ただし「必須ゲート」としての明示的な指定 (このテストだけが落ちたらリリースを止める、という結線) は行っていない |
-| revisit トリガー (テナント 10 超過) の監視手順 | ✅ | P12 runbook.md §5 に記載 |
+| revisit トリガー (テナント 10 超過) の監視手順 | ✅ | P12 runbook.md §3 に記載 |
 
 **独立レビューの所見**: 分離テスト自体は既存の hub テストスイートに含まれるため、
 CI では実際に実行される (261 ケース中の 12 ケース)。QC-4 ほど深刻ではない。
