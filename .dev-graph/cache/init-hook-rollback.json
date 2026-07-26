@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-07-25T03:38:46Z",
+  "repository_id": "github:daishiman/HarnessHub",
+  "reason": "run-dev-graph-init R5 project fallback normalization (rolled back after repository-native projection check)",
+  "before": {
+    "config_sha256": "4c2554fc32dfec666c9b449eed3e2b5650a04a73ea3efe22758da0d22a9445b7",
+    "settings_sha256": "7d82b9a6ced18548a1c612f8ea095e9c302414451e861945cd629d91aa831b11",
+    "claude_hooks_source": "plugin",
+    "project_plugin_link_present": false
+  },
+  "managed_changes": [
+    {
+      "path": ".dev-graph/config.json",
+      "operation": "replace",
+      "json_pointer": "/claude_hooks/source",
+      "before": "plugin",
+      "after": "project"
+    },
+    {
+      "path": ".claude/settings.json",
+      "operation": "replace-dev-graph-managed-hook-prefix",
+      "before": "${CLAUDE_PROJECT_DIR}/plugins/dev-graph",
+      "after": "${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin",
+      "managed_registry_count": 4,
+      "effective_hook_count": 4
+    },
+    {
+      "path": ".claude/dev-graph-plugin",
+      "operation": "create-symlink",
+      "target": "../plugins/dev-graph"
+    }
+  ],
+  "unmanaged_settings_keys_changed": [],
+  "after": {
+    "config_sha256": "d8a16f88ab657a04fabd7b897feb362eb585afb51f122923e51d3152f87ab3d2",
+    "settings_sha256": "0eca7bcf3e0067c17ca33af13ca3acdcf3485e81e9884e1ffb5b132eeaaf7e4b",
+    "claude_hooks_source": "project",
+    "project_plugin_link": ".claude/dev-graph-plugin",
+    "effective_dev_graph_hook_count": 4
+  },
+  "rollback": {
+    "applied_at": "2026-07-26T00:36:41Z",
+    "reason": "HarnessHub enables dev-graph as a repository-native plugin; project fallback would drift from the managed Claude settings projection",
+    "config_sha256": "4c2554fc32dfec666c9b449eed3e2b5650a04a73ea3efe22758da0d22a9445b7",
+    "settings_sha256": "7d82b9a6ced18548a1c612f8ea095e9c302414451e861945cd629d91aa831b11",
+    "claude_hooks_source": "plugin",
+    "project_plugin_link_present": true,
+    "project_fallback_active": false,
+    "native_surface_check": "pass"
+  }
+}
