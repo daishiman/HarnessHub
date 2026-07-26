@@ -47,7 +47,6 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-25T09:27:54Z","missing_sections":[],"status":"incomplete"}
 ---
 
-
 # 概要
 
 <問題または要望を一文で記載>

@@ -10,6 +10,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 > **位置づけ**: system-spec 確定章 (infrastructure / maintenance-ops) と docs/backend-spec.md を実装可能な粒度へ展開した詳細正本。確定 QA (qa-003/011/019/026/027/031/032/033) と decision (D1-D6) に反する記述はできない。矛盾を発見した場合は R4-reopen の根拠として扱う。
 > **確定状態**: §12 の 4 論点は 2026-07-17 のユーザー確認 (qa-034) で確定済み。本書に【要確認】は残っていない。
 > **2026-07-21 改訂**: 環境構成 (§2/§4/§6/§7/§10/§12) を **qa-038 準拠 (常設 staging なし・preview は PR ごとに使い捨て)** へ、CI/CD (§7) を **ci.yml 単一 workflow への deploy 統合**へ追随させた。feat-hub-foundation P03 の指摘 R-01/R-02 に対するユーザー確定 (2026-07-21) を反映したもの。
+> **2026-07-26 実装反映**: qa-011 / qa-019 の既確定方針を変えず、日次バックアップを restore CLI と同じ JSONL 形式へ統一し、GitHub Actions の secret / variable を機械可読台帳と CI 突合ゲートで管理する形へ具体化した。
 
 ## 1. リソーストポロジ (C2: 固定費 0 円構成)
 
@@ -69,7 +70,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | バケット | key 設計 | 書込経路 (それ以外は禁止) | 公開 |
 |---|---|---|---|
 | `harness-hub-packages` | `packages/<sha256>.zip` (content-addressed, **immutable**) | publish pipeline (`PUT /publish/:id/package` 検査通過後) のみ | 非公開。配信は Worker 経由 (認可 + 監査) |
-| `harness-hub-backups` | `db-export/<YYYY>/<YYYY-MM-DD>.sql.gz` | GitHub Actions 日次 export (§10) のみ | 非公開 |
+| `harness-hub-backups` | `db-export/<YYYY>/<YYYY-MM-DD>.jsonl.gz` | GitHub Actions 日次 export (§10) のみ | 非公開 |
 
 - packages は上書き・削除を行わない (content hash 一致 = 同一実体。suspend は DB 側 status で表現)。
 - S01 の Web upload と Publisher CLI upload は同じ staging prefix・検査 pipeline・content hash 確定処理へ収束させる。ブラウザから R2 への公開 write URL は発行しない。
@@ -121,9 +122,9 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | workflow | trigger | 内容 |
 |---|---|---|
 | `ci.yml` | PR / push (main・feature branch) | **静的ゲート → install → test → bundle → deploy を単一 workflow 内で連鎖**（下記）。deploy job は main への push のみで実行され、全ゲート通過が前提 |
-| `backup.yml` | cron `0 17 * * *` | Turso CLI で dump → gzip → R2 へ **`wrangler r2 object put --remote` で upload → 再 download + `cmp` で往復検証** → 成功を heartbeat 通知 |
+| `backup.yml` | cron `0 17 * * *` | `export-control-plane.ts` で決定論的 JSONL を生成 → gzip → R2 へ **`wrangler r2 object put --remote` で upload → 再 download + `cmp` で往復検証** → 成功を heartbeat 通知 |
 
-- **backup.yml の upload 経路は wrangler を正本とする (2026-07-25 / P13 実装確定)**。当初は S3 互換 API (`aws s3 cp`) + `head-object` の ContentLength 比較を前提としていたが、(a) R2 アクセスキーを追加発行せず §4.5 の secret 台帳を増やさない、(b) ContentLength 一致は「同じ長さの別バイト列」を検出できず**復元できないバックアップを成功と数えない** (§10 / qa-019) を満たせない、の 2 点で `wrangler` + 再 download `cmp` へ改めた。job は `pnpm/action-setup` + `actions/setup-node` + `pnpm install --frozen-lockfile` で wrangler を解決する。
+- **backup.yml の export / upload 経路 (2026-07-26 実装反映)**: `packages/db/scripts/export-control-plane.ts` が生成する JSONL を日次保存形式の正本とする。restore CLI が同じ形式を直接読めるため、drill と障害復旧が日次成果物そのものを検証する。upload は R2 アクセスキーを追加発行せず `wrangler` を用い、再 download 後の `cmp` で byte 一致まで確認する。Turso CLI / `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` はこの経路では不要。
 
 **`ci.yml` の品質ゲート（qa-038【2】の required status checks に対応）**
 
@@ -146,6 +147,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 - **Worker 成果物の生成は G4 より前**に行う。`check:bundle` と bundle contract test は `.open-next` を前提とするため、G4 の後に生成していた旧構成では bundle 検査が CI で常時 skip されていた (P10 F-15)。
 - `pnpm --filter <pkg> run <script>` は **script 不在でも exit 0 になり得る**ため、G6 / G7 / G8 は実行前に `scripts/ci/check-required-package-script.mjs` で package.json 上の script 実在を fail-closed 検査する。ゲートの「緑」が「検査した結果の緑」であることを構造的に担保する。
+- **Actions 設定台帳の突合**: `scripts/ci/actions-secrets-registry.json` を用途・種類・必須度・利用 workflow の正本とし、`scripts/ci/check-actions-secrets.mjs` が workflow の実参照と双方向で照合する。静的ゲートでは構造 drift を、手動 `--live` では GitHub 上の実投入状況も fail-closed で検査する。
 
 - **`deploy.yml` への分離は行わない (2026-07-21 改訂)**。理由: feat-hub-foundation の acceptance「CI が test→deploy を完走する」は**単一 workflow run 内での連鎖**を判定条件としており、2 workflow に分けると別 run になって構造的に判定不能になる。ユーザー確認により `ci.yml` への統合を確定した。
 - deploy job の内容: production へ drizzle migrate → `wrangler deploy` → post-deploy `GET /health` 確認 → **本番スモークテスト 6 項目** → 失敗時 `wrangler rollback` (直前 version へ)。**常設 staging を経由しない** (§6 / qa-038【5】)。
@@ -153,18 +155,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - **本番スモークテスト (2026-07-25 / P13 実装確定)**: `packages/db/scripts/smoke-production.ts --url <turso> --r2-bucket <name>` が S1 接続 / S2 ULID 単調性 / S3 release 不変性 / S4 R2 往復 / S5 audit chain / S6 export→restore dry-run を検査し、**6 項目すべての ok** と検証データ cleanup 成功を満たさない限り exit≠0。検証で作成した行と R2 オブジェクトは `finally` で必ず削除し、削除失敗自体をスモーク失敗として扱う (本番に検証ゴミを残したまま緑にしない)。
 - デプロイは main merge で全自動 (qa-034 確定)。手動 gate は置かず、post-deploy health + smoke + rollback を防波堤とする。
 - **rollback step の契約 (2026-07-25 / P13 実装確定)**: `if: failure()` で起動し、**`wrangler rollback` は deploy step が success のときだけ**実行する (deploy 前に落ちた失敗で直前 version を巻き戻すと、無関係な回帰を持ち込むため)。**DB は自動 rollback しない** — migration は expand-only (§7 G7) で前方互換なので、旧 code は新 schema 上で動作する。step の exit code は rollback 自体の成否のみを表し、元の失敗を打ち消さない。
-- **GitHub Secrets 台帳 (2026-07-25 実登録内容で更新)**:
-
-| secret | 用途 | 利用 workflow |
-|---|---|---|
-| `CLOUDFLARE_API_TOKEN` | Workers deploy + R2 write | `ci.yml` / `backup.yml` |
-| `CLOUDFLARE_ACCOUNT_ID` | account 指定 | `ci.yml` / `backup.yml` |
-| `TURSO_DATABASE_URL` | production DB 接続先 (migrate / smoke) | `ci.yml` |
-| `TURSO_AUTH_TOKEN` | **DB 接続** token (環境別) | `ci.yml` |
-| `TURSO_API_TOKEN` | **Turso Platform API** token (`turso db shell` 用・DB 接続 token とは別物) | `backup.yml` |
-| `TURSO_DATABASE_NAME` | dump 対象の DB 名 | `backup.yml` |
-| `HUB_HEALTH_URL` | post-deploy `/health` 疎通先 | `ci.yml` |
-| `BACKUP_HEARTBEAT_URL` | 外形監視 heartbeat (§9) | `backup.yml` |
+- **GitHub Actions secret / variable 台帳 (2026-07-26 実装反映)**: 正本は [`scripts/ci/actions-secrets-registry.json`](../scripts/ci/actions-secrets-registry.json)。手動投入が必須なのは secret 4 件 (`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` / `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN`) と variable 2 件 (`HUB_HEALTH_URL` / `HUB_PUBLIC_URL`) の計 6 件。任意は `BACKUP_HEARTBEAT_URL` / `NOTION_TOKEN`、`GITHUB_TOKEN` は Actions 自動注入である。値や投入済み判定を文書へ複製せず、`node scripts/ci/check-actions-secrets.mjs --live` の結果を現在状態の正とする。
 
 - **R2 専用アクセスキーは発行しない (2026-07-25 確定)**。`R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ACCOUNT_ID` の 3 件は wrangler 経路へ統一したため台帳から削除した (§4.5 が「Workers binding 利用時は不要」としていた線に実装を寄せた)。
 - **残存リスク**: 上表では `CLOUDFLARE_API_TOKEN` 1 本を deploy と R2 write で共用しており、本節が推奨する「Workers deploy 権限と R2 write 権限を分離した 2 token」は **2026-07-25 現在未達**。最小権限 (least privilege) への分割は `issue-ci-token-least-privilege-20260725` (`HarnessHub-bda4`) で追跡する。
@@ -194,11 +185,10 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 ## 10. バックアップ・DR (qa-019)
 
-- **RPO ≤ 24h**: 日次 export (backup.yml)。export は Turso dump (SQL) を gzip し R2 へ。salary は暗号文のまま (qa-032)。
-- **RTO ≤ 4h (目標)**: runbook — (1) 新 Turso DB 作成 → (2) dump restore → (3) secret の URL/token 差替 → (4) `/health` 確認。SLO 99.5% の月間許容停止内に収める。
-  - **(2) の正本手順 (2026-07-25 / P13 実走で確定)**: `turso db shell <new-db> < production.sql` (**標準入力から直接投入**)。`turso db create --from-dump <file>` は**使わない** — CLI 1.0.30 で同じ dump に対し成功表示を返しながら 20 秒後も table 0 件だったため、「復元したつもり」を作る経路として排除する。
+- **RPO ≤ 24h**: 日次 export (backup.yml)。`export-control-plane.ts` の JSONL を gzip し R2 へ保存する。salary / client secret は暗号文のまま転写し、export 経路で復号しない (qa-032)。
+- **RTO ≤ 4h (目標)**: runbook — (1) 空の一時 DB または新 Turso DB を用意 → (2) `restore-control-plane.ts` で最新 JSONL を restore → (3) report の `ok` / `chainOk` と table / index 数を確認 → (4) 障害復旧時だけ secret の URL/token 差替 → (5) `/health` 確認。
 - **restore drill**: 四半期ごとに**一時 DB** へ実 restore し、行数・整合検査まで実施 (常設 staging は持たない = §6)。**復元できないバックアップを成功と数えない** (qa-019)。
-  - **2 段検証を必須とする (2026-07-25 / P13 実走で確定)**: (a) backup.yml が実際に保存する形式 = **SQL dump** を新 Turso へ復元して table / index 数を照合、(b) その復元 DB を JSONL へ再 export し空 DB へ `restore-control-plane.ts` で戻して `chainOk: true` / `errors: []` を確認する。(a) だけでは行の意味的整合 (audit hash chain) を確かめられず、(b) だけでは日次バックアップ形式そのものを検証できないため、片方では drill を pass としない。
+  - **単一経路の検証 (2026-07-26 実装反映)**: backup.yml が保存する JSONL を空 DB へ `restore-control-plane.ts` で戻し、header / schema / 行数 / audit hash chain / salary・secret 暗号断面を同じ CLI で検査する。日次形式・四半期 drill・本番復旧の入力形式とコマンドを揃え、別経路だけが緑になる偽成功を作らない。
   - **空 DB の復元は drill 成立の根拠にしない**。実データを含む断面で実走する (P13 は本番の実データ 7 行断面で実施)。
   - **既存 DB への誤上書きは fail-closed で止まる**: スキーマ適用済み DB へ再 restore すると `CREATE TABLE` 衝突で exit 1 となることを実測済み。
 - **縮退マトリクス (§6.1 の実装形)**:

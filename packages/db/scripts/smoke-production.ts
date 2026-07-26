@@ -46,7 +46,23 @@ const MIGRATION_SQL = join(import.meta.dirname, '..', 'migrations', '0000_baseli
 const REQUIRED_BASELINE_TABLES = [...readFileSync(MIGRATION_SQL, 'utf8').matchAll(/CREATE TABLE `([^`]+)`/g)].map(
   (match) => match[1] as string,
 );
-const WRANGLER_BIN = process.env.WRANGLER_BIN ?? 'wrangler';
+const REPOSITORY_ROOT = join(import.meta.dirname, '..', '..', '..');
+
+/**
+ * DB package は wrangler を直接依存に持たないため、既定では依存を持つ Hub workspace 経由で起動する。
+ * CI の実行 cwd や PATH に依存させず、必要な場合だけ WRANGLER_BIN でテスト用 stub 等へ差し替える。
+ */
+function execWrangler(args: string[]): void {
+  const override = process.env.WRANGLER_BIN;
+  if (override !== undefined && override !== '') {
+    execFileSync(override, args, { stdio: 'pipe' });
+    return;
+  }
+  execFileSync('pnpm', ['--filter', '@harness-hub/hub', 'exec', 'wrangler', ...args], {
+    cwd: REPOSITORY_ROOT,
+    stdio: 'pipe',
+  });
+}
 
 /**
  * wrangler CLI を背後に置く R2BucketLike。実装 (createPackageRegistry) を一切改変せず実バケットへ通す。
@@ -59,17 +75,13 @@ function createWranglerBucket(bucketName: string, workDir: string): R2BucketLike
     async put(key, value) {
       const file = join(workDir, 'put.bin');
       writeFileSync(file, Buffer.from(value instanceof Uint8Array ? value : new Uint8Array(value)));
-      execFileSync(WRANGLER_BIN, ['r2', 'object', 'put', objectPath(key), '--file', file, '--remote'], {
-        stdio: 'pipe',
-      });
+      execWrangler(['r2', 'object', 'put', objectPath(key), '--file', file, '--remote']);
       return null;
     },
     async get(key) {
       const file = join(workDir, 'get.bin');
       try {
-        execFileSync(WRANGLER_BIN, ['r2', 'object', 'get', objectPath(key), '--file', file, '--remote'], {
-          stdio: 'pipe',
-        });
+        execWrangler(['r2', 'object', 'get', objectPath(key), '--file', file, '--remote']);
       } catch {
         return null;
       }
@@ -216,9 +228,7 @@ async function checkR2(bucketName: string, workDir: string): Promise<CheckResult
   } finally {
     // 毎 deploy の smoke で検証 object を蓄積しない。削除失敗も smoke failure として扱う。
     if (createdKey !== null) {
-      execFileSync(WRANGLER_BIN, ['r2', 'object', 'delete', `${bucketName}/${createdKey}`, '--remote'], {
-        stdio: 'pipe',
-      });
+      execWrangler(['r2', 'object', 'delete', `${bucketName}/${createdKey}`, '--remote']);
     }
   }
   if (result === null) throw new Error('R2 registry の検査結果を生成できませんでした');

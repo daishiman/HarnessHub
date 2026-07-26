@@ -24,7 +24,8 @@ on:
       - "package.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
-      - ".github/workflows/ci.yml"
+      # backup.yml など ci.yml 以外を壊しても検査が走るよう workflow 全体を対象にする
+      - ".github/workflows/**"
   pull_request:
     paths:
       - "apps/**"
@@ -33,7 +34,8 @@ on:
       - "package.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
-      - ".github/workflows/ci.yml"
+      # backup.yml など ci.yml 以外を壊しても検査が走るよう workflow 全体を対象にする
+      - ".github/workflows/**"
   workflow_dispatch:
 
 concurrency:
@@ -44,9 +46,10 @@ env:
   NODE_VERSION: "22"
 
 jobs:
-  # ゲート 1: 静的検査。依存インストール前に走らせ、npm 混入・共通層の重複実装・認証構造違反を最速で落とす
+  # ゲート 1: 静的検査。依存インストール前に走らせ、npm 混入・共通層の重複実装・
+  # 認証構造違反・Actions secret/variable 台帳の乖離を最速で落とす
   static-gates:
-    name: 静的ゲート (pnpm / duplicate detector / auth)
+    name: 静的ゲート (pnpm / duplicate detector / auth / secret 台帳突合)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,6 +81,11 @@ jobs:
             echo "detector が意図的違反を検出できていません (ゲートの故障)"; exit 1
           fi
           echo "detector 実効性チェック完了 (exit=$code)"
+      # workflow が要求する secret / variable と台帳 (actions-secrets-registry.json) の乖離を落とす。
+      # 散文の台帳は書いた翌日には腐るので、突合そのものをゲートにする (HarnessHub-fnzl)。
+      # ここでは --live を付けない。実投入状況の確認は gh 認証が要るため runbook §1 2-d の手動運用。
+      - name: Actions secret / variable 台帳の突合
+        run: node scripts/ci/check-actions-secrets.mjs --json artifacts/actions-secrets.json
       - uses: actions/upload-artifact@v4
         with:
           name: static-gate-evidence
