@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "run-dev-graph-init",
+  "repository_id": "github:daishiman/HarnessHub",
+  "created_at": "2026-07-25T04:07:14Z",
+  "roots": {
+    "issues": "issues",
+    "tasks": "tasks",
+    "specifications": "specs",
+    "architecture": "architecture",
+    "features": "features",
+    "documents": "docs"
+  },
+  "created": [
+    ".claude/dev-graph-plugin",
+    ".dev-graph/cache/init-hook-rollback.json",
+    ".dev-graph/cache/init-receipt.json"
+  ],
+  "preserved": [
+    ".dev-graph/templates/repo-config.example.json",
+    ".dev-graph/templates/system-task-spec.md"
+  ],
+  "migration_preview": [
+    {
+      "path": ".dev-graph/templates/repo-config.example.json",
+      "action": "preserve-user-edit",
+      "target_sha256": "a19c9bced459fef1b97f9e6ab8e64685fbebf041b86b5ed7ee57c75bfb06695b",
+      "plugin_sha256": "7f08d99ede12a8aef4ef40363d0623457867fe19af1affd0a11e455c7ff121bd"
+    },
+    {
+      "path": ".dev-graph/templates/system-task-spec.md",
+      "action": "preserve-user-edit",
+      "target_sha256": "50456aab2f01cd6dbed23965f327f1bff827a56fa2710913469794254fe8be2a",
+      "plugin_sha256": "6c49cdbdf3c9898bb0458510a00a890ec6257415fac26682725e221e0ed9ed99"
+    }
+  ],
+  "hook_source": "project",
+  "hook_receipt": {
+    "project_plugin_link": ".claude/dev-graph-plugin",
+    "link_target": "../plugins/dev-graph",
+    "managed_event_count": 4,
+    "effective_event_count": 4,
+    "duplicate_count": 0,
+    "rollback_manifest": ".dev-graph/cache/init-hook-rollback.json"
+  },
+  "schema_result": {
+    "valid": true,
+    "violations": [],
+    "implementation_readiness": "complete"
+  },
+  "planned_changes": {
+    "first_idempotence_check": 0,
+    "second_idempotence_check": 0
+  }
+}

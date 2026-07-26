@@ -66,7 +66,7 @@
     "dirty_worktree_policy": "fail_closed"
   },
   "claude_hooks": {
-    "source": "plugin",
+    "source": "project",
     "project_plugin_link": ".claude/dev-graph-plugin",
     "session_start": true,
     "post_tool_reconcile": true,
