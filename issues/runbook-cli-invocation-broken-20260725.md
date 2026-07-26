@@ -12,15 +12,15 @@ iteration: null
 title: "runbook の export/restore 手動コマンドが pnpm 10.9.0 と cwd 差でそのままでは実行できない"
 owners: ["daishiman"]
 created_at: "2026-07-25T00:41:30Z"
-updated_at: "2026-07-25T06:40:00Z"
+updated_at: "2026-07-26T06:20:00Z"
 status: "closed"
 depends_on: []
 related_nodes: ["SYS-DOMAIN-MODEL-DB-P13"]
-resource_scope: ["docs/features/feat-domain-model-db/runbook.md","docs/features/feat-domain-model-db/refactoring-migration-note.md"]
+resource_scope: ["docs/features/feat-domain-model-db/runbook.md","docs/features/feat-domain-model-db/refactoring-migration-note.md","packages/db/__tests__/runbook-invocation.test.ts"]
 purpose: "四半期 restore drill と障害時の手動 export/restore を、runbook に書かれたコマンドをそのまま貼るだけで実行できる状態にする"
 goal: "runbook §1/§2 のコマンドが pnpm 10.9.0 の実環境で 1 回で通り、書かれた手順と実行可能な手順が一致する"
 mvp_alignment: null
-scope_in: ["runbook §1/§2 の pnpm run -- --url 形式を pnpm exec tsx 形式へ修正","restore の --migrations-dir 相対パス記述の削除または絶対解決への修正","refactoring-migration-note.md の同形記述の修正","修正後コマンドの実走確認"]
+scope_in: ["runbook §1/§2 の pnpm run -- --url 形式を pnpm exec tsx 形式へ修正","restore の --migrations-dir 相対パス記述の削除または絶対解決への修正","filter 実行時の path 引数を絶対パスへ統一","runbook 記載コマンドをそのまま実走する regression test","修正後コマンドの実走確認"]
 scope_out: ["CLI スクリプト側の引数パーサ仕様変更","backup/restore の設計そのものの変更"]
 acceptance: ["runbook §1/§2 のコマンドをコピー&ペーストで実行して export と restore が成功する","誤りのある -- --url 形式と相対 --migrations-dir がリポジトリ内の文書から消えている"]
 architecture_refs: []
@@ -44,29 +44,29 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-25T03:26:51Z","evidence_refs":["docs/features/feat-domain-model-db/runbook.md","docs/features/feat-domain-model-db/refactoring-migration-note.md","packages/db/__tests__/backup-restore.test.ts"],"policy":"manual","reconciled_at":"2026-07-25T03:26:51Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-07-25T03:26:51Z","evidence_refs":["docs/features/feat-domain-model-db/runbook.md","docs/features/feat-domain-model-db/refactoring-migration-note.md","packages/db/__tests__/backup-restore.test.ts","packages/db/__tests__/runbook-invocation.test.ts"],"policy":"manual","reconciled_at":"2026-07-26T06:20:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T00:41:30Z","missing_sections":[],"status":"complete"}
 ---
 
 # 概要
 
-四半期 restore drill と手動 export の runbook コマンドを pnpm 10.9.0 で実行できる形式へ修正し、日次 SQL dump の復元経路も実バックアップ形式と一致させた。
+四半期 restore drill と手動 export の runbook コマンドを pnpm 10.9.0 で実行できる形式へ修正し、日次 JSONL の保存・drill・障害復旧を同じ CLI 経路へ統一した。記載コマンドをそのまま実走する regression test により、手順と実装の再乖離を防ぐ。
 
 ## 対応
 
 - export / JSONL restore を `pnpm --filter @harness-hub/db exec tsx scripts/<name>.ts` 形式へ統一
 - JSONL restore は CLI が持つ既定の `packages/db/migrations` 解決を利用し、誤った相対 `--migrations-dir` を削除
-- 日次 SQL dump は R2 から取得後、新 Turso へ `turso db shell <name> < dump.sql` で直接 restore
-- SQL restore 後に 18 domain table / 12 explicit index を独立確認し、さらに JSONL round-trip で行数・audit chain・暗号断面を検証
-- Turso CLI 1.0.30 の `db create --from-dump` は成功表示でも 0 table だったため、runbook の経路として不採用
+- `--filter` が package を cwd にするため、`--out` / `--in` / `--file` の値を絶対パスへ統一
+- 日次 JSONL は R2 から取得後、空の一時 DB へ `restore-control-plane.ts` で直接 restore
+- `packages/db/__tests__/runbook-invocation.test.ts` が docs / DB scripts / workflows の command surface を走査し、壊れた引数・相対 path と runbook の実走を検査
 
 ## 受入条件
 
 - [x] runbook と同じ JSONL export / restore コマンドを一時 DB で実走し、両方 exit 0
 - [x] 誤った `run ... -- --url` と二重相対 `--migrations-dir packages/db/migrations` が対象文書から消滅
-- [x] 本番 SQL dump を使い捨て Turso へ restore し、18 table / 12 index を確認
-- [x] SQL restore 後の DB を JSONL semantic round-trip し、`chainOk:true / errors:[]`
-- [x] `@harness-hub/db` の 65 tests が pass
+- [x] `pnpm --filter` を使う path 引数に cwd 依存の相対値が残っていない
+- [x] 日次 JSONL を使い捨て DB へ restore し、18 table / 12 index と `chainOk:true / errors:[]` を確認
+- [x] runbook regression 3 tests と backup/smoke 10 tests が pass
 
 ## 検証証跡
 
@@ -74,3 +74,4 @@ implementation_readiness: {"checked_at":"2026-07-25T00:41:30Z","missing_sections
 - `docs/features/feat-domain-model-db/refactoring-migration-note.md`
 - `docs/features/feat-domain-model-db/release-record.md`
 - `packages/db/__tests__/backup-restore.test.ts`
+- `packages/db/__tests__/runbook-invocation.test.ts`

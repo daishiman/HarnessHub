@@ -12,15 +12,15 @@ iteration: null
 title: "GitHub Actions の Turso secrets が未登録で deploy migration と日次 backup が失敗する (secret 名の系統も二重)"
 owners: ["daishiman"]
 created_at: "2026-07-25T00:41:30Z"
-updated_at: "2026-07-25T06:40:00Z"
+updated_at: "2026-07-26T06:20:00Z"
 status: "blocked"
 depends_on: []
 related_nodes: ["SYS-DOMAIN-MODEL-DB-P13"]
-resource_scope: [".github/workflows/ci.yml",".github/workflows/backup.yml","docs/features/feat-hub-foundation/runbook.md"]
+resource_scope: [".github/workflows/ci.yml",".github/workflows/backup.yml","scripts/ci/actions-secrets-registry.json","scripts/ci/check-actions-secrets.mjs","apps/hub/tests/ci/actions-secrets.test.ts","docs/features/feat-hub-foundation/runbook.md"]
 purpose: "CI が本番へ migration を適用し deploy し、日次 backup が実際に走る前提 (secret / variable) をリポジトリへ投入し、名前の系統を 1 つに揃える"
 goal: "hub-ci の deploy job と hub-backup が secret 欠落で中止されず完走し、必要な secret 名の一覧が runbook から一意に引ける状態"
 mvp_alignment: null
-scope_in: ["GitHub Actions repository secret / variable の投入 (TURSO_*, CLOUDFLARE_*, HUB_HEALTH_URL)","backup.yml の TURSO_DATABASE_NAME と ci.yml の TURSO_DATABASE_URL の名前系統の統一","foundation runbook へ GitHub Actions secret 一覧節の追加","投入後に hub-backup を手動 dispatch し 1 回 green を実測"]
+scope_in: ["GitHub Actions repository secret / variable の投入 (TURSO_*, CLOUDFLARE_*, HUB_HEALTH_URL, HUB_PUBLIC_URL)","workflow 実参照と機械可読台帳の双方向突合","backup.yml の日次形式を restore CLI と同じ JSONL へ統一","foundation runbook へ投入・live 検査手順を追加","投入後に hub-backup を手動 dispatch し 1 回 green を実測"]
 scope_out: ["Turso / Cloudflare のアカウント設計そのものの変更","backup 保持世代・cron 時刻の再設計"]
 acceptance: ["gh api repos/daishiman/HarnessHub/actions/secrets が必要な secret を返す","hub-backup の直近 run が success で R2 に export が存在する","main への push で hub-ci の deploy job が migration 適用 → deploy → smoke を完走する","secret 名が backup.yml / ci.yml / runbook で一致する"]
 architecture_refs: []
@@ -44,34 +44,33 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[".github/workflows/backup.yml",".github/workflows/ci.yml","docs/features/feat-hub-foundation/runbook.md"],"policy":"manual","reconciled_at":"2026-07-25T04:09:04Z","source":null,"status":"blocked"}
+completion_evidence: {"completed_at":null,"evidence_refs":[".github/workflows/backup.yml",".github/workflows/ci.yml","scripts/ci/actions-secrets-registry.json","scripts/ci/check-actions-secrets.mjs","apps/hub/tests/ci/actions-secrets.test.ts","docs/features/feat-hub-foundation/runbook.md"],"policy":"manual","reconciled_at":"2026-07-26T06:20:00Z","source":null,"status":"blocked"}
 implementation_readiness: {"checked_at":"2026-07-25T00:41:30Z","missing_sections":[],"status":"complete"}
 ---
 
 # 概要
 
-GitHub Actions に不足していた Turso Secrets を登録し、日次 backup を既存の SQL dump 設計のまま R2 へ保存できるよう workflow と runbook を更新した。
+GitHub Actions の secret / variable を機械可読台帳で管理し、workflow の実参照と CI で双方向突合するようにした。日次 backup は restore CLI と同じ JSONL 形式へ統一し、「保存できたが復元経路が別物」という欠陥も同時に解消した。
 
 ## 対応済み
 
-- repository secrets に DB 接続用 `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` を登録
-- repository secrets に backup CLI 用 `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を登録
-- `TURSO_API_TOKEN` は空の Turso 設定 directory から `SELECT 1` を実行し、CLI 認証として有効であることを確認
-- backup の R2 認証を専用 S3 key 3 件から既存の `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` へ統一
-- Wrangler 4.113.0 の `r2 object put/get --remote` を用い、upload 後に byte 単位で一致検証
-- CI / backup / foundation runbook の必要名と token 種別を同期
-- R2 の使い捨て object で put → get → cmp → delete を実測
+- `scripts/ci/actions-secrets-registry.json` に required 6 / optional 2 / auto 1 の 9 項目を登録
+- `scripts/ci/check-actions-secrets.mjs` で workflow → 台帳、台帳 → workflow、台帳 → 実投入、実投入 → 台帳の 4 方向を fail-closed で突合
+- `ci.yml` の静的ゲートから非 live 突合を実行し、`--live` で GitHub 上の投入済み集合も確認可能にした
+- `backup.yml` は `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` で control-plane JSONL を生成し、gzip → R2 put → get → `cmp` を実行
+- `smoke-production.ts` は DB package から bare `wrangler` を起動せず、Hub workspace の依存を repo root から解決
+- 台帳の 4 方向突合 14 tests、runbook 記載コマンド 3 tests、backup/smoke 10 testsを追加・更新
 
 ## 未完了
 
-変更はユーザー指示により commit / push / PR 未実施である。GitHub 上の `hub-backup` 手動 dispatch と、main push 後の migration → deploy → health → smoke は、workflow がリモートへ反映されるまで実行できない。
+GitHub 上の旧 `backup.yml` がまだ `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を参照しているため、旧 2 secrets は landing 前に削除しない。更新版の `hub-backup` success と、main push 後の migration → deploy → health → smoke の完走を確認するまで本 issue は blocked を維持する。
 
 ## 受入条件
 
-- [x] GitHub API が必要な 6 repository secrets を返す
-- [x] backup.yml / ci.yml / runbook の secret 名と token 種別が一致
-- [x] Turso Platform API token を設定ファイルへ依存せず検証
-- [x] R2 転送経路を実バケットで検証し、検証 object を削除
+- [x] required 6 項目が GitHub に投入済み
+- [x] workflow 実参照 9 項目と台帳 9 項目が一致
+- [x] backup.yml / ci.yml / runbook の secret / variable 種別が一致
+- [x] R2 転送と本番 smoke の Wrangler 起動境界を regression test で固定
 - [ ] 更新後の `hub-backup` が GitHub Actions で success
 - [ ] main push 後の `hub-ci` deploy job が migration → deploy → smoke を完走
 
@@ -79,4 +78,7 @@ GitHub Actions に不足していた Turso Secrets を登録し、日次 backup 
 
 - `.github/workflows/backup.yml`
 - `.github/workflows/ci.yml`
+- `scripts/ci/actions-secrets-registry.json`
+- `scripts/ci/check-actions-secrets.mjs`
+- `apps/hub/tests/ci/actions-secrets.test.ts`
 - `docs/features/feat-hub-foundation/runbook.md`
