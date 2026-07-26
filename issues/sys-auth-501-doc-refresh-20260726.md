@@ -12,8 +12,8 @@ iteration: null
 title: "feat-auth-tenancy の成果物 6 件が /api/auth を 501 未結線と記述したままで実装と食い違う"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T06:48:00Z"
-status: "active"
+updated_at: "2026-07-26T06:50:00Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-auth-tenancy","issue-auth-tenancy-production-adapter-20260725"]
 resource_scope: ["docs/features/feat-auth-tenancy/"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-mr3c","linked_at":"2026-07-26T06:24:00Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/issue-auth-tenancy-production-adapter-20260725","linked_at":"2026-07-26T04:29:00Z","merge_commit_sha":"8e8f9a46851906926f00bf097fda4a34ba672ec1","merged_at":"2026-07-26T01:35:21Z","pr_number":76,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/76"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-auth-tenancy/spec-reflection-receipt.md"],"policy":"linked_pr_merged_all","reconciled_at":null,"source":"manual","status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-26T01:35:21Z","evidence_refs":["docs/features/feat-auth-tenancy/spec-reflection-receipt.md","https://github.com/daishiman/HarnessHub/pull/76"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-26T04:29:00Z","source":"github_pr_merge","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-26T06:46:00Z","missing_sections":[],"status":"complete"}
 ---
 

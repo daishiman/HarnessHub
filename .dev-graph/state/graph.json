@@ -1,5 +1,5 @@
 {
-  "graph_revision": 630,
+  "graph_revision": 633,
   "nodes": [
     {
       "acceptance": [
@@ -32958,15 +32958,16 @@
       "classification_confidence": 0.95,
       "classification_reason": "feat-auth-tenancy のローカル core 実装と本番実行経路の間に残る単一の結線課題",
       "completion_evidence": {
-        "completed_at": null,
+        "completed_at": "2026-07-26T01:35:21Z",
         "evidence_refs": [
           "docs/features/feat-auth-tenancy/spec-reflection-receipt.md",
-          "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md"
+          "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
+          "https://github.com/daishiman/HarnessHub/pull/76"
         ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": "manual",
-        "status": "in_progress"
+        "reconciled_at": "2026-07-26T04:27:52.736958Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
@@ -33004,7 +33005,20 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-auth-tenancy-production-adapter-20260725",
+          "linked_at": "2026-07-26T04:27:52.735600Z",
+          "merge_commit_sha": "8e8f9a46851906926f00bf097fda4a34ba672ec1",
+          "merged_at": "2026-07-26T01:35:21Z",
+          "pr_number": 76,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/76"
+        }
+      ],
       "purpose": "初回 feature 完了時は OIDC 検証・session claims・認可・Device Flow の pure core と in-memory E2E までで、Auth.js route と本番 DB ports が未結線だった。HarnessHub-b7ng は vendor 境界を維持したまま @auth/core、session bridge、本番 DB AuthPorts、CAS 永続化、Workers composition root を実結線し、仕様・設計・migration・証跡を正規フローで同期する",
       "related_nodes": [
         "feat-auth-tenancy",
@@ -33056,7 +33070,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "follow-up",
         "auth-tenancy",
@@ -33069,7 +33083,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:47:00Z"
+      "updated_at": "2026-07-26T06:49:00Z"
     },
     {
       "acceptance": [
@@ -37076,14 +37090,15 @@
       "classification_confidence": 0.9,
       "classification_reason": "HarnessHub-b7ng の実装により陳腐化した feature 成果物の記述を追従させる doc drift issue",
       "completion_evidence": {
-        "completed_at": null,
+        "completed_at": "2026-07-26T01:35:21Z",
         "evidence_refs": [
-          "docs/features/feat-auth-tenancy/spec-reflection-receipt.md"
+          "docs/features/feat-auth-tenancy/spec-reflection-receipt.md",
+          "https://github.com/daishiman/HarnessHub/pull/76"
         ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": "manual",
-        "status": "in_progress"
+        "reconciled_at": "2026-07-26T04:29:00Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
@@ -37121,7 +37136,20 @@
       "phase_ref": null,
       "priority": "medium",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-auth-tenancy-production-adapter-20260725",
+          "linked_at": "2026-07-26T04:29:00Z",
+          "merge_commit_sha": "8e8f9a46851906926f00bf097fda4a34ba672ec1",
+          "merged_at": "2026-07-26T01:35:21Z",
+          "pr_number": 76,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/76"
+        }
+      ],
       "purpose": "HarnessHub-b7ng で @auth/core を adapter 境界内へ導入し、/api/auth/[...nextauth] は 501 auth_provider_not_wired ではなく tenant 別 OIDC を処理するようになった。しかし feat-auth-tenancy の成果物 6 件 (architecture-decision-record.md / acceptance-record.md / test-run-results.md / release-record.md / refactoring-migration-note.md / final-review-record.md) は依然として『501 を返す』『next-auth 未導入』『本番 runtime 未結線』と記述している。これらは feature 完了時の記録であり、当時としては正しいが、現在の実装を知らない読者が『まだ未結線だ』と誤読する。特に final-review-record.md の未達表は HarnessHub-b7ng を open として掲げており、epic rollup の判断材料になる。記録の改竄ではなく『いつ何が変わったか』を追記する形で追従させる必要がある",
       "related_nodes": [
         "feat-auth-tenancy",
@@ -37149,7 +37177,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "follow-up",
         "doc-drift",
@@ -37160,7 +37188,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の成果物 6 件が /api/auth を 501 未結線と記述したままで実装と食い違う",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:48:00Z"
+      "updated_at": "2026-07-26T06:50:00Z"
     },
     {
       "acceptance": [

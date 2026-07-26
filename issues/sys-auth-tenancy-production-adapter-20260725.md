@@ -12,8 +12,8 @@ iteration: null
 title: "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する"
 owners: ["daishiman"]
 created_at: "2026-07-25T01:05:00Z"
-updated_at: "2026-07-26T06:47:00Z"
-status: "active"
+updated_at: "2026-07-26T06:49:00Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-auth-tenancy","feat-domain-model-db","feat-hub-foundation","issue-auth-501-doc-refresh-20260726","issue-db-write-gate-sweep-20260726","issue-libsql-connection-recovery-20260726","issue-refresh-race-observability-20260726"]
 resource_scope: ["apps/hub/package.json","pnpm-lock.yaml","apps/hub/next.config.ts","apps/hub/src/lib/auth/","apps/hub/src/lib/authz/runtime.ts","apps/hub/src/app/api/auth/","apps/hub/tests/auth-tenancy/","packages/db/schema/","packages/db/repository/","packages/db/connection/","packages/db/migrations/","packages/db/__tests__/","system-spec/","specs/","architecture/","features/feat-auth-tenancy.md","tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md","docs/features/feat-auth-tenancy/"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-b7ng","linked_at":"2026-07-25T01:05:00Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/issue-auth-tenancy-production-adapter-20260725","linked_at":"2026-07-26T04:27:52.735600Z","merge_commit_sha":"8e8f9a46851906926f00bf097fda4a34ba672ec1","merged_at":"2026-07-26T01:35:21Z","pr_number":76,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/76"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-auth-tenancy/spec-reflection-receipt.md","tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md"],"policy":"linked_pr_merged_all","reconciled_at":null,"source":"manual","status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-26T01:35:21Z","evidence_refs":["docs/features/feat-auth-tenancy/spec-reflection-receipt.md","tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md","https://github.com/daishiman/HarnessHub/pull/76"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-26T04:27:52.736958Z","source":"github_pr_merge","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-26T06:45:00Z","missing_sections":[],"status":"complete"}
 ---
 
