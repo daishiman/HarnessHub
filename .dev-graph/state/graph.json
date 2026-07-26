@@ -1,5 +1,5 @@
 {
-  "graph_revision": 633,
+  "graph_revision": 634,
   "nodes": [
     {
       "acceptance": [
@@ -37662,6 +37662,127 @@
       "title": "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 client JS 削減と PR 段階の予算ゲート新設",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T09:27:54Z"
+    },
+    {
+      "acceptance": [
+        "Better Stack で production /health の 3 分間隔監視が稼働し、monitor が up 状態を記録している",
+        "cron heartbeat monitor が登録され CRON_HEARTBEAT_URL が Worker secret へ投入済みで、日次 cron 完走時に heartbeat が着信する",
+        "SLO ダッシュボードが外形監視の downtime と Workers analytics の 5xx 率の双方を反映しており、外形監視単独を正としていない (infrastructure-spec §9 / qa-019)",
+        "1 ヶ月分の可用性時系列から 99.5% の達成可否を判定でき、判定結果と生データ参照が docs/features/feat-hub-foundation/evidence/ に記録されている",
+        "acceptance-report.md §0 の A3 行が判定結果で更新され、未達の場合はエラーバジェット運用 (消費 70% 警告 / 100% 凍結) の適用状況が併記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-37h.15",
+        "linked_at": "2026-07-25T15:44:20Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hub-slo-external-monitoring-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "P13 から切り出した A3 (SLO 計測) の時間ゲート作業を追跡する standalone issue。exact-13 package の子は P01-P13 固定のため package へ追加できない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T11:06:48Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hub-slo-external-monitoring-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Better Stack で production /health が 3 分間隔で監視され、cron heartbeat が稼働し、外形監視の downtime と Workers analytics の 5xx 率から 1 ヶ月分の可用性を算定して SLO 99.5% を判定できる状態にし、判定結果を feat-hub-foundation の証跡へ記録する",
+      "graph_node_id": "issue-hub-slo-external-monitoring-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T11:06:48Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "P13 で本番デプロイと CI 自動デプロイ経路は確立したが、acceptance A3『SLO 99.5% の計測と /health が稼働する』のうち SLO 算定側が未達で残った。外部死活監視が未設定のため可用性の時系列が存在しないためである。A3 は 3 分間隔・1 ヶ月分の観測期間を要する時間ゲートであり、P13 に紐づけたままでは実作業完了後も最短 1 ヶ月 P13 を閉じられず、feat-hub-foundation epic を depends_on に持つ 9 feature が着手できない。P13 をデプロイ作業の完了として閉じ、A3 の判定を本 issue へ切り出す。epic HarnessHub-37h の受入条件には SLO 99.5% 計測が含まれるため、epic の close 判定には本 issue の完了が必要である",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "SYS-HUB-FOUNDATION-P13",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/runbook.md",
+        "docs/features/feat-hub-foundation/acceptance-report.md",
+        "docs/features/feat-hub-foundation/evidence/",
+        "docs/infrastructure-spec.md"
+      ],
+      "scope_in": [
+        "Better Stack Free での production /health 3 分間隔 monitor 登録",
+        "cron heartbeat monitor の登録と CRON_HEARTBEAT_URL の Worker secret 投入",
+        "SLO ダッシュボードの作成 (外形監視 downtime + Workers analytics 5xx 率の複合算定)",
+        "1 ヶ月分の可用性時系列取得と A3 の判定",
+        "判定結果の evidence 記録と acceptance-report.md §0 の A3 行更新"
+      ],
+      "scope_out": [
+        "独自ドメイン hub.<domain> の割当 (運用上の必須要件ではない)",
+        "cron ジョブ本体の実装 (handler は実装済みでジョブ実体は各ドメイン feature の責務)",
+        "Workers analytics の取得基盤の新規実装 (Cloudflare 標準機能を使う)",
+        "restore drill の実施 (別途 runbook §6 の四半期運用)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T11:06:48Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "feat-hub-foundation",
+        "slo",
+        "monitoring",
+        "operations",
+        "acceptance-a3"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T15:44:20Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
