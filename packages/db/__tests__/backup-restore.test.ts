@@ -203,7 +203,7 @@ describe('P13 production migration / smoke CLI', () => {
     expect(result.stderr).toContain('--r2-bucket <name>');
   }, 60_000);
 
-  it('6 項目をローカル DB + R2 CLI stub で完走し、既存データを残して検証データだけを削除する', async () => {
+  it('6 項目を Hub workspace の R2 CLI 経由で完走し、既存データを残して検証データだけを削除する', async () => {
     const dbPath = join(workDir, 'p13-smoke.db');
     const url = `file:${dbPath}`;
     runCli('scripts/migrate-deploy.ts', ['--url', url]);
@@ -240,10 +240,33 @@ else process.exit(1);
     );
     chmodSync(fakeWrangler, 0o755);
 
-    const output = runCli('scripts/smoke-production.ts', ['--url', url, '--r2-bucket', 'p13-test'], {
+    // CI と同じく DB package から起動しても、Hub workspace にだけ存在する wrangler を選べることを検査する。
+    // pnpm 自体を stub にして、実際の R2 通信は上の Wrangler stub へ委譲する。
+    const fakePnpm = join(workDir, 'pnpm');
+    writeFileSync(
+      fakePnpm,
+      `#!/bin/sh
+if [ "$PWD" != "$EXPECTED_PNPM_CWD" ]; then exit 65; fi
+if [ "$1" != "--filter" ] || [ "$2" != "@harness-hub/hub" ] || [ "$3" != "exec" ] || [ "$4" != "wrangler" ]; then
+  exit 66
+fi
+shift 4
+exec "$FAKE_WRANGLER" "$@"
+`,
+      'utf8',
+    );
+    chmodSync(fakePnpm, 0o755);
+
+    const smokeEnv: NodeJS.ProcessEnv = {
       ...process.env,
+      EXPECTED_PNPM_CWD: join(import.meta.dirname, '..', '..', '..'),
       FAKE_R2_DIR: r2Dir,
-      WRANGLER_BIN: fakeWrangler,
+      FAKE_WRANGLER: fakeWrangler,
+      PATH: `${workDir}:${process.env.PATH ?? ''}`,
+    };
+    delete smokeEnv.WRANGLER_BIN;
+    const output = runCli('scripts/smoke-production.ts', ['--url', url, '--r2-bucket', 'p13-test'], {
+      ...smokeEnv,
     });
     const report = JSON.parse(output) as {
       ok: boolean;
