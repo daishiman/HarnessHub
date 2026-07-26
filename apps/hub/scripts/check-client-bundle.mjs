@@ -96,6 +96,31 @@ function toRouteKind(manifestKey) {
 }
 
 /**
+ * chunk の相対パスをファイルシステム表記へ正規化する。
+ *
+ * 同一の chunk が manifest によって別表記で現れる (実測 2026-07-26 / 動的 route 追加時に判明):
+ *   app-build-manifest.json        → static/chunks/app/[tenant_slug]/signin/page-*.js
+ *   *_client-reference-manifest.js → static/chunks/app/%5Btenant_slug%5D/signin/page-*.js
+ *
+ * 後者はブラウザが <script src> として読む URL なので、動的セグメントの [ ] が percent-encode される。
+ * 正規化しないと 2 つの誤りが同時に起きる:
+ *   (a) 実ファイルを引けず fail-closed で停止し、動的 route を持つ app では常に赤くなる
+ *   (b) 和集合を取る Set 上で同一 chunk が別要素として残り、二重計上で予算判定が過大に厳しくなる
+ *
+ * @param {string} chunkPath manifest が持つ chunk の相対パス
+ * @returns {string} STATIC_ROOT からの相対ファイルパス
+ */
+function toFsRelativePath(chunkPath) {
+  try {
+    return decodeURIComponent(chunkPath);
+  } catch (error) {
+    throw new Error(`chunk path の URL decode に失敗しました: ${chunkPath}`, {
+      cause: error,
+    });
+  }
+}
+
+/**
  * route 固有の client reference manifest から、layout を含む client component chunk を取り出す。
  *
  * app-build-manifest の pages["/page"] は page entry しか列挙せず、root layout の entry は
@@ -120,7 +145,7 @@ async function clientReferenceChunks(appPath, serverEntry) {
   const chunks = new Set();
   for (const module of Object.values(manifest.clientModules ?? {})) {
     for (const value of module.chunks ?? []) {
-      if (typeof value === 'string' && value.endsWith('.js')) chunks.add(value);
+      if (typeof value === 'string' && value.endsWith('.js')) chunks.add(toFsRelativePath(value));
     }
   }
   return chunks;
@@ -152,7 +177,7 @@ async function measureRoutes(budget) {
   };
 
   let polyfillBytes = 0;
-  for (const file of polyfillFiles) polyfillBytes += await sizeOf(file);
+  for (const file of polyfillFiles) polyfillBytes += await sizeOf(toFsRelativePath(file));
 
   const routes = [];
   for (const [manifestKey, routePath] of Object.entries(routeManifest)) {
@@ -162,7 +187,8 @@ async function measureRoutes(budget) {
     }
 
     const kind = toRouteKind(manifestKey);
-    const routeFiles = new Set(files);
+    // 和集合を取る前に表記を揃える。揃えないと同一 chunk が別要素として残り二重計上される
+    const routeFiles = new Set(files.map(toFsRelativePath));
     if (kind === 'page') {
       const serverEntry = appPathsManifest[manifestKey];
       if (typeof serverEntry !== 'string') {

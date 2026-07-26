@@ -23,6 +23,7 @@ type Fixture = {
   buildRoot: string;
   reportPath: string;
   layoutChunk: string;
+  dynamicPageChunk: string;
 };
 
 function writeJson(filePath: string, value: unknown): void {
@@ -39,6 +40,10 @@ function writeChunk(buildRoot: string, relativePath: string, content: string): v
 /**
  * Next.js 15 の build 出力を最小構成で再現する。
  * app-build-manifest では /layout と /page が別 entry だが、ブラウザは両方を読む点が今回の重要な回帰条件。
+ *
+ * 動的 route (/[tenant_slug]/signin) も含める。client reference manifest はブラウザが読む URL を持つため
+ * 同じ chunk が app-build-manifest 側と別表記 ([tenant_slug] / %5Btenant_slug%5D) で現れ、
+ * 正規化を忘れると実ファイルを引けない。実 build で 2026-07-26 に顕在化した条件をここで固定する。
  */
 function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } = {}): Fixture {
   const buildRoot = mkdtempSync(path.join(tmpdir(), 'hub-client-build-'));
@@ -48,22 +53,29 @@ function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } 
   const layoutChunk = 'static/chunks/app/layout.js';
   const pageChunk = 'static/chunks/app/page.js';
   const handlerChunk = 'static/chunks/app/health/route.js';
+  /** ファイルシステム上の実体名。動的セグメントは [ ] のリテラル */
+  const dynamicPageChunk = 'static/chunks/app/[tenant_slug]/signin/page.js';
+  /** 同一ファイルを指す URL 表記。client reference manifest 側はこちらで記録される */
+  const dynamicPageChunkAsUrl = 'static/chunks/app/%5Btenant_slug%5D/signin/page.js';
 
   writeJson(path.join(buildRoot, 'app-build-manifest.json'), {
     pages: {
       '/layout': [commonChunk, layoutChunk],
       '/page': [commonChunk, pageChunk],
       '/health/route': [commonChunk, handlerChunk],
+      '/[tenant_slug]/signin/page': [commonChunk, dynamicPageChunk],
     },
   });
   writeJson(path.join(buildRoot, 'app-path-routes-manifest.json'), {
     '/page': '/',
     '/health/route': '/health',
+    '/[tenant_slug]/signin/page': '/[tenant_slug]/signin',
   });
   writeJson(path.join(buildRoot, 'build-manifest.json'), { polyfillFiles: [] });
   writeJson(path.join(buildRoot, 'server/app-paths-manifest.json'), {
     '/page': 'app/page.js',
     '/health/route': 'app/health/route.js',
+    '/[tenant_slug]/signin/page': 'app/[tenant_slug]/signin/page.js',
   });
 
   const clientReferenceManifest = {
@@ -90,7 +102,36 @@ function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } 
     'utf8',
   );
 
+  // 動的 route 側。dynamicPageChunk は app-build-manifest にもあるので、正規化できないと二重計上になる
+  const dynamicClientReferenceManifest = {
+    clientModules: {
+      '/workspace/packages/ui/src/theme/UiProvider.tsx': {
+        id: 3,
+        name: '*',
+        chunks: ['101', layoutChunk],
+        async: false,
+      },
+      '/workspace/apps/hub/src/app/[tenant_slug]/signin/SignInForm.tsx': {
+        id: 4,
+        name: '*',
+        chunks: ['103', dynamicPageChunkAsUrl],
+        async: false,
+      },
+    },
+  };
+  const dynamicClientManifestPath = path.join(
+    buildRoot,
+    'server/app/[tenant_slug]/signin/page_client-reference-manifest.js',
+  );
+  mkdirSync(path.dirname(dynamicClientManifestPath), { recursive: true });
+  writeFileSync(
+    dynamicClientManifestPath,
+    `globalThis.__RSC_MANIFEST=(globalThis.__RSC_MANIFEST||{});globalThis.__RSC_MANIFEST["/[tenant_slug]/signin/page"]=${JSON.stringify(dynamicClientReferenceManifest)}`,
+    'utf8',
+  );
+
   writeChunk(buildRoot, commonChunk, 'export const common = true;\n');
+  writeChunk(buildRoot, dynamicPageChunk, 'export const signin = true;\n');
   writeChunk(
     buildRoot,
     layoutChunk,
@@ -111,6 +152,7 @@ function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } 
     buildRoot,
     reportPath: path.join(buildRoot, 'reports/client-bundle.json'),
     layoutChunk,
+    dynamicPageChunk,
   };
 }
 
@@ -173,6 +215,30 @@ describe('client JS 予算ゲート', () => {
     expect(handler.firstLoadGzipBytes).toBeGreaterThan(128);
     expect(report.violations.some((violation: { route: string }) => violation.route === '/health')).toBe(false);
     expect(result.stdout).toContain('SKIP (route handler) /health');
+  });
+
+  it('動的 route の percent-encode された chunk 参照を実ファイルへ解決する', () => {
+    const fixture = makeFixture();
+    const result = runCheck(fixture.buildRoot, ['--report', fixture.reportPath]);
+
+    // 正規化しないと「chunk が見つかりません: .../%5Btenant_slug%5D/...」で fail-closed 停止する
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const report = JSON.parse(readFileSync(fixture.reportPath, 'utf8'));
+    const signin = report.routes.find((route: { route: string }) => route.route === '/[tenant_slug]/signin');
+    expect(signin.kind).toBe('page');
+    expect(signin.largestChunks.map((chunk: { path: string }) => chunk.path)).toContain(fixture.dynamicPageChunk);
+  });
+
+  it('同一 chunk が manifest 間で別表記でも二重計上しない', () => {
+    const fixture = makeFixture();
+    runCheck(fixture.buildRoot, ['--report', fixture.reportPath]);
+
+    const report = JSON.parse(readFileSync(fixture.reportPath, 'utf8'));
+    const signin = report.routes.find((route: { route: string }) => route.route === '/[tenant_slug]/signin');
+    // common + layout + signin page の 3 つ。表記違いを取りこぼすと page 分が 2 重になり 4 になる
+    expect(signin.chunkCount).toBe(3);
+    expect(signin.largestChunks.filter((chunk: { path: string }) => chunk.path.includes('signin'))).toHaveLength(1);
   });
 
   it('計測対象が無いときは pass せず非ゼロ終了する', () => {
