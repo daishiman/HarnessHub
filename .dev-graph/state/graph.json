@@ -1,5 +1,5 @@
 {
-  "graph_revision": 619,
+  "graph_revision": 635,
   "nodes": [
     {
       "acceptance": [
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-24T12:35:34Z"
+      "updated_at": "2026-07-26T06:12:00Z"
     },
     {
       "acceptance": [
@@ -299,9 +299,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T15:01:04Z",
+        "imported_at": "2026-07-26T06:10:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f6ba21931374775143fb656c55c7689e8490662b56a19b170902c6ab565dd465",
+        "source_digest": "0ec0f8b86acd29ef4fa98c2e6b93c6d7b9ee9d31dbcb0b36259a2d52df8f3f44",
         "source_path": "system-spec/backend.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -317,7 +317,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub backend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-18T15:01:04Z"
+      "updated_at": "2026-07-26T06:10:00Z"
     },
     {
       "acceptance": [
@@ -405,9 +405,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T15:01:04Z",
+        "imported_at": "2026-07-26T08:35:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1",
+        "source_digest": "44731a240f143b9e386d165ca8706ebda887262bbd634d02681d2f06ec3a6239",
         "source_path": "system-spec/database.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -423,7 +423,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub data アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-18T15:01:04Z"
+      "updated_at": "2026-07-26T08:35:00Z"
     },
     {
       "acceptance": [
@@ -512,9 +512,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-23T04:45:00Z",
+        "imported_at": "2026-07-26T06:10:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e",
+        "source_digest": "8d4e9a33e32e01eccf27043108740c57ce58892c6d0de5c80a3eedbdfc3ec161",
         "source_path": "system-spec/security.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -530,7 +530,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub security アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-23T04:45:00Z"
+      "updated_at": "2026-07-26T06:10:00Z"
     },
     {
       "acceptance": [
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-23T00:04:07Z",
+        "imported_at": "2026-07-26T06:10:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf",
+        "source_digest": "37f83d648993da8f6b69ced5aca0d2cecd5d05dcb94c29ddbfd9dfce86642a55",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-23T00:04:47.206172Z"
+      "updated_at": "2026-07-26T06:10:00Z"
     },
     {
       "acceptance": [
@@ -1084,7 +1084,7 @@
       "template_version": "1.0.0",
       "title": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:09Z"
+      "updated_at": "2026-07-26T06:12:00Z"
     },
     {
       "acceptance": [
@@ -15791,7 +15791,7 @@
       "template_version": "1.0.0",
       "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T00:47:04Z"
+      "updated_at": "2026-07-26T06:12:00Z"
     },
     {
       "acceptance": [
@@ -32958,23 +32958,27 @@
       "classification_confidence": 0.95,
       "classification_reason": "feat-auth-tenancy のローカル core 実装と本番実行経路の間に残る単一の結線課題",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "completed_at": "2026-07-26T01:35:21Z",
+        "evidence_refs": [
+          "docs/features/feat-auth-tenancy/spec-reflection-receipt.md",
+          "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
+          "https://github.com/daishiman/HarnessHub/pull/76"
+        ],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": "2026-07-26T04:27:52.736958Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "evaluator": "final-review/pnpm-verify+system-spec-gates",
+        "evidence_ref": "docs/features/feat-auth-tenancy/spec-reflection-receipt.md"
       },
-      "confirmation_status": "draft",
+      "confirmation_status": "confirmed",
       "created_at": "2026-07-25T01:05:00Z",
       "depends_on": [],
       "domain": "security",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/sys-auth-tenancy-production-adapter-20260725.md",
@@ -32988,12 +32992,9 @@
       "goal": "テナント別 OIDC と Device Flow が in-memory テストだけでなく本番 repository と Auth.js を通って動く",
       "graph_node_id": "issue-auth-tenancy-production-adapter-20260725",
       "implementation_readiness": {
-        "checked_at": "2026-07-25T01:05:00Z",
-        "missing_sections": [
-          "Auth.js と custom session claims の bridge 詳細",
-          "DB schema owner と合意した Device Flow 列 migration"
-        ],
-        "status": "incomplete"
+        "checked_at": "2026-07-26T06:45:00Z",
+        "missing_sections": [],
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -33004,21 +33005,49 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "現行実装は OIDC 検証・session claims・認可・Device Flow の pure core と in-memory E2E を持つ一方、next-auth が未導入で /api/auth は 501、authRuntime() は常に例外を投げる。本番 DB は main に存在するが、AuthPorts が要求する device_authorizations の scope/deviceLabel/attempts/last poll/workspace と publisher_tokens の workspace、利用者 workspace 所属が現行 schema/repository に無い。この状態では本番認証や Device API は稼働しないため、依存追加と schema owner をまたぐ契約調整を独立 follow-up として追跡する",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-auth-tenancy-production-adapter-20260725",
+          "linked_at": "2026-07-26T04:27:52.735600Z",
+          "merge_commit_sha": "8e8f9a46851906926f00bf097fda4a34ba672ec1",
+          "merged_at": "2026-07-26T01:35:21Z",
+          "pr_number": 76,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/76"
+        }
+      ],
+      "purpose": "初回 feature 完了時は OIDC 検証・session claims・認可・Device Flow の pure core と in-memory E2E までで、Auth.js route と本番 DB ports が未結線だった。HarnessHub-b7ng は vendor 境界を維持したまま @auth/core、session bridge、本番 DB AuthPorts、CAS 永続化、Workers composition root を実結線し、仕様・設計・migration・証跡を正規フローで同期する",
       "related_nodes": [
         "feat-auth-tenancy",
         "feat-domain-model-db",
-        "feat-hub-foundation"
+        "feat-hub-foundation",
+        "issue-auth-501-doc-refresh-20260726",
+        "issue-db-write-gate-sweep-20260726",
+        "issue-libsql-connection-recovery-20260726",
+        "issue-refresh-race-observability-20260726"
       ],
       "resource_scope": [
         "apps/hub/package.json",
         "pnpm-lock.yaml",
+        "apps/hub/next.config.ts",
         "apps/hub/src/lib/auth/",
         "apps/hub/src/lib/authz/runtime.ts",
         "apps/hub/src/app/api/auth/",
+        "apps/hub/tests/auth-tenancy/",
         "packages/db/schema/",
-        "packages/db/repository/"
+        "packages/db/repository/",
+        "packages/db/connection/",
+        "packages/db/migrations/",
+        "packages/db/__tests__/",
+        "system-spec/",
+        "specs/",
+        "architecture/",
+        "features/feat-auth-tenancy.md",
+        "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
+        "docs/features/feat-auth-tenancy/"
       ],
       "scope_in": [
         "Auth.js 依存と route handler の実結線",
@@ -33041,7 +33070,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "follow-up",
         "auth-tenancy",
@@ -33054,7 +33083,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T01:05:00Z"
+      "updated_at": "2026-07-26T06:49:00Z"
     },
     {
       "acceptance": [
@@ -37034,6 +37063,726 @@
       "title": "required status checks の G7 / G7b / G9 が local pnpm verify に未結線 (CI にしか無い)",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T15:24:07.483127Z"
+    },
+    {
+      "acceptance": [
+        "docs/features/feat-auth-tenancy/ 配下に、/api/auth が 501 を返すと現在形で述べている記述が残っていない (grep で確認できる)",
+        "final-review-record.md の Auth.js 実結線の行が解消済みとして、根拠 (HarnessHub-b7ng の受入条件) 付きで更新されている",
+        "lint-doc-line-limit.py が exit 0 のままである"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-mr3c",
+        "linked_at": "2026-07-26T06:24:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-auth-501-doc-refresh-20260726.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-b7ng の実装により陳腐化した feature 成果物の記述を追従させる doc drift issue",
+      "completion_evidence": {
+        "completed_at": "2026-07-26T01:35:21Z",
+        "evidence_refs": [
+          "docs/features/feat-auth-tenancy/spec-reflection-receipt.md",
+          "https://github.com/daishiman/HarnessHub/pull/76"
+        ],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": "2026-07-26T04:29:00Z",
+        "source": "github_pr_merge",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
+        "evaluator": "final-review/docs-gates",
+        "evidence_ref": "docs/features/feat-auth-tenancy/spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "docs",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-auth-501-doc-refresh-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "feat-auth-tenancy の成果物を読んだ人が、/api/auth の現在の挙動 (tenant 別 OIDC を処理する) と、501 だった期間および解消した経緯を取り違えずに読める状態",
+      "graph_node_id": "issue-auth-501-doc-refresh-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T06:46:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-auth-tenancy-production-adapter-20260725",
+          "linked_at": "2026-07-26T04:29:00Z",
+          "merge_commit_sha": "8e8f9a46851906926f00bf097fda4a34ba672ec1",
+          "merged_at": "2026-07-26T01:35:21Z",
+          "pr_number": 76,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/76"
+        }
+      ],
+      "purpose": "HarnessHub-b7ng で @auth/core を adapter 境界内へ導入し、/api/auth/[...nextauth] は 501 auth_provider_not_wired ではなく tenant 別 OIDC を処理するようになった。しかし feat-auth-tenancy の成果物 6 件 (architecture-decision-record.md / acceptance-record.md / test-run-results.md / release-record.md / refactoring-migration-note.md / final-review-record.md) は依然として『501 を返す』『next-auth 未導入』『本番 runtime 未結線』と記述している。これらは feature 完了時の記録であり、当時としては正しいが、現在の実装を知らない読者が『まだ未結線だ』と誤読する。特に final-review-record.md の未達表は HarnessHub-b7ng を open として掲げており、epic rollup の判断材料になる。記録の改竄ではなく『いつ何が変わったか』を追記する形で追従させる必要がある",
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "issue-auth-tenancy-production-adapter-20260725"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/"
+      ],
+      "scope_in": [
+        "docs/features/feat-auth-tenancy/ の該当 6 ファイルについて、501 記述に HarnessHub-b7ng で解消した旨の追記または更新を行う",
+        "final-review-record.md の未達表から Auth.js 実結線の行を解消済みへ更新する (HarnessHub-b7ng の acceptance 4 件を根拠として参照する)",
+        "doc-line-limit の ratchet 対象ファイルがある場合は行数を増やさない形 (置換) に留める"
+      ],
+      "scope_out": [
+        "実装の変更 (実装は HarnessHub-b7ng で完了している)",
+        "system-spec/ および docs/security-spec.md の内容変更 (R4-reopen が必要。spec delta は issue-auth-tenancy-spec-delta-20260725 が所有)",
+        "feat-auth-tenancy epic の close 判定 (依存 feature の未了があり別途)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/features/feat-auth-tenancy/final-review-record.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "follow-up",
+        "doc-drift",
+        "auth-tenancy"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "feat-auth-tenancy の成果物 6 件が /api/auth を 501 未結線と記述したままで実装と食い違う",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-26T06:50:00Z"
+    },
+    {
+      "acceptance": [
+        "packages/db/repository/ 配下の全 write が guardedWrite 経由であることが、追加した CI スクリプトで exit 0 として示される",
+        "その CI スクリプトが、任意の write から guardedWrite を外した状態で実際に非ゼロ終了することを fixture または一時改変で確認済みである",
+        "別接続 reader から数える回帰テストが、掃き出した代表経路について pass する",
+        "packages/db/repository/conflict.ts のヘッダから『掃き出しは別 issue で行う』旨の記述が消え、現状 (全経路がゲート内) と一致している"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-mb7c",
+        "linked_at": "2026-07-26T06:24:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-db-write-gate-sweep-20260726.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-b7ng の実装中に実測した silent data loss の残余リスクを、掃き出し + CI 機械検査として切り出した issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "data",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-db-write-gate-sweep-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "packages/db の全 repository の書き込みが guardedWrite を経由し、新規の write 実装がゲートを通さずに追加されたら CI が落ちる状態",
+      "graph_node_id": "issue-db-write-gate-sweep-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-b7ng で、libSQL のローカル backend は SQLITE_BUSY で失敗した文を後片付けしないため、負けた接続が『書き込みが自分からは見えるが commit されない』状態で壊れることを実測した (packages/db/repository/conflict.ts のヘッダに機序を記録)。対策として書き込みをプロセス内で直列化する guardedWrite を導入し、監査 append、device flow、users.insert、user-workspaces.add/remove はゲート内へ移した。監査 append はほぼ全ての状態変更に付随するため、guardedWrite を通っていない残りの書き込み (tenants / users の update / idp-connections / workspaces / packages / releases など) は同じ競合を踏みうる。失敗が例外ではなく『成功したのに行が無い』形で出るため、残りを掃き出し、新しい書き込みが素通りしないことを CI で機械検査する必要がある",
+      "related_nodes": [
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "issue-auth-tenancy-production-adapter-20260725"
+      ],
+      "resource_scope": [
+        "packages/db/repository/",
+        "packages/db/__tests__/",
+        "scripts/ci/"
+      ],
+      "scope_in": [
+        "packages/db/repository/ 配下の全 repository について insert/update/delete を列挙し、guardedWrite を通っていないものをゲート内へ移す",
+        "書き込み関数がゲートを通っているかを静的検査する CI スクリプトを追加する (repository/audit.ts と device-flow.ts が既に満たす形を基準にする)",
+        "packages/db/__tests__/write-conflict.test.ts と同じ形 (別接続の reader から commit 済み行だけを数える) の回帰テストを、掃き出した経路のうち代表 2-3 本へ広げる"
+      ],
+      "scope_out": [
+        "接続層の復旧 (壊れた接続の reconnect) — issue-libsql-connection-recovery-20260726 が所有する",
+        "guardedWrite そのものの設計変更 (WeakMap による adapter 単位の待ち行列という方式は HarnessHub-b7ng で確定済み)",
+        "D1 経路の並行性 (D1 には interactive transaction が無く BEGIN IMMEDIATE の競合が起きない)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "packages/db/repository/conflict.ts",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "data-loss",
+        "libsql",
+        "concurrency",
+        "auth-tenancy"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "packages/db の書き込みのうち guardedWrite を通っていない経路が残っており監査 append と衝突しうる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-26T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "別プロセスが同じ file に書き込みロックを保持した状態で adapter に書き込ませ、SQLITE_BUSY を踏んだ後の書き込みが『別接続から見える』ことを検証する回帰テストが pass する",
+        "復旧できない場合は成功を返さず例外になる (成功を返して行が無い状態にならない) ことがテストで示される",
+        "packages/db/repository/conflict.ts ヘッダの『復旧手段は接続を捨てることだけで drizzle 越しには届かない』という記述が、接続層で解決済みである旨へ更新されている",
+        "check:connection-isolation が exit 0 のままである (復旧を接続層の外へ漏らしていない)"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-njkm",
+        "linked_at": "2026-07-26T06:24:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-libsql-connection-recovery-20260726.md",
+          "confidence": 0.85
+        }
+      ],
+      "classification_confidence": 0.85,
+      "classification_reason": "HarnessHub-b7ng で確認した『BUSY を踏んだ接続は復旧できない』という残余リスクを、接続層の責務として切り出した issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "data",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-libsql-connection-recovery-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "ローカル file backend で SQLITE_BUSY を踏んだ接続が検知され、以降の書き込みが失われる前に接続が張り直されるか、少なくとも例外として観測可能になっている状態",
+      "graph_node_id": "issue-libsql-connection-recovery-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-b7ng で導入した guardedWrite は書き込みを『プロセス内で』直列化するため、同一プロセス内の競合は消える。しかしローカル file backend を別プロセスが同時に触る場合 (テストの並行実行・restore drill と export の同時起動・開発中の CLI 併走) の SQLITE_BUSY は防げない。そして libSQL のローカル backend は BUSY で失敗した単発 execute() を後片付けしないため、踏んだ時点でその接続は未終了 statement を抱えて固まり、以降の書き込みが commit されない状態になる。復旧手段は接続を捨てて張り直すこと (Sqlite3Client.reconnect()) だけだが、これは driver 内部 API で drizzle 越しには届かない。よって現状『プロセス外の競合を踏んだら黙ってデータが失われる』穴が残っている。接続層 (packages/db/connection/) が接続の寿命を握っている唯一の層なので、そこで検知と張り直しを提供する必要がある",
+      "related_nodes": [
+        "feat-domain-model-db",
+        "issue-db-write-gate-sweep-20260726",
+        "issue-auth-tenancy-production-adapter-20260725"
+      ],
+      "resource_scope": [
+        "packages/db/connection/",
+        "packages/db/__tests__/"
+      ],
+      "scope_in": [
+        "packages/db/connection/turso.ts の adapter が、書き込みが SQLITE_BUSY で失敗したことを検知して raw client を張り直す (または adapter を fail-fast にする) 経路を持つ",
+        "張り直し後に drizzle instance が新しい raw client を指すこと (差し替えが adapter.client の同一性に依存する呼び出し側を壊さないこと) を確認する",
+        "別プロセスから同じ file を掴んで BUSY を誘発する回帰テストを追加し、復旧後の書き込みが別接続から見えることを検証する"
+      ],
+      "scope_out": [
+        "プロセス内の書き込み直列化 (HarnessHub-b7ng で guardedWrite として実装済み。残りの掃き出しは issue-db-write-gate-sweep-20260726)",
+        "本番 (Turso remote) の再試行方針 — remote は 1 文 = 1 HTTP 要求で接続に状態が残らないため現行の retryOnConflict で足りる",
+        "D1 経路"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "packages/db/repository/conflict.ts",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "libsql",
+        "connection-layer",
+        "resilience",
+        "auth-tenancy"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "SQLITE_BUSY で壊れた libSQL ローカル接続を接続層で復旧できずプロセス外競合に耐えられない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-26T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "docs/backend-spec.md の監査 action 列挙と docs/security-spec.md の監査 event 表に token.refresh_race が追記されている",
+        "service.ts の rotation CAS 敗北分岐が token.refresh_race を記録し、metadata に family_id を含む",
+        "runbook.md §2.5 に token.refresh_race の切り分け手順があり token.reuse_detected と混同しない旨が書かれている",
+        "CAS 敗北を強制した統合テストで監査に当該 action が 1 行残ることを検証している",
+        "lint-doc-line-limit.py が exit 0 のままである"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-v22l",
+        "linked_at": "2026-07-26T06:24:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-refresh-race-observability-20260726.md",
+          "confidence": 0.85
+        }
+      ],
+      "classification_confidence": 0.85,
+      "classification_reason": "HarnessHub-b7ng で確定した rotation CAS 敗北の方針に付随する観測性の欠落を、action 語彙の owner が docs 側であることから分離した issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "security",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-refresh-race-observability-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "rotation CAS 敗北が独立した監査 action として残り、運用側が token.reuse_detected と混同せずに並行窓の発生と窃取の兆候を切り分けられる状態",
+      "graph_node_id": "issue-refresh-race-observability-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "refresh() には同じ refresh token が 2 回提示されたときに落ちる分岐が 2 つある。(1) 失効済みを提示した再利用検知は family 全失効 + token.reuse_detected を残す。(2) 読んだ時点は生きていたが revokeIfActive の CAS に負けた側は invalid_grant を返すだけで監査に何も残らない。どちらに落ちるかは interleaving で決まり、負けた側の読みが勝者の CAS より後なら (1)、先なら (2)。単一プロセス (ローカル file backend + guardedWrite) の実測では (1) に落ちるが、Workers は isolate が複数でプロセス内の待ち行列を共有しないため本番では両者が生きた枝を読んで (2) に落ちる。つまり本番の主経路が監査に痕跡を残さない側である。HarnessHub-b7ng は escalate しない判断を採った (掃討が勝者の create と競走して決定論にならない。実測の監査行 revoked_family_size=1 / revoked_count=0 が掃討時点で勝者の枝が無いことの証拠。加えて CLI の並行 refresh ごとに利用者がログアウトする可用性の代償がある)。検知自体は負けた枝の再提示で (1) に落ちるので失われないが、client が invalid_grant で古い token を捨てて再提示しない場合その窓の窃取は観測されない。監査 action の語彙の正本は docs/backend-spec.md にあり b7ng の resource_scope 外だったため分離した",
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "issue-auth-tenancy-production-adapter-20260725"
+      ],
+      "resource_scope": [
+        "apps/hub/src/lib/auth/device-flow/service.ts",
+        "apps/hub/tests/auth-tenancy/",
+        "docs/backend-spec.md",
+        "docs/security-spec.md",
+        "docs/features/feat-auth-tenancy/runbook.md"
+      ],
+      "scope_in": [
+        "監査 action token.refresh_race を docs/backend-spec.md の action 列挙と docs/security-spec.md の監査 event 表へ追記する",
+        "apps/hub/src/lib/auth/device-flow/service.ts の rotation CAS 敗北分岐から同 action を記録する (metadata に family_id を含める)",
+        "docs/features/feat-auth-tenancy/runbook.md §2.5 へ token.refresh_race の切り分け手順を追加する",
+        "CAS 敗北を強制した統合テストで監査に 1 行残ることを検証する"
+      ],
+      "scope_out": [
+        "family 単位の墓標による決定論的な escalate (schema 追加を伴う別設計。必要になった時点で別 issue)",
+        "client 側の refresh single-flight 化 (feat-publisher-plugin の責務)",
+        "既存 token.reuse_detected の意味変更 (security-spec §2.2 の契約なので触らない)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "apps/hub/src/lib/auth/device-flow/service.ts",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "device-flow",
+        "audit",
+        "observability",
+        "auth-tenancy"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "refresh rotation の CAS 敗北が監査に残らず Workers 本番経路の並行窓で窃取が観測できない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-26T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "/ の First Load JS が是正前 159 kB から framework baseline 近傍へ削減され、gzip 実測で予算 120 KiB/route を満たす",
+        "optimizePackageImports を外して再ビルドすると G13 が非ゼロ終了し、route handler は誤検知しないことが実測で確認できる",
+        "CI 品質ゲート登録簿・ADR §6・infrastructure-spec・frontend-spec §8 の 4 者が G13 を含む形で整合し、shared-layers.md の不変条件 (ゲート増減時の同一 PR 改訂) を満たす"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-infrastructure"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-aqi",
+        "linked_at": "2026-07-24T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hub-cwv-tbt-over-budget-20260724.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "本番 CWV 実測で判明した性能退行と、それを検知できなかった CI ゲート設計ギャップを追跡する issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T00:00:00Z",
+      "depends_on": [],
+      "domain": "ui-ux",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hub-cwv-tbt-over-budget-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "/ の First Load JS を framework baseline 近傍まで削減して TBT 予算超過の主因を除去し、同種の退行が PR 段階で必ず fail する client JS 予算ゲート (G13) を CI 品質ゲート登録簿へ正式登録した状態にする。",
+      "graph_node_id": "issue-hub-cwv-tbt-over-budget-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T09:27:54Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "2026-07-24 の Hub 本番初回 CWV 実測で TBT 926ms (予算 200ms・qa-018 の INP lab 代理指標) を記録した。原因は apps/hub/src/app/{page,layout}.tsx が @harness-hub/ui の barrel から named import しており、App Router が barrel 経由で到達可能な 'use client' 部品を丸ごと client reference manifest へ載せるため、Alert 1 個しか使わない / が MarkdownView 依存の react-markdown/micromark/rehype 一式 (146.4 KB) を初期チャンクで読んでいたこと。さらに既存 CI ゲート G5 は wrangler が Cloudflare へ上げる Worker (サーバー側実行コード) を 3MiB 予算で測る設計であり、ブラウザへ配る client JS の退行を原理的に検知できない (実測時 0.96MiB/3MiB で緑のままだった)。G11 (CWV 定期計測) は main 反映後の実行なので PR 段階では止められず、client JS 退行を事前に遮断する経路が存在しない。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/next.config.ts",
+        "apps/hub/package.json",
+        "apps/hub/scripts/check-client-bundle.mjs",
+        "apps/hub/tests/ci/client-bundle-budget.test.ts",
+        ".github/workflows/ci.yml",
+        "package.json",
+        "docs/shared-layers.md",
+        "docs/infrastructure-spec.md",
+        "docs/frontend-spec.md",
+        "docs/features/feat-hub-foundation/architecture-decision-record.md"
+      ],
+      "scope_in": [
+        "next.config.ts への experimental.optimizePackageImports 追加による barrel 巻き込みの解消",
+        "route ごと First Load JS を gzip 実測する client JS 予算ゲート (G13) の新設と ci.yml 配線",
+        "CI 品質ゲート登録簿 (shared-layers.md) / 設計正本 (ADR §6) / infrastructure-spec / frontend-spec §8 への G13 反映",
+        "dev-workflow qa-039【2】の CI/local 同値要件に沿った root pnpm verify への G13 組み込み"
+      ],
+      "scope_out": [
+        "TBT <=200ms の本番実測による最終確認 (cwv.yml の定期計測または workflow_dispatch が必要でデプロイ後にのみ取得可能)",
+        "G11 cwv.yml 自体の閾値・実装変更",
+        "packages/ui 側の barrel 構成そのものの再設計 (公開 contract 単一入口 R-15 は維持する)",
+        "Markdown エディタ等を実際に使う重量 route の個別予算設計 (発生時に measureRoutes で例外化する余地のみ残す)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-24T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "hub",
+        "performance",
+        "cwv",
+        "ci-gate",
+        "bundle-budget",
+        "qa-018"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 client JS 削減と PR 段階の予算ゲート新設",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T09:27:54Z"
+    },
+    {
+      "acceptance": [
+        "Better Stack で production /health の 3 分間隔監視が稼働し、monitor が up 状態を記録している",
+        "cron heartbeat monitor が登録され CRON_HEARTBEAT_URL が Worker secret へ投入済みで、日次 cron 完走時に heartbeat が着信する",
+        "SLO ダッシュボードが外形監視の downtime と Workers analytics の 5xx 率の双方を反映しており、外形監視単独を正としていない (infrastructure-spec §9 / qa-019)",
+        "1 ヶ月分の可用性時系列から 99.5% の達成可否を判定でき、判定結果と生データ参照が docs/features/feat-hub-foundation/evidence/ に記録されている",
+        "acceptance-report.md §0 の A3 行が判定結果で更新され、未達の場合はエラーバジェット運用 (消費 70% 警告 / 100% 凍結) の適用状況が併記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-37h.15",
+        "linked_at": "2026-07-25T15:44:20Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hub-slo-external-monitoring-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "P13 から切り出した A3 (SLO 計測) の時間ゲート作業を追跡する standalone issue。exact-13 package の子は P01-P13 固定のため package へ追加できない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T11:06:48Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hub-slo-external-monitoring-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Better Stack で production /health が 3 分間隔で監視され、cron heartbeat が稼働し、外形監視の downtime と Workers analytics の 5xx 率から 1 ヶ月分の可用性を算定して SLO 99.5% を判定できる状態にし、判定結果を feat-hub-foundation の証跡へ記録する",
+      "graph_node_id": "issue-hub-slo-external-monitoring-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T11:06:48Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "P13 で本番デプロイと CI 自動デプロイ経路は確立したが、acceptance A3『SLO 99.5% の計測と /health が稼働する』のうち SLO 算定側が未達で残った。外部死活監視が未設定のため可用性の時系列が存在しないためである。A3 は 3 分間隔・1 ヶ月分の観測期間を要する時間ゲートであり、P13 に紐づけたままでは実作業完了後も最短 1 ヶ月 P13 を閉じられず、feat-hub-foundation epic を depends_on に持つ 9 feature が着手できない。P13 をデプロイ作業の完了として閉じ、A3 の判定を本 issue へ切り出す。epic HarnessHub-37h の受入条件には SLO 99.5% 計測が含まれるため、epic の close 判定には本 issue の完了が必要である",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "SYS-HUB-FOUNDATION-P13",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/runbook.md",
+        "docs/features/feat-hub-foundation/acceptance-report.md",
+        "docs/features/feat-hub-foundation/evidence/",
+        "docs/infrastructure-spec.md"
+      ],
+      "scope_in": [
+        "Better Stack Free での production /health 3 分間隔 monitor 登録",
+        "cron heartbeat monitor の登録と CRON_HEARTBEAT_URL の Worker secret 投入",
+        "SLO ダッシュボードの作成 (外形監視 downtime + Workers analytics 5xx 率の複合算定)",
+        "1 ヶ月分の可用性時系列取得と A3 の判定",
+        "判定結果の evidence 記録と acceptance-report.md §0 の A3 行更新"
+      ],
+      "scope_out": [
+        "独自ドメイン hub.<domain> の割当 (運用上の必須要件ではない)",
+        "cron ジョブ本体の実装 (handler は実装済みでジョブ実体は各ドメイン feature の責務)",
+        "Workers analytics の取得基盤の新規実装 (Cloudflare 標準機能を使う)",
+        "restore drill の実施 (別途 runbook §6 の四半期運用)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T11:06:48Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "feat-hub-foundation",
+        "slo",
+        "monitoring",
+        "operations",
+        "acceptance-a3"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T15:44:20Z"
     },
     {
       "acceptance": [

@@ -3,10 +3,15 @@
 export {
   type AuthjsConfig,
   type AuthjsConfigDeps,
+  type AuthjsHandlerDeps,
+  type AuthRouteHandler,
   buildOidcProvider,
+  createAuthjsHandler,
   createSessionAuthProvider,
   type OidcProviderConfig,
+  type ResolvedAuthjsConfig,
   resolveAuthjsConfig,
+  resolveAuthjsConfigForTenant,
   resolveSignIn,
   type SessionAuthProviderDeps,
   type SignInInput,
@@ -23,6 +28,7 @@ export {
   serializeClearedSessionCookie,
   serializeSessionCookie,
 } from './config.js';
+export { AuthPortDataError, createDbAuthPorts, type DbAuthPortsDeps } from './db-ports.js';
 export {
   type ApproveRejection,
   type ApproveResult,
@@ -50,6 +56,7 @@ export type {
   DeviceAuthorizationPort,
   DeviceAuthorizationRecord,
   DeviceAuthorizationStatus,
+  DevicePollProgress,
   DirectoryUser,
   PublisherTokenPort,
   PublisherTokenRecord,

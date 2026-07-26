@@ -15,7 +15,7 @@ serves_goals: [G2, G4, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-072 |
+| Web (web) | 確定 | 確定質疑: qa-074 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,11 +24,11 @@ serves_goals: [G2, G4, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-072 (対応セル: web)
+### qa-074 (対応セル: web)
 
-**質問**: qa-036 (auth.web) の R4-reopen: session JWT claims の確定集合へ workspace_ids を追加するか、edge の Workspace 判定を別手段 (DB 往復 / KV キャッシュ) へ変えるか? (follow-up HarnessHub-l2g9 / issue-auth-tenancy-spec-delta-20260725。qa-036 は claims を sub/tenant_id/role/status/iat/exp の 6 種で『最小集合』と列挙して確定したが、feat-auth-tenancy 実装 packages/schemas/auth-tenancy/session.ts は 7 種目に workspace_ids を載せており、Publisher CLI から観測できる契約であるため実装側の判断のままにできない)
+**質問**: HarnessHub-b7ng の本番 Auth.js / AuthPorts 結線で確定した認証契約を auth.web の正本へ反映するか。
 
-**回答**: ユーザー確認 (2026-07-25、AskUserQuestion で「実装を追認して 7 claim で確定」を選択。承認記録 appr-010) により、qa-036 の確定内容を全面維持したうえで session JWT claims の確定集合のみを改定し、auth.web の専用正本として再確定する。【本 R4-reopen の唯一の差分】session JWT claims = sub(user_id) / tenant_id / role / status / workspace_ids / iat / exp の 7 種(qa-036 の 6 種 + workspace_ids) を、認可 MW が DB 往復なしで判定できる最小集合とする。workspace_ids は所属 Workspace id の配列で、edge の認可 MW が Workspace 越境を DB 往復なしで拒否するために載せる(載せない場合 edge は membership を判定できず、全 Workspace スコープ要求が落ちる)。代償は 2 点あり、いずれも受容する: (a) cookie が所属 Workspace 数に比例して膨らむ、(b) membership 変更の反映が最大 updateAge (15 分) 遅れる — これは role/status と同じ陳腐化として扱い、緊急時は session_revocations による即時失効で回避する。access token 側は発行時の workspace_id 1 件だけへ束縛し、被害範囲を session より狭く保つ (claims をそのまま写さない)。実装正本は packages/schemas/auth-tenancy/session.ts の sessionClaimsSchema、仕様正本は docs/security-spec.md §2.1。【qa-036 から維持する確定内容】qa-005 の Auth.js + テナント別 OIDC (顧客既存 IdP 委譲・Hub 独自アカウント基盤なし・署名付き JWT cookie・role 4 種) を全面維持し、docs/security-spec.md §2.1/§2.3/§2.5 で確定する。session 数値: strategy=JWT、cookie は __Host-harness-hub.session (HttpOnly/Secure/SameSite=Lax/Path=/、Domain 設定なし)、maxAge 8 時間 (業務日 1 日)、updateAge 15 分、署名鍵は AUTH_SECRET (Workers Secret binding)。失効の意味論: JWT は stateless のため role/status 変更の反映は最大 15 分遅延する(updateAge ごとの再発行時に jwt callback で DB 再読込)。これを受容する代わりに、Publisher/ingest token 失効は即時 (publisher_tokens.revoked_at を毎リクエスト参照)、緊急失効 (退職・侵害) は session_revocations テーブル (テナント単位の最終失効時刻・KV/メモリキャッシュ TTL 60 秒) により即時とし、認可 MW が iat < revoked_at の JWT を拒否する。OIDC 検証契約 (T1 対策): issuer は idp_connections.issuer_url と厳密一致 (discovery の issuer とも一致)、aud は当該テナントの client_id、nonce/state 検証、PKCE S256 を confidential client でも併用、tenant 束縛はログイン URL /{tenant_slug}/signin で tenant を先に確定し当該テナントの idp_connections のみを候補にする、email_verified=true のみ受理し email はテナント跨ぎの識別子に使わない(同一 email が複数テナントに存在しうるため識別子は idp_subject。UNIQUE(tenant_id, idp_subject) で束縛)、JIT provisioning は role=member/status=active で作成し自動昇格しない。パスワード/2FA/リセットは実装せず IdP 責務とする (D3 維持・scope out)。mockup の login 画面は IdP redirect へ、account 画面のセキュリティ節は IdP 設定への外部リンク + Publisher token 一覧・失効ボタンへ置換する。開発・デモ環境の認証 (ユーザー確認による確定 2026-07-17): 提供者の Google Workspace を dev tenant の OIDC provider として登録し、本番と同一経路で認証する。dev 専用 provider (Credentials/mock login/SKIP_AUTH) をコードに存在させず CI で文字列出現を禁止検査する(認証経路を 1 本に保てば dev 専用コードの本番混入という事故クラスが構造的に発生しない)。ネット接続と dev tenant IdP 設定が開発の前提条件になることを受容する。CSRF は SameSite=Lax + 全 state-changing リクエストの Origin 検査 + Auth.js 既定の CSRF token、CORS は不許可。
+**回答**: ユーザーの 2026-07-26 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映」を明示承認として、qa-072 までの auth.web 確定内容を全面維持し、次の実装追補を確定する。Auth endpoint は GET/POST /api/auth/{tenant_slug}/{action} とし、slug から当該 tenant の idp_connections だけを解決する。Auth.js の JWT encode/decode は SessionClaims の署名・検証へ委譲し、edge 認可と cookie が同じ 7 claims 契約を使う。callback origin は要求 Host ではなく AUTH_CANONICAL_ORIGIN へ固定する。JIT provisioning は同一 (tenant_id,idp_subject) の同時初回ログインを UNIQUE 制約後の再読込で 1 user へ収束させ、role=member/status=active 以外を IdP claims から与えない。Workers Secret は session と Publisher access token の blast radius を分離するため AUTH_SESSION_SECRET と AUTH_ACCESS_TOKEN_SECRET に分ける。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 
