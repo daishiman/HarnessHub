@@ -12,7 +12,7 @@ iteration: null
 title: "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する"
 owners: ["daishiman"]
 created_at: "2026-07-25T01:05:00Z"
-updated_at: "2026-07-26T06:45:00Z"
+updated_at: "2026-07-26T06:47:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-auth-tenancy","feat-domain-model-db","feat-hub-foundation","issue-auth-501-doc-refresh-20260726","issue-db-write-gate-sweep-20260726","issue-libsql-connection-recovery-20260726","issue-refresh-race-observability-20260726"]
@@ -107,10 +107,12 @@ Cloudflare Workers build を通り、同時要求でも token または試行回
 - [x] 本番 DB ports と Device Flow 永続化契約差を解消する。
 - [x] 2 tenant OIDC / Device Flow / refresh rotation / revocation の実 DB 統合テストが pass する。
 - [x] system-spec / specs / architecture / features / tasks / docs を正規フローで反映する。
-- [ ] draft PR が default branch へ merge され、dev-graph lifecycle が reconciliation される。
+- [x] PR #76 が default branch へ merge された。
 
-## 検証証跡
+## Verification and evidence
 
-- `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-auth-tenancy`
-- `pnpm verify`
-- `docs/features/feat-auth-tenancy/spec-reflection-receipt.md`
+- Automated command: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-auth-tenancy`
+- Automated command: `pnpm verify`
+- Required evidence: `docs/features/feat-auth-tenancy/spec-reflection-receipt.md`
+- Required evidence: `docs/features/feat-auth-tenancy/final-review-record.md`
+- Merge authority: `https://github.com/daishiman/HarnessHub/pull/76`
