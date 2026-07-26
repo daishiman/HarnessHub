@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-24T12:35:34Z"
+updated_at: "2026-07-26T06:12:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `6b24a06e4116a966…`)
-- [system-spec/index.md](../system-spec/index.md) (sha256: `491539b244ee2436…`)
+- [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `190b5c6131b7c78…`)
+- [system-spec/index.md](../system-spec/index.md) (sha256: `862938b8c222c01c…`)
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **FAIL** (`system-spec/completeness-report.json`、2026-07-22 実 fork 監査つき再評価。evaluated_digest `f5e022ed4ad5ae96…` = D7 反映後の正本。是正: doc_freshness 2 件 + D7 質疑証跡の補完後に再評価で pass へ復帰させる)
-- 取込日時: 2026-07-18T08:10:00Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json`、evaluated_digest `190b5c6131b7c78…`)
+- 取込日時: 2026-07-24T12:35:34Z / plugin: system-spec-harness v0.1.0
 
 ## 目的と成功状態
 
@@ -102,6 +102,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 認証・認可
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**実装反映 (2026-07-26 / HarnessHub-b7ng)**:
+
+- `qa-074`、`qa-075`、`qa-082`〜`qa-086` として auth / security / backend / database / infrastructure の web セルを R4 reopen →再確定した。
+- Auth.js 本番 route、DB-backed AuthPorts、CAS 一回性、テナント付き所属主キー、Worker Secret、要求間 write 分離と rollout 順序を正本へ書き戻した。
+- 反映先と検証の対応は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) を正とする。
 
 ## エラー・例外・回復
 

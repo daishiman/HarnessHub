@@ -66,10 +66,10 @@ OS 資格情報域保存 (macOS Keychain / Windows Credential Manager) は `feat
 
 | ゲート | 結果 | CI 自動実行 |
 | --- | --- | --- |
-| G1 テナント分離テスト | ✅ 12 ケース pass | ⚠️ hub テストスイート内で実行 (必須ゲートとしての名指しは無し) |
-| G2 Auth.js adapter 境界隔離 | ✅ 走査 92 / 違反 0 | ❌ 未結線 |
-| G3 認可判定の単一集約 + route 例外の厳密一致 | ✅ 走査 97 / 違反 0 / allowlist 3 / 例外 5 件一致 | ❌ 未結線 |
-| G4 dev 専用 provider 非存在 | ✅ 走査 97 / 禁止語 15 種 / 検出 0 | ❌ 未結線 |
+| G1 テナント分離テスト | ✅ pass | ✅ `test:tenant-isolation` として名指し |
+| G2 Auth.js adapter 境界隔離 | ✅ pass | ✅ root `check:auth` / CI G12 |
+| G3 認可判定の単一集約 + route 例外の厳密一致 | ✅ pass | ✅ root `check:auth` / CI G12 |
+| G4 dev 専用 provider 非存在 | ✅ pass | ✅ root `check:auth` / CI G12 |
 | G5 数値契約の単一集約 | ✅ 11 項目一致 (うち 1 項目は ADR 実装追補 §10.7 の決定値) | ✅ hub テストスイート |
 | G6 secret scan | ✅ 走査 297 / 検出 0 / verdict=pass | ✅ `pnpm check:secrets` |
 | (既存) `unwrapped-route-handler` (C2) | ✅ 走査 250 / 違反 0 | ✅ 既存 CI |
@@ -80,15 +80,15 @@ OS 資格情報域保存 (macOS Keychain / Windows Credential Manager) は `feat
 
 | # | constraint | 判定 |
 | --- | --- | --- |
-| QC-1 | `tenant-oidc-dynamic-resolution-authjs-d3-qa005` | ⚠️ 条件付き充足 (`next-auth` 未結線) |
+| QC-1 | `tenant-oidc-dynamic-resolution-authjs-d3-qa005` | ✅ 充足 (`@auth/core` と tenant route を結線) |
 | QC-2 | `role4-authorization-matrix-single-middleware-deny-by-default-sec2` | ✅ 充足 |
 | QC-3 | `device-flow-os-credential-token-revocation-qa008` | ✅ 充足 (所有範囲において) |
-| QC-4 | `auth-adapter-boundary-better-auth-migration-hedge-d3-qa020` | ⚠️ 条件付き充足 (CI 未結線) |
-| QC-5 | `tenant-workspace-row-level-scope-isolation-test-ci-d4` | ⚠️ 条件付き充足 (必須ゲート指定なし) |
-| QC-6 | `no-hub-native-account-idp-delegation-i7` | ⚠️ 条件付き充足 (CI 未結線) |
+| QC-4 | `auth-adapter-boundary-better-auth-migration-hedge-d3-qa020` | ✅ 充足 (adapter 隔離 + CI) |
+| QC-5 | `tenant-workspace-row-level-scope-isolation-test-ci-d4` | ✅ 充足 (複合 PK + 実 DB 分離テスト + CI) |
+| QC-6 | `no-hub-native-account-idp-delegation-i7` | ✅ 充足 (CI) |
 | QC-7 | `session-jwt-staleness-emergency-revocation-qa036` | ✅ 充足 |
 
-**充足 3 / 条件付き充足 4 / 未充足 0。P05/P07/P09/P10 は完了条件未達のため open。**
+**2026-07-26 再評価: 充足 7 / 条件付き充足 0 / 未充足 0。**
 
 ---
 
@@ -101,8 +101,8 @@ task spec が名指しで追跡可能性の担保を求めている 2 件。
 - **根拠文書**: `docs/features/feat-auth-tenancy/architecture-decision-record.md` §1 (AD-1)
 - **内容**: `session_revocations` / `users` / `publisher_tokens` / `device_authorizations` / `idp_connections` の
   スキーマ owner は `feat-domain-model-db`。本 feature は **port 越しにのみ触る**。
-- **帰結**: 本 feature は `packages/db/schema/` を write scope に持たず、DB migration を一切生成しない
-  (P08 §0)。既存データへの後方互換性・backfill は構造的に発生しない。
+- **初回 feature の帰結**: P08 時点では `packages/db/schema/` を変更しなかった。
+  `HarnessHub-b7ng` では schema owner の変更として認証 port 差分を DB schema/migration へ正規反映した。
 - **リリース後に効いてくる点**: 認証に必要な列を追加したくなったとき、
   変更するのは本 feature ではなく `feat-domain-model-db` である。ここを取り違えると、
   2 つの feature が同じテーブルを別々に定義する。
@@ -171,7 +171,7 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 | 分離テストの CI 必須ゲート指定 | ✅ **解消 (2026-07-25)** — `check-tenant-isolation-gate.mjs` + `test:tenant-isolation` の名指し実行 | bd `HarnessHub-1f28` closed |
 | `validate-system-plan.py` が `status=fail` (violations 27 件) | ⚠️ plan package 側の記述欠落。実装成果物の欠陥ではない (§9) | bd `HarnessHub-mvdc` |
 | `next-auth` (または Better Auth) の導入と実結線 | ⏳ 別途の意思決定 | P13 / 後続 feature |
-| `AuthPorts` の本番 DB adapter と永続化契約差の解消 | ❌ 未実施 | bd `HarnessHub-b7ng` |
+| `AuthPorts` の本番 DB adapter と永続化契約差の解消 | ✅ **解消 (2026-07-26)**。実 DB 統合・並行 CAS・JIT 競合を検証 | bd `HarnessHub-b7ng` / [仕様反映受領書](./spec-reflection-receipt.md) |
 | 本番 `idp_connections` への OIDC provider 登録 | ⏳ control-plane DB 確立が前提 | P13 |
 | `test-design.md` の `T-SESS-05` 文言を実装へ追随 | ⏳ 次回改訂 | P04 改訂時 |
 | ~~確定仕様を超えた 2 決定 (session claims の `workspace_ids` / polling 上限 60 秒・減衰) の仕様側確定~~ | ✅ R4-reopen とユーザー確認 `appr-010` を経て `qa-072` / `qa-073` として確定済み | bd `HarnessHub-l2g9` (closed) |

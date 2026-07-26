@@ -4,8 +4,8 @@
  * **Auth.js への依存はこのディレクトリの中だけ**に閉じる。境界の外 (lib/authz, app/) は
  * 本 feature が定義した型だけを見る。移行判断のトリガは ADR AD-2 に記載。
  *
- * 現時点で `next-auth` はワークスペースに入っていないため、ここでは **設定オブジェクトの生成まで**を
- * 実装する。依存導入、session claims bridge、route 結線は HarnessHub-b7ng で追跡する。
+ * `@auth/core` の実行・session claims bridge・route 結線は同じ adapter 境界内の
+ * `authjs-handler.ts` が担う。このファイルは tenant ごとの設定解決だけに責務を絞る。
  */
 
 import { AUTH_NUMERIC_CONTRACT, SESSION_COOKIE_ATTRIBUTES, SESSION_COOKIE_NAME } from '../config.js';
@@ -75,19 +75,38 @@ export function buildOidcProvider(connection: TenantOidcConnection, clientSecret
 }
 
 /**
+ * 解決結果。`connection` を一緒に返すのは、route handler が `tenantId` を必要とするため。
+ * (JIT provisioning と session claims はテナント slug ではなく tenantId で行う。)
+ * slug から 2 回引き直すと、その 2 回の間にテナント設定が変わる隙間が生まれる。
+ */
+export interface ResolvedAuthjsConfig {
+  readonly connection: TenantOidcConnection;
+  readonly config: AuthjsConfig;
+}
+
+/**
  * テナント slug から Auth.js 設定を解決する。
  *
  * 解決できないときは **null を返して呼び出し側を落とす**。既定 provider へのフォールバックを置くと、
  * 未登録テナントが別テナントの IdP でログインできる経路になる (AD-5)。
  */
 export async function resolveAuthjsConfig(deps: AuthjsConfigDeps, tenantSlug: string): Promise<AuthjsConfig | null> {
+  const resolved = await resolveAuthjsConfigForTenant(deps, tenantSlug);
+  return resolved === null ? null : resolved.config;
+}
+
+/** `resolveAuthjsConfig` と同じ解決を行い、接続情報も併せて返す。 */
+export async function resolveAuthjsConfigForTenant(
+  deps: AuthjsConfigDeps,
+  tenantSlug: string,
+): Promise<ResolvedAuthjsConfig | null> {
   const connection = await resolveTenantOidcConfig(deps.oidcConnections, tenantSlug);
   if (connection === null) return null;
 
   const clientSecret = await deps.clientSecretFor(connection.tenantId);
   if (clientSecret === null || clientSecret.length === 0) return null;
 
-  return {
+  const config: AuthjsConfig = {
     providers: [buildOidcProvider(connection, clientSecret)],
     session: {
       strategy: 'jwt',
@@ -104,4 +123,6 @@ export async function resolveAuthjsConfig(deps: AuthjsConfigDeps, tenantSlug: st
       error: `/${connection.tenantSlug}/signin`,
     },
   };
+
+  return { connection, config };
 }
