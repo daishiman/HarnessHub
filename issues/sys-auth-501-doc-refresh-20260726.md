@@ -12,7 +12,7 @@ iteration: null
 title: "feat-auth-tenancy の成果物 6 件が /api/auth を 501 未結線と記述したままで実装と食い違う"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T06:46:00Z"
+updated_at: "2026-07-26T06:48:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-auth-tenancy","issue-auth-tenancy-production-adapter-20260725"]
@@ -49,17 +49,18 @@ implementation_readiness: {"checked_at":"2026-07-26T06:46:00Z","missing_sections
 
 # 概要
 
-`feat-auth-tenancy` の成果物 6 件が `/api/auth/[...nextauth]` を「501 `auth_provider_not_wired` を返す」と現在形で記述している。HarnessHub-b7ng で `@auth/core` を adapter 境界内へ導入し、tenant 別 OIDC を処理するようになったため、記述と実装が食い違っている。
+`feat-auth-tenancy` の成果物 6 件が `/api/auth/[...nextauth]` を「501
+`auth_provider_not_wired` を返す」と現在形で記述していた。
+HarnessHub-b7ng で `@auth/core` を adapter 境界内へ導入し、tenant 別 OIDC を
+処理するようになったため、履歴を保ちながら現行実装へ追従した。
 
 ## 背景と問題
 
-501 を返す実装は「未結線を隠さない」ための意図的な設計だった (ADR AD-8 と同じ思想)。成果物はその状態を正しく記録している。HarnessHub-b7ng でその前提が変わったが、記録側は追従していない。
-
-記録の改竄は避けるべきなので、**「いつ何が変わったか」を追記する**形で追従させる。
+501 を返す実装は「未結線を隠さない」ための意図的な設計だった
+（ADR AD-8 と同じ思想）。成果物はその時点を正しく記録しているため、
+記録を消さず、**「いつ何が変わったか」を追記する**形で更新した。
 
 ## 現在の挙動
-
-本 branch では解消追記を反映済みで、初回 501 の事実は過去形として保持した。
 
 | ファイル | 反映内容 |
 |---|---|
@@ -71,36 +72,39 @@ implementation_readiness: {"checked_at":"2026-07-26T06:46:00Z","missing_sections
 
 ## 期待する挙動
 
-読者が「現在の `/api/auth` は tenant 別 OIDC を処理する」と「501 だった期間とその理由」を取り違えずに読める。とくに `final-review-record.md` の未達表は epic rollup の判断材料なので、解消済みであることが根拠付きで分かる必要がある。
+読者が「現在の `/api/auth` は tenant 別 OIDC を処理する」と
+「501 だった期間とその理由」を取り違えずに読める。
 
 ## 再現手順またはユースケース
 
-```
-grep -rn "501" docs/features/feat-auth-tenancy/ | grep -i auth
-```
+`rg -n "501|auth_provider_not_wired" docs/features/feat-auth-tenancy`
 
 ## 影響と優先度
 
 - 影響: 実装ではなく読み手の判断。未結線と誤読すると重複実装や誤った epic 判定に繋がる。
-- 優先度: medium。動作影響は無いが、`final-review-record.md` は rollup 判断に使われる。
+- 優先度: medium。動作影響はないが、`final-review-record.md` は rollup 判断に使われる。
 
 ## スコープ
 
-- in: 該当 6 ファイルの追記・更新、`final-review-record.md` 未達表の更新。
-- out: 実装変更、`system-spec/` と `docs/security-spec.md` の内容変更 (R4-reopen が必要)、epic close 判定。
+- In: 該当成果物の追記・更新、`final-review-record.md` 未達表の更新。
+- Out: 実装変更、本番デプロイ、feat-auth-tenancy epic の close 判定。
 
 ## 関連グラフ
 
-- `feat-auth-tenancy` (成果物の owner)
-- `issue-auth-tenancy-production-adapter-20260725` (= HarnessHub-b7ng、変更の原因)
+- `feat-auth-tenancy`
+- `issue-auth-tenancy-production-adapter-20260725` / `HarnessHub-b7ng`
 
 ## 受入条件
 
-1. [x] `docs/features/feat-auth-tenancy/` 配下の 501 記述を過去時点の履歴として明示した。
+1. [x] 501 記述を過去時点の履歴として明示した。
 2. [x] `final-review-record.md` の Auth.js 実結線を根拠付きで解消済みへ更新した。
 3. [x] `lint-doc-line-limit.py` と `lint-artifact-placement.py` が exit 0。
-4. [ ] draft PR が merge され、dev-graph lifecycle が reconciliation される。
+4. [x] PR #76 が default branch へ merge された。
 
-## 検証証跡
+## Verification and evidence
 
-- 変更の根拠: HarnessHub-b7ng の受入条件 4 件と `apps/hub/src/lib/auth/adapter/authjs-handler.ts`
+- Automated command: `python3 scripts/lint-doc-line-limit.py`
+- Automated command: `python3 scripts/lint-artifact-placement.py`
+- Required evidence: `docs/features/feat-auth-tenancy/spec-reflection-receipt.md`
+- Required evidence: `docs/features/feat-auth-tenancy/final-review-record.md`
+- Merge authority: `https://github.com/daishiman/HarnessHub/pull/76`

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 626,
+  "graph_revision": 630,
   "nodes": [
     {
       "acceptance": [
@@ -33069,7 +33069,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:45:00Z"
+      "updated_at": "2026-07-26T06:47:00Z"
     },
     {
       "acceptance": [
@@ -37160,7 +37160,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の成果物 6 件が /api/auth を 501 未結線と記述したままで実装と食い違う",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:46:00Z"
+      "updated_at": "2026-07-26T06:48:00Z"
     },
     {
       "acceptance": [
