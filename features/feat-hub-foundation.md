@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-19T14:15:47Z"
+updated_at: "2026-07-25T21:18:40Z"
 status: "active"
 depends_on: []
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-25T21:18:40Z","origin_kind":"generated","source_digest":"2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-hub-foundation.md","confidence":0.9}]
@@ -81,6 +81,12 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する
 - SLO 99.5% の計測と /health が稼働する
 - shared-layers 登録済み共通層が単一 package/境界に実装され、消費 feature が同じ実装を参照する
+
+## 実装反映 (2026-07-26)
+
+- CI の静的ゲートに GitHub Actions secret / variable 台帳の突合を追加した。用途・種類・必須度・利用 workflow の正本は `scripts/ci/actions-secrets-registry.json` で、散文の投入一覧を現在状態の正本にしない。
+- 本番 smoke が DB package から Hub workspace の Wrangler を起動する境界を固定し、package cwd や runner の PATH に依存しない形へ修正した (`HarnessHub-fnzl`)。
+- landing 前は remote workflow の完走を証明できないため、受入「CI が test→deploy を完走する」の最終判定は GitHub Actions 実走まで `blocked` を維持する。
 
 ## アーキテクチャ参照
 
