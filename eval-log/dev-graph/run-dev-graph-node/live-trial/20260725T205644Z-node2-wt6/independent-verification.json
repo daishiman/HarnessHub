@@ -1,0 +1,96 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "Skill ツールの実起動 (script 直叩き代替でないこと)",
+      "observed": "transcript da7526c7-493f-401f-a854-b97d6c370bf2.jsonl の tool_use #11 (2026-07-25T22:58:52) が name=Skill, input={\"skill\": \"dev-graph:run-dev-graph-node\", \"args\": \"add --repo-root .../node-wt6 --input .../mixed-artifacts.json\"}、tool_result=\"Launching skill: dev-graph:run-dev-graph-node\"。直後の #12 で resolve-repo-context.py --mode write、#13-16 で prompts/R0-context.md, R1-classify.md, R3-write.md, R4-apply-template.md、#17 template-contract.json、#18 graph-node.schema.json を読み、SKILL.md 記載の書込み本体 upsert-node.py へ進んでいる。Skill 呼出しは全 53 tool_use 中 1 件。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "5 artifact の canonical directory への自動 routing",
+      "observed": "graph.json (graph_revision=7, nodes=5) の実測: lt-issue-session-timeout|issue|issues/lt-issue-session-timeout.md, lt-task-rate-limiting|task|tasks/lt-task-rate-limiting.md, lt-spec-api-v2-migration|specification|specs/lt-spec-api-v2-migration.md, lt-arch-order-pipeline|architecture|architecture/lt-arch-order-pipeline.md, lt-doc-dev-setup-guide|document|docs/lt-doc-dev-setup-guide.md。5件とも os.path.isfile=True (サイズ 2366/2351/2810/3013/2212 bytes)。fixture の .dev-graph/config.json content_roots = {architecture: architecture, documents: docs, issues: issues, specifications: specs, tasks: tasks, features: features} と全件一致。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "原文 body の byte-for-byte 保存 (body in stored_text を自分で評価)",
+      "observed": "mixed-artifacts.json の 5 body について python3 で `a['body'] in txt` を評価: 全 5 件 True、txt.count(a['body']) は全件 1 (issue/task/specification/architecture/document)。分割・再構成・置換なしの完全な連続文字列として 1 回ずつ存在。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "バッククォート付き API 識別子の保存後存在",
+      "observed": "specs/lt-spec-api-v2-migration.md を読み各トークンを count: '`GET /api/v1/users`'=1, '`POST /api/v2/orders`'=1, '`items`'=1, '`line_items`'=1, '`X-API-Key`'=1, '`Authorization: Bearer`'=1, '`DELETE /api/v2/sessions/bulk`'=1。過去事故 (shell command substitution による欠落) の再発なし。入力生成は Write ツールで作った inputs/generate-node-inputs.py 等が mixed-artifacts.json を json.load して body を変数取得する方式。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "連続更新の operation=updated 実測 (task.md 第 2 段)",
+      "observed": "transcript #44 (issue): {\"operation\": \"updated\", \"status\": \"applied\", \"idempotent\": false, \"graph_revision_before\": 5, \"graph_revision_after\": 6, \"write_count\": 2, \"file_path\": \"issues/lt-issue-session-timeout.md\"}。#45 (architecture): {\"operation\": \"updated\", \"idempotent\": false, \"graph_revision_before\": 6, \"graph_revision_after\": 7, \"write_count\": 2, \"file_path\": \"architecture/lt-arch-order-pipeline.md\"}。初回登録 #32-36 は 5 件とも operation=\"added\" で graph_revision 0->1->2->3->4->5。noop は 1 件も現れていない。graph.json の最終 graph_revision=7。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "updated_at != created_at の node が 2 件で artifact_kind が相異なる",
+      "observed": "graph.json 全 5 node の (created_at, updated_at): lt-issue-session-timeout=(2026-07-25T23:02:16Z, 2026-07-25T23:07:04.926992Z) 相違, lt-task-rate-limiting=(23:02:16Z, 23:02:16Z) 同一, lt-spec-api-v2-migration=(23:02:16Z, 23:02:16Z) 同一, lt-arch-order-pipeline=(23:02:16Z, 2026-07-25T23:07:20.886512Z) 相違, lt-doc-dev-setup-guide=(23:02:16Z, 23:02:16Z) 同一。相違は 2 件で artifact_kind は issue と architecture (相異なる)。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "更新後の frontmatter artifact_kind と保存 path の整合",
+      "observed": "各 Markdown の frontmatter を実読: issues/lt-issue-session-timeout.md -> artifact_kind:\"issue\", file_path:\"issues/lt-issue-session-timeout.md\", updated_at:\"2026-07-25T23:07:04.926992Z\"; architecture/lt-arch-order-pipeline.md -> artifact_kind:\"architecture\", file_path:\"architecture/lt-arch-order-pipeline.md\", updated_at:\"2026-07-25T23:07:20.886512Z\"; 残り 3 件も frontmatter artifact_kind と実ディレクトリ (tasks/specs/docs) が一致。更新 2 件とも canonical directory から移動していない。frontmatter の updated_at は graph.json の updated_at と文字列一致。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "更新後も original body が完全な連続文字列として残存 (全置換していない)",
+      "observed": "更新済み 2 件について `mixed-artifacts.json body in stored` = True / count=1 を維持。追記分も実在: issues/... は '## 追加調査結果' が 1 回、'Redis の EXPIRE コマンドが発行されていない経路を特定した。' が 1 回。architecture/... は原文末尾以降に 253 文字が追加され '## 運用監視の追加方針' + 未充足 template section (Goals and non-goals / Cross-cutting contracts / Architecture decisions / Delivery, migration and rollback / Risks and verification) が TBD で追記されている。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "feature 直接登録の fail-closed (task.md 第 3 段の肯定側観測)",
+      "observed": "被験は Write で inputs/feature-direct.json (graph_node_id=lt-feature-direct-test, artifact_kind=feature, file_path=features/lt-feature-direct-test.md, source_lineage.origin_kind=manual) を作成し、transcript #48 で upsert-node.py へ投入。出力原文: {\"error\": \"feature must come from the C14 macro contract: source_lineage.origin_kind 'manual' is not one of ['generated', 'system-spec-harness']\", \"valid\": false, \"write_count\": 0} / EXIT_CODE=2。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "拒否後の graph_revision 不変と features/ 無変化",
+      "observed": "transcript #49 の実出力: 'graph_revision after feature attempt: 7' / \"features/ contents: ['.gitkeep']\"。私自身の再確認でも .dev-graph/state/graph.json の graph_revision=7 (更新後の 7 から増えていない)、features/ は .gitkeep (0 bytes) のみ、git status でも features/ 配下の新規ファイルなし。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "goal-seek 3 点セットの存在と intermediate 必須 6 キー",
+      "observed": "fixture eval-log/ に run-dev-graph-node-goal-spec.json / -progress.json / -intermediate.jsonl の 3 ファイルが存在。intermediate は 2 行、各行のキーは exactly ['current_goal_snapshot','delta_from_original','drift_signal','merged_directive_for_next','original_goal','original_goal_hash'] で必須 6 キーの欠落 0。goal-spec の original_goal は SKILL.md '### ゴール (Goal)' の本文と同一文字列。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "original_goal_hash の自力再計算による照合",
+      "observed": "hashlib.sha256(goal_spec['original_goal'].encode('utf-8')).hexdigest() = eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2。intermediate 1 行目・2 行目の original_goal_hash も同値 eb23c324...8ab2 で一致。両行の original_goal は goal-spec の original_goal と文字列一致 (True)。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "intermediate.jsonl の append-only 性 (時刻順と書込み手段)",
+      "observed": "transcript 時刻順: #9 Write intermediate.jsonl @22:58:17 (1 行目、hash は #7 @22:57:37 で事前計算) -> #11 Skill 起動 @22:58:52 -> #51 Bash @23:09:16 が open(..., 'a') で 2 行目のみ f.write(line + '\\n')。intermediate.jsonl への Edit / 2 回目の Write は transcript 中に 0 件 (Write は #9 のみ)。#52 で SKILL.md 記載の検証 script が 'PASS: goal-seek verification OK (2 rows, hash matches)' を出力。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "fixture を汚す shell error の有無",
+      "observed": "transcript 全 tool_result を 'command not found|not found: |permission denied|Traceback' で走査してヒット 0 件。is_error=true は #43 の 1 件のみで、内容は cwd 相対 path の誤りによる \"can't open file '.../node-wt6/plugins/dev-graph/scripts/upsert-node.py': [Errno 2] No such file or directory\" (Exit code 2)。script が起動していないため書込みは発生せず、直後 #44 で正しい cwd から再実行され updated が成立。バッククォートの command substitution 事故は前掲の識別子 count=1 で否定済み。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "DISCLOSURE: 範囲外 (crash-recovery / WAL / reader lock) の pytest 実在と実行結果",
+      "observed": "REPO を cwd に `python3 -m pytest plugins/dev-graph/tests/test_operational_loop_v2.py -k \"atomic_idempotent or recovers_crash or whole_reader\" -q` を実行 -> exit 0, '3 passed, 8 deselected in 7.87s'。対象は test_node_upsert_is_atomic_idempotent_and_patchable / test_node_recovers_crash_before_exposing_graph_to_readers / test_node_writer_waits_for_whole_reader_operation_lock の 3 件で、いずれも実在し PASS。OUT1 第 2 文 (通常例外/KeyboardInterrupt 即 rollback、強制終了時の durable WAL rollback、reader の共有 lock) は本 live-trial では故障注入されておらず未実走のため、この pytest 結果で被覆されているものとして FAIL 事由にしない。",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "DISCLOSURE: Skill 呼出しは 1 件のみで第 2/3 段は同一 skill context 内の script 実行",
+      "observed": "task.md 第 2 段・第 3 段は「skill を再実行する」と書くが、transcript 上の Skill tool_use は #11 の 1 件だけで、更新 (#44,#45) と feature 拒否 (#48) は同一 skill context を継続したまま upsert-node.py を Bash 実行している。SKILL.md '## Deterministic upsert' が「通常nodeのwrite本体は upsert-node.py とする」と明記しており、これは skill 手順の内部実装であって skill の迂回ではない。評価指示の判定基準 (Skill 呼出しが 1 件以上あれば launch=PASS、script 直叩きによる代替のみが blocker) に照らして blocker としない。",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "DISCLOSURE: 真空合格 (vacuous pass) の点検",
+      "observed": "(1) feature gate は空集合による自明成立ではない — inputs/feature-direct.json という肯定側入力を実際に投入し exit 2 で拒否された観測がある。(2) progress.json の checklist のうち 'package は P01..P13 exact 13...' と '各中断位置で WAL から before-image へ収束...' の 2 件は status=not_applicable であり、これらは本 scenario の検査対象外 (前者は OUT3 verify_by: test、後者は上記 3 pytest が被覆)。この 2 件を PASS として数えていない点を明示する。(3) 'updated_at != created_at が 2 件' は 5 node 中の実数比較であり空集合ではない。",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "DISCLOSURE: fixture に残存する lock file",
+      "observed": ".dev-graph/state/.graph.json.register.lock (0 bytes, 更新 08:02 JST) が残存し git status で untracked。fcntl ベースの lock file の残置は upsert-node.py の通常動作の範囲で、graph.json の内容 (graph_revision=7, nodes=5) には影響しない。OUT1 の受入条件には関わらないため blocker としない。",
+      "verdict": "DISCLOSURE"
+    }
+  ]
+}

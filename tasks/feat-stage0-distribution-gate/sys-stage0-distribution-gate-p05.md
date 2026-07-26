@@ -12,7 +12,7 @@ iteration: null
 title: "実装 — 最小 skill package・marketplace.json・Bootstrap Installer 試作の作成"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-20T22:51:28Z"
+updated_at: "2026-07-26T01:39:34.074446Z"
 status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P04"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P05","head_sha":"fe7042881c4e76f0a21f1902177134921d496abb","last_seen_at":"2026-07-20T22:46:37.559620Z","lease_acquired_at":"2026-07-20T22:46:32.471252Z","released_at":null,"state":"claimed","worktree_id":"wt_eed96293f3fd512f"}]
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

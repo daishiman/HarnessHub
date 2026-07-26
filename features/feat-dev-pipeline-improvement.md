@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-24T07:20:00Z"
+updated_at: "2026-07-26T03:31:17.854238Z"
 status: "done"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717"]
@@ -93,6 +93,19 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 
 - `qa-067`: 上記 8 要件として本 feature で実装済み (完了)
 - `qa-071`: 2026-07-25 以降、tag 宣言だけでは被覆と見なされない。C12 決定論ゲート (契約 version 1.2.0) が goal-spec 5 項目と exact-13 task spec への意味被覆を要求する。契約の正本は `plugins/system-dev-planner/references/feature-execution-package-contract.md` §2.5、判定経緯は [system-dev-planner-qa-semantic-coverage](../docs/plugin-contracts/system-dev-planner-qa-semantic-coverage.md)。本 feature の現行世代 task spec への本文伝播は再 plan 経路 (HarnessHub-8wo) で行い、凍結済み投影を手編集しない
+
+## 2026-07-26 最終レビュー追記
+
+- C10 guard の破壊操作遮断を subprocess 非依存へ変更し、hook timeout による fail-open 窓を解消した。
+- quote 外 redirect だけを解析して、Beads notes 等に記載した例示コマンドの誤遮断を解消した。
+- `.dev-graph/config.json` と初期 graph store に preview/receipt 付き sanctioned writer を追加し、init が `Path.write_text()` を含む直接書込みへ退避しない契約にした。
+- C02 node upsert は既存 Markdown 本文を既定保持し、明示 `--regenerate-body` だけが再生成できる。
+- `local_only` task の PR 連動完了 policy を `manual` へ正規化し、完了不能な 167 node を移行した。
+- 500 行を超えた手書き実装・テスト・命名例外台帳を責務別ファイルへ分離し、今回変更した手書き Python をすべて 500 行以下にした。
+- 最終品質ゲートは Dev Graph pytest 539 passed / 2 skipped、current 19 task package の Phase P01〜P13 が 19/19 PASS、fresh live-trial が 9/9 PASS。
+- C19 live-trial の task 指示と fixture 前提のずれは `HarnessHub-768b` として分離し、最終再試験は requirements brief から正規4 skillを実行して独立 completeness evaluator とも PASS。
+- graph 管理された docs を C02 writer で再登録すると `layer` が落ちる既存契約差は `HarnessHub-dqca` として分離し、本変更では最終レビュー文書の `layer: feature-design` を復元した。
+- 変更は開発基盤内部の契約であり、製品 API・state・security・UI の仕様を変えない。正本は `plugins/dev-graph/references/`、下流の設計判断は `architecture/harness-hub-dev-workflow.md` に反映し、`system-spec/` と `specs/` は qa-066 の二重正本防止に従い非変更とした。
 
 ## アーキテクチャ参照
 

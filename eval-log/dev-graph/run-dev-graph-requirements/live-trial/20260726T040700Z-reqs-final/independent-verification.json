@@ -1,0 +1,76 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "skill-invocation-via-tool",
+      "verdict": "PASS",
+      "observed": "pane.txt line 35: Skill(dev-graph:run-dev-graph-requirements) → 'Successfully loaded skill · 6 tools allowed'; no direct script substitution"
+    },
+    {
+      "name": "exact-13-package-validation",
+      "verdict": "PASS",
+      "observed": "validate-system-plan.py --staging returned status=pass, phase_refs P01..P13 (13), violations=0; handoff execution_tasks array contains exactly 13 entries SYS-LIVE-001-P01 through P13"
+    },
+    {
+      "name": "gate1-c11-validate-graph-schema",
+      "verdict": "PASS",
+      "observed": "validate-graph-schema.py exit 0: valid=true, implementation_readiness=complete, missing_sections=[], violations=[]"
+    },
+    {
+      "name": "gate2-validate-source-digest",
+      "verdict": "PASS",
+      "observed": "validate-source-digest.py exit 0 with feature-scoped 14 nodes: checked=14, registered_mismatch=[]"
+    },
+    {
+      "name": "gate3-validate-system-plan",
+      "verdict": "PASS",
+      "observed": "validate-system-plan.py --staging system-plan/F-LIVE-001: exit 0, status=pass, P01..P13 exact 13, violations=0"
+    },
+    {
+      "name": "gate4-c02-readiness-evaluation",
+      "verdict": "PASS",
+      "observed": "All 15 graph nodes: implementation_readiness.status=complete, evaluation_status=pass, confirmation_status=confirmed, missing_sections=[]"
+    },
+    {
+      "name": "correct-lineage-closure",
+      "verdict": "PASS",
+      "observed": "F-LIVE-001 source_lineage from system-spec-harness; 13 task nodes all have parent_feature=F-LIVE-001, feature_package_id=feature-package/F-LIVE-001; lineage closure gaps=0"
+    },
+    {
+      "name": "capability-build-handoff-emitted",
+      "verdict": "PASS",
+      "observed": "F-LIVE-001-capability-build-handoff.json emitted with kind=capability-build-handoff-reference, target=capability-build/task-graph, 3 digests (source_feature, graph_snapshot, package_validated) bound to feature_id=F-LIVE-001"
+    },
+    {
+      "name": "requirements-document-emitted",
+      "verdict": "PASS",
+      "observed": "docs/requirements/F-LIVE-001-requirements.md emitted (80 lines) with gate results, readiness matrix (14 nodes), and package reference"
+    },
+    {
+      "name": "negative-control-no-implementation-code",
+      "verdict": "PASS",
+      "observed": "implementation_code_generated=0 in handoff; checklist item confirms 0 source files (.py/.ts/.tsx/.js/.go etc); only .md and .json artifacts emitted"
+    },
+    {
+      "name": "goal-seek-triplet-complete",
+      "verdict": "PASS",
+      "observed": "3 files present: goal-spec.json (7 lines, hash=04482e65…), progress.json (42 lines, 6 items all PASS, overall=PASS), intermediate.jsonl (2 lines with all 6 required keys each)"
+    },
+    {
+      "name": "goal-seek-hash-integrity",
+      "verdict": "PASS",
+      "observed": "SHA-256 of original_goal string = 04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96; matches goal-spec and both intermediate lines"
+    },
+    {
+      "name": "intermediate-append-only",
+      "verdict": "PASS",
+      "observed": "Line 1 written before skill invocation (pane line 27); line 2 appended after artifact emission (pane line ~198); verification script confirmed 'VERIFY OK: 2 rows'"
+    },
+    {
+      "name": "status-json-written",
+      "verdict": "PASS",
+      "observed": "{\"status\":\"PASS\",\"scenario\":\"C04-OUT1-positive-ready-handoff\"} in out/status.json; final pane output 'DONE: PASS'"
+    }
+  ]
+}

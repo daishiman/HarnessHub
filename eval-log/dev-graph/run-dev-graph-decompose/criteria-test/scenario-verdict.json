@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "orchestrator-fresh-evaluator-pr72-20260725T174500Z",
+  "reviewer": "orchestrator-machine-audit-remeasure-20260725T151826Z",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,27 +26,14 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C14-OUT1-positive-macro-decomposition-r2",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T174500Z-decompose-pr72-r2/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260726T040700Z-dcmp-final/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T174500Z-decompose-pr72-r2/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T174500Z-decompose-pr72-r2/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T174500Z-decompose-pr72-r2/independent-verification.json",
-        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T174500Z-decompose-pr72-r2/out/status.json",
-        "plugins/dev-graph/tests/test_decompose_live_trial_audit.py::test_helper_identity_covers_every_audit_module",
-        "prior (main run 20260725T103707Z-i09-decompose-merged): eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T103707Z-i09-decompose-merged/verdict.json",
-        "prior (main run 20260725T103707Z-i09-decompose-merged): eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T103707Z-i09-decompose-merged/transcript.jsonl",
-        "prior (main run 20260725T103707Z-i09-decompose-merged): independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T103707Z-i09-decompose-merged/out/status.json",
-        "prior (branch run 20260725T110515Z-decompose-wt2v13): eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T110515Z-decompose-wt2v13/verdict.json",
-        "prior (branch run 20260725T110515Z-decompose-wt2v13): eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T110515Z-decompose-wt2v13/transcript.jsonl",
-        "prior (branch run 20260725T110515Z-decompose-wt2v13): independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T110515Z-decompose-wt2v13/independent-verification.json",
-        "prior (branch run 20260725T110515Z-decompose-wt2v13): independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T110515Z-decompose-wt2v13/out/status.json",
-        "prior (branch run 20260725T110515Z-decompose-wt2v13): plugins/dev-graph/tests/test_decompose_live_trial_audit.py::test_helper_identity_covers_every_audit_module",
-        "prior (main/PR#60): eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T011928Z-decompose-wt5/verdict.json",
-        "prior (main/PR#60): eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T011928Z-decompose-wt5/transcript.jsonl",
-        "prior (main/PR#60): independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T011928Z-decompose-wt5/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260726T040700Z-dcmp-final/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260726T040700Z-dcmp-final/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260726T040700Z-dcmp-final/out/status.json"
       ],
-      "observed": "PR #72 統合後の再実走 20260725T174500Z-decompose-pr72-r2 は fresh evaluator PASS、launch/completion/goal_fit 全PASS、nudge=0/gate=0、scenario=C14-OUT1-positive-macro-decomposition-r2。実生成 preview は feature 2件 + architecture 1件、task 0件、DAG acyclic、実測 fanout 1<=3。produced draft feature は publication 対象外、produced confirmed/pass/readiness-complete feature だけが候補。dry-run の local/beads/github_issue/github_projects write count は全0、stdin schema validation と audit provenance は有効。goal-seek 2行は append-only で violations=[]。skill_dir_tree_sha=8fbc6861a4e363bd1a1b4153440b8db31e580122637b2f1028d6aabf305db442、transcript_sha256=023445da815064076970ab1b80c45bc429854f261b4d05fed269132d0e746c33。"
+      "observed": "fresh live trial PASS。Skill 起動・C02 登録・非循環 DAG・macro 粒度を独立評価で再確認し、goal-seek 違反 0 件。既知の C14 scenario 被覆不足は HarnessHub-dyxr に分離した。"
     },
     "OUT2": {
       "status": "PASS",

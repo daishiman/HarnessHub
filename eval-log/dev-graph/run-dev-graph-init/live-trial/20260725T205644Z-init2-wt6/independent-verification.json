@@ -1,0 +1,114 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "6 content root の実在 (自前 test -d)",
+      "expected": "issues/tasks/specs/architecture/features/docs の 6 ディレクトリが fixture 直下に実在する",
+      "observed": "DIR-OK issues / tasks / specs / architecture / features / docs = 6/6。find でも ./issues ./tasks ./specs ./architecture ./features ./docs を確認",
+      "verdict": "PASS"
+    },
+    {
+      "name": "graph store の実在と中身",
+      "expected": ".dev-graph/state/graph.json が実在し、空グラフでない (真空合格でない)",
+      "observed": "graph.json 実在。schema_version=1.0.0, graph_revision=1, edges=[], nodes=1 件 (graph_node_id=ISSUE-INIT-001, artifact_kind=issue, file_path=issues/ISSUE-INIT-001.md)。file_path 先の issues/ISSUE-INIT-001.md も実在",
+      "verdict": "PASS"
+    },
+    {
+      "name": ".dev-graph 骨格の実在",
+      "expected": "config.json / state/graph.json / cache / locks / templates が揃う",
+      "observed": "5/5 すべて OK。templates は 21 ファイル (plugin templates/ の 21 件と件数一致)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "二回目 init が実際に起動したか (skill 再起動の証跡)",
+      "expected": "手書きの存在確認ではなく Skill 自体が 2 回起動している",
+      "observed": "pane.txt L55 と L378 に 'Skill(dev-graph:run-dev-graph-init) / Successfully loaded skill' が 2 回。L381 以降で 2 回目が resolve-repo-context.py・6 root 存在確認・template 21 件確認・build-repo-config.py・validate-repo-config.py・validate-graph-schema.py を実走している",
+      "verdict": "PASS"
+    },
+    {
+      "name": "二回目 init の変更 0 件 (mtime による独立観測)",
+      "expected": "2 回目実行の時間窓に fixture 内のファイル書込みが 1 件も無い",
+      "observed": "2 回目の窓 = 06:32:55 (node 登録 = pane L376 の直後に 2 回目 Skill) 〜 06:34:51 (2 回目後の intermediate append)。この窓に入る mtime は 0 件。config.json=06:29:39 (1 回目)、templates 20 件=06:29:54-55 (1 回目)、issue.md=06:31:11 (パス間の利用者編集)、graph.json=06:32:55 (パス間の node 登録)、6 root dir=06:26:09 (issues のみ 06:32:55 = node ファイル作成)。2 回目による書込み 0 件",
+      "verdict": "PASS"
+    },
+    {
+      "name": "config 冪等性の内容比較による再現 (--if-absent 迂回の穴埋め)",
+      "expected": "同一 draft で writer を --if-absent 無しで再実行すると内容比較の結果 unchanged になる",
+      "observed": "trial の 2 回目は --if-absent 使用のため action=skipped_existing (比較せず skip) だった。そこで fixture を scratchpad へ cp -a し、同一 config-draft.json で --from-json (--if-absent 無し) を再実行 → action=unchanged, changed=false, valid=true, violations=[], exit=0。config.json の sha256 も 0c0add59f19edd02d833454a95bb745fca00eba2c7023a5789ac590797971eaf で fixture と一致 (無変化)。また draft と config.json は json 等価 (draft==config: True)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "負の対照: writer の比較機構が実際に発火するか",
+      "expected": "draft を 1 箇所変えたら unchanged にならない",
+      "observed": "複製上で worktrees.heartbeat_seconds を 30→31 に変えた draft で再実行 → action=updated, changed=true。同一 draft では unchanged/false。比較機構は実際に差分を判定している (無条件 unchanged ではない)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "負の対照: validate-graph-schema.py が node を実検査しているか",
+      "expected": "node の必須キーを落としたら exit 非 0 で violation を出す",
+      "observed": "複製の graph から nodes[0].artifact_kind を削除 → valid=false, violations に code=schema_violation (node=ISSUE-INIT-001), missing_sections=[\"$: 'artifact_kind' is a required property\"], exit=1。無改変コピーは同じ tmp path で valid=true, violations=0, exit=0。照合機構は作動している",
+      "verdict": "PASS"
+    },
+    {
+      "name": "真空合格の検査: 空グラフに対する C11 の振る舞い",
+      "expected": "空グラフでも valid=true になる仕様なら、被験グラフが非空であることが必須",
+      "observed": "nodes=[] のグラフで validate-graph-schema.py は valid=true, violations=0, exit=0 (空集合には真空合格しうる)。ただし被験 fixture のグラフは node 1 件を保持しており、上記の負の対照どおり実検査が発火している。よって本 trial の C11 PASS は真空合格ではない",
+      "verdict": "PASS"
+    },
+    {
+      "name": "負の対照: 6 root 実在検査が発火するか",
+      "expected": "存在しない root を required に含めたら content_root_missing で落ちる",
+      "observed": "validate-repo-config.py:206 に `key in required and not resolved.is_dir()` の実在検査あり。複製で --require-content-roots に system_spec を追加 → valid=false, violations=[{code: content_root_missing, location: content_roots.system_spec, detail: system-spec}]。6 root だけを渡した通常実行は valid=true, violations=[], exit=0 なので、6 root の実在は検査済みの結果である",
+      "verdict": "PASS"
+    },
+    {
+      "name": "利用者編集 template の非上書き (init 実走後の実測)",
+      "expected": "パス間に編集した template のバイト列が 2 回目後も保持され、他 20 件は plugin 正本と一致",
+      "observed": "issue.md sha256=6af1105e7cef420aa9623815236cc5e6cee905abd5d080df2c0622c42bc0bcaa (plugin 正本 00a3a972... と不一致、diff は '<!-- USER-EDIT-MARKER: C01-OUT1-positive-idempotence-r17 -->' の 1 行追加のみ)。他 20 件は plugin 正本と cmp で SAME。issue.md の mtime=06:31:11 は 2 回目の窓より前で、2 回目に触られていない",
+      "verdict": "PASS"
+    },
+    {
+      "name": "C11 / config 検証の自前再実行",
+      "expected": "validate-repo-config.py と validate-graph-schema.py が exit 0, violations 0",
+      "observed": "複製に対して自分で実行: validate-repo-config.py → valid=true, violations=[], missing_sections=[], exit=0。validate-graph-schema.py → valid=true, violations=[], implementation_readiness=complete, exit=0",
+      "verdict": "PASS"
+    },
+    {
+      "name": "config の絶対 path / token / node ID 不在 (自前走査)",
+      "expected": "絶対 path 0 件、token 0 件、GitHub node ID 0 件",
+      "observed": "config.json の全 70 スカラーを走査: absolute paths=[] / home-user paths=[] / github node ids (PVT_/PVTI_/PVTF_/I_/MDU6/U_kg)=[] / token 値 (ghp_ 等)=[] / token 系キー=[]。stored_paths=repository-relative, github.enabled=false, owner_login/project_number=1/field name のみ保持",
+      "verdict": "PASS"
+    },
+    {
+      "name": "goal_seek 3 点セットの存在",
+      "expected": "goal-spec.json / progress.json / intermediate.jsonl が fixture の eval-log/ に揃う",
+      "observed": "3/3 実在。goal-spec.json (06:24:45, skill 起動前)、progress.json (06:35:24, 7 checklist すべて status/evidence 付き)、intermediate.jsonl (06:34:51)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "intermediate の必須 6 キーと hash 再計算",
+      "expected": "全行が 6 キーを持ち、original_goal_hash が SKILL.md のゴール文字列の UTF-8 SHA-256 と一致",
+      "observed": "2 行。両行とも欠落キー 0、original_goal は goal-spec と一致。自前再計算 sha256=4e3fee6288f589997e759a2d929f4a7a7489caf16ec31a95abd9c4ca1b80e1ec が両行の original_goal_hash と一致。さらに SKILL.md '### ゴール (Goal)' 直下の文字列と goal-spec.original_goal が完全一致し、その sha256 も同値",
+      "verdict": "PASS"
+    },
+    {
+      "name": "intermediate の append-only 時系列",
+      "expected": "1 行目が skill 実行前に書かれ、2 行目が実行後に追記されている (後からの一括書き・既存行の書換えでない)",
+      "observed": "pane.txt L31-35 で skill 起動 (L55) より前に intermediate.jsonl へ 1 行 Write。そこに表示された本文 (current_goal_snapshot='first pass: invoke run-dev-graph-init to scaffold 6 content roots...', merged_directive_for_next='execute run-dev-graph-init first pass, then verify idempotence with second pass after user-equivalent edits') が現在の 1 行目と完全一致。2 行目は 2 回目パス完了後 (mtime 06:34:51) の追記で、内容も 2 回目結果 (planned changes 0)。既存行の書換え痕跡なし",
+      "verdict": "PASS"
+    },
+    {
+      "name": "fixture が read-only 制約を守った独立 repo であること",
+      "expected": "fixture 内だけが変更され、HarnessHub 本体は非汚染",
+      "observed": "fixture の git log は初期 commit 1 件 (9924511) のみ、git status は untracked の .dev-graph/ eval-log/ issues/ の 3 件 = init 生成物のみ。tracked ファイルの改変 0 件",
+      "verdict": "PASS"
+    }
+  ],
+  "notes": [
+    "非ブロッキング所見 1: trial の 2 回目 config 検査は build-repo-config.py --if-absent を使っており、これは内容比較せず skipped_existing を返す経路。単独では冪等性の証明として弱い。評価者側で同一 draft を --if-absent 無しで再実行し action=unchanged を得たうえで、mutation 対照で比較機構の発火も確認したため OUT1 の実体は満たされている。SKILL 側の推奨改善: 2 回目は --from-json で action==\"unchanged\" をアサートする。",
+    "非ブロッキング所見 2: content_roots.system_spec='system-spec' が config に宣言されているが system-spec/ ディレクトリは不在。これは references/validation-contract.md L45-46 が明記する設計 (7 番目の system_spec は run-dev-graph-system-spec の責務で init は作らない) であり OUT1 の 6 root 対象外。",
+    "非ブロッキング所見 3: .dev-graph/state/.graph.json.register.lock (0 bytes, 06:31:38) が残存。C02 upsert-node.py 由来で C01 init の責務外、OUT1 の判定に影響しない。",
+    "非ブロッキング所見 4: validate-graph-schema.py は nodes=[] の空グラフに対して valid=true / exit 0 を返す (空集合の真空合格が構造的に可能)。本 trial は node 1 件を登録済みで該当しないが、他シナリオでは node 非空の事前確認が必須。"
+  ]
+}
