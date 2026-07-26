@@ -17,7 +17,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "pnpm --workspace-root exec biome check apps/hub",
     "check:bundle": "node scripts/check-bundle.mjs",
-    "check:auth-gates": "node scripts/check-auth-gates.mjs"
+    "check:auth-gates": "node scripts/check-auth-gates.mjs",
+    "check:client-bundle": "node scripts/check-client-bundle.mjs"
   },
   "dependencies": {
     "@auth/core": "0.41.3",

@@ -14,6 +14,15 @@ const nextConfig: NextConfig = {
   ],
   // Worker bundle 3MiB (gzip 後) 予算のため、production build では source map を出力しない
   productionBrowserSourceMaps: false,
+  experimental: {
+    // 共通層は barrel (src/index.ts) 単一入口を契約にしているが、barrel 経由の named import は
+    // 到達可能な 'use client' 部品を丸ごと client reference manifest へ載せる。
+    // 実測 (2026-07-25): Alert 1 個しか使わない / が MarkdownView 依存の
+    // react-markdown/micromark/rehype 一式 146.4 KB を初期チャンクで読んでいた (TBT 926ms, 予算 200ms)。
+    // optimizePackageImports は build 時に barrel の named import を実体モジュールへ書き換えるため、
+    // deep import 禁止という共通層の契約 (docs/shared-layers.md) を崩さずに未使用部品を落とせる。
+    optimizePackageImports: ['@harness-hub/ui'],
+  },
   /**
    * libSQL driver の **workerd 版実体**を trace 対象へ足す (HarnessHub-b7ng)。
    *

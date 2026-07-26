@@ -135,13 +135,14 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | G2 | lint / format | 静的整形検査 |
 | G3 | typecheck | TypeScript strict |
 | G4 | unit / integration test | tenant 分離 (SEC3)・検査 pipeline 挙動同値 (qa-010)・共通層 contract を含む |
-| G5 | bundle 予算 | OpenNext build 出力の gzip サイズ ≤ 3 MiB |
+| G5 | bundle 予算 (Worker) | OpenNext build 出力の gzip サイズ ≤ 3 MiB。**サーバー側実行コードのみ**が対象で、ブラウザへ配る client JS は G13 が別途測る |
 | G6 | secret scan | 検査ロジック共有 package を CI からも呼ぶ (qa-038【2】) |
 | G7 | 破壊的 DDL 検査 | drizzle migration の expand/contract 3 段階違反を検出 |
 | G8 | OpenAPI / zod drift 検査 | 生成物と実装の乖離を検出 (qa-009) |
 | G9 | axe a11y | 部品単体 + 画面結合の 2 段 (qa-018) |
 | G10 | 共通層 duplicate detector | owner package 外の同名 export / 境界迂回 import に加え、**運用機構 (§3) の owner artifact 実在**と**認可 wrapper を迂回した route handler** を検出 |
 | G11 | Core Web Vitals | main 反映後の定期計測 (PR 単位では Actions 無料枠を圧迫するため) |
+| G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS を gzip 実測し 120 KiB / route 超過で fail (G5 の Worker 予算とは別軸。qa-018 / frontend-spec §8) |
 
 **ゲートが空振りしないための実行順序と前提検査 (2026-07-21 追記)**
 
