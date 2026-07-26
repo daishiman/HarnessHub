@@ -34,14 +34,23 @@
       "plugin_sha256": "6c49cdbdf3c9898bb0458510a00a890ec6257415fac26682725e221e0ed9ed99"
     }
   ],
-  "hook_source": "project",
+  "hook_source": "plugin",
   "hook_receipt": {
     "project_plugin_link": ".claude/dev-graph-plugin",
     "link_target": "../plugins/dev-graph",
     "managed_event_count": 4,
     "effective_event_count": 4,
     "duplicate_count": 0,
-    "rollback_manifest": ".dev-graph/cache/init-hook-rollback.json"
+    "rollback_manifest": ".dev-graph/cache/init-hook-rollback.json",
+    "delivery": "plugin",
+    "project_fallback_active": false
+  },
+  "reconciliation": {
+    "applied_at": "2026-07-26T00:36:41Z",
+    "reason": "repository-native Claude settings projection is authoritative in HarnessHub",
+    "native_surface_check": "pass",
+    "config_sha256": "4c2554fc32dfec666c9b449eed3e2b5650a04a73ea3efe22758da0d22a9445b7",
+    "settings_sha256": "7d82b9a6ced18548a1c612f8ea095e9c302414451e861945cd629d91aa831b11"
   },
   "schema_result": {
     "valid": true,

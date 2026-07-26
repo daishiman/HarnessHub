@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "created_at": "2026-07-25T03:38:46Z",
   "repository_id": "github:daishiman/HarnessHub",
-  "reason": "run-dev-graph-init R5 project fallback normalization",
+  "reason": "run-dev-graph-init R5 project fallback normalization (rolled back after repository-native projection check)",
   "before": {
     "config_sha256": "4c2554fc32dfec666c9b449eed3e2b5650a04a73ea3efe22758da0d22a9445b7",
     "settings_sha256": "7d82b9a6ced18548a1c612f8ea095e9c302414451e861945cd629d91aa831b11",
@@ -38,5 +38,15 @@
     "claude_hooks_source": "project",
     "project_plugin_link": ".claude/dev-graph-plugin",
     "effective_dev_graph_hook_count": 4
+  },
+  "rollback": {
+    "applied_at": "2026-07-26T00:36:41Z",
+    "reason": "HarnessHub enables dev-graph as a repository-native plugin; project fallback would drift from the managed Claude settings projection",
+    "config_sha256": "4c2554fc32dfec666c9b449eed3e2b5650a04a73ea3efe22758da0d22a9445b7",
+    "settings_sha256": "7d82b9a6ced18548a1c612f8ea095e9c302414451e861945cd629d91aa831b11",
+    "claude_hooks_source": "plugin",
+    "project_plugin_link_present": true,
+    "project_fallback_active": false,
+    "native_surface_check": "pass"
   }
 }

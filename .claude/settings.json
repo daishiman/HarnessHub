@@ -16,25 +16,25 @@
       {
         "event": "PostToolUse",
         "matcher": "Bash",
-        "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\"",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\"",
         "from_plugin": "dev-graph"
       },
       {
         "event": "PreToolUse",
         "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
-        "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"",
         "from_plugin": "dev-graph"
       },
       {
         "event": "SessionStart",
         "matcher": "startup|resume",
-        "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin/hooks/reconcile-task-lifecycle.py\" --event session-start --repo-root \"${CLAUDE_PROJECT_DIR}\"",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event session-start --repo-root \"${CLAUDE_PROJECT_DIR}\"",
         "from_plugin": "dev-graph"
       },
       {
         "event": "TaskCompleted",
         "matcher": null,
-        "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\"",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\"",
         "from_plugin": "dev-graph"
       },
       {
@@ -294,9 +294,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-            "timeout": 10,
-            "async": true
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\""
           }
         ]
       },
@@ -452,8 +450,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-            "timeout": 10
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/guard-graph-schema.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\""
           }
         ]
       },
@@ -608,8 +605,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin/hooks/reconcile-task-lifecycle.py\" --event session-start --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-            "timeout": 10
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event session-start --repo-root \"${CLAUDE_PROJECT_DIR}\""
           }
         ]
       },
@@ -646,8 +642,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PROJECT_DIR}/.claude/dev-graph-plugin/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\"",
-            "timeout": 20
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\""
           }
         ]
       }
