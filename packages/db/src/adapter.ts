@@ -8,6 +8,14 @@ export const DATABASE_DRIVERS = ['turso', 'd1'] as const;
 
 export type DatabaseDriver = (typeof DATABASE_DRIVERS)[number];
 
+/**
+ * process 内の書き込み直列化を安全に共有できる範囲。
+ *
+ * `process-local` は Node のローカル libSQL のように接続を同一プロセスで所有する経路、
+ * `request-bound` は Workers の Turso/D1 のように要求をまたぐ Promise 共有を禁じる経路。
+ */
+export type WriteConcurrencyScope = 'process-local' | 'request-bound';
+
 export function isDatabaseDriver(value: unknown): value is DatabaseDriver {
   return typeof value === 'string' && (DATABASE_DRIVERS as readonly string[]).includes(value);
 }
@@ -32,6 +40,7 @@ export function assertSupportedDriver(
  */
 export interface DatabaseAdapter<TSchema extends DrizzleSchema = DrizzleSchema, TClient = unknown> {
   readonly driver: DatabaseDriver;
+  readonly writeConcurrencyScope: WriteConcurrencyScope;
   /** feat-domain-model-db が定義するスキーマ束。この package は中身を知らない。 */
   readonly schema: TSchema;
   /** drizzle のクライアント実体。型引数として受け取るだけで、生成も破棄もしない。 */

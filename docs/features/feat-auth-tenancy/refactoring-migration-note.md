@@ -57,16 +57,16 @@ P05/P06 の実装完了時点で、境界外からの Auth.js 固有 API 参照�
 是正後、意図的な 2 段再輸出を投入して exit 1 での赤化と検出経路
 (`adapter/index.ts -> adapter/__probe.ts`) の出力を確認済み (P06 §3)。
 
-### 1.3 未実施であり、意図的にそうしている事項
+### 1.3 初回時点では未実施だった事項 (2026-07-26 解消済み)
 
-**`next-auth` は現時点で未インストールである。**
-`apps/hub/src/app/api/auth/[...nextauth]/route.ts` は 501 `auth_provider_not_wired` を返す。
+初回時点では Auth.js が未導入で、route は 501 を返していた。
+`HarnessHub-b7ng` で `@auth/core`・session claims bridge・テナント別 route・本番 DB ports を実結線した。
 
 これは実装漏れではなく D3 caveat (Better Auth への乗り換え余地を残す) に沿った状態である。
 境界は依存の有無と無関係に成立しており、`T-BND-01`/`T-BND-02` は module 指定子と参照経路だけを見るため、
 `next-auth` を導入した瞬間から同じ検査がそのまま効く。
 
-乗り換えが発生した場合に触るファイルは `adapter/` 配下の 4 枚に閉じる。
+乗り換えが発生した場合に触るファイルは引き続き `adapter/` 配下に閉じる。
 これが本境界を維持している唯一の理由であり、**入口を増やすと乗り換えコストが即座に膨らむ**。
 
 ---

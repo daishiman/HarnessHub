@@ -21,7 +21,7 @@ export * from './core/security';
 // --- studio extensions (re-export のみ。各 feature が自身の write_scope から追加する) ---
 // 例: export * from './hearing-intake/schema';
 
-/** コアドメイン 18 テーブルの一覧 (export・分離テスト・網羅チェックが共用する単一ソース)。 */
+/** コアドメイン 19 テーブルの一覧 (export・分離テスト・網羅チェックが共用する単一ソース)。 */
 export const coreTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
   Object.fromEntries(
     [
@@ -29,6 +29,7 @@ export const coreTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
       identity.idpConnections,
       identity.workspaces,
       identity.users,
+      identity.userWorkspaces,
       identity.userSettings,
       catalog.projects,
       catalog.targetChannels,

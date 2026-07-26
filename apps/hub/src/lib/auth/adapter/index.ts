@@ -9,8 +9,12 @@ export {
   type AuthjsConfigDeps,
   buildOidcProvider,
   type OidcProviderConfig,
+  type ResolvedAuthjsConfig,
   resolveAuthjsConfig,
+  resolveAuthjsConfigForTenant,
 } from './authjs-config.js';
+// Auth.js 由来の型は 1 つも出さない。出るのは Web 標準の `(Request) => Promise<Response>` だけ (T-BND-02)
+export { type AuthjsHandlerDeps, type AuthRouteHandler, createAuthjsHandler } from './authjs-handler.js';
 export {
   resolveSignIn,
   type SignInInput,

@@ -20,6 +20,17 @@ export {
   type EncryptionPurpose,
 } from './crypto';
 export type { CoreAdapter, CoreDb, CoreSchema } from './db';
+export {
+  createDeviceAuthorizationsRepo,
+  createPublisherTokensRepo,
+  type DeviceAuthorizationProgress,
+  type DeviceAuthorizationRow,
+  type DeviceAuthorizationStatus,
+  type DeviceAuthorizationsRepo,
+  type DeviceAuthorizationTransition,
+  type PublisherTokenRow,
+  type PublisherTokensRepo,
+} from './device-flow';
 export { createIdpConnectionsRepo, type IdpConnectionRow, type IdpConnectionsRepo } from './idp';
 export {
   createIdempotencyLedgerRepo,
@@ -48,3 +59,4 @@ export {
   type UserStatus,
   type UsersRepo,
 } from './users';
+export { createUserWorkspacesRepo, type UserWorkspaceRow, type UserWorkspacesRepo } from './workspaces';

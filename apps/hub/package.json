@@ -21,6 +21,7 @@
     "check:client-bundle": "node scripts/check-client-bundle.mjs"
   },
   "dependencies": {
+    "@auth/core": "0.41.3",
     "@harness-hub/db": "workspace:*",
     "@harness-hub/estimation": "workspace:*",
     "@harness-hub/inspection": "workspace:*",
