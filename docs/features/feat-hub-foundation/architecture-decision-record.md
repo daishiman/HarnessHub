@@ -145,13 +145,16 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 | G10 | duplicate implementation detector | 登録共通層の owner package 外の同名 export / 境界迂回 import を検出 | 1 件以上で fail | A4 |
 | G11 | Core Web Vitals 計測 | **main 反映後の定期計測**（Lighthouse）で LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1 を確認 | good を外れたら是正起票 | qa-018, R-05 |
 | G12 | 認証・認可 静的検査 | `apps/hub/scripts/check-auth-gates.mjs` が束ねる 3 検査（Auth.js 境界隔離 / 認可判定の単一集約 + route 例外の厳密一致 / dev 専用 provider の非存在） | 1 本でも違反で非ゼロ終了 | qa-020, SEC2, D3, I7 |
+| G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS（page entry + route 固有 client reference manifest の和集合）を gzip 実測。運用値 **120 KiB / route**（frontend-spec §8 の上限 250KB の内側に置く早期検知線） | 超過で非ゼロ終了 | qa-018, R-05 |
 
 - **G11 を PR 単位に置かない理由 (R-05)**: PR ごとの Lighthouse 実行は GitHub Actions 無料枠 2,000 分/月（infrastructure-spec §11）を圧迫し C2 に反する。CWV は bundle 予算（代理指標）とは別に**実測経路を持つ**必要があるため、main 反映後の定期計測として確保する。R2/edge 配信（`ASSETS` binding）と不要 JS 削減が達成手段（qa-018(2) の 3 手段に対応）。
+- **G13 を G5 と分けて置く理由 (2026-07-25 追記, qa-018)**: G5 と G13 は名前が似ているが**測る対象が別物**である。G5 は wrangler が Cloudflare へ上げる Worker（サーバー側実行コード）を 3 MiB で測り、G13 はブラウザへ配る client JS を測る。TBT / INP を悪化させるのは後者であり、G5 では原理的に検知できない。実測（2026-07-24 の本番初回 CWV / HarnessHub-aqi）: `/` の First Load JS が 159 kB へ膨らみ TBT 926ms（予算 200ms）を出したとき、G5 は 0.96 MiB / 3 MiB で緑のままだった。G11 は main 反映後の定期計測ゆえ PR 段階では止められないため、PR 段階で client 側の退行を遮断する G13 を独立に置く。G11（実測・事後）と G13（静的予算・事前）は代替関係ではなく二段構えである。G13 は Lighthouse を起動せず既存の `next build` 出力を読むだけなので Actions 時間をほぼ消費せず、R-05 が G11 を定期計測へ回した理由（C2）とは衝突しない。
+- **G13 の計測範囲 (2026-07-25)**: `app-build-manifest.json` の route entry だけでは root layout の chunk を取りこぼす（App Router は `/page` と `/layout` を別 entry にするため）。実ブラウザは両方を読むので、route 固有の `*_client-reference-manifest.js` と page entry の**和集合**を計測対象とする。route handler（API）はブラウザが chunk を読まないため判定対象から外し、計測値の記録のみ行う。未ビルド・chunk 欠落は「予算内」と誤判定せず **fail-closed** で停止する。
 - **G6 の consumer 構成 (R-07)**: `packages/inspection` の第 2 consumer は **CI 自身**とする。Publisher（feat-publisher-plugin）は未実装で workspace member でもないため、A4-1「実在する consumer のみを対象にする」規則により Publisher を待つと判定不能になる。qa-038【2】が「CI からも呼ぶ」と確定しているため、CI が実在 consumer として成立する。
-- ゲートの実行順は「静的ゲート（G1・G10・G12）→ install → G2・G3 → build → G4・G6・G7・G8・G9 → G5 → deploy」とし、**deploy は全ゲート通過後にのみ、同一 workflow run 内で実行**する（R-02。A1 の "test→deploy 完走" の定義）。
+- ゲートの実行順は「静的ゲート（G1・G10・G12）→ install → G2・G3 → build → G4・G6・G7・G8・G9 → G5・G13 → deploy」とし、**deploy は全ゲート通過後にのみ、同一 workflow run 内で実行**する（R-02。A1 の "test→deploy 完走" の定義）。G13 が静的ゲート段に入らないのは、`next build` の出力を読む必要があり install・build を前提とするためである。
 - **G12 の位置づけ (2026-07-25 追記 / issue-auth-tenancy-ci-wiring-20260725)**: feat-auth-tenancy が追加した 3 検査は、共有 CI が当該 feature の write scope 外だったため CI から 1 度も呼ばれていなかった。呼ばれない検査は存在しないのと同じなので、静的ゲート段へ結線する。3 検査はいずれも「名前と参照経路」から決定的に判定でき next-auth の導入有無に依存しないため、install 前に落とせる。G9・G10 と同じく qa-038【2】の「8 種」には数えない横断品質ゲートであり、qa-038【2】の列挙項目を増減させない。
 - **G4 の Tenant 分離を名指しで守る (同上)**: qa-038【2】は Tenant 分離テストを必須ゲートとして名指しするが、`pnpm -r test` に含まれるだけでは分割・`it.skip` で静かに外れる。`scripts/ci/check-tenant-isolation-gate.mjs` で対象実在・T-ISO ID 網羅・無効化の不在を検査したうえで名指し実行する（ゲート数は増えない）。
-- **local 再現 (R-18)**: required status checks と同一コマンドを root の `pnpm verify` で実行できるようにする（qa-039【2】）。**2026-07-25 時点の未結線は G7 / G7b / G9** — 追加ゲートは CI と local 入口を同時に用意すること（CI にしか無いゲートは着手前に気づけず、PR で初めて落ちる）。
+- **local 再現 (R-18)**: required status checks と同一コマンドを root の `pnpm verify` で実行できるようにする（qa-039【2】）。**2026-07-25 時点の未結線は G7 / G7b / G9** — 追加ゲートは CI と local 入口を同時に用意すること（CI にしか無いゲートは着手前に気づけず、PR で初めて落ちる）。G13 は `pnpm check:client-bundle` を root に用意して同時結線した。
 
 ## 7. 監視・SLO 構成（qa-019 / qa-027）
 
