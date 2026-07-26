@@ -12,7 +12,7 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 - graph_node_id: `sys-auth-tenancy-p09`
 - feature_context_digest: `sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5`
 - 判定: **該当する品質ゲート 6 件すべて pass**
-- ただし **CI パイプラインへの自動結線は未実施** (§4 に明記)
+- 初回 QA 時は CI 未結線だったが、2026-07-25 `HarnessHub-1f28` で自動結線済み (§4)
 
 ---
 

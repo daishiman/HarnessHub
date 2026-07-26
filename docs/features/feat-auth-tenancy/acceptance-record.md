@@ -12,7 +12,7 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 - graph_node_id: `sys-auth-tenancy-p07`
 - feature_context_digest: `sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5`
 - 判定根拠: `docs/features/feat-auth-tenancy/test-run-results.md` (P06) に記録された実行証跡のみ
-- 総合判定: **2 項目 pass / 1 項目条件付き** (`next-auth` 実依存は未導入)
+- 初回判定: **2 項目 pass / 1 項目条件付き**。2026-07-26 `HarnessHub-b7ng` の実結線後は **3 項目 pass**
 
 > 本 task は「実行された証跡」だけを判定材料にする。未実行のもの・計画中のものは根拠にしない。
 
@@ -98,17 +98,18 @@ session_revocations 経由の緊急失効を併用する。手順は P12 runbook
 exit 1 での赤化と検出経路の出力を確認済み (P06 §3)。**入口 1 枚だけを見る検査では素通りする形**を
 到達可能性解析で塞いでいる。
 
-### 明記すべき前提: `next-auth` は現時点で未インストール
+### 初回受入時点の前提: `next-auth` は未インストールだった
 
-本リポジトリに `next-auth` パッケージは導入されておらず、
-`apps/hub/src/app/api/auth/[...nextauth]/route.ts` は意図的に 501 `auth_provider_not_wired` を返す。
+初回受入時点では Auth.js パッケージは導入されておらず、route は意図的に 501 を返していた。
+**2026-07-26 に `HarnessHub-b7ng` で `@auth/core` と本番 runtime を実結線済み**であり、
+現在の受入証跡は [spec-reflection-receipt.md](./spec-reflection-receipt.md) に引き継いだ。
 
 したがって AC-3 の現在の充足内容は次のとおりである。**これを「Auth.js を導入して隔離済み」と読み替えてはならない。**
 
 - ✅ **成立している**: Auth.js 固有 API を扱ってよい場所が `adapter/` 1 箇所に限定され、その境界が機械検査で守られている。境界外への import と、入口経由の型の素通しの両方が塞がれている。
 - ✅ **成立している**: `apps/hub/src/shared/auth/` の `AuthProvider` 抽象と `denyAllAuthProvider` (既定は全拒否 = fail-closed) により、Auth.js 未導入でも認証面が「開いた」状態にならない。
-- ⏳ **未実施**: `next-auth` の実インストール、session claims bridge、dynamic tenant route の結線
-  (`HarnessHub-b7ng`)。実依存が無い状態の静的隔離は、受入を完全充足した根拠にはしない。
+- ✅ **解消済み**: `@auth/core` の実インストール、session claims bridge、dynamic tenant route、
+  本番 DB `AuthPorts` の結線 (`HarnessHub-b7ng`)。
 - ✅ **導入後も同じ検査で守れる**: `T-BND-01`/`T-BND-02` は module 指定子と参照経路だけを見るため、`next-auth` のインストール有無に依存しない。導入した瞬間に、境界外 import があれば赤くなる。
 
 ---

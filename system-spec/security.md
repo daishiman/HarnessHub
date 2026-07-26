@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-061 |
+| Web (web) | 確定 | 確定質疑: qa-075 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,11 +24,11 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-061 (対応セル: web)
+### qa-075 (対応セル: web)
 
-**質問**: docs/security-spec.md の 2026-07-18 追記 (許可表拡張・§6.3.1 install/download 配布境界・T-13/T-14 テスト・§8.7 構築順 security gate) を security 仕様へ反映するか。 (訂正再登録: qa-054 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-061 として登録し直す)
+**質問**: HarnessHub-b7ng で確定した Device Flow / refresh token の並行更新契約を security.web の正本へ反映するか。
 
-**回答**: qa-050 の確定内容 (脅威モデル基盤 qa-042 と業務データ保持 delta を統合した security (web) 確定) を全面維持しつつ、次の delta を確定する。許可表へ projects.create (member。作成者を owner に固定)・projects.update (owner)・harnesses.install (member。安定版の導入/ダウンロード descriptor 発行) を追加 (install_hint から改称)。§6.3.1 配布境界: install は session 認証 + harnesses.install を要求し principal と同 tenant/workspace の stable かつ available release だけをサーバ側解決、クライアント指定 release/R2 key は不受理。skill の raw ZIP は Stage 0 採用時のみ Worker 署名の TTL 5 分以内・単回・対象 release 固定 URL とし、レスポンス/ログ/Referer に R2 credential/object key を露出しない。web_app は health 確認済み URL のみ返し外部遷移は noopener,noreferrer。suspended/他 tenant/非 stable は存在秘匿の 404。download count は (tenant, user, project, release) 範囲の Idempotency-Key 重複排除後に加算。upload は S01 Web=session+CSRF / Publisher CLI=Bearer+publish:write の 2 入口を同一検査・owner/tenant 判定へ収束させ、multipart の project_id/workspace_id/owner_user_id を信頼せず認証 principal と認可済み PublishRequest から解決、staging object key に元ファイル名を使わない。テスト追加: T-13 ヒアリング所有者境界 (member は自分の applicant_user_id のみ・form 改ざんで他人のシート取得不可・admin は自テナント全件のみ)、T-14 Project/配布境界 (作成者のみ owner・他 Project publish 拒否・install は stable/available のみ・他 tenant/任意 release/R2 key 指定 404・短命 URL の期限切れ/再利用拒否)。§8.7 構築順 security gate: P0 で SSO/session・Device Flow・単一認可 MW・tenant scope・deny-by-default・失効・監査 logger を dev bypass なしで完成 → P1 開始前に sheets 権限 + T-13 → P2 開始前に projects 権限・upload 2 経路・ZIP 検査・harnesses.install + T-14 → P3 以降は同一 MW/tenant repository 流用 + 新 action の許可表・全 role テスト同時追加。管理者 UI が P4/P5 でも admin/member 認可判定は P0 から有効で「後から role を付ける」移行は不許可。
+**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-061 までの security.web 確定内容を全面維持し、次の実装追補を確定する。device authorization の approve/consume/失敗計数は status と attempts の組を条件にする compare-and-swap (CAS) とし、同じ device_code の token 発行成功は 1 本だけ、user_code の同時失敗は取りこぼさず 5 回で denied とする。refresh rotation は revoked_at IS NULL の CAS で旧枝を先に失効し、新しい枝は 1 本だけ作る。既に失効した refresh token の再提示では family 全体を一括失効して token.reuse_detected を記録する。一方、同時提示で CAS に負けただけの要求は invalid_grant とし、その瞬間に family 失効へ昇格しない。昇格すると勝者の新枝作成との競走で掃討漏れが生じるためであり、同じ旧 token の再提示時に再利用検知へ昇格する。認証 runtime は Worker binding/Secret の値変更を要求ごとに比較し、変更後も旧鍵・旧接続先を使い続けない。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

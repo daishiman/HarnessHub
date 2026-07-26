@@ -47,7 +47,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | `BACKUPS_BUCKET` | R2 | `harness-hub-backups` | DB export 保管 (§10) |
 | `ASSETS` | assets | `.open-next/assets` | 静的アセット (edge 配信) |
 | `CF_VERSION_METADATA` | version_metadata | Cloudflare 採番の version id | `/health` の `version` に載せ「いま配信されている版」を応答から特定可能にする (§9)。build 時注入と違い **rollback 後も実配信版と一致する**ため、障害時のロールバック判断の一次情報になる (2026-07-21 追加) |
-| `APP_BASE_URL` | var | 環境別 URL (§8) | 絶対 URL 生成・OIDC callback |
+| `AUTH_CANONICAL_ORIGIN` / `AUTH_ALLOWED_ORIGINS` / `AUTH_DEVICE_VERIFICATION_URI` | var | 環境別 URL (§8) | Host ヘッダに依存しない OIDC callback、変更系 Origin 許可、Device Flow の確認画面 URL |
 | `ENVIRONMENT` | var | `production` / `preview` | 環境分岐 (ログ・通知の抑制)。常設 staging は持たない (§6) |
 
 - **secret 台帳 (`wrangler secret put`。コード・DB へ平文を持ち込まない = qa-020)**:
@@ -55,7 +55,8 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | secret 名 | 用途 | ローテーション |
 |---|---|---|
 | `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` | libSQL 接続 | token 失効時・年 1 回 |
-| `AUTH_SECRET` | Auth.js JWT cookie 署名 | 年 1 回 (全セッション失効を伴う) |
+| `AUTH_SESSION_SECRET` | Auth.js session JWT cookie 署名 | 年 1 回 (全セッション失効を伴う) |
+| `AUTH_ACCESS_TOKEN_SECRET` | Publisher access token JWT 署名 | 年 1 回 (短命 access token の再発行を伴う) |
 | `RESEND_API_KEY` | メール送信 (SEC9) | 年 1 回 |
 | `SALARY_ENC_KEY` | users.salary の AES-GCM 鍵 (qa-032) | 計画ローテーション時は再暗号化 migration を伴う (runbook 化) |
 | `IDP_SECRET_<tenant_slug>` | テナント別 OIDC client secret (`idp_connections.client_secret_ref` が参照) | テナント IdP 側の更新に追随 |

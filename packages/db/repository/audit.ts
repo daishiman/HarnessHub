@@ -7,6 +7,7 @@ import { auditEvents } from '../schema/core/security';
 import { isTransactionalAdapter } from '../src/adapter';
 import type { RepositoryContext } from '../src/types';
 import { canonicalJson, sha256Hex } from './bytes';
+import { errorChainText, guardedWrite, isLockConflict } from './conflict';
 import type { CoreAdapter, CoreDb } from './db';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
@@ -71,23 +72,17 @@ export async function computeEventHash(row: {
   );
 }
 
-const APPEND_MAX_RETRY = 25;
-
 /**
  * 並行 append の競合として再試行してよい失敗:
  * UNIQUE(tenant_id, seq) 違反 (両 driver の直列化検出) と、
  * BEGIN IMMEDIATE 同士のロック競合 (SQLITE_BUSY / locked)。
+ *
+ * `unique` を再試行対象に含めるのは **この経路だけ**。seq の採番を UNIQUE 制約で弾かせて
+ * 次の seq を読み直すのが直列化そのものだから成立する。他の書き込みで `unique` を再試行すると
+ * 確定的な重複違反を無駄に叩き続けることになる (conflict.ts の既定述語は lock 競合のみ)。
  */
 function isRetryableConflict(error: unknown): boolean {
-  if (!(error instanceof Error)) return false;
-  const text = `${error.message} ${(error as { code?: string }).code ?? ''}`;
-  return /unique|busy|locked/i.test(text);
-}
-
-function backoff(attempt: number): Promise<void> {
-  // ジッタ付き線形バックオフ。同時到着した writer 同士が再衝突し続けるのを避ける。
-  const jitter = Math.floor(Math.random() * 20);
-  return new Promise((resolve) => setTimeout(resolve, attempt * 10 + jitter));
+  return /unique/i.test(errorChainText(error)) || isLockConflict(error);
 }
 
 export interface AuditRepo {
@@ -141,19 +136,23 @@ export function createAuditRepo(adapter: CoreAdapter): AuditRepo {
      * libSQL では BEGIN IMMEDIATE トランザクションで read-modify-write を直列化する (ADR §7)。
      * D1 には interactive transaction が無いため UNIQUE(tenant_id, seq) の競合検出 + 再試行で直列化する。
      * どちらの経路でも UNIQUE 制約が最終防衛線。
+     *
+     * `guardedWrite` で囲むのは **他の書き込みとの衝突を防ぐため**。libSQL はこのトランザクションを
+     * 別接続で開くので、囲まないと同一プロセスの素の INSERT/UPDATE と書き込みロックを奪い合い、
+     * 負けた側の接続が壊れる (conflict.ts)。トランザクション全体がゲートの中に入る点が要点で、
+     * BEGIN から COMMIT の間に他の書き込みを 1 本も通さない。
      */
     async append(context, event) {
-      for (let attempt = 1; ; attempt += 1) {
-        try {
+      return guardedWrite(
+        adapter,
+        async () => {
           if (isTransactionalAdapter(adapter)) {
-            return await adapter.transaction((tx) => appendOnce(tx.client, context, event));
+            return adapter.transaction((tx) => appendOnce(tx.client, context, event));
           }
-          return await appendOnce(adapter.client, context, event);
-        } catch (error) {
-          if (!isRetryableConflict(error) || attempt >= APPEND_MAX_RETRY) throw error;
-          await backoff(attempt);
-        }
-      }
+          return appendOnce(adapter.client, context, event);
+        },
+        isRetryableConflict,
+      );
     },
 
     async read(context, options) {
