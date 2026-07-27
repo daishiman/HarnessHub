@@ -1,0 +1,12 @@
+{
+  "verdict": "FAIL",
+  "component": "C06",
+  "auditor": "system-spec-hearing-auditor",
+  "dispatch": {"tool": "Agent", "subagent_type": "system-spec-hearing-auditor", "session_id": "4e36e2fc-5ee3-4926-b723-71b490e6442b"},
+  "audited_at": "2026-07-24T12:23:00Z",
+  "summary": "qa-070〜qa-075とdecision D8を4軸で監査。(1)聞き漏れ: ユーザー一括指示の6要素(テスト戦略網羅・カバレッジ80%・FE/BE/インフラ層別・UI微調整で壊れない保守性・改善ループ・冪等な仕組み化)はqa-070/071/072/073/075にすべて反映されており欠落なし。(2)誘導質問: 過去のC06指摘(AI推奨を質問文に埋め込む型)は本件になく改善維持。qa-070後段の片側Yes/No質問をlow検出。D8はoption2件均等提示+推奨別掲で問題なし。(3)早期停止: testing-qa全6セル解決済み、hearing_progressと整合し検出なし。(4)トレーサビリティ: desktop-windows(qa-075)とdesktop-macos(qa-072)が異なるqaを参照し他8カテゴリの同一qa_ref共有パターンから逸脱、platform境界を確定したqa-074が孤立エントリでmedium検出。qa-073のqa-075回答中引用による章反映方式はdev-workflow章qa-066/qa-069前例と同型で問題なし。",
+  "findings": [
+    {"severity": "medium", "detail": "testing-qa.desktop-windows(qa_ref=qa-075)とdesktop-macos(qa_ref=qa-072)が異なるqaを参照。他8カテゴリではdesktop-windows/macosが常に同一qa_refを共有しておりtesting-qaのみ逸脱。かつplatform境界(web=CI実行、desktop=作者ローカル実行)を実際に確定させたqa-074がmatrixのどのqa_refからもqa-075回答文中の引用からも参照されず孤立。C01はdesktopセルのqa_refをqa-074に揃えるか、回答本文にqa-074引用を追加し系譜を明示すべき。"},
+    {"severity": "low", "detail": "qa-070の質問文後段『単体テストだけで十分ですか?』はYes/Noで『不十分』を暗示する片側質問。ユーザー自身が事前指示で網羅方針を明示的に求めていた文脈があり実害は限定的だが、中立形式への言い換えが望ましい。"}
+  ]
+}

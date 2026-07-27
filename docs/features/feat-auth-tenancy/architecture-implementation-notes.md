@@ -101,9 +101,9 @@ RFC 8628 §3.5 が定めているのは「`slow_down` を返したら `interval`
 
 | 事項 | 現状と引受先 |
 |---|---|
-| Auth.js 実結線 | `next-auth` 未導入。依存追加、JWT bridge、dynamic tenant route 結線が必要 |
+| Auth.js 実結線 | ✅ 2026-07-26 `HarnessHub-b7ng` で `@auth/core`、JWT bridge、dynamic tenant route、本番 DB ports を結線 |
 | 本番 auth port adapter | DB は land 済みだが Device Flow/Workspace の永続化契約差を schema owner と解消する必要がある |
-| 認証 gate の CI 結線 | 手動 pass。follow-up `HarnessHub-1f28` |
+| ~~認証 gate の CI 結線~~ | **解消済み** (`HarnessHub-1f28`)。`ci.yml` 静的ゲート段の G12 と root `pnpm check:auth` / `pnpm check:tenant-isolation` で結線済み |
 | ~~確定仕様を超えた 2 決定 (§10.2 `workspace_ids` / §10.7 polling 上限・減衰)~~ | **解消済み** (`HarnessHub-l2g9`)。R4-reopen → `appr-010` → `qa-072` / `qa-073` として再確定し、security-spec §2.1/§2.2 と system-spec/auth.md が実装と一致 |
 | Workers rate limit | feat-hub-foundation の binding 結線が必要 |
 | 本番 OIDC / deploy | P13。依存・資格情報・commit/push/PR が前提 |

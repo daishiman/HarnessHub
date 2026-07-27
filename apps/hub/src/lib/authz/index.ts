@@ -13,8 +13,11 @@ export { ACTION_RULES, type ActionRule, findActionRule } from './rules.js';
 export {
   type AuthRuntime,
   type AuthRuntimeEnv,
+  type AuthRuntimeInput,
   authRuntime,
   createAuthRuntime,
+  createDbAuditSink,
+  createProductionAuthRuntime,
   readAuthRuntimeEnv,
 } from './runtime.js';
 export {

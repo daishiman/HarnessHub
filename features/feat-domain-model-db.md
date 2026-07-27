@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-19T14:12:28Z"
+updated_at: "2026-07-25T21:18:40Z"
 status: "active"
 depends_on: ["feat-hub-foundation"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-25T21:18:40Z","origin_kind":"generated","source_digest":"2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-domain-model-db.md","confidence":0.9}]
@@ -79,6 +79,12 @@ Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメイ�
 - スキーマが SQLite 方言互換で D1 接続テストが通る
 - Release が immutable として強制される
 - バックアップ export と復元手順が検証済み
+
+## 実装反映 (2026-07-26)
+
+- 日次 export は `export-control-plane.ts` の JSONL を gzip して R2 に保存し、四半期 drill と障害復旧は同じ成果物を `restore-control-plane.ts` で検証付き restore する。
+- runbook のコマンドは `packages/db/__tests__/runbook-invocation.test.ts` が記載どおりに実走し、`pnpm --filter` の cwd 差と引数透過の回帰を検出する (`HarnessHub-0yvi`)。
+- remote の backup / deploy 実走確認は `HarnessHub-fnzl` に残し、最小権限 token 分離は `HarnessHub-bda4` に分離している。
 
 ## アーキテクチャ参照
 

@@ -36,6 +36,12 @@ serves_goals: [G1, G2, G5]
 
 **回答**: 既確定の qa-011 / qa-027 / qa-039 / qa-041 の desktop 該当部分を maintenance-ops.desktop の専用正本として集約確定する。(1) plugin 更新導線 (qa-011): 作者環境の Publisher / Skill 更新は marketplace / Bootstrap Installer の更新導線 (「更新あり」表示 + 手動 update) で提供し、自動強制更新はしない。(2) 作者サポート (qa-011): 相談は予約制 office hour (供給上限あり §11.3)。(3) 退職・棚卸し (qa-027): 四半期のユーザー棚卸し (退職者アカウント無効化・owner 再割当確認) は作者デスクトップの token 失効 (Hub Web からの即時失効 = qa-041) と対にして実施する。(4) ローカル環境の維持 (qa-039): CI と同一実装の pnpm verify (lint/typecheck/test/bundle size) を local から実行可能に保ち「local では通るが CI で落ちる」を構造的に減らす。pre-commit hook (lint/format/secret scan) は早期検知の補助で、正本の遮断は CI 側。(5) 資格情報のインシデント初動 (qa-041): token 窃取疑い時は Hub Web から失効 → family 全失効 → 監査確認 (docs/security-spec.md §8.6)。refresh token 再利用検知は provider-admin + 該当 workspace-admin へ即時通知。(6) 障害縮退 (qa-011 維持): Hub 障害時も作者環境の導入済み Skill・公開済み Web App は動作継続し、新規公開・追加・更新のみ停止する。本 qa は maintenance-ops.desktop 行への接地点を提供し、詳細 runbook は maintenance-ops (qa-011/qa-027) の web 行確定に従属する。
 
+## 実装反映記録 (2026-07-26 / qa-011・qa-019 の具体化)
+
+- 日次バックアップは、四半期 drill と障害復旧が同じ入力を直接検査できる control-plane JSONL 形式へ統一する。RPO ≤ 24h / RTO ≤ 4h と「復元できないバックアップを成功と数えない」の既確定要件は変更しない。
+- GitHub Actions の secret / variable は、機械可読台帳と workflow 実参照の双方向突合を CI 静的ゲートに置く。実投入状況は同じ検査の `--live` で確認し、散文の一覧を現在状態の正本にしない。
+- 本記録は新しい利用者要件・外部契約・意思決定を追加せず、qa-011 / qa-019 の実現方法と検証境界を明示するもの。よって `spec-state.json` の確定回答を reopen せず、詳細正本を `docs/infrastructure-spec.md` §7 / §10 と各 feature runbook へ反映した。
+
 ## 上流指針 (doctrine anchor)
 
 | concern | authority (正本) | 導く上流原則 | 出典 |

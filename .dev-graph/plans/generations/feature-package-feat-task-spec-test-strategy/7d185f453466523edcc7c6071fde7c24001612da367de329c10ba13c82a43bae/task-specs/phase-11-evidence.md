@@ -1,0 +1,163 @@
+# System task overlay: 証跡固定 — 実測ログと digest の evidence manifest 化
+
+## Machine-readable registration fields
+
+- feature_package_id: feature-package/feat-task-spec-test-strategy (13 task で共有)
+- owners: ["daishiman"]
+- tags: ["feat-task-spec-test-strategy", "macro-feature", "test-strategy", "quality-gate", "qa-074", "system-dev-planner"]
+- related_nodes: ["feat-task-spec-test-strategy", "arch-harness-hub-testing-qa"]
+- parent_feature: feat-task-spec-test-strategy
+- phase_ref: P11
+- classification: confidence=0.86, reason="system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 のタスク仕様書テスト戦略必須化要求のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task", candidates=[{artifact_kind: task, confidence: 0.86, candidate_path: tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p11.md}]
+- tracker_binding_intent: beads
+- github_publication: mode=local_only, project_aliases=[], labels=[], milestone=なし (.dev-graph/config.json の execution_tracker.mode=beads、github.enabled=false に従う)
+- pr_completion_policy: linked_pr_merged_all (.dev-graph/config.json github.completion_policy.required_pull_requests=all に従う)
+- branch_policy: one-task-one-branch + worktree lease required + default-branch reconciliation + assignment_owner=dev-graph-scheduler
+
+## 目的
+
+P06 のテスト実行ログと P09 の fail-closed 実効性実測ログを digest 付きの evidence manifest として固定し、世代非依存の再実行コマンドとともに再実行可能な形で保存する。
+
+## 背景
+
+acceptance (P07) と最終レビュー (P10) の判定根拠を後から再検証できるよう、証跡の digest immutability (不変性) を担保する。同一入力での再生成における section 構成の冪等性検証 (scope_in 7) を裏づける実測結果も、この manifest で追跡可能にする必要がある。
+
+## 前提条件
+
+- P01 entry gate marker: parent_feature.depends_on all done|closed
+- Required predecessor: SYS-TASK-SPEC-TEST-STRATEGY-P10 が done であること
+- Required spec/architecture/phase/task nodes: feat-task-spec-test-strategy, arch-harness-hub-testing-qa
+- Entry gate: goal-spec.json の feature_context_digest が sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7 に一致し、features/feat-task-spec-test-strategy.md の frontmatter と goal-spec の purpose/goal/scope_in/scope_out/acceptance が逐語一致すること
+- Source pin: system-spec-harness v0.1.0 / run-system-spec-compile / assign-system-spec-completeness-evaluator
+- Repository context: repo_identity=github:daishiman/HarnessHub、root_resolution_source=explicit-cli (validate-system-plan.py 実行時に --repo-root を明示指定する運用)、config=.dev-graph/config.json。全 path は repository 相対とし absolute path は使用しない
+
+## Workstream applicability
+
+- Frontend: N/A: frontend 実装物を変更しない
+- Backend: N/A: 本 phase は証跡固定のみで実装コードを変更しない
+- API: N/A: Hub 本体の API を変更しない (scope_out)
+- Data: N/A: Hub 本体の DB/schema を変更しない (scope_out)
+- Infrastructure: N/A: デプロイ基盤を変更しない
+- Security: N/A: 本 phase は認可・秘密情報の取り扱いを変更しない
+- Quality: applicable + change: P06/P09 証跡の digest immutability を固定する
+- Documentation: applicable + change: eval-log/system-dev-planner/task-spec-test-strategy/evidence-manifest.json を新規作成する
+- Operations: N/A: 本 phase は運用手順を変更しない
+
+## Architecture and deploy unit
+
+- Architecture decisions: arch-harness-hub-testing-qa
+- Deploy unit/environment: dev-tooling/repository
+- Compatibility/migration/backfill: N/A: 本 phase は証跡固定のみで互換性変更を伴わない
+
+## 成果物
+
+- Produced artifacts:
+- eval-log/system-dev-planner/task-spec-test-strategy/evidence-manifest.json
+- Consumed artifacts:
+- eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.json
+- eval-log/system-dev-planner/task-spec-test-strategy/qa-fail-closed-report.json
+- Write scope/touches: eval-log/system-dev-planner/task-spec-test-strategy/evidence-manifest.json
+
+## Tracker publication and completion
+
+- Tracker binding intent: beads (.dev-graph/config.json execution_tracker.mode=beads)
+- Publication mode: local_only
+- Project aliases / labels / milestone: N/A: github.enabled=false のため GitHub 公開を行わない (.dev-graph/config.json)
+- PR completion policy: linked_pr_merged_all
+- PR body contract: Closes に紐づく beads issue 番号 + dev-graph graph_node_id (sys-task-spec-test-strategy-p11) を本文に明記し、default branch を対象にする
+- Ownership boundary: system-dev-planner は intent の宣言のみを行い、dev-graph が実際の binding 解決・mutation・reconciliation を行う
+
+## Branch and worktree execution
+
+- Branch: dev-graph 登録後に C15 が devgraph/sys-task-spec-test-strategy-p11 として払い出す。system-dev-planner は事前に branch 名を確定しない
+- Worktree lease: 実装着手前に graph_node_id (sys-task-spec-test-strategy-p11) の worktree lease を claim し、heartbeat 送出と完了時 release を行う
+- Parallel safety: 直前 predecessor task (SYS-TASK-SPEC-TEST-STRATEGY-P10) が done になるまで着手しない。write scope が他 task の active lease と重複しないことを確認する
+- Completion projection: feature branch 上の完了は pending event として記録され、default branch (main) へのクリーンな reconciliation で durable done へ確定する
+
+## スコープ外
+
+1. テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線
+2. カバレッジ計測と未達時マージブロックの CI 実装
+3. flaky 検出・quarantine・再実行ポリシーの運用実装
+4. pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)
+5. Hub プロダクト本体機能 (Web/API/DB) のテストケース追加
+6. 既存タスク仕様書資産の一括再生成
+7. P01..P13 exact-13 契約そのものの変更
+
+## Verification and evidence
+
+- Automated commands:
+  - `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .`
+- Required evidence: evidence-manifest.json に P06/P09 の証跡ファイルパスと sha256 digest、再実行コマンドが記録されていること
+
+## Inner goal-seek execution loop
+
+- Methodology contract: `system-task-goal-seek/v1`
+- Goal: P11 の Phase acceptance と Verification and evidence をすべて満たす
+- Generic execution prompt: 目的・背景・前提条件・write scope・成果物・受け入れ条件を入力に、実装手段を固定せず最小の安全な変更を行う
+- Rubric: acceptance 全件、回帰テスト、必須証跡、write scope、依存整合がすべて PASS
+- Feedback loop: 実装→独立評価→finding を次の prompt へ反映→再実行し、`rubric verdict=PASS` まで反復する。上限到達時は fail-closed
+- P13 spec/architecture writeback: N/A: P13 owns writeback
+
+## Rollout and rollback
+
+- Rollout: P06/P09 証跡の digest を固定した evidence-manifest.json を作成してから P12 へ引き継ぐ
+- Rollback trigger and steps: manifest の digest が実ファイルと不一致なら manifest を再生成し、再実行コマンドの世代非依存性を再確認する
+
+## Handoff
+
+- Executor: system build route (dev-graph 経由での実装 claim)
+- Ready when: confirmed かつ evaluation pass かつ readiness complete かつ promoted digest 確定かつ dev-graph registration complete の 4 条件が揃った時点
+
+## Current canonical feature baseline
+
+- Feature: `features/feat-task-spec-test-strategy.md` (feature_context_digest `sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7`)
+- Phase responsibility: 現行 feature の purpose・goal・scope・acceptance のうち本 phase 責務の部分集合を所有する。
+- Purpose: タスク仕様書がテスト網羅を明記しない、あるいは書き方が実行ごとにぶれるため、実装後に「結合が通らない」「既存機能が壊れた」を後追いで発見している (qa-070/qa-073)。仕様生成の時点でテスト戦略を必須 section 化し欠落を機械的に拒否することで、何度実行しても同じ品質基準の仕様書が出る冪等な仕組みへ移す。あわせて、ボタン配置など見た目の微調整でテストが壊れる保守性崩壊 (qa-072) を、実装ではなく仕様段階の制約として先に封じる
+- Goal: system-dev-planner が生成する P01..P13 タスク仕様書が、テストレベル選定 (単体・結合・境界値・回帰)・カバレッジ目標 (既定 80%、層別上書き可)・層別方針 (フロント behavior ベース / バックエンド API 契約+ロジック単体+DB 結合 / インフラ IaC 静的検証+デプロイ後 smoke)・保守性制約 (pixel 位置・DOM 構造依存の禁止、過剰テストを作らない線引き) の 4 項目を必須 section として持ち、欠落した仕様書は promotion 前に fail-closed で拒否され、同一入力の再生成で section 構成が冪等に一致する状態
+- Scope in (all items are in-scope for the package; this phase owns the subset matching its responsibility):
+  1. タスク仕様書テスト戦略 section のスキーマ定義 (テストレベル選定・カバレッジ目標・層別方針・保守性制約の 4 項目)
+  2. system-dev-planner の task spec テンプレート (P01..P13) への必須 section 組込
+  3. テスト戦略 section 欠落を promotion 前に非0終了で拒否する fail-closed validator
+  4. 変更内容の種別 (フロント/バックエンド/インフラ) からテストレベルと層別方針を導出する規則
+  5. 層別テスト方針の明文化 (フロント= accessible role/ラベル選択の behavior ベース必須かつ pixel 位置・DOM 構造依存禁止、バックエンド= API 契約テスト+ビジネスロジック単体+DB 結合、インフラ= IaC/設定の静的検証+デプロイ後 smoke)
+  6. 「どこまで管理するか」の線引き (実装詳細への密結合となる過剰テストを作らない基準) の仕様記述
+  7. 同一 feature context での再生成における section 構成の冪等性検証
+- Scope out:
+  1. テスト実行基盤 (Vitest / Playwright / @testing-library/react) の scaffold・設定・CI 配線
+  2. カバレッジ計測と未達時マージブロックの CI 実装
+  3. flaky 検出・quarantine・再実行ポリシーの運用実装
+  4. pixel 位置・DOM 構造依存を検出する lint の実装 (本 feature は仕様上の制約明記までを範囲とする)
+  5. Hub プロダクト本体機能 (Web/API/DB) のテストケース追加
+  6. 既存タスク仕様書資産の一括再生成
+  7. P01..P13 exact-13 契約そのものの変更
+- Acceptance (P04/P06/P07/P10/P11 must preserve exact coverage):
+  1. テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する
+  2. 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する
+  3. 同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する
+  4. 生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む
+  5. カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される
+  6. 保守性制約に pixel 位置・DOM 構造依存の禁止が明記される
+  7. 既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である
+- Architecture/source refs:
+  - architecture/harness-hub-testing-qa.md
+  - system-spec/testing-qa.md
+  - specs/harness-hub-system-specification.md
+
+This section is the current source closure and supersedes older counts or wording in this task when they conflict with the pinned feature context.
+
+## Phase acceptance
+
+1. テスト戦略 section を欠いた task spec 入力に対し validator が非0終了で拒否する
+2. 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) を全て持つ task spec が validator PASS する
+3. 同一 feature context で仕様生成を二回実行し、テスト戦略 section の項目集合と順序が一致する
+4. 生成された task spec のテストレベル選定が、変更内容の種別に対応する層別方針を含む
+5. カバレッジ目標が既定 80% で表現され、層別に上書き可能な形で記録される
+6. 保守性制約に pixel 位置・DOM 構造依存の禁止が明記される
+7. 既存の P01..P13 exact-13 契約と 13-node DAG 検査が非退行である
+
+## 参照情報
+
+- goal-spec: goal-spec.json (parent_feature=feat-task-spec-test-strategy, feature_context_digest=sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7)
+- 仕様正本: system-spec/testing-qa.md qa-070/qa-072/qa-073/qa-074 (タスク仕様書テスト戦略必須化)
+- trace rule: P04 defines executable test IDs; P05 implements their subjects; P06 executes them; P07/P10 adjudicate only executed evidence; P09 makes applicable checks fail-closed; P11 preserves source digest and rerun commands; P12/P13 cannot substitute documentation or planned work for missing implementation/evidence.

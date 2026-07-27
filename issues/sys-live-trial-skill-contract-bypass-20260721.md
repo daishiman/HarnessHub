@@ -12,8 +12,8 @@ iteration: null
 title: "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる"
 owners: ["daishiman"]
 created_at: "2026-07-21T18:30:00Z"
-updated_at: "2026-07-23T10:25:28.267083Z"
-status: "draft"
+updated_at: "2026-07-24T11:20:29Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["issues/sys-live-trial-skill-contract-bypass-20260721.md"]

@@ -36,6 +36,13 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 (2) `next-auth`・本番 AuthPorts adapter・DB 永続化契約の未結線 (`HarnessHub-b7ng`) に集約される。
 どちらも現 write scope を越えるため、未達を隠さず後続課題へ分離した。
 
+> **解消追記 (2026-07-25 / `issue-auth-tenancy-ci-wiring-20260725`)**: (1) は解消した。
+> QC-4 / QC-5 の「未達を解消する条件」(下記各節) を満たす結線が完了している。
+> ただし本記録は P10 時点の独立レビュー結果であり、判定の再評価は QC-4 / QC-5 の
+> 解消追記を根拠に P09 差し戻し (`HarnessHub-1f28` closed) の解除として扱う。
+> **解消追記 (2026-07-26)**: (2) も `HarnessHub-b7ng` で解消した。`@auth/core`、session claims bridge、
+> dynamic tenant route、本番 DB `AuthPorts`、CAS 永続化を結線し、現行証跡を仕様反映受領書へ記録した。
+
 ---
 
 ## QC-1 `tenant-oidc-dynamic-resolution-authjs-d3-qa005`
@@ -50,7 +57,7 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 | OIDC 検証契約 (issuer/aud 不一致・nonce/state 欠落・PKCE 未使用の拒否) | ✅ | `T-OIDC-01`〜`T-OIDC-18` 26 ケース pass (P06 §2) |
 | テナント間の sub 混線防止 | ✅ | `(tenantId, idpSubject)` の複合キー。別テナントの同値 sub と混線しない |
 | JIT provisioning の role 固定 | ✅ | `UserDirectoryPort.createFromOidc` が **role = member 固定**で作る契約。IdP の claim で role が動かない |
-| Auth.js 実装との実結線 | ⏳ **未実施** | `next-auth` 未導入、`/api/auth` は 501、本番 runtime も未結線 (`HarnessHub-b7ng`) |
+| Auth.js 実装との実結線 | ✅ **解消 (2026-07-26)** | `@auth/core`・`/api/auth/{tenant_slug}/{action}`・session bridge・本番 DB runtime (`HarnessHub-b7ng`) |
 
 **独立レビューの所見**: 「動的解決」の**判断ロジックと検証契約**は実装され、テストで証明されている。
 不足しているのは Auth.js ライブラリとの物理的な結線のみで、これは QC-4 (D3 caveat) が
@@ -147,6 +154,11 @@ P12 runbook.md §2 に手順を記載。
 **未達を解消する条件**: `apps/hub/package.json` へ `"check:auth-gates": "node scripts/check-auth-gates.mjs"` を追加し、
 root の `pnpm verify` から呼ぶこと (follow-up 起票済み)。
 
+> **解消 (2026-07-25 / `issue-auth-tenancy-ci-wiring-20260725`)**: 条件を満たした。
+> root `pnpm check:auth` を `verify` チェーンへ、`.github/workflows/ci.yml` の `static-gates` job へ
+> **G12** として結線済み。実測: `pnpm verify` exit 0 / `[auth-gates] OK: 3 ゲート全て pass`、
+> かつ Auth.js の意図的な境界違反を投入すると `pnpm verify` が `check:auth` で exit 1。
+
 ---
 
 ## QC-5 `tenant-workspace-row-level-scope-isolation-test-ci-d4`
@@ -175,6 +187,13 @@ CI では実際に実行される (261 ケース中の 12 ケース)。QC-4 ほ�
 
 **未達を解消する条件**: 分離テストを名指しした CI ステップを設けるか、
 少なくとも `check-auth-gates.mjs` と同時に必須実行される位置へ結線すること。
+
+> **解消 (2026-07-25 / `issue-auth-tenancy-ci-wiring-20260725`)**: 条件を満たした。
+> `ci.yml` に「G4 名指し tenant 分離テスト」ステップを設け、root は `pnpm check:tenant-isolation` で同一実装を呼ぶ。
+> 「静かに外れうる」という本節の懸念そのものを `scripts/ci/check-tenant-isolation-gate.mjs` が
+> 対象実在 / T-ISO-01〜07 の ID 網羅 / `skip`・`todo`・`only` の不在 の 3 点で fail-closed に検査する。
+> 実測: `it.skip` 化とケース削除の両方で exit 1 になることを確認済み。
+> なお **ゲート数は増えない** (G4 の内訳を明示するだけ) ため qa-038【2】の「8 種」の数え方は不変。
 
 ---
 
@@ -242,10 +261,22 @@ test-design.md §`T-SESS-05` の文言は次回改訂時に実装へ追随させ
 | P05 (実装) への差し戻し | ✅ 必要 (`HarnessHub-b7ng`: Auth.js / 本番 adapter) |
 | P06 (テスト実行) への差し戻し | ❌ 不要 |
 | P07 (受入) への差し戻し | ✅ 必要 (AC-3 は条件付き) |
-| P09 (品質保証) への差し戻し | ✅ 必要 (`HarnessHub-1f28`: CI 必須ゲート化) |
+| P09 (品質保証) への差し戻し | ✅ 必要 (`HarnessHub-1f28`: CI 必須ゲート化) → **2026-07-25 解消**。`HarnessHub-1f28` closed |
 
 条件付き充足 4 件の未達部分は、いずれも**本 feature の write scope 外の作業** (共有 CI への結線) と
 **別途の意思決定を要する依存導入** (`next-auth`) に起因する。
 どちらも follow-up として起票し、P11 evidence-summary.md / P13 release-record.md に引き継ぐ。
 
 → P11 の証跡集約は実施できるが、P10 は follow-up 完了後に再レビューする。
+
+## 2026-07-26 本番結線の最終再レビュー
+
+`HarnessHub-b7ng` で Auth.js・本番 DB ports・CAS 永続化を結線した後、branch 全差分を
+Cloudflare Workers の要求分離と stream 処理の観点で再レビューした。
+未認証 Auth.js POST の全量メモリ化と、DB write の module-scope Promise を要求間で
+共有し得る 2 点を検出し、いずれも commit 前に修正した。
+
+- Request body は buffer 化せず、正規 origin へ stream のまま引き継ぐ。
+- DB adapter は `process-local` / `request-bound` を型で明示し、ローカルだけを直列化する。
+- system-spec は `qa-086` で自己完結した契約へ再確定し、反映受領書へ判断と検証を追記した。
+- Draft PR の default branch merge と lifecycle reconciliation だけを残し、実装上の blocker は 0 件と判定する。

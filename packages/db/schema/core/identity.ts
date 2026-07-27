@@ -1,7 +1,7 @@
 // コアドメイン: テナント境界と利用者 (docs/backend-spec.md §2.2 / ADR §2 #1-#5)。
 // driver 非依存 API (`drizzle-orm/sqlite-core`) のみを使う (D2 ヘッジ)。
 
-import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { index, integer, primaryKey, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 /** 課金・IdP 設定の境界。tenant_id 列を持たない唯一のルート境界テーブル。 */
 export const tenants = sqliteTable(
@@ -66,6 +66,33 @@ export const users = sqliteTable(
     createdAt: integer('created_at').notNull(),
   },
   (t) => [uniqueIndex('users_tenant_idp_subject_uq').on(t.tenantId, t.idpSubject)],
+);
+
+/**
+ * 利用者 ↔ Workspace の所属 (HarnessHub-b7ng で feat-auth-tenancy と合意した追加)。
+ *
+ * **権限の強さ (role) はテナント単位**だが、Workspace 資源への到達可否は所属で決まる
+ * (apps/hub の authz が `workspace_not_member` を判定する単一ソース)。
+ * これを持たないと、認可判定は本番で必ず「所属なし = 全 Workspace 拒否」に倒れる。
+ *
+ * PK(tenant_id, user_id, workspace_id) がテナント内の重複所属を作らせない。
+ * user/workspace の ID が別テナントで同じでも衝突させないため、tenant_id も PK に含める。
+ * tenant_id は users/workspaces 経由で辿れるが、row-level scope (D4) の WHERE を
+ * 1 テーブルで閉じるため冗長に持つ。
+ */
+export const userWorkspaces = sqliteTable(
+  'user_workspaces',
+  {
+    tenantId: text('tenant_id').notNull(),
+    userId: text('user_id').notNull(),
+    workspaceId: text('workspace_id').notNull(),
+    createdAt: integer('created_at').notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.tenantId, t.userId, t.workspaceId] }),
+    // session 発行時の「この利用者の所属 Workspace 一覧」が最頻の読み取り経路
+    index('user_workspaces_tenant_user_idx').on(t.tenantId, t.userId),
+  ],
 );
 
 /** アカウント設定 (users 1:1 従属。tenant へは users 経由で辿る)。2FA/パスワード列なし (SEC1)。 */

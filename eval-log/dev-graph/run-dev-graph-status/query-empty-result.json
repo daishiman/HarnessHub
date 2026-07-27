@@ -1,0 +1,22 @@
+{
+  "authority_sha256_after": "a9b70a2fa364ddb8e1624f0a195127893edbf827ea8963884c3548d7ca228fd1",
+  "authority_sha256_before": "a9b70a2fa364ddb8e1624f0a195127893edbf827ea8963884c3548d7ca228fd1",
+  "count": 0,
+  "executed_at": "2026-07-25T04:35:13.941371Z",
+  "filters": {
+    "domain": null,
+    "id": "STATUS-NONEXISTENT-EMPTY-PROBE",
+    "keyword": null,
+    "kind": null,
+    "project": null,
+    "status": null,
+    "tag_match": "all",
+    "tags": []
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "graph_sha256_before": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "ok": true,
+  "read_only": true,
+  "results": []
+}

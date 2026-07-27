@@ -1,0 +1,453 @@
+{
+  "applied": [],
+  "changes": 71,
+  "conflicts": [],
+  "converged": false,
+  "executed_at": "2026-07-25T01:09:04.745864Z",
+  "exports": [],
+  "graph_sha256_after": "13c53eb5e8f7beb057ffb530885751b0244bc57051014fe9d680a15015c3009f",
+  "graph_sha256_before": "13c53eb5e8f7beb057ffb530885751b0244bc57051014fe9d680a15015c3009f",
+  "imports": [
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HUB-FOUNDATION-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-audit-followups-20260717",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOMAIN-MODEL-DB-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-AUTH-TENANCY-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-qa070-implementation-feature-20260722",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-doc-governance-portability",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DOC-GOVERNANCE-PORTABILITY-P13",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-render-out1-unsatisfiable-20260721",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-live-trial-fixture-receipt-forgery-20260721",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-live-trial-skill-contract-bypass-20260721",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-mvp-first-scheduling",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-MVP-FIRST-SCHEDULING-P13",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-live-trial-closure-stale-mvp-first-20260723",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-mvp-first-scheduling-completion-projection-20260724",
+      "to": "closed"
+    }
+  ],
+  "mode": "dry-run",
+  "ok": true,
+  "pending_retry": [
+    {
+      "binding": "beads",
+      "node": "issue-build-trace-doc-coverage-schema-drift-20260723",
+      "reason": "external_linkage_missing"
+    }
+  ],
+  "remote_sha256_after": null,
+  "remote_sha256_before": null,
+  "snapshot_sha256_after": "2b370eb6a344a4246db5eaf6667bb8063035baa328b6bdb15a4cf0f9a4774d55",
+  "snapshot_sha256_before": "2b370eb6a344a4246db5eaf6667bb8063035baa328b6bdb15a4cf0f9a4774d55",
+  "tombstones": [],
+  "write_count": 0
+}

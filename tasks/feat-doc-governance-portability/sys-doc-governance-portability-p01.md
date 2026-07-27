@@ -12,8 +12,8 @@ iteration: null
 title: "要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化"
 owners: ["daishiman"]
 created_at: "2026-07-22T02:31:19Z"
-updated_at: "2026-07-22T02:47:44Z"
-status: "active"
+updated_at: "2026-07-24T08:24:50Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-doc-governance-portability","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-doc-governance-portability/requirements-baseline.md"]

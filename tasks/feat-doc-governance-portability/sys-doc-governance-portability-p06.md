@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 回帰テスト全件と 3 検査の実測記録"
 owners: ["daishiman"]
 created_at: "2026-07-22T02:31:19Z"
-updated_at: "2026-07-22T02:47:44Z"
-status: "active"
+updated_at: "2026-07-24T08:25:35Z"
+status: "closed"
 depends_on: ["SYS-DOC-GOVERNANCE-PORTABILITY-P05"]
 related_nodes: ["feat-doc-governance-portability","arch-harness-hub-dev-workflow"]
 resource_scope: ["eval-log/dev-graph/doc-governance-portability/test-run-p06.json"]

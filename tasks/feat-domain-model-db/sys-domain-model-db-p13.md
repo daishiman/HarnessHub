@@ -71,3 +71,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-domain-model-db` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 追補実行記録 (2026-07-26)
+
+- `HarnessHub-0yvi`: runbook 記載の export → restore をそのまま実走する regression test を追加し、JSONL の単一復元経路へ同期した。
+- `HarnessHub-fnzl`: backup を restore CLI と同じ JSONL 形式へ変更し、Actions 設定台帳と CI 突合を追加した。本番 smoke の Wrangler 起動は Hub workspace 経由へ固定した。
+- local の focused test と task package 検証後も、更新版 backup と main deploy の GitHub Actions 実走までは completion を `in_progress` / `blocked` のまま維持する。

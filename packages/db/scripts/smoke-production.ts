@@ -11,7 +11,7 @@
 // R2 の使い捨て検証 object は蓄積を避けるため常に削除する。
 
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -42,11 +42,32 @@ interface CheckResult {
   readonly detail: Record<string, unknown>;
 }
 
-const MIGRATION_SQL = join(import.meta.dirname, '..', 'migrations', '0000_baseline-core-domain.sql');
-const REQUIRED_BASELINE_TABLES = [...readFileSync(MIGRATION_SQL, 'utf8').matchAll(/CREATE TABLE `([^`]+)`/g)].map(
-  (match) => match[1] as string,
-);
-const WRANGLER_BIN = process.env.WRANGLER_BIN ?? 'wrangler';
+const MIGRATIONS_DIR = join(import.meta.dirname, '..', 'migrations');
+const BASELINE_MIGRATION_SQL = join(MIGRATIONS_DIR, '0000_baseline-core-domain.sql');
+const REQUIRED_BASELINE_TABLES = [
+  ...readFileSync(BASELINE_MIGRATION_SQL, 'utf8').matchAll(/CREATE TABLE `([^`]+)`/g),
+].map((match) => match[1] as string);
+const MIGRATION_STATEMENTS = readdirSync(MIGRATIONS_DIR)
+  .filter((file) => file.endsWith('.sql'))
+  .sort()
+  .flatMap((file) => splitMigrationSql(readFileSync(join(MIGRATIONS_DIR, file), 'utf8')));
+const REPOSITORY_ROOT = join(import.meta.dirname, '..', '..', '..');
+
+/**
+ * DB package は wrangler を直接依存に持たないため、既定では依存を持つ Hub workspace 経由で起動する。
+ * CI の実行 cwd や PATH に依存させず、必要な場合だけ WRANGLER_BIN でテスト用 stub 等へ差し替える。
+ */
+function execWrangler(args: string[]): void {
+  const override = process.env.WRANGLER_BIN;
+  if (override !== undefined && override !== '') {
+    execFileSync(override, args, { stdio: 'pipe' });
+    return;
+  }
+  execFileSync('pnpm', ['--filter', '@harness-hub/hub', 'exec', 'wrangler', ...args], {
+    cwd: REPOSITORY_ROOT,
+    stdio: 'pipe',
+  });
+}
 
 /**
  * wrangler CLI を背後に置く R2BucketLike。実装 (createPackageRegistry) を一切改変せず実バケットへ通す。
@@ -59,17 +80,13 @@ function createWranglerBucket(bucketName: string, workDir: string): R2BucketLike
     async put(key, value) {
       const file = join(workDir, 'put.bin');
       writeFileSync(file, Buffer.from(value instanceof Uint8Array ? value : new Uint8Array(value)));
-      execFileSync(WRANGLER_BIN, ['r2', 'object', 'put', objectPath(key), '--file', file, '--remote'], {
-        stdio: 'pipe',
-      });
+      execWrangler(['r2', 'object', 'put', objectPath(key), '--file', file, '--remote']);
       return null;
     },
     async get(key) {
       const file = join(workDir, 'get.bin');
       try {
-        execFileSync(WRANGLER_BIN, ['r2', 'object', 'get', objectPath(key), '--file', file, '--remote'], {
-          stdio: 'pipe',
-        });
+        execWrangler(['r2', 'object', 'get', objectPath(key), '--file', file, '--remote']);
       } catch {
         return null;
       }
@@ -216,9 +233,7 @@ async function checkR2(bucketName: string, workDir: string): Promise<CheckResult
   } finally {
     // 毎 deploy の smoke で検証 object を蓄積しない。削除失敗も smoke failure として扱う。
     if (createdKey !== null) {
-      execFileSync(WRANGLER_BIN, ['r2', 'object', 'delete', `${bucketName}/${createdKey}`, '--remote'], {
-        stdio: 'pipe',
-      });
+      execWrangler(['r2', 'object', 'delete', `${bucketName}/${createdKey}`, '--remote']);
     }
   }
   if (result === null) throw new Error('R2 registry の検査結果を生成できませんでした');
@@ -291,7 +306,9 @@ async function checkExportDryRun(adapter: TursoAdapter, workDir: string): Promis
   const drill = createTursoClient({ url: `file:${join(workDir, 'drill.db')}` });
   let report: Awaited<ReturnType<typeof restoreControlPlane>>;
   try {
-    await applyDdlStatements(drill, splitMigrationSql(readFileSync(MIGRATION_SQL, 'utf8')));
+    // 復元先は現行 schema でなければならない。baseline だけを流すと、後続 migration が追加した列を
+    // export/restore 検証が読めず、実バックアップが復元可能でも smoke が偽陰性になる。
+    await applyDdlStatements(drill, MIGRATION_STATEMENTS);
     report = await restoreControlPlane(drill, artifact);
   } finally {
     drill.close();

@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-07-25T00:47:18Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P11"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/runbook.md"]

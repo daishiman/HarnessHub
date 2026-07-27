@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-24T23:09:08Z",
+  "generation_id": "7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "supersedes": null,
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "evaluated_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "published_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/dev-graph-registration.json"
+}

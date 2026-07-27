@@ -50,6 +50,7 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   idp_connections: 'createIdpConnectionsRepo',
   workspaces: 'workspaces',
   users: 'createUsersRepo',
+  user_workspaces: 'createUserWorkspacesRepo',
   projects: 'projects',
   target_channels: 'createTargetChannelsRepo',
   releases: 'createReleasesRepo',

@@ -13,11 +13,15 @@
     "deploy": "opennextjs-cloudflare deploy",
     "test": "vitest run",
     "test:a11y": "vitest run tests/a11y",
+    "test:tenant-isolation": "vitest run tests/auth-tenancy/tenant-isolation.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "pnpm --workspace-root exec biome check apps/hub",
-    "check:bundle": "node scripts/check-bundle.mjs"
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "check:auth-gates": "node scripts/check-auth-gates.mjs",
+    "check:client-bundle": "node scripts/check-client-bundle.mjs"
   },
   "dependencies": {
+    "@auth/core": "0.41.3",
     "@harness-hub/db": "workspace:*",
     "@harness-hub/estimation": "workspace:*",
     "@harness-hub/inspection": "workspace:*",

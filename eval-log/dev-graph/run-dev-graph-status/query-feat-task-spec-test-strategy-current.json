@@ -1,0 +1,56 @@
+{
+  "authority_sha256_after": "a9b70a2fa364ddb8e1624f0a195127893edbf827ea8963884c3548d7ca228fd1",
+  "authority_sha256_before": "a9b70a2fa364ddb8e1624f0a195127893edbf827ea8963884c3548d7ca228fd1",
+  "count": 1,
+  "executed_at": "2026-07-25T04:36:11.918714Z",
+  "filters": {
+    "domain": null,
+    "id": "feat-task-spec-test-strategy",
+    "keyword": null,
+    "kind": null,
+    "project": null,
+    "status": null,
+    "tag_match": "all",
+    "tags": []
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "graph_sha256_before": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "ok": true,
+  "read_only": true,
+  "results": [
+    {
+      "artifact_kind": "feature",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [],
+      "depends_on": [],
+      "domain": "testing-qa",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-task-spec-test-strategy.md",
+      "graph_node_id": "feat-task-spec-test-strategy",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "harness-hub",
+      "status": "active",
+      "tags": [
+        "macro-feature",
+        "testing-qa",
+        "task-spec",
+        "quality-gate",
+        "qa-070",
+        "qa-072",
+        "qa-073",
+        "qa-075",
+        "decision-d8"
+      ],
+      "title": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
+      "tracker_binding": "beads"
+    }
+  ]
+}

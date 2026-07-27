@@ -49,8 +49,8 @@ packages/db         Drizzle スキーマ + リポジトリ層
 |---|---|---|
 | `tenants` | id, slug, name, plan, status(`active/suspended`), created_at | slug UNIQUE。課金・IdP 設定の境界 |
 | `idp_connections` | id, tenant_id, issuer_url, client_id, **client_secret_enc**, scopes | **封筒暗号化 (KEK/DEK) で DB 保存** (security-spec §4.3)。テナント IdP secret は顧客ごとに動的に増えるため環境 binding では C1/C2 に反する。「secret は環境 binding のみ」原則は Hub 自身の静的 secret を対象とし、テナント由来の動的 secret は本方式で保護する |
-| `workspaces` | id, tenant_id, slug, name | UNIQUE(tenant_id, slug)。**共有・カタログの境界 (権限の境界は tenant)** — `users` に workspace 所属列が無いため認可判定には使わない (security-spec §3.1.2) |
-| `users` | id, tenant_id, idp_subject, email, name, department, **salary (PII, 年収 JPY)**, role(`provider-admin/workspace-admin/member`), status(`active/inactive`), last_login_at | UNIQUE(tenant_id, idp_subject)。**owner は role 列ではなく `projects.owner_user_id` による関係 role** (qa-005 の 4 role は認可判定時に合成) |
+| `workspaces` | id, tenant_id, slug, name | UNIQUE(tenant_id, slug)。**共有・カタログの境界 (権限の強さは tenant、到達可否は `user_workspaces` の所属)** (security-spec §3.1.2) |
+| `users` / `user_workspaces` | users: id, tenant_id, idp_subject, email, name, department, **salary (PII, 年収 JPY)**, role, status, last_login_at / 所属: tenant_id, user_id, workspace_id, created_at | users は UNIQUE(tenant_id, idp_subject)。**owner は role 列ではなく `projects.owner_user_id` による関係 role**。所属は PK(tenant_id,user_id,workspace_id) とし、別テナントの同じ ID を衝突させず session の `workspace_ids` と Workspace 到達可否の正本にする |
 | `user_settings` | user_id PK, notify_generation, notify_review, notify_weekly, notify_feedback, email_enabled, theme, density, language | mockup account 画面準拠。2FA/パスワードは IdP 責務のため列なし (SEC1) |
 | `projects` | id, tenant_id, workspace_id, slug, name, description, owner_user_id, status(`active/suspended/archived`) | 業務ツール名は Workspace 内一意 (§4.2)。UNIQUE(workspace_id, name) |
 | `target_channels` | id, project_id, target(`skill/web_app`), stable_release_id | UNIQUE(project_id, target)。stable pointer の正本 |
@@ -59,8 +59,8 @@ packages/db         Drizzle スキーマ + リポジトリ層
 | `deployment_references` | id, project_id, channel_id, release_id, url, provider(`cloudflare`), orphan_candidate BOOL, registered_by, last_health_at | web_app 出口。orphan_candidate は §7.2 準拠 |
 | `catalog_entries` | id, tenant_id, workspace_id, project_id UNIQUE, visibility(`private/workspace`), summary, tags_json, dl_count, published_at | `public` は Stage 5 まで非対象 (mockup 分析 §6-4) |
 | `publish_requests` | id, tenant_id, workspace_id, project_id, channel_id, status(§5.1 の 9 値), verdict(`green/yellow/red`), findings_json, release_id, requested_by, idempotency_key | **同一 channel の非終端 request は 1 件** (partial UNIQUE index で直列化, qa-009) |
-| `publisher_tokens` | id, tenant_id, user_id, device_name, refresh_token_hash, scopes_json, last_used_at, expires_at, revoked_at, **family_id** | access token は短命 JWT で発行のみ (保存しない、TTL 15 分)。refresh は SHA-256 ハッシュ保存・TTL 90 日・**rotation 必須**・**再利用検知で family 全失効** (security-spec §2.2)。`scopes_json` の値域は `publish:write`/`metrics:write`/`feedback:write`/`aijob:process` の 4 種。失効導線は Hub Web (qa-008) |
-| `device_authorizations` | id, device_code_hash, user_code, tenant_id, user_id, status(`pending/approved/denied/expired`), interval_sec, expires_at | Device Flow (qa-008)。user_code は照合後即失効 |
+| `publisher_tokens` | id, tenant_id, workspace_id, user_id, device_name(nullable), refresh_token_hash, scopes_json, family_id, last_used_at, expires_at, revoked_at, created_at | access token は短命 JWT で発行のみ (保存しない、TTL 15 分)。refresh は SHA-256 ハッシュ保存・TTL 90 日・**CAS rotation 必須**・**再利用検知で family 全失効** (security-spec §2.2)。`scopes_json` の値域は `publish:write`/`metrics:write`/`feedback:write`/`aijob:process` の 4 種。失効導線は Hub Web (qa-008) |
+| `device_authorizations` | id, tenant_id, device_code_hash, user_code, user_id, workspace_id, scopes_json, device_name, status(`pending/approved/denied/consumed`), attempts, interval_sec, last_polled_at, expires_at, created_at | Device Flow (qa-008)。期限切れは `expires_at` から導出し、user_code 試行回数・poll 間隔・approve/consume は期待状態と attempts を含む CAS（比較して一致した時だけ更新）で競合を拒否する |
 | `audit_events` | id, tenant_id, workspace_id, actor_type(`user/publisher_token/system`), actor_id, action, entity_type, entity_id, summary_json, created_at, **seq**, **prev_hash**, **event_hash** | **append-only** (UPDATE/DELETE 禁止)。対象 action は §3.8。**hash chain (テナント単位)** で改竄検知 — UNIQUE(tenant_id, seq)、計算式と検証は security-spec §5.4。`summary_json` に値そのもの (salary 金額・secret・token) を書かない |
 | `encryption_keys` | id, purpose(`salary/idp_secret`), key_version, dek_wrapped, status(`active/retiring/retired`), created_at, retired_at | **封筒暗号化の DEK 保管** (KEK で wrap)。UNIQUE(purpose, key_version)。`active` は purpose ごとに 1 件。DEK 平文は保存しない (security-spec §4.1.1) |
 | `session_revocations` | tenant_id PK, revoked_at | **緊急失効のみ**。認可 MW が `JWT.iat < revoked_at` を拒否する。KV/メモリキャッシュ (TTL 60 秒) 経由で参照し通常の DB 往復を発生させない (security-spec §2.1) |
@@ -157,7 +157,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 | Method Path | 認証 | 概要 |
 |---|---|---|
-| `GET/POST /api/auth/[...nextauth]` | — | Auth.js (テナント別 OIDC redirect)。adapter 境界内 |
+| `GET/POST /api/auth/{tenant_slug}/{action}` | — | Auth.js (`@auth/core`) によるテナント別 OIDC。tenant slug を path で維持し、session cookie は認可 middleware と同じ JWT 署名・検証契約を使う。adapter 境界内 |
 | `POST /api/v1/device/code` | なし (rate limit) | device_code + user_code + verification_uri + interval 発行 |
 | `POST /api/v1/device/token` | なし (polling) | RFC 8628 準拠。`authorization_pending / slow_down / expired_token` → 承認後 access+refresh 発行 |
 | `POST /api/v1/device/approve` | session | ブラウザ側承認 (user_code 入力)。SSO ログイン済み前提 |
