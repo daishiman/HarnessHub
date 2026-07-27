@@ -41,3 +41,35 @@ P01-P09 成果物を横断し baseline 乖離・acceptance 残未達・quality_c
 ## 判定
 
 P11 以降 (証跡固定・文書化・リリース) へ進む条件を満たす。機能 acceptance は7件すべて PASS。P13 の外部リリース操作 (commit/main 統合/push/PR) は実行済みで、PR #41 は 2026-07-23 に main へ merge 済み。最終 done 確定 (merge commit `b655e22` 記録・graph/md/beads の 3 表現 durable done) まで完了した。
+
+## qa-071 本文伝播の最終レビュー (2026-07-28)
+
+`HarnessHub-8wo` の再 plan を最終レビューし、remote `main`
+(`4b4a945`) を local `main` へ一致させた後、branch へ merge
+(`6bbffe6`) した。main 取り込みで戻った完了投影 56 件は、保存済みの
+merge replay と正本 validator を使い、Markdown / graph / Beads の
+3 表現へ再収束させた。
+
+### task 仕様書ゲート
+
+- `validate-system-plan.py`: PASS、exact-13、digest `af8a73df…`、違反 0
+- `validate-generation-lineage.py`: 1 package 検査、違反 0
+- `build-task-projection-rerun.py --check`: 13 task 検査、missing 0
+- `validate-source-digest.py`: 13 node 検査、mismatch 0
+- planner tests: 166 PASS
+- dev-graph tests: 484 PASS
+- criteria evidence tests: 21 PASS
+- graph schema、artifact placement、eval-log layout、handoff disposition、
+  evidence refs: すべて違反 0
+
+`lint-open-residue.py` で今回対象の残置は 0 件。最新 main 由来の別機能
+15 件 (`feat-task-spec-test-strategy` 13 件、既存 issue 2 件) は、
+今回の差分へ混ぜず別課題の責務として残した。
+
+### 仕様・設計影響
+
+新しい製品仕様・API・データ・セキュリティ・配備契約への影響はない。
+qa-071 / appr-009 は `system-spec/spec-state.json` に既に確定済みで、
+本変更はその本文を feature と P01〜P13 の実行契約へ投影する変更である。
+判断根拠と `system-spec/`・`specs/`・`architecture/` を編集しない理由は
+`qa071-spec-reflection-receipt.md` に記録した。

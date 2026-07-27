@@ -162,6 +162,27 @@ def test_or_p05_not_applicable_settled(tmp_path: Path) -> None:
     assert code == 0
 
 
+def test_or_p06_local_only_manual_policy_settles_after_close_loop(tmp_path: Path) -> None:
+    """local_only 運用 (PR 0件) の node が close-loop を完走した終状態を残置にしない。
+
+    PR を持たない node に `linked_pr_merged_all|any` を残すと graph-node.schema.json が
+    `status=done` に merged な pull_request_linkages を 1 件以上要求するため、
+    completion_evidence が永久に done へ到達できず beads だけ closed になって OR-003 が
+    構造的に再発する (HarnessHub-n7gw)。`policy=manual` なら到達でき、その終状態は残置ではない。
+    """
+    node = _node("issue-local-only", status="closed", ce_status="done", policy="manual")
+    node["github_publication"] = {"mode": "local_only", "project_aliases": []}
+    node["pull_request_linkages"] = []
+    node["completion_evidence"]["source"] = "manual"
+    node["completion_evidence"]["completed_at"] = "2026-07-26T00:00:00Z"
+    node["completion_evidence"]["reconciled_at"] = "2026-07-26T00:00:00Z"
+    root, export = _repo(tmp_path, [node], {"HarnessHub-x": "closed"})
+    code, out = _run(root, export)
+    assert code == 0 and out["violation_count"] == 0
+    # 走査から外して緑にする逃げ (偽の解決) を塞ぐ: 検査されたうえで違反 0 であること。
+    assert out["scanned"] == 1
+
+
 # --- 契約 ---
 
 def test_or_c02_deterministic_across_node_order(tmp_path: Path) -> None:
