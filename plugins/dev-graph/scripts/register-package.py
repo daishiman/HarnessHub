@@ -20,6 +20,7 @@ import hashlib
 import json
 import os
 import re
+import runpy
 import sys
 import tempfile
 from contextlib import contextmanager
@@ -27,10 +28,12 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from _common import ContractError, atomic_json, contained, dump, load_json, utc_now
-from registration_preflight import preflight_contract
-from registration_schema import validate_schema as _validate_schema
 
 HERE = Path(__file__).resolve().parent
+_PREFLIGHT_HELPER = runpy.run_path(str(HERE / "validate-registration-preflight.py"))
+_SCHEMA_HELPER = runpy.run_path(str(HERE / "validate-registration-schema.py"))
+preflight_contract = _PREFLIGHT_HELPER["preflight_contract"]
+_validate_schema = _SCHEMA_HELPER["validate_schema"]
 PLUGIN_ROOT = HERE.parent
 DEFAULT_SYSTEM_ROOT = PLUGIN_ROOT.parent / "system-dev-planner"
 PHASES = [f"P{i:02d}" for i in range(1, 14)]

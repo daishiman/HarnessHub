@@ -71,12 +71,12 @@ qa-071 の要件本文と承認記録は、先行変更で
 feature/task の手書き Markdown はすべて 300 行以下であり、
 ユーザー指定の 500 行上限も満たす。
 500 行を超えていた `register-package.py` は、JSON Schema 検証を
-`registration_schema.py`、上流契約の事前確認を
-`registration_preflight.py` へ責務分離した。完了ポリシーの回帰テストも
+`validate-registration-schema.py`、上流契約の事前確認を
+`validate-registration-preflight.py` へ責務分離した。完了ポリシーの回帰テストも
 `test_register_package_completion_policy.py` へ分け、各ファイルを
 500 行以下にした。分割後の C02 挙動閉包は live trial
-`20260727T220201Z-node-qa071-split` で再実走し、現行 digest
-`3688a1a4a12625c78f2ab1560354393b372a135a90cf6d7b8316bda60a7e8854`
+`20260727T230007Z-node-qa071-ci-r3` で再実走し、現行 digest
+`596229f7a0b53a416bca062b10c2050a0901161e6dafd6a4151346f5d1f6b92c`
 に対して fresh evaluator と criteria evidence gate の PASS を記録した。
 generation JSON、graph store、live-trial transcript は writer が生成する
 機械証跡なので、人手で分割して digest・provenance を壊さない。

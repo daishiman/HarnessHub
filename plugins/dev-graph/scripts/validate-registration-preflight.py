@@ -1,4 +1,4 @@
-"""Cross-plugin preflight for the system-dev-planner handoff contract."""
+"""Validate the cross-plugin preflight for the planner handoff contract."""
 from __future__ import annotations
 
 from pathlib import Path

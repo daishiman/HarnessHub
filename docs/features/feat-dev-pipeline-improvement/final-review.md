@@ -69,7 +69,7 @@ main 由来の別機能・issue 70 件が OR-003 として残る。これらを�
 
 500 行を超えていた登録scriptは、JSON Schema検証と上流契約preflightを
 別moduleへ責務分離した。分割で変わったC02の挙動閉包は
-live trial `20260727T220201Z-node-qa071-split` を再実走し、
+live trial `20260727T230007Z-node-qa071-ci-r3` を再実走し、
 5 artifactの本文保全、連続no-op、graph schema、goal-seek証跡を確認した。
 fresh evaluatorも自己申告を除外した一次情報でblockerなしPASSと判定した。
 

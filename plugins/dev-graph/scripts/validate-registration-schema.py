@@ -1,4 +1,4 @@
-"""Stdlib-only JSON Schema subset used by dev-graph package registration."""
+"""Validate the stdlib-only JSON Schema subset used by package registration."""
 from __future__ import annotations
 
 import json
