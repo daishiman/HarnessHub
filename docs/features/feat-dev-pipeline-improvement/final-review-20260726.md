@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-26T06:20:00Z"
+updated_at: "2026-07-27T21:50:27Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -47,6 +47,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-26T03:25:49Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # 目的
 
@@ -100,6 +101,27 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 - 作業中の main 更新を含めてローカル `main` を本 branch へ再 merge し、最新 merge commit `1d42c70` を作成した。
 - `git merge-base --is-ancestor main HEAD` で、本 branch が同期済み main を含むことを確認した。
 
+### 差分追記 (2026-07-28): PR #82 の CI 失敗 (hooks entry point 契約) を是正
+
+`tests/scripts-root/test_root__validate_plugin_completeness.py` の `test_dev_graph_native_manifest_and_sidecar_are_separated` が CI で FAIL した。原因は、本変更で `guard-graph-schema.py` を 500 行以下へ分離した結果 `plugins/dev-graph/hooks/guard_graph_commands.py` (import 専用 support module) が生まれ、同テストが `package-contract.json` の `entry_points.hooks` を「`hooks/` にあるファイルの一覧」と厳密一致で突合していたことにある。**500 行分割規約と entry point 宣言規約が同時には満たせない**構造であり、実装の不備ではない。
+
+検討した 3 案と選択理由:
+
+| 案 | 内容 | 判断 |
+|---|---|---|
+| A | support module を `hooks/` の外へ移す | **不採用**。live-trial receipt の behavior closure digest (`skill_dir_tree_sha`) が own-plugin の `hooks/` ツリー全体を含むため、無関係な 9 件の receipt が一斉に stale になり再実行コストが発生する |
+| B | support module を `entry_points.hooks` へ宣言する | **不採用**。`entry_points` は Claude Code が起動する入口の台帳であり、起動されないファイルを載せると台帳の意味が失われる |
+| C | 契約テストの不変条件を修正する | **採用**。契約テストは repo-root `tests/` にあり behavior closure の外側なので、既存 receipt を 1 件も失効させない |
+
+是正内容:
+
+- 突合相手を「ディスク上のファイル一覧」から **`hooks/hooks.json` が実際に登録している command の起動先** へ変更した。未宣言の登録 (本テストの主目的) は従来どおり FAIL、宣言のみで未登録・実体なしも FAIL とする。
+- `hooks/` に残る未宣言ファイルは `_is_import_only_support_module()` が **単体起動の入口を持たない**ことまで検査したときだけ許容する (`.py` である / import 可能な名前である / shebang なし / `if __name__ == "__main__"` なし)。命名規則だけを許容条件にすると、underscore 名を付けた実 hook の宣言漏れを素通りさせるため採らない。
+- 新しい判別ロジック (`_registered_hook_stems` / `_support_module_candidates` / `_is_import_only_support_module`) に単体テスト 8 件を追加した。
+- 986 行に達した同テストファイルを責務で 3 分割した: `test_root__validate_plugin_completeness.py` (収集/検証層・367 行)、`test_root__validate_plugin_completeness_s2.py` (登録予防層と CLI・386 行)、`test_root__plugin_hooks_entry_point_contract.py` (実 repo の hooks entry point 契約・197 行)。共有 fixture は `tests/scripts-root/_plugin_completeness_fixtures.py` へ集約し複製を作らない。
+
+検証: `python3 -m pytest tests plugins/dev-graph/tests -q` が **8029 passed / 7 skipped / 0 failed**。lint は test discovery coverage、script naming、doc line limit、artifact placement、content review、skill description、prompt contract drift、live-trial verdict がいずれも違反 0。graph schema は `valid: true` / `implementation_readiness: complete`。
+
 ## 決定事項
 
 - Dev Graph plugin 内部契約を製品 `system-spec/` へ追加しない。
@@ -107,6 +129,7 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 - metadata-only C02 upsert は既存本文を保持し、再生成は明示 opt-in に限定する。
 - `local_only` と PR 連動完了 policy の組合せを生成しない。
 - 機械生成の `.dev-graph/state/graph.json` は単一台帳、live-trial の `transcript.jsonl` / `pane.txt` は digest に束縛された不可分証跡のため分割しない。手書きの Python / Markdown はすべて 500 行以下へ分割する。
+- entry point の宣言は「ディスク上のファイル一覧」ではなく「実際の登録内容」と突合する。代理指標は、規約どうしが衝突したとき正しい実装を偽陽性で落とす。
 - `os` / `shutil` / `json.dump` 等の広域 interpreter API は誤遮断設計を伴うため、本変更へ無理に含めず `HarnessHub-lp36` で継続する。
 
 ## 運用・更新方法
@@ -128,3 +151,4 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 |---|---|---|
 | 2026-07-26 | 最終レビュー、仕様影響判断、Beads 対応を初版記録 | Codex |
 | 2026-07-26 | final live-trial 9/9、pytest 539件、task gate 19/19、C19 後続課題を追記 | Codex |
+| 2026-07-28 | PR #82 の CI 失敗 (hooks entry point 契約) の是正、テスト 3 分割、全体 pytest 8029件を追記 | Claude |

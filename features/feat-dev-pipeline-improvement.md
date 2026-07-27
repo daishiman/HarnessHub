@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-26T03:31:17.854238Z"
+updated_at: "2026-07-27T21:53:46Z"
 status: "done"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717"]
@@ -106,6 +106,14 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - C19 live-trial の task 指示と fixture 前提のずれは `HarnessHub-768b` として分離し、最終再試験は requirements brief から正規4 skillを実行して独立 completeness evaluator とも PASS。
 - graph 管理された docs を C02 writer で再登録すると `layer` が落ちる既存契約差は `HarnessHub-dqca` として分離し、本変更では最終レビュー文書の `layer: feature-design` を復元した。
 - 変更は開発基盤内部の契約であり、製品 API・state・security・UI の仕様を変えない。正本は `plugins/dev-graph/references/`、下流の設計判断は `architecture/harness-hub-dev-workflow.md` に反映し、`system-spec/` と `specs/` は qa-066 の二重正本防止に従い非変更とした。
+
+## 2026-07-28 追記: entry point 宣言契約の是正
+
+- 500 行分割で生まれた import 専用 support module (`hooks/guard_graph_commands.py`) を、plugin 完全性の契約テストが「未宣言の entry point」として落としていた (PR #82 の CI 失敗)。500 行分割規約と entry point 宣言規約が同時には満たせない構造で、実装の不備ではない。
+- 是正として、`package-contract.json` の `entry_points.hooks` を「`hooks/` のファイル一覧」ではなく **`hooks/hooks.json` の登録内容**と突合するよう不変条件を変更した。宣言・登録・実体の 3 者一致を検査し、残る未宣言ファイルは「単体起動の入口を持たない」ことまで検査したときだけ support module として許容する。
+- 契約テストは repo-root `tests/` にあり behavior closure の外側のため、既存 live-trial receipt 9 件は 1 件も失効していない。
+- 986 行に達した契約テストを責務で 3 ファイルへ分割し、共有 fixture を `tests/scripts-root/_plugin_completeness_fixtures.py` へ集約した (各 367 / 386 / 197 行)。
+- 検証: `pytest tests plugins/dev-graph/tests` が 8029 passed / 7 skipped / 0 failed。
 
 ## アーキテクチャ参照
 
