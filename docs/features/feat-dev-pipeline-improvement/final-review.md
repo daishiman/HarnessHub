@@ -45,10 +45,10 @@ P11 以降 (証跡固定・文書化・リリース) へ進む条件を満たす
 ## qa-071 本文伝播の最終レビュー (2026-07-28)
 
 `HarnessHub-8wo` の再 plan を最終レビューし、remote `main`
-(`4b4a945`) を local `main` へ一致させた後、branch へ merge
-(`6bbffe6`) した。main 取り込みで戻った完了投影 56 件は、保存済みの
-merge replay と正本 validator を使い、Markdown / graph / Beads の
-3 表現へ再収束させた。
+(`aeedea0`) を local `main` へ一致させた後、対象限定 commit
+(`f6c7d46`) へ merge (`87e2431`) した。main 由来の別 task/issue の
+完了投影差分は qa-071 の変更へ混ぜず、対象 feature、P01〜P13、
+フォローアップ `HarnessHub-cvli` の15 nodeだけを graphへ反映した。
 
 ### task 仕様書ゲート
 
@@ -57,14 +57,21 @@ merge replay と正本 validator を使い、Markdown / graph / Beads の
 - `build-task-projection-rerun.py --check`: 13 task 検査、missing 0
 - `validate-source-digest.py`: 13 node 検査、mismatch 0
 - planner tests: 166 PASS
-- dev-graph tests: 484 PASS
+- dev-graph tests: 487 PASS
 - criteria evidence tests: 21 PASS
 - graph schema、artifact placement、eval-log layout、handoff disposition、
   evidence refs: すべて違反 0
 
-`lint-open-residue.py` で今回対象の残置は 0 件。最新 main 由来の別機能
-15 件 (`feat-task-spec-test-strategy` 13 件、既存 issue 2 件) は、
-今回の差分へ混ぜず別課題の責務として残した。
+`lint-open-residue.py` で今回対象の残置は 0 件。repository 全体では
+main 由来の別機能・issue 70 件が OR-003 として残る。これらを直す
+広域差分は draft PR #82 と `HarnessHub-wdpq` / `HarnessHub-n7gw` の
+責務であるため、本変更へ混ぜていない。
+
+500 行を超えていた登録scriptは、JSON Schema検証と上流契約preflightを
+別moduleへ責務分離した。分割で変わったC02の挙動閉包は
+live trial `20260727T220201Z-node-qa071-split` を再実走し、
+5 artifactの本文保全、連続no-op、graph schema、goal-seek証跡を確認した。
+fresh evaluatorも自己申告を除外した一次情報でblockerなしPASSと判定した。
 
 ### 仕様・設計影響
 

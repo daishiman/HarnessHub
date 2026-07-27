@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "add --repo-root eval-log/dev-graph/live-trial-fixtures/node-qa071-split --input eval-log/dev-graph/live-trial-fixtures/node-qa071-split/mixed-artifacts.json",
+  "requested_model": "claude-opus-4-6",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "3688a1a4a12625c78f2ab1560354393b372a135a90cf6d7b8316bda60a7e8854",
+  "transcript_sha256": "be16aab24f647dbbf2774ce44a6b5e1327f0a9b8a5b5d587343577c0f951711d",
+  "scenario_origin": "replay",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 10.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 495.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts"
+}
