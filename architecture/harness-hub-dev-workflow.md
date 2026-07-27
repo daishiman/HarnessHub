@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-28T00:25:00Z"
+updated_at: "2026-07-28T00:55:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -46,8 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections":[],"status":"complete"}
 ---
-
-
 
 # Harness Hub dev-workflow アーキテクチャ (system-spec 取込)
 
@@ -151,6 +149,16 @@ support module を `entry_points` へ書き足す解は採らない。`entry_poi
 **代理指標の衝突は 1 回限りの事故ではなく、500 行分割規約が持つ系統的な副作用である。**entry point 台帳は「ファイル一覧」を、coverage は「ファイル数」を、それぞれ実体の代理として使っていた。分割はファイルを増やすが実体を増やさないため、どちらも同じ向きに壊れる。構造的な是正 (分母を entry point 単位にするか、除外方向の変更が測定対象を減らして率を上げる Goodhart 経路にならないかの評価) は `HarnessHub-2mor` で追跡する。
 
 あわせて、`--update-floor` が floor note を固定文字列で上書きし、**過去 2 回の baseline reset 経緯を消す**ことが判明した。今回は実行後に note を復元・追記している。判断の履歴が指標ファイル自身に載っていることが「なぜこの floor なのか」を後から検証可能にしていたため、この上書きは記録の欠落として同課題で扱う。
+
+### 差分追記 (2026-07-28): 3 例目 — PKG-006/007 の「配下は全て起動対象」前提
+
+`scripts/validate-plugin-packages.py` (PKG-006 = hook 登録整合 / PKG-007 = script shebang・実行ビット) も同じ規約で落ちた。両 check は **`hooks/` と `scripts/` の配下にあるファイルは全て起動される入口である**という前提で書かれていたため、責務分離で生まれた import 専用 module (`hooks/guard_graph_commands.py`, `scripts/node_body.py` ほか 3 件) を「未登録の hook」「shebang 欠落の script」として P0 で遮断した。
+
+**ここまでで前提の壊れ方は 3 通り揃った** — 台帳との一致 (entry point)、母数の件数 (coverage)、そして配置ディレクトリによる役割推定 (PKG-006/007)。共通するのは、**ファイルシステム上の存在を「起動される実体」の代理として扱っている**点である。分割はファイルを増やすが起動点を増やさないため、代理を使っている検査は例外なく同じ向きに壊れる。
+
+是正は entry point 契約テストと同じ「代理指標の廃止」で統一した。`is_import_only_support_module()` が `.py` / import 可能な名前 / shebang なし / `if __name__` なし の 4 条件を**構造として**検査し、これを満たすものだけを起動対象から除外する。命名規則だけを許容条件にすると underscore 名を付けた実 hook の宣言漏れを素通りさせるため採らない。逆に verb-hyphen 名 (`build-repo-config.py`) は import 不能なので「起動されるしかない」と確定でき、shebang 欠落は従来どおり FAIL のままである。実際、同時に検出された `build-repo-config.py` の実行ビット欠落は真の不備だったので `chmod +x` で直している。
+
+判別境界は単体テスト 8 件で固定した (`test_harness_creator__validate_plugin_package_s2.py`)。この 3 例目までは「分割のたびに個別の検査を直す」対応だが、次に同型が出たら検査側ではなく規約側を見直す。
 
 ### 差分追記 (2026-07-25): CI にしか存在しないゲートは「着手前に気づけない」
 

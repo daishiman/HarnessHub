@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-28T00:25:00Z"
+updated_at: "2026-07-28T00:55:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -47,8 +47,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-26T03:25:49Z","missing_sections":[],"status":"complete"}
 ---
-
-
 
 # 目的
 
@@ -135,6 +133,22 @@ CI 再実行で pytest は緑になったが、後段の `make harness-ratchet` 
 
 副次的に、`--update-floor` が floor note を固定文字列で上書きし過去の baseline reset 経緯を消すことが判明したため、note を復元・追記した。構造的是正は `HarnessHub-2mor` / `issue-500-line-split-dilutes-harness-coverage-20260728` で追跡する。
 
+### 差分追記 (2026-07-28): 3 例目 — PKG-006/007 の起動対象前提を構造判定へ
+
+ratchet 通過後、同じ `verify` job の `validate-plugin-packages.py` が `dev-graph FAIL (blocking): ['PKG-006', 'PKG-007']` で落ちた。**500 行分割規約による 3 例目**である。
+
+| PKG | 前提 | 落ちた対象 |
+|---|---|---|
+| PKG-006 | `hooks/` 配下は全て登録済み hook | `hooks/guard_graph_commands.py` (import 専用) |
+| PKG-007 | `scripts/` 配下は全て shebang + `+x` の実行体 | `node_body.py` / `node_lifecycle.py` / `registration_preflight.py` / `registration_schema.py` (import 専用) |
+| PKG-007 | 同上 | `build-repo-config.py` (実行ビット欠落 = **真の不備**) |
+
+是正は entry point 契約テストと同じ方針で統一した。`is_import_only_support_module()` を `validate-plugin-package.py` に追加し、`.py` / import 可能な名前 / shebang なし / `if __name__` なし の 4 条件を構造として検査したときだけ起動対象から除外する。verb-hyphen 名は import 不能なので「起動されるしかない」と確定でき、shebang 欠落は従来どおり FAIL。underscore 名でも `__main__` guard があれば実 entry point として FAIL する。真の不備だった `build-repo-config.py` は `chmod +x` で是正した。
+
+975 行に達していた契約テストは責務で 3 分割した — `test_harness_creator__validate_plugin_package.py` (純関数・PKG-002〜005・364 行)、`..._s2.py` (PKG-006〜014・386 行)、`..._cli.py` (run_checks・main・301 行)、共有 fixture `_validate_plugin_package_fixtures.py` (73 行)。分割前後でテスト関数は 78 → 86 件 (欠落 0・判別境界の新規 8 件)。
+
+検証は CI の `verify` job を step 単位でローカル再現し、pytest 8037 passed / 7 skipped / 0 failed、governance-check の 16 lint と verify の 22 step がすべて exit 0。
+
 ## 決定事項
 
 - Dev Graph plugin 内部契約を製品 `system-spec/` へ追加しない。
@@ -143,6 +157,7 @@ CI 再実行で pytest は緑になったが、後段の `make harness-ratchet` 
 - `local_only` と PR 連動完了 policy の組合せを生成しない。
 - 機械生成の `.dev-graph/state/graph.json` は単一台帳、live-trial の `transcript.jsonl` / `pane.txt` は digest に束縛された不可分証跡のため分割しない。手書きの Python / Markdown はすべて 500 行以下へ分割する。
 - entry point の宣言は「ディスク上のファイル一覧」ではなく「実際の登録内容」と突合する。代理指標は、規約どうしが衝突したとき正しい実装を偽陽性で落とす。
+- 「起動される実体」をファイルの存在や配置ディレクトリで代理しない。除外は命名規則ではなく構造 (import 可能名・shebang なし・`__main__` なし) で判定し、実 entry point の宣言漏れを素通りさせない。次に同型の 4 例目が出たら、検査側ではなく 500 行分割規約の側を見直す。
 - 指標が分割で希釈されたとき、verdict を書いて率を戻さない。実測値へ baseline reset し、理由を指標ファイル自身の note へ残す。指標を守るために指標の意味を壊さない。
 - `os` / `shutil` / `json.dump` 等の広域 interpreter API は誤遮断設計を伴うため、本変更へ無理に含めず `HarnessHub-lp36` で継続する。
 
@@ -167,3 +182,4 @@ CI 再実行で pytest は緑になったが、後段の `make harness-ratchet` 
 | 2026-07-26 | final live-trial 9/9、pytest 539件、task gate 19/19、C19 後続課題を追記 | Codex |
 | 2026-07-28 | PR #82 の CI 失敗 (hooks entry point 契約) の是正、テスト 3 分割、全体 pytest 8029件を追記 | Claude |
 | 2026-07-28 | main 同期、harness coverage ratchet の実測値 reset、残課題 2 件 (vf66 / 2mor) の分離を追記 | Claude |
+| 2026-07-28 | PKG-006/007 の起動対象前提を構造判定へ是正 (3 例目)、契約テスト 3 分割、pytest 8037件を追記 | Claude |

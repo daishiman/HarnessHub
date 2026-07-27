@@ -1,5 +1,5 @@
 {
-  "graph_revision": 909,
+  "graph_revision": 915,
   "nodes": [
     {
       "acceptance": [
@@ -13014,7 +13014,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T00:25:00Z"
+      "updated_at": "2026-07-28T00:55:00Z"
     },
     {
       "acceptance": [
@@ -25359,7 +25359,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T00:25:00Z"
+      "updated_at": "2026-07-28T00:55:00Z"
     },
     {
       "acceptance": [
@@ -38488,7 +38488,7 @@
       "template_version": "1.0.0",
       "title": "Dev Graph 基盤変更 最終レビュー 2026-07-26",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T00:25:00Z"
+      "updated_at": "2026-07-28T00:55:00Z"
     },
     {
       "acceptance": [
