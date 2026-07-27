@@ -1,5 +1,5 @@
 {
-  "graph_revision": 635,
+  "graph_revision": 636,
   "nodes": [
     {
       "acceptance": [
@@ -33341,12 +33341,19 @@
       "classification_confidence": 0.9,
       "classification_reason": "live-trial の fresh evaluator が宣言 path と実体の乖離として申し送り、schema と validator の実装を追って条件付き検査の欠落と確定した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-26T03:44:26Z",
+        "evidence_refs": [
+          "beads:HarnessHub-7tn1",
+          "plugins/dev-graph/schemas/repo-config.schema.json",
+          "plugins/dev-graph/scripts/validate-repo-config.py",
+          "plugins/dev-graph/tests/test_validate_repo_config.py",
+          "eval-log/dev-graph/run-dev-graph-init/live-trial/20260726T032205Z-7tn1-init-r2/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260726T031146Z-7tn1-sync/verdict.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-27T21:25:52Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -33411,7 +33418,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "quality",
         "dev-graph",
@@ -33425,7 +33432,7 @@
       "template_version": "1.0.0",
       "title": "claude_hooks.source=project でも project_plugin_link の実在と plain-symlink 性が機械検査されない",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T03:19:13.592819Z"
+      "updated_at": "2026-07-27T21:25:52Z"
     },
     {
       "acceptance": [

@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260726T031146Z-7tn1-sync/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260725T042500Z-i08-merged-r2/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260726T031146Z-7tn1-sync/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260726T031146Z-7tn1-sync/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260726T031146Z-7tn1-sync/out/status.json"
       ],
-      "observed": "2026-07-25 再実走 (run 20260725T042500Z-i08-merged-r2, fresh claude session opus-4-6, 自走完走 nudge=0/gate=0, Skill ツール起動, wall_clock 360s): main (8c179ab) を本ブランチへマージしたことで behavior closure 内の github-lifecycle-contract.md と reconcile-github-lifecycle.py が main 側から変わり、closure digest が両親のどちらとも異なる 718a9c06… へ移ったため i07 受領書が stale 化。マージ後の木で再取得した。SKILL.md sha は 29baae33… で不変 (マージは SKILL.md を変えていない)。build_live_trial_fixture.py --kind sync のクリーン fixture (単一初期化 commit 435d9e8) に対し dry-run→apply→確認 dry-run の 3 パスを単一セッション内で実行。初回 apply が title import 1/status export 1 を実適用 (fixture 実ファイル tasks/LT-TASK-001.md・.dev-graph/remote.json の Status=In Progress/OPT_InProgress001 で裏取り)、確認 dry-run は imports=[]/exports=[]/changes=0/converged=true/write_count=0、graph sha 4dc2e47c…/snapshot sha ae94bd6d…/remote sha 74de9b84… が前後不変、Project item_id PVTI_lADOFixture001 と graph_node_id LT-TASK-001 も不変。独立 fresh evaluator (dev-graph-sync-conflict-verifier) が fixture を scratchpad へ複製して 3 パスを自力再現し、report 値と実ファイル digest の一致を shasum で再計算確認 (被験 fixture は read-only、試走直後の mtime 13:28:20 のまま)。i07 で追加した parity manifest 配線も維持: applied[] に local/external/local_project_linkage/parity_manifest の 4 receipt、本 fixture の唯一 node は tracker_binding=github で beads linkage を持たないため manifest は nodes=[] の正しい空集合。goal-seek 3 点セット violations 0・intermediate append-only 2 行 (Write 04:27:03 → Skill 起動 04:27:11 → sync 3 パス → cat >> 追記 04:28:59、Edit/Update 使用 0 件)・original_goal hash ab2f296e… 一致。skill_dir_tree_sha 718a9c06… が現行 closure と一致、overall=PASS。所見 (非 blocker): pass1 の初回試行は --remote-state 未指定のため gh issue view が実ネットワークへ出て exit 2 (read のみ write 0)、直後に SKILL.md 記載の fixture adapter へ切替えて成功。"
+      "observed": "2026-07-26 再実走 (run 20260726T031146Z-7tn1-sync, fresh claude session, 自走完走 nudge=0/gate=0, wall_clock 285s)。build_live_trial_fixture.py --kind sync の決定論fixtureに対し、Skillツール起動後にdry-run→apply→確認dry-runの3パスを同じ入力で実行。初回はremote-only title import 1件とlocal status export 1件を検出・適用し、確認passはimports=[]、exports=[]、changes=0、converged=true、write_count=0。stable graph node ID、Project item ID、snapshotを保持し、goal-seek 3点セットはintermediate append-only 2行・original_goal hash一致・violations 0。別fresh evaluatorがraw transcriptとfixture成果物を独立検査してPASS。skill_dir_tree_sha=88f71a96…が現行closureと一致し、overall 4軸すべてPASS。"
     },
     "OUT2": {
       "status": "PASS",
