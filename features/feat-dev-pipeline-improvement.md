@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-27T21:53:46Z"
+updated_at: "2026-07-28T00:12:00Z"
 status: "done"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717"]
@@ -46,6 +46,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":"2026-07-23T04:02:24Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/acceptance-report.md","eval-log/dev-graph/pipeline-improvement/release-receipt.json","https://github.com/daishiman/HarnessHub/pull/41"],"policy":"manual","reconciled_at":"2026-07-24T07:20:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # 開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)
 
@@ -113,7 +114,8 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - 是正として、`package-contract.json` の `entry_points.hooks` を「`hooks/` のファイル一覧」ではなく **`hooks/hooks.json` の登録内容**と突合するよう不変条件を変更した。宣言・登録・実体の 3 者一致を検査し、残る未宣言ファイルは「単体起動の入口を持たない」ことまで検査したときだけ support module として許容する。
 - 契約テストは repo-root `tests/` にあり behavior closure の外側のため、既存 live-trial receipt 9 件は 1 件も失効していない。
 - 986 行に達した契約テストを責務で 3 ファイルへ分割し、共有 fixture を `tests/scripts-root/_plugin_completeness_fixtures.py` へ集約した (各 367 / 386 / 197 行)。
-- 検証: `pytest tests plugins/dev-graph/tests` が 8029 passed / 7 skipped / 0 failed。
+- 検証: `pytest tests plugins/dev-graph/tests` が 8029 passed / 7 skipped / 0 failed。`main` (`aeedea0`) を本 branch へ再 merge した後も同結果を再確認した。
+- 残る被覆差 (repo 全体の `validate-plugin-completeness.py` は hooks について `declared ⊆ actual` しか強制せず、`hooks.json` 登録との parity は dev-graph 専用テストにしか無い) は `HarnessHub-vf66` として分離した。
 
 ## アーキテクチャ参照
 

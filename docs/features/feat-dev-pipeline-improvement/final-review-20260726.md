@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-27T21:50:27Z"
+updated_at: "2026-07-28T00:10:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -87,7 +87,7 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 
 完了対象: `HarnessHub-6in4`, `HarnessHub-q5h9`, `HarnessHub-v1yh`, `HarnessHub-wdpq`, `HarnessHub-n7gw`, `HarnessHub-7dw`。
 
-継続対象: `HarnessHub-dyxr`, `HarnessHub-9ndl`, `HarnessHub-lp36`, `HarnessHub-xswf`, `HarnessHub-35ai`, `HarnessHub-768b`, `HarnessHub-dqca`。`HarnessHub-768b` は C19 task 指示と fixture 契約の前提ずれ、`HarnessHub-dqca` は graph 管理 docs の C02 再登録で `layer` が失われる契約不整合を決定論的に防ぐ後続課題。各 Dev Graph issue node の `beads_linkage` を C02 writer で補正し、本文保持 receipt を確認した。
+継続対象: `HarnessHub-dyxr`, `HarnessHub-9ndl`, `HarnessHub-lp36`, `HarnessHub-xswf`, `HarnessHub-35ai`, `HarnessHub-768b`, `HarnessHub-dqca`, `HarnessHub-vf66`。`HarnessHub-768b` は C19 task 指示と fixture 契約の前提ずれ、`HarnessHub-dqca` は graph 管理 docs の C02 再登録で `layer` が失われる契約不整合、`HarnessHub-vf66` は hooks entry point の宣言・登録 parity が dev-graph 専用テストにしか無い被覆差を決定論的に防ぐ後続課題。各 Dev Graph issue node の `beads_linkage` を C02 writer で補正し、本文保持 receipt を確認した。
 
 ### 仕様・設計への影響
 
@@ -120,7 +120,9 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 - 新しい判別ロジック (`_registered_hook_stems` / `_support_module_candidates` / `_is_import_only_support_module`) に単体テスト 8 件を追加した。
 - 986 行に達した同テストファイルを責務で 3 分割した: `test_root__validate_plugin_completeness.py` (収集/検証層・367 行)、`test_root__validate_plugin_completeness_s2.py` (登録予防層と CLI・386 行)、`test_root__plugin_hooks_entry_point_contract.py` (実 repo の hooks entry point 契約・197 行)。共有 fixture は `tests/scripts-root/_plugin_completeness_fixtures.py` へ集約し複製を作らない。
 
-検証: `python3 -m pytest tests plugins/dev-graph/tests -q` が **8029 passed / 7 skipped / 0 failed**。lint は test discovery coverage、script naming、doc line limit、artifact placement、content review、skill description、prompt contract drift、live-trial verdict がいずれも違反 0。graph schema は `valid: true` / `implementation_readiness: complete`。
+検証: `python3 -m pytest tests plugins/dev-graph/tests -q` が **8029 passed / 7 skipped / 0 failed**。lint は test discovery coverage、script naming、doc line limit、artifact placement、content review、skill description、prompt contract drift、live-trial verdict がいずれも違反 0。graph schema は `valid: true` / `implementation_readiness: complete`。`main` (`aeedea0`) を本 branch へ再 merge した後も同じ結果を再確認した。
+
+残る被覆差 (`validate-plugin-completeness.py` は hooks について `declared ⊆ actual` しか強制せず、`hooks.json` 登録との parity は dev-graph 専用テストにしか無い) は `HarnessHub-vf66` / `issue-hooks-entry-point-parity-generalization-20260728` として分離した。
 
 ## 決定事項
 

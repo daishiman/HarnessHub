@@ -1,5 +1,5 @@
 {
-  "graph_revision": 900,
+  "graph_revision": 904,
   "nodes": [
     {
       "acceptance": [
@@ -25359,7 +25359,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-27T21:53:46Z"
+      "updated_at": "2026-07-28T00:12:00Z"
     },
     {
       "acceptance": [
@@ -38488,7 +38488,7 @@
       "template_version": "1.0.0",
       "title": "Dev Graph 基盤変更 最終レビュー 2026-07-26",
       "tracker_binding": "none",
-      "updated_at": "2026-07-27T21:50:27Z"
+      "updated_at": "2026-07-28T00:10:00Z"
     },
     {
       "acceptance": [
@@ -39072,6 +39072,119 @@
       "title": "make lint が CI の repo-wide skill description lint を再現しない",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T15:49:08Z"
+    },
+    {
+      "acceptance": [
+        "全 plugin へ適用するか dev-graph 専用に留めるかの判断が根拠付きで記録されている",
+        "適用する場合、hooks.json へ登録済みかつ未宣言の hook を持つ plugin を repo 全体の検査が非 0 終了で検出する",
+        "適用する場合、import 専用 support module が偽陽性として検出されない回帰テストが存在する",
+        "適用しない場合、dev-graph 専用に留める理由と再検討トリガーが architecture へ記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-vf66",
+        "linked_at": "2026-07-28T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hooks-entry-point-parity-generalization-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "PR #82 の CI 是正で判明した、repo 全体検査と plugin 専用テストの被覆差に関する追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hooks-entry-point-parity-generalization-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "hooks.json 登録 ⊆ package-contract.json 宣言 の parity を、dev-graph 専用テストではなく repo 全 plugin へ適用する検査経路に置くか、適用しない設計判断を根拠付きで確定した状態にする",
+      "graph_node_id": "issue-hooks-entry-point-parity-generalization-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "scripts/validate-plugin-completeness.py は hooks について declared ⊆ actual (宣言した hook がディスクに実在すること) しか強制しておらず、hooks/hooks.json が実際に登録している entry point が package-contract.json に宣言されているかを検査しない。この parity 検査は 2026-07-28 に dev-graph 1 plugin 専用の契約テストとしてのみ実装されており、他 plugin が hooks.json へ hook を登録しながら宣言を怠っても repo 全体の完全性検査は素通りする",
+      "related_nodes": [],
+      "resource_scope": [
+        "scripts/validate-plugin-completeness.py",
+        "tests/scripts-root/test_root__plugin_hooks_entry_point_contract.py",
+        "plugins/*/package-contract.json",
+        "plugins/*/hooks/hooks.json"
+      ],
+      "scope_in": [
+        "validate-plugin-completeness.py へ hooks.json 登録内容との parity 検査を追加する是非を評価する",
+        "support module (単体起動の入口を持たない import 専用ファイル) の許容判定を全 plugin 共通ロジックとして共有できるか評価する",
+        "一般化する場合、既存 plugin の hooks.json と package-contract.json の乖離を棚卸しし移行コストを見積もる",
+        "一般化しない場合、dev-graph 専用に留める理由を architecture へ記録する"
+      ],
+      "scope_out": [
+        "skills / agents / commands の entry_points 宣言漏れ (HarnessHub-zrn で追跡)",
+        "hooks 実装そのものの変更",
+        "live-trial behavior closure digest の算出範囲変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "plugin-governance",
+        "entry-points",
+        "contract-test"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "hooks entry point の宣言・登録 parity 検査が dev-graph 専用テストにしか存在しない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T00:05:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
