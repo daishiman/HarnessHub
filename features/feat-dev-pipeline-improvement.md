@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-28T00:12:00Z"
+updated_at: "2026-07-28T00:25:00Z"
 status: "done"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717"]
@@ -46,6 +46,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":"2026-07-23T04:02:24Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/acceptance-report.md","eval-log/dev-graph/pipeline-improvement/release-receipt.json","https://github.com/daishiman/HarnessHub/pull/41"],"policy":"manual","reconciled_at":"2026-07-24T07:20:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 
 # 開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)
@@ -116,6 +117,7 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - 986 行に達した契約テストを責務で 3 ファイルへ分割し、共有 fixture を `tests/scripts-root/_plugin_completeness_fixtures.py` へ集約した (各 367 / 386 / 197 行)。
 - 検証: `pytest tests plugins/dev-graph/tests` が 8029 passed / 7 skipped / 0 failed。`main` (`aeedea0`) を本 branch へ再 merge した後も同結果を再確認した。
 - 残る被覆差 (repo 全体の `validate-plugin-completeness.py` は hooks について `declared ⊆ actual` しか強制せず、`hooks.json` 登録との parity は dev-graph 専用テストにしか無い) は `HarnessHub-vf66` として分離した。
+- 同じ衝突が harness coverage にも現れた。`scripts/llm_eval` は分母をファイル数で数えるため、500 行分割で新規 7 件が verdict 未添付のまま母数へ加わり 64.1% → 63.1% へ希釈された。7 件を除くと 64.2% で floor 超え、分割元 `upsert-node.py` の verdict も PASS/91 のままであり、回帰の全量が分母希釈に由来する。先例 2 件と同型に floor を実測値へ手動 baseline reset し (`--update-floor` は回帰時据え置きのため使えない)、verdict を書いて率を戻す Goodhart 経路は取らなかった。構造的是正は `HarnessHub-2mor` として分離した。
 
 ## アーキテクチャ参照
 

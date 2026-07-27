@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-27T21:50:27Z"
+updated_at: "2026-07-28T00:25:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -46,6 +46,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 
 # Harness Hub dev-workflow アーキテクチャ (system-spec 取込)
@@ -140,6 +141,16 @@ support module を `entry_points` へ書き足す解は採らない。`entry_poi
 採った是正は**代理指標の廃止**である。突合相手を「ディスク上のファイル一覧」から **`hooks/hooks.json` が実際に登録している command の起動先** へ変え、宣言・登録・実体の 3 者一致を検査する。`hooks/` に残る未宣言ファイルは、「単体起動の入口を持たない」こと (`.py` かつ import 可能な名前、shebang なし、`if __name__ == "__main__"` なし) を満たすときだけ support module として許容する。命名規則だけを許容条件にすると、underscore 名を付けた実 hook の宣言漏れを素通りさせるためである。
 
 この契約テストは repo-root の `tests/` にあり behavior closure の外側なので、是正は既存 receipt を一切失効させない。**どの層を触ると何が失効するか**が是正案の選択を決めた点は、以後の同種判断でも参照する。
+
+### 差分追記 (2026-07-28): 同じ衝突が harness coverage にも現れる (2 例目)
+
+上記と同じ責務分離で、`validate-harness-coverage.py` の `scripts/llm_eval` にも回帰が出た。同指標は**分母をファイル数、分子を code-review verdict が PASS のファイル数**で数えるため、1 実装を 5 ファイルへ割ると分母が +4、分子は +0 になる。実測は 63.1% (floor 64.1%) だが、新規 7 件を除くと 64.2% で floor 超え、分割元 `upsert-node.py` の verdict も PASS/91 のまま残っていた。**回帰の全量が分母希釈に由来し、品質は下がっていない。**
+
+暫定対応は先例 2 件 (2026-07-12 の plugins/ 再編、2026-07-23 の `HarnessHub-aoe`) に倣った floor の手動 baseline reset である。`--update-floor` は `max(old, 現値)` で回帰時に据え置く設計のため使えない。verdict を書いて率を戻す道は取らない。`eval-log/harness-coverage-floor.json` の note が明示するとおり、それは「evaluation の捏造による緑化」であり、指標を守るために指標の意味を壊す。
+
+**代理指標の衝突は 1 回限りの事故ではなく、500 行分割規約が持つ系統的な副作用である。**entry point 台帳は「ファイル一覧」を、coverage は「ファイル数」を、それぞれ実体の代理として使っていた。分割はファイルを増やすが実体を増やさないため、どちらも同じ向きに壊れる。構造的な是正 (分母を entry point 単位にするか、除外方向の変更が測定対象を減らして率を上げる Goodhart 経路にならないかの評価) は `HarnessHub-2mor` で追跡する。
+
+あわせて、`--update-floor` が floor note を固定文字列で上書きし、**過去 2 回の baseline reset 経緯を消す**ことが判明した。今回は実行後に note を復元・追記している。判断の履歴が指標ファイル自身に載っていることが「なぜこの floor なのか」を後から検証可能にしていたため、この上書きは記録の欠落として同課題で扱う。
 
 ### 差分追記 (2026-07-25): CI にしか存在しないゲートは「着手前に気づけない」
 

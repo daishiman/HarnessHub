@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-28T00:10:00Z"
+updated_at: "2026-07-28T00:25:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -47,6 +47,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-26T03:25:49Z","missing_sections":[],"status":"complete"}
 ---
+
 
 
 # 目的
@@ -87,7 +88,7 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 
 完了対象: `HarnessHub-6in4`, `HarnessHub-q5h9`, `HarnessHub-v1yh`, `HarnessHub-wdpq`, `HarnessHub-n7gw`, `HarnessHub-7dw`。
 
-継続対象: `HarnessHub-dyxr`, `HarnessHub-9ndl`, `HarnessHub-lp36`, `HarnessHub-xswf`, `HarnessHub-35ai`, `HarnessHub-768b`, `HarnessHub-dqca`, `HarnessHub-vf66`。`HarnessHub-768b` は C19 task 指示と fixture 契約の前提ずれ、`HarnessHub-dqca` は graph 管理 docs の C02 再登録で `layer` が失われる契約不整合、`HarnessHub-vf66` は hooks entry point の宣言・登録 parity が dev-graph 専用テストにしか無い被覆差を決定論的に防ぐ後続課題。各 Dev Graph issue node の `beads_linkage` を C02 writer で補正し、本文保持 receipt を確認した。
+継続対象: `HarnessHub-dyxr`, `HarnessHub-9ndl`, `HarnessHub-lp36`, `HarnessHub-xswf`, `HarnessHub-35ai`, `HarnessHub-768b`, `HarnessHub-dqca`, `HarnessHub-vf66`, `HarnessHub-2mor`。`HarnessHub-768b` は C19 task 指示と fixture 契約の前提ずれ、`HarnessHub-dqca` は graph 管理 docs の C02 再登録で `layer` が失われる契約不整合、`HarnessHub-vf66` は hooks entry point の宣言・登録 parity が dev-graph 専用テストにしか無い被覆差を決定論的に防ぐ後続課題。各 Dev Graph issue node の `beads_linkage` を C02 writer で補正し、本文保持 receipt を確認した。
 
 ### 仕様・設計への影響
 
@@ -124,6 +125,16 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 
 残る被覆差 (`validate-plugin-completeness.py` は hooks について `declared ⊆ actual` しか強制せず、`hooks.json` 登録との parity は dev-graph 専用テストにしか無い) は `HarnessHub-vf66` / `issue-hooks-entry-point-parity-generalization-20260728` として分離した。
 
+### 差分追記 (2026-07-28): harness coverage ratchet の回帰を実測値 reset で解消
+
+CI 再実行で pytest は緑になったが、後段の `make harness-ratchet` が `scripts/llm_eval: 63.1% < floor 64.1%` で FAIL した。同指標は分母をファイル数、分子を code-review verdict PASS のファイル数で数えるため、500 行分割で新規 scripts 7 件 (`build-graph-store.py`, `build-repo-config.py`, `node_body.py`, `node_lifecycle.py`, `registration_preflight.py`, `registration_schema.py`, `lint-script-naming-pending-paths.py`) が verdict 未添付のまま母数に加わり希釈された。
+
+回帰が分母希釈に由来することは実測で確認した。分母 412 / 分子 260 = 63.1%、7 件を除くと **64.2% で floor 超え**、分割元 `upsert-node.py` の verdict は **PASS / score 91** のまま残っている。
+
+対応は先例 2 件 (2026-07-12 の plugins/ 再編、2026-07-23 の `HarnessHub-aoe`) と同型の**手動 baseline reset** (64.1% → 63.1%)。`--update-floor` は `max(old, 現値)` で回帰時据え置きのため使えず、他 5 軸の ratchet up (skills.llm_eval 82.3→86.8、agents.mechanical 68.0→75.0、agents.llm_eval 56.0→63.2、commands.mechanical 94.1→96.8、commands.llm_eval 47.1→48.4) だけが反映された。verdict を書いて率を戻す道は取っていない。`make harness-ratchet` は exit 0 (`RATCHET OK: 全軸が floor 以上`)。
+
+副次的に、`--update-floor` が floor note を固定文字列で上書きし過去の baseline reset 経緯を消すことが判明したため、note を復元・追記した。構造的是正は `HarnessHub-2mor` / `issue-500-line-split-dilutes-harness-coverage-20260728` で追跡する。
+
 ## 決定事項
 
 - Dev Graph plugin 内部契約を製品 `system-spec/` へ追加しない。
@@ -132,6 +143,7 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 - `local_only` と PR 連動完了 policy の組合せを生成しない。
 - 機械生成の `.dev-graph/state/graph.json` は単一台帳、live-trial の `transcript.jsonl` / `pane.txt` は digest に束縛された不可分証跡のため分割しない。手書きの Python / Markdown はすべて 500 行以下へ分割する。
 - entry point の宣言は「ディスク上のファイル一覧」ではなく「実際の登録内容」と突合する。代理指標は、規約どうしが衝突したとき正しい実装を偽陽性で落とす。
+- 指標が分割で希釈されたとき、verdict を書いて率を戻さない。実測値へ baseline reset し、理由を指標ファイル自身の note へ残す。指標を守るために指標の意味を壊さない。
 - `os` / `shutil` / `json.dump` 等の広域 interpreter API は誤遮断設計を伴うため、本変更へ無理に含めず `HarnessHub-lp36` で継続する。
 
 ## 運用・更新方法
@@ -154,3 +166,4 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 | 2026-07-26 | 最終レビュー、仕様影響判断、Beads 対応を初版記録 | Codex |
 | 2026-07-26 | final live-trial 9/9、pytest 539件、task gate 19/19、C19 後続課題を追記 | Codex |
 | 2026-07-28 | PR #82 の CI 失敗 (hooks entry point 契約) の是正、テスト 3 分割、全体 pytest 8029件を追記 | Claude |
+| 2026-07-28 | main 同期、harness coverage ratchet の実測値 reset、残課題 2 件 (vf66 / 2mor) の分離を追記 | Claude |
