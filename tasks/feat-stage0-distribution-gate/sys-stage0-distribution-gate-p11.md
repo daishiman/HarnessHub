@@ -12,7 +12,7 @@ iteration: null
 title: "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-21T03:18:14Z"
+updated_at: "2026-07-26T01:39:34.074446Z"
 status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P10"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

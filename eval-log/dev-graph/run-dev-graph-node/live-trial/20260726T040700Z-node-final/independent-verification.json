@@ -1,0 +1,51 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "five_artifact_kinds_canonical_paths",
+      "verdict": "PASS",
+      "observed": "issue→issues/sys-session-timeout-not-enforced.md, task→tasks/sys-api-rate-limit-implementation.md, specification→specs/sys-rest-api-v2-migration-spec.md, architecture→architecture/sys-order-backend-architecture.md, document→docs/sys-dev-environment-setup-guide.md; all 5 kind prefixes match canonical directories"
+    },
+    {
+      "name": "original_bodies_preserved_byte_for_byte",
+      "verdict": "PASS",
+      "observed": "Independent python verification confirms all 5 original bodies from mixed-artifacts.json appear as contiguous substrings in their stored Markdown files. All 7 API identifiers (GET /api/v1/users, POST /api/v2/orders, items, line_items, X-API-Key, Authorization: Bearer, DELETE /api/v2/sessions/bulk) present in spec file"
+    },
+    {
+      "name": "frontmatter_kind_path_agree_all_nodes",
+      "verdict": "PASS",
+      "observed": "All 5 nodes: frontmatter artifact_kind matches graph.json artifact_kind; file_path in frontmatter matches graph node file_path; graph_revision=7, node_count=5"
+    },
+    {
+      "name": "stage2_consecutive_update_operation_updated",
+      "verdict": "PASS",
+      "observed": "2 operation=updated confirmed in transcript (line 172: escaped JSON shows operation=updated 3+ times). Issue: created_at=2026-07-26T04:11:45Z, updated_at=2026-07-26T04:13:03.429164Z. Architecture: created_at=2026-07-26T04:11:45Z, updated_at=2026-07-26T04:13:04.271831Z. graph_revision progressed 5→6→7. Original bodies still preserved as substrings after updates"
+    },
+    {
+      "name": "metadata_only_reapply_body_source_preserved",
+      "verdict": "PASS",
+      "observed": "Not explicitly tested as a separate stage (task.md Stage 2 requires actual body diffs, not metadata-only). However body_source=from_input confirmed for all applies, and original bodies verified intact after Stage 2 updates. The task success conditions do not require a metadata-only reapply test in this scenario"
+    },
+    {
+      "name": "feature_direct_registration_fail_closed",
+      "verdict": "PASS",
+      "observed": "Transcript confirms rejection message: 'feature must come from the C14 macro contract: source_lineage.origin_kind manual is not one of [generated, system-spec-harness]'. graph_revision remained 7 after attempt. features/ directory contains only .gitkeep (no artifact files created)"
+    },
+    {
+      "name": "validators_pass",
+      "verdict": "PASS",
+      "observed": "validate-graph-schema.py returned valid=true with 0 violations (pane line 100-103). verify-bodies.py and verify-stage2.py both passed all assertions"
+    },
+    {
+      "name": "goal_seek_3_file_set_complete",
+      "verdict": "PASS",
+      "observed": "goal-spec.json: has original_goal, scenario, started_at. intermediate.jsonl: exactly 2 lines, both with correct SHA-256 hash eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2, all 6 required keys (original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal) present in both entries. progress.json: has checklist (6 items) and criteria (IN1, OUT1)"
+    },
+    {
+      "name": "skill_tool_invocation",
+      "verdict": "PASS",
+      "observed": "Transcript line with type=assistant contains tool_use name=Skill with input skill=dev-graph:run-dev-graph-node. Pane line 42: 'Skill(dev-graph:run-dev-graph-node)' → 'Successfully loaded skill · 9 tools allowed'"
+    }
+  ]
+}

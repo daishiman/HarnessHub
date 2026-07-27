@@ -12,7 +12,7 @@ iteration: null
 title: "Hub 基盤 要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-24T21:00:24Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "closed"
 depends_on: []
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-HUB-FOUNDATION-P01","head_sha":"8f490ef5f02676d77111b324e54d290d3704c64c","last_seen_at":"2026-07-19T14:59:39.662741Z","lease_acquired_at":"2026-07-19T14:59:39.659359Z","released_at":null,"state":"claimed","worktree_id":"wt_2a278c395bdc3152"}]
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-24T21:00:24Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

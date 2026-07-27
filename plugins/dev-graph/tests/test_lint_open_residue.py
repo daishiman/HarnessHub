@@ -162,6 +162,28 @@ def test_or_p05_not_applicable_settled(tmp_path: Path) -> None:
     assert code == 0
 
 
+def test_or_p06_local_only_manual_policy_settles_after_close_loop(tmp_path: Path) -> None:
+    node = _node(
+        "issue-a",
+        status="closed",
+        ce_status="done",
+        policy="manual",
+    )
+    node["github_publication"] = {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": None,
+    }
+    node["pull_request_linkages"] = []
+    root, export = _repo(tmp_path, [node], {"HarnessHub-x": "closed"})
+
+    code, out = _run(root, export)
+
+    assert code == 0 and out["violation_count"] == 0
+    assert out["scanned"] == 1
+
+
 # --- 契約 ---
 
 def test_or_c02_deterministic_across_node_order(tmp_path: Path) -> None:

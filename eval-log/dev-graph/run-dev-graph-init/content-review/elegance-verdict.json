@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
-    "skill_md_sha256": "0381d338b69cee76b5ecb300d84b325a33d67d0b5c77cde4c3ed5d588c68bc5b"
+    "skill_md_sha256": "3b7080713c94b4d81bdf95df07fcada9ec333b745afc74f731e96d7abb5e7abf"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
   "reviewer": "assign-skill-design-evaluator",
-  "reviewed_at": "2026-07-25",
+  "reviewed_at": "2026-07-26",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
@@ -21,20 +21,20 @@
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3", "OUT4", "OUT5"],
     "positive_feedback": [
-      "退避で増えた宣言箇所を同じ変更の中で機械 pin し直している。references/validation-contract.md の新設により 6 root の宣言箇所が『SKILL.md の bash 実行行』と『reference の列挙』の 2 箇所になったが、同じ系列で test_validate_repo_config.py に test_skill_command_requires_exactly_the_init_roots (実行可能行のみ抽出し INIT_ROOTS と全一致、placeholder だけ残る空真を明示的に禁止) と test_reference_contract_lists_exactly_the_init_roots (reference 内の列挙行はちょうど 1 箇所、かつ system_spec の根拠文が残存) が入っている。python3 -m pytest 実測 25 passed。『詳細を references/ へ退避したら、増えた宣言箇所を機械で束ねる』は他 skill の references 化へ横展開すべきパターン。",
-      "skill-local references/ の新設で PD-001 が両枝で成立した。評価器 render-findings-score.py と同じ数え方 (SKILL.md 全文を '---' で maxsplit=2 split した parts[2] の splitlines) で body = 100 行、PD-001 の発火条件は body > 100 なので行数枝では非発火。加えて references/ が非空 (validation-contract.md) なので、body が 100 を超えても PD-001 は成立し続ける。姉妹 skill を同じ scorer にかけると run-dev-graph-node / -sync / -decompose はいずれも score 94 で 'PD-001 body>100 lines but references/ empty' を出すのに対し、本 skill は 97 で PD-001 clean。同じ退避を姉妹 3 skill へ横展開する候補。",
-      "秘密材料 report の二次保管禁止が設計として明文化され、実装と一致している。reference は『値そのものを出さない・prefix 種別だけを出す』と述べ、実測でも github.projects[0].owner_login に ghp_ token を入れた config は detail='ghp_* 形式の token/node ID が保存されている (値は非出力)' を返し値を出さない。eval-log へ残る report が秘密の二次保管場所になる経路を設計段階で塞いでいる。",
-      "実在要求を opt-in にした設計判断が『正常完了直後の恒久 FAIL』を避けており、reference・script docstring・test・CLI 実挙動の 4 者が一致している。実測: 6 root 未作成 + --require-content-roots 6 key → exit 1 / content_root_missing 6 件、6 root 作成後 → exit 0、そこへ system_spec を足すと exit 1 (content_root_missing: system-spec)、未知 key 指定は黙殺せず content_root_key_unknown で exit 1。schema required 7 key と各 skill の生成契約が一致しないという前提が全層で一貫している。"
+      "build-graph-store.py の追加が C10 guard の既存構造に自然に収まった。guard-graph-schema.py の static_denial は Write/Edit の GRAPH_AUTHORITY_PATH 判定を先に行い、Bash 枝では build-graph-store.py を sanctioned writer として通す。test_guard_graph_schema_fail_open_window.py の WRITER_MUST_PASS リストに GRAPH_WRITER_CALL が含まれ、かつ WRITER_MUST_BLOCK の名前一致偽装パターンが build-graph-store.py にも適用可能なことを確認済み。新規 writer の追加が既存 guard に穴を開けず、テストが初日から fail-open 窓を固定している。",
+      "Execution contract 6 の『既存 store は全 node の C11 検証に通る場合だけ byte-preserve し、非正準 store を暗黙修復しない』が test_build_graph_store_contract.py::test_noncanonical_existing_store_is_rejected_without_repair で action=rejected_existing / changed=false / 原本不変として検証されている。修復なし・byte 不変を receipt の machine 値で裏づける形は build-repo-config.py の action=unchanged パターンと同型であり、2 writer の挙動パターンが統一されている。",
+      "interpreter 経由の graph authority 書込み (Path.write_text 等) を PATHLIB_MUTATION + GRAPH_AUTHORITY_LITERAL の二条件で遮断する実装が test_guard_graph_schema_authority_contract.py::test_c10_blocks_interpreter_writes_to_the_graph_authority で固定されている。read_text は通り write_text は止まる分類が in-process テストで実測されており、Gotchas に追加した『Path.write_text() 等で代替しない』との整合が取れている。",
+      "SKILL.md Execution contract 6 の bash ブロック内 build-graph-store.py 呼出しが実在する script のインターフェースと一致する (--repo-root のみ必須、--dry-run は任意)。test_build_graph_store_contract.py が同じインターフェースで create→preserve の冪等性を検証し、identity mismatch と canonical path 不一致を reject する境界をカバーしている。"
     ],
     "negative_feedback": [
-      "[low/inconsistency] references/validation-contract.md の『--require-content-roots に渡す root』節が 7 番目の root を『run-dev-graph-system-spec が取込時に用意する別責務の root』と断定するが、当の run-dev-graph-system-spec/SKILL.md は system-spec/ を入力として扱うだけで生成主体を宣言していない (Purpose 入力: 'C24 で caller repo 内に固定した system-spec/'、Execution contract 1: 'C24 で caller repo の system-spec/ を解決し、plugin source/別 repo の content を拒否する')。validate-repo-config.py の docstring も『system_spec は run-dev-graph-system-spec の責務』までで『用意する』とは書いていない。荷重のかかる主張 (init は作らない) は正しく test でも pin 済みなので blocker ではないが、生成主体の断定は現状 plugin 内に裏付けが無い。",
-      "[low/smell] Execution contract 5 は実測 255 字で依然 step 中最長 (step 1=97 / step 2=59 / step 3=106 / step 4=177 字)、かつ Execution contract 内で唯一 bash ブロックを抱える。最長/最短比は 4.3 まで縮み step 4 と同オーダーには収まったが、2 つのゲートコマンドを 1 step が独占する非対称は残る。",
-      "[low/smell] 冪等性の停止条件『二回目の planned changes が 0』が Purpose & Output Contract の完了条件・Execution contract 5・完了チェックリストの 3 箇所に別表現で置かれている。6 root の列挙が 2 箇所 + 機械 pin なのに対し、この主張には pin が無く片側だけの編集が静かに残りうる。"
+      "[low/smell] Execution contract 5 が実測 481 字で step 中最長のまま据え置かれている (1=97 / 2=59 / 3=106 / 4=177 / 5=481 / 6=255 字、最長/最短比 8.2)。前系列 verdict が残課題として挙げた非対称は未解消だが、step 5 の (a) writer が唯一の正規経路である理由と (b) C10 guard が遮断する 3 経路の列挙は references/validation-contract.md へ退避すれば step 5 を 200 字程度に縮められる。BD-003 の 300 行上限には余裕があるため機械スコアには影響しない。",
+      "[low/inconsistency] validation-contract.md に build-repo-config.py への言及が 0 件のまま (grep 実測)。Execution contract 7 (旧 6) が当該 reference を『変数束縛・検証 3 層・--require-content-roots に 6 root だけを渡す根拠』の正本と宣言しているのに、config writer という新しい検証層の記載がない。root 一覧には test_reference_contract_lists_exactly_the_init_roots の pin があるが、writer 経路にはそれに相当する pin がなく、片側だけの編集が静かに残りうる。",
+      "[low/smell] 冪等性の停止条件『二回目の planned changes が 0』が Purpose & Output Contract・Execution contract 7・完了チェックリストの 3 箇所に別表現で残っている。build-graph-store.py が action=preserved_existing を返すようになり主張の一部は機械観測値へ接地したが、3 箇所の文言が同じ主張を指していることの pin はまだない。"
     ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "incremental profile の focused combined review を 1 context で実行し、その結果を elegance / rubric の 2 verdict へ分離投影した (content-review-protocol.md『incremental: unresolved semantic batch』)。30 思考法は使用していない。判定軸は (a) 矛盾なし (b) 漏れなし (c) 規約整合 (d) 依存関係整合 (e) rubric high severity 0 の 5 条件。前系列 (sha a493b8a3…) は別系列であり、本 verdict は新しい変更系列の iteration 1 である。実測根拠: SKILL.md sha256 は自身で shasum -a 256 を実行して取得 (0381d338…、coordinator 提示値は使用していない)。reference が挙げる finding code (schema_violation / path_not_repo_relative / declared_path_collision / path_escapes_repository / content_root_missing / content_root_key_unknown / secret_material) は validate-repo-config.py の実装読取と CLI 実走の双方で全件一致。schema 条件制約 execution_tracker.mode∈{github,both}→github.enabled=true は mode=github + enabled=false の config を実走し $.github.enabled: 'True was expected' を確認。graph 検証対象が .dev-graph/state/graph.json である点は repo-config.example.json の local_state.graph と plugin 全体 grep (bare .dev-graph/graph.json 参照 0 件) で確認 (script 自体は graph の置き場所を強制しないため、この節は規約の宣言であり script 挙動の記述ではない)。退避による情報欠落は検出しなかった: 手書き検証禁止と graph path は本文にも残り、変数束縛は Execution contract 5 の参照文が『変数束縛…の根拠は references/validation-contract.md を正本とする』と名指ししている。なお $DEV_GRAPH_PLUGIN は本文 bash で使われ束縛は reference 側にあるが、姉妹 skill (decompose/requirements) は同変数を束縛記述なしで使っており、本 skill だけが束縛を明文化している (退行ではなく改善)。frontmatter が宣言する script_refs 3 件 / schema_refs 2 件 / reference_refs 4 件 / responsibility_refs 5 件は全て実在し、lint-external-refs.py でも本 skill の EXTERNAL は 0 件、lint-skill-tree.py / lint-doc-line-limit.py / lint-skill-description.py はいずれも exit 0。behavioral claim (OUT1 の verify_by=live-trial 等) の受入は Gate D (run-skill-live-trial) の実走証拠が正本であり、本 verdict は design claim のみを判定している。"
+  "notes": "Fresh independent review of current bytes (sha256:3b708071…). Prior verdicts targeted sha256:6d01572a… and are stale. This review evaluates all feedback_contract criteria (IN1/OUT1–OUT5) as design claims only — behavioral acceptance is Gate D (run-skill-live-trial) evidence and must not be substituted by this static verdict. Mechanical scoring via render-findings-score.py: score=97, threshold=80, passed=true, findings=[FM-005 low], rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d, composition_hash=sha256:e614f46dd2e0a64401dee72acd80f489d8f9b6dd8f9823d5f06a463529d11bce. Structural verification: all 5 responsibility prompts (R1–R5) exist, all 5 script_refs exist (including new build-graph-store.py), all schema_refs and reference_refs resolve. Body=110 lines; PD-001 passes because references/ is non-empty. Criteria IN1 design claim: validate-graph-schema.py is called in Execution contract step 7 and is a concrete binary gate. OUT1–OUT5 design claims: each has a Criteria acceptance mapping, a completion checklist item, and a verify_by specifying test or live-trial. Remaining 3 findings are all low severity; 0 high, 0 medium → verdict PASS, next_action=none."
 }

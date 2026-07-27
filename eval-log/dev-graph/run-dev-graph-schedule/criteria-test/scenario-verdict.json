@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C15-OUT1-positive-ready-set-r16",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260725T002025Z-i07-schedule/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260725T002025Z-i07-schedule/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260725T002025Z-i07-schedule/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260725T002025Z-i07-schedule/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/out/status.json"
       ],
-      "observed": "2026-07-25 再実走 (run 20260725T002025Z-i07-schedule, fresh claude session opus-4-6, 自走完走 nudge=0/gate=0, Skill ツール起動, --max-parallel 2): i07 の parity manifest 入口追加で SKILL.md sha と behavior closure sha がともに更新されたため、build_live_trial_fixture.py --kind schedule のクリーン fixture に対して再取得。ready=001/002/003/006、scope 重複ペア(src/alpha.py を共有する LT-SCHED-001/002)は別バッチ、blocked(LT-SCHED-005)除外+理由報告、active lease(LT-SCHED-004)抑止・stale lease(LT-SCHED-006)回収、--max-parallel 2 遵守・suggested_branch/worktree claim command 一意、を独立 fresh evaluator (dev-graph-parallel-safety-verifier) が schedule-graph.py の副作用なし独立再実行で bit 単位一致・read-only (graph/lease sha 不変) 確認。本 run 固有として、parity manifest 欠落時に skill 内で build-parity-manifest.py を起動する新経路が実際に行使され、生成後に ready-set が算出されたことも transcript 上で確認済み。goal-seek 3 点セットは append-only 2 行・original_goal hash 一致。skill_dir_tree_sha 80ed4198… が現行 closure と一致、overall=PASS。"
+      "observed": "fresh live trial PASS。ready set の依存順序・schedule 結果・graph 不変・goal-seek を独立評価で確認した。"
     },
     "OUT2": {
       "status": "PASS",
