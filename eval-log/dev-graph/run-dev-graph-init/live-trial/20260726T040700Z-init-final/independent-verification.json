@@ -1,0 +1,71 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "build-repo-config.py used",
+      "verdict": "PASS",
+      "observed": "Called twice via Bash: L96 (first pass, action=created) and L210 (second pass, action=unchanged)"
+    },
+    {
+      "name": "build-graph-store.py used",
+      "verdict": "PASS",
+      "observed": "Called twice via Bash: L100 (first pass, action=created) and L212 (second pass, action=preserved_existing)"
+    },
+    {
+      "name": "No direct graph-authority writes",
+      "verdict": "PASS",
+      "observed": "Zero Write/Edit tool calls targeting .dev-graph/config.json or .dev-graph/state/graph.json (excluding /tmp/). No shell redirects or open()/write_text/write_bytes to authority files."
+    },
+    {
+      "name": "Graph has C02-created node",
+      "verdict": "PASS",
+      "observed": "graph_revision=1, 1 node: sys-init-test-seed-20260726 (kind=issue, status=draft). Registered via upsert-node.py (C02) at transcript L190 with successful output."
+    },
+    {
+      "name": "Second skill invocation idempotent",
+      "verdict": "PASS",
+      "observed": "Second Skill call at L195 with identical args. build-repo-config: action=unchanged changed=false. build-graph-store: action=preserved_existing changed=false graph_revision=1. Templates: copied=0 preserved=21."
+    },
+    {
+      "name": "Edited template bytes survived",
+      "verdict": "PASS",
+      "observed": "issue.md SHA-256 before second pass: eb94a280a63615a4684d8a873c4903aab093513566bf02fa819ae028daac0bd4. After second pass: eb94a280a63615a4684d8a873c4903aab093513566bf02fa819ae028daac0bd4. Identical. Contains USER-EDITED marker."
+    },
+    {
+      "name": "validate-repo-config passes",
+      "verdict": "PASS",
+      "observed": "valid=true, violations=[], missing_sections=[], repository_id=local:sha256:028729..."
+    },
+    {
+      "name": "validate-graph-schema passes",
+      "verdict": "PASS",
+      "observed": "valid=true, violations=[], implementation_readiness=complete, 1 node in graph"
+    },
+    {
+      "name": "Config has no absolute paths or tokens",
+      "verdict": "PASS",
+      "observed": "No /Users or /tmp absolute paths in config.json. No token, ghp_, or gho_ strings. All paths are repository-relative."
+    },
+    {
+      "name": "Six content roots created",
+      "verdict": "PASS",
+      "observed": "All 6 directories exist: issues/, tasks/, specs/, architecture/, features/, docs/. Plus .dev-graph/{config.json, state/graph.json, cache/, locks/, templates/}."
+    },
+    {
+      "name": "Goal-seek 3 artifacts present",
+      "verdict": "PASS",
+      "observed": "All 3 files in fixture eval-log/: run-dev-graph-init-goal-spec.json, run-dev-graph-init-intermediate.jsonl, run-dev-graph-init-progress.json"
+    },
+    {
+      "name": "Intermediate append-only with 6 required keys",
+      "verdict": "PASS",
+      "observed": "2 lines. Line 1 via Write (L38, before skill). Line 2 via Bash cat >> (L252, after verification). Both lines have all 6 keys (original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal). SHA-256 hash verified correct on both lines: 4e3fee6288f589997e759a2d929f4a7a7489caf16ec31a95abd9c4ca1b80e1ec."
+    },
+    {
+      "name": "Hook source resolved",
+      "verdict": "PASS",
+      "observed": "config.claude_hooks.source=plugin. hooks.json present with PreToolUse/SessionStart/PostToolUse/TaskCompleted events. progress.json records hook-source check as PASS."
+    }
+  ]
+}

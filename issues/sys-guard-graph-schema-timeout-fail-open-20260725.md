@@ -12,17 +12,17 @@ iteration: null
 title: "guard-graph-schema の Bash 破壊操作枝が決定に無関係な graph 全検証を挟み hook timeout で fail-open する"
 owners: ["daishiman"]
 created_at: "2026-07-25T03:05:00Z"
-updated_at: "2026-07-25T03:08:27.024482Z"
+updated_at: "2026-07-26T05:56:00Z"
 status: "draft"
 depends_on: []
 related_nodes: []
-resource_scope: ["plugins/dev-graph/hooks/guard-graph-schema.py","plugins/dev-graph/skills/run-dev-graph-init/SKILL.md","plugins/dev-graph/scripts/upsert-node.py"]
+resource_scope: ["plugins/dev-graph/hooks/guard-graph-schema.py","plugins/dev-graph/scripts/build-repo-config.py","plugins/dev-graph/scripts/build-graph-store.py","plugins/dev-graph/skills/run-dev-graph-init/SKILL.md"]
 purpose: "「単一 fail-closed guard」を名乗る hook が実際には遅延起因で迂回可能である状態を解消し、同時に init が config.json を書く正規経路を与える"
 goal: "graph authority への Bash 書込みが graph サイズや負荷に依存せず常に遮断され、かつ run-dev-graph-init が sanctioned な経路で config.json を生成できる状態"
 mvp_alignment: null
-scope_in: ["guard-graph-schema.py の Bash 破壊操作枝から、遮断判定に寄与しない schema_ok() 呼出しを外す","`.dev-graph/config.json` に対する C02 相当の atomic writer を用意し guard が allowlist する","変更後に run-dev-graph-init の live-trial を再取得する"]
+scope_in: ["guard-graph-schema.py の遮断判定から subprocess と graph 全件検査を除去する","`.dev-graph/config.json` と初期 graph store に検証済み atomic writer を用意する","`Path.write_text()` / `Path.write_bytes()` による graph authority 迂回を静的遮断する","変更後に run-dev-graph-init を含む stale live-trial を再取得する"]
 scope_out: ["GRAPH_AUTHORITY_PATH から config.json を単に除外する案 (config は routing authority であり保護を外すのは退行)","他 plugin の guard hook","live-trial verdict 不在 6 skill の解消"]
-acceptance: ["Bash で `.dev-graph/config.json` へ heredoc 書込みする入力が、graph サイズに依らず 1 秒未満で exit 2 になる","run-dev-graph-init が fail-open に依存せず config.json を生成できる","再取得した live-trial verdict の transcript に guard 迂回 (Write 遮断→Bash heredoc) が現れない"]
+acceptance: ["Bash で graph authority へ heredoc 書込みする入力が graph サイズに依らず 1 秒未満で exit 2 になる","`Path.write_text()` / `Path.write_bytes()` による graph authority 書込みが exit 2 になる","run-dev-graph-init が build-repo-config.py と build-graph-store.py を使い fail-open に依存せず初期化できる","再取得した live-trial transcript に graph authority の直接書込み成功が無い"]
 architecture_refs: []
 parent_feature: null
 feature_package_id: null
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-26T05:56:00Z","evidence_refs":["eval-log/dev-graph/run-dev-graph-init/live-trial/20260726T040700Z-init-final/verdict.json","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/verdict.json","pytest:plugins/dev-graph/tests:539-passed-2-skipped"],"policy":"manual","reconciled_at":"2026-07-26T05:56:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T03:05:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -177,3 +177,23 @@ grep -l "^# write-scope:.*config" plugins/dev-graph/scripts/*.py   # 0 件
 ## 注意
 
 `guard-graph-schema.py` は run-dev-graph-init の behavior closure に含まれる (closure 18 ファイル中の 1 つ)。修正すると `skill_dir_tree_sha` が動き、live-trial verdict が stale になる。init の config writer 追加と同じ周回で扱い、live-trial 再取得を 1 回に抑えること。
+
+## 2026-07-26 最終レビューで検出した残存経路
+
+最終レビューの live-trial で、`Write` と heredoc redirect の遮断後に被験
+セッションが `pathlib.Path.write_text()` を使い、
+`.dev-graph/state/graph.json` を直接作成できることを実測した。このため
+`HarnessHub-6in4` を再オープンした。
+
+是正は次の 2 点を同じ周回で行う。
+
+- interpreter 判定で graph authority path と
+  `Path.write_text()` / `Path.write_bytes()` 等の mutator が共起する入力を、
+  subprocess 無しで遮断する。
+- 初期 graph store 専用の `build-graph-store.py` を追加する。writer は config の
+  `repository_id` と canonical path を検証し、欠落時だけ 4-key empty envelope を
+  atomic に生成する。既存 store は C11 検証に通る場合だけ保持し、暗黙修復しない。
+
+これにより init は保護迂回へ退避せず、config は `build-repo-config.py`、初期 graph
+は `build-graph-store.py`、node 登録後の graph 変更は C02 `upsert-node.py` という
+3 つの責務境界で完結する。

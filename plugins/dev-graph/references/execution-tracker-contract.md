@@ -91,10 +91,17 @@ PR merged (事実 authority)
 ## 4. 二重起票禁止 (単一 publication authority)
 
 - `tracker_binding=beads` のtaskノードは`github_publication.mode=local_only`を強制する。GitHub mirrorが必要なら **`bd github sync --push-only`** だけがIssue publication authorityで、bidirectional defaultは使わない。C12はIssue create/update/closeを行わない。
+- `github_publication.mode=local_only` のtaskへ `linked_pr_merged_all|linked_pr_merged_any` を残すと、存在しないGitHub Issue/PR linkageを待ち続けて完了不能になる。C02 exact-13 registration はこの組合せを `completion_evidence.policy=manual` へ決定論的に正規化する。GitHub publicationを持つtaskだけがPR連動policyを保持できる。
 - push-only結果のmirror Issue identityは`beads_linkage.github_mirror`へread-only projectionとして保存し、PR marker/Projects auto-add照合に使う。`issue_linkage`はGitHub-authority task専用のままにする。
 - Beads mirrorのProjectsはnative auto-add/Doneによるviewer-only。C12 custom-field 3-way同期対象外で、管理custom fieldsが必要ならGitHub bindingを選ぶ。
 - `tracker_binding=github` のtaskはbdへprojectionせず、`github_publication.mode`を`issue|issue_and_projects`に限定する。`github + local_only`は禁止する。
 - 仕様書・アーキテクチャ・ドキュメント系 artifact (task 以外) は本契約の対象外 (従来どおり dev-graph + GitHub)。
+
+### C02 artifact 本文の保持
+
+- `upsert-node.py` の本文解決順は `--body-file` → input `body` → `--regenerate-body` → 実在artifact本文の保持 → 新規template とする。graphからnodeが消えている再注入時も、artifactが実在すれば本文を保持する。
+- metadataだけのpatchは本文を暗黙再生成しない。既存本文を破棄してtemplateへ戻す操作は `--regenerate-body` の明示opt-inに限る。
+- transaction receipt は `body_source` (`from_file|from_input|preserved|template|regenerated`) と `replaced_body_lines` を返す。一括更新の本文非破壊性は `body_source=preserved` と `replaced_body_lines=null` で検証する。
 
 ## 5. worktree 並列実行との対応
 

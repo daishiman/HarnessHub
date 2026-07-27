@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-integrity-fresh-evaluator-pr72-20260725T201500Z",
+  "reviewer": "dev-graph-integrity-auditor-fresh-evaluator-20260724T095200Z-system-spec-wt1r3",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,14 +28,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260725T201500Z-system-spec-pr72-r5/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260725T201500Z-system-spec-pr72-r5/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260725T201500Z-system-spec-pr72-r5/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260725T201500Z-system-spec-pr72-r5/independent-verification.json",
-        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260725T201500Z-system-spec-pr72-r5/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/out/status.json"
       ],
-      "observed": "PR #72 統合後の再実走 20260725T201500Z-system-spec-pr72-r5 は fresh evaluator PASS、launch/completion/goal_fit 全PASS、nudge=0/gate=0。root Skill は task読込直後に起動し、elicit/doc-fetch/compile/completeness-evaluator と C02 node Skill 2回を実呼出し。48/48 matrix、foundation、公式引用が決定論ゲートを通過。初回 hearing/doc-freshness FAIL を単一writerと公式資料更新で修正し、両auditorを再forkしてPASS。実PostToolUse台帳5行を session=a005a527-765b-4b38-891f-50933dfac921 で aggregateしPASS。specification/architecture 2ノードはsource_lineage・confirmation_evidence・readinessを保持し、source-digest/evidence-ref/graph-schema/goal-seek全PASS、register lock残存なし。skill_dir_tree_sha=3bd6ef4b2888fe8882cfc35d7ced36ab74a738d12a773ebec33e4e4fe75314ca、transcript_sha256=46cb326cd2ea454ed638eca3d7fbe46b169ee87bab7d770fc6f23010252dec1e。"
+      "observed": "fresh live trial PASS。requirements brief だけの初期状態から system-spec-harness 正規 4 entry point を Skill 経由で完走し、完全性評価 PASS、specification/architecture 各 1 node、lineage/digest/evidence、C02-only writer、goal-seek を独立再計算で確認した。"
     }
   }
 }
