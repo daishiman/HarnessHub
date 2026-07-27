@@ -38960,6 +38960,118 @@
       "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T15:44:20Z"
+    },
+    {
+      "acceptance": [
+        "make lint から python3 scripts/lint-skill-description.py の引数なし実行、または同じ対象集合を検査する等価コマンドが起動する",
+        ".claude/skills または .claude/agents に違反を置いた検証 fixture でローカル lint が非 0 終了する",
+        "Makefile と governance-check.yml の対象集合の乖離を検知する回帰テストが追加される",
+        "現行ツリーで make lint と python3 scripts/lint-skill-description.py がともに成功する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-kkqq",
+        "linked_at": "2026-07-25T15:49:08Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-make-lint-ci-skill-description-parity-20260726.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "ローカル品質ゲートと CI 品質ゲートの対象集合が一致しない再現可能な追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T15:44:20Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-make-lint-ci-skill-description-parity-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "make lint が CI の repo-wide skill description lint と同じ対象・同じ失敗条件を実行し、ローカルで CI 固有の description 違反を事前検出できる状態にする",
+      "graph_node_id": "issue-make-lint-ci-skill-description-parity-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T15:44:20Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "CI の governance-check と scripts/run-ci-checks.sh は python3 scripts/lint-skill-description.py を引数なしで実行し、既定の対象である plugins/harness-creator/skills、.claude/skills、.claude/agents を検査する。一方 make lint は --skills-dir 付きの個別呼び出しだけで、.claude/skills と .claude/agents を含む引数なし実行を再現しない。このためローカルの推奨ゲートが成功しても、CI で初めて skill description 違反が見つかる経路が残っている",
+      "related_nodes": [],
+      "resource_scope": [
+        "Makefile",
+        ".github/workflows/governance-check.yml",
+        "scripts/run-ci-checks.sh",
+        "scripts/lint-skill-description.py",
+        "tests/test_plugin_lint_coverage.py"
+      ],
+      "scope_in": [
+        "Makefile の lint ターゲットへ引数なし lint-skill-description.py または意味的に同等な repo-wide 検査を結線する",
+        "Makefile と CI の対象集合が再び乖離したとき失敗する回帰テストを追加する",
+        "scripts/run-ci-checks.sh を含む既存呼び出しとの重複・責務を整理する"
+      ],
+      "scope_out": [
+        "lint-skill-description.py の R1-R5 ルール自体の変更",
+        "既存 skill description の文言変更",
+        "skill description 以外のローカル・CI ゲート乖離の一括是正"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T15:44:20Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "ci",
+        "local-gate",
+        "skill-governance",
+        "drift"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "make lint が CI の repo-wide skill description lint を再現しない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T15:49:08Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
