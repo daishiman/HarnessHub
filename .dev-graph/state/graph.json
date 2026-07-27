@@ -1,5 +1,5 @@
 {
-  "graph_revision": 626,
+  "graph_revision": 634,
   "nodes": [
     {
       "acceptance": [
@@ -32958,15 +32958,16 @@
       "classification_confidence": 0.95,
       "classification_reason": "feat-auth-tenancy のローカル core 実装と本番実行経路の間に残る単一の結線課題",
       "completion_evidence": {
-        "completed_at": null,
+        "completed_at": "2026-07-26T01:35:21Z",
         "evidence_refs": [
           "docs/features/feat-auth-tenancy/spec-reflection-receipt.md",
-          "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md"
+          "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
+          "https://github.com/daishiman/HarnessHub/pull/76"
         ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": "manual",
-        "status": "in_progress"
+        "reconciled_at": "2026-07-26T04:27:52.736958Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
@@ -33004,7 +33005,20 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-auth-tenancy-production-adapter-20260725",
+          "linked_at": "2026-07-26T04:27:52.735600Z",
+          "merge_commit_sha": "8e8f9a46851906926f00bf097fda4a34ba672ec1",
+          "merged_at": "2026-07-26T01:35:21Z",
+          "pr_number": 76,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/76"
+        }
+      ],
       "purpose": "初回 feature 完了時は OIDC 検証・session claims・認可・Device Flow の pure core と in-memory E2E までで、Auth.js route と本番 DB ports が未結線だった。HarnessHub-b7ng は vendor 境界を維持したまま @auth/core、session bridge、本番 DB AuthPorts、CAS 永続化、Workers composition root を実結線し、仕様・設計・migration・証跡を正規フローで同期する",
       "related_nodes": [
         "feat-auth-tenancy",
@@ -33056,7 +33070,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "follow-up",
         "auth-tenancy",
@@ -33069,7 +33083,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:45:00Z"
+      "updated_at": "2026-07-26T06:49:00Z"
     },
     {
       "acceptance": [
@@ -37076,14 +37090,15 @@
       "classification_confidence": 0.9,
       "classification_reason": "HarnessHub-b7ng の実装により陳腐化した feature 成果物の記述を追従させる doc drift issue",
       "completion_evidence": {
-        "completed_at": null,
+        "completed_at": "2026-07-26T01:35:21Z",
         "evidence_refs": [
-          "docs/features/feat-auth-tenancy/spec-reflection-receipt.md"
+          "docs/features/feat-auth-tenancy/spec-reflection-receipt.md",
+          "https://github.com/daishiman/HarnessHub/pull/76"
         ],
         "policy": "linked_pr_merged_all",
-        "reconciled_at": null,
-        "source": "manual",
-        "status": "in_progress"
+        "reconciled_at": "2026-07-26T04:29:00Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52",
@@ -37121,7 +37136,20 @@
       "phase_ref": null,
       "priority": "medium",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-auth-tenancy-production-adapter-20260725",
+          "linked_at": "2026-07-26T04:29:00Z",
+          "merge_commit_sha": "8e8f9a46851906926f00bf097fda4a34ba672ec1",
+          "merged_at": "2026-07-26T01:35:21Z",
+          "pr_number": 76,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/76"
+        }
+      ],
       "purpose": "HarnessHub-b7ng で @auth/core を adapter 境界内へ導入し、/api/auth/[...nextauth] は 501 auth_provider_not_wired ではなく tenant 別 OIDC を処理するようになった。しかし feat-auth-tenancy の成果物 6 件 (architecture-decision-record.md / acceptance-record.md / test-run-results.md / release-record.md / refactoring-migration-note.md / final-review-record.md) は依然として『501 を返す』『next-auth 未導入』『本番 runtime 未結線』と記述している。これらは feature 完了時の記録であり、当時としては正しいが、現在の実装を知らない読者が『まだ未結線だ』と誤読する。特に final-review-record.md の未達表は HarnessHub-b7ng を open として掲げており、epic rollup の判断材料になる。記録の改竄ではなく『いつ何が変わったか』を追記する形で追従させる必要がある",
       "related_nodes": [
         "feat-auth-tenancy",
@@ -37149,7 +37177,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "follow-up",
         "doc-drift",
@@ -37160,7 +37188,7 @@
       "template_version": "1.0.0",
       "title": "feat-auth-tenancy の成果物 6 件が /api/auth を 501 未結線と記述したままで実装と食い違う",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:46:00Z"
+      "updated_at": "2026-07-26T06:50:00Z"
     },
     {
       "acceptance": [
@@ -37634,6 +37662,127 @@
       "title": "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 client JS 削減と PR 段階の予算ゲート新設",
       "tracker_binding": "beads",
       "updated_at": "2026-07-25T09:27:54Z"
+    },
+    {
+      "acceptance": [
+        "Better Stack で production /health の 3 分間隔監視が稼働し、monitor が up 状態を記録している",
+        "cron heartbeat monitor が登録され CRON_HEARTBEAT_URL が Worker secret へ投入済みで、日次 cron 完走時に heartbeat が着信する",
+        "SLO ダッシュボードが外形監視の downtime と Workers analytics の 5xx 率の双方を反映しており、外形監視単独を正としていない (infrastructure-spec §9 / qa-019)",
+        "1 ヶ月分の可用性時系列から 99.5% の達成可否を判定でき、判定結果と生データ参照が docs/features/feat-hub-foundation/evidence/ に記録されている",
+        "acceptance-report.md §0 の A3 行が判定結果で更新され、未達の場合はエラーバジェット運用 (消費 70% 警告 / 100% 凍結) の適用状況が併記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-37h.15",
+        "linked_at": "2026-07-25T15:44:20Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hub-slo-external-monitoring-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "P13 から切り出した A3 (SLO 計測) の時間ゲート作業を追跡する standalone issue。exact-13 package の子は P01-P13 固定のため package へ追加できない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T11:06:48Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hub-slo-external-monitoring-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Better Stack で production /health が 3 分間隔で監視され、cron heartbeat が稼働し、外形監視の downtime と Workers analytics の 5xx 率から 1 ヶ月分の可用性を算定して SLO 99.5% を判定できる状態にし、判定結果を feat-hub-foundation の証跡へ記録する",
+      "graph_node_id": "issue-hub-slo-external-monitoring-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T11:06:48Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "P13 で本番デプロイと CI 自動デプロイ経路は確立したが、acceptance A3『SLO 99.5% の計測と /health が稼働する』のうち SLO 算定側が未達で残った。外部死活監視が未設定のため可用性の時系列が存在しないためである。A3 は 3 分間隔・1 ヶ月分の観測期間を要する時間ゲートであり、P13 に紐づけたままでは実作業完了後も最短 1 ヶ月 P13 を閉じられず、feat-hub-foundation epic を depends_on に持つ 9 feature が着手できない。P13 をデプロイ作業の完了として閉じ、A3 の判定を本 issue へ切り出す。epic HarnessHub-37h の受入条件には SLO 99.5% 計測が含まれるため、epic の close 判定には本 issue の完了が必要である",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "SYS-HUB-FOUNDATION-P13",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "docs/features/feat-hub-foundation/runbook.md",
+        "docs/features/feat-hub-foundation/acceptance-report.md",
+        "docs/features/feat-hub-foundation/evidence/",
+        "docs/infrastructure-spec.md"
+      ],
+      "scope_in": [
+        "Better Stack Free での production /health 3 分間隔 monitor 登録",
+        "cron heartbeat monitor の登録と CRON_HEARTBEAT_URL の Worker secret 投入",
+        "SLO ダッシュボードの作成 (外形監視 downtime + Workers analytics 5xx 率の複合算定)",
+        "1 ヶ月分の可用性時系列取得と A3 の判定",
+        "判定結果の evidence 記録と acceptance-report.md §0 の A3 行更新"
+      ],
+      "scope_out": [
+        "独自ドメイン hub.<domain> の割当 (運用上の必須要件ではない)",
+        "cron ジョブ本体の実装 (handler は実装済みでジョブ実体は各ドメイン feature の責務)",
+        "Workers analytics の取得基盤の新規実装 (Cloudflare 標準機能を使う)",
+        "restore drill の実施 (別途 runbook §6 の四半期運用)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T11:06:48Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "feat-hub-foundation",
+        "slo",
+        "monitoring",
+        "operations",
+        "acceptance-a3"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T15:44:20Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
