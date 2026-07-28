@@ -193,6 +193,27 @@ C02 `upsert-node.py` の dry-run と apply を順に実行し、graph revision �
 **942 → 943**、`operation=added / write_count=2` で node と本文を登録した。
 これにより今回の累計個別復元は **19 件** (初回 18 件 + 増分 1 件) となった。
 
+## HarnessHub-5u5k の node 復元誤りの訂正 (2026-07-28 マージ時発覚)
+
+PR #590 のコンフリクト解消中に `origin/main` を取り込んだところ、`HarnessHub-5u5k`
+(`issue-governance-notion-steps-always-skipped-20260725`) は別ブランチ (PR #589) で
+既に修正完了 (`status: done`、governance-check.yml の fail-open 是正・
+`lint-workflow-step-guard.py` 追加・回帰テスト 31 件パス・全体テスト 7530 件パス) して
+いたことが判明した。127-145 行目時点の「Notion gate が常時 skip される fail-open が
+未解決」という判断は、棚卸し実行時点 (2026-07-28 早朝) の自ブランチの `graph.json`
+だけを見た誤認であり、並行ブランチで既に解消されていた事実を反映していなかった。
+
+`graph.json` へ HEAD 側 (このブランチで復元した draft 版) と origin/main 側 (実装
+完了させた done 版) の node が両方独立に追加された結果、
+`graph_node_id: issue-governance-notion-steps-always-skipped-20260725` の重複
+(`duplicate_id`) が `validate-graph-schema.py` で検出された。マージコンフリクト解消
+時に HEAD 側の draft 版 node と `issues/sys-governance-notion-steps-always-skipped-20260725.md`
+を削除し、origin/main 側の done 版のみを残した。
+
+したがって `HarnessHub-5u5k` は「未解決課題の node 復元」ではなく「既に他ブランチで
+解決済みだった課題への統合」であり、真に node 復元を要した件数は 19 件から
+**18 件** に訂正される。
+
 最終の `orphan-audit --scan-refs` は
 `non_closed=1 / merge_pending=1 / restore_node=0 / repoint_or_close=0`。
 残件は `HarnessHub-5rb` のみで、`refs/heads/wip/p73-worktree-snapshot` に node が実在するため
