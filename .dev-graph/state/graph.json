@@ -1,5 +1,5 @@
 {
-  "graph_revision": 937,
+  "graph_revision": 938,
   "nodes": [
     {
       "acceptance": [
@@ -39666,6 +39666,244 @@
       "title": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T07:20:00Z"
+    },
+    {
+      "acceptance": [
+        "secret 有無の判定を job-level env の真偽値 HAS_NOTION_TOKEN 経由で行い、step-level if から解決できる",
+        "NOTION_TOKEN 投入時に Notion 3 step (config 準備 + schema drift + relation invariants) が run される",
+        "未投入時は 3 step とも skip され workflow 全体は成功する",
+        "NOTION_TOKEN 投入時に DB ID 3 件が欠けていれば prepare notion config step が exit 1 で落ちる",
+        "step-level if の解決不能な env / secrets 参照を全 workflow に対し fail-closed で遮断する lint が CI に配線されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-5u5k",
+        "linked_at": "2026-07-25T03:19:04Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-governance-notion-steps-always-skipped-20260725.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-fnzl (Actions secret 台帳整備) の裏取り中に検出した governance-check.yml の fail-open。台帳と backup.yml を範囲とする fnzl から分離した issue",
+      "completion_evidence": {
+        "completed_at": "2026-07-28T04:09:49Z",
+        "evidence_refs": [
+          "beads:HarnessHub-5u5k",
+          ".github/workflows/governance-check.yml",
+          "scripts/lint-workflow-step-guard.py",
+          "tests/scripts-root/test_root__lint_workflow_step_guard.py",
+          "scripts/ci/actions-secrets-registry.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-28T04:09:49Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T03:19:04Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-governance-notion-steps-always-skipped-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "NOTION_TOKEN を投入すれば Notion 検査 2 step が実際に走り、未投入時は skip して workflow が成功し、同型の常時 skip が機械的に遮断されている状態",
+      "graph_node_id": "issue-governance-notion-steps-always-skipped-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-25T03:19:04Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "governance-check.yml の Notion 検査 2 step が step-level if の評価順ゆえに secret を投入しても常時 skip される fail-open を解消し、同型の再発を全 workflow に対して機械遮断する",
+      "related_nodes": [
+        "issue-governance-lint-local-entry-20260725"
+      ],
+      "resource_scope": [
+        ".github/workflows/governance-check.yml",
+        "scripts/lint-workflow-step-guard.py",
+        "tests/scripts-root/test_root__lint_workflow_step_guard.py",
+        "scripts/ci/actions-secrets-registry.json"
+      ],
+      "scope_in": [
+        "governance-check.yml の secret 有無 gate の是正 (job-level env の真偽値経由)",
+        "Notion DB ID 3 件の条件付き必須化と CI 用最小 config の生成",
+        "同型再発を遮断する lint script と回帰テストの追加・CI 配線",
+        "scripts/ci/actions-secrets-registry.json の記述更新 (variable 3 件の追加)",
+        "Notion 設定契約ドキュメント (解決順・fail-closed 挙動) の実装追従"
+      ],
+      "scope_out": [
+        "secret / variable の実投入そのもの (issue-actions-secrets-provisioning-evidence-20260725)",
+        "backup.yml 系の台帳整備 (HarnessHub-fnzl)",
+        "メタ層 lint の local 入口設計 (issue-governance-lint-local-entry-20260725)",
+        "Notion schema 定義そのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-25T03:19:04Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "ci",
+        "fail-open",
+        "governance-check",
+        "notion",
+        "actions-secrets"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "governance-check.yml の Notion 検査 2 step が常に skip される (fail-open)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T04:09:49Z"
+    },
+    {
+      "acceptance": [
+        "存在しない --workflows-dir を渡すと非 0 で落ちる",
+        "空ディレクトリを渡すと非 0 で落ちる",
+        "--allow-empty を付けた場合に限り 0 を返す",
+        "上記 3 ケースが tests/scripts-root/test_root__lint_workflow_step_guard.py に追加されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-foq6",
+        "linked_at": "2026-07-28T04:26:49Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-workflow-step-guard-empty-scan-20260728.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-5u5k の最終レビューで検出した、追加した lint 自身に残る空走査 fail-open。5u5k のスコープ (defect 是正 + 同型遮断) を膨らませないため独立 issue として分離した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T04:30:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-workflow-step-guard-empty-scan-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "検査対象が 0 件のときに lint が非 0 で停止し、意図的な空走査だけが明示 opt-in で許される状態",
+      "graph_node_id": "issue-workflow-step-guard-empty-scan-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T04:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "scripts/lint-workflow-step-guard.py の main() が workflows dir 不在および走査 0 件を成功として返すため、検査が起動していない緑と検査した結果の緑を区別できない。防ごうとしている defect と同型の fail-open が検査器自身に残っている",
+      "related_nodes": [
+        "issue-governance-notion-steps-always-skipped-20260725"
+      ],
+      "resource_scope": [
+        "scripts/lint-workflow-step-guard.py",
+        "tests/scripts-root/test_root__lint_workflow_step_guard.py"
+      ],
+      "scope_in": [
+        "main() の空走査 fail-closed 化 (dir 不在 / 検査 0 件)",
+        "--allow-empty による明示 opt-in の追加",
+        "self-test fixture と単体テストによる分岐固定"
+      ],
+      "scope_out": [
+        "lint の検出ルール自体の変更 (classify_env_reference の判定基準)",
+        "--simulate の出力仕様変更",
+        "呼び出し 3 経路 (governance-check.yml / make lint / run-ci-checks.sh) の再設計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T04:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "issues/sys-governance-notion-steps-always-skipped-20260725.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "follow-up",
+        "ci",
+        "fail-open",
+        "lint",
+        "governance-check"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T04:30:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

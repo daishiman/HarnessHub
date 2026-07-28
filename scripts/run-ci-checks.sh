@@ -41,6 +41,11 @@ run_soft() {
 
 # ── 構造・命名・frontmatter ──
 run "lint-script-naming"                   python3 scripts/lint-script-naming.py
+# workflow の step gate 自体が壊れていないかを pre-push 段で検査する。step-level `if` から同一 step の
+# `env:` を参照すると Actions の評価順 (if → env) で式が恒久 false になり、secret 投入後も step が
+# 永久 skip される (= 検査が存在しないのと同じ緑)。CI 側 governance-check.yml と同一実装。
+run "lint-workflow-step-guard --self-test" python3 scripts/lint-workflow-step-guard.py --self-test
+run "lint-workflow-step-guard"             python3 scripts/lint-workflow-step-guard.py
 run "lint-skill-description (harness-creator)" python3 scripts/lint-skill-description.py
 run "lint-dependency-direction (harness-creator)" python3 scripts/lint-dependency-direction.py --skills-dir plugins/harness-creator/skills
 run "lint-dependency-direction (all)"      python3 scripts/lint-dependency-direction.py --skills-dir plugins

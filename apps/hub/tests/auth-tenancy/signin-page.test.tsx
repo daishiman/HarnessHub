@@ -91,7 +91,7 @@ describe('サインイン画面の接続解決', () => {
     const html = await renderSignin('acme');
 
     expect(html).toContain('Acme IdP でサインイン');
-    expect(html).toContain('action="/api/auth/signin/tenant-oidc?tenant=acme"');
+    expect(html).toContain('action="/api/auth/acme/signin/tenant-oidc"');
     expect(html).toContain('method="post"');
   });
 
