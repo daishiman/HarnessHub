@@ -66,6 +66,10 @@ run "lint-runtime-portability"             python3 scripts/lint-runtime-portabil
 # 同じ「CI にあってローカルに無い」型で、実測では他に 17 件が残っている
 # (issues/sys-local-ci-gate-drift-20260728.md)。
 run "lint-readme-plugin-root-portability"  python3 scripts/lint-readme-plugin-root-portability.py
+# 同じ「CI にあってローカルに無い」型の 2 例目 (同日中の再発)。新規 script を 1 本足すと
+# llm_eval 被覆率が floor を割り CI verify が落ちる。引数なしの bare 実行は PASS を返すため、
+# script 名だけの突合では検出できない (--ratchet の有無で意味が変わる)。読み取り専用。
+run "validate-harness-coverage --ratchet"  python3 scripts/validate-harness-coverage.py --ratchet
 run "check-scripts-drift"                  bash scripts/check-scripts-drift.sh
 run "build-claude-symlinks --check"        python3 scripts/build-claude-symlinks.py --check
 # ── discovery 派生台帳 parity (roster / llm-coverage が discovery と一致するか) ──

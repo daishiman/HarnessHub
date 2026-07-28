@@ -12,10 +12,10 @@ iteration: null
 title: "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている"
 owners: ["daishiman"]
 created_at: "2026-07-28T07:20:00Z"
-updated_at: "2026-07-28T07:30:50Z"
+updated_at: "2026-07-28T07:46:58Z"
 status: "draft"
 depends_on: []
-related_nodes: ["issue-worktree-main-ref-desync-20260728"]
+related_nodes: ["issue-worktree-main-ref-desync-20260728","issue-desync-guard-bundle-untracked-20260728"]
 resource_scope: ["scripts/run-ci-checks.sh",".github/workflows"]
 purpose: "scripts/run-ci-checks.sh は冒頭に「CI と同等の機械チェックをローカルで一括実行する」と宣言し、pre-push hook はその結果を「All CI-equivalent checks passed」と表示する。しかし .github/workflows/*.yml が実行する scripts/*.py と run-ci-checks.sh が実行するものを機械的に突合すると、CI にあってローカルに無いものが 19 件ある。同等性は誰にも検査されていない。結果として開発者は「pre-push が緑なら CI も緑」という誤った事前確率を持ち、実際には CI で初めて落ちる。本リポジトリでは同型の事故が既に 2 回起きており (2026-07-02 / 2026-07-28)、いずれも当該 1〜2 件を手で追加して終わっている。"
 goal: "CI が実行する検査集合とローカルゲートが実行する検査集合の差を機械検査し、意図的な除外だけを理由付き allowlist で許す状態にして、「pre-push 緑ならば CI 緑」を検査可能な命題にする"
@@ -117,6 +117,28 @@ CI にあってローカルゲートに無いもの:
 - **突合の粒度**。`python3 scripts/X.py --flag` 全体を鍵にすると workflow の些細な整形で偽陽性が出る。script 名 + 意味のあるフラグ集合に正規化する必要がある
 - **`|| true` で非ブロッキングな CI ステップの扱い**。`skill-fixture-runner.py` は CI 側で失敗を無視している。これをローカルで hard fail にすると CI より厳しくなり、逆向きの不一致になる
 
+## 同日中に 2 例目が発生した (受入条件 4 の実証)
+
+`lint-readme-plugin-root-portability` を追加した直後、**同じ PR の同じ CI 実行で 2 例目**が出た。`validate-harness-coverage.py --ratchet` である。
+
+```
+[harness-coverage] RATCHET FAIL: 1 軸が floor を下回った (回帰)
+  - scripts/llm_eval: 62.8% < floor 63.1%
+```
+
+本 PR が新規 script を 1 本 (`plugins/dev-graph/scripts/build-merged-graph.py`) 追加したことで llm_eval 被覆率の分母が増え、floor を割った。`eval-log/coverage/scripts/` へ code-review verdict を追加して 63.0% へ回復させ解消した。
+
+重要なのは、**この検査は上の表で「PASS」と記録されていた**ことである。
+
+| 呼び出し形 | 結果 |
+|---|---|
+| `python3 scripts/validate-harness-coverage.py` (bare。上の表の実測) | PASS |
+| `python3 scripts/validate-harness-coverage.py --ratchet` (CI の実形) | **FAIL** |
+
+つまり script 名だけで CI とローカルを突合していれば「両方にある」と判定され、この乖離は検出できなかった。**受入条件 4 (突合の鍵は script 名だけでなく意味のある引数を含む呼び出し形であること) は、思考実験ではなく実測に裏付けられている。**
+
+同時に、上の 19 件の表のうち bare 実行で PASS と記録した 14 件は、**CI と同じ引数形で走らせた結果ではない**ことも意味する。表の PASS は「ローカルで動くこと」の確認であって「CI と同じ判定になること」の確認ではない。
+
 ## 既存課題との関係 (2026-07-28 マージ後に判明)
 
 本 issue を起票した直後に main を取り込んだところ、**同じ問題の一部が既に別経路で扱われていた**ことが分かった。重複作業を避けるため関係を明示する。
@@ -129,4 +151,13 @@ CI にあってローカルゲートに無いもの:
 
 ## 暫定対応 (本 PR で実施済み)
 
-`lint-readme-plugin-root-portability` を `run-ci-checks.sh` へ追加した。これは**当該 1 件の再発しか防がない**。残り 18 件は未対応であり、上記の機械検査が入るまで「pre-push 緑 = CI 緑」は成立しない。
+`run-ci-checks.sh` へ 2 件を追加した。いずれも読み取り専用で pre-push に副作用が無いことを確認済みである。
+
+| 追加した検査 | 契機 |
+|---|---|
+| `lint-readme-plugin-root-portability` | 1 例目。README の bash フェンス修正が CI で初めて落ちた |
+| `validate-harness-coverage --ratchet` | 2 例目。新規 script 追加で llm_eval floor を割った。CI と同じ引数形で結線した |
+
+**これは当該 2 件の再発しか防がない。**残り 17 件は未対応であり、さらに上記のとおり残り 17 件の「PASS」判定自体が CI と同じ引数形での確認ではない。上記の機械検査が入るまで「pre-push 緑 = CI 緑」は成立しない。
+
+なお、この 2 件は**同じ PR の作業中に連続して発生**している。1 件ずつ手で足す運用が追いついていないことの直接の証拠である。

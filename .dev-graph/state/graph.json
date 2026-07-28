@@ -1,5 +1,5 @@
 {
-  "graph_revision": 940,
+  "graph_revision": 942,
   "nodes": [
     {
       "acceptance": [
@@ -39629,7 +39629,8 @@
       "pull_request_linkages": [],
       "purpose": "scripts/run-ci-checks.sh は冒頭に「CI と同等の機械チェックをローカルで一括実行する」と宣言し、pre-push hook はその結果を「All CI-equivalent checks passed」と表示する。しかし .github/workflows/*.yml が実行する scripts/*.py と run-ci-checks.sh が実行するものを機械的に突合すると、CI にあってローカルに無いものが 19 件ある。同等性は誰にも検査されていない。結果として開発者は「pre-push が緑なら CI も緑」という誤った事前確率を持ち、実際には CI で初めて落ちる。本リポジトリでは同型の事故が既に 2 回起きており (2026-07-02 / 2026-07-28)、いずれも当該 1〜2 件を手で追加して終わっている。",
       "related_nodes": [
-        "issue-worktree-main-ref-desync-20260728"
+        "issue-worktree-main-ref-desync-20260728",
+        "issue-desync-guard-bundle-untracked-20260728"
       ],
       "resource_scope": [
         "scripts/run-ci-checks.sh",
@@ -39667,7 +39668,7 @@
       "template_version": "1.0.0",
       "title": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T07:30:50Z"
+      "updated_at": "2026-07-28T07:46:58Z"
     },
     {
       "acceptance": [
@@ -39906,6 +39907,118 @@
       "title": "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T04:30:00Z"
+    },
+    {
+      "acceptance": [
+        ".git/harness-hub-hooks/ の 11 ファイル 985 行が tracked template としてリポジトリに存在すること",
+        "install-git-hooks.sh が共有 bundle への設置まで行い core.hooksPath が絶対パスに依存しないこと",
+        "hook 配線と guard 判定の回帰テストが tests/ に存在し lint-test-discovery-coverage の CI 到達被覆に入っていること",
+        "guard-worktree-desync.py が発火する commit 経路が実測で特定され、素通りする経路があれば制約として記録されていること",
+        "HarnessHub-7xi9 の close 状態が実態に合わせて是正されていること"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-desync-guard-bundle-untracked-20260728.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "close 済み課題の成果物がリポジトリに不在という、追跡と実体の乖離に関するリポジトリ運用上の欠陥であり、特定 feature の実装タスクではない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T07:55:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-desync-guard-bundle-untracked-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "desync / clobber 遮断機構を tracked template としてリポジトリへ復元し、任意の clone で install-git-hooks.sh 経由で有効化でき、その配線と発火経路が回帰テストで機械検査される状態にする",
+      "graph_node_id": "issue-desync-guard-bundle-untracked-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T07:55:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "critical",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-7xi9 (worktree desync 遮断) は全 5 受入条件を実装・検証済みとして CLOSED になっているが、その成果物はリポジトリに 1 バイトも存在しない。実体は .git/harness-hub-hooks/ 配下の 11 ファイル 985 行のみであり、.git/ は追跡対象外・push 対象外のため再 clone で消える。hook 自身が参照する tracked template 7 件は origin/main に無く、origin の 29 ブランチを全数走査しても 0 件。close 理由が主張する回帰テストも tests/ に存在しない。core.hooksPath は絶対パスを指しており、この 1 台の 1 clone でしか機能しない。hook の mtime (15:43-15:46) と同日夕方の作業ツリー clobber (403 files / -29,159 行) の時系列から、install 済みコピーだけが .git/ 配下で生き残り作業ツリー側の template が commit 前に消失した経路が最も整合する。HarnessHub-7xi9 が防ごうとした障害そのものによって HarnessHub-7xi9 の成果物が失われている。",
+      "related_nodes": [
+        "issue-worktree-main-ref-desync-20260728",
+        "issue-local-ci-gate-drift-20260728"
+      ],
+      "resource_scope": [
+        ".githooks",
+        "scripts/install-git-hooks.sh"
+      ],
+      "scope_in": [
+        ".git/harness-hub-hooks/ の 11 ファイル 985 行を tracked template として復元し、install-git-hooks.sh を共有 bundle 設置まで行うよう拡張する",
+        "guard-worktree-desync.py が発火する commit 経路 (commit -a / add 後 commit / 部分 add) の実測と、素通りする経路の制約としての記録",
+        "hook 配線と guard 判定の回帰テストを tests/ へ追加し CI 到達被覆に載せる",
+        "HarnessHub-7xi9 の close 状態の是正"
+      ],
+      "scope_out": [
+        "clobber の発生源そのものの特定と遮断",
+        "beads hook (.beads/hooks) の設計変更",
+        "他 plugin の hook 配線"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T07:55:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-workflow",
+        "git",
+        "worktree",
+        "data-loss-risk",
+        "false-green"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "HarnessHub-7xi9 の成果物 985 行がリポジトリに存在せず .git/ 内の 1 コピーのみで生存している",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T07:55:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

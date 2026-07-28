@@ -137,3 +137,9 @@ apps/hub/.dev.vars
 
 # vitest --coverage の生成物 (各 package/apps 配下)
 coverage/
+# ただし eval-log/coverage/ は code-review verdict の正本で追跡対象 (281 件が tracked)。
+# 上の coverage/ は区切り文字を含まないため全階層の coverage/ にマッチし、eval-log/coverage/ も
+# 巻き込む。ignore は index 済みファイルには効かないので既存 281 件は動き続ける一方、
+# 新規 verdict だけが黙って untracked のまま落ちる (= harness-ratchet を緑にする修正が
+# push されない)。2026-07-28 に実際に踏んだため明示的に再包含する。
+!eval-log/coverage/
