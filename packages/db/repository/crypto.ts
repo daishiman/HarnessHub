@@ -5,6 +5,7 @@
 import { and, desc, eq } from 'drizzle-orm';
 import { encryptionKeys } from '../schema/core/security';
 import { fromBase64, toBase64 } from './bytes';
+import { guardedWrite } from './conflict';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
@@ -148,14 +149,16 @@ export class ColumnCipher {
     const dekRaw = crypto.getRandomValues(new Uint8Array(DEK_BYTES));
     const kek = await this.kek();
     const { iv, ciphertext, tag } = await gcmEncrypt(kek, dekRaw, aadBytes(this.wrapAad(purpose, keyVersion)));
-    await this.adapter.client.insert(encryptionKeys).values({
-      id: newUlid(),
-      purpose,
-      keyVersion,
-      dekWrapped: `${toBase64(iv)}:${toBase64(ciphertext)}:${toBase64(tag)}`,
-      status: 'active',
-      createdAt: serverNow(),
-    });
+    await guardedWrite(this.adapter, () =>
+      this.adapter.client.insert(encryptionKeys).values({
+        id: newUlid(),
+        purpose,
+        keyVersion,
+        dekWrapped: `${toBase64(iv)}:${toBase64(ciphertext)}:${toBase64(tag)}`,
+        status: 'active',
+        createdAt: serverNow(),
+      }),
+    );
   }
 
   /** active な DEK が無ければ新 version を発行する。UNIQUE 競合は再読込して収束させる。 */
@@ -235,7 +238,6 @@ export class ColumnCipher {
    * 旧 version 行の再暗号化バッチは運用手順 (P12 runbook) の責務。
    */
   async rotateDek(purpose: EncryptionPurpose): Promise<number> {
-    const db = this.adapter.client;
     for (let attempt = 0; attempt < KEY_WRITE_ATTEMPTS; attempt += 1) {
       const current = await this.ensureActiveDek(purpose);
       const nextVersion = current + 1;
@@ -247,16 +249,18 @@ export class ColumnCipher {
         if (winner !== null && winner > current) return winner;
         continue;
       }
-      await db
-        .update(encryptionKeys)
-        .set({ status: 'retiring' })
-        .where(
-          and(
-            eq(encryptionKeys.purpose, purpose),
-            eq(encryptionKeys.keyVersion, current),
-            eq(encryptionKeys.status, 'active'),
+      await guardedWrite(this.adapter, () =>
+        this.adapter.client
+          .update(encryptionKeys)
+          .set({ status: 'retiring' })
+          .where(
+            and(
+              eq(encryptionKeys.purpose, purpose),
+              eq(encryptionKeys.keyVersion, current),
+              eq(encryptionKeys.status, 'active'),
+            ),
           ),
-        );
+      );
       return nextVersion;
     }
     throw new EncryptionError(`DEK rotation が競合しました (purpose=${purpose})`);
