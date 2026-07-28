@@ -22,5 +22,19 @@ export default defineConfig({
     // 時間切れを「違反 0 件」と誤読させないため広げる (packages/ui の設定と揃える)
     testTimeout: 30_000,
     hookTimeout: 30_000,
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        // OpenNext のビルド生成物 (.open-next/worker.js) への静的 import を持つ配線層。
+        // ビルドしないと import 先が存在せず、単体テストでは到達できない
+        'src/worker.ts',
+        // route/service が使う型だけの契約ファイル (実行コードなし)
+        'src/lib/auth/device-flow/contracts.ts',
+        // 公開入口のバレル (re-export のみ、実行コードなし)
+        'src/lib/authz/index.ts',
+      ],
+      thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
+    },
   },
 });

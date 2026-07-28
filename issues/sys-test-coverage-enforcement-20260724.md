@@ -12,7 +12,7 @@ iteration: null
 title: "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築"
 owners: ["daishiman"]
 created_at: "2026-07-24T11:51:28Z"
-updated_at: "2026-07-24T11:56:47Z"
+updated_at: "2026-07-28T02:43:39.962309Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -44,10 +44,9 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-28T02:35:00Z","evidence_refs":["issues/sys-test-coverage-enforcement-20260724.md","plugin-plans/system-dev-planner/references/system-task-spec-template.md","plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py","apps/hub/vitest.config.ts","packages/db/vitest.config.ts",".github/workflows/ci.yml"],"policy":"manual","reconciled_at":"2026-07-28T02:42:53Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-24T11:51:28Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 概要
 
