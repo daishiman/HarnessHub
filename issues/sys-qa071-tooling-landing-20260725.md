@@ -12,7 +12,7 @@ iteration: null
 title: "qa-071 の意味被覆 enforcement を landing し dev-graph 3 skill の live-trial を再取得する"
 owners: ["daishiman"]
 created_at: "2026-07-25T11:09:07Z"
-updated_at: "2026-07-25T11:09:07Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "draft"
 depends_on: ["issue-validator-contract-version-20260724"]
 related_nodes: ["issue-planner-script-line-limit-20260724"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-25T16:13:34Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T11:09:07Z","missing_sections":[],"status":"complete"}
 ---
 

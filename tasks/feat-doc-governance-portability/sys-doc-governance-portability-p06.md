@@ -12,7 +12,7 @@ iteration: null
 title: "テスト実行 — 回帰テスト全件と 3 検査の実測記録"
 owners: ["daishiman"]
 created_at: "2026-07-22T02:31:19Z"
-updated_at: "2026-07-24T08:25:35Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "closed"
 depends_on: ["SYS-DOC-GOVERNANCE-PORTABILITY-P05"]
 related_nodes: ["feat-doc-governance-portability","arch-harness-hub-dev-workflow"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-24T08:25:35Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-22T09:35:00Z","missing_sections":[],"status":"complete"}
 ---
 

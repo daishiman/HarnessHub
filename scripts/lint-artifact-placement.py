@@ -93,7 +93,10 @@ def _read_frontmatter_block(path: Path) -> list[str] | None:
     lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
     if not lines or lines[0].strip() != "---":
         return None
-    for i, line in enumerate(lines[1:41], start=1):
+    # dev-graph の canonical frontmatter は lineage / tracker / completion
+    # receipt を含むため 40 行を超えうる。文書本文全体を frontmatter と誤認しない
+    # 安全弁は残しつつ、現行 node schema の全 field を収められる上限にする。
+    for i, line in enumerate(lines[1:201], start=1):
         if line.strip() == "---":
             return lines[1:i]
     return None
@@ -217,6 +220,15 @@ def self_test() -> int:
         (root / "docs" / "ok.md").write_text(
             "---\nstatus: draft\nlayer: system-wide-design\n---\nbody",
             encoding="utf-8")
+        # canonical dev-graph frontmatter は 40 行を超える。終端が安全弁内なら
+        # status/layer を正しく読めることを固定し、旧 40 行上限への回帰を防ぐ。
+        long_frontmatter = ["---", "status: draft", "layer: feature-design"]
+        long_frontmatter.extend(f"field_{i}: null" for i in range(45))
+        long_frontmatter.extend(["---", "body"])
+        (root / "docs" / "long-frontmatter.md").write_text(
+            "\n".join(long_frontmatter),
+            encoding="utf-8",
+        )
         (root / "system-spec" / "spec-state.json").write_text("{}", encoding="utf-8")
         v, _ = lint(root)
         assert v == [], f"クリーン状態で違反を誤検出: {v}"

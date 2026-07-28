@@ -29,7 +29,7 @@ def test_local_only_binding_leaves_completion_policy_reachable(
     nodes = [task_node(index) for index in range(13)]
     for node in nodes:
         node["completion_evidence"]["policy"] = policy
-    intents = {node["graph_node_id"]: tracker_mode for node in nodes}
+    intents = {node["graph_node_id"]: "auto" for node in nodes}
 
     resolved = RP._resolved_nodes(
         nodes,
@@ -39,6 +39,7 @@ def test_local_only_binding_leaves_completion_policy_reachable(
     )
 
     for node in resolved:
+        assert node["tracker_binding"] == tracker_mode
         assert node["github_publication"]["mode"] == "local_only"
         assert node["pull_request_linkages"] == []
         assert node["completion_evidence"]["policy"] == "manual"
@@ -49,7 +50,7 @@ def test_github_binding_keeps_pr_linked_completion_policy() -> None:
     nodes = [task_node(index) for index in range(13)]
     for node in nodes:
         node["completion_evidence"]["policy"] = "linked_pr_merged_all"
-    intents = {node["graph_node_id"]: "github" for node in nodes}
+    intents = {node["graph_node_id"]: "auto" for node in nodes}
 
     resolved = RP._resolved_nodes(
         nodes,
@@ -59,5 +60,6 @@ def test_github_binding_keeps_pr_linked_completion_policy() -> None:
     )
 
     for node in resolved:
+        assert node["tracker_binding"] == "github"
         assert node["github_publication"]["mode"] == "issue"
         assert node["completion_evidence"]["policy"] == "linked_pr_merged_all"

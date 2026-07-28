@@ -171,7 +171,12 @@ def test_or_p06_local_only_manual_policy_settles_after_close_loop(tmp_path: Path
     構造的に再発する (HarnessHub-n7gw)。`policy=manual` なら到達でき、その終状態は残置ではない。
     """
     node = _node("issue-local-only", status="closed", ce_status="done", policy="manual")
-    node["github_publication"] = {"mode": "local_only", "project_aliases": []}
+    node["github_publication"] = {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": None,
+    }
     node["pull_request_linkages"] = []
     node["completion_evidence"]["source"] = "manual"
     node["completion_evidence"]["completed_at"] = "2026-07-26T00:00:00Z"

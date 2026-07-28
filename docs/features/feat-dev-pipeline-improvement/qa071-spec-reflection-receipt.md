@@ -75,8 +75,9 @@ feature/task の手書き Markdown はすべて 300 行以下であり、
 `validate-registration-preflight.py` へ責務分離した。完了ポリシーの回帰テストも
 `test_register_package_completion_policy.py` へ分け、各ファイルを
 500 行以下にした。分割後の C02 挙動閉包は live trial
-`20260727T230007Z-node-qa071-ci-r3` で再実走し、現行 digest
-`596229f7a0b53a416bca062b10c2050a0901161e6dafd6a4151346f5d1f6b92c`
+`20260727T234043Z-node-qa071-main515-r4` で最新 main (`515b849`)
+統合後に再実走し、現行 digest
+`8c555da985c9e77f706ae263476c45a4f2a7d0b35c8b9a9053797e69bc64810e`
 に対して fresh evaluator と criteria evidence gate の PASS を記録した。
 generation JSON、graph store、live-trial transcript は writer が生成する
 機械証跡なので、人手で分割して digest・provenance を壊さない。
@@ -86,10 +87,5 @@ generation JSON、graph store、live-trial transcript は writer が生成する
 - `HarnessHub-cvli`: `register-package` の登録 node と、
   `upsert-node` が補う task frontmatter 6 項目の所有境界を一本化し、
   同一 generation の再登録を冪等にする。
-- `HarnessHub-n7gw`: 既存 `local_only` node の completion policy 移行は
-  実装済み・Beads closed だが、提出先の draft PR #82 は 2026-07-28 時点で
-  未 merge、conflicting、`verify` failure である。今回の対象 13 task は
-  正規 writer で `manual` へ収束させ、広域移行の差分は本 PR に混ぜない。
-
-これらは qa-071 の要件本文や generation の semantic coverage とは別の
-writer / lifecycle 整合課題であり、今回の本文伝播の受入を妨げない。
+`HarnessHub-cvli` は qa-071 の要件本文や generation の semantic coverage
+とは別の writer 所有境界の課題であり、今回の本文伝播の受入を妨げない。

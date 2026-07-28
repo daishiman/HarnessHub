@@ -12,7 +12,7 @@ iteration: null
 title: "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随"
 owners: ["daishiman"]
 created_at: "2026-07-22T23:04:59Z"
-updated_at: "2026-07-23T10:24:33.032661Z"
+updated_at: "2026-07-26T01:39:34.074446Z"
 status: "draft"
 depends_on: []
 related_nodes: ["spec-harness-hub-requirements"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-22T23:04:59Z","missing_sections":[],"status":"complete"}
 ---
 

@@ -9,19 +9,19 @@ trigger: aggregate-evals (SessionEnd)
 
 ## 集計サマリ
 
-- 評価件数: 345
-- FAIL 率: 3.48%
+- 評価件数: 347
+- FAIL 率: 3.75%
 - 平均スコア: 85.692
 
 ## 検出された異常
 
 - **run-skill-create**: friction_density — {"friction_records": 2, "window": 5, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-elegant-review**: friction_density — {"friction_records": 2, "window": 5, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
-- **run-dev-graph-schedule**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-22", "iterations": null, "negative_feedback_count": null, "findings_count": 3}, {"date": "2026-07-22", "iterations": null, "negative_feedback_count": null, "findings_count": 3}]}
+- **/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260722-084044-wt-9/plugins/dev-graph/skills/run-dev-graph-schedule/SKILL.md**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-22", "iterations": null, "negative_feedback_count": null, "findings_count": 3}, {"date": "2026-07-22", "iterations": null, "negative_feedback_count": null, "findings_count": 3}]}
 - **run-company-master-backfill**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-company-master-build**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-template-sync**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
-- **run-dev-graph-init**: friction_density — {"friction_records": 2, "window": 6, "evidence": [{"date": "2026-07-25", "iterations": 1, "negative_feedback_count": 3, "findings_count": 0}, {"date": "2026-07-25", "iterations": 1, "negative_feedback_count": 3, "findings_count": 0}]}
+- **run-dev-graph-init**: friction_density — {"friction_records": 2, "window": 6, "evidence": [{"date": "2026-07-26", "iterations": 1, "negative_feedback_count": 3, "findings_count": 0}, {"date": "2026-07-26", "iterations": 1, "negative_feedback_count": 3, "findings_count": 0}]}
 - **run-dev-graph-schedule**: friction_density — {"friction_records": 2, "window": 6, "evidence": [{"date": "2026-07-24", "iterations": 1, "negative_feedback_count": 2, "findings_count": 0}, {"date": "2026-07-24", "iterations": 1, "negative_feedback_count": 2, "findings_count": 0}]}
 - **assign-blueprint-fidelity-evaluator**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-blueprint-apply**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
