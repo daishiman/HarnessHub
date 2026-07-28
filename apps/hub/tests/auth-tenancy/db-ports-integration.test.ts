@@ -352,6 +352,48 @@ describe('refresh rotation (AC-4)', () => {
     expect(audit.filter((row) => row.action === 'token.reuse_detected').length).toBeGreaterThanOrEqual(1);
   });
 
+  it('rotation CAS 敗北を強制すると token.refresh_race が監査に 1 行残る (HarnessHub-v22l)', async () => {
+    const first = await issuedTokenPair(tenantA);
+
+    // 実 DB の真の並行実行はタイミング依存で「読んだ時点は生きていたが CAS に負けた」を
+    // 確実には再現できない (上のテストの通り、単一プロセスでは大抵 reuse_detected 側に落ちる)。
+    // ここでは revokeIfActive だけを強制的に false へ差し替え、rotation CAS 敗北の分岐を
+    // 決定論的に踏む。読み取り経路 (findByRefreshTokenHash 等) は実 DB のまま
+    const racingPorts = {
+      ...harness.ports,
+      publisherTokens: {
+        ...harness.ports.publisherTokens,
+        async revokeIfActive() {
+          return false;
+        },
+      },
+    };
+    const racingService = createDeviceFlowService({
+      ports: racingPorts,
+      audit: createAuditLogger({
+        sink: createDbAuditSink(harness.repositories.audit),
+        now: () => new Date(harness.clock.nowSeconds() * 1000),
+        newId: createSequentialIds('audit-race'),
+      }),
+      accessTokenSecret: 'access-secret',
+      verificationUri: 'https://hub.example.com/device',
+    });
+
+    const raced = await racingService.refresh({ tenantId: tenantA.tenantId, refreshToken: first.refreshToken });
+    expect(raced).toEqual({ ok: false, error: { error: 'invalid_grant' } });
+
+    // CAS を偽装しただけで実際の失効 write は起きていない。旧枝は生きたまま残る
+    const tokens = await harness.ports.publisherTokens.listByUserId(tenantA.tenantId, tenantA.userId);
+    expect(tokens.every((token) => token.revokedAtSeconds === null)).toBe(true);
+
+    const audit = await harness.repositories.audit.read(createRepositoryContext({ tenantId: tenantA.tenantId }));
+    const raceEvents = audit.filter((row) => row.action === 'token.refresh_race');
+    expect(raceEvents).toHaveLength(1);
+    expect(JSON.parse(raceEvents[0]?.summaryJson ?? '{}')).toMatchObject({ family_id: tokens[0]?.familyId });
+    // token.reuse_detected とは別 action。混同・合流させない
+    expect(audit.filter((row) => row.action === 'token.reuse_detected')).toHaveLength(0);
+  });
+
   it('旧 refresh token の再利用は family 全体を失効させる', async () => {
     const first = await issuedTokenPair(tenantA);
     const rotated = await service.refresh({ tenantId: tenantA.tenantId, refreshToken: first.refreshToken });

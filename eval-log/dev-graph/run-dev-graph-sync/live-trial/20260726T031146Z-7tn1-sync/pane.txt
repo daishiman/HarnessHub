@@ -1,0 +1,16 @@
+The fresh trial invoked dev-graph:run-dev-graph-sync through the Skill tool.
+It validated the contained fixture, ran the deterministic three-pass sync,
+and recorded:
+
+- pass 1 dry-run: one remote-only title import and one local status export
+- pass 2 apply: expected writes applied, parity manifest refreshed
+- pass 3 verification dry-run: imports=[], exports=[], changes=0,
+  converged=true, write_count=0
+- stable IDs and snapshots retained
+- goal-seek goal-spec, progress and append-only intermediate evidence valid
+
+The trial wrote:
+{"status": "PASS", "scenario": "C03-OUT1-positive-second-sync-zero"}
+
+Final session report:
+DONE: PASS

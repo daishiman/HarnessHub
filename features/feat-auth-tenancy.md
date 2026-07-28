@@ -88,6 +88,19 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 未認証 POST を stream のまま処理し、Workers の要求間では DB write の Promise 待ち行列を共有しない。
 - 詳細は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) と [最終レビュー記録](../docs/features/feat-auth-tenancy/final-review-record.md) を参照する。
 
+## 実装反映 (2026-07-27 / HarnessHub-v22l)
+
+- refresh rotation の CAS（compare-and-swap＝比較して一致した場合だけ更新する
+  排他制御）敗北、すなわち同時提示された refresh token のうち勝者以外の枝を、
+  監査 action `token.refresh_race` として記録するようにした。
+- `token.reuse_detected`（失効済み token の再提示という確定的な窃取シグナル）
+  とは意味を分け、昇格・合流させない。
+- 外部契約（`invalid_grant` 応答）と DB schema は無変更で、内部観測性のみを
+  追加した。仕様反映は不要と判断した（判断理由は
+  [仕様反映受領書 §9](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md)
+  を参照）。
+- 詳細は [runbook §2.5.1](../docs/features/feat-auth-tenancy/runbook.md) を参照する。
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-security](../architecture/harness-hub-security.md)
