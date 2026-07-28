@@ -106,6 +106,10 @@ eval-log/dev-graph/**/.verify-*.json
 # 追跡対象にすると受領書ビルダー (scripts/build-spec-reflection-receipt.py) の
 # clean-tree 検査を毎回落とすため、揮発スクラッチとして除外する。
 .dev-graph/tmp/
+# plugins/dev-graph/README.md が node 入力 JSON の例示に使っているのは .dev-graph/staging/
+# であり、tmp/ だけを除外しても README どおりに操作した時点で clean-tree 検査が落ちる。
+# 同じ揮発スクラッチなので同じ扱いにする。
+.dev-graph/staging/
 plugin-plans/*/task-execution-report.html
 plugin-plans/*/.gate/
 
