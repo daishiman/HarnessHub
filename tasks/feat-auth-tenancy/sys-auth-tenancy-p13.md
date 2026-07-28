@@ -71,3 +71,15 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-auth-tenancy` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-28 リリース準備追補
+
+- Beads: `HarnessHub-15h.13` / feature: `HarnessHub-15h`
+- `docs/features/feat-auth-tenancy/production-auth-manual-setup.md` に、
+  Worker Secret・通常変数・2 テナント OIDC 接続・確認・rollback を具体化した。
+- read-only の本番確認結果と、未投入の設定・未実施のデプロイ / smoke を
+  `release-record.md` に分離記録した。
+- 本番資格情報投入、デプロイ、2 テナントログイン、Device Flow E2E は未実施である。
+  P13 の acceptance を満たしていないため、`in_progress` を維持する。
+- 仕様影響なしの判断は
+  `docs/features/feat-auth-tenancy/spec-reflection-receipt.md` §10 を参照する。
