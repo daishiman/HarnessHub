@@ -133,6 +133,12 @@ qa-067 要件 1 と 8 の運用面の恒久化である。検査 (lint-open-resi
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .`
 - Required evidence: operations.md の手順どおりに issue-bd-bridge-notes-passthrough-20260721 を閉じられることの机上検証記録
 
+### 2026-07-29 横断品質ゲート追補
+
+`HarnessHub-9ndl` / `HarnessHub-dyxr` の最終レビューは、P12 の「運用手順を再現可能な証拠へする」責務へ次を追補した。live-trial verdict の observation は run directory 内の実在ファイルへ解決し、scenario 更新・削除で旧証拠を失効させる。scenario が必須・禁止手順を持つ場合は task.md も照合し、別 operation への読み替えを許さない。監査値は pre/post state と永続 graph から導出し、起動引数や dry-run echo を代理値にしない。実測コマンドと受領結果は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` に記録する。
+
+再実行結果は広域 pytest 1711 passed / 2 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r6 live-trial beads/none 2 系列 PASS である。
+
 ## Inner goal-seek execution loop
 
 - Methodology contract: `system-task-goal-seek/v1`

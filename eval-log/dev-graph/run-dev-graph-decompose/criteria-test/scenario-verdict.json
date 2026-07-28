@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "orchestrator-machine-audit-remeasure-20260725T151826Z",
+  "reviewer": "codex-final-review-20260729",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,14 +26,19 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C14-OUT1-positive-macro-decomposition",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260726T040700Z-dcmp-final/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r6",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260726T040700Z-dcmp-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260726T040700Z-dcmp-final/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260726T040700Z-dcmp-final/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/evidence/decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T223733Z-dcmp-r9-none/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T223733Z-dcmp-r9-none/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T223733Z-dcmp-r9-none/evidence/decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T223733Z-dcmp-r9-none/independent-verification.json"
       ],
-      "observed": "fresh live trial PASS。Skill 起動・C02 登録・非循環 DAG・macro 粒度を独立評価で再確認し、goal-seek 違反 0 件。既知の C14 scenario 被覆不足は HarnessHub-dyxr に分離した。"
+      "observed": "現行 r6 scenario を apply mode で 2 系列 (r8 tracker_binding=beads / r9 tracker_binding=none) 実走し、両 verdict が launch/completion/goal_fit=PASS、required_observations 5/5、args_divergence.matches=true、task_contract.matches=true となった。証拠 ref は各 run directory 内の durable decompose-audit.json へ解決する。独立 verifier は graph・pre/post inventory・transcript・goal-seek artifact を再計算し、両系列とも DAG 5 node/3 edge/acyclic、task 0、粒度実測 1<=3、3 draft 除外と sole promoted candidate、persisted binding 一致、stdin schema 検証、zero attribution 分離を確認した。none 系列の二度目の同一入力が昇格済み lifecycle を draft へ退行させたため通常 C02 upsert で再昇格し、別責務の回帰を HarnessHub-bk8v に起票した。最終 graph と今回の C14 観測契約は成立している。"
     },
     "OUT2": {
       "status": "PASS",

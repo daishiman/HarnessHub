@@ -866,6 +866,11 @@
       "id": "qa-088",
       "question": "qa-039 のローカル開発契約と qa-087 の並列 worktree 安全契約を、章単独で情報を失わない自己完結した契約としてどう確定しますか?",
       "answer": "ユーザーの 2026-07-28 最終レビュー・仕様反映指示を明示承認として、qa-039 と qa-087 を統合した次のローカル開発契約を確定する。\n\n【1. ローカル環境】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。\n\n【2. CI と local の一致】PR の required status checks と同じ実装を pnpm script から実行できるようにし、CI 専用の検査手順を CI 側だけに持たない。merge 前ゲートの正本は CI とする。\n\n【3. commit 前のローカルゲート】lint と format は早期検知の補助として任意実行し、secret scan も local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。\n\n【4. 並列 worktree の ref 整合性】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲する。tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。\n\n【5. ローカルからの本番操作】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。ローカル開発は preview Turso または local SQLite を使い production DB を指さない。\n\n【6. Web App 出口との境界】作者 local session から顧客 Web App を公開する I5 は Hub 本体の開発フローと分離する。本契約は Hub repository の開発フローに限り、Hub の外部 API、データモデル、認証認可、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-089",
+      "question": "AI skill の live-trial を task/feature の受入証拠として再利用するとき、文字列上の PASS や一時ファイル参照を実証済みと誤認しないために何を必須としますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、開発品質ゲートの実走証拠契約を確定する。\n\n【1. scenario 束縛】受領書と verdict は positive scenario 正本の現行 scenario_id に一致し、required_observations を全件回収し、task_args_template と実引数の option flag が一致しなければならない。scenario が task.md の必須・禁止手順を宣言する場合は実 task.md も一致させ、実装不能な指示を別 operation へ読み替えて結果だけを合わせる run を拒否する。scenario_id の更新または scenario の削除は旧証拠を失効させる。\n\n【2. durable evidence】各 observation の evidence_ref は verdict の run directory を起点とした相対パスとし、生成時に workdir 内の実在する通常ファイルへ解決する。絶対パス、workdir 外への逸脱、ignored fixture や削除済み一時領域だけに残る参照を受入根拠にしない。PR に採用する run は参照先を含めて repository へ保持し、clean clone の品質ゲートでも解決できなければならない。\n\n【3. 実測と帰属】write count は実行前後の repository state 差分から導出し、binding は graph に永続した tracker_binding から導出する。起動引数や adapter の dry-run echo を実測値として書き戻さない。draft node の publication gate による 0 件と、promoted candidate の external-adapter dry-run による 0 件は別の帰属として記録する。\n\n【4. provenance】監査 helper は責務分割した全 module の複合 digest と Git index 一致を pre/post で束縛し、監査自身を書き換えた trial を拒否する。正例だけでなく publication gate や schema rule を壊した mutation test が赤になることを要求する。\n\n【5. 境界】本契約は Harness Hub の開発管理・テスト証拠に限定する。製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -904,6 +909,10 @@
     {
       "id": "appr-010",
       "note": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725) の R4-reopen 2 件を 1 往復で確認・承認 (2026-07-25、AskUserQuestion)。D1 (session JWT claims): 選択肢「実装を追認して 7 claim で確定」「6 claim を維持し実装を改修」「7 claim で確定 + 所属数上限で DB 判定へフォールバック」を提示し、ユーザーは **「実装を追認して 7 claim で確定」** を選択。→ qa-072 として確定登録。D2 (Device Flow polling interval): 選択肢「上限 60 秒・減衰 -5 秒を確定」「上限のみ確定し減衰は削除」「上限値を変更して確定」を提示し、ユーザーは **「上限 60 秒・減衰 -5 秒を確定」** を選択。→ qa-073 として確定登録。いずれも現行実装 (packages/schemas/auth-tenancy/session.ts / apps/hub/src/lib/auth/config.ts) の追認であり、本承認により実装改修は不要、仕様側 (docs/security-spec.md §2.1/§2.2) を確定内容へ合わせる。"
+    },
+    {
+      "id": "appr-011",
+      "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks の文書にも反映」を明示承認として記録。HarnessHub-9ndl / HarnessHub-dyxr の最終レビューで確定した durable live-trial evidence、scenario 失効、実測帰属、監査 provenance の契約を qa-089 として反映する。"
     }
   ],
   "reopen_log": [

@@ -151,6 +151,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 **差分追記 (2026-07-26)**: `packages/db/__tests__/runbook-invocation.test.ts` は runbook に記載した `pnpm --filter ... exec` コマンドをそのまま実走し、引数区切りと cwd (実行時の基準ディレクトリ) の回帰を検出する。`apps/hub/tests/ci/actions-secrets.test.ts` は台帳の 4 方向突合と live 設定検査の fail-closed 性を固定する。
 
+**開発品質反映 (2026-07-29 / `HarnessHub-9ndl`・`HarnessHub-dyxr`)**:
+
+- `system-spec/testing-qa.md` の qa-089 として、AI skill の live-trial を受入根拠にする場合の durable evidence（repository に残り clean clone でも解決できる証拠）、scenario・task 手順束縛と失効、pre/post 実測、監査 provenance を確定した。
+- 影響は repository 内の開発品質ゲートに限定され、Harness Hub 製品の外部 API・データモデル・認証認可・UI・Cloudflare deploy unit は変更しない。
+- 反映先と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) を正とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)

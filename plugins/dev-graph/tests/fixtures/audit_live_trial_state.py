@@ -26,6 +26,7 @@ import hashlib
 import json
 import os
 import subprocess
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -202,6 +203,73 @@ def content_inventory(repo_root: Path, config: dict[str, Any]) -> dict[str, list
     return result
 
 
+BEADS_EXPORT_PATH = ".beads/issues.jsonl"
+
+
+def publication_inventory(
+    repo_root: Path, config: dict[str, Any], nodes: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """起票 (tracker publication) の実数を run 前後で同じ手順から数える。
+
+    「draft の Issue 起票 0 件」は bridge が返す ``dry_run`` エコーで測ってはいけない。
+    エコーは「adapter に dry-run を渡した」ことしか言わず、ゲートが止めたのか flag が
+    止めたのかを区別できないからである。ここでは実際に増えた成果物だけを数える:
+
+    - ``issues/`` 配下のファイル (binding=none でローカルに現れる起票物)
+    - ``.beads/issues.jsonl`` の record (binding=beads の投影先)
+    - graph node の ``issue_linkage`` / ``beads_linkage`` / ``github_project_linkages``
+      (binding=github は外部 API を叩かずに投影の有無をローカル観測できる唯一の面)
+    """
+    roots = config.get("content_roots")
+    if not isinstance(roots, dict):
+        raise AuditError("config.content_roots must be a map")
+    issues_relative = roots.get("issues")
+    if not isinstance(issues_relative, str):
+        raise AuditError("config.content_roots.issues must be a string")
+    issues_root = repo_root / issues_relative
+    issue_paths = (
+        sorted(
+            path.relative_to(repo_root).as_posix()
+            for path in issues_root.rglob("*")
+            if path.is_file()
+        )
+        if issues_root.is_dir()
+        else []
+    )
+    beads_path = repo_root / BEADS_EXPORT_PATH
+    beads_ids: list[str] = []
+    if beads_path.is_file():
+        for line in beads_path.read_text(encoding="utf-8").splitlines():
+            stripped = line.strip()
+            if not stripped:
+                continue
+            try:
+                record = json.loads(stripped)
+            except json.JSONDecodeError as exc:
+                raise AuditError(f"beads export holds a non-JSON line: {BEADS_EXPORT_PATH}") from exc
+            identifier = record.get("id") if isinstance(record, dict) else None
+            beads_ids.append(identifier if isinstance(identifier, str) else stripped[:64])
+    linkages = {
+        node["graph_node_id"]: {
+            "issue_linkage": node.get("issue_linkage") is not None,
+            "beads_linkage": node.get("beads_linkage") is not None,
+            "github_project_linkages": len(node.get("github_project_linkages") or []),
+        }
+        for node in nodes
+        if isinstance(node, dict) and isinstance(node.get("graph_node_id"), str)
+    }
+    return {
+        "issues": {"root": issues_relative, "paths": issue_paths, "count": len(issue_paths)},
+        "beads_export": {
+            "path": BEADS_EXPORT_PATH,
+            "exists": beads_path.is_file(),
+            "ids": sorted(beads_ids),
+            "count": len(beads_ids),
+        },
+        "node_linkages": linkages,
+    }
+
+
 def capture_state(repo_root: Path, *, audit_implementation: dict[str, Any]) -> dict[str, Any]:
     config_path = repo_root / ".dev-graph/config.json"
     config = load_object(config_path)
@@ -227,17 +295,66 @@ def capture_state(repo_root: Path, *, audit_implementation: dict[str, Any]) -> d
             "node_count": len(nodes),
         },
         "content_inventory": content_inventory(repo_root, config),
+        "publication_inventory": publication_inventory(repo_root, config, nodes),
         "git_status": git_status(repo_root),
     }
 
 
+def _multiset_added(before: list[str], after: list[str]) -> list[str]:
+    """after にだけ現れた要素を重複込みで返す (同一 id の複数追加を潰さない)。"""
+    remaining = Counter(before)
+    added: list[str] = []
+    for value in after:
+        if remaining.get(value):
+            remaining[value] -= 1
+            continue
+        added.append(value)
+    return sorted(added)
+
+
+def publication_delta(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    """run 前後の起票実数の差分。write count の唯一の導出元。"""
+    for snapshot, label in ((before, "pre-state"), (after, "post-state")):
+        if not isinstance(snapshot.get("publication_inventory"), dict):
+            raise AuditError(
+                f"{label} lacks publication_inventory; re-capture the snapshot with the current audit modules"
+            )
+    pre = before["publication_inventory"]
+    post = after["publication_inventory"]
+    added_issues = _multiset_added(pre["issues"]["paths"], post["issues"]["paths"])
+    added_beads = _multiset_added(pre["beads_export"]["ids"], post["beads_export"]["ids"])
+    pre_links = pre["node_linkages"]
+    linked_nodes = {"beads": [], "github": []}
+    for node_id, link in sorted(post["node_linkages"].items()):
+        baseline = pre_links.get(node_id) or {
+            "issue_linkage": False,
+            "beads_linkage": False,
+            "github_project_linkages": 0,
+        }
+        if link["beads_linkage"] and not baseline["beads_linkage"]:
+            linked_nodes["beads"].append(node_id)
+        gained_issue = link["issue_linkage"] and not baseline["issue_linkage"]
+        gained_project = link["github_project_linkages"] > baseline["github_project_linkages"]
+        if gained_issue or gained_project:
+            linked_nodes["github"].append(node_id)
+    return {
+        "issues": {"added": added_issues, "added_count": len(added_issues)},
+        "beads_export": {"added": added_beads, "added_count": len(added_beads)},
+        "linked_nodes": linked_nodes,
+    }
+
+
 def state_comparison(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    delta = publication_delta(before, after)
     checks = {
         "config_sha_unchanged": before["config"]["sha256"] == after["config"]["sha256"],
         "graph_sha_unchanged": before["graph"]["sha256"] == after["graph"]["sha256"],
         "graph_revision_unchanged": before["graph"]["revision"] == after["graph"]["revision"],
         "graph_node_count_unchanged": before["graph"]["node_count"] == after["graph"]["node_count"],
         "content_inventory_unchanged": before["content_inventory"] == after["content_inventory"],
+        "publication_inventory_unchanged": (
+            before["publication_inventory"] == after["publication_inventory"]
+        ),
         "managed_git_status_unchanged": (
             before["git_status"]["managed"] == after["git_status"]["managed"]
         ),
@@ -245,6 +362,7 @@ def state_comparison(before: dict[str, Any], after: dict[str, Any]) -> dict[str,
     return {
         "checks": checks,
         "mutation_suppressed": all(checks.values()),
+        "publication_delta": delta,
         "before": before,
         "after": after,
     }
