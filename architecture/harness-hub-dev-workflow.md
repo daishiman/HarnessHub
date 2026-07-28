@@ -169,3 +169,15 @@ qa-039【2】(CI と local の乖離防止) は required status check を local 
 是正として `.github/workflows/ci.yml` の静的ゲート段へ **G12** を、root には `pnpm check:auth` を同時に用意した。あわせて、必須ゲートとして名指しされている tenant 分離テストが `pnpm -r test` に紛れて実行されるだけの状態を、`scripts/ci/check-tenant-isolation-gate.mjs` (対象実在 / ケース ID 網羅 / `skip`・`only` の不在を fail-closed で検査) で名指し化した。ゲート数は増やしていない。
 
 この作業中に **同型の未結線が G7 / G7b / G9 に残っている**ことが判明した (`HarnessHub-yhc3`)。またメタ層 lint (`governance-check.yml`) には local 入口そのものが無く、プロダクト層 `verify` へ混ぜると層分離を壊すため設計判断を要する (`HarnessHub-11qt`)。ゲート登録簿と local 入口の対応表は `docs/shared-layers.md` §3 (下流投影) が持ち、本節は「乖離が構造的に再発する」というリスクの記録に留める。
+
+### 差分追記 (2026-07-28): 結線されていても「起動条件が恒久 false」なら走らない
+
+出典: `issue-governance-notion-steps-always-skipped-20260725` (bd `HarnessHub-5u5k`)。
+
+上節は「検査を書いた」と「検査が走り続ける」を別の達成として区別した。今回はその**さらに内側**が壊れていた。`governance-check.yml` の Notion 検査 2 step は workflow に結線済みで、step-level `if: ${{ env.NOTION_TOKEN != '' }}` という一見自然な gate を持っていた。しかし参照先の `env.NOTION_TOKEN` は**同じ step の `env:`** にしか無く、Actions は step の `if` を step の `env` 適用より前に評価するため、式は恒久的に `'' != '' = false` になる。`steps.if` から `secrets` context は参照できないので、この書き方では gate を secret 有無へ結び付ける経路がそもそも存在しない。結果は「secret を投入しても永久に skip」であり、未設定ゆえの skip と CI 上は完全に同じ緑を出す。
+
+**前 3 例が「ファイルシステム上の存在を、起動される実体の代理として使った」誤りだったのに対し、これは「宣言の存在を、実行可能性の代理として使った」誤りである。**ゲート登録簿・結線チェックはいずれも「その step が workflow に書かれているか」しか見ておらず、「起動条件が真になりうるか」を検査していなかった。人手のレビューでも同型は自然に見えるため再発しやすい。
+
+是正は 3 段構えとした。(1) 判定を job-level `env` の真偽値 (`HAS_NOTION_TOKEN: ${{ secrets.NOTION_TOKEN != '' }}`) 経由に変え、step-level `if` から解決可能にする。(2) 同型を全 workflow に対し fail-closed で遮断する `scripts/lint-workflow-step-guard.py` を追加し、`--simulate` で実 workflow の run/skip を実測可能にする。(3) 上節が指摘した CI-local 乖離を再生産しないよう、**新設ゲートを CI と同時に `make lint` / `scripts/run-ci-checks.sh` (pre-push) へも結線する**。`HarnessHub-11qt` が扱う `lint-artifact-placement` / `lint-doc-line-limit` の local 入口設計 (`--ratchet-base origin/main` を要するため別途判断が要る) とは分離してある。
+
+あわせて、条件付き必須という第 3 の状態を台帳へ導入した。`NOTION_TOKEN` は任意 (未投入なら skip して成功) だが、**投入したなら DB ID 3 件 (variable) がすべて必要**で、欠ければ `prepare notion config` step が exit 1 で落ちる。「必須/任意」の 2 値だけでは、token だけ入れて DB ID を忘れた中途半端な設定が緑のまま残る。

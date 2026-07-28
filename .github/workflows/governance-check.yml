@@ -9,6 +9,18 @@ on:
 jobs:
   change-category-guard:
     runs-on: ubuntu-latest
+    # step-level の `env:` は step-level `if:` の評価「後」に適用されるため、if から
+    # 同じ step の env を参照すると常に未定義 ('' != '' = false) になり、secret を投入
+    # しても当該 step が永久に skip される fail-open になる (HarnessHub-5u5k)。
+    # steps.if で `secrets` context は参照できないので、判定に使う真偽値だけを job-level
+    # env へ配る。secret 本体は実際に使う step の env に限定し、job 全 step への露出を避ける。
+    env:
+      HAS_NOTION_TOKEN: ${{ secrets.NOTION_TOKEN != '' }}
+      # DB ID は秘匿情報ではないため variable で持つ (台帳 kind=variable)。
+      # NOTION_TOKEN 投入時は prepare step が 3 件すべての存在を fail-closed で検査する。
+      NOTION_DB_SKILL_LIST: ${{ vars.NOTION_DB_SKILL_LIST }}
+      INTAKE_NOTION_DATABASE_ID: ${{ vars.INTAKE_NOTION_DATABASE_ID }}
+      NOTION_DB_IMPROVEMENT_REQUEST: ${{ vars.NOTION_DB_IMPROVEMENT_REQUEST }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,15 +72,49 @@ jobs:
       - name: "lint prompt contract drift (7層プロンプトの参照パス/allowed-tools が実装と整合・Tier1 fail-closed)"
         run: python3 scripts/lint-prompt-contract-drift.py --all
         continue-on-error: false
+      - name: lint workflow step guard self-test (if 評価順ガードの分岐検査)
+        run: python3 scripts/lint-workflow-step-guard.py --self-test
+        continue-on-error: false
+      # step-level if が step 自身の env を参照すると、secret を投入しても当該 step が
+      # 永久に skip される (HarnessHub-5u5k)。静的には自然に見えて人手では再発しやすい
+      # ため、全 workflow に対して fail-closed で機械遮断する。
+      - name: "lint workflow step guard (step-level if の env 解決性。secret gate の常時 skip 遮断)"
+        run: python3 scripts/lint-workflow-step-guard.py
+        continue-on-error: false
+      # per-repo の .notion-config.json は gitignore 対象で CI には存在しない。
+      # notion_config.require_or_skip() は config 不在を fail-closed (exit 2) で落とすため、
+      # token / DB ID をすべて env 解決へ委ねる最小 config を生成し NOTION_CONFIG_PATH で指す。
+      # databases を空にしておくのは、未設定の DB ID をプレースホルダ文字列で埋めて
+      # 実在しない DB を叩きに行く (= API エラーで落ちる) 事故を防ぐため。
+      - name: prepare notion config (CI は Keychain も per-repo config も持たない)
+        if: env.HAS_NOTION_TOKEN == 'true'
+        run: |
+          missing=0
+          for name in NOTION_DB_SKILL_LIST INTAKE_NOTION_DATABASE_ID NOTION_DB_IMPROVEMENT_REQUEST; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Notion configuration missing::$name must be set when NOTION_TOKEN is configured"
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+          printf '{"databases": {}, "schema_dir": "doc/notion-schema"}\n' > "$RUNNER_TEMP/notion-config.json"
+          echo "NOTION_CONFIG_PATH=$RUNNER_TEMP/notion-config.json" >> "$GITHUB_ENV"
       - name: notion schema drift check (3DB SSOT vs Notion)
-        if: ${{ env.NOTION_TOKEN != '' }}
+        if: env.HAS_NOTION_TOKEN == 'true'
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          # notion_config.get_token() は Keychain (macOS 専用の security コマンド) を正とし、
+          # env の NOTION_TOKEN は本フラグが '1' のときだけ許可する。Keychain の無い CI で
+          # これを落とすと token 未解決となり require_or_skip() が exit 2 で停止する。
+          INTAKE_ALLOW_ENV_TOKEN: '1'
         run: python3 scripts/sync-notion-schema.py --check
       - name: notion relation invariants (1:1 hearing↔plugin / N:1 request→plugin / TITLE 重複なし)
-        if: ${{ env.NOTION_TOKEN != '' }}
+        if: env.HAS_NOTION_TOKEN == 'true'
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_ALLOW_ENV_TOKEN: '1'
         run: python3 scripts/lint-notion-relations.py
       - name: check plugin external refs
         run: >
