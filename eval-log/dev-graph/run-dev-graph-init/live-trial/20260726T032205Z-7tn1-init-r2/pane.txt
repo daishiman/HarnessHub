@@ -1,0 +1,20 @@
+The fresh trial invoked dev-graph:run-dev-graph-init twice through the Skill
+tool against an initially uninitialized isolated Git repository.
+
+Observed results:
+- first pass created all six content roots, config, graph store and 21 templates
+- between passes, one template was edited and hashed
+- one issue node was registered through the canonical C02 upsert-node writer
+- second pass reported planned changes 0
+- edited template SHA-256 remained
+  1a9388963a72ce3dd38d2ed8d18ea7c33b60d6235037f974a58c291dfc765ca2
+- validate-repo-config.py and validate-graph-schema.py both passed
+- config absolute paths, tokens and GitHub node IDs were all 0
+- graph validation exercised a non-empty graph with one node
+- goal-seek evidence contained two append-only intermediate rows
+
+The trial wrote:
+{"status": "PASS", "scenario": "C01-OUT1-positive-idempotence-r17"}
+
+Final session report:
+DONE: PASS

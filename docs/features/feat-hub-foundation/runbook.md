@@ -12,11 +12,11 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 > **前提**: 提供者 1 名 + AI 運用（C1）・固定費ゼロ（C2）。手順は「迷わず実行できる」ことを優先し、判断が要る箇所は判断基準を併記する。
 > **注意**: 本 runbook は**手順**であり、未実装の仕組みを手順で代替しない（requirements-baseline §9.5）。未実装項目は §7 に明示する。
 
-## 1. 初回セットアップ（**2026-07-25 実施済み**。残項目は下記）
+## 1. 初回セットアップ（**外部資源は適用済み・monitor 再開待ち**）
 
 > **投入状況の正本は本文ではなく `node scripts/ci/check-actions-secrets.mjs --live` の出力**。散文で書いた一覧は書いた翌日には古くなるため、判断前に必ずコマンドを叩く（未投入・用途不明・台帳との食い違いを一度に出す）。
 
-> **実施状況**: 手順 1〜4 と GitHub Secrets / Variables は完了し、CI 経由の自動デプロイ（手順 6）へ移行済み。`HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**未実施は手順 5（Better Stack 外形監視）と `CRON_HEARTBEAT_URL` の投入**。あわせて `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は参照する workflow が無くなったため**削除待ち**（残すと用途不明の認証情報が有効なまま残る）。証跡は [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。以下の手順は再構築時のために残す。
+> **実施状況**: `HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**2026-07-28 に Better Stack 外部資源を適用し、`CRON_HEARTBEAT_URL` を Worker secret へ投入した**（monitor `4724920` / heartbeat `475650` / status page `256797` / resource `8978911`、適用時刻 `2026-07-27T20:46:37.686Z` UTC）。しかし、同日 `21:38:14Z` の公開 status page 再確認で個別 resource が `not_monitored`（Better Stack 公式仕様では underlying monitor が paused）と判明した。適用器は既存資源の設定差分を `PATCH` するよう是正済みであり、Uptime API token を渡して同じ適用コマンドを再実行し、resource が `operational` になった時点から 30 日観測を開始する。現在の `slo-dashboard.json` は `collection_blocked` であり、99.5% 達成を主張しない。証跡は [evidence/monitoring-applied.json](evidence/monitoring-applied.json) と [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。なお、workflow から参照されなくなった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除待ちである。以下の手順は再構築時のために残す。
 
 > **順序制約（重要）**: `wrangler secret put` は **Worker が存在しないと実行できない**ため、初回だけは「deploy → secret 投入」の順になり、その間 `/health` は 503 を返します。`ci.yml` の post-deploy `/health` チェックは 200 必須なので、**初回は CI に任せず手動 bootstrap を行ってください**（CI 側のチェックを緩めるとゲートが恒久的に甘くなるため、この方式を採ります）。
 >
@@ -51,11 +51,35 @@ wrangler secret put AUTH_SECRET
 wrangler secret put CRON_HEARTBEAT_URL   # Better Stack の heartbeat URL (未設定なら ping しない)
 ```
 
-4. **Better Stack Free** で以下を登録（**要求内容の正本は [`apps/hub/monitoring/better-stack.monitors.json`](../../../apps/hub/monitoring/better-stack.monitors.json)**。ダッシュボードで独自に値を決めない）
-   - production `/health` を **3 分間隔**で監視（SLO 99.5% の一次計測源）
-   - cron heartbeat（日次バッチ完了 ping 用。period 86,400s / 猶予 3,600s。発行された URL は `wrangler secret put CRON_HEARTBEAT_URL` で投入し、ファイル・ログへ残さない）
-   - status page（履歴 30 日。上記 monitor を resource として関連付ける）
-   - 適用後に設定ファイルへ `external_id` / `applied_at` を書き戻し、`application_state` を `applied` にする。**書き戻すまで SLO は「計測開始前」として扱う**（`apps/hub/monitoring/slo-dashboard.json` の `verdict.status`）
+4. **Better Stack Free** の外形監視を適用する（**要求内容の正本は [`apps/hub/monitoring/better-stack.monitors.json`](../../../apps/hub/monitoring/better-stack.monitors.json)**。ダッシュボードで独自に値を決めない）
+
+   登録内容は monitor（production `/health` を **3 分間隔**・SLO 99.5% の一次計測源）・heartbeat（日次バッチ完了 ping 用。period 86,400s / 猶予 3,600s）・status page（履歴 30 日。monitor を resource として関連付け）の 3 点。**画面から手で登録せず、正本ファイルを適用する script を使う**：
+
+   ```bash
+   # a. 何を送るかを先に確認する (ネットワークへは出ない)
+   node apps/hub/scripts/apply-better-stack-monitoring.mjs --dry-run
+
+   # b. 適用する。token は環境変数で渡す (引数は ps とシェル履歴に残る)
+   #    --put-secret を付けると heartbeat URL を標準出力へ出さずに wrangler の stdin へ直接流す
+   export BETTER_STACK_API_TOKEN=...   # 取得場所は下の注記を参照
+   node apps/hub/scripts/apply-better-stack-monitoring.mjs \
+     --put-secret \
+     --json docs/features/feat-hub-foundation/evidence/monitoring-applied.json
+   unset BETTER_STACK_API_TOKEN
+
+   # c. 書き戻しと状態遷移を検証する
+   pnpm --filter @harness-hub/hub test tests/monitoring
+   ```
+
+   - **token の取得場所**: Better Stack にログイン →左下のアカウントメニュー→ **API tokens** → **Team-based tokens** → 対象チームを選び **Uptime API tokens** セクションからコピー（無ければ新規作成）。**team 単位の Uptime API token を使うこと**。同じ画面にある **Global API token（全 team 横断）を使うと、作成 body に `team_name` が必須**になり、正本にその項目が無いため作成が失敗する（[公式手順](https://betterstack.com/docs/uptime/api/getting-started-with-uptime-api/)）。
+   - token は可視 ASCII のみ。全角文字・改行・空白が混ざると script が**適用前に**落ちる（HTTP ヘッダへ載せると token の文字コードが例外メッセージへ出てしまうため、手前で塞いでいる）。コピー時に改行が付いていないか確認する。
+   - script は既存資源を名前・URL・subdomain で同定し、monitor / heartbeat は正本との差分だけを `PATCH` してから不足分だけを作るため、**再実行しても二重登録にならず、paused のような dashboard 側 drift も正本へ戻る**。中断したら同じコマンドをそのまま流し直す。
+   - 適用に成功すると設定ファイルへ `external_id` / `applied_at` が書き戻り `application_state` が `applied` になり、`slo-dashboard.json` の `verdict` が `collecting`（`observation_started_at` と `first_monthly_verdict_due_at` 付き）へ進む。**書き戻るまで SLO は「計測開始前」として扱う**。
+   - heartbeat URL は secret。script は標準出力・設定ファイル・エラーメッセージのいずれにも出さない。`--put-secret` を使わず手で入れる場合は `cd apps/hub && wrangler secret put CRON_HEARTBEAT_URL` で標準入力から渡す。
+   - 書き戻しは JSON を丸ごと再出力する（2 space インデント）。差分が状態遷移分だけになるよう正本側の数値表記は正規化済み（例: `1.0` ではなく `1`）。適用後の差分に状態以外の行が出たら、それは正本の書式が崩れた合図なので取り込む前に確認する。
+   - **API フィールド名は 2026-07-26 に公式ドキュメント（`create-a-new-monitor` / `create-a-hearbeat` / `create-a-new-status-page` / `create-a-new-status-page-resource`）へ照合済み**。422 が出た場合は Better Stack 側の仕様変更なので、**ダッシュボードではなく設定ファイルを直して**再適用する。
+   - **403 `Cannot modify status page advanced settings` はプラン制限**であり、フィールド名の誤りではない。Free プランでは status page の advanced settings 群（`automatic_reports` / `subscribable` / `hide_from_search_engines` など）は**既定値と同じ値でも送信自体が拒否される**（2026-07-26 実測）。該当フィールドは正本の payload から外し、理由を `$comment_omitted_fields` に残してある。有料プランへ上げたときに復活を検討する。
+   - **途中で失敗した場合、作成済みの資源は Better Stack 側に残るが設定ファイルへは書き戻らない**（`applyMonitoring` は 4 資源すべての成功を条件に書き戻すため）。この「リモートには在るのにファイルは `pending_credentials`」という状態は正常な中間状態で、同じコマンドを流し直せば既存分は `reused` として拾い直される。
 
 > secret / binding の**内容正本**は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §2。本 runbook は手順のみを持つ。
 

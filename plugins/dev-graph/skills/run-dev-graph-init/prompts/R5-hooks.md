@@ -22,6 +22,7 @@
 ### 責務境界
 
 - fallbackはplain-symlinkかつeffective plugin hook不在時のみ許可し既存key上書き/二重登録をしない。
+- 前提のうち「`project_plugin_link` が実在し plain symlink である」は `scripts/validate-repo-config.py` が機械検査する。`claude_hooks.source=project` のときだけ実体を検査し、link が不在、または symlink でない実体 (ディレクトリ/ファイル) を指す config を exit 1 で落とす。`source` が `plugin`/`disabled` のときは link 値が読まれないため検査せず、schema 側も同条件で `project_plugin_link` の required を切り替える (層の責務は schema=key の有無、validator=実体の性質)。
 
 ### 受入条件
 

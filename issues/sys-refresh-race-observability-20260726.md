@@ -12,7 +12,7 @@ iteration: null
 title: "refresh rotation の CAS 敗北が監査に残らず Workers 本番経路の並行窓で窃取が観測できない"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T00:00:00Z"
+updated_at: "2026-07-27T23:33:20.616615Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-auth-tenancy","issue-auth-tenancy-production-adapter-20260725"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-27T23:31:48Z","evidence_refs":["apps/hub/tests/auth-tenancy/db-ports-integration.test.ts","docs/features/feat-auth-tenancy/runbook.md","issues/sys-refresh-race-observability-20260726.md"],"policy":"manual","reconciled_at":"2026-07-27T23:31:58Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-26T00:00:00Z","missing_sections":[],"status":"incomplete"}
 ---
 

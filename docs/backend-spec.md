@@ -149,7 +149,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 `project.create / project.update / publish.request / publish.approve / publish.reject / channel.promote / channel.rollback / release.suspend / sheet.status_change / build.stage_change / doc.create / doc.update / user.role_change / user.salary_change / coefficient.change / token.revoke / feedback.status_change / ai_job.complete`
 
-**security-spec で追加**: `user.salary_read` (PII 読取の記録) / `idp.connection_change` / `token.reuse_detected` / `provider.cross_tenant_access` (provider-admin の越境は読取も記録 — security-spec §3.1.3)。記録するのは変更の**事実**であり、値そのもの (salary 金額・secret・token) は書かない (security-spec §5.2)。action 数は固定値として別管理せず、この列挙を正本にする。
+**security-spec で追加**: `user.salary_read` (PII 読取の記録) / `idp.connection_change` / `token.reuse_detected` / `provider.cross_tenant_access` (provider-admin の越境は読取も記録 — security-spec §3.1.3) / `token.refresh_race` (refresh rotation の CAS 敗北。並行提示されたことの観測性 — security-spec §5.2)。記録するのは変更の**事実**であり、値そのもの (salary 金額・secret・token) は書かない (security-spec §5.2)。action 数は固定値として別管理せず、この列挙を正本にする。
 
 ## 4. API エンドポイント一覧
 
