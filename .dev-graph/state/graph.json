@@ -1,5 +1,5 @@
 {
-  "graph_revision": 915,
+  "graph_revision": 930,
   "nodes": [
     {
       "acceptance": [
@@ -25244,7 +25244,10 @@
         "task template に status = 文書ライフサイクル (active/superseded) の意味論が明記され、実行状態の二重正本が無い",
         "graph.json 分割の再検討トリガーが仕様に記録されている",
         "spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される",
-        "陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている"
+        "陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている",
+        "feature の purpose/goal/scope_in/acceptance と context JSON・goal-spec が qa-071 の方法論要件 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を明示的に保持している",
+        "P01..P13 の task spec が外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復契約・スコープ分離・情報配置 (正本への参照と lineage のみ)・P13 の仕様/architecture への書き戻しを実行可能な形で trace している",
+        "validate-system-plan.py と system-dev-plan-evaluator が、feature 宣言 qa 要件の spec-state qa_log 登録と goal-spec/task spec への semantic coverage を tag/lineage 一致だけで PASS にせず fail-closed 検証している"
       ],
       "architecture_refs": [
         "arch-harness-hub-dev-workflow"
@@ -25266,21 +25269,22 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)",
       "completion_evidence": {
-        "completed_at": "2026-07-23T04:02:24Z",
+        "completed_at": null,
         "evidence_refs": [
           "docs/features/feat-dev-pipeline-improvement/acceptance-report.md",
           "eval-log/dev-graph/pipeline-improvement/release-receipt.json",
-          "https://github.com/daishiman/HarnessHub/pull/41"
+          "https://github.com/daishiman/HarnessHub/pull/41",
+          ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/atomic-promotion-receipt.json"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-07-24T07:20:00Z",
+        "reconciled_at": "2026-07-25T16:53:34Z",
         "source": "manual",
-        "status": "done"
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-21T14:40:00Z",
@@ -25297,7 +25301,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態",
+      "goal": "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態",
       "graph_node_id": "feat-dev-pipeline-improvement",
       "implementation_readiness": {
         "checked_at": "2026-07-21T15:10:00Z",
@@ -25314,7 +25318,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する",
+      "purpose": "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する",
       "related_nodes": [
         "issue-audit-followups-20260717"
       ],
@@ -25329,7 +25333,8 @@
         "graph.json 肥大対策の再検討トリガー記録",
         "dev-graph 中核 handoff 31 findings の差分監査と disposition 遡及付与",
         "spec-drift-guardian の verdict close gate 配線",
-        "陳腐化文書の定期棚卸し GC の sync verb 運用組込み"
+        "陳腐化文書の定期棚卸し GC の sync verb 運用組込み",
+        "qa-071 方法論要件 (外側/内側ループ・スコープ分離・情報配置・P13 書き戻し) の feature context・goal-spec・P01..P13 task spec への意味的伝播と semantic coverage 検査の恒常化"
       ],
       "scope_out": [
         "Hub プロダクト本体機能 (Web/API/DB) の変更",
@@ -25340,13 +25345,13 @@
       "source_lineage": {
         "imported_at": "2026-07-21T14:40:00Z",
         "origin_kind": "generated",
-        "source_digest": "bdf3c60e2ab89540c6dd7bdf6009316070d66f9cf36aee17743d825668b6ae21",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "macro-feature",
         "dev-pipeline",
@@ -25359,12 +25364,12 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T00:55:00Z"
+      "updated_at": "2026-07-25T22:55:12.292521Z"
     },
     {
       "acceptance": [
         "requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) が逐語一致で転記されている",
-        "現行 feature context sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である",
+        "現行 feature context sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である",
         "P02 で確定すべき据置事項 (検査 script 入出力契約・handoff schema 後方互換方式・eval-log 再配置対象一覧・close-loop の bd-bridge 経由手順) が明記されている"
       ],
       "architecture_refs": [
@@ -25372,11 +25377,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.1",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25387,22 +25388,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P01 責務 (要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T06:29:56Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [],
       "domain": "documentation",
       "evaluation_status": "pass",
@@ -25452,15 +25451,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-01-requirements.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-01-requirements.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25472,7 +25471,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:52:03.400821Z"
     },
     {
       "acceptance": [
@@ -25488,11 +25487,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.2",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25503,22 +25498,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P02 責務 (検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T06:30:09Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/design.md"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P01"
       ],
@@ -25570,15 +25563,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-02-architecture.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-02-architecture.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25590,7 +25583,7 @@
       "template_version": "1.1.0",
       "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:52:26.342269Z"
     },
     {
       "acceptance": [
@@ -25602,11 +25595,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.3",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25617,22 +25606,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P03 責務 (設計レビュー — 単一 writer・choke-point・sync authority との整合検証) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T06:30:11Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/design-review.md"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P02"
       ],
@@ -25684,15 +25671,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-03-design-review.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-03-design-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25704,7 +25691,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:52:52.655407Z"
     },
     {
       "acceptance": [
@@ -25718,11 +25705,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.4",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25733,22 +25716,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P04 責務 (テスト設計 — lint script 群と冪等 migration の回帰テスト設計) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T06:30:15Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/test-plan.md"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P03"
       ],
@@ -25800,15 +25781,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-04-test-design.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-04-test-design.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25820,7 +25801,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:53:26.151657Z"
     },
     {
       "acceptance": [
@@ -25834,11 +25815,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.5",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25849,24 +25826,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P05 責務 (実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T06:30:28Z",
-        "evidence_refs": [
-          "plugins/dev-graph/tests/test_lint_open_residue.py",
-          "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
-          "plugins/dev-graph/tests/test_lint_handoff_disposition.py"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P04"
       ],
@@ -25908,7 +25881,7 @@
         "plugins/dev-graph/scripts/lint-open-residue.py",
         "plugins/dev-graph/scripts/lint-eval-log-layout.py",
         "plugins/dev-graph/scripts/lint-handoff-disposition.py",
-        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json",
+        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
         "plugins/dev-graph/tests/test_lint_open_residue.py",
         "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
         "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
@@ -25921,7 +25894,7 @@
         "plugins/dev-graph/scripts/lint-open-residue.py",
         "plugins/dev-graph/scripts/lint-eval-log-layout.py",
         "plugins/dev-graph/scripts/lint-handoff-disposition.py",
-        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/schemas/improvement-handoff.schema.json",
+        "plugins/dev-graph/schemas/improvement-handoff.schema.json",
         "plugins/dev-graph/tests/test_lint_open_residue.py",
         "plugins/dev-graph/tests/test_lint_eval_log_layout.py",
         "plugins/dev-graph/tests/test_lint_handoff_disposition.py",
@@ -25938,15 +25911,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-05-implementation.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-05-implementation.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25958,7 +25931,7 @@
       "template_version": "1.1.0",
       "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:53:54.327678Z"
     },
     {
       "acceptance": [
@@ -25970,11 +25943,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.6",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25985,22 +25954,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P06 責務 (テスト実行 — 回帰テスト全件と lint 実測の記録) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T11:38:04Z",
-        "evidence_refs": [
-          "eval-log/dev-graph/pipeline-improvement/test-run-p06.json"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P05"
       ],
@@ -26052,15 +26019,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-06-test-run.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-06-test-run.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26072,7 +26039,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:54:18.356033Z"
     },
     {
       "acceptance": [
@@ -26084,11 +26051,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.7",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26099,22 +26062,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P07 責務 (受入判定 — 8 acceptance の突合と未達の差し戻し) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T11:38:08Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/acceptance-report.md"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P06"
       ],
@@ -26166,15 +26127,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-07-acceptance.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-07-acceptance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26186,7 +26147,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:54:44.875336Z"
     },
     {
       "acceptance": [
@@ -26201,11 +26162,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.8",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26216,22 +26173,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P08 責務 (移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T11:38:13Z",
-        "evidence_refs": [
-          "eval-log/dev-graph/pipeline-improvement/migration-receipt.json"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P07"
       ],
@@ -26287,15 +26242,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-08-refactoring-migration.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-08-refactoring-migration.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26307,7 +26262,7 @@
       "template_version": "1.1.0",
       "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:55:08.510722Z"
     },
     {
       "acceptance": [
@@ -26319,11 +26274,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.9",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26334,22 +26285,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P09 責務 (品質保証 — fail-closed 実効性の悪性ケース実測) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T11:38:18Z",
-        "evidence_refs": [
-          "eval-log/dev-graph/pipeline-improvement/qa-fail-closed-report.json"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P08"
       ],
@@ -26401,15 +26350,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-09-quality-assurance.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-09-quality-assurance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26421,7 +26370,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:55:39.527178Z"
     },
     {
       "acceptance": [
@@ -26433,11 +26382,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.10",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26448,22 +26393,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P10 責務 (最終レビュー — 全 phase 成果の横断整合確認) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T11:38:20Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/final-review.md"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P09"
       ],
@@ -26515,15 +26458,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-10-final-review.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-10-final-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26535,7 +26478,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:56:08.038751Z"
     },
     {
       "acceptance": [
@@ -26547,11 +26490,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.11",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26562,22 +26501,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P11 責務 (証跡固定 — 実測ログと digest の evidence manifest 化) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T11:38:22Z",
-        "evidence_refs": [
-          "eval-log/dev-graph/pipeline-improvement/evidence-manifest.json"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P10"
       ],
@@ -26629,15 +26566,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-11-evidence.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-11-evidence.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26649,7 +26586,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:56:36.431928Z"
     },
     {
       "acceptance": [
@@ -26661,11 +26598,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.12",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26676,22 +26609,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P12 責務 (運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-22T11:38:25Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/operations.md"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-23T11:10:47Z",
-        "source": "reconciliation",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P11"
       ],
@@ -26743,15 +26674,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-12-documentation-operations.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-12-documentation-operations.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26763,7 +26694,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:22:00Z"
+      "updated_at": "2026-07-25T16:57:02.733424Z"
     },
     {
       "acceptance": [
@@ -26775,11 +26706,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u.13",
-        "linked_at": "2026-07-21T16:50:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26790,22 +26717,20 @@
       "classification_confidence": 0.87,
       "classification_reason": "qa-067 の開発管理パイプライン改善 8 要件のうち P13 責務 (リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証) を実行する task",
       "completion_evidence": {
-        "completed_at": "2026-07-23T04:02:24Z",
-        "evidence_refs": [
-          "https://github.com/daishiman/HarnessHub/pull/41"
-        ],
-        "policy": "linked_pr_merged_all",
-        "reconciled_at": "2026-07-24T07:07:52.148676Z",
-        "source": "github_pr_merge",
-        "status": "done"
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
+        "evaluated_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-22T04:16:31Z",
+      "created_at": "2026-07-25T16:38:15Z",
       "depends_on": [
         "SYS-DEV-PIPELINE-IMPROVEMENT-P12"
       ],
@@ -26837,20 +26762,7 @@
       "phase_ref": "P13",
       "priority": null,
       "project_id": "feature-package-feat-dev-pipeline-improvement",
-      "pull_request_linkages": [
-        {
-          "base_branch": "main",
-          "closing_reference_verified": true,
-          "head_branch": "devgraph/feat-dev-pipeline-and-doc-governance",
-          "linked_at": "2026-07-24T07:07:52.148155Z",
-          "merge_commit_sha": "b655e22db768f38fb044cb24482807ce35ec00f5",
-          "merged_at": "2026-07-23T04:02:24Z",
-          "pr_number": 41,
-          "repo": "daishiman/HarnessHub",
-          "state": "merged",
-          "url": "https://github.com/daishiman/HarnessHub/pull/41"
-        }
-      ],
+      "pull_request_linkages": [],
       "purpose": "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
@@ -26870,15 +26782,15 @@
         "本 phase の責務外の成果物生成 (他 phase の write scope への書込)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-22T04:16:31Z",
+        "imported_at": "2026-07-25T16:38:15Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-13-release-deploy.md",
+        "source_digest": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-13-release-deploy.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26890,7 +26802,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T07:07:52.151248Z"
+      "updated_at": "2026-07-25T16:57:34.035214Z"
     },
     {
       "acceptance": [
@@ -39300,6 +39212,121 @@
       "title": "500 行分割が harness coverage の分母を希釈し ratchet を回帰させる",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T00:22:00Z"
+    },
+    {
+      "acceptance": [
+        "正規の register → upsert 後に同じ generation の register-package --dry-run が idempotent=true で成功する",
+        "purpose / goal / scope_in / scope_out / acceptance / architecture_refs が task Markdown と graph node の両方に保持される",
+        "exact-13・graph schema・source digest・generation receipt の回帰テストが PASS する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-cvli",
+        "linked_at": "2026-07-27T21:24:33.65077Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-register-package-projection-idempotency-drift-20260728.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "HarnessHub-8wo 最終レビューで正規 register → upsert → register dry-run を再現し、同一 source digest の内容差エラーを実測したため",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-27T21:24:33.65077Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-register-package-projection-idempotency-drift-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "register-package → upsert-node 後に同じ generation を dry-run すると idempotent=true で成功し、必須 frontmatter 6 項目と receipt 不変性も維持される状態",
+      "graph_node_id": "issue-register-package-projection-idempotency-drift-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-27T21:24:33.65077Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "exact-13 package の登録と task Markdown 投影が同じ node 契約へ収束し、同一 generation の再登録を安全な no-op にする",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/register-package.py",
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/tests/test_register_package.py",
+        "issues/sys-register-package-projection-idempotency-drift-20260728.md"
+      ],
+      "scope_in": [
+        "register-package と task projection の所有フィールド統一",
+        "同一 source digest 再実行の idempotency 判定修正",
+        "exact-13・graph schema・source digest・receipt の回帰テスト"
+      ],
+      "scope_out": [
+        "qa-071 要件本文の変更",
+        "既存 generation digest の書き換え",
+        "task frontmatter 必須 6 項目の削除"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-27T21:24:33.65077Z",
+        "origin_kind": "generated",
+        "source_digest": "5fc84a3f1c4517692cd2f4b6d4b115c07debcf5285d00354fd5ccdc2f7134d68",
+        "source_path": "plugins/dev-graph/scripts/register-package.py",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "register-package",
+        "idempotency",
+        "task-projection",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "register-package 再実行が projection 6 項目差で同一 digest を拒否する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-27T21:24:33.65077Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
