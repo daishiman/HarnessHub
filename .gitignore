@@ -130,3 +130,6 @@ node_modules/
 artifacts/
 *.tsbuildinfo
 apps/hub/.dev.vars
+
+# vitest --coverage の生成物 (各 package/apps 配下)
+coverage/
