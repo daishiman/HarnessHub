@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+# reference-transaction (保険経路)
+#
+# core.hooksPath が .beads/hooks を指す構成へ戻された場合でも、他ワークツリーが
+# checkout 中の ref への直接更新を遮断できるようにするための hook。
+# 主経路は git common dir の共有 hook bundle。
+#
+# beads はこの hook を生成しないため BEADS INTEGRATION ブロックは持たない
+# (= beads の再生成対象外であり、上書きで失われにくい)。
+set -u
+
+_hh_root="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+[ -n "${_hh_root:-}" ] || exit 0
+
+_hh_common="$(git rev-parse --git-common-dir 2>/dev/null)"
+case "${_hh_common:-}" in
+  /*) ;;
+  ?*) _hh_common="$_hh_root/$_hh_common" ;;
+esac
+_hh_guards="$_hh_common/harness-hub-hooks/lib/run-repo-guards.sh"
+[ -f "$_hh_guards" ] || _hh_guards="$_hh_root/.githooks/lib/run-repo-guards.sh"
+[ -f "$_hh_guards" ] || exit 0
+
+exec sh "$_hh_guards" reference-transaction "$@"

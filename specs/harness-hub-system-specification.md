@@ -113,6 +113,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**開発フロー反映 (2026-07-28 / `HarnessHub-7xi9`)**:
+
+- `system-spec/dev-workflow.md` の desktop-windows / desktop-macos を R4-reopen し、`qa-088` で `qa-039` の既存ローカル開発契約と並列 worktree の整合性契約を自己完結して再確定した。
+- ref 更新は `reference-transaction` で予防し、判定不能時は修復可能性を残すため fail-open とする。巻き戻し commit は `pre-commit` で fail-closed に止める二層境界を正本とした。
+- 影響は repository の開発運用に限定され、Hub の外部 API・データモデル・認証認可・Cloudflare deploy unit は変更しない。
+
 ## イベント・非同期処理
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。

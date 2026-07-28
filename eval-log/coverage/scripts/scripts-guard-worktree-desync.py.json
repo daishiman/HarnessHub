@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/guard-worktree-desync.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 91,
+    "notes": "genuine code-review + py_compile OK。pre-commit の最終防衛線として index tree を HEAD の祖先 tree と比較し、内容が過去状態へ完全に戻る rollback を決定論的に拒否する。HEAD と同一 tree を持つ merge 親を除外するため commit ではなく tree 単位で比較しており、実環境で検出した誤検知を原理に沿って修正済み。完全一致しない部分 desync は staged deletion 件数の閾値で補完し、確定判定 rollback をヒューリスティック bulk-delete より優先する。証拠取得失敗や設定値不正は commit だけを fail-closed で止め、明示 bypass と復旧手順を提示するため前進可能性を保つ。祖先探索は既定 200 commit に有限化され、より古い rollback は完全一致検出外になりうるが、環境変数で拡張でき、大量削除検査が補助する設計として文書化されている。初回 commit は祖先が無いため許可し、--json は同じ judge 結果を機械可読で返す。TESTS: rollback/bulk-delete/正常、同 tree merge、部分 desync、証拠欠落 fail-closed、環境変数、実 git commit 経路を含む対象 suite が PASS。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}
