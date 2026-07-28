@@ -109,3 +109,5 @@ verdict を自分で書いて率を戻す道は取らない。floor note が明�
 - `HarnessHub-vf66` — `hooks` 側の同型課題（entry point の宣言・登録 parity）
 - `HarnessHub-aoe` — 2026-07-23 の同型 baseline reset
 - `arch-harness-hub-dev-workflow` — 「500 行分割規約が entry point 宣言契約と衝突する」差分追記（2026-07-28）
+- `HarnessHub-nq2` — 2026-07-28、C08 一次 GET 手段 (`validate-primary-source.py`) の 500 行超過分割
+  (`primary_source_http.py` 切出し) による同型 4 例目の baseline reset (`scripts.llm_eval` 63.1% → 62.8%)

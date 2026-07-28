@@ -78,6 +78,10 @@ eval-log/skill-intake/**
 !eval-log/skill-intake/standalone/elegant-review/20260606T001612-standalone/**
 eval-log/docs/
 eval-log/notion-conflicts.json
+# 一次 GET 台帳 (validate-primary-source.py の append-only writer) は実行のたびに
+# タイムスタンプ・実行者依存の行が追記される揮発ログで、実装成果物ではない
+# (issue: HarnessHub-nq2)。監査証跡はローカル実行時にのみ意味を持つ。
+eval-log/system-spec-harness/primary-get-ledger.jsonl
 
 # plugin-dev-planner の計画成果物は tracked。周回・buildごとの揮発投影だけを除外する。
 plugin-plans/*/run-plugin-dev-plan-progress.json

@@ -71,7 +71,7 @@ feedback_contract:
 |---|---|---|---|
 | `matrix_coverage` | マトリクス網羅性 | `system-spec-matrix-auditor` (C07) + sub-input `system-spec-hearing-auditor` (C06) | `validate-coverage-matrix.py --require-complete` の exit0 + 意味層。C06 の 4 軸 (聞き漏れ/誘導/早期停止/トレーサビリティ) を網羅性・トレースの補助根拠に併せる |
 | `design_knowledge_reflection` | 設計知識反映 | C05 R1-score が自前評価 (**独立 auditor なし**) | 機械層=各章の設計知識ポインタ存在 (compile 注入) + 意味層=そのポインタ原則の確定セルへの具体適用 (存在確認だけで PASS にしない = Goodhart 防止) |
-| `doc_freshness` | 最新ドキュメント出典 | `system-spec-doc-freshness-auditor` (C08) | 二層監査 (形式=`validate-source-citation.py` / 内容鮮度=公式再照合) |
+| `doc_freshness` | 最新ドキュメント出典 | `system-spec-doc-freshness-auditor` (C08) | 二層監査 (形式=`validate-source-citation.py` / 内容鮮度=`validate-primary-source.py` による一次 2 経路 GET 照合。WebSearch は補助) |
 
 > `system-spec/*.md` を読まない C06 (hearing-auditor) を設計知識反映へ束縛するのは虚偽対応のため撤去した。C06 はヒアリング品質を担い matrix_coverage の sub-input へ再配置し、設計知識反映は C05 が system-spec/*.md と resource-map から自前評価する。監査 sub-agent (C07/C08 と matrix sub-input の C06) は Task tool でそれぞれ独立 context (fork) に起動する (R2-delegate)。監査ロジックは各 agent の SSOT prompt に委ね、本 skill は結果を集約するだけで書き換えない。
 
@@ -153,6 +153,8 @@ feedback_contract:
 ### Step 1: 観点別監査を独立 context で集約 (R2-delegate)
 Task tool で監査 sub-agent (`system-spec-matrix-auditor` (C07) / `system-spec-hearing-auditor` (C06) / `system-spec-doc-freshness-auditor` (C08)) をそれぞれ fork する。C07 は matrix_coverage、C08 は doc_freshness の一次根拠。C06 はヒアリング品質を監査し matrix_coverage の sub-input として併せる。design_knowledge_reflection は独立 auditor を立てず Step 3 で C05 自身が評価する。
 
+**C08 への delegation には一次 GET 手段を必ず含める** (issue: HarnessHub-nq2)。C08 の実行環境では WebFetch が使えず `curl` も権限拒否されるため、手段を伝えないと WebSearch (二次索引) 依存に退行し、公開直後の版で「裏取り不能 FAIL」が反復する。伝達内容は `python3 $CLAUDE_PLUGIN_ROOT/scripts/validate-primary-source.py` (npm registry / GitHub Releases の一次 2 経路、公式ページは `--url ... --allow-host ...`)、fallback 順 (script → WebFetch → WebSearch は補助のみ / curl 禁止)、証跡台帳 `eval-log/system-spec-harness/primary-get-ledger.jsonl` の 3 点。
+
 ### Step 2: マトリクス網羅性の決定論ゲート
 ```bash
 PLUGIN_ROOT=plugins/system-spec-harness
@@ -184,5 +186,6 @@ C05 R1-score が `system-spec/*.md` 各章を直接読み、`ref-system-design-k
 - `schemas/completeness-findings.schema.json` — 評価レポート出力スキーマ
 - `scripts/aggregate-completeness.py` — レポート形状検証 + 総合 fail-closed 集約 + 帰属の fork 証跡接地検証 (決定論)
 - `../../hooks/record-audit-fork.py` — 監査 fork 台帳 writer (PostToolUse: `Task|Agent`)。帰属検証の証跡正本
+- `../../scripts/validate-primary-source.py` — C08 が公式一次ソース (npm registry / GitHub Releases / 公式ページ) へ read-only GET する単一チョークポイント + 一次 GET 台帳 writer
 - `prompts/R1-score.md` / `prompts/R2-delegate.md` — R1 (スコアリング) / R2 (監査 fork 集約) 責務正本
 - fork 先 agent: `../../agents/system-spec-{matrix,hearing,doc-freshness}-auditor.md`

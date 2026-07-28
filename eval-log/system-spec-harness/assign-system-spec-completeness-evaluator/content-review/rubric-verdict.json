@@ -2,12 +2,12 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "febfdb3dae3f9a39a3474b32befee07f8f9bfabb0d150c1cf498af678588df4e"
+    "skill_md_sha256": "b8153f48693f3942784349e081be44d6a9492721600b64b7b2fabaebc7309c99"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
   "reviewer": "assign-skill-design-evaluator-combined",
-  "reviewed_at": "2026-07-23",
+  "reviewed_at": "2026-07-26",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
@@ -21,19 +21,19 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "単一責務と境界が run/session 束縛の追加後も崩れていない: session の観測は引き続き hook (record-audit-fork.py) の責務、宣言は R2 (fork 起動者) の責務、突合は consumer (aggregate-completeness.py) の責務で、skill 側 allowed-tools に Write が増えていない。『証跡はモデルが書けない層に置く』という既存の設計原理の延長として session 軸が増えており、新しい原理を持ち込んでいない。",
-      "出力契約の二重接地が session 軸にも及ぶ: schema (dispatch.session_id required + 単一 run 収束要件を description に明記) と施行 (validate_attribution の収束検査 + ledger_corroborates の突合 + --session の CLI 検査) が 1:1 対応し、schema にだけ書いて施行しない・施行するのに schema へ書かない、のどちらの片肺も無い。契約テスト (test_schema_requires_audit_delegations の dispatch.required 検査) で固定済み。",
-      "判断箇所を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針 (knowledge-build-patterns.json feedback-no-todo-human / ref-skill-design-rubric KeyRule5) に適合: \"unknown\" 宣言の受理/拒否というトレードオフを、両選択肢の帰結を実装コメントへ記録した上で fail-closed 拒否として決定し、対象 skill 配下の TODO(human) 残存は 0 件。pytest は 514 passed / 0 failed。",
-      "Progressive Disclosure が保たれている: SKILL.md への追記は帰属節の bullet 2 本 (束縛の要点 + 機械層の限界の更新) に留まり、分岐仕様の詳細は aspect-criteria.md、設計判断の根拠は ledger_corroborates の docstring/実装コメント、運用手順は R2-delegate.md へ委譲されている。issue 正本 (issues/sys-completeness-auditor-attribution-20260721.md) の残余ギャップ節が予告した設計とも一致。"
+      "単一責務と境界が一次 GET 能力の追加後も崩れていない: 手段の提供は script、判定は C08 の SSOT、手段の伝達は C05 (R2-delegate)、証跡の記録は script 側と、層ごとに担当が 1 つに定まっている。C05 の allowed-tools は増えておらず read-only のまま。C05 は『C08 に何を渡すか』だけを負い、鮮度判定ロジックを一切再実装していないため、既存の『監査ロジックは各 agent の SSOT に委ね R2 は集約するだけ』という不変則が保たれている。",
+      "SSOT 優先則を正しく踏まえた変更範囲: agent 定義 (system-spec-doc-freshness-auditor.md) は『本ファイルと監査 SSOT に差分がある場合は SSOT を優先』と自ら宣言しているため、agent 定義だけを更新すると SSOT (旧記述: Bash は network:false・WebFetch で再照合) に上書きされて無効化される。両者を同一内容で更新したことで、宣言と実効の乖離が生じていない。受け入れ条件3 (session 一時指示でなく agent 定義または SKILL 正本へ反映) を、SSOT 優先則まで込みで満たしている。",
+      "Progressive Disclosure が保たれている: SKILL.md への追記は doc_freshness 行 1 行 + Step1 の手段伝達 1 段落 + Additional Resources 1 行に留め、判定規則の詳細は script docstring、監査手順は agent SSOT、観点別の合否条件は aspect-criteria.md へ委譲している。読者が最初に見る層に手続きの詳細を積み上げていない。",
+      "Goodhart 対策の系譜が一貫している: 既存の帰属検証 (fork 台帳との突合) と同じく、今回も『モデルの自己申告では緑にできない』構造を選んでいる。C08 が『一次照合を試みたが到達不能だった』と主張しても、台帳に試行行が無ければ裏取りできない。宣言だけで通る余地を残さない設計が、既存 attribution 節の思想と同型。"
     ],
     "negative_feedback": [
-      "(content 対象外 / 参考) lint-skill-tree.py の LS-203 Warn 2 件: top-level 'tests' は従前どおり系全体の規約論点。'.claude/handoff' は本セッションの PreCompact hook が skill ディレクトリを cwd として自動生成した未追跡 snapshot で、SKILL.md 内容起因ではない (git 未追跡のため commit 対象にもならない)。",
-      "(landing 制約 / 本 skill の内容起因ではない) schema の dispatch.session_id required 化は破壊的変更であり、origin/main に既存の completeness-report.json (PR #39 で再生成) は session_id 欠落のため landing 後に violation となる。レポート再生成の migration follow-up が必要 (セッション報告で起票予定)。"
+      "(live-trial で発見し修正済み / findings には計上しない) 経路 A の実装が実環境で機能しなかった: packument (`registry.npmjs.org/<pkg>`) は全 version の metadata を含むため pnpm では 5MB を超え、MAX_BYTES で切り詰められて JSON parse に失敗し、経路 A が丸ごと落ちていた (本 issue が名指しした pnpm でまさに再現)。ユニットテストは小さなスタブ応答しか返さないためこの失敗モードを一切踏まず、live-trial を実行しなければ『テストは全部通るが実環境で片肺』のまま landing していた。dist-tags 専用エンドポイント (`registry.npmjs.org/-/package/<pkg>/dist-tags`、数百バイト) へ切り替え、あわせて MAX_BYTES 超過を truncated として名乗らせる処理 (従来は切り詰めが JSON parse 失敗という無関係に見えるエラーへ化けていた) を追加。scoped package・切り詰め検知・エンドポイント選択の 4 回帰テストで固定し、live で pnpm 11.17.0=FRESH / 11.15.0=STALE / @opennextjs/cloudflare 1.20.2=FRESH を再確認した。",
+      "(今回閉じていない範囲 / 意図的な非拡張) 一次 GET 台帳と鮮度判定の突合は機械化していない。fork 台帳 (audit-fork-ledger.jsonl) が aggregate-completeness.py で機械突合されているのに対し、primary-get-ledger.jsonl は agent の完了チェックリストと content-review (意味層) で確認する段階に留まる。したがって『C08 が一次 GET を実行せず鮮度判定を返す』ことは機械層では止まらない。規範正本 scoring-rubric.json を変更しなかったのも同じ理由で、施行を伴わない主張を規範正本へ足すと『schema に書いて施行しない片肺』になるため。台帳突合の機械化はフォローアップ課題として起票を推奨する (本 issue の受け入れ条件の範囲外)。"
     ],
     "iteration": 1,
     "iteration_limit": 2,
     "hook_trigger": "stop-hook",
     "next_action": "none"
   },
-  "notes": "incremental profile の combined review のうち rubric 側を分離投影 (verification_profile=exhaustive 非明示のため 30 思考法 + 独立 rubric evaluator は未実施であることを申告する)。ref-skill-design-rubric の規範軸での採点: 単一責務 — 観測 (hook) / 宣言 (R2) / 突合 (consumer) の三権分立が session 軸でも維持され、skill は read-only のまま (allowed-tools: Read/Bash/Task)。命名 — session_id / sessions / declared_sid / recorded_sessions / expected_session の語彙が schema・script・SKILL.md・aspect-criteria.md・R2/R1 prompt・テストで一貫し、『宣言』と『観測』の区別が全箇所で保たれている。境界 — 機械層の主張範囲は『(session_id, subagent_type) の fork 完了』までで、能動的偽装 (--session なしでの過去 session 丸写し) を意味層責務として開示し over-claim なし。出力契約 — dispatch.required = {tool, subagent_type, session_id} は schema と契約テストで固定、fail-closed 分岐は台帳不在 / subagent_type 未宣言 / 記録なし / 宣言なし / \"unknown\" / session 不一致 の 6 分岐全てに復旧手順つき reason。SSOT — 規範正本 scoring-rubric.json の attribution 節は receipt 集合を定めるもので session 軸の変更対象外 (required_receipts 不変)、runtime 正本は aggregate-completeness.py の実装、詳細正本は aspect-criteria.md という層構造が維持されている。機械検査 — validate-frontmatter.py exit0 / lint-skill-name.py exit0 / lint-skill-tree.py exit0 (Warn のみ) / pytest plugins/system-spec-harness 514 passed / pytest plugins/system-dev-planner 62 passed (producer↔consumer 追従の検証)。high severity 0 のため PASS。negative_feedback の 2 点はいずれも本 SKILL.md の内容起因ではないため findings に計上しないが、隠さず記録した。"
+  "notes": "incremental profile の combined review のうち rubric 側を分離投影 (verification_profile=exhaustive 非明示のため 30 思考法 + 独立 rubric evaluator は未実施であることを申告する)。ref-skill-design-rubric の規範軸での採点: 単一責務 — 手段提供 (script) / 判定 (C08 SSOT) / 伝達 (C05 R2) / 証跡 (script 側 writer) の分業が保たれ、C05 の allowed-tools は不変 (read-only)。命名 — 一次ソース・二次索引・経路 A/B・FRESH/STALE/INDETERMINATE・host_policy=default|explicit・outcome=ok|unreachable の語彙が script・agent 定義・SSOT・SKILL.md・aspect-criteria・テストで一貫。境界 — 機械層の主張範囲は『GET が実行され台帳へ記録された』までで、その GET を C08 が実際に判定根拠に使ったかは意味層責務として rubric-verdict の negative_feedback に開示済み (over-claim なし)。出力契約 — exit code (0/1/2/3) と verdict enum が script ヘッダ・agent 定義・SSOT・EXIT_BY_VERDICT 契約テストで 1:1、報告フィールド (一次 GET 実行数・台帳 path) が agent 定義 Layer4.2/7.1 と build_report の primary_get_count/ledger_path に対応。SSOT — 規範正本 scoring-rubric.json (成果物の性質)、監査手続き正本 R4-audit-doc-freshness.md、観点詳細正本 aspect-criteria.md、runtime 正本 validate-primary-source.py の層構造を維持し、今回は手続き層のみを更新した。TODO(human) 残存は対象 skill 配下 0 件 (repo 方針 feedback-no-todo-human 適合。判断は docstring の設計判断 5 点 + 回帰テストで閉じた)。機械検査 — validate-frontmatter.py exit0 / lint-skill-name.py exit0 / lint-skill-tree.py exit0 (Warn のみ) / pytest plugins/system-spec-harness 556 passed 0 failed / pytest plugins/system-dev-planner 166 passed (producer↔consumer への波及なし)。high severity 0 のため PASS。negative_feedback の 2 点はいずれも修正済みまたは範囲外の開示であり findings に計上しないが、隠さず記録した。"
 }

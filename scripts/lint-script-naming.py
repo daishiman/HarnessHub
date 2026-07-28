@@ -389,6 +389,11 @@ PENDING_RENAME_PATHS = {
     # できず underscore も持たない単一トークン module 名で固定する (§4.3 恒久例外・
     # feedback_contract_ssot.py / discover_repo_tests.py と同列)。
     "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/specfm.py",
+    # primary_source_http.py (issue HarnessHub-nq2): validate-primary-source.py が
+    # `from primary_source_http import (...)` で標準 import する HTTP/policy 層モジュール
+    # (500 行超過分割で切出し)。呼び出し元・テストとも標準 import 構文で参照するため
+    # ハイフン付きファイル名にできない (specfm.py と同列の恒久例外候補)。
+    "plugins/system-spec-harness/scripts/primary_source_http.py",
 }
 PENDING_RENAME_PATHS.update(
     runpy.run_path(

@@ -67,10 +67,19 @@
   照合する。設計知識反映と同じ Goodhart 防止で、registry の存在確認だけでは PASS にしない。
 
 ### 3. 最新ドキュメント出典 (doc_freshness / C08)
-- doc-freshness-auditor の二層 (形式=`validate-source-citation.py` / 内容鮮度=公式サイト再照合) を
-  一次根拠にする。
+- doc-freshness-auditor の二層 (形式=`validate-source-citation.py` / 内容鮮度=`validate-primary-source.py`
+  による一次 GET 再照合) を一次根拠にする。
 - C13 (形式) が通っても、非公式 host・世代落ち version・実効性を欠く latest_checked_at は
   内容鮮度層で FAIL にする。到達不能 target は「鮮度未確認」として surface し PASS と誤認しない。
+- **一次接地 (issue: HarnessHub-nq2)**: 鮮度の確定根拠は publisher の一次ソース (npm registry の
+  `dist-tags.latest` / GitHub Releases の `tag_name` / 公式ページ) への GET 観測に置く。`WebSearch` は
+  二次索引で、公開直後の版では索引ラグと真の世代落ちを区別できないため、単独で確定した
+  「古い」「鮮度未確認」を受理しない。証跡は `eval-log/system-spec-harness/primary-get-ledger.jsonl`
+  (writer = script 側 = C08 が書けない層) に 1 GET = 1 行で残り、到達不能も `outcome=unreachable`
+  として記録される。つまり「試みたが不能」と「試みていない」を事後に区別でき、後者を
+  「鮮度未確認」と称した delegation は受理しない。
+- R2 は C08 への delegation prompt に一次 GET 手段 (script path / fallback 順 / 台帳 path) を
+  必ず含める。手段を伝えない delegation は C08 が WebSearch 依存へ退行するため、それ自体が欠落。
 
 ### 4. prompt品質
 - 全promptでprompt-creatorの機械validatorがPASSし、L5は成果状態・原子的停止条件・動的実行方式を持つ。
