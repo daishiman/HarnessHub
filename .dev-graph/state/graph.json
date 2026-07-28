@@ -1,5 +1,5 @@
 {
-  "graph_revision": 930,
+  "graph_revision": 932,
   "nodes": [
     {
       "acceptance": [
@@ -39334,6 +39334,117 @@
       "title": "register-package 再実行が projection 6 項目差で同一 digest を拒否する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-27T21:24:33.65077Z"
+    },
+    {
+      "acceptance": [
+        "依存プラグインの entry-point skill 編集が dev-graph 側 live-trial 証跡へ与える影響範囲の設計判断が確定している",
+        "判断が plugins/dev-graph の実装または architecture へ反映されている",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T033200Z-sysspec-split/ の未完了 trial が re-trial または明示的な破棄のいずれかで解消されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-1wo3",
+        "linked_at": "2026-07-28T04:48:09Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-cross-plugin-behavior-closure-staleness-20260728.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-nq2 (PR #88) の verify 失敗原因調査 (git worktree での origin/main vs nq2 実測比較) で特定した構造的副作用の追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T01:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-cross-plugin-behavior-closure-staleness-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "依存プラグインの非対象 skill 編集だけでは dev-graph 側の live-trial 証跡が連鎖失効しない仕組み (閉包スコープの絞り込み、または意味的に無関係な変更への verdict 継承) を確定する",
+      "graph_node_id": "issue-cross-plugin-behavior-closure-staleness-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T01:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "run-skill-live-trial の skill_dir_tree_sha (挙動閉包ダイジェスト) は、依存プラグインとして宣言された package-contract.json の entry_points.{skills,agents,commands} をエントリポイントディレクトリごと丸ごと閉包へ取り込む。そのため system-spec-harness の entry-point skill (assign-system-spec-completeness-evaluator 等) を 1 byte 編集しただけで、それを直接使っていない dev-graph:run-dev-graph-system-spec の live-trial 証跡まで stale 化し、test_skill_criteria_evidence.py の verify が落ちる。2026-07-28 に HarnessHub-nq2 (PR #88) で実測した: origin/main では PASS、nq2 branch では plugins/dev-graph/ への diff が 0 件のまま FAIL、記録済み skill_dir_tree_sha (8f1013d23ccdcc...) と再計算値 (14c0b847adcea6...) が不一致。",
+      "related_nodes": [
+        "issue-c08-audit-primary-get-capability-20260722",
+        "issue-500-line-split-dilutes-harness-coverage-20260728"
+      ],
+      "resource_scope": [
+        "plugins/harness-creator/skills/run-skill-live-trial/scripts/live-trial-verdict.py",
+        "plugins/dev-graph/tests/test_skill_criteria_evidence.py",
+        "plugins/dev-graph/references/package-contract.json"
+      ],
+      "scope_in": [
+        "behavior_closure_files() が依存プラグインの entry point 全体を閉包に含める現行設計を維持するか、dev-graph が実際に呼び出す skill のみへ絞るかの評価",
+        "sha 不変以外の verdict 継承 (意味的に無関係と判定できる変更への引き継ぎ) の是非評価",
+        "live-trial fixture worktree が prunable のまま実体だけ消える運用の是正 (今回 sysspec-split trial で発生)"
+      ],
+      "scope_out": [
+        "verify の検査基準の緩和 (回帰の正しい検出は維持する)",
+        "content-review-verdict の sha 手書換による偽装的な緑化"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T01:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "live-trial",
+        "package-contract",
+        "verify",
+        "goodhart"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "依存プラグインの非対象 skill 編集が dev-graph の live-trial 挙動閉包ダイジェストを連鎖失効させ verify を落とす",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T01:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

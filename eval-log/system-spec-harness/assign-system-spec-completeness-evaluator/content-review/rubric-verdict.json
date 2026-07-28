@@ -2,12 +2,12 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "b8153f48693f3942784349e081be44d6a9492721600b64b7b2fabaebc7309c99"
+    "skill_md_sha256": "7ca74f1fc5b07436213af667088713263f34bf7ffe4eb7116c3ab0d95d6722bd"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
   "reviewer": "assign-skill-design-evaluator-combined",
-  "reviewed_at": "2026-07-26",
+  "reviewed_at": "2026-07-28T12:00:00Z",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
@@ -21,19 +21,16 @@
     "loop_scope": "both",
     "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
     "positive_feedback": [
-      "単一責務と境界が一次 GET 能力の追加後も崩れていない: 手段の提供は script、判定は C08 の SSOT、手段の伝達は C05 (R2-delegate)、証跡の記録は script 側と、層ごとに担当が 1 つに定まっている。C05 の allowed-tools は増えておらず read-only のまま。C05 は『C08 に何を渡すか』だけを負い、鮮度判定ロジックを一切再実装していないため、既存の『監査ロジックは各 agent の SSOT に委ね R2 は集約するだけ』という不変則が保たれている。",
-      "SSOT 優先則を正しく踏まえた変更範囲: agent 定義 (system-spec-doc-freshness-auditor.md) は『本ファイルと監査 SSOT に差分がある場合は SSOT を優先』と自ら宣言しているため、agent 定義だけを更新すると SSOT (旧記述: Bash は network:false・WebFetch で再照合) に上書きされて無効化される。両者を同一内容で更新したことで、宣言と実効の乖離が生じていない。受け入れ条件3 (session 一時指示でなく agent 定義または SKILL 正本へ反映) を、SSOT 優先則まで込みで満たしている。",
-      "Progressive Disclosure が保たれている: SKILL.md への追記は doc_freshness 行 1 行 + Step1 の手段伝達 1 段落 + Additional Resources 1 行に留め、判定規則の詳細は script docstring、監査手順は agent SSOT、観点別の合否条件は aspect-criteria.md へ委譲している。読者が最初に見る層に手続きの詳細を積み上げていない。",
-      "Goodhart 対策の系譜が一貫している: 既存の帰属検証 (fork 台帳との突合) と同じく、今回も『モデルの自己申告では緑にできない』構造を選んでいる。C08 が『一次照合を試みたが到達不能だった』と主張しても、台帳に試行行が無ければ裏取りできない。宣言だけで通る余地を残さない設計が、既存 attribution 節の思想と同型。"
+      "決定論スクリプト `plugins/harness-creator/skills/assign-skill-design-evaluator/scripts/render-findings-score.py` を rubric-refs (ref-skill-design-rubric/references/rubric.json L0 + assign-skill-design-evaluator/references/rubric.json L2) で自分で実行し、score=100 / threshold=80 / passed=true / findings=[] / rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d / composition_hash=sha256:27532d127cca14abdff1f8b6648b23c34edc97c7fdb3e774f171b024ebff215c を得た。frontmatter (FM系: name/description/allowed-tools/context:fork/kind:assign/prefix:assign/role_suffix:evaluator/version/owner/since/rubric_refs/responsibility_refs/schema_refs/agent_refs/script_refs 等) と本文構造 (BD系: Purpose & Output Contract / Key Rules / Steps / Gotchas / Additional Resources) に機械検出の減点が0件。",
+      "単一責務境界が新しい doc_freshness 記述追加後も崩れていない: SKILL.md (C05/R1-score) は一次 GET の『手段を C08 へ伝える』責務のみを負い (Step1 新段落)、実際の GET 実行と鮮度判定ロジックは C08 の SSOT (R4-audit-doc-freshness.md) と script (validate-primary-source.py) 側に閉じている。frontmatter の allowed-tools (Read/Bash/Task) は変更されておらず、C05 が新たに外部到達能力を得たわけではない (Bash は既存の decision-gate 実行専用のまま)。",
+      "命名・enum・path の一貫性: FRESH/STALE/INDETERMINATE の3値 verdict、host_policy=default|explicit、outcome=ok|unreachable、exit code 0/1/2/3 の語彙が SKILL.md → aspect-criteria.md → R2-delegate.md → agent 定義 → R4-SSOT → script docstring の全層で綴りゆれなく一致している。`$CLAUDE_PLUGIN_ROOT/scripts/validate-primary-source.py` という起動コマンド文字列も全ファイルで同一表記。",
+      "帰属 (attribution) の rubric 記述と機械実装の1:1対応を確認した: SKILL.md『帰属の接地』表の (matrix_coverage/primary=C07, matrix_coverage/sub_input=C06, doc_freshness/primary=C08) が references/scoring-rubric.json の `attribution.required_receipts` と完全一致し、両者が参照する `aggregate-completeness.py` の `required_delegations()` / `LEDGER_TOOL_NAMES=(\"Task\",\"Agent\")` / `ledger_corroborates()` という実装がその契約を機械施行している。schemas/completeness-findings.schema.json の `audit_delegation.dispatch` (tool/subagent_type/session_id 必須) もこの契約と一致し、規範(rubric)⇄schema⇄script の三者間に齟齬が無い。"
     ],
-    "negative_feedback": [
-      "(live-trial で発見し修正済み / findings には計上しない) 経路 A の実装が実環境で機能しなかった: packument (`registry.npmjs.org/<pkg>`) は全 version の metadata を含むため pnpm では 5MB を超え、MAX_BYTES で切り詰められて JSON parse に失敗し、経路 A が丸ごと落ちていた (本 issue が名指しした pnpm でまさに再現)。ユニットテストは小さなスタブ応答しか返さないためこの失敗モードを一切踏まず、live-trial を実行しなければ『テストは全部通るが実環境で片肺』のまま landing していた。dist-tags 専用エンドポイント (`registry.npmjs.org/-/package/<pkg>/dist-tags`、数百バイト) へ切り替え、あわせて MAX_BYTES 超過を truncated として名乗らせる処理 (従来は切り詰めが JSON parse 失敗という無関係に見えるエラーへ化けていた) を追加。scoped package・切り詰め検知・エンドポイント選択の 4 回帰テストで固定し、live で pnpm 11.17.0=FRESH / 11.15.0=STALE / @opennextjs/cloudflare 1.20.2=FRESH を再確認した。",
-      "(今回閉じていない範囲 / 意図的な非拡張) 一次 GET 台帳と鮮度判定の突合は機械化していない。fork 台帳 (audit-fork-ledger.jsonl) が aggregate-completeness.py で機械突合されているのに対し、primary-get-ledger.jsonl は agent の完了チェックリストと content-review (意味層) で確認する段階に留まる。したがって『C08 が一次 GET を実行せず鮮度判定を返す』ことは機械層では止まらない。規範正本 scoring-rubric.json を変更しなかったのも同じ理由で、施行を伴わない主張を規範正本へ足すと『schema に書いて施行しない片肺』になるため。台帳突合の機械化はフォローアップ課題として起票を推奨する (本 issue の受け入れ条件の範囲外)。"
-    ],
+    "negative_feedback": [],
     "iteration": 1,
     "iteration_limit": 2,
-    "hook_trigger": "stop-hook",
+    "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "incremental profile の combined review のうち rubric 側を分離投影 (verification_profile=exhaustive 非明示のため 30 思考法 + 独立 rubric evaluator は未実施であることを申告する)。ref-skill-design-rubric の規範軸での採点: 単一責務 — 手段提供 (script) / 判定 (C08 SSOT) / 伝達 (C05 R2) / 証跡 (script 側 writer) の分業が保たれ、C05 の allowed-tools は不変 (read-only)。命名 — 一次ソース・二次索引・経路 A/B・FRESH/STALE/INDETERMINATE・host_policy=default|explicit・outcome=ok|unreachable の語彙が script・agent 定義・SSOT・SKILL.md・aspect-criteria・テストで一貫。境界 — 機械層の主張範囲は『GET が実行され台帳へ記録された』までで、その GET を C08 が実際に判定根拠に使ったかは意味層責務として rubric-verdict の negative_feedback に開示済み (over-claim なし)。出力契約 — exit code (0/1/2/3) と verdict enum が script ヘッダ・agent 定義・SSOT・EXIT_BY_VERDICT 契約テストで 1:1、報告フィールド (一次 GET 実行数・台帳 path) が agent 定義 Layer4.2/7.1 と build_report の primary_get_count/ledger_path に対応。SSOT — 規範正本 scoring-rubric.json (成果物の性質)、監査手続き正本 R4-audit-doc-freshness.md、観点詳細正本 aspect-criteria.md、runtime 正本 validate-primary-source.py の層構造を維持し、今回は手続き層のみを更新した。TODO(human) 残存は対象 skill 配下 0 件 (repo 方針 feedback-no-todo-human 適合。判断は docstring の設計判断 5 点 + 回帰テストで閉じた)。機械検査 — validate-frontmatter.py exit0 / lint-skill-name.py exit0 / lint-skill-tree.py exit0 (Warn のみ) / pytest plugins/system-spec-harness 556 passed 0 failed / pytest plugins/system-dev-planner 166 passed (producer↔consumer への波及なし)。high severity 0 のため PASS。negative_feedback の 2 点はいずれも修正済みまたは範囲外の開示であり findings に計上しないが、隠さず記録した。"
+  "notes": "CI の stale-sha (直前コミット 4181964 で SKILL.md の doc_freshness 行/Step1 段落/Additional Resources が更新され sha256 が旧 verdict の b8153f48693f3942784349e081be44d6a9492721600b64b7b2fabaebc7309c99 から現行 7ca74f1fc5b07436213af667088713263f34bf7ffe4eb7116c3ab0d95d6722bd へ変化) を受けた genuine 再評価 (rubric 側)。実行コマンド: `python3 plugins/harness-creator/skills/assign-skill-design-evaluator/scripts/render-findings-score.py --rubric-refs plugins/harness-creator/skills/ref-skill-design-rubric/references/rubric.json plugins/harness-creator/skills/assign-skill-design-evaluator/references/rubric.json --target plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator --emit-hash` → `{\"score\":100,\"threshold\":80,\"passed\":true,\"findings\":[],\"rubric_hash\":\"sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d\",\"composition_hash\":\"sha256:27532d127cca14abdff1f8b6648b23c34edc97c7fdb3e774f171b024ebff215c\"}`。実読ファイルは elegance-verdict.json と同一集合 (SKILL.md/R1-score.md/R2-delegate.md/aspect-criteria.md/scoring-rubric.json/resource-map.yaml/completeness-findings.schema.json/agents/system-spec-doc-freshness-auditor.md/R4-audit-doc-freshness.md/validate-primary-source.py/primary_source_http.py/aggregate-completeness.py 該当部/validate-knowledge-graph.py 該当部)。加えて `pytest plugins/system-spec-harness/tests/test_validate_primary_source.py plugins/system-spec-harness/tests/test_primary_source_http.py` で 43 passed を確認し、500行分割後も rubric が前提とする決定論ゲートの実装が生きていることを検証した。既存 (stale) verdict 2件は参考として読んだが、判定文はコピーせず今回の自分の読解から書き直した。rubric machine gate 減点0・意味層 (単一責務/命名/境界/帰属の三者整合) にも high 相当の欠陥を発見できず、総合 PASS とする。"
 }
