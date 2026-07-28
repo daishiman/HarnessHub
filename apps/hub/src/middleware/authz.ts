@@ -39,6 +39,8 @@ export const PUBLIC_PATH_PREFIXES: readonly string[] = [
 
 /** tenant slug を先に確定するサインイン画面。API 配下などへ広がらないよう 1 segment に限定する。 */
 const TENANT_SIGNIN_PATH = /^\/[A-Za-z0-9][A-Za-z0-9_-]*\/signin$/;
+/** Device Flow の入力画面だけを公開する。`/device/*` へ広げない。承認 API は認証必須のまま。 */
+const DEVICE_APPROVAL_PATH = '/device';
 
 export interface AuthzInput {
   readonly pathname: string;
@@ -50,6 +52,7 @@ export interface AuthzInput {
 export function isPublicPath(pathname: string): boolean {
   const normalized = normalize(pathname);
   return (
+    normalized === DEVICE_APPROVAL_PATH ||
     TENANT_SIGNIN_PATH.test(normalized) ||
     PUBLIC_PATH_PREFIXES.some((prefix) =>
       prefix === '/' ? normalized === '/' : normalized === prefix || normalized.startsWith(`${prefix}/`),

@@ -84,6 +84,11 @@ lint: contract-intake vendored-ssot legacy-plugin-name tenant-isolation runtime-
 	# knowledge/ (JSON ストア) ↔ lessons-learned/ (散文ログ) の役割分担を fail-closed 検査
 	#   (散文 .md の knowledge/ 直下混入・lessons-index の dangling source.file・lesson 形式。2026-07-11)
 	python3 scripts/lint-knowledge-layout.py
+	# step-level `if` が同一 step の `env:` を参照する形 (Actions は if を env 適用より前に評価するため
+	#   式が恒久 false になり、secret を投入しても step が永久に skip される fail-open) を全 workflow で遮断。
+	#   governance-check.yml と同一実装を local からも呼べるようにする (HarnessHub-5u5k / 2026-07-28)
+	python3 scripts/lint-workflow-step-guard.py --self-test
+	python3 scripts/lint-workflow-step-guard.py
 
 ## vendored-ssot: plugin 同梱 SSOT (notion_config.py / feedback_contract_ssot.py) が正本と byte 一致か検証
 vendored-ssot:
