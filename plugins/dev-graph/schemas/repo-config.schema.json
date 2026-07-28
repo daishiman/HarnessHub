@@ -541,7 +541,6 @@
       "additionalProperties": false,
       "required": [
         "source",
-        "project_plugin_link",
         "session_start",
         "post_tool_reconcile",
         "task_completed_gate"
@@ -556,7 +555,8 @@
           ]
         },
         "project_plugin_link": {
-          "$ref": "#/$defs/repoRelative"
+          "$ref": "#/$defs/repoRelative",
+          "description": "R5-hooks の fallback deep-merge が読む plugin root への plain symlink。意味を持つのは source=project のときだけなので required も条件付き (下の allOf)。plugin/disabled でも宣言は許可するが、その値は使われない。実在と plain-symlink 性は schema では表現できないため validate-repo-config.py の path 層が検査する。"
         },
         "session_start": {
           "type": "boolean"
@@ -567,7 +567,26 @@
         "task_completed_gate": {
           "type": "boolean"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "source"
+            ],
+            "properties": {
+              "source": {
+                "const": "project"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "project_plugin_link"
+            ]
+          }
+        }
+      ]
     },
     "path_policy": {
       "type": "object",

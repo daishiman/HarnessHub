@@ -273,6 +273,10 @@ def _repo_config(repository_id: str, *, tracker_mode: str, projects: list[dict[s
             "completion_write_branch": "default",
             "dirty_worktree_policy": "fail_closed",
         },
+        # fixture は .claude/ を作らないので project_plugin_link は declared-but-absent になる。
+        # 宣言を残すのは意図的で、source=plugin では link 値が読まれず実体検査も走らないという
+        # 現行運用そのものを live-trial で踏ませるため (HarnessHub-7tn1)。source=project へ
+        # 変えるなら実体の plain symlink を同時に用意しないと validate-repo-config.py が落とす。
         "claude_hooks": {
             "source": "plugin",
             "project_plugin_link": ".claude/dev-graph-plugin",
