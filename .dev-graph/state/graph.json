@@ -1,5 +1,5 @@
 {
-  "graph_revision": 944,
+  "graph_revision": 945,
   "nodes": [
     {
       "acceptance": [
@@ -39453,7 +39453,7 @@
       "template_version": "1.0.0",
       "title": "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T07:30:50Z"
+      "updated_at": "2026-07-28T08:45:00Z"
     },
     {
       "acceptance": [

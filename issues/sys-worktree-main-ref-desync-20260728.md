@@ -12,7 +12,7 @@ iteration: null
 title: "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む"
 owners: ["daishiman"]
 created_at: "2026-07-28T02:05:00Z"
-updated_at: "2026-07-28T07:30:50Z"
+updated_at: "2026-07-28T08:45:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-local-ci-gate-drift-20260728"]
@@ -148,10 +148,31 @@ git diff --shortstat HEAD
 
 書き込みが今起きたなら mtime は全て「今」になる。バラバラの過去日時が保存されているということは、**過去のツリー全体をアーカイブから mtime 込みで展開した**ことを意味する。git の操作では起こらない (git は checkout 時に mtime を現在時刻にする)。
 
-実害は 2 つ出た。
+実害は 3 つ出た。
 
 1. **未コミットの編集が消えた**。当該セッションが直前に書いた `plugins/dev-graph/scripts/build-merged-graph.py` と README の修正が、ディスク上から丸ごと消失した。HEAD には無いので `git checkout` でも戻せない
 2. **テストが偽の赤を出した**。汚染されたツリーで実行した dev-graph のテストが 24 件失敗し、別のテストは収集エラーになった。これは実装の欠陥ではなく、**依存ファイルが古い実体に置き換わっていたことの派生症状**である。原因を実装側に探すと時間を丸ごと失う
+3. **評価ゲートが偽陽性で発火し、従うと台帳が汚染される**。後述。
+
+### 実害 3 の詳細: 汚染ツリーが content-review ゲートを誤発火させる
+
+Stop hook (`plugins/harness-creator/skills/run-elegant-review/scripts/check-review-trigger.py`) が「未評価 or stale な変更 skill が 16 件」と報告して停止をブロックした。しかし当該セッションは **SKILL.md を 1 バイトも編集していない**。
+
+原因は判定基準である。同 script は変更 skill を `git diff --name-only HEAD` — すなわち **HEAD と作業ツリーの差** — で決める。commit 履歴ではない。汚染ツリーでは 9 件の SKILL.md が古いスナップショット (計 -200 行) に戻っているため、触っていない skill が「変更された」と判定される。続いて `_pending_review_targets` が現在の SKILL.md の sha256 を verdict の `target.skill_md_sha256` と照合し、当然一致しないので stale と結論する。
+
+3 件で照合した結果、**台帳側が正しい**ことが確認できる。
+
+| skill | 汚染ツリー | HEAD | eval-log 台帳 |
+|---|---|---|---|
+| `run-dev-graph-node` | `ec6f3f06…` | `3749ff51…` | **`3749ff51…`** |
+| `run-dev-graph-init` | `1db7dd6c…` | `3b708071…` | **`3b708071…`** |
+| `run-dev-graph-sync` | `7c0ffd26…` | `29baae33…` | **`29baae33…`** |
+
+台帳の記録は 3 件とも HEAD と完全一致する。stale なのは台帳ではなく作業ツリーである。
+
+**ここで指示どおり review を実行してはならない。** 評価対象は汚染された古い SKILL.md であり、書き込まれる `skill_md_sha256` は壊れた内容のハッシュになる。結果として台帳は緑になり、リポジトリの実際の SKILL.md は未評価のまま残る。これは本リポジトリで繰り返し出ている「実体と代理がずれても緑」型そのものであり、**汚染に従うことで汚染が正当化される**。
+
+一般化すると、**作業ツリーの内容を入力とする全ての鮮度ゲートは、clobber 下で偽陽性を出し、かつ従うと被害を台帳へ焼き付ける**。`git diff HEAD` を変更検出に使う機構はすべて同じ性質を持つ。汚染ツリーで停止ゲートに遭遇したら、まず `git diff --shortstat HEAD` を撃って汚染量を確認し、ゲートの入力が信用できるかを先に判定すること (§2.1)。
 
 ### この変種に対して §6 の緩和策は効かない
 
