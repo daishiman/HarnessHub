@@ -1,5 +1,5 @@
 {
-  "graph_revision": 951,
+  "graph_revision": 953,
   "nodes": [
     {
       "acceptance": [
@@ -25364,7 +25364,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T22:55:12.292521Z"
+      "updated_at": "2026-07-28T08:39:07.757446Z"
     },
     {
       "acceptance": [
@@ -38543,7 +38543,8 @@
         "C19 task の初期前提が shape_system_spec.py の配置物と機械的に一致する",
         "task が system-spec-harness の正規 4 entry point を Skill 経由で要求する",
         "確定成果物を事前配置済みかつ正規フロー再実行禁止という旧前提を lint が拒否する",
-        "fixture 再構築直後の C19 fresh live-trial が人手の事前生成物なしで PASS する"
+        "fixture 再構築直後の C19 fresh live-trial が人手の事前生成物なしで PASS する",
+        "scenario ID、task args、required observations、fixture contract の変更が 1 つの検証経路へ束ねられる"
       ],
       "architecture_refs": [],
       "artifact_kind": "issue",
@@ -38563,12 +38564,17 @@
       "classification_confidence": 0.98,
       "classification_reason": "deterministic fixture rebuild 後の fresh C19 trial が、古い task の『確定成果物を事前配置済み』前提と実 fixture の requirements-brief.md のみという契約矛盾を再現した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-28T08:02:52Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_live_trial_task_contract.py",
+          "plugins/dev-graph/references/live-trial-task-contract.md",
+          "docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-28T08:30:41Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -38609,12 +38615,20 @@
       "pull_request_linkages": [],
       "purpose": "手作業で複製された C19 task の入力前提が deterministic fixture の正本契約からずれ、正規フローを実行不能にする再発を防ぐ",
       "related_nodes": [
+        "feat-dev-pipeline-improvement",
         "issue-guard-fix-closure-verdict-refresh-20260726",
         "issue-guard-graph-schema-timeout-fail-open-20260725"
       ],
       "resource_scope": [
         "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py",
         "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+        "plugins/dev-graph/scripts/lint-live-trial-task-contract.py",
+        "plugins/dev-graph/lib/live_trial_task_contract.py",
+        "plugins/dev-graph/tests/test_live_trial_task_contract.py",
+        "plugins/dev-graph/references/live-trial-task-contract.md",
+        "docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md",
+        "eval-log/coverage/scripts/plugins-dev-graph-scripts-lint-live-trial-task-contract.py.json",
+        "eval-log/harness-coverage.json",
         "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/"
       ],
       "scope_in": [
@@ -38637,7 +38651,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -38650,7 +38664,7 @@
       "template_version": "1.0.0",
       "title": "C19 live-trial の task 指示を fixture 契約から決定論生成し、前提ずれを防ぐ",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T05:50:27Z"
+      "updated_at": "2026-07-28T09:31:38.126210Z"
     },
     {
       "acceptance": [

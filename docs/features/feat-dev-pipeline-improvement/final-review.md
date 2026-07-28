@@ -80,6 +80,24 @@ CI で検出した PKG-007 に対して分割 helper 2 本へ Python shebang と
 付与した。live-trial planner の再利用判定では挙動閉包 digest が不変で、
 上記 r4 証跡を current PASS として再利用できることも確認した。
 
+## C19 task / fixture 前提 drift の最終レビュー (2026-07-28)
+
+`HarnessHub-768b` の実装をレビューし、C19 の fixture が
+`system-spec/requirements-brief.md` だけを置く契約を machine-readable な
+`TASK_CONTRACT` にした。task 指示は scenario と fixture の両正本へ照合され、確定成果物を
+事前配置済みとする旧前提、正規 flow の再実行禁止、被験 skill・引数・entry point・観測条件
+のずれを `LT-001..012` で fail-closed に検出する。
+
+650 行だった lint は、CLI／report と契約解析 module に責務分離し、双方を 500 行未満へ
+収束した。focused pytest は 29 PASS、`--all` は最新 verdict 保有 task 1 件を検査して
+違反 0。fixture を brief だけから構築した fresh PASS evidence は
+`20260726T050519Z-sysspec-final2` を再利用し、改変していない。
+
+中学生向けには「実験台に水しかないのに、説明書が完成品を置いた前提になっていないかを
+始める前に照合する仕組み」である。技術契約と再実行コマンドは
+`plugins/dev-graph/references/live-trial-task-contract.md`、仕様影響なしの層別判断は
+`c19-task-contract-spec-reflection.md` に記録した。
+
 ### 仕様・設計影響
 
 新しい製品仕様・API・データ・セキュリティ・配備契約への影響はない。
