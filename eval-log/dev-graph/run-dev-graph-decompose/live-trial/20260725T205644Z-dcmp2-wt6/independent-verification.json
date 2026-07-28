@@ -1,0 +1,76 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "Skill ツールの実起動 (script 直叩きによる代替なし)",
+      "verdict": "PASS",
+      "observed": "transcript 全 306 行を機械走査し tool_use を 54 件抽出。うち #13 (jsonl L64, 2026-07-25T23:13:47.317Z) が name=\"Skill\"、input.skill=\"dev-graph:run-dev-graph-decompose\"、input.args=\"ユーザー登録とログインができて、ログイン後にダッシュボードで自分の利用状況を見られる小規模 Web アプリを作りたい。登録完了時と重要な変更時には通知メールを送りたい。運営者向けには全ユーザーの利用状況を集計したレポート画面もほしい。 --repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-002450-wt-6/eval-log/dev-graph/live-trial-fixtures/decompose-wt6 --binding none\"。対応 tool_result は \"Launching skill: dev-graph:run-dev-graph-decompose\" (is_error なし)。args に --dry-run は含まれない。54 件の tool_use 入力を \"dry-run\"/\"dry_run\" で全文検索した結果ヒットは #49 (progress.json の Write 本文中で criteria:OUT3 に言及した evidence 文字列) の 1 件のみで、Skill args・Bash command には 0 件。Skill 起動 (#13) より前の tool_use #1-#12 に plugins/dev-graph/scripts/ 配下の Bash 実行は 0 件。起動後の script 実行は resolve-repo-context.py (#14, #24)、validate-graph-schema.py (#21)、upsert-node.py (#33-#37) で、いずれも SKILL.md:114 が指示する \"C02 preview/atomic writer で macro graph を登録する\" 経路に該当し、#23 では Skill ツールで dev-graph:run-dev-graph-node も正規に呼出している。よって skill 本体の Bash 代替は不成立。"
+    },
+    {
+      "name": "実登録の確認 (graph_revision と全 node)",
+      "verdict": "PASS",
+      "observed": "fixture の .dev-graph/state/graph.json を直接読取り: graph_revision=5、nodes 5 件 (top-level キーは graph_revision と nodes のみ)。graph_node_id / artifact_kind は arch-webapp-base=architecture、feat-user-auth=feature、feat-user-dashboard=feature、feat-email-notification=feature、feat-admin-report=feature。pre-state.json は graph.revision=0 / node_count=0 / sha256=f4273afd63c3... を記録しており、5 node 全てが本 run に帰属する。upsert-node.py の receipt 5 件が graph_revision 0→1→2→3→4→5、各 status=applied / operation=added / owner=C02/run-dev-graph-node / idempotent=false を返している。eval-log/macro-preview.json は graph.json と sha256 が完全一致 (1f6d5b6566c73027a901b47c9ce6b543c85d50702a5dcff59b2d230af622f2cc) で、手書き preview ではなく実 graph の写しである。生成された content artifact 5 件 (architecture/arch-webapp-base.md, features/feat-user-auth.md, feat-user-dashboard.md, feat-email-notification.md, feat-admin-report.md) の sha256 も upsert receipt の artifact_sha256_after と一致 (例: arch-webapp-base.md=0618980dc771ecab107d36d2db6042d5ec35d3007267d1ef09b1accfd5081f4d、feat-user-auth.md=28e905b866d29134235d9f11d4d2b0e9d560d71c15be138b7fb9f81c87e8ff7b、feat-admin-report.md=02bb52ccc6c28ae80a8f1021fd5ebc3e2440e24f4a7b97cf78cf3a7d7d318f46) で、C02 writer が著者であることを確認した。"
+    },
+    {
+      "name": "DAG 循環なし (自前の Kahn + DFS、判別力の明示)",
+      "verdict": "PASS",
+      "observed": "全 node の depends_on から辺集合を自分で構築した。辺は 4 本 (向きは 依存先→依存元): feat-user-auth→feat-user-dashboard、feat-user-auth→feat-email-notification、feat-user-auth→feat-admin-report、feat-user-dashboard→feat-admin-report。dangling endpoint は 0 件 (全 4 辺の両端が登録済み node ID)。自分で実装した Kahn 法は 5 node 中 5 node を処理し topological order ['arch-webapp-base','feat-user-auth','feat-user-dashboard','feat-email-notification','feat-admin-report'] を得た → acyclic。独立に実装した 3 色 DFS でも back-edge 0 本、検出サイクル [] → acyclic。辺が 4 本 (>1) あり 5 node 中 4 node が辺に関与するので、循環は構成可能な構造であり本検査には判別力がある。参考として architecture_refs も別の辺集合 4 本 (feat-user-auth/feat-user-dashboard/feat-email-notification/feat-admin-report → arch-webapp-base) を成し、これを合成しても循環はない。被験の #48 出力 (Edge count: 4 / Kahn 全 5 処理) とも一致するが、上記は私が graph.json から再構築した独立判定である。"
+    },
+    {
+      "name": "粒度閾値 (inter-feature fan-out)",
+      "verdict": "PASS",
+      "observed": "scenario 定義 plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json の declared_granularity_threshold は metric=max_inter_feature_depends_on_per_feature、max_value=3。私が graph.json から数えた feature ごとの兄弟 feature への depends_on 本数は feat-user-auth=0、feat-user-dashboard=1、feat-email-notification=1、feat-admin-report=2 で measured_max=2 ≤ 3。閾値内である。"
+    },
+    {
+      "name": "task 粒度混入なし",
+      "verdict": "PASS",
+      "observed": "artifact_kind の内訳を自分で集計: architecture=1、feature=4、task=0 (合計 5)。phase_ref が非 null の node=0 件、parent_feature が非 null の node=0 件、feature_package_id が非 null の node=0 件 (いずれも 5 node すべて null)。graph_node_id を正規表現 P(0[1-9]|1[0-3]) で照合した結果、P01..P13 形式の ID を持つ node は 0 件。fixture の tasks/ ディレクトリは .gitkeep (0 バイト) のみで task 成果物ファイルも 0 件。macro 層 (feature+architecture) だけが登録され micro 層の task 粒度は混入していない。"
+    },
+    {
+      "name": "評価前 draft の Issue 起票 0 件 (draft node 非空の状態で)",
+      "verdict": "PASS",
+      "observed": "graph.json の全 5 node の状態を列挙: arch-webapp-base / feat-user-auth / feat-user-dashboard / feat-email-notification / feat-admin-report のすべてが confirmation_status=\"draft\"、evaluation_status=\"pending\"、implementation_readiness.status=\"incomplete\" (missing_sections=[\"full_specification\"], checked_at=2026-07-25T23:20:49Z)、加えて status=\"draft\"、confirmation_evidence は evaluated_digest/evaluator/evidence_ref すべて null。起票源となる draft node が 5 件 (うち feature 4 件) 実在する状態で、fixture の issues/ 配下を実測すると .gitkeep (0 バイト, 07:47 作成) のみで issue ファイルは 0 件、.beads/ ディレクトリは ls で \"No such file or directory\" (不在)。pre-state.json の content_inventory.issues も .gitkeep 1 件のみで run 前後に増分なし。したがって「node 集合が空だから 0 件」という真空合格ではない。ただし 0 件という観測の因果帰属には制限があり、その内容は真空合格の点検 check に記載した。"
+    },
+    {
+      "name": "tracker 投影の限定 (肯定側は本 scenario で観測不能)",
+      "verdict": "DISCLOSURE",
+      "observed": "全 5 node の tracker 関連フィールドを列挙: tracker_binding=\"none\" (5/5)、issue_linkage=null (5/5)、beads_linkage=null (5/5)、github_project_linkages=[] (5/5)、github_publication.mode=\"local_only\" かつ labels=[] / milestone=null / project_aliases=[] (5/5)、pull_request_linkages=[] (5/5)。--binding none では tracker 投影経路そのものが発火しないため、「confirmed/pass/readiness complete の node が実際に tracker へ投影される」という肯定側の観測は本 run では一切得られない。監査 script が記録した adapter_receipts (bd-bridge.py --op create / gh-bridge.py --op issue-create / gh-bridge.py --op project-item-add) は argv 末尾に --dry-run が付いた preview 実行であり (payload.dry_run=true, mutation_suppressed=true)、実投影の観測ではない。この欠落は本 scenario の設計上のもので、binding=beads / binding=github での肯定側検証は別 trial の担当である。"
+    },
+    {
+      "name": "write count の帰属 (git 実差分との整合)",
+      "verdict": "PASS",
+      "observed": "私が独立に実行した git -C <fixture> status --short は 8 エントリ: \" M .dev-graph/state/graph.json\"、\"?? .dev-graph/state/.graph.json.register.lock\"、\"?? architecture/arch-webapp-base.md\"、\"?? eval-log/\"、\"?? features/feat-admin-report.md\"、\"?? features/feat-email-notification.md\"、\"?? features/feat-user-auth.md\"、\"?? features/feat-user-dashboard.md\"。fixture は独立 Git repo で commit は 49d6643 (chore(fixture): initialize dev-graph live-trial fixture) の 1 件のみ。upsert-node.py の receipt 5 件はそれぞれ write_count=2 (graph.json + artifact md) を返しており累計 10 write operation、実体は distinct 6 ファイル (新規 md 5 件 + graph.json の 5 回更新) で git 差分と整合する。被験の最終報告「managed files は graph.json (M) + 5 content files (新規) + lock file = 7 managed changes」は監査の local_state.after.git_status.managed とも私の実測とも一致し、固定値の自己申告ではない。外部 tracker への write は 0 件 (.beads/ 不在、GitHub 呼出しは dry-run preview のみ)。"
+    },
+    {
+      "name": "監査 script の欠陥 (pass=false は被験の失敗ではない)",
+      "verdict": "DISCLOSURE",
+      "observed": "fixture/eval-log/decompose-audit.json の \"pass\" は false である。原因を audit_decompose_live_trial.py の実装から特定した: L328 で suppression[\"local\"] = local[\"mutation_suppressed\"] を取り、L337-349 の passed 条件に all(suppression.values()) を含めている。local_state.checks は graph_sha_unchanged=false / graph_revision_unchanged=false / graph_node_count_unchanged=false / content_inventory_unchanged=false / managed_git_status_unchanged=false で mutation_suppressed=false。すなわちこの監査は「ローカル状態が変化しないこと」を pass 条件にしており、--dry-run を付けない実書込みの positive scenario に対しては検査が反転している (実書込みなら必ず false になる)。したがって pass=false は被験の失敗の証拠にならない。同 script の他の既知欠陥も確認した: (1) derived_write_counts は L329-332 の int(not value) による真偽値変換なので local:1 は「変化あり」の bool であって書込み件数ではない (実測は 6 ファイル / 10 write operation)。(2) draft_candidates は L148-155 で beads/github/none の 3 binding に同一リストを複製しており binding 次元は偽 (3 件とも count=0, ids=[])。(3) readiness_probe は L158-169 で features[0] を deepcopy して confirmation_status=confirmed / evaluation_status=pass / readiness=incomplete をメモリ上で代入し _is_publication_candidate が False を返すことを見るだけの述語の自己言及テストで、実 run の観測ではない (candidate=false, excluded_only_by_readiness=true は自明に成立する)。以上より監査の pass フィールドは肯定・否定いずれの根拠にも使えず、本評価は全項目を graph.json / fixture 実ファイル / transcript から独立に再測した。"
+    },
+    {
+      "name": "goal-seek 3 点セット (hash 再計算と 6 キー)",
+      "verdict": "PASS",
+      "observed": "fixture の eval-log/ に 3 点が揃っている: run-dev-graph-decompose-goal-spec.json、run-dev-graph-decompose-progress.json、run-dev-graph-decompose-intermediate.jsonl。goal-spec のキーは original_goal / original_goal_hash / scenario の 3 つで、original_goal は plugins/dev-graph/skills/run-dev-graph-decompose/SKILL.md の 132 行目 (## ゴールシーク実行 > ### ゴール) と Python の文字列 == で完全一致 (302 文字 / UTF-8 516 バイト)。私が hashlib.sha256(goal['original_goal'].encode('utf-8')).hexdigest() で再計算した値は ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795 で、goal-spec の original_goal_hash と一致し、SKILL.md L132 から直接計算した値とも一致する。intermediate.jsonl は 2206 バイト / 非空 2 行で、各行のキーは丁度 6 個 (original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal) で欠落 0・余剰 0。両行の original_goal は goal-spec と同一文字列で、両行の original_goal_hash も私の再計算値と一致した。時刻順は 1 行目 Write (#10, 23:13:10.066Z) < Skill 起動 (#13, 23:13:47.317Z) < 監査実行 (#45, 23:23:19.779Z) < 2 行目追記 (#51, 23:25:29.906Z) で、要求された順序を満たす。2 行目の current_goal_snapshot は \"マクロ分解完了。graph_revision=5, 5 nodes (1 architecture + 4 features)。DAG acyclic (4 edges)。…\" で私の実測値と一致する。"
+    },
+    {
+      "name": "intermediate の append-only 性 (機序は Edit ツール)",
+      "verdict": "DISCLOSURE",
+      "observed": "intermediate.jsonl への mutation は transcript 全体で 2 件のみ (#10 Write = 1 行目、#51 Edit = 2 行目)。ただし 2 行目の追加は指示された `>>` リダイレクトや open(...,'a') ではなく Edit ツールで行われている: old_string='\"drift_signal\":\"none\"}\\n'、new_string は同一文字列の直後に 2 行目 JSON を連結したもの。実効果を実ファイルで検証したところ、現行ファイル先頭 970 バイトが #10 の Write content と完全一致 (startswith 判定 True)、総サイズ 2206 バイト、増分 1236 バイトで、既存 1 行目の内容改変は 0 バイトであった。したがって「既存行の書換えが 0 件」という append-only の実質は満たしているが、追記手段が Edit ツールである点を機序の差異として開示する。既存行を対象とした再 Write は 0 件。"
+    },
+    {
+      "name": "progress の checklist (pending / evidence null の不在と理由の書き分け)",
+      "verdict": "PASS",
+      "observed": "run-dev-graph-decompose-progress.json の checklist は 6 項目。status の内訳は pass=3 (macro_result_no_cycle_no_task, draft_tracker_publication_zero, c02_all_or_none_no_duplicate)、not_applicable=3 (exact_13_package, single_projection_authority, dry_run_write_zero)。pending は 0 件、evidence が null の項目も 0 件 (6 項目すべてが具体値を含む文字列 evidence を持つ)。not_applicable の理由は 3 種に書き分けられている: exact_13_package は「全 feature が status=draft, confirmation_status=draft, evaluation_status=pending であり ready ではない。draft gate により system-dev-planner (ミクロ層) の自動起動が発火せず」= draft gate 由来、single_projection_authority は「binding=none のため tracker 投影経路が発火しない。全 node の tracker_binding=none, issue_linkage=null, beads_linkage=null, github_project_linkages=[]」= binding=none 由来、dry_run_write_zero は「--dry-run の write 0 件検証は criteria:OUT3 の担当であり、本 scenario (OUT1) の判定対象ではない」= scenario 範囲外。要求された「draft gate か binding=none か」の区別は明示されている。pass 項目の evidence 記載値 (graph_revision=5、architecture=1/feature=4/task=0、edges=4、phase_ref/parent_feature/feature_package_id すべて 0 件、P01..P13 形式 0 件) は私の実測と一致する。"
+    },
+    {
+      "name": "真空合格 (vacuous pass) の点検",
+      "verdict": "DISCLOSURE",
+      "observed": "検査対象が空集合であることによる自明成立を洗い出した。(a) Issue 起票 0 件: 起票源となる draft node が 5 件実在するので node 集合の空による真空ではないが、--binding none では confirmed な node であっても issue は作られないため、この 0 件が「draft gate が作動した結果」か「binding=none で投影経路自体が無効だった結果」かを一意に切り分けられない (交絡がある)。(b) scenario 定義 live-trial-positive-scenarios.json の fixture_contract は \"The run must additionally promote at least one produced feature to confirmed with evaluation-pass while its implementation_readiness stays incomplete, so the publication-candidate gate has to evaluate readiness and exclude it; a candidate set that is empty only because every node is draft leaves the readiness condition untested and does not satisfy the contract\" を要求しているが、本 run は 5 node すべてが draft/pending/incomplete で昇格は 0 件。したがって required_observations の 3 番目 (readiness-incomplete による publication candidate からの除外) は実データでは未検証で、監査 script の合成 probe (features[0] の deepcopy に対する述語テスト) が代替しているにすぎない。なお被験へ渡された task.md には昇格の手順が一切書かれておらず、これは task.md と scenario 契約の乖離であって被験の逸脱ではない。(c) scenario の task_args_template は \"--repo-root <contained-fixture-repo> --binding none --dry-run\" だが task.md が --dry-run を明示的に禁止して上書きしているため、required_observations の 4 番目 (dry run の write 0 件と stdin 経由 schema 検証) も本 run では未検証で criteria:OUT3 の担当となる。(d) DAG 循環検査・task 粒度検査・粒度閾値検査はいずれも対象 node 5 件・辺 4 本の非空集合に対する検査で、真空ではない。"
+    },
+    {
+      "name": "fixture を汚す shell error の有無",
+      "verdict": "DISCLOSURE",
+      "observed": "全 tool_result を 'command not found' / 'No such file' / 'Traceback' / 'permission denied' の 4 パターンで走査した結果、ヒットは 0 件。一方 is_error=true の tool_result は 2 件あった。(1) #21 (jsonl L115): validate-graph-schema.py が exit code 1、payload の violations は code=artifact_missing の 5 件のみ (architecture/arch-webapp-base.md と features/*.md の 4 件で、まだファイルを作っていない段階での想定内の失敗)。これは検証実行であり書込みを伴わない。(2) #22 (jsonl L121): PreToolUse hook が Bash をブロック — \"[guard-graph-schema] BLOCKED: graph/schema の直接破壊操作は C02 atomic writer を迂回できない (.dev-graph/config.json は scripts/build-repo-config.py 経由で書く)\"。これは heredoc (cat > architecture/arch-webapp-base.md) で content root へ直接書こうとした操作を hook が止めたもので、PreToolUse ブロックのため command 自体が実行されず書込みは 0。直後の #23 で Skill dev-graph:run-dev-graph-node を呼び、#33-#37 の upsert-node.py (C02 atomic writer) 経由で全 5 artifact を生成してリカバリしており、現存する md ファイルの sha256 はすべて upsert receipt の artifact_sha256_after と一致する。よって fixture 汚染はない。残留物として .dev-graph/state/.graph.json.register.lock (0 バイト, 08:21) が untracked のまま残っているが、graph.json の内容には影響しておらず (私の再読取りで graph_revision=5 / 5 node が正常に parse でき、sha256 は最終 upsert receipt の graph_sha256_after=1f6d5b6566c73027a901b47c9ce6b543c85d50702a5dcff59b2d230af622f2cc と一致)、後片付け漏れとして開示するに留める。"
+    }
+  ]
+}

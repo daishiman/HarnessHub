@@ -1,0 +1,40 @@
+{
+  "evaluator": "fresh-session-independent",
+  "verdict": "PASS",
+  "blockers": [],
+  "checks": {
+    "1_canonical_paths": {
+      "result": "PASS",
+      "observed": "5 nodes routed: issue→issues/, task→tasks/, specification→specs/, architecture→architecture/, document→docs/. All 5 files exist on disk."
+    },
+    "2_body_preservation": {
+      "result": "PASS",
+      "observed": "stored.count(original)==1 for all 5 artifacts. Each original body from mixed-artifacts.json is a contiguous substring in its stored Markdown."
+    },
+    "3_api_literals": {
+      "result": "PASS",
+      "observed": "All 7 literals found in specs/spec-rest-api-v2-migration.md: GET /api/v1/users, POST /api/v2/orders, items, line_items, X-API-Key, Authorization: Bearer, DELETE /api/v2/sessions/bulk."
+    },
+    "4_consecutive_update": {
+      "result": "PASS",
+      "observed": "Transcript line 210 contains 5 'operation: updated' receipts with write_count=2 each. graph_revision=10 (5 creates + 5 updates). All 5 nodes: frontmatter artifact_kind matches graph artifact_kind and storage directory."
+    },
+    "5_no_feature_created": {
+      "result": "PASS",
+      "observed": "features/ contains only .gitkeep (0 feature files). graph.json has 0 nodes with artifact_kind=feature."
+    },
+    "6_goal_seek_triplet": {
+      "result": "PASS",
+      "observed": "3 files exist in eval-log/: goal-spec.json, progress.json, intermediate.jsonl. intermediate.jsonl has 2 rows, each with all 6 required keys. Independently computed SHA-256 of SKILL.md original_goal = eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2, matches original_goal_hash in both rows."
+    },
+    "7_skill_tool_invocation": {
+      "result": "PASS",
+      "observed": "Transcript line 66: Skill tool_use with skill='dev-graph:run-dev-graph-node'. Subsequent Bash calls to scripts (resolve-repo-context.py, upsert-node.py etc.) occur after the Skill invocation as part of normal skill execution, not as a substitute."
+    },
+    "8_fixture_not_polluted": {
+      "result": "PASS",
+      "observed": "git -C <fixture> rev-list --count HEAD = 1. No trial-originated commits."
+    }
+  },
+  "notes": []
+}

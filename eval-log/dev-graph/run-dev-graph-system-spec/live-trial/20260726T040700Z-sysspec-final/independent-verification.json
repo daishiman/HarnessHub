@@ -1,0 +1,95 @@
+{
+  "result": "FAIL",
+  "blockers": [
+    "Fixture system-spec-wt6/system-spec/ contains only .gitkeep and requirements-brief.md — lacks spec-state.json, completeness-report.json, fetched-references.json, index.md, and confirmed chapter .md files that task.md assumes are pre-placed",
+    "Task.md prohibits re-running harness (elicit/doc-fetch/compile) and prohibits WebFetch/WebSearch, creating an unresolvable fixture-task precondition mismatch",
+    "0 nodes registered (graph_revision=0, nodes=[]) — stages 2-4 all fail as a consequence"
+  ],
+  "checks": [
+    {
+      "name": "skill-invocation-via-skill-tool",
+      "verdict": "PASS",
+      "observed": "pane.txt line 11: Skill(dev-graph:run-dev-graph-system-spec) → 'Successfully loaded skill · 5 tools allowed'. transcript.jsonl contains exactly 1 Skill tool_use."
+    },
+    {
+      "name": "R0-C24-repo-root-containment",
+      "verdict": "PASS",
+      "observed": "resolve-repo-context.py --mode write returned repo_root matching fixture realpath: /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-002450-wt-6/eval-log/dev-graph/live-trial-fixtures/system-spec-wt6"
+    },
+    {
+      "name": "R1-harness-version-entry-points",
+      "verdict": "PASS",
+      "observed": "plugin.json version=0.1.0 satisfies >=0.1.0 <1.0.0. Required 4 entry points (run-system-spec-elicit, run-system-spec-doc-fetch, run-system-spec-compile, assign-system-spec-completeness-evaluator) all present in package-contract.json"
+    },
+    {
+      "name": "fixture-confirmed-artifacts-exist",
+      "verdict": "FAIL",
+      "observed": "system-spec/ contains only .gitkeep and requirements-brief.md. spec-state.json=MISSING, completeness-report.json=MISSING, fetched-references.json=MISSING, index.md=MISSING. shape_system_spec.py explicitly documents these are NOT pre-placed."
+    },
+    {
+      "name": "C02-node-registration-spec-and-arch",
+      "verdict": "FAIL",
+      "observed": "graph.json: graph_revision=0, nodes=[]. registered_this_run=[] in progress.json. 0 specification nodes, 0 architecture nodes registered."
+    },
+    {
+      "name": "source-lineage-6-fields-non-null",
+      "verdict": "FAIL",
+      "observed": "No nodes registered — no source_lineage to evaluate."
+    },
+    {
+      "name": "source-digest-sha256-match",
+      "verdict": "FAIL",
+      "observed": "No nodes registered — no source_digest to verify against source files."
+    },
+    {
+      "name": "confirmation-status-confirmed-with-evidence",
+      "verdict": "FAIL",
+      "observed": "No nodes registered — no confirmation_status or confirmation_evidence to check."
+    },
+    {
+      "name": "validate-source-digest-exit-0",
+      "verdict": "FAIL",
+      "observed": "Not executed — no nodes in registered_this_run to validate."
+    },
+    {
+      "name": "validate-evidence-refs-exit-0",
+      "verdict": "FAIL",
+      "observed": "Not executed — no nodes in registered_this_run to validate."
+    },
+    {
+      "name": "C02-only-write-path-positive-control",
+      "verdict": "FAIL",
+      "observed": "No write operations occurred to graph.json/specs/architecture — positive control cannot fire with 0 registrations."
+    },
+    {
+      "name": "no-duplicate-elicitation-compile-logic",
+      "verdict": "FAIL",
+      "observed": "progress.json: NOT_EVALUATED, evidence='Blocked by prior failures'. No positive-control search was attempted."
+    },
+    {
+      "name": "no-reverse-import-or-double-SSOT",
+      "verdict": "FAIL",
+      "observed": "Cannot verify — 0 nodes registered, no node markdown to check for content duplication vs reference."
+    },
+    {
+      "name": "goal-seek-3-point-set",
+      "verdict": "PASS",
+      "observed": "goal-spec.json (458B), progress.json (1890B), intermediate.jsonl (1710B, 2 rows) all present in fixture/eval-log/. original_goal_hash=30a1de05…ce454 verified correct via inline python SHA-256."
+    },
+    {
+      "name": "intermediate-append-only-temporal-order",
+      "verdict": "PASS",
+      "observed": "intermediate.jsonl has 2 rows: row1 written via Write tool (R0/R1 snapshot), row2 appended after FAIL determination. Both rows have required 6 keys (original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal). Row2 drift_signal='blocked_by_fixture_precondition_mismatch'."
+    },
+    {
+      "name": "task-prohibitions-respected",
+      "verdict": "PASS",
+      "observed": "No WebFetch/WebSearch in pane. No re-execution of run-system-spec-elicit/doc-fetch/compile. No Task/Agent delegation. Skill invoked exactly once."
+    },
+    {
+      "name": "trial-self-assessment-honest",
+      "verdict": "PASS",
+      "observed": "Trial correctly self-assessed as FAIL in out/status.json and progress.json. Blocker accurately describes fixture-task precondition mismatch. No false PASS claims on unverifiable items."
+    }
+  ]
+}

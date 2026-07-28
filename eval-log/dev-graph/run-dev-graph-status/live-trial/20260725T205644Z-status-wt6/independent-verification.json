@@ -1,0 +1,60 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "OUT1 全件フィールド突合 (graph.json vs report)",
+      "expected": "report の各ノードの status/closed_at/depends_on/dependents/linkage が graph の実値と 1 件ずつ一致し、不一致 0 件",
+      "observed": "突合ノード 2/2、フィールド assertion 32 件、不一致 0 件。比較対象フィールド: status, closed_at, depends_on, dependents(逆辺を独立再計算), artifact_kind, project_id, domain, tags, file_path, parent_feature, feature_package_id, tracker_binding, issue_linkage, beads_linkage, title, execution_contexts。graph にあって report に無いノード 0 件、report にあって graph に無いノード 0 件。突合スクリプトは自作 (scratchpad/reconcile.py)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "status 一致",
+      "expected": "report.status == graph node.status (全ノード)",
+      "observed": "LT-TASK-001: graph=active / report=active。LT-TASK-002: graph=active / report=active。一致 2/2。ただし graph の status 分布は {active: 2} の 1 値のみで、closed/tombstoned の報告経路は本シナリオでは未通過",
+      "verdict": "PASS"
+    },
+    {
+      "name": "closed_at 一致 (出所の識別可能性を含む)",
+      "expected": "report.closed_at == graph node.closed_at (全ノード)。SKILL.md:136 Gotcha は graph の closed_at をそのまま報告することを要求",
+      "observed": "LT-TASK-001/002 ともに graph.closed_at=None、report.closed_at=None -> 一致 2/2。ただし実装 (plugins/dev-graph/scripts/status-graph.py:136) は report の closed_at を top-level closed_at ではなく completion_evidence.completed_at から取得している。本 fixture では両フィールドが同値 (2/2 ノードで None) のため報告値がどちらを読んだか区別できず、closed_at 節の検証は provenance について真空。in-memory 再現: graph.closed_at='2026-07-22T10:00:00Z' かつ completion_evidence.completed_at=None のとき同式は None を返し graph 実値と不一致になる。なお plugin 内に top-level closed_at を書く writer は grep で 0 件 (schemas 定義のみ) のため現状の graph では顕在化しない",
+      "verdict": "PASS"
+    },
+    {
+      "name": "依存関係 (depends_on / dependents) 一致",
+      "expected": "depends_on が graph 実値と一致し、dependents が逆辺の独立再計算と一致する",
+      "observed": "graph の辺は [(LT-TASK-001, []), (LT-TASK-002, [LT-TASK-001])] の 1 本。report: LT-TASK-001 depends_on=[] / dependents=[LT-TASK-002]、LT-TASK-002 depends_on=[LT-TASK-001] / dependents=[]。自前で再計算した逆辺と完全一致 (不一致 0/2)。blocked/ready の明示フィールドは report に存在しない (row keys 17 個に readiness 系なし) が、辺が正しく報告されているため導出可能: 自前導出で LT-TASK-001=ready, LT-TASK-002=blocked",
+      "verdict": "PASS"
+    },
+    {
+      "name": "真空合格 (vacuous pass) 検査 — ノード被覆",
+      "expected": "report 行数が graph ノード総数と一致し、突合件数が 0 件でない",
+      "observed": "graph ノード総数 = 2、report results 行数 = 2、report.count = 2 -> 被覆率 100%、取りこぼし 0 件。突合件数 2 件 > 0 なのでノード被覆の意味での真空合格ではない。ただし fixture の多様性は低い: artifact_kind は task のみ (2/2)、status は active のみ (2/2)、closed_at は全て null (2/2)、linkage 系フィールドは全ノードで空 (issue_linkage/beads_linkage=None, github_project_linkages/pull_request_linkages=[]) のため、close/tombstone 状態と非空 linkage の報告忠実性は本シナリオでは未検証",
+      "verdict": "PASS"
+    },
+    {
+      "name": "read-only 契約の実測 (fixture repo の差分)",
+      "expected": "status skill 実行で graph/config/content が変更されず、eval-log/ 以外に差分がない",
+      "observed": "git diff HEAD --stat が空 (tracked ファイル変更 0 件)。git status --porcelain -uall の未追跡は eval-log/ 配下の 4 ファイルのみ (run-dev-graph-status-execution.json / -goal-spec.json / -progress.json / -intermediate.jsonl)。.dev-graph 配下の変更・未追跡 0 件。graph.json sha256 = 120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d、config.json sha256 = 213d03e52bf56b281bb495fb247d14d5edf90a6266186f68e6afc9100e8d1d57。eval-log/run-dev-graph-status-execution.json は status-graph.py の --eval-log 既定値 (script 206 行) であり SKILL.md が許可する eval-log/ 内",
+      "verdict": "PASS"
+    },
+    {
+      "name": "digest 不変の独立再計算",
+      "expected": "report が申告する graph digest が現在のファイル実値と一致し、before == after",
+      "observed": "私が再計算した graph.json sha256 = 120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d。report の graph_sha256_before / graph_sha256_after 双方と一致 (3 値同一)。authority_sha256_before == authority_sha256_after == 2f4c14bc41974e203ef2a3df61e7a7e1b90bcefd9ce8447b9e57f5f5d0eac5fa。report の ok=true / read_only=true",
+      "verdict": "PASS"
+    },
+    {
+      "name": "goal_seek 3 点セットの存在",
+      "expected": "fixture/eval-log/ に goal-spec.json / progress.json / intermediate.jsonl が揃う",
+      "observed": "3 ファイルすべて存在。goal-spec.original_goal は SKILL.md 本文 81 行の Goal 文字列と完全一致 (in-file 照合 True)。progress.json は checklist 6 項目 (SKILL.md 89-94 行と同数) すべて PASS + criteria IN1/OUT1/OUT2 記載",
+      "verdict": "PASS"
+    },
+    {
+      "name": "intermediate.jsonl の必須 6 キーと hash",
+      "expected": "全行が original_goal / original_goal_hash / current_goal_snapshot / delta_from_original / merged_directive_for_next / drift_signal を持ち、hash が original_goal の UTF-8 SHA-256 と一致",
+      "observed": "2 行。SKILL.md 113-124 行の検証スニペットを私が再実行して全 assert 通過。私が再計算した SHA-256 = 24dc23d4cf800a092b7f9970a465ab921b4cdf5d20b95ce2a1fd212884b45b5c で 2 行の original_goal_hash と一致。6 キー欠落 0 件。1 行目 = skill 実行前スナップショット、2 行目 = 実行後結果で時系列整合。pane.txt の transcript でも 2 行目のみ append (progress.json Write は別操作) を確認",
+      "verdict": "PASS"
+    }
+  ]
+}

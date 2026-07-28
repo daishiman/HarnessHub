@@ -12,7 +12,7 @@ iteration: null
 title: "feature-package/feat-auth-tenancy の 13 task-spec が validate-system-plan.py で fail (inner goal-seek 節の欠落 27 件)"
 owners: ["daishiman"]
 created_at: "2026-07-25T00:37:03Z"
-updated_at: "2026-07-25T00:40:00Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-auth-tenancy"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-25T12:13:40Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T00:37:03Z","missing_sections":[],"status":"incomplete"}
 ---
 

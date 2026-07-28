@@ -11,9 +11,9 @@ target_date: null
 iteration: null
 title: "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化"
 owners: ["daishiman"]
-created_at: "2026-07-22T04:16:31Z"
-updated_at: "2026-07-24T07:22:00Z"
-status: "done"
+created_at: "2026-07-25T16:38:15Z"
+updated_at: "2026-07-25T16:52:03.400821Z"
+status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"]
@@ -21,7 +21,7 @@ purpose: "qa-067 で確定した開発管理パイプライン改善 8 要件と
 goal: "P01 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す"
 scope_in: ["docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"]
 scope_out: ["Hub プロダクト本体機能 (Web/API/DB) の変更","dev-graph への新 verb 追加","bd CLI 本体の変更","graph.json 分割の実装 (トリガー記録のみ)","本 phase の責務外の成果物生成 (他 phase の write scope への書込)"]
-acceptance: ["requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) が逐語一致で転記されている","現行 feature context sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である","P02 で確定すべき据置事項 (検査 script 入出力契約・handoff schema 後方互換方式・eval-log 再配置対象一覧・close-loop の bd-bridge 経由手順) が明記されている"]
+acceptance: ["requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) が逐語一致で転記されている","現行 feature context sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である","P02 で確定すべき据置事項 (検査 script 入出力契約・handoff schema 後方互換方式・eval-log 再配置対象一覧・close-loop の bd-bridge 経由手順) が明記されている"]
 architecture_refs: ["arch-harness-hub-dev-workflow"]
 parent_feature: "feat-dev-pipeline-improvement"
 feature_package_id: "feature-package/feat-dev-pipeline-improvement"
@@ -31,19 +31,19 @@ template_id: "task"
 template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-22T04:16:31Z","origin_kind":"system-dev-planner","source_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","source_path":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-01-requirements.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-25T16:38:15Z","origin_kind":"system-dev-planner","source_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","source_path":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-01-requirements.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.87
 classification_reason: "qa-067 の開発管理パイプライン改善 8 要件のうち P01 責務 (要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化) を実行する task"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p01.md","confidence":0.87}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: {"bd_issue_id":"HarnessHub-k2u.1","linked_at":"2026-07-21T16:50:00Z","sync_state":"linked"}
+beads_linkage: null
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-22T06:29:56Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/requirements-baseline.md"],"policy":"manual","reconciled_at":"2026-07-23T11:10:47Z","source":"reconciliation","status":"done"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -75,7 +75,7 @@ system-spec/dev-workflow.md の qa-067 は、2026-07-21 の運用実態調査 (e
 
 - Macro entry gate: `parent_feature.depends_on all done|closed`。canonical parent feature の現行depends_onを都度評価し、task edgeへ複製しない。
 - Required spec/architecture/phase/task nodes: feat-dev-pipeline-improvement, arch-harness-hub-dev-workflow
-- Entry gate: goal-spec.json の feature_context_digest が sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 に一致し、features/feat-dev-pipeline-improvement.md の frontmatter と goal-spec の purpose/goal/scope_in/scope_out/acceptance が逐語一致すること
+- Entry gate: goal-spec.json の feature_context_digest が sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89 に一致し、features/feat-dev-pipeline-improvement.md の frontmatter と goal-spec の purpose/goal/scope_in/scope_out/acceptance が逐語一致すること
 - Source pin: system-spec-harness v0.1.0 / run-system-spec-compile / assign-system-spec-completeness-evaluator
 - Repository context: repo_identity=github:daishiman/HarnessHub、root_resolution_source=explicit-cli (validate-system-plan.py 実行時に --repo-root を明示指定する運用)、config=.dev-graph/config.json。全 path は repository 相対とし absolute path は使用しない
 - feature内依存なし。P01の場合はparent featureのmacro entry gateを実行時に評価する。
@@ -155,10 +155,10 @@ system-spec/dev-workflow.md の qa-067 は、2026-07-21 の運用実態調査 (e
 
 ## Current canonical feature baseline
 
-- Feature context: `features/feat-dev-pipeline-improvement.context.json` (`sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78`)
+- Feature context: `features/feat-dev-pipeline-improvement.context.json` (`sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89`)
 - Phase responsibility: 現行 context の purpose・goal・scope・acceptance のうち本 phase 責務の部分集合を所有する。
-- Purpose: 開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する
-- Goal: qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態
+- Purpose: 開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する
+- Goal: qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態
 - Scope in (all items are in-scope for the package; this phase owns the subset matching its responsibility):
 - lifecycle close-loop の機械化 (open 残置検出と md/graph/beads 3 表現の同時 close 導線)
 - eval-log/ 配置規約の明文化と CI lint 強制
@@ -168,6 +168,7 @@ system-spec/dev-workflow.md の qa-067 は、2026-07-21 の運用実態調査 (e
 - dev-graph 中核 handoff 31 findings の差分監査と disposition 遡及付与
 - spec-drift-guardian の verdict close gate 配線
 - 陳腐化文書の定期棚卸し GC の sync verb 運用組込み
+- qa-071 方法論要件 (外側/内側ループ・スコープ分離・情報配置・P13 書き戻し) の feature context・goal-spec・P01..P13 task spec への意味的伝播と semantic coverage 検査の恒常化
 - Scope out:
 - Hub プロダクト本体機能 (Web/API/DB) の変更
 - dev-graph への新 verb 追加
@@ -181,21 +182,32 @@ system-spec/dev-workflow.md の qa-067 は、2026-07-21 の運用実態調査 (e
 - graph.json 分割の再検討トリガーが仕様に記録されている
 - spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される
 - 陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている
+- feature の purpose/goal/scope_in/acceptance と context JSON・goal-spec が qa-071 の方法論要件 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を明示的に保持している
+- P01..P13 の task spec が外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復契約・スコープ分離・情報配置 (正本への参照と lineage のみ)・P13 の仕様/architecture への書き戻しを実行可能な形で trace している
+- validate-system-plan.py と system-dev-plan-evaluator が、feature 宣言 qa 要件の spec-state qa_log 登録と goal-spec/task spec への semantic coverage を tag/lineage 一致だけで PASS にせず fail-closed 検証している
 - Architecture/source refs:
 - architecture/harness-hub-dev-workflow.md
 - specs/harness-hub-system-specification.md
 - system-spec/dev-workflow.md
 
 This section is the current source closure and supersedes older counts or wording in this task when they conflict with the pinned feature context.
-
 ## Phase acceptance
 
 - requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 8 件/scope_out 4 件/acceptance 7 件/quality_constraints 6 件 (id 単位) が逐語一致で転記されている
-- 現行 feature context sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である
+- 現行 feature context sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89 の scope_in/acceptance 全件が P01 責務として追跡され、未割当 0 件である
 - P02 で確定すべき据置事項 (検査 script 入出力契約・handoff schema 後方互換方式・eval-log 再配置対象一覧・close-loop の bd-bridge 経由手順) が明記されている
 
 ## 参照情報
 
-- goal-spec: goal-spec.json (parent_feature=feat-dev-pipeline-improvement, feature_context_digest=sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78)
-- 仕様正本: system-spec/dev-workflow.md qa-067 (開発管理パイプライン改善 8 要件)
+- goal-spec: goal-spec.json (parent_feature=feat-dev-pipeline-improvement, feature_context_digest=sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89)
+- 仕様正本: system-spec/dev-workflow.md qa-067 (開発管理パイプライン改善 8 要件) / qa-071 (開発管理方法論 8 要件: マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制。spec-state qa_log 登録済み・appr-009 承認)
 - trace rule: P04 defines executable test IDs; P05 implements their subjects; P06 executes them; P07/P10 adjudicate only executed evidence; P09 makes applicable checks fail-closed; P11 preserves source digest and rerun commands; P12/P13 cannot substitute documentation or planned work for missing implementation/evidence.
+
+## 実行契約
+
+- claim: Beads issueをatomic claimし、並行実行時はworktree leaseを取得する。
+- scope: frontmatter `resource_scope` と published task spec の Write scope/touches を両方守る。
+- verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
+- rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
+- completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
+- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。

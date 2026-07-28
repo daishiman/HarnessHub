@@ -10,7 +10,7 @@ deployed_at: "2026-07-25T09:59:09Z"
 
 # feat-hub-foundation 本番リリース記録 (P13)
 
-> **状態**: CI の単一 workflow run 内で test → deploy が success で完走し（A1 達成）、cron トリガーの登録も解決した。残るのは外部死活監視と SLO ダッシュボード（A3）で、**要求内容の正本は `apps/hub/monitoring/` に確定済み・外部適用のみ未実施**。完了判定は §6 を参照。
+> **状態**: CI の単一 workflow run 内で test → deploy が success で完走し（A1 達成）、cron トリガーの登録も解決した。外部死活監視の資源作成と Worker secret 投入までは完了したが、2026-07-28 の実測で既存 monitor が paused と判明し、SLO 収集はまだ開始していない。要求内容の正本と再適用手段は `apps/hub/monitoring/`・`apps/hub/scripts/apply-better-stack-monitoring.mjs`。完了判定は §6 を参照。
 
 ## 1. デプロイ結果（CI 経由・確定値）
 
@@ -43,7 +43,7 @@ deployed_at: "2026-07-25T09:59:09Z"
 | `TURSO_DATABASE_URL` | 投入済み | 上表の URL |
 | `TURSO_AUTH_TOKEN` | 投入済み | `turso db tokens create harness-hub-prod` で再発行可能 |
 | `AUTH_SECRET` | 投入済み | **再発行すると全セッションが失効**。生成値は `~/harness-hub-secrets.txt` (mode 600) に保存済み。パスワードマネージャへ移して当該ファイルは削除すること |
-| `CRON_HEARTBEAT_URL` | **未投入** | Better Stack の heartbeat 登録後 |
+| `CRON_HEARTBEAT_URL` | **投入済み**（2026-07-28 に `wrangler secret list` で名前を再確認。値は非表示） | Better Stack heartbeat `475650` |
 
 ### 設定済み GitHub Actions secret / variable
 
@@ -116,7 +116,7 @@ Deployed harness-hub triggers (0.59 sec)
 |---|---|---|
 | **A1** CI が単一 workflow run 内で test → deploy を success で完走 | **達成** | run [30143422049](https://github.com/daishiman/HarnessHub/actions/runs/30143422049)（`main` / `ec0f3e45`）で 3 job すべて success。§4.1 |
 | **A2** Worker bundle が gzip 後 3 MiB 以内 | **達成** | gzip 1034.27 KiB（約 1.01 MiB）。CI の G5 bundle 予算ゲートも success |
-| **A3** SLO 99.5% の計測と `/health` 稼働 | **未達** | `/health` の本番稼働は確認済み。監視・SLO の**設定正本**（`apps/hub/monitoring/`）を 2026-07-25 に確定し回帰テスト `HF-A3-SLO-001`（6 件 pass）で固定したが、**Better Stack への適用が未実施**（`application_state: pending_credentials`）で時系列が無い。§5 |
+| **A3** SLO 99.5% の計測と `/health` 稼働 | **未達** | `/health` は 2026-07-28 に HTTP 200・依存 3 件 ok を再確認。Better Stack の 4 資源と Worker secret は適用済みだが、公開 status page の個別 resource が `not_monitored`（underlying monitor paused）で時系列収集は未開始。適用器を正本との差分 `PATCH` 対応へ是正済み。§5 |
 
 ### 4.1 A1 の証跡
 
@@ -136,20 +136,20 @@ run 30143422049（branch `main` / event `push` / sha `ec0f3e45dfa2e72da6d6a24c08
 
 | # | 項目 | 状態 | 影響 |
 |---|---|---|---|
-| 1 | 外部死活監視（Better Stack） | **設定正本は用意済み・外部適用は未実施**（`application_state: pending_credentials` / `external_id: null`） | A3 が未達。SLO 99.5% の算定には適用後 3 分間隔・1 ヶ月分の時系列が必要。実施は `HarnessHub-37h.15` |
-| 2 | SLO ダッシュボード | **算定式と閾値は確定済み・計測は未開始**（`verdict: collecting_not_started`） | 同上 |
-| 3 | `CRON_HEARTBEAT_URL`（Worker secret） | **未投入** | cron の実行監視が効かない。Better Stack の heartbeat 登録が前提 |
+| 1 | 外部死活監視（Better Stack） | **4 資源は適用済み・monitor 再開待ち**（monitor `4724920` / resource `8978911` は `not_monitored`） | A3 が未達。Uptime API token で適用器を再実行し `paused:false` を適用する |
+| 2 | SLO ダッシュボード | **算定式と閾値は確定済み・計測は未開始**（`verdict: collection_blocked`） | monitor が `operational` になった時点から 30 日を数える |
+| 3 | `CRON_HEARTBEAT_URL`（Worker secret） | **投入済み** | 次回日次 cron（2026-07-28T15:00:00Z）後の heartbeat 着信は未確認 |
 | 4 | 独自ドメイン（`hub.<domain>`） | **未設定** | 現状は workers.dev サブドメイン。運用上の必須要件ではない |
 
 ### 5.1 監視設定の正本（2026-07-25 追加）
 
 | ファイル | 役割 | 適用状態 |
 |---|---|---|
-| `apps/hub/monitoring/better-stack.monitors.json` | `/health` 3 分監視・日次 cron heartbeat（86,400s / 猶予 3,600s）・30 日履歴 status page の API 要求内容 | `pending_credentials`（`external_id` すべて null） |
-| `apps/hub/monitoring/slo-dashboard.json` | 月次可用性 99.5%・許容停止 12,960 秒/30 日・算定式（外形 downtime + Worker 5xx）・エラーバジェット 70% 警告 / 100% 凍結 | `verdict: collecting_not_started` |
-| `apps/hub/tests/monitoring/monitoring-config.test.ts` | 上記の回帰固定と「適用前に合格を主張しない」検査 | 6 件 pass |
+| `apps/hub/monitoring/better-stack.monitors.json` | `/health` 3 分監視・日次 cron heartbeat（86,400s / 猶予 3,600s）・30 日履歴 status page の API 要求内容 | `applied`（4 資源の `external_id` を記録済み） |
+| `apps/hub/monitoring/slo-dashboard.json` | 月次可用性 99.5%・許容停止 12,960 秒/30 日・算定式（外形 downtime + Worker 5xx）・エラーバジェット 70% 警告 / 100% 凍結 | `verdict: collection_blocked` |
+| `apps/hub/tests/monitoring/*.test.ts` | 状態機械、秘密非保存、重複防止、設定 drift の `PATCH` 是正 | 32 件 pass（2026-07-28） |
 
-> **設定ファイルの存在を「監視稼働」と読み替えない。** テストが `applied_at: null` / `external_id: null` / `verdict.status: collecting_not_started` を強制しており、外部適用してこれらを書き戻すまで A3 は未達のままである。
+> **外部 ID の存在を「監視稼働」と読み替えない。** 今回は資源が存在しても monitor が paused なら status page resource は `not_monitored` になり、時系列を収集できないことを実測した。`operational` の確認と 30 日の時系列が揃うまで A3 は未達のままである。
 > API token と heartbeat URL は設定ファイルに保存しない。token は投入時のみ環境変数、heartbeat URL は Worker secret `CRON_HEARTBEAT_URL` として渡す。
 
 ### 運用上の注意（今回の実行で判明）
@@ -167,7 +167,7 @@ task spec (`phase-13-release-deploy.md`) の記述は 2 か所で食い違って
 | 出典 | 要求 | 充足 |
 |---|---|---|
 | §Verification and evidence の Required evidence | release-notes.md にデプロイ日時・Worker バージョン・本番 URL・/health 初回応答・bundle サイズ最終値が記録されていること | **5 項目すべて §1〜§2 に記録済み** |
-| §目的 および Workstream applicability の Operations | 外部死活監視と SLO ダッシュボードが本番稼働を計測している状態にする | **未充足**（要求内容は §5.1 に確定済みだが Better Stack へ未適用） |
+| §目的 および Workstream applicability の Operations | 外部死活監視と SLO ダッシュボードが本番稼働を計測している状態にする | **未充足**（外部資源と secret は適用済みだが monitor paused のため収集未開始） |
 
 前者（Required evidence）を採る。理由は 3 点。
 
@@ -179,8 +179,8 @@ task spec (`phase-13-release-deploy.md`) の記述は 2 か所で食い違って
 
 ## 7. 次の手順
 
-1. Better Stack で `/health` の 3 分間隔監視・cron heartbeat・status page を登録する（**要求内容は `apps/hub/monitoring/better-stack.monitors.json` を正本とし、ダッシュボードで独自に値を決めない**。手順は runbook §1-4）
-2. 適用後に `external_id` / `applied_at` を設定ファイルへ書き戻し、`application_state` を `applied` にする。あわせて `slo-dashboard.json` の `verdict` を観測開始状態へ更新し、`monitoring-config.test.ts` の前提アサーションを切り替える
-3. heartbeat URL を `wrangler secret put CRON_HEARTBEAT_URL` で Worker へ投入する（ファイル・ログへ残さない）
-4. 1 ヶ月分の可用性時系列を取得して A3 を判定する
+1. Uptime API token を環境変数で渡して適用器を再実行し、monitor `4724920` を `paused:false` へ是正する（ダッシュボードで独自の値へ変更しない）
+2. 公開 status page の個別 resource が `operational` になったことを確認し、その時刻を 30 日観測の開始として証跡へ記録する
+3. 次回日次 cron 後に heartbeat `475650` の着信を確認する（heartbeat URL はファイル・ログへ残さない）
+4. 30 日分の可用性時系列を取得して A3 を判定する
 5. （任意）独自ドメイン `hub.<domain>` を割り当てる

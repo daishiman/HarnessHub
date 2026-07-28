@@ -12,7 +12,7 @@ iteration: null
 title: "運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-25T00:51:31.539074Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "active"
 depends_on: ["SYS-TASK-SPEC-TEST-STRATEGY-P11"]
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-25T14:19:19Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-24T21:59:18Z","missing_sections":[],"status":"complete"}
 ---
 

@@ -12,7 +12,7 @@ iteration: null
 title: "C08 監査 sub-agent が公式 API へ一次 GET できず WebSearch 二次索引依存で doc_freshness FAIL が反復する"
 owners: ["daishiman"]
 created_at: "2026-07-22T23:38:10Z"
-updated_at: "2026-07-23T10:24:14.484185Z"
+updated_at: "2026-07-26T01:39:34.074446Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-22T23:38:10Z","missing_sections":[],"status":"complete"}
 ---
 

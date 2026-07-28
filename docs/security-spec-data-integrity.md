@@ -135,6 +135,7 @@ Turso/SQLite には DB レベルの append-only 強制機構 (行レベル権限
 | `idp.connection_change` | テナント IdP 設定の追加・変更・削除 | §4.3 (顧客 IdP へのなりすまし経路のため) |
 | `token.reuse_detected` | refresh token の再利用検知 | §2.2 (窃取検知) |
 | **`provider.cross_tenant_access`** | **provider-admin が自テナント以外の resource へ到達した全操作** (読取を含む) | §3.1.3 (越境を許す代わりの統制。`withAuthz()` が自動記録する) |
+| `token.refresh_race` | refresh rotation の CAS 敗北 (並行提示されたが窃取と確定できない側) | HarnessHub-v22l。`token.reuse_detected` と混同しない (§2.2 rotation 実装のコメント参照) |
 
 **記録内容の原則**:
 

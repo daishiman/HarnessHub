@@ -1,0 +1,141 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "Skill ツールの実起動 (被験 skill の起動証跡)",
+      "verdict": "PASS",
+      "observed": "transcript (277 行) を機械走査し tool_use を全 61 件抽出した。うち name==\"Skill\" は 1 件のみで、jsonl 行 7 / 2026-07-25T23:28:23.529Z、input.skill=\"dev-graph:run-dev-graph-system-spec\"、input.args=\"--repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-002450-wt-6/eval-log/dev-graph/live-trial-fixtures/system-spec-wt6 --resume\" と task.md 指定文字列に完全一致。これはセッション 2 番目の tool_use (1 件目は task.md の Read、行 3 / 23:28:12) で、実行アクションとしては最初である。tool 内訳は Read 25 / Bash 20 / Grep 8 / Write 7 / Skill 1、Task・Agent は 0 件で委譲による肩代わりなし。progress 型 110 行はすべて hook_progress 107 / bash_progress 3 で、sidechain 行は 0 件 (nested agent 実行なし)。Skill 起動より前に plugins/dev-graph/scripts/ を Bash 直叩きした形跡はなく (最初の Bash は行 12 / 23:28:34 の resolve-repo-context.py で Skill 起動の 11 秒後)、skill 内部からの script 実行のみ。"
+    },
+    {
+      "name": "task.md 禁止事項の遵守 (外部ネットワーク・harness skill 再実行)",
+      "verdict": "PASS",
+      "observed": "全 tool_use 61 件に対する name 走査で WebFetch=0 件、WebSearch=0 件。Skill 呼出しは前掲 1 件のみのため run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile の Skill 呼出しはいずれも 0 件。Bash 20 件のコマンド文字列にも harness 側 script (apply-spec-transition.py / compile-spec-doc.py / validate-coverage-matrix.py / validate-source-citation.py) の実行は 1 件も含まれない。fixture の system-spec/ 配下 20 ファイルの mtime は最新でも 2026-07-26 07:32:23 (JST) で、本 run の開始時刻 07:27:56 UTC = 08:27:56 JST より前であり、確定成果物の再生成は物理的にも起きていない。"
+    },
+    {
+      "name": "第1段: C24 receipt の repo_root と containment",
+      "verdict": "PASS",
+      "observed": "行 12 / 23:28:34 の `python3 plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root <fixture>` の receipt (is_error=False) を読み、content_roots.repository = \"/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-002450-wt-6/eval-log/dev-graph/live-trial-fixtures/system-spec-wt6\"、content_roots.system_spec = 同 + \"/system-spec\"、local_state_paths.graph = 同 + \"/.dev-graph/state/graph.json\"、git_common_dir = 同 + \"/.git\"、head_sha=5f4f3f1f031520eb127b6bc6d9e13622d7a2ff2e、mode=write を確認。評価者側で os.path.realpath(fixture) を独立実行した結果も同一文字列 (シンボリックリンクなし) で、receipt の repo_root は fixture realpath と一致する。diagnostics は [\"default_branch_fallback_main\"] のみで containment 違反の診断は出ていない。"
+    },
+    {
+      "name": "第1段: system-spec-harness の version と required 4 entry points",
+      "verdict": "PASS",
+      "observed": "評価者が plugins/system-spec-harness/.claude-plugin/plugin.json を直接読み、name=\"system-spec-harness\"、version=\"0.1.0\" を実測。SKILL.md 要求の `>=0.1.0 <1.0.0` に対し 0.1.0 は下限含みで充足 (判定: 満たす)。plugins/system-spec-harness/references/package-contract.json#entry_points.skills の実配列は [\"run-system-spec-elicit\", \"run-system-spec-doc-fetch\", \"run-system-spec-compile\", \"ref-system-design-knowledge\", \"assign-system-spec-completeness-evaluator\"] の 5 要素で、required 4 (run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator) はすべて含まれる。ほかに entry_points.agents 3 件、commands 2 件、hooks 2 件。"
+    },
+    {
+      "name": "第1段: fixture の確定状態 4 点の実測",
+      "verdict": "PASS",
+      "observed": "評価者が fixture のファイルを直接読み、(1) system-spec/spec-state.json の category_aggregate = {\"database\":\"確定\",\"auth\":\"確定\",\"ui-ux\":\"確定\",\"security\":\"確定\",\"infrastructure\":\"確定\",\"backend\":\"確定\",\"frontend\":\"確定\",\"maintenance-ops\":\"確定\"} で 8/8 が「確定」、approval_log は 2 件 (appr-foundation-001, appr-platform-excl)。(2) system-spec/completeness-report.json の verdict=\"PASS\"、evaluator={\"name\":\"assign-system-spec-completeness-evaluator\",\"version\":\"0.1.0\",\"context\":\"fork\"}、gate_results に G-matrix (validate-coverage-matrix, exit_code=0) と G-citation (validate-source-citation, exit_code=0) が記録済み。(3) system-spec/fetched-references.json の references は 3 件。(4) system-spec/index.md の表 (20-27 行目) で 8 章すべてが「集約状態=確定 / 確定マーカー=`confirmed`」、33 行目に確定カテゴリ 8 件の列挙あり。被験の第 1 段報告値 (8 全確定 / PASS / 3 件 / confirmed マーカーあり) と一次資料が一致する。"
+    },
+    {
+      "name": "第2段: 登録 node の id と artifact_kind (specification / architecture 両方)",
+      "verdict": "PASS",
+      "observed": "fixture/.dev-graph/state/graph.json を直接パースし、graph_revision=2、nodes は list で 2 件。(a) graph_node_id=\"spec-system-spec-index\", artifact_kind=\"specification\", file_path=\"specs/spec-system-spec-index.md\", created_at=\"2026-07-25T23:32:59.088747Z\"。(b) graph_node_id=\"arch-requirements-definition\", artifact_kind=\"architecture\", file_path=\"architecture/arch-requirements-definition.md\", created_at=\"2026-07-25T23:33:09.826683Z\"。specification 1 件・architecture 1 件で、どちらも 1 件以上という要求を満たす (登録 0 件ではない)。git show HEAD:.dev-graph/state/graph.json は {\"graph_revision\": 0, \"nodes\": []} であり、この 2 件はすべて本 run で追加されたもの。"
+    },
+    {
+      "name": "第2段: source_lineage 6 フィールドの実値 (null/空文字 0 件)",
+      "verdict": "PASS",
+      "observed": "spec-system-spec-index: origin_kind=\"system-spec-harness\" / source_plugin=\"system-spec-harness\" / source_path=\"system-spec/index.md\" / source_version=\"0.1.0\" / source_digest=\"cad25dcfbc7a7db0e5b33c004ede3120d5f5383c4bf8370405668d2e308030f3\" / imported_at=\"2026-07-25T23:32:20Z\"。arch-requirements-definition: origin_kind=\"system-spec-harness\" / source_plugin=\"system-spec-harness\" / source_path=\"system-spec/00-requirements-definition.md\" / source_version=\"0.1.0\" / source_digest=\"93ea891b850773ac195dcde72bf82f25436ca7a55fdd16d780a8f2718fae8310\" / imported_at=\"2026-07-25T23:32:20Z\"。12 値すべて非 null かつ非空文字で、欠落 0 件。source_version=\"0.1.0\" は plugin.json の version 実値と一致する。"
+    },
+    {
+      "name": "第2段: source_digest の評価者による独立再計算",
+      "verdict": "PASS",
+      "observed": "評価者自身が hashlib.sha256(open(source_path,'rb').read()).hexdigest() を実行。system-spec/index.md → 再計算 cad25dcfbc7a7db0e5b33c004ede3120d5f5383c4bf8370405668d2e308030f3 = node 値 (MATCH=True)。system-spec/00-requirements-definition.md → 再計算 93ea891b850773ac195dcde72bf82f25436ca7a55fdd16d780a8f2718fae8310 = node 値 (MATCH=True)。confirmation_evidence.evaluated_digest についても system-spec/completeness-report.json を再計算し 2cfd428203a49ef60c8936321b66cdb6f77070ed2fd8ba35b30bc9ad797fff6b = node 値 (MATCH=True) を確認した。3/3 一致。"
+    },
+    {
+      "name": "第2段: confirmation_status と confirmation_evidence の evaluator 成果物参照",
+      "verdict": "PASS",
+      "observed": "両 node とも confirmation_status=\"confirmed\"、evaluation_status=\"pass\"。confirmation_evidence = {\"evaluator\":\"assign-system-spec-completeness-evaluator\", \"evidence_ref\":\"system-spec/completeness-report.json\", \"evaluated_digest\":\"2cfd4282...fff6b\"} で、evidence_ref は evaluator 成果物 (verdict=PASS の completeness-report.json) を指し、実ファイルが fixture 内に存在する (6829 bytes)。implementation_readiness={\"checked_at\":\"2026-07-25T23:32:20Z\",\"missing_sections\":[],\"status\":\"complete\"} も両 node に付与済み。"
+    },
+    {
+      "name": "第2段: progress.json の registered_this_run",
+      "verdict": "PASS",
+      "observed": "fixture/eval-log/run-dev-graph-system-spec-progress.json の registered_this_run = [\"spec-system-spec-index\", \"arch-requirements-definition\"] で、graph.json に実在する 2 node id と完全一致。同ファイルの evidence_ref_audit = {\"scanned_nodes_with_evidence\":2, \"registered_dangling\":[], \"existing_dangling\":[]}、loop=1、status=\"complete\"。"
+    },
+    {
+      "name": "検証 script の評価者による独立再実行",
+      "verdict": "PASS",
+      "observed": "評価者が被験の報告を写さず自分で実行した。(1) `python3 plugins/dev-graph/scripts/validate-source-digest.py --repo-root <fixture> --progress <fixture>/eval-log/run-dev-graph-system-spec-progress.json` → stdout {\"checked\": 2, \"registered_mismatch\": []}、exit code 0。(2) `python3 plugins/dev-graph/scripts/validate-evidence-refs.py --repo-root <fixture> --progress <同上>` → stdout {\"scanned_nodes_with_evidence\": 2, \"registered_dangling\": [], \"existing_dangling\": []}、exit code 0。checked=2 / scanned=2 と検査対象が非 0 であるため、exit 0 は「未検査による自明成立」ではなく実際にゲートが発火した結果である。"
+    },
+    {
+      "name": "第3段 3-a: 本 run の書込み操作の全数検査 (C02 以外の登録 0 件)",
+      "verdict": "PASS",
+      "observed": "transcript の全 tool_use を走査し、fixture の .dev-graph/state/graph.json および specs/ architecture/ を変更した操作は次の 2 件のみ (集合は非空)。(1) 行 151 / 23:32:52 Bash: `python3 <plugins/dev-graph>/scripts/upsert-node.py --repo-root <fixture> --input .dev-graph/tmp/spec-input.json` → receipt {\"owner\":\"C02/run-dev-graph-node\", \"operation\":\"added\", \"status\":\"applied\", \"graph_node_id\":\"spec-system-spec-index\", \"graph_revision_before\":0, \"graph_revision_after\":1, \"write_count\":2}。(2) 行 158 / 23:33:05 Bash: 同 script --input .dev-graph/tmp/arch-input.json → receipt {\"owner\":\"C02/run-dev-graph-node\", \"operation\":\"added\", \"graph_node_id\":\"arch-requirements-definition\", \"graph_revision_before\":1, \"graph_revision_after\":2, \"write_count\":2}。graph_revision は 0 → 1 → 2 と登録件数ぶん増加 (git show HEAD 版が graph_revision=0/nodes=[] であることも確認済み)。Write ツール 7 件の file_path はすべて fixture/eval-log/ 配下の goal-seek 3 点セット (goal-spec ×2 試行, intermediate ×2 試行, progress ×2) と WORK_DIR の out/status.json であり、graph.json・specs/・architecture/ への Write は 0 件。Edit / MultiEdit / NotebookEdit の tool_use は全体で 0 件。Bash のリダイレクト書込みは `cat > .dev-graph/tmp/spec-input.json` / `arch-input.json` (upsert-node.py への入力 JSON、実行後 23:36:07 に rm -rf で撤去) と intermediate.jsonl への `>>` 追記のみで、graph 直接書込みはない。この検査は Write ツール自体が本 run で 7 回実際に使われている状況下での否定形確認であり、判別力がある。"
+    },
+    {
+      "name": "第3段 3-b: writer 経路の静的確認 (陽性対照の成立)",
+      "verdict": "PASS",
+      "observed": "被験は行 228 / 23:34:37 で `atomic_json.*graph` を plugins/dev-graph/scripts/*.py に適用し、upsert-node.py:709 `atomic_json(graph_path, proposed)`、register-package.py:537 `atomic_json(graph_path, proposed)`、sync-graph.py:578 `atomic_json(request, ...)` の 3 ヒットを得ている。upsert-node.py が graph.json writer としてヒットしており陽性対照は成立 (空振りではない)。被験は「upsert-node.py 以外に存在しない」と断定せず、register-package.py を別経路として開示し、本 run 未使用の根拠を graph_revision 0→2 (upsert-node 2 回分のみ) で示しており、事実に反する主張はしていない。評価者も独立に検証した: plugins/dev-graph/scripts/ で `graph.json` 言及と書込み述語 (write_text/json.dump/os.replace) の交差を取ると、graph.json 本体へ前進方向で書くのは upsert-node.py:709 のみで、build-repo-config.py は config.json、lint-open-residue.py と validate-evidence-refs.py は report/progress ファイル、validate-source-digest.py は stdout のみ。node_transaction.py:199 の _atomic_bytes(graph_path, graph_before) はロールバック復旧専用で、argparse も __main__ も持たない共有モジュール (upsert-node.py からのみ呼ばれる)。register-package.py は docstring が \"C02 exact-13 package registration consumer\" で C02 側の別コンシューマであり、C02 外の writer ではない。"
+    },
+    {
+      "name": "第4段: 複製 0 件の対照実験 (評価者自身の検索語による独立確認)",
+      "verdict": "PASS",
+      "observed": "被験の検索語は `apply-spec-transition|apply_spec_transition` (harness 55 hit / dev-graph 1 hit) と `compile-spec-doc|compile_spec_doc` (harness 26 hit / dev-graph 1 hit) で、dev-graph 側の各 1 hit はいずれも plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py の日本語コメント行 (20 行目・58 行目) であり実装コードではない。評価者は被験の語に依存せず、実装内部の識別子を自分で 10 語選んで両プラグイン配下を grep -rn した (ヒアリング側=apply-spec-transition.py 由来、compile 側=compile-spec-doc.py 由来)。結果 (harness / dev-graph): next_unresolved_question 4/0、recompute_aggregates 6/0、apply_cell_op 21/0、DECISION_COMPARISON_AXES 4/0、render_confirmed_qa 2/0、render_state_table 5/0、TERMINAL_AGGREGATES 2/0、render_doctrine_anchor 2/0、derive_aggregate 29/0、CANONICAL_PLATFORMS 23/0。10 語すべてが harness 側で N>0 (陽性対照成立)、dev-graph 側は 10 語すべて 0 件。harness 中核実装の行数実測は apply-spec-transition.py 1080 行、compile-spec-doc.py 915 行、validate-coverage-matrix.py 518 行、validate-source-citation.py 217 行で、これらに相当する実装は dev-graph 側に存在しない。"
+    },
+    {
+      "name": "第4段: node 本文が複製ではなく参照であることの本文確認",
+      "verdict": "PASS",
+      "observed": "評価者が登録 node の Markdown を実際に読んだ。specs/spec-system-spec-index.md の frontmatter 以降の本文は 430 字で、見出し「# システム構築仕様書 (system-spec index)」+「本ノードは system-spec-harness が生成した確定仕様書 index を source_lineage で参照する。」+ 参照元 (source: system-spec/index.md、evaluator: assign-system-spec-completeness-evaluator (verdict: PASS)、8 カテゴリ名) + 上位概念トレース G1-G4 の要約のみ。source の system-spec/index.md は 2422 字で、両者の最長共通部分文字列は difflib 実測で 24 字 (' 1 コマンドで起動・停止・バックアップできる') にとどまる。architecture/arch-requirements-definition.md も本文 450 字に対し source (system-spec/00-requirements-definition.md) は 1988 字、最長共通部分文字列 16 字 (', 起動/バックアップ手順')。章本文の丸ごとコピーは存在せず、実体参照は frontmatter の source_lineage (source_path + source_digest) と related_nodes、および本文の source パス表記で行われている。"
+    },
+    {
+      "name": "goal-seek 3 点セットの存在と intermediate 必須 6 キー",
+      "verdict": "PASS",
+      "observed": "fixture/eval-log/ に run-dev-graph-system-spec-goal-spec.json (1396 bytes, mtime 08:30)、run-dev-graph-system-spec-progress.json (2608 bytes, 08:35)、run-dev-graph-system-spec-intermediate.jsonl (1849 bytes, 08:35) の 3 点が存在。intermediate.jsonl は 2 行で、評価者が各行をパースし required 6 キー (original_goal / original_goal_hash / current_goal_snapshot / delta_from_original / merged_directive_for_next / drift_signal) の充足を確認 → row0 missing=set()、row1 missing=set()。両行とも drift_signal=\"none\"、original_goal は goal-spec と同一文字列。row0 の snapshot は「R0/R1 preflight 完了。既存確定成果物の検証完了 (8カテゴリ全確定、evaluator PASS、fetched-references 3件、confirmed マーカー全章存在)。R3-import で C02 経由の node 登録を開始する。」、row1 は「全 checklist PASS。specification node (spec-system-spec-index) と architecture node (arch-requirements-definition) を C02 経由で登録完了…」で、内容がそれぞれの時点の実態と整合する。過去 run の行 (旧 snapshot「skill実行前: goal-seek配線を準備し、run-dev-graph-system-specをSkill呼出しで起動する」) は残っておらず、2 行とも本 run のもの。"
+    },
+    {
+      "name": "original_goal_hash の独立再計算と SKILL.md 本文一致",
+      "verdict": "PASS",
+      "observed": "評価者が SKILL.md (plugins/dev-graph/skills/run-dev-graph-system-spec/SKILL.md) の `### ゴール (Goal)` 直後の本文 (80 行目) を正規表現で抽出し、127 文字の文字列「仕様書・アーキテクチャをplugins/system-spec-harness/の正規フローで構築し、出典・確定状態・上位目的traceを保ったままdev-graphのspecification/architectureノードへ取り込んだ状態になっている」を得た。goal-spec.json の original_goal も 127 文字で、Python の == 比較で一字一句一致 (True)。hashlib.sha256(SKILL.md 本文.encode('utf-8')).hexdigest() = 30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454 で、goal-spec.json の original_goal_hash および intermediate 2 行の original_goal_hash と完全一致。"
+    },
+    {
+      "name": "intermediate.jsonl の append-only 性と追記ツールの特定",
+      "verdict": "PASS",
+      "observed": "transcript 上、intermediate.jsonl への操作は 3 回。(1) 行 72 / 23:29:53 Write → tool_result is_error=True 「File has not been read yet. Read it first before writing to it.」で**書込みは発生していない** (同時刻の goal-spec への Write 行 70 も同じ理由で失敗)。(2) 行 103 / 23:30:32 Write (689 bytes, 1 行) → 「has been updated successfully」で成功。これが本 run の 1 行目の実書込みである。(3) 行 246 / 23:35:45 Bash の `echo '{...}' >> \"$FIXTURE/eval-log/run-dev-graph-system-spec-intermediate.jsonl\"` による 2 行目の**追記**。したがって追記に使われたツールは Bash のリダイレクト `>>` であり、Edit / MultiEdit による既存行の改変は本 run 全体で 0 件 (Edit の tool_use が 0 件)。1 行目書込み (23:30:32) 後、2 行目 append (23:35:45) までの間に intermediate.jsonl への上書き Write は存在せず、既存行の改変は 0 バイト。1 行目 (23:30:32) は実際の登録操作である upsert-node.py 実行 (23:32:52 / 23:33:05) より 2 分以上前で、2 行目はその後の追記であり、実行途中の証拠としての時系列は保たれている。"
+    },
+    {
+      "name": "goal-seek 1 行目と Skill 起動の前後関係 (指示間の矛盾)",
+      "verdict": "DISCLOSURE",
+      "observed": "評価指示の期待「1 行目は Skill 起動より前」は満たされていない。Skill tool_use は 23:28:23.529Z、intermediate 1 行目の成功書込みは 23:30:32.784Z で、1 行目は Skill 起動の約 2 分 9 秒**後**である。ただしこれは task.md 自身の 2 つの要求が両立不能なことに起因する: task.md 冒頭は「被験 skill の実行は必ず次の Skill ツール呼出しで開始してください。これが最初の実行アクションです」と Skill を最初の実行アクションに固定し、後段の goal-seek 節は「skill 実行前に…最初の intermediate 行を新規作成する」と要求している。被験は Skill 起動を最優先し、実質作業 (R3-import の upsert-node.py 実行 23:32:52) の前に 1 行目を置くという解釈を取った。goal-seek 配線の趣旨 (実行途中の証拠であり事後にまとめ書きされていないこと) は満たされているため、criteria:OUT1 の判定対象外として開示にとどめる。"
+    },
+    {
+      "name": "progress.json の checklist 完全性 (pending / evidence:null の残存)",
+      "verdict": "PASS",
+      "observed": "fixture/eval-log/run-dev-graph-system-spec-progress.json の checklist は C1-C8 の 8 項目で、status はすべて \"pass\" (\"pending\" は 0 件、\"not_applicable\" も 0 件)、evidence はすべて非 null の文字列で埋まっている。例: C6 evidence=\"checked=2, registered_mismatch=[], exit_code=0\"、C7 evidence=\"scanned=2, registered_dangling=[], existing_dangling=[], exit_code=0\"、C8 evidence=\"apply-spec-transition: harness 46+ hits, dev-graph 0 (1 test fixture comment only). compile-spec-doc: harness 20+ hits, dev-graph 0 (1 test fixture comment only). No functional duplication.\"。C6/C7/C8 の evidence は評価者の独立再実行・独立検索結果と整合する (C8 の harness ヒット数は評価者実測で 55 件 / 26 件であり、被験の「46+」「20+」は下限表現として正しい)。loop=1、status=\"complete\"。"
+    },
+    {
+      "name": "真空合格 (vacuous pass) の点検",
+      "verdict": "PASS",
+      "observed": "否定形主張 4 つについて判別力を個別に確認した。(1) 第3段 3-a「C02 以外の登録 0 件」— 検査対象集合は空ではなく upsert-node.py 実行 2 件が実在し、graph_revision 0→2 と 2 本の Markdown 生成という実変更が起きている。また Write ツールは本 run で 7 回実際に使われている (eval-log/ と out/) ため、「Write が使えなかったから 0 件」ではない。(2) 第3段 3-b「upsert-node.py 以外の writer なし」— 検索述語 `atomic_json.*graph` が upsert-node.py:709 を実際にヒットさせており陽性対照成立。評価者の独立交差検索でも同一結論。(3) 第4段「複製 0 件」— 評価者が選んだ 10 語すべてが harness 側で 2〜29 件ヒットしており、検索語が空振りでないことが証明されている。(4) validate-source-digest.py / validate-evidence-refs.py の exit 0 — checked=2 / scanned_nodes_with_evidence=2 で対象が非 0。したがって自明成立している項目は見当たらない。"
+    },
+    {
+      "name": "shell error / 失敗した tool_result の走査",
+      "verdict": "PASS",
+      "observed": "全 tool_result を \"command not found\" / \"No such file\" / \"Traceback\" / \"permission denied\" / \"Permission denied\" で走査した結果、該当 0 件。is_error=True の tool_result は 4 件あり内訳は次のとおり: 行 71 (Write goal-spec) と行 73 (Write intermediate) が「File has not been read yet. Read it first before writing to it.」— 既存ファイルへの未読 Write を harness がブロックしたもので、**書込みは発生していない** (fixture 汚染なし)。行 75・行 77 は同一バッチ内の Read が「Sibling tool call errored」で連鎖失敗したもの。被験は直後に該当ファイルを Read してから (行 80/83/86 の Read、23:29:59-23:30:00)、23:30:24 / 23:30:32 に改めて Write して正常にリカバリしている。upsert-node.py・validate 系 script の実行はすべて is_error=False かつ正常 JSON を返しており、失敗痕跡はない。"
+    },
+    {
+      "name": "fixture の副作用と確定章の不変性",
+      "verdict": "PASS",
+      "observed": "`git -C <fixture> status --short` を評価者が実行。tracked の変更は ` M .dev-graph/state/graph.json` の 1 件のみ (git diff --stat: 184 insertions / 2 deletions、HEAD 版は {\"graph_revision\":0,\"nodes\":[]})。untracked 新規は architecture/arch-requirements-definition.md、specs/spec-system-spec-index.md、eval-log/ (goal-seek 3 点セット)、.dev-graph/state/.graph.json.register.lock (0 バイト)、および system-spec/ 配下 19 ファイル。system-spec/ 配下は本 run 以前からの untracked (fixture 準備時に作られたもの) で、mtime は最遅が completeness-report.json の 2026-07-26 07:32:23 JST、確定章 md 群は 07:28:23 JST であり、本 run 開始 (08:27:56 JST) より前。すなわち**確定章の書き換えは 0 件**。system-spec/spec-state.json (07:25:34) や index.md (07:28:23) も無改変。.graph.json.register.lock は upsert-node.py:586 の `lock_path = graph_path.with_name(f\".{graph_path.name}.register.lock\")` が生成する writer 側のロックファイルで、被験の直接操作ではなく C02 writer の残置物 (0 バイト、mtime 08:32:59 = 1 回目の upsert 時刻)。被験は 23:36:07 に一時ディレクトリ .dev-graph/tmp を rm -rf で片付けており、実際に残っていない。想定外の場所への書込みは見当たらない。"
+    },
+    {
+      "name": "criteria:IN1 の gate script 本 run 未実行 (範囲外)",
+      "verdict": "DISCLOSURE",
+      "observed": "本 run の Bash 20 件に plugins/system-spec-harness/scripts/validate-coverage-matrix.py および validate-source-citation.py の実行は 1 件も含まれない。progress.json の C4 evidence 「completeness-report.json verdict=PASS, G-matrix exit0, G-citation exit0」は、fixture に既存の system-spec/completeness-report.json の gate_results 配列 (G-matrix: command=\"validate-coverage-matrix.py --require-complete\", exit_code=0 / G-citation: command=\"validate-source-citation.py --targets targets.json --references fetched-references.json\", exit_code=0) を引用したものであり、本 run で新規に実行した結果ではない。これは task.md が harness フローの再実行を明示的に禁じた帰結であり、評価指示でも criteria:IN1 のうち本 run 未実行の部分は範囲外と定義されているため FAIL としない。dev-graph 側の gate である validate-source-digest.py / validate-evidence-refs.py は評価者が本検証で独立に実行し、いずれも exit 0 (checked=2 / scanned=2) を確認済み。"
+    },
+    {
+      "name": "elicit / doc-fetch / compile の再実行と negative scenario (範囲外)",
+      "verdict": "DISCLOSURE",
+      "observed": "task.md が明示的に禁止しているため、run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile はいずれも本 run で 0 回実行されており (Skill 呼出し 0 件、対応 script の Bash 実行 0 件)、R2-delegate は fixture 既存 receipt (spec-state.json の approval_log 2 件、completeness-report.json verdict=PASS、fetched-references.json 3 件) の検証で代替されている。また system-spec-harness が未導入 / version 不一致のときの fail-closed 動作 (negative scenario) は本 fixture が version 0.1.0 で正常導入済みのため観測できていない。どちらも本 scenario の positive スライス外のため FAIL としない。"
+    },
+    {
+      "name": "architecture_refs が空である点 (参照経路の内訳)",
+      "verdict": "DISCLOSURE",
+      "observed": "task.md 第 4 段 4 は「参照は source_lineage と architecture_refs で行われている」ことの確認を求めているが、登録 2 node の architecture_refs はいずれも [] (空配列) である。実際の参照は frontmatter の source_lineage (source_path + source_digest + source_version)、confirmation_evidence.evidence_ref、および arch-requirements-definition 側の related_nodes=[\"spec-system-spec-index\"] で成立している。SKILL.md 74 行目は「feature は `architecture_refs` で参照し、内容を複製しない」と feature 参照用として architecture_refs を規定しており、本 fixture には feature node が 1 件も存在しない (graph.json の node は specification / architecture の 2 件のみ) ため、空であること自体は矛盾しない。複製 0 件という criteria:OUT1 第 2 分節の判定には影響しないため FAIL としない。"
+    },
+    {
+      "name": "登録範囲が確定 8 章のうち 2 node にとどまる点",
+      "verdict": "DISCLOSURE",
+      "observed": "fixture の確定章は 8 カテゴリ (database.md / auth.md / ui-ux.md / security.md / infrastructure.md / backend.md / frontend.md / maintenance-ops.md) + 00-requirements-definition.md + index.md だが、本 run で登録されたのは index.md 由来の specification node 1 件と 00-requirements-definition.md 由来の architecture node 1 件の計 2 件。task.md 第 2 段の要求は「specification node と architecture node をそれぞれ 1 件以上」であり、この最小要件は満たしている (登録 0 件ではない)。個別 8 章を node 化していない点は task.md の明示要求ではないため FAIL としない。なお両 node の status は \"draft\" (confirmation_status は \"confirmed\") である。"
+    }
+  ]
+}

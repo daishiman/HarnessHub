@@ -4,7 +4,7 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
     "component_id": "C01",
-    "skill_md_sha256": "0381d338b69cee76b5ecb300d84b325a33d67d0b5c77cde4c3ed5d588c68bc5b"
+    "skill_md_sha256": "3b7080713c94b4d81bdf95df07fcada9ec333b745afc74f731e96d7abb5e7abf"
   },
   "verdict": "PASS",
   "reviewer": "independent-criteria-scenario-reviewer-C01-init-wt9-20260725",
@@ -30,15 +30,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C01-OUT1-positive-idempotence-r17",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260725T014705Z-init-wt9/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260727T235346Z-7tn1-init-postmerge/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260725T014705Z-init-wt9/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260725T014705Z-init-wt9/transcript.jsonl",
-        "plugins/dev-graph/tests/test_skill_criteria_evidence.py::test_positive_live_trial_scenarios_cover_out1_without_eval_log_fixture_coupling",
-        "independent: skill_dir_tree_sha / transcript_sha256 の再計算と verdict 値の突合",
-        "independent: init-wt9 fixture に対する planned-changes 再計算 (read-only)"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260727T235346Z-7tn1-init-postmerge/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260727T235346Z-7tn1-init-postmerge/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260727T235346Z-7tn1-init-postmerge/out/status.json"
       ],
-      "observed": "2026-07-25 実走の verdict を独立検証した。live-trial-verdict.schema.json で Draft202012 検証 VALID、tier=live、downgrade_reason=null、actual_model=[claude-opus-4-6]、environment.transcript_layer=jsonl、goal_verdict={PASS,[]}、overall 4 項目すべて PASS。live-trial-verdict.py の skill_dir_tree_sha() を自分で呼び直して bde90f18c9afa9fa3ad7bd0024e5d5caafd9f7b1a2a885e7679e5d41ededd4e2 を得、verdict 記載値と一致 (behavior closure が現行 skill dir と同期)。transcript.jsonl (270 行) の sha256 を再計算して 486d923bd5555777eb592a99953a7f04328f3b3ea94aeb8910928903dac5e171 が一致。transcript を自分で解析し Skill ツール起動が line 52 (pass1) と line 210 (pass2) の 2 回、間の line 178 で template 編集、pass2 側 tool_result (line 228) に \"Planned changes: 0\" を確認。さらにレビュア自身が fixture へ read-only の planned-changes 再計算を行い planned=0 (6 content root + .dev-graph/{config.json,state/graph.json,cache,locks,templates} + template 21 件すべて既存)、graph node 1 件、config.content_roots が issues/tasks/specs/architecture/features/docs+system_spec の routing policy を保持していることを確認した。"
+      "observed": "post-merge の挙動閉包 (skill_dir_tree_sha=6651f78e8596de244e2e39fc62f2d5ce933e29d33425a8e9dfd45612c5a6e0a6) に対する fresh live trial で overall.verdict=PASS。nudge 0 / gate 応答 0 の完全自走、poll は DONE で終端、actual_model=claude-opus-4-6、invoked_skills=[dev-graph:run-dev-graph-init] で Skill ツール経由の 2 回起動 (script 直叩き代替ではない) を機械確認した。1 回目の実走は build-repo-config.py と build-graph-store.py の正規 writer 経由で 6 content root (issues/tasks/specs/architecture/features/docs)・path_policy・state/graph.json を作成し、Write/Edit は .dev-graph/tmp/ の draft に限定された。between-pass で templates/task.md を編集 (sha256=747821347cde36e242f6dfc8e8b34de38d406d7067db8fb79f24be7d8494e71e) し C02 upsert-node.py で INIT-FIXTURE-001 を 1 件登録した後の 2 回目実走は action=skipped_existing / preserved_existing・changed=false で planned changes 0 の no-op となり、編集済み template は MODIFIED (user-edited, preserve) と migration_preview に現れて bytes 不変を保った。claude_hooks.source=plugin が解決され、config の絶対 path / token / GitHub node ID はいずれも 0 件、C11 validate-graph-schema.py は node 1 件を保持した graph に対し exit=0 valid=true violations=[] (空 graph の真空合格ではない)。goal_seek 3 点セットは実ファイルで検証され goal_seek_evidence_violations=[]、intermediate は必須 6 キー完備で 1 行目が Skill 実行前・2 行目のみ検証後 append、original_goal_hash も再計算値と一致した。orchestrator と別個体の fresh evaluator は点数を出さず PASS + blocker 0 件を返し、非 blocker 所見として (a) intermediate 1 行目が Skill 実行前に 1 度自己訂正で書き直されている (走行後の捏造ではない)、(b) init receipt の独立ファイル保存 path を SKILL.md が規定していない、(c) project_plugin_link が source=plugin 時は実体検査対象外という既知の設計境界、(d) .dev-graph/tmp と register.lock の残渣、を記録した。副作用は git status で fixture 外 0 件。なお最初の boot は並行 live-trial 側の live-trial-backend.py reap (prefix lt- の全 session を無条件 kill) により task.md 読込直後に外部から落とされたため、同一 task.md・同一 workdir で再 boot して本証跡を取得している (被験 skill 起因の失敗ではない)。"
     },
     "OUT2": {
       "status": "PASS",
