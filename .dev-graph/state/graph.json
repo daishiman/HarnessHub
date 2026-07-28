@@ -1,5 +1,5 @@
 {
-  "graph_revision": 933,
+  "graph_revision": 934,
   "nodes": [
     {
       "acceptance": [
@@ -32271,12 +32271,19 @@
       "classification_confidence": 0.9,
       "classification_reason": "feat-domain-model-db (u6q) のテスト品質レビュー中に判明した、タスク仕様書がテスト網羅を機械強制していない harness 横断ギャップの是正 issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-28T02:35:00Z",
+        "evidence_refs": [
+          "issues/sys-test-coverage-enforcement-20260724.md",
+          "plugin-plans/system-dev-planner/references/system-task-spec-template.md",
+          "plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py",
+          "apps/hub/vitest.config.ts",
+          "packages/db/vitest.config.ts",
+          ".github/workflows/ci.yml"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-28T02:42:53Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -32356,7 +32363,7 @@
       "template_version": "1.0.0",
       "title": "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T11:56:47Z"
+      "updated_at": "2026-07-28T02:43:39.962309Z"
     },
     {
       "acceptance": [

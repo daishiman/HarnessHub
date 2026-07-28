@@ -34,6 +34,11 @@ describe('resolveHourlyRate', () => {
   it('直接指定でも範囲検証を行う', () => {
     expect(() => resolveHourlyRate({ kind: 'direct', hourlyRate: -100 })).toThrow(EstimationInputError);
   });
+
+  it('未知の kind を拒否する (型システムをすり抜けた不正値からの防御)', () => {
+    const invalid = { kind: 'unknown' } as unknown as Parameters<typeof resolveHourlyRate>[0];
+    expect(() => resolveHourlyRate(invalid)).toThrow(EstimationInputError);
+  });
 });
 
 describe('calcTimeSaving', () => {
