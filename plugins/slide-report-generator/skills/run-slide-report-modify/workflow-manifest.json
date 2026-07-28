@@ -18,7 +18,7 @@
         "ref-report-modification-rules",
         "schema-structure",
         "schema-report-structure",
-        "script-setup-playwright",
+        "script-build-playwright-runtime",
         "script-validate-output-mode"
       ],
       "fatal_exit_codes": [
@@ -63,7 +63,7 @@
         "script-render-report",
         "script-verify-report-runtime",
         "script-validate-report-visual",
-        "script-setup-playwright",
+        "script-build-playwright-runtime",
         "script-validate-output-mode"
       ],
       "fatal_exit_codes": [
@@ -119,7 +119,7 @@
       ]
     },
     {
-      "id": "script-setup-playwright",
+      "id": "script-build-playwright-runtime",
       "kind": "script",
       "path": "../../scripts/build-playwright-runtime.py",
       "phaseIds": [

@@ -15,7 +15,7 @@
       "exitHook": "validate-output-mode",
       "resourceIds": [
         "ref-resource-map",
-        "glue-setup-playwright",
+        "glue-build-playwright-runtime",
         "glue-validate-output-mode",
         "schema-structure",
         "schema-report-structure"
@@ -75,7 +75,7 @@
         "vendor-evaluate-deck",
         "vendor-validate-print",
         "vendor-verify-report-runtime",
-        "glue-setup-playwright",
+        "glue-build-playwright-runtime",
         "glue-validate-report-visual",
         "vendor-validate-ai-image-assets",
         "vendor-workflow-manager"
@@ -204,7 +204,7 @@
       ]
     },
     {
-      "id": "glue-setup-playwright",
+      "id": "glue-build-playwright-runtime",
       "kind": "script",
       "path": "../../scripts/build-playwright-runtime.py",
       "phaseIds": [
