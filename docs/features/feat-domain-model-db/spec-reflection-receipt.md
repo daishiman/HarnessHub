@@ -1,7 +1,7 @@
 ---
 status: recorded
 layer: feature-design
-updated: 2026-07-25
+updated: 2026-07-28
 task: SYS-DOMAIN-MODEL-DB (最終レビュー / 仕様反映判定)
 parent_feature: feat-domain-model-db
 feature_package_id: feature-package/feat-domain-model-db
@@ -111,3 +111,43 @@ reviewer: independent-fork (spec-impact 監査。read-only + digest 実測 + 検
 - 違反ノードは `SYS-DOC-GOVERNANCE-PORTABILITY-P01..P13`・`SYS-STAGE0-DISTRIBUTION-GATE-P02..P13`・独立 issue 6 件で、`feat-domain-model-db` 系および本セッション追加の `issue-test-coverage-enforcement-20260724` は **0 件** (node id 全件を grep して実測)。
 - CI の同ステップは `continue-on-error: false` にもかかわらず PR #53 で **pass** している。差分の理由は **beads DB の有無**: ローカルは `beads_axis=resolved` で md / graph / beads の 3 表現の乖離まで検査するが、CI 環境には beads DB が無いためこの軸が評価されない。
 - したがって本 PR のマージ可否には影響しない。既存 tracker (`HarnessHub-j71` 系 / doc-governance 系) の completion projection 残置として別途扱う。
+
+---
+
+## 8. 追補: 2026-07-28 `HarnessHub-mb7c` (db-write-gate-sweep) の仕様反映判定
+
+`issue-db-write-gate-sweep-20260726` (beads `HarnessHub-mb7c`) で、`packages/db/repository/` 配下の残る write を `guardedWrite` へ掃き出し、CI 静的検査 (`scripts/ci/check-db-write-gate.mjs`) を追加した最終レビューでの仕様反映判定。
+
+**結論: 正本 (`system-spec/`・`architecture/`・`features/`・`tasks/`・`specs/`) への反映は不要 (spec_impact = none)。**
+
+### 8-1. 判定対象の変更集合
+
+| # | 変更 | 種別 |
+|---|---|---|
+| A | `packages/db/repository/{crud,channels,crypto,idp,misc,packages,releases,tenants,users}.ts` の insert/update/delete を `guardedWrite(adapter, () => ...)` でラップ | 実装 (掃き出し) |
+| B | `packages/db/repository/conflict.ts` ヘッダコメント更新 (「掃き出しは別 issue で行う」→「掃き出し済み、CI が網羅を保証」) | コメント整合 |
+| C | `scripts/ci/check-db-write-gate.mjs` (新規) — repository 配下の write が全て `guardedWrite` 経由かを TypeScript AST で静的検査 | CI ゲート新設 |
+| D | `packages/db/__tests__/check-db-write-gate.test.ts` (新規) + `fixtures/db-write-gate-violation/` (新規) — 上記 CI スクリプトの正常系・実効性 (fixture で意図的に違反させ非ゼロ終了することを確認) | テスト |
+| E | `packages/db/__tests__/write-conflict.test.ts` へ `users.markLastLogin` / `releases.createRelease` の代表 2 経路を追加 (別接続 reader で commit 済み行数を数える回帰) | テスト |
+
+### 8-2. 反映不要の判断理由
+
+- **`guardedWrite` の適用方針自体は既に確定済み契約である。** `system-spec/spec-state.json` の `qa-083`/`qa-086` (database.web 正本) が「認証・監査と並走する書き込みは `guardedWrite` を通す」という方針を確定しており、`system-spec/database.md` にもその契約が反映されている (`docs/features/feat-auth-tenancy/spec-reflection-receipt.md` §8 で `HarnessHub-mb7c` は「残る DB write を `guardedWrite` へ統一する」後続作業として明示的に切り出し済み)。今回の変更はこの確定済み方針の **未実施分の実装を完了させた** だけであり、新しい設計判断・外部契約・データ契約の追加ではない。
+- **公開 API のシグネチャは無変更。** 各 repository の関数シグネチャ (引数・戻り値の型) は変更していない。内部実装を `guardedWrite` のコールバックで包んだのみで、呼び出し側 (consumer) の契約に影響しない。
+- **正本は本タスクで未改変。** `git status --porcelain=v1 -- system-spec/ architecture/ features/ tasks/ specs/` を実測すると、表示される差分は全て `M ` (2 文字目が空白 = ステージ済みで working tree 差分なし) であり、これは本タスク開始前に別経路で index へ積まれていた `main` 取り込み分 (コンフリクトゼロの機械的マージ) である。`HarnessHub-mb7c` の実装 (unstaged 変更 + untracked 新規ファイル) はこれらのファイルを一切含まない。
+
+### 8-3. follow-up (ドキュメント鮮度のずれ)
+
+`system-spec/spec-state.json` の `qa-086` 回答文末尾に「残る repository write の全量掃き出しは `HarnessHub-mb7c` で追跡する」という未来形の記述があり (`system-spec/database.md` にも同文言が反映済み)、今回の完了により事実と食い違う (stale) 状態になった。
+
+正本の直接編集は `plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py` が確定済み章への Write/Edit を fail-closed で遮断するため、手編集では解消しない。是正は次回の `/spec-hearing-start --resume` (C01 R4-reopen で `qa-086` を再オープン) → `/spec-compile` の正規サイクルで、回答文へ「(2026-07-28 完了。全 write が `guardedWrite` 経由、CI 検査 `scripts/ci/check-db-write-gate.mjs` で担保)」を追記して解消する。新規 follow-up の起票は不要 (既存の `HarnessHub-mb7c` 自体が是正対象であり、close 時にこの追補で申し送りが完結する)。
+
+### 8-4. 品質ゲート再実行の結果 (2026-07-28 実測)
+
+| ゲート | 結果 |
+|---|---|
+| `node scripts/ci/check-db-write-gate.mjs` | ✅ repository 配下 19 ファイル / write 31 件 (直接 30 / helper 経由 1) / 全て guardedWrite 経由・違反 0 |
+| `pnpm --filter @harness-hub/db typecheck` | ✅ 0 error |
+| `pnpm --filter @harness-hub/db test` | ✅ 17 files / **80 tests pass / 0 fail** (write-conflict.test.ts の新規 2 ケース、check-db-write-gate.test.ts の 5 ケースを含む) |
+| `biome check packages/db scripts/ci/check-db-write-gate.mjs` | ✅ 77 files / 0 diagnostics |
+| 500 行超チェック | ✅ 変更ファイルの最大は `scripts/ci/check-db-write-gate.mjs` 271 行。分離不要 |

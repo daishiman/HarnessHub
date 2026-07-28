@@ -5,6 +5,7 @@ import { and, eq } from 'drizzle-orm';
 import { idempotencyLedger } from '../schema/core/publish';
 import { sessionRevocations } from '../schema/core/security';
 import type { RepositoryContext } from '../src/types';
+import { guardedWrite } from './conflict';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
 
@@ -18,10 +19,12 @@ export function createSessionRevocationsRepo(adapter: CoreAdapter): SessionRevoc
   return {
     async revokeAll(context) {
       const revokedAt = serverNow();
-      await adapter.client
-        .insert(sessionRevocations)
-        .values({ tenantId: context.tenantId, revokedAt })
-        .onConflictDoUpdate({ target: sessionRevocations.tenantId, set: { revokedAt } });
+      await guardedWrite(adapter, () =>
+        adapter.client
+          .insert(sessionRevocations)
+          .values({ tenantId: context.tenantId, revokedAt })
+          .onConflictDoUpdate({ target: sessionRevocations.tenantId, set: { revokedAt } }),
+      );
       return { tenantId: context.tenantId, revokedAt };
     },
 
@@ -54,11 +57,13 @@ export interface IdempotencyLedgerRepo {
 export function createIdempotencyLedgerRepo(adapter: CoreAdapter): IdempotencyLedgerRepo {
   return {
     async put(context, record) {
-      const rows = await adapter.client
-        .insert(idempotencyLedger)
-        .values({ ...record, tenantId: context.tenantId })
-        .onConflictDoNothing()
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client
+          .insert(idempotencyLedger)
+          .values({ ...record, tenantId: context.tenantId })
+          .onConflictDoNothing()
+          .returning(),
+      );
       return (rows[0] as IdempotencyRecord | undefined) ?? { ...record, tenantId: context.tenantId };
     },
 

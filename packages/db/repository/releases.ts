@@ -6,6 +6,7 @@ import { and, desc, eq } from 'drizzle-orm';
 import { releases } from '../schema/core/catalog';
 import { EntityNotFoundError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
+import { CONFLICT_MAX_RETRY, errorChainText, guardedWrite } from './conflict';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
@@ -34,10 +35,13 @@ export interface CreateReleaseInput {
 }
 
 const VERSION_PATTERN = /^v(\d+)$/;
-const CREATE_MAX_RETRY = 5;
+// 再試行の上限は conflict.ts の方針 (経路ごとに待ち時間の上限を変えない) に揃える。
+const CREATE_MAX_RETRY = CONFLICT_MAX_RETRY;
 
 function isUniqueViolation(error: unknown): boolean {
-  return error instanceof Error && /unique/i.test(error.message);
+  // drizzle は driver 例外を DrizzleQueryError で包み message を書き換えるため、
+  // error.message だけでは UNIQUE 違反を見逃す (conflict.ts の errorChainText 参照)。
+  return /unique/i.test(errorChainText(error));
 }
 
 export interface ReleasesRepo {
@@ -78,21 +82,23 @@ export function createReleasesRepo(adapter: CoreAdapter): ReleasesRepo {
         }
         const lastN = latest === undefined ? 0 : Number(VERSION_PATTERN.exec(latest.version)?.[1] ?? 0);
         try {
-          const rows = await adapter.client
-            .insert(releases)
-            .values({
-              id: newUlid(),
-              tenantId: context.tenantId,
-              projectId: input.projectId,
-              channelId: input.channelId,
-              version: `v${lastN + 1}`,
-              packageHash: input.packageHash,
-              manifestJson: input.manifestJson,
-              status: 'available',
-              createdBy: input.createdBy,
-              createdAt: serverNow(),
-            })
-            .returning();
+          const rows = await guardedWrite(adapter, () =>
+            adapter.client
+              .insert(releases)
+              .values({
+                id: newUlid(),
+                tenantId: context.tenantId,
+                projectId: input.projectId,
+                channelId: input.channelId,
+                version: `v${lastN + 1}`,
+                packageHash: input.packageHash,
+                manifestJson: input.manifestJson,
+                status: 'available',
+                createdBy: input.createdBy,
+                createdAt: serverNow(),
+              })
+              .returning(),
+          );
           return { release: rows[0] as ReleaseRow, created: true };
         } catch (error) {
           if (!isUniqueViolation(error) || attempt >= CREATE_MAX_RETRY) throw error;
@@ -101,11 +107,13 @@ export function createReleasesRepo(adapter: CoreAdapter): ReleasesRepo {
     },
 
     async updateReleaseStatus(context, id, status) {
-      const rows = await adapter.client
-        .update(releases)
-        .set({ status })
-        .where(and(eq(releases.tenantId, context.tenantId), eq(releases.id, id)))
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client
+          .update(releases)
+          .set({ status })
+          .where(and(eq(releases.tenantId, context.tenantId), eq(releases.id, id)))
+          .returning(),
+      );
       const updated = rows[0] as ReleaseRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('releases', id);
       return updated;
