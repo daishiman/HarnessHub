@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _common import ContractError, dump, run
+from _common import ContractError, contained, dump, git, load_json, run
 
 MUTATIONS = {"create", "update", "dep-add", "dep-remove", "close", "claim", "github-push", "gate-add"}
 PHASES = [f"P{i:02d}" for i in range(1, 14)]
@@ -30,7 +30,24 @@ RFC3339_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
 # ready 候補が parity manifest に載らなかった理由の exact-set。
 # 「graph 管理外の bd 課題」と「graph 管理下なのに manifest から落ちた課題」は
 # 対処 owner が違う (前者は放置可・後者は sync 必要) ため、同じ袋へ入れない。
-UNMAPPED_REASONS = ("external_ref_absent", "parity_manifest_missing")
+# `graph_node_missing` は「external_ref が指す node が graph から消えている」= C02 案件で、
+# sync を何度回しても解消しない。これを `parity_manifest_missing` に混ぜると、GC 削除の
+# 残置が「sync すれば直る取りこぼし」を装って常駐し、本物の取りこぼしを覆い隠す
+# (HarnessHub-ii90)。逆方向の全数検査は lint-orphan-external-ref.py が担う。
+UNMAPPED_REASONS = ("external_ref_absent", "graph_node_missing", "parity_manifest_missing")
+# --op orphan-audit が付ける仕分け札の exact-set。UNMAPPED_REASONS と同じ理由で、
+# 対処 owner と次の一手が違うものを同じ袋へ入れない。
+# restore_node:     spec 実体が content_roots に在るのに graph 未登録 → C02 upsert-node.py で復元。
+# merge_pending:    他 ref の graph に node が実在 → 参照は正しい。対処不要、当該 ref のマージ待ち。
+# repoint_or_close: どこにも実体が無い → 実在 node への張り替えか失効かを中身から人が決める。
+ORPHAN_DISPOSITIONS = ("restore_node", "merge_pending", "repoint_or_close")
+# graph node を物理削除するときに人が選べる処分の exact-set。
+# bridge 自身は close/detach を実行しない。実状態が選択どおり収束したことを read-only で
+# 確認してから削除を許可し、未解決 issue の silent drop を不可能にする。
+REMOVAL_DISPOSITIONS = ("cancel_deletion", "close_issue_first", "detach_external_ref_first")
+# spec markdown の frontmatter から graph_node_id を読む式。C02 upsert-node.py が graph node
+# へ写す field と同名で、spec 実体と node の対応を決める唯一の手がかり。
+FRONTMATTER_NODE_ID = re.compile(r"^graph_node_id:\s*[\"']?([^\"'\r\n]+?)[\"']?\s*$", re.M)
 # qa-069 MVP-first: ready_set の表示順を schedule-graph.py の選定順と整合させる rank (SI-3)。
 # 正本は graph node の mvp_alignment を直接参照する schedule-graph.py 側で、こちらは
 # parity manifest 経由の表示順のみを揃える。schedule-graph.py の同名定数と一致必須
@@ -157,6 +174,76 @@ def _load_manifest(path: str | None, root: Path, *, label: str) -> dict[str, Any
     return value
 
 
+def _canonical_graph_path(root: Path) -> Path:
+    """canonical graph の実体 path を `.dev-graph/config.json` から解決する。
+
+    path を引数で受け取らないのは、bridge が「どの graph を正本とみなすか」を呼び出し側の
+    裁量にすると、起票時の実在検証 (`_require_registered_nodes`) を空の graph を指させて
+    素通しできてしまうため。解決経路は build-parity-manifest.py `_graph_path` と同一で、
+    repository config が単一の正本を決める。
+    """
+    config = load_json(root / ".dev-graph" / "config.json")
+    raw = (config.get("local_state") or {}).get("graph") if isinstance(config, dict) else None
+    if not isinstance(raw, str) or not raw:
+        raise ContractError("bd-bridge requires config local_state.graph to resolve the canonical graph")
+    return contained(root / raw, root, must_exist=True)
+
+
+def _graph_node_ids(root: Path) -> set[str]:
+    """canonical graph に実在する graph_node_id の集合を fail-closed で読む。"""
+    graph = load_json(_canonical_graph_path(root))
+    nodes = graph.get("nodes") if isinstance(graph, dict) else None
+    if not isinstance(nodes, list) or not all(isinstance(node, dict) for node in nodes):
+        raise ContractError("canonical graph must contain nodes[] objects")
+    ids: set[str] = set()
+    for node in nodes:
+        node_id = node.get("graph_node_id") or node.get("id")
+        if not isinstance(node_id, str) or not node_id:
+            raise ContractError("canonical graph node is missing graph_node_id")
+        ids.add(node_id)
+    return ids
+
+
+def _registration_status(root: Path, graph_node_ids: list[str]) -> dict[str, Any]:
+    """起票対象の graph_node_id が canonical graph に実在するかを判定して返す (raise しない)。
+
+    manifest ではなく canonical graph を読むのは、起票前の node は `beads_linkage` を
+    まだ持たず parity manifest の `nodes[]` に載らない (build-parity-manifest.py が
+    `unlinked` へ落とす) ため。manifest で検証すると常に「未登録」と誤判定する。
+    """
+    known = _graph_node_ids(root)
+    unregistered = sorted({node_id for node_id in graph_node_ids if node_id not in known})
+    return {
+        "graph_node_ids": sorted(set(graph_node_ids)),
+        "registered": not unregistered,
+        "unregistered": unregistered,
+        "graph_node_count": len(known),
+    }
+
+
+def _require_registered_nodes(root: Path, graph_node_ids: list[str]) -> dict[str, Any]:
+    """書込経路の gate。未登録が 1 件でもあれば bd へ 1 度も書く前に落とす。
+
+    塞いでいる失敗形: `--graph-node-id` は必須だが実在検証が無かったため、任意の文字列で
+    `external_ref: dev-graph:<id>` を持つ bd issue を作れた。node 登録 (C02) を伴わずに
+    起票すると参照先の無い dangling reference が常駐し、C28 ready の
+    `parity_manifest_missing` (本来は manifest 生成側の異常を指す札) に混ざって、
+    本物の取りこぼしと区別できなくなる。
+
+    raise するのは書込経路だけ。dry-run が同じ判定で **落ちる** と、C14 decompose の
+    ような「C02 登録 → C28 起票」を 1 本のパイプラインで行う skill の全体 dry-run が
+    通らなくなる (登録はまだ走っていないので未登録なのが正常)。preview 側は
+    `_registration_status` を使い、判定結果を payload に載せて exit 0 で返す。
+    """
+    status = _registration_status(root, graph_node_ids)
+    if status["unregistered"]:
+        raise ContractError(
+            "create requires every graph_node_id to exist in the canonical graph; "
+            f"unregistered: {', '.join(status['unregistered'])}; register the node with C02 upsert-node.py first"
+        )
+    return status
+
+
 def _external_ref(row: dict[str, Any]) -> str | None:
     direct = row.get("external_ref") or row.get("externalRef")
     if isinstance(direct, str) and direct:
@@ -274,6 +361,10 @@ def _validate_projection(manifest: dict[str, Any]) -> tuple[dict[str, Any], list
 def _package_projection(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
     feature, children, source_digest = _validate_projection(manifest)
     feature_id = feature["graph_node_id"]
+    # 14 件を 1 件でも書き始める前に全数の実在を確かめる。途中で落とすと epic だけ
+    # dangling reference で残り、再実行の冪等経路 (_find_external) がそれを拾って
+    # 「登録済み」に見せてしまう。
+    registration = _require_registered_nodes(root, [feature_id, *(str(row["graph_node_id"]) for row in children)])
 
     epic = _create_one(
         root,
@@ -332,6 +423,7 @@ def _package_projection(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
         "expected_count": 13,
         "applied_count": len(projected),
         "source_digest": source_digest,
+        "registration": registration,
     }
 
 
@@ -352,14 +444,44 @@ def _manifest_provenance(manifest: dict[str, Any]) -> dict[str, Any]:
     return {"generated_at": generated_at, "source_graph_digest": source_graph_digest}
 
 
-def _unmapped_reason(external_ref: str | None) -> str:
-    """ready 候補が manifest に載らない理由を、対処 owner が分かる粒度で決める。"""
-    return "parity_manifest_missing" if external_ref else "external_ref_absent"
+def _manifest_graph_node_ids(manifest: dict[str, Any]) -> set[str]:
+    """manifest が申告する「graph に実在する node id の全集合」を fail-closed で読む。
+
+    `nodes[]` (beads 束縛済みの投影) だけでは、候補が manifest に載らない理由が
+    「graph から node が消えた」のか「graph には居るが投影から漏れた」のか判別できない。
+    前者は C02 (node 復元 / bd close)、後者は C03 sync と対処 owner が異なる。
+
+    欠落を許容して従来の 1 つの札へ丸めると、GC 削除の残置が sync 案件を装って常駐し、
+    「sync しても消えない警告」が常態化して本物の取りこぼしを覆い隠す。manifest は
+    build-parity-manifest.py の単一経路が毎回作り直す揮発 snapshot なので、
+    欠落時の正しい回復は再生成であって黙認ではない。
+    """
+    raw = manifest.get("graph_node_ids")
+    if not isinstance(raw, list) or any(not isinstance(value, str) or not value for value in raw):
+        raise ContractError(
+            "parity manifest requires graph_node_ids as string[]; "
+            "regenerate it with build-parity-manifest.py"
+        )
+    return set(raw)
+
+
+def _unmapped_reason(external_ref: str | None, graph_node_ids: set[str] | None) -> str:
+    """ready 候補が manifest に載らない理由を、対処 owner が分かる粒度で決める。
+
+    `graph_node_ids` が None なのは manifest 自体が渡されていない場合だけで、そのときは
+    「投影が存在しない」ことが原因なので従来どおり `parity_manifest_missing` を返す。
+    """
+    if not external_ref:
+        return "external_ref_absent"
+    if graph_node_ids is not None and external_ref not in graph_node_ids:
+        return "graph_node_missing"
+    return "parity_manifest_missing"
 
 
 def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) -> dict[str, Any]:
     candidates = _rows(raw)
     provenance = _manifest_provenance(manifest) if manifest is not None else None
+    graph_node_ids = _manifest_graph_node_ids(manifest) if manifest is not None else None
     entries = manifest.get("nodes", []) if manifest else []
     if not isinstance(entries, list) or not all(isinstance(row, dict) for row in entries):
         raise ContractError("parity manifest nodes must be an array of objects")
@@ -386,7 +508,10 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
         expected = by_issue.get(issue_id)
         if not expected:
             external_ref = _external_ref(candidate)
-            unmapped.append({"bd_issue_id": issue_id or None, "external_ref": external_ref, "reason": _unmapped_reason(external_ref)})
+            unmapped.append({
+                "bd_issue_id": issue_id or None, "external_ref": external_ref,
+                "reason": _unmapped_reason(external_ref, graph_node_ids),
+            })
             continue
         shown = _issue(bd(["show", issue_id, "--json"], cwd=root), issue_id)
         try:
@@ -422,6 +547,390 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
         "ready_set": ready_set, "unmapped": unmapped, "unmapped_summary": summary,
         "conflicts": conflicts, "candidate_count": len(candidates),
         "parity_provenance": provenance,
+    }
+
+
+def _spec_index(root: Path) -> dict[str, list[str]]:
+    """content_roots 配下の markdown が宣言する graph_node_id → 相対 path[] の索引。
+
+    走査範囲を repository config の `content_roots` に限るのは、範囲を固定しないと
+    「どこまで探したか」が実行環境で変わり、`disposition` が再現しない診断になるため。
+    同じ id を複数ファイルが宣言する多重登録も落とさず全件返す (件数 1 を仮定して
+    片方を捨てると、graph 側の整合破れを audit が隠すことになる)。
+    """
+    config = load_json(root / ".dev-graph" / "config.json")
+    roots = config.get("content_roots") if isinstance(config, dict) else None
+    if not isinstance(roots, dict) or not roots:
+        raise ContractError("bd-bridge requires config content_roots to locate artifact specs")
+    index: dict[str, list[str]] = {}
+    for relative in sorted({value for value in roots.values() if isinstance(value, str) and value}):
+        base = root / relative
+        if not base.is_dir():
+            continue
+        for path in sorted(base.rglob("*.md")):
+            try:
+                head = path.read_text(encoding="utf-8")[:8192]
+            except OSError:
+                continue
+            if not head.startswith("---"):
+                continue
+            frontmatter = head[3:].split("\n---", 1)[0]
+            match = FRONTMATTER_NODE_ID.search(frontmatter)
+            if match:
+                index.setdefault(match.group(1), []).append(path.relative_to(root).as_posix())
+    return index
+
+
+def _refs_with_node(root: Path, node_ids: set[str]) -> dict[str, list[str]]:
+    """他 ref の canonical graph に実在する node_id → その ref[] を返す。
+
+    作業ツリーだけを見ると、未マージブランチで登録された node が「どこにも無い」に
+    見える。その誤判定のまま失効扱いすると、参照が正しい生きた課題を消す。dangling か
+    マージ待ちかは **同じ「node が無い」** に見えるため、ref 横断でしか区別できない。
+
+    ref ごとに graph を 1 回だけ読む (node_id ごとに git を叩くと ref 数 × node 数の
+    実行になる)。読めない ref は「その ref には無い」として黙って飛ばす — graph を持たない
+    古い ref や壊れた ref で audit 全体を落とすと、棚卸しそのものが実行不能になるため。
+    """
+    if not node_ids:
+        return {}
+    graph_relative = _canonical_graph_path(root).relative_to(root.resolve()).as_posix()
+    refs = git(["for-each-ref", "--format=%(refname)", "refs/heads", "refs/remotes"], root).split()
+    found: dict[str, list[str]] = {}
+    for ref in refs:
+        blob = git(["show", f"{ref}:{graph_relative}"], root, check=False)
+        if not blob:
+            continue
+        try:
+            nodes = json.loads(blob).get("nodes")
+        except (json.JSONDecodeError, AttributeError):
+            continue
+        if not isinstance(nodes, list):
+            continue
+        present = {
+            node.get("graph_node_id") or node.get("id")
+            for node in nodes if isinstance(node, dict)
+        }
+        for node_id in sorted(node_ids & present):
+            found.setdefault(node_id, []).append(ref)
+    return found
+
+
+def _orphan_disposition(spec_files: list[str], refs: list[str]) -> str:
+    """orphan 1 件に付ける仕分け札を決める。
+
+    入力:
+      spec_files - 作業ツリーの content_roots で当該 graph_node_id を宣言する markdown[]
+      refs       - 当該 node が graph に実在する他 ref[] (--scan-refs 未指定なら常に空)
+
+    返り値は ORPHAN_DISPOSITIONS のいずれか。
+
+    優先順位は「その札を見た人が次に **書き込む** か否か」で決める。
+
+      refs あり → merge_pending
+        参照先は実在する。ここで C02 upsert を走らせると、マージで運ばれてくる同じ
+        node を先回りで書くことになり graph.json が衝突する。spec 実体がローカルにも
+        在る場合 (ブランチとローカル両方に居る) も同じ理由で merge_pending が勝つ。
+        「待て」は取り消せるが「書いた」は取り消しに手間がかかる。
+
+      refs 無し + spec あり → restore_node
+        復元先が一意に決まる。C02 upsert-node.py 一択で、人の判断は要らない。
+
+      refs 無し + spec 無し → repoint_or_close
+        機械には決められない。張り替えか失効かを中身から人が決める。
+
+    refs が常に空 (--scan-refs 未指定) のときは後ろ 2 分岐だけが働き、走査を足す前の
+    挙動と一致する。既定実行の意味を変えずに札を 1 つ増やすための形。
+    """
+    if refs:
+        return "merge_pending"
+    return "restore_node" if spec_files else "repoint_or_close"
+
+
+def _orphan_audit(root: Path, *, scan_refs: bool = False) -> dict[str, Any]:
+    """dev-graph external_ref を持つ bd issue を canonical graph と全数突合する。
+
+    C28 `--op ready` の `parity_manifest_missing` は「external_ref を持つのに manifest に
+    対応 node が無い」だけを見るため、(1) 参照先 node が graph に実在しない dangling
+    reference と (2) node は実在するのに manifest から落ちた真の取りこぼし が同じ札に
+    混ざる。前者が常駐すると札が恒常的に立ち続け、後者を検出できなくなる。
+
+    本 op は ready 候補に限らず **全 issue** を対象に (1) を切り出して数え、対処 owner が
+    分かる `disposition` を付ける。ready と違って silent drop の余地を作らないため、
+    closed も含め全件を返し、集計だけを status 別に分ける。
+    """
+    known = _graph_node_ids(root)
+    specs = _spec_index(root)
+    rows = _rows(bd(["list", "--status", "all", "--limit", "10000", "--json"], cwd=root))
+    referenced: list[dict[str, Any]] = []
+    orphans: list[dict[str, Any]] = []
+    for row in rows:
+        raw = row.get("external_ref") or row.get("externalRef")
+        # dev-graph 管轄の参照だけを対象にする。prefix の無い external_ref は
+        # 契約 §10 の `external_ref_absent` (graph 管理外・対処不要) 側の事象。
+        if not (isinstance(raw, str) and raw.startswith("dev-graph:")):
+            continue
+        node_id = _external_ref(row)
+        if not node_id:
+            continue
+        referenced.append(row)
+        if node_id in known:
+            continue
+        orphans.append({
+            "bd_issue_id": str(row.get("id") or ""),
+            "graph_node_id": node_id,
+            "status": str(row.get("status") or ""),
+            "spec_files": specs.get(node_id, []),
+        })
+    # 札付けは全 orphan を集めてから一括で行う。ref 走査は ref 単位で graph を 1 回読む
+    # 設計なので、行ごとに呼ぶと同じ ref を orphan の数だけ読み直すことになる。
+    refs_by_node = (
+        _refs_with_node(root, {row["graph_node_id"] for row in orphans}) if scan_refs else {}
+    )
+    for row in orphans:
+        row["node_in_refs"] = refs_by_node.get(row["graph_node_id"], [])
+        row["disposition"] = _orphan_disposition(row["spec_files"], row["node_in_refs"])
+    orphans.sort(key=lambda row: (row["graph_node_id"], row["bd_issue_id"]))
+    non_closed = [row for row in orphans if row["status"] != "closed"]
+    by_status: dict[str, int] = {}
+    for row in orphans:
+        by_status[row["status"]] = by_status.get(row["status"], 0) + 1
+    return {
+        "graph_node_count": len(known),
+        "issue_count": len(rows),
+        "dev_graph_reference_count": len(referenced),
+        # 走査したかを receipt に残す。未走査を「他 ref に無いことを確認済み」と読まれると、
+        # merge_pending が 0 件なのは調べていないからなのか本当に無いのかが区別できない。
+        "scanned_refs": scan_refs,
+        "orphans": orphans,
+        "orphan_summary": {
+            "total": len(orphans),
+            "non_closed": len(non_closed),
+            "by_status": dict(sorted(by_status.items())),
+            "by_disposition": {
+                disposition: sum(1 for row in non_closed if row["disposition"] == disposition)
+                for disposition in ORPHAN_DISPOSITIONS
+            },
+        },
+    }
+
+
+def _graph_ids_from_document(value: Any, *, label: str) -> set[str]:
+    """removal preflight 用に graph_node_id exact-set を fail-closed で読む。"""
+    nodes = value.get("nodes") if isinstance(value, dict) else None
+    if not isinstance(nodes, list) or not all(isinstance(node, dict) for node in nodes):
+        raise ContractError(f"{label} graph must contain nodes[] objects")
+    ids: list[str] = []
+    for node in nodes:
+        node_id = node.get("graph_node_id") or node.get("id")
+        if not isinstance(node_id, str) or not node_id:
+            raise ContractError(f"{label} graph node is missing graph_node_id")
+        ids.append(node_id)
+    if len(ids) != len(set(ids)):
+        raise ContractError(f"{label} graph contains duplicate graph_node_id")
+    return set(ids)
+
+
+def _graph_ids_from_source(
+    root: Path,
+    *,
+    path: str | None,
+    ref: str | None,
+    label: str,
+    default_current: bool = False,
+) -> set[str]:
+    """repository 内 path または git ref の graph を読む。両方指定は拒否する。"""
+    if path and ref:
+        raise ContractError(f"{label} graph accepts path or ref, not both")
+    if ref:
+        graph_relative = _canonical_graph_path(root).relative_to(root).as_posix()
+        raw = git(["show", f"{ref}:{graph_relative}"], root, check=False)
+        if not raw:
+            raise ContractError(f"{label} graph is unavailable at ref: {ref}")
+        try:
+            value = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise ContractError(f"{label} graph at ref is invalid JSON: {ref}") from exc
+        return _graph_ids_from_document(value, label=label)
+    if not path and default_current:
+        candidate = _canonical_graph_path(root)
+    elif path:
+        candidate = Path(path)
+        candidate = candidate if candidate.is_absolute() else root / candidate
+        candidate = contained(candidate, root, must_exist=True)
+    else:
+        raise ContractError(f"{label} graph requires --{label}-graph or --{label}-ref")
+    return _graph_ids_from_document(load_json(candidate), label=label)
+
+
+def _removal_disposition_rows(manifest: dict[str, Any] | None) -> dict[str, dict[str, Any]]:
+    """処分 manifest を node ID で索引化し、exact-set と重複を検証する。"""
+    if manifest is None:
+        return {}
+    if manifest.get("schema_version") != "1.0.0":
+        raise ContractError("removal disposition manifest schema_version must be 1.0.0")
+    raw = manifest.get("dispositions")
+    if not isinstance(raw, list) or not all(isinstance(row, dict) for row in raw):
+        raise ContractError("removal disposition manifest requires dispositions[] objects")
+    indexed: dict[str, dict[str, Any]] = {}
+    for row in raw:
+        node_id = row.get("graph_node_id")
+        disposition = row.get("disposition")
+        reason = row.get("reason")
+        issue_ids = row.get("bd_issue_ids")
+        if not isinstance(node_id, str) or not node_id:
+            raise ContractError("removal disposition requires graph_node_id")
+        if node_id in indexed:
+            raise ContractError(f"duplicate removal disposition: {node_id}")
+        if disposition not in REMOVAL_DISPOSITIONS:
+            raise ContractError(
+                "removal disposition must be one of: "
+                + ", ".join(REMOVAL_DISPOSITIONS)
+            )
+        if not isinstance(reason, str) or not reason.strip():
+            raise ContractError(f"removal disposition requires a reason: {node_id}")
+        if not isinstance(issue_ids, list) or not all(
+            isinstance(issue_id, str) and issue_id for issue_id in issue_ids
+        ):
+            raise ContractError(f"removal disposition requires bd_issue_ids[]: {node_id}")
+        if len(issue_ids) != len(set(issue_ids)):
+            raise ContractError(f"duplicate bd_issue_ids in removal disposition: {node_id}")
+        indexed[node_id] = row
+    return indexed
+
+
+def _removal_preflight(
+    root: Path,
+    *,
+    before_graph: str | None,
+    before_ref: str | None,
+    after_graph: str | None,
+    after_ref: str | None,
+    disposition_manifest: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """graph 物理削除で非クローズ orphan を増やさない read-only gate。
+
+    自動 close/detach は行わない。選択した処分が Beads の現在状態に既に反映済みかを
+    確認するだけなので、未解決課題を件数のために暗黙終了する経路を持たない。
+    """
+    before = _graph_ids_from_source(
+        root, path=before_graph, ref=before_ref, label="before"
+    )
+    after = _graph_ids_from_source(
+        root,
+        path=after_graph,
+        ref=after_ref,
+        label="after",
+        default_current=True,
+    )
+    removed = sorted(before - after)
+    dispositions = _removal_disposition_rows(disposition_manifest)
+    cancelled = sorted(
+        node_id
+        for node_id, row in dispositions.items()
+        if row["disposition"] == "cancel_deletion"
+        and node_id in before
+        and node_id in after
+    )
+    invalid_extra = sorted(set(dispositions) - set(removed) - set(cancelled))
+    if invalid_extra:
+        raise ContractError(
+            "removal disposition names nodes that are not removed or validly cancelled: "
+            + ", ".join(invalid_extra)
+        )
+
+    rows = _rows(
+        bd(["list", "--status", "all", "--limit", "10000", "--json"], cwd=root)
+    )
+    references: dict[str, list[dict[str, str]]] = {}
+    live_refs: list[tuple[str, str]] = []
+    for row in rows:
+        raw = row.get("external_ref") or row.get("externalRef")
+        if not (isinstance(raw, str) and raw.startswith("dev-graph:")):
+            continue
+        node_id = _external_ref(row)
+        issue_id = str(row.get("id") or "")
+        status = str(row.get("status") or "")
+        if not node_id or not issue_id:
+            continue
+        references.setdefault(node_id, []).append(
+            {"bd_issue_id": issue_id, "status": status}
+        )
+        if status != "closed":
+            live_refs.append((issue_id, node_id))
+
+    before_orphans = sorted(
+        issue_id for issue_id, node_id in live_refs if node_id not in before
+    )
+    after_orphans = sorted(
+        issue_id for issue_id, node_id in live_refs if node_id not in after
+    )
+    decisions: list[dict[str, Any]] = []
+    blockers: list[dict[str, Any]] = []
+    for node_id in sorted(set(removed) | set(cancelled)):
+        was_removed = node_id in removed
+        refs = sorted(
+            references.get(node_id, []),
+            key=lambda row: (row["bd_issue_id"], row["status"]),
+        )
+        actual_issue_ids = sorted(row["bd_issue_id"] for row in refs)
+        non_closed = [row for row in refs if row["status"] != "closed"]
+        requested = dispositions.get(node_id)
+        disposition = requested.get("disposition") if requested else None
+        declared_issue_ids = (
+            sorted(requested.get("bd_issue_ids", [])) if requested else []
+        )
+        errors: list[str] = []
+        if requested is None:
+            errors.append("disposition_missing")
+        elif declared_issue_ids != actual_issue_ids:
+            errors.append("bd_issue_ids_mismatch")
+        elif disposition == "cancel_deletion":
+            if was_removed:
+                errors.append("deletion_not_cancelled")
+        elif disposition == "close_issue_first":
+            if not refs:
+                errors.append("referenced_issue_missing")
+            if non_closed:
+                errors.append("non_closed_reference")
+        elif disposition == "detach_external_ref_first" and refs:
+            errors.append("external_ref_not_detached")
+        decision = {
+            "graph_node_id": node_id,
+            "removed": was_removed,
+            "disposition": disposition,
+            "reason": requested.get("reason") if requested else None,
+            "references": refs,
+            "non_closed_references": non_closed,
+            "verified": not errors,
+            "errors": errors,
+        }
+        decisions.append(decision)
+        if errors:
+            blockers.append(
+                {"graph_node_id": node_id, "errors": errors}
+            )
+
+    new_orphans = sorted(set(after_orphans) - set(before_orphans))
+    if new_orphans:
+        blockers.append(
+            {"graph_node_id": None, "errors": ["non_closed_orphan_increase"], "bd_issue_ids": new_orphans}
+        )
+    return {
+        "allowed": not blockers,
+        "write_count": 0,
+        "before_node_count": len(before),
+        "after_node_count": len(after),
+        "removed_node_count": len(removed),
+        "removed_nodes": removed,
+        "disposition_exact_set": list(REMOVAL_DISPOSITIONS),
+        "decisions": decisions,
+        "blockers": blockers,
+        "orphan_audit": {
+            "before_non_closed": len(before_orphans),
+            "after_non_closed": len(after_orphans),
+            "new_non_closed_bd_issue_ids": new_orphans,
+        },
     }
 
 
@@ -484,9 +993,15 @@ def _update_argv(args: Any) -> tuple[list[str], list[str]]:
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(); p.add_argument("--op", required=True, choices=("create", "update", "dep-add", "dep-remove", "close", "ready", "show", "claim", "github-push", "gate-add", "gate-check"))
+    p = argparse.ArgumentParser(); p.add_argument("--op", required=True, choices=("create", "update", "dep-add", "dep-remove", "close", "ready", "show", "claim", "github-push", "gate-add", "gate-check", "orphan-audit", "removal-preflight"))
     p.add_argument("--repo-root", default="."); p.add_argument("--graph-node-id"); p.add_argument("--bd-issue-id"); p.add_argument("--depends-on"); p.add_argument("--expected-depends-on", action="append", default=[]); p.add_argument("--expected-status"); p.add_argument("--expected-workspace-id"); p.add_argument("--verify-parity", action="store_true"); p.add_argument("--title"); p.add_argument("--description"); p.add_argument("--notes"); p.add_argument("--append-notes"); p.add_argument("--design"); p.add_argument("--priority"); p.add_argument("--status"); p.add_argument("--reason"); p.add_argument("--pr", type=int); p.add_argument("--dry-run", action="store_true")
     p.add_argument("--parity-manifest"); p.add_argument("--projection-manifest"); p.add_argument("--feature-rollup-manifest"); p.add_argument("--artifact-kind", choices=("feature", "task"))
+    # 既定 off。全 ref の graph を読むため作業ツリー限定より重く、CI の常時実行には向かない。
+    # 一方 merge_pending の判定はこれ無しでは不可能なので、処分を決める棚卸しでは必ず付ける。
+    p.add_argument("--scan-refs", action="store_true", help="orphan-audit: 他 ref の graph も走査し merge_pending を切り分ける")
+    p.add_argument("--before-graph"); p.add_argument("--before-ref")
+    p.add_argument("--after-graph"); p.add_argument("--after-ref")
+    p.add_argument("--disposition-manifest")
     a = p.parse_args(); root = Path(a.repo_root).resolve(strict=True)
     pf = preflight(root, a.expected_workspace_id) if a.expected_workspace_id else preflight(root)
     create_priority: str | None = None
@@ -507,7 +1022,15 @@ def main() -> int:
                 "dependency_type": "blocks",
                 "source_digest": source_digest,
                 "write_count": 0,
+                "registration": _registration_status(root, [feature["graph_node_id"], *(str(row["graph_node_id"]) for row in children)]),
             }
+        elif a.op == "create" and a.graph_node_id:
+            # preview でも同じ判定を通すが、raise ではなく payload へ載せる。dry-run は
+            # 「今 apply したらどうなるか」を返す観測であって書込ではないので、未登録を
+            # 理由に落とすと、C02 登録を同一 run の前段に持つ skill (C14 decompose) の
+            # 全体 dry-run が原理的に通らなくなる。判定は registered / unregistered
+            # として receipt に残るので、素通しにはならない。
+            preview["registration"] = _registration_status(root, [a.graph_node_id])
         if a.op == "update":
             # preview でも同じ受理判定を通し、不正な update 要求を書込前に落とす。
             _, preview["applied_fields"] = _update_argv(a)
@@ -524,7 +1047,9 @@ def main() -> int:
             result = _package_projection(root, projection)
         else:
             if not a.graph_node_id or not a.title: raise ContractError("create requires --graph-node-id and --title")
+            registration = _require_registered_nodes(root, [a.graph_node_id])
             result = _create_one(root, graph_node_id=a.graph_node_id, title=a.title, description=a.description or "", issue_type="epic" if a.artifact_kind == "feature" else "task", priority=create_priority)
+            result = {**result, "registration": registration}
     elif a.op in {"update", "close", "claim", "show"}:
         if not issue: raise ContractError(f"{a.op} requires --bd-issue-id")
         shown = bd(["show", issue, "--json"], cwd=root)
@@ -558,6 +1083,19 @@ def main() -> int:
     elif a.op == "ready":
         manifest = _load_manifest(a.parity_manifest, root, label="parity")
         result = _ready_with_parity(root, bd(["ready", "--json"], cwd=root), manifest)
+    elif a.op == "orphan-audit":
+        result = _orphan_audit(root, scan_refs=a.scan_refs)
+    elif a.op == "removal-preflight":
+        result = _removal_preflight(
+            root,
+            before_graph=a.before_graph,
+            before_ref=a.before_ref,
+            after_graph=a.after_graph,
+            after_ref=a.after_ref,
+            disposition_manifest=_load_manifest(
+                a.disposition_manifest, root, label="removal disposition"
+            ),
+        )
     elif a.op == "github-push": result = bd(["github", "sync", "--push-only", "--json"], cwd=root)
     elif a.op in {"gate-add", "gate-check"}:
         if not issue or not a.pr: raise ContractError("gate operation requires issue and --pr")
@@ -592,8 +1130,30 @@ def main() -> int:
         payload["applied_fields"] = applied_fields
     if a.op == "ready" and isinstance(result, dict):
         payload.update({key: result[key] for key in ("ready_set", "unmapped", "unmapped_summary", "conflicts", "candidate_count", "parity_provenance")})
+    # ready と同じく、集計を receipt の top-level にも出す。orphans[] を数え直さないと
+    # 件数が分からない形にすると、下流と人間が「全部見た」を確認できない。
+    if a.op == "orphan-audit" and isinstance(result, dict):
+        payload.update({key: result[key] for key in ("orphans", "orphan_summary", "graph_node_count", "dev_graph_reference_count", "scanned_refs")})
+    if a.op == "removal-preflight" and isinstance(result, dict):
+        payload.update(
+            {
+                key: result[key]
+                for key in (
+                    "allowed",
+                    "write_count",
+                    "before_node_count",
+                    "after_node_count",
+                    "removed_node_count",
+                    "removed_nodes",
+                    "disposition_exact_set",
+                    "decisions",
+                    "blockers",
+                    "orphan_audit",
+                )
+            }
+        )
     dump(payload)
-    return 0
+    return 2 if a.op == "removal-preflight" and not result["allowed"] else 0
 
 
 if __name__ == "__main__":
