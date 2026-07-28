@@ -7,6 +7,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { tenantOidcSigninAction } from '../../src/app/[tenant_slug]/signin/tenant-oidc-action.js';
 import { createAuthjsHandler, SESSION_COOKIE_NAME, signSessionToken } from '../../src/lib/auth/index.js';
 import { createInMemoryOidcConnections, createInMemoryUsers, createMutableClock } from './support/in-memory-ports.js';
 
@@ -39,6 +40,11 @@ function createHandler() {
 }
 
 describe('Auth.js route 結線 (AC-1)', () => {
+  it('テナント別サインイン画面を handler と同じ tenant path へ接続する', () => {
+    expect(tenantOidcSigninAction('acme')).toBe('/api/auth/acme/signin/tenant-oidc');
+    expect(tenantOidcSigninAction('tenant/subpath')).toBe('/api/auth/tenant%2Fsubpath/signin/tenant-oidc');
+  });
+
   it('tenant 別 provider を実 Auth.js endpoint から返し、callback origin を正規値へ固定する', async () => {
     const response = await createHandler()(new Request('https://forged-host.example/api/auth/acme/providers'));
 

@@ -149,7 +149,7 @@ node scripts/ci/check-shared-layer-duplicates.mjs   # C2 unwrapped-route-handler
 # --- 回帰 (hub 全体) ---
 pnpm --filter @harness-hub/hub run build:worker
 pnpm --filter @harness-hub/hub test
-#   期待: Test Files 23 passed (23) / Tests 261 passed (261)
+#   期待: Test Files 31 passed (31) / Tests 351 passed (351) — 2026-07-28 実測
 
 # --- plan 整合 ---
 python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
@@ -169,24 +169,29 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 | --- | --- | --- |
 | `check-auth-gates.mjs` の CI 結線 (`apps/hub/package.json` + root `verify`) | ✅ **解消 (2026-07-25)** — `ci.yml` G12 + root `pnpm check:auth` | bd `HarnessHub-1f28` closed |
 | 分離テストの CI 必須ゲート指定 | ✅ **解消 (2026-07-25)** — `check-tenant-isolation-gate.mjs` + `test:tenant-isolation` の名指し実行 | bd `HarnessHub-1f28` closed |
-| `validate-system-plan.py` が `status=fail` (violations 27 件) | ⚠️ plan package 側の記述欠落。実装成果物の欠陥ではない (§9) | bd `HarnessHub-mvdc` |
-| `next-auth` (または Better Auth) の導入と実結線 | ⏳ 別途の意思決定 | P13 / 後続 feature |
+| ~~`validate-system-plan.py` が `status=fail` (violations 27 件)~~ | ✅ **解消**。2026-07-28 再実行で `status=pass` / violations **0 件** (§9) | bd `HarnessHub-mvdc` closed |
+| ~~`next-auth` (または Better Auth) の導入と実結線~~ | ✅ **解消 (2026-07-26)**。`@auth/core` 0.41.3 を `adapter/authjs-handler.ts` へ実結線 | bd `HarnessHub-b7ng` closed |
 | `AuthPorts` の本番 DB adapter と永続化契約差の解消 | ✅ **解消 (2026-07-26)**。実 DB 統合・並行 CAS・JIT 競合を検証 | bd `HarnessHub-b7ng` / [仕様反映受領書](./spec-reflection-receipt.md) |
 | 本番 `idp_connections` への OIDC provider 登録 | ⏳ control-plane DB 確立が前提 | P13 |
 | `test-design.md` の `T-SESS-05` 文言を実装へ追随 | ⏳ 次回改訂 | P04 改訂時 |
 | ~~確定仕様を超えた 2 決定 (session claims の `workspace_ids` / polling 上限 60 秒・減衰) の仕様側確定~~ | ✅ R4-reopen とユーザー確認 `appr-010` を経て `qa-072` / `qa-073` として確定済み | bd `HarnessHub-l2g9` (closed) |
 
-→ P12 の runbook 成果物は完成。P13 は `HarnessHub-1f28` / `HarnessHub-b7ng` と
-親依存の完了まで実行不可。
+→ P12 の runbook 成果物は完成。
 
-> **進捗追記 (2026-07-25 / `issue-auth-tenancy-ci-wiring-20260725`)**: `HarnessHub-1f28` は closed。
-> P13 の残ブロッカーは `HarnessHub-b7ng` (本番 AuthPorts adapter) と親依存に絞られた。
+> **進捗追記 (2026-07-28)**: `HarnessHub-1f28` / `HarnessHub-b7ng` / `HarnessHub-mvdc` /
+> `HarnessHub-l2g9` はすべて closed。親依存側も `HarnessHub-u6q.13` (control-plane DB リリース) が closed。
+> **P13 の残ブロッカーはコード側に 0 件**で、本番 auth Secret / Variable / OIDC 資格情報の投入と
+> R1〜R5 の本番実施だけが残る (`release-record.md` §6 に read-only 事前確認の実測を記録)。
 
 ---
 
 ## 9. plan 整合検査の結果 (`validate-system-plan.py`)
 
-**結果: `status=fail` / violations 27 件。緑ではないので、緑と書かない。**
+**結果 (2026-07-28 再実行): `status=pass` / violations 0 件 / exit 0。**
+
+### 初回は fail だった — 何が起きていたか
+
+初回集約時点では `status=fail` / violations **27 件**で、内訳は次のとおりだった。
 
 | 違反コード | 件数 | 対象 |
 | --- | --- | --- |
@@ -194,16 +199,24 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 | `inner-goal-seek-contract` | 13 | 同上 |
 | `p13-spec-architecture-writeback` | 1 | `task-specs/phase-13-release-deploy.md` |
 
-**判断: これは実装成果物の欠陥ではない。** 根拠は 3 点。
+これは実装成果物の欠陥ではなく、**planner 版と validator 版の drift** だった。根拠は 3 点で、
+(1) 違反対象は 27 件すべて `task-specs/*.md` で `apps/hub` / `packages` 配下は 0 件、
+(2) `validated_digest` が package digest `sha256:98fd3cc3…` と一致しており検査対象は正しい、
+(3) 13 task-spec は実装作業で一度も変更していない (plan 生成時点から fail だった)。
 
-1. 違反対象は 27 件すべて `feature-package/feat-auth-tenancy/task-specs/*.md`。
-   `apps/hub` / `packages` 配下は 1 件も指摘されていない。
-2. `validated_digest` は package digest `sha256:98fd3cc3…` と一致しており、検査対象は正しい。
-3. 13 task-spec は本実装作業で**一度も変更していない** (`git status --porcelain feature-package/feat-auth-tenancy` が空)。
-   つまり plan 生成時から fail だった = planner 版と validator 版の drift である。
+### 解消の機序 — 「節を追記した」のではない (誤読しないこと)
 
-**放置しない理由**: fail のまま置くと、将来 実装側に本物の違反が出たときに
-既存 27 件のノイズに埋もれる。bd `HarnessHub-mvdc` で追跡する。
+bd `HarnessHub-mvdc` (closed) の実測記録によれば、解消したのは **PR #60「validator 契約 version 台帳」**
+のマージによる。13 task-spec の本文は**書き換えていない**。現在の validator 出力は
+`contract_version: "1.0.0"` / `contract_baseline_exemption: true` を返しており、
+**新契約が要求する Inner goal-seek 節は「新規 promote される package」に対してのみ強制され、
+既存 baseline package は免除される**という設計になっている。
 
-**やらなかったこと**: validator 側の検査を緩めることでの緑化。
-検査を弱めて緑にするのは、緑の意味を捨てる操作にあたる。
+つまり pass の意味は「13 task-spec に節が備わった」ではなく
+**「この package は新契約の適用対象外として扱われる」**である。記述の必須化そのものは
+別課題 `HarnessHub-a4ks` 系で扱う。
+
+**やらなかったこと**: validator の検査そのものを弱めることでの緑化。
+上記は検査の削除ではなく、契約に version を持たせて適用範囲を明示する移行機構であり、
+新規 package に対する検査強度は落ちていない。ただし
+**本 package が実際に節を持つことを保証するものでもない**ため、ここを混同しない。
