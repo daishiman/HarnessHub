@@ -1,5 +1,5 @@
 {
-  "graph_revision": 930,
+  "graph_revision": 935,
   "nodes": [
     {
       "acceptance": [
@@ -39334,6 +39334,222 @@
       "title": "register-package 再実行が projection 6 項目差で同一 digest を拒否する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-27T21:24:33.65077Z"
+    },
+    {
+      "acceptance": [
+        "worktree から refs/heads/main を直接更新しようとした操作が遮断されるか、遮断できない場合はその制約が根拠つきで記録されている",
+        "desync 状態 (HEAD と作業ツリーの不整合) でのコミットが検査で止まり、巻き戻しコミットが main へ到達しないことが再現手順つきで検証されている",
+        "hook の設置場所が beads 更新で消えないこと、または消えたことを検知できることが検証されている",
+        "並列稼働下の復旧手順が runbook に記載され、記載どおりの操作で復旧できることが確認されている",
+        "stash 参照をメッセージで行う規約が文書化されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-worktree-main-ref-desync-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "並列 worktree 運用と git ref 更新の衝突により再現しうる、リポジトリ運用上の追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T02:05:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-worktree-main-ref-desync-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "並列セッションを止めずに、main ref の横取り更新による desync を発生させない、または発生しても巻き戻しコミットとして main へ到達させない状態にする",
+      "graph_node_id": "issue-worktree-main-ref-desync-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T02:05:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "2026-07-28、主ワークツリーで HEAD と index だけが最新 main へ進み、作業ツリーが 09:36 時点 (03093e4) に取り残される desync が発生した。原因は並列稼働中の worktree/セッションが git update-ref 系で refs/heads/main を直接書き換えたこと。git reflog show main に理由メッセージが空のエントリが 3 件 (10:06:29 -> 8560e92 / 10:16:32 -> 6e03e8f / 10:52:28 -> 9fe09e5) 残っており、pull / merge / checkout いずれの経路でもないことが確定している。症状は (a) ref が最新のため git pull が Already up to date を返す、(b) git status が PR で追加されたファイルを deleted、更新されたファイルを modified と表示する、の 2 点。この状態で git commit -a すると PR #84 / #85 のマージ内容を丸ごと巻き戻すコミット (65 files / -5467 行) が main に載る。今回は commit 前に検知して復旧したが、stash@{26} に同種の退避 (main-4bf2a66 同期前の退避: index+worktree が 7e250f1 のまま古かった分) が残っており再発である。復旧作業中に別セッションが stash push したため stash@{0} の指す対象が入れ替わる事象も同時に観測した",
+      "related_nodes": [],
+      "resource_scope": [
+        ".beads/hooks",
+        "plugins/dev-graph/hooks",
+        "plugins/dev-graph/scripts"
+      ],
+      "scope_in": [
+        "worktree/エージェントから他ワークツリーで checkout 中の ref を直接更新する経路を遮断する仕組みの設計と導入 (reference-transaction hook が第一候補)",
+        "core.hooksPath が .beads/hooks を指すため beads 更新で hook が消える経路の評価と、消えた場合の検知手段",
+        "desync 状態でのコミットを fail-closed で止める検査の pre-commit 系への結線 (HEAD と作業ツリーの整合、大量 deletion の異常検知)",
+        "並列稼働を止めない復旧手順の runbook 化 (--detach で HEAD を SHA 固定 -> stash push -u -> 一致確認 -> 選択復元 -> checkout main)",
+        "stash の参照を番号ではなくメッセージで行う規約の明文化"
+      ],
+      "scope_out": [
+        "並列セッション運用そのものの停止や同時実行数の削減",
+        "既存 48 件の stash の棚卸し",
+        "GitHub 側のブランチ保護設定の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T02:05:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-workflow",
+        "git",
+        "worktree",
+        "parallel-session",
+        "data-loss-risk"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T06:23:05Z"
+    },
+    {
+      "acceptance": [
+        "graph サイズ非依存性が、絶対所要時間ではない指標 (所要時間の比、または構造検査) で固定されている",
+        "並列全件実行と単独実行の両方で反復実行し、安定して緑になることが確認されている",
+        "是正が既存 assert の閾値引き上げのみになっていないこと、および閾値を上げた場合に見逃す退行の範囲が広がる旨が根拠として記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-flaky-guard-graph-schema-latency-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "既存テストの判定基準に起因する再現性のある不安定化であり、リポジトリ運用上の追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T06:23:05Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-flaky-guard-graph-schema-latency-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph サイズ非依存性という契約を、マシン負荷に汚染されない形で測るテストへ置き換え、並列全件実行でも単独実行でも安定して緑になる状態にする",
+      "graph_node_id": "issue-flaky-guard-latency-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T06:23:05Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "test_guard_graph_schema_fail_open_window.py::test_denial_latency_does_not_depend_on_the_repository_graph が並列稼働下で assert 3.559 < 1.0 により失敗する。単独実行では 26 passed / 2 skipped で緑。テストが固定したい契約は「遮断が graph サイズに依存せず確定する」だが、assert が見ているのは絶対所要時間であり代理指標にすぎない。代理指標にはマシン負荷という契約外の変数が混入するため、20 以上の worktree が同時稼働する本リポジトリの運用条件では契約が破れていなくても赤になる。赤が情報を失い、同じ見た目の本物の退行を読み飛ばす習慣を生む点が有害である。",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/tests"
+      ],
+      "scope_in": [
+        "絶対時間 assert を比 (巨大 graph と極小 graph の所要時間比) など負荷が相殺される指標へ置き換える設計と実装",
+        "構造検査 (test_semantic_contract_boundaries_c10_c11_c24.py が固定する subprocess 非起動) との責務分担の整理",
+        "並列全件実行と単独実行の双方での反復実行による安定性確認"
+      ],
+      "scope_out": [
+        "guard-graph-schema.py 本体の遮断ロジック変更",
+        "pytest の並列度やテスト実行基盤の変更",
+        "他の flaky テストの棚卸し"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T06:23:05Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-workflow",
+        "testing",
+        "flaky",
+        "proxy-metric",
+        "dev-graph"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T06:23:05Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
