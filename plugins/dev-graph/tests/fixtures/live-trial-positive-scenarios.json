@@ -96,7 +96,7 @@
       "criterion_id": "OUT1",
       "mode": "positive",
       "task_args_template": "--repo-root <contained-fixture-repo> --binding none --dry-run",
-      "fixture_contract": "A contained initialized repository holds the macro decomposition input (the want) and deliberately holds no expected feature, architecture or task node, so every produced node is attributable to the skill rather than to the fixture. At least one produced feature remains in pre-evaluation draft so the zero-issue-publication rule is exercised. During the run, another produced feature is advanced in the preview through the schema-valid confirmed, evaluation-pass, implementation-readiness-complete lifecycle and must become the sole publication candidate. This simultaneously proves the negative draft gate and the positive candidate gate without constructing the schema-invalid pass-plus-incomplete state. The lifecycle advance operates only on a node emitted by the skill and never seeds the fixture, preserving attribution.",
+      "fixture_contract": "A contained initialized repository holds the macro decomposition input (the want) and deliberately holds no expected feature, architecture or task node, so every produced node is attributable to the skill rather than to the fixture. The run must leave at least one produced feature in pre-evaluation draft and must promote at least one other produced feature to a schema-valid confirmed, evaluation-pass and readiness-complete state carrying its confirmation_evidence. Both classes must be present so the publication gate is measured on a non-trivial partition; an all-draft candidate set is empty for a reason unrelated to the gate and does not satisfy the contract. A confirmed, evaluation-pass, readiness-incomplete specimen must not be requested: graph-node.schema.json allOf[7] entails readiness-complete from evaluation-pass, so no such node can exist and demanding one forces the audit to fabricate it (HarnessHub-ojh6). Promotion is performed on the produced preview nodes during the run, never seeded by the fixture, so node attribution is preserved. The promoted feature must carry confirmation_evidence whose evaluated_digest is the sha256 of its own canonicalised node content, computed by serialising the node with confirmation_evidence removed using sorted keys, no whitespace and non-ASCII characters preserved. A digest that only satisfies the 64-hex pattern is a placeholder and does not pin confirmation to the artifact, so it does not satisfy the contract (HarnessHub-ojh6).",
       "declared_granularity_threshold": {
         "metric": "max_inter_feature_depends_on_per_feature",
         "max_value": 3,
@@ -104,9 +104,11 @@
       },
       "required_observations": [
         "the produced feature and architecture nodes form an acyclic DAG whose inter-feature depends_on stays within declared_granularity_threshold.max_value measured by declared_granularity_threshold.metric",
-        "pre-evaluation draft features publish zero issues on every binding",
-        "at least one actual produced draft feature remains excluded while one actual produced feature advanced to confirmed, evaluation-pass and readiness-complete becomes the sole publication candidate",
-        "the dry run reports local, Beads, GitHub and Projects write counts of zero, and the preview graph is validated through the stdin path so no temporary file is created inside the managed repository"
+        "pre-evaluation draft features are excluded from the publication candidates of every binding",
+        "a produced feature promoted to a schema-valid confirmed, evaluation-pass and readiness-complete state becomes a publication candidate while the draft features remain excluded, so the gate is observed to discriminate between the two classes rather than to hold vacuously, and binding resolution leaves the beads and github publication eligibility empty under --binding none",
+        "the dry run reports local, Beads, GitHub and Projects write counts of zero, and the preview graph is validated through the stdin path so no temporary file is created inside the managed repository",
+        "the confirmation_evidence of every promoted feature is recomputed from that feature's own node content and matches, so a promoted node edited after promotion is rejected instead of carrying a stale pass",
+        "gate violations synthesised from this run's own preview are rejected by the canonical schema validator, so the publication gate is shown to be falsifiable on this data rather than reported as satisfied by a run in which nothing was projected at all"
       ]
     },
     {

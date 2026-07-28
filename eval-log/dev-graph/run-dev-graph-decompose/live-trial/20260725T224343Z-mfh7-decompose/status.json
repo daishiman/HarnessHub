@@ -1,0 +1,32 @@
+{
+  "trial_id": "20260725T224343Z-mfh7-decompose",
+  "skill": "dev-graph:run-dev-graph-decompose",
+  "scenario_id": "C14-OUT1-positive-macro-decomposition",
+  "status": "PASS",
+  "audit_pass": true,
+  "provenance_valid": true,
+  "derived_write_counts": {
+    "local": 0,
+    "beads": 0,
+    "github_issue": 0,
+    "github_projects": 0
+  },
+  "graph_summary": {
+    "feature_count": 2,
+    "architecture_count": 1,
+    "task_count": 0,
+    "acyclic": true,
+    "threshold_pass": true,
+    "measured_max_inter_feature_depends_on": 1
+  },
+  "publication_summary": {
+    "draft_candidate_count": 0,
+    "readiness_probe_excluded_only_by_readiness": true
+  },
+  "goal_seek": {
+    "loops_used": 1,
+    "drift_signal": "none",
+    "all_checklist_pass": true
+  },
+  "completed_at": "2026-07-26T08:16:00Z"
+}

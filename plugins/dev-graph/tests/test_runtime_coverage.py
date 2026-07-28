@@ -120,6 +120,11 @@ def test_resolve_discover_and_main(common, tmp_path, monkeypatch, capsys):
 
 def test_bd_helpers_and_all_operations(common, tmp_path, monkeypatch, capsys):
     mod = load(SCRIPTS / "bd-bridge.py", "bd_bridge_cov")
+    # create の実在検証 (HarnessHub-mfh7) が読む canonical graph。起票対象の
+    # graph_node_id が graph に居ないと create は書込前に落ちる。
+    state = tmp_path / ".dev-graph"; state.mkdir(exist_ok=True)
+    (state / "config.json").write_text(json.dumps({"local_state": {"graph": ".dev-graph/graph.json"}, "content_roots": {"issues": "issues"}}))
+    (state / "graph.json").write_text(json.dumps({"nodes": [{"graph_node_id": "G1"}, {"graph_node_id": "G9"}]}))
     monkeypatch.setattr(mod, "run", lambda *a, **k: SimpleNamespace(stdout='{"id":"x"}', returncode=0))
     assert mod.bd(["show"], cwd=tmp_path)["id"] == "x"
     monkeypatch.setattr(mod, "run", lambda *a, **k: SimpleNamespace(stdout="plain", returncode=4))

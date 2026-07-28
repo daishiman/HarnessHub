@@ -7,7 +7,7 @@
     "skill_md_sha256": "29baae336110074cb542880cb8641858eab6fa9f0f25edade6c227e0896e8fa0"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-sync-conflict-verifier-fresh-goal-evaluator-i08-merged-20260725",
+  "reviewer": "fresh-goal-evaluator-mfh7-20260726",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T235412Z-7tn1-sync-postmerge/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T234208Z-mfh7-current/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T235412Z-7tn1-sync-postmerge/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T235412Z-7tn1-sync-postmerge/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T235412Z-7tn1-sync-postmerge/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T234208Z-mfh7-current/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T234208Z-mfh7-current/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T234208Z-mfh7-current/out/status.json"
       ],
-      "observed": "挙動閉包更新後の fresh live trial が PASS (nudge=0 / gate=0 / poll_exit=DONE)。Skill 呼出しは transcript 上に実在し script 直叩きではない。dry-run/apply/確認 dry-run の 3 パスで、第 1 sync が import (LT-TASK-001 title 更新) と export (Project Status=In Progress) を changes=2 / write_count=4 で反映、第 2 sync は imports/exports とも changes=0 かつ converged=true。stable ID (LT-TASK-001 / PVTI_lADOFixture001) と graph/snapshot/remote の SHA-256 は 2 回目で不変。goal-seek 3 点セットは実ファイルとして存在し、intermediate は必須 6 キー・original_goal hash 一致・Skill 起動前に 1 行目/検証後に append で 2 行目という append-only を独立評価で確認した。"
+      "observed": "2026-07-26 再実走 (run 20260727T234208Z-mfh7-current, fresh claude session, 自走完走 nudge=0/gate=0, Skill ツール起動, poll DONE 285s)。C28 bd-bridge.py の orphan external_ref 対応で behavior closure digest が変化したため受領書を取り直した。独立 fresh evaluator の判定 PASS: (1) Skill ツール呼出しで起動 (script 直叩きは skill 内 protocol に従う起動後の実行のみ)。(2) goal-spec.original_goal は SKILL.md の正本 Goal と repr 比較で完全一致、original_goal_hash=ab2f296e0c39c58a4ea7f3a58096f702728aa38be198eaff465ce9d5970b8c43 を評価者が独立再計算して一致。(3) intermediate.jsonl は 2 行・各行 6 キー、1 行目は Skill 起動前の Write、2 行目は 3 パス完了後の `cat >>` append で、既存行の Edit/まとめ書きなし。(4) scenario 眼目の 2 回目 sync が changes=0 / converged=true / imports=[] / exports=[] / write_count=0、graph_sha256・remote_sha256・snapshot_sha256 が before==after。(5) 冪等の偽装でないことの裏取りとして 1 回目 apply が remote.json の Status を OPT_InProgress001 へ実際に書き換えている (git diff 4 files)。(6) progress checklist に pending / evidence:null は 0 件。"
     },
     "OUT2": {
       "status": "PASS",

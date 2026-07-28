@@ -1,0 +1,590 @@
+{
+  "adapter_receipts": {
+    "beads": {
+      "argv": [
+        "python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/plugins/dev-graph/scripts/bd-bridge.py",
+        "--op",
+        "create",
+        "--repo-root",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/eval-log/dev-graph/live-trial-fixtures/decompose",
+        "--graph-node-id",
+        "feat-user-auth-001",
+        "--title",
+        "ユーザー登録・ログイン",
+        "--description",
+        "ユーザーがアカウントを作成しログインすることで、認証済みセッションを取得できるようにする",
+        "--artifact-kind",
+        "feature",
+        "--dry-run"
+      ],
+      "payload": {
+        "dry_run_preview": {
+          "artifact_kind": "feature",
+          "description": "ユーザーがアカウントを作成しログインすることで、認証済みセッションを取得できるようにする",
+          "expected_depends_on": [],
+          "graph_node_id": "feat-user-auth-001",
+          "op": "create",
+          "registration": {
+            "graph_node_count": 3,
+            "graph_node_ids": [
+              "feat-user-auth-001"
+            ],
+            "registered": true
+          },
+          "repo_root": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/eval-log/dev-graph/live-trial-fixtures/decompose",
+          "scan_refs": false,
+          "title": "ユーザー登録・ログイン",
+          "verify_parity": false
+        },
+        "op": "create",
+        "version": "1.1.0",
+        "workspace_identity": {
+          "attributes": {
+            "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/eval-log/dev-graph/live-trial-fixtures/decompose/.beads/embeddeddolt",
+            "prefix": "HarnessHub",
+            "schema_version": "1"
+          },
+          "workspace_id": "bdw_6354328551c759e8aa3419bd"
+        }
+      },
+      "returncode": 0,
+      "stderr": ""
+    },
+    "github_issue": {
+      "argv": [
+        "python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/plugins/dev-graph/scripts/gh-bridge.py",
+        "--op",
+        "issue-create",
+        "--repo",
+        "example/dev-graph-live-trial",
+        "--title",
+        "ユーザー登録・ログイン",
+        "--body",
+        "{\"acceptance\": [\"新規ユーザーがメールアドレスとパスワードでアカウントを作成できる\", \"登録済みユーザーがログインしてセッションを取得できる\", \"未認証ユーザーが保護ページにアクセスするとログインページへリダイレクトされる\"], \"graph_node_id\": \"feat-user-auth-001\", \"implementation_readiness\": {\"checked_at\": null, \"missing_sections\": [\"detailed_requirements\"], \"status\": \"incomplete\"}}",
+        "--dry-run"
+      ],
+      "payload": {
+        "dry_run": true,
+        "mutation_suppressed": true,
+        "op": "issue-create",
+        "preview": {
+          "body": "{\"acceptance\": [\"新規ユーザーがメールアドレスとパスワードでアカウントを作成できる\", \"登録済みユーザーがログインしてセッションを取得できる\", \"未認証ユーザーが保護ページにアクセスするとログインページへリダイレクトされる\"], \"graph_node_id\": \"feat-user-auth-001\", \"implementation_readiness\": {\"checked_at\": null, \"missing_sections\": [\"detailed_requirements\"], \"status\": \"incomplete\"}}",
+          "op": "issue-create",
+          "repo": "example/dev-graph-live-trial",
+          "title": "ユーザー登録・ログイン",
+          "value_type": "single_select"
+        }
+      },
+      "returncode": 0,
+      "stderr": ""
+    },
+    "github_projects": {
+      "argv": [
+        "python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/plugins/dev-graph/scripts/gh-bridge.py",
+        "--op",
+        "project-item-add",
+        "--content-id",
+        "feat-user-auth-001",
+        "--project-id",
+        "feat-user-auth-001",
+        "--dry-run"
+      ],
+      "payload": {
+        "dry_run": true,
+        "mutation_suppressed": true,
+        "op": "project-item-add",
+        "preview": {
+          "content_id": "feat-user-auth-001",
+          "op": "project-item-add",
+          "project_id": "feat-user-auth-001",
+          "value_type": "single_select"
+        }
+      },
+      "returncode": 0,
+      "stderr": ""
+    }
+  },
+  "audit_implementation": {
+    "index_matches_worktree": true,
+    "modules": [
+      {
+        "index_blob": "93ac9c0eb7bf6b9bcd90793e58b660845e30bd24",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+        "sha256": "e6a6cf1d9c1d20038288fa012a9379262ba7ccf5aecfda579c95adc9bd11ca42",
+        "tracked_in_index": true,
+        "worktree_blob": "93ac9c0eb7bf6b9bcd90793e58b660845e30bd24"
+      },
+      {
+        "index_blob": "8ac2d8082867fa11b4160bee9d93e584923ad21c",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+        "sha256": "363680ba627b25610781ea8aa6e07a97fb390667b5fc6f545e2a72c546e48788",
+        "tracked_in_index": true,
+        "worktree_blob": "8ac2d8082867fa11b4160bee9d93e584923ad21c"
+      }
+    ],
+    "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+    "provenance_valid": true,
+    "same_as_pre_state": true,
+    "sha256": "2bca7609adeed8a192faea69ed211a738d1e7546ec50c04ba60b6b4842ec52b9",
+    "tracked_in_index": true
+  },
+  "derived_write_counts": {
+    "beads": 0,
+    "github_issue": 0,
+    "github_projects": 0,
+    "local": 0
+  },
+  "graph": {
+    "acyclic": true,
+    "architecture_count": 1,
+    "declared_max": 3,
+    "feature_count": 2,
+    "measured_max": 1,
+    "metric": "max_inter_feature_depends_on_per_feature",
+    "per_feature": {
+      "feat-dashboard-001": 1,
+      "feat-user-auth-001": 0
+    },
+    "produced_node_count": 3,
+    "task_count": 0,
+    "threshold_pass": true
+  },
+  "local_state": {
+    "after": {
+      "audit_implementation": {
+        "index_matches_worktree": true,
+        "modules": [
+          {
+            "index_blob": "93ac9c0eb7bf6b9bcd90793e58b660845e30bd24",
+            "index_matches_worktree": true,
+            "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+            "sha256": "e6a6cf1d9c1d20038288fa012a9379262ba7ccf5aecfda579c95adc9bd11ca42",
+            "tracked_in_index": true,
+            "worktree_blob": "93ac9c0eb7bf6b9bcd90793e58b660845e30bd24"
+          },
+          {
+            "index_blob": "8ac2d8082867fa11b4160bee9d93e584923ad21c",
+            "index_matches_worktree": true,
+            "path": "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+            "sha256": "363680ba627b25610781ea8aa6e07a97fb390667b5fc6f545e2a72c546e48788",
+            "tracked_in_index": true,
+            "worktree_blob": "8ac2d8082867fa11b4160bee9d93e584923ad21c"
+          }
+        ],
+        "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+        "sha256": "2bca7609adeed8a192faea69ed211a738d1e7546ec50c04ba60b6b4842ec52b9",
+        "tracked_in_index": true
+      },
+      "config": {
+        "path": ".dev-graph/config.json",
+        "sha256": "93844dcd18219202d3970314d26e9630110d2a991b278699e1ad3de25f3747da"
+      },
+      "content_inventory": {
+        "architecture": [
+          {
+            "bytes": 0,
+            "path": "architecture/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "bytes": 3850,
+            "path": "architecture/arch-web-app-001.md",
+            "sha256": "ff64f9da526d2891629012990b66e0a6f56af227c23eaea1b00ca7d1dbca6850"
+          }
+        ],
+        "documents": [
+          {
+            "bytes": 0,
+            "path": "docs/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "features": [
+          {
+            "bytes": 0,
+            "path": "features/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "bytes": 3682,
+            "path": "features/feat-dashboard-001.md",
+            "sha256": "54b945a57b9391e7f513d1eeabed3f44eeda0bc2a0c5c13d826d98b9e7be48f1"
+          },
+          {
+            "bytes": 3789,
+            "path": "features/feat-user-auth-001.md",
+            "sha256": "9885306d7963653a17c1ec5bf81f8162df2da787b58db964dad515b1449661a2"
+          }
+        ],
+        "issues": [
+          {
+            "bytes": 0,
+            "path": "issues/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "specifications": [
+          {
+            "bytes": 0,
+            "path": "specs/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "system_spec": [
+          {
+            "bytes": 0,
+            "path": "system-spec/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "tasks": [
+          {
+            "bytes": 0,
+            "path": "tasks/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "git_status": {
+        "all": [
+          {
+            "path": ".dev-graph/state/graph.json",
+            "status": " M"
+          },
+          {
+            "path": ".dev-graph/state/.graph.json.register.lock",
+            "status": "??"
+          },
+          {
+            "path": "architecture/arch-web-app-001.md",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/decompose-want.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/macro-preview.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/node-input-arch-web-app-001.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/node-input-feat-dashboard-001.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/node-input-feat-user-auth-001.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/pre-state.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/run-dev-graph-decompose-goal-spec.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/run-dev-graph-decompose-intermediate.jsonl",
+            "status": "??"
+          },
+          {
+            "path": "features/feat-dashboard-001.md",
+            "status": "??"
+          },
+          {
+            "path": "features/feat-user-auth-001.md",
+            "status": "??"
+          }
+        ],
+        "managed": [
+          {
+            "path": ".dev-graph/state/graph.json",
+            "status": " M"
+          },
+          {
+            "path": ".dev-graph/state/.graph.json.register.lock",
+            "status": "??"
+          },
+          {
+            "path": "architecture/arch-web-app-001.md",
+            "status": "??"
+          },
+          {
+            "path": "features/feat-dashboard-001.md",
+            "status": "??"
+          },
+          {
+            "path": "features/feat-user-auth-001.md",
+            "status": "??"
+          }
+        ]
+      },
+      "graph": {
+        "node_count": 3,
+        "path": ".dev-graph/state/graph.json",
+        "revision": 3,
+        "sha256": "eabd8d558dcc78851d4dd6681a763287a94e0f6f4fff4a8d9248954703e506ef"
+      },
+      "repo_root": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/eval-log/dev-graph/live-trial-fixtures/decompose"
+    },
+    "before": {
+      "audit_implementation": {
+        "index_matches_worktree": true,
+        "modules": [
+          {
+            "index_blob": "93ac9c0eb7bf6b9bcd90793e58b660845e30bd24",
+            "index_matches_worktree": true,
+            "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+            "sha256": "e6a6cf1d9c1d20038288fa012a9379262ba7ccf5aecfda579c95adc9bd11ca42",
+            "tracked_in_index": true,
+            "worktree_blob": "93ac9c0eb7bf6b9bcd90793e58b660845e30bd24"
+          },
+          {
+            "index_blob": "8ac2d8082867fa11b4160bee9d93e584923ad21c",
+            "index_matches_worktree": true,
+            "path": "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+            "sha256": "363680ba627b25610781ea8aa6e07a97fb390667b5fc6f545e2a72c546e48788",
+            "tracked_in_index": true,
+            "worktree_blob": "8ac2d8082867fa11b4160bee9d93e584923ad21c"
+          }
+        ],
+        "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+        "sha256": "2bca7609adeed8a192faea69ed211a738d1e7546ec50c04ba60b6b4842ec52b9",
+        "tracked_in_index": true
+      },
+      "config": {
+        "path": ".dev-graph/config.json",
+        "sha256": "93844dcd18219202d3970314d26e9630110d2a991b278699e1ad3de25f3747da"
+      },
+      "content_inventory": {
+        "architecture": [
+          {
+            "bytes": 0,
+            "path": "architecture/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "bytes": 3850,
+            "path": "architecture/arch-web-app-001.md",
+            "sha256": "ff64f9da526d2891629012990b66e0a6f56af227c23eaea1b00ca7d1dbca6850"
+          }
+        ],
+        "documents": [
+          {
+            "bytes": 0,
+            "path": "docs/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "features": [
+          {
+            "bytes": 0,
+            "path": "features/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "bytes": 3682,
+            "path": "features/feat-dashboard-001.md",
+            "sha256": "54b945a57b9391e7f513d1eeabed3f44eeda0bc2a0c5c13d826d98b9e7be48f1"
+          },
+          {
+            "bytes": 3789,
+            "path": "features/feat-user-auth-001.md",
+            "sha256": "9885306d7963653a17c1ec5bf81f8162df2da787b58db964dad515b1449661a2"
+          }
+        ],
+        "issues": [
+          {
+            "bytes": 0,
+            "path": "issues/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "specifications": [
+          {
+            "bytes": 0,
+            "path": "specs/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "system_spec": [
+          {
+            "bytes": 0,
+            "path": "system-spec/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "tasks": [
+          {
+            "bytes": 0,
+            "path": "tasks/.gitkeep",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "git_status": {
+        "all": [
+          {
+            "path": ".dev-graph/state/graph.json",
+            "status": " M"
+          },
+          {
+            "path": ".dev-graph/state/.graph.json.register.lock",
+            "status": "??"
+          },
+          {
+            "path": "architecture/arch-web-app-001.md",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/decompose-want.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/macro-preview.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/node-input-arch-web-app-001.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/node-input-feat-dashboard-001.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/node-input-feat-user-auth-001.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/pre-state.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/run-dev-graph-decompose-goal-spec.json",
+            "status": "??"
+          },
+          {
+            "path": "eval-log/run-dev-graph-decompose-intermediate.jsonl",
+            "status": "??"
+          },
+          {
+            "path": "features/feat-dashboard-001.md",
+            "status": "??"
+          },
+          {
+            "path": "features/feat-user-auth-001.md",
+            "status": "??"
+          }
+        ],
+        "managed": [
+          {
+            "path": ".dev-graph/state/graph.json",
+            "status": " M"
+          },
+          {
+            "path": ".dev-graph/state/.graph.json.register.lock",
+            "status": "??"
+          },
+          {
+            "path": "architecture/arch-web-app-001.md",
+            "status": "??"
+          },
+          {
+            "path": "features/feat-dashboard-001.md",
+            "status": "??"
+          },
+          {
+            "path": "features/feat-user-auth-001.md",
+            "status": "??"
+          }
+        ]
+      },
+      "graph": {
+        "node_count": 3,
+        "path": ".dev-graph/state/graph.json",
+        "revision": 3,
+        "sha256": "eabd8d558dcc78851d4dd6681a763287a94e0f6f4fff4a8d9248954703e506ef"
+      },
+      "repo_root": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/eval-log/dev-graph/live-trial-fixtures/decompose"
+    },
+    "checks": {
+      "config_sha_unchanged": true,
+      "content_inventory_unchanged": true,
+      "graph_node_count_unchanged": true,
+      "graph_revision_unchanged": true,
+      "graph_sha_unchanged": true,
+      "managed_git_status_unchanged": true
+    },
+    "mutation_suppressed": true
+  },
+  "mutation_suppression": {
+    "beads": true,
+    "github_issue": true,
+    "github_projects": true,
+    "local": true
+  },
+  "pass": true,
+  "preview": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/eval-log/dev-graph/live-trial-fixtures/decompose/eval-log/macro-preview.json",
+  "publication": {
+    "draft_candidates": {
+      "beads": {
+        "count": 0,
+        "ids": []
+      },
+      "github": {
+        "count": 0,
+        "ids": []
+      },
+      "none": {
+        "count": 0,
+        "ids": []
+      }
+    },
+    "readiness_probe": {
+      "candidate": false,
+      "conditions": {
+        "confirmation_confirmed": true,
+        "evaluation_pass": true,
+        "readiness_complete": false
+      },
+      "excluded_only_by_readiness": true,
+      "graph_node_id": "feat-user-auth-001"
+    }
+  },
+  "scenario_id": "C14-OUT1-positive-macro-decomposition",
+  "schema_validation": {
+    "receipt": {
+      "argv": [
+        "python3",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/plugins/dev-graph/scripts/validate-graph-schema.py",
+        "--graph",
+        "-",
+        "--repo-root",
+        "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/eval-log/dev-graph/live-trial-fixtures/decompose"
+      ],
+      "payload": {
+        "implementation_readiness": "complete",
+        "missing_sections": [],
+        "schema": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/plugins/dev-graph/schemas/graph-node.schema.json",
+        "valid": true,
+        "violations": []
+      },
+      "returncode": 0,
+      "stderr": ""
+    },
+    "stdin_path_used": true,
+    "structural_contract_valid": true,
+    "structural_violations": [],
+    "violation_count": 0
+  }
+}

@@ -48,8 +48,17 @@ def package_manifest() -> dict:
     }
 
 
+def register_graph(root: Path, *node_ids: str) -> None:
+    """create の実在検証 (HarnessHub-mfh7) が読む canonical graph を fixture root に置く。"""
+    state = root / ".dev-graph"
+    state.mkdir(exist_ok=True)
+    (state / "config.json").write_text(json.dumps({"local_state": {"graph": ".dev-graph/graph.json"}}))
+    (state / "graph.json").write_text(json.dumps({"nodes": [{"graph_node_id": node_id} for node_id in node_ids]}))
+
+
 def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_path, monkeypatch, capsys):
     module = load(SCRIPTS / "bd-bridge.py", "c28_projection")
+    register_graph(tmp_path, "F", *(f"T{i:02d}" for i in range(1, 14)))
     identity = {"workspace_id": "bdw_fixture"}
     monkeypatch.setattr(module, "preflight", lambda root: {"version": "1.1.0", "workspace_identity": identity})
     issues: dict[str, dict] = {}

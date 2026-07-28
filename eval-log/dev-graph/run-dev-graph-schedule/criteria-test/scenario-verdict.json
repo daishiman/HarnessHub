@@ -7,7 +7,7 @@
     "skill_md_sha256": "8c6f7de616403cf3664b6332a66f082a6b6e903213c7de2254da06808c852641"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-parallel-safety-verifier-fresh-goal-evaluator-i07-20260725",
+  "reviewer": "fresh-goal-evaluator-mfh7-20260726",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C15-OUT1-positive-ready-set-r16",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260728T000712Z-mfh7-current/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260728T000712Z-mfh7-current/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260728T000712Z-mfh7-current/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260728T000712Z-mfh7-current/out/status.json"
       ],
-      "observed": "fresh live trial PASS。ready set の依存順序・schedule 結果・graph 不変・goal-seek を独立評価で確認した。"
+      "observed": "2026-07-26 再実走 (run 20260728T000712Z-mfh7-current, fresh claude session, 自走完走 nudge=0/gate=0, Skill ツール起動, --max-parallel 2, poll DONE 450s)。C28 bd-bridge.py の orphan external_ref 対応で behavior closure digest が変化したため受領書を取り直した。独立 fresh evaluator の判定 PASS: (1) Skill ツール呼出しで起動し、script 実行は全て起動後の SKILL.md pipeline 内。(2) goal-spec.original_goal が SKILL.md の正本 Goal と一致、hash=d0041ddebcc8144ed4c7a8f0f69d0ab279eed66f40807119d91a716b54e32ca6 を評価者が独立再計算して一致。(3) intermediate は Skill 起動前に 1 行目 Write、起動後に `cat >>` で 2 行目 append の append-only。(4) resource_scope 分離: batches=[[LT-SCHED-001,LT-SCHED-003],[LT-SCHED-002,LT-SCHED-006]] で src/alpha.py を共有する 001/002 が別 batch、conflict_pairs[0].kind=ready_pair。(5) blocked 除外: LT-SCHED-005 は depends_on=[LT-SCHED-001](status=active) により ready_set 不在で理由も報告。(6) lease: 004 は active lease(expires 2099) で ready_set から抑止・conflicts に出現、006 は stale lease(expires 2020) で reclaim され ready_set に出現。lease_source=git_common_dir。(7) max_parallel=2 遵守、suggested_branch 4 件が devgraph/<graph_node_id> 形式で重複なし。(8) read_only=true で graph_sha256/lease_sha256 が before==after、C17 verifier が独立再計算して一致。(9) progress checklist 7 件全て PASS・evidence 非 null。"
     },
     "OUT2": {
       "status": "PASS",

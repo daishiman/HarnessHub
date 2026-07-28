@@ -1,0 +1,46 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "--repo-root <contained-fixture-repo> --binding none --dry-run",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "OUT1 後半 (confirmed/pass/readiness complete への昇格後だけ起票対象になる) が未実証。produced node が全て draft/pending/incomplete のまま昇格されておらず、scenario fixture_contract が明文で禁じた vacuity (a candidate set that is empty only because every node is draft ... does not satisfy the contract) に該当する",
+      "decompose-audit.json:publication.readiness_probe は恒真。audit_decompose_live_trial.py:_publication_measurements が features[0] を deepcopy して confirmed/pass/incomplete を自ら代入した dict を判定するため、features 非空なら excluded_only_by_readiness が常に true。skill 側の publication gate は発火していない",
+      "decompose-audit.json:publication.draft_candidates は binding 別を称するが内包表記が binding を参照せず none/beads/github で同一集合。binding 別 0 件という証拠は 1 集合の 3 重掲載にすぎない"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "1909be59c1f0d9193f9524aa28c071052f23034e4d7e9840f0f65228eb6fae8e",
+  "transcript_sha256": "ade75b56b2cff3e08525f11bb3906cd6b49780d048c93826fd530ae531d13ed5",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 6.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 390.0
+  },
+  "scenario_id": "C14-OUT1-positive-macro-decomposition"
+}
