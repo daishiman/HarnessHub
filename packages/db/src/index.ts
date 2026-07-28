@@ -16,12 +16,17 @@
 export { applyDdlStatements, splitMigrationSql } from '../backup/ddl';
 export { createTursoClient, createTursoWebClient } from '../connection/turso';
 export {
+  type AiJobRow,
   type CoreRepositories,
   type CoreRepositoriesInput,
   createCoreRepositories,
+  createHearingIntakeRepository,
   type DeviceAuthorizationRow,
+  type HearingIntakeRepository,
+  type HearingSheetRow,
   type IdpConnectionRow,
   type PublisherTokenRow,
+  type TenantCoefficientRow,
   type TenantRow,
   type UserRow,
 } from '../repository/composition';

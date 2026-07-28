@@ -12,14 +12,14 @@ iteration: null
 title: "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+updated_at: "2026-07-28T23:37:46.185264Z"
 status: "active"
 depends_on: ["SYS-HEARING-INTAKE-P01"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
-resource_scope: ["docs/features/feat-hearing-intake/architecture-decision-record.md"]
+resource_scope: ["docs/features/feat-hearing-intake/architecture-decision-record.md","docs/features/feat-hearing-intake/architecture-review-and-validation.md"]
 purpose: "feat-hearing-intake の P02 を実行する: アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計"
 goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
-scope_in: ["docs/features/feat-hearing-intake/architecture-decision-record.md"]
+scope_in: ["docs/features/feat-hearing-intake/architecture-decision-record.md","docs/features/feat-hearing-intake/architecture-review-and-validation.md"]
 scope_out: ["published task spec の『スコープ外』節を正本とする"]
 acceptance: ["architecture-decision-record.md に HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer のカラム一覧、受付番号採番方式、AI キュー API 契約、共通 ai_jobs consumer contractと重複schema禁止の明記、S10-S12 の画面構成表が記載されている","現行feature context sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507のscope_in/acceptance全件をP02責務として追跡し、未割当0件である","Normative closure: feature固有 AiJob schema や kind=hearing を作らず、共通 ai_jobs の kind=sheet_generation を consumer として使う。POST /api/v1/sheets は server-side packages/estimation の sheetEstimate を実行し estimate snapshot を保存してから、同一transactionでsheet_generationをenqueueする。共通 package/boundary の実装ownerは feat-hub-foundationであり、hearingは公開contractを消費する。P1は後発metrics完了を前提にしない。 Evidence: kind=sheet_generation、shared queue consumer、sheetEstimate server execution、estimate snapshot、tenant/role、enqueue/complete round-trip の contract testsを必須とする。"]
 architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
