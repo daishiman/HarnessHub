@@ -13,7 +13,7 @@
     "src"
   ],
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "lint": "pnpm --workspace-root exec biome check packages/schemas",
     "check:drift": "vitest run src/contract-drift.test.ts",
@@ -23,6 +23,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.7",
     "typescript": "^5.7.0",
     "vitest": "^3.2.0"
   }

@@ -1,4 +1,4 @@
-"""`## テスト戦略` section 契約の構造・fail-closed 実効性・正本 parity (TS-A01..A15).
+"""`## テスト戦略` section 契約の構造・fail-closed 実効性・正本 parity (TS-A01..A16).
 
 対応 task: SYS-TASK-SPEC-TEST-STRATEGY-P05 / test 設計正本:
 `docs/features/feat-task-spec-test-strategy/test-plan.md` §3。
@@ -26,6 +26,13 @@ VALIDATOR = fx.VALIDATOR
 HANDOFF = fx.HANDOFF
 PLUGIN = fx.PLUGIN
 TEMPLATE = PLUGIN / "references" / "system-task-spec-template.md"
+PLAN_TEMPLATE = (
+    PLUGIN.parents[1]
+    / "plugin-plans"
+    / "system-dev-planner"
+    / "references"
+    / "system-task-spec-template.md"
+)
 # テスト戦略 section を必須化した契約版と、その直前版。段階適用は package の自己申告では
 # なく契約 version 台帳 (canonical digest -> version) が決めるため、テスト側も
 # 「台帳に登録されているか」で enforced / legacy を作り分ける。
@@ -275,6 +282,10 @@ class TestStrategySectionContractTests(unittest.TestCase):
 
 class TemplateAndParityTests(unittest.TestCase):
     """生成側正本と検証側定数の drift 検出 (finding F-1 の緩和策を含む)。"""
+
+    def test_plan_ssot_and_built_template_are_byte_identical(self):
+        """TS-A16: plan 正本と配布用 plugin copy の片側更新を拒否する。"""
+        self.assertEqual(PLAN_TEMPLATE.read_bytes(), TEMPLATE.read_bytes())
 
     def test_template_reference_declares_section_and_items(self):
         """TS-A12: 生成器が読むテンプレート正本に見出しと 4 ラベルが正順で存在する。
