@@ -11,6 +11,7 @@ core.hooksPath はリポジトリに 1 つしか設定できず、beads の .bea
 カバー:
 - 完全な配線 -> violation なし
 - 主経路 (.githooks) の欠落・実行権限欠落・ガード/委譲の結線漏れを個別に検知
+- 共有 bundle へコピーする tracked guard script の欠落を検知
 - 保険経路 (.beads/hooks) のガード呼び出し消失 (= beads 上書き) を検知
 - --check-local-config: core.hooksPath 未設定 / 別ディレクトリ指定を検知
 - 実リポジトリの配線が実際に通ること (契約テスト)
@@ -64,6 +65,13 @@ def _build_wiring(root: Path) -> Path:
             encoding="utf-8",
         )
         path.chmod(0o755)
+
+    scripts_root = root / "scripts"
+    scripts_root.mkdir()
+    for script in MOD.BUNDLE_SCRIPT_FILES:
+        (scripts_root / script).write_text(
+            f"#!/usr/bin/env python3\n# {script}\n", encoding="utf-8"
+        )
     return root
 
 
@@ -113,6 +121,17 @@ def test_detects_missing_lib(wired):
     (wired / ".githooks" / "lib" / "run-repo-guards.sh").unlink()
     violations = MOD.check_wiring(wired)
     assert any("run-repo-guards.sh" in v and "存在しません" in v for v in violations)
+
+
+def test_detects_missing_tracked_bundle_script(wired):
+    """install 済みコピーだけが残る状態を CI の tracked 配線検査で検知する。"""
+    (wired / "scripts" / "guard-worktree-desync.py").unlink()
+    violations = MOD.check_wiring(wired)
+    assert any(
+        "scripts/guard-worktree-desync.py" in v
+        and "tracked source" in v
+        for v in violations
+    )
 
 
 def test_detects_beads_overwrite_of_fallback_guard(wired):

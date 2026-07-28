@@ -138,6 +138,19 @@ def _check_beads_fallback(repo_root):
     return violations
 
 
+def _check_tracked_bundle_scripts(repo_root):
+    """共有 bundle へコピーする tracked guard 本体の欠落を検査する。"""
+    scripts_root = Path(repo_root) / "scripts"
+    violations = []
+    for script in BUNDLE_SCRIPT_FILES:
+        if not (scripts_root / script).is_file():
+            violations.append(
+                f"scripts/{script} が存在しません "
+                "(共有 hook bundle の tracked source)"
+            )
+    return violations
+
+
 def shared_hooks_root(repo_root):
     """全 worktree が共有する installed hook bundle の絶対パス。"""
     repo_root = Path(repo_root)
@@ -233,6 +246,7 @@ def check_wiring(repo_root, check_local_config=False):
     repo_root = Path(repo_root)
     violations = _check_hook_tree(repo_root / ".githooks", ".githooks")
     violations += _check_beads_fallback(repo_root)
+    violations += _check_tracked_bundle_scripts(repo_root)
 
     if check_local_config:
         installed_root = shared_hooks_root(repo_root)
