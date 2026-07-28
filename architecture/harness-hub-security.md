@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub security アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-23T04:45:00Z"
+updated_at: "2026-07-26T06:10:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"}
-source_lineage: {"imported_at":"2026-07-23T04:45:00Z","origin_kind":"system-spec-harness","source_digest":"06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-26T06:10:00Z","origin_kind":"system-spec-harness","source_digest":"8d4e9a33e32e01eccf27043108740c57ce58892c6d0de5c80a3eedbdfc3ec161","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.95}]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/security.md](../system-spec/security.md) (sha256: `cf1d1fbb63146f77…`)
-- [system-spec/auth.md](../system-spec/auth.md) (sha256: `8735c8860019ecb8…`)
+- [system-spec/security.md](../system-spec/security.md) (sha256: `8d4e9a33e32e01ec…`)
+- [system-spec/auth.md](../system-spec/auth.md) (sha256: `9ac779ad29ed2d86…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 取込日時: 2026-07-18T15:01:04Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-07-26T06:10:00Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -90,6 +90,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## Architecture decisions
 
 正本章 (system-spec/security.md, system-spec/auth.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**差分追記 (2026-07-26 / HarnessHub-b7ng)**:
+
+- Auth.js cookie と edge 認可は同じ SessionClaims JWT を使い、callback origin を設定値へ固定する。
+- device_code / refresh token の一回性と user_code 失敗計数を CAS で保証する。
+- session / access token の署名鍵を別 Secret に分け、binding 更新時は runtime を再構成する。
 
 ## Delivery, migration and rollback
 

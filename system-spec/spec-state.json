@@ -54,7 +54,7 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-060",
+        "qa_ref": "qa-086",
         "serves_goals": [
           "G1",
           "G2",
@@ -86,7 +86,7 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-072",
+        "qa_ref": "qa-074",
         "serves_goals": [
           "G2",
           "G4"
@@ -162,7 +162,7 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-061",
+        "qa_ref": "qa-075",
         "serves_goals": [
           "G4",
           "G5"
@@ -200,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-068",
+        "qa_ref": "qa-084",
         "serves_goals": [
           "G1",
           "G4",
@@ -239,7 +239,7 @@
     "backend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-059",
+        "qa_ref": "qa-082",
         "serves_goals": [
           "G1",
           "G2",
@@ -821,6 +821,41 @@
       "id": "qa-081",
       "question": "テスト戦略をタスク仕様書へ組み込み、何度実行しても同じ品質基準で再現する仕組みはどう実装しますか? (qa-079 の確定内容の章反映)",
       "answer": "qa-079 で確定したとおり、タスク仕様書の生成時にテスト戦略セクション (テストレベル選定・カバレッジ目標・層別方針・保守性制約) をテンプレート必須項目として組み込み、何度実行しても同じ品質基準のタスク仕様書が生成される冪等な仕組みとする。手作業の書き足しに依存せず、仕様生成パイプライン (system-dev-planner の task spec 必須 section 契約) 側で機械検証し、テスト戦略の欠落した仕様書を fail-closed で拒否する。カバレッジ基準は qa-077 で確定した 80% 以上の品質ゲートと失敗時の改善ループ (失敗分析→修正→再実行) を維持し、テストレベルの範囲は qa-076 で確定した 4 レベル網羅 (単体・結合・境界値・回帰) を前提とする。UI コンポーネント層の実装ツールは D8 (意思決定) で @testing-library/react + Vitest を正式採用した"
+    },
+    {
+      "id": "qa-074",
+      "question": "HarnessHub-b7ng の本番 Auth.js / AuthPorts 結線で確定した認証契約を auth.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映」を明示承認として、qa-072 までの auth.web 確定内容を全面維持し、次の実装追補を確定する。Auth endpoint は GET/POST /api/auth/{tenant_slug}/{action} とし、slug から当該 tenant の idp_connections だけを解決する。Auth.js の JWT encode/decode は SessionClaims の署名・検証へ委譲し、edge 認可と cookie が同じ 7 claims 契約を使う。callback origin は要求 Host ではなく AUTH_CANONICAL_ORIGIN へ固定する。JIT provisioning は同一 (tenant_id,idp_subject) の同時初回ログインを UNIQUE 制約後の再読込で 1 user へ収束させ、role=member/status=active 以外を IdP claims から与えない。Workers Secret は session と Publisher access token の blast radius を分離するため AUTH_SESSION_SECRET と AUTH_ACCESS_TOKEN_SECRET に分ける。"
+    },
+    {
+      "id": "qa-075",
+      "question": "HarnessHub-b7ng で確定した Device Flow / refresh token の並行更新契約を security.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-061 までの security.web 確定内容を全面維持し、次の実装追補を確定する。device authorization の approve/consume/失敗計数は status と attempts の組を条件にする compare-and-swap (CAS) とし、同じ device_code の token 発行成功は 1 本だけ、user_code の同時失敗は取りこぼさず 5 回で denied とする。refresh rotation は revoked_at IS NULL の CAS で旧枝を先に失効し、新しい枝は 1 本だけ作る。既に失効した refresh token の再提示では family 全体を一括失効して token.reuse_detected を記録する。一方、同時提示で CAS に負けただけの要求は invalid_grant とし、その瞬間に family 失効へ昇格しない。昇格すると勝者の新枝作成との競走で掃討漏れが生じるためであり、同じ旧 token の再提示時に再利用検知へ昇格する。認証 runtime は Worker binding/Secret の値変更を要求ごとに比較し、変更後も旧鍵・旧接続先を使い続けない。"
+    },
+    {
+      "id": "qa-082",
+      "question": "HarnessHub-b7ng の本番 adapter と API 結線を backend.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-059 までの backend.web 確定内容を全面維持し、次の実装追補を確定する。apps/hub の composition root は createDbAuthPorts、createDbAuditSink、createAuthjsHandler、DeviceFlowService を packages/db の CoreRepositories へ結線する。Auth.js 固有 import と型は lib/auth/adapter/ 内だけに閉じ、外部へは Web 標準の (Request)=>Promise<Response> を公開する。/api/v1/device/code・approve・token、/api/v1/token/refresh、/api/v1/tokens の本番経路は同じ AuthPorts を使い、in-memory adapter を production fallback にしない。必要な設定・OIDC 接続・client_secret・DB 接続が欠ける場合は既定 tenant/provider/secret へ落とさず fail-closed で停止する。"
+    },
+    {
+      "id": "qa-083",
+      "question": "HarnessHub-b7ng で確定した認証永続化スキーマと migration 契約を database.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-060 までの database.web 確定内容を全面維持し、次の実装追補を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書込みは guardedWrite を通し、ローカル libSQL の SQLITE_BUSY による未 commit 成功を防ぐ。残る repository write の全量掃き出しは別 Beads 課題で追跡する。"
+    },
+    {
+      "id": "qa-084",
+      "question": "HarnessHub-b7ng の production 認証に必要な Worker 変数・Secret と rollout 順序を infrastructure.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-068 までの infrastructure.web 確定内容を全面維持し、次の実装追補を確定する。production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、ログへ記録しない。rollout は DB backup と migration dry-run、本適用、認証 Secret/変数の存在確認、Worker deploy、2 tenant OIDC・Device Flow smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。"
+    },
+    {
+      "id": "qa-085",
+      "question": "HarnessHub-b7ng の最終レビューで確定した DB 書き込みゲートの実行環境別共有範囲を database.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 のスキーマ、migration、guardedWrite 契約を全面維持し、実行環境別の共有範囲を追補する。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。"
+    },
+    {
+      "id": "qa-086",
+      "question": "HarnessHub-b7ng の database.web 正本を、schema・migration・書き込みゲートの共有範囲を失わない単独で完結した契約としてどう確定するか。",
+      "answer": "ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 と qa-085 を統合した次の database.web 契約を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は Workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書き込みは guardedWrite を通す。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。残る repository write の全量掃き出しは HarnessHub-mb7c で追跡する。"
     }
   ],
   "approval_log": [
@@ -1454,6 +1489,48 @@
       "category": "testing-qa",
       "platform": "desktop-windows",
       "reason": "completeness evaluator (completeness-report-20260724-qa074.json) の medium 指摘: qa-079 (タスク仕様書へのテスト戦略の冪等組込) が qa_log に確定記録されているのに章へ描画されていない。qa-079 の内容を統合した qa-081 を本セルの確定質疑へ昇格させ、章反映するため再オープンする (qa-077 のカバレッジ基準は qa-081 の回答中で引用維持)",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng で Auth.js route、JWT bridge、canonical origin、JIT 同時実行契約、鍵分離が実結線され、実装から仕様への書き戻しが必要になった",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng の最終レビューで token 一回性と失敗回数の並行 CAS、refresh race の失効方針、Secret 更新時の runtime 再構成を実装契約として確定した",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng で 501 placeholder を実 Auth.js handler と DB-backed AuthPorts へ置換し、本番 composition contract が確定した",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng で AuthPorts を満たす列・テナント付き所属主キー・migration の token 再発行境界・競合ゲートが確定した",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng の本番結線で必要な Secret/変数名、migration と deploy の順序、既存 token 再認証が release contract になった",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng の最終レビューで、ローカル接続用の module-scope 書き込み待ち行列を Workers の要求間で共有し得る設計差分が判明し、実行環境別の共有範囲を正本へ明示する必要が生じた",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "qa-085 は qa-083 の維持を参照で表したため、compile 後の database.md 単独では schema と migration の詳細が展開されない。情報を落とさない自己完結した契約へ統合する",
       "from": "確定"
     }
   ],

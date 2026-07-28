@@ -174,6 +174,17 @@ export interface InMemoryDeviceAuthorizations extends DeviceAuthorizationPort {
 export function createInMemoryDeviceAuthorizations(): InMemoryDeviceAuthorizations {
   const records: DeviceAuthorizationRecord[] = [];
 
+  /**
+   * tenantId まで一致させる。id だけで引くと隣テナントの行を書き換えられる穴になる。
+   * index ではなく行そのものを返すのは、`noUncheckedIndexedAccess` の下で
+   * 「見つかった」ことを型に伝えるため (index を返すと後段が毎回 undefined 検査になる)。
+   */
+  const locate = (tenantId: string, id: string): { index: number; record: DeviceAuthorizationRecord } | null => {
+    const index = records.findIndex((r) => r.tenantId === tenantId && r.id === id);
+    const record = records[index];
+    return index < 0 || record === undefined ? null : { index, record };
+  };
+
   return {
     all: () => [...records],
     rawById: (id) => records.find((record) => record.id === id) ?? null,
@@ -186,10 +197,27 @@ export function createInMemoryDeviceAuthorizations(): InMemoryDeviceAuthorizatio
     async findByUserCode(tenantId, userCode) {
       return records.find((r) => r.tenantId === tenantId && r.userCode === userCode) ?? null;
     },
-    async save(record) {
-      const index = records.findIndex((r) => r.id === record.id);
-      if (index < 0) throw new Error(`unknown device authorization: ${record.id}`);
-      records[index] = record;
+    async savePollProgress(progress) {
+      const found = locate(progress.tenantId, progress.id);
+      if (found === null) throw new Error(`unknown device authorization: ${progress.id}`);
+      records[found.index] = {
+        ...found.record,
+        lastPolledAtSeconds: progress.lastPolledAtSeconds,
+        intervalSeconds: progress.intervalSeconds,
+      };
+    },
+    /**
+     * 本番 (SQLite の `UPDATE ... WHERE status = ?`) と同じ判定をここでも行う。
+     * 「保存済みの status を読み直して比較する」ことが CAS の意味なので、
+     * 引数の `next.status` ではなく **記録側の現在値**と `expectedStatus` を比べる。
+     */
+    async compareAndSwapStatus({ expectedStatus, expectedAttempts, next }) {
+      const found = locate(next.tenantId, next.id);
+      if (found === null) return false;
+      if (found.record.status !== expectedStatus) return false;
+      if (found.record.attempts !== expectedAttempts) return false;
+      records[found.index] = next;
+      return true;
     },
   };
 }
@@ -225,10 +253,28 @@ export function createInMemoryPublisherTokens(): InMemoryPublisherTokens {
     async listByWorkspaceId(tenantId, workspaceId) {
       return records.filter((r) => r.tenantId === tenantId && r.workspaceId === workspaceId);
     },
-    async save(record) {
-      const index = records.findIndex((r) => r.id === record.id);
-      if (index < 0) throw new Error(`unknown publisher token: ${record.id}`);
-      records[index] = record;
+    /** 本番の `UPDATE ... WHERE revoked_at IS NULL` と同じ判定。未失効の 1 本だけが true を得る。 */
+    async revokeIfActive({ tenantId, id, revokedAtSeconds, lastUsedAtSeconds }) {
+      const index = records.findIndex((r) => r.tenantId === tenantId && r.id === id);
+      const current = records[index];
+      if (current === undefined) return false;
+      if (current.revokedAtSeconds !== null) return false;
+      records[index] = {
+        ...current,
+        revokedAtSeconds,
+        lastUsedAtSeconds: lastUsedAtSeconds ?? current.lastUsedAtSeconds,
+      };
+      return true;
+    },
+    async revokeFamily({ tenantId, familyId, revokedAtSeconds }) {
+      let revoked = 0;
+      for (const [index, record] of records.entries()) {
+        if (record.tenantId !== tenantId || record.familyId !== familyId) continue;
+        if (record.revokedAtSeconds !== null) continue;
+        records[index] = { ...record, revokedAtSeconds };
+        revoked += 1;
+      }
+      return revoked;
     },
   };
 }

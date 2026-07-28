@@ -1,6 +1,30 @@
 // packages/db の公開 API。**境界と型のみ**を公開し、テーブル定義 (スキーマ実体) は持たない。
 // スキーマ実体は feat-domain-model-db の責務 (architecture-decision-record.md §3 / §9)。
+//
+// repository / connection の実体も **ここから**取る。`@harness-hub/db/repository` のような
+// subpath 直参照は `scripts/ci/check-shared-layer-duplicates.mjs` が「境界迂回 (deep import)」として落とす
+// (公開 API の集計入口を index 1 枚に固定するための規則)。
+//
+// repository は leaf module (`../repository/users` 等) を直接 re-export せず、
+// `../repository/composition` の facade だけを出す。理由はその file の冒頭コメントにある
+// (leaf を辿らせると値域 enum まで公開 API になり、zod 単一ソースと二重定義になる)。
 
+// DDL 適用ヘルパ。空 DB へ canonical migration を流す経路 (restore drill / 統合テストの足場) を
+// **driver に触らせずに**提供するために公開する。consumer が自前で sqlite を開くと
+// packages/db/scripts/check-connection-layer-isolation.ts が落ちる — それが正しい設計の表明なので、
+// 迂回させるのではなく必要な能力をここから出す。
+export { applyDdlStatements, splitMigrationSql } from '../backup/ddl';
+export { createTursoClient, createTursoWebClient } from '../connection/turso';
+export {
+  type CoreRepositories,
+  type CoreRepositoriesInput,
+  createCoreRepositories,
+  type DeviceAuthorizationRow,
+  type IdpConnectionRow,
+  type PublisherTokenRow,
+  type TenantRow,
+  type UserRow,
+} from '../repository/composition';
 export {
   assertSupportedDriver,
   DATABASE_DRIVERS,
@@ -9,6 +33,7 @@ export {
   isDatabaseDriver,
   isTransactionalAdapter,
   type TransactionalAdapter,
+  type WriteConcurrencyScope,
 } from './adapter';
 export { createRepositoryContext, type RepositoryContextInput } from './context';
 export type { DrizzleSchema, QueryFilter } from './drizzle';

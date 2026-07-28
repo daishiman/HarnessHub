@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-sync"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "290c3ba6c4e70c558b68db3ce8c84712ce5fd15ca1118c6570cda2990d776538",
+  "transcript_sha256": "5d71820602900bc98c2d702ecc3275d126e61cd3b5fe57565f9e0eafcff21e31",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 33.0,
+    "poll_exit": "0",
+    "wall_clock_s": 388.0
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero"
+}

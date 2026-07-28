@@ -384,6 +384,25 @@ def check_pkg_005(plugin_dir: Path) -> list[dict]:
     return findings
 
 
+def is_import_only_support_module(path: Path) -> bool:
+    """単体起動の入口を持たない import 専用 module か。
+
+    500 行分割規約に従うと hooks/ と scripts/ に「実行されない .py」が生まれる。
+    PKG-006 (hook 登録) と PKG-007 (shebang/+x) はどちらも「配下のファイルは全て
+    起動対象」を前提にしていたため、分割のたびに偽陽性を出していた。命名規則だけを
+    許容条件にすると実 entry point の宣言漏れを素通りさせるので、構造で判定する。
+    """
+    if path.suffix != ".py":
+        return False
+    # verb-hyphen 名 (build-repo-config.py) は import 不能 = 起動されるしかない
+    if not path.stem.isidentifier():
+        return False
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    if text.startswith("#!"):
+        return False
+    return not any(line.startswith("if __name__") for line in text.splitlines())
+
+
 def check_pkg_006(plugin_dir: Path) -> list[dict]:
     findings: list[dict] = []
     hooks_dir = plugin_dir / "hooks"
@@ -449,12 +468,15 @@ def check_pkg_006(plugin_dir: Path) -> list[dict]:
                             register_hook_name(cmd)
     idx = 1
     for hook in actual_hooks:
-        if hook.name not in registered and hook.stem not in registered:
-            findings.append(make_finding(
-                "PKG-006", idx, str(hook),
-                "hook ファイル実体は存在するが settings 断片の hooks 配列に未登録",
-                suggested_fix=f"settings/*.json の hooks 配列に {hook.name} を追加"))
-            idx += 1
+        if hook.name in registered or hook.stem in registered:
+            continue
+        if is_import_only_support_module(hook):
+            continue
+        findings.append(make_finding(
+            "PKG-006", idx, str(hook),
+            "hook ファイル実体は存在するが settings 断片の hooks 配列に未登録",
+            suggested_fix=f"settings/*.json の hooks 配列に {hook.name} を追加"))
+        idx += 1
     return findings
 
 
@@ -468,6 +490,8 @@ def check_pkg_007(plugin_dir: Path) -> list[dict]:
         if not sc.is_file():
             continue
         if sc.suffix not in {".py", ".sh"}:
+            continue
+        if is_import_only_support_module(sc):
             continue
         text_head = sc.read_text(errors="ignore")[:200] if sc.suffix in {".py", ".sh"} else ""
         if sc.suffix in {".py", ".sh"} and not text_head.startswith("#!"):

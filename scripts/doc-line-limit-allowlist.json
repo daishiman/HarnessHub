@@ -4,11 +4,6 @@
   "line_limit": 300,
   "allowlist": [
     {
-      "path": "docs/security-spec.md",
-      "baseline_line_count": 910,
-      "reason": "qa-070 remediation baseline (2026-07-22 実測)。縮小のみ許す。"
-    },
-    {
       "path": "docs/backend-spec.md",
       "baseline_line_count": 434,
       "reason": "qa-070 remediation baseline (2026-07-22 実測)。縮小のみ許す。"

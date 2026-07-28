@@ -1,0 +1,86 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "Skill ツールの実起動 (trial 有効性の前提)",
+      "observed": "transcript f5fc8380-f57d-47e4-9140-d8fe5fad6e06.jsonl 行49 / 2026-07-25T22:43:05.070Z に tool_use Skill {\"skill\": \"dev-graph:run-dev-graph-status\", \"args\": \"--repo-root .../live-trial-fixtures/status-wt6\"} が1件存在。行51 で SKILL.md 本文が skill 経由で注入されている。Task/Agent への委譲は transcript 全体で0件。Bash 13件の内訳は ls×3 / cat×1 / python3(hash計算) / resolve-repo-context.py / shasum×2 / validate-graph-schema.py / status-graph.py / cat>>(append) / goal-seek検証 / mkdir で、script 直叩きは Skill 起動 (22:43:05) より後の手順実行としてのみ出現",
+      "verdict": "PASS"
+    },
+    {
+      "name": "LT-TASK-001 の field-by-field 一致 (graph.json 実値 vs skill 出力)",
+      "observed": "graph.json 実値: status=\"active\", closed_at=null, depends_on=[], file_path=\"tasks/lt-task-001.md\", project_id=\"live-trial-fixture\", domain=\"documentation\", tags=[\"live-trial\",\"fixture\"], parent_feature=null, feature_package_id=null, tracker_binding=\"none\", beads_linkage=null, issue_linkage=null, title=\"live-trial fixture の基点タスク\"。skill 出力 (execution.json results[0] および transcript 行82 の status-graph.py stdout) : status=\"active\", closed_at=null, depends_on=[], file_path=\"tasks/lt-task-001.md\", project_id=\"live-trial-fixture\", domain=\"documentation\", tags=[\"live-trial\",\"fixture\"], parent_feature=null, feature_package_id=null, tracker_binding=\"none\", beads_linkage=null, issue_linkage=null, title=\"live-trial fixture の基点タスク\"。13 field すべて同値",
+      "verdict": "PASS"
+    },
+    {
+      "name": "LT-TASK-002 の field-by-field 一致 (graph.json 実値 vs skill 出力)",
+      "observed": "graph.json 実値: status=\"active\", closed_at=null, depends_on=[\"LT-TASK-001\"], file_path=\"tasks/lt-task-002.md\", project_id=\"live-trial-fixture\", domain=\"documentation\", tags=[\"live-trial\",\"fixture\"], parent_feature=null, feature_package_id=null, tracker_binding=\"none\", beads_linkage=null, issue_linkage=null, title=\"LT-TASK-001 に依存する後続タスク\"。skill 出力 results[1]: status=\"active\", closed_at=null, depends_on=[\"LT-TASK-001\"], file_path=\"tasks/lt-task-002.md\", project_id=\"live-trial-fixture\", domain=\"documentation\", tags=[\"live-trial\",\"fixture\"], parent_feature=null, feature_package_id=null, tracker_binding=\"none\", beads_linkage=null, issue_linkage=null, title=\"LT-TASK-001 に依存する後続タスク\"。13 field すべて同値",
+      "verdict": "PASS"
+    },
+    {
+      "name": "dependents (逆辺) の独立再導出",
+      "observed": "graph.json に dependents field は存在せず depends_on からの導出値。評価者が再計算: LT-TASK-002.depends_on=[\"LT-TASK-001\"] より dependents(LT-TASK-001)=[\"LT-TASK-002\"]、LT-TASK-001 を depends_on に持つ他 node は無いので dependents(LT-TASK-002)=[]。skill 出力は results[0].dependents=[\"LT-TASK-002\"], results[1].dependents=[] で一致",
+      "verdict": "PASS"
+    },
+    {
+      "name": "依存の向き (先行=ready / 後続=blocked) の独立再計算",
+      "observed": "評価者が graph.json から再計算: LT-TASK-001 は depends_on=[] のため ready。LT-TASK-002 は depends_on=[\"LT-TASK-001\"] かつ LT-TASK-001.status=\"active\" (closed/tombstone でない) のため blocked by LT-TASK-001。被験の報告 (transcript 行94 末尾): 「LT-TASK-001: depends_on=[] → ready (no blockers)」「LT-TASK-002: depends_on=[LT-TASK-001] → blocked by predecessor」。向き・主語ともに一致",
+      "verdict": "PASS"
+    },
+    {
+      "name": "ready/blocked ラベルの出所 (skill 構造化出力には無い)",
+      "observed": "status-graph.py の JSON (execution.json / transcript 行82) には ready・blocked を表す key が存在しない (results の key は artifact_kind, beads_linkage, closed_at, dependents, depends_on, domain, execution_contexts, feature_package_id, file_path, graph_node_id, issue_linkage, parent_feature, project_id, status, tags, title, tracker_binding の 17 個)。SKILL.md の Output Contract も ready/blocked を出力 field に挙げていない。task.md が要求する ready/blocked 表明は被験の text 報告 (行94) で depends_on から導出して行われたもので、その導出結果自体は評価者の再計算と一致する",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "read-only 性 (fixture の git 状態)",
+      "observed": "git -C status-wt6 status --short → 「?? eval-log/」の1行のみ。git log --oneline → 「3d22f2f chore(fixture): initialize dev-graph live-trial fixture」の1コミットのみ (skill 実行前の resolve-repo-context receipt が報告した head_sha 3d22f2fd4f7bb48bbbfaf5614b07e6696ea6afc9 と同一)。tracked 11 file (.dev-graph/config.json, .dev-graph/state/graph.json, tasks/lt-task-001.md, tasks/lt-task-002.md, .gitkeep×7) に差分なし: git diff HEAD --stat は空、git rev-parse HEAD:.dev-graph/state/graph.json = git hash-object .dev-graph/state/graph.json = 351935f8515159d8396b55b6600f69d0efdba912。transcript の Write/Edit は4件のみで宛先は fixture の eval-log/ 配下3件と trial out/status.json の1件、Edit/MultiEdit は0件。gh・git add/commit/push は0件",
+      "verdict": "PASS"
+    },
+    {
+      "name": "実行前後 digest の同一性と評価者による事後再計算",
+      "observed": "skill 自身の報告: graph_sha256_before = graph_sha256_after = 120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d、authority_sha256_before = authority_sha256_after = 2f4c14bc41974e203ef2a3df61e7a7e1b90bcefd9ce8447b9e57f5f5d0eac5fa。transcript 行73 (実行前 shasum) と行93 (実行後 shasum) がともに 120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d。評価者が現時点で再計算した graph.json の sha256 も 120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d で一致 (config.json の単体 sha256 は 213d03e52bf56b281bb495fb247d14d5edf90a6266186f68e6afc9100e8d1d57 で、authority digest は config 単体でなく合成値と解される)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "goal-seek 3 点セットの存在と intermediate 必須6キー・hash 照合",
+      "observed": "fixture eval-log/ に run-dev-graph-status-goal-spec.json (465B) / -progress.json (2131B) / -intermediate.jsonl (1421B) の3点が存在 (加えて status-graph.py が出力した -execution.json)。intermediate 2行とも必須6キー (original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal) を過不足なく保持 (余剰キー0)。評価者が goal-spec の original_goal を UTF-8 SHA-256 で再計算 → 24dc23d4cf800a092b7f9970a465ab921b4cdf5d20b95ce2a1fd212884b45b5c、記録値および intermediate 2行の値と完全一致。さらに SKILL.md の 「### ゴール (Goal)」本文と goal-spec.original_goal の文字列一致を確認 (True)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "intermediate の append-only 性と時系列",
+      "observed": "1行目: Write ツールで 22:42:57.674Z に新規作成 (Skill 起動 22:43:05.070Z より前)。2行目: 22:44:55.630Z に Bash の `cat >> ...intermediate.jsonl <<'EOF'` で追記 (status-graph.py 実行 22:43:49 / 事後 shasum 22:44:21 より後)。当該ファイルへの Edit/Update/再 Write は transcript 上0件。1行目の内容は「skill起動前」snapshot、2行目は実行結果 snapshot で、記録順と実行順が一致",
+      "verdict": "PASS"
+    },
+    {
+      "name": "真空合格の点検: closed_at の比較対象が全て null",
+      "observed": "fixture の node は2件のみで statuses=['active','active']、closed_at=[None, None]。したがって OUT1 の closed_at 一致検証は null==null の照合しか行われておらず、closed 済み node / tombstone 状態の表示正当性 (非 null の closed_at を正しく転記するか、tombstone を隠さないか) はこの scenario では一切試されていない。graph-node には tombstone 名の field 自体が存在せず、closed 系の被覆は completion_evidence.status=\"open\" のみ",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "真空合格の点検: filter が全て null の無条件クエリ",
+      "observed": "execution.json の filters は {id:null, kind:null, project:null, domain:null, status:null, tags:[], tag_match:\"all\", keyword:null} で、count=2 は graph 全 node。OUT1 の「検索」側 (AND 結合・tag match mode・keyword 絞り込みの正当性) は実質未試験で、確認できたのは「状態表示」側の転記一致のみ。artifact_kind も task の1種のみで kind filter の分岐は未被覆",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "真空合格の点検: 『該当なしが空 result の成功として返る』checklist の自己付与",
+      "observed": "progress.json の当該 checklist item は status=\"PASS\"、evidence=\"該当あり (count=2) のため空 result テスト不要。ok=true で成功応答\"。transcript 上、空 result を生む filter 付きクエリは1度も実行されていない (status-graph.py 起動は 22:43:49 の1回のみ)。すなわち未実行のまま PASS が付与されている。これは skill 側 goal-seek checklist の運用上の緩みであり、OUT1 の正本文言 (報告値と graph 実状態の一致) の判定材料ではない",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "真空合格の点検: GitHub state 不変が自明成立",
+      "observed": "fixture の全 node は github_publication.mode=\"local_only\", project_aliases=[], github_project_linkages=[], pull_request_linkages=[], tracker_binding=\"none\", beads_linkage=null, issue_linkage=null。`git remote -v` は origin の URL が空で実体の push 先が無い。したがって「GitHub state を変更しない」は変更しうる対象が空集合であるため自明に成立しており、GitHub 呼び出し抑止の能動的検証にはなっていない (transcript 上 gh コマンド0件という事実のみ確認済み)",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "判定範囲外 (OUT2) の未検証事項",
+      "observed": "OUT2 (共有 graph lock の全処理保持 / pending WAL 検査 / eval-log root・target の symlink escape 事前拒否) は verify_by: test であり live-trial の担当外のため本評価では検証していない。被験の progress.json は当該 checklist を PASS とし evidence を \"status-graph.py read_only=true, ok=true; eval-log 以外への書込みなし\" としているが、これは lock・WAL・symlink の直接検証ではない。OUT1 の判定には用いていない",
+      "verdict": "DISCLOSURE"
+    },
+    {
+      "name": "軽微: goal-spec の created_at が実行時刻と不整合",
+      "observed": "goal-spec.json の created_at=\"2026-07-26T00:30:00Z\" に対し、実際の goal-spec Write は 2026-07-25T22:42:48.763Z、status-graph.py の executed_at は 2026-07-25T22:43:52.868846Z。created_at が実行より約1時間47分後の未来時刻を指しており JST/UTC の取り違えと推定される。criteria が要求する field ではなく、hash 照合・append 順序の判定には影響しない",
+      "verdict": "DISCLOSURE"
+    }
+  ]
+}

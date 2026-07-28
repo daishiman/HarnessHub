@@ -8,8 +8,6 @@
 
 import type {
   AccessTokenClaims,
-  DeviceCodeResponse,
-  DeviceErrorResponse,
   PublisherTokenScope,
   SessionRole,
   TokenResponse,
@@ -17,51 +15,20 @@ import type {
 } from '@harness-hub/schemas';
 import { publisherTokenScopeSchema } from '@harness-hub/schemas';
 
-import type { AuditLogger } from '../../../shared/audit/index.js';
 import { AUTH_NUMERIC_CONTRACT } from '../config.js';
 import { sha256Hex, signJwt } from '../jwt.js';
-import type { AuthPorts, PublisherTokenRecord } from '../ports.js';
-import { generateOpaqueToken, generateUserCode, type RandomBytes, systemRandomBytes } from './codes.js';
+import type { PublisherTokenRecord } from '../ports.js';
+import { generateOpaqueToken, generateUserCode, systemRandomBytes } from './codes.js';
+import type { ApproveRejection, ApproveResult, DeviceFlowDeps, DeviceFlowService } from './contracts.js';
 
-export interface DeviceFlowDeps {
-  readonly ports: AuthPorts;
-  /** 監査は共通層 (src/shared/audit) の単一実装に載せる。ここで独自に記録経路を作らない。 */
-  readonly audit: AuditLogger;
-  /** access token の署名鍵。session とは別鍵にできるよう独立して受け取る。 */
-  readonly accessTokenSecret: string;
-  /** 利用者が user_code を入力する画面の URL。 */
-  readonly verificationUri: string;
-  readonly randomBytes?: RandomBytes;
-  readonly newId?: () => string;
-}
-
-export type DeviceFlowResult<T> =
-  | { readonly ok: true; readonly value: T }
-  | { readonly ok: false; readonly error: DeviceErrorResponse };
-
-export type ApproveRejection = 'not_found' | 'expired' | 'denied' | 'already_used';
-
-export type ApproveResult =
-  | { readonly ok: true; readonly deviceLabel: string | null }
-  | { readonly ok: false; readonly reason: ApproveRejection };
-
-export interface DeviceFlowService {
-  requestCode(input: {
-    tenantId: string;
-    scope: readonly string[];
-    deviceLabel: string | null;
-  }): Promise<DeviceCodeResponse>;
-  approve(input: { tenantId: string; userCode: string; userId: string; workspaceId: string }): Promise<ApproveResult>;
-  exchangeToken(input: { tenantId: string; deviceCode: string }): Promise<DeviceFlowResult<TokenResponse>>;
-  refresh(input: { tenantId: string; refreshToken: string }): Promise<DeviceFlowResult<TokenResponse>>;
-  revokeToken(input: {
-    tenantId: string;
-    tokenId: string;
-    actorUserId: string;
-  }): Promise<{ readonly revokedCount: number } | null>;
-  listTokensForUser(input: { tenantId: string; userId: string }): Promise<readonly TokenSummary[]>;
-  listTokensForWorkspace(input: { tenantId: string; workspaceId: string }): Promise<readonly TokenSummary[]>;
-}
+// 既存の直接 import を壊さない互換 export。新規の公開入口は device-flow/index.ts。
+export type {
+  ApproveRejection,
+  ApproveResult,
+  DeviceFlowDeps,
+  DeviceFlowResult,
+  DeviceFlowService,
+} from './contracts.js';
 
 export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService {
   const randomBytes = deps.randomBytes ?? systemRandomBytes;
@@ -162,7 +129,8 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
     },
 
     async approve(input) {
-      const record = await deviceAuthorizations.findByUserCode(input.tenantId, normalizeUserCode(input.userCode));
+      const normalizedUserCode = normalizeUserCode(input.userCode);
+      const record = await deviceAuthorizations.findByUserCode(input.tenantId, normalizedUserCode);
       // 存在しない user_code はどの authorization にも帰属できないので試行回数を数えない。
       // 全 pending へ数えると、攻撃者が他人の認可を潰せる DoS になる。
       // 総当たり自体は security-spec §7.2 の rate limit (5/分) が担う (本 feature は所有しない)
@@ -179,14 +147,30 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
        * 上の `record === null` による絞り込みが閉包の中まで届かない (TS18047)。
        */
       const countFailure = async (reason: ApproveRejection): Promise<ApproveResult> => {
-        const attempts = record.attempts + 1;
-        const exhausted = attempts >= AUTH_NUMERIC_CONTRACT.userCodeMaxAttempts;
-        await deviceAuthorizations.save({
-          ...record,
-          attempts,
-          status: exhausted ? 'denied' : record.status,
-        });
-        return { ok: false, reason: exhausted ? 'denied' : reason };
+        let current = record;
+        for (;;) {
+          // 上限へ達した後の追加要求で attempts を 6, 7… と増やさない。
+          // 「5 回で denied」が永続化契約なので、denied は終端としてそのまま返す。
+          if (current.status === 'denied' || current.attempts >= AUTH_NUMERIC_CONTRACT.userCodeMaxAttempts) {
+            return { ok: false, reason: 'denied' };
+          }
+          const attempts = current.attempts + 1;
+          const exhausted = attempts >= AUTH_NUMERIC_CONTRACT.userCodeMaxAttempts;
+          // status と attempts の組を CAS する。status だけだと、同時に失敗した要求が全て
+          // attempts=1 を書いて成功し、総当たり回数を過少計数してしまう。
+          const counted = await deviceAuthorizations.compareAndSwapStatus({
+            expectedStatus: current.status,
+            expectedAttempts: current.attempts,
+            next: { ...current, attempts, status: exhausted ? 'denied' : current.status },
+          });
+          if (counted) return { ok: false, reason: exhausted ? 'denied' : reason };
+
+          // CAS に負けたのは別要求が先に計数・遷移したため。最新行で残りの 1 回を数え直す。
+          // 行が消える設計ではないが、外部 DB 操作を推測で補完しないため null は not_found に倒す。
+          const latest = await deviceAuthorizations.findByUserCode(input.tenantId, normalizedUserCode);
+          if (latest === null) return { ok: false, reason: 'not_found' };
+          current = latest;
+        }
       };
 
       if (record.expiresAtSeconds <= now) return { ok: false, reason: 'expired' };
@@ -194,12 +178,18 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
       // 承認済み / 交換済みの user_code は再利用させない (照合後即失効)
       if (record.status !== 'pending') return countFailure('already_used');
 
-      await deviceAuthorizations.save({
-        ...record,
-        status: 'approved',
-        approvedByUserId: input.userId,
-        workspaceId: input.workspaceId,
+      // pending のままなら承認する。負けた側は「既に承認済み」— 監査も出さずに弾く
+      const approved = await deviceAuthorizations.compareAndSwapStatus({
+        expectedStatus: 'pending',
+        expectedAttempts: record.attempts,
+        next: {
+          ...record,
+          status: 'approved',
+          approvedByUserId: input.userId,
+          workspaceId: input.workspaceId,
+        },
       });
+      if (!approved) return { ok: false, reason: 'already_used' };
 
       await deps.audit.record({
         actorSubject: input.userId,
@@ -226,8 +216,9 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
 
       // polling が速すぎる場合は間隔を広げて突き返す。RFC 8628 §3.5 の slow_down
       if (record.lastPolledAtSeconds !== null && now - record.lastPolledAtSeconds < record.intervalSeconds) {
-        await deviceAuthorizations.save({
-          ...record,
+        await deviceAuthorizations.savePollProgress({
+          tenantId: record.tenantId,
+          id: record.id,
           lastPolledAtSeconds: now,
           intervalSeconds: nextPollIntervalSeconds(record.intervalSeconds),
         });
@@ -236,8 +227,9 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
 
       // ここへ来たのは interval を守った polling。罰を 1 段だけ戻す (下の `relaxedPollIntervalSeconds`)
       if (record.status === 'pending') {
-        await deviceAuthorizations.save({
-          ...record,
+        await deviceAuthorizations.savePollProgress({
+          tenantId: record.tenantId,
+          id: record.id,
           lastPolledAtSeconds: now,
           intervalSeconds: relaxedPollIntervalSeconds(record.intervalSeconds),
         });
@@ -255,7 +247,21 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
         return { ok: false, error: { error: 'access_denied' } };
       }
 
-      await deviceAuthorizations.save({ ...record, status: 'consumed', lastPolledAtSeconds: now });
+      /**
+       * device_code の使い捨てを確定させる 1 点。
+       *
+       * `approved` のままだったときだけ `consumed` へ遷移する。同じ device_code を並行に
+       * 提示された場合、この CAS で true を得るのは 1 本だけなので token pair の発行も 1 回で終わる。
+       * ここを read→save にすると、両方が「approved を読んだ」状態から書き込むため
+       * **同じ認可から 2 組の token が出る** (RFC 8628 §3.5 の使い捨て要件が壊れる)。
+       */
+      const consumed = await deviceAuthorizations.compareAndSwapStatus({
+        expectedStatus: 'approved',
+        expectedAttempts: record.attempts,
+        next: { ...record, status: 'consumed', lastPolledAtSeconds: now },
+      });
+      // 負けた側は「既に交換済み」。expired ではないので invalid_grant を返す
+      if (!consumed) return { ok: false, error: { error: 'invalid_grant' } };
 
       const token = await issueTokenPair({
         tenantId: input.tenantId,
@@ -290,12 +296,15 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
       // 失効済みの refresh token が提示された = 窃取された枝が使われた。
       // rotation だけでは窃取を検知できない。family 全体を落として初めて意味を持つ
       if (record.revokedAtSeconds !== null) {
+        // 影響範囲 (family 全体の枝数) は監査に残す値。失効操作の前に読む
         const family = await publisherTokens.listByFamilyId(input.tenantId, record.familyId);
-        for (const sibling of family) {
-          if (sibling.revokedAtSeconds === null) {
-            await publisherTokens.save({ ...sibling, revokedAtSeconds: now });
-          }
-        }
+        // 1 操作で family 全体を落とす。1 本ずつ read→save すると、途中で落ちた時に
+        // 「一部だけ生きている family」が残り、窃取された枝が生き延びうる
+        const revokedCount = await publisherTokens.revokeFamily({
+          tenantId: input.tenantId,
+          familyId: record.familyId,
+          revokedAtSeconds: now,
+        });
         await deps.audit.record({
           actorSubject: record.userId,
           tenantId: input.tenantId,
@@ -303,7 +312,13 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
           action: 'token.reuse_detected',
           resourceType: 'token',
           resourceId: record.id,
-          metadata: { family_id: record.familyId, revoked_family_size: family.length },
+          metadata: {
+            family_id: record.familyId,
+            // 影響を受けた枝の総数 (既に失効していたものも含む) = 侵害の広さ
+            revoked_family_size: family.length,
+            // この検知で新たに止めた本数。差 (family_size - revoked_count) が既失効の枝数
+            revoked_count: revokedCount,
+          },
         });
         return { ok: false, error: { error: 'invalid_grant' } };
       }
@@ -313,9 +328,55 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
       const user = await users.findById(input.tenantId, record.userId);
       if (user === null || user.status !== 'active') return { ok: false, error: { error: 'access_denied' } };
 
-      // 旧 refresh を先に失効させてから新しい枝を作る。順序を逆にすると
-      // 途中で落ちたときに「両方生きている」状態が残る
-      await publisherTokens.save({ ...record, revokedAtSeconds: now, lastUsedAtSeconds: now });
+      /**
+       * rotation の直列化点。
+       *
+       * 旧 refresh を**先に**失効させてから新しい枝を作る (順序を逆にすると、途中で落ちた時に
+       * 「両方生きている」状態が残る)。さらにその失効を CAS にしてあるので、同じ refresh token を
+       * 並行に提示されても true を得るのは 1 本だけ = **新しい枝も 1 本だけ**生まれる。
+       */
+      const rotated = await publisherTokens.revokeIfActive({
+        tenantId: input.tenantId,
+        id: record.id,
+        revokedAtSeconds: now,
+        lastUsedAtSeconds: now,
+      });
+      if (!rotated) {
+        /**
+         * CAS に負けた側。**この 1 本だけ拒否し、family へは波及させない** (HarnessHub-b7ng で確定)。
+         *
+         * ここを通るのは「同じ refresh token を出した並行要求のうち、失効させられなかった側」。
+         * 直前の `record.revokedAtSeconds !== null` 検査は通っている = 読んだ時点では生きていた。
+         * つまり窃取の再利用と client の同時多重送信が**同じ形で現れる**分岐で、上の再利用検知
+         * (`revokedAtSeconds !== null`) と違い「失効済みを提示した」証拠が無い。
+         *
+         * **どちらの分岐に落ちるかは interleaving で決まる。** 負けた側の *読み* が勝者の CAS
+         * より後なら上の再利用検知に落ち、先ならここに落ちる。単一プロセス
+         * (ローカル file backend + guardedWrite) の実測では前者。Workers は isolate が複数で
+         * プロセス内の待ち行列を共有しないため、**本番では両者が生きた枝を読んでここに落ちる**。
+         * だからこの分岐の方針が本番の挙動そのものになる。
+         *
+         * **family 全失効へ escalate しない理由。** ここから `revokeFamily` を撃つと勝者の
+         * `issueTokenPair` (= 新しい枝の `create`) と競走する。掃討はその時点で存在する行しか
+         * 落とせないので、勝者の枝が後に生まれれば生き残る。実測でこれが起きている:
+         * 上の再利用検知が撃った監査は `revoked_family_size: 1 / revoked_count: 0` で、
+         * **掃討時点で勝者の枝がまだ無い** = 掃討後に生まれた枝は取り逃す。つまり escalate は
+         * 「たいてい family が死ぬが時々勝者だけ生き残る」タイミング依存にしかならない
+         * (決定論にするには family 単位の墓標が要り、schema 追加を伴う別設計)。加えて CLI が
+         * 並行に refresh するたび利用者がログアウトするので、可用性の代償が恒常的になる。
+         *
+         * **検知が失われない根拠。** 負けた側が読んだ枝は勝者が既に失効させている。よって同じ
+         * refresh token を次に提示すれば上の再利用検知に落ち family が失効する。窃取の検知は
+         * **遅れるだけで消えない** (tests の「並行提示で拒否された refresh token の再提示は
+         * 再利用検知へ昇格する」が証拠)。
+         *
+         * **残る穴。** client が invalid_grant で古い token を捨て再提示しない場合、この窓で
+         * 起きた窃取は観測されない。塞ぐには「並行提示されたこと自体」を残す監査 action
+         * (`token.refresh_race`) が要るが、action 語彙の正本は docs/backend-spec.md で
+         * b7ng の resource_scope 外。HarnessHub-v22l が持つ。
+         */
+        return { ok: false, error: { error: 'invalid_grant' } };
+      }
 
       const token = await issueTokenPair({
         tenantId: input.tenantId,
@@ -335,14 +396,11 @@ export function createDeviceFlowService(deps: DeviceFlowDeps): DeviceFlowService
       if (record === null) return null;
 
       const now = clock.nowSeconds();
-      const family = await publisherTokens.listByFamilyId(input.tenantId, record.familyId);
-      let revokedCount = 0;
-      for (const sibling of family) {
-        if (sibling.revokedAtSeconds === null) {
-          await publisherTokens.save({ ...sibling, revokedAtSeconds: now });
-          revokedCount += 1;
-        }
-      }
+      const revokedCount = await publisherTokens.revokeFamily({
+        tenantId: input.tenantId,
+        familyId: record.familyId,
+        revokedAtSeconds: now,
+      });
 
       await deps.audit.record({
         actorSubject: input.actorUserId,

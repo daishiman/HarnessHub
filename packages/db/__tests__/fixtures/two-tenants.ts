@@ -1,5 +1,5 @@
 // 2 テナント完全 fixture (DMDB-T03/T06/T12 / security-spec §8.4)。
-// tenant A / B の双方で 18 テーブル全てに行を作る。seed は必ずリポジトリ層経由で行い、
+// tenant A / B の双方で 19 テーブル全てに行を作る。seed は必ずリポジトリ層経由で行い、
 // 「全エンティティの CRUD が接続層越しに動作する」ことを fixture 構築自体が検証する。
 // 新テーブル追加時にこの fixture が未追随なら tenant-isolation.test.ts が fail する (スキーマ駆動)。
 
@@ -15,6 +15,7 @@ import { createPackagesRepo } from '../../repository/packages';
 import { createReleasesRepo } from '../../repository/releases';
 import { createTenantsRepo } from '../../repository/tenants';
 import { createUsersRepo } from '../../repository/users';
+import { createUserWorkspacesRepo } from '../../repository/workspaces';
 import { catalogEntries, deploymentReferences, projects } from '../../schema/core/catalog';
 import { userSettings, workspaces } from '../../schema/core/identity';
 import { deviceAuthorizations, publisherTokens, publishRequests } from '../../schema/core/publish';
@@ -71,6 +72,10 @@ async function seedTenant(
   });
 
   await adapter.client.insert(userSettings).values({ userId: user.id });
+
+  // 所属 (user_workspaces) を作る。これが無いと apps/hub の authz は全 Workspace を拒否に倒す。
+  const userWorkspacesRepo = createUserWorkspacesRepo(adapter);
+  await userWorkspacesRepo.add(context, { userId: user.id, workspaceId });
 
   const projectsRepo = createScopedCrud(adapter, projects);
   const project = await projectsRepo.insert(context, {
@@ -144,6 +149,7 @@ async function seedTenant(
 
   const tokensRepo = createScopedCrud(adapter, publisherTokens);
   await tokensRepo.insert(context, {
+    workspaceId,
     userId: user.id,
     deviceName: `dev-machine-${slug}`,
     refreshTokenHash: await sha256Hex(`refresh-${slug}`),
@@ -159,8 +165,13 @@ async function seedTenant(
     deviceCodeHash: await sha256Hex(`device-${slug}`),
     userCode: `USER-${slug.toUpperCase()}`,
     userId: user.id,
+    workspaceId,
+    scopesJson: '["publish:write"]',
+    deviceName: `dev-machine-${slug}`,
     status: 'approved',
+    attempts: 0,
     intervalSec: 5,
+    lastPolledAt: null,
     expiresAt: Date.now() + 600_000,
   });
 

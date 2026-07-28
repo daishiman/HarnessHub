@@ -40,7 +40,8 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 > QC-4 / QC-5 の「未達を解消する条件」(下記各節) を満たす結線が完了している。
 > ただし本記録は P10 時点の独立レビュー結果であり、判定の再評価は QC-4 / QC-5 の
 > 解消追記を根拠に P09 差し戻し (`HarnessHub-1f28` closed) の解除として扱う。
-> (2) は未解消のまま `HarnessHub-b7ng` が引き受ける。
+> **解消追記 (2026-07-26)**: (2) も `HarnessHub-b7ng` で解消した。`@auth/core`、session claims bridge、
+> dynamic tenant route、本番 DB `AuthPorts`、CAS 永続化を結線し、現行証跡を仕様反映受領書へ記録した。
 
 ---
 
@@ -56,7 +57,7 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 | OIDC 検証契約 (issuer/aud 不一致・nonce/state 欠落・PKCE 未使用の拒否) | ✅ | `T-OIDC-01`〜`T-OIDC-18` 26 ケース pass (P06 §2) |
 | テナント間の sub 混線防止 | ✅ | `(tenantId, idpSubject)` の複合キー。別テナントの同値 sub と混線しない |
 | JIT provisioning の role 固定 | ✅ | `UserDirectoryPort.createFromOidc` が **role = member 固定**で作る契約。IdP の claim で role が動かない |
-| Auth.js 実装との実結線 | ⏳ **未実施** | `next-auth` 未導入、`/api/auth` は 501、本番 runtime も未結線 (`HarnessHub-b7ng`) |
+| Auth.js 実装との実結線 | ✅ **解消 (2026-07-26)** | `@auth/core`・`/api/auth/{tenant_slug}/{action}`・session bridge・本番 DB runtime (`HarnessHub-b7ng`) |
 
 **独立レビューの所見**: 「動的解決」の**判断ロジックと検証契約**は実装され、テストで証明されている。
 不足しているのは Auth.js ライブラリとの物理的な結線のみで、これは QC-4 (D3 caveat) が
@@ -267,3 +268,15 @@ test-design.md §`T-SESS-05` の文言は次回改訂時に実装へ追随させ
 どちらも follow-up として起票し、P11 evidence-summary.md / P13 release-record.md に引き継ぐ。
 
 → P11 の証跡集約は実施できるが、P10 は follow-up 完了後に再レビューする。
+
+## 2026-07-26 本番結線の最終再レビュー
+
+`HarnessHub-b7ng` で Auth.js・本番 DB ports・CAS 永続化を結線した後、branch 全差分を
+Cloudflare Workers の要求分離と stream 処理の観点で再レビューした。
+未認証 Auth.js POST の全量メモリ化と、DB write の module-scope Promise を要求間で
+共有し得る 2 点を検出し、いずれも commit 前に修正した。
+
+- Request body は buffer 化せず、正規 origin へ stream のまま引き継ぐ。
+- DB adapter は `process-local` / `request-bound` を型で明示し、ローカルだけを直列化する。
+- system-spec は `qa-086` で自己完結した契約へ再確定し、反映受領書へ判断と検証を追記した。
+- Draft PR の default branch merge と lifecycle reconciliation だけを残し、実装上の blocker は 0 件と判定する。

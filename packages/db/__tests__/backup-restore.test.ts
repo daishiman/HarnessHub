@@ -178,13 +178,13 @@ describe('P13 production migration / smoke CLI', () => {
     const dbPath = join(workDir, 'p13-migration.db');
     const url = `file:${dbPath}`;
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 1, applied: 0, pending: 1 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 2, applied: 0, pending: 2 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 1 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 2 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 1, appliedAfter: 1 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 2, appliedAfter: 2 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);

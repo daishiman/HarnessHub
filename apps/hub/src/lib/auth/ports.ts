@@ -3,10 +3,18 @@
  *
  * ここに宣言するのは **port (要求する形)** であって、テーブル定義ではない。
  * `users` / `session_revocations` / `device_authorizations` / `publisher_tokens` / `idp_connections` の
- * スキーマ owner は feat-domain-model-db であり、本 feature は `packages/db/schema/` を一切変更しない。
+ * スキーマ owner は feat-domain-model-db である。HarnessHub-b7ng で owner と合意し、
+ * ここで要求している列 (device_authorizations の scope/device_name/attempts/last_polled_at/workspace_id、
+ * publisher_tokens の workspace_id、利用者の Workspace 所属) を `packages/db/schema/` 側へ追加した。
+ * **port が先、スキーマが後**であり、逆 (テーブルの形に合わせて port を歪める) はしない。
  *
  * 全メソッドが第 1 引数にテナントスコープを要求する。
  * テナントを受け取らない問い合わせを 1 つでも作ると、そこが row-level-scope (D4) の穴になる。
+ *
+ * **状態遷移は必ず compare-and-swap (CAS = 期待した現在値と一致したときだけ更新) を通す。**
+ * 「読む → 判定する → 全置換で書く」を許す port にすると、同じ device_code / refresh token を
+ * 並行に提示された時に両方が通り、token が複製される。そのため遷移用メソッドは真偽値を返し、
+ * 遷移できなかった側 (= 競合に負けた側) を呼び出し側が識別できる形にしてある。
  */
 
 import type { PublisherTokenScope, SessionRole, UserStatus } from '@harness-hub/schemas';
@@ -107,12 +115,40 @@ export interface DeviceAuthorizationRecord {
   readonly workspaceId: string | null;
 }
 
+/** polling 進行の書き戻し。**status を含められない形**にしてあるのが要点 (下の解説を参照)。 */
+export interface DevicePollProgress {
+  readonly tenantId: string;
+  readonly id: string;
+  readonly lastPolledAtSeconds: number;
+  readonly intervalSeconds: number;
+}
+
 export interface DeviceAuthorizationPort {
   create(record: DeviceAuthorizationRecord): Promise<void>;
   findByDeviceCodeHash(tenantId: string, deviceCodeHash: string): Promise<DeviceAuthorizationRecord | null>;
   findByUserCode(tenantId: string, userCode: string): Promise<DeviceAuthorizationRecord | null>;
-  /** 全体差し替え。部分更新にすると「どの列を書き忘れたか」が呼び出し側に散る。 */
-  save(record: DeviceAuthorizationRecord): Promise<void>;
+  /**
+   * polling の進行だけを書き戻す。
+   *
+   * **あえて record 全置換の `save` を持たせていない。** 全置換を残すと、遷移 (status の書き換え) が
+   * CAS を通らずここから漏れる。この引数型では status を渡す手段が無いので、
+   * 「うっかり非原子的に遷移させる」経路が型レベルで消える。
+   * 競合しても後書きが残るだけで認可の可否は変わらないため、こちらは CAS にしない。
+   */
+  savePollProgress(progress: DevicePollProgress): Promise<void>;
+  /**
+   * 現在の status が `expectedStatus` と一致するときだけ `next` へ差し替える CAS。
+   * 遷移できたら true、既に別の要求が遷移させていたら false。
+   *
+   * 並行要求のうち **true を得るのは 1 本だけ**であることが device_code 使い捨ての保証になる。
+   * `attempts` の増加もここを通す — 上限到達で `denied` へ落ちる = 遷移だから。
+   */
+  compareAndSwapStatus(input: {
+    readonly expectedStatus: DeviceAuthorizationStatus;
+    /** 失敗回数も同時更新されるため、読み取った値から変わっていないことを CAS 条件へ含める。 */
+    readonly expectedAttempts: number;
+    readonly next: DeviceAuthorizationRecord;
+  }): Promise<boolean>;
 }
 
 // ---------------------------------------------------------------------------
@@ -147,7 +183,29 @@ export interface PublisherTokenPort {
   /** 利用者の token 一覧。workspaceId を渡すと Workspace で絞る (管理者の一覧用)。 */
   listByUserId(tenantId: string, userId: string): Promise<readonly PublisherTokenRecord[]>;
   listByWorkspaceId(tenantId: string, workspaceId: string): Promise<readonly PublisherTokenRecord[]>;
-  save(record: PublisherTokenRecord): Promise<void>;
+  /**
+   * **まだ失効していないときだけ**失効させる CAS。失効させられたら true。
+   *
+   * refresh token の「1 回しか使えない」を DB の条件で保証する要点。同じ refresh token を
+   * 並行に提示されても true を得るのは 1 本だけなので、新しい枝も 1 本しか生まれない。
+   * ここも `save` (全置換) を持たせない — 全置換を残すと `revokedAtSeconds` の書き込みが
+   * 「読んで null を確認してから書く」形に戻せてしまう。
+   */
+  revokeIfActive(input: {
+    readonly tenantId: string;
+    readonly id: string;
+    readonly revokedAtSeconds: number;
+    readonly lastUsedAtSeconds?: number;
+  }): Promise<boolean>;
+  /**
+   * family 単位の一括失効 (再利用検知 / 利用者による失効)。
+   * **実際に失効させた本数**を返す (既に失効していた枝は数えない)。冪等に呼べる。
+   */
+  revokeFamily(input: {
+    readonly tenantId: string;
+    readonly familyId: string;
+    readonly revokedAtSeconds: number;
+  }): Promise<number>;
 }
 
 /** 本 feature が要求する port 一式。実装 (本番 / in-memory) はこの形で注入する。 */
