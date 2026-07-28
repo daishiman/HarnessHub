@@ -25,10 +25,17 @@
 - event keyは`repository_id:event:session_id:tool_use_id:head_sha`。git common dir配下のdev-graph event ledgerとatomic lockで重複・再入を抑止する。
 - async hookは状態判定を返さない。TaskCompletedは当該`graph_node_id`のlease transitionだけを行い、無関係なClaude taskは常にno-opとする。PR open検知後はC26/C27が`pending_merge`へ進め、merge後だけdurable doneへ進める。
 
+## C10 PreToolUse の遮断時間契約
+
+- graph authority (`.dev-graph/state/`、`.dev-graph/config.json`、`graph-node.schema.json`) への直接書込み、Beads/GitHub bridge 迂回、content root への破壊操作は `guard-graph-schema.py` の `static_denial` で判定する。遮断対象の判定経路では subprocess、graph 全件 schema 検査、network I/O を起動しない。
+- repository context 検査は静的遮断を通過した入力にだけ実行する。PreToolUse timeout が「遮断すべき操作を許可する fail-open 窓」にならない順序を不変条件とする。
+- shell redirect は quote 外の演算子とその宛先だけを評価する。遮断例を引用した notes 等の散文は redirect とみなさず、tokenize 不能な入力だけ安全側 fallback を使う。
+- `.dev-graph/config.json` の正規 writer は `scripts/build-repo-config.py`、初期 `.dev-graph/state/graph.json` の正規 writer は `scripts/build-graph-store.py`。init は各 receipt を検証し、直接 Write/Edit/Bash redirect/`Path.write_text()` へ退避しない。node 登録後の graph 変更は C02 `upsert-node.py` に限定する。
+- シェル書込み先解析は `hooks/guard_graph_commands.py` に分離し、hook entrypoint は input 正規化・静的遮断・context 検査の順序だけを所有する。
+
 ## 公式仕様参照
 
 - https://code.claude.com/docs/en/hooks
 - https://code.claude.com/docs/en/hooks-guide
 - https://code.claude.com/docs/en/configuration
 - https://code.claude.com/docs/en/debug-your-config
-

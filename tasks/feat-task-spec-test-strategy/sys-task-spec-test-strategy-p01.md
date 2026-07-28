@@ -12,7 +12,7 @@ iteration: null
 title: "要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-25T00:47:22.619662Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-25T14:18:00Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-24T21:59:18Z","missing_sections":[],"status":"complete"}
 ---
 

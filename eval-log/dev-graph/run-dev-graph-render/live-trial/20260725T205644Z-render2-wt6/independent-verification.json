@@ -1,0 +1,72 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "render-metadata.registration が非 null で実在 receipt を指す",
+      "expected": "registration != null、path が実在する registration receipt",
+      "observed": "HTML 内 <script type=\"application/json\" id=\"render-metadata\"> = {\"registration\":{\"applied_count\":13,\"expected_count\":13,\"parent_feature\":\"LT-FEATURE-001\",\"path\":\"system-plan/LT-FEATURE-001/dev-graph-registration-receipt.json\",\"source_digest\":\"sha256:d23642a89399...\"},\"scope\":\"LT-FEATURE-001\"}。path 先 <fixture>/system-plan/LT-FEATURE-001/dev-graph-registration-receipt.json は実在 (46 行, schema_version 1.0.0, operation=registered)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "表示総数 Y が receipt の applied_count / expected_count と一致",
+      "expected": "HTML 表示 Y == receipt.applied_count == receipt.expected_count",
+      "observed": "HTML の SVG <text> から抽出した表示文字列 = 'active · feature · 4/13' → Y=13。receipt 本体を読んだ値 applied_count=13, expected_count=13。graph-data inline JSON の progress = {\"done\":4,\"total\":13}。3 者一致",
+      "verdict": "PASS"
+    },
+    {
+      "name": "真空合格の排除: 分母一致が照合の結果であること (否定テスト)",
+      "expected": "receipt を改竄すると renderer が書込みを拒否する",
+      "observed": "scratchpad 複製上で 3 パターンの改竄 receipt を投入。(1) applied/expected=12 → exit=1 'rendered feature progress count does not match registration receipt'、出力 HTML 未生成。(2) source_digest 1 文字改竄 → exit=1 'rendered nodes do not match registration receipt source_digest'、未生成。(3) node_ids 1 件差替 (件数は 13 維持) → exit=1 'rendered feature children do not match registration receipt node_ids'、未生成。registration 非 null は render-graph-html.py:102-124 の 7 検査を全通過した場合のみ到達するため、13/13 の一致は照合実行の結果",
+      "verdict": "PASS"
+    },
+    {
+      "name": "HTML が renderer 出力の忠実な成果物 (手書き偽装でない)",
+      "expected": "同一引数の再実行で fixture HTML と byte 一致",
+      "observed": "fixture を scratchpad に複製し --scope LT-FEATURE-001 --registration-receipt <上記 receipt> で再実行。fixture 実成果物 sha256=1641428f6038581eba22 / 私の再現 sha256=1641428f6038581eba22 で byte 完全一致。再実行 receipt は nodes=14, edges=12, feature_progress.by_feature.LT-FEATURE-001={done:4,total:13}, registration 非 null, self_contained=true",
+      "verdict": "PASS"
+    },
+    {
+      "name": "receipt の source_digest が HTML 内に出現",
+      "expected": "出現件数 >= 1",
+      "observed": "grep -o 'd23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807' → 1 件。HTML 中の sha256 パターン全件も同一 digest 1 件のみ (render-metadata 内)。先頭 12 文字 = d23642a89399",
+      "verdict": "PASS"
+    },
+    {
+      "name": "表示対象 (描画された 13 子 task) が receipt の source_digest に対応",
+      "expected": "描画対象の全 child node の source_lineage.source_digest == receipt.source_digest (sha256: prefix 除去)",
+      "observed": "graph.json から独立算出: parent_feature=LT-FEATURE-001 の child node 13 件、その source_lineage.source_digest のユニーク集合 = {d23642a89399...} (size=1)、receipt.source_digest の prefix 除去値と完全一致。render-graph-html.py:121-122 が同一検査を実施",
+      "verdict": "PASS"
+    },
+    {
+      "name": "receipt の graph_digest_after が実 graph と一致 (stale 検査の作動)",
+      "expected": "receipt.graph_digest_after == sha256(canonical graph.json)",
+      "observed": "自分で再計算した canonical digest (sort_keys, separators=(',',':'), UTF-8) = sha256:4430031097eea98c63aa 、receipt.graph_digest_after = sha256:4430031097eea98c63aa で一致。render-graph-html.py:123-124 が不一致時に 'registration receipt graph digest is stale' で停止",
+      "verdict": "PASS"
+    },
+    {
+      "name": "追加ランタイム依存 0 (外部 CDN / script src / link)",
+      "expected": "外部参照 0 件",
+      "observed": "grep -o -i で '<script src=' / '<link ' / 'http://' / 'https://' / 'cdn' / '@import' / 'src=' を検索 → いずれも 0 件。含まれるのは inline のみ: <style> 1 件、<svg> 1 件、<script> 3 件 (application/json 2 + inline JS 1、いずれも src 属性なし)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "SVG グラフが描画可能な形で存在",
+      "expected": "SVG が browser でパース可能で node と X/Y が描画テキストとして存在",
+      "observed": "HTML から <svg>...</svg> を抽出し xml.etree で parse 成功 (well-formed)。<g class=\"node\"> 14 件 (feature 1 + task 13)、<text> 42 件、X/Y を含む描画テキストは 'active · feature · 4/13' の 1 件。scope 動作も確認: graph 全 15 node のうち 14 を描画し LT-ARCH-001 のみ scope 外で除外。※実ブラウザ (headless Chrome, DNS 遮断) での描画も試みたがこの sandbox 内で Chrome が起動せずハングしたため証拠には採用せず、静的 XML パースと外部参照 grep で代替",
+      "verdict": "PASS"
+    },
+    {
+      "name": "goal_seek 3 点セットの存在と intermediate の必須 6 キー",
+      "expected": "goal-spec / progress / intermediate.jsonl が存在、intermediate 各行が 6 キーを持ち hash 整合",
+      "observed": "<fixture>/eval-log/ に 3 ファイル存在 (goal-spec 345B, progress 1422B, intermediate 1274B)。intermediate は 2 行、両行が {original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal} を完備、original_goal は goal-spec と一致、original_goal_hash は sha256(original_goal)=1c3829684b15a6a2... と一致 (SKILL.md:116-127 の検証スクリプト相当を実行し assert 全通過)。progress は CL1-CL5 全て pass, loop_count=1, status=complete",
+      "verdict": "PASS"
+    },
+    {
+      "name": "参考 (OUT1 では不要): done 数 X の独立再計算との一致",
+      "expected": "OUT1 は X 一致を求めない",
+      "observed": "表示 X=4。graph.json から独立再計算した child status 分布 = {done:4, active:1, blocked:1, draft:7} で done+closed=4、表示と一致。※SKILL.md:133 は「receipt を伴う状態の X は常に 0」と記述するが本 fixture は X=4 かつ graph_digest_after 整合で render 成立しており、この記述は実態と乖離 (OUT1 判定には無影響)",
+      "verdict": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "OUT1 の changes=0 記録先の特定",
+      "expected": "SKILL.md 74-76 行 (feedback_contract OUT1 / verify_by: live-trial) と 204 行 criteria:OUT1 が指す 'changes=0' は sync-graph.py の report JSON のフィールドで記録される",
+      "observed": "plugins/dev-graph/scripts/sync-graph.py:901 で changes = len(imports)+len(exports)+len(tombstones)、:910 で converged = imports/exports/conflicts/pending_retry すべて空かつ failed なし。report top keys = [applied, changes, conflicts, converged, executed_at, exports, graph_sha256_before/after, imports, mode, ok, parity_manifest, pending_retry, remote_sha256_before/after, snapshot_sha256_before/after, tombstones, write_count]",
+      "verdict": "PASS"
+    },
+    {
+      "name": "2 回分 (実際は 3 pass) の同期記録が実在するか",
+      "expected": "1 回目 (dry-run/apply) と 2 回目 (検証 dry-run) の同期実行記録が transcript と fixture 最終状態の双方に実在する",
+      "observed": "trial transcript pane.txt に sync-graph.py の 3 回の Bash 実行が実在: 99 行 pass1 dry-run changes=2 / 109-115 行 pass2 --apply (--parity-manifest 付き) 1 import + 1 export / 117-124 行 pass3 検証 dry-run changes=0 converged=true。fixture 最終状態も apply 後の値に一致 (remote.json Status=In Progress @2026-07-25T21:02:22.122721Z、tasks/LT-TASK-001.md title に (updated remotely r7)、field_snapshot.status=In Progress)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "真空合格 (vacuous pass) の否定 — 1 回目の変更件数 > 0",
+      "expected": "1 回目 sync の imports/exports が 0 件でないこと (0 件なら冪等性を何も検証していない)",
+      "observed": "自分で base commit 27cfad1 の状態に戻した複製で再実行し pass1 changes=2 を実測。内訳 imports=[{node: LT-TASK-001, field: title, from: 'Validate isolated live trial', to: 'Validate isolated live trial (updated remotely r7)'}]、exports=[{node: LT-TASK-001, kind: project-field-update, alias: planning, project_field: Status, value: 'In Progress', option_id: OPT_InProgress001}]。base commit 側の diff も裏付け (local title は接尾辞なし、field_snapshot.status=Backlog、remote Status=Backlog/OPT_Backlog001)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "独立再現 1 — 最終状態の複製に対する 3 回目 sync",
+      "expected": "同一状態の再同期で changes=0 / converged=true / 外部 write 0",
+      "observed": "fixture を cp -a で scratchpad へ複製し python3 sync-graph.py --repo-root <copy> --remote-state <copy>/.dev-graph/remote.json --dry-run --no-eval-log を実行 → exit=0, ok=true, mode=dry-run, changes=0, converged=true, imports=0, exports=0, conflicts=0, tombstones=0, pending_retry=0, write_count=0",
+      "verdict": "PASS"
+    },
+    {
+      "name": "独立再現 2 — base commit からの 3 pass 完全再走",
+      "expected": "pass1 changes>0 → pass2 apply → pass3 changes=0 converged=true、graph digest が pass2→pass3 で不変",
+      "observed": "別複製を git checkout -- . で base commit へ戻して 3 pass 実行。pass1: ok=true changes=2 converged=false write_count=0 / pass2 (--apply): ok=true changes=2 write_count=3 graph 7860c610→aa009fe5 / pass3: ok=true changes=0 converged=true write_count=0 graph aa009fe5→aa009fe5 (before=after)。pending_retry/conflicts は 3 pass すべて 0",
+      "verdict": "PASS"
+    },
+    {
+      "name": "stable IDs / snapshot 不変の自己申告の独立検証",
+      "expected": "progress.json が主張する graph/snapshot/remote の before=after digest が fixture 実ファイルの実測値と一致",
+      "observed": "shasum -a 256 による独立計測: graph.json=309f152b3c5cab905f55fc7bc49ffc97cd68b4e5132ca0c1e7c95abcc0684b14, sync-snapshot.json=ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f, remote.json=bb10bb17e22f0ed1331f138ef0d64ac103eacfdc6334a6c1d2723dd589efe6cc。progress.json の 3 値と完全一致し、私の 3 回目 dry-run の *_before/_after も同値。item_id=PVTI_lADOFixture001 / issue id=I_kwDOFixture001 も不変",
+      "verdict": "PASS"
+    },
+    {
+      "name": "goal_seek 3 点セットの存在と中身",
+      "expected": "goal-spec.json / progress.json / intermediate.jsonl が fixture の eval-log/ に存在し、intermediate は必須 6 キーを持つ",
+      "observed": "3 ファイルすべて実在。intermediate.jsonl は 2 行、両行が {original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal} の 6 キーを保持。original_goal から自分で計算した SHA-256 = ab2f296e0c39c58a4ea7f3a58096f702728aa38be198eaff465ce9d5970b8c43 が記録値と一致。progress.json は checklist 3 件 (first-sync-applies / second-sync-zero / stable-ids) すべて status=pass で evidence 付き",
+      "verdict": "PASS"
+    },
+    {
+      "name": "intermediate の append-only 時系列",
+      "expected": "1 行目は skill 実行前に作成、2 行目は実行後に append (後からまとめ書き・既存行の書換えなし)",
+      "observed": "transcript 45 行で Write 1 lines (1 行目のみ) → 53 行 Skill(dev-graph:run-dev-graph-sync) → 99/109/117 行 で 3 pass → 135 行で printf '%s\\n' による 2 行目の追記。1 行目に対する Edit / 全体上書きは transcript 上に存在しない",
+      "verdict": "PASS"
+    },
+    {
+      "name": "被験 skill の起動経路 (script 直叩き代替でないこと)",
+      "expected": "Skill ツールで dev-graph:run-dev-graph-sync が起動され、その後に skill 本文が指示する script 実行が続く",
+      "observed": "pane.txt 53 行に Skill(dev-graph:run-dev-graph-sync) が実在し、sync-graph.py の実行 (64 行以降) はすべてその後。先行していたのは task.md が明示的に許可した goal-seek 配線の Write/Bash のみ",
+      "verdict": "PASS"
+    },
+    {
+      "name": "parity manifest の鮮度 (C28 stale でないこと)",
+      "expected": "apply 後に再生成された parity-manifest の source_graph_digest が最終 graph から導出した値と一致し、stale 検出を無効化する手書き改変がない",
+      "observed": "fixture の eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json は generated_at 2026-07-25T21:02:23Z / nodes=[] / source_graph_digest=sha256:a59db507775bab6635a7997207afb0ef81bcdb8cc16cfa7d3fe881431fa71235。複製上で build-parity-manifest.py を再実行すると source_graph_digest=sha256:a59db507... / node_count=0 と完全一致 (nodes=[] は LT-TASK-001 が tracker_binding=github で beads 投影対象外のため)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "外部副作用ゼロ (dry-run / fixture adapter)",
+      "expected": "dry-run の write_count=0、apply も fixture adapter 経由で実 GitHub を書き換えない",
+      "observed": "dry-run 3 回すべて write_count=0。sync-graph.py:790-795 で --remote-state 指定時は _fixture_apply 経由となり実 GitHub mutation は発生しない。trial の apply は write_count=3 で書込先は fixture 内 graph.json / sync-snapshot.json / remote.json + task md のみ。fixture repo は未 commit の working tree 変更のみで git log は初期 commit 1 件のまま",
+      "verdict": "PASS"
+    }
+  ]
+}

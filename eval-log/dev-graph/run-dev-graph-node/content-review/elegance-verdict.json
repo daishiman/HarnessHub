@@ -2,30 +2,43 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-node",
-    "skill_md_sha256": "5a2cf162d207756e8b7f82c03b31f95fd0d9d82a7d53636bdc42f5c8c8d44a10"
+    "skill_md_sha256": "3749ff518403e2b48d02aeb7f3dd5aa3567331426db1850de75d3ab5db994bd1"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "independent-content-reviewer-20260723",
-  "reviewed_at": "2026-07-23",
-  "iterations": 1,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
+  "reviewer": "independent-content-reviewer-content_review_74hx",
+  "reviewed_at": "2026-07-26T01:56:58Z",
+  "iterations": 2,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
+    "criteria_evaluated": [
+      "IN1",
+      "OUT1",
+      "OUT2",
+      "OUT3"
+    ],
     "positive_feedback": [
-      "C1 矛盾なし: 追加文『単発の node 操作 1 件だけを依頼された場合でも、この配線成果物 (goal-spec / progress / intermediate) の書き出しは省略しない』は、### ゴールシーク検証 の検査 (assert rows で intermediate.jsonl 非空を強制) が従来から前提としていた「常時書き出し」を本文側で明文化するもので、検証スクリプトと本文記述の潜在的乖離を解消する方向に働く。『--dry-run は local/external write 0』(Exact-13 節) は graph node 書込みへの限定保証 (dry-run receipt 自体はファイル出力される) であり、eval-log telemetry の書き出しとは書込みクラスが別で矛盾しない。",
-      "C2 漏れなし: 追加文の括弧書き (goal-spec / progress / intermediate) が同節で定義される 3 つの配線成果物パスと過不足なく一致し、live-trial 実測で観測された履行ばらつき (単発依頼時の書き出し省略) の抜け穴を対象成果物の全列挙で閉じている。IN1+OUT1..OUT3 の 4 criteria は全て ## Criteria acceptance に受入条件化され、通常5 artifact routing・kind別必須セクション (C18/C19)・exact-13 異常系 (12/14/欠落重複/mixed/cross-feature edge→applied_count=0)・WAL/共有lock 回復を網羅する。",
-      "C4 依存整合: script_refs 5件 (resolve-repo-context/validate-graph-schema/upsert-node/node_transaction/register-package)・schema_refs 2件・reference_refs 3件・prompts R0-R4 の全参照ファイルが実在することを確認。goal_seek.max_loops=5 と『5周到達時』、feedback_contract.max_iterations=3 と『最大 3 周』の数値も frontmatter と本文で一致する。"
+      "C1 矛盾なし: 正常 frontmatter 時の本文優先順位と実装の分岐が一致する。壊れた frontmatter では --regenerate-body を復旧認可として要求し、既存 artifact は regenerated、新規 artifact は template とする実装にも一致する。",
+      "C2 漏れなし: body_source 5値、replaced_body_lines、本文保持、破損時の fail-closed、Beads/none の各 local-only 完了経路まで説明されている。",
+      "C3 規約整合: argument-hint、用語、C02/C28 authority、文書 status と実行状態の分離が既存規約と整合する。",
+      "C4 依存整合: upsert-node.py、register-package.py、bd-bridge.py、lint-open-residue.py を含む全参照が実在し、実装・schema・テスト間の依存関係に破断がない。",
+      "破壊的操作を明示フラグへ限定し、receipt で本文由来と損失量を観測可能にする構造は再利用可能な良設計である。"
     ],
     "negative_feedback": [
-      "非ブロッキング: 追加文中の intermediate は同 bullet でなく 2 つ後の bullet で定義される前方参照だが、括弧書きの全列挙により誤読リスクは低い。",
-      "非ブロッキング: 単発依頼時の書き出し履行が実際に改善するかは behavioral claim であり、本静的レビューでは設計 adequacy のみ確認した。収束確認は Gate D (run-skill-live-trial) の再実走証拠による。"
+      "未解決の設計上の問題はない。静的レビューは実データ移行や live-trial の代替ではないため、それらの実行証拠は別ゲートで保持する必要がある。"
     ],
-    "iteration": 1,
+    "iteration": 2,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "live-trial でゴールシーク配線成果物の書き出し履行が実行個体でばらつく (3回中1回のみ完備) 実測を受け、単発 node 操作でも省略不可の 1 文を配線節へ追加した最小変更の独立再評価。SKILL.md 全文 (sha256 5a2cf162...) を対象に focused combined review を実施し、4条件いずれも重大問題 0 件。追加文は検証スクリプトの非空 assert と整合し、対象成果物を全列挙して抜け穴を閉じる設計として妥当。PASS。"
+  "notes": "初回レビューで検出した破損 frontmatter 時の body_source 矛盾、local-only の beads|none 混同、C28/lint 依存の未宣言を修正後に再評価した。最新 SKILL.md の4条件と全 criteria に blocking finding はなく PASS。"
 }

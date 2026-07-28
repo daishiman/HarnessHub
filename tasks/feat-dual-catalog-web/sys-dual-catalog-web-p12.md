@@ -12,7 +12,7 @@ iteration: null
 title: "文書化・runbook・引き継ぎ — カタログ利用者/管理者向け手順・marketplace.json形式文書・障害時縮退runbook・更新通知導線の文書化"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-19T14:13:14Z"
+updated_at: "2026-07-26T01:39:34.074446Z"
 status: "active"
 depends_on: ["SYS-DUAL-CATALOG-WEB-P11"]
 related_nodes: ["feat-dual-catalog-web"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

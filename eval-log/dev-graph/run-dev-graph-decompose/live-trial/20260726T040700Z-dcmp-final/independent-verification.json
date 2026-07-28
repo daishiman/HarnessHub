@@ -1,0 +1,41 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "skill-invocation",
+      "verdict": "PASS",
+      "observed": "Transcript line 73 confirms Skill tool invoked with skill:'dev-graph:run-dev-graph-decompose', args:'--repo-root .../decompose-wt6 --binding none'. Pane.txt line 43 shows 'Successfully loaded skill - 6 tools allowed'. Nodes registered via upsert-node.py (sanctioned script), not direct graph.json manipulation."
+    },
+    {
+      "name": "exact-13-decomposition",
+      "verdict": "PASS",
+      "observed": "Not applicable for this scenario (C14-OUT1-positive-macro-decomposition). The scenario tests macro decomposition only. All 4 features are confirmation_status=draft, evaluation_status=pending, readiness=incomplete — system-dev-planner correctly not invoked. Trial produced 5 nodes (1 architecture + 4 features), the expected macro output. SKILL.md OUT1 criteria do not require exact-13 for this scenario."
+    },
+    {
+      "name": "phase-order",
+      "verdict": "PASS",
+      "observed": "Macro DAG has 4 dependency edges: feat-dashboard -> feat-user-auth, feat-email-notification -> feat-user-auth, feat-admin-report -> feat-user-auth, feat-admin-report -> feat-dashboard. Semantically correct ordering. DFS cycle check confirmed acyclic=true. graph_revision progressed linearly 0->1->2->3->4->5."
+    },
+    {
+      "name": "lineage-evidence",
+      "verdict": "PASS",
+      "observed": "All 5 nodes have complete source_lineage blocks: origin_kind='generated', source_plugin='dev-graph/run-dev-graph-decompose', source_digest SHA-256 present, imported_at timestamped. All 4 feature nodes have architecture_refs=['arch-webapp-foundation'] establishing parent-child linkage."
+    },
+    {
+      "name": "negative-controls",
+      "verdict": "PASS",
+      "observed": "No direct Write tool calls to graph.json in transcript. All graph.json references are Read operations or progress.json content mentioning graph.json. Registration exclusively through upsert-node.py. decompose-audit.json confirms structural_contract_valid=true, provenance_valid=true. Pre-state graph_revision=0,node_count=0; post-state graph_revision=5,node_count=5 — delta fully attributable to upsert-node.py calls."
+    },
+    {
+      "name": "validators",
+      "verdict": "PASS",
+      "observed": "5 validation steps executed: (1) validate-graph-schema.py — schema valid, 0 violations; (2) pre-state snapshot via audit script; (3) full audit via audit_decompose_live_trial.py; (4) manual DFS cycle detection — 4 edges, cyclic=false; (5) git status and issues/directory verification. All passed."
+    },
+    {
+      "name": "goal-seek-evidence",
+      "verdict": "PASS",
+      "observed": "Three goal-seek artifacts present: goal-spec.json with SHA-256 hash; intermediate.jsonl with 2 entries (before/after Skill execution) containing all required fields with matching original_goal_hash; progress.json with 6 checklist items all non-null evidence (3 pass, 3 not_applicable with justification). status.json reads {status:'PASS', scenario:'C14-OUT1-positive-macro-decomposition'}."
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+STALL (600s 無進捗・成果物なし = 未着手 or hang, via jsonl, state:IDLE_TURN_COMPLETE) — STALL 分岐表へ
+--- poll exit=2 (21:17:29Z) ---

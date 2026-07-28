@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-23T09:50:00Z"
+updated_at: "2026-07-28T00:55:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -121,6 +121,44 @@ live-trial 証跡の調査 (`HarnessHub-s7b`/`-rix`/`-aoe`/`-m7d`) で、**成�
 > **差分追記 (2026-07-25):** 検証入口を「証跡の真正性」から **trial 入力の適合性** へ 1 軸広げた (`validate-repo-config.py`)。成果物が真正でも、**入力が本番の起動ゲートを通らない状態**なら PASS は挙動の保証にならない。実測として 8 kind 全ての live-trial fixture が schema 違反 config で走っていたことが本入口で初めて機械検出された (`HarnessHub-n88`)。
 >
 > 同時に、C02 単一 writer の強制点である `guard-graph-schema.py` が **Bash 破壊操作枝のみ hook timeout で fail-open する**ことが実測された。判定に寄与しない `schema_ok()` (実測 66.47s) が fail-closed 経路の内側にあり、`Write` 0.32s に対し `Bash` は 23.88s。live-trial 中に被験セッションが自力でこの窓を発見し、`.dev-graph/state/graph.json` への生書きまで通している。**C02 の不変条件は現状「guard が遅すぎて止められない」ことに依存しており、保証ではない。** 併発して `.dev-graph/config.json` を書く sanctioned な writer が不在であり、fail-open を閉じるだけでは init が実行不能になる。是正は `HarnessHub-6in4` (`issues/sys-guard-graph-schema-timeout-fail-open-20260725.md`) で追跡する。
+
+### 差分追記 (2026-07-26): C02 guard fail-open の解消
+
+`HarnessHub-6in4` と `HarnessHub-7dw` の是正により、C10 の破壊操作遮断は subprocess と graph 全件 schema 検査に依存しない静的判定へ移行した。redirect は quote 外の演算子と宛先だけを解析し、遮断例を含む Beads notes 等の散文を誤遮断しない。`.dev-graph/config.json` は `build-repo-config.py`、初期 `.dev-graph/state/graph.json` は `build-graph-store.py` の preview/receipt 付き atomic writer が所有する。最終 live-trial で実測した `Path.write_text()` 迂回も静的遮断へ追加し、node 登録後の graph 変更は C02 `upsert-node.py` に限定した。
+
+実装責務は `guard-graph-schema.py` (entrypoint と判定順序)、`guard_graph_commands.py` (shell 書込み先解析)、`build-repo-config.py` (config writer)、`build-graph-store.py` (初期 graph writer) へ分離し、各手書きファイルを 500 行以下に保った。正本契約は `plugins/dev-graph/references/claude-code-hooks-contract.md`。これは製品 API・state・security・UI contract を変えないため、`system-spec/` と `specs/` へは反映しない。
+
+`Path.write_text/write_bytes/touch/unlink/rmdir` と書込み mode の `Path.open` は遮断対象へ含めた。一方、`os` / `shutil` / `json.dump` 等の広域 API は静的判定の誤遮断リスクを別途設計する必要があるため、architecture 上の既知の残余リスクとして `HarnessHub-lp36` で追跡する。
+
+### 差分追記 (2026-07-28): 500 行分割規約が entry point 宣言契約と衝突する
+
+上記の責務分離で `hooks/` に import 専用の support module (`guard_graph_commands.py`) が生まれた。一方 plugin 完全性の契約テストは、`package-contract.json` の `entry_points.hooks` を **「`hooks/` にある `.py` / `.sh` の一覧」** と厳密一致で突合していた。両規約は個別には妥当だが同時には満たせず、PR #82 の CI がこれを「未宣言の entry point」として落とした。**片方の規約に従うともう片方を必ず破る**という構造であり、実装の不備ではない。
+
+support module を `entry_points` へ書き足す解は採らない。`entry_points` は Claude Code が起動する入口の台帳であり、起動されないファイルを載せると台帳としての意味が失われる。hook 本体を `hooks/` の外へ移す解も採らない。live-trial receipt の behavior closure digest (`skill_dir_tree_sha`) が own-plugin の `hooks/` ツリー全体を含むため、無関係な 9 件の receipt が一斉に stale になる。
+
+採った是正は**代理指標の廃止**である。突合相手を「ディスク上のファイル一覧」から **`hooks/hooks.json` が実際に登録している command の起動先** へ変え、宣言・登録・実体の 3 者一致を検査する。`hooks/` に残る未宣言ファイルは、「単体起動の入口を持たない」こと (`.py` かつ import 可能な名前、shebang なし、`if __name__ == "__main__"` なし) を満たすときだけ support module として許容する。命名規則だけを許容条件にすると、underscore 名を付けた実 hook の宣言漏れを素通りさせるためである。
+
+この契約テストは repo-root の `tests/` にあり behavior closure の外側なので、是正は既存 receipt を一切失効させない。**どの層を触ると何が失効するか**が是正案の選択を決めた点は、以後の同種判断でも参照する。
+
+### 差分追記 (2026-07-28): 同じ衝突が harness coverage にも現れる (2 例目)
+
+上記と同じ責務分離で、`validate-harness-coverage.py` の `scripts/llm_eval` にも回帰が出た。同指標は**分母をファイル数、分子を code-review verdict が PASS のファイル数**で数えるため、1 実装を 5 ファイルへ割ると分母が +4、分子は +0 になる。実測は 63.1% (floor 64.1%) だが、新規 7 件を除くと 64.2% で floor 超え、分割元 `upsert-node.py` の verdict も PASS/91 のまま残っていた。**回帰の全量が分母希釈に由来し、品質は下がっていない。**
+
+暫定対応は先例 2 件 (2026-07-12 の plugins/ 再編、2026-07-23 の `HarnessHub-aoe`) に倣った floor の手動 baseline reset である。`--update-floor` は `max(old, 現値)` で回帰時に据え置く設計のため使えない。verdict を書いて率を戻す道は取らない。`eval-log/harness-coverage-floor.json` の note が明示するとおり、それは「evaluation の捏造による緑化」であり、指標を守るために指標の意味を壊す。
+
+**代理指標の衝突は 1 回限りの事故ではなく、500 行分割規約が持つ系統的な副作用である。**entry point 台帳は「ファイル一覧」を、coverage は「ファイル数」を、それぞれ実体の代理として使っていた。分割はファイルを増やすが実体を増やさないため、どちらも同じ向きに壊れる。構造的な是正 (分母を entry point 単位にするか、除外方向の変更が測定対象を減らして率を上げる Goodhart 経路にならないかの評価) は `HarnessHub-2mor` で追跡する。
+
+あわせて、`--update-floor` が floor note を固定文字列で上書きし、**過去 2 回の baseline reset 経緯を消す**ことが判明した。今回は実行後に note を復元・追記している。判断の履歴が指標ファイル自身に載っていることが「なぜこの floor なのか」を後から検証可能にしていたため、この上書きは記録の欠落として同課題で扱う。
+
+### 差分追記 (2026-07-28): 3 例目 — PKG-006/007 の「配下は全て起動対象」前提
+
+`scripts/validate-plugin-packages.py` (PKG-006 = hook 登録整合 / PKG-007 = script shebang・実行ビット) も同じ規約で落ちた。両 check は **`hooks/` と `scripts/` の配下にあるファイルは全て起動される入口である**という前提で書かれていたため、責務分離で生まれた import 専用 module (`hooks/guard_graph_commands.py`, `scripts/node_body.py` ほか 3 件) を「未登録の hook」「shebang 欠落の script」として P0 で遮断した。
+
+**ここまでで前提の壊れ方は 3 通り揃った** — 台帳との一致 (entry point)、母数の件数 (coverage)、そして配置ディレクトリによる役割推定 (PKG-006/007)。共通するのは、**ファイルシステム上の存在を「起動される実体」の代理として扱っている**点である。分割はファイルを増やすが起動点を増やさないため、代理を使っている検査は例外なく同じ向きに壊れる。
+
+是正は entry point 契約テストと同じ「代理指標の廃止」で統一した。`is_import_only_support_module()` が `.py` / import 可能な名前 / shebang なし / `if __name__` なし の 4 条件を**構造として**検査し、これを満たすものだけを起動対象から除外する。命名規則だけを許容条件にすると underscore 名を付けた実 hook の宣言漏れを素通りさせるため採らない。逆に verb-hyphen 名 (`build-repo-config.py`) は import 不能なので「起動されるしかない」と確定でき、shebang 欠落は従来どおり FAIL のままである。実際、同時に検出された `build-repo-config.py` の実行ビット欠落は真の不備だったので `chmod +x` で直している。
+
+判別境界は単体テスト 8 件で固定した (`test_harness_creator__validate_plugin_package_s2.py`)。この 3 例目までは「分割のたびに個別の検査を直す」対応だが、次に同型が出たら検査側ではなく規約側を見直す。
 
 ### 差分追記 (2026-07-25): CI にしか存在しないゲートは「着手前に気づけない」
 
