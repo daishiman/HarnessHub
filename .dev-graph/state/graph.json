@@ -1,5 +1,5 @@
 {
-  "graph_revision": 936,
+  "graph_revision": 937,
   "nodes": [
     {
       "acceptance": [
@@ -39579,6 +39579,118 @@
       "title": "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T04:30:00Z"
+    },
+    {
+      "acceptance": [
+        "BACKUP_HEARTBEAT_URL を投入し、成功 run で heartbeat の着信を実測している",
+        "Worker cron 用 CRON_HEARTBEAT_URL と資源を共用するか分離するかを決め、根拠を runbook へ記録している",
+        "日次 backup が連続失敗した場合に無音にならないことを、heartbeat の period と猶予の整合で説明できる",
+        "scripts/ci/actions-secrets-registry.json の requirement を optional 据え置きか required 昇格かで判断し反映している"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-dbx6",
+        "linked_at": "2026-07-28T04:49:52.215131Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-backup-failure-undetected-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-vns9 の実作業中に判明した監視側の欠陥。backup 自体の判定不具合は vns9 で是正したが、3 夜連続失敗が誰にも気づかれなかった経路の欠落は別問題であり独立 issue として切り出す",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T02:40:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-backup-failure-undetected-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "日次 backup が失敗または不発になったとき、外形監視側が無音のままにならず、当日中に気づける状態になっている",
+      "graph_node_id": "issue-backup-failure-undetected-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T02:40:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "hub-backup が稼働開始以来 3 回連続で失敗し R2 に成果物が 1 つも無い状態が続いたにもかかわらず誰も気づかなかった。失敗そのものは是正したが、気づけなかった経路の欠落を塞がない限り同じ事態が再発する",
+      "related_nodes": [],
+      "resource_scope": [
+        "issues/sys-backup-failure-undetected-20260728.md",
+        ".github/workflows/backup.yml",
+        "scripts/ci/actions-secrets-registry.json",
+        "apps/hub/monitoring/better-stack.monitors.json",
+        "docs/features/feat-hub-foundation/runbook.md"
+      ],
+      "scope_in": [
+        "BACKUP_HEARTBEAT_URL の投入と着信実測",
+        "backup 用 heartbeat 資源を CRON_HEARTBEAT_URL と共用するか分離するかの決定",
+        "連続失敗が無音にならないことの確認 (period と猶予の整合)",
+        "台帳の requirement 見直し (optional 据え置き / required 昇格)"
+      ],
+      "scope_out": [
+        "backup.yml の採否判定の是正 (HarnessHub-vns9 で実施済み)",
+        "四半期 restore drill の実行",
+        "Better Stack monitor の paused 解除 (HarnessHub-37h.15)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T02:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "backup",
+        "monitoring",
+        "ops",
+        "qa-027"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "日次 backup の連続失敗が 3 夜気づかれなかった (BACKUP_HEARTBEAT_URL 未投入で不発・失敗が無音になる)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T04:49:52.215131Z"
     },
     {
       "acceptance": [

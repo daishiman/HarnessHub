@@ -88,6 +88,14 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - 本番 smoke が DB package から Hub workspace の Wrangler を起動する境界を固定し、package cwd や runner の PATH に依存しない形へ修正した (`HarnessHub-fnzl`)。
 - landing 前は remote workflow の完走を証明できないため、受入「CI が test→deploy を完走する」の最終判定は GitHub Actions 実走まで `blocked` を維持する。
 
+## 実装反映 (2026-07-28 / HarnessHub-vns9)
+
+- GitHub Actions の secret / variable は実投入済みで、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。未参照になっていた `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除した。
+- 日次 backup の**採否判定を `packages/db/scripts/verify-export-artifact.ts` へ一本化**した。旧実装は workflow の shell で「データ行が 0 なら不採用」と判定しており、migration 済みだが全 19 テーブル 0 行の稼働直後 DB を恒常的に落としていた (3 夜連続失敗)。判定の詳細正本は [infrastructure-spec §7 / §10](../docs/infrastructure-spec.md)。
+- 受入「CI が test→deploy を完走する」(A1) は run `30143422049` で達成済み。**日次 backup の初回成功は未達**で、是正版が main へ land した後の `workflow_dispatch` 再実行まで残る ([release-notes.md](../docs/features/feat-hub-foundation/release-notes.md) §4.1 の #5)。
+- 3 夜連続の失敗が誰にも気づかれなかった経路の欠落 (`BACKUP_HEARTBEAT_URL` 未投入で外形監視が無音) は本 feature の範囲外として `HarnessHub-dbx6` / `issue-backup-failure-undetected-20260728` へ分離した。
+- 証跡: [evidence/actions-secrets-2026-07-28.json](../docs/features/feat-hub-foundation/evidence/actions-secrets-2026-07-28.json)
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-infrastructure](../architecture/harness-hub-infrastructure.md)

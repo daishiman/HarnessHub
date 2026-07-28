@@ -16,7 +16,7 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 
 > **投入状況の正本は本文ではなく `node scripts/ci/check-actions-secrets.mjs --live` の出力**。散文で書いた一覧は書いた翌日には古くなるため、判断前に必ずコマンドを叩く（未投入・用途不明・台帳との食い違いを一度に出す）。
 
-> **実施状況**: `HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**2026-07-28 に Better Stack 外部資源を適用し、`CRON_HEARTBEAT_URL` を Worker secret へ投入した**（monitor `4724920` / heartbeat `475650` / status page `256797` / resource `8978911`、適用時刻 `2026-07-27T20:46:37.686Z` UTC）。しかし、同日 `21:38:14Z` の公開 status page 再確認で個別 resource が `not_monitored`（Better Stack 公式仕様では underlying monitor が paused）と判明した。適用器は既存資源の設定差分を `PATCH` するよう是正済みであり、Uptime API token を渡して同じ適用コマンドを再実行し、resource が `operational` になった時点から 30 日観測を開始する。現在の `slo-dashboard.json` は `collection_blocked` であり、99.5% 達成を主張しない。証跡は [evidence/monitoring-applied.json](evidence/monitoring-applied.json) と [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。なお、workflow から参照されなくなった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除待ちである。以下の手順は再構築時のために残す。
+> **実施状況**: `HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**2026-07-28 に Better Stack 外部資源を適用し、`CRON_HEARTBEAT_URL` を Worker secret へ投入した**（monitor `4724920` / heartbeat `475650` / status page `256797` / resource `8978911`、適用時刻 `2026-07-27T20:46:37.686Z` UTC）。しかし、同日 `21:38:14Z` の公開 status page 再確認で個別 resource が `not_monitored`（Better Stack 公式仕様では underlying monitor が paused）と判明した。適用器は既存資源の設定差分を `PATCH` するよう是正済みであり、Uptime API token を渡して同じ適用コマンドを再実行し、resource が `operational` になった時点から 30 日観測を開始する。現在の `slo-dashboard.json` は `collection_blocked` であり、99.5% 達成を主張しない。証跡は [evidence/monitoring-applied.json](evidence/monitoring-applied.json) と [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。なお、workflow から参照されなくなった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は **2026-07-28 に削除し、`--live` は exit 0 になった**（証跡は [evidence/actions-secrets-2026-07-28.json](evidence/actions-secrets-2026-07-28.json)）。同日その状態で日次 backup を実起動したところ、**secret とは別の原因**で失敗している（§7 U-1）。以下の手順は再構築時のために残す。
 
 > **順序制約（重要）**: `wrangler secret put` は **Worker が存在しないと実行できない**ため、初回だけは「deploy → secret 投入」の順になり、その間 `/health` は 503 を返します。`ci.yml` の post-deploy `/health` チェックは 200 必須なので、**初回は CI に任せず手動 bootstrap を行ってください**（CI 側のチェックを緩めるとゲートが恒久的に甘くなるため、この方式を採ります）。
 >
@@ -166,7 +166,7 @@ curl -s -X PUT -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
 
 | # | 未実装 | 影響 | 必要な作業 |
 |---|---|---|---|
-| ~~U-1~~ | ~~backup workflow 未実装~~ → **実装済み** (`.github/workflows/backup.yml`) | — | secret 投入後に初回実行を確認すること |
+| U-1 | ~~backup workflow 未実装~~ → 実装済み (`.github/workflows/backup.yml`)。ただし**初回成功はまだ取れていない** | R2 に成果物が 1 つも無く、RPO ≤ 24h を実際には満たしていない | 2026-07-28 の実起動 (run 30321679596) と直前 2 回の cron はいずれも export step で失敗していた。原因は secret ではなく「データ行が 0 なら不採用」という判定で、稼働直後の本番 DB は 19 テーブルすべて 0 行のため恒常的に落ちていた。判定を `verify-export-artifact` CLI へ一本化して是正済み。**main へ land 後に workflow_dispatch で再実行し、`db-export/<year>/<stamp>.jsonl.gz` を確認すること** |
 | ~~U-2~~ | ~~scheduled handler 未実装~~ → **実装済み** (`apps/hub/src/worker.ts` + `src/worker/cron.ts`) | ジョブ本体は空 (id は登録済み)。各ドメイン feature が中身を実装する | — |
 | ~~U-3~~ | ~~G6 / G8 未配線~~ → **配線済み**。実効性も実測 | — | — |
 | U-4 | 未 wrap route の静的検出 | 認可 fail-open のリスクが残る | detector 拡張 |
