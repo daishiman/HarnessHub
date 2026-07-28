@@ -140,6 +140,14 @@ run "validate-plugin-completeness (MK/BD)" python3 scripts/validate-plugin-compl
 # 実 test 集合 ⊆ CI 到達集合 を fail-closed 検査し silent-skip を loud failure 化する。
 run "lint-test-discovery-coverage"         python3 scripts/lint-test-discovery-coverage.py
 
+# ── git hook 配線 (hook が「存在するのに動いていない」状態の検知) ──
+# core.hooksPath はリポジトリに 1 つしか設定できず、beads の .beads/hooks と repo の
+# .githooks が競合する。片方が選ばれるともう片方の hook は無言で死ぬため、失敗が
+# 起きず気づけない (本検査の導入前、.githooks/pre-push の CI 等価チェックは実際に
+# 死んでいた)。CI ではファイル整合を fail-closed 検査し、ローカル設定 (core.hooksPath)
+# は pre-push 側の run-repo-guards.sh が --check-local-config 付きで検査する。
+run "validate-git-hooks-wiring"            python3 scripts/validate-git-hooks-wiring.py
+
 # ── サマリ ──
 echo
 echo "========================================"

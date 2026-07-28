@@ -209,3 +209,15 @@ This section is the current source closure and supersedes older counts or wordin
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-28 実装後の運用追補
+
+本 P12 の promoted task spec と完了判定は変更しない。後続の repository 横断課題
+`HarnessHub-7xi9` で、並列 worktree の ref ずれを予防・検知・復旧する runbook を
+`docs/worktree-parallel-operations-runbook.md` へ追加した。仕様正本は
+`system-spec/dev-workflow.md` `qa-088`、設計正本は
+`architecture/harness-hub-dev-workflow.md` とする。
+
+再検証は `python3 scripts/validate-git-hooks-wiring.py --check-local-config` と、
+対象 3 test file の pytest を使う。stash は `stash@{N}` でなく固有メッセージから得た
+commit SHA で参照し、古い branch でも git common dir の共有 hook bundle を使う。

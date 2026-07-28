@@ -169,7 +169,6 @@ qa-039【2】(CI と local の乖離防止) は required status check を local 
 是正として `.github/workflows/ci.yml` の静的ゲート段へ **G12** を、root には `pnpm check:auth` を同時に用意した。あわせて、必須ゲートとして名指しされている tenant 分離テストが `pnpm -r test` に紛れて実行されるだけの状態を、`scripts/ci/check-tenant-isolation-gate.mjs` (対象実在 / ケース ID 網羅 / `skip`・`only` の不在を fail-closed で検査) で名指し化した。ゲート数は増やしていない。
 
 この作業中に **同型の未結線が G7 / G7b / G9 に残っている**ことが判明した (`HarnessHub-yhc3`)。またメタ層 lint (`governance-check.yml`) には local 入口そのものが無く、プロダクト層 `verify` へ混ぜると層分離を壊すため設計判断を要する (`HarnessHub-11qt`)。ゲート登録簿と local 入口の対応表は `docs/shared-layers.md` §3 (下流投影) が持ち、本節は「乖離が構造的に再発する」というリスクの記録に留める。
-
 ### 差分追記 (2026-07-28): 結線されていても「起動条件が恒久 false」なら走らない
 
 出典: `issue-governance-notion-steps-always-skipped-20260725` (bd `HarnessHub-5u5k`)。
@@ -183,3 +182,42 @@ qa-039【2】(CI と local の乖離防止) は required status check を local 
 あわせて、条件付き必須という第 3 の状態を台帳へ導入した。`NOTION_TOKEN` は任意 (未投入なら skip して成功) だが、**投入したなら DB ID 3 件 (variable) がすべて必要**で、欠ければ `prepare notion config` step が exit 1 で落ちる。「必須/任意」の 2 値だけでは、token だけ入れて DB ID を忘れた中途半端な設定が緑のまま残る。
 
 **後日談 — 是正そのものが同じ罠を踏んだ。** 追加した `lint-workflow-step-guard.py` は PyYAML を要求する。開発機には入っているので `make lint` は緑になったが、`change-category-guard` job は lint 専用で依存を install しておらず、CI では `[ERR] PyYAML が必要です` の exit 2 で落ちた (PR #589)。上節が扱った「local 入口が無い」の**裏返し**で、こちらは*入口はあるが実行前提が local にしか無い*形である。結線 (どこから呼ぶか) と前提 (何があれば動くか) は別々に検査しなければならない。是正は install step を step guard より前へ置くことだが、それだけでは「後から順序が入れ替わっても気づけない」ため、①依存が本当に必要であること (PyYAML を解決不能にすると exit 2)、②install が guard より前にあり無条件であること、③版指定が `requirements-dev.txt` から実際に取り出せること、を契約テストで固定した。なお `-r` で丸ごと install しないのは、本 job が pytest を持たないこと自体が「plugin pytest は kit-ci に一元化する」の前提になっているためで、この境界も同テストで機械化した。
+### 差分追記 (2026-07-28): 並列 worktree の ref 更新は共有 hook と commit 前検査で二重防御する
+
+出典: `issue-worktree-main-ref-desync-20260728` (bd `HarnessHub-7xi9`)。運用・復旧手順は
+`docs/worktree-parallel-operations-runbook.md`。
+
+worktree は git common dir（全 worktree が共有する Git 管理領域）を共有する一方、
+HEAD / index / 作業ツリーは worktree ごとに持つ。別 worktree から `git update-ref` や
+`git fetch origin main:main` で checkout 中の branch ref だけを動かすと、所有者側の
+作業ツリーが古いまま残る。この状態で `git commit -a` すると、直前に取り込まれた変更を
+大量削除として巻き戻せる。`git pull` は ref が既に最新なので修復手段にならない。
+
+防御は次の 2 層とする。
+
+1. `reference-transaction` hook は、更新対象の `refs/heads/*` を checkout 中の worktree
+   を列挙し、実行元以外が所有する ref の更新を transaction 確定前に拒否する。
+   ref 更新はリポジトリ修復にも必要な根幹経路なので、worktree 情報を取得できない場合は
+   fail-open（判定不能なら通す）とする。
+2. `pre-commit` hook は、index tree が HEAD の過去の tree と一致する巻き戻し、および
+   閾値以上の staged 削除を拒否する。こちらは commit だけを止めればよいため、
+   Python や検査材料が欠けた場合も fail-closed（判定不能なら止める）とする。
+
+`core.hooksPath=.githooks` のような相対指定は採用しない。相対パスはコマンド実行元
+worktree の内容を参照するため、導入前の古い branch には新しい hook が存在せず、
+防御を迂回できる。`scripts/install-git-hooks.sh` は tracked template を
+`<git-common-dir>/harness-hub-hooks/` へコピーし、その絶対パスを `core.hooksPath` に
+設定する。これにより branch の新旧に関係なく全 worktree が同じ hook を実行する。
+
+beads が管理する `.beads/hooks` との競合は、共有 hook から現在の worktree の beads hook
+へ委譲し、beads 側にも共有 guard を呼ぶ保険経路を置いて解消する。共有 bundle の欠落・
+tracked template との差・`core.hooksPath` のずれ・beads 再生成による保険経路の消失は
+`scripts/validate-git-hooks-wiring.py` を pre-push と CI に結線して検知する。
+pre-push の installed-bundle 経路も、現在の branch に tracked template が存在する場合は
+内容差を検査する。これにより guard 本体を変更した後の再 install 忘れを push 前に止める。
+導入前の古い branch では source template が無い pair の freshness 比較だけを省略し、
+共有 bundle 単独での遮断能力を維持する。
+
+並列環境の stash は `stash@{N}`（スタック位置）を永続識別子として扱わない。push 時に
+固有メッセージを付け、`git stash list --format='%H %gs'` から commit SHA を直接取得して
+復元する。番号を得てから SHA へ変換する 2 段階手順にも競合窓があるため使用しない。

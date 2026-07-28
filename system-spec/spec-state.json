@@ -372,7 +372,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-039",
+        "qa_ref": "qa-088",
         "serves_goals": [
           "G1",
           "G4"
@@ -384,7 +384,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-039",
+        "qa_ref": "qa-088",
         "serves_goals": [
           "G1",
           "G4"
@@ -856,6 +856,16 @@
       "id": "qa-086",
       "question": "HarnessHub-b7ng の database.web 正本を、schema・migration・書き込みゲートの共有範囲を失わない単独で完結した契約としてどう確定するか。",
       "answer": "ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 と qa-085 を統合した次の database.web 契約を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は Workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書き込みは guardedWrite を通す。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。残る repository write の全量掃き出しは HarnessHub-mb7c で追跡する。"
+    },
+    {
+      "id": "qa-087",
+      "question": "提供者のローカル開発環境で複数 worktree を並列利用するとき、別 worktree による checkout 中 branch の ref 直接更新と、その結果生じる巻き戻しコミットをどのように防止しますか?",
+      "answer": "ユーザーの 2026-07-28 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映」を明示承認として、qa-039 のローカル開発環境・CI 正本・secret scan の契約を全面維持し、並列 worktree の整合性契約を追補する。全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要なため worktree 情報を取得できない場合は fail-open とし、pre-commit hook が index tree と HEAD の祖先 tree の一致および異常な staged 削除を検査して巻き戻し commit を fail-closed で拒否する。共有 bundle は beads hook へ委譲し、tracked template・installed bundle・core.hooksPath・beads 保険経路のずれを pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。対象は開発フローの安全性であり、Hub の外部 API・データモデル・認証認可・Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-088",
+      "question": "qa-039 のローカル開発契約と qa-087 の並列 worktree 安全契約を、章単独で情報を失わない自己完結した契約としてどう確定しますか?",
+      "answer": "ユーザーの 2026-07-28 最終レビュー・仕様反映指示を明示承認として、qa-039 と qa-087 を統合した次のローカル開発契約を確定する。\n\n【1. ローカル環境】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。\n\n【2. CI と local の一致】PR の required status checks と同じ実装を pnpm script から実行できるようにし、CI 専用の検査手順を CI 側だけに持たない。merge 前ゲートの正本は CI とする。\n\n【3. commit 前のローカルゲート】lint と format は早期検知の補助として任意実行し、secret scan も local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。\n\n【4. 並列 worktree の ref 整合性】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲する。tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。\n\n【5. ローカルからの本番操作】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。ローカル開発は preview Turso または local SQLite を使い production DB を指さない。\n\n【6. Web App 出口との境界】作者 local session から顧客 Web App を公開する I5 は Hub 本体の開発フローと分離する。本契約は Hub repository の開発フローに限り、Hub の外部 API、データモデル、認証認可、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -1531,6 +1541,30 @@
       "category": "database",
       "platform": "web",
       "reason": "qa-085 は qa-083 の維持を参照で表したため、compile 後の database.md 単独では schema と migration の詳細が展開されない。情報を落とさない自己完結した契約へ統合する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-7xi9 で並列 worktree の ref 直接更新遮断、巻き戻し commit の fail-closed 検査、共有 hook bundle の配線契約が新たに確定し、qa-039 のローカル hook 方針へ追補が必要になった",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-7xi9 で並列 worktree の ref 直接更新遮断、巻き戻し commit の fail-closed 検査、共有 hook bundle の配線契約が新たに確定し、qa-039 のローカル hook 方針へ追補が必要になった",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "qa-087 は qa-039 の維持を参照で表したため、compile 後の dev-workflow.md 単独ではローカル環境・CI 一致・本番操作禁止の詳細が展開されない。旧契約と worktree 安全契約を統合する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "qa-087 は qa-039 の維持を参照で表したため、compile 後の dev-workflow.md 単独ではローカル環境・CI 一致・本番操作禁止の詳細が展開されない。旧契約と worktree 安全契約を統合する",
       "from": "確定"
     }
   ],
