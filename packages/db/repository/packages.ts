@@ -4,6 +4,7 @@
 
 import { eq } from 'drizzle-orm';
 import { packages } from '../schema/core/catalog';
+import { guardedWrite } from './conflict';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
 
@@ -29,10 +30,12 @@ export interface PackagesRepo {
 export function createPackagesRepo(adapter: CoreAdapter): PackagesRepo {
   return {
     async record(input) {
-      await adapter.client
-        .insert(packages)
-        .values({ ...input, createdAt: serverNow() })
-        .onConflictDoNothing();
+      await guardedWrite(adapter, () =>
+        adapter.client
+          .insert(packages)
+          .values({ ...input, createdAt: serverNow() })
+          .onConflictDoNothing(),
+      );
       const rows = await adapter.client
         .select()
         .from(packages)

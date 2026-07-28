@@ -16,10 +16,12 @@ import { createTursoClient, type TursoAdapter } from '@harness-hub/db/connection
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createAuditRepo } from '../repository/audit';
 import { createDeviceAuthorizationsRepo } from '../repository/device-flow';
+import { createReleasesRepo } from '../repository/releases';
 import { createTenantsRepo } from '../repository/tenants';
+import { createUsersRepo } from '../repository/users';
 import { createRepositoryContext } from '../src/context';
 import type { RepositoryContext } from '../src/types';
-import { asCore, createLibsqlTestDb } from './support/test-db';
+import { asCore, createLibsqlTestDb, testCipher } from './support/test-db';
 
 /** 同時到着数。ロック競合は 2 本でも起きるが、取りこぼしを確率的に見逃さない程度に増やす。 */
 const CONCURRENCY = 8;
@@ -126,5 +128,79 @@ describe('監査 append と並走する書き込み', () => {
     expect(outcomes.filter((outcome) => outcome === true)).toHaveLength(1);
     const persisted = await createDeviceAuthorizationsRepo(asCore(reader)).findById(context, 'device-0');
     expect(persisted?.status).toBe('approved');
+  }, 30_000);
+
+  // HarnessHub-mb7c: users.ts / releases.ts の write を guardedWrite で掃き出した代表経路の回帰確認。
+  it('同時到着した users.markLastLogin (掃き出し対象) が監査 append と競合しても失われない', async () => {
+    const audit = createAuditRepo(asCore(writer));
+    const users = createUsersRepo(asCore(writer), testCipher(asCore(writer)));
+    const createdUsers = await Promise.all(
+      Array.from({ length: CONCURRENCY }, (_, i) =>
+        users.insert(context, {
+          idpSubject: `sub-${i}`,
+          email: `user${i}@example.com`,
+          name: `User ${i}`,
+          role: 'member',
+          status: 'active',
+        }),
+      ),
+    );
+
+    await Promise.all([
+      ...createdUsers.map((user) => users.markLastLogin(context, user.id)),
+      ...Array.from({ length: CONCURRENCY }, (_, i) =>
+        audit.append(context, {
+          actorType: 'system',
+          actorId: 'test',
+          action: 'user.login',
+          entityType: 'user',
+          entityId: createdUsers[i]?.id ?? `missing-${i}`,
+          summary: { index: i },
+        }),
+      ),
+    ]);
+
+    const readerUsers = createUsersRepo(asCore(reader), testCipher(asCore(reader)));
+    const persisted = await Promise.all(createdUsers.map((user) => readerUsers.findById(context, user.id)));
+    expect(persisted).toHaveLength(CONCURRENCY);
+    expect(persisted.every((user) => user?.lastLoginAt !== null && user?.lastLoginAt !== undefined)).toBe(true);
+
+    const events = await createAuditRepo(asCore(reader)).read(context, { limit: 100 });
+    expect(events).toHaveLength(CONCURRENCY);
+  }, 30_000);
+
+  it('同時到着した releases.createRelease (掃き出し対象・独自 unique retry と guardedWrite が両立) が監査 append と競合しても採番が壊れない', async () => {
+    const audit = createAuditRepo(asCore(writer));
+    const releases = createReleasesRepo(asCore(writer));
+    const channelId = 'channel-0';
+
+    await Promise.all([
+      ...Array.from({ length: CONCURRENCY }, (_, i) =>
+        releases.createRelease(context, {
+          projectId: 'project-0',
+          channelId,
+          packageHash: `hash-${i}`,
+          manifestJson: '{}',
+          createdBy: 'test',
+        }),
+      ),
+      ...Array.from({ length: CONCURRENCY }, (_, i) =>
+        audit.append(context, {
+          actorType: 'system',
+          actorId: 'test',
+          action: 'release.create',
+          entityType: 'release',
+          entityId: `pending-${i}`,
+          summary: { index: i },
+        }),
+      ),
+    ]);
+
+    const persisted = await createReleasesRepo(asCore(reader)).listByChannel(context, channelId);
+    expect(persisted).toHaveLength(CONCURRENCY);
+    expect(new Set(persisted.map((release) => release.version)).size).toBe(CONCURRENCY);
+
+    const events = await createAuditRepo(asCore(reader)).read(context, { limit: 100 });
+    expect(events).toHaveLength(CONCURRENCY);
   }, 30_000);
 });

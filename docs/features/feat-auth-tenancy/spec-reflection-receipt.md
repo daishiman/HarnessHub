@@ -4,6 +4,7 @@ layer: feature-evidence
 beads_ids:
   - HarnessHub-b7ng
   - HarnessHub-mr3c
+  - HarnessHub-v22l
 dev_graph_node_id: issue-auth-tenancy-production-adapter-20260725
 spec_impact: reflected
 reflected_at: 2026-07-26
@@ -146,7 +147,71 @@ request-controls / assurance の 6 分冊へ分け、全分冊を 300 行以下�
 
 - `HarnessHub-mb7c`: 残る DB write を `guardedWrite` へ統一し CI で検査する
 - `HarnessHub-njkm`: プロセス外 `SQLITE_BUSY` 後の接続復旧または fail-fast
-- `HarnessHub-v22l`: refresh rotation の CAS 敗北を監査可能にする
+- `HarnessHub-v22l`: refresh rotation の CAS 敗北を監査可能にする（第 9 節で完了）
 
 これらは今回の Auth.js・本番 ports 結線を無効にする欠陥ではないが、
 ローカル DB の耐障害性と Workers 上の観測性を強化する後続作業である。
+
+## 9. 追補: HarnessHub-v22l（refresh rotation の CAS 敗北を監査可能にする）
+
+### 9.1 受領対象
+
+第 8 節の残課題のうち `HarnessHub-v22l` を完了した。`revokeIfActive` の CAS
+（compare-and-swap＝比較して一致した場合だけ更新する排他制御）敗北、すなわち
+同時提示された refresh token のうち勝者以外の枝を、監査 action
+`token.refresh_race` として記録する。
+
+- Beads ID: `HarnessHub-v22l`
+- dev-graph node ID: `issue-refresh-race-observability-20260726`
+- 対象 branch: `devgraph/issue-refresh-race-observability-20260726`
+
+### 9.2 仕様・設計影響の判定
+
+判定は **not_reflected（仕様反映不要）**。理由は次の 3 点である。
+
+1. `system-spec/security.md` qa-075 が確定する外部契約・振る舞い（CAS 敗北時は
+   `invalid_grant` を返し、その瞬間に family 失効へ昇格しない）を一切変更しない。
+   今回追加したのは「その事象が起きたこと」を監査ログへ 1 行残す内部観測性だけであり、
+   client から見える応答もデータベースの schema も変わらない。
+2. `token.refresh_race` は `token.reuse_detected`（失効済み token の再提示という
+   確定的な窃取シグナル）とは意味が異なる別 action として追加した。既存 action の
+   置換・拡張ではないため、qa-075 が確定した「昇格させない」という判断そのものを
+   変えるものではない。
+3. 監査 action 語彙の正本はそもそも `docs/backend-spec.md` §3.8 と
+   `docs/security-spec-data-integrity.md` §5.2 であり、`system-spec/` は個々の
+   action 名の完全列挙を正本としていない。下流の詳細を上流へ逆輸入して二重正本に
+   しない（qa-066 の原則）ため、`system-spec/`・`specs/`・`architecture/` への反映は
+   不要と判断した。
+
+### 9.3 変更内容
+
+- `apps/hub/src/lib/auth/device-flow/service.ts`: CAS 敗北分岐に
+  `token.refresh_race` 監査記録を追加
+- `docs/backend-spec.md` §3.8、`docs/security-spec-data-integrity.md` §5.2:
+  action 語彙表へ 1 行追加
+- `docs/features/feat-auth-tenancy/runbook.md`: §2.5.1
+  「`token.refresh_race` との切り分け」を追加
+- `apps/hub/tests/auth-tenancy/db-ports-integration.test.ts`: CAS 敗北を強制し
+  監査記録が 1 行残ることを検証するテストケースを追加
+
+### 9.4 反映検証
+
+- vitest（auth-tenancy 統合テストを含む全 309 cases、1 skip）: pass
+- typecheck: pass
+- lint: pass
+
+### 9.5 500 行超の扱い
+
+`token.refresh_race` 監査記録の追加で `apps/hub/src/lib/auth/device-flow/service.ts`
+が 507 行になった。`normalizeUserCode`・polling 間隔調整
+（`nextPollIntervalSeconds` / `relaxedPollIntervalSeconds`）・一覧表示用の
+`toSummary` という、DB / clock に依存しない純粋変換関数だけを
+`device-flow/transforms.ts`（78 行）へ分離し、`service.ts` を 436 行にした。
+`normalizeUserCode` は `device-flow/index.ts`・`auth/index.ts` から再 export
+されている公開 API のため、`service.ts` からも re-export し既存の import 経路を
+壊さないようにした。
+
+### 9.6 残課題
+
+第 8 節の残課題から `HarnessHub-v22l` を除く。残り 2 件（`HarnessHub-mb7c`、
+`HarnessHub-njkm`）は本追補の対象外のまま残る。

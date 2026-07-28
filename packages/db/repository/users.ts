@@ -133,18 +133,18 @@ export function createUsersRepo(adapter: CoreAdapter, cipher: ColumnCipher): Use
       if (input.department !== undefined) patch.department = input.department;
       if (input.role !== undefined) patch.role = input.role;
       if (input.status !== undefined) patch.status = input.status;
-      const rows = await adapter.client.update(users).set(patch).where(scope(context, id)).returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client.update(users).set(patch).where(scope(context, id)).returning(),
+      );
       const updated = rows[0] as UserRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('users', id);
       return updated;
     },
 
     async markLastLogin(context, id) {
-      const rows = await adapter.client
-        .update(users)
-        .set({ lastLoginAt: serverNow() })
-        .where(scope(context, id))
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client.update(users).set({ lastLoginAt: serverNow() }).where(scope(context, id)).returning(),
+      );
       const updated = rows[0] as UserRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('users', id);
       return updated;
@@ -152,7 +152,9 @@ export function createUsersRepo(adapter: CoreAdapter, cipher: ColumnCipher): Use
 
     async updateSalary(context, id, salary) {
       const salaryEnc = salary === null ? null : await cipher.encryptColumn('salary', String(salary), SALARY_REF(id));
-      const rows = await adapter.client.update(users).set({ salary: salaryEnc }).where(scope(context, id)).returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client.update(users).set({ salary: salaryEnc }).where(scope(context, id)).returning(),
+      );
       const updated = rows[0] as UserRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('users', id);
       return updated;
@@ -168,7 +170,7 @@ export function createUsersRepo(adapter: CoreAdapter, cipher: ColumnCipher): Use
     },
 
     async deleteById(context, id) {
-      await adapter.client.delete(users).where(scope(context, id));
+      await guardedWrite(adapter, () => adapter.client.delete(users).where(scope(context, id)));
     },
   };
 }

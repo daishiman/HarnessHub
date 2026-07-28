@@ -5,6 +5,7 @@ import { and, eq } from 'drizzle-orm';
 import { releases, targetChannels } from '../schema/core/catalog';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
+import { guardedWrite } from './conflict';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
@@ -34,17 +35,19 @@ export interface TargetChannelsRepo {
 export function createTargetChannelsRepo(adapter: CoreAdapter): TargetChannelsRepo {
   return {
     async create(context, input) {
-      const rows = await adapter.client
-        .insert(targetChannels)
-        .values({
-          id: newUlid(),
-          tenantId: context.tenantId,
-          projectId: input.projectId,
-          target: input.target,
-          stableReleaseId: null,
-          createdAt: serverNow(),
-        })
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client
+          .insert(targetChannels)
+          .values({
+            id: newUlid(),
+            tenantId: context.tenantId,
+            projectId: input.projectId,
+            target: input.target,
+            stableReleaseId: null,
+            createdAt: serverNow(),
+          })
+          .returning(),
+      );
       return rows[0] as TargetChannelRow;
     },
 
@@ -70,11 +73,13 @@ export function createTargetChannelsRepo(adapter: CoreAdapter): TargetChannelsRe
           throw new RepositoryError('not-found', `release ${releaseId} は channel ${channelId} に属していません`);
         }
       }
-      const rows = await adapter.client
-        .update(targetChannels)
-        .set({ stableReleaseId: releaseId })
-        .where(and(eq(targetChannels.tenantId, context.tenantId), eq(targetChannels.id, channelId)))
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client
+          .update(targetChannels)
+          .set({ stableReleaseId: releaseId })
+          .where(and(eq(targetChannels.tenantId, context.tenantId), eq(targetChannels.id, channelId)))
+          .returning(),
+      );
       const updated = rows[0] as TargetChannelRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('target_channels', channelId);
       return updated;

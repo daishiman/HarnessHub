@@ -6,6 +6,7 @@ import { and, eq, getTableColumns, getTableName } from 'drizzle-orm';
 import type { SQLiteColumn, SQLiteTable } from 'drizzle-orm/sqlite-core';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
+import { guardedWrite } from './conflict';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
@@ -58,7 +59,7 @@ export function createScopedCrud(adapter: CoreAdapter, table: SQLiteTable): Scop
       row[idKey] = newUlid();
       row[tenantKey] = context.tenantId;
       if (createdAtEntry !== undefined) row[createdAtEntry[0]] = serverNow();
-      const inserted = await adapter.client.insert(table).values(row).returning();
+      const inserted = await guardedWrite(adapter, () => adapter.client.insert(table).values(row).returning());
       return (inserted as Record<string, unknown>[])[0] as Record<string, unknown>;
     },
 
@@ -84,14 +85,16 @@ export function createScopedCrud(adapter: CoreAdapter, table: SQLiteTable): Scop
       if (Object.keys(patch).length === 0) {
         throw new RepositoryError('invalid-context', '更新対象の列がありません');
       }
-      const rows = await adapter.client.update(table).set(patch).where(scopeWhere(context, id)).returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client.update(table).set(patch).where(scopeWhere(context, id)).returning(),
+      );
       const updated = (rows as Record<string, unknown>[])[0];
       if (updated === undefined) throw new EntityNotFoundError(tableName, id);
       return updated;
     },
 
     async deleteById(context, id) {
-      await adapter.client.delete(table).where(scopeWhere(context, id));
+      await guardedWrite(adapter, () => adapter.client.delete(table).where(scopeWhere(context, id)));
     },
   };
 }

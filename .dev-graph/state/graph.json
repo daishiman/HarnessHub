@@ -38224,12 +38224,16 @@
       "classification_confidence": 0.85,
       "classification_reason": "HarnessHub-b7ng で確定した rotation CAS 敗北の方針に付随する観測性の欠落を、action 語彙の owner が docs 側であることから分離した issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-27T23:31:48Z",
+        "evidence_refs": [
+          "apps/hub/tests/auth-tenancy/db-ports-integration.test.ts",
+          "docs/features/feat-auth-tenancy/runbook.md",
+          "issues/sys-refresh-race-observability-20260726.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-27T23:31:58Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -38313,7 +38317,7 @@
       "template_version": "1.0.0",
       "title": "refresh rotation の CAS 敗北が監査に残らず Workers 本番経路の並行窓で窃取が観測できない",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T00:00:00Z"
+      "updated_at": "2026-07-27T23:33:20.616615Z"
     },
     {
       "acceptance": [],
