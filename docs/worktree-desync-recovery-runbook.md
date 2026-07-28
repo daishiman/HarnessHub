@@ -66,6 +66,22 @@ git の checkout は書き込んだファイルの mtime を**現在時刻**に�
 
 派生症状として、**テストが偽の赤を出す**。依存ファイルが古い実体に置き換わっているためで、実測では dev-graph のテストが 24 件失敗し別のテストは収集エラーになった。原因を実装側に探すと時間を丸ごと失う。**テストが説明のつかない失敗をしたら、まず `git diff --shortstat HEAD` を撃つ。**
 
+#### 2.1.1 鮮度ゲートの偽陽性に従ってはいけない
+
+もう一つの派生症状として、**作業ツリーの内容を入力とする鮮度ゲートが偽陽性で発火する**。実測では Stop hook (`check-review-trigger.py`) が「未評価 or stale な変更 skill が 16 件」と報告したが、当該セッションは SKILL.md を 1 バイトも編集していなかった。同 script は変更検出に `git diff --name-only HEAD` を使うため、clobber で古い実体に戻った 9 件の SKILL.md が「変更された」と判定されていた。
+
+このとき指示に従って評価を実行すると、**汚染された古い内容を評価し、そのハッシュを台帳へ焼き付ける**。台帳は緑になり、リポジトリの実際のファイルは未評価のまま残る。汚染に従うことで汚染が正当化される。
+
+判別は台帳と HEAD の照合で確定する。
+
+```bash
+git show HEAD:<SKILL.md> | shasum -a 256          # HEAD 版
+shasum -a 256 <SKILL.md>                          # 作業ツリー版
+jq -r .target.skill_md_sha256 eval-log/<plugin>/<skill>/content-review/elegance-verdict.json
+```
+
+**台帳の記録が HEAD 版と一致するなら、stale なのは台帳ではなく作業ツリーである。** この場合ゲートには従わず、先に汚染を復旧する。`git diff HEAD` を変更検出に使う機構はすべて同じ性質を持つ。
+
 ## 3. 検知手順
 
 ### 3.1 reflog の理由メッセージが空か
