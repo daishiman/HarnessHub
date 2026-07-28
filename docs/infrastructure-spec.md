@@ -126,6 +126,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | `backup.yml` | cron `0 17 * * *` | `export-control-plane.ts` で決定論的 JSONL を生成 → gzip → R2 へ **`wrangler r2 object put --remote` で upload → 再 download + `cmp` で往復検証** → 成功を heartbeat 通知 |
 
 - **backup.yml の export / upload 経路 (2026-07-26 実装反映)**: `packages/db/scripts/export-control-plane.ts` が生成する JSONL を日次保存形式の正本とする。restore CLI が同じ形式を直接読めるため、drill と障害復旧が日次成果物そのものを検証する。upload は R2 アクセスキーを追加発行せず `wrangler` を用い、再 download 後の `cmp` で byte 一致まで確認する。Turso CLI / `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` はこの経路では不要。
+- **成果物の採否判定は `verify-export-artifact.ts` に一本化する (2026-07-28 実装反映 / `HarnessHub-vns9`)**: workflow の shell で header を `grep` したり行数を `awk` で数えたりしない。判定の実体は `parseExportArtifact` (`packages/db/backup/export.ts`) で、header 形式・`format_version`・`coreTables` 19 テーブルとの**集合一致**・header 宣言行数と実際の行数の一致まで fail-closed に見る。workflow 側に弱い検査を二重に置くと、**弱い方が先に判定してしまう**。実際、旧実装の「データ行 0 なら不採用」がこれに当たり、migration 済みだがまだ利用の無い本番 DB を 3 夜連続で失敗させていた (詳細は §10)。
 
 **`ci.yml` の品質ゲート（qa-038【2】の required status checks に対応）**
 
@@ -156,7 +157,8 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - **本番スモークテスト (2026-07-25 / P13 実装確定)**: `packages/db/scripts/smoke-production.ts --url <turso> --r2-bucket <name>` が S1 接続 / S2 ULID 単調性 / S3 release 不変性 / S4 R2 往復 / S5 audit chain / S6 export→restore dry-run を検査し、**6 項目すべての ok** と検証データ cleanup 成功を満たさない限り exit≠0。検証で作成した行と R2 オブジェクトは `finally` で必ず削除し、削除失敗自体をスモーク失敗として扱う (本番に検証ゴミを残したまま緑にしない)。
 - デプロイは main merge で全自動 (qa-034 確定)。手動 gate は置かず、post-deploy health + smoke + rollback を防波堤とする。
 - **rollback step の契約 (2026-07-25 / P13 実装確定)**: `if: failure()` で起動し、**`wrangler rollback` は deploy step が success のときだけ**実行する (deploy 前に落ちた失敗で直前 version を巻き戻すと、無関係な回帰を持ち込むため)。**DB は自動 rollback しない** — migration は expand-only (§7 G7) で前方互換なので、旧 code は新 schema 上で動作する。step の exit code は rollback 自体の成否のみを表し、元の失敗を打ち消さない。
-- **GitHub Actions secret / variable 台帳 (2026-07-26 実装反映)**: 正本は [`scripts/ci/actions-secrets-registry.json`](../scripts/ci/actions-secrets-registry.json)。手動投入が必須なのは secret 4 件 (`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` / `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN`) と variable 2 件 (`HUB_HEALTH_URL` / `HUB_PUBLIC_URL`) の計 6 件。任意は `BACKUP_HEARTBEAT_URL` / `NOTION_TOKEN`、`GITHUB_TOKEN` は Actions 自動注入である。値や投入済み判定を文書へ複製せず、`node scripts/ci/check-actions-secrets.mjs --live` の結果を現在状態の正とする。
+- **GitHub Actions secret / variable 台帳 (2026-07-26 実装反映)**: 正本は [`scripts/ci/actions-secrets-registry.json`](../scripts/ci/actions-secrets-registry.json)。手動投入が必須なのは secret 4 件 (`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` / `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN`) と variable 2 件 (`HUB_HEALTH_URL` / `HUB_PUBLIC_URL`) の計 6 件。任意は secret 2 件 (`BACKUP_HEARTBEAT_URL` / `NOTION_TOKEN`) と variable 3 件 (`NOTION_DB_SKILL_LIST` / `INTAKE_NOTION_DATABASE_ID` / `NOTION_DB_IMPROVEMENT_REQUEST`)、`GITHUB_TOKEN` は Actions 自動注入である。値や投入済み判定を文書へ複製せず、`node scripts/ci/check-actions-secrets.mjs --live` の結果を現在状態の正とする。
+- **Notion 系 5 件は「任意だが条件付き必須」(2026-07-28 / `HarnessHub-5u5k`)**: これらはメタ層 (`governance-check.yml`) 専用で、プロダクト層の deploy には関与しない。`NOTION_TOKEN` 未投入なら該当 step は skip し workflow は成功するが、**投入した場合は DB ID 3 件 (variable) がすべて必要**であり、欠けていれば `prepare notion config` step が exit 1 で落ちる (未設定のまま「検査したつもりの緑」を出さないため)。DB ID に秘匿性は無いので secret ではなく variable で持つ。判定は job-level env の真偽値 `HAS_NOTION_TOKEN` 経由で行う — step-level `if` から同じ step の `env:` を参照すると、Actions の評価順 (`if` → `env` の順) により式が恒久的に false になり、secret を投入しても step が永久に skip される fail-open になるため (再発は `scripts/lint-workflow-step-guard.py` が全 workflow に対し fail-closed で遮断する)。
 
 - **R2 専用アクセスキーは発行しない (2026-07-25 確定)**。`R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ACCOUNT_ID` の 3 件は wrangler 経路へ統一したため台帳から削除した (§4.5 が「Workers binding 利用時は不要」としていた線に実装を寄せた)。
 - **残存リスク**: 上表では `CLOUDFLARE_API_TOKEN` 1 本を deploy と R2 write で共用しており、本節が推奨する「Workers deploy 権限と R2 write 権限を分離した 2 token」は **2026-07-25 現在未達**。最小権限 (least privilege) への分割は `issue-ci-token-least-privilege-20260725` (`HarnessHub-bda4`) で追跡する。
@@ -187,6 +189,9 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 ## 10. バックアップ・DR (qa-019)
 
 - **RPO ≤ 24h**: 日次 export (backup.yml)。`export-control-plane.ts` の JSONL を gzip し R2 へ保存する。salary / client secret は暗号文のまま転写し、export 経路で復号しない (qa-032)。
+  - **全テーブル 0 行の断面も「採用する」(2026-07-28 実装反映 / `HarnessHub-vns9`)**。空の DB を写した断面は restore すれば空の DB が再現するため、「復元できないバックアップを成功と数えない」(qa-019) には反しない。逆に 0 行を失敗にすると、稼働直後のまだ利用の無い期間じゅう日次 backup が赤で埋まり、**本物の障害がその赤の中に紛れる**。ただし採用は無言では行わず `::warning::` を残す (「バックアップは取れている」という読み違えを防ぐため)。
+  - この「採用する」は **§10 の restore drill の「空 DB の復元は drill 成立の根拠にしない」と矛盾しない**。前者は*日次成果物として保存に値するか*の判定、後者は*復元手順が実証されたと言えるか*の判定であり、判断対象が異なる。空断面は保存されるが、drill の成立根拠には数えない。
+  - artifact 単体では**「同じ 19 テーブル schema を持つ別 DB を見ていた」ことは切り分けられない**。`verify-export-artifact` が保証するのは schema 集合・形式・行数整合までで、接続先 URL 自体の正当性は GitHub Secret (`TURSO_DATABASE_URL`) の運用境界で管理する。
 - **RTO ≤ 4h (目標)**: runbook — (1) 空の一時 DB または新 Turso DB を用意 → (2) `restore-control-plane.ts` で最新 JSONL を restore → (3) report の `ok` / `chainOk` と table / index 数を確認 → (4) 障害復旧時だけ secret の URL/token 差替 → (5) `/health` 確認。
 - **restore drill**: 四半期ごとに**一時 DB** へ実 restore し、行数・整合検査まで実施 (常設 staging は持たない = §6)。**復元できないバックアップを成功と数えない** (qa-019)。
   - **単一経路の検証 (2026-07-26 実装反映)**: backup.yml が保存する JSONL を空 DB へ `restore-control-plane.ts` で戻し、header / schema / 行数 / audit hash chain / salary・secret 暗号断面を同じ CLI で検査する。日次形式・四半期 drill・本番復旧の入力形式とコマンドを揃え、別経路だけが緑になる偽成功を作らない。

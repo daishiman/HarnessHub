@@ -61,16 +61,13 @@ jobs:
           # --filter は cwd を packages/db にするため、--out は必ず絶対パスで渡す。
           pnpm --filter @harness-hub/db exec tsx scripts/export-control-plane.ts \
             --url "$TURSO_DATABASE_URL" --out "$artifact"
-          head -n 1 "$artifact" | grep -q 'harness-hub-control-plane-export' \
-            || { echo "::error::export 成果物の header が control-plane export ではない"; exit 1; }
-          # 行数は awk NR で数える。export は行を join('\n') で連結し末尾に改行を置かないため、
-          # wc -l だと最終行を数えず 1 行少なくなり、データ 1 行の正常な成果物を失敗扱いにしてしまう。
-          rows=$(($(awk 'END{print NR}' "$artifact") - 1))
-          echo "export rows: ${rows}"
-          if [ "$rows" -lt 1 ]; then
-            echo "::error::export にデータ行が 1 行も無い。バックアップとして採用しない"
-            exit 1
-          fi
+          # 成果物の採否は verify-export-artifact へ一本化する (実体は parseExportArtifact)。
+          # header の形式・coreTables 19 テーブルとの集合一致・header の行数と実際の行数の一致まで
+          # fail-closed で見るため、schema が異なる接続先や migration 未適用は必ず落ちる。
+          # ここで header を grep したり行数を awk で数えたりすると、ライブラリより弱い検査が
+          # 先に判定してしまう。旧実装の「データ行 0 なら失敗」がまさにそれで、migration 済みだが
+          # まだ利用の無い本番 DB を 3 夜連続で失敗させていた (空 DB の export も復元可能な正しい断面)。
+          pnpm --filter @harness-hub/db exec tsx scripts/verify-export-artifact.ts --file "$artifact"
           gzip -9 "$artifact"
           echo "OBJECT_KEY=db-export/${year}/${stamp}.jsonl.gz" >> "$GITHUB_ENV"
           echo "LOCAL_PATH=${artifact}.gz" >> "$GITHUB_ENV"

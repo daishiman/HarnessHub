@@ -3,8 +3,11 @@
 
 scenario: ``C19-OUT1-positive-system-spec-lineage``
 契約: live-trial-positive-scenarios.json の fixture_contract
-  "A contained system-spec workspace and the declared system-spec-harness plugin
-   provide all four required entry points, confirmed output, citations, and evaluator PASS."
+  "The contained system-spec workspace holds only system-spec/requirements-brief.md;
+   spec-state.json, fetched-references.json, completeness-report.json and index.md are
+   absent by design. The declared system-spec-harness plugin supplies all four required
+   entry points, and confirmed output, citations and evaluator PASS must be produced by
+   completing that canonical flow during the trial."
 
 この形状が置くもの (1 file):
   system-spec/requirements-brief.md   非対話で正規フローを完走させるための要求 brief
@@ -201,6 +204,54 @@ serves_goals: D1 → G1, G3, G4 / D2 → G2, G4 / D3 → G2。
 - §4 の採択 (D1 `sqlite` / D2 `fastapi` / D3 `local-bearer-token`)。
 """
 
+# 本 shape が置く実体の正本。build() はこの map からしか書かないので、
+# 「置くもの」の宣言 (TASK_CONTRACT.placed_inputs) と実 fixture が構造的に一致する。
+PLACED_CONTENT: dict[str, str] = {BRIEF_PATH: BRIEF}
+
+# task 指示 (live-trial の被験セッションへ渡す task.md) の前提を機械検査するための契約。
+#
+# 上の docstring は「なぜそう置くか」の根拠を人間へ説明するが、散文なので機械は読めない。
+# HarnessHub-768b の事故は、その散文契約と手作業複製された task.md の前提が食い違っても
+# 誰も気づけなかったことに起因する (task が「確定成果物は事前配置済み」と仮定し、
+# 実 fixture は brief 1 file だけだった)。ここを機械可読にして
+# ``plugins/dev-graph/scripts/lint-live-trial-task-contract.py`` の入力にする。
+#
+# scenario_id / task_args_template / required_observations の正本は
+# ``live-trial-positive-scenarios.json`` 側にあり、本 dict は重複保持しない
+# (scenario_id だけは突合キーとして持つ)。lint が両者を突合するので、
+# どちらか一方だけ動かすと drift として検出される。
+TASK_CONTRACT: dict[str, object] = {
+    "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+    # 被験 skill が委譲する先の plugin。task.md はこの plugin 名を明示して
+    # 「宣言済み plugin を読み込む」観測条件 (required_observations[0]) に接地させる。
+    "harness_plugin": "system-spec-harness",
+    # fixture が最初から置く業務入力。task.md はこれを初期状態として書かなければならない。
+    "placed_inputs": tuple(PLACED_CONTENT),
+    # fixture が置かない成果物。被験 skill が正規フローで生成する対象そのものであり、
+    # task.md が「事前配置済み」と主張したら前提が実 fixture と矛盾する。
+    "absent_artifacts": (
+        "system-spec/spec-state.json",
+        "system-spec/fetched-references.json",
+        "system-spec/completeness-report.json",
+        "system-spec/index.md",
+    ),
+    # R1-preflight の検査対象。task.md はこの 4 つを Skill 経由で完走するよう要求する。
+    "required_entry_points": (
+        "run-system-spec-elicit",
+        "run-system-spec-doc-fetch",
+        "run-system-spec-compile",
+        "assign-system-spec-completeness-evaluator",
+    ),
+    # required_observations (scenario 正本) と同数・同順。各 observation が task.md 上で
+    # 要求されていることを機械判定するためのキーワード群で、内側 tuple は AND 条件。
+    # scenario 側が観測条件を増減したら本 tuple も動かさないと lint が件数 drift で落ちる。
+    "observation_keywords": (
+        ("system-spec-harness", "Skill"),
+        ("source_lineage", "confirmation_evidence"),
+        ("C02", "upsert-node.py"),
+    ),
+}
+
 
 def build(out: Path) -> None:
     """C19 scenario 用の隔離 fixture repository を生成する。
@@ -210,7 +261,17 @@ def build(out: Path) -> None:
     1 file 置くだけに留める。content root ``system-spec/`` は骨格側が実体化する。
     """
     scaffold(out, kind=SHAPE)
-    target = out / BRIEF_PATH
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(BRIEF, encoding="utf-8")
+    for relative, body in PLACED_CONTENT.items():
+        target = out / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(body, encoding="utf-8")
+    # 「置かないもの」を生成時点で閉じる。骨格側 (scaffold) の変更や将来の追記で
+    # absent_artifacts が実体化すると、task.md の前提検査が全て緑のまま
+    # 実 fixture だけが旧前提へ戻る (検査が意味を失う) ため、ここで fail-closed にする。
+    for relative in TASK_CONTRACT["absent_artifacts"]:
+        if (out / relative).exists():
+            raise AssertionError(
+                f"absent_artifacts に宣言した {relative} が fixture に実体化している "
+                "(TASK_CONTRACT と build の契約が破れている)"
+            )
     finalize(out)

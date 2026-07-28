@@ -71,3 +71,13 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-auth-tenancy` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-28 最終レビュー追補
+
+- Beads: `HarnessHub-15h.5` / feature: `HarnessHub-15h`
+- サインイン form action を確定済み tenant path へ一致させ、`/device` 承認画面と
+  session 緊急失効の表示境界を追加した。
+- task spec validator、対象テスト、typecheck、lint を再実行して pass を確認した。
+- 新しい API・DB・role・数値契約は無い。仕様影響なしの判断は
+  `docs/features/feat-auth-tenancy/spec-reflection-receipt.md` §10 を参照する。
+- PR が main へ merge されるまで durable done にせず、`in_progress` を維持する。
