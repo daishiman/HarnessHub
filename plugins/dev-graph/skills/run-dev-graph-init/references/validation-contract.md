@@ -18,8 +18,9 @@ schema 適合だけでは検出できない不変条件を含めて 3 層で検�
 
 | 層 | 検査内容 | finding code |
 |---|---|---|
-| schema | `repo-config.schema.json` への適合 (条件制約 `execution_tracker.mode ∈ {github,both}` → `github.enabled=true` を含む) | `schema_violation` |
+| schema | `repo-config.schema.json` への適合 (条件制約 `execution_tracker.mode ∈ {github,both}` → `github.enabled=true`、`claude_hooks.source=project` → `project_plugin_link` required を含む) | `schema_violation` |
 | path | repo-relative 宣言・宣言重複・realpath による repo 内包・実在 | `path_not_repo_relative` / `declared_path_collision` / `path_escapes_repository` / `content_root_missing` / `content_root_key_unknown` |
+| hook link | `claude_hooks.source=project` のときだけ `project_plugin_link` の実体が plain symlink か | `project_plugin_link_absent` / `project_plugin_link_not_symlink` / `project_plugin_link_broken` / `project_plugin_link_not_directory` |
 | 秘密材料 | `github` セクション配下値への token / GitHub node ID 混入 | `secret_material` |
 
 **path 層が schema と別に要る理由**: schema の `pattern` は文字列しか見ない。`issues` という
