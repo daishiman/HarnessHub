@@ -12,7 +12,7 @@ iteration: null
 title: "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-24T22:32:02Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P05"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-24T22:32:02Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-26T04:57:29Z",
+  "evaluator": "fresh-agent/evaluate_8wo_live_trial",
+  "scenario": "C02-OUT1-positive-mixed-artifacts",
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "../../../live-trial-fixtures/node-wt7-r3"
+  ]
+}

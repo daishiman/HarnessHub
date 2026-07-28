@@ -2,27 +2,43 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-node",
-    "skill_md_sha256": "5a2cf162d207756e8b7f82c03b31f95fd0d9d82a7d53636bdc42f5c8c8d44a10"
+    "skill_md_sha256": "3749ff518403e2b48d02aeb7f3dd5aa3567331426db1850de75d3ab5db994bd1"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent-content-reviewer-20260723",
-  "reviewed_at": "2026-07-23",
-  "iterations": 1,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 2
+  },
+  "reviewer": "independent-content-reviewer-content_review_74hx",
+  "reviewed_at": "2026-07-26T01:56:58Z",
+  "iterations": 2,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3"],
-    "positive_feedback": [
-      "NM 命名: name=run-dev-graph-node が dir 名/prefix=run/kind=run と一致し、description は atomic 追加・差分更新+exact-13 all-or-none 登録という発火条件を trigger 型で維持。今回の変更は命名・description に影響しない。",
-      "BD 出力契約: Purpose & Output Contract の入力/出力/完了条件、Classification and write・Deterministic upsert・Exact-13 package gate・Execution-context consumer・Gotchas の節分割が維持され、追加文は既存の ### ゴールシーク配線 節内で成果物定義 bullet に密着配置されており progressive disclosure を崩さない。",
-      "RG 責務: 追加文は新しい責務や成果物を導入せず、既定義の 3 配線成果物の履行条件 (単発依頼時も省略不可) を明確化するのみで、C02 単一 writer という単一責務に収束したまま。受入条件の測定可能性 (欠落0件/applied_count=0/expected_count=applied_count=13 等) も全て維持され、追加文自体も eval-log ファイルの実在検査で live-trial 検証可能な行動記述になっている。"
+    "criteria_evaluated": [
+      "IN1",
+      "OUT1",
+      "OUT2",
+      "OUT3"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "positive_feedback": [
+      "Purpose & Output Contract、Gotchas、300行上限、命名とディレクトリの一致を満たす。",
+      "description の2つの発火条件は通常 artifact upsert と exact-13 package 登録として本文へ対応付けられている。",
+      "追加説明は既存節へ局所的に配置され、C02単一 writer の責務を崩していない。",
+      "受入条件は本文保持、receipt、local-only policy、OR-003 収束として観測可能である。"
+    ],
+    "negative_feedback": [
+      "低 severity: description は dev-graph artifact から始まり、FM-005 の動詞的な語から開始する推奨形式には厳密一致しない。",
+      "低 severity: 本文は約127行で skill 直下に references/ がなく、PD-001 の推奨分割条件には厳密一致しない。いずれも既存構造由来で今回の変更を妨げない。"
+    ],
+    "iteration": 2,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "配線成果物書き出しの履行ばらつき対策として単発 node 操作でも省略不可の 1 文を追加した変更後 SKILL.md (sha256 5a2cf162...) を rubric 観点で独立再評価。命名・出力契約・単一責務・progressive disclosure・受入条件の測定可能性はいずれも維持され、追加文は既存構造への最小挿入で rubric 違反を新規に生まない。重大違反 0 件。PASS。"
+  "notes": "rubric 推定 94/100。blocking finding はなく、--regenerate-body、5値 receipt、local-only 完了経路は内容・実装ともに適切で PASS。"
 }

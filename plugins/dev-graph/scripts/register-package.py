@@ -20,6 +20,7 @@ import hashlib
 import json
 import os
 import re
+import runpy
 import sys
 import tempfile
 from contextlib import contextmanager
@@ -29,6 +30,10 @@ from typing import Any, Iterator
 from _common import ContractError, atomic_json, contained, dump, load_json, utc_now
 
 HERE = Path(__file__).resolve().parent
+_PREFLIGHT_HELPER = runpy.run_path(str(HERE / "validate-registration-preflight.py"))
+_SCHEMA_HELPER = runpy.run_path(str(HERE / "validate-registration-schema.py"))
+preflight_contract = _PREFLIGHT_HELPER["preflight_contract"]
+_validate_schema = _SCHEMA_HELPER["validate_schema"]
 PLUGIN_ROOT = HERE.parent
 DEFAULT_SYSTEM_ROOT = PLUGIN_ROOT.parent / "system-dev-planner"
 PHASES = [f"P{i:02d}" for i in range(1, 14)]
@@ -45,92 +50,10 @@ RECEIPT_STABLE_KEYS = {
     "supersedes_source_digest",
 }
 CANONICAL_REGISTRATION_RECEIPT = "dev-graph-registration-receipt.json"
-
-
-def _schema_error(path: str, detail: str) -> ContractError:
-    return ContractError(f"schema violation at {path}: {detail}")
-
-
-def _is_type(value: Any, expected: str) -> bool:
-    if expected == "null": return value is None
-    if expected == "object": return isinstance(value, dict)
-    if expected == "array": return isinstance(value, list)
-    if expected == "string": return isinstance(value, str)
-    if expected == "boolean": return isinstance(value, bool)
-    if expected == "integer": return isinstance(value, int) and not isinstance(value, bool)
-    if expected == "number": return isinstance(value, (int, float)) and not isinstance(value, bool)
-    return True
-
-
-def _matches(value: Any, schema: Any, root: dict[str, Any]) -> bool:
-    try:
-        _validate_schema(value, schema, root, "$")
-        return True
-    except ContractError:
-        return False
-
-
-def _validate_schema(value: Any, schema: Any, root: dict[str, Any], path: str) -> None:
-    """Validate the stdlib-only subset used by the local package/node schemas."""
-    if schema is True: return
-    if schema is False: raise _schema_error(path, "value is forbidden")
-    if not isinstance(schema, dict): raise _schema_error(path, "invalid schema object")
-    ref = schema.get("$ref")
-    if isinstance(ref, str):
-        if not ref.startswith("#/"):
-            raise _schema_error(path, f"external $ref is not supported here: {ref}")
-        target: Any = root
-        for part in ref[2:].split("/"):
-            target = target[part.replace("~1", "/").replace("~0", "~")]
-        _validate_schema(value, target, root, path)
-    for child in schema.get("allOf", []): _validate_schema(value, child, root, path)
-    if "if" in schema and _matches(value, schema["if"], root) and "then" in schema:
-        _validate_schema(value, schema["then"], root, path)
-    expected = schema.get("type")
-    if expected is not None:
-        choices = expected if isinstance(expected, list) else [expected]
-        if not any(_is_type(value, item) for item in choices):
-            raise _schema_error(path, f"expected type {choices}, got {type(value).__name__}")
-    if "const" in schema and value != schema["const"]:
-        raise _schema_error(path, f"expected const {schema['const']!r}")
-    if "enum" in schema and value not in schema["enum"]:
-        raise _schema_error(path, f"not in enum {schema['enum']!r}")
-    if isinstance(value, str):
-        if len(value) < schema.get("minLength", 0): raise _schema_error(path, "string too short")
-        if "pattern" in schema and re.search(schema["pattern"], value) is None:
-            raise _schema_error(path, f"does not match {schema['pattern']}")
-    if isinstance(value, (int, float)) and not isinstance(value, bool):
-        if "minimum" in schema and value < schema["minimum"]: raise _schema_error(path, "below minimum")
-        if "maximum" in schema and value > schema["maximum"]: raise _schema_error(path, "above maximum")
-    if isinstance(value, list):
-        if len(value) < schema.get("minItems", 0): raise _schema_error(path, "too few items")
-        if "maxItems" in schema and len(value) > schema["maxItems"]: raise _schema_error(path, "too many items")
-        if schema.get("uniqueItems"):
-            packed = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in value]
-            if len(set(packed)) != len(packed): raise _schema_error(path, "items are not unique")
-        prefix = schema.get("prefixItems", [])
-        for index, child in enumerate(prefix[:len(value)]):
-            _validate_schema(value[index], child, root, f"{path}[{index}]")
-        items = schema.get("items")
-        if items is False and len(value) > len(prefix): raise _schema_error(path, "additional items forbidden")
-        if isinstance(items, dict):
-            for index, item in enumerate(value): _validate_schema(item, items, root, f"{path}[{index}]")
-        if "contains" in schema and not any(_matches(item, schema["contains"], root) for item in value):
-            raise _schema_error(path, "contains constraint not satisfied")
-    if isinstance(value, dict):
-        for key in schema.get("required", []):
-            if key not in value: raise _schema_error(path, f"missing required property {key}")
-        props = schema.get("properties", {})
-        for key, child in props.items():
-            if key in value: _validate_schema(value[key], child, root, f"{path}.{key}")
-        additional = schema.get("additionalProperties", True)
-        unknown = set(value) - set(props)
-        if additional is False and unknown: raise _schema_error(path, f"unknown properties {sorted(unknown)}")
-        if isinstance(additional, dict):
-            for key in unknown: _validate_schema(value[key], additional, root, f"{path}.{key}")
-        if len(value) < schema.get("minProperties", 0): raise _schema_error(path, "too few properties")
-        if "maxProperties" in schema and len(value) > schema["maxProperties"]:
-            raise _schema_error(path, "too many properties")
+# PR の merge を完了条件にする policy。local_only の node は PR を 1 件も持たないため
+# これらのままでは `status=done` へ到達できない (_normalize_local_only_completion を参照)。
+PR_LINKED_COMPLETION_POLICIES = frozenset({"linked_pr_merged_all", "linked_pr_merged_any"})
+LOCAL_ONLY_COMPLETION_POLICY = "manual"
 
 
 def _path(root: Path, raw: str, *, must_exist: bool) -> Path:
@@ -156,45 +79,6 @@ def _schema_version(schema: dict[str, Any], name: str) -> str:
     value = (((schema.get("properties") or {}).get("schema_version") or {}).get("const"))
     if not isinstance(value, str): raise ContractError(f"{name} does not pin properties.schema_version.const")
     return value
-
-
-def preflight_contract(system_root: Path, required_version: str, required_schema_version: str) -> dict[str, Any]:
-    root = system_root.resolve(strict=True)
-    manifest = _json_object(root / ".claude-plugin" / "plugin.json")
-    if manifest.get("name") != "system-dev-planner": raise ContractError("unexpected upstream plugin name")
-    if manifest.get("version") != required_version:
-        raise ContractError(f"system-dev-planner version mismatch: expected {required_version}, got {manifest.get('version')}")
-    package_contract = _json_object(root / "references" / "package-contract.json")
-    if package_contract.get("plugin_name") != "system-dev-planner":
-        raise ContractError("system-dev-planner package contract identity mismatch")
-    entry_points = package_contract.get("entry_points")
-    if not isinstance(entry_points, dict):
-        raise ContractError("system-dev-planner package contract entry_points missing")
-    required = {
-        "skills": ["run-system-dev-plan", "assign-system-dev-plan-evaluator"],
-        "agents": ["system-dev-plan-elicitor", "system-dev-plan-architect", "system-dev-plan-evaluator"],
-        "commands": ["system-dev-plan"],
-    }
-    suffixes = {"skills": "SKILL.md", "agents": ".md", "commands": ".md"}
-    for kind, names in required.items():
-        declared = entry_points.get(kind)
-        if not isinstance(declared, list) or not set(names).issubset(set(declared)):
-            raise ContractError(f"missing required {kind} entrypoints: {sorted(set(names) - set(declared or []))}")
-        for name in names:
-            physical = root / kind / name / suffixes[kind] if kind == "skills" else root / kind / f"{name}{suffixes[kind]}"
-            if not physical.is_file(): raise ContractError(f"declared entrypoint is missing: {physical}")
-    schemas = {}
-    for filename in ("feature-execution-package.schema.json", "dev-graph-registration.schema.json"):
-        schema = _json_object(root / "schemas" / filename)
-        version = _schema_version(schema, filename)
-        if version != required_schema_version:
-            raise ContractError(f"{filename} version mismatch: expected {required_schema_version}, got {version}")
-        schemas[filename] = version
-    for filename in ("validate-system-plan.py", "promote-system-plan.py"):
-        if not (root / "scripts" / filename).is_file(): raise ContractError(f"required upstream script missing: {filename}")
-    return {"valid": True, "plugin": "system-dev-planner", "version": required_version,
-            "entrypoint_source": "references/package-contract.json",
-            "schema_versions": schemas, "required_entrypoints": required}
 
 
 def _validate_package(package: dict[str, Any], schema: dict[str, Any]) -> None:
@@ -271,6 +155,25 @@ def _resolve_binding(intent: str, mode: str) -> str:
     return intent
 
 
+def _normalize_local_only_completion(node: dict[str, Any]) -> None:
+    """local_only 運用の node から到達不能な完了 policy を取り除く。
+
+    `linked_pr_merged_all|any` は「紐づいた PR が全て/いずれか merge されたら done」を
+    意味し、graph-node.schema.json も `status=done` への遷移時に merged な
+    `pull_request_linkages` を 1 件以上要求する。local_only の node は PR を 1 件も
+    持たないため、この policy のままでは `completion_evidence` が永久に `done` へ
+    到達せず、beads だけが closed になって OR-003 (解決済みの open 残置) が積み上がる。
+
+    正本: HarnessHub-n7gw / `.dev-graph/templates/task.md` (beads 運用では
+    `policy=manual` を用いる)。
+    """
+    completion = node.get("completion_evidence")
+    if not isinstance(completion, dict):
+        return
+    if completion.get("policy") in PR_LINKED_COMPLETION_POLICIES:
+        completion["policy"] = LOCAL_ONLY_COMPLETION_POLICY
+
+
 def _resolved_nodes(nodes: list[dict[str, Any]], intents: dict[str, str], mode: str,
                     node_schema: dict[str, Any]) -> list[dict[str, Any]]:
     result = copy.deepcopy(nodes)
@@ -284,6 +187,7 @@ def _resolved_nodes(nodes: list[dict[str, Any]], intents: dict[str, str], mode: 
         else:
             publication["mode"] = "local_only"
             publication["project_aliases"] = []
+            _normalize_local_only_completion(node)
         if binding in {"github", "none"}: node["beads_linkage"] = None
         _validate_schema(node, node_schema, node_schema, f"resolved_nodes[{index}]")
         if node["tracker_binding"] == "repo-config-default": raise ContractError("unresolved binding sentinel")

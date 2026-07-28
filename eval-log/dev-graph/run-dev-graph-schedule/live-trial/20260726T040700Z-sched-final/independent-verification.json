@@ -1,0 +1,66 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "skill-invocation-via-tool",
+      "verdict": "PASS",
+      "observed": "Transcript line 66 contains Skill tool_use with name='Skill', input.skill='dev-graph:run-dev-graph-schedule', args='--repo-root .../schedule-wt6 --max-parallel 2'. Pane.txt line 46 confirms 'Skill(dev-graph:run-dev-graph-schedule) → Successfully loaded skill · 6 tools allowed'."
+    },
+    {
+      "name": "deterministic-ready-set",
+      "verdict": "PASS",
+      "observed": "execution.json ready_set.tasks=[LT-SCHED-001,002,003,006]. Independently verified: all 4 nodes are confirmed/pass/readiness=complete, depends_on=[] (or satisfied), no active lease. LT-SCHED-004 (active lease 2099) and LT-SCHED-005 (depends_on=[001] unsatisfied) correctly excluded."
+    },
+    {
+      "name": "resource-scope-conflict-separation",
+      "verdict": "PASS",
+      "observed": "LT-SCHED-001 and LT-SCHED-002 both have resource_scope=['src/alpha.py']. batches.tasks=[[001,003],[002,006]] — the overlapping pair is never in the same batch. Batch 0: alpha.py+beta.py (no overlap). Batch 1: alpha.py+delta.py (no overlap). conflict_pairs records kind=ready_pair for 001↔002."
+    },
+    {
+      "name": "blocked-task-excluded",
+      "verdict": "PASS",
+      "observed": "LT-SCHED-005 has depends_on=['LT-SCHED-001']; LT-SCHED-001.completion_evidence.status='open' (not done). LT-SCHED-005 absent from ready_set. progress.json candidate-eligibility evidence: 'LT-SCHED-005 blocked by unmet dependency'."
+    },
+    {
+      "name": "active-lease-suppresses-stale-reclaimed",
+      "verdict": "PASS",
+      "observed": "leases.json: LT-SCHED-004 expires_at=2099-01-01 state=in_progress (active) → conflicts=['LT-SCHED-004'], excluded from ready_set. LT-SCHED-006 expires_at=2020-01-01 state=claimed (stale/expired) → included in ready_set, stale lease reclaimed."
+    },
+    {
+      "name": "max-parallel-respected",
+      "verdict": "PASS",
+      "observed": "max_parallel=2 in execution.json. batches.tasks=[[001,003],[002,006]]; each batch has exactly 2 items, never exceeding --max-parallel 2."
+    },
+    {
+      "name": "unique-branches-and-claims",
+      "verdict": "PASS",
+      "observed": "4 assignment_hints with unique suggested_branch values: devgraph/LT-SCHED-{001,002,003,006}. Each claim_command follows '/dev-graph worktree claim <id> --branch devgraph/<id> --session-id <session>' format. No duplicate branches or claims."
+    },
+    {
+      "name": "digest-immutability",
+      "verdict": "PASS",
+      "observed": "graph_sha256_before=e4d17190c755...=graph_sha256_after. lease_sha256_before=b10e1c1670e6...=lease_sha256_after. read_only=true. Schedule was computed without mutating graph or leases."
+    },
+    {
+      "name": "goal-seek-3-piece-set",
+      "verdict": "PASS",
+      "observed": "goal-spec.json exists (original_goal matches SKILL.md line 110 verbatim). progress.json exists (overall=PASS, 7 checklist items all PASS, 4 criteria IN1/OUT1/OUT2/OUT3 all PASS). intermediate.jsonl exists (2 lines, each with all 6 required keys, hash d0041dde...=SHA-256 of original_goal verified by independent recomputation)."
+    },
+    {
+      "name": "intermediate-append-only",
+      "verdict": "PASS",
+      "observed": "Pane.txt shows: Write(intermediate.jsonl) at line 33-37 (1 line, pre-execution), then Skill invocation at line 46, then Bash printf append (>>) at line 137-138 (post-execution). 2 lines total, written in temporal order, no overwrites."
+    },
+    {
+      "name": "c17-independent-verifier",
+      "verdict": "PASS",
+      "observed": "Pane.txt line 109-111: 'dev-graph:dev-graph-parallel-safety-verifier(C17 independent verifier) → Done'. Line 113: 'C17 verifier returned PASS'. progress.json c17-verifier checklist item status=PASS."
+    },
+    {
+      "name": "repeated-run-stability",
+      "verdict": "PASS",
+      "observed": "scenario-verdict.json OUT1 observed section documents: 'fixture を scratchpad へコピーし schedule-graph.py --max-parallel 2 を再実行 (exit=0)。executed_at 以外の全キーが fixture receipt と完全一致 (ready_set / batches [[001,003],[002,006]] / conflicts / conflict_pairs / assignment_hints / selection_receipt を含む)'. Deterministic reproduction confirmed."
+    }
+  ]
+}

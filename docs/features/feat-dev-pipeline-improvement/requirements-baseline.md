@@ -71,7 +71,7 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 
 ## 6. qa-067 の 8 要件との対応表
 
-正本: `system-spec/dev-workflow.md` qa-067 (`sha256:bdf3c60e2ab89540c6dd7bdf6009316070d66f9cf36aee17743d825668b6ae21`)。
+正本: `system-spec/dev-workflow.md` qa-067 (`sha256:43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86`)。
 
 | qa-067 要件 | scope_in | acceptance |
 |---|---|---|
@@ -88,10 +88,10 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 
 | path | sha256 | status |
 |---|---|---|
-| `features/feat-dev-pipeline-improvement.context.json` | `16d9e07bc878c21e6054ba7f178d2d1fc5e303961a297f9a5949a20f328e5085` | verified |
+| `features/feat-dev-pipeline-improvement.context.json` | `0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89` | verified |
 | `architecture/harness-hub-dev-workflow.md` | `ee6ff7b9b95d37d41921f2ca482ae7b90e094e9c6236aff9794be1a1e8a61db3` | verified |
 | `specs/harness-hub-system-specification.md` | `a619518374201b03723ebd2cfd4d1406b3f9aa1a986f01756a10ccea091a11dc` | verified |
-| `system-spec/dev-workflow.md` | `bdf3c60e2ab89540c6dd7bdf6009316070d66f9cf36aee17743d825668b6ae21` | verified |
+| `system-spec/dev-workflow.md` | `43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86` | verified |
 
 ## 8. P02 で確定すべき据置事項 (4 件)
 
