@@ -169,6 +169,7 @@ qa-039【2】(CI と local の乖離防止) は required status check を local 
 是正として `.github/workflows/ci.yml` の静的ゲート段へ **G12** を、root には `pnpm check:auth` を同時に用意した。あわせて、必須ゲートとして名指しされている tenant 分離テストが `pnpm -r test` に紛れて実行されるだけの状態を、`scripts/ci/check-tenant-isolation-gate.mjs` (対象実在 / ケース ID 網羅 / `skip`・`only` の不在を fail-closed で検査) で名指し化した。ゲート数は増やしていない。
 
 この作業中に **同型の未結線が G7 / G7b / G9 に残っている**ことが判明した (`HarnessHub-yhc3`)。またメタ層 lint (`governance-check.yml`) には local 入口そのものが無く、プロダクト層 `verify` へ混ぜると層分離を壊すため設計判断を要する (`HarnessHub-11qt`)。ゲート登録簿と local 入口の対応表は `docs/shared-layers.md` §3 (下流投影) が持ち、本節は「乖離が構造的に再発する」というリスクの記録に留める。
+
 ### 差分追記 (2026-07-28): 結線されていても「起動条件が恒久 false」なら走らない
 
 出典: `issue-governance-notion-steps-always-skipped-20260725` (bd `HarnessHub-5u5k`)。
@@ -182,18 +183,27 @@ qa-039【2】(CI と local の乖離防止) は required status check を local 
 あわせて、条件付き必須という第 3 の状態を台帳へ導入した。`NOTION_TOKEN` は任意 (未投入なら skip して成功) だが、**投入したなら DB ID 3 件 (variable) がすべて必要**で、欠ければ `prepare notion config` step が exit 1 で落ちる。「必須/任意」の 2 値だけでは、token だけ入れて DB ID を忘れた中途半端な設定が緑のまま残る。
 
 **後日談 — 是正そのものが同じ罠を踏んだ。** 追加した `lint-workflow-step-guard.py` は PyYAML を要求する。開発機には入っているので `make lint` は緑になったが、`change-category-guard` job は lint 専用で依存を install しておらず、CI では `[ERR] PyYAML が必要です` の exit 2 で落ちた (PR #589)。上節が扱った「local 入口が無い」の**裏返し**で、こちらは*入口はあるが実行前提が local にしか無い*形である。結線 (どこから呼ぶか) と前提 (何があれば動くか) は別々に検査しなければならない。是正は install step を step guard より前へ置くことだが、それだけでは「後から順序が入れ替わっても気づけない」ため、①依存が本当に必要であること (PyYAML を解決不能にすると exit 2)、②install が guard より前にあり無条件であること、③版指定が `requirements-dev.txt` から実際に取り出せること、を契約テストで固定した。なお `-r` で丸ごと install しないのは、本 job が pytest を持たないこと自体が「plugin pytest は kit-ci に一元化する」の前提になっているためで、この境界も同テストで機械化した。
-### 差分追記 (2026-07-28): 並列 worktree の ref 更新は共有 hook と commit 前検査で二重防御する
 
-出典: `issue-worktree-main-ref-desync-20260728` (bd `HarnessHub-7xi9`)。運用・復旧手順は
-`docs/worktree-parallel-operations-runbook.md`。
+### 差分追記 (2026-07-28): 並列 worktree が共有する ref は「作業ツリーを持たない更新経路」を持つ
 
-worktree は git common dir（全 worktree が共有する Git 管理領域）を共有する一方、
-HEAD / index / 作業ツリーは worktree ごとに持つ。別 worktree から `git update-ref` や
-`git fetch origin main:main` で checkout 中の branch ref だけを動かすと、所有者側の
-作業ツリーが古いまま残る。この状態で `git commit -a` すると、直前に取り込まれた変更を
-大量削除として巻き戻せる。`git pull` は ref が既に最新なので修復手段にならない。
+出典: `issue-worktree-main-ref-desync-20260728` (bd `HarnessHub-7xi9`)。復旧手順は `docs/worktree-desync-recovery-runbook.md`。
 
-防御は次の 2 層とする。
+git は HEAD (ref) / index / 作業ツリーの 3 層で状態を持ち、`pull` と `checkout` は 3 層すべてを、`update-ref` 系は **ref だけ**を更新する。worktree は `.git` を共有するため、**別ディレクトリの worktree から、主ワークツリーが checkout 中の `refs/heads/main` を作業ツリー無しで動かせる**。これは git の仕様であり不具合ではない。
+
+結果として主ワークツリーは ref だけが最新へ進み、実ファイルが古い基点に取り残される。この状態で `git commit -a` すると**直前の PR のマージ内容を丸ごと打ち消すコミット**が main に載る。2026-07-28 に 2 度実測しており、それぞれ 65 files / -5,467 行、19 files / -878 行の巻き戻しに相当した。`stash@{26}` に残る同種の退避を含めれば 3 回目の再発である。
+
+**危険なのは検知が目視に依存している点である。** `git pull` は ref が最新なので `Already up to date` を返し (git は正しい)、`git status` は PR が追加したファイルを `deleted`、更新したファイルを `modified` と表示する。差分の向きが直感と逆になるため「自分が壊した」と誤認しやすく、CI も「意図された削除」と区別できないため緑のまま通過しうる。**巻き戻しコミットは、レビュー済みの変更が無言で消える形で main に到達する。**
+
+現時点の是正は運用制約と runbook に留まる — エージェントの ref 操作を `git fetch origin` (remote-tracking のみ) に限定し、`git fetch origin main:main` / `git update-ref refs/heads/main` を禁じる。仕組みによる遮断 (`reference-transaction` hook による他ワークツリー checkout 中 ref への更新拒否、desync 状態での commit を止める pre-commit 検査) は同課題で追跡する。`core.hooksPath` が `.beads/hooks` を指すため、hook の設置場所が beads 更新で消えないことの検証が前提になる。
+
+あわせて、**`stash@{N}` はスタックの位置であって識別子ではない**という制約が並列稼働下で顕在化した。復旧作業中に別セッションの `git stash push` で `stash@{0}` の指す対象が入れ替わる事象を観測している。退避内容を番号で参照する手順は、それ自体が事故要因である。規約は「`-m` でメッセージを必須とし、参照はメッセージ検索で行う」。
+
+### 差分追記 (2026-07-28): 共有 hook と commit 前検査で worktree desync を二重防御する
+
+出典: `issue-worktree-main-ref-desync-20260728` (bd `HarnessHub-7xi9`)。実装後の運用・
+復旧手順は `docs/worktree-parallel-operations-runbook.md`。
+
+観測時点では運用制約だけだったが、最終的に次の 2 層を実装した。
 
 1. `reference-transaction` hook は、更新対象の `refs/heads/*` を checkout 中の worktree
    を列挙し、実行元以外が所有する ref の更新を transaction 確定前に拒否する。
@@ -203,9 +213,9 @@ HEAD / index / 作業ツリーは worktree ごとに持つ。別 worktree から
    閾値以上の staged 削除を拒否する。こちらは commit だけを止めればよいため、
    Python や検査材料が欠けた場合も fail-closed（判定不能なら止める）とする。
 
-`core.hooksPath=.githooks` のような相対指定は採用しない。相対パスはコマンド実行元
-worktree の内容を参照するため、導入前の古い branch には新しい hook が存在せず、
-防御を迂回できる。`scripts/install-git-hooks.sh` は tracked template を
+`core.hooksPath=.githooks` のような相対指定は、コマンド実行元 worktree の内容を参照する。
+そのため導入前の古い branch には hook が存在せず、防御を迂回できる。
+`scripts/install-git-hooks.sh` は tracked template を
 `<git-common-dir>/harness-hub-hooks/` へコピーし、その絶対パスを `core.hooksPath` に
 設定する。これにより branch の新旧に関係なく全 worktree が同じ hook を実行する。
 
@@ -214,10 +224,21 @@ beads が管理する `.beads/hooks` との競合は、共有 hook から現在�
 tracked template との差・`core.hooksPath` のずれ・beads 再生成による保険経路の消失は
 `scripts/validate-git-hooks-wiring.py` を pre-push と CI に結線して検知する。
 pre-push の installed-bundle 経路も、現在の branch に tracked template が存在する場合は
-内容差を検査する。これにより guard 本体を変更した後の再 install 忘れを push 前に止める。
-導入前の古い branch では source template が無い pair の freshness 比較だけを省略し、
-共有 bundle 単独での遮断能力を維持する。
+内容差を検査する。導入前の古い branch では source template が無い pair の freshness
+比較だけを省略し、共有 bundle 単独での遮断能力を維持する。
 
-並列環境の stash は `stash@{N}`（スタック位置）を永続識別子として扱わない。push 時に
-固有メッセージを付け、`git stash list --format='%H %gs'` から commit SHA を直接取得して
-復元する。番号を得てから SHA へ変換する 2 段階手順にも競合窓があるため使用しない。
+並列環境の stash は、push 時に固有メッセージを付け、
+`git stash list --format='%H %gs'` から commit SHA を直接取得して復元する。番号を得てから
+SHA へ変換する 2 段階手順にも競合窓があるため使用しない。
+
+### 差分追記 (2026-07-28): 登録済みの merge driver が、宣言の欠落で一度も発火していなかった
+
+出典: bd `HarnessHub-3829`。
+
+`.dev-graph/state/graph.json` は約 340 ノードが 1 配列に並ぶ単一 JSON であり、git 標準の行ベース 3-way マージは「配列の同じ位置への両側追加」を衝突として誤検出する。これに対し `graph_node_id` を鍵とする構造マージ driver (`plugins/dev-graph/scripts/build-merged-graph.py`) が用意され、各 worktree の `git config merge.devgraph-json.driver` にも登録されていた。**しかし発火条件である `.gitattributes` の宣言がリポジトリのどこにも存在せず、driver は一度も呼ばれていなかった。**
+
+git は merge driver を 2 段で解決する。`.gitattributes` が「どのパスにどの**名前**の driver を割り当てるか」を宣言し、`git config merge.<name>.driver` が「その名前をどの**コマンド**で実行するか」を解決する。driver 本体のコマンドを `.gitattributes` に書くことは git が禁じている (clone しただけで任意コマンドが実行されるため)。この分離自体は fail-safe に効いており、未 install の clone では名前が解決できず従来どおり行ベースで衝突表示される — 壊れた自動解決にはならない。**壊れるのは逆側、宣言が無いまま config だけが揃っている場合である。**このとき driver は静かに使われず、行ベースマージが偶然成功する限り誰も困らない。
+
+是正は `.gitattributes` の追加と、**対照実験を伴う機械検査**である (`plugins/dev-graph/tests/test_build_merged_graph.py`)。本命テストが「driver が衝突を解決する」ことを見るだけでは、シナリオが行ベースでも解決できるものへ退化したときに気づけない。同ファイルに「driver 未 install の repo では同じシナリオが必ず衝突する」対照群を置き、本命の緑が driver の発火を実際に含意するようにした。
+
+これは先行する 4 例 (代理指標の衝突 3 件と、恒久 false な起動条件 1 件) とは別種だが、**「動いていないことが観測できない」という点で同型**である。代理指標は実体と代理がずれても緑を出し、恒久 false な gate は起動しない step が緑を出し、本件は有効化されていない機構が緑を出す。いずれも検査の不在ではなく、検査が何を含意しているかの取り違えに由来する。

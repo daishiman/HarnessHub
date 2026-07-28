@@ -15,8 +15,8 @@ created_at: "2026-07-28T02:05:00Z"
 updated_at: "2026-07-28T07:59:42Z"
 status: "draft"
 depends_on: []
-related_nodes: ["feat-dev-pipeline-improvement","spec-harness-hub-requirements"]
-resource_scope: [".githooks",".beads/hooks",".dev-graph/state/graph.json","architecture/harness-hub-dev-workflow.md","docs/worktree-parallel-operations-runbook.md","features/feat-dev-pipeline-improvement.md","issues/sys-worktree-main-ref-desync-20260728.md","scripts/install-git-hooks.sh","scripts/run-ci-checks.sh","scripts/guard-cross-worktree-ref-update.py","scripts/guard-worktree-desync.py","scripts/validate-git-hooks-wiring.py","specs/harness-hub-system-specification.md","system-spec/dev-workflow.md","system-spec/spec-state.json","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tests/scripts-root"]
+related_nodes: ["feat-dev-pipeline-improvement","spec-harness-hub-requirements","issue-local-ci-gate-drift-20260728","issue-desync-guard-bundle-untracked-20260728"]
+resource_scope: [".githooks",".beads/hooks",".dev-graph/state/graph.json","architecture/harness-hub-dev-workflow.md","docs/worktree-desync-recovery-runbook.md","docs/worktree-parallel-operations-runbook.md","features/feat-dev-pipeline-improvement.md","issues/sys-worktree-main-ref-desync-20260728.md","scripts/install-git-hooks.sh","scripts/run-ci-checks.sh","scripts/guard-cross-worktree-ref-update.py","scripts/guard-worktree-desync.py","scripts/validate-git-hooks-wiring.py","specs/harness-hub-system-specification.md","system-spec/dev-workflow.md","system-spec/spec-state.json","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tests/scripts-root"]
 purpose: "2026-07-28、主ワークツリーで HEAD と index だけが最新 main へ進み、作業ツリーが 09:36 時点 (03093e4) に取り残される desync が発生した。原因は並列稼働中の worktree/セッションが git update-ref 系で refs/heads/main を直接書き換えたこと。git reflog show main に理由メッセージが空のエントリが 3 件 (10:06:29 -> 8560e92 / 10:16:32 -> 6e03e8f / 10:52:28 -> 9fe09e5) 残っており、pull / merge / checkout いずれの経路でもないことが確定している。症状は (a) ref が最新のため git pull が Already up to date を返す、(b) git status が PR で追加されたファイルを deleted、更新されたファイルを modified と表示する、の 2 点。この状態で git commit -a すると PR #84 / #85 のマージ内容を丸ごと巻き戻すコミット (65 files / -5467 行) が main に載る。今回は commit 前に検知して復旧したが、過去の stash に同種の退避が残っており再発である。復旧作業中に別セッションが stash push したため番号参照の指す対象が入れ替わる事象も同時に観測した"
 goal: "並列セッションを止めずに、main ref の横取り更新による desync を発生させない、または発生しても巻き戻しコミットとして main へ到達させない状態にする"
 scope_in: ["worktree/エージェントから他ワークツリーで checkout 中の ref を直接更新する経路を遮断する仕組みの設計と導入 (reference-transaction hook が第一候補)","core.hooksPath が .beads/hooks を指すため beads 更新で hook が消える経路の評価と、消えた場合の検知手段","desync 状態でのコミットを fail-closed で止める検査の pre-commit 系への結線 (HEAD と作業ツリーの整合、大量 deletion の異常検知)","並列稼働を止めない復旧手順の runbook 化 (--detach で HEAD を SHA 固定 -> stash push -u -> 一致確認 -> 選択復元 -> checkout main)","stash の参照を番号ではなくメッセージで行う規約の明文化"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-28T06:55:08Z","evidence_refs":["architecture/harness-hub-dev-workflow.md","docs/worktree-parallel-operations-runbook.md","features/feat-dev-pipeline-improvement.md","specs/harness-hub-system-specification.md","system-spec/dev-workflow.md","system-spec/spec-state.json","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tests/scripts-root/test_root__guard_cross_worktree_ref_update.py","tests/scripts-root/test_root__guard_worktree_desync.py","tests/scripts-root/test_root__validate_git_hooks_wiring.py"],"policy":"manual","reconciled_at":"2026-07-28T07:59:42Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-07-28T06:55:08Z","evidence_refs":["architecture/harness-hub-dev-workflow.md","docs/worktree-desync-recovery-runbook.md","docs/worktree-parallel-operations-runbook.md","features/feat-dev-pipeline-improvement.md","specs/harness-hub-system-specification.md","system-spec/dev-workflow.md","system-spec/spec-state.json","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tests/scripts-root/test_root__guard_cross_worktree_ref_update.py","tests/scripts-root/test_root__guard_worktree_desync.py","tests/scripts-root/test_root__validate_git_hooks_wiring.py"],"policy":"manual","reconciled_at":"2026-07-28T07:59:42Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-28T02:05:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -98,6 +98,83 @@ On main: main-4bf2a66 同期前の退避: index+worktree が 7e250f1 のまま�
 
 同じ現象が過去にも発生し、そのときも手作業で退避して収束させている。仕組みで止めていないため再発した。
 
+### 3 回目の再発 (2026-07-28 午後、本課題の起票中に発生)
+
+本課題を起票した同じ日の午後、**同一の主ワークツリーで 3 回目が発生した**。起票によって現象が既知になっても、仕組みが無ければ止まらないことの実証になっている。
+
+```
+dedfdc3 main@{2026-07-28 12:34:40 +0900}:            <- 空 = 4 件目の直接書き換え
+```
+
+- HEAD = `dedfdc3` (PR #87 マージ済みの最新 main)
+- index + 作業ツリー = PR #87 以前の実体
+- `git diff --shortstat HEAD` = 19 files / -878 行
+
+実体でも裏を取った。`packages/db/repository/crud.ts` の `guardedWrite` が作業ツリー側 0 個に対し HEAD 側 4 個、PR #87 が追加した `packages/db/scripts/check-db-write-gate.mjs` がディスク上に存在しない状態だった。commit していれば **PR #87 (repository write の guardedWrite 掃き出し) が丸ごと打ち消されていた**。
+
+commit 前に検知し、下記 runbook の手順で復旧済み。**3 回とも目視で止めており、機械的な遮断は 1 度も働いていない。**
+
+### 直接書き換えは常態である (2026-07-28 時点の全数)
+
+本課題の対応中 (15:08:40) にさらに 5 件目 (`4c66e5e`) を観測した。この時点で `git reflog show main` に残る当日のエントリは、**`pull: Fast-forward` と記録された 09:36 の 1 件を除きすべて理由メッセージが空**である。つまり main の更新経路として、ref 直接書き換えが例外ではなく既定になっている。
+
+一方で 5 件目は desync を起こさなかった。作業中のワークツリーが `main` ではなく作業ブランチを checkout していたためである。**desync の必要条件は「main を checkout したまま保持していること」**であり、これは (1) の遮断が入るまでの実効的な緩和策になる (runbook §6 に反映済み)。
+
+## 6 件目は別機構である: 作業ツリーの丸ごと差し替え (2026-07-28 夕)
+
+同日夕方に観測した 6 件目は、**ここまでの 5 件とは機構が異なる**。ref は一切動いていない。
+
+| | 1〜5 件目 (ref desync) | 6 件目 (作業ツリー clobber) |
+|---|---|---|
+| HEAD / refs | 進む (直接書き換え) | **無傷**。`4452145` = `origin/devgraph/...` のまま |
+| reflog | 理由メッセージが空のエントリが残る | **異常なし**。指紋が残らない |
+| 作業ツリー | 古い実体が取り残される | **古いスナップショットで丸ごと置換される** |
+| checkout 中の branch | `main` (必要条件) | **作業ブランチ**。main は無関係 |
+
+実測値は次のとおり。
+
+```
+git diff --shortstat HEAD
+  403 files changed, 4284 insertions(+), 29159 deletions(-)
+```
+
+古いスナップショットの復元である決め手は **mtime** である。差し替えられたファイルの mtime が現在時刻ではなく、それぞれ過去の別々の時点を指していた。
+
+| ファイル | mtime |
+|---|---|
+| `plugins/dev-graph/README.md` | `Jul 14 12:34:26` |
+| company-master 系 | `Jul 11 22:35:32` |
+| untracked な playwright 生成物 | `Jul 24` |
+
+書き込みが今起きたなら mtime は全て「今」になる。バラバラの過去日時が保存されているということは、**過去のツリー全体をアーカイブから mtime 込みで展開した**ことを意味する。git の操作では起こらない (git は checkout 時に mtime を現在時刻にする)。
+
+実害は 2 つ出た。
+
+1. **未コミットの編集が消えた**。当該セッションが直前に書いた `plugins/dev-graph/scripts/build-merged-graph.py` と README の修正が、ディスク上から丸ごと消失した。HEAD には無いので `git checkout` でも戻せない
+2. **テストが偽の赤を出した**。汚染されたツリーで実行した dev-graph のテストが 24 件失敗し、別のテストは収集エラーになった。これは実装の欠陥ではなく、**依存ファイルが古い実体に置き換わっていたことの派生症状**である。原因を実装側に探すと時間を丸ごと失う
+
+### この変種に対して §6 の緩和策は効かない
+
+5 件目の観測から導いた「**main を checkout していなければ desync しない**」という緩和策は、ref desync に対してのみ成立する。6 件目のワークツリーは作業ブランチを checkout していたが、被害を受けた。作業ブランチにいることは、この変種に対する安全の根拠にならない。
+
+### 復旧: 汚染ツリーを触らない
+
+汚染ツリーの中で復旧を試みると、消えた編集と残った編集の判別に時間がかかり、その間も汚染が続いている可能性がある。実際に採った手順は**汚染ツリーを一切触らず、別の場所に清浄なワークツリーを作って作業を続行する**ものだった。
+
+```bash
+git worktree add --detach <clean-path> <sha>
+```
+
+`.git` を共有するため commit / push はそのまま行える。汚染ツリーの復旧は作業完了後に切り離して扱える。
+
+**注意: 汚染ツリーは残置されている。** その状態で `git commit -a` すると 403 ファイル / -29,159 行の巻き戻しコミットが生成される。1〜5 件目と同じ危険が、より大きな規模で存在している。
+
+## 復旧手順
+
+正本は `docs/worktree-desync-recovery-runbook.md`。検知 (reflog の理由メッセージ / `git diff --shortstat HEAD` / 実体照合)、退避、選択復元、stash のメッセージ参照規約までを収録している。
+
+要点のみ再掲すると、`--detach` で HEAD を SHA に固定してから退避することで、**並列セッションを止めずに**復旧できる。実際 1 回目の復旧作業中に PR #86 のマージで main が動いたが、影響を受けなかった。
+
 ## 併発した二次問題: stash 番号の揺れ
 
 復旧作業中、別セッションが `git stash push` を実行したため `stash@{0}` の指す対象が入れ替わった。`stash@{N}` は **スタックの位置**であって識別子ではない。並列稼働下では、退避した内容を番号で参照する手順はそれ自体が事故要因になる。
@@ -110,68 +187,33 @@ On main: main-4bf2a66 同期前の退避: index+worktree が 7e250f1 のまま�
 | hook の永続性 | `core.hooksPath` が `.beads/hooks` を指すため、beads の更新で hook が消える可能性がある。消えない設置場所か、消失の検知が要る |
 | 検知 | HEAD と作業ツリーの整合検査を pre-commit へ結線し、desync 状態のコミットを fail-closed で止める。大量 deletion の異常検知も併用しうる |
 | 運用 | エージェント側は `git fetch origin` (remote-tracking のみ) に限定し、`git fetch origin main:main` / `git update-ref refs/heads/main` を禁止する |
-| 復旧 | 並列稼働を止めない復旧手順の runbook 化 |
+| 復旧 | 並列稼働を止めない復旧手順の runbook 化 (2026-07-28 に `docs/worktree-desync-recovery-runbook.md` として完了) |
 
-## 復旧手順 (2026-07-28 に実証済み)
+## 実装と最終状態 (2026-07-28)
 
-`--detach` で HEAD を SHA に固定すると、作業中に ref が書き換わっても作業ツリーが巻き込まれない。実際、この手順の実行中に PR #86 のマージで main が動いたが影響を受けなかった。
+観測段階では未着手だった機械防御を、次の 2 層と共有 hook bundle で実装した。詳細な
+導入・復旧・stash の安全な参照方法は `docs/worktree-parallel-operations-runbook.md`、
+事故調査と汚染ツリーからの退避手順は `docs/worktree-desync-recovery-runbook.md` を正本とする。
 
-```bash
-git checkout --detach          # HEAD を SHA 固定。ref 書き換えの影響を遮断
-git stash push -u -m "<内容がわかるメッセージ>"
-git status                     # 作業ツリーが HEAD と一致することを確認
-git diff --shortstat HEAD      # 空であること
-git restore --source="<メッセージから取得した stash SHA>^3" -- <untracked で残したいパス>
-git checkout main              # ref の最新へ追従
-```
-
-保全対象の選別には「main 側がそのファイルを触ったか」を使う。
-
-```bash
-git diff --shortstat <古い基点> <最新> -- <path>
-# 出力が空 = main 側は無変更 = 作業ツリー側の固有変更
-```
-
-## 実装 (2026-07-28)
-
-本課題への対応として次を導入した。詳細は `docs/worktree-parallel-operations-runbook.md`。
-
-| 受入条件 | 実装 |
+| 受入条件 | 最終状態 |
 |---|---|
-| ref 直接更新の遮断 | `scripts/guard-cross-worktree-ref-update.py` を、全 worktree 共通の `<git-common-dir>/harness-hub-hooks/reference-transaction` へ結線。古い branch 側に hook ファイルが無くても遮断。判定不能時は fail-open (根拠は同スクリプト docstring) |
-| desync コミットの遮断 | `scripts/guard-worktree-desync.py` を `pre-commit` へ結線。index の tree が HEAD 祖先の tree と一致すれば巻き戻し確定として fail-closed |
-| hook 消失の検知 | git common dir の共有 bundle (主経路) + `.githooks` (tracked template) + `.beads/hooks` (保険経路) を検証する `scripts/validate-git-hooks-wiring.py` を CI と pre-push へ結線 |
-| 復旧 runbook | `docs/worktree-parallel-operations-runbook.md` §4 |
-| stash 参照規約 | 同 runbook §5 (メッセージ検索で SHA を得てから使う) |
+| (1) ref 直接更新の遮断 | **完了** — `scripts/guard-cross-worktree-ref-update.py` を共有 `reference-transaction` hook へ結線し、他 worktree が checkout 中の branch ref 更新を transaction 確定前に拒否する |
+| (2) desync / clobber 後の巻き戻し commit 遮断 | **完了** — `scripts/guard-worktree-desync.py` を `pre-commit` へ結線し、祖先 tree への巻き戻しと大量 staged 削除を fail-closed で拒否する |
+| (3) hook の永続性と消失検知 | **完了** — git common dir の共有 bundle を主経路とし、tracked template・installed bundle・beads 委譲の差異を `scripts/validate-git-hooks-wiring.py` が pre-push / CI で検知する |
+| (4) 並列稼働下の復旧 runbook | **完了** — 2 種類の runbook に検知、SHA 固定、退避、選択復元、清浄 worktree への避難を記録した |
+| (5) stash 参照規約 | **完了** — 固有メッセージから commit SHA を直接取得し、`stash@{N}` を永続識別子として使わない |
 
-### 有効化時に実環境で検出した誤検知と修正
+`reference-transaction` は Git の根幹経路を止めるため、worktree 情報を取得できない場合は
+fail-open（判定不能なら通す）とした。一方、`pre-commit` は commit だけを止めればよいため、
+Python や検査材料が欠けた場合も fail-closed（判定不能なら止める）とした。この役割分担により、
+ref を経由しない作業ツリー clobber も、巻き戻し内容を commit する直前の第 2 層で遮断する。
 
-初期案の `core.hooksPath=.githooks` を有効化し、稼働中の全 worktree で
-`guard-worktree-desync.py` を実行したところ `verdict=rollback` を返した。原因は祖先
-tree の照合対象から **HEAD 自身しか除いていなかった**こと。
+導入時に検出した誤検知は、HEAD と同じ tree を持つ merge commit の祖先を rollback と
+誤判定したことが原因だった。祖先 commit ではなく祖先 tree を比較し、HEAD と同一 tree を
+除外する修正と回帰テストを追加した。さらに、相対 `core.hooksPath` では導入前 branch に
+hook が存在しない欠陥を実測したため、全 worktree が共有する git common dir へ bundle を
+install する方式へ改めた。
 
-HEAD の `dedfdc3` (Merge PR #87) と親の `1f78791` は tree が共に `76c6a92` である。
-main 側に追加 commit が無い状態のマージは親の tree をそのまま採るため、GitHub の PR
-マージで日常的にこの形になる。結果、差分なしの index (= HEAD の tree) が「祖先と一致」
-に該当し、通常の commit が全て遮断されていた。
-
-修正は照合対象の除外を commit 単位から **tree 単位**へ変更 (`ancestor_tree_map`)。
-HEAD と同 tree の祖先へ巻き戻しても内容は変わらないため、除外しても検知漏れは生じない。
-回帰テストは `test_allows_commit_after_ff_like_merge` /
-`test_still_blocks_desync_after_ff_like_merge`。
-
-修正後、稼働中 16 worktree すべてで guard を直接実行して `verdict=ok`、現在の
-worktree から `refs/heads/main` への直接更新は `fatal: ref updates aborted by hook`
-で遮断、他者が checkout していない branch の作成/削除は通過した。
-
-### 相対 hooksPath の worktree 間欠落と修正
-
-上記の初期案には、`core.hooksPath=.githooks` がコマンド実行元 worktree の
-`.githooks` を参照するため、導入前の古い branch では `reference-transaction` 自体が
-存在しない欠陥があった。実際に稼働中の古い worktree で欠落を確認した。
-
-`scripts/install-git-hooks.sh` を、全 worktree が共有する git common dir 配下へ hook と
-guard 本体をコピーし、その絶対パスを `core.hooksPath` に設定する方式へ変更した。
-統合テストは「main worktree にだけ導入ファイルがあり、legacy worktree には
-`.githooks` も guard script も無い」状態を作り、legacy 側の `git update-ref
-refs/heads/main` が共有 bundle で遮断されることを実 git で確認する。
+最終検証では対象 57 test、task 仕様書 13 phase、system-spec coverage、dev-graph schema、
+hook wiring、および CI 相当全体ゲートを再実行し、`PASS 119 / WARN 4 / FAIL 0` を確認した。
+4 warning は段階導入中の既知項目であり、本変更による失敗ではない。
