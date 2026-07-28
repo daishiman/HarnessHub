@@ -14,7 +14,7 @@ sources:
 
 この状態に気づかず `git commit -a` すると、**直前にマージされた PR の内容を丸ごと打ち消すコミット**が main に載る。CI は「意図された削除」と区別できないため緑のまま通過しうる。
 
-課題の追跡は `issues/sys-worktree-main-ref-desync-20260728.md`（bd `HarnessHub-7xi9`）。本書は**発生してしまった後の復旧**のみを扱う。発生そのものを止める仕組み（hook による遮断、pre-commit 検査）は同課題で追跡中であり、**2026-07-28 時点では未実装**である。
+課題の追跡は `issues/sys-worktree-main-ref-desync-20260728.md`（bd `HarnessHub-7xi9`）。本書は**発生してしまった後の復旧**を扱う。発生前の防御は 2026-07-28 に共有 hook bundle として実装済みで、導入・検査・制約の正本は `docs/worktree-parallel-operations-runbook.md` とする。
 
 ## 1. なぜ起きるか
 
@@ -218,9 +218,16 @@ git stash list | grep "wt-main-desync-20260728"
 
 `git stash pop`（番号省略 = `stash@{0}`）は、並列稼働下では**触る対象が確定しないため使わない**。
 
-## 6. 予防（現時点で有効な運用制約）
+## 6. 予防（機械防御と運用制約）
 
-仕組みによる遮断は未実装のため、当面は運用で抑える。
+clone ごとに共有 hook bundle を設置し、配線検査が通ることを確認する。
+
+```bash
+bash scripts/install-git-hooks.sh
+python3 scripts/validate-git-hooks-wiring.py --check-local-config
+```
+
+主経路の `reference-transaction` hook は、別 worktree が checkout 中の branch ref 更新を transaction 確定前に遮断する。第 2 層の `pre-commit` hook は、祖先 tree と一致する巻き戻し内容または大量の staged 削除を fail-closed で遮断する。機械防御に加えて、次の運用制約を守る。
 
 - エージェント／自動化からの ref 操作は **`git fetch origin`（remote-tracking のみ更新）に限定**する
 - **`git fetch origin main:main` と `git update-ref refs/heads/main` は使わない**。どちらも他ワークツリーが checkout 中の ref を作業ツリー無しで動かす
@@ -241,4 +248,4 @@ git stash list | grep "wt-main-desync-20260728"
 | 2026-07-28 午後 | ref desync | 作業ツリーが PR #87 前に取り残し。commit していれば 19 files / -878 行 | commit 前に検知・復旧 |
 | 2026-07-28 夕 | **clobber（§2.1）** | ref 無傷のまま作業ツリーが丸ごと過去スナップショットへ。403 files / -29,159 行。未コミットの編集が消失 | §4.0 で清浄 worktree へ退避し作業続行。**汚染ツリーは残置** |
 
-**4 回とも人間／エージェントの目視で止めている。**仕組みで止めていないため再発しており、これが `HarnessHub-7xi9` を P1 として扱う根拠である。とくに 4 件目は reflog に指紋を残さないため、`HarnessHub-7xi9` の受入条件 (1)（ref 直接更新の遮断）が達成されても検知できない。**受入条件 (2)（HEAD と作業ツリーの整合を pre-commit で検査）の方が被覆が広い**ことが、この事例で判明した。
+表の 4 件は、機械防御の導入前に人間／エージェントの目視で止めた履歴である。この再発を根拠に `reference-transaction` と `pre-commit` の二層防御を導入した。とくに 4 件目は reflog に指紋を残さないため ref 更新の遮断だけでは検知できないが、有害な巻き戻し内容を stage して commit する段階では第 2 層が遮断する。未 stage の clobber 自体は hook の検査対象外なので、テストの説明不能な失敗や大量差分が出たときは §2.1 の検知を引き続き行う。

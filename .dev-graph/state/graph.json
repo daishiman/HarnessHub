@@ -1,5 +1,5 @@
 {
-  "graph_revision": 946,
+  "graph_revision": 950,
   "nodes": [
     {
       "acceptance": [
@@ -39369,8 +39369,9 @@
       ],
       "classification_confidence": 0.95,
       "classification_reason": "並列 worktree 運用と git ref 更新の衝突により再現しうる、リポジトリ運用上の追跡課題",
+      "closed_at": "2026-07-28T08:55:00Z",
       "completion_evidence": {
-        "completed_at": "2026-07-28T06:55:08Z",
+        "completed_at": "2026-07-28T08:55:00Z",
         "evidence_refs": [
           "architecture/harness-hub-dev-workflow.md",
           "docs/worktree-desync-recovery-runbook.md",
@@ -39385,7 +39386,7 @@
           "tests/scripts-root/test_root__validate_git_hooks_wiring.py"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-07-28T07:59:42Z",
+        "reconciled_at": "2026-07-28T08:55:00Z",
         "source": "manual",
         "status": "done"
       },
@@ -39425,7 +39426,20 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-worktree-main-ref-desync-20260728",
+          "linked_at": "2026-07-28T08:55:00Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 592,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/592"
+        }
+      ],
       "purpose": "2026-07-28、主ワークツリーで HEAD と index だけが最新 main へ進み、作業ツリーが 09:36 時点 (03093e4) に取り残される desync が発生した。原因は並列稼働中の worktree/セッションが git update-ref 系で refs/heads/main を直接書き換えたこと。git reflog show main に理由メッセージが空のエントリが 3 件 (10:06:29 -> 8560e92 / 10:16:32 -> 6e03e8f / 10:52:28 -> 9fe09e5) 残っており、pull / merge / checkout いずれの経路でもないことが確定している。症状は (a) ref が最新のため git pull が Already up to date を返す、(b) git status が PR で追加されたファイルを deleted、更新されたファイルを modified と表示する、の 2 点。この状態で git commit -a すると PR #84 / #85 のマージ内容を丸ごと巻き戻すコミット (65 files / -5467 行) が main に載る。今回は commit 前に検知して復旧したが、過去の stash に同種の退避が残っており再発である。復旧作業中に別セッションが stash push したため番号参照の指す対象が入れ替わる事象も同時に観測した",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
@@ -39474,7 +39488,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-workflow",
         "git",
@@ -39487,7 +39501,7 @@
       "template_version": "1.0.0",
       "title": "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T08:45:00Z"
+      "updated_at": "2026-07-28T09:00:15.438342Z"
     },
     {
       "acceptance": [
@@ -39945,7 +39959,7 @@
     {
       "acceptance": [
         ".git/harness-hub-hooks/ の 11 ファイル 985 行が tracked template としてリポジトリに存在すること",
-        "install-git-hooks.sh が共有 bundle への設置まで行い core.hooksPath が絶対パスに依存しないこと",
+        "install-git-hooks.sh が共有 bundle への設置まで行い、clone 固有の絶対パスをハードコードせず git common dir から導出すること",
         "hook 配線と guard 判定の回帰テストが tests/ に存在し lint-test-discovery-coverage の CI 到達被覆に入っていること",
         "guard-worktree-desync.py が発火する commit 経路が実測で特定され、素通りする経路があれば制約として記録されていること",
         "HarnessHub-7xi9 の close 状態が実態に合わせて是正されていること"
@@ -39955,7 +39969,11 @@
       ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ag07",
+        "linked_at": "2026-07-28T08:54:00Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
@@ -39965,13 +39983,23 @@
       ],
       "classification_confidence": 0.97,
       "classification_reason": "close 済み課題の成果物がリポジトリに不在という、追跡と実体の乖離に関するリポジトリ運用上の欠陥であり、特定 feature の実装タスクではない",
+      "closed_at": "2026-07-28T08:54:00Z",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-28T08:54:00Z",
+        "evidence_refs": [
+          ".githooks",
+          "docs/worktree-desync-recovery-runbook.md",
+          "docs/worktree-parallel-operations-runbook.md",
+          "scripts/install-git-hooks.sh",
+          "scripts/validate-git-hooks-wiring.py",
+          "tests/scripts-root/test_root__guard_cross_worktree_ref_update.py",
+          "tests/scripts-root/test_root__guard_worktree_desync.py",
+          "tests/scripts-root/test_root__validate_git_hooks_wiring.py"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-28T08:54:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -40009,15 +40037,37 @@
       "phase_ref": null,
       "priority": "critical",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-worktree-main-ref-desync-20260728",
+          "linked_at": "2026-07-28T08:54:00Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 592,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/592"
+        }
+      ],
       "purpose": "HarnessHub-7xi9 (worktree desync 遮断) は全 5 受入条件を実装・検証済みとして CLOSED になっているが、その成果物はリポジトリに 1 バイトも存在しない。実体は .git/harness-hub-hooks/ 配下の 11 ファイル 985 行のみであり、.git/ は追跡対象外・push 対象外のため再 clone で消える。hook 自身が参照する tracked template 7 件は origin/main に無く、origin の 29 ブランチを全数走査しても 0 件。close 理由が主張する回帰テストも tests/ に存在しない。core.hooksPath は絶対パスを指しており、この 1 台の 1 clone でしか機能しない。hook の mtime (15:43-15:46) と同日夕方の作業ツリー clobber (403 files / -29,159 行) の時系列から、install 済みコピーだけが .git/ 配下で生き残り作業ツリー側の template が commit 前に消失した経路が最も整合する。HarnessHub-7xi9 が防ごうとした障害そのものによって HarnessHub-7xi9 の成果物が失われている。",
       "related_nodes": [
         "issue-worktree-main-ref-desync-20260728",
         "issue-local-ci-gate-drift-20260728"
       ],
       "resource_scope": [
+        ".beads/hooks",
         ".githooks",
-        "scripts/install-git-hooks.sh"
+        "docs/worktree-desync-recovery-runbook.md",
+        "docs/worktree-parallel-operations-runbook.md",
+        "scripts/guard-cross-worktree-ref-update.py",
+        "scripts/guard-worktree-desync.py",
+        "scripts/install-git-hooks.sh",
+        "scripts/validate-git-hooks-wiring.py",
+        "tests/scripts-root/test_root__guard_cross_worktree_ref_update.py",
+        "tests/scripts-root/test_root__guard_worktree_desync.py",
+        "tests/scripts-root/test_root__validate_git_hooks_wiring.py"
       ],
       "scope_in": [
         ".git/harness-hub-hooks/ の 11 ファイル 985 行を tracked template として復元し、install-git-hooks.sh を共有 bundle 設置まで行うよう拡張する",
@@ -40039,7 +40089,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-workflow",
         "git",
@@ -40052,7 +40102,7 @@
       "template_version": "1.0.0",
       "title": "HarnessHub-7xi9 の成果物 985 行がリポジトリに存在せず .git/ 内の 1 コピーのみで生存している",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T07:55:00Z"
+      "updated_at": "2026-07-28T08:59:47.027730Z"
     },
     {
       "acceptance": [

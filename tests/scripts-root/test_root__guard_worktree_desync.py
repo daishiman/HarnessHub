@@ -132,6 +132,19 @@ def _make_desync(repo):
     _git(repo["path"], "update-ref", "refs/heads/main", repo["b"])
 
 
+def _install_pre_commit_guard(repo):
+    """tmp repo の実 pre-commit 経路へ guard を結線する。"""
+    hooks = repo["path"] / ".test-hooks"
+    hooks.mkdir()
+    hook = hooks / "pre-commit"
+    hook.write_text(
+        f'#!/bin/sh\nexec "{sys.executable}" "{SCRIPT}"\n',
+        encoding="utf-8",
+    )
+    hook.chmod(0o755)
+    _git(repo["path"], "config", "core.hooksPath", str(hooks))
+
+
 def test_blocks_commit_in_desync_state(repo):
     """MUST_BLOCK: desync 状態の commit は巻き戻しになるため止める。"""
     _make_desync(repo)
@@ -143,6 +156,37 @@ def test_blocks_commit_in_desync_state(repo):
     proc = _run_guard(repo["path"])
     assert proc.returncode == 1, proc.stdout + proc.stderr
     assert "guard-worktree-desync" in proc.stderr
+
+
+def test_real_pre_commit_blocks_commit_a_rollback(repo):
+    """実 git commit -a でも pre-commit が巻き戻し commit を作らせない。"""
+    _make_desync(repo)
+    _install_pre_commit_guard(repo)
+    before = _git(repo["path"], "rev-parse", "HEAD").stdout.strip()
+
+    proc = _git(
+        repo["path"], "commit", "-a", "-m", "must be blocked",
+        check=False,
+    )
+
+    assert proc.returncode != 0
+    assert "guard-worktree-desync" in proc.stderr
+    assert _git(repo["path"], "rev-parse", "HEAD").stdout.strip() == before
+
+
+def test_real_pre_commit_blocks_partial_add_with_bulk_deletions(repo):
+    """部分 add が祖先 tree 完全一致を崩しても、大量 staged 削除で止める。"""
+    _make_desync(repo)
+    _install_pre_commit_guard(repo)
+    (repo["path"] / "local-note.txt").write_text("keep\n", encoding="utf-8")
+    _git(repo["path"], "add", "local-note.txt")
+    before = _git(repo["path"], "rev-parse", "HEAD").stdout.strip()
+
+    proc = _git(repo["path"], "commit", "-m", "must also be blocked", check=False)
+
+    assert proc.returncode != 0
+    assert "異常な量の削除" in proc.stderr
+    assert _git(repo["path"], "rev-parse", "HEAD").stdout.strip() == before
 
 
 def test_desync_state_would_produce_rollback_commit(repo):

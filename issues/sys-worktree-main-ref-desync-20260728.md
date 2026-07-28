@@ -12,8 +12,9 @@ iteration: null
 title: "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む"
 owners: ["daishiman"]
 created_at: "2026-07-28T02:05:00Z"
-updated_at: "2026-07-28T08:45:00Z"
-status: "draft"
+updated_at: "2026-07-28T09:00:15.438342Z"
+status: "closed"
+closed_at: "2026-07-28T08:55:00Z"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","spec-harness-hub-requirements","issue-local-ci-gate-drift-20260728","issue-desync-guard-bundle-untracked-20260728"]
 resource_scope: [".githooks",".beads/hooks",".dev-graph/state/graph.json","architecture/harness-hub-dev-workflow.md","docs/worktree-desync-recovery-runbook.md","docs/worktree-parallel-operations-runbook.md","features/feat-dev-pipeline-improvement.md","issues/sys-worktree-main-ref-desync-20260728.md","scripts/install-git-hooks.sh","scripts/run-ci-checks.sh","scripts/guard-cross-worktree-ref-update.py","scripts/guard-worktree-desync.py","scripts/validate-git-hooks-wiring.py","specs/harness-hub-system-specification.md","system-spec/dev-workflow.md","system-spec/spec-state.json","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tests/scripts-root"]
@@ -41,9 +42,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-7xi9","linked_at":"2026-07-28T06:31:19Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/issue-worktree-main-ref-desync-20260728","linked_at":"2026-07-28T08:55:00Z","merge_commit_sha":null,"merged_at":null,"pr_number":592,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/592"}]
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-28T06:55:08Z","evidence_refs":["architecture/harness-hub-dev-workflow.md","docs/worktree-desync-recovery-runbook.md","docs/worktree-parallel-operations-runbook.md","features/feat-dev-pipeline-improvement.md","specs/harness-hub-system-specification.md","system-spec/dev-workflow.md","system-spec/spec-state.json","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tests/scripts-root/test_root__guard_cross_worktree_ref_update.py","tests/scripts-root/test_root__guard_worktree_desync.py","tests/scripts-root/test_root__validate_git_hooks_wiring.py"],"policy":"manual","reconciled_at":"2026-07-28T07:59:42Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-07-28T08:55:00Z","evidence_refs":["architecture/harness-hub-dev-workflow.md","docs/worktree-desync-recovery-runbook.md","docs/worktree-parallel-operations-runbook.md","features/feat-dev-pipeline-improvement.md","specs/harness-hub-system-specification.md","system-spec/dev-workflow.md","system-spec/spec-state.json","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tests/scripts-root/test_root__guard_cross_worktree_ref_update.py","tests/scripts-root/test_root__guard_worktree_desync.py","tests/scripts-root/test_root__validate_git_hooks_wiring.py"],"policy":"manual","reconciled_at":"2026-07-28T08:55:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-28T02:05:00Z","missing_sections":[],"status":"complete"}
 ---
 

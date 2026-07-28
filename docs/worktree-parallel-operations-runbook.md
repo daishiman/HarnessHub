@@ -85,6 +85,8 @@ HH_ALLOW_CROSS_WORKTREE_REF_UPDATE=1 git update-ref refs/heads/main <sha>
 
 こちらは **fail-closed**（検査できなければ止める）。止まるのは commit だけで、bypass と復旧手順で必ず前進できるため。
 
+検査対象は **commit される index** であり、未 stage の作業ツリー汚染そのものではない。実 `pre-commit` 経路の回帰テストでは、`git commit -a` の完全 rollback と、部分 add 後に残る 30 件の staged 削除を遮断する。一方、未 stage の clobber、小規模で祖先 tree と一致しない部分 rollback、明示 bypass は制約として残る。これらは commit 前の `git diff --cached --stat` と、説明不能なテスト失敗時の `git diff --shortstat HEAD` で補完する。
+
 ```bash
 HH_SKIP_DESYNC_CHECK=1 git commit ...          # 検査を skip
 HH_DESYNC_DELETION_THRESHOLD=50 git commit ... # 閾値を変更
