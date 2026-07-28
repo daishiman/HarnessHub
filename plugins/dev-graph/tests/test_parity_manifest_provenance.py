@@ -81,6 +81,7 @@ def test_c28_ready_separates_unmapped_reasons_and_echoes_provenance(tmp_path, mo
     issues = [
         {"id": "B-mapped", "status": "open", "dependencies": [], "external_ref": "dev-graph:node-a"},
         {"id": "B-drift", "status": "open", "dependencies": [], "external_ref": "dev-graph:node-b"},
+        {"id": "B-orphan", "status": "open", "dependencies": [], "external_ref": "dev-graph:node-gone"},
         {"id": "B-native", "status": "open", "dependencies": [], "description": "hand written issue"},
     ]
     module = bridge_with_issues(monkeypatch, issues)
@@ -91,6 +92,9 @@ def test_c28_ready_separates_unmapped_reasons_and_echoes_provenance(tmp_path, mo
             "graph_node_id": "node-a", "bd_issue_id": "B-mapped",
             "graph_status": "active", "depends_on": [],
         }],
+        # node-b は graph に実在するが投影から漏れた (= C03 sync 案件)。
+        # node-gone は graph から消えている (= C02 案件) ので、この集合に載らない。
+        "graph_node_ids": ["node-a", "node-b"],
     }), encoding="utf-8")
 
     code, receipt = call_main(
@@ -100,10 +104,29 @@ def test_c28_ready_separates_unmapped_reasons_and_echoes_provenance(tmp_path, mo
     assert code == 0
     assert [row["bd_issue_id"] for row in receipt["ready_set"]] == ["B-mapped"]
     reasons = {row["bd_issue_id"]: row["reason"] for row in receipt["unmapped"]}
-    # graph 管理下 (external_ref あり) の取りこぼしと、graph 管理外の bd 課題を混ぜない。
-    assert reasons == {"B-drift": "parity_manifest_missing", "B-native": "external_ref_absent"}
-    assert receipt["unmapped_summary"] == {"external_ref_absent": 1, "parity_manifest_missing": 1}
+    # 3 つの owner を混ぜない: 投影の取りこぼし (C03) / graph から消えた参照 (C02) / graph 管理外。
+    assert reasons == {
+        "B-drift": "parity_manifest_missing",
+        "B-orphan": "graph_node_missing",
+        "B-native": "external_ref_absent",
+    }
+    assert receipt["unmapped_summary"] == {
+        "external_ref_absent": 1, "graph_node_missing": 1, "parity_manifest_missing": 1,
+    }
     assert receipt["parity_provenance"] == PROVENANCE
+
+
+def test_c28_ready_rejects_parity_manifest_without_graph_node_ids(tmp_path, monkeypatch, capsys):
+    """`graph_node_ids` 欠落を黙認すると orphan が sync 案件を装って常駐する (HarnessHub-ii90)。
+
+    manifest は build-parity-manifest.py が毎回作り直す揮発 snapshot なので、欠落時の
+    正しい回復は再生成であって従来の 1 つの札への丸め込みではない。
+    """
+    module = bridge_with_issues(monkeypatch, [])
+    manifest = tmp_path / "parity.json"
+    manifest.write_text(json.dumps({**PROVENANCE, "nodes": []}), encoding="utf-8")
+    with pytest.raises(module.ContractError, match="graph_node_ids"):
+        call_main(module, monkeypatch, capsys, "--op", "ready", "--repo-root", tmp_path, "--parity-manifest", manifest)
 
 
 def schedule_workspace(tmp_path: Path, ready_payload: dict) -> tuple[Path, Path, Path]:

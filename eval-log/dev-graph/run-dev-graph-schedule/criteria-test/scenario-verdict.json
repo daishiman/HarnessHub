@@ -7,7 +7,7 @@
     "skill_md_sha256": "8c6f7de616403cf3664b6332a66f082a6b6e903213c7de2254da06808c852641"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-parallel-safety-verifier-fresh-goal-evaluator-i07-20260725",
+  "reviewer": "fresh-goal-evaluator-mfh7-20260726",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C15-OUT1-positive-ready-set-r16",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260728T122707Z-zep2b-schedule/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260726T040700Z-sched-final/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260728T122707Z-zep2b-schedule/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260728T122707Z-zep2b-schedule/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260728T122707Z-zep2b-schedule/out/status.json"
       ],
-      "observed": "fresh live trial PASS。ready set の依存順序・schedule 結果・graph 不変・goal-seek を独立評価で確認した。"
+      "observed": "2026-07-28 再実走 (run 20260728T122707Z-zep2b-schedule, fresh claude session, 自走完走 nudge=0/gate=0, Skill ツール起動, --max-parallel 2, poll DONE 600s)。C15 は script_refs に共有スクリプト plugins/dev-graph/scripts/bd-bridge.py を宣言しているため、その変更 (commit a0d9bbf: bd external_ref orphan の逆方向全数検査) で挙動閉包 digest が変化した。SKILL.md 本体は無変更だが受領書の live-trial 参照は現ツリーに対して取り直す必要があるため再実走した。独立 fresh evaluator の判定 PASS: (1) Skill ツール呼出しで起動し (transcript 11 番目の呼出しで skill をロード)、それ以前の Bash は goal-seek 配線と hash 計算のみ、schedule-graph.py 等の script 実行は全て起動後の SKILL.md pipeline 内。(2) goal-spec.original_goal が SKILL.md の正本 Goal と一致、hash=d0041ddebcc8144ed4c7a8f0f69d0ab279eed66f40807119d91a716b54e32ca6 を評価者が独立再計算して一致。(3) intermediate は Skill 起動前 (12:33:30) に 1 行目 Write、起動後 (12:37:45) に `>>` で 2 行目 append の append-only。(4) resource_scope 分離: batches.tasks=[[LT-SCHED-001,LT-SCHED-003],[LT-SCHED-002,LT-SCHED-006]] で src/alpha.py を共有する 001/002 が別 batch、conflict_pairs[0].kind=ready_pair。(5) blocked 除外: LT-SCHED-005 は depends_on=[LT-SCHED-001](completion_evidence.status=open) により ready_set・batches・assignment_hints のいずれにも不在で、理由は progress の S2 evidence に記録。(6) lease: 004 は active lease(expires 2099) で ready_set から抑止され conflicts=[LT-SCHED-004]・conflict_pairs kind=lease に出現、006 は stale lease(expires 2020) が active 扱いされず ready_set と Batch 1 へ復帰。lease_source=git_common_dir。(7) max_parallel=2 遵守 (両 batch サイズ 2)、suggested_branch 4 件 devgraph/LT-SCHED-{001,002,003,006} と worktree claim コマンドが重複なし。(8) read_only=true で graph_sha256=e4d17190…・lease_sha256=b10e1c16… が before==after、fixture の git status も未追跡 eval-log/ のみ。(9) progress checklist は pending 0 件・evidence null 0 件で overall/final=PASS。"
     },
     "OUT2": {
       "status": "PASS",

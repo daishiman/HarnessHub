@@ -46,7 +46,7 @@ serves_goals: [G1, G2, G5]
 
 **質問**: AI skill の live-trial を task/feature の受入証拠として再利用するとき、文字列上の PASS や一時ファイル参照を実証済みと誤認しないために何を必須としますか?
 
-**回答**: scenario 正本の現行 ID・required observations 全件・実引数を verdict に束縛し、scenario の更新または削除で旧証拠を失効させる。scenario が task.md の必須・禁止手順を宣言する場合は実 task.md も照合し、別 operation への読み替えで結果だけを合わせた run を拒否する。各 observation の evidence ref は run directory 内の実在ファイルへ解決し、PR に採用する run と一緒に保持して clean clone でも解決できることを必須とする。write count は pre/post repository state、binding は永続 graph から測り、起動引数や dry-run echo を実測の代理にしない。draft gate と candidate adapter suppression の 0 件理由を分離する。監査 helper は分割 module 全体の複合 digest と Git index 一致へ束縛し、mutation test で検査の判別力も確認する。詳細な受領対応は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` を正とする。
+**回答**: scenario 正本の現行 ID・required observations 全件・実引数を verdict に束縛し、scenario の更新または削除で旧証拠を失効させる。scenario が task.md の必須・禁止手順を宣言する場合は実 task.md も照合し、別 operation への読み替えで結果だけを合わせた run を拒否する。各 observation の evidence ref は run directory 内の実在ファイルへ解決し、PR に採用する run と一緒に保持して clean clone でも解決できることを必須とする。write count は pre/post repository state、binding は永続 graph から測り、起動引数や dry-run echo を実測の代理にしない。draft gate と candidate adapter suppression の 0 件理由を分離する。昇格証跡の digest は形式だけでなく最終 persisted node の正準内容から再計算して一致させ、昇格後の変更や placeholder を拒否する。監査 helper は scenario 契約を含む分割 module 全体の複合 digest と Git index 一致へ束縛し、同じ最終 graph から作る負の検体を正準 validator が拒否することまで確認する。詳細な受領対応は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` を正とする。
 
 ## 上流指針 (doctrine anchor)
 

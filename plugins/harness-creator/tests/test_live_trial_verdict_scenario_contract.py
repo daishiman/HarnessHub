@@ -27,7 +27,7 @@ SCRIPT = (
 DEV_GRAPH_SCENARIOS = (
     REPO / "plugins" / "dev-graph" / "tests" / "fixtures" / "live-trial-positive-scenarios.json"
 )
-C14_SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r6"
+C14_SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r7"
 
 
 def _load_verdict_module():

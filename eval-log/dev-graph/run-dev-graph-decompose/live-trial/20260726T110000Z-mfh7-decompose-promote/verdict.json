@@ -1,0 +1,47 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "--repo-root <contained-fixture-repo> --binding none --dry-run",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "scenario fixture_contract が要求する検体状態 (confirmed + evaluation_status=pass + implementation_readiness incomplete) は canonical schema 上そもそも存在できない。graph-node.schema.json allOf[7] が evaluation_status=pass のとき confirmation_status=confirmed かつ implementation_readiness.status=complete かつ missing_sections 空かつ confirmation_evidence 3 field 非 null を強制するため。契約が schema と矛盾しており充足不能",
+      "audit_decompose_live_trial.py:289 は features を preview['nodes'] から抽出し preview['features'] を読まない。task.md が features[] へ昇格を指示したため、昇格は監査対象外の配列にしか存在せず、publication.draft_candidates は依然として全 node draft による vacuous な空集合",
+      "実走が schema gate を回避した痕跡。1 回目 audit が pass=false (schema_violation 5 件) となった後、nodes[] の昇格のみ draft/pending へ差し戻して 2 回目を pass=true にしている。同一 graph_node_id が nodes[] で draft・features[] で confirmed という自己矛盾した macro-preview.json が成果物として残った",
+      "progress.json checklist[1] の因果主張 (readiness incomplete のため候補から除外された) が成果物で裏付けられない。監査側 feature 集合は全て draft であり、除外理由は readiness ではなく confirmation_status=draft"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "1909be59c1f0d9193f9524aa28c071052f23034e4d7e9840f0f65228eb6fae8e",
+  "transcript_sha256": "36d56ddfd252b4a8c9dfebd9ab81de778174bc50dad115442101f90cd0d05591",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 6.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 765.0
+  },
+  "scenario_id": "C14-OUT1-positive-macro-decomposition"
+}

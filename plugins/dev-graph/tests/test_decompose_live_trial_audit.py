@@ -16,7 +16,6 @@
 from __future__ import annotations
 
 import copy
-import hashlib
 import importlib.util
 import json
 import os
@@ -155,7 +154,7 @@ def _promote(node: dict) -> dict:
             "confirmation_status": "confirmed",
             "evaluation_status": "pass",
             "confirmation_evidence": {
-                "evaluated_digest": hashlib.sha256(node["graph_node_id"].encode()).hexdigest(),
+                "evaluated_digest": None,
                 "evaluator": "run-dev-graph-decompose",
                 "evidence_ref": "eval-log/macro-preview.json",
             },
@@ -165,6 +164,9 @@ def _promote(node: dict) -> dict:
                 "status": "complete",
             },
         }
+    )
+    promoted["confirmation_evidence"]["evaluated_digest"] = (
+        AUDIT.INTEGRITY.evaluation_digest(promoted)
     )
     return promoted
 

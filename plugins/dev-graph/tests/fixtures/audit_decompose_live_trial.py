@@ -16,8 +16,8 @@
 snapshot し、skill が生成した一つの preview と、実 adapter の dry-run receipt だけから
 受け入れ証拠を導出する。試験中に監査コードを即席生成して期待値を自己申告することを防ぐ。
 
-状態 snapshot と before/after 比較は audit_live_trial_state.py に分離した (責務分割)。
-provenance は両 module の合成 identity で測るため、どちらを試験中に書き換えても
+状態 snapshot、publication route、証跡整合性は sibling module に分離した (責務分割)。
+provenance は全 module と scenario 契約の合成 identity で測るため、どれかを試験中に書き換えても
 `provenance_valid` が落ちる。
 """
 
@@ -34,6 +34,8 @@ from typing import Any
 HERE = Path(__file__).resolve().parent
 STATE_MODULE = "audit_live_trial_state.py"
 PUBLICATION_MODULE = "audit_decompose_publication.py"
+INTEGRITY_MODULE = "audit_decompose_integrity.py"
+SCENARIO_CONTRACT = "live-trial-positive-scenarios.json"
 
 
 def _load_sibling(filename: str, module_name: str):
@@ -46,6 +48,7 @@ def _load_sibling(filename: str, module_name: str):
 
 STATE = _load_sibling(STATE_MODULE, "audit_live_trial_state")
 PUBLICATION = _load_sibling(PUBLICATION_MODULE, "audit_decompose_publication")
+INTEGRITY = _load_sibling(INTEGRITY_MODULE, "audit_decompose_integrity")
 AuditError = STATE.AuditError
 _load_object = STATE.load_object
 _write_object = STATE.write_object
@@ -55,13 +58,15 @@ _git_status = STATE.git_status
 _content_inventory = STATE.content_inventory
 _state_comparison = STATE.state_comparison
 
-SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r6"
+SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r7"
 BINDINGS = PUBLICATION.BINDINGS
 RUN_MODES = ("dry-run", "apply")
 AUDIT_MODULES = (
     Path(__file__).resolve(),
     HERE / STATE_MODULE,
     HERE / PUBLICATION_MODULE,
+    HERE / INTEGRITY_MODULE,
+    HERE / SCENARIO_CONTRACT,
 )
 
 
@@ -187,6 +192,7 @@ def audit(
         raise AuditError("scenario requires declared_granularity_threshold")
 
     features = [node for node in nodes if node.get("artifact_kind") == "feature"]
+    preview_consistency = INTEGRITY.preview_consistency(preview, features)
     graph = _graph_measurements(nodes, threshold)
     # DAG と粒度は skill が生成した preview で測る。publication は run 終了時の実 graph で
     # 判定する。同じ node 集合の別の時点であり、混ぜると昇格が観測できなくなる。
@@ -237,6 +243,14 @@ def audit(
         for item in violations
         if not isinstance(item, dict) or item.get("code") != "artifact_missing"
     ]
+    state_schema = _schema_receipt(repo_root, plugin_root, state_graph)
+    evidence_binding = INTEGRITY.evidence_binding(state_features)
+    negative_controls = INTEGRITY.gate_negative_controls(
+        document=state_graph,
+        baseline=state_schema,
+        blocked_ids=draft_ids,
+        validate=lambda document: _schema_receipt(repo_root, plugin_root, document),
+    )
 
     write_counts = {
         "local_issue_files": delta["issues"]["added_count"],
@@ -304,6 +318,9 @@ def audit(
         not bool(graph["task_count"]),
         gate["discriminates"],
         gate["promotion_attributable_to_run"],
+        evidence_binding["all_bound"],
+        negative_controls["all_rejected"],
+        preview_consistency["consistent"],
         draft_publication_zero,
         binding_observations_distinct,
         run_binding_attested,
@@ -326,7 +343,10 @@ def audit(
             "provenance_valid": helper_provenance_valid,
         },
         "graph": graph,
+        "preview_consistency": preview_consistency,
         "publication_gate": gate,
+        "evidence_binding": evidence_binding,
+        "gate_negative_controls": negative_controls,
         "publication_decisions": decisions,
         "binding_projections": projections,
         "persisted_bindings": persisted_bindings,
@@ -392,7 +412,7 @@ def main() -> int:
                 run_binding=args.run_binding,
             )
         _write_object(args.output, result)
-    except (AuditError, OSError, json.JSONDecodeError) as exc:
+    except (AuditError, OSError, ValueError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return os.EX_DATAERR
     return os.EX_OK

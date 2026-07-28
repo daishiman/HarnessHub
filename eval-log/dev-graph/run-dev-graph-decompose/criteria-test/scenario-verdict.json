@@ -26,19 +26,19 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C14-OUT1-positive-macro-decomposition-r6",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/evidence/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T222100Z-dcmp-r8-beads/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T223733Z-dcmp-r9-none/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T223733Z-dcmp-r9-none/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T223733Z-dcmp-r9-none/evidence/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260728T223733Z-dcmp-r9-none/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/evidence/decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T031000Z-dcmp-r11-none/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T031000Z-dcmp-r11-none/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T031000Z-dcmp-r11-none/evidence/decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T031000Z-dcmp-r11-none/independent-verification.json"
       ],
-      "observed": "現行 r6 scenario を apply mode で 2 系列 (r8 tracker_binding=beads / r9 tracker_binding=none) 実走し、両 verdict が launch/completion/goal_fit=PASS、required_observations 5/5、args_divergence.matches=true、task_contract.matches=true となった。証拠 ref は各 run directory 内の durable decompose-audit.json へ解決する。独立 verifier は graph・pre/post inventory・transcript・goal-seek artifact を再計算し、両系列とも DAG 5 node/3 edge/acyclic、task 0、粒度実測 1<=3、3 draft 除外と sole promoted candidate、persisted binding 一致、stdin schema 検証、zero attribution 分離を確認した。none 系列の二度目の同一入力が昇格済み lifecycle を draft へ退行させたため通常 C02 upsert で再昇格し、別責務の回帰を HarnessHub-bk8v に起票した。最終 graph と今回の C14 観測契約は成立している。"
+      "observed": "現行 r7 scenario を apply mode で 2 系列 (r10 tracker_binding=beads / r11 tracker_binding=none) fresh 実走し、両 verdict が launch/completion/goal_fit=PASS、required_observations 7/7、args_divergence.matches=true、task_contract.matches=true となった。両系列とも DAG 5 node/3 edge/acyclic、task 0、粒度実測 1<=3、3 draft 除外と sole promoted candidate、persisted binding 一致、stdin schema 検証、zero attribution 分離を確認した。独立 verifier は最終 persisted feat-user-auth-001 から digest を再計算し、beads=2eb2640c…b2779 / none=40d2cbc4…e8df が宣言値と一致することを確認した。2 種の in-memory negative control は各 run で canonical validator の該当節により拒否された。旧 r6 の r8/r9 は digest 不一致を main 統合レビューで検出したため最終受入証拠から除外した。同一入力の再 upsert による lifecycle 退行は通常 C02 upsert で再昇格し、別責務の回帰を HarnessHub-bk8v で追跡する。"
     },
     "OUT2": {
       "status": "PASS",
