@@ -1,0 +1,10 @@
+# dev-graph の正本 graph は約340ノードが1配列に並ぶ単一 JSON。git 標準の行ベース
+# 3-way merge は近接した追加/削除を衝突として誤検出するため、graph_node_id を鍵にした
+# 構造マージ driver を使う。driver 本体の登録は .gitattributes には書けない (任意コマンド
+# 実行になるため git が禁じている) ので、clone / worktree ごとに一度だけ以下を実行する:
+#
+#   python3 plugins/dev-graph/scripts/merge-graph-conflict.py --install
+#
+# 未 install の環境では merge.devgraph-json が解決できず、git は従来通り行ベースで
+# 衝突表示する (壊れた自動解決にはならない = fail-safe)。
+.dev-graph/state/graph.json merge=devgraph-json

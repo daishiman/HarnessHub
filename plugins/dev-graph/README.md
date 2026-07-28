@@ -82,6 +82,27 @@ python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/upsert-node.py" \
 - `render`はgraphを変更せず、repository内のHTML出力だけを書き換えます。
 - public dispatcherは全11 verbを正規capabilityへdispatchします。上流verb（`init/spec/decompose/plan/requirements`）の成果物確定は各dispatch先Skillが行い、上位commandが自動登録しない成果物だけを`node`（単一writer）で登録します。`system-spec`という単独verbはありません（`spec`がsystem-spec-harnessを引用します）。
 
+## graph.json の merge driver install (clone / worktree ごとに 1 回)
+
+`.dev-graph/state/graph.json` は約 340 ノードが 1 配列に並ぶ単一 JSON のため、git 標準の行ベース 3-way マージは近接した追加/削除を衝突として誤検出します。`graph_node_id` を鍵にした構造マージ driver を使ってください。
+
+```bash
+python3 plugins/dev-graph/scripts/merge-graph-conflict.py --install
+```
+
+`.gitattributes` は `merge=devgraph-json` という **driver 名**しか宣言できません (任意コマンドの実行になるため、コマンド本体の指定を git が禁じています)。名前からコマンドへの解決は `git config merge.devgraph-json.driver` 側にあるため、**clone と worktree のたびに上記 `--install` が必要**です。冪等 (何回実行しても同じ結果) なので迷ったら再実行してかまいません。
+
+未 install の環境では driver 名が解決できず、git は従来どおり行ベースで衝突を表示します (壊れた自動解決にはなりません = fail-safe)。
+
+既に conflicted になってしまった graph を後から解消する場合:
+
+```bash
+python3 plugins/dev-graph/scripts/merge-graph-conflict.py --resolve-conflict --dry-run
+python3 plugins/dev-graph/scripts/merge-graph-conflict.py --resolve-conflict
+```
+
+片側から消えているノードは既定で温存します (事故で消えたノードを黙って葬らないため)。意図的な削除と確認できた場合だけ `--accept-deletion <graph_node_id>` で明示承認してください。
+
 ## Validation
 
 ```bash
