@@ -47,7 +47,7 @@ Exit codes:
   1  一般エラー (repo-root 不正・正本欠落・shape import 失敗)
   2  違反検出 (fail-closed)
 
-CLI と前提節の出力処理は ``lint-live-trial-task-contract.py`` に分離する。この module は
+CLI と前提節の出力処理は ``scripts/lint-live-trial-task-contract.py`` に分離する。この module は
 fixture/scenario/task の契約照合だけを担い、500 行上限と単一責務を維持する。
 """
 from __future__ import annotations

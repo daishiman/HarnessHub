@@ -108,6 +108,19 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - C10 guard の破壊操作遮断を subprocess 非依存へ変更し、hook timeout による fail-open 窓を解消した。
 - quote 外 redirect だけを解析して、Beads notes 等に記載した例示コマンドの誤遮断を解消した。
 - `.dev-graph/config.json` と初期 graph store に preview/receipt 付き sanctioned writer を追加し、init が `Path.write_text()` を含む直接書込みへ退避しない契約にした。
+
+## 2026-07-28 並列 worktree 安全契約の横断追補
+
+`HarnessHub-7xi9`（`issue-worktree-main-ref-desync-20260728`）で、別 worktree が
+checkout 中の branch ref だけを動かして作業ツリーを古いまま残す事故への二層防御を
+追加した。これは本 feature の promoted exact-13 package を再生成する変更ではなく、
+開発管理パイプラインを利用する全 feature に共通する repository 運用の追補である。
+
+- 仕様正本: `system-spec/dev-workflow.md` `qa-088`
+- 設計正本: `architecture/harness-hub-dev-workflow.md`
+- 運用正本: `docs/worktree-parallel-operations-runbook.md`
+- 検査: `reference-transaction` で ref 更新を予防し、`pre-commit` で巻き戻しを遮断、
+  `pre-push` / CI で共有 hook bundle の欠落・陳腐化を検知する
 - C02 node upsert は既存 Markdown 本文を既定保持し、明示 `--regenerate-body` だけが再生成できる。
 - `local_only` task の PR 連動完了 policy を `manual` へ正規化し、完了不能な 167 node を移行した。
 - 500 行を超えた手書き実装・テスト・命名例外台帳を責務別ファイルへ分離し、今回変更した手書き Python をすべて 500 行以下にした。

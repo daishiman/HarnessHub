@@ -7,46 +7,41 @@
 # contexts: [E]
 # network: false
 # write-scope: --json-out 指定時のみ
-# dependencies: [lint-live-trial-task-contract-core.py]
+# dependencies: [../lib/live_trial_task_contract.py]
 # requires-python: ">=3.11"
 # ///
 """live-trial の task 指示が fixture 契約からずれることを機械的に防ぐ CLI。
 
-決定論的な契約読込・task 解析は ``lint-live-trial-task-contract-core.py`` に分離し、本ファイルは
+決定論的な契約読込・task 解析は ``../lib/live_trial_task_contract.py`` に分離し、本ファイルは
 前提節の生成、対象列挙、JSON report、CLI のみに責務を限定する。
 """
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import sys
 from pathlib import Path
 from typing import Any
 
-_CORE_PATH = Path(__file__).with_name("lint-live-trial-task-contract-core.py")
-_CORE_SPEC = importlib.util.spec_from_file_location(
-    "dev_graph_live_trial_task_contract_core", _CORE_PATH
-)
-if _CORE_SPEC is None or _CORE_SPEC.loader is None:
-    raise RuntimeError(f"契約検査 core module を読み込めない: {_CORE_PATH}")
-_CORE = importlib.util.module_from_spec(_CORE_SPEC)
-sys.modules[_CORE_SPEC.name] = _CORE
-_CORE_SPEC.loader.exec_module(_CORE)
+LIB_DIR = str(Path(__file__).resolve().parents[1] / "lib")
+if LIB_DIR not in sys.path:
+    sys.path.insert(0, LIB_DIR)
 
-LINT_NAME = _CORE.LINT_NAME
-PREMISE_BEGIN = _CORE.PREMISE_BEGIN
-PREMISE_END = _CORE.PREMISE_END
-LintError = _CORE.LintError
-args_drift = _CORE.args_drift
-check_task = _CORE.check_task
-contract_digest = _CORE.contract_digest
-find_contract = _CORE.find_contract
-latest_task_path = _CORE.latest_task_path
-load_scenarios = _CORE.load_scenarios
-load_shape_contracts = _CORE.load_shape_contracts
-premise_block = _CORE.premise_block
-resolve_scenario = _CORE.resolve_scenario
+from live_trial_task_contract import (  # noqa: E402
+    LINT_NAME,
+    PREMISE_BEGIN,
+    PREMISE_END,
+    LintError,
+    args_drift,
+    check_task,
+    contract_digest,
+    find_contract,
+    latest_task_path,
+    load_scenarios,
+    load_shape_contracts,
+    premise_block,
+    resolve_scenario,
+)
 
 __all__ = ["PREMISE_BEGIN", "args_drift"]
 

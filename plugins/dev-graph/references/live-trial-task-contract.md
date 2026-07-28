@@ -26,7 +26,7 @@ repository）が最初から持つ入力と、被験セッションへ渡す `ta
 | `live-trial-positive-scenarios.json` | scenario ID、被験 skill、引数 template、fixture contract、必須観測 |
 | `task.md` | 被験セッションへ実際に渡した指示 |
 | `lint-live-trial-task-contract.py` | CLI、前提節生成、対象列挙、JSON report |
-| `lint-live-trial-task-contract-core.py` | 正本読込、task 解析、契約照合 |
+| `lib/live_trial_task_contract.py` | 正本読込、task 解析、契約照合 |
 
 fixture の業務入力は `system-spec/requirements-brief.md` だけである。
 `spec-state.json`、`fetched-references.json`、`completeness-report.json`、

@@ -12,11 +12,11 @@ iteration: null
 title: "C19 live-trial の task 指示を fixture 契約から決定論生成し、前提ずれを防ぐ"
 owners: ["daishiman"]
 created_at: "2026-07-26T05:52:00Z"
-updated_at: "2026-07-28T08:44:33.034350Z"
+updated_at: "2026-07-28T09:31:38.126210Z"
 status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","issue-guard-fix-closure-verdict-refresh-20260726","issue-guard-graph-schema-timeout-fail-open-20260725"]
-resource_scope: ["plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py","plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json","plugins/dev-graph/scripts/lint-live-trial-task-contract.py","plugins/dev-graph/scripts/lint-live-trial-task-contract-core.py","plugins/dev-graph/tests/test_live_trial_task_contract.py","plugins/dev-graph/references/live-trial-task-contract.md","docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/"]
+resource_scope: ["plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py","plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json","plugins/dev-graph/scripts/lint-live-trial-task-contract.py","plugins/dev-graph/lib/live_trial_task_contract.py","plugins/dev-graph/tests/test_live_trial_task_contract.py","plugins/dev-graph/references/live-trial-task-contract.md","docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md","eval-log/coverage/scripts/plugins-dev-graph-scripts-lint-live-trial-task-contract.py.json","eval-log/harness-coverage.json","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/"]
 purpose: "手作業で複製された C19 task の入力前提が deterministic fixture の正本契約からずれ、正規フローを実行不能にする再発を防ぐ"
 goal: "C19 task の初期前提・必須 Skill・観測条件が scenario と fixture の正本から決定論的に生成または検証される"
 scope_in: ["C19 task 前提と shape_system_spec.py 配置物の parity 検証","system-spec-harness 正規 4 entry point の Skill 呼出し要件","矛盾する旧前提を拒否する lint","fixture 再構築直後の fresh live-trial"]
