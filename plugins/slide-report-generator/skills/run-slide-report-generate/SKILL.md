@@ -121,7 +121,7 @@ feedback_contract: # per-skill 受入基準(purpose-acceptance)。deck-evaluator
 # 送信前: output_mode/reportType 値域検証 (値域外 exit 2・fail-closed)
 python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/validate-output-mode.py" --mode <slide|report> [--report-type <enum>]
 # 初回/更新後に依存+plugin-local Chromiumを復元し、node/npm/browser/codexをpreflight
-python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/setup-playwright.py" --install && python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/validate-output-mode.py" --preflight
+python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/build-playwright-runtime.py" --install && python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/validate-output-mode.py" --preflight
 # 構成の仕様確定ゲート (V-001〜043・SR-ID 連動)
 node "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/vendor/scripts/validate-structure.js" <structure|report-structure>
 # slide の UI 品質 (テキスト切れ・16:9 比率)
@@ -195,6 +195,6 @@ node "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/vendor/scripts/validate-print.js" <index.
 - `../../schemas/report-structure.schema.json` — report 入力契約 (`sections[]`・structure と共通コア `$defs` 共有)。
 
 **plugin 共有 scripts**
-- `../../scripts/setup-playwright.py` / `validate-output-mode.py` — plugin-local Chromium復元・検査 + 送信前 mode/reportType 値域検証 (fail-closed exit 2) / 環境 preflight。
+- `../../scripts/build-playwright-runtime.py` / `validate-output-mode.py` — plugin-local Chromium復元・検査 + 送信前 mode/reportType 値域検証 (fail-closed exit 2) / 環境 preflight。
 - `../../vendor/scripts/` — 決定論レンダラ・validator 群 (`render-slide.cjs`/`render-report.js`/`validate-structure.js`/`verify-slides.js`/`evaluate-deck.js`/`validate-print.js`/`build-image-prompts.js`/`generate-images-codex.js`/`build-deck-html.js`/`validate-ai-image-assets.js`/`workflow-manager.js`。byte 携行・書換禁止)。
 - plugin-root references (本文が参照): `../../references/full-image-deck-method.md` / `post-generation-evaluation.md` / `report-types.md` ほか意匠・生成規範の共有正本。

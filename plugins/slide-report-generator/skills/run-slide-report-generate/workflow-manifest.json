@@ -8,7 +8,7 @@
     {
       "id": "R1-hearing-mode",
       "step": 1,
-      "title": "setup-playwright.py でplatform別Chromiumをplugin-localへ復元・検査した上で、hearing-facilitator が output_mode/reportType/読者/長さ/ビジュアル方針と読者価値ブリーフ(対象範囲・共有課題・読後の変化・専門の橋・深さの証拠・正式タイトル制約)を確定し、validate-output-mode.py で送信前値域検証(fail-closed)して下流へ一貫伝播",
+      "title": "build-playwright-runtime.py でplatform別Chromiumをplugin-localへ復元・検査した上で、hearing-facilitator が output_mode/reportType/読者/長さ/ビジュアル方針と読者価値ブリーフ(対象範囲・共有課題・読後の変化・専門の橋・深さの証拠・正式タイトル制約)を確定し、validate-output-mode.py で送信前値域検証(fail-closed)して下流へ一貫伝播",
       "gate": "C1",
       "dependsOn": [],
       "entryHook": null,
@@ -206,7 +206,7 @@
     {
       "id": "glue-setup-playwright",
       "kind": "script",
-      "path": "../../scripts/setup-playwright.py",
+      "path": "../../scripts/build-playwright-runtime.py",
       "phaseIds": [
         "R1-hearing-mode",
         "R3-generate-evaluate"

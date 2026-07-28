@@ -36,7 +36,7 @@
   },
   "vendor/scripts/install-playwright-browser.js": {
    "strategy": "semantic-additive",
-   "note": "npm postinstall と setup-playwright.py が共有する platform-specific Chromium installer。"
+   "note": "npm postinstall と build-playwright-runtime.py が共有する platform-specific Chromium installer。"
   },
   "vendor/scripts/verify-report-runtime.js": {
    "strategy": "semantic-additive",

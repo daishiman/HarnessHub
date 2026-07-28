@@ -20,5 +20,5 @@ export function configurePluginLocalPlaywright() {
 }
 
 export function setupCommand() {
-  return `python3 "${resolve(pluginRoot, 'scripts', 'setup-playwright.py')}" --install`;
+  return `python3 "${resolve(pluginRoot, 'scripts', 'build-playwright-runtime.py')}" --install`;
 }

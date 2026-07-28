@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /// script
-# name: setup-playwright
+# name: build-playwright-runtime
 # purpose: Playwright Node依存とOS/CPU別Chromiumをplugin-local vendor配下へ復元・検査する。
 # inputs:
 #   - CLI: --install または --check

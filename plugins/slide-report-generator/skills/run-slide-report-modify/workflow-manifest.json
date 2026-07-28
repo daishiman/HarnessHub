@@ -8,7 +8,7 @@
     {
       "id": "R1-identify-target",
       "step": 1,
-      "title": "setup-playwright.py でplatform別Chromiumをplugin-localへ復元・検査し、修正対象成果物のパスと output_mode を特定して修正指示を mode 別 6 区分に分類、validate-output-mode.py で mode/reportType の値域整合を送信前検証",
+      "title": "build-playwright-runtime.py でplatform別Chromiumをplugin-localへ復元・検査し、修正対象成果物のパスと output_mode を特定して修正指示を mode 別 6 区分に分類、validate-output-mode.py で mode/reportType の値域整合を送信前検証",
       "gate": "C1",
       "dependsOn": [],
       "entryHook": null,
@@ -121,7 +121,7 @@
     {
       "id": "script-setup-playwright",
       "kind": "script",
-      "path": "../../scripts/setup-playwright.py",
+      "path": "../../scripts/build-playwright-runtime.py",
       "phaseIds": [
         "R1-identify-target",
         "R3-re-evaluate"

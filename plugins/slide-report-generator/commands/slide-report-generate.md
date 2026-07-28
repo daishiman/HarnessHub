@@ -25,7 +25,7 @@ disable-model-invocation: false
 
 ## 事前条件
 
-- node / npm が PATH に在ること (決定論レンダラ・評価に必要)。初回またはplugin更新後は `python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/setup-playwright.py" --install` で依存とOS/CPU別Chromiumを `vendor/playwright-browsers/` へ復元する。`validate-output-mode.py --preflight` はplugin-local Chromiumまで検出する (欠落は warning・非停止)。
+- node / npm が PATH に在ること (決定論レンダラ・評価に必要)。初回またはplugin更新後は `python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/build-playwright-runtime.py" --install` で依存とOS/CPU別Chromiumを `vendor/playwright-browsers/` へ復元する。`validate-output-mode.py --preflight` はplugin-local Chromiumまで検出する (欠落は warning・非停止)。
 - vendor エンジンは `${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/vendor/scripts/` から `node` で起動する。
 
 ## 備考

@@ -35,7 +35,7 @@ Node 製レンダリング/画像/印刷/検証エンジンは `vendor/` に **b
 Node engine は `vendor/` に携行済み。初回は次の1コマンドで、lockfileどおりの `node_modules` とOS/CPUに合うChromiumをプラグイン内へ復元する:
 
 ```bash
-python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/setup-playwright.py" --install
+python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/build-playwright-runtime.py" --install
 python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/validate-output-mode.py" --preflight
 ```
 

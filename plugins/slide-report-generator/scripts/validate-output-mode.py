@@ -103,7 +103,7 @@ def _plugin_root() -> Path:
 
 def _playwright_preflight(root: Path) -> dict:
     """Plugin-local Playwright を write/network なしで検査する。"""
-    setup_script = root / "scripts" / "setup-playwright.py"
+    setup_script = root / "scripts" / "build-playwright-runtime.py"
     if not setup_script.is_file():
         return {
             "ready": False,
@@ -189,12 +189,12 @@ def run_preflight():
     if not node_modules.is_dir():
         warnings.append(
             "vendor/node_modules 未インストール "
-            "(setup-playwright.py --install で復元)"
+            "(build-playwright-runtime.py --install で復元)"
         )
     if not playwright.get("ready"):
         warnings.append(
             "plugin-local Playwright Chromium 未準備 "
-            f"(python3 \"{root / 'scripts' / 'setup-playwright.py'}\" --install)"
+            f"(python3 \"{root / 'scripts' / 'build-playwright-runtime.py'}\" --install)"
         )
         warnings.extend(playwright.get("warnings", []))
     if not codex:

@@ -89,7 +89,7 @@
 - R3: `html-generator` (slide LLM 経路) ／ `slide-renderer` (slide 決定論経路) ／ `report-composer` (report 経路) ／ `ai-image-diagram-producer` (画像明示時) ／ **slide 品質補正** `layout-optimizer` ／ `ui-quality-reviewer` ／ **report 品質補正** `report-quality-reviewer` (読み物文体・段落密度・1項目1ビジュアル整合・reportType 骨格順守) ／ `deck-evaluator` (生成後評価 30 種思考法・mode-aware)。
 
 **plugin-root glue (Bash python3)**:
-- `${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/setup-playwright.py --install` — 初回/更新後にlockfile依存とOS/CPU別Chromiumをplugin-local `vendor/playwright-browsers/`へ復元。続く `validate-output-mode.py --preflight` は node/npm/browser/codex CLI を fail-soft 検出する。
+- `${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/build-playwright-runtime.py --install` — 初回/更新後にlockfile依存とOS/CPU別Chromiumをplugin-local `vendor/playwright-browsers/`へ復元。続く `validate-output-mode.py --preflight` は node/npm/browser/codex CLI を fail-soft 検出する。
 - `${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/validate-report-visual.py <report.html> --structure <report-structure.json> --require-structure --json` — report 決定論視覚ゲート (report gate は構造正本必須・欠落 exit 2、section 構造/1項目1ビジュアル/段落密度/placeholder/印刷・0=PASS/1=崩れ/2=usage)。slide の `verify-slides.js`/`validate-print.js` に対称な report 版。
 
 **vendor scripts (Bash node・`${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/vendor/scripts/…`・byte 携行/書換禁止)**:
@@ -110,7 +110,7 @@
 - `validate-structure.js` の仕様確定ゲート判定: **PASS→R3** ／ **WARN→該当 ID をユーザー提示し承認後 R3** ／ **FAIL→R2 設計へ差し戻し** (structure-designer / report-structure-designer 再設計)。
 - `evaluate-deck.js` が **exit 4 (FAIL)** → 未達指摘を findings 化し R3 の生成/品質補正へ反映して再評価 (goal-seek reloop)。`verify-slides.js`/`validate-print.js` の視覚崩れ CRITICAL も同様。
 - **codex は画像生成器ではない**: `ai-image-diagram-producer` 起動時は着手前に実 text-to-image backend を確認する。`meta.source` は実体名 `codex-image2` を記録し plain `codex` は不可。
-- 環境エラーは `--preflight` で検出する。node/npm不在は停止、plugin-local Chromium欠落は `setup-playwright.py --install` を1回実行して再検査、codex CLI不在は画像明示時のみ停止する。mode 検証は常に fail-closed。
+- 環境エラーは `--preflight` で検出する。node/npm不在は停止、plugin-local Chromium欠落は `build-playwright-runtime.py --install` を1回実行して再検査、codex CLI不在は画像明示時のみ停止する。mode 検証は常に fail-closed。
 
 ### 4.2 観測 / ロギング
 - 進捗・次アクションは `node "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/vendor/scripts/workflow-manager.js" <out-dir> --check --next` で確認。

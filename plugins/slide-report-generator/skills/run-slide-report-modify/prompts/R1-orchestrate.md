@@ -81,7 +81,7 @@
 
 | script | 用途 | いつ |
 |---|---|---|
-| `setup-playwright.py` / `validate-output-mode.py` | OS/CPU別Chromiumをplugin-localへ復元し、`output_mode` (slide/report) と `reportType` (report 時 4 enum) の値域を fail-closed 検証。`--preflight` で node/npm/plugin-local Chromium/codex CLI を検出 | R1 (送信前・必須) / R3 (再確認) |
+| `build-playwright-runtime.py` / `validate-output-mode.py` | OS/CPU別Chromiumをplugin-localへ復元し、`output_mode` (slide/report) と `reportType` (report 時 4 enum) の値域を fail-closed 検証。`--preflight` で node/npm/plugin-local Chromium/codex CLI を検出 | R1 (送信前・必須) / R3 (再確認) |
 | `verify-report-runtime.js` / `validate-report-visual.py` | **report** 修正後に6 viewport＋print＋navigation/computed metrics bundleを生成し、`validate-report-visual.py <report.html> --structure <report-structure.json> --require-structure --json` で静的shape/構造同期をfail-closed判定 | R3 (report・必須) |
 
 ### 3.4 schemas (`${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/schemas/`)

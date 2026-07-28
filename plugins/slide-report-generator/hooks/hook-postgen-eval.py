@@ -128,7 +128,7 @@ def build_context(mode: str, deck_dir: str) -> str:
         mechanical = (
             "1) slide 機械評価 (broken img・はみ出し・computed フォント・16:9 等の静的/動的検証):\n"
             f'   node "{evaluator}" "{deck_dir}"\n'
-            "   (Chromium 未導入なら scripts/setup-playwright.py --install 後に再実行)"
+            "   (Chromium 未導入なら scripts/build-playwright-runtime.py --install 後に再実行)"
         )
     else:
         report_html = os.path.join(deck_dir, "report.html")

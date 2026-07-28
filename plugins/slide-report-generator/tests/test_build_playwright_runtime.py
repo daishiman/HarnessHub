@@ -9,11 +9,11 @@ import sys
 from pathlib import Path
 
 
-_SCRIPT = Path(__file__).resolve().parent.parent / "scripts" / "setup-playwright.py"
+_SCRIPT = Path(__file__).resolve().parent.parent / "scripts" / "build-playwright-runtime.py"
 
 
 def _load_module():
-    spec = importlib.util.spec_from_file_location("setup_playwright_mod", _SCRIPT)
+    spec = importlib.util.spec_from_file_location("build_playwright_runtime_mod", _SCRIPT)
     assert spec and spec.loader
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

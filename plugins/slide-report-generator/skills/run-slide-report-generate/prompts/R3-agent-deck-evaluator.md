@@ -74,11 +74,11 @@ last-audited: 2026-07-05
 | `agents/ui-quality-reviewer.md` | S1〜S26 視覚チェックの参照（重複実装回避・CONST_002） | Step 2 の視覚評価 | — | — |
 | Read / Edit | 対象成果物の読込と修正履歴反映（slide=`structure.md`/`index.html`、report=`report-structure.*`/`report.html`） | Step 2 / Step 5 | — | — |
 
-エラーハンドリング: plugin-local Chromium 未導入なら `setup-playwright.py --install` を実行し1回再評価する。復元不能時のみ静的評価へ縮退する。`evaluation-report.json` 不在なら Step 0 で生成。`evaluate-deck.js` 実行失敗時はエラー内容を提示し deck-dir の中核ファイル存在を確認。詳細は Layer 4 参照。
+エラーハンドリング: plugin-local Chromium 未導入なら `build-playwright-runtime.py --install` を実行し1回再評価する。復元不能時のみ静的評価へ縮退する。`evaluation-report.json` 不在なら Step 0 で生成。`evaluate-deck.js` 実行失敗時はエラー内容を提示し deck-dir の中核ファイル存在を確認。詳細は Layer 4 参照。
 
 ```bash
 node "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/vendor/scripts/evaluate-deck.js" "<deck-dir>"
-# chromium未導入なら: python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/setup-playwright.py" --install 後に再実行
+# chromium未導入なら: python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/build-playwright-runtime.py" --install 後に再実行
 # （broken img/はみ出し/computedフォントが有効化される）
 ```
 
@@ -122,7 +122,7 @@ node "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/vendor/scripts/evaluate-deck.js" "<deck-d
 ## エラーハンドリング
 | 想定エラー | 対応アクション | 最大リトライ |
 |-----------|---------------|-------------|
-| plugin-local Chromium 未導入で動的検証不可 | `setup-playwright.py --install` で復元し再実行。復元不能時のみ静的評価で続行（graceful degradation） | 1（インストール後再実行） |
+| plugin-local Chromium 未導入で動的検証不可 | `build-playwright-runtime.py --install` で復元し再実行。復元不能時のみ静的評価で続行（graceful degradation） | 1（インストール後再実行） |
 | evaluation-report.json 不在 | Step 0 で `evaluate-deck.js` を実行して生成 | 1 |
 | evaluate-deck.js 実行失敗 | エラー内容を提示し、deck-dir の中核ファイル存在を確認 | 1 |
 | 改善ループが収束しない | 3周で打ち切りユーザーへエスカレーション（CONST_003） | 3 |

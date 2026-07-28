@@ -27,4 +27,4 @@ disable-model-invocation: false
 
 - `$ARGUMENTS` (project-dir) が未指定の場合は、直近に生成した出力ディレクトリのパスを尋ねてから実行する。
 - report mode の出力 (`report.html` / `report-structure.json`) でも同じ workflow-manager でファイル状態から進行を確認できる。
-- `python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/validate-output-mode.py" --preflight` で node/npm と plugin-local Chromium の状態を確認する。Chromium欠落時は `setup-playwright.py --install` でプラグイン配下へ復元する。
+- `python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/validate-output-mode.py" --preflight` で node/npm と plugin-local Chromium の状態を確認する。Chromium欠落時は `build-playwright-runtime.py --install` でプラグイン配下へ復元する。

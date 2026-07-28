@@ -69,7 +69,7 @@
 **静的検証のみで継続**（exit を落とさない）。導入手順:
 
 ```bash
-python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/setup-playwright.py" --install
+python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/build-playwright-runtime.py" --install
 ```
 
 ## 4. 30種思考法マッピング（deck-evaluator が全件評価・省略禁止）

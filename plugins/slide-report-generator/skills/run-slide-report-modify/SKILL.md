@@ -95,7 +95,7 @@ feedback_contract: # per-skill 受入基準(purpose-acceptance)。修正後の�
 
 ```bash
 # 【共通】初回/更新後にplugin-local Chromiumを復元
-python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/setup-playwright.py" --install
+python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/build-playwright-runtime.py" --install
 # 【共通】既存成果物の output_mode 判定と値域整合 (送信前・fail-closed)
 python3 "${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/validate-output-mode.py" --mode <slide|report> [--report-type <enum>]
 
@@ -153,7 +153,7 @@ mode を先に確定し (`validate-output-mode.py`)、R3 は mode 分岐で実�
 - `references/report-modification-rules.md` — **report** 部分修正規範の逐語 SSOT (reportType 4 骨格の維持・section 構造の局所修正・report.html ⇔ report-structure.json 同期・読み物文体/1項目1ビジュアル非破壊・履歴追記)。modification-rules.md(slide) と対を成し、slide-report-modifier が mode 別に適用。
 - `../../schemas/structure.schema.json` — slide 修正対象の構造正本 (修正後 `structure.*` が valid を保つ判定)。
 - `../../schemas/report-structure.schema.json` — report 修正対象の構造正本 (修正後 `report-structure.*` が valid を保つ判定)。
-- `../../scripts/setup-playwright.py` / `validate-output-mode.py` — plugin-local Chromium復元・検査 + output_mode 判定・値域検証 (plugin-root glue・IN1)。
+- `../../scripts/build-playwright-runtime.py` / `validate-output-mode.py` — plugin-local Chromium復元・検査 + output_mode 判定・値域検証 (plugin-root glue・IN1)。
 - `../../vendor/scripts/verify-slides.js` / `evaluate-deck.js` / `validate-print.js` — **slide** 修正後の視覚崩れ検証 (R3・OUT1)。
 - `../../scripts/validate-report-visual.py` — **report** 修正後の決定論視覚ゲート (section 構造/1項目1ビジュアル/段落密度/placeholder・R3・OUT1)。
 - `../../vendor/scripts/render-report.js` — **report** 修正後の report-structure.json → report.html 再レンダ整合 (正本射影の確認・R3)。
