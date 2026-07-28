@@ -1,22 +1,41 @@
 #!/usr/bin/env bash
-# pre-push: CI 等価チェックをローカル先行実行。fail なら push を停止。
-# 有効化: git config core.hooksPath .githooks  (または bash scripts/install-git-hooks.sh)
+# pre-push: hook 配線検査 → CI 等価チェック → beads hook 委譲。fail なら push を停止。
+# 本ファイルは git common dir の共有 hook bundle へコピーされる tracked template。
+# 有効化: bash scripts/install-git-hooks.sh
 # bypass: PUSH_SKIP_CI=1 git push  (緊急時のみ、CI 側で再検査される)
+#
+# stdin には push 対象の ref 一覧が渡り、beads hook がそれを読む可能性がある。
+# 途中の処理が stdin を消費しないよう </dev/null を明示する。
 set -u
+
+ROOT="$(git rev-parse --show-toplevel)"
+HOOKS_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+LIB="$HOOKS_DIR/lib"
+
+# hook 配線そのものが死んでいないかの検知。PUSH_SKIP_CI では skip しない
+# (配線が死ぬと desync 検査も ref 遮断も無言で無効化されるため)。
+if [[ -d "$LIB" ]]; then
+  sh "$LIB/run-repo-guards.sh" pre-push "$@" </dev/null || exit $?
+  HH_REPO_GUARDS_DONE="${HH_REPO_GUARDS_DONE:-}:pre-push"
+  export HH_REPO_GUARDS_DONE
+fi
 
 if [[ "${PUSH_SKIP_CI:-0}" == "1" ]]; then
   echo "[pre-push] PUSH_SKIP_CI=1 によりスキップ (CI で再検査されます)"
-  exit 0
+else
+  echo "[pre-push] CI 等価チェック実行中…"
+  if bash "$ROOT/scripts/run-ci-checks.sh" </dev/null; then
+    echo "[pre-push] OK — push 続行"
+  else
+    echo
+    echo "[pre-push] FAIL — push を中止しました。"
+    echo "  - 上記の失敗を修正後 git push を再実行してください (loop until pass)"
+    echo "  - 緊急回避: PUSH_SKIP_CI=1 git push (CI で再検査されます)"
+    exit 1
+  fi
 fi
 
-ROOT="$(git rev-parse --show-toplevel)"
-echo "[pre-push] CI 等価チェック実行中…"
-if bash "$ROOT/scripts/run-ci-checks.sh"; then
-  echo "[pre-push] OK — push 続行"
-  exit 0
+if [[ -d "$LIB" ]]; then
+  exec sh "$LIB/delegate-beads.sh" pre-push "$@"
 fi
-echo
-echo "[pre-push] FAIL — push を中止しました。"
-echo "  - 上記の失敗を修正後 git push を再実行してください (loop until pass)"
-echo "  - 緊急回避: PUSH_SKIP_CI=1 git push (CI で再検査されます)"
-exit 1
+exit 0
