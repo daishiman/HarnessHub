@@ -5,13 +5,26 @@ import { describe, expect, it } from 'vitest';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
 
+const MONITORING_FILES = [
+  'apps/hub/monitoring/better-stack.monitors.json',
+  'apps/hub/monitoring/slo-dashboard.json',
+] as const;
+
+/** 適用状態はこの 2 値だけ。中間状態を作ると「半分適用」を緑で通してしまう */
+const APPLICATION_STATES = ['pending_credentials', 'applied'] as const;
+
+/** heartbeat の ping URL。これ自体が cron 成功を偽装できる秘密なので成果物へ出さない */
+const HEARTBEAT_URL_PATTERN = /uptime\.betterstack\.com\/api\/v\d+\/heartbeat\//;
+
+const ISO_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
+
 function readJson(relativePath: string): unknown {
   return JSON.parse(readFileSync(path.join(REPO_ROOT, relativePath), 'utf8'));
 }
 
 interface BetterStackConfig {
   provider: string;
-  application_state: string;
+  application_state: (typeof APPLICATION_STATES)[number];
   applied_at: string | null;
   monitor: {
     external_id: string | null;
@@ -38,6 +51,7 @@ interface BetterStackConfig {
   status_page: {
     external_id: string | null;
     resource_local_ids: string[];
+    resource_external_ids: Record<string, string | null>;
     request: { endpoint: string; payload: { history: number; published: boolean } };
     resource_request: {
       endpoint_template: string;
@@ -65,6 +79,7 @@ interface SloConfig {
     status: string;
     observation_started_at: string | null;
     first_monthly_verdict_due_at: string | null;
+    blocker?: string | null;
   };
 }
 
@@ -131,17 +146,70 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
     ]);
   });
 
-  it('外部適用前は applied と月次合格を主張しない', () => {
-    expect(monitoring.application_state).toBe('pending_credentials');
-    expect(monitoring.applied_at).toBeNull();
-    expect(monitoring.monitor.external_id).toBeNull();
-    expect(monitoring.heartbeat.external_id).toBeNull();
-    expect(monitoring.status_page.external_id).toBeNull();
-    expect(dashboard.verdict).toStrictEqual({
-      status: 'collecting_not_started',
-      observation_started_at: null,
-      first_monthly_verdict_due_at: null,
-      $comment: expect.any(String),
-    });
+  it('適用状態は宣言された 2 値のいずれかである', () => {
+    expect(APPLICATION_STATES).toContain(monitoring.application_state);
+  });
+
+  // 「未適用を前提に書く」と適用後にテストが用済みになり、「適用済みを前提に書く」と
+  // 適用前に恒常 red になる。どちらの状態でも成立し、かつ中間の食い違い
+  // (monitor だけ採番済みで application_state は pending のまま等) を落とす形にする。
+  it('external_id / applied_at / 観測開始が application_state と矛盾しない', () => {
+    const externalIds = [
+      monitoring.monitor.external_id,
+      monitoring.heartbeat.external_id,
+      monitoring.status_page.external_id,
+      monitoring.status_page.resource_external_ids['hub-health'],
+    ];
+
+    if (monitoring.application_state === 'pending_credentials') {
+      expect(monitoring.applied_at).toBeNull();
+      expect(externalIds).toStrictEqual([null, null, null, null]);
+      expect(dashboard.verdict.status).toBe('collecting_not_started');
+      expect(dashboard.verdict.observation_started_at).toBeNull();
+      expect(dashboard.verdict.first_monthly_verdict_due_at).toBeNull();
+      return;
+    }
+
+    // applied 側: 4 資源すべてが採番済みで、適用時刻が観測開始と一致していること
+    for (const externalId of externalIds) {
+      expect(typeof externalId).toBe('string');
+      expect(externalId).not.toBe('');
+    }
+    expect(monitoring.applied_at).toMatch(ISO_INSTANT);
+    expect(['collecting', 'collection_blocked']).toContain(dashboard.verdict.status);
+    if (dashboard.verdict.status === 'collection_blocked') {
+      expect(dashboard.verdict.observation_started_at).toBeNull();
+      expect(dashboard.verdict.first_monthly_verdict_due_at).toBeNull();
+      expect(dashboard.verdict.blocker).toBe('better-stack-monitor-paused');
+      return;
+    }
+
+    expect(dashboard.verdict.observation_started_at).toBe(monitoring.applied_at);
+
+    // 初回月次判定は観測開始 + minimum_observation_days。ここを短く詰めると
+    // 「30 日集める前に 99.5% 達成と言う」経路が開く (受け入れ条件 3)
+    const startedAt = Date.parse(dashboard.verdict.observation_started_at ?? '');
+    const dueAt = Date.parse(dashboard.verdict.first_monthly_verdict_due_at ?? '');
+    expect(Number.isNaN(startedAt)).toBe(false);
+    expect(dueAt - startedAt).toBe(dashboard.slo.minimum_observation_days_for_final_verdict * 86_400_000);
+  });
+
+  it('観測期間の満了前に月次 SLO 達成を主張しない', () => {
+    const dueAt = Date.parse(dashboard.verdict.first_monthly_verdict_due_at ?? '');
+    if (Number.isNaN(dueAt) || Date.now() >= dueAt) return;
+    // 判定予定日より前に collecting 以外へ進んでいたら、根拠なく達成を宣言している
+    expect(dashboard.verdict.status).toBe('collecting');
+  });
+
+  it('秘密値 (heartbeat URL・API token) を設定ファイルへ書かない', () => {
+    for (const relativePath of MONITORING_FILES) {
+      const raw = readFileSync(path.join(REPO_ROOT, relativePath), 'utf8');
+      expect(raw).not.toMatch(HEARTBEAT_URL_PATTERN);
+      // token は「値そのもの」を検出できないため、置き場としての key 名の出現を禁じる
+      expect(raw).not.toMatch(/"(?:api_token|token|authorization)"\s*:/i);
+    }
+    // heartbeat URL の受け渡し口は Worker secret 名の宣言だけであること
+    expect(monitoring.heartbeat.secret_binding).toBe('CRON_HEARTBEAT_URL');
+    expect(JSON.stringify(monitoring)).not.toContain('/api/v1/heartbeat/');
   });
 });

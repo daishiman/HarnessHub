@@ -26,6 +26,7 @@ depends_on: [SYS-HUB-FOUNDATION-P03]
 | HF-A3-HEALTH-002 | contract | A3 | `/health` 応答が `{status, version, checkedAt, dependencies[]}` の契約を満たし、`status` は `ok` / `degraded` / `down` のいずれか | local + CI |
 | HF-A3-HEALTH-003 | integration | A3 | 依存先が不通のとき `status` が `ok` 以外になり、HTTP は 200（監視は body で判定）または 503 を返す | local + CI |
 | HF-A3-SLO-001 | integration | A3 | (a) 監視・SLO の設定正本（`apps/hub/monitoring/`）が 3 分間隔・heartbeat・30 日履歴・99.5%・エラーバジェット 70/100% を保持し、**外部適用前に `applied` と月次合格を主張しない**ことを検査する。(b) 外形監視（Better Stack Free / 3 分間隔）が `/health` を実計測し、月次可用性 99.5% を算定できる時系列が取得できる | (a) local + CI / (b) **外部サービス** |
+| HF-A3-SLO-002 | contract | A3 | 適用器（`apps/hub/scripts/apply-better-stack-monitoring.mjs`）が (a) 既存資源を同定して**再実行時に本番へ重複を作らない**、(b) monitor / heartbeat の paused など正本との差分を `PATCH` する、(c) heartbeat URL と API token を設定ファイル・標準出力・例外へ**出さない**、(d) 正常な再実行では観測開始を後ろ倒しせず、monitor 再作成・再開時だけ 30 日観測をリセットする | local + CI（実 API へは出ない） |
 | HF-A4-OWNER-001 | unit | A4 | shared-layers §1〜§3 の全登録層について、owner package / 公開 API / consumer の一覧が生成でき、owner 未定義の層が 0 件 | local + CI |
 | HF-A4-CONTRACT-001 | contract | A4 | `packages/ui` の公開 API を **2 系統以上の consumer** が参照し、同一実装を指していることを検証 | local + CI |
 | HF-A4-CONTRACT-002 | contract | A4 | `packages/schemas` について同上 | local + CI |
@@ -45,7 +46,8 @@ depends_on: [SYS-HUB-FOUNDATION-P03]
 - `HF-CRON-*` は P10 指摘 F-08 の是正で追加した scheduled handler（`apps/hub/src/worker/cron.ts`）に対応する。配置は `apps/hub/tests/worker/cron.test.ts`（§3 の配置設計に追記済み）。
 
 - `HF-QA-TENANT-001` は本 feature では**共通境界の deny-by-default 挙動のみ**を検証する枠であり、テナント固有 policy の網羅検証は feat-auth-tenancy の責務。
-- `HF-A3-SLO-001` のみ外部サービス設定に依存する。**未設定の間は A3 を pass にできない**（fail-closed）。
+- `HF-A3-SLO-001` のみ外部サービス設定に依存する。**未設定または monitor paused の間は A3 を pass にできない**（fail-closed）。`HF-A3-SLO-001` は `application_state` が `pending_credentials` / `applied` のどちらでも成立する状態機械の不変条件で、適用済みでも実計測できない場合は `verdict.status = collection_blocked` として観測開始日時を持たせない。
+- `HF-A3-SLO-002` は適用**手段**の契約であり、外部サービスへは出ない。これが pass でも A3 の blocked は解けない（解けるのは実適用と 30 日の観測後）。
 
 ## 2. 種別ごとの受入契約
 
