@@ -126,6 +126,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | `backup.yml` | cron `0 17 * * *` | `export-control-plane.ts` で決定論的 JSONL を生成 → gzip → R2 へ **`wrangler r2 object put --remote` で upload → 再 download + `cmp` で往復検証** → 成功を heartbeat 通知 |
 
 - **backup.yml の export / upload 経路 (2026-07-26 実装反映)**: `packages/db/scripts/export-control-plane.ts` が生成する JSONL を日次保存形式の正本とする。restore CLI が同じ形式を直接読めるため、drill と障害復旧が日次成果物そのものを検証する。upload は R2 アクセスキーを追加発行せず `wrangler` を用い、再 download 後の `cmp` で byte 一致まで確認する。Turso CLI / `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` はこの経路では不要。
+- **成果物の採否判定は `verify-export-artifact.ts` に一本化する (2026-07-28 実装反映 / `HarnessHub-vns9`)**: workflow の shell で header を `grep` したり行数を `awk` で数えたりしない。判定の実体は `parseExportArtifact` (`packages/db/backup/export.ts`) で、header 形式・`format_version`・`coreTables` 19 テーブルとの**集合一致**・header 宣言行数と実際の行数の一致まで fail-closed に見る。workflow 側に弱い検査を二重に置くと、**弱い方が先に判定してしまう**。実際、旧実装の「データ行 0 なら不採用」がこれに当たり、migration 済みだがまだ利用の無い本番 DB を 3 夜連続で失敗させていた (詳細は §10)。
 
 **`ci.yml` の品質ゲート（qa-038【2】の required status checks に対応）**
 
@@ -187,6 +188,9 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 ## 10. バックアップ・DR (qa-019)
 
 - **RPO ≤ 24h**: 日次 export (backup.yml)。`export-control-plane.ts` の JSONL を gzip し R2 へ保存する。salary / client secret は暗号文のまま転写し、export 経路で復号しない (qa-032)。
+  - **全テーブル 0 行の断面も「採用する」(2026-07-28 実装反映 / `HarnessHub-vns9`)**。空の DB を写した断面は restore すれば空の DB が再現するため、「復元できないバックアップを成功と数えない」(qa-019) には反しない。逆に 0 行を失敗にすると、稼働直後のまだ利用の無い期間じゅう日次 backup が赤で埋まり、**本物の障害がその赤の中に紛れる**。ただし採用は無言では行わず `::warning::` を残す (「バックアップは取れている」という読み違えを防ぐため)。
+  - この「採用する」は **§10 の restore drill の「空 DB の復元は drill 成立の根拠にしない」と矛盾しない**。前者は*日次成果物として保存に値するか*の判定、後者は*復元手順が実証されたと言えるか*の判定であり、判断対象が異なる。空断面は保存されるが、drill の成立根拠には数えない。
+  - artifact 単体では**「同じ 19 テーブル schema を持つ別 DB を見ていた」ことは切り分けられない**。`verify-export-artifact` が保証するのは schema 集合・形式・行数整合までで、接続先 URL 自体の正当性は GitHub Secret (`TURSO_DATABASE_URL`) の運用境界で管理する。
 - **RTO ≤ 4h (目標)**: runbook — (1) 空の一時 DB または新 Turso DB を用意 → (2) `restore-control-plane.ts` で最新 JSONL を restore → (3) report の `ok` / `chainOk` と table / index 数を確認 → (4) 障害復旧時だけ secret の URL/token 差替 → (5) `/health` 確認。
 - **restore drill**: 四半期ごとに**一時 DB** へ実 restore し、行数・整合検査まで実施 (常設 staging は持たない = §6)。**復元できないバックアップを成功と数えない** (qa-019)。
   - **単一経路の検証 (2026-07-26 実装反映)**: backup.yml が保存する JSONL を空 DB へ `restore-control-plane.ts` で戻し、header / schema / 行数 / audit hash chain / salary・secret 暗号断面を同じ CLI で検査する。日次形式・四半期 drill・本番復旧の入力形式とコマンドを揃え、別経路だけが緑になる偽成功を作らない。

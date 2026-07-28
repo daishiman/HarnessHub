@@ -10,6 +10,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createTursoClient, type TursoAdapter } from '../connection/turso';
 import { ENCRYPTED_COLUMN_PATTERN } from '../repository/crypto';
 import { createTenantsRepo } from '../repository/tenants';
+import { coreTables } from '../schema/index';
 import { seedTwoTenants, type TwoTenantsFixture } from './fixtures/two-tenants';
 import { schemaDdl } from './support/schema-harness';
 import { asCore, createLibsqlTestDb, testCipher } from './support/test-db';
@@ -163,6 +164,63 @@ describe('DMDB-T12 CLI 経由の round-trip (executable-export-restore-ci-fixtur
     expect(report.ok).toBe(true);
     expect(report.chainOk).toBe(true);
   }, 120_000);
+});
+
+// 稼働直後の本番 DB は migration 済みだが全テーブル 0 行になる。旧 backup.yml は
+// 「データ行 0 なら失敗」で落としており、日次 backup が 3 夜連続で赤になっていた。
+// 空 DB の断面も restore すれば空 DB が再現する以上、これは採用しなければならない。
+describe('vns9 export 成果物の採否 (verify-export-artifact CLI)', () => {
+  const runVerify = (artifactPath: string) =>
+    spawnSync(process.execPath, ['--import', 'tsx', 'scripts/verify-export-artifact.ts', '--file', artifactPath], {
+      cwd: join(import.meta.dirname, '..'),
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+  it('全テーブル 0 行の export を採用する (稼働直後の本番 DB)', async () => {
+    const emptyPath = join(workDir, 'empty.db');
+    const emptyDb = await createLibsqlTestDb(`file:${emptyPath}`);
+    const emptyArtifact = await exportControlPlane(asCore(emptyDb));
+    emptyDb.close();
+
+    const artifactPath = join(workDir, 'empty-export.jsonl');
+    writeFileSync(artifactPath, emptyArtifact, 'utf8');
+
+    const result = runVerify(artifactPath);
+    expect(result.status).toBe(0);
+    const summary = JSON.parse(result.stdout.trim().split('\n').at(-1) as string);
+    expect(summary.ok).toBe(true);
+    expect(summary.totalRows).toBe(0);
+    expect(summary.tableCount).toBe(Object.keys(coreTables).length);
+    // 採用はするが、無言で通すと「バックアップは取れている」と読み違えるため警告は残す
+    expect(result.stdout).toContain('::warning::');
+  }, 120_000);
+
+  it('行のある export も同じ CLI で採用される', () => {
+    const artifactPath = join(workDir, 'seeded-export.jsonl');
+    writeFileSync(artifactPath, artifact, 'utf8');
+
+    const result = runVerify(artifactPath);
+    expect(result.status).toBe(0);
+    const summary = JSON.parse(result.stdout.trim().split('\n').at(-1) as string);
+    expect(summary.totalRows).toBeGreaterThan(0);
+    expect(result.stdout).not.toContain('::warning::');
+  }, 60_000);
+
+  // 検出力の裏取り。上 2 件は「通ること」しか示さず、検査が素通しになっても同じ緑になる。
+  // 0 行を通すようにした結果として検査全体が緩んでいないことを、負のコントロールで押さえる。
+  it('テーブルが欠けた成果物は採用しない', () => {
+    const header = JSON.parse(artifact.split('\n')[0] as string) as {
+      tables: Record<string, number>;
+    };
+    delete header.tables[Object.keys(header.tables)[0] as string];
+    const brokenPath = join(workDir, 'broken-export.jsonl');
+    writeFileSync(brokenPath, JSON.stringify(header), 'utf8');
+
+    const result = runVerify(brokenPath);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('テーブル集合が不正');
+  }, 60_000);
 });
 
 describe('P13 production migration / smoke CLI', () => {
