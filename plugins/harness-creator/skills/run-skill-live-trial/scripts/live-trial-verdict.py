@@ -408,7 +408,7 @@ def behavior_closure_files(skill_dir: Path) -> list[tuple[str, Path]]:
                         f"{source}: {child} -> {child_resolved}"
                     )
                 continue
-            if "__pycache__" in child.parts or child.suffix == ".pyc":
+            if "__pycache__" in child.parts or ".pytest_cache" in child.parts or child.suffix == ".pyc":
                 continue
             add_file(child, source)
 

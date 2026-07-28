@@ -1,6 +1,6 @@
 # YAML Spec Cache
 
-last_fetched: 2026-07-27T03:16:26Z
+last_fetched: 2026-07-28T07:00:22Z
 fetcher: scripts/build-yaml-spec-cache.py
 
 ## Source (skills): https://docs.claude.com/en/docs/claude-code/skills
@@ -4932,7 +4932,22 @@ In the subagent’s frontmatter
 : define hooks that run only while that subagent is active
 In
 settings.json
-: define hooks that run in the main session when subagents start or stop
+: define session-wide hooks that also fire inside subagents. Tool events such as
+PreToolUse
+and
+PostToolUse
+fire for the subagent’s tool calls the same way they do in the main conversation, and
+SubagentStart
+and
+SubagentStop
+fire when a subagent starts or finishes
+Hooks from
+settings files, managed policy settings, and plugins
+all apply inside subagents, so a
+PreToolUse
+hook in
+settings.json
+also runs before every tool a subagent uses.
 ​
 Hooks in subagent frontmatter
 Define hooks directly in the subagent’s markdown file. These hooks only run while that specific subagent is active and are cleaned up when it finishes.
@@ -5290,17 +5305,7 @@ main conversation
 when:
 The task needs frequent back-and-forth or iterative refinement
 Multiple phases share significant context, such as planning, implementation, and testing
-You’re making a quick, targeted change
-Latency matters. Subagents start fresh and may need time to gather context
-Use
-subagents
-when:
-The task produces verbose output you don’t need in your main context
-You want to enforce specific tool restrictions or permissions
-The work is self-contained and can return a summary
-Consider
-Skills
-instead when you want reusable prompts or workf
+You’re making
 
 ## Source (hooks): https://docs.claude.com/en/docs/claude-code/hooks
 
@@ -5660,6 +5665,18 @@ Yes, defined in the component file
 For details on settings file resolution, see
 settings
 .
+Hooks from settings files, managed policy settings, and plugins also run inside
+subagents
+. When a subagent calls a tool, tool events such as
+PreToolUse
+and
+PostToolUse
+fire the same configured hooks as in the main conversation, and the input carries the
+agent_id
+and
+agent_type
+common input fields
+that identify the subagent.
 Enterprise administrators can use
 allowManagedHooksOnly
 to block user, project, and plugin hooks. Hooks from plugins force-enabled in managed settings
@@ -5667,6 +5684,16 @@ enabledPlugins
 are exempt, so administrators can distribute vetted hooks through an organization marketplace. See
 Hook configuration
 .
+Hook entries merge across settings levels rather than replacing each other: user, project, and local settings add their own hooks without removing managed ones, and the
+disableAllHooks
+setting can’t disable managed hooks from outside managed settings.
+The
+HTTP hook allowlists
+apply to hooks from every source, including managed policy settings:
+allowedHttpHookUrls
+: when defined at any settings level, Claude Code runs an HTTP hook handler only if its URL matches the merged allowlist
+httpHookAllowedEnvVars
+: when defined, Claude Code interpolates only the environment variables on that list into hook headers
 ​
 Matcher patterns
 The
@@ -7549,43 +7576,7 @@ Not every event supports blocking or controlling behavior through JSON. The even
 Events
 Decision pattern
 Key fields
-UserPromptSubmit, UserPromptExpansion, PostToolUse, PostToolUseFailure, PostToolBatch, Stop, SubagentStop, ConfigChange, PreCompact
-Top-level
-decision
-decision: "block"
-,
-reason
-. Stop and SubagentStop also accept
-hookSpecificOutput.additionalContext
-for
-non-error feedback that continues the conversation
-TeammateIdle, TaskCreated, TaskCompleted
-Exit code or
-continue: false
-Exit code 2 blocks the action with stderr feedback. JSON
-{"continue": false, "stopReason": "..."}
-also stops the teammate entirely, matching
-Stop
-hook behavior
-PreToolUse
-hookSpecificOutput
-permissionDecision
-(allow/deny/ask/defer),
-permissionDecisionReason
-PermissionRequest
-hookSpecificOutput
-decision.behavior
-(allow/deny)
-PermissionDenied
-hookSpecificOutput
-retry: true
-tells the model it may retry the denied tool call
-WorktreeCreate
-path return
-Command hook prints path on stdout; HTTP hook returns
-hookSpecificOutput.worktreePath
-. Hook failure or missing path fails creation
-Elici
+UserPromptSubmit, UserPr
 
 ## Source (permissions): https://docs.claude.com/en/docs/claude-code/permissions
 

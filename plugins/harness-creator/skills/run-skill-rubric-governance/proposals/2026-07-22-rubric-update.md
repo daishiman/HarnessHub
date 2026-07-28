@@ -9,9 +9,9 @@ trigger: aggregate-evals (SessionEnd)
 
 ## 集計サマリ
 
-- 評価件数: 241
-- FAIL 率: 2.90%
-- 平均スコア: 90.222
+- 評価件数: 226
+- FAIL 率: 0.44%
+- 平均スコア: 91.714
 
 ## 検出された異常
 
@@ -20,7 +20,6 @@ trigger: aggregate-evals (SessionEnd)
 - **run-company-master-backfill**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-company-master-build**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-template-sync**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
-- **run-dev-graph-decompose**: friction_density — {"friction_records": 2, "window": 6, "evidence": [{"date": "2026-07-21", "iterations": null, "negative_feedback_count": 0, "findings_count": 3}, {"date": "2026-07-21", "iterations": null, "negative_feedback_count": 0, "findings_count": 3}]}
 - **assign-blueprint-fidelity-evaluator**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-blueprint-apply**: friction_density — {"friction_records": 2, "window": 2, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
 - **run-skill-update-notifier**: friction_density — {"friction_records": 2, "window": 4, "evidence": [{"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}, {"date": "2026-07-12", "iterations": 2, "negative_feedback_count": 0, "findings_count": 0}]}
@@ -38,11 +37,7 @@ trigger: aggregate-evals (SessionEnd)
 
 ## 主要 finding カテゴリ (top5)
 
-- tmux session exited before completion marker; transcript ended after tool_result without turn_duration: 2 件
-- preview nodes omit required created_at and updated_at; independent schema validation reports six violations: 1 件
-- validation fields remain pending and required publication preview fields are absent: 1 件
-- required Agent fork and independent macro auditor were not executed: 1 件
-- The transcript has no Skill invocation or read of the target SKILL.md; the workflow was manually reproduced.: 1 件
+- (なし)
 
 ## 提案アクション (要 human review)
 

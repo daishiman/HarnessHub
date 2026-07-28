@@ -12,7 +12,7 @@ iteration: null
 title: "guard-graph-schema 修正で stale 化した dev-graph 9 skill の live-trial verdict と run-dev-graph-init の content-review verdict の再取得"
 owners: ["daishiman"]
 created_at: "2026-07-25T17:12:02Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
+updated_at: "2026-07-28T08:41:00Z"
 status: "draft"
 depends_on: ["issue-guard-graph-schema-timeout-fail-open-20260725"]
 related_nodes: ["issue-live-trial-closure-stale-mvp-first-20260723","issue-init-live-trial-scenario-refresh-20260725"]
@@ -93,6 +93,24 @@ content-review 分は解消済み。run-dev-graph-init に対する focused comb
 この再評価中に C10 guard の Write 枝の遮断理由文が保護範囲を過大に名乗っていた (`.dev-graph/ 配下` と表記、実体は `state/` と `config.json` と `graph-node.schema.json` の 3 対象のみ) 不整合を検出して修正したため、`plugins/dev-graph/hooks/guard-graph-schema.py` の内容は再び変わっている。**live-trial の再取得はこの修正後の closure に対して行うこと。**
 
 残りは live-trial 9 件のみ。
+
+## 追記 (2026-07-28) — 依存プラグイン経由の別経路 stale 化と、証跡削除の誤りの訂正
+
+本 issue のスコープに含まれる `run-dev-graph-system-spec` について、PR #499 (`system-spec-harness/scripts/` 配下の qa_log ID 重複チェック修正) の作業中に、hook 経由 (`plugins/<plugin>/hooks/`) とは別の stale 化経路が実際に発生した。
+
+`plugins/dev-graph/references/package-contract.json` の `skill_dependencies.run-dev-graph-system-spec: ["system-spec-harness"]` により、`behavior_closure_files()` は `system-spec-harness/scripts/` を closure へ含める。このため `system-spec-harness/scripts/validate-coverage-matrix.py` 等の修正だけで `run-dev-graph-system-spec` の `skill_dir_tree_sha` が変わり、既存 live-trial 証跡 19 件 + `20260726T050519Z-sysspec-final2` (計 20 件) が一括で stale-sha 化した。
+
+### 誤った対応と訂正 (重要な教訓)
+
+最初、stale 化した 20 件を `.dev-graph/tmp/preserved-evidence/` へバックアップした上で `git rm -r` で削除する対応を取ったが、これは `scripts/lint-live-trial-verdict.py --check-provenance origin/main` の **evidence-removed** 違反 (「証跡は append-only。分岐点 (merge-base) に存在した証跡を消すのは digest 書き換えの履歴束縛を外す経路として拒否する」) を新たに引き起こすと判明した。
+
+**正しい対応は「削除しない」**: stale な証跡は残したままでよい (`lint-live-trial-verdict.py --all` は辞書順最大の run-id の verdict.json だけを検査するため、stale な旧証跡は検査対象にすらならず無害)。新しい run-id で `run-skill-live-trial` を実走して PASS 証跡を追加するだけで十分。20 件は全て `git restore --staged --worktree` で復元し、新規 run-id `20260728T160623-sysspec-r2` (verdict: PASS、fresh evaluator で監査台帳偽装の再発なしも確認済み) を追加した。`scenario-verdict.json` の `OUT1.live_trial_verdict_ref` もこの新 run-id へ更新した。
+
+なお C19 の live-trial (run-id `20260728T112105-sysspec-wt8`、別 issue `HarnessHub-3vmz` の発端) は本セッション内で新規作成後すぐ削除したもので、origin/main との分岐点に存在しないため `--check-provenance` の対象外であり、これは削除のままで問題ない。
+
+### 今後への適用
+
+本 issue が対象とする残り 8 skill (init/node/sync/requirements/render/decompose/schedule/status) の live-trial 再取得でも、既存 stale 証跡を削除せず残したまま新規 run-id を追加する方針を徹底すること。証跡削除は provenance ゲートの観点で常に誤りである。
 
 ## 関連
 

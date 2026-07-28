@@ -1,25 +1,31 @@
 {
-  "target": {"plugin": "slide-report-generator", "skill": "run-slide-report-generate", "skill_md_sha256": "37f991560886f6cdff32c0603bc7e6f33e1037837c56ec2ffbfdf7b3bae86b64"},
+  "target": {"plugin": "slide-report-generator", "skill": "run-slide-report-generate", "skill_md_sha256": "360d9ccc12576cdf2334ab3d5d9aaf1b2bbb712fee75985649cd55b9ded0ec05"},
   "review_kind": "elegance",
   "verdict": "PASS",
-  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
-  "reviewer": "review-group-c-independent-elegance",
-  "reviewed_at": "2026-07-12T00:22:24Z",
-  "iterations": 2,
+  "findings_summary": {"contradiction": 0, "omission": 1, "inconsistency": 2, "dependency_break": 0, "smell": 1},
+  "reviewer": "claude-opus-5-rescue-independent-elegance",
+  "reviewed_at": "2026-07-28T00:00:00Z",
+  "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "IN1: validate-output-mode.py fail-closes mode/reportType before R2, and workflow-manifest plus R1 prompt propagate the resolved mode to structure and generation agents. test_validate_output_mode covers valid and invalid paths.",
-      "OUT1/C1-C3: the shared design core is not duplicated across modes; slide and report branch only at content intent, schemas, renderers and mode-aware quality gates. validate-report-visual requires the structure SSOT and plugin tests cover defects/exit codes.",
-      "C4: all prompt, schema, reference and vendor/glue script paths listed by the manifest exist; boundaries delegate modification and cross-deck review. slide plugin pytest 131 PASS."
+      "C1(矛盾なし): plugin root を `${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}` へ変更した箇所が SKILL.md 本文・deterministic_checks・Gotchas で網羅的に統一されており、取り残しは 0。この記法は scripts 側が実装で受理する (build-playwright-runtime.py:35 と validate-output-mode.py:91-98 が SRG_ROOT を優先解決) ため宣言と実装が一致し、sibling skill (run-slide-report-modify 8 箇所・run-cross-deck-review 5 箇所) とも同一規約。",
+      "C2(漏れなし): 新設の読者価値ブリーフ(6項目)が宣言だけで終わらず R1→R2→R3 の全層へ実体接続されている。prompts/R1-orchestrate.md(L39/87/132/137/149-151/163/186/199)で伝播経路と完了チェックが定義され、下流の受け皿も RQ31〜RQ34(report-quality-checklist.md I 群)・CONST_039(html-generation-rules.md)・D5 読者フック(R3-agent-deck-evaluator.md L99/111/149 と deck-evaluation-rubric.md L16/82/87)として実在する。OUT1 強化文の受入も EVALS.json の criteria-test 行へ反映済み。",
+      "C3(整合性): 決定論 rubric (L0+L2 合成) が score=100/threshold=80・findings 0・high severity 0。BD 系見出し規約・行数(200行)・PD-001(references 実在)いずれも違反なし。",
+      "C4(依存関係整合): SKILL.md が参照する 23 パス (prompts/manifest/schemas 3・plugin 共有 scripts 3・plugin-root references 3・vendor scripts 11) を実測し全て実在。改名対象 build-playwright-runtime.py も実在し、旧 setup-playwright.py への dangling 参照は本 skill 配下に 0 件。workflow-manifest.json の resources[] は全 path が解決 (dangling 0)。plugin pytest 136 passed、lint-contract-drift PASS、lint-reference-attribution PASS、validate-plugin-completeness PASS。"
     ],
-    "negative_feedback": [],
-    "iteration": 2,
+    "negative_feedback": [
+      "[low・smell] 追加リソース節で `workflow-manifest.json` 箇条書き直後の空行が本差分で削除され、`**skill 私有 references (10 本…)**` が CommonMark の lazy continuation として直前リスト項目の段落へ吸収される。節ラベルが独立表示されなくなる描画上の退行で、空行 1 行の復帰で解消する。",
+      "[low・inconsistency] 改名がパスでは完了しているが id ラベルに残存。workflow-manifest.json の resource id が `glue-setup-playwright` のまま (path は ../../scripts/build-playwright-runtime.py に更新済・phases[].resources 2 箇所からも旧 id で参照)。解決には影響しないが SKILL.md が manifest を id↔path 正本と宣言している以上、語彙が実体から乖離している。sibling の run-slide-report-modify も同様に `script-setup-playwright` が残る。",
+      "[low・omission] R3 節の deck-evaluator 記述 (mode 別 rubric 次元 = slide:視覚崩れ/1メッセージ、report:可読性/図解適合/情報密度) に読者フック(D5)が列挙されていない一方、完了条件(4) と OUT1 は『読者フックと視覚崩れ 0 を確認して PASS』を要求しており SKILL.md 内で粒度が非対称。実装側 (R3-agent-deck-evaluator.md の D5・deck-evaluation-rubric.md) は充足済みのため実害は無いが、router 要約としては 1 語の追記が望ましい。",
+      "[low・inconsistency・既存] 冒頭の『7 フェーズ総体ワークフロー』に対し括弧内の列挙は P1/P2/P2.5/P3/P3.5/P3.6 の 6 個で数が合わない。origin/main から継承した既存の不一致で本差分の導入ではない。"
+    ],
+    "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual-skill-sha-change",
     "next_action": "none"
   },
-  "notes": "Iteration 1 found only rubric heading nonconformance; the meaning-preserving heading correction passed independent rubric re-evaluation. Four elegance conditions PASS."
+  "notes": "救出 branch の未レビュー変更 (origin/main 比 +30 -28) に対する genuine 再評価であり、旧 verdict (sha 37f99156…) の引き写しではない。実測根拠: (1) 参照パス 23 件を存在検査し MISSING 0、改名先 build-playwright-runtime.py 実在・旧名 dangling 0。(2) plugin pytest 136 passed、lint-contract-drift/lint-reference-attribution/validate-plugin-completeness いずれも PASS。(3) 決定論 rubric score=100/threshold=80・findings 0。(4) 読者価値ブリーフと OUT1 強化の受け皿 (RQ31〜34・CONST_039・D5) を下流 reference/prompt で個別に実在確認。C1-C4 に high severity の破れは無く PASS。ただし low 4 件 (markdown 空行退行 / manifest resource id の改名漏れ / D5 列挙の非対称 / 7 フェーズ表記) を負のフィードバックとして残す。なお plugin 宣言ゲート lint-vendor-parity.py は vendor/scripts/hooks/deck-postgen-hook.js の pin 不一致で FAIL するが、pin(7c6e2165…) は origin/main の blob(3e527c76…) とも既に不一致で本 branch 由来の退行ではないため本 verdict の FAIL 要因とはせず、plugin レベルの既存課題として別途起票を推奨する。"
 }
