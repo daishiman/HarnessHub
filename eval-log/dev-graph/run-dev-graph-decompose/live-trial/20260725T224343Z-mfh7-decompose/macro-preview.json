@@ -1,0 +1,302 @@
+{
+  "nodes": [
+    {
+      "graph_node_id": "arch-web-app-001",
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "frontend",
+        "backend"
+      ],
+      "title": "小規模Webアプリ技術アーキテクチャ",
+      "project_id": "web-app",
+      "domain": "platform",
+      "status": "draft",
+      "owners": [],
+      "tags": [
+        "architecture",
+        "web"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-26T01:20:00Z",
+      "updated_at": "2026-07-26T01:20:00Z",
+      "depends_on": [],
+      "related_nodes": [],
+      "resource_scope": [
+        "architecture"
+      ],
+      "parent_feature": null,
+      "feature_package_id": null,
+      "phase_ref": null,
+      "file_path": "architecture/arch-web-app-001.md",
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "confirmation_status": "draft",
+      "evaluation_status": "pending",
+      "confirmation_evidence": {
+        "evaluator": null,
+        "evidence_ref": null,
+        "evaluated_digest": null
+      },
+      "source_lineage": {
+        "origin_kind": "generated",
+        "source_plugin": "dev-graph/run-dev-graph-decompose",
+        "source_path": "eval-log/decompose-want.json",
+        "source_version": "0.1.0",
+        "source_digest": "80894344621b3966d1fd595d2d339050b3b405197cab52c185812e41ba2f8ff6",
+        "imported_at": "2026-07-26T01:20:00Z"
+      },
+      "classification_confidence": 1.0,
+      "classification_reason": "shared technology architecture for the web application",
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "confidence": 1.0,
+          "candidate_path": "architecture/arch-web-app-001.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "none",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "manual",
+        "status": "open",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "incomplete",
+        "missing_sections": [
+          "detailed_requirements"
+        ],
+        "checked_at": null
+      },
+      "purpose": "小規模Webアプリの共有技術基盤を定義し、フロントエンドとバックエンドの技術選定・構成方針を統一する",
+      "goal": "認証機能とダッシュボード機能が共通のアーキテクチャ上で一貫して動作する技術基盤が確立された状態",
+      "scope_in": [],
+      "scope_out": [],
+      "acceptance": [],
+      "architecture_refs": []
+    },
+    {
+      "graph_node_id": "feat-user-auth-001",
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "title": "ユーザー登録・ログイン",
+      "project_id": "web-app",
+      "domain": "authentication",
+      "status": "draft",
+      "owners": [],
+      "tags": [
+        "auth",
+        "registration",
+        "login"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-26T01:20:00Z",
+      "updated_at": "2026-07-26T01:20:00Z",
+      "depends_on": [],
+      "related_nodes": [],
+      "resource_scope": [
+        "src/auth"
+      ],
+      "parent_feature": null,
+      "feature_package_id": null,
+      "phase_ref": null,
+      "file_path": "features/feat-user-auth-001.md",
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "confirmation_status": "draft",
+      "evaluation_status": "pending",
+      "confirmation_evidence": {
+        "evaluator": null,
+        "evidence_ref": null,
+        "evaluated_digest": null
+      },
+      "source_lineage": {
+        "origin_kind": "generated",
+        "source_plugin": "dev-graph/run-dev-graph-decompose",
+        "source_path": "eval-log/decompose-want.json",
+        "source_version": "0.1.0",
+        "source_digest": "80894344621b3966d1fd595d2d339050b3b405197cab52c185812e41ba2f8ff6",
+        "imported_at": "2026-07-26T01:20:00Z"
+      },
+      "classification_confidence": 1.0,
+      "classification_reason": "want contains explicit user registration and login requirements",
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "confidence": 1.0,
+          "candidate_path": "features/feat-user-auth-001.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "none",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "manual",
+        "status": "open",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "incomplete",
+        "missing_sections": [
+          "detailed_requirements"
+        ],
+        "checked_at": null
+      },
+      "purpose": "ユーザーがアカウントを作成しログインすることで、認証済みセッションを取得できるようにする",
+      "goal": "メールアドレスとパスワードによるユーザー登録・ログイン・セッション管理が動作し、未認証アクセスを適切に拒否できる状態",
+      "scope_in": [
+        "ユーザー登録フォームとバリデーション",
+        "ログインフォームと認証処理",
+        "セッション管理"
+      ],
+      "scope_out": [
+        "OAuth/ソーシャルログイン",
+        "多要素認証",
+        "パスワードリセット"
+      ],
+      "acceptance": [
+        "新規ユーザーがメールアドレスとパスワードでアカウントを作成できる",
+        "登録済みユーザーがログインしてセッションを取得できる",
+        "未認証ユーザーが保護ページにアクセスするとログインページへリダイレクトされる"
+      ],
+      "architecture_refs": [
+        "arch-web-app-001"
+      ]
+    },
+    {
+      "graph_node_id": "feat-dashboard-001",
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "title": "ログイン後ダッシュボード",
+      "project_id": "web-app",
+      "domain": "dashboard",
+      "status": "draft",
+      "owners": [],
+      "tags": [
+        "dashboard",
+        "ui"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-07-26T01:20:00Z",
+      "updated_at": "2026-07-26T01:20:00Z",
+      "depends_on": [
+        "feat-user-auth-001"
+      ],
+      "related_nodes": [],
+      "resource_scope": [
+        "src/dashboard"
+      ],
+      "parent_feature": null,
+      "feature_package_id": null,
+      "phase_ref": null,
+      "file_path": "features/feat-dashboard-001.md",
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "confirmation_status": "draft",
+      "evaluation_status": "pending",
+      "confirmation_evidence": {
+        "evaluator": null,
+        "evidence_ref": null,
+        "evaluated_digest": null
+      },
+      "source_lineage": {
+        "origin_kind": "generated",
+        "source_plugin": "dev-graph/run-dev-graph-decompose",
+        "source_path": "eval-log/decompose-want.json",
+        "source_version": "0.1.0",
+        "source_digest": "80894344621b3966d1fd595d2d339050b3b405197cab52c185812e41ba2f8ff6",
+        "imported_at": "2026-07-26T01:20:00Z"
+      },
+      "classification_confidence": 1.0,
+      "classification_reason": "want contains explicit post-login dashboard requirement",
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "confidence": 1.0,
+          "candidate_path": "features/feat-dashboard-001.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "none",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "manual",
+        "status": "open",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "incomplete",
+        "missing_sections": [
+          "detailed_requirements"
+        ],
+        "checked_at": null
+      },
+      "purpose": "認証済みユーザーにアプリケーションの主要情報を集約表示するダッシュボードを提供する",
+      "goal": "ログイン後にダッシュボード画面が表示され、ユーザー固有の情報やナビゲーションが利用できる状態",
+      "scope_in": [
+        "ダッシュボードレイアウトと基本UI",
+        "ユーザー情報の表示",
+        "ナビゲーション"
+      ],
+      "scope_out": [
+        "リアルタイム通知",
+        "カスタマイズ可能なウィジェット",
+        "管理者ダッシュボード"
+      ],
+      "acceptance": [
+        "ログイン後にダッシュボード画面が表示される",
+        "ダッシュボードにログインユーザーの情報が表示される",
+        "ダッシュボードから各機能へのナビゲーションが利用できる"
+      ],
+      "architecture_refs": [
+        "arch-web-app-001"
+      ]
+    }
+  ]
+}
