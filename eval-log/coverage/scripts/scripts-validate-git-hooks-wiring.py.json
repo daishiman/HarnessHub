@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/validate-git-hooks-wiring.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 92,
+    "notes": "genuine code-review + py_compile OK。tracked .githooks、beads fallback、git common dir の installed bundle、core.hooksPath、tracked/install 内容一致を別関数で検査し、hook が存在するだけで実行されない silent failure を fail-closed にする。installed-only 経路は古い branch で tracked template が無い pair の freshness 比較だけを省略し、共有 bundle 単独の構造・local config は検査するため backward compatibility と安全性の境界が明確。最終レビューで、CI 用 check_wiring が root scripts の欠落を直接検査せず、install 済みコピーだけが残る状態を見逃す gap を発見したため _check_tracked_bundle_scripts と回帰テストを追加して是正した。Path.realpath で macOS symlink 差を吸収し、subprocess は check=False で結果を violation に変換する。network/write は無く、変更は install-git-hooks.sh に委譲する。TESTS: hook/lib/guard/delegate/beads fallback/source script/core.hooksPath/freshness の個別破壊、古い branch の installed-only 動作、実 git worktree での ref 遮断を含む対象 suite が PASS。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

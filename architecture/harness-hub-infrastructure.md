@@ -109,6 +109,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - migration は旧 publisher token を移送しないため、利用者告知と Device Flow 再認証を release 条件に含める。
 - rollback は既存どおり DB を前進させたまま Worker code を戻す。
 
+**差分追記 (2026-07-28 / `HarnessHub-vns9`)** — 詳細正本は [docs/infrastructure-spec.md](../docs/infrastructure-spec.md) §7 / §10。
+
+- **backup 成果物の採否判定境界**: 採用するか否かの判定は `packages/db/scripts/verify-export-artifact.ts` (実体は `parseExportArtifact`) の**一箇所へ集約**する。workflow の shell 側に header の `grep` や行数の `awk` を置かない。判定が 2 箇所に分かれると**弱い方が先に判定する**ため、ライブラリ側の fail-closed 検査 (header 形式・`format_version`・`coreTables` 19 テーブルとの集合一致・header 宣言行数と実際の行数の一致) が届かなくなる。
+- **qa-019「復元できないバックアップを成功と数えない」の適用範囲**: この確定要件が禁じるのは*復元できない断面*の採用であって、*データ行 0 の断面*の採用ではない。migration 済みで全 19 テーブル 0 行の断面は restore すれば同じ空 DB を再現するため採用し、`::warning::` だけ残す。旧実装はこの取り違えにより、稼働直後の本番 DB を 3 夜連続で不採用にしていた。
+
 ## Risks and verification
 
 正本章 (system-spec/infrastructure.md, system-spec/maintenance-ops.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
@@ -118,3 +123,8 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **未達リスク**: `CLOUDFLARE_API_TOKEN` を Workers deploy と R2 write で共用しており、最小権限分離 (2 token) が未達。追跡: `issue-ci-token-least-privilege-20260725` (`HarnessHub-bda4`)。
 - **未検証境界**: 更新版 `backup.yml` の成功と、main 上の `ci.yml` が migration → deploy → health → smoke を完走することは landing 後の GitHub Actions 実走待ち。追跡: `issue-actions-secrets-missing-20260725` (`HarnessHub-fnzl`)。
 - **検証済み**: 本番 Turso 18 table / 12 index、D1 hedge 同一断面、R2 往復、スモーク 6/6、restore drill 2 段、rollback 3 分岐 (deploy 未成功 / rollback 成功 / rollback 失敗)。証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
+
+**差分追記 (2026-07-28 / `HarnessHub-vns9`)**
+
+- **未検証境界の更新**: `HarnessHub-fnzl` 由来の secret / variable 投入は完了し `check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。`ci.yml` の完走は run `30143422049` で達成済み。**残るのは `backup.yml` の成功のみ**で、是正版が main へ land した後の `workflow_dispatch` 実走待ち。
+- **観測経路の欠落**: `BACKUP_HEARTBEAT_URL` が未投入のため、backup の cron 不発も step 失敗も外形監視側では同じ無音になる (qa-027 の意図が実装上未達)。実際に 3 夜連続の失敗が数日誰にも気づかれなかった。追跡: `issue-backup-failure-undetected-20260728` (`HarnessHub-dbx6`)。

@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-25T22:55:12.292521Z"
+updated_at: "2026-07-28T08:39:07.757446Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717"]
@@ -108,6 +108,19 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - C10 guard の破壊操作遮断を subprocess 非依存へ変更し、hook timeout による fail-open 窓を解消した。
 - quote 外 redirect だけを解析して、Beads notes 等に記載した例示コマンドの誤遮断を解消した。
 - `.dev-graph/config.json` と初期 graph store に preview/receipt 付き sanctioned writer を追加し、init が `Path.write_text()` を含む直接書込みへ退避しない契約にした。
+
+## 2026-07-28 並列 worktree 安全契約の横断追補
+
+`HarnessHub-7xi9`（`issue-worktree-main-ref-desync-20260728`）で、別 worktree が
+checkout 中の branch ref だけを動かして作業ツリーを古いまま残す事故への二層防御を
+追加した。これは本 feature の promoted exact-13 package を再生成する変更ではなく、
+開発管理パイプラインを利用する全 feature に共通する repository 運用の追補である。
+
+- 仕様正本: `system-spec/dev-workflow.md` `qa-088`
+- 設計正本: `architecture/harness-hub-dev-workflow.md`
+- 運用正本: `docs/worktree-parallel-operations-runbook.md`
+- 検査: `reference-transaction` で ref 更新を予防し、`pre-commit` で巻き戻しを遮断、
+  `pre-push` / CI で共有 hook bundle の欠落・陳腐化を検知する
 - C02 node upsert は既存 Markdown 本文を既定保持し、明示 `--regenerate-body` だけが再生成できる。
 - `local_only` task の PR 連動完了 policy を `manual` へ正規化し、完了不能な 167 node を移行した。
 - 500 行を超えた手書き実装・テスト・命名例外台帳を責務別ファイルへ分離し、今回変更した手書き Python をすべて 500 行以下にした。
@@ -126,6 +139,14 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - 残る被覆差 (repo 全体の `validate-plugin-completeness.py` は hooks について `declared ⊆ actual` しか強制せず、`hooks.json` 登録との parity は dev-graph 専用テストにしか無い) は `HarnessHub-vf66` として分離した。
 - 3 例目として `validate-plugin-packages.py` の PKG-006 (hook 登録整合) / PKG-007 (script shebang・実行ビット) も落ちた。両 check は「`hooks/`・`scripts/` 配下は全て起動対象」を前提にしており、import 専用 module 5 件を P0 で遮断していた。entry point 契約テストと同じ構造判定 (`is_import_only_support_module`: `.py` / import 可能名 / shebang なし / `__main__` なし) で統一し、単体テスト 8 件で境界を固定。同時に検出された `build-repo-config.py` の実行ビット欠落は真の不備だったので `chmod +x` で是正した。986 行の契約テストは責務で 3 分割 (364 / 386 / 301 行 + 共有 fixture 73 行)。
 - 同じ衝突が harness coverage にも現れた。`scripts/llm_eval` は分母をファイル数で数えるため、500 行分割で新規 7 件が verdict 未添付のまま母数へ加わり 64.1% → 63.1% へ希釈された。7 件を除くと 64.2% で floor 超え、分割元 `upsert-node.py` の verdict も PASS/91 のままであり、回帰の全量が分母希釈に由来する。先例 2 件と同型に floor を実測値へ手動 baseline reset し (`--update-floor` は回帰時据え置きのため使えない)、verdict を書いて率を戻す Goodhart 経路は取らなかった。構造的是正は `HarnessHub-2mor` として分離した。
+
+## 2026-07-28 追記: C19 task / fixture 前提契約
+
+- `HarnessHub-768b` を実装し、C19 fixture が置く入力、置かない成果物、必須 entry point、観測条件を `TASK_CONTRACT` と scenario JSON から一つの digest へ束ねた。
+- 旧 task の「確定成果物は事前配置済み」「正規 flow を再実行しない」前提を実物回帰で拒否し、fixture 契約へ合わせた fresh PASS task は誤検出しない。
+- 650 行だった lint は CLI／report と契約解析 module に分け、双方を 500 行未満へ収束した。
+- focused pytest 29 PASS、latest verdict task に対する `--all` は checked 1 / violation 0。
+- 技術契約は `plugins/dev-graph/references/live-trial-task-contract.md`、仕様影響なしの層別判断は `docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md` を正本とする。
 
 ## アーキテクチャ参照
 

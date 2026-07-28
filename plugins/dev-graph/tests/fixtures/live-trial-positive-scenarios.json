@@ -50,7 +50,7 @@
       "criterion_id": "OUT1",
       "mode": "positive",
       "task_args_template": "--repo-root <contained-fixture-repo>",
-      "fixture_contract": "A contained system-spec workspace and the declared system-spec-harness plugin provide all four required entry points, confirmed output, citations, and evaluator PASS.",
+      "fixture_contract": "The contained system-spec workspace holds only system-spec/requirements-brief.md; spec-state.json, fetched-references.json, completeness-report.json and index.md are absent by design. The declared system-spec-harness plugin supplies all four required entry points, and confirmed output, citations and evaluator PASS must be produced by completing that canonical flow during the trial.",
       "required_observations": [
         "the declared system-spec-harness plugin is loaded and its canonical flow completes",
         "the imported specification and architecture retain source lineage and evaluator evidence",

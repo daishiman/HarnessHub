@@ -12,16 +12,16 @@ iteration: null
 title: "C19 live-trial の task 指示を fixture 契約から決定論生成し、前提ずれを防ぐ"
 owners: ["daishiman"]
 created_at: "2026-07-26T05:52:00Z"
-updated_at: "2026-07-26T05:50:27Z"
-status: "draft"
+updated_at: "2026-07-28T09:31:38.126210Z"
+status: "closed"
 depends_on: []
-related_nodes: ["issue-guard-fix-closure-verdict-refresh-20260726","issue-guard-graph-schema-timeout-fail-open-20260725"]
-resource_scope: ["plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py","plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/"]
+related_nodes: ["feat-dev-pipeline-improvement","issue-guard-fix-closure-verdict-refresh-20260726","issue-guard-graph-schema-timeout-fail-open-20260725"]
+resource_scope: ["plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py","plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json","plugins/dev-graph/scripts/lint-live-trial-task-contract.py","plugins/dev-graph/lib/live_trial_task_contract.py","plugins/dev-graph/tests/test_live_trial_task_contract.py","plugins/dev-graph/references/live-trial-task-contract.md","docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md","eval-log/coverage/scripts/plugins-dev-graph-scripts-lint-live-trial-task-contract.py.json","eval-log/harness-coverage.json","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/"]
 purpose: "手作業で複製された C19 task の入力前提が deterministic fixture の正本契約からずれ、正規フローを実行不能にする再発を防ぐ"
 goal: "C19 task の初期前提・必須 Skill・観測条件が scenario と fixture の正本から決定論的に生成または検証される"
 scope_in: ["C19 task 前提と shape_system_spec.py 配置物の parity 検証","system-spec-harness 正規 4 entry point の Skill 呼出し要件","矛盾する旧前提を拒否する lint","fixture 再構築直後の fresh live-trial"]
 scope_out: ["system-spec-harness 本体の仕様変更","他 scenario の task generator 全面再設計","今回取得済み verdict の再取得"]
-acceptance: ["C19 task の初期前提が shape_system_spec.py の配置物と機械的に一致する","task が system-spec-harness の正規 4 entry point を Skill 経由で要求する","確定成果物を事前配置済みかつ正規フロー再実行禁止という旧前提を lint が拒否する","fixture 再構築直後の C19 fresh live-trial が人手の事前生成物なしで PASS する"]
+acceptance: ["C19 task の初期前提が shape_system_spec.py の配置物と機械的に一致する","task が system-spec-harness の正規 4 entry point を Skill 経由で要求する","確定成果物を事前配置済みかつ正規フロー再実行禁止という旧前提を lint が拒否する","fixture 再構築直後の C19 fresh live-trial が人手の事前生成物なしで PASS する","scenario ID、task args、required observations、fixture contract の変更が 1 つの検証経路へ束ねられる"]
 architecture_refs: []
 parent_feature: null
 feature_package_id: null
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-28T08:02:52Z","evidence_refs":["plugins/dev-graph/tests/test_live_trial_task_contract.py","plugins/dev-graph/references/live-trial-task-contract.md","docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/"],"policy":"manual","reconciled_at":"2026-07-28T08:30:41Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-26T05:52:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -82,3 +82,32 @@ C19 の task 指示を scenario / fixture の正本から決定論的に生成�
   `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T040700Z-sysspec-final/`
 - fixture 契約へ合わせた PASS:
   `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/`
+
+## 実装結果
+
+- `shape_system_spec.py` に配置入力・未配置成果物・必須 entry point・観測条件を
+  machine-readable な `TASK_CONTRACT` として定義した。
+- scenario と fixture の契約を 16 桁 digest へ束ね、`--emit-premise` で task の入力前提
+  block を決定論生成できるようにした。
+- `LT-001..012` で scenario、配置物、旧前提、引数、被験 skill、entry point、
+  required observations、digest、task 実体の drift を fail-closed に検出する。
+- 650 行の lint を CLI／report と契約解析 module へ分け、双方を 500 行未満へ収束した。
+- 技術契約を
+  `plugins/dev-graph/references/live-trial-task-contract.md` に記録した。
+
+## 最終品質ゲート
+
+- focused pytest: 29 PASS
+- `lint-live-trial-task-contract.py --all`: checked 1 / violation 0 / exit 0
+- 旧 task 実物: `LT-004` / `LT-005` / `LT-008` / `LT-006` で拒否
+- fresh PASS task 実物: violation 0
+- fixture build: placed input 1 件、absent artifacts 4 件が契約と一致
+- 受入条件 5 件: すべて PASS
+
+## 仕様・設計への影響
+
+Hub 製品の API、DB、認証、UI、deployment と、system-spec-harness の正規 4 entry point
+自体には影響しない。変更は dev-graph plugin 内部の live-trial 指示・検査契約で閉じるため、
+`system-spec/`、`specs/`、`architecture/` は変更しない。層別判断は
+`docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md`
+に記録した。
