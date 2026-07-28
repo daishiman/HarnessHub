@@ -1,5 +1,5 @@
 {
-  "graph_revision": 963,
+  "graph_revision": 964,
   "nodes": [
     {
       "acceptance": [
@@ -41925,26 +41925,27 @@
     },
     {
       "acceptance": [
-        "Beads issue HarnessHub-ory6 の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
-        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+        "3ファイルそれぞれについて要検査/対象外の判定が根拠付きで本ドキュメントまたは後続ドキュメントに記録されている",
+        "要検査と判定したファイルに重複ID fixture の回帰テストが追加され、重複時に非0終了することを確認できる",
+        "対象外と判定したファイルについて、なぜ qa_log と同型の実害が無いかの理由が記録されている"
       ],
       "architecture_refs": [],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
         "bd_issue_id": "HarnessHub-ory6",
-        "linked_at": "2026-07-28T01:33:02.881Z",
+        "linked_at": "2026-07-28T01:25:04Z",
         "sync_state": "linked"
       },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
           "candidate_path": "issues/sys-id-uniqueness-gate-generalization-20260728.md",
-          "confidence": 1
+          "confidence": 0.9
         }
       ],
-      "classification_confidence": 1,
-      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-ory6 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-33ho の最終レビュー中に scope_in の未消化項目を発見し、grep 実測で該当候補ファイルを特定した",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -41959,7 +41960,7 @@
         "evidence_ref": null
       },
       "confirmation_status": "draft",
-      "created_at": "2026-07-28T01:25:05Z",
+      "created_at": "2026-07-28T01:25:04Z",
       "depends_on": [],
       "domain": "quality",
       "evaluation_status": "pending",
@@ -41973,16 +41974,15 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)",
+      "goal": "3ファイルそれぞれについて、ID重複が実際に検査結果を偽陽性化しうるかを個別判定し、該当する場合は _collect_unique_ids 相当の fail-closed 検査と回帰テストを追加し、該当しない場合はその理由を記録する",
       "graph_node_id": "issue-id-uniqueness-gate-generalization-20260728",
       "implementation_readiness": {
-        "checked_at": "2026-07-28T01:33:02.881Z",
+        "checked_at": "2026-07-28T01:25:04Z",
         "missing_sections": [],
         "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
-      "mvp_alignment": null,
       "owners": [
         "daishiman"
       ],
@@ -41991,40 +41991,48 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "未解決の Beads issue HarnessHub-ory6 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "purpose": "issue-qa-log-id-uniqueness-gate-20260726 (HarnessHub-33ho) の scope_in には『同種の集合化による取りこぼしが requirement_ids など他の ID 集合にも無いかの点検』が含まれていたが、validate-coverage-matrix.py への fail-closed 検査追加のみで HarnessHub-33ho は close された。grep 実測で {x.get(\"id\") for x in ...} という同型の集合内包を validate-task-graph.py / validate-consult-session.py / validate-route-build-reports.py の3ファイルで確認した。これらは検査対象データの参照先ID一意性を暗黙に前提するバリデータであり、qa_log と同じ『重複IDが静かに1件へ畳み込まれ実在検査だけが通る』構造を持ちうる。",
       "related_nodes": [
-        "issue-bd-external-ref-orphan-nodes-20260725",
-        "issue-orphan-external-ref-backlog-disposition-20260726"
+        "issue-qa-log-id-uniqueness-gate-20260726"
       ],
-      "resource_scope": [],
+      "resource_scope": [
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph.py",
+        "plugins/ubm-goal-setting/scripts/validate-consult-session.py",
+        "plugins/harness-creator/skills/run-build-skill/scripts/validate-route-build-reports.py"
+      ],
       "scope_in": [
-        "Beads issue HarnessHub-ory6 の題名・説明・notes・受入条件を保持した issue node の復元"
+        "validate-task-graph.py の node_ids/comp_ids が重複IDを畳み込むケースの要否判定",
+        "validate-consult-session.py の user_turn_ids が重複IDを畳み込むケースの要否判定",
+        "validate-route-build-reports.py の routes/known_ids が重複IDを畳み込むケースの要否判定",
+        "要検査と判定したファイルへの fail-closed 実装と正例=OK/負例=各違反の回帰テスト追加"
       ],
       "scope_out": [
-        "orphan 復元と同時に元 issue の実装や close を行うこと"
+        "dev-graph 自身の graph.json 内 by_id ルックアップ (schedule-graph.py, render-graph-html.py 等。graph_node_id の一意性は validate-graph-schema.py が別途担保済み)",
+        "harness-creator の task-graph/handoff 系ルックアップ (accept-discovered-task.py, sync-task-state.py, build-script-route.py 等。内部状態の last-write-wins マージであり参照先一意性の検査ゲートではない)",
+        "qa_log 自体の内容修正 (HarnessHub-33ho の scope_out を継承)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-28T01:33:02.881Z",
-        "origin_kind": "generated",
-        "source_digest": "a2609e33b4e33fd81d4c6c88896f000cc5c22d8b9b82832cec8c09d71527b7fc",
-        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-ory6",
-        "source_plugin": "dev-graph",
+        "imported_at": "2026-07-28T01:25:04Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "issues/sys-qa-log-id-uniqueness-gate-20260726.md",
+        "source_plugin": null,
         "source_version": null
       },
       "start_date": null,
       "status": "draft",
       "tags": [
         "quality",
-        "dev-graph",
-        "beads",
-        "orphan-recovery"
+        "validation",
+        "fail-closed",
+        "follow-up"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
       "title": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T01:25:05Z"
+      "updated_at": "2026-07-28T01:25:04Z"
     },
     {
       "acceptance": [
