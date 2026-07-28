@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-28T00:55:00Z"
+updated_at: "2026-07-28T03:00:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -149,6 +149,24 @@ ratchet 通過後、同じ `verify` job の `validate-plugin-packages.py` が `d
 
 検証は CI の `verify` job を step 単位でローカル再現し、pytest 8037 passed / 7 skipped / 0 failed、governance-check の 16 lint と verify の 22 step がすべて exit 0。
 
+### 差分追記 (2026-07-28): qa_log/approval_log/categories/goals の ID 一意性検査を追加
+
+`issues/sys-qa-log-id-uniqueness-gate-20260726.md` (`HarnessHub-33ho`) 対応。`validate-coverage-matrix.py` は `qa_ids = {e.get("id") for e in qa_log}` のように集合内包で ID を集めており、`qa_log` に同一 ID の別エントリが 2 件あっても要素数 1 に畳み込まれ、「参照先が実在するか」しか検査できず「参照先が一意か」を検査していなかった。`feat-task-spec-test-strategy` ブランチと `main` が別内容の `qa-070`/`qa-071` を二重採番した事故 (`docs/features/feat-task-spec-test-strategy/qa-id-renumbering-20260725.md`) は、この無検出が原因で 3-way diff を人手で突き合わせるまで表面化しなかった。
+
+対応として `_collect_unique_ids()` を追加し、正規化 (集合化) より先に出現順で走査して重複を明示的に検出するようにした。`validate()` から `categories` / `qa_log` / `approval_log` の重複検出と両ログ間の ID 衝突検出を、`validate_foundation()` から `requirements_foundation.goals` の重複検出を、それぞれ fail-closed で呼び出す。既存の `system-spec/spec-state.json` に重複は無く、追加後も `--matrix` / `--require-complete` は exit 0 を維持する (後方互換)。
+
+`HarnessHub-33ho` の scope_in には「同種の集合化による取りこぼしが requirement_ids など他の ID 集合にも無いかの点検」が含まれていたが、`validate-coverage-matrix.py` への fail-closed 検査追加のみで `HarnessHub-33ho` は close された。この変更では未消化のまま残っていたこの点検を実施し、repo 全体を grep して `{x.get("id") for x in ...}` 型の集合内包を 20 箇所超で確認した。うち `validate-task-graph.py` / `validate-consult-session.py` / `validate-route-build-reports.py` の 3 ファイルは qa_log と同型の実害を持ちうる候補として要否判定が必要と判断し、`HarnessHub-ory6` / `issue-id-uniqueness-gate-generalization-20260728` へ follow-up issue として切り出した。残りは dev-graph/harness-creator 内部の状態ルックアップであり、参照先一意性を保証する検査ゲートではないと一次判定したが、この切り分け自体の検証は follow-up issue 側のスコープとした。
+
+### 差分追記 (2026-07-28): validate-coverage-matrix.py の 500 行分割 (4 例目・規約側の見直しは不要と判定)
+
+ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達し、500 行上限を超えた。決定事項にある「次に同型の 4 例目が出たら検査側ではなく 500 行分割規約の側を見直す」に照らして検証したが、今回は PKG-006/007・entry point 契約のいずれにも抵触しなかったため、規約の見直しは不要と判断した。
+
+要件 C9 (`--require-foundation` opt-in) 関連の `validate_decisions()` / `validate_foundation()` とその専用ヘルパー・定数 (`_FOUNDATION_REQUIRED`, `_is_https_url`, `_is_rfc3339`, `_validate_cost_model` 等、296 行相当) を、同ディレクトリの import 専用 support module `coverage_foundation.py` (snake_case・shebang なし・実行ビットなし) へ分離した。既定経路 (`validate()` / `--matrix` / `--require-complete`) が定義される `validate-coverage-matrix.py` は 286 行、分離した `coverage_foundation.py` は 314 行になった。
+
+`plugins/dev-graph/hooks/guard-graph-schema.py` → `guard_graph_commands.py` と同じ分割パターン (`sys.path.insert()` してから通常の `import`) を踏襲した。ハイフン名ファイルは Python の識別子規則上 `import` できないため、`register-package.py` 系のように `runpy.run_path()` で分割する流儀もあるが、今回切り出したのは独立 CLI ゲートではなく既存ゲートを支える内部実装であるため、後者ではなく前者のパターンを選んだ。
+
+`python3 -m pytest plugins/system-spec-harness/tests -q` で **218 passed**、`python3 scripts/validate-plugin-packages.py` で `system-spec-harness OK (clean)` (PKG-006/007 含めすべて PASS) を確認した。テストは importlib でハイフン名モジュールを直接ロードする既存方式のままで変更不要だった (分割先の関数が `import` 経由で元モジュールの属性として引き続き参照できるため)。
+
 ## 決定事項
 
 - Dev Graph plugin 内部契約を製品 `system-spec/` へ追加しない。
@@ -183,3 +201,5 @@ ratchet 通過後、同じ `verify` job の `validate-plugin-packages.py` が `d
 | 2026-07-28 | PR #82 の CI 失敗 (hooks entry point 契約) の是正、テスト 3 分割、全体 pytest 8029件を追記 | Claude |
 | 2026-07-28 | main 同期、harness coverage ratchet の実測値 reset、残課題 2 件 (vf66 / 2mor) の分離を追記 | Claude |
 | 2026-07-28 | PKG-006/007 の起動対象前提を構造判定へ是正 (3 例目)、契約テスト 3 分割、pytest 8037件を追記 | Claude |
+| 2026-07-28 | qa_log/approval_log/categories/goals の ID 一意性検査 (HarnessHub-33ho) を追記、validate-coverage-matrix.py の 500 行分割 (4 例目・規約側の見直し不要と判定) を追記 | Claude |
+| 2026-07-28 | scope_in 未消化点検の記載誤り (scope_out→scope_in) を訂正し、follow-up issue HarnessHub-ory6 / issue-id-uniqueness-gate-generalization-20260728 への切り出しを追記 | Claude |
