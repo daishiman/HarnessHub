@@ -14,6 +14,7 @@ import { notFound } from 'next/navigation';
 
 import { resolveTenantOidcConfig } from '../../../lib/auth/index.js';
 import { authRuntime } from '../../../lib/authz/index.js';
+import { tenantOidcSigninAction } from './tenant-oidc-action.js';
 
 interface SigninPageProps {
   readonly params: Promise<{ tenant_slug: string }>;
@@ -57,7 +58,7 @@ export default async function SigninPage({ params }: SigninPageProps) {
     <section aria-labelledby="signin-heading">
       <h2 id="signin-heading">サインイン</h2>
       <p>{connection.displayName} のアカウントでサインインします。</p>
-      <form method="post" action={`/api/auth/signin/tenant-oidc?tenant=${encodeURIComponent(parsed.data.tenant_slug)}`}>
+      <form method="post" action={tenantOidcSigninAction(parsed.data.tenant_slug)}>
         <Button type="submit" variant="primary">
           {connection.displayName} でサインイン
         </Button>

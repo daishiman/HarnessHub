@@ -101,6 +101,20 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   を参照）。
 - 詳細は [runbook §2.5.1](../docs/features/feat-auth-tenancy/runbook.md) を参照する。
 
+## 実装反映 (2026-07-28 / 最終レビュー)
+
+- テナント別サインイン画面を、確定済みの Auth.js path
+  `/api/auth/{tenant_slug}/signin/tenant-oidc` へ接続した。
+- `AUTH_DEVICE_VERIFICATION_URI` の現行配備先 `/device` に、
+  確認コード入力・Workspace 選択・状態別エラー表示を持つ承認画面を追加した。
+- `/device` の表示時にも session 緊急失効を確認し、承認 API は既存の
+  `withAuthz` による認証・認可を維持する。
+- API・DB・role・数値・信頼境界の新しい仕様判断はなく、既存契約への実装接地である。
+  判断根拠と検証は
+  [仕様反映受領書 §10](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md)
+  を参照する。
+- 本番設定・OIDC 登録・デプロイ・スモークは未実施のため、P13 は継続する。
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-security](../architecture/harness-hub-security.md)

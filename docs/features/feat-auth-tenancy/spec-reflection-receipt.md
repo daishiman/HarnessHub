@@ -2,10 +2,18 @@
 status: confirmed
 layer: feature-evidence
 beads_ids:
+  - HarnessHub-15h
+  - HarnessHub-15h.5
+  - HarnessHub-15h.13
+  - HarnessHub-k3n6
   - HarnessHub-b7ng
   - HarnessHub-mr3c
   - HarnessHub-v22l
 dev_graph_node_id: issue-auth-tenancy-production-adapter-20260725
+dev_graph_node_ids:
+  - feat-auth-tenancy
+  - SYS-AUTH-TENANCY-P05
+  - SYS-AUTH-TENANCY-P13
 spec_impact: reflected
 reflected_at: 2026-07-26
 ---
@@ -215,3 +223,65 @@ request-controls / assurance の 6 分冊へ分け、全分冊を 300 行以下�
 
 第 8 節の残課題から `HarnessHub-v22l` を除く。残り 2 件（`HarnessHub-mb7c`、
 `HarnessHub-njkm`）は本追補の対象外のまま残る。
+
+## 10. 追補: 2026-07-28 最終レビューと本番認証導線
+
+### 10.1 受領対象
+
+`HarnessHub-15h` の最終レビューとして、P05 のサインイン・Device Flow 導線と、
+P13 の本番設定手順を再確認した。`HarnessHub-k3n6` では
+`AUTH_DEVICE_VERIFICATION_URI` が指す `/device` 承認画面を追加している。
+
+- Beads ID: `HarnessHub-15h` / `HarnessHub-15h.5` / `HarnessHub-15h.13` /
+  `HarnessHub-k3n6`
+- dev-graph node ID: `feat-auth-tenancy` / `SYS-AUTH-TENANCY-P05` /
+  `SYS-AUTH-TENANCY-P13`
+- 対象 branch: `devgraph/feat-auth-tenancy-rollup-20260728`
+
+### 10.2 仕様・設計影響の判定
+
+判定は **not_reflected（新たな仕様反映不要）**。今回の変更は、すでに正規フローで
+確定・反映済みの契約を実装と運用手順へ接地するもので、新しい仕様判断を追加しない。
+
+| 照合した正本 | 今回の実装との対応 |
+| --- | --- |
+| `system-spec/auth.md` qa-074 | サインイン先を既存契約 `/api/auth/{tenant_slug}/{action}` と一致させた |
+| `system-spec/backend.md` qa-082 | 既存の `POST /api/v1/device/approve` を承認画面から利用する |
+| `system-spec/security.md` qa-075 / qa-036 | 承認 API に加え、画面表示時も既存の緊急失効判定を再利用する |
+| `system-spec/infrastructure.md` qa-084 | 既存変数 `AUTH_DEVICE_VERIFICATION_URI` の設定例を `/device` へ具体化した |
+| `specs/harness-hub-system-specification.md` | 上記確定章への参照と実装反映の関係に変更はない |
+| `architecture/harness-hub-backend.md` / `harness-hub-security.md` / `harness-hub-infrastructure.md` | adapter 境界、deny-by-default、環境 binding の既存判断に従っている |
+
+API の request/response、DB schema、role、数値契約、Secret の分類、trust boundary
+（信頼境界＝どこまでを信用するかの境目）は変更していない。`/device` は
+`AUTH_DEVICE_VERIFICATION_URI` という既存の設定可能な絶対 URL の現行配備先であり、
+system-spec に固定 path を追加する契約変更ではない。
+
+このため `system-spec/` の writer と compile は起動しない。新しい確定回答が無いのに
+生成物を更新すると、同じ契約を二重管理するためである。`system-spec/`・`specs/`・
+`architecture/` は差分なしとし、本節を影響なしの受領記録とする。
+
+### 10.3 実装・文書反映
+
+- サインイン form action を tenant path の Auth.js handler 契約へ一致させた。
+- `/device` に確認コード入力、Workspace 選択、状態別の安全なエラー表示を追加した。
+- 画面表示でも session の緊急失効を確認し、失効済み利用者へ Workspace を表示しない。
+- middleware は `/device` だけを公開し、`/device/*` と承認 API は認証必須のままにした。
+- `production-auth-manual-setup.md` と OIDC onboarding / release 記録へ、
+  Secret・通常変数・OIDC 接続・スモークテストの未実施境界を記録した。
+- feature / P05 / P13 の投影文書へ本受領書と実行状態を追記した。
+
+### 10.4 検証と残る境界
+
+- task spec validator: pass（13 phase、violations 0）
+- 集中テスト: 4 files / 33 cases pass
+- auth-tenancy: 23 files / 310 cases pass
+- hub 全体: 44 files / 508 cases pass、coverage 4 指標 90% 以上
+- hub typecheck / lint: pass
+- Next.js / OpenNext Workers build: pass
+- Worker bundle: gzip 1.075 MiB / 3 MiB、`/device` client bundle: 107.7 KiB / 120 KiB
+- doc line limit（上限 300 行）/ artifact placement: pass
+
+本番 Secret・通常変数・2 テナント分の OIDC 資格情報投入、デプロイ、
+本番 Device Flow / 2 テナントログインのスモークは未実施である。
+したがって `HarnessHub-15h.13` は `in_progress` のまま維持する。

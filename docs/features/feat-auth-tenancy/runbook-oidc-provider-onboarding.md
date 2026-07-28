@@ -12,6 +12,8 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 - graph_node_id: `sys-auth-tenancy-p12`
 - 対象読者: HarnessHub の運用担当者 (provider-admin 権限を持つ人)
 - 親文書: [runbook.md](./runbook.md)
+- 本番の値生成・Cloudflare入力・DB登録コマンド:
+  [production-auth-manual-setup.md](./production-auth-manual-setup.md)
 
 [runbook.md](./runbook.md) から**オンボーディング系の 2 手順**を分離した文書。
 失効・棚卸し・監視といった「事故対応と定期監視」は親文書が扱う。
@@ -38,24 +40,25 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 
 1. **テナント側の IdP で OIDC アプリケーションを作成してもらう**
    (Google Workspace / Microsoft Entra ID / Okta など)。
-2. **リダイレクト URI を登録してもらう**: `https://<hub-host>/api/auth/callback/<provider-id>`
+2. **リダイレクト URI を登録してもらう**:
+   `https://<hub-host>/api/auth/<tenant_slug>/callback/tenant-oidc`
 3. **`issuer` / `client_id` / `client_secret` を受け取る**。
    - `client_secret` はメール等の平文経路で受け取らない。
 4. **`idp_connections` へ登録する** (`feat-domain-model-db` のリポジトリ層関数経由)。
 
    | フィールド | 内容 |
    | --- | --- |
-   | `tenant_id` | テナント ID |
-   | `tenant_slug` | ログイン URL に現れる識別子 (`/{tenant_slug}/signin`) |
-   | `issuer` | discovery document の `issuer` と**厳密一致**する値 |
+   | `tenant_id` | repository context で指定するテナント ID |
+   | `issuer_url` | discovery document の `issuer` と**厳密一致**する値 |
    | `client_id` | OIDC クライアント ID |
-   | `display_name` | 「〇〇でログイン」のボタン文言 |
-   | `enabled` | `true` |
+   | `client_secret_enc` | repository が平文 `client_secret` を封筒暗号化して保存 |
+   | `scopes` | `openid email profile` |
 
-   `client_secret` は暗号化列 / Cloudflare Workers Secret へ格納する。
-   **リポジトリへ平文で置かない** (`pnpm check:secrets` が検出して CI が落ちる)。
+   `tenant_slug` / 表示名 / 有効状態は`tenants.slug` / `tenants.name` / `tenants.status`が持つ。
+   `client_secret`はテナントごとに増えるためWorker Secretへ個別登録せず、
+   repositoryが`client_secret_enc`へ暗号化して保存する。暗号鍵`ENCRYPTION_KEK`だけをWorker Secretに置く。
 
-5. **`enabled = true` にする。**
+5. **`tenants.status = active`を確認する。** `suspended`ならOIDC接続は解決されない。
 6. **ログインを 1 回通す**: `https://<hub-host>/<tenant_slug>/signin`
    初回ログインで `users` 行が **role = member 固定**で自動作成される (JIT provisioning)。
 7. **初期の workspace-admin を昇格させる**: 既存の provider-admin が対象利用者の role を変更する。
@@ -92,12 +95,13 @@ Hub の権限は Hub 側でしか変えられない、という状態を保つ�
 
 1. **提供者 (HarnessHub 運営) 自身の Google Workspace** で OIDC アプリケーションを作成する。
    - `issuer`: `https://accounts.google.com`
-   - リダイレクト URI: `https://<dev-hub-host>/api/auth/callback/google`
+   - リダイレクト URI: `https://<dev-hub-host>/api/auth/dev/callback/tenant-oidc`
 2. **Google Cloud Console の OAuth 同意画面を「内部 (Internal)」に設定する。**
    提供者ドメインのアカウントだけがログインでき、外部アカウントは弾かれる。
 3. dev 環境の control-plane DB に Dev tenant を作成する (`tenant_slug: dev` など)。
 4. §1.2 の手順 4〜5 と同じ形で `idp_connections` へ登録する。
-   `client_secret` は `wrangler secret put` で dev 環境の Workers Secret へ入れる。
+   `client_secret` はrepository経由でDBの暗号化列へ保存する。
+   Worker Secretへ入れるのは環境共通の`ENCRYPTION_KEK`であり、テナント個別secretではない。
 5. `https://<dev-hub-host>/dev/signin` からログインし、提供者アカウントで通ることを確認する。
 6. 提供者アカウントを provider-admin へ昇格させる (初回のみ)。
 
