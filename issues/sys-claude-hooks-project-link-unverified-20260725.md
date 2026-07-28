@@ -12,7 +12,7 @@ iteration: null
 title: "claude_hooks.source=project でも project_plugin_link の実在と plain-symlink 性が機械検査されない"
 owners: ["daishiman"]
 created_at: "2026-07-25T03:25:00Z"
-updated_at: "2026-07-27T23:42:34Z"
+updated_at: "2026-07-28T08:40:00Z"
 status: "done"
 depends_on: []
 related_nodes: []
@@ -44,9 +44,10 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-26T03:44:26Z","evidence_refs":["beads:HarnessHub-7tn1","plugins/dev-graph/schemas/repo-config.schema.json","plugins/dev-graph/scripts/validate-repo-config.py","plugins/dev-graph/tests/test_validate_repo_config.py","eval-log/dev-graph/run-dev-graph-init/live-trial/20260726T032205Z-7tn1-init-r2/verdict.json","eval-log/dev-graph/run-dev-graph-sync/live-trial/20260726T031146Z-7tn1-sync/verdict.json"],"policy":"manual","reconciled_at":"2026-07-27T23:42:34Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-07-26T03:44:26Z","evidence_refs":["beads:HarnessHub-7tn1","plugins/dev-graph/schemas/repo-config.schema.json","plugins/dev-graph/scripts/validate-repo-config.py","plugins/dev-graph/tests/test_validate_repo_config.py","eval-log/dev-graph/run-dev-graph-init/live-trial/20260727T235346Z-7tn1-init-postmerge/verdict.json","eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T235412Z-7tn1-sync-postmerge/verdict.json"],"policy":"manual","reconciled_at":"2026-07-28T08:40:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T03:25:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # 概要
 

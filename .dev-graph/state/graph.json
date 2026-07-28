@@ -1,5 +1,5 @@
 {
-  "graph_revision": 916,
+  "graph_revision": 917,
   "nodes": [
     {
       "acceptance": [
@@ -33453,11 +33453,11 @@
           "plugins/dev-graph/schemas/repo-config.schema.json",
           "plugins/dev-graph/scripts/validate-repo-config.py",
           "plugins/dev-graph/tests/test_validate_repo_config.py",
-          "eval-log/dev-graph/run-dev-graph-init/live-trial/20260726T032205Z-7tn1-init-r2/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260726T031146Z-7tn1-sync/verdict.json"
+          "eval-log/dev-graph/run-dev-graph-init/live-trial/20260727T235346Z-7tn1-init-postmerge/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260727T235412Z-7tn1-sync-postmerge/verdict.json"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-07-27T23:42:34Z",
+        "reconciled_at": "2026-07-28T08:40:00Z",
         "source": "manual",
         "status": "done"
       },
@@ -33538,7 +33538,7 @@
       "template_version": "1.0.0",
       "title": "claude_hooks.source=project でも project_plugin_link の実在と plain-symlink 性が機械検査されない",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-27T23:42:34Z"
+      "updated_at": "2026-07-28T08:40:00Z"
     },
     {
       "acceptance": [
