@@ -116,7 +116,7 @@ reviewer: independent-fork (spec-impact 監査。read-only + digest 実測 + 検
 
 ## 8. 追補: 2026-07-28 `HarnessHub-mb7c` (db-write-gate-sweep) の仕様反映判定
 
-`issue-db-write-gate-sweep-20260726` (beads `HarnessHub-mb7c`) で、`packages/db/repository/` 配下の残る write を `guardedWrite` へ掃き出し、CI 静的検査 (`scripts/ci/check-db-write-gate.mjs`) を追加した最終レビューでの仕様反映判定。
+`issue-db-write-gate-sweep-20260726` (beads `HarnessHub-mb7c`) で、`packages/db/repository/` 配下の残る write を `guardedWrite` へ掃き出し、CI 静的検査 (`packages/db/scripts/check-db-write-gate.mjs`) を追加した最終レビューでの仕様反映判定。
 
 **結論: 正本 (`system-spec/`・`architecture/`・`features/`・`tasks/`・`specs/`) への反映は不要 (spec_impact = none)。**
 
@@ -126,7 +126,7 @@ reviewer: independent-fork (spec-impact 監査。read-only + digest 実測 + 検
 |---|---|---|
 | A | `packages/db/repository/{crud,channels,crypto,idp,misc,packages,releases,tenants,users}.ts` の insert/update/delete を `guardedWrite(adapter, () => ...)` でラップ | 実装 (掃き出し) |
 | B | `packages/db/repository/conflict.ts` ヘッダコメント更新 (「掃き出しは別 issue で行う」→「掃き出し済み、CI が網羅を保証」) | コメント整合 |
-| C | `scripts/ci/check-db-write-gate.mjs` (新規) — repository 配下の write が全て `guardedWrite` 経由かを TypeScript AST で静的検査 | CI ゲート新設 |
+| C | `packages/db/scripts/check-db-write-gate.mjs` (新規) — repository 配下の write が全て `guardedWrite` 経由かを TypeScript AST で静的検査 | CI ゲート新設 |
 | D | `packages/db/__tests__/check-db-write-gate.test.ts` (新規) + `fixtures/db-write-gate-violation/` (新規) — 上記 CI スクリプトの正常系・実効性 (fixture で意図的に違反させ非ゼロ終了することを確認) | テスト |
 | E | `packages/db/__tests__/write-conflict.test.ts` へ `users.markLastLogin` / `releases.createRelease` の代表 2 経路を追加 (別接続 reader で commit 済み行数を数える回帰) | テスト |
 
@@ -140,14 +140,16 @@ reviewer: independent-fork (spec-impact 監査。read-only + digest 実測 + 検
 
 `system-spec/spec-state.json` の `qa-086` 回答文末尾に「残る repository write の全量掃き出しは `HarnessHub-mb7c` で追跡する」という未来形の記述があり (`system-spec/database.md` にも同文言が反映済み)、今回の完了により事実と食い違う (stale) 状態になった。
 
-正本の直接編集は `plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py` が確定済み章への Write/Edit を fail-closed で遮断するため、手編集では解消しない。是正は次回の `/spec-hearing-start --resume` (C01 R4-reopen で `qa-086` を再オープン) → `/spec-compile` の正規サイクルで、回答文へ「(2026-07-28 完了。全 write が `guardedWrite` 経由、CI 検査 `scripts/ci/check-db-write-gate.mjs` で担保)」を追記して解消する。新規 follow-up の起票は不要 (既存の `HarnessHub-mb7c` 自体が是正対象であり、close 時にこの追補で申し送りが完結する)。
+正本の直接編集は `plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py` が確定済み章への Write/Edit を fail-closed で遮断するため、手編集では解消しない。是正は次回の `/spec-hearing-start --resume` (C01 R4-reopen で `qa-086` を再オープン) → `/spec-compile` の正規サイクルで、回答文へ「(2026-07-28 完了。全 write が `guardedWrite` 経由、CI 検査 `packages/db/scripts/check-db-write-gate.mjs` で担保)」を追記して解消する。新規 follow-up の起票は不要 (既存の `HarnessHub-mb7c` 自体が是正対象であり、close 時にこの追補で申し送りが完結する)。
 
 ### 8-4. 品質ゲート再実行の結果 (2026-07-28 実測)
 
 | ゲート | 結果 |
 |---|---|
-| `node scripts/ci/check-db-write-gate.mjs` | ✅ repository 配下 19 ファイル / write 31 件 (直接 30 / helper 経由 1) / 全て guardedWrite 経由・違反 0 |
+| `node packages/db/scripts/check-db-write-gate.mjs` | ✅ repository 配下 19 ファイル / write 31 件 (直接 30 / helper 経由 1) / 全て guardedWrite 経由・違反 0 |
 | `pnpm --filter @harness-hub/db typecheck` | ✅ 0 error |
 | `pnpm --filter @harness-hub/db test` | ✅ 17 files / **80 tests pass / 0 fail** (write-conflict.test.ts の新規 2 ケース、check-db-write-gate.test.ts の 5 ケースを含む) |
-| `biome check packages/db scripts/ci/check-db-write-gate.mjs` | ✅ 77 files / 0 diagnostics |
-| 500 行超チェック | ✅ 変更ファイルの最大は `scripts/ci/check-db-write-gate.mjs` 271 行。分離不要 |
+| `biome check packages/db` | ✅ 76 files / 0 diagnostics (移動後は `packages/db/scripts/check-db-write-gate.mjs` もこの走査範囲に含まれる) |
+| 500 行超チェック | ✅ 変更ファイルの最大は `packages/db/scripts/check-db-write-gate.mjs` 271 行。分離不要 |
+
+2026-07-28 追記: 初回 PR 作成後、CI (`build & test`) で `Cannot find package 'typescript' imported from .../scripts/ci/check-db-write-gate.mjs` により失敗した。原因は pnpm workspace の既定 (isolated) node-linker では `scripts/ci/` がどの workspace パッケージにも属さず、`typescript` を直接依存に持つ `packages/db` の node_modules 解決が届かないため (ローカル検証環境はグローバル pnpm 設定 `node-linker=hoisted` によりルート直下へ巻き上げられていて再現しなかった)。`scripts/ci/check-db-write-gate.mjs` を `packages/db/scripts/check-db-write-gate.mjs` へ移動し、`packages/db` 自身の直接依存解決に乗せて修正した。仕様反映の判定 (§8 結論) に変更はない。

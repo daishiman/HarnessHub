@@ -126,7 +126,7 @@ function settled(promise: Promise<unknown>): Promise<unknown> {
  * Promise 共有を避け、DB 側の排他/CAS に並行制御を委ねるためである。
  *
  * `packages/db/repository/` 配下の write (insert/update/delete) は全てこのゲートを経由する
- * (HarnessHub-mb7c で掃き出し済み)。網羅は `scripts/ci/check-db-write-gate.mjs` が静的検査で保証する。
+ * (HarnessHub-mb7c で掃き出し済み)。網羅は `packages/db/scripts/check-db-write-gate.mjs` が静的検査で保証する。
  */
 export function guardedWrite<TResult>(
   owner: { readonly writeConcurrencyScope: 'process-local' | 'request-bound' },

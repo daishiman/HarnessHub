@@ -17,10 +17,14 @@
 // `.insert/.update/.delete()` を DB query builder 専用名として扱い、非 DB collection に同名
 // method を使うコードも fail-closed (安全側に倒して違反) とする。
 //
+// 配置: packages/db/scripts/ 配下。packages/db が直接依存する `typescript` を
+// pnpm workspace の isolated node_modules 解決で確実に見つけるため、
+// (どの workspace パッケージにも属さない) scripts/ci/ ではなくここに置く。
+//
 // 使い方:
-//   node scripts/ci/check-db-write-gate.mjs                  # 検出 0 件でなければ非ゼロ終了
-//   node scripts/ci/check-db-write-gate.mjs --root <dir>     # 走査起点を差し替える (fixture 検証用)
-//   node scripts/ci/check-db-write-gate.mjs --json <path>    # 検出結果を JSON で保存
+//   node packages/db/scripts/check-db-write-gate.mjs               # 検出 0 件でなければ非ゼロ終了
+//   node packages/db/scripts/check-db-write-gate.mjs --root <dir>  # 走査起点を差し替える (fixture 検証用)
+//   node packages/db/scripts/check-db-write-gate.mjs --json <path> # 検出結果を JSON で保存
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -28,7 +32,7 @@ import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(HERE, '..', '..');
+const REPO_ROOT = resolve(HERE, '..', '..', '..');
 const TARGET_DIR = join('packages', 'db', 'repository');
 const WRITE_METHODS = new Set(['insert', 'update', 'delete']);
 

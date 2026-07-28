@@ -1,4 +1,4 @@
-// scripts/ci/check-db-write-gate.mjs の正常系・実効性検証 (HarnessHub-mb7c 受入条件 1・2)。
+// packages/db/scripts/check-db-write-gate.mjs の正常系・実効性検証 (HarnessHub-mb7c 受入条件 1・2)。
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { afterAll, describe, expect, it } from 'vitest';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const SCRIPT = path.join(REPO_ROOT, 'scripts/ci/check-db-write-gate.mjs');
+const SCRIPT = path.join(REPO_ROOT, 'packages/db/scripts/check-db-write-gate.mjs');
 const VIOLATION_FIXTURE = path.join(REPO_ROOT, 'packages/db/__tests__/fixtures/db-write-gate-violation');
 
 interface GateResult {
