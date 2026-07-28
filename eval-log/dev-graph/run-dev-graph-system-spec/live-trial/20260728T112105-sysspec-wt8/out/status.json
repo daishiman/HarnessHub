@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "specification_registered": true,
+  "architecture_registered": true,
+  "specification_node_id": "spec-todo-rest-api",
+  "architecture_node_id": "arch-todo-rest-api",
+  "graph_revision": 2,
+  "gates": {
+    "coverage_matrix": "exit0",
+    "source_citation": "exit0",
+    "completeness_evaluator": "PASS",
+    "evidence_refs": "exit0",
+    "source_digest": "exit0",
+    "goal_seek_verification": "PASS"
+  },
+  "harness_entry_points_executed": [
+    "run-system-spec-elicit",
+    "run-system-spec-doc-fetch",
+    "run-system-spec-compile",
+    "assign-system-spec-completeness-evaluator"
+  ],
+  "completed_at": "2026-07-28T12:00:00Z"
+}

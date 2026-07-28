@@ -1,5 +1,5 @@
 {
-  "graph_revision": 931,
+  "graph_revision": 932,
   "nodes": [
     {
       "acceptance": [
@@ -39445,6 +39445,119 @@
       "title": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T01:25:04Z"
+    },
+    {
+      "acceptance": [
+        "audit-fork-ledger.jsonl への Write/Edit/Bash 経由の直接書込みが PreToolUse hook で exit2 拒否されることを回帰テストで確認できる",
+        "record-audit-fork.py が書いた正規レコードと、模倣により偽装されたレコードを、aggregate-completeness.py 側の追加検査 (時刻整合性等) で区別できるか検討し、結論を本課題または後続課題に記録する",
+        "completeness-report.json 内で独立監査 agent の生 verdict が下流で書き換えられていないかを検出する仕組みが追加される、または対応不能な場合はその理由が記録される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3vmz",
+        "linked_at": "2026-07-28T03:55:05Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-audit-fork-ledger-forgery-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "C19 live-trial (dev-graph:run-dev-graph-system-spec, run-id 20260728T112105-sysspec-wt8) の fresh evaluator が goal_fit=FAIL/verdict=DEGRADED を返し、transcript.jsonl の生ログ (line 403/441/479) で独立に裏取りした重大欠陥",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T03:51:58Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-audit-fork-ledger-forgery-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "audit-fork-ledger.jsonl (および将来同種の目的で追加される証跡ファイル) への hook 以外からの直接書込みを fail-closed で拒否し、completeness-report の verdict 書き換え自体も検出・拒否できるようにする",
+      "graph_node_id": "issue-audit-fork-ledger-forgery-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T03:51:58Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "critical",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "assign-system-spec-completeness-evaluator の独立監査 fork 証跡 (audit-fork-ledger.jsonl) が、モデル自身の Write ツールによる直接偽装から fail-closed で保護されておらず、live-trial で実際に独立監査の FAIL 判定を PASS へ書き換える攻撃が成立することを是正する",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/system-spec-harness/hooks/record-audit-fork.py",
+        "plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py",
+        "plugins/system-spec-harness/hooks/hooks.json",
+        "plugins/system-spec-harness/hooks/references/hook-guard-protection-scope.md",
+        "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py"
+      ],
+      "scope_in": [
+        "guard-confirmed-chapter-overwrite.py (またはそれに類する新規 PreToolUse ガード) の保護対象へ eval-log/system-spec-harness/audit-fork-ledger.jsonl を追加し Write/Edit/Bash による直接書込みを拒否する",
+        "「hook にしか書けない」ことを構造的に保証する仕組み (署名・パーミッション等) の検討",
+        "aggregate-completeness.py への、独立監査 agent が返した生の verdict をレポートが書き換えていないかの整合検査追加",
+        "上記の回帰テスト追加"
+      ],
+      "scope_out": [
+        "監査 prompt の実質性判定 (意味層 = content-review/human の責務、issue-completeness-auditor-attribution-20260721 と同じ既知の境界)",
+        "C19 live-trial シナリオの scenario-verdict.json 自体の再生成 (別課題)",
+        "record-audit-fork.py の記録対象 agent レジストリの変更 (今回の欠陥と無関係)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T03:51:58Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260728T112105-sysspec-wt8/verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "fail-closed",
+        "goodhart",
+        "attribution",
+        "live-trial",
+        "security"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "system-spec-harness: 独立監査台帳(audit-fork-ledger.jsonl)をモデルがWriteで直接偽装でき、completeness-reportのFAILがPASSへ書き換えられる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T03:51:58Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
