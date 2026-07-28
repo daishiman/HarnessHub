@@ -199,3 +199,43 @@ C02/C03/C14/C15 の stale behavior closure digest で、上記 live-trial 未完
 このため実装受け入れ条件の機械テストは満たすが、plugin 全体の live 品質ゲートは未完了である。
 使用枠復旧後に C02/C03 を再実走し、planner を再計算して C14/C15 も fresh PASS へ更新するまで、
 Beads issue `HarnessHub-ii90` は `in_progress` を維持する。
+
+### latest main 統合後の再検証 (2026-07-28)
+
+`origin/main` の `2144ce2` まで取り込んだ作業ツリーで、受け入れ条件を再検証した。
+通常の removal preflight は `before_node_count=342 / after_node_count=367 /
+removed_node_count=0 / allowed=true / write_count=0` で、非クローズ orphan は
+before 12 → after 4、新規増加は 0 件だった。
+
+commit `84c8076^..84c8076` の再現は、上記と同じ 4 node を
+`before_node_count=283 / after_node_count=279` の差分として検出し、
+全件を `disposition_missing` で拒否した (`allowed=false / exit 2 / write_count=0`)。
+共有 Beads DB は最初の実測後にも更新されているため、今回の再実測では当時の
+`HarnessHub-aqi` などの参照は残っておらず、orphan は before 16 → after 16、
+新規増加 0 件だった。前節の 4 node ↔ Beads issue 対応は、最初の再現時点の
+point-in-time evidence（その時点の証拠）として保持し、今回の結果は削除 exact-set と
+fail-closed 判定が現在も再現することの証拠とする。
+
+共有 Beads DB と複数 worktree を併用すると、別 branch に node が存在する未マージ課題を
+真の orphan と誤判定しうる。そこで `lint-orphan-external-ref.py --scan-refs` を追加し、
+他の local/remote ref に node がある非クローズ参照を `merge_pending` として報告する。
+current branch とその upstream は探索対象から除外するため、作業中の削除を古い commit が
+隠すことはない。最新実測は 545 issue / dev-graph ref 32 / graph node 367、
+`closed_residue=13 / merge_pending=4 / violation=0` だった。
+
+対象テストは `118 passed`。graph schema は `valid=true / violations=[]`、
+orphan lint、Python compile、`git diff --check` も exit 0 だった。
+全 dev-graph suite は `624 passed / 2 skipped / 4 failed` で、4件は
+C02/C03/C14/C15 の stale live-trial behavior closure だけである。
+リポジトリ標準の root suite は `7537 passed / 5 skipped`。
+native-surfaces、lint、plugin-package、feedback-contract、LLM coverage、
+content-review、gate-phase0 も exit 0 だった。
+
+C02/C03 は latest main 上で fresh trial を各2回再実施し、いずれも
+Skill 起動と処理完走は PASS だったが、独立 evaluator は未実測 criteria の PASS 化と
+goal-seek intermediate の後書き・時系列矛盾を検出したため、正式 verdict を
+`goal_fit=FAIL / overall=DEGRADED` とした。古い PASS receipt への repoint は行っていない。
+この plugin-wide gate は `HarnessHub-zep2`、`HarnessHub-r8cz`、`HarnessHub-dtg`、
+`HarnessHub-419`、`HarnessHub-fcth` が追跡する既存課題であり、ii90 の削除ゲート実装とは
+分離している。ただし repository の要求する全品質ゲートが green ではないため、
+`HarnessHub-ii90` は引き続き `in_progress` とする。

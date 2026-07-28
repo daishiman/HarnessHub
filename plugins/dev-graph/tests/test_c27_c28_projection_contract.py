@@ -170,6 +170,7 @@ def test_c28_projects_epic_exact13_and_returns_only_parity_confirmed_ready(tmp_p
             }
             for row in children
         ],
+        "graph_node_ids": sorted({row["graph_node_id"] for row in children}),
     }
     parity_path = tmp_path / "parity.json"; parity_path.write_text(json.dumps(parity))
     _, ready = call_main(module, monkeypatch, capsys, "--op", "ready", "--repo-root", tmp_path, "--parity-manifest", parity_path)

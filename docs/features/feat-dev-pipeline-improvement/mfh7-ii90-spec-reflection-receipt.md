@@ -104,3 +104,84 @@ tasks/docs` の 5 root のみで `issues/` と `*.py` は対象外であり、CI
 - `HarnessHub-mfh7` / `HarnessHub-ii90` は Claude Code の使用上限 (2026-07-31 17:00
   Asia/Tokyo に reset) により C02/C03/C14/C15 の live-trial fresh 再取得が未完了のため、
   実装は完了・決定論テストは PASS だが `in_progress` を維持する
+
+## 7. 第 2 ラウンド (2026-07-28) — 逆方向の全数検査と ratchet 空化
+
+第 1 ラウンド (§1〜§6) は choke-point 側で「これから書く操作」を止めるゲートだった。本
+ラウンドは **既に宙に浮いた参照の全数検査**を追加し、あわせて `origin/main` を取り込んだ。
+
+### 7.1 追加した変更
+
+| 変更 | 内容 |
+|---|---|
+| `plugins/dev-graph/lib/orphan_external_ref.py` (新規) | bd export 起点で graph を引く検査ロジック。OE-001 (true_orphan) / OE-002 (node_restorable) を判定し、`closed_residue` / `merge_pending` は違反にせず可視化する |
+| `plugins/dev-graph/scripts/lint-orphan-external-ref.py` (新規) | 上記の CLI。argv 解釈・JSON 出力・exit code のみ |
+| `scripts/dev-graph-orphan-baseline.json` (新規) | shrink-only ratchet の repo 側データ。qa-070 境界により plugins/ の外に置く |
+| `Makefile` | `orphan-external-ref` ターゲット追加 (ローカル専用。`lint` / `test` には束ねない) |
+| `build-parity-manifest.py` / `bd-bridge.py` | manifest に `graph_node_ids[]` を追加 (schema 1.0→1.1) し、C28 の unmapped 理由を `graph_node_missing` (C02 案件) と `parity_manifest_missing` (C03 案件) へ分離 |
+| `references/execution-tracker-contract.md` | §10 に上記 2 分類と、逆方向検査が必要な理由・baseline の置き場を追記 |
+| `issues/sys-schedule-blocked-exclusion-unreported-20260728.md` (新規) | 棚卸し中に見つかった follow-up (C02 登録済み) |
+
+### 7.2 仕様・設計影響の判定
+
+判定は引き続き **none**。根拠は §2 に加えて `docs/shared-layers.md` §3 の明文規約である。
+
+> メタ層のゲート (配置規約 lint・skill description lint・live-trial 証跡の検査など) を
+> qa-038 の 8 種へ数え入れないこと。(中略) 両者はゲートの数を互いに増減させない独立系統で
+> あり、**片方の変更はもう片方の仕様反映を要さない**。
+
+`make orphan-external-ref` は `plugins/dev-graph/` を対象とするメタ層ゲートなので、
+プロダクト層の登録簿 (G1〜G13)・`system-spec/spec-state.json` qa-038【2】・
+`architecture/` の改訂を要さない。**むしろ登録簿へ足すことが上記規約に反する。**
+`system-spec/dev-workflow.md` には品質ゲートの列挙自体が無く (grep 0 件)、影響しない。
+
+parity manifest の `schema_version` 1.0→1.1 は dev-graph 内部契約であり、正本の
+`references/execution-tracker-contract.md` §10 を同一 PR で改訂済み。消費側 (C28) は
+`schema_version` を検査せず `graph_node_ids` の有無で fail-closed するため、旧 manifest は
+再生成で回復する (manifest は git 追跡しない揮発 snapshot)。
+
+### 7.3 ratchet を空へ縮小した
+
+`origin/main` 統合後の実測で、baseline 6 行の全件が canonical graph の実在 node を指す
+ようになり `resolved_baseline_entries[]` へ移行した。ratchet は縮小のみ許可のため 6 行とも
+削除し、**`baselined_external_refs` は空**になった。免除ゼロであり、以後は orphan 1 件でも
+violation として止まる。削除の経緯はデータ側の `_comment` に記録した。
+
+### 7.4 500 行分割 (§5 の follow-up を一部実施)
+
+新設した `lint-orphan-external-ref.py` が 537 行に達したため、`lint-live-trial-task-contract.py`
+の先例 (lib docstring に「500 行上限と単一責務を維持する」と明記) に倣って分離した。
+
+| ファイル | 行数 | 責務 |
+|---|---|---|
+| `lib/orphan_external_ref.py` | 474 | 入力解決・突合・分類 |
+| `scripts/lint-orphan-external-ref.py` | 100 | CLI |
+| `tests/conftest.py` | 118 | 疑似 repo 構築の共有 fixture |
+| `tests/test_lint_orphan_external_ref.py` | 358 | 検査ロジックの不変条件 |
+| `tests/test_lint_orphan_external_ref_cli.py` | 123 | CLI 契約・repo データ契約・配線 |
+
+`bd-bridge.py` (1124 行) と `issues/sys-bd-external-ref-orphan-nodes-20260725.md` (533 行) の
+分割は §5 の理由 (共有インフラの分割は coverage 分母と node body 整合を壊しうる) により
+`HarnessHub-w7n7` へ据え置く。既存の 500 行超テスト 6 本は本変更の対象外のため触っていない。
+
+### 7.5 検証結果
+
+| ゲート | 結果 |
+|---|---|
+| `make orphan-external-ref` | exit 0 (violations 0 / baselined 0 / resolved 0 / closed_residue 13) |
+| `make lint` | exit 0 |
+| `make plugin-package-check` | exit 0 (advisory 21 件は PKG-002/004 の未採用標準) |
+| `pytest plugins/dev-graph/tests/` | 671 passed / 2 skipped / **4 failed** |
+
+4 件の failure は C02/C03/C14/C15 の live-trial verdict が持つ behavior closure digest の
+stale で、**本変更が原因ではない**。作業ツリーの変更を含まない HEAD (`ca28434`) を独立
+worktree へ切り出して実行し、同一の 4 件が同じ理由で失敗することを確認した。ただし 4 skill は
+いずれも `script_refs` に `bd-bridge.py` を宣言しており、本変更はこの digest をさらにずらす。
+解消には live-trial の再実行が要る (`HarnessHub-1wo3`)。
+
+### 7.6 本ラウンドの残課題
+
+- `HarnessHub-1wo3` (`issue-cross-plugin-behavior-closure-staleness-20260728`): 上記 4 件の
+  stale digest。node は他 branch にのみ実在するため本 lint では `merge_pending` と判定される。
+  **本 branch では graph へ登録しない** (重複登録は graph.json のマージ衝突を招く)
+- `HarnessHub-31k5` / `HarnessHub-w7n7`: §6 から継続

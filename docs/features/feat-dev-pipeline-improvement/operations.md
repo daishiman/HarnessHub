@@ -115,3 +115,43 @@ before より 1 件でも増えれば disposition の指定内容とは無関係
 と `test_bd_bridge_node_removal_preflight.py` に、発見経緯と実測は
 `issues/sys-bd-external-ref-orphan-nodes-20260725.md` と
 `issues/sys-devgraph-graph-gc-bd-close-propagation-20260726.md` に記録している。
+
+### 6.4 逆方向の全数検査 (`make orphan-external-ref`)
+
+6.1〜6.3 は choke-point 側のゲートで、いずれも **これから書く操作**を止める。既に宙に浮いた
+参照は止められないため、残置の全数検査を独立した品質ゲートとして持つ。
+
+```bash
+make orphan-external-ref
+```
+
+dev-graph の同期系 (`sync-graph.py::_plan` / `lint-open-residue.py::lint` /
+`build-parity-manifest.py::_entries`) は例外なく graph の `nodes[]` を起点に走る。したがって
+**node が graph から消えた瞬間、その node を指す bd issue は全ての検査の視界から同時に外れる**。
+本 lint だけが bd export を起点に graph を引くため、この盲点を塞ぐ唯一の検査になる。
+
+6.1 の `--op orphan-audit` との違いは役割である。`orphan-audit` は choke-point 内蔵の棚卸し
+(「今どうなっているか」を見る道具) で exit code による遮断をしない。本 lint は Makefile の
+品質ゲートとして **非クローズの残置を exit 2 で遮断する** (「悪化を止める」ゲート)。
+
+| disposition | 意味 | 違反 | 次の一手 |
+|---|---|---|---|
+| `true_orphan` | graph node も md 実体も無い | OE-001 | bd 側を閉じるか再起票する |
+| `node_restorable` | md 実体は repo にある | OE-002 | C02 `upsert-node.py` で graph へ復元する |
+| `merge_pending` | 他 ref に node が実在 | — | マージ待ち。触らない |
+| `closed_residue` | bd 側が closed 済み | — | 履歴の残骸。件数のみ残す (silent drop 禁止) |
+
+既知の未処分 orphan は `scripts/dev-graph-orphan-baseline.json` の **shrink-only baseline** に
+凍結し、新規発生のみを遮断する。**baseline へ行を足して緑化することは禁止**で、これは本 lint の
+目的 (orphan を生み続ける経路を塞ぐ) そのものを無効化する。処分が済んだ行は lint 出力の
+`resolved_baseline_entries[]` に現れるので削除する (残すと同じ参照が再発しても違反にならない
+穴になる)。**2026-07-28 時点で baseline は空** = 免除ゼロであり、以後は 1 件でも fail-closed で
+止まる。
+
+baseline が plugins/ の外にあるのは qa-070 の仕組み/ナレッジ境界による。portable な
+`plugins/dev-graph/` は repo 固有の node id を抱えられないため、repo 側データとして入力で
+受け渡す (`scripts/lint-mechanism-knowledge-boundary.py` が機械強制)。
+
+本 lint は live な bd (Dolt DB) を要求するため **ローカル専用**で、`make lint` / `make test` には
+束ねない。`.beads/issues.jsonl` は gitignore 対象で CI に存在せず、CI へ置くと恒久 no-op になる。
+契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md` §10。

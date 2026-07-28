@@ -30,7 +30,11 @@ RFC3339_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
 # ready 候補が parity manifest に載らなかった理由の exact-set。
 # 「graph 管理外の bd 課題」と「graph 管理下なのに manifest から落ちた課題」は
 # 対処 owner が違う (前者は放置可・後者は sync 必要) ため、同じ袋へ入れない。
-UNMAPPED_REASONS = ("external_ref_absent", "parity_manifest_missing")
+# `graph_node_missing` は「external_ref が指す node が graph から消えている」= C02 案件で、
+# sync を何度回しても解消しない。これを `parity_manifest_missing` に混ぜると、GC 削除の
+# 残置が「sync すれば直る取りこぼし」を装って常駐し、本物の取りこぼしを覆い隠す
+# (HarnessHub-ii90)。逆方向の全数検査は lint-orphan-external-ref.py が担う。
+UNMAPPED_REASONS = ("external_ref_absent", "graph_node_missing", "parity_manifest_missing")
 # --op orphan-audit が付ける仕分け札の exact-set。UNMAPPED_REASONS と同じ理由で、
 # 対処 owner と次の一手が違うものを同じ袋へ入れない。
 # restore_node:     spec 実体が content_roots に在るのに graph 未登録 → C02 upsert-node.py で復元。
@@ -440,14 +444,44 @@ def _manifest_provenance(manifest: dict[str, Any]) -> dict[str, Any]:
     return {"generated_at": generated_at, "source_graph_digest": source_graph_digest}
 
 
-def _unmapped_reason(external_ref: str | None) -> str:
-    """ready 候補が manifest に載らない理由を、対処 owner が分かる粒度で決める。"""
-    return "parity_manifest_missing" if external_ref else "external_ref_absent"
+def _manifest_graph_node_ids(manifest: dict[str, Any]) -> set[str]:
+    """manifest が申告する「graph に実在する node id の全集合」を fail-closed で読む。
+
+    `nodes[]` (beads 束縛済みの投影) だけでは、候補が manifest に載らない理由が
+    「graph から node が消えた」のか「graph には居るが投影から漏れた」のか判別できない。
+    前者は C02 (node 復元 / bd close)、後者は C03 sync と対処 owner が異なる。
+
+    欠落を許容して従来の 1 つの札へ丸めると、GC 削除の残置が sync 案件を装って常駐し、
+    「sync しても消えない警告」が常態化して本物の取りこぼしを覆い隠す。manifest は
+    build-parity-manifest.py の単一経路が毎回作り直す揮発 snapshot なので、
+    欠落時の正しい回復は再生成であって黙認ではない。
+    """
+    raw = manifest.get("graph_node_ids")
+    if not isinstance(raw, list) or any(not isinstance(value, str) or not value for value in raw):
+        raise ContractError(
+            "parity manifest requires graph_node_ids as string[]; "
+            "regenerate it with build-parity-manifest.py"
+        )
+    return set(raw)
+
+
+def _unmapped_reason(external_ref: str | None, graph_node_ids: set[str] | None) -> str:
+    """ready 候補が manifest に載らない理由を、対処 owner が分かる粒度で決める。
+
+    `graph_node_ids` が None なのは manifest 自体が渡されていない場合だけで、そのときは
+    「投影が存在しない」ことが原因なので従来どおり `parity_manifest_missing` を返す。
+    """
+    if not external_ref:
+        return "external_ref_absent"
+    if graph_node_ids is not None and external_ref not in graph_node_ids:
+        return "graph_node_missing"
+    return "parity_manifest_missing"
 
 
 def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) -> dict[str, Any]:
     candidates = _rows(raw)
     provenance = _manifest_provenance(manifest) if manifest is not None else None
+    graph_node_ids = _manifest_graph_node_ids(manifest) if manifest is not None else None
     entries = manifest.get("nodes", []) if manifest else []
     if not isinstance(entries, list) or not all(isinstance(row, dict) for row in entries):
         raise ContractError("parity manifest nodes must be an array of objects")
@@ -474,7 +508,10 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
         expected = by_issue.get(issue_id)
         if not expected:
             external_ref = _external_ref(candidate)
-            unmapped.append({"bd_issue_id": issue_id or None, "external_ref": external_ref, "reason": _unmapped_reason(external_ref)})
+            unmapped.append({
+                "bd_issue_id": issue_id or None, "external_ref": external_ref,
+                "reason": _unmapped_reason(external_ref, graph_node_ids),
+            })
             continue
         shown = _issue(bd(["show", issue_id, "--json"], cwd=root), issue_id)
         try:
