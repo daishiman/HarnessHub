@@ -55,6 +55,12 @@ run "lint-feedback-contract (all)"         python3 scripts/lint-feedback-contrac
 run "lint-vendored-ssot"                   python3 scripts/lint-vendored-ssot.py
 run "lint-legacy-plugin-name"              python3 scripts/lint-legacy-plugin-name.py
 run "lint-runtime-portability"             python3 scripts/lint-runtime-portability.py
+# harness-creator-kit-ci.yml では lint-runtime-portability の直後に置かれているが
+# run-ci-checks には非包含だった。README の bash フェンスを触る変更が pre-push を
+# 素通りし CI で初めて落ちる (2026-07-28 に発生)。上の criteria-roster / llm-coverage と
+# 同じ「CI にあってローカルに無い」型で、実測では他に 17 件が残っている
+# (issues/sys-local-ci-gate-drift-20260728.md)。
+run "lint-readme-plugin-root-portability"  python3 scripts/lint-readme-plugin-root-portability.py
 run "check-scripts-drift"                  bash scripts/check-scripts-drift.sh
 run "build-claude-symlinks --check"        python3 scripts/build-claude-symlinks.py --check
 # ── discovery 派生台帳 parity (roster / llm-coverage が discovery と一致するか) ──

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 936,
+  "graph_revision": 937,
   "nodes": [
     {
       "acceptance": [
@@ -39557,6 +39557,115 @@
       "title": "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T06:23:05Z"
+    },
+    {
+      "acceptance": [
+        "CI とローカルゲートの検査集合差が機械検査され、allowlist に無い差分で fail-closed に落ちること",
+        "判定が件数や比率ではなく set membership であること",
+        "突合の鍵が script 名だけでなく意味のある引数を含む呼び出し形であること",
+        "意図的なローカル非実行が理由とともに allowlist へ記載されており、run-ci-checks.sh の宣言文が実際の被覆範囲と一致していること"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-local-ci-gate-drift-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "CI とローカルゲートの被覆差というリポジトリ運用上の追跡課題であり、特定 feature の実装タスクではない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T07:20:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-local-ci-gate-drift-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "CI が実行する検査集合とローカルゲートが実行する検査集合の差を機械検査し、意図的な除外だけを理由付き allowlist で許す状態にして、「pre-push 緑ならば CI 緑」を検査可能な命題にする",
+      "graph_node_id": "issue-local-ci-gate-drift-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T07:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "scripts/run-ci-checks.sh は冒頭に「CI と同等の機械チェックをローカルで一括実行する」と宣言し、pre-push hook はその結果を「All CI-equivalent checks passed」と表示する。しかし .github/workflows/*.yml が実行する scripts/*.py と run-ci-checks.sh が実行するものを機械的に突合すると、CI にあってローカルに無いものが 19 件ある。同等性は誰にも検査されていない。結果として開発者は「pre-push が緑なら CI も緑」という誤った事前確率を持ち、実際には CI で初めて落ちる。本リポジトリでは同型の事故が既に 2 回起きており (2026-07-02 / 2026-07-28)、いずれも当該 1〜2 件を手で追加して終わっている。",
+      "related_nodes": [
+        "issue-worktree-main-ref-desync-20260728"
+      ],
+      "resource_scope": [
+        "scripts/run-ci-checks.sh",
+        ".github/workflows"
+      ],
+      "scope_in": [
+        ".github/workflows/*.yml とscripts/run-ci-checks.sh の実行検査集合を突合する meta-lint の設計と実装",
+        "ローカル非実行を意図する検査の理由付き allowlist の定義",
+        "build 系 (作業ツリーへ書き込みうる) と読み取り専用検査の切り分け、および run-ci-checks.sh の宣言文の修正"
+      ],
+      "scope_out": [
+        "個々の lint の判定ロジック変更",
+        "CI workflow のジョブ分割やキャッシュ戦略の変更",
+        "pre-commit 側のゲート設計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T07:20:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-workflow",
+        "ci",
+        "pre-push",
+        "proxy-metric",
+        "meta-check"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T07:20:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
