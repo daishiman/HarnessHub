@@ -342,6 +342,18 @@ def test_tree_sha_deterministic_and_content_sensitive(tmp_path):
     assert sha1 != verdict_mod.skill_dir_tree_sha(d2)  # 内容変更で変わる
 
 
+def test_tree_sha_ignores_pytest_cache_artifacts(tmp_path):
+    d = _fake_skill_dir(tmp_path)
+    baseline = verdict_mod.skill_dir_tree_sha(d)
+    cache_dir = d / "scripts" / ".pytest_cache" / "v" / "cache"
+    cache_dir.mkdir(parents=True)
+    (cache_dir / "nodeids").write_text('["scripts/test_a.py::test_x"]', encoding="utf-8")
+    (d / "scripts" / ".pytest_cache" / "v" / "cache" / "lastfailed").write_text(
+        "{}", encoding="utf-8"
+    )
+    assert verdict_mod.skill_dir_tree_sha(d) == baseline  # 非決定的な pytest artifact は無視
+
+
 def _write_package_contract(
     plugin_dir: Path, depends_on: list[str], *, skills: list[str] | None = None,
     skill_dependencies: dict[str, list[str]] | None = None,
