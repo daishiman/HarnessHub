@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Validate the cross-plugin preflight for the planner handoff contract."""
 from __future__ import annotations
 

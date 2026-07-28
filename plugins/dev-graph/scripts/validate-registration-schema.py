@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Validate the stdlib-only JSON Schema subset used by package registration."""
 from __future__ import annotations
 
