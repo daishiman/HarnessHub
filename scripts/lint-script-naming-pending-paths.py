@@ -97,4 +97,9 @@ PENDING_RENAME_PATHS = {
     "plugins/harness-creator/skills/run-plugin-package-check/scripts/sandbox-plugin-lifecycle.py",
     "plugins/harness-creator/skills/run-plugin-package-check/scripts/run-pkg-015.py",
     "plugins/harness-creator/skills/run-skill-live-trial/scripts/plan-live-trials.py",
+    # coverage_foundation.py: validate-coverage-matrix.py (500行分割 4例目) から
+    # `from coverage_foundation import validate_foundation` される import 専用 support
+    # module のため Python import 上ハイフン不可 (§4.3 恒久例外・node_transaction.py 等の
+    # dev-graph 系 support module と同種)。
+    "plugins/system-spec-harness/scripts/coverage_foundation.py",
 }
