@@ -185,6 +185,179 @@ def test_created_content_roots_satisfy_the_flag(mod, config: dict, repo: Path) -
     assert mod.validate(config, repo_root=repo, required_content_roots=keys) == []
 
 
+@pytest.fixture
+def project_hooks(config: dict) -> dict:
+    """hook fallback を使う唯一のモード。ここでだけ link の実体が契約になる。"""
+    config["claude_hooks"]["source"] = "project"
+    return config
+
+
+def hook_link(repo: Path, config: dict) -> Path:
+    return repo / config["claude_hooks"]["project_plugin_link"]
+
+
+def test_project_source_requires_the_link_key(mod, project_hooks: dict) -> None:
+    """source=project で key ごと欠けたら schema 層が落とす (条件付き required)。"""
+    del project_hooks["claude_hooks"]["project_plugin_link"]
+    violations = mod.validate(project_hooks)
+    assert "schema_violation" in codes(violations)
+    assert any("project_plugin_link" in item["detail"] for item in violations)
+
+
+@pytest.mark.parametrize("source", ["plugin", "disabled"])
+def test_unused_link_key_is_optional(mod, config: dict, source: str) -> None:
+    """link を読まないモードは未使用 path の宣言を強制されない。
+
+    無条件 required だった頃は plugin/disabled の repo が「使わないのに書かされる」path を
+    持ち、その値が正しいか誰も検査しないという状態を生んでいた (HarnessHub-7tn1)。
+    """
+    config["claude_hooks"]["source"] = source
+    del config["claude_hooks"]["project_plugin_link"]
+    assert mod.validate(config) == []
+
+
+def test_project_source_with_absent_link_is_rejected(mod, project_hooks: dict, repo: Path) -> None:
+    """受入条件 1: source=project かつ link 不在の config が違反を出す。"""
+    violations = mod.validate(project_hooks, repo_root=repo)
+    assert [item["location"] for item in violations] == [mod.HOOK_LINK_LOCATION]
+    assert violations[0]["code"].startswith("project_plugin_link")
+
+
+def test_project_source_with_real_directory_is_rejected(
+    mod, project_hooks: dict, repo: Path
+) -> None:
+    """plain symlink でなく実ディレクトリを置いた config は落ちる。
+
+    R5-hooks の責務境界は fallback を「plain-symlink かつ effective plugin hook 不在時のみ」
+    に限る。実体コピーを許すと plugin 更新が link 先へ伝播せず、hook が古い経路を指し続ける。
+    """
+    hook_link(repo, project_hooks).mkdir(parents=True)
+    violations = mod.validate(project_hooks, repo_root=repo)
+    assert [item["location"] for item in violations] == [mod.HOOK_LINK_LOCATION]
+    assert violations[0]["code"].startswith("project_plugin_link")
+
+
+def test_project_source_with_plain_symlink_passes(
+    mod, project_hooks: dict, repo: Path, tmp_path: Path
+) -> None:
+    """正常形: repo 外の共有 plugin root への plain symlink は通る。
+
+    plugin root が repo 外にあるのは正常な配布形態である。content path と同じ realpath
+    containment をここへかけると project モードが原理的に成立しなくなるため、
+    path 層は link を content path と別扱いにしている。
+    """
+    plugin_root = tmp_path / "shared-plugin-root"
+    (plugin_root / "hooks").mkdir(parents=True)
+    link = hook_link(repo, project_hooks)
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(plugin_root, target_is_directory=True)
+    assert mod.validate(project_hooks, repo_root=repo) == []
+
+
+def test_project_source_with_dangling_symlink_is_rejected(
+    mod, project_hooks: dict, repo: Path, tmp_path: Path
+) -> None:
+    """symlink は在るが解決先が無い config は落ちる。
+
+    fallback は link 越しに plugin root の hooks を読むので、dangling link では read が
+    成立しない。`exists()` は link を解決するため不在と区別が付かず、この経路は
+    `is_symlink()` を先に見ないと `absent` へ誤分類される。
+    """
+    link = hook_link(repo, project_hooks)
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(tmp_path / "never-created", target_is_directory=True)
+    violations = mod.validate(project_hooks, repo_root=repo)
+    assert [item["code"] for item in violations] == ["project_plugin_link_broken"]
+
+
+def test_project_source_with_symlink_to_file_is_rejected(
+    mod, project_hooks: dict, repo: Path, tmp_path: Path
+) -> None:
+    """plugin root は directory である。file への symlink は hooks を辿れない。"""
+    target = tmp_path / "not-a-plugin-root"
+    target.write_text("", encoding="utf-8")
+    link = hook_link(repo, project_hooks)
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(target)
+    violations = mod.validate(project_hooks, repo_root=repo)
+    assert [item["code"] for item in violations] == ["project_plugin_link_not_directory"]
+
+
+def test_multi_hop_symlink_passes(
+    mod, project_hooks: dict, repo: Path, tmp_path: Path
+) -> None:
+    """段数は fallback の成否と無関係なので symlink of symlink を落とさない。
+
+    plugin の配布形態が package manager 経由の多段 link になることがある。段数で落とすと
+    正常な配布を検証が拒否する。
+    """
+    plugin_root = tmp_path / "shared-plugin-root"
+    (plugin_root / "hooks").mkdir(parents=True)
+    hop = tmp_path / "hop"
+    hop.symlink_to(plugin_root, target_is_directory=True)
+    link = hook_link(repo, project_hooks)
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(hop, target_is_directory=True)
+    assert mod.validate(project_hooks, repo_root=repo) == []
+
+
+@pytest.mark.parametrize("source", ["plugin", "disabled"])
+def test_unused_link_existence_is_not_required(mod, config: dict, repo: Path, source: str) -> None:
+    """受入条件 2 の回帰防止: 現行運用 (source=plugin) は link 実体を持たない。"""
+    config["claude_hooks"]["source"] = source
+    assert mod.validate(config, repo_root=repo) == []
+
+
+def test_hook_link_finding_does_not_leak_absolute_paths(
+    mod, project_hooks: dict, repo: Path
+) -> None:
+    """report は eval-log へ残る。環境固有の絶対 path を成果物へ保存しない。"""
+    violations = mod.validate(project_hooks, repo_root=repo)
+    assert violations
+    assert all(str(repo) not in json.dumps(item, ensure_ascii=False) for item in violations)
+
+
+def test_declared_link_still_shares_the_common_path_checks(mod, project_hooks: dict) -> None:
+    """content 扱いを外しても repo-relative 性と宣言重複の共通検査は効き続ける。"""
+    project_hooks["claude_hooks"]["project_plugin_link"] = "../outside-plugin"
+    assert "path_not_repo_relative" in codes(mod.validate(project_hooks))
+
+
+def test_cli_fails_closed_on_absent_project_link(repo: Path, config: dict) -> None:
+    """受入条件 1 を CLI の exit code で固定する。"""
+    config["claude_hooks"]["source"] = "project"
+    result = run_cli(write_config(repo, config))
+    assert result.returncode == 1
+    report = json.loads(result.stdout)
+    assert report["valid"] is False
+    assert any(
+        item["location"] == "claude_hooks.project_plugin_link" for item in report["violations"]
+    )
+
+
+def test_fallback_validator_agrees_on_the_conditional_link_requirement(
+    mod, project_hooks: dict, monkeypatch
+) -> None:
+    """jsonschema 不在環境でも条件付き required が同じ判定になる。
+
+    fallback は `if` の中身を素の schema として評価するため、`if` に `required: [source]` が
+    無いと source 未宣言の config で then が誤って適用される。その差分を固定する。
+    """
+    del project_hooks["claude_hooks"]["project_plugin_link"]
+    with_library = codes(mod.validate(project_hooks))
+    assert "schema_violation" in with_library
+
+    real_import = builtins.__import__
+
+    def without_jsonschema(name, *args, **kwargs):
+        if name == "jsonschema":
+            raise ImportError("deterministic fallback exercise")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", without_jsonschema)
+    assert codes(mod.validate(project_hooks)) == with_library
+
+
 @pytest.mark.parametrize(
     ("location", "value"),
     [

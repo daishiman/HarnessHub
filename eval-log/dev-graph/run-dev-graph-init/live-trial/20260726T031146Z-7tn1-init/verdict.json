@@ -1,0 +1,49 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-init",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "second pass was not executed; idempotence was not observed",
+      "ゴールシーク配線の実体検証に失敗: progress-missing: run-dev-graph-init-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-init"
+  ],
+  "missing_goal_seek_artifacts": [
+    "progress.json"
+  ],
+  "goal_seek_evidence_violations": [
+    "progress-missing: run-dev-graph-init-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "86be6603f8336f1abd08cf5a85357877e94b5d093205912e7088362b88fc4f17",
+  "transcript_sha256": "fa848ac3b14a7e7ecea304a4360f7bd26c5d1b3c1072b1f62218249e002e7da8",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "STALL",
+    "wall_clock_s": 390.0
+  },
+  "scenario_id": "C01-OUT1-positive-idempotence-r17"
+}

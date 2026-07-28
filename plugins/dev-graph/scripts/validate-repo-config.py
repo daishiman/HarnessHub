@@ -76,6 +76,11 @@ _schema_fallback = _vgs._schema_fallback
 # セクションだが、同じ config を共有する以上 containment 契約は等しく効かせる。
 PATH_SECTIONS = ("content_roots", "local_state", "plan_roots")
 
+# claude_hooks.project_plugin_link は path 宣言だが content path ではない。
+# repo-relative 性と宣言重複は他の path と同じ扱いにし、realpath containment と
+# 実在検査だけを hook_link_findings() へ分岐させる (理由は同関数の docstring)。
+HOOK_LINK_LOCATION = "claude_hooks.project_plugin_link"
+
 # criteria:OUT4 が config への保存を禁じる秘密材料の実在プレフィックス。
 # 判定を prefix 完全一致に限るのは意図的で、長さやエントロピーで測ると
 # option_map の "In Progress" のような正常値を落とし、かつ判定が非決定論になる
@@ -140,8 +145,72 @@ def declared_paths(config: dict[str, Any]) -> list[tuple[str, str]]:
     hooks = config.get("claude_hooks")
     link = hooks.get("project_plugin_link") if isinstance(hooks, dict) else None
     if isinstance(link, str):
-        pairs.append(("claude_hooks.project_plugin_link", link))
+        pairs.append((HOOK_LINK_LOCATION, link))
     return pairs
+
+
+def hook_link_findings(config: dict[str, Any], value: str, link_path: Path) -> list[dict[str, str]]:
+    """source=project のとき project_plugin_link が hook fallback の前提を満たすか検査する。
+
+    R5-hooks の責務境界は「fallback は plain-symlink かつ effective plugin hook 不在時のみ
+    許可」と書くが、そのうち **link が実在し plain symlink である** という前提は、どの決定論
+    経路にも落ちていなかった。schema の pattern は文字列しか見ないため、fallback が黙って
+    成立しない config が exit 0 で通る (HarnessHub-7tn1)。
+
+    source が plugin / disabled のときは link 値そのものが使われないので検査しない。schema 側も
+    同じ条件で required を切り替えており、層の責務は「schema=key の有無」「ここ=実体の性質」に
+    分かれる。
+
+    detail へ絶対 path を載せない。receipt と eval-log へ残る出力に環境固有の絶対 path を
+    保存しない契約 (R5-hooks Layer 3) があるため、repo-relative の宣言値だけを出す。
+
+    「plain symlink」を *symlink であり解決先が実在する directory* と定義する。R5-hooks の
+    fallback は link 越しに plugin root の hooks を読むため、実体コピー (directory) を許すと
+    plugin 更新が伝播せず hook が古い経路を指し続ける。dangling / 非 directory は link 越しの
+    read がそもそも成立しない。symlink の段数 (symlink of symlink) は落とさない: plugin の
+    配布形態が package manager 経由の多段 link になることがあり、段数は fallback の成否と
+    無関係だからである。
+
+    Args:
+        config: 検証対象の repo-local config 全体。
+        value: config が宣言した repo-relative の link 値 (detail 用)。
+        link_path: repo_root と結合した実 path。symlink は解決しない。
+
+    Returns:
+        findings: [{"location": HOOK_LINK_LOCATION, "code": ..., "detail": ...}]
+        code は `project_plugin_link_` 接頭辞つきの 4 値
+        (`absent` / `not_symlink` / `broken` / `not_directory`)。
+    """
+    hooks = config.get("claude_hooks")
+    source = hooks.get("source") if isinstance(hooks, dict) else None
+    if source != "project":
+        return []
+
+    def finding(code: str, reason: str) -> list[dict[str, str]]:
+        return [
+            {
+                "location": HOOK_LINK_LOCATION,
+                "code": f"project_plugin_link_{code}",
+                # 宣言値だけを出す (絶対 path を成果物へ残さない契約)。
+                "detail": f"{value} {reason} (source=project は hook fallback の実体を要求する)",
+            }
+        ]
+
+    # is_symlink() を exists() より先に見る。exists() は link を解決するため、dangling link を
+    # 「不在」と誤分類し、直すべき対象 (link 先) を報告から落としてしまう。
+    if not link_path.is_symlink():
+        if link_path.exists():
+            return finding("not_symlink", "は symlink でない実体を指す")
+        return finding("absent", "が存在しない")
+    try:
+        target = link_path.resolve(strict=True)
+    except (OSError, RuntimeError):
+        # strict=True の未解決は dangling と symlink loop の両方で起きる。前者は OSError、
+        # 後者は Python version により RuntimeError/OSError(ELOOP) と分かれるため両方受ける。
+        return finding("broken", "の symlink 解決先が存在しない")
+    if not target.is_dir():
+        return finding("not_directory", "の symlink 解決先が directory でない")
+    return []
 
 
 def path_findings(
@@ -162,6 +231,10 @@ def path_findings(
     (issues/tasks/specs/architecture/features/docs) を作る契約で、7 番目の
     `system_spec` は run-dev-graph-system-spec が取込時に用意する別責務の root である。
     全件を暗黙要求すると init 直後の正常な repo が恒久的に FAIL する。
+
+    `claude_hooks.project_plugin_link` だけは content path と扱いが分かれる。repo-relative 性と
+    宣言重複は共通検査を通すが、realpath containment はかけず、代わりに
+    `hook_link_findings()` が `source=project` のときだけ実体を検査する。
     """
     findings: list[dict[str, str]] = []
     owner_of: dict[str, str] = {}
@@ -192,6 +265,14 @@ def path_findings(
                 }
             )
         if repo_root is None:
+            continue
+        if location == HOOK_LINK_LOCATION:
+            # plugin link の実体は共有 plugin root (= repo 外) を指すのが正常な配布形態である。
+            # path_policy が禁じるのは content symlink の repo 外脱出
+            # (follow_content_symlinks_outside_repository) であり、plugin 資産への参照は
+            # その対象ではないため realpath containment をかけない。宣言値が repo-relative で
+            # あることは上の共通検査で既に効いている。
+            findings.extend(hook_link_findings(config, value, repo_root / value))
             continue
         try:
             # 実在は要求しない (init 前の config も検証対象)。realpath 解決だけ行い、
