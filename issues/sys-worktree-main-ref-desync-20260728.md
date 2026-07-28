@@ -12,10 +12,10 @@ iteration: null
 title: "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む"
 owners: ["daishiman"]
 created_at: "2026-07-28T02:05:00Z"
-updated_at: "2026-07-28T06:23:05Z"
+updated_at: "2026-07-28T07:30:50Z"
 status: "draft"
 depends_on: []
-related_nodes: []
+related_nodes: ["issue-local-ci-gate-drift-20260728"]
 resource_scope: [".beads/hooks","plugins/dev-graph/hooks","plugins/dev-graph/scripts"]
 purpose: "2026-07-28、主ワークツリーで HEAD と index だけが最新 main へ進み、作業ツリーが 09:36 時点 (03093e4) に取り残される desync が発生した。原因は並列稼働中の worktree/セッションが git update-ref 系で refs/heads/main を直接書き換えたこと。git reflog show main に理由メッセージが空のエントリが 3 件 (10:06:29 -> 8560e92 / 10:16:32 -> 6e03e8f / 10:52:28 -> 9fe09e5) 残っており、pull / merge / checkout いずれの経路でもないことが確定している。症状は (a) ref が最新のため git pull が Already up to date を返す、(b) git status が PR で追加されたファイルを deleted、更新されたファイルを modified と表示する、の 2 点。この状態で git commit -a すると PR #84 / #85 のマージ内容を丸ごと巻き戻すコミット (65 files / -5467 行) が main に載る。今回は commit 前に検知して復旧したが、stash@{26} に同種の退避 (main-4bf2a66 同期前の退避: index+worktree が 7e250f1 のまま古かった分) が残っており再発である。復旧作業中に別セッションが stash push したため stash@{0} の指す対象が入れ替わる事象も同時に観測した"
 goal: "並列セッションを止めずに、main ref の横取り更新による desync を発生させない、または発生しても巻き戻しコミットとして main へ到達させない状態にする"
@@ -120,6 +120,55 @@ commit 前に検知し、下記 runbook の手順で復旧済み。**3 回とも
 
 一方で 5 件目は desync を起こさなかった。作業中のワークツリーが `main` ではなく作業ブランチを checkout していたためである。**desync の必要条件は「main を checkout したまま保持していること」**であり、これは (1) の遮断が入るまでの実効的な緩和策になる (runbook §6 に反映済み)。
 
+## 6 件目は別機構である: 作業ツリーの丸ごと差し替え (2026-07-28 夕)
+
+同日夕方に観測した 6 件目は、**ここまでの 5 件とは機構が異なる**。ref は一切動いていない。
+
+| | 1〜5 件目 (ref desync) | 6 件目 (作業ツリー clobber) |
+|---|---|---|
+| HEAD / refs | 進む (直接書き換え) | **無傷**。`4452145` = `origin/devgraph/...` のまま |
+| reflog | 理由メッセージが空のエントリが残る | **異常なし**。指紋が残らない |
+| 作業ツリー | 古い実体が取り残される | **古いスナップショットで丸ごと置換される** |
+| checkout 中の branch | `main` (必要条件) | **作業ブランチ**。main は無関係 |
+
+実測値は次のとおり。
+
+```
+git diff --shortstat HEAD
+  403 files changed, 4284 insertions(+), 29159 deletions(-)
+```
+
+古いスナップショットの復元である決め手は **mtime** である。差し替えられたファイルの mtime が現在時刻ではなく、それぞれ過去の別々の時点を指していた。
+
+| ファイル | mtime |
+|---|---|
+| `plugins/dev-graph/README.md` | `Jul 14 12:34:26` |
+| company-master 系 | `Jul 11 22:35:32` |
+| untracked な playwright 生成物 | `Jul 24` |
+
+書き込みが今起きたなら mtime は全て「今」になる。バラバラの過去日時が保存されているということは、**過去のツリー全体をアーカイブから mtime 込みで展開した**ことを意味する。git の操作では起こらない (git は checkout 時に mtime を現在時刻にする)。
+
+実害は 2 つ出た。
+
+1. **未コミットの編集が消えた**。当該セッションが直前に書いた `plugins/dev-graph/scripts/build-merged-graph.py` と README の修正が、ディスク上から丸ごと消失した。HEAD には無いので `git checkout` でも戻せない
+2. **テストが偽の赤を出した**。汚染されたツリーで実行した dev-graph のテストが 24 件失敗し、別のテストは収集エラーになった。これは実装の欠陥ではなく、**依存ファイルが古い実体に置き換わっていたことの派生症状**である。原因を実装側に探すと時間を丸ごと失う
+
+### この変種に対して §6 の緩和策は効かない
+
+5 件目の観測から導いた「**main を checkout していなければ desync しない**」という緩和策は、ref desync に対してのみ成立する。6 件目のワークツリーは作業ブランチを checkout していたが、被害を受けた。作業ブランチにいることは、この変種に対する安全の根拠にならない。
+
+### 復旧: 汚染ツリーを触らない
+
+汚染ツリーの中で復旧を試みると、消えた編集と残った編集の判別に時間がかかり、その間も汚染が続いている可能性がある。実際に採った手順は**汚染ツリーを一切触らず、別の場所に清浄なワークツリーを作って作業を続行する**ものだった。
+
+```bash
+git worktree add --detach <clean-path> <sha>
+```
+
+`.git` を共有するため commit / push はそのまま行える。汚染ツリーの復旧は作業完了後に切り離して扱える。
+
+**注意: 汚染ツリーは残置されている。** その状態で `git commit -a` すると 403 ファイル / -29,159 行の巻き戻しコミットが生成される。1〜5 件目と同じ危険が、より大きな規模で存在している。
+
 ## 復旧手順
 
 正本は `docs/worktree-desync-recovery-runbook.md`。検知 (reflog の理由メッセージ / `git diff --shortstat HEAD` / 実体照合)、退避、選択復元、stash のメッセージ参照規約までを収録している。
@@ -151,3 +200,12 @@ commit 前に検知し、下記 runbook の手順で復旧済み。**3 回とも
 | (5) stash 参照をメッセージで行う規約 | **完了** — 同 runbook §5 |
 
 残る (1)(2)(3) が本課題の主眼であり、これらが未達である限り検知は目視依存のままである。
+
+### 優先順位の訂正 (6 件目を受けて)
+
+起票時は (1) ref 直接更新の遮断を第一候補としていたが、**6 件目は ref を経由しないため (1) では検知できない**。一方 (2) の「HEAD と作業ツリーの整合検査」は、ref desync と clobber の**両方**を捕捉する。被覆が広いのは (2) である。
+
+- (1) の被覆: ref desync のみ (1〜5 件目)
+- (2) の被覆: ref desync + clobber (1〜6 件目すべて)
+
+したがって着手順は **(2) → (1) → (3)** とする。(2) は「commit 直前に `git diff --shortstat HEAD` が非空なら止める」という単純な検査で成立し、hook の設置場所問題 (3) からも独立している。

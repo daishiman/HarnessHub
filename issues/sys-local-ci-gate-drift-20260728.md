@@ -12,7 +12,7 @@ iteration: null
 title: "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている"
 owners: ["daishiman"]
 created_at: "2026-07-28T07:20:00Z"
-updated_at: "2026-07-28T07:20:00Z"
+updated_at: "2026-07-28T07:30:50Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-worktree-main-ref-desync-20260728"]
@@ -116,6 +116,16 @@ CI にあってローカルゲートに無いもの:
 - **`build-*` / `sync-*` 系をローカルゲートに含めるか**。これらは作業ツリーへ書き込みうるため、pre-push で走らせると副作用が出る。allowlist で除外するのが妥当だが、その場合「CI 同等」という宣言自体を「CI 同等の *読み取り専用* 検査」へ書き換えるべきである
 - **突合の粒度**。`python3 scripts/X.py --flag` 全体を鍵にすると workflow の些細な整形で偽陽性が出る。script 名 + 意味のあるフラグ集合に正規化する必要がある
 - **`|| true` で非ブロッキングな CI ステップの扱い**。`skill-fixture-runner.py` は CI 側で失敗を無視している。これをローカルで hard fail にすると CI より厳しくなり、逆向きの不一致になる
+
+## 既存課題との関係 (2026-07-28 マージ後に判明)
+
+本 issue を起票した直後に main を取り込んだところ、**同じ問題の一部が既に別経路で扱われていた**ことが分かった。重複作業を避けるため関係を明示する。
+
+- `HarnessHub-11qt` — メタ層 lint (`governance-check.yml`) に local 入口が無い件。上記表の `lint-artifact-placement` / `lint-doc-line-limit` はこちらの担当。両者は `--ratchet-base origin/main` を要するため local 入口の設計判断が別途要る、と `architecture/harness-hub-dev-workflow.md` に記録されている
+- `HarnessHub-yhc3` — G7 / G7b / G9 に残る同型の未結線
+- `HarnessHub-5u5k` — `governance-check.yml` の step gate が恒久 false だった件。その是正で `lint-workflow-step-guard` が CI と `run-ci-checks.sh` の**両方へ同時に**結線された。是正方針として正しい向きであり、本 issue が求める機械検査はこれを個別の心がけではなく強制にするもの
+
+つまり「新設ゲートは CI とローカルへ同時に結線する」という方針は既に文書化されている。**方針があるのに 2026-07-28 に再発した**のだから、欠けているのは方針ではなくその遵守を検査する機構である。本 issue の主眼はそこにある。
 
 ## 暫定対応 (本 PR で実施済み)
 
