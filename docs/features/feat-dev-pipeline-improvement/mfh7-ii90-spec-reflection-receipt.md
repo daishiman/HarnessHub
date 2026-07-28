@@ -174,14 +174,70 @@ violation として止まる。削除の経緯はデータ側の `_comment` に�
 | `pytest plugins/dev-graph/tests/` | 671 passed / 2 skipped / **4 failed** |
 
 4 件の failure は C02/C03/C14/C15 の live-trial verdict が持つ behavior closure digest の
-stale で、**本変更が原因ではない**。作業ツリーの変更を含まない HEAD (`ca28434`) を独立
-worktree へ切り出して実行し、同一の 4 件が同じ理由で失敗することを確認した。ただし 4 skill は
-いずれも `script_refs` に `bd-bridge.py` を宣言しており、本変更はこの digest をさらにずらす。
-解消には live-trial の再実行が要る (`HarnessHub-1wo3`)。
+stale である。
+
+**当初「本変更が原因ではない」と記録したが、これは誤りだった。** 比較対象に選んだ
+`ca28434` が既に本 branch 上の commit で、原因となる変更を含んでいたためである。base
+(`main` = `326198f`) を独立 worktree へ切り出して `scripts/lint-live-trial-verdict.py --all`
+を実行すると `9 verdict(s) verified, 6 missing (record-only)` で **exit 0 = green** であり、
+4 件はいずれも本変更が digest をずらしたことによる。
+
+原因の特定は、各 skill の behavior closure を `git diff --name-only main...HEAD` (174 files)
+と積集合を取って行った。
+
+| skill | closure と交差する本 PR の変更 |
+|---|---|
+| C02 `run-dev-graph-node` | `bd-bridge.py` |
+| C03 `run-dev-graph-sync` | `bd-bridge.py` / `execution-tracker-contract.md` / `build-parity-manifest.py` |
+| C14 `run-dev-graph-decompose` | `bd-bridge.py` / `execution-tracker-contract.md` |
+| C15 `run-dev-graph-schedule` | `bd-bridge.py` / `build-parity-manifest.py` |
+
+いずれも本 PR の中核ファイルで、取り下げれば変更そのものが成立しない。したがって
+**live-trial の再実走が唯一の解消経路**であり、§7.7 で 4 本すべて実施した。
 
 ### 7.6 本ラウンドの残課題
 
 - `HarnessHub-1wo3` (`issue-cross-plugin-behavior-closure-staleness-20260728`): 上記 4 件の
   stale digest。node は他 branch にのみ実在するため本 lint では `merge_pending` と判定される。
-  **本 branch では graph へ登録しない** (重複登録は graph.json のマージ衝突を招く)
+  **本 branch では graph へ登録しない** (重複登録は graph.json のマージ衝突を招く)。
+  digest の失効そのものは §7.7 の再実走で解消済みで、残るのは「共有 script を
+  `script_refs` に宣言した複数 skill が同時に失効する」構造課題の扱いである
 - `HarnessHub-31k5` / `HarnessHub-w7n7`: §6 から継続
+
+### 7.7 live-trial 4 本の再実走 (stale digest の解消)
+
+§7.5 の 4 件は、いずれも SKILL.md 本体が無変更のまま `script_refs` 経由で behavior
+closure digest だけがずれた状態である。digest を現在値へ書き換えるだけの緑化は
+`lint-live-trial-verdict.py --check-provenance` が `digest-only-rewrite` として遮断する
+ため、fresh claude session による再実走で解消した。
+
+| skill | run-id | closure digest | 実測 |
+|---|---|---|---|
+| C02 `run-dev-graph-node` | `20260728T115514Z-zep2b-node` | `2a7d9bb7c162` | PASS / 825s |
+| C03 `run-dev-graph-sync` | `20260728T205448Z-zep2b-sync` | `f432f2a63139` | PASS / 585s |
+| C14 `run-dev-graph-decompose` | `20260728T122040Z-zep2b-decompose` | `417c0f534209` | PASS / 945s |
+| C15 `run-dev-graph-schedule` | `20260728T122707Z-zep2b-schedule` | `09618b5b4994` | PASS / 600s |
+
+4 本すべて `nudge_count=0` / `gate_response_count=0` / `poll_exit=DONE` / `tier=live` で、
+`invoked_skills` は被験 skill 単独。人手介入なしの自走完遂である。
+
+受領書 (`criteria-test/scenario-verdict.json`) の OUT1 は `live_trial_verdict_ref` /
+`test_refs` / `observed` を新 run へ張り替えた。新しい実走を置くだけでは受領書が旧 run を
+指したままとなり、`test_independent_scenario_receipt_covers_exact_criteria` が旧 digest を
+照合して落ちる (受領書は verdict を間接参照する)。
+
+| ゲート | 再実走後 |
+|---|---|
+| `lint-live-trial-verdict.py --all` | exit 0 (9 verified / 6 missing = record-only) |
+| `lint-live-trial-verdict.py --check-provenance origin/main` | exit 0 |
+| `pytest plugins/dev-graph/tests/` | 675 passed / 2 skipped |
+
+provenance 検査が `0 verdict(s) inspected` を返すのは、本ラウンドが既存 verdict.json を
+書き換えず新しい run-id を追加したためである。同検査は分岐点に存在した verdict の digest
+変化だけを数え、新規追加は比較対象を持たない。証跡は append-only を保った。
+
+C14 のみ `audit_implementation.sha256` (provenance composite) が前 run から変化した。監査
+module 2 本は byte 不変で、変化したのは `live-trial-positive-scenarios.json` だけである。
+C19-OUT1 の fixture_contract 精緻化 (commit `6026b41`) に由来し、C14 の scenario エントリ
+自体は不変。composite が契約ファイル**全体**を対象にするため他 component の変更でも C14 の
+provenance がずれるが、これは fail-closed 側へ倒した設計である。
