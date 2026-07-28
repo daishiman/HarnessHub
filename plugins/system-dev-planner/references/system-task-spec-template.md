@@ -111,7 +111,7 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 - Methodology contract: `system-task-goal-seek/v1`
 - Goal: <このtask単体で達成する検証可能な状態>
 - Generic execution prompt: <実装手段を固定せず、目的・背景・制約・成果物を渡すprompt>
-- Rubric: <PASS条件を列挙。最低限、受け入れ条件・回帰・証跡・scopeを含む>
+- Rubric: <PASS条件を列挙。最低限、受け入れ条件・カバレッジ閾値 green・既存テストの回帰 0 件・証跡・scopeを含む>
 - Feedback loop: <実装→独立評価→findingをpromptへ反映→再実行し、rubric verdict=PASSまで反復。上限到達時はfail-closed>
 - P13 spec/architecture writeback: <P13はrequired: execution results, decisions, and improvement findingsをsystem specとarchitectureへ反映。P01..P12はN/A: P13 owns writeback>
 
