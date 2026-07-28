@@ -143,6 +143,12 @@ fi
 # fail-closed 検査する。配線漏れで腐ると登録漏れ (notion-gmail-send 未表示) を永久に
 # 見逃す自己強化ループに陥るため hard 配線で再発を機械遮断する (F4/F5)。
 run "validate-plugin-completeness (MK/BD)" python3 scripts/validate-plugin-completeness.py
+# 同じ「CI にあってローカルに無い」型の 3 例目 (同日中の 3 度目)。名前が
+# validate-plugin-completeness と紛らわしいが別物で、こちらは package-contract
+# (PKG-002..014) を検査する。plugin-root scripts/ に shebang 付き .py を
+# 実行ビット無しで足すと PKG-007 が blocking FAIL になる。
+run "validate-plugin-packages (PKG-*)"     python3 scripts/validate-plugin-packages.py
+run "contract-intake-enum-ssot"            python3 scripts/contract-intake-enum-ssot.py
 
 # ── test discovery coverage (全 test が CI 実行で到達するか) ──
 # elegant-review 2026-06-30 (LS-F1/SS-02/SS-05): tests/・plugins/ 以外 (scripts/・doc/・

@@ -12,7 +12,7 @@ iteration: null
 title: "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている"
 owners: ["daishiman"]
 created_at: "2026-07-28T07:20:00Z"
-updated_at: "2026-07-28T07:46:58Z"
+updated_at: "2026-07-28T08:25:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-worktree-main-ref-desync-20260728","issue-desync-guard-bundle-untracked-20260728"]
@@ -83,7 +83,7 @@ CI にあってローカルゲートに無いもの:
 | `build-yaml-spec-cache.py` | PASS。同上 |
 | `lint-plugin-manifest.py` | 引数必須 (`--plugin-root .`)。scripts/ 直下に実体が無く、別 plugin の同名 script を指している可能性がある |
 | `sync-notion-schema.py` | 引数必須 (`--check`) |
-| `validate-plugin-packages.py` | bare で exit 1 (advisory 32 件)。CI での呼び出し形の確認が必要 |
+| `validate-plugin-packages.py` | bare で exit 1 (advisory 32 件)。CI での呼び出し形の確認が必要 → **3 例目として実際に CI を落とした (後述)** |
 
 ## なぜ有害か
 
@@ -139,6 +139,23 @@ CI にあってローカルゲートに無いもの:
 
 同時に、上の 19 件の表のうち bare 実行で PASS と記録した 14 件は、**CI と同じ引数形で走らせた結果ではない**ことも意味する。表の PASS は「ローカルで動くこと」の確認であって「CI と同じ判定になること」の確認ではない。
 
+## 同日中に 3 例目が発生した (「確認が必要」と書いた行がそのまま落ちた)
+
+2 例目の修正を push した直後、**同じ PR の同じ CI 実行で 3 例目**が出た。上の表の最終行、`validate-plugin-packages.py` である。
+
+```
+[plugin-package-check] blocking failure あり
+  dev-graph                        FAIL (blocking): ['PKG-007']
+```
+
+原因は本 PR が追加した `plugins/dev-graph/scripts/build-merged-graph.py` の mode が `100644` で、同ディレクトリの他 30 本の `100755` と食い違っていたこと。PKG-007 は plugin-root `scripts/` 配下の shebang 付き script に実行ビットを要求する。`chmod +x` + `git update-index --chmod=+x` で解消した。
+
+この事例が示すもの:
+
+1. **「確認が必要」と書いた行は、確認されないまま事故になる。** 表の最終行には起票時点で「CI での呼び出し形の確認が必要」と書いてあった。それでも確認は行われず、6 時間後に同じ行が CI を落とした。未確認項目を表に残すことは対策ではない
+2. **名前の近さが見落としを生む。** ローカルには `validate-plugin-completeness.py` があり、pre-push の出力に `OK: 22 plugin(s) complete` と出る。人間もエージェントも「plugin の検査は通っている」と読む。実際には別物 (完全性 vs package-contract) で、CI が落とした方はローカルに存在しなかった
+3. **3 件とも「新規ファイルを 1 本足した」ことが引き金である。** README 追記・script 追加・script 追加。新規ファイルの追加は本リポジトリで最も頻度の高い操作であり、そこが最も検査から漏れている
+
 ## 既存課題との関係 (2026-07-28 マージ後に判明)
 
 本 issue を起票した直後に main を取り込んだところ、**同じ問題の一部が既に別経路で扱われていた**ことが分かった。重複作業を避けるため関係を明示する。
@@ -151,13 +168,17 @@ CI にあってローカルゲートに無いもの:
 
 ## 暫定対応 (本 PR で実施済み)
 
-`run-ci-checks.sh` へ 2 件を追加した。いずれも読み取り専用で pre-push に副作用が無いことを確認済みである。
+`run-ci-checks.sh` へ 4 件を追加した。いずれも読み取り専用で pre-push に副作用が無いことを確認済みである。
 
 | 追加した検査 | 契機 |
 |---|---|
 | `lint-readme-plugin-root-portability` | 1 例目。README の bash フェンス修正が CI で初めて落ちた |
 | `validate-harness-coverage --ratchet` | 2 例目。新規 script 追加で llm_eval floor を割った。CI と同じ引数形で結線した |
+| `validate-plugin-packages (PKG-*)` | 3 例目。新規 script の実行ビット欠落で PKG-007 が blocking FAIL |
+| `contract-intake-enum-ssot` | 3 例目と同じ CI step に同居していたため同時に結線 |
 
-**これは当該 2 件の再発しか防がない。**残り 17 件は未対応であり、さらに上記のとおり残り 17 件の「PASS」判定自体が CI と同じ引数形での確認ではない。上記の機械検査が入るまで「pre-push 緑 = CI 緑」は成立しない。
+加えて `check-scripts-drift.sh` (bash・上の 19 件の表とは別枠) も結線した。
 
-なお、この 2 件は**同じ PR の作業中に連続して発生**している。1 件ずつ手で足す運用が追いついていないことの直接の証拠である。
+**これは当該 4 件の再発しか防がない。**残り 15 件は未対応であり、さらに上記のとおり残り 15 件の「PASS」判定自体が CI と同じ引数形での確認ではない。上記の機械検査が入るまで「pre-push 緑 = CI 緑」は成立しない。
+
+なお、この 3 件は**同じ PR の作業中に連続して発生**している。1 件ずつ手で足す運用が追いついていないことの直接の証拠である。3 度とも「push → CI 赤 → 1 件足す → push」を繰り返しており、1 サイクルあたり CI の実行時間 (verify で約 4 分) を消費している。

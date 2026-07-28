@@ -1,5 +1,5 @@
 {
-  "graph_revision": 943,
+  "graph_revision": 944,
   "nodes": [
     {
       "acceptance": [
@@ -39668,7 +39668,7 @@
       "template_version": "1.0.0",
       "title": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T07:46:58Z"
+      "updated_at": "2026-07-28T08:25:00Z"
     },
     {
       "acceptance": [
