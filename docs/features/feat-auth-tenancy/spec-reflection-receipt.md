@@ -275,7 +275,11 @@ system-spec に固定 path を追加する契約変更ではない。
 
 - task spec validator: pass（13 phase、violations 0）
 - 集中テスト: 4 files / 33 cases pass
+- auth-tenancy: 23 files / 310 cases pass
+- hub 全体: 44 files / 508 cases pass、coverage 4 指標 90% 以上
 - hub typecheck / lint: pass
+- Next.js / OpenNext Workers build: pass
+- Worker bundle: gzip 1.075 MiB / 3 MiB、`/device` client bundle: 107.7 KiB / 120 KiB
 - doc line limit（上限 300 行）/ artifact placement: pass
 
 本番 Secret・通常変数・2 テナント分の OIDC 資格情報投入、デプロイ、

@@ -164,7 +164,7 @@ P10 / P11 から引き継いだもの。**リリース前に解消すること�
 
 - `AUTH_DEVICE_VERIFICATION_URI` の想定先である `/device` ページを実装
   (follow-up: bd `HarnessHub-k3n6` closed)
-- 対象 27 ケース、型検査、lint、Next.js build、ローカル HTTP 200 を確認
+- 対象 28 ケース、型検査、lint、Next.js build、ローカル HTTP 200 を確認
 - 本番には未デプロイのため、実環境の Device Flow は未確認
 
 サインイン画面の form action は handler 契約

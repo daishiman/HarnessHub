@@ -23,18 +23,18 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 | # | ゲート | 対応 quality_constraint | 実行コマンド | 結果 | CI 結線先 |
 | --- | --- | --- | --- | --- | --- |
 | G1 | テナント分離テスト | `tenant-workspace-row-level-scope-isolation-test-ci-d4` | `pnpm check:tenant-isolation` | ✅ 12 ケース pass / 必須 ID 7 種確認 / 越境成功 0 件 | `ci.yml` build & test (G4 名指し) + root `verify` |
-| G2 | Auth.js adapter 境界隔離 | `auth-adapter-boundary-better-auth-migration-hedge-d3-qa020` | `node apps/hub/scripts/check-auth-adapter-boundary.mjs` | ✅ 走査 **111** ファイル / 違反 0 件 | `ci.yml` static-gates (G12) + root `check:auth` |
-| G3 | 認可判定の単一集約 + route 例外の厳密一致 | `role4-authorization-matrix-single-middleware-deny-by-default-sec2` | `node apps/hub/scripts/check-single-authz-middleware.mjs` | ✅ 走査 **116** ファイル / 違反 0 件 / allowlist 3 件 / route 例外 5 件一致 | 同上 |
-| G4 | dev 専用 provider 非存在 | `no-hub-native-account-idp-delegation-i7` | `node apps/hub/scripts/check-dev-auth-provider-absence.mjs` | ✅ 走査 **116** ファイル / 禁止語 15 種 / 検出 0 件 | 同上 |
+| G2 | Auth.js adapter 境界隔離 | `auth-adapter-boundary-better-auth-migration-hedge-d3-qa020` | `node apps/hub/scripts/check-auth-adapter-boundary.mjs` | ✅ 走査 **127** ファイル / 違反 0 件 | `ci.yml` static-gates (G12) + root `check:auth` |
+| G3 | 認可判定の単一集約 + route 例外の厳密一致 | `role4-authorization-matrix-single-middleware-deny-by-default-sec2` | `node apps/hub/scripts/check-single-authz-middleware.mjs` | ✅ 走査 **132** ファイル / 違反 0 件 / allowlist 3 件 / route 例外 5 件一致 | 同上 |
+| G4 | dev 専用 provider 非存在 | `no-hub-native-account-idp-delegation-i7` | `node apps/hub/scripts/check-dev-auth-provider-absence.mjs` | ✅ 走査 **132** ファイル / 禁止語 15 種 / 検出 0 件 | 同上 |
 | G5 | 数値契約の単一集約 | `session-jwt-staleness-emergency-revocation-qa036` ほか | `pnpm exec vitest run tests/auth-tenancy/session-revocation.test.ts` (`T-SESS-01`) | ✅ 23 ケース pass / 11 項目一致 (10 項目は仕様書リテラル、1 項目は ADR 実装追補 §10.7 の決定値) | `ci.yml` build & test + root `verify` |
-| G6 | secret scan | (G6 / qa-038【2】) | `pnpm check:secrets` | ✅ 走査 **336** ファイル / 検出 0 件 / verdict=pass | root `verify` (`check:secrets`) |
+| G6 | secret scan | (G6 / qa-038【2】) | `pnpm check:secrets` | ✅ 走査 **362** ファイル / 検出 0 件 / verdict=pass | root `verify` (`check:secrets`) |
 
 一括再実行:
 
 ```bash
 pnpm check:auth                    # G2 + G3 + G4 (1 本でも fail なら非ゼロ終了)
 pnpm check:tenant-isolation        # G1 (対象実在 / 必須 ID 網羅 / skip 不在 も検査)
-cd apps/hub && pnpm exec vitest run tests/auth-tenancy   # G1 + G5 を含む実行系 149 ケース
+cd apps/hub && pnpm exec vitest run tests/auth-tenancy   # G1 + G5 を含む実行系 310 ケース
 pnpm check:secrets                 # G6
 node scripts/ci/check-shared-layer-duplicates.mjs        # 既存ゲート (§3)
 ```
@@ -173,7 +173,7 @@ $ node scripts/ci/check-shared-layer-duplicates.mjs
 | --- | --- | --- |
 | `apps/hub/src/lib/authz/` から `@auth/core/types` を import (境界外) | `pnpm check:auth` | **exit 1** / `authjs-import-outside-adapter` を該当行つきで検出 |
 | `tenant-isolation.test.ts` の `T-ISO-01` を `it.skip` 化 | `node scripts/ci/check-tenant-isolation-gate.mjs` | **exit 1** / 無効化されたケースを行番号つきで検出 |
-| いずれも撤去後 | 同上 | **exit 0** に復帰 (走査 111/116/116 ファイル、12 ケース / 必須 ID 7 種) |
+| いずれも撤去後 | 同上 | **exit 0** に復帰 (最終HEADは走査 127/132/132 ファイル、12 ケース / 必須 ID 7 種) |
 
 これで D4 の「分離テスト CI 必須ゲート化」と qa-020 / qa-036 の「CI で機械検証」は、
 宣言ではなく**実測された遮断挙動**として満たされている。

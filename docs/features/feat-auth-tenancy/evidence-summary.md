@@ -149,7 +149,7 @@ node scripts/ci/check-shared-layer-duplicates.mjs   # C2 unwrapped-route-handler
 # --- 回帰 (hub 全体) ---
 pnpm --filter @harness-hub/hub run build:worker
 pnpm --filter @harness-hub/hub test
-#   期待: Test Files 31 passed (31) / Tests 351 passed (351) — 2026-07-28 実測
+#   期待: Test Files 44 passed (44) / Tests 508 passed (508) — 2026-07-28 最終HEAD実測
 
 # --- plan 整合 ---
 python3 plugins/system-dev-planner/scripts/validate-system-plan.py \

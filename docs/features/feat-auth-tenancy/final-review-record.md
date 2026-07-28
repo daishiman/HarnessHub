@@ -34,9 +34,9 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 | QC-6 | `no-hub-native-account-idp-delegation-i7` | ⚠️ 条件付き | ✅ **充足** (CI 結線) |
 | QC-7 | `session-jwt-staleness-emergency-revocation-qa036` | ✅ 充足 | ✅ 充足 |
 
-再判定の根拠実測 (2026-07-28): `pnpm check:auth` 3/3 pass (走査 111/116/116)、
-`pnpm check:tenant-isolation` 12 ケース / 必須 ID 7 種、`tests/auth-tenancy` 149 ケース pass、
-hub 全体 351 pass / 0 skip、`check:secrets` 走査 336 / 検出 0、
+再判定の根拠実測 (2026-07-28 最終HEAD): `pnpm check:auth` 3/3 pass (走査 127/132/132)、
+`pnpm check:tenant-isolation` 12 ケース / 必須 ID 7 種、`tests/auth-tenancy` 310 ケース pass、
+hub 全体 508 pass / 0 skip、`check:secrets` 走査 362 / 検出 0、
 `validate-system-plan.py --feature-package feature-package/feat-auth-tenancy` status=pass / violations 0。
 **遮断挙動も実測済み** (P09 §4.1): 境界違反・`it.skip` のいずれでも exit 1。
 
@@ -140,7 +140,7 @@ P12 runbook.md §2 に手順を記載。
 
 | 観点 | 判定 | 根拠 |
 | --- | --- | --- |
-| 境界外からの Auth.js 固有 API import が 0 件 | ✅ | `T-BND-01` exit 0 / 走査 **111** ファイル (2026-07-28) |
+| 境界外からの Auth.js 固有 API import が 0 件 | ✅ | `T-BND-01` exit 0 / 走査 **127** ファイル (2026-07-28 最終HEAD) |
 | 公開入口経由の型の素通しが 0 件 | ✅ | `T-BND-02` exit 0 (到達可能性解析) |
 | 検査が実際に落ちることの確認 | ✅ | 境界外 `@auth/core/types` import を投入して **exit 1** を実測 (P09 §4.1) |
 | 乗り換え時に触る面が `adapter/` 4 枚に閉じている | ✅ | P08 §1.1 |

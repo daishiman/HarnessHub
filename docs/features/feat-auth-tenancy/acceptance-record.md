@@ -92,7 +92,8 @@ session_revocations 経由の緊急失効を併用する。手順は P12 runbook
 | `T-BND-01` | `lib/auth/adapter/` 以外から Auth.js 固有 module (`next-auth` / `@auth/*` / `@next-auth/*`) の import が無い | exit 0 |
 | `T-BND-02` | 公開入口 `adapter/index.ts` から**到達可能な**再輸出経路に Auth.js module が現れない | exit 0 |
 
-実行証跡 (2026-07-28 再実行): `node apps/hub/scripts/check-auth-gates.mjs` — 走査 **111 ファイル** / 違反 0 件
+実行証跡 (2026-07-28 最終HEAD再実行): `node apps/hub/scripts/check-auth-gates.mjs` —
+走査 **127 ファイル** / 違反 0 件
 
 ### 検査が有効であることの確認
 
@@ -127,7 +128,7 @@ exit 1 での赤化と検出経路の出力を確認済み (P06 §3)。**入口 
 | --- | --- | --- |
 | AC-1 テナント越境アクセスが分離テストで 0 件 | ✅ pass | `T-ISO-01`〜`T-ISO-07` (12 ケース) |
 | AC-2 Device Flow の E2E (承認→token→失効) が成功する | ✅ pass | `T-DEV-E2E-01` (9 工程) |
-| AC-3 Auth.js 依存が adapter 境界に隔離されている | ✅ pass | `@auth/core` 実結線下で `T-BND-01`/`T-BND-02` 走査 111 ファイル / 違反 0 件 + CI 結線 |
+| AC-3 Auth.js 依存が adapter 境界に隔離されている | ✅ pass | `@auth/core` 実結線下で `T-BND-01`/`T-BND-02` 走査 127 ファイル / 違反 0 件 + CI 結線 |
 
 **3 項目すべて pass。P07 の受入判定は確定である。**
 
@@ -135,10 +136,10 @@ exit 1 での赤化と検出経路の出力を確認済み (P06 §3)。**入口 
 
 | 検証 | コマンド | 結果 |
 | --- | --- | --- |
-| auth 3 ゲート | `pnpm check:auth` | 3/3 pass (走査 111 / 116 / 116 ファイル、違反 0 件) |
+| auth 3 ゲート | `pnpm check:auth` | 3/3 pass (走査 127 / 132 / 132 ファイル、違反 0 件) |
 | テナント分離 CI ゲート | `pnpm check:tenant-isolation` | 12 ケース pass / 必須 ID 7 種を確認 |
-| auth-tenancy テスト群 | `pnpm exec vitest run tests/auth-tenancy` | 10 ファイル / **149 ケース pass** |
-| hub 全体 | `pnpm --filter @harness-hub/hub test` | **351 pass / 0 skip** (31 ファイル) |
+| auth-tenancy テスト群 | `pnpm exec vitest run tests/auth-tenancy` | 23 ファイル / **310 ケース pass** |
+| hub 全体 | `pnpm --filter @harness-hub/hub test` | **508 pass / 0 skip** (44 ファイル) |
 
 > **本番環境での再確認は本 task の範囲外**である。AC-1〜AC-3 はいずれもコードとテストに対する判定であり、
 > 本番 OIDC provider 登録下での再確認は P13 (`release-record.md`) が別途担う。ここでの pass を
