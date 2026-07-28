@@ -62,7 +62,7 @@ writer で graph へ再反映した。
   8037 PASS / 7 SKIP
 - criteria evidence: C02 live trial r4 と全 criteria tests が PASS
 - graph schema、artifact placement、eval-log layout、handoff disposition、
-  evidence refs: すべて違反 0
+  evidence refs、plugin package PKG-002〜008/014: すべて blocking 違反 0
 
 `lint-open-residue.py` で今回対象の 14 node を走査し、残置は 0 件。
 repository 全体の live Beads 状態では、本変更と無関係な並行 task
@@ -76,6 +76,9 @@ OR-003 として検出された。対象外の lifecycle を本変更へ混ぜ�
 5 artifactの本文保全、連続no-op、graph schema、goal-seek証跡を確認した。
 現行 digest は `8c555da985c9e77f706ae263476c45a4f2a7d0b35c8b9a9053797e69bc64810e`
 で、fresh evaluatorも自己申告を除外した一次情報でblockerなしPASSと判定した。
+CI で検出した PKG-007 に対して分割 helper 2 本へ Python shebang と実行ビットを
+付与した。live-trial planner の再利用判定では挙動閉包 digest が不変で、
+上記 r4 証跡を current PASS として再利用できることも確認した。
 
 ### 仕様・設計影響
 

@@ -74,7 +74,8 @@ feature/task の手書き Markdown はすべて 300 行以下であり、
 `validate-registration-schema.py`、上流契約の事前確認を
 `validate-registration-preflight.py` へ責務分離した。完了ポリシーの回帰テストも
 `test_register_package_completion_policy.py` へ分け、各ファイルを
-500 行以下にした。分割後の C02 挙動閉包は live trial
+500 行以下にした。kebab-case helper 2 本は package gate が実行対象として扱うため、
+Python shebang と実行ビットを付与し PKG-007 を PASS させた。分割後の C02 挙動閉包は live trial
 `20260727T234043Z-node-qa071-main515-r4` で最新 main (`515b849`)
 統合後に再実走し、現行 digest
 `8c555da985c9e77f706ae263476c45a4f2a7d0b35c8b9a9053797e69bc64810e`
