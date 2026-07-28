@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "add --repo-root <fixture> --input <fixture>/mixed-artifacts.json",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "61f60aa38719801300f53394d7270ebd182580b265d7ff22bfcfd38aab9e8a81",
+  "transcript_sha256": "37a7db7033889e662c5d3924b6cf6eb5c5a5d037b91781a6b402c9645b34ac3b",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 11.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 750.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts"
+}

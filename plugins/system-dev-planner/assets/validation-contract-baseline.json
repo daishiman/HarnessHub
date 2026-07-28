@@ -146,6 +146,13 @@
       "feature_package_id": "feature-package/feat-task-spec-test-strategy",
       "promoted_at": "2026-07-24T23:09:08Z",
       "note": "契約 1.2.0 を導入した feature 自身の実行計画 package。テスト戦略 section を必須化する実装より前に promote されており (bootstrap)、digest 不変ゆえ遡及追記できないため 1.1.0 で再検証する。1.1.0 で残違反ゼロを実測確認済み。"
+    },
+    {
+      "canonical_digest": "sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+      "contract_version": "1.1.0",
+      "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
+      "promoted_at": "2026-07-25T16:38:15Z",
+      "note": "qa-071 semantic coverage tooling で再 plan・promote 済みの世代。並行開発された契約 1.2.0 のテスト戦略 section 必須化が後から main に統合されたため、promote 済み digest を遡及変更せず 1.1.0 で再検証する。qa-071 の登録・goal 被覆・exact-13 trace は promotion 時の contract 1.2.0 validation で violations 0 を実測済み。1.1.0 で残違反ゼロも再確認済み。"
     }
   ]
 }

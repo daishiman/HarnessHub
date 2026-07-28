@@ -1,0 +1,44 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "tmux session exited unexpectedly before completion marker; transcript stopped during schema inspection"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "BLOCKED"
+  },
+  "skill_dir_tree_sha": "5b8a4a48f7cc367e66b14e9b98e821b9202c4c9f87eae27da75fbc43a0a2a039",
+  "transcript_sha256": "623b9f57287d13d32cba5a3797d7b51438d16498d79805311a81a0484e7040e1",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "tmux 不在 / HARD_CAP 超過等の fail-closed",
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "STALL_CRASH",
+    "wall_clock_s": 660.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts"
+}
