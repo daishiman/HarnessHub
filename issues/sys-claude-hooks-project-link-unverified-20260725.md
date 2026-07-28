@@ -12,7 +12,7 @@ iteration: null
 title: "claude_hooks.source=project でも project_plugin_link の実在と plain-symlink 性が機械検査されない"
 owners: ["daishiman"]
 created_at: "2026-07-25T03:25:00Z"
-updated_at: "2026-07-25T03:19:13.592819Z"
+updated_at: "2026-07-26T05:56:00Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-26T03:44:26Z","evidence_refs":["eval-log/dev-graph/run-dev-graph-init/live-trial/20260726T032205Z-7tn1-init-r2/verdict.json","eval-log/dev-graph/run-dev-graph-sync/live-trial/20260726T031146Z-7tn1-sync/verdict.json","pytest:plugins/dev-graph/tests:539-passed-2-skipped"],"policy":"manual","reconciled_at":"2026-07-26T05:56:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T03:25:00Z","missing_sections":[],"status":"complete"}
 ---
 

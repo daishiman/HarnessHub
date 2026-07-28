@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-requirements",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-requirements"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "ed604d36942141a1b5e5644535fc2b95f0e0825d207dd4265a3a8c8ab7f3caa3",
+  "transcript_sha256": "5575b0c818eb195ad934e611de300d5dff925e52d887fd99a933b40de090a89e",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 390.0
+  },
+  "scenario_id": "C04-OUT1-positive-ready-handoff"
+}

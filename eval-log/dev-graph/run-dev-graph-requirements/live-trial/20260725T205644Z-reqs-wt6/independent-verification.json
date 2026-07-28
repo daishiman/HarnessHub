@@ -1,0 +1,60 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "handoff-artifact-exists",
+      "expected": "capability-build/task-graph 宛の handoff 成果物が fixture repo に実在する",
+      "observed": "fixture の eval-log/capability-build-handoff.json (1640 bytes, git status では untracked の新規ファイル) が実在。kind=capability-build-handoff, handoff_target=\"capability-build/task-graph\", generated_by=run-dev-graph-requirements, readiness_verdict=ready, implementation_code_generated=false。fixture 形状定義 (plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_requirements.py) が「本 fixture は C04 の出力を 1 件も含まない」と宣言しているため、この 2 成果物は trial 中の生成物と確定できる。pane.txt では line 54 の Skill(dev-graph:run-dev-graph-requirements) 起動後 (line 170/184) に Write されている。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "handoff-covers-exact-13-package",
+      "expected": "handoff が exact-13 package (P01..P13) を対象にしている",
+      "observed": "package_reference.task_count=13、phase_refs は 13 件で sorted 済み [P01..P13] と完全一致 (自分で再計算: True)。task_node_ids 13 件が graph.json の artifact_kind=task ノード集合と set 一致 (自分で再計算: True)。package 側 system-plan/F-LIVE-001/task-graph.json のノード数も 13。package_reference.path=system-plan/F-LIVE-001 は実在し、system_build_handoff_path / registration_receipt_path も実ファイルとして存在。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "handoff-bound-to-feature-and-source-digest",
+      "expected": "handoff が feature と source digest に束縛されている (digest は実測値と一致)",
+      "observed": "feature_id=parent_feature=F-LIVE-001、feature_package_id=feature-package/F-LIVE-001。digest 3 種を自分で再計算し全一致: graph_snapshot_digest=sha256:06613ca5de64d396898fe805aac5e0a3b461a249b53e50e8383d69003fc1d17a = shasum -a 256 .dev-graph/state/graph.json の実測値; system_plan_validated_digest=sha256:3086d9afca49285942780fcfe9b89f3e5db1525f5f176b8febd873257cfb3a23 = staging-manifest.json の canonical_digest かつ validate-system-plan.py --staging の validated_digest かつ 13 task node の source_lineage.source_digest; source_feature_digest=sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998 = system-plan/F-LIVE-001/feature-context.json の実 sha256 (fixture 全ファイルを総当たり hash して同定)。requirements-document.json も同一の 3 digest を持ち、両成果物が同一 snapshot に固定されている。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "no-implementation-code-generated",
+      "expected": "trial 中に実装コード (.py/.ts/.js/.go 等) が 1 件も生成されていない",
+      "observed": "git diff --stat HEAD が空 = commit 1fee4a0 で入った tracked 49 ファイルは 1 バイトも変更されていない。git status --porcelain -uall の追加は untracked 5 件のみで全て fixture の eval-log/ 配下: capability-build-handoff.json / requirements-document.json / run-dev-graph-requirements-goal-spec.json / run-dev-graph-requirements-intermediate.jsonl / run-dev-graph-requirements-progress.json。拡張子 grep (py|ts|tsx|js|jsx|go|rs|java|rb|sh|c|cpp|swift|kt) のヒット 0 件。実装コード生成 0 件。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "gate-values-independently-reproduced",
+      "expected": "成果物が申告する gate 値を評価者側の再実行で再現できる",
+      "observed": "自分で 3 validator を再実行: (1) validate-graph-schema.py --graph <fixture>/.dev-graph/state/graph.json --repo-root <fixture> → exit 0, valid=true, violations=[], implementation_readiness=complete。(2) validate-source-digest.py --repo-root <fixture> --registered <14 scope node> → exit 0, checked=14, registered_mismatch=[]。(3) validate-system-plan.py --repo-root <fixture> --staging system-plan/F-LIVE-001 → exit 0, status=pass, phase_refs=P01..P13 (13), contract_version=1.2.0, violations=[]。申告値 (c11 violations 0 / c02 checked=14 mismatch 0 / exact_13 violations 0 contract 1.2.0) と完全一致。--feature-package モードは current pointer 不在で fail-closed になるため staging モードが正当な経路。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "readiness-matrix-matches-graph",
+      "expected": "readiness matrix が graph.json の実値と一致し、捏造・取りこぼしがない",
+      "observed": "requirements-document.json の scope_nodes 14 件 = graph の task 13 件 + F-LIVE-001 (set 一致 True)。readiness_matrix の key 集合 == scope_nodes。14 件すべてについて graph の (implementation_readiness.status, evaluation_status, confirmation_status, implementation_readiness.missing_sections) と突合し mismatch 0 件。graph 15 ノード全てが complete/pass/confirmed/missing_sections=[] であることも独自に確認。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "goal-seek-triplet",
+      "expected": "goal-spec / progress / intermediate の 3 点セットが実在し intermediate が必須 6 キーを持つ",
+      "observed": "3 ファイルすべて実在 (goal-spec 380B / progress 1673B / intermediate.jsonl 2 行 1545B)。SKILL.md 127-138 行の検証スクリプトを自分で実行 → rows=2、全行が {original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal} を保持、original_goal_hash=04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96 = sha256(goal-spec.original_goal) と一致、assert 全通過 exit 0。progress.json は checklist 6 項目すべて status=pass / loop=1 / status=completed。append-only 要件も pane.txt で確認 (1 行目は Skill 起動前 line 30 の Write、2 行目は成果物 emit 後の printf 追記)。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "vacuous-pass-probe",
+      "expected": "handoff が空の器でなく、「実装コード 0 件」が対象 0 件による自明成立でない",
+      "observed": "handoff 対象は 0 件ではない: scope 14 node (feature 1 + task 13) が実在し、handoff の task_node_ids 13 件・phase_refs 13 件・readiness matrix 14 件がいずれも graph 実測値と一致。missing_sections=[] は positive fixture (15 ノード全て complete/pass/confirmed) の実測と整合し、null や未記入ではなく実際に空。残余 gap (blocker としない): requirements-document.json は gate 結果・readiness matrix・digest・scope で構成され、system-spec 本文から導出した個別の要件記述 (requirement 項目列) を含まない。また handoff から requirements-document.json への path 参照が無く、両者の紐付けは feature_id と 3 digest の一致のみ。OUT1 文面と scenario 契約 (live-trial-positive-scenarios.json の required_observations 3 件) はどちらも要件記述の粒度や相互 path 参照を要求していないため受入条件違反にはならない。",
+      "verdict": "PASS"
+    },
+    {
+      "name": "scope-narrowing-goodhart-probe",
+      "expected": "fail-closed gate を通すための恣意的な scope 縮小が行われていない",
+      "observed": "pane.txt によれば skill は最初 LT-ARCH-001 込み 15 ノードで validate-source-digest.py を実行して exit 2 (LT-ARCH-001: source_path/source_digest 欠落) を得た後、feature scope 14 ノードで再実行して exit 0 を得た。自分で両方再実行し同結果を確認 (15 件 → registered_mismatch 1 件 / 14 件 → 0 件)。LT-ARCH-001 は origin_kind=manual・source_path=null の fixture support node (architecture_refs の参照先を実在させるための存在) であり、fixture 形状の正本 shape_requirements.py が宣言する digest 閉包は「13 task node + feature node = 14」。よって 14 への限定は fixture 設計と一致し gate 回避目的の縮小ではない。留意点として F-LIVE-001.architecture_refs=['LT-ARCH-001'] であり、skill の除外理由は「parent_feature 連結が無い」であって architecture_refs 連結を根拠にしていない (IN1/lineage closure 側で扱うべき論点、OUT1 の判定には影響しない)。",
+      "verdict": "PASS"
+    }
+  ]
+}

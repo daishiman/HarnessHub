@@ -8,9 +8,9 @@ kind: run
 prefix: run
 hierarchy: L1
 user-invocable: true
-argument-hint: "<upsert|register-package> [--repo-root PATH] --input PATH [--body-file PATH] [--dry-run]"
+argument-hint: "<upsert|register-package> [--repo-root PATH] --input PATH [--body-file PATH] [--regenerate-body] [--dry-run]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Skill, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/upsert-node.py, ../../scripts/node_transaction.py, ../../scripts/register-package.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/upsert-node.py, ../../scripts/node_transaction.py, ../../scripts/register-package.py, ../../scripts/bd-bridge.py, ../../scripts/lint-open-residue.py]
 schema_refs: [../../schemas/graph-node.schema.json, ../../schemas/package-registration-receipt.schema.json]
 reference_refs: [../../schemas/graph-node.schema.json, ../../templates/template-contract.json, ../../../system-dev-planner/references/feature-execution-package-contract.md]
 responsibility_refs:
@@ -91,6 +91,20 @@ feedback_contract:
 
 通常nodeのwrite本体は`../../scripts/upsert-node.py`とする。入力JSONは完全な`node`、またはtop-level `graph_node_id`と既存nodeへmergeする`patch`を持つ。任意の`body`/`--body-file`はYAML frontmatterを含めない。
 
+既存 artifact が実在する場合、入力の `body` と `--body-file` をどちらも省略すると本文を保持する。graph node が欠落していても artifact の実在を基準に保持し、暗黙に template へ戻さない。本文を template から作り直す破壊的な操作は `--regenerate-body` の明示指定時だけ許可する。frontmatter が正常な artifact では、本文指定の優先順位を `--body-file`、入力 `body`、`--regenerate-body`、既存本文、新規 template の順とする。
+
+既存 artifact の frontmatter が壊れている場合は本文境界を安全に判定できないため、`--body-file` または入力 `body` だけでは復旧せず fail-closed する。復旧を明示する `--regenerate-body` が必要で、単独指定なら template、`--body-file` または入力 `body` との併用なら上記の優先順位に従う。
+
+receipt は本文の由来を `body_source` で必ず報告する。値は次の5つだけとする。
+
+- `from_file`: `--body-file` から取得
+- `from_input`: 入力JSONの `body` から取得
+- `preserved`: 既存 artifact の本文を保持
+- `template`: artifact が存在しない新規作成時に template を適用
+- `regenerated`: 既存 artifact に `--regenerate-body` を明示して template を再適用
+
+既存本文を異なる内容へ置き換える場合は、receipt の `replaced_body_lines` に置換前の行数を記録する。保持時と新規作成時は `null` とし、本文破棄を成功終了の陰に隠さない。
+
 ```bash
 python3 ../../scripts/upsert-node.py \
   --repo-root "$DEV_GRAPH_ROOT" \
@@ -107,6 +121,12 @@ dry-run receiptの`write_count=0`とschema/path判定を確認してから同じ
 system-dev-planner の package は P01..P13 exact set、13 node、共通 `parent_feature`/`feature_package_id`、同一 package 内だけの DAG、source digest、tracker binding を commit 前に検証する。12/14件、phase 重複/欠落、mixed parent/package、cross-feature edge は `applied_count=0` で拒否する。成功 receipt は `status/source_digest/expected_count=13/applied_count=13/graph_revision/registered_node_ids/committed_at` を持ち immutable に保存する (schema: `../../schemas/package-registration-receipt.schema.json`)。
 
 `--dry-run` は local/external write 0。失敗時に一部 node を残さない。
+
+`tracker_binding=beads|none` へ解決された node は `github_publication.mode=local_only` となる。PR を作らない運用では `linked_pr_merged_all|linked_pr_merged_any` は永久に成立しないため、package 登録時に `completion_evidence.policy=manual` へ正規化する。GitHub binding の PR 連動 policy は変更しない。
+
+Beads binding の完了ループは、C28 `bd-bridge.py --op close` で課題を close した後、通常 node の upsert で `completion_evidence` を `policy=manual`、`status=done`、`source=manual`、`completed_at=<Beads closed_at>`、`reconciled_at=<反映時刻>`、空でない `evidence_refs` へ更新し、`lint-open-residue.py` の OR-003 が 0 になるところまでとする。`status` は文書ライフサイクルのため、この操作で無条件に `done` へ変更しない。
+
+`tracker_binding=none` は Beads 課題を持たないため C28 close と OR-003 の対象外である。完了時は C02 upsert で同じ `policy=manual`、`status=done`、`source=manual`、`completed_at`、`reconciled_at`、`evidence_refs` を記録し、graph と artifact frontmatter の一致を `validate-graph-schema.py` で確認する。
 
 ## Execution-context consumer
 

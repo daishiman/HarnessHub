@@ -12,7 +12,7 @@ iteration: null
 title: "証跡固定 — 実測ログと digest の evidence manifest 化"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-25T00:51:10.485882Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "active"
 depends_on: ["SYS-TASK-SPEC-TEST-STRATEGY-P10"]
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-25T14:19:13Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-24T21:59:18Z","missing_sections":[],"status":"complete"}
 ---
 

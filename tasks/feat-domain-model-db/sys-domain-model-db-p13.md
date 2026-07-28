@@ -12,7 +12,7 @@ iteration: null
 title: "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "active"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P12"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-25T16:06:25Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

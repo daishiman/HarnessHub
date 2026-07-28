@@ -12,7 +12,7 @@ iteration: null
 title: "Hub 基盤 本番リリース・デプロイ"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "active"
 depends_on: ["SYS-HUB-FOUNDATION-P12"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
@@ -42,8 +42,8 @@ beads_linkage: {"bd_issue_id":"HarnessHub-37h.13","linked_at":"2026-07-18T01:45:
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
-execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-HUB-FOUNDATION-P13","head_sha":"f055796a5412a8f1ec9b59e9cb2f589663650ffa","last_seen_at":"2026-07-25T11:07:45.666064Z","lease_acquired_at":"2026-07-25T11:01:35.019032Z","released_at":"2026-07-25T11:07:45.665778Z","state":"released","worktree_id":"wt_34e5e34b31310b4a"}]
+completion_evidence: {"completed_at":"2026-07-25T16:06:31Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

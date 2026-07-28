@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": [
+      "被験 skill dev-graph:run-dev-graph-status の Skill 呼出しが transcript に0件 (実行された Skill: なし)。skill を起動せず script を直接実行した実走は受け入れ検証にならない"
+    ]
+  },
+  "invoked_skills": [],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "FAIL",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "72db2e4afa845a6d8fe3cec30d422ca9255dcaa6cabc67730885e768e980c3f5",
+  "transcript_sha256": "932e532de0a0df558c1de60d467e30923c19e9a0e5aa4c6ab5abc50e29d58ae7",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "0",
+    "wall_clock_s": 286.0
+  },
+  "scenario_id": "C18-OUT1-positive-read-only-status"
+}

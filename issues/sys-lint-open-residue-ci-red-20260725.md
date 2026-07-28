@@ -12,7 +12,7 @@ iteration: null
 title: "OR-003 残置 51 件がローカル品質ゲートで恒常 exit 2 / CI では beads 軸未評価のため素通りする"
 owners: ["daishiman"]
 created_at: "2026-07-25T02:55:00Z"
-updated_at: "2026-07-25T03:04:12.728493Z"
+updated_at: "2026-07-26T02:07:30.962498Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-25T17:35:42Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T02:55:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -117,3 +117,80 @@ python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . --no-requir
 python3 plugins/dev-graph/scripts/lint-open-residue.py --repo-root . --no-require-beads \
   | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['beads_axis'], d['scanned'], d['violation_count'])"
 ```
+
+## 対処結果 (2026-07-26)
+
+### 1. 一括整合 — OR-003 違反 70 件 → 0 件
+
+最新 `origin/main` 取り込み後の Beads DB を正として再計測し、C02 の単一 writer
+(`upsert-node.py`) 経由で 70 node の `completion_evidence` を終了状態へ整合させた。
+起票時 51 件、先行実行時 55 件だったが、その後の main 追加・Beads close により
+本作業開始時点では 70 件へ増えていた。
+
+| 指標 | 整合前 | 整合後 |
+|---|---:|---:|
+| `beads_axis` | `resolved` | `resolved` |
+| `scanned` | 299 | 299 |
+| `violations` | 70 (全て OR-003) | **0** |
+| `baselined_residue` | 12 | 12 |
+| exit code | 2 | **0** |
+
+`scanned` を減らして対象外にしたり、`_BASELINE_RESIDUE` を増やしたりして緑にしていない。
+内訳は task 60 件・issue 10 件。全 70 件の受領書で
+`body_source=preserved` / `replaced_body_lines=null` を確認し、本文 SHA-256 も前後一致した。
+graph revision は 624 → 694 で、70 件ちょうど進んだ。
+
+整合後の証跡は次の意味に統一した。
+
+```json
+{
+  "policy": "manual",
+  "status": "done",
+  "source": "reconciliation",
+  "completed_at": "<Beads の closed_at>",
+  "reconciled_at": "<整合実行時刻>",
+  "evidence_refs": ["issues/sys-lint-open-residue-ci-red-20260725.md"]
+}
+```
+
+### 2. 再発経路 — `local_only` と PR 待機 policy の不一致
+
+70 件すべてが `github_publication.mode=local_only` かつ PR 紐付け 0 件だった。
+整合前 policy は `linked_pr_merged_all` が 64 件、`manual` が 6 件である。
+
+`linked_pr_merged_all` は実 PR の merge を待つが、`local_only` node は PR を作らないため
+条件が永久に成立しない。`bd-bridge.py --op close` も Beads だけを閉じ、
+graph の `completion_evidence` を進める経路を持っていなかった。
+個別ミスではなく、運用モードと完了 policy の構造的な不一致である。
+
+恒久対処は Beads `HarnessHub-n7gw`
+(`issue-completion-evidence-local-only-gap-20260726`) で追跡する。
+
+### 3. CI での扱い — ローカルゲートを正とする
+
+CI へ Dolt DB を復元せず、OR-003/OR-004 は Dolt DB のあるローカル環境の
+`lint-open-residue.py --no-require-beads` が担う現行設計を維持する。
+
+- `.beads/issues.jsonl` は受動エクスポートであり、状態判定の正本にはしない。
+- CI に Dolt DB を復元すると、CI の成否が Beads 同期状態へ依存し、脆弱性と実行時間が増す。
+- 残置を 0 件へ戻したため、次の +1 件をローカルゲートで即時検出できる。
+
+この CI/ローカルの非対称は `.github/workflows/dev-pipeline-lint.yml` 冒頭の既存コメントどおりで、
+CI は git 追跡成果物だけで判定できる OR-001/OR-002 を強制する。
+
+## 最新 main 再統合後の再確認 (2026-07-26)
+
+作業中に進んだ `origin/main` (`8e8f9a4`) を追加で fast-forward し、main 側の
+新規 4 node・更新 8 node を C02 経由で意味的に統合した。全 12 node の本文は保持され、
+`replaced_body_lines` は全件 `null` だった。
+
+再統合後の `lint-open-residue.py --no-require-beads` は
+`beads_axis=resolved`、`scanned=303`、`violations=0`、`baselined_residue=12`、
+exit code 0 である。走査数は main の新規 Beads node 4 件分増えており、対象を減らして
+緑にしたものではない。
+
+再発防止課題 `HarnessHub-n7gw` では、既存 165 node と main 追加後に見つかった 2 node、
+合計 167 node の PR 待機 policy を `manual` へ C02 移行した。完了状態は変更せず、
+全件で本文 SHA-256 の前後一致を確認した。新規 package 登録も
+`register-package.py` が local-only binding の PR 待機 policy を `manual` へ正規化するため、
+移行後の到達不能 node は 0 件である。

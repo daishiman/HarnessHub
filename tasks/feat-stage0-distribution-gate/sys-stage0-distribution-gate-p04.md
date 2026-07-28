@@ -12,7 +12,7 @@ iteration: null
 title: "テストファースト設計 — quality_constraints 8 件・acceptance 3 件に対応する実機検証ケースの設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-20T22:46:30Z"
+updated_at: "2026-07-26T01:39:34.074446Z"
 status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P03"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-STAGE0-DISTRIBUTION-GATE-P04","head_sha":"2ce4f473211d5afe5e41c610ecd2a22c32d1d436","last_seen_at":"2026-07-20T22:44:01.277341Z","lease_acquired_at":"2026-07-20T22:43:59.721888Z","released_at":null,"state":"claimed","worktree_id":"wt_eed96293f3fd512f"}]
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-init",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-init"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "1aeab90682a9536baa86c954915e27ab1cbcff20f19697d89e5a889d690c7d8c",
+  "transcript_sha256": "7ad9c1027fba513394f9d7be6121a1121b7849cd25145b97b3941e30935e65e7",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 4.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 450.0
+  },
+  "scenario_id": "C01-OUT1-positive-idempotence-r17"
+}
