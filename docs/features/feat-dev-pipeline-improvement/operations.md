@@ -56,4 +56,4 @@ P13 は qa-071 を実装する `system-task-goal-seek/v1` に従い、実行結�
 
 手順と違反 code (`qa-ref-unregistered` / `qa-semantic-coverage` / `qa-task-trace` / `qa-tags-unparsable`) の正本は `plugins/system-dev-planner/references/feature-execution-package-contract.md` §2.5 で、判定経緯は [docs/plugin-contracts/system-dev-planner-qa-semantic-coverage.md](../../plugin-contracts/system-dev-planner-qa-semantic-coverage.md) に記録した。ここに手順を複写しない (正本が 2 つになる)。
 
-**現行世代の `tasks/feat-dev-pipeline-improvement/*.md` は手編集しない。** これらは `source_digest: 9be3809d…` で凍結済み promoted package に束縛された投影であり、本文へ qa-071 を手で足すと `published_digest` との乖離を生む。本文伝播は契約 1.2.0 下での再 plan で行い、HarnessHub-8wo で追跡する。
+**`tasks/feat-dev-pipeline-improvement/*.md` は手編集しない。** qa-071 の本文伝播は `HarnessHub-8wo` で契約 1.2.0 下の再 plan として完了し、現行 generation は `af8a73df…` である。旧 `9be3809d…` generation は superseded として byte-for-byte 保全する。今後も本文変更は再 plan → promote → C02 再登録で行い、投影だけを書き換えて `published_digest` との束縛を壊さない。
