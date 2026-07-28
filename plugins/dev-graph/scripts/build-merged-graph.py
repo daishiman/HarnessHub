@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /// script
-# name: merge-graph-conflict
+# name: build-merged-graph
 # purpose: git merge driver for .dev-graph/state/graph.json — structural 3-way merge by graph_node_id.
 # inputs: ["argv: %O(base) %A(ours, overwritten with result) %B(theirs) [%P(path)]", "--install", "--resolve-conflict"]
 # outputs: ["exit 0: %A holds the merged graph; exit 1: %A holds __merge_conflict__ sentinels needing manual resolution"]
@@ -28,6 +28,13 @@ git merge driver の契約: 呼び出し引数は base/ours/theirs の一時フ�
 そのまま採用する。exit 非0 なら git はそのパスを未解決 (conflicted) のまま残す —
 このとき %A には診断用の __merge_conflict__ sentinel を書き出し、通常の
 schema validate で機械的に発見できるようにする。
+
+ファイル名について: git の語彙では本ファイルは "merge driver" だが、``merge`` は
+scripts/lint-script-naming.py の ALLOWED_VERBS (build/diff/extract/format/guard/
+lint/render/validate) に含まれない。許可動詞のうち実態に最も近いのは ``build``
+であり、本スクリプトの出力はマージ済み graph という成果物そのものなので
+``build-merged-graph`` とした。allowed-list への ``merge`` 追加は governance の
+変更にあたるため、必要なら独立した Change Governance PR で扱う。
 """
 from __future__ import annotations
 
@@ -168,7 +175,7 @@ def _merge_nodes(
 
     if preserved_deletions:
         sys.stderr.write(
-            "[merge-graph-conflict] preserved "
+            "[build-merged-graph] preserved "
             f"{len(preserved_deletions)} node(s) dropped by one side: {', '.join(preserved_deletions)}\n"
             "  意図的な削除なら --accept-deletion <id> を付けて --resolve-conflict を再実行する\n"
         )
@@ -275,14 +282,14 @@ def resolve_conflict(
 
     status = _git(root, ["status", "--porcelain=2", "--", relpath])
     if not any(line.startswith("u ") for line in status.splitlines()):
-        sys.stderr.write(f"[merge-graph-conflict] {relpath} has no unresolved merge conflict\n")
+        sys.stderr.write(f"[build-merged-graph] {relpath} has no unresolved merge conflict\n")
         return 1
 
     base = _stage_blob(root, 1, relpath) or {"nodes": []}
     ours = _stage_blob(root, 2, relpath)
     theirs = _stage_blob(root, 3, relpath)
     if ours is None or theirs is None:
-        sys.stderr.write("[merge-graph-conflict] add/add or delete/modify conflict needs manual resolution\n")
+        sys.stderr.write("[build-merged-graph] add/add or delete/modify conflict needs manual resolution\n")
         return 1
 
     merged, has_conflict, preserved = merge_graph(base, ours, theirs, accept_deletions)
@@ -345,15 +352,15 @@ def main(argv: list[str]) -> int:
                     accept_deletions=frozenset(args.accept_deletion),
                 )
         except Exception as exc:  # fail-closed: 認識できない状態で graph は書かない
-            sys.stderr.write(f"[merge-graph-conflict] {exc}\n")
+            sys.stderr.write(f"[build-merged-graph] {exc}\n")
             return 1
         parser.error("one of --install / --resolve-conflict is required")
 
     if len(argv) < 4:
         sys.stderr.write(
-            "usage: merge-graph-conflict.py <base> <ours> <theirs> [path]\n"
-            "       merge-graph-conflict.py --install [--repo-root DIR]\n"
-            "       merge-graph-conflict.py --resolve-conflict [--repo-root DIR] [--graph PATH] [--dry-run]\n"
+            "usage: build-merged-graph.py <base> <ours> <theirs> [path]\n"
+            "       build-merged-graph.py --install [--repo-root DIR]\n"
+            "       build-merged-graph.py --resolve-conflict [--repo-root DIR] [--graph PATH] [--dry-run]\n"
         )
         return 1
     base_path, ours_path, theirs_path = Path(argv[1]), Path(argv[2]), Path(argv[3])
@@ -363,7 +370,7 @@ def main(argv: list[str]) -> int:
         ours = json.loads(ours_path.read_text(encoding="utf-8"))
         theirs = json.loads(theirs_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        sys.stderr.write(f"[merge-graph-conflict] cannot parse input: {exc}\n")
+        sys.stderr.write(f"[build-merged-graph] cannot parse input: {exc}\n")
         return 1
 
     merged, has_conflict, _preserved = merge_graph(base, ours, theirs)
@@ -371,7 +378,7 @@ def main(argv: list[str]) -> int:
 
     if has_conflict:
         sys.stderr.write(
-            "[merge-graph-conflict] unresolved node conflicts remain "
+            "[build-merged-graph] unresolved node conflicts remain "
             "(__merge_conflict__ sentinels written; resolve manually then re-stage)\n"
         )
         return 1

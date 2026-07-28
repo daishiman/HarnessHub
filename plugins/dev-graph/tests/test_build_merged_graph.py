@@ -1,4 +1,4 @@
-"""merge-graph-conflict.py (HarnessHub-3829) の検証。
+"""build-merged-graph.py (HarnessHub-3829) の検証。
 
 graph.json は約340ノードが1配列に並ぶ単一 JSON のため、git 標準の行ベース 3-way
 マージは「配列の同じ位置への両側追加」を衝突として誤検出する。本テストは次の3層を検証する。
@@ -23,7 +23,7 @@ from pathlib import Path
 PLUGIN = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS = PLUGIN / "scripts"
-DRIVER = SCRIPTS / "merge-graph-conflict.py"
+DRIVER = SCRIPTS / "build-merged-graph.py"
 GRAPH_REL = ".dev-graph/state/graph.json"
 
 if str(SCRIPTS) not in sys.path:
@@ -38,7 +38,7 @@ def load(filename: str, name: str):
     return module
 
 
-mod = load("merge-graph-conflict.py", "merge_graph_conflict")
+mod = load("build-merged-graph.py", "build_merged_graph")
 
 
 def _node(node_id: str, **fields) -> dict:

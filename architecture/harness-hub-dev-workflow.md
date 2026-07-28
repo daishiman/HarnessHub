@@ -188,10 +188,10 @@ git は HEAD (ref) / index / 作業ツリーの 3 層で状態を持ち、`pull`
 
 出典: bd `HarnessHub-3829`。
 
-`.dev-graph/state/graph.json` は約 340 ノードが 1 配列に並ぶ単一 JSON であり、git 標準の行ベース 3-way マージは「配列の同じ位置への両側追加」を衝突として誤検出する。これに対し `graph_node_id` を鍵とする構造マージ driver (`plugins/dev-graph/scripts/merge-graph-conflict.py`) が用意され、各 worktree の `git config merge.devgraph-json.driver` にも登録されていた。**しかし発火条件である `.gitattributes` の宣言がリポジトリのどこにも存在せず、driver は一度も呼ばれていなかった。**
+`.dev-graph/state/graph.json` は約 340 ノードが 1 配列に並ぶ単一 JSON であり、git 標準の行ベース 3-way マージは「配列の同じ位置への両側追加」を衝突として誤検出する。これに対し `graph_node_id` を鍵とする構造マージ driver (`plugins/dev-graph/scripts/build-merged-graph.py`) が用意され、各 worktree の `git config merge.devgraph-json.driver` にも登録されていた。**しかし発火条件である `.gitattributes` の宣言がリポジトリのどこにも存在せず、driver は一度も呼ばれていなかった。**
 
 git は merge driver を 2 段で解決する。`.gitattributes` が「どのパスにどの**名前**の driver を割り当てるか」を宣言し、`git config merge.<name>.driver` が「その名前をどの**コマンド**で実行するか」を解決する。driver 本体のコマンドを `.gitattributes` に書くことは git が禁じている (clone しただけで任意コマンドが実行されるため)。この分離自体は fail-safe に効いており、未 install の clone では名前が解決できず従来どおり行ベースで衝突表示される — 壊れた自動解決にはならない。**壊れるのは逆側、宣言が無いまま config だけが揃っている場合である。**このとき driver は静かに使われず、行ベースマージが偶然成功する限り誰も困らない。
 
-是正は `.gitattributes` の追加と、**対照実験を伴う機械検査**である (`plugins/dev-graph/tests/test_merge_graph_conflict.py`)。本命テストが「driver が衝突を解決する」ことを見るだけでは、シナリオが行ベースでも解決できるものへ退化したときに気づけない。同ファイルに「driver 未 install の repo では同じシナリオが必ず衝突する」対照群を置き、本命の緑が driver の発火を実際に含意するようにした。
+是正は `.gitattributes` の追加と、**対照実験を伴う機械検査**である (`plugins/dev-graph/tests/test_build_merged_graph.py`)。本命テストが「driver が衝突を解決する」ことを見るだけでは、シナリオが行ベースでも解決できるものへ退化したときに気づけない。同ファイルに「driver 未 install の repo では同じシナリオが必ず衝突する」対照群を置き、本命の緑が driver の発火を実際に含意するようにした。
 
 これは前 3 例 (代理指標の衝突) とは別種だが、**「動いていないことが観測できない」という点で同型**である。代理指標は実体と代理がずれても緑を出し、本件は有効化されていない機構が緑を出す。いずれも検査の不在ではなく、検査が何を含意しているかの取り違えに由来する。
