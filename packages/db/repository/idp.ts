@@ -5,6 +5,7 @@ import { and, eq } from 'drizzle-orm';
 import { idpConnections } from '../schema/core/identity';
 import { EntityNotFoundError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
+import { guardedWrite } from './conflict';
 import type { ColumnCipher } from './crypto';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
@@ -53,18 +54,20 @@ export function createIdpConnectionsRepo(adapter: CoreAdapter, cipher: ColumnCip
     async insert(context, input) {
       const id = newUlid();
       const enc = await cipher.encryptColumn('idp_secret', input.clientSecret, SECRET_REF(id));
-      const rows = await adapter.client
-        .insert(idpConnections)
-        .values({
-          id,
-          tenantId: context.tenantId,
-          issuerUrl: input.issuerUrl,
-          clientId: input.clientId,
-          clientSecretEnc: enc,
-          scopes: input.scopes,
-          createdAt: serverNow(),
-        })
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client
+          .insert(idpConnections)
+          .values({
+            id,
+            tenantId: context.tenantId,
+            issuerUrl: input.issuerUrl,
+            clientId: input.clientId,
+            clientSecretEnc: enc,
+            scopes: input.scopes,
+            createdAt: serverNow(),
+          })
+          .returning(),
+      );
       return rows[0] as IdpConnectionRow;
     },
 
@@ -89,7 +92,7 @@ export function createIdpConnectionsRepo(adapter: CoreAdapter, cipher: ColumnCip
     },
 
     async deleteById(context, id) {
-      await adapter.client.delete(idpConnections).where(scope(context, id));
+      await guardedWrite(adapter, () => adapter.client.delete(idpConnections).where(scope(context, id)));
     },
   };
 }

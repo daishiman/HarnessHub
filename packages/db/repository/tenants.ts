@@ -4,6 +4,7 @@
 import { eq } from 'drizzle-orm';
 import { tenants } from '../schema/core/identity';
 import { EntityNotFoundError } from '../src/errors';
+import { guardedWrite } from './conflict';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
@@ -32,17 +33,19 @@ export interface TenantsRepo {
 export function createTenantsRepo(adapter: CoreAdapter): TenantsRepo {
   return {
     async create(input) {
-      const rows = await adapter.client
-        .insert(tenants)
-        .values({
-          id: newUlid(),
-          slug: input.slug,
-          name: input.name,
-          plan: input.plan,
-          status: 'active',
-          createdAt: serverNow(),
-        })
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client
+          .insert(tenants)
+          .values({
+            id: newUlid(),
+            slug: input.slug,
+            name: input.name,
+            plan: input.plan,
+            status: 'active',
+            createdAt: serverNow(),
+          })
+          .returning(),
+      );
       return rows[0] as TenantRow;
     },
 
@@ -66,14 +69,16 @@ export function createTenantsRepo(adapter: CoreAdapter): TenantsRepo {
       if (input.name !== undefined) patch.name = input.name;
       if (input.plan !== undefined) patch.plan = input.plan;
       if (input.status !== undefined) patch.status = input.status;
-      const rows = await adapter.client.update(tenants).set(patch).where(eq(tenants.id, id)).returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client.update(tenants).set(patch).where(eq(tenants.id, id)).returning(),
+      );
       const updated = rows[0] as TenantRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('tenants', id);
       return updated;
     },
 
     async deleteById(id) {
-      await adapter.client.delete(tenants).where(eq(tenants.id, id));
+      await guardedWrite(adapter, () => adapter.client.delete(tenants).where(eq(tenants.id, id)));
     },
   };
 }
