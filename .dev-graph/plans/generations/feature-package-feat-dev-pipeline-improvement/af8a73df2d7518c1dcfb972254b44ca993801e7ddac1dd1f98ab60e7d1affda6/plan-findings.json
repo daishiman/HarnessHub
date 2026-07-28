@@ -1,0 +1,180 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-dev-pipeline-improvement/sdp-20260724-p73b",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "前回評価 (evaluated_digest=sha256:5ade807a...) で検出した high finding (task-specs/phase-01-requirements.md の『前提条件』Entry gate line29・『Phase acceptance』line148・『参照情報』line153 の3箇所が旧 generation の digest sha256:f6403a6d76bc22797e51615b4f9f80156d0d75424daf413a33cfeff18ab23a78 を参照し、同ファイル内『Current canonical feature baseline』line109 および goal-spec.json/workstream-inventory.json/P02..P13 の digest sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89 と自己矛盾していた件) が是正されたことを独立に再確認した。task-specs/phase-01-requirements.md を再読し、line29/109/148/153 の4箇所全てが sha256:0dcdff8e... に統一されていることを目視確認。加えて staging ディレクトリ全体を grep し、旧 digest 文字列 sha256:f6403a6d76bc...が task-specs/ 以下のいずれの .md にも残存しないことを確認した (repo 全体 grep でも唯一の残存箇所は自分自身が前回書いた plan-findings.json 内の履歴的な evidence 引用テキストのみであり、評価対象パッケージの実体ではない)。修正後の task-specs/phase-01-requirements.md の sha256 を自前で再計算し 1f2ce5349e78817b0e47b9c4d4a88e641ba63a002b1369c75240194411b63c18 を得た。この値は staging-manifest.json の files エントリおよび system-build-handoff.json の source_inputs エントリと完全一致し (自前再計算値との match=True を確認)、修正が manifest/handoff まで正しく伝播していることも独立確認した。P01 の Entry gate 条件『goal-spec.json の feature_context_digest が sha256:0dcdff8e... に一致する』は現行 goal-spec.json (feature_context_digest=sha256:0dcdff8e...) に対して恒久的に充足可能となった。他12 task spec は前回評価時点で既に無矛盾であり今回変更もない (sha256 byte-identical) ため再点検の結果も無矛盾のまま。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#前提条件Entry gate line29 が sha256:0dcdff8e... に是正済み",
+        "task-specs/phase-01-requirements.md#Current canonical feature baseline line109 は元々 sha256:0dcdff8e... で正しい",
+        "task-specs/phase-01-requirements.md#Phase acceptance line148 が sha256:0dcdff8e... に是正済み",
+        "task-specs/phase-01-requirements.md#参照情報 goal-spec 行 line153 が sha256:0dcdff8e... に是正済み",
+        "staging-manifest.json#files[\"task-specs/phase-01-requirements.md\"]=1f2ce5349e78817b0e47b9c4d4a88e641ba63a002b1369c75240194411b63c18",
+        "system-build-handoff.json#source_inputs の P01 hash が自前再計算値と一致 (match=True)",
+        "task-specs/phase-01-requirements.md#repo-wide grep で旧digest sha256:f6403a6d76bc... の残存が0件 (唯一の残存は自分自身の前回 plan-findings.json 内 evidence 引用のみで package 実体ではない)"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "qa-071 (開発管理方法論8要件) の semantic coverage は前回評価から根拠ファイルが変化していないため結論を維持する。goal-spec.json (sha256:c3b8921f...)、feature-package.json、workstream-inventory.json、task-graph.json、task-specs/phase-02..13、system-spec/spec-state.json はいずれも前回評価時点と byte-identical (sha256 一致) であり、(1) qa-ref-unregistered: qa-071 は spec-state.json qa_log に8要件全文で実在、(2) qa-semantic-coverage: goal-spec の purpose/goal/scope_in/acceptance に qa-071 が意味内容として明記され features/feat-dev-pipeline-improvement.context.json と逐語一致、(3) qa-task-trace: 13 task spec 全件が5箇所 (Purpose/Goal/scope_in/acceptance/仕様正本参照) で qa-071 を保持し、外側/内側ループ・スコープ分離・情報配置・P13書き戻しが各 phase の実体セクションに個別実装済み、という前回の判定はそのまま有効である。今回変更された task-specs/phase-01-requirements.md も qa-071 関連セクション (Purpose/Goal/scope_in/acceptance/Inner goal-seek execution loop) の内容は変更されておらず (差分は digest 参照4箇所のみ)、qa-071 の semantic coverage に影響しないことを再読して確認した。validate-system-plan.py の qa_semantic_violations (qa-ref-unregistered/qa-semantic-coverage/qa-task-trace) を新 digest に対して再実行し violations=0 を独立に再測した。",
+      "evidence": [
+        "gate:deterministic-validation#qa-ref-unregistered axis: qa-071 は system-spec/spec-state.json の qa_log に8要件全文で実在 (violations=0)",
+        "task-specs/phase-01-requirements.md#Current canonical feature baseline は goal-spec.json (sha256:c3b8921f13a74bd9d56440e267436a77e03278c8bc3e6c6e9ce7c5079a8700dc) の purpose/goal/scope/acceptance を逐語複製、前回評価から内容不変",
+        "task-specs/phase-01-requirements.md#qa-071 関連セクション (Purpose/Goal/scope_in/acceptance/Inner goal-seek execution loop) の内容は無変更、digest参照4箇所のみ変更",
+        "task-specs/phase-13-release-deploy.md#line94 P13 spec/architecture writeback: required",
+        "gate:deterministic-validation#qa_semantic_violations 0件、新 digest に対して再測"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "validate-system-plan.py --repo-root . --staging .dev-graph/staging/feature-package-feat-dev-pipeline-improvement/sdp-20260724-p73b を team-lead 報告後に自分で独立に再実行し、exit 0 / status=pass / validated_digest=sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6 / violations=[] を実測した。この値は staging-manifest.json の canonical_digest、および team-lead 報告値 (C12 実測 status=pass, violations=0) と完全一致し、他者の verdict をそのまま採用せず自前 gate 実行で独立に裏付けた。staging-manifest.json (sha256:d3d594ef71bceab3a2ba42a2c520aff3dd57752a0964571e3e83a7f11ed735c3)・system-build-handoff.json (sha256:cea1586db5c7a2f6933c5025824e526f0d75712e96316701a2a0abfdade51d99)・task-specs/phase-01-requirements.md (sha256:1f2ce5349e78817b0e47b9c4d4a88e641ba63a002b1369c75240194411b63c18) の3ファイルを自前で sha256 再計算し、いずれも manifest の files マップおよび handoff の記載値と完全一致することを確認した。それ以外の15ファイルは前回評価ラウンド (evaluated_digest=sha256:5ade807a...) と byte-identical (sha256 不変) であり、その時点で既に自前検証済みのため再導出不要と判断した。C1 で検出していた prose 矛盾は是正されており、決定論 gate が検出できない領域についても目視再確認で無矛盾を確認した。",
+      "evidence": [
+        "staging-manifest.json#canonical_digest=sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
+        "gate:deterministic-validation#自前実行、exit 0、validated_digest 一致",
+        "system-build-handoff.json#自前再計算 sha256 一致"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json は前回評価から byte-identical (sha256:eced7f12d64a7e915c1e4f3c389c59a0d32afbc056c8b7befbb612d8ac509e9a 不変) であり、P01 (depends_on=[]) を起点に P02..P13 が直前 phase のみへ依存する完全直列 DAG (後方参照・欠落エッジ・循環 0件) の結論は維持される。workstream-inventory.json も不変 (sha256:133a2375... 不変) で、p01_entry_gate の selector/operator/required_statuses 定義に変更なし。system-build-handoff.json はファイル全体の sha256 は変化した (source_inputs の P01 ハッシュ更新と source_manifest の cascading フィールド更新のため) が、execution_tasks の依存順序自体は無変更であることを確認した。C1 是正により P01 の Entry gate 条件 (goal-spec.json の feature_context_digest 一致) も現行値と整合し、依存関係整合性は digest 面でも実体面でも矛盾がない。",
+      "evidence": [
+        "task-graph.json#sha256=eced7f12d64a7e915c1e4f3c389c59a0d32afbc056c8b7befbb612d8ac509e9a、前回評価から不変",
+        "workstream-inventory.json#p01_entry_gate (前回評価から不変)",
+        "system-build-handoff.json#execution_tasks (依存順序は無変更、ファイル全体ハッシュのみ更新)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-dev-pipeline-improvement/sdp-20260724-p73b"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6\",\n  \"feature_package_id\": \"feature-package/feat-dev-pipeline-improvement\",\n  \"parent_feature\": \"feat-dev-pipeline-improvement\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "b3079048b1eef795ec75654cf101eca9ad1a5ae31a2393cad696fd779a688cb4"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "cea1586db5c7a2f6933c5025824e526f0d75712e96316701a2a0abfdade51d99"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "eced7f12d64a7e915c1e4f3c389c59a0d32afbc056c8b7befbb612d8ac509e9a"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "1f2ce5349e78817b0e47b9c4d4a88e641ba63a002b1369c75240194411b63c18"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "8a864621eeac261678d6df013a4b49fca537813861e3a343f7f8277c6974198c"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "fd13b75e876fcaea11da1078c893aa0571585b145f6f0a2b41b950490772ceac"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "fbdce8317f997ffa2393beeea535e76e0a19965097d0a81d1a2a8b07fd05ecbd"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "4b432486d49afba694ee58ec6fa1139de4d39b19c9c00cd4f52d26f72d337775"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "4017ae68068987c72fd47548df24133ba3a6f85a6d691aa66ed2b1a6c3a209d3"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "937f2d042575d1c403e3ae3752a2c1c8b81d592a9821ff6e841ce94295b79eaa"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "f9f3eb2009e088cc875df7a16252ad8ff9c213238d8358485c8d7c420dcf41dd"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "85dcf6ec9588751cd63d22eb83294cc2b346dcd8e704ebb45c7effd29495b978"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "f34b0b8f1378035466c68b84f782abe86375c5625231613d8ee6e736fb92608e"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "132726b61e206784c0344c3e301363f9b7ca03d5e366659eba68c76bd3248175"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "f39e50d3b3ab9b0ae16f8d5ff102e8845695ca35e99490c461db9b8c95129f1d"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "384ed47fc73c0672e62eb3fe153285092acb3e017b87cb7048f7f973a38fcbe0"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "133a2375413bcf18f47b15cbf4ad30e27894282bc1368df81e83f794bd166d66"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "d3d594ef71bceab3a2ba42a2c520aff3dd57752a0964571e3e83a7f11ed735c3"
+    }
+  ],
+  "staleness_rule": "Any evaluated input byte change invalidates this fork review and requires a new C1-C4 verdict.",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "remediation-verified",
+      "observation": "前回評価 (evaluated_digest=sha256:5ade807a3e7ca64fdd08df71010c94660c21a356497384e2281c3f317ba8b5e4) で high finding として報告した task-specs/phase-01-requirements.md の digest 自己矛盾 (line29/148/153 が旧 generation の sha256:f6403a6d76bc... を参照) は是正され、line29/109/148/153 の4箇所全てが現行 sha256:0dcdff8e... で統一された。修正は staging-manifest.json (新 canonical_digest=sha256:af8a73df...) と system-build-handoff.json (source_inputs の P01 hash 更新) まで正しく伝播していることを自前の sha256 再計算と2回目の独立 gate 実行 (validated_digest 一致) で確認した。前回評価から本評価までの間に変更されたファイルは task-specs/phase-01-requirements.md・system-build-handoff.json・staging-manifest.json の3件のみで、他16件は byte-identical である。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md:29,109,148,153",
+        "staging-manifest.json (canonical_digest=sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6)",
+        "gate:deterministic-validation"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "qa-semantic-coverage-verified",
+      "observation": "qa-071 (開発管理方法論8要件) は spec-state qa_log 登録・goal-spec purpose/goal/scope/acceptance への意味反映・13 task spec への trace の3軸全てで確認され、tag/lineage の形式一致だけに頼らない semantic coverage が新 digest に対しても維持されている。validate-system-plan.py の qa_semantic_violations 実測 (qa-ref-unregistered/qa-semantic-coverage/qa-task-trace) も0件で独立に一致した。",
+      "evidence": [
+        "system-spec/spec-state.json (qa_log id=qa-071)",
+        "goal-spec.json",
+        "task-specs/phase-13-release-deploy.md:94",
+        "gate:deterministic-validation"
+      ]
+    }
+  ]
+}

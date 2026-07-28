@@ -20,6 +20,7 @@ import hashlib
 import json
 import os
 import re
+import runpy
 import sys
 import tempfile
 from contextlib import contextmanager
@@ -27,10 +28,12 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from _common import ContractError, atomic_json, contained, dump, load_json, utc_now
-from registration_preflight import preflight_contract
-from registration_schema import validate_schema as _validate_schema
 
 HERE = Path(__file__).resolve().parent
+_PREFLIGHT_HELPER = runpy.run_path(str(HERE / "validate-registration-preflight.py"))
+_SCHEMA_HELPER = runpy.run_path(str(HERE / "validate-registration-schema.py"))
+preflight_contract = _PREFLIGHT_HELPER["preflight_contract"]
+_validate_schema = _SCHEMA_HELPER["validate_schema"]
 PLUGIN_ROOT = HERE.parent
 DEFAULT_SYSTEM_ROOT = PLUGIN_ROOT.parent / "system-dev-planner"
 PHASES = [f"P{i:02d}" for i in range(1, 14)]
@@ -47,7 +50,9 @@ RECEIPT_STABLE_KEYS = {
     "supersedes_source_digest",
 }
 CANONICAL_REGISTRATION_RECEIPT = "dev-graph-registration-receipt.json"
-PR_LINKED_COMPLETION_POLICIES = {"linked_pr_merged_all", "linked_pr_merged_any"}
+# PR の merge を完了条件にする policy。local_only の node は PR を 1 件も持たないため
+# これらのままでは `status=done` へ到達できない (_normalize_local_only_completion を参照)。
+PR_LINKED_COMPLETION_POLICIES = frozenset({"linked_pr_merged_all", "linked_pr_merged_any"})
 LOCAL_ONLY_COMPLETION_POLICY = "manual"
 
 
@@ -151,12 +156,21 @@ def _resolve_binding(intent: str, mode: str) -> str:
 
 
 def _normalize_local_only_completion(node: dict[str, Any]) -> None:
-    """Keep PR-less local-only nodes on a completion path they can reach."""
+    """local_only 運用の node から到達不能な完了 policy を取り除く。
+
+    `linked_pr_merged_all|any` は「紐づいた PR が全て/いずれか merge されたら done」を
+    意味し、graph-node.schema.json も `status=done` への遷移時に merged な
+    `pull_request_linkages` を 1 件以上要求する。local_only の node は PR を 1 件も
+    持たないため、この policy のままでは `completion_evidence` が永久に `done` へ
+    到達せず、beads だけが closed になって OR-003 (解決済みの open 残置) が積み上がる。
+
+    正本: HarnessHub-n7gw / `.dev-graph/templates/task.md` (beads 運用では
+    `policy=manual` を用いる)。
+    """
     completion = node.get("completion_evidence")
-    if (
-        isinstance(completion, dict)
-        and completion.get("policy") in PR_LINKED_COMPLETION_POLICIES
-    ):
+    if not isinstance(completion, dict):
+        return
+    if completion.get("policy") in PR_LINKED_COMPLETION_POLICIES:
         completion["policy"] = LOCAL_ONLY_COMPLETION_POLICY
 
 
