@@ -12,12 +12,15 @@ fail-open)。悪性 (step 自身の env のみ / どこにも無い / steps.if �
 - ゲート実効性: 修正形は token 有無で run/skip が切り替わり、defect 形は token を入れても skip
 - 実リポジトリ契約: CLI が exit 0 / governance-check.yml の Notion 3 step の run/skip 実測
 - 注入した defect workflow を CLI が exit 1 で落とすこと
+- 実行環境契約: PyYAML の install が CI で本 lint より前に配線され、local 入口 2 経路
+  (make lint / run-ci-checks.sh) からも同一実装が呼ばれること
 
 network: false, keychain: なし, 実ファイル書換: なし (tmp_path のみ)。
 """
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -386,3 +389,93 @@ def test_cli_simulate_reports_run_and_skip(tmp_path):
     without_token = subprocess.run(base, text=True, capture_output=True)
     assert "RUN " in with_token.stdout and with_token.returncode == 0
     assert "SKIP" in without_token.stdout and without_token.returncode == 0
+
+
+# ── 実行環境契約 ──────────────────────────────────────────────────────────
+# 本 lint は PyYAML を要求する。開発機には入っているが CI runner の stdlib には無い。
+# この差が「local は緑・CI だけ赤」を生む (本 PR で実際に発生させた)。ゲートの中身
+# ではなく、ゲートが走る前提条件そのものを機械で固定する。
+def _guard_job_steps():
+    workflow = MOD.yaml.safe_load(REAL_WORKFLOW.read_text(encoding="utf-8"))
+    return workflow["jobs"]["change-category-guard"]["steps"]
+
+
+def _step_indexes(steps, needle):
+    return [i for i, step in enumerate(steps) if needle in str(step.get("run", ""))]
+
+
+def test_step_guard_really_needs_pyyaml(tmp_path):
+    """install step の必要性そのものを固定する。
+
+    PyYAML を解決不能にすると本 lint は exit 2 で落ちる。ここが 0 になったら
+    (= 依存が消えたら) install step の存在理由も消えるので、両方を同時に見直す。
+    """
+    (tmp_path / "yaml.py").write_text('raise ImportError("blocked by test")\n', encoding="utf-8")
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(tmp_path) + os.pathsep + env.get("PYTHONPATH", "")
+    res = subprocess.run([sys.executable, str(SCRIPT), "--self-test"],
+                         cwd=ROOT, env=env, text=True, capture_output=True)
+    assert res.returncode == 2, f"stdout={res.stdout}\nstderr={res.stderr}"
+    assert "PyYAML" in res.stderr
+
+
+def test_dependency_install_precedes_the_step_guard():
+    steps = _guard_job_steps()
+    install = _step_indexes(steps, "requirements-dev.txt")
+    guard = _step_indexes(steps, "lint-workflow-step-guard.py")
+    assert install, "requirements-dev.txt を install する step が change-category-guard に無い"
+    assert guard, "step guard を呼ぶ step が change-category-guard に無い"
+    assert min(install) < min(guard), (
+        f"install={install} guard={guard}: install が後ろだと CI だけ ImportError で落ちる"
+    )
+
+
+def test_dependency_install_is_unconditional():
+    # install 側に if を付けると、条件が false のときだけ CI が落ちる不安定なゲートになる。
+    steps = _guard_job_steps()
+    for index in _step_indexes(steps, "requirements-dev.txt"):
+        assert "if" not in steps[index], steps[index].get("name")
+
+
+def test_install_step_resolves_a_real_spec_from_the_ssot():
+    """install の run を実 bash で流し、SSOT から版指定が実際に取り出せることを確認する。
+
+    requirements-dev.txt から PyYAML 行が消えれば grep が空で落ちる (fail-closed)。
+    「install step は書いてあるが何も入らない」状態を許さない。
+    """
+    steps = _guard_job_steps()
+    install = steps[_step_indexes(steps, "requirements-dev.txt")[0]]
+    grep_line = next(
+        line for line in install["run"].splitlines() if line.strip().startswith("spec=")
+    )
+    resolved = subprocess.run(
+        ["bash", "-euo", "pipefail", "-c", f"{grep_line}\nprintf '%s' \"$spec\""],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    assert resolved.returncode == 0, resolved.stderr
+    assert re.fullmatch(r"(?i)PyYAML\s*[><=!~]+\s*[0-9][^\s]*", resolved.stdout.strip()), (
+        resolved.stdout
+    )
+
+
+def test_guard_job_stays_lint_only():
+    """本 job に pytest を持ち込まない境界を機械で固定する。
+
+    直下の step 群のコメントは「plugin pytest は kit-ci に一元化する」と宣言しているが、
+    これまでは pytest が install されていない偶然に支えられていた。依存 install を
+    足した以上、宣言側を検査に格上げしないと境界が静かに消える。
+    """
+    for step in _guard_job_steps():
+        run = str(step.get("run", ""))
+        assert not re.search(r"\bpytest\b", run), step.get("name")
+        assert "-r requirements-dev.txt" not in run, step.get("name")
+
+
+def test_local_entrypoints_invoke_the_same_lint():
+    """CI にしか無いゲートは着手前に気づけない。local 入口 2 経路の結線を固定する。"""
+    for relative in ("Makefile", "scripts/run-ci-checks.sh"):
+        text = (ROOT / relative).read_text(encoding="utf-8")
+        assert "lint-workflow-step-guard.py --self-test" in text, relative
+        assert re.search(r"lint-workflow-step-guard\.py(?!\s+--)", text), relative

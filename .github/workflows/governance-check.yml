@@ -72,6 +72,18 @@ jobs:
       - name: "lint prompt contract drift (7層プロンプトの参照パス/allowed-tools が実装と整合・Tier1 fail-closed)"
         run: python3 scripts/lint-prompt-contract-drift.py --all
         continue-on-error: false
+      # この job で唯一の外部依存。他の lint は frontmatter の限定ブロックしか読まないため
+      # stdlib の最小パーサで足りるが、step guard は workflow YAML の構造 (jobs → steps →
+      # if / env / run、複数行スカラーや引用を含む) を全走査する。自前パーサはブロックの
+      # 取りこぼしが検出漏れ = fail-open に直結するので、正規の YAML パーサを使う。
+      # 版指定は requirements-dev.txt を SSOT にしつつ、-r で丸ごと入れずに PyYAML だけを
+      # 取り出す。本 job は lint 専用で pytest を持たないこと自体が「plugin pytest は
+      # kit-ci に一元化する」(下記 187 行付近) の前提になっており、-r で pytest まで
+      # 入れるとその前提が静かに崩れるため。行が消えれば grep が空で落ちる (fail-closed)。
+      - name: install workflow step guard の PyYAML (版指定は requirements-dev.txt が SSOT)
+        run: |
+          spec="$(grep -iE '^[[:space:]]*PyYAML' requirements-dev.txt)"
+          python3 -m pip install --quiet "$spec"
       - name: lint workflow step guard self-test (if 評価順ガードの分岐検査)
         run: python3 scripts/lint-workflow-step-guard.py --self-test
         continue-on-error: false
