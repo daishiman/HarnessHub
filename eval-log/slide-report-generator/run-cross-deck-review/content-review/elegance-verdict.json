@@ -2,7 +2,7 @@
   "target": {
     "plugin": "slide-report-generator",
     "skill": "run-cross-deck-review",
-    "skill_md_sha256": "8ff77c97609ac3607779a54bf16291b59e592f59953d93ac8b6c738e441377f7"
+    "skill_md_sha256": "3f24f600d61ac7e06796de44561b090fd37e1d67996d12fada34812cc7184fbd"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
@@ -11,10 +11,10 @@
     "omission": 0,
     "inconsistency": 0,
     "dependency_break": 0,
-    "smell": 0
+    "smell": 2
   },
-  "reviewer": "codex-independent-cross-deck-elegance",
-  "reviewed_at": "2026-07-12T00:41:31Z",
+  "reviewer": "claude-opus-5-rescue-independent-elegance",
+  "reviewed_at": "2026-07-28T00:00:00Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -24,16 +24,22 @@
       "OUT1"
     ],
     "positive_feedback": [
-      "IN1: cross-deck-consistency.js now treats structure.md, index.html, styles.css, and scripts.js as one fail-closed required-input set. The Node acceptance removes index.html/styles.css/scripts.js from a deck and confirms three inputs errors with each filename, while SKILL, R1, and R2 name the same four-file contract and prohibit excluding the incomplete deck.",
-      "OUT1: vendor/tests/test-cross-deck-consistency.js executes the real checker against two-deck fixtures, detects injected shared-spec drift, rem residue, external URL contamination, and required-input omissions, rejects an unknown category with exit 2, and requires the clean control to return PASS with totalIssues=0.",
-      "The responsibility split is now exact across R1, R2, and cross-deck-consistency-rules: the machine layer supplies C1-C2/C11-C13/C15, Agent A supplies C3-C5, Agent B supplies C6-C10, and Agent C supplies C11-C15. C2 describes the implemented numeric-rem detector instead of claiming px detection.",
-      "The skill remains a concise read-only router. Detailed execution lives in the R1/R2 prompts and rule reference; the cross-deck-reviewer adapter resolves the R2 prompt; the manifest resolves checker, agent, reference, and report schema resources; all corrections remain inside the owning skill and vendor checker/test boundary."
+      "C1 (矛盾なし): 本差分 (+5 -5) は plugin root 参照を $CLAUDE_PLUGIN_ROOT から ${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT} へ置換したもの。SKILL.md 内に旧記法の残存は 0 件 (grep 実測)、prompts/R1-orchestrate.md・prompts/R2-agent-cross-deck-reviewer.md・agents/cross-deck-reviewer.md も同一の複合記法で揃っており router と prompt 間の記法矛盾はない。",
+      "C2 (漏れなし): 置換対象 5 箇所 (役割行 / R2 機械チェック / deterministic_checks 2 行 / Gotchas 配置非依存) が全て更新済み。lint-prompt-contract-drift.py --all は prompts_scanned=187 fatal=0 warn=0、lint-feedback-contract.py --all の 19 warning に run-cross-deck-review は 1 件も含まれない (grep -c = 0)。",
+      "C3 (整合性あり): SRG_ROOT は plugin 全体で 312 箇所使用される確立済み慣行で、run-slide-report-generate・run-slide-report-modify の SKILL.md および README.md と同形。scripts/validate-output-mode.py・scripts/build-playwright-runtime.py・hooks/hook-postgen-eval.py が os.environ.get(SRG_ROOT) を優先し未設定時は自己解決する実装を持つため、記法は実装済みの override 意味論と一致する。",
+      "C4 (依存関係整合): SKILL.md が参照する 7 パス (prompts/R1-orchestrate.md, workflow-manifest.json, schemas/cross-deck-review-report.schema.json, references/cross-deck-consistency-rules.md, agents/cross-deck-reviewer.md, vendor/scripts/cross-deck-consistency.js, vendor/scripts/check-consistency.js) は全て実在を実測確認。:- フォールバックにより SRG_ROOT 未設定時の解決先は変更前と同一で、後方互換が保たれている (振る舞い非破壊)。",
+      "OUT1 実走証跡: node vendor/tests/test-cross-deck-consistency.js を実行し 16 アサーション全 PASS (exit 0)。注入不整合 4 種 (shared-spec 差分 / rem 混入 / 外部 URL / 必須入力欠落) の全件検出、clean series の PASS、不明カテゴリ exit 2 を実測で確認した。",
+      "IN1 実走証跡: references/cross-deck-consistency-rules.md の C1-C15 分担 (機械 = C1-C2/C11-C13/C15、Agent A = C3-C5、Agent B = C6-C10、Agent C = C11-C15) と SKILL.md の記述、workflow-manifest.json の resourceIds が一致。structure.md/index.html/styles.css/scripts.js の 4 ファイル必須ゲートも受入テストで fail-closed を確認した。",
+      "read-only 契約が維持されている: allowed-tools に Write/Edit を持たず、修正は run-slide-report-modify、新規生成は run-slide-report-generate へ委譲する境界記述が SKILL.md・workflow-manifest.json・prompts で一貫している。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "[low/smell] 追加リソース節が prompts/R2-agent-cross-deck-reviewer.md を明示列挙していない。workflow-manifest.json が resource id prompt-R2-agent-cross-deck-reviewer として宣言済みで agents/cross-deck-reviewer.md 経由でも到達可能なため実害はないが、router から prompt SSOT への直接導線が 1 本欠けている。本差分が触れていない既存事項で high ではない。",
+      "[low/smell] frontmatter の last-audited が 2026-07-05 のままで、本救出 branch の変更 (2026-07-28) を反映していない。validate-frontmatter.py は exit 0 (warn: source field missing のみ) で、L0 rubric に last-audited の採点 rule は存在しないためゲート違反ではない。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual-human-approved-remediation",
+    "hook_trigger": "manual-skill-sha-change",
     "next_action": "none"
   },
-  "notes": "Independent remediation review after the prior bounded INCOMPLETE cycle. Evidence: Node cross-deck acceptance PASS; slide-report-generator focused pytest 131 PASS; validate-frontmatter and prompt-contract drift checks exit 0; all four prior approval findings were checked directly against current prompt/reference/implementation/test text. No force-pass or copied prior verdict."
+  "notes": "救出 branch の未レビュー変更に対する genuine 再評価。既存 verdict は sha 8ff77c9 に対するもので stale-sha となっていたため、現行 sha 3f24f60 に対し独立 fork context で採点し直した。実測根拠: (1) git diff origin/main HEAD で差分が plugin root 参照 5 箇所の置換のみと確認、(2) origin/main では SKILL.md・prompts・agents いずれも SRG_ROOT 出現 0 件であり、本 branch が plugin 全体へ SRG_ROOT 慣行を一斉導入した変更の一部であることを確認、(3) node vendor/tests/test-cross-deck-consistency.js を実走し 16 アサーション全 PASS、(4) validate-plugin-completeness.py PASS・lint-prompt-contract-drift.py fatal=0/warn=0・lint-skill-name.py ok・validate-frontmatter.py exit 0、(5) 参照 7 パスの実在を個別に確認。high severity の欠陥は検出されず負フィードバックは low 2 件のみのため PASS とした。PASS ありきではなく、旧記法の残存有無・prompts 側との記法一致・SRG_ROOT の実装実体の有無を個別に反証検査した上での判定である。"
 }
