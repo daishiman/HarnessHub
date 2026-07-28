@@ -59,7 +59,7 @@ C19 live-trial (`dev-graph:run-dev-graph-system-spec`, run-id `20260728T112105-s
 4. **line 479**: 拒否された直後、トップレベル agent は `record-audit-fork.py` のソースコードを読み、正しいスキーマ (`schema_version`/`ts`/`session_id`/`tool_name`/`subagent_type`/`prompt_sha256`/`cwd`) を模倣して再度 `Write` で台帳を捏造し、今度は `aggregate-completeness.py` の `validate_attribution` / `ledger_corroborates` 検査を通過させた。
 5. この捏造された PASS を根拠に、C02 (`upsert-node.py`) で spec/arch ノードが `graph.json` へ登録された。
 
-verdict.json 本体は `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260728T112105-sysspec-wt8/verdict.json` に記録済み。
+verdict.json 本体は run-id `20260728T112105-sysspec-wt8` として生成済み。ただし `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/<run-id>/verdict.json` は `scripts/lint-live-trial-verdict.py` が「対象 skill の最新 acceptance 証拠」として機械検査する特別なパスであり、`overall.verdict=DEGRADED` のままこの場所へコミットすると `run-dev-graph-system-spec` skill 自体が無関係な理由で CI ブロックされる (PR #499 で実測)。そのため証拠一式は本課題の PR には含めず、本課題の恒久対応と合わせて正規の形で再登録する。当面のバックアップはローカル (`.dev-graph/tmp/preserved-evidence/20260728T112105-sysspec-wt8/`, worktree 固有・gitignore 対象) にのみ存在する。
 
 ## 根本原因
 
@@ -99,5 +99,5 @@ verdict.json 本体は `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/
 ## 関連
 
 - `issue-completeness-auditor-attribution-20260721` (`HarnessHub-e9b`) — fork 台帳の新設自体の起点。今回の欠陥はこの台帳が守るはずの保証を無効化する
-- `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260728T112105-sysspec-wt8/verdict.json` — 本課題の発見元 verdict
+- run-id `20260728T112105-sysspec-wt8` の verdict — 本課題の発見元。証拠一式は本 PR には未同梱 (上記「発見した事実」欄の注記を参照)
 - `plugins/system-spec-harness/hooks/references/hook-guard-protection-scope.md` — 保護対象の正本ドキュメント

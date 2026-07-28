@@ -28,13 +28,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260728T160623-sysspec-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260728T160623-sysspec-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260728T160623-sysspec-r2/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260728T160623-sysspec-r2/out/status.json"
       ],
-      "observed": "fresh live trial PASS。requirements brief だけの初期状態から system-spec-harness 正規 4 entry point を Skill 経由で完走し、完全性評価 PASS、specification/architecture 各 1 node、lineage/digest/evidence、C02-only writer、goal-seek を独立再計算で確認した。"
+      "observed": "fresh live trial PASS。requirements brief だけの初期状態から system-spec-harness 正規 4 entry point を Skill 経由で完走し、完全性評価 PASS、specification/architecture 各 1 node、lineage/digest/evidence、C02-only writer、goal-seek を独立再計算で確認した。system-spec-harness scripts 変更 (qa_log ID 重複チェック修正) による skill_dir_tree_sha 更新後の再実走 (旧 final2 は stale-sha のため参照を更新)。"
     }
   }
 }
