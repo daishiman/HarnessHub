@@ -1,0 +1,12 @@
+PASS
+
+- Transcript records exactly four actual `Skill(dev-graph:run-dev-graph-decompose)` calls: two for the beads fixture and two for the none fixture.
+- The final pass for each binding returned `operation=noop` and `write_count=0` for all five nodes.
+- No human nudge or gate response occurred; the mid-run continuation was automatic context compaction.
+- Both audits report `pass=true`, `run_binding_attested=true`, and implementation SHA-256 `be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f`.
+- Each graph contains four feature nodes, one architecture node, zero task nodes, and the same three acyclic dependency edges.
+- The promoted `feat-user-auth-001` digest matches canonical persisted content for both bindings (`e553bbed…a017` for beads, `8ffa7747…4680` for none).
+- Goal-spec, progress, and both intermediate rows contain no pending status or null evidence.
+- After normalizing timestamps, repository identity, and derived evidence digest, the only semantic paired-run difference is the persisted tracker binding and its expected route attribution.
+
+No run defect found. The requested `plugins/dev-graph/evals/scenarios.json` path does not exist; the task and audits correctly use the indexed canonical fixture `plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json`.

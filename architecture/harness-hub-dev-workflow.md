@@ -284,3 +284,13 @@ tmux server は複数 worktree・複数 trial から共有されるため、`lt-
 owner PID の代用品にせず、boot の READY 出力をそのまま cleanup へ渡す。
 全 session の回収は通常フローから分離した明示 `--all` だけに許可する。
 fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠とする。
+
+### 差分追記 (2026-07-29): feature lifecycle の単調前進を C02 境界で守る
+
+出典: `issue-c02-upsert-lifecycle-regression-20260729` (bd `HarnessHub-bk8v`)。
+C14 は最新 persisted feature を読み直して C02 へ渡し、C02 も stale full snapshot が
+`status`、`confirmation_status`、`evaluation_status`、
+`implementation_readiness.status` を後退させる場合は Markdown / graph / revision を
+変えずに拒否する。通常の冪等再送は noop、stale snapshot は fail-closed、意図的な再評価は
+変更対象を列挙した patch として経路を分離する。この境界は repository 内の開発管理 graph
+だけに適用し、Harness Hub 製品の runtime architecture は変更しない。

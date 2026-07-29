@@ -1,0 +1,4 @@
+FAIL
+Blockers:
+- progress.json contains no checklist records.
+- CL1 through CL5 remain pending without evidence in goal-spec.json.
