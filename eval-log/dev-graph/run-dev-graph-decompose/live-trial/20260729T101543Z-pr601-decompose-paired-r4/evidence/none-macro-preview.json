@@ -1,0 +1,524 @@
+{
+  "graph_revision": 5,
+  "nodes": [
+    {
+      "acceptance": [
+        "技術スタックが決定されている",
+        "責務分離が明確に定義されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "frontend"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/arch-webapp-foundation-001.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (自然文 want からの feature/architecture 導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T10:35:15Z",
+      "depends_on": [],
+      "domain": "webapp",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/arch-webapp-foundation-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "フロントエンド・バックエンド・データベース・メール送信の技術スタックと責務分離を確立する",
+      "graph_node_id": "arch-webapp-foundation-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "claude"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "live-trial",
+      "pull_request_linkages": [],
+      "purpose": "認証・ダッシュボード・通知・レポートを支える Web アプリの基盤構成を定義する",
+      "related_nodes": [],
+      "resource_scope": [
+        "architecture/arch-webapp-foundation-001.md"
+      ],
+      "scope_in": [
+        "フロントエンド構成",
+        "バックエンドAPI構成",
+        "データベース設計方針",
+        "メール送信基盤"
+      ],
+      "scope_out": [
+        "インフラ構築手順",
+        "CI/CDパイプライン",
+        "モニタリング"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T10:35:15Z",
+        "origin_kind": "generated",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "architecture",
+        "webapp-foundation"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "小規模 Web アプリ基盤アーキテクチャ",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T10:35:15Z"
+    },
+    {
+      "acceptance": [
+        "登録後にログインできる",
+        "ログアウト後にセッションが無効化される",
+        "重複メールアドレスでの登録が拒否される"
+      ],
+      "architecture_refs": [
+        "arch-webapp-foundation-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-user-auth-001.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (自然文 want からの feature/architecture 導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T10:35:15Z",
+      "depends_on": [],
+      "domain": "webapp",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-user-auth-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "メールアドレスとパスワードで新規登録・ログイン・ログアウトが正常に動作する",
+      "graph_node_id": "feat-user-auth-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "claude"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "live-trial",
+      "pull_request_linkages": [],
+      "purpose": "ユーザーがアカウントを登録し、ログインしてアプリを利用できるようにする",
+      "related_nodes": [],
+      "resource_scope": [
+        "features/feat-user-auth-001.md"
+      ],
+      "scope_in": [
+        "ユーザー登録フォーム",
+        "ログインフォーム",
+        "パスワードハッシュ化",
+        "セッション管理",
+        "ログアウト"
+      ],
+      "scope_out": [
+        "OAuth/SSO連携",
+        "二要素認証",
+        "パスワードリセット"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T10:35:15Z",
+        "origin_kind": "generated",
+        "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+        "source_path": "docs/want.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "authentication"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "ユーザー認証 (登録・ログイン)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T10:35:15Z"
+    },
+    {
+      "acceptance": [
+        "ログイン後にダッシュボードが表示される",
+        "利用状況データが正確に表示される"
+      ],
+      "architecture_refs": [
+        "arch-webapp-foundation-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-dashboard-001.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (自然文 want からの feature/architecture 導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T10:35:15Z",
+      "depends_on": [
+        "feat-user-auth-001"
+      ],
+      "domain": "webapp",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-dashboard-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "ログイン後にダッシュボード画面が表示され、利用状況データが正しく表示される",
+      "graph_node_id": "feat-dashboard-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "claude"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "live-trial",
+      "pull_request_linkages": [],
+      "purpose": "ログインユーザーが自分の利用状況をダッシュボードで確認できるようにする",
+      "related_nodes": [],
+      "resource_scope": [
+        "features/feat-dashboard-001.md"
+      ],
+      "scope_in": [
+        "ダッシュボード画面",
+        "利用状況データ取得API",
+        "利用状況の可視化"
+      ],
+      "scope_out": [
+        "リアルタイム更新",
+        "カスタムウィジェット",
+        "データエクスポート"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T10:35:15Z",
+        "origin_kind": "generated",
+        "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+        "source_path": "docs/want.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "dashboard"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "ダッシュボード (利用状況表示)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T10:35:15Z"
+    },
+    {
+      "acceptance": [
+        "登録完了時にメールが送信される",
+        "重要変更時にメールが送信される",
+        "メール内容が正しい"
+      ],
+      "architecture_refs": [
+        "arch-webapp-foundation-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-notification-001.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (自然文 want からの feature/architecture 導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T10:35:15Z",
+      "depends_on": [
+        "feat-user-auth-001"
+      ],
+      "domain": "webapp",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-notification-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "登録完了メールと重要変更時の通知メールが正しく送信される",
+      "graph_node_id": "feat-notification-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "claude"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "live-trial",
+      "pull_request_linkages": [],
+      "purpose": "登録完了時と重要な変更時にユーザーへ通知メールを送信する",
+      "related_nodes": [],
+      "resource_scope": [
+        "features/feat-notification-001.md"
+      ],
+      "scope_in": [
+        "メール送信基盤",
+        "登録完了メール",
+        "重要変更通知メール",
+        "メールテンプレート"
+      ],
+      "scope_out": [
+        "SMS通知",
+        "プッシュ通知",
+        "通知設定カスタマイズ"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T10:35:15Z",
+        "origin_kind": "generated",
+        "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+        "source_path": "docs/want.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "notification"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "通知メール (登録完了・重要変更時)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T10:35:15Z"
+    },
+    {
+      "acceptance": [
+        "運営者がレポート画面にアクセスできる",
+        "全ユーザーの利用状況が集計表示される",
+        "一般ユーザーはアクセスできない"
+      ],
+      "architecture_refs": [
+        "arch-webapp-foundation-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-admin-report-001.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (自然文 want からの feature/architecture 導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T10:35:15Z",
+      "depends_on": [
+        "feat-user-auth-001"
+      ],
+      "domain": "webapp",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-admin-report-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "運営者向けレポート画面で全ユーザーの利用状況が集計表示される",
+      "graph_node_id": "feat-admin-report-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "claude"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "live-trial",
+      "pull_request_linkages": [],
+      "purpose": "運営者が全ユーザーの利用状況を集計したレポートを閲覧できるようにする",
+      "related_nodes": [],
+      "resource_scope": [
+        "features/feat-admin-report-001.md"
+      ],
+      "scope_in": [
+        "レポート画面",
+        "利用状況集計API",
+        "運営者権限チェック"
+      ],
+      "scope_out": [
+        "CSV/PDFエクスポート",
+        "カスタムレポート作成",
+        "リアルタイム集計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T10:35:15Z",
+        "origin_kind": "generated",
+        "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+        "source_path": "docs/want.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "admin-report"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "管理者レポート (全ユーザー利用状況集計)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T10:35:15Z"
+    }
+  ]
+}

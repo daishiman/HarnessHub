@@ -1,0 +1,5 @@
+FAIL
+Blockers:
+- The current run persists only tracker_binding=none; the paired beads execution was not included in this evaluator's evidence set.
+- The second skill pass rejects the promoted feature's stale before-image instead of converging all nodes to no-op.
+- The evaluator could not establish all write-count dimensions from the provided current-run evidence.

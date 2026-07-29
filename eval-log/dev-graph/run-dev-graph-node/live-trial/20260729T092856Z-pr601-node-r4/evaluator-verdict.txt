@@ -1,0 +1,2 @@
+PASS
+Exact Skill invocation verified. Five auto-classifications routed correctly with full bodies preserved and body_source=from_input receipts; two real updates reached revisions 6 and 7 with operation=updated; direct feature registration failed closed with zero writes. All paths are repository-contained, final graph revision/hash matches receipts, and goal/progress/intermediate evidence is complete with CL1-CL5 and OUT1 PASS, zero pending/null evidence.

@@ -1,0 +1,36 @@
+{
+  "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+  "binding": "beads",
+  "checklist": [
+    {
+      "item": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+      "status": "pass",
+      "evidence": "graph contains 4 features + 1 architecture, 0 tasks. DAG is acyclic with 3 inter-feature edges. No phase_ref/parent_feature/feature_package_id set."
+    },
+    {
+      "item": "draft/unconfirmed/evaluation非pass/readiness非complete の tracker publication が0件である",
+      "status": "pass",
+      "evidence": "draft_publication_zero=true. 3 draft features excluded by draft gate. feat-user-auth-001 is the sole promoted candidate."
+    },
+    {
+      "item": "各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす",
+      "status": "not_applicable",
+      "evidence": "This is a macro-only decomposition run. system-dev-planner micro-layer packages are not produced in this trial scope."
+    },
+    {
+      "item": "C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である",
+      "status": "pass",
+      "evidence": "All 5 nodes registered atomically via C02 upsert-node.py. No duplicate graph_node_id. Idempotent re-execution produced operation=noop/write_count=0 for all 5."
+    },
+    {
+      "item": "beads/github/none の各 task が単一 projection authority と linkage を持つ",
+      "status": "pass",
+      "evidence": "All 5 nodes have tracker_binding=beads, beads_linkage=null (unlinked draft/macro), github_publication.mode=local_only, issue_linkage=null."
+    },
+    {
+      "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "not_applicable",
+      "evidence": "This run used apply mode (--dry-run not specified). dry-run write count is tested by criteria:OUT3, not this scenario."
+    }
+  ]
+}
