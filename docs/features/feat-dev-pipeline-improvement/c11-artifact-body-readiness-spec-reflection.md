@@ -70,14 +70,16 @@ SHA-256 が実走 transcript の完全な byte 列を束縛する機械証跡な
 
 ## 品質ゲート
 
-- main 統合: local `main` は `origin/main` と同一の `7153859`。
-  feature branch への merge commit は `a9a5b5e` (第 2 parent=`7153859`)。
+- main 統合: local `main` は `origin/main` と同一の `bcb683f`。
+  feature branch への最終 merge commit は `09d2955` (第 2 parent=`bcb683f`)。
 - focused pytest: 実装 3 suite は `23 passed`、命名回帰を含む再検証は `55 passed`。
-- Dev Graph 全体: `709 passed / 2 skipped / 5 subtests passed`。
+- Dev Graph 全体: `720 passed / 2 skipped / 5 subtests passed`。
 - repository 全体: `make test` は `7620 passed / 5 skipped`、
   LLM coverage 100%、Phase 0 PASS。
-- live trial: main 統合後に影響を受ける 8 skill を fresh session で再実走し、
-  独立 goal evaluator は全件 PASS。挙動 digest が不変の schedule を含め、
+- live trial: `bcb683f` 統合後に挙動が変わった node / sync / decompose を
+  fresh session で再実走し、残る6 skill は現行 digest 一致の証跡を再利用した。
+  decompose 初回は2回目 Skill 後の digest 補正を検出して明示 FAIL とし、新規 fixture の
+  retry で4 Skill 呼出し、10 noop、後追い mutation 0、独立 evaluator PASS へ収束した。
   incremental planner は `reuse=9 / run=0 / defer=0`、
   Dev Graph lint は `9 verdicts verified / 0 missing`。
 - task package: exact P01〜P13、digest `af8a73…da6`、violations 0。

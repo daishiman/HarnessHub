@@ -1,0 +1,556 @@
+
+ ▐▛███▜▌   Claude Code v2.1.62
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-28
+
+❯ 次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手:
+  /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T125000Z-wt28-finalmain-c11-node/task.md
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ Explore(Find SKILL.md original_goal)
+  ⎿  Done (3 tool uses · 31.4k tokens · 12s)
+  (ctrl+o to expand)
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ Bash(python3 -c "import hashlib; g='通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase
+      tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/pat…)
+  ⎿  eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T125000Z-wt28-finalmain-c11-node/out)
+  ⎿  Done
+
+⏺ Now create the goal-seek evidence files in the fixture's eval-log.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/eval-log/run-dev-graph-node-goal-spec.json)
+  ⎿  Wrote 6 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/eval-log/run-dev-graph-node-goal-spec.json
+      1 {
+      2   "original_goal": "通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/
+        package整合を保つ",
+      3   "original_goal_hash": "eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2",
+      4   "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+      5   "created_at": "2026-07-29T12:50:00Z"
+      6 }
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/eval-log/run-dev-graph-node-progress.json)
+  ⎿  Wrote 46 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/eval-log/run-dev-graph-node-progress.json
+       1 {
+       2   "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+       3   "original_goal": "通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path
+         /package整合を保つ",
+       4   "original_goal_hash": "eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2",
+       5   "steps": [
+       6     {
+       7       "id": "V1",
+       8       "description": "Register all 5 artifact kinds (issue/task/specification/architecture/document) and verify canonical paths and graph revision",
+       9       "status": "pending",
+      10       "criterion": "all five artifacts are routed to canonical kind paths",
+     … +36 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/eval-log/run-dev-graph-node-intermediate.jsonl)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/eval-log/run-dev-graph-node-intermediate.jsonl
+      1 {"original_goal":"通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/pa
+        ckage整合を保つ","original_goal_hash":"eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2","current_goal_snapshot":"5種類の混在artifactを一括登録し、連続更新のfrontmatter/p
+        ath整合と、C14外feature拒否を検証する","delta_from_original":"scenarioをC02-OUT1-positive-mixed-artifactsに特化。package登録は対象外","merged_directive_for_next":"Skill実行→5 artifact登
+        録→body保存検証→連続更新→feature拒否検証の順で進行","drift_signal":"none"}
+
+⏺ Now verify the intermediate file with the goal-seek validation script.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node && python3 - "$DEV_GRAPH_ROOT/eval-log/run-…)
+  ⎿  Goal-seek validation PASSED
+
+⏺ Now run the Skill to add all 5 mixed artifacts.
+
+⏺ Skill(dev-graph:run-dev-graph-node)
+  ⎿  Successfully loaded skill · 9 tools allowed
+
+⏺ I'll follow the skill's responsibilities in order. Starting with R0-context to resolve the repo context.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root /Users/dm/orca/workspaces/HarnessH…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +25 lines (ctrl+o to expand)
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ R0 context resolved successfully. Now let me read the template contract and graph node schema to prepare classification and upsert inputs.
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ Now I'll classify the 5 artifacts and prepare upsert inputs. All have high confidence and wide margin, so all auto-confirm.
+
+  Classification preview:
+  1. issue (0.95) — bug report with reproduction steps → issues/session-timeout-not-enforced.md
+  2. task (0.92) — implementation task with acceptance criteria → tasks/implement-api-rate-limiting.md
+  3. specification (0.97) — formal API spec with breaking changes → specs/rest-api-v2-migration.md (subtypes: ["api"])
+  4. architecture (0.97) — system architecture doc → architecture/order-processing-backend-security.md (subtypes: ["backend", "security", "infrastructure"])
+  5. document (0.95) — developer guide → docs/development-environment-setup-guide.md
+
+  Let me check the upsert-node.py interface, then prepare inputs.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --help 2>&1 | head -60)
+  ⎿  usage: upsert-node.py [-h] [--repo-root REPO_ROOT] [--graph GRAPH]
+                           [--input INPUT] [--body-file BODY_FILE]
+                           [--regenerate-body] [--dry-run]
+     … +18 lines (ctrl+o to expand)
+
+⏺ Now let me create all 5 upsert input files. I'll write them to the fixture's inputs/ directory.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-01-issue.json)
+  ⎿  Wrote 81 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-01-issue.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "issue-session-timeout-001",
+       4     "artifact_kind": "issue",
+       5     "artifact_subtypes": [],
+       6     "title": "ログインセッションのタイムアウトが強制されない",
+       7     "project_id": "default",
+       8     "domain": "authentication",
+       9     "status": "draft",
+      10     "priority": "high",
+     … +71 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-02-task.json)
+  ⎿  Wrote 81 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-02-task.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "task-api-rate-limiting-001",
+       4     "artifact_kind": "task",
+       5     "artifact_subtypes": [],
+       6     "title": "公開 API エンドポイントへレートリミットを実装する",
+       7     "project_id": "default",
+       8     "domain": "api",
+       9     "status": "draft",
+      10     "priority": null,
+     … +71 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-03-spec.json)
+  ⎿  Wrote 81 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-03-spec.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "spec-rest-api-v2-migration-001",
+       4     "artifact_kind": "specification",
+       5     "artifact_subtypes": ["api"],
+       6     "title": "REST API v2 移行仕様",
+       7     "project_id": "default",
+       8     "domain": "api",
+       9     "status": "draft",
+      10     "priority": null,
+     … +71 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-04-architecture.json)
+  ⎿  Wrote 81 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-04-architecture.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "arch-order-processing-backend-001",
+       4     "artifact_kind": "architecture",
+       5     "artifact_subtypes": ["backend", "security", "infrastructure"],
+       6     "title": "注文処理バックエンドのアーキテクチャとセキュリティ層",
+       7     "project_id": "default",
+       8     "domain": "backend",
+       9     "status": "draft",
+      10     "priority": null,
+     … +71 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-05-document.json)
+  ⎿  Wrote 81 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node/inputs/node-05-document.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "doc-dev-environment-setup-001",
+       4     "artifact_kind": "document",
+       5     "artifact_subtypes": [],
+       6     "title": "開発環境セットアップの手引き",
+       7     "project_id": "default",
+       8     "domain": "developer-experience",
+       9     "status": "draft",
+      10     "priority": null,
+     … +71 lines (ctrl+o to expand)
+
+⏺ Now run schema validation and dry-run for each node. Let me validate first, then do dry-run for all 5.
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node && python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/p…)
+  ⎿  Error: Exit code 2
+     usage: validate-graph-schema.py [-h] --graph GRAPH [--repo-root REPO_ROOT]
+     validate-graph-schema.py: error: the following arguments are required: --graph
+
+     usage: validate-graph-schema.py [-h] --graph GRAPH [--repo-root REPO_ROOT]
+     validate-graph-schema.py: error: the following arguments are required: --graph
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node && python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/p…)
+  ⎿  Error: Sibling tool call errored
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node && python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/p…)
+  ⎿  Error: Sibling tool call errored
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node && python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/p…)
+  ⎿  Error: Sibling tool call errored
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node && python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/p…)
+  ⎿  Error: Sibling tool call errored
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node && python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/p…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +4 lines (ctrl+o to expand)
+
+⏺ Good - schema validation passes. Now let me run dry-run for all 5 nodes via upsert-node.py, then apply them.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-01-issue.json --dry-run 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "3a02f1d21ba4145a34c324bf2c0388e520fc3c30160211163a1f8d8b3bc65987",
+       "body_source": "from_input",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-02-task.json --dry-run 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "fd56e21e83262c1750912a5627e0b9724b7e34d0eabb6ed43f224456a1fe1757",
+       "body_source": "from_input",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-03-spec.json --dry-run 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "967029a7a99e0c55a0782d9355665317f0360ea7b64b42f9fba4a1e7bafa2889",
+       "body_source": "from_input",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-04-architecture.json --dry-run 2>&…)
+  ⎿  {
+       "artifact_sha256_after": "a9f007feec146bd4e4b2aef30065cab0b17887371bec132a5590eb66ca28795a",
+       "body_source": "from_input",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-05-document.json --dry-run 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "4a7fb8337a12ed2d0de3fc18cf12f54011d40e9cf05773d3927e54c92da43a38",
+       "body_source": "from_input",
+     … +13 lines (ctrl+o to expand)
+
+⏺ All 5 dry-runs pass with write_count=0 and correct paths. Now apply all 5 in sequence.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-01-issue.json 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "3a02f1d21ba4145a34c324bf2c0388e520fc3c30160211163a1f8d8b3bc65987",
+       "body_source": "from_input",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-02-task.json 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "fd56e21e83262c1750912a5627e0b9724b7e34d0eabb6ed43f224456a1fe1757",
+       "body_source": "from_input",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-03-spec.json 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "967029a7a99e0c55a0782d9355665317f0360ea7b64b42f9fba4a1e7bafa2889",
+       "body_source": "from_input",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-04-architecture.json 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "a9f007feec146bd4e4b2aef30065cab0b17887371bec132a5590eb66ca28795a",
+       "body_source": "from_input",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-05-document.json 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "4a7fb8337a12ed2d0de3fc18cf12f54011d40e9cf05773d3927e54c92da43a38",
+       "body_source": "from_input",
+     … +14 lines (ctrl+o to expand)
+
+⏺ All 5 nodes added. Graph revision went 0→1→2→3→4→5. Now verify V1: check graph state and file paths, then verify body preservation.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  graph_revision: 5
+     node_count: 5
+       issue-session-timeout-001: kind=issue, path=issues/session-timeout-not-enforced.md
+     … +4 lines (ctrl+o to expand)
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ V1 PASS: All 5 kinds routed to canonical paths. Now verify body preservation (V4) - check for the API terms.
+
+⏺ Bash(python3 <<'PY'
+      import json…)
+  ⎿  PASS: issues/session-timeout-not-enforced.md - original body is contiguous substring
+     PASS: tasks/implement-api-rate-limiting.md - original body is contiguous substring
+     PASS: specs/rest-api-v2-migration.md - original body is contiguous substring
+     … +11 lines (ctrl+o to expand)
+
+⏺ V1 and V4 PASS. Now V2: consecutive updates on 2 artifacts with different artifact_kind, with real diffs. I'll update the spec and architecture nodes.
+
+⏺ Write(inputs/update-03-spec.json)
+  ⎿  Wrote 7 lines to inputs/update-03-spec.json
+      1 {
+      2   "graph_node_id": "spec-rest-api-v2-migration-001",
+      3   "patch": {
+      4     "priority": "high",
+      5     "tags": ["api", "specification", "migration", "breaking-change", "v2"]
+      6   }
+      7 }
+
+⏺ Write(inputs/update-04-architecture.json)
+  ⎿  Wrote 7 lines to inputs/update-04-architecture.json
+      1 {
+      2   "graph_node_id": "arch-order-processing-backend-001",
+      3   "patch": {
+      4     "priority": "medium",
+      5     "related_nodes": ["spec-rest-api-v2-migration-001"]
+      6   }
+      7 }
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/update-03-spec.json --dry-run 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "452b6631349ddabd0befeaf8c2eb2606ed4e6bb66280118699fd06c34401b078",
+       "body_source": "preserved",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/update-04-architecture.json --dry-run 2…)
+  ⎿  {
+       "artifact_sha256_after": "2ae127ee3ea4e6ae08941b8bde90599d22044c326f115beeb8b412f5e77749e6",
+       "body_source": "preserved",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Both dry-runs show operation=updated, body_source=preserved. Now apply both.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/update-03-spec.json 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "cfcf9b31f85167c191c8fc10482fc37cda358f9eee684751005a21c554b67afb",
+       "body_source": "preserved",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/update-04-architecture.json 2>&1)
+  ⎿  {
+       "artifact_sha256_after": "a145ec9a6581884a21553ca94e98f32d3c681df1e57ea4d1020b84bfa3e0700d",
+       "body_source": "preserved",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Now verify V2 requirements: operation=updated, revision increase, updated_at != created_at, kind/path consistency, body preserved.
+
+⏺ Bash(python3 <<'PY'
+      import json…)
+  ⎿  graph_revision: 7
+
+     spec-rest-api-v2-migration-001:
+     … +20 lines (ctrl+o to expand)
+
+⏺ V2 PASS. Now V3: attempt direct feature registration outside C14 macro contract. Record pre-state first.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  pre_revision: 7
+     pre_features_file_count: 0
+
+⏺ Write(inputs/node-06-feature-invalid.json)
+  ⎿  Wrote 80 lines to inputs/node-06-feature-invalid.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "feature-unauthorized-direct-001",
+       4     "artifact_kind": "feature",
+       5     "artifact_subtypes": [],
+       6     "title": "Unauthorized direct feature registration",
+       7     "project_id": "default",
+       8     "domain": "test",
+       9     "status": "draft",
+      10     "priority": null,
+     … +70 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py --repo-root . --input inputs/node-06-feature-invalid.json 2>&1; echo…)
+  ⎿  {
+       "error": "feature must come from the C14 macro contract: source_lineage.origin_kind 'manual' is not one of ['generated', 'system-spec-harness']",
+       "valid": false,
+     … +3 lines (ctrl+o to expand)
+
+⏺ Feature registration rejected. Now verify post-state is unchanged.
+
+⏺ Bash(python3 -c "
+      import json, os…)
+  ⎿  post_revision: 7 (expected: 7)
+     post_features_file_count: 0 (expected: 0)
+     revision unchanged: True
+     features unchanged: True
+
+⏺ V3 PASS. All verifications complete. Now update the progress file with evidence, validate graph schema, and finalize.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root . 2>&1)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +4 lines (ctrl+o to expand)
+
+⏺ Now update progress.json with all evidence and mark all steps completed.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(eval-log/run-dev-graph-node-progress.json)
+  ⎿  Added 87 lines, removed 16 lines
+        6      {
+        7        "id": "V1",
+        8        "description": "Register all 5 artifact kinds (issue/task/specification/architecture/document) and verify canonical paths and graph revision",
+        9 -      "status": "pending",
+        9 +      "status": "completed",
+       10        "criterion": "all five artifacts are routed to canonical kind paths",
+       11 -      "evidence": null
+       11 +      "evidence": {
+       12 +        "result": "PASS",
+       13 +        "graph_revision_after": 5,
+       14 +        "nodes_registered": 5,
+       15 +        "paths": {
+       16 +          "issue-session-timeout-001": "issues/session-timeout-not-enforced.md",
+       17 +          "task-api-rate-limiting-001": "tasks/implement-api-rate-limiting.md",
+       18 +          "spec-rest-api-v2-migration-001": "specs/rest-api-v2-migration.md",
+       19 +          "arch-order-processing-backend-001": "architecture/order-processing-backend-security.md",
+       20 +          "doc-dev-environment-setup-001": "docs/development-environment-setup-guide.md"
+       21 +        },
+       22 +        "all_operations": "added",
+       23 +        "all_write_count": 2,
+       24 +        "schema_validation": "valid"
+       25 +      }
+       26      },
+       27      {
+       28        "id": "V2",
+       29        "description": "Consecutive update of 2 artifacts with real diffs, verify operation=updated, revision increase, updated_at != created_at, kind/path consistency, original body pr
+           eserved",
+       16 -      "status": "pending",
+       30 +      "status": "completed",
+       31        "criterion": "frontmatter kind and stored path agree after a consecutive update",
+       18 -      "evidence": null
+       32 +      "evidence": {
+       33 +        "result": "PASS",
+       34 +        "updates": [
+       35 +          {
+       36 +            "graph_node_id": "spec-rest-api-v2-migration-001",
+       37 +            "operation": "updated",
+       38 +            "artifact_kind": "specification",
+       39 +            "file_path": "specs/rest-api-v2-migration.md",
+       40 +            "kind_path_consistent": true,
+       41 +            "created_at": "2026-07-29T12:50:02Z",
+       42 +            "updated_at": "2026-07-29T12:58:36.998690Z",
+       43 +            "updated_ne_created": true,
+       44 +            "body_source": "preserved",
+       45 +            "revision_before": 5,
+       46 +            "revision_after": 6,
+       47 +            "diff_applied": "priority=high, tags added 'v2'"
+       48 +          },
+       49 +          {
+       50 +            "graph_node_id": "arch-order-processing-backend-001",
+       51 +            "operation": "updated",
+       52 +            "artifact_kind": "architecture",
+       53 +            "file_path": "architecture/order-processing-backend-security.md",
+       54 +            "kind_path_consistent": true,
+       55 +            "created_at": "2026-07-29T12:50:03Z",
+       56 +            "updated_at": "2026-07-29T12:58:44.650170Z",
+       57 +            "updated_ne_created": true,
+       58 +            "body_source": "preserved",
+       59 +            "revision_before": 6,
+       60 +            "revision_after": 7,
+       61 +            "diff_applied": "priority=medium, related_nodes added spec ref"
+       62 +          }
+       63 +        ],
+       64 +        "final_graph_revision": 7
+       65 +      }
+       66      },
+       67      {
+       68        "id": "V3",
+       69        "description": "Attempt direct feature registration outside C14 macro contract, verify fail-closed rejection with no revision/file count increase",
+       23 -      "status": "pending",
+       70 +      "status": "completed",
+       71        "criterion": "no feature is created outside the C14 macro-feature contract",
+       25 -      "evidence": null
+       72 +      "evidence": {
+       73 +        "result": "PASS",
+       74 +        "rejection_error": "feature must come from the C14 macro contract: source_lineage.origin_kind 'manual' is not one of ['generated', 'system-spec-harness']",
+       75 +        "write_count": 0,
+       76 +        "exit_code": 2,
+       77 +        "pre_revision": 7,
+       78 +        "post_revision": 7,
+       79 +        "pre_features_count": 0,
+       80 +        "post_features_count": 0,
+       81 +        "revision_unchanged": true,
+       82 +        "features_unchanged": true
+       83 +      }
+       84      },
+       85      {
+       86        "id": "V4",
+       87        "description": "Verify original body content preservation including API terms",
+       30 -      "status": "pending",
+       88 +      "status": "completed",
+       89        "criterion": "original body byte-for-byte preserved as contiguous substring",
+       32 -      "evidence": null
+       90 +      "evidence": {
+       91 +        "result": "PASS",
+       92 +        "all_5_bodies_contiguous": true,
+       93 +        "api_terms_verified": [
+       94 +          "GET /api/v1/users",
+       95 +          "POST /api/v2/orders",
+       96 +          "items",
+       97 +          "line_items",
+       98 +          "X-API-Key",
+       99 +          "Authorization: Bearer",
+      100 +          "DELETE /api/v2/sessions/bulk"
+      101 +        ],
+      102 +        "all_api_terms_found": true
+      103 +      }
+      104      }
+      105    ],
+      106    "checklist": [
+       36 -    {"id": "CL1", "text": "全 read/write realpath が resolved repo root 内で repository_id が一致する", "status": "pending"},
+       37 -    {"id": "CL2", "text": "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ", "status": "pending"},
+       38 -    {"id": "CL3", "text": "通常 artifact の frontmatter/body/path/template metadata が schema と一致する", "status": "pending"},
+       39 -    {"id": "CL4", "text": "feature は C14 の macro contract から受け取り、通常 artifact routing で新規生成しない", "status": "pending"},
+       40 -    {"id": "CL5", "text": "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する", "status": "pending"}
+      107 +    {"id": "CL1", "text": "全 read/write realpath が resolved repo root 内で repository_id が一致する", "status": "PASS", "evidence": "resolve-repo-context.py receipt confirms root_tr
+          +ust_evidence.git_toplevel_verified=true, repository_id matches config"},
+      108 +    {"id": "CL2", "text": "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ", "status": "PASS", "evidence": "All 5 artifacts had confidence>=0.80
+          +and margin>=0.15: issue 0.95/0.55, task 0.92/0.42, spec 0.97/0.67, arch 0.97/0.72, doc 0.95/0.60"},
+      109 +    {"id": "CL3", "text": "通常 artifact の frontmatter/body/path/template metadata が schema と一致する", "status": "PASS", "evidence": "validate-graph-schema.py returned valid=true,
+          + violations=[], implementation_readiness=complete"},
+      110 +    {"id": "CL4", "text": "feature は C14 の macro contract から受け取り、通常 artifact routing で新規生成しない", "status": "PASS", "evidence": "Direct feature upsert rejected with e
+          +xit_code=2, error='feature must come from the C14 macro contract', write_count=0, revision and features/ unchanged"},
+      111 +    {"id": "CL5", "text": "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する", "status": "PASS", "evidence": "graph_revision=7 after 5 adds + 2 updat
+          +es, all 5 node IDs present in graph.json, sequential revision increments 0->1->2->3->4->5->6->7"}
+      112    ],
+       42 -  "overall_status": "in_progress",
+       43 -  "final_status": null,
+      113 +  "overall_status": "completed",
+      114 +  "final_status": "PASS",
+      115    "started_at": "2026-07-29T12:50:00Z",
+       45 -  "completed_at": null
+      116 +  "completed_at": "2026-07-29T13:00:00Z"
+      117  }
+
+⏺ Now append the second intermediate line and verify.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  Appended line 2
+
+⏺ Now run the goal-seek validation script and verify progress final state.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-node && python3 - "$DEV_GRAPH_ROOT/eval-log/run-…)
+  ⎿  Goal-seek validation PASSED (2 rows)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  pending_steps: 0
+     all_checklist_pass: True
+     overall_status: completed
+     final_status: PASS
+
+⏺ All checks pass. Now write the status.json completion marker.
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T125000Z-wt28-finalmain-c11-node/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-node/live-trial/20260729T125000Z-wt28-finalmain-c11-node/out/status.json
+      1 {"status": "PASS", "scenario": "C02-OUT1-positive-mixed-artifacts"}
+
+⏺ DONE: PASS
+
+✻ Worked for 9m 48s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code
