@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-21T14:40:00Z","origin_kind":"generated","source_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-29T05:21:27Z","origin_kind":"generated","source_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -172,6 +172,20 @@ checkout 中の branch ref だけを動かして作業ツリーを古いまま�
   製品仕様・設計へ影響しない判断は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   に記録した。
+
+## 2026-07-29 追記: live-trial reaper の並行安全性
+
+- `HarnessHub-cjwm` と重複 `HarnessHub-0vs2` を実装し、通常の `reap` を
+  run-id と boot owner PID の完全一致へ限定した。
+- session 作成時に tmux metadata へ所有情報を記録し、別 owner、別 run、
+  metadata 無し session は通常 cleanup の対象外とする。
+- 暗黙の全件削除を廃止し、全 live-trial session の回収は明示 `--all` だけに分離した。
+- 1,600 行超だった test module は 6 責務と共通 support へ分割し、全ファイルを
+  500 行未満へ収束した。
+- 仕様影響はローカル開発運用に限定される。system-spec `qa-090`、
+  `architecture/harness-hub-dev-workflow.md`、
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
+  に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
 ## アーキテクチャ参照
 
