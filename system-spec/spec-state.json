@@ -384,7 +384,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-088",
+        "qa_ref": "qa-090",
         "serves_goals": [
           "G1",
           "G4"
@@ -871,6 +871,11 @@
       "id": "qa-089",
       "question": "AI skill の live-trial を task/feature の受入証拠として再利用するとき、文字列上の PASS や一時ファイル参照を実証済みと誤認しないために何を必須としますか?",
       "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、開発品質ゲートの実走証拠契約を確定する。\n\n【1. scenario 束縛】受領書と verdict は positive scenario 正本の現行 scenario_id に一致し、required_observations を全件回収し、task_args_template と実引数の option flag が一致しなければならない。scenario が task.md の必須・禁止手順を宣言する場合は実 task.md も一致させ、実装不能な指示を別 operation へ読み替えて結果だけを合わせる run を拒否する。scenario_id の更新または scenario の削除は旧証拠を失効させる。\n\n【2. durable evidence】各 observation の evidence_ref は verdict の run directory を起点とした相対パスとし、生成時に workdir 内の実在する通常ファイルへ解決する。絶対パス、workdir 外への逸脱、ignored fixture や削除済み一時領域だけに残る参照を受入根拠にしない。PR に採用する run は参照先を含めて repository へ保持し、clean clone の品質ゲートでも解決できなければならない。\n\n【3. 実測と帰属】write count は実行前後の repository state 差分から導出し、binding は graph に永続した tracker_binding から導出する。起動引数や adapter の dry-run echo を実測値として書き戻さない。draft node の publication gate による 0 件と、promoted candidate の external-adapter dry-run による 0 件は別の帰属として記録する。昇格済み node の confirmation_evidence.evaluated_digest は、最終 persisted node から自己参照となる confirmation_evidence だけを除いた正準 JSON の SHA-256 と突合し、形式だけを満たす placeholder や昇格後の stale PASS を拒否する。\n\n【4. provenance】監査 helper は scenario 契約を含む責務分割した全 module の複合 digest と Git index 一致を pre/post で束縛し、監査自身や合格条件を書き換えた trial を拒否する。正例だけでなく同じ最終 graph から publication gate や schema rule を壊した負の検体を作り、正準 validator の該当節が赤になることを要求する。\n\n【5. 境界】本契約は Harness Hub の開発管理・テスト証拠に限定する。製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-090",
+      "question": "並行 live-trial の後片付けが別実行の tmux session を終了させないため、macOS のローカル開発契約へどの所有権境界を追加しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 のローカル開発契約を全面維持し、live-trial cleanup の所有権境界を追補する。各 tmux session は起動時に安全な run-id と owner PID を metadata として保持する。通常の reap は session 名の run prefix、記録済み run-id、記録済み owner PID の三つが完全一致した session だけを削除し、同じ run-id の別 owner、別 run-id、metadata 無し session を削除しない。run-id または owner PID が無い通常 reap は fail-closed で拒否する。全 live-trial session の削除は明示的な管理者操作 --all に限定し、通常の終了経路で使用しない。boot は記録した owner PID を READY 出力で呼出元へ渡し、cleanup は現在の shell PID で代用しない。fake tmux と実 tmux の回帰テストで sibling session の生存を固定する。本契約は repository 内の開発用 acceptance harness に限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -913,6 +918,10 @@
     {
       "id": "appr-011",
       "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks の文書にも反映」を明示承認として記録。HarnessHub-9ndl / HarnessHub-dyxr の最終レビューで確定した durable live-trial evidence、scenario 失効、実測帰属、最終 node への評価 digest 束縛、反証可能な negative control、監査 provenance の契約を qa-089 として反映する。"
+    },
+    {
+      "id": "appr-012",
+      "note": "ユーザーの 2026-07-29 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-cjwm / HarnessHub-0vs2 の最終レビューで確定した run-id + owner PID の live-trial cleanup 所有権境界を qa-090 として dev-workflow.desktop-macos へ反映する。"
     }
   ],
   "reopen_log": [
@@ -1574,6 +1583,12 @@
       "category": "dev-workflow",
       "platform": "desktop-macos",
       "reason": "qa-087 は qa-039 の維持を参照で表したため、compile 後の dev-workflow.md 単独ではローカル環境・CI 一致・本番操作禁止の詳細が展開されない。旧契約と worktree 安全契約を統合する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-cjwm / HarnessHub-0vs2 の実装で、並行 live-trial cleanup の所有権境界が既存 qa-088 より具体化されたため、ユーザーの仕様反映指示に従い R4-reopen して qa-090 へ再確定する",
       "from": "確定"
     }
   ],

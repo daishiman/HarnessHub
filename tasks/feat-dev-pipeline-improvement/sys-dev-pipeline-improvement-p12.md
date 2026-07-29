@@ -227,3 +227,16 @@ This section is the current source closure and supersedes older counts or wordin
 再検証は `python3 scripts/validate-git-hooks-wiring.py --check-local-config` と、
 対象 3 test file の pytest を使う。stash は `stash@{N}` でなく固有メッセージから得た
 commit SHA で参照し、古い branch でも git common dir の共有 hook bundle を使う。
+
+## 2026-07-29 実装後の live-trial 運用追補
+
+本 P12 の promoted task spec と完了判定は変更しない。live-trial の通常終了では、
+boot READY 行の `OWNER_PID` と同じ値を
+`reap --run-id "$RUN_ID" --owner-pid "$OWNER_PID"` へ渡す。
+現在の shell の `$$` で代用しない。
+
+引数なし `reap` と、通常フローでの `reap --all` は禁止する。
+`--all` は tmux server 上の全 live-trial session を管理者が明示回収する場合だけ使う。
+障害調査で metadata 無し session を見つけても通常 reaper は削除しないため、
+必要性と対象を確認してから個別 `kill-session` または管理者 `--all` を選ぶ。
+詳細は `docs/worktree-parallel-operations-runbook.md` と system-spec `qa-090` を正とする。

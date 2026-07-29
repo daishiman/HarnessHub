@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-28T00:55:00Z"
+updated_at: "2026-07-29T05:22:00.507534Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"}
-source_lineage: {"imported_at":"2026-07-23T04:45:00Z","origin_kind":"system-spec-harness","source_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md"}
+source_lineage: {"imported_at":"2026-07-29T05:21:27Z","origin_kind":"system-spec-harness","source_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -242,3 +242,20 @@ git は merge driver を 2 段で解決する。`.gitattributes` が「どのパ
 是正は `.gitattributes` の追加と、**対照実験を伴う機械検査**である (`plugins/dev-graph/tests/test_build_merged_graph.py`)。本命テストが「driver が衝突を解決する」ことを見るだけでは、シナリオが行ベースでも解決できるものへ退化したときに気づけない。同ファイルに「driver 未 install の repo では同じシナリオが必ず衝突する」対照群を置き、本命の緑が driver の発火を実際に含意するようにした。
 
 これは先行する 4 例 (代理指標の衝突 3 件と、恒久 false な起動条件 1 件) とは別種だが、**「動いていないことが観測できない」という点で同型**である。代理指標は実体と代理がずれても緑を出し、恒久 false な gate は起動しない step が緑を出し、本件は有効化されていない機構が緑を出す。いずれも検査の不在ではなく、検査が何を含意しているかの取り違えに由来する。
+
+### 差分追記 (2026-07-29): live-trial cleanup の所有権境界
+
+出典: system-spec `qa-090`、bd `HarnessHub-cjwm` / `HarnessHub-0vs2`。
+
+tmux server は複数 worktree・複数 trial から共有されるため、`lt-` prefix だけでは
+削除権限を表せない。session 作成時に `@lt_run_id` と `@lt_owner_pid` を記録し、
+通常の reaper は次の三条件をすべて満たす session だけを削除する。
+
+1. session 名が対象 run-id の正規 prefix に一致する。
+2. tmux metadata の `@lt_run_id` が対象 run-id と一致する。
+3. tmux metadata の `@lt_owner_pid` が boot から handoff された owner PID と一致する。
+
+一条件でも不明または不一致なら削除しない fail-closed 境界とする。現在の shell PID を
+owner PID の代用品にせず、boot の READY 出力をそのまま cleanup へ渡す。
+全 session の回収は通常フローから分離した明示 `--all` だけに許可する。
+fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠とする。

@@ -209,3 +209,15 @@ This section is the current source closure and supersedes older counts or wordin
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-29 実装後の証跡追補
+
+本 P11 の promoted task spec と完了判定は変更しない。後続課題 `HarnessHub-cjwm`
+（重複 `HarnessHub-0vs2`）では、live-trial cleanup の回帰証拠を責務別 pytest、
+backend/boot self-test、内容レビュー、仕様反映受領書へ固定した。
+
+通常 reaper の証拠は「対象が消えた」だけでなく、同じ run-id の別 owner、別 run、
+metadata 無し session が残ることを含む。全件削除は明示 `--all` の正例と、
+引数なし `reap` を拒否する負例の両方を保持する。
+再検証は `python3 -m pytest tests/test_live_trial_*.py -q` と
+`python3 scripts/lint-content-review.py --all` を使う。
