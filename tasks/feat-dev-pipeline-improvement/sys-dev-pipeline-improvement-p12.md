@@ -12,7 +12,7 @@ iteration: null
 title: "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:57:02.733424Z"
+updated_at: "2026-07-29T12:47:25Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P11"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -240,3 +240,15 @@ boot READY 行の `OWNER_PID` と同じ値を
 障害調査で metadata 無し session を見つけても通常 reaper は削除しないため、
 必要性と対象を確認してから個別 `kill-session` または管理者 `--all` を選ぶ。
 詳細は `docs/worktree-parallel-operations-runbook.md` と system-spec `qa-090` を正とする。
+
+## 2026-07-29 HarnessHub-foq6 仕様反映追補
+
+本 P12 の promoted task spec と完了判定は変更しない。空走査 fail-open は
+repository 内の開発品質契約へ影響するため、`appr-013` を承認根拠として
+`system-spec/dev-workflow.md` の web セルを R4 reopen し、qa-092 へ再確定した。
+`specs/`、`architecture/`、`features/`、`docs/`、本 `tasks/` の参照を同一 wave で同期し、
+製品 API・DB・認証認可・UI・deploy unit は非変更と記録した。受領書は
+`docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`
+を正とする。C05 completeness evaluator は同一 session の C07/C06/C08 fork 証跡を
+hook 台帳で裏取りして PASS し、Architecture/Feature の source digest も qa-092 反映後の
+`system-spec/dev-workflow.md` と一致する。

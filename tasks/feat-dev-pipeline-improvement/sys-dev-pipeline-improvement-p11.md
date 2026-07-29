@@ -12,7 +12,7 @@ iteration: null
 title: "証跡固定 — 実測ログと digest の evidence manifest 化"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:56:36.431928Z"
+updated_at: "2026-07-29T12:47:25Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P10"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -221,3 +221,13 @@ metadata 無し session が残ることを含む。全件削除は明示 `--all`
 引数なし `reap` を拒否する負例の両方を保持する。
 再検証は `python3 -m pytest tests/test_live_trial_*.py -q` と
 `python3 scripts/lint-content-review.py --all` を使う。
+
+## 2026-07-29 HarnessHub-foq6 品質ゲート追補
+
+本 P11 の promoted task spec と完了判定は変更しない。後続の空走査是正では、
+missing directory / empty directory / explicit `--allow-empty` の三分岐を専用テストへ
+分離し、focused pytest 41 passed、self-test 9 checks、実 workflow 10 件の
+violations 0 を証拠として固定した。検査対象 0 件の exit 0 は証拠として受理しない。
+再検証の全コマンドと仕様反映は
+`docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`
+を正とする。

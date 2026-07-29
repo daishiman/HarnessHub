@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-069 |
+| Web (web) | 確定 | 確定質疑: qa-092 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
@@ -24,11 +24,23 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-069 (対応セル: web)
+### qa-092 (対応セル: web)
 
-**質問**: dev-graph/beads (bd) のタスク優先度選定 (schedule/ready の判断軸) を、どのような基準へ変更しますか? 現行の品質・本質先行の選定で何が問題になっていますか?
+**質問**: MVP ファーストの優先度判断を維持したまま、CI / local の品質ゲートが検査対象 0 件で緑になる fail-open を防ぐ dev-workflow.web 契約を、章単独で情報を失わない形でどう確定しますか?
 
-**回答**: 現行は AI が文脈から『本質的なシステムを作り上げること』を最優先に選定するため、同じ基盤タスクを繰り返し実行して解決せず、依存関係でつながった他タスクまで止まり、いちばん作りたかった機能から離れていく (根本原因は品質と再現性を求めすぎる完璧主義がスケジューラの優先度に転写されたこと)。変更後の判断軸は (1) 目的=何のために作るか、(2) 背景=どういう経緯で必要になったか、(3) MVP=今必要な動くもの、の3軸とし、品質を先回りする基盤・本質課題解決タスクよりも『まず使えるものを構築する』タスクを優先して選定する。まず作って、使って、課題をあぶり出す回転 (build-use-learn) に戻すことが狙い。具体的には feature/task の選定時に MVP 適合 (今必要な動くものに直結するか) を第一ソートキーへ昇格し、品質・再現性強化系は MVP 成立後に繰り延べる。CI/CD・quality gate 等の既確定の dev-workflow 要件 (qa-066) 自体は維持し、優先度選定の判断軸のみ組み替える
+**回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-069 の MVP ファーストな優先度契約を全面維持し、品質ゲートの空走査境界を統合した次の dev-workflow.web 契約を確定する。
+
+【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。
+
+【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。
+
+【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。
+
+【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。
+
+【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は plugins/dev-graph/references/execution-tracker-contract.md、判断と検証の受領書は docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md とする。
+
+【6. 境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-088 (対応セル: desktop-windows)
 
@@ -53,21 +65,6 @@ serves_goals: [G1, G4, G5]
 **質問**: 並行 live-trial の後片付けが別実行の tmux session を終了させないため、macOS のローカル開発契約へどの所有権境界を追加しますか?
 
 **回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 のローカル開発契約を全面維持し、live-trial cleanup の所有権境界を追補する。各 tmux session は起動時に安全な run-id と owner PID を metadata として保持する。通常の reap は session 名の run prefix、記録済み run-id、記録済み owner PID の三つが完全一致した session だけを削除し、同じ run-id の別 owner、別 run-id、metadata 無し session を削除しない。run-id または owner PID が無い通常 reap は fail-closed で拒否する。全 live-trial session の削除は明示的な管理者操作 --all に限定し、通常の終了経路で使用しない。boot は記録した owner PID を READY 出力で呼出元へ渡し、cleanup は現在の shell PID で代用しない。fake tmux と実 tmux の回帰テストで sibling session の生存を固定する。本契約は repository 内の開発用 acceptance harness に限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-
-### 実装反映注記 (2026-07-29 / `HarnessHub-bk8v`)
-
-dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、
-`status`、`confirmation_status`、`evaluation_status`、
-`implementation_readiness.status` の後退を stale before-image として拒否する。
-拒否は dry-run / apply の双方で無変更かつ fail-closed とし、意図的な再評価は
-変更フィールドを列挙した明示 patch に限る。
-
-これは qa-088 / qa-090 の開発フローを安全に実行する内部整合性ガードであり、
-確定済み QA の回答、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は
-変更しない。実装契約の正本は
-`plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は
-`docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
-とする。
 
 ## 上流指針 (doctrine anchor)
 

@@ -355,7 +355,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-069",
+        "qa_ref": "qa-092",
         "serves_goals": [
           "G1",
           "G4",
@@ -881,6 +881,11 @@
       "id": "qa-091",
       "question": "production Worker の認証設定と GitHub Actions の Cloudflare token 最小権限分離を、infrastructure.web 単独で情報を失わない契約としてどう確定しますか?",
       "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-084 の production 認証・rollout 契約を全面維持し、GitHub Actions の Cloudflare token 分離を統合した次の infrastructure.web 契約を確定する。\n\n【1. Worker runtime の Secret / 環境設定】production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、文書、ログへ記録しない。\n\n【2. GitHub Actions の Cloudflare token 分離】CLOUDFLARE_API_TOKEN は Worker deploy / rollback 専用とし Workers Scripts Edit を付与するが R2 write 権限を付与しない。CLOUDFLARE_R2_API_TOKEN は日次 backup と production smoke の R2 object put/get/delete 専用とし Workers Scripts 権限を付与しない。Wrangler の r2 object put/get --remote は Cloudflare REST API を使い、bucket-scoped の Workers R2 Storage Bucket Item Write は S3-compatible API 専用で REST API では利用できないため、R2 token には account-scoped の Workers R2 Storage Write を使う。2 token は別々の GitHub Actions secret として投入し、値を引数・文書・ログへ残さない。\n\n【3. rollout 順序】DB backup と migration dry-run、本適用、認証 Secret/環境設定と Actions required secret の存在確認、Worker deploy、/health、2 tenant OIDC・Device Flow smoke、本番 R2 smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。\n\n【4. 検証境界】workflow の secret 参照と scripts/ci/actions-secrets-registry.json は CI で双方向突合し、実投入状況は check-actions-secrets.mjs --live で検査する。静的 test は deploy step が deploy token だけを、backup / R2 smoke が R2 token だけを参照することを固定する。token 発行、GitHub への投入、deploy token による R2 write 拒否、R2 token による workflow 完走は外部状態の実測が揃うまで完了扱いにしない。\n\n【5. 境界】本変更は CI/CD credential の権限境界と運用契約を強化する。Hub の外部 API、DB schema、認証認可モデル、UI、Cloudflare deploy unit 自体は変更しない。"
+    },
+    {
+      "id": "qa-092",
+      "question": "MVP ファーストの優先度判断を維持したまま、CI / local の品質ゲートが検査対象 0 件で緑になる fail-open を防ぐ dev-workflow.web 契約を、章単独で情報を失わない形でどう確定しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-069 の MVP ファーストな優先度契約を全面維持し、品質ゲートの空走査境界を統合した次の dev-workflow.web 契約を確定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は plugins/dev-graph/references/execution-tracker-contract.md、判断と検証の受領書は docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md とする。\n\n【6. 境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -927,6 +932,10 @@
     {
       "id": "appr-012",
       "note": "ユーザーの 2026-07-29 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-cjwm / HarnessHub-0vs2 の最終レビューで確定した run-id + owner PID の live-trial cleanup 所有権境界を qa-090 として dev-workflow.desktop-macos へ反映する。"
+    },
+    {
+      "id": "appr-013",
+      "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映。500 行超過時は分離」を明示承認として記録。HarnessHub-foq6 の空走査 fail-closed、明示 allow-empty、回帰証拠、500 行分冊を qa-092 として dev-workflow.web へ反映する。"
     }
   ],
   "reopen_log": [
@@ -1600,6 +1609,12 @@
       "category": "infrastructure",
       "platform": "web",
       "reason": "HarnessHub-bda4 の Cloudflare credential 分離を qa-091 として再確定し、origin/main の qa-090 live-trial cleanup 契約との QA ID 衝突を解消する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "HarnessHub-foq6 で品質ゲート自身に残っていた対象 0 件成功の fail-open を解消し、qa-069 の MVP ファースト契約を維持したまま CI / local の空走査境界を自己完結して再確定する",
       "from": "確定"
     }
   ],

@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-07-29T12:47:25Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -184,6 +184,18 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   DB schema、認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
 - 実装契約、設計判断、検証結果の対応は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
+  を正とする。
+
+**開発品質ゲートの空走査反映 (2026-07-29 / `HarnessHub-foq6`)**:
+
+- `system-spec/dev-workflow.md` の web セルを正規に reopen し、qa-069 の
+  MVP ファースト契約を維持したまま qa-092 へ再確定した。
+- 品質ゲートは directory 不在・検査対象 0 件を既定で失敗させ、
+  意図的な空走査だけを明示 opt-in で許可する。
+- completeness evaluator は C07/C06/C08 の fork 証跡を同一 session へ束縛して PASS し、
+  `arch-harness-hub-dev-workflow` の source digest は確定章の実 digest と一致する。
+- 製品 API・DB・認証認可・UI・deploy unit は変更しない。反映と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
   を正とする。
 
 ## 未決事項
