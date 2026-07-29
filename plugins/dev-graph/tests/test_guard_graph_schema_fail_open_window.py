@@ -200,6 +200,50 @@ def test_writer_name_does_not_launder_a_direct_write(guard, monkeypatch, capsys,
     assert "build-repo-config.py" in stderr, "遮断理由が正規経路を案内していない"
 
 
+# HarnessHub-lp36: interpreter 経由 (python -c / heredoc) の書込み API 検出を issue の静的
+# probe と同じ形で固定する。取りこぼし側 (false negative) は pathlib write_text/write_bytes に
+# 加えて shutil.copy* / shutil.move / os.replace / os.rename / json.dump を、過剰遮断側
+# (false positive) は open(..., 'r'/'rb') が ALLOW になり 'r+' は BLOCK のまま残ることを見る。
+# shell redirect (cat> / tee) 側は REDIRECT_MUST_BLOCK / WRITER_MUST_BLOCK が別途固定済み。
+INTERPRETER_WRITE_MUST_BLOCK = [
+    "open('.dev-graph/state/graph.json', 'w')",
+    "open('.dev-graph/config.json', 'a')",
+    "open('.dev-graph/state/graph.json', 'x')",
+    "open('.dev-graph/state/graph.json', 'r+')",
+    "open('.dev-graph/state/graph.json', 'br+')",
+    "open('.dev-graph/state/graph.json', '+rb')",
+    "open('.dev-graph/state/graph.json', 'bw')",
+    "from pathlib import Path\nPath(sys.argv[1]).write_text('{}')  # .dev-graph/state/graph.json",
+    "from pathlib import Path\nPath('.dev-graph/state/graph.json').write_text('{}')",
+    "from pathlib import Path\nPath('.dev-graph/config.json').write_bytes(b'{}')",
+    "shutil.copy(src, '.dev-graph/state/graph.json')",
+    "shutil.copyfile(src, '.dev-graph/config.json')",
+    "shutil.copy2(src, '.dev-graph/state/graph.json')",
+    "shutil.move(src, '.dev-graph/state/graph.json')",
+    "os.replace(src, '.dev-graph/state/graph.json')",
+    "os.rename(src, '.dev-graph/config.json')",
+    "json.dump(data, open('.dev-graph/state/graph.json', 'w'))",
+]
+
+INTERPRETER_READ_MUST_ALLOW = [
+    "open('.dev-graph/state/graph.json', 'r')",
+    "open('.dev-graph/state/graph.json', 'rb')",
+    "open('.dev-graph/state/graph.json', 'br')",
+    "json.load(open('.dev-graph/state/graph.json'))",
+    "from pathlib import Path\nprint(Path('.dev-graph/state/graph.json').read_text())",
+]
+
+
+@pytest.mark.parametrize("command", INTERPRETER_WRITE_MUST_BLOCK)
+def test_interpreter_write_apis_into_graph_authority_are_blocked(guard, command):
+    assert guard.interpreter_writes_graph_authority(command) is True, command
+
+
+@pytest.mark.parametrize("command", INTERPRETER_READ_MUST_ALLOW)
+def test_interpreter_read_only_calls_are_not_blocked(guard, command):
+    assert guard.interpreter_writes_graph_authority(command) is False, command
+
+
 def test_write_denial_names_the_actual_protected_scope(guard, monkeypatch, capsys, tmp_path):
     """遮断理由が保護範囲を広く名乗ると、正規手順まで塞がれていると読まれる。
 

@@ -1,25 +1,32 @@
 {
-  "target": {"plugin": "slide-report-generator", "skill": "run-slide-report-modify", "skill_md_sha256": "aff9aeb31b92cc21440f35592c9ad216e049ab6f99eac7febacf9347d2080576"},
+  "target": {"plugin": "slide-report-generator", "skill": "run-slide-report-modify", "skill_md_sha256": "841df17edb2b95adcc24e77b22e9641da3904463493901e9302c9fa4c003b3b2"},
   "review_kind": "rubric",
   "verdict": "PASS",
-  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
-  "reviewer": "review-group-c-independent-rubric",
-  "reviewed_at": "2026-07-12T00:22:24Z",
-  "iterations": 2,
+  "findings_summary": {"contradiction": 0, "omission": 1, "inconsistency": 1, "dependency_break": 0, "smell": 1},
+  "reviewer": "claude-opus-5-rescue-independent-rubric",
+  "reviewed_at": "2026-07-28T00:00:00Z",
+  "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "Deterministic rubric initially found exact BD-001/BD-002 heading violations; after correction rubric 1.3.0 score=100/threshold=80 with no findings.",
-      "Single responsibility is in-place local modification with mode preservation; new generation and series review are delegated. Router, 7-layer prompt, manifest and mode-specific references form progressive disclosure.",
-      "IN1/OUT1 are purpose acceptance rather than generic gates and map to concrete mode validation, local-change constraints and post-change visual tests; plugin pytest 131 PASS."
+      "決定論採点を実走: render-findings-score.py を L0 (ref-skill-design-rubric/references/rubric.json) → L2 (assign-skill-design-evaluator/references/rubric.json) の順で合成し score=100 / threshold=80 / passed=true / findings 0 / required_fixes 0 / pending_human 0。rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d、composition_hash=sha256:993e0c21ed1e5cc71d7f5d1214e5ed062069d27b7df966d412d5aded301392d0。FM/BD/NM/PD/RG 系に減点対象は無い。",
+      "改名整合 (rubric 規約観点): SKILL.md の deterministic_checks L98・追加リソース L156 が build-playwright-runtime.py を指し、実体・workflow-manifest.json の path と id (script-build-playwright-runtime)・R1-orchestrate.md:84 の記述が一致。skill 配下に `setup-playwright.py` / `npx playwright install` の旧記述は 0 件で、命名規約 (許可動詞 build-) への移行が語彙レベルまで完了している。",
+      "単一責務と progressive disclosure が保たれている: 本 skill は既存成果物の in-place 局所修正のみを持ち、新規生成は run-slide-report-generate、シリーズ横断検証は run-cross-deck-review へ明示委譲 (境界節)。SKILL.md 160 行の router に対し 7 層駆動契約は prompts/R1-orchestrate.md、機械可読宣言は workflow-manifest.json、mode 別規範は references/modification-rules.md と report-modification-rules.md へ分離され、PD-001 (本文 100 行超なら references 必須) を満たす。",
+      "IN1/OUT1 が汎用ゲートの言い換えでなく purpose-acceptance になっている: IN1 は validate-output-mode.py による output_mode/reportType 値域の送信前 fail-closed 検証 (verify_by=script) に、OUT1 は『指定箇所のみ修正・意匠/技術コアと非対象箇所が不変・再評価で視覚崩れ 0』(verify_by=test) に写像され、frontmatter・本文『ゴールシークと受入基準』・manifest の gate C1/C2/C3 が同一内容で三重宣言されている。",
+      "REG-001 の一方 (validate-plugin-completeness.py) は PASS。加えて lint-contract-drift PASS(count=0)、lint-reference-attribution PASS、plugin pytest 136 passed。"
     ],
-    "negative_feedback": [],
-    "iteration": 2,
+    "negative_feedback": [
+      "[medium・omission] score=100 は rubric 全 rule の充足を意味しない。L2 rubric が high で宣言する 4 rule (PG-001/PG-002/BND-001/REG-001) は check が宣言文字列のままで render-findings-score.py が機械実行しないため、findings 0 の内訳に含まれない。手検証の結果: PG-001 は prompts/R1-orchestrate.md が実在し充足 (規則本文は prompts/<R-id>.yaml と書くが repo 全体が .md 採用で、これは rubric 側の表記乖離)、PG-002 は agents/slide-report-modifier.md:19 に `<!-- responsibility: R2-agent-slide-report-modifier -->` anchor があり充足。REG-001 は validate-plugin-completeness.py が exit 0 だが本 plugin に build-trace.json が存在せず validate-build-trace.py を実行できないため未充足のまま。BND-001 は slide-report-generator が .claude-plugin/bundles.json・marketplace.json のいずれにも未登録 (origin/main でも同様の既存欠落) だが、規則のトリガー『plugins/<name>/ が新規追加された場合』を本変更集合は満たさないため適用外と判定した。",
+      "[medium・inconsistency・plugin scope] REG-001 と並ぶ plugin 宣言ゲートである lint-vendor-parity.py が FAIL (mismatch=1)。本 branch の改名で vendor/scripts/hooks/deck-postgen-hook.js の案内文を build-playwright-runtime.py へ書き換えたが、vendor-digest-manifest.json の pin (7c6e2165…) と実 blob (f3171915…) が不一致。origin/main では pin 3e527c76… と blob 3e527c76… が一致していたため本 branch 由来の退行であり、merge 前に pin 再計算が必要。当該 hook は本 SKILL.md の参照閉包外のため rubric score には反映しない。",
+      "[low・smell] deterministic_checks ブロックの層が混在。副作用を持つ復元コマンド `build-playwright-runtime.py --install` が検査コマンド列に同居し、ブロック末尾 L114 は『いずれも全ゲート exit 0 を完成根拠とする』と宣言する。sibling の run-slide-report-generate:124 は `--install && validate-output-mode.py --preflight` と連結して検査で閉じており、modify 側だけ復元成否の検証手段を欠く。",
+      "[low・inconsistency] 新規制約の記述が mode 間で非対称。RCONST_013 は report 側 (L87) で『入口ホリゾンタル（タイトル/リード/summary の読者価値）』と中身まで書かれるのに、対称に新設された slide 側 CONST_013 (references/modification-rules.md:86) は L86 の範囲繰り上げのみで実質が本文に現れない。"
+    ],
+    "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual-skill-sha-change",
     "next_action": "none"
   },
-  "notes": "rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d; composition_hash=sha256:964f754f53128715cc6da07f933f12e466d5fe943dad21929bc9b83adf7bcef9。"
+  "notes": "救出 branch の未レビュー変更 (origin/main 比 +13 -11) に対する genuine 再評価であり、旧 verdict (sha aff9aeb3…) の引き写しではない。実測根拠: (1) render-findings-score.py を L0→L2 合成で実走し score=100/threshold=80/findings 0 (rubric_version 1.3.0・composition_hash=sha256:993e0c21…)。前 verdict の composition_hash (964f754f…) とは L0 側の更新により異なる値で、再計算済みであることを示す。(2) 機械実行されない L2 high 4 rule を手検証し、PG-001/PG-002 充足・REG-001 は build-trace.json 不在で半充足・BND-001 はトリガー非該当と判定。(3) 改名整合を実測 — workflow-manifest.json の id/path/phase resourceIds 3 箇所すべて build-playwright-runtime 系へ更新、skill 配下の setup-playwright dangling 0 件、vendor playwright-runtime.js:22-24 の setupCommand() も新名。(4) plugin pytest 136 passed、lint-contract-drift/lint-reference-attribution/validate-plugin-completeness いずれも PASS。rubric 上の high severity finding は 0 のため PASS。ただし medium 2 件 (score の被覆範囲の限界を明示する必要・lint-vendor-parity の branch 由来退行) と low 2 件を負のフィードバックとして残し、lint-vendor-parity の pin 修正を merge 前提条件として推奨する。本評価は content-review-protocol の incremental 経路であり、30 思考法の網羅実行は行っていない。"
 }

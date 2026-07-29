@@ -1,0 +1,20 @@
+{
+  "artifact": "plugins/harness-creator/skills/run-skill-live-trial/scripts/validate-live-trial-scenario-contract.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 95,
+    "notes": "scenario 観測契約の解析と証拠束縛に責務を限定。観測番号・evidence ref・args・task.md 手順の不一致を fail-closed で blocker に変換し、読み取り以外の副作用を持たない。"
+  },
+  "reviewed_by": "independent-content-reviewer-20260729",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "evidence-containment",
+    "task-contract",
+    "frontmatter-exemption"
+  ]
+}

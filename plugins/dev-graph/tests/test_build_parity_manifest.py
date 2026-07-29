@@ -226,6 +226,27 @@ def test_unlinked_and_dependency_gaps_are_reported_not_dropped(tmp_path, monkeyp
     assert manifest["nodes"][0]["depends_on"] == ["n-unlinked"]
 
 
+def test_graph_node_ids_is_the_full_existence_set_not_the_projection(tmp_path, monkeypatch, capsys):
+    """`graph_node_ids` は「graph に実在した node の全集合」で `nodes[]` の superset (HarnessHub-ii90)。
+
+    投影対象だけを載せると、起票前 node と「graph から消えた node」が C28 で同じ札に
+    なる。前者は C03 sync / C02 起票で解ける一方、後者 (orphan external_ref) は sync を
+    何度回しても解けないため、混ぜると「sync すれば直る」という誤診断が常駐する。
+    """
+    builder = load("build-parity-manifest.py", "c28_manifest_existence_set")
+    graph = workspace(tmp_path, [
+        node("n-linked", "B-linked"),
+        node("n-unlinked", None),                          # 起票前 (投影対象外)
+        node("n-github", "ignored", tracker_binding="github"),  # tracker が beads でない
+    ])
+
+    code, receipt = call_main(builder, monkeypatch, capsys, "--repo-root", tmp_path, "--graph", graph)
+    assert code == 0
+    manifest = json.loads((tmp_path / receipt["manifest_path"]).read_text(encoding="utf-8"))
+    assert [row["graph_node_id"] for row in manifest["nodes"]] == ["n-linked"]
+    assert manifest["graph_node_ids"] == ["n-github", "n-linked", "n-unlinked"]
+
+
 def test_duplicate_bd_issue_id_fails_closed(tmp_path, monkeypatch, capsys):
     """C28 が manifest 破損として拒否する重複を、生成側で先に止める。"""
     builder = load("build-parity-manifest.py", "c28_manifest_duplicate")

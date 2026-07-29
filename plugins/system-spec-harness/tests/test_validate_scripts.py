@@ -170,6 +170,103 @@ def test_c12_derive_aggregate_truth_table():
     assert c12._derive_aggregate(["確定", "対象外"]) == "確定"
 
 
+# ── C12 ID 一意性 (集合化で静かに潰れる二重採番の fail-closed 検出) ─────────
+def test_c12_qa_log_duplicate_id_fails():
+    # 同一 id の別内容エントリ (並行ブランチでの二重採番) を非 0 終了させる。
+    d = _valid_matrix()
+    d["qa_log"].append({"id": "qa-001", "question": "別内容の二重採番", "answer": "b"})
+    assert any("qa_log" in f and "重複" in f for f in c12.validate(d, require_complete=True))
+
+
+def test_c12_qa_log_duplicate_reports_id_and_count():
+    # どの ID が何件重複しているかを出力する (期待挙動: 重複 ID の報告)。
+    d = _valid_matrix()
+    d["qa_log"] += [{"id": "qa-001"}, {"id": "qa-001"}]
+    findings = c12.validate(d)
+    assert any("qa-001" in f and "3 件重複" in f for f in findings)
+
+
+def test_c12_qa_log_duplicate_does_not_mask_dangling_ref():
+    # 重複検出を足しても既存の参照実在検査は従来どおり働く (検査が相互に隠れない)。
+    d = _valid_matrix()
+    d["qa_log"].append({"id": "qa-001"})
+    d["matrix"]["database"]["web"] = {"state": "確定", "qa_ref": "qa-999"}
+    findings = c12.validate(d)
+    assert any("重複" in f for f in findings)
+    assert any("qa-999" in f for f in findings)
+
+
+def test_c12_approval_log_duplicate_id_fails():
+    d = _valid_matrix()
+    d["approval_log"].append({"id": "appr-001", "note": "別内容の二重採番"})
+    assert any("approval_log" in f and "重複" in f for f in c12.validate(d))
+
+
+def test_c12_qa_and_approval_id_collision_fails():
+    # 両ログは ref_ids へ統合されるため、ログを跨いだ衝突も参照先を一意にしない。
+    d = _valid_matrix()
+    d["approval_log"].append({"id": "qa-001"})
+    assert any("両ログ" in f for f in c12.validate(d))
+
+
+def test_c12_qa_log_entry_without_id():
+    d = _valid_matrix()
+    d["qa_log"].append({"question": "id 無し"})
+    assert any("qa_log" in f and "id" in f for f in c12.validate(d))
+
+
+def test_c12_qa_log_entry_with_non_string_id():
+    # 非文字列 id は sorted() で型混在 TypeError を招くため一意性検査の前に拒否する。
+    d = _valid_matrix()
+    d["qa_log"].append({"id": 42})
+    assert any("qa_log" in f and "id" in f for f in c12.validate(d))
+
+
+def test_c12_qa_log_entry_not_object():
+    d = _valid_matrix()
+    d["qa_log"].append("qa-002")
+    assert any("qa_log" in f and "オブジェクトでない" in f for f in c12.validate(d))
+
+
+def test_c12_qa_log_not_list():
+    d = _valid_matrix()
+    d["qa_log"] = {"id": "qa-001"}
+    assert any("qa_log" in f and "配列でない" in f for f in c12.validate(d))
+
+
+def test_c12_qa_log_absent_is_still_ok():
+    # qa_log 不在 (確定セルが 1 つも無い段階) は従来どおり違反にしない (後方互換)。
+    d = _valid_matrix()
+    del d["qa_log"]
+    d["matrix"] = {
+        c: {p: {"state": "対象外", "reason": "x"} for p in PLATFORMS} for c in CATEGORIES
+    }
+    assert c12.validate(d, require_complete=True) == []
+
+
+def test_c12_categories_duplicate_id_fails():
+    # 同種の集合化取りこぼし: 重複 category id は同一 matrix 行を二重評価する。
+    d = _valid_matrix()
+    d["categories"].append({"id": "database", "label": "重複定義"})
+    assert any("categories" in f and "重複" in f for f in c12.validate(d))
+
+
+def test_c12_unique_ids_keep_passing():
+    # 重複が無ければ従来どおり exit 0 相当 (現行 spec-state.json の後方互換)。
+    d = _valid_matrix()
+    d["qa_log"].append({"id": "qa-002", "question": "q2", "answer": "a2"})
+    d["approval_log"].append({"id": "appr-002"})
+    assert c12.validate(d, require_complete=True) == []
+
+
+def test_c12_main_duplicate_qa_id_exits_nonzero(tmp_path, capsys):
+    d = _valid_matrix()
+    d["qa_log"].append({"id": "qa-001", "question": "二重採番", "answer": "b"})
+    m = write(tmp_path, "m.json", d)
+    assert c12.main(["--matrix", m, "--require-complete"]) == 1
+    assert "qa-001" in capsys.readouterr().err
+
+
 # ── C12 main() CLI tests ──────────────────────────────────────────────────
 def test_c12_main_ok(tmp_path, capsys):
     m = write(tmp_path, "m.json", _valid_matrix())

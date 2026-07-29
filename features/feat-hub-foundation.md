@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-25T21:18:40Z"
+updated_at: "2026-07-29T06:15:52.997834Z"
 status: "active"
 depends_on: []
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-25T21:18:40Z","origin_kind":"generated","source_digest":"2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-25T21:18:40Z","origin_kind":"generated","source_digest":"e8a7f9308f00bcaa6e7d7df9f623cf3649d15c9f2242c18b31f0336ad8ce3dc9","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-hub-foundation.md","confidence":0.9}]
@@ -95,6 +95,13 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - 受入「CI が test→deploy を完走する」(A1) は run `30143422049` で達成済み。**日次 backup の初回成功は未達**で、是正版が main へ land した後の `workflow_dispatch` 再実行まで残る ([release-notes.md](../docs/features/feat-hub-foundation/release-notes.md) §4.1 の #5)。
 - 3 夜連続の失敗が誰にも気づかれなかった経路の欠落 (`BACKUP_HEARTBEAT_URL` 未投入で外形監視が無音) は本 feature の範囲外として `HarnessHub-dbx6` / `issue-backup-failure-undetected-20260728` へ分離した。
 - 証跡: [evidence/actions-secrets-2026-07-28.json](../docs/features/feat-hub-foundation/evidence/actions-secrets-2026-07-28.json)
+
+## 実装反映 (2026-07-29 / HarnessHub-bda4)
+
+- GitHub Actions の Cloudflare token を、Workers deploy / rollback 用の `CLOUDFLARE_API_TOKEN` と、backup / 本番 smoke の R2 object 操作用 `CLOUDFLARE_R2_API_TOKEN` に分離した。一方の token が漏れても Worker と backup の両方を変更できない境界にする。
+- R2 経路は Wrangler の Cloudflare REST API を使うため、R2 token は account-scoped の `Workers R2 Storage Write` とする。S3 互換 API 専用の bucket item 権限へ読み替えない。
+- workflow と機械可読台帳の静的整合は実装済み。Cloudflare 側の token 発行、GitHub secret 投入、deploy token による R2 write 拒否、本番 workflow 完走は外部実測待ちのため、`HarnessHub-bda4` は継続中とする。
+- 仕様反映と最終レビューの記録: [Cloudflare token 最小権限分離 仕様反映受領書](../docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md)
 
 ## アーキテクチャ参照
 

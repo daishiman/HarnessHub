@@ -1,0 +1,15 @@
+{
+  "status": "FAIL",
+  "scenario": "C14-OUT1-positive-macro-decomposition",
+  "reason": "Audit exited with EX_DATAERR (65) before producing a result. bd-bridge.py _require_registered_nodes (HarnessHub-mfh7 P1 fix) rejects --op create --dry-run when graph_node_id is absent from the canonical graph. The fixture deliberately holds an empty graph (per scenario fixture_contract), and --dry-run prohibits local graph writes (per SKILL.md OUT3 contract). The audit's _adapter_receipts calls bd-bridge.py --op create --dry-run with a preview node's graph_node_id, creating an unsatisfiable precondition. The macro decomposition preview itself is valid: acyclic DAG with 2 features + 1 architecture, 0 task nodes, 0 structural schema violations, inter-feature depends_on within threshold. Only artifact_missing violations were reported (expected for dry-run preview without artifact files).",
+  "artifacts": {
+    "goal_spec": "eval-log/run-dev-graph-decompose-goal-spec.json",
+    "intermediate": "eval-log/run-dev-graph-decompose-intermediate.jsonl",
+    "progress": "eval-log/run-dev-graph-decompose-progress.json",
+    "pre_state": "eval-log/pre-state.json",
+    "macro_preview": "eval-log/macro-preview.json"
+  },
+  "goal_seek_verification": "PASSED",
+  "audit_exit_code": 65,
+  "audit_output_produced": false
+}

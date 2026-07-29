@@ -69,6 +69,14 @@ def calls(bridge, monkeypatch):
     return recorded
 
 
+def register_graph(root: Path, *node_ids: str) -> None:
+    """create の実在検証 (HarnessHub-mfh7) が読む canonical graph を fixture root に置く。"""
+    state = root / ".dev-graph"
+    state.mkdir(exist_ok=True)
+    (state / "config.json").write_text(json.dumps({"local_state": {"graph": ".dev-graph/graph.json"}}))
+    (state / "graph.json").write_text(json.dumps({"nodes": [{"graph_node_id": node_id} for node_id in node_ids]}))
+
+
 def _update_call(calls: list[list[str]]) -> list[str]:
     matching = [args for args in calls if args and args[0] == "update"]
     assert len(matching) == 1, calls
@@ -187,6 +195,7 @@ def test_dry_run_applies_the_same_acceptance_rules(bridge, calls, monkeypatch, c
     [("critical", "0"), ("high", "1"), ("medium", "2"), ("low", "3"), ("backlog", "4"), ("P3", "3")],
 )
 def test_create_priority_is_normalized_and_forwarded(bridge, calls, monkeypatch, capsys, tmp_path, priority, expected):
+    register_graph(tmp_path, f"G-{priority}")
     code, _ = call_main(
         bridge, monkeypatch, capsys,
         "--op", "create", "--repo-root", tmp_path,
@@ -201,6 +210,7 @@ def test_create_priority_is_normalized_and_forwarded(bridge, calls, monkeypatch,
 def test_create_rejects_unknown_priority_before_write(bridge, calls, monkeypatch, capsys, tmp_path):
     from _common import ContractError
 
+    register_graph(tmp_path, "G1")
     with pytest.raises(ContractError, match="priority must be"):
         call_main(
             bridge, monkeypatch, capsys,
@@ -211,6 +221,7 @@ def test_create_rejects_unknown_priority_before_write(bridge, calls, monkeypatch
 
 
 def test_create_priority_dry_run_normalizes_without_writing(bridge, calls, monkeypatch, capsys, tmp_path):
+    register_graph(tmp_path, "G1")
     code, receipt = call_main(
         bridge, monkeypatch, capsys,
         "--op", "create", "--repo-root", tmp_path,

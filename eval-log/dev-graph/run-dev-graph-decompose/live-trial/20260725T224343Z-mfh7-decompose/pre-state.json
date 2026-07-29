@@ -1,0 +1,181 @@
+{
+  "audit_implementation": {
+    "index_matches_worktree": true,
+    "modules": [
+      {
+        "index_blob": "93ac9c0eb7bf6b9bcd90793e58b660845e30bd24",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+        "sha256": "e6a6cf1d9c1d20038288fa012a9379262ba7ccf5aecfda579c95adc9bd11ca42",
+        "tracked_in_index": true,
+        "worktree_blob": "93ac9c0eb7bf6b9bcd90793e58b660845e30bd24"
+      },
+      {
+        "index_blob": "8ac2d8082867fa11b4160bee9d93e584923ad21c",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+        "sha256": "363680ba627b25610781ea8aa6e07a97fb390667b5fc6f545e2a72c546e48788",
+        "tracked_in_index": true,
+        "worktree_blob": "8ac2d8082867fa11b4160bee9d93e584923ad21c"
+      }
+    ],
+    "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+    "sha256": "2bca7609adeed8a192faea69ed211a738d1e7546ec50c04ba60b6b4842ec52b9",
+    "tracked_in_index": true
+  },
+  "config": {
+    "path": ".dev-graph/config.json",
+    "sha256": "93844dcd18219202d3970314d26e9630110d2a991b278699e1ad3de25f3747da"
+  },
+  "content_inventory": {
+    "architecture": [
+      {
+        "bytes": 0,
+        "path": "architecture/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 3850,
+        "path": "architecture/arch-web-app-001.md",
+        "sha256": "ff64f9da526d2891629012990b66e0a6f56af227c23eaea1b00ca7d1dbca6850"
+      }
+    ],
+    "documents": [
+      {
+        "bytes": 0,
+        "path": "docs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "features": [
+      {
+        "bytes": 0,
+        "path": "features/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 3682,
+        "path": "features/feat-dashboard-001.md",
+        "sha256": "54b945a57b9391e7f513d1eeabed3f44eeda0bc2a0c5c13d826d98b9e7be48f1"
+      },
+      {
+        "bytes": 3789,
+        "path": "features/feat-user-auth-001.md",
+        "sha256": "9885306d7963653a17c1ec5bf81f8162df2da787b58db964dad515b1449661a2"
+      }
+    ],
+    "issues": [
+      {
+        "bytes": 0,
+        "path": "issues/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "specifications": [
+      {
+        "bytes": 0,
+        "path": "specs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "system_spec": [
+      {
+        "bytes": 0,
+        "path": "system-spec/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "tasks": [
+      {
+        "bytes": 0,
+        "path": "tasks/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "git_status": {
+    "all": [
+      {
+        "path": ".dev-graph/state/graph.json",
+        "status": " M"
+      },
+      {
+        "path": ".dev-graph/state/.graph.json.register.lock",
+        "status": "??"
+      },
+      {
+        "path": "architecture/arch-web-app-001.md",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/decompose-want.json",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/macro-preview.json",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/node-input-arch-web-app-001.json",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/node-input-feat-dashboard-001.json",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/node-input-feat-user-auth-001.json",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/pre-state.json",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/run-dev-graph-decompose-goal-spec.json",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/run-dev-graph-decompose-intermediate.jsonl",
+        "status": "??"
+      },
+      {
+        "path": "features/feat-dashboard-001.md",
+        "status": "??"
+      },
+      {
+        "path": "features/feat-user-auth-001.md",
+        "status": "??"
+      }
+    ],
+    "managed": [
+      {
+        "path": ".dev-graph/state/graph.json",
+        "status": " M"
+      },
+      {
+        "path": ".dev-graph/state/.graph.json.register.lock",
+        "status": "??"
+      },
+      {
+        "path": "architecture/arch-web-app-001.md",
+        "status": "??"
+      },
+      {
+        "path": "features/feat-dashboard-001.md",
+        "status": "??"
+      },
+      {
+        "path": "features/feat-user-auth-001.md",
+        "status": "??"
+      }
+    ]
+  },
+  "graph": {
+    "node_count": 3,
+    "path": ".dev-graph/state/graph.json",
+    "revision": 3,
+    "sha256": "eabd8d558dcc78851d4dd6681a763287a94e0f6f4fff4a8d9248954703e506ef"
+  },
+  "repo_root": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-011205-wt-2/eval-log/dev-graph/live-trial-fixtures/decompose"
+}

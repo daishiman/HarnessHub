@@ -1,5 +1,5 @@
 {
-  "graph_revision": 936,
+  "graph_revision": 986,
   "nodes": [
     {
       "acceptance": [
@@ -621,7 +621,7 @@
       "source_lineage": {
         "imported_at": "2026-07-26T06:10:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "37f83d648993da8f6b69ced5aca0d2cecd5d05dcb94c29ddbfd9dfce86642a55",
+        "source_digest": "a74473d62712ab66f503f345e46b8f8e74cae30574b91aa05d1d3f0d4c06445e",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-26T06:10:00Z"
+      "updated_at": "2026-07-29T06:15:35.564276Z"
     },
     {
       "acceptance": [
@@ -843,7 +843,7 @@
       "source_lineage": {
         "imported_at": "2026-07-25T21:18:40Z",
         "origin_kind": "generated",
-        "source_digest": "2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c",
+        "source_digest": "e8a7f9308f00bcaa6e7d7df9f623cf3649d15c9f2242c18b31f0336ad8ce3dc9",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -860,7 +860,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T21:18:40Z"
+      "updated_at": "2026-07-29T06:15:52.997834Z"
     },
     {
       "acceptance": [
@@ -5582,7 +5582,7 @@
     },
     {
       "acceptance": [
-        "architecture-decision-record.md に HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer のカラム一覧、受付番号採番方式、AI キュー API 契約、共通 ai_jobs consumer contractと重複schema禁止の明記、S10-S12 の画面構成表が記載されている",
+        "architecture-decision-record.md と architecture-decisions-application.md に HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer のカラム一覧、受付番号採番方式、AI キュー API 契約、共通 ai_jobs consumer contractと重複schema禁止の明記、S10-S12 の画面構成表が記載されている",
         "現行feature context sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507のscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
         "Normative closure: feature固有 AiJob schema や kind=hearing を作らず、共通 ai_jobs の kind=sheet_generation を consumer として使う。POST /api/v1/sheets は server-side packages/estimation の sheetEstimate を実行し estimate snapshot を保存してから、同一transactionでsheet_generationをenqueueする。共通 package/boundary の実装ownerは feat-hub-foundationであり、hearingは公開contractを消費する。P1は後発metrics完了を前提にしない。 Evidence: kind=sheet_generation、shared queue consumer、sheetEstimate server execution、estimate snapshot、tenant/role、enqueue/complete round-trip の contract testsを必須とする。"
       ],
@@ -5662,10 +5662,14 @@
         "arch-harness-hub-data"
       ],
       "resource_scope": [
-        "docs/features/feat-hearing-intake/architecture-decision-record.md"
+        "docs/features/feat-hearing-intake/architecture-decision-record.md",
+        "docs/features/feat-hearing-intake/architecture-decisions-application.md",
+        "docs/features/feat-hearing-intake/architecture-review-and-validation.md"
       ],
       "scope_in": [
-        "docs/features/feat-hearing-intake/architecture-decision-record.md"
+        "docs/features/feat-hearing-intake/architecture-decision-record.md",
+        "docs/features/feat-hearing-intake/architecture-decisions-application.md",
+        "docs/features/feat-hearing-intake/architecture-review-and-validation.md"
       ],
       "scope_out": [
         "published task spec の『スコープ外』節を正本とする"
@@ -5691,7 +5695,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-29T00:10:32.588547Z"
     },
     {
       "acceptance": [
@@ -5889,14 +5893,14 @@
       ],
       "resource_scope": [
         "apps/hub/src/app/api/v1/sheets/",
-        "apps/hub/src/features/hearing-intake/__tests__/",
+        "apps/hub/tests/hearing-intake/",
         "apps/hub/src/features/hearing-intake/ai-job-adapter/",
         "apps/hub/src/features/hearing-intake/estimation-adapter/",
         "docs/features/feat-hearing-intake/test-design.md"
       ],
       "scope_in": [
         "apps/hub/src/app/api/v1/sheets/",
-        "apps/hub/src/features/hearing-intake/__tests__/",
+        "apps/hub/tests/hearing-intake/",
         "apps/hub/src/features/hearing-intake/ai-job-adapter/",
         "apps/hub/src/features/hearing-intake/estimation-adapter/",
         "docs/features/feat-hearing-intake/test-design.md"
@@ -5925,7 +5929,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-28T23:37:47.151668Z"
     },
     {
       "acceptance": [
@@ -6009,22 +6013,22 @@
         "arch-harness-hub-data"
       ],
       "resource_scope": [
-        "apps/hub/src/app/(dashboard)/hearing-intake/",
-        "apps/hub/src/app/(dashboard)/hearing-sheets/",
+        "apps/hub/src/app/(dashboard)/sheets/",
         "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/app/api/v1/ai-jobs/",
         "apps/hub/src/features/hearing-intake/",
-        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
-        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "packages/db/repository/hearing-intake.ts",
+        "packages/db/repository/hearing-intake-queue.ts",
         "packages/db/schema/hearing-intake/",
         "packages/schemas/hearing-intake/"
       ],
       "scope_in": [
-        "apps/hub/src/app/(dashboard)/hearing-intake/",
-        "apps/hub/src/app/(dashboard)/hearing-sheets/",
+        "apps/hub/src/app/(dashboard)/sheets/",
         "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/app/api/v1/ai-jobs/",
         "apps/hub/src/features/hearing-intake/",
-        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
-        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "packages/db/repository/hearing-intake.ts",
+        "packages/db/repository/hearing-intake-queue.ts",
         "packages/db/schema/hearing-intake/",
         "packages/schemas/hearing-intake/"
       ],
@@ -6052,7 +6056,7 @@
       "template_version": "1.0.0",
       "title": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-28T23:37:47.968705Z"
     },
     {
       "acceptance": [
@@ -12939,9 +12943,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"
+        "evaluated_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -12996,9 +13000,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-23T04:45:00Z",
+        "imported_at": "2026-07-29T05:21:27Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13014,7 +13018,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T00:55:00Z"
+      "updated_at": "2026-07-29T05:22:00.507534Z"
     },
     {
       "acceptance": [
@@ -25343,9 +25347,9 @@
         "graph.json 分割の実装 (トリガー記録のみ)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-21T14:40:00Z",
+        "imported_at": "2026-07-29T05:21:27Z",
         "origin_kind": "generated",
-        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -25364,7 +25368,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T22:55:12.292521Z"
+      "updated_at": "2026-07-29T05:22:10.828117Z"
     },
     {
       "acceptance": [
@@ -33943,9 +33947,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"
+        "evaluated_digest": "926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -33964,7 +33968,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-076/qa-077/qa-078/qa-079/qa-080/qa-081 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・失敗時改善ループの指針を提供する",
+      "goal": "qa-076/qa-077/qa-078/qa-079/qa-080/qa-081/qa-089 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・再利用可能な live-trial 証拠・失敗時改善ループの指針を提供する",
       "graph_node_id": "arch-harness-hub-testing-qa",
       "implementation_readiness": {
         "checked_at": "2026-07-24T12:35:34Z",
@@ -34001,9 +34005,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-24T12:35:34Z",
+        "imported_at": "2026-07-28T22:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d",
+        "source_digest": "926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34019,7 +34023,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-24T12:35:34Z"
+      "updated_at": "2026-07-28T22:00:00Z"
     },
     {
       "acceptance": [
@@ -35978,7 +35982,7 @@
       "template_version": "1.0.0",
       "title": "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T03:00:44.850804Z"
+      "updated_at": "2026-07-28T02:18:00Z"
     },
     {
       "acceptance": [
@@ -36338,11 +36342,14 @@
     },
     {
       "acceptance": [
-        "backup.yml が deploy token を参照しておらず、R2 write 権限のみを持つ token で完走する",
+        "backup.yml と production smoke が CLOUDFLARE_R2_API_TOKEN、deploy / rollback が CLOUDFLARE_API_TOKEN だけを参照し、静的ゲートが相互利用を拒否する",
+        "R2 専用 token で hub-backup と production smoke が完走する",
         "deploy 用 token で R2 バケットへ書き込もうとすると権限エラーになることを実測する",
-        "docs/infrastructure-spec.md §7 の残存リスク節から本 issue の未達記述が消えている"
+        "docs/infrastructure-spec.md §7 と system-spec/infrastructure.md qa-091 が分離設計と外部実測待ちの境界を記録している"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -36409,18 +36416,29 @@
       "pull_request_linkages": [],
       "purpose": "CI/CD の Cloudflare token が漏洩した場合の影響範囲を、Workers deploy と R2 write のどちらか一方に閉じ込める",
       "related_nodes": [
+        "SYS-HUB-FOUNDATION-P13",
         "SYS-DOMAIN-MODEL-DB-P13"
       ],
       "resource_scope": [
         ".github/workflows/backup.yml",
-        "docs/features/feat-hub-foundation/runbook.md"
+        ".github/workflows/ci.yml",
+        "apps/hub/tests/ci/actions-secrets.test.ts",
+        "scripts/ci/actions-secrets-registry.json",
+        "docs/infrastructure-spec.md",
+        "docs/features/feat-hub-foundation/",
+        "docs/features/feat-domain-model-db/release-record.md",
+        "system-spec/",
+        "features/feat-hub-foundation.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-infrastructure.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
+        "issues/ci-token-least-privilege-20260725.md"
       ],
       "scope_in": [
-        "Cloudflare API token を deploy 用 (Workers Scripts Edit) と backup 用 (R2 Write に限定) の 2 本へ分割発行",
-        "backup.yml の CLOUDFLARE_API_TOKEN 参照を R2 専用 secret 名へ差し替え",
-        "docs/infrastructure-spec.md §7 の secret 台帳と残存リスク節の更新",
-        "docs/features/feat-hub-foundation/runbook.md の secret 投入手順の更新",
-        "分割後に hub-backup を手動 dispatch して 1 回 green を実測"
+        "Cloudflare API token を deploy / rollback 用 Workers Scripts Edit と backup / production smoke 用 Workers R2 Storage Write の 2 本へ分離する",
+        "workflow と Actions secret 台帳を用途別 token 参照へ更新し、相互利用を静的テストで拒否する",
+        "infrastructure.web の credential 境界を正規 system-spec フローで qa-091 として反映する",
+        "Cloudflare token 発行と GitHub Secrets 投入後に --live 検査、拒否系、backup / production smoke の完走を実測する"
       ],
       "scope_out": [
         "Turso token の分割 (DB 接続 token と Platform API token は既に分離済み)",
@@ -36430,7 +36448,7 @@
       "source_lineage": {
         "imported_at": "2026-07-25T05:50:00Z",
         "origin_kind": "generated",
-        "source_digest": "a3ff8e3653e08fdd5d1f62d199b0b054aedf7a0c31ca8694fb3e3694862f4c22",
+        "source_digest": "f5e7935b007bb51d75b2209bd5b11ac87b02b4b9bf50ce8c438a5830b52f7f57",
         "source_path": "docs/features/feat-domain-model-db/release-record.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -36448,9 +36466,9 @@
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "CLOUDFLARE_API_TOKEN 1 本を deploy と R2 write で共用しており最小権限分離が未達",
+      "title": "Cloudflare deploy token と R2 token を分離し外部検証を完了する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T06:40:00Z"
+      "updated_at": "2026-07-29T06:16:12.710038Z"
     },
     {
       "acceptance": [
@@ -37377,7 +37395,9 @@
         "open(<graph authority>, 'r+') と 'w' / 'a' / 'x' が BLOCK のまま維持される",
         "pytest plugins/dev-graph/tests が 0 failed (修正後の closure に対する live-trial 再取得を含む)"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -37395,25 +37415,29 @@
       "classification_confidence": 0.95,
       "classification_reason": "hook 本体を import した静的 probe で 7 形の判定を実測し、live-trial transcript で pathlib write_text 形の素通りを実観測した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-29T04:14:11Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260729T042000Z-lp36-system-spec-hook-final-r4/verdict.json",
+          "docs/features/feat-dev-pipeline-improvement/final-review-20260726.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-29T04:14:11Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "edd14af39a3983f5725340b6e1901992c7ecae531c1b4096b5083b4f649c79ec",
+        "evaluator": "user-request-2026-07-29",
+        "evidence_ref": "HarnessHub-lp36"
       },
-      "confirmation_status": "draft",
+      "confirmation_status": "confirmed",
       "created_at": "2026-07-25T22:22:01Z",
       "depends_on": [
         "issue-guard-fix-closure-verdict-refresh-20260726"
       ],
       "domain": "quality",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/sys-guard-graph-schema-interpreter-write-coverage-20260726.md",
@@ -37448,7 +37472,11 @@
       ],
       "resource_scope": [
         "plugins/dev-graph/hooks/guard-graph-schema.py",
-        "plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py"
+        "plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py",
+        "plugins/dev-graph/references/claude-code-hooks-contract.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "docs/features/feat-dev-pipeline-improvement/final-review-20260726.md"
       ],
       "scope_in": [
         "INTERPRETER_WRITE の書込み API 集合の拡張 (write_text / write_bytes / shutil.copy* / shutil.move / os.replace / os.rename / json.dump)",
@@ -37470,7 +37498,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -37485,7 +37513,7 @@
       "template_version": "1.0.0",
       "title": "guard-graph-schema の interpreter 枝が pathlib/shutil 系書込みを取りこぼし、読取モード r を誤遮断する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T03:27:10.205075Z"
+      "updated_at": "2026-07-29T04:14:11Z"
     },
     {
       "acceptance": [
@@ -38333,7 +38361,7 @@
       "artifact_subtypes": [],
       "beads_linkage": null,
       "classification_candidates": [],
-      "classification_confidence": 1.0,
+      "classification_confidence": 1,
       "classification_reason": "ユーザー要求による Dev Graph 基盤変更の最終レビュー記録",
       "completion_evidence": {
         "completed_at": null,
@@ -38414,7 +38442,7 @@
       "template_version": "1.0.0",
       "title": "Dev Graph 基盤変更 最終レビュー 2026-07-26",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T00:55:00Z"
+      "updated_at": "2026-07-28T23:16:20Z"
     },
     {
       "acceptance": [
@@ -38543,7 +38571,8 @@
         "C19 task の初期前提が shape_system_spec.py の配置物と機械的に一致する",
         "task が system-spec-harness の正規 4 entry point を Skill 経由で要求する",
         "確定成果物を事前配置済みかつ正規フロー再実行禁止という旧前提を lint が拒否する",
-        "fixture 再構築直後の C19 fresh live-trial が人手の事前生成物なしで PASS する"
+        "fixture 再構築直後の C19 fresh live-trial が人手の事前生成物なしで PASS する",
+        "scenario ID、task args、required observations、fixture contract の変更が 1 つの検証経路へ束ねられる"
       ],
       "architecture_refs": [],
       "artifact_kind": "issue",
@@ -38563,12 +38592,17 @@
       "classification_confidence": 0.98,
       "classification_reason": "deterministic fixture rebuild 後の fresh C19 trial が、古い task の『確定成果物を事前配置済み』前提と実 fixture の requirements-brief.md のみという契約矛盾を再現した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-28T08:02:52Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_live_trial_task_contract.py",
+          "plugins/dev-graph/references/live-trial-task-contract.md",
+          "docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260726T050519Z-sysspec-final2/"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-28T08:30:41Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -38609,12 +38643,20 @@
       "pull_request_linkages": [],
       "purpose": "手作業で複製された C19 task の入力前提が deterministic fixture の正本契約からずれ、正規フローを実行不能にする再発を防ぐ",
       "related_nodes": [
+        "feat-dev-pipeline-improvement",
         "issue-guard-fix-closure-verdict-refresh-20260726",
         "issue-guard-graph-schema-timeout-fail-open-20260725"
       ],
       "resource_scope": [
         "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py",
         "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+        "plugins/dev-graph/scripts/lint-live-trial-task-contract.py",
+        "plugins/dev-graph/lib/live_trial_task_contract.py",
+        "plugins/dev-graph/tests/test_live_trial_task_contract.py",
+        "plugins/dev-graph/references/live-trial-task-contract.md",
+        "docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md",
+        "eval-log/coverage/scripts/plugins-dev-graph-scripts-lint-live-trial-task-contract.py.json",
+        "eval-log/harness-coverage.json",
         "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/"
       ],
       "scope_in": [
@@ -38637,7 +38679,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -38650,7 +38692,7 @@
       "template_version": "1.0.0",
       "title": "C19 live-trial の task 指示を fixture 契約から決定論生成し、前提ずれを防ぐ",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T05:50:27Z"
+      "updated_at": "2026-07-28T09:31:38.126210Z"
     },
     {
       "acceptance": [
@@ -39691,6 +39733,3318 @@
       "title": "日次 backup の連続失敗が 3 夜気づかれなかった (BACKUP_HEARTBEAT_URL 未投入で不発・失敗が無音になる)",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T04:49:52.215131Z"
+    },
+    {
+      "acceptance": [
+        "scenario が要求する検体状態が graph-node.schema.json で valid であることが検証されている",
+        "readiness_probe が deepcopy + 強制代入を行わず実 preview node を判定している",
+        "gate を満たす node を含む preview では draft_candidates が非空、満たさない preview では空になることがテストで示されている",
+        "draft_candidates が binding ごとに異なりうることがテストで示されている",
+        "preview['nodes'] と preview['features'] のどちらが監査の正本かが明文化され、両者が乖離した preview を audit が pass=false で拒否する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ojh6",
+        "linked_at": "2026-07-26T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c14-publication-probe-tautology-20260726.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-mfh7 の live-trial 再取得中に fresh evaluator が 2 回にわたり検出した検証系の欠陥。mfh7 の変更 (bd-bridge.py) とは無関係の既存不具合で resource_scope も重ならないため切り出した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-c14-publication-probe-tautology-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "C14 OUT1 後半が schema-valid な検体で実測され、gate を壊したときに live-trial が赤くなる状態",
+      "graph_node_id": "issue-c14-publication-probe-tautology-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C14 OUT1 は 2 連言だが、後半 (昇格後だけ起票対象になる) を測る scenario 契約が canonical schema と矛盾して充足不能であり、監査はその状態を deepcopy + 強制代入でしか作れず恒真式になっている。結果として gate 実装を削除しても受領書が緑のままになる",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+        "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+        "plugins/dev-graph/schemas/graph-node.schema.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/"
+      ],
+      "scope_in": [
+        "scenario fixture_contract の要求検体を schema-valid な状態へ書き換える (例: confirmed + evaluation_status=pending + readiness incomplete は allOf[7] の制約外で成立しうる)",
+        "_publication_measurements の readiness_probe を deepcopy + 強制代入から実 preview node の判定へ変更する",
+        "audit が preview['nodes'] だけを見て preview['features'] を無視している点を、どちらが正本かを決めたうえで統一する",
+        "draft_candidates の内包表記が binding を実際に参照するよう修正する",
+        "gate を壊した preview で audit が pass=false になる negative control を追加する"
+      ],
+      "scope_out": [
+        "graph-node.schema.json allOf[7] の制約緩和 (evaluation_status=pass ⟹ readiness complete は健全な不変条件であり、テストの都合で緩めてはならない)",
+        "run-dev-graph-decompose SKILL.md 本体の変更 (skill の挙動ではなく検証側の欠陥である)",
+        "他 skill の live-trial 監査ヘルパーへの横展開 (別途棚卸しが必要)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "live-trial",
+        "evaluation",
+        "goodhart",
+        "schema"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C14 scenario が canonical schema 上ありえない検体を要求しており OUT1 後半が原理的に検証不能な状態を解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-26T03:40:00Z"
+    },
+    {
+      "acceptance": [
+        "graph node 削除経路が全数特定され一覧化されている",
+        "非クローズ bd issue から参照されている node の削除が、既定で拒否されるか明示的な処分指定を要求する",
+        "--op orphan-audit を GC 実行の前後で走らせ、非クローズ orphan が増えないことがテストで固定されている",
+        "commit 84c8076 の GC が消した node の実測と、それが生んだ orphan の対応が記録されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ii90",
+        "linked_at": "2026-07-26T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-devgraph-graph-gc-bd-close-propagation-20260726.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-mfh7 の orphan 棚卸しで特定した発生経路 P2。C28 create 側の P1 とは独立に orphan を生む別経路であり、修正範囲も C28 ではなく graph 削除経路側",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-devgraph-graph-gc-bd-close-propagation-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph node の削除時に、その node を external_ref に持つ非クローズ bd issue が必ず検出され、終了させるか参照を剥がすかの判断が強制される状態",
+      "graph_node_id": "issue-devgraph-graph-gc-bd-close-propagation-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C28 create 側の穴 (HarnessHub-mfh7 で修正済み) を塞いでも、graph から node を消す経路が bd を放置する限り orphan は増え続ける。参照整合を『作るとき』だけでなく『消すとき』にも守り、unmapped の警告を信号として保つ",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725"
+      ],
+      "resource_scope": [
+        ".dev-graph/state/graph.json",
+        "plugins/dev-graph/scripts/",
+        "plugins/dev-graph/tests/",
+        "issues/"
+      ],
+      "scope_in": [
+        "stale GC を含む graph node 削除経路の全数特定 (commit 84c8076 の GC を起点に洗い出す)",
+        "削除対象 node を external_ref に持つ非クローズ bd issue を書込前に検出する fail-closed ゲートの追加",
+        "検出時の処分 (bd 側終了 / 参照剥がし / 削除中止) の exact-set 定義と receipt への記録",
+        "回帰テストの追加"
+      ],
+      "scope_out": [
+        "21 件の既存 orphan の個別処分 (issue-orphan-external-ref-backlog-disposition-20260726 の担当)",
+        "検出した bd issue を自動で閉じる実装 (中身を読まずに終わらせるのは silent drop と同型のため禁止)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "parity",
+        "governance"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "graph node の GC 削除が bd issue へ伝播せず orphan external_ref を生み続ける",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T02:23:00Z"
+    },
+    {
+      "acceptance": [
+        "C02-OUT1 obs2 が、契約外 feature を含む入力に対して拒否を実測し、その実例が fixture に存在することがテストで示されている",
+        "C05-OUT1 obs1 が、成果物の存在から含意されない形 (独立再計算または in-run negative control) で測られている",
+        "C19-OUT1 obs2 の run 非依存部分が run の観測から分離されている",
+        "恒真性を排除できない観測については、受領書に恒真である旨の自己申告 field が出力され、evidence として使わない旨が task 契約に明記されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-31k5",
+        "linked_at": "2026-07-28T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-observation-tautology-inventory-20260728.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-ojh6 の残課題 #4 (同型の恒真 probe の棚卸し) の成果。ojh6 の scope_out が別課題として切り出していた範囲にあたる",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-observation-tautology-inventory-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "C02/C05/C19 の該当観測が、被験 skill の挙動を変えたときに赤くなる形へ書き換えられ、恒真な field は受領書自身が恒真であると自己申告している状態",
+      "graph_node_id": "issue-live-trial-observation-tautology-inventory-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-ojh6 で C14 の恒真式を解消した際、同じ欠陥型が他 scenario に残っていないかの棚卸しが scope_out として切り出されていた。棚卸しの結果 C02/C05/C19 に 3 件の恒真観測が実在し、いずれも被験 skill の実装を削除しても受領書が緑のままになる",
+      "related_nodes": [
+        "issue-c14-publication-probe-tautology-20260726"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+        "eval-log/dev-graph/run-dev-graph-node/",
+        "eval-log/dev-graph/run-dev-graph-render/",
+        "eval-log/dev-graph/run-dev-graph-system-spec/"
+      ],
+      "scope_in": [
+        "C02-OUT1 obs2 の fixture へ feature 入力を加え、契約外 feature の拒否と契約内 feature の受理を両クラスで測る",
+        "C05-OUT1 obs1 に applied_count != expected_count の receipt を渡す in-run negative control を追加し、renderer の描画拒否を実測する",
+        "C19-OUT1 obs2 後半 (run 非依存の静的性質) を run の観測から分離し、静的検査として位置づけ直す",
+        "非恒真と判定した C15-OUT1 obs0 / C03-OUT1 obs1 の判定根拠を scenario 側へ記録し、将来 fixture を縮小したときに空虚化する退行を検出できるようにする"
+      ],
+      "scope_out": [
+        "被験 skill 本体 (C02/C05/C19 の SKILL.md) の挙動変更 — 検証側の欠陥であり skill の欠陥ではない",
+        "C14 の恒真式そのものの解消 (HarnessHub-ojh6 で完了済み)",
+        "graph-node.schema.json の制約緩和"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "live-trial",
+        "evaluation",
+        "goodhart"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "live-trial scenario の required_observations に残る恒真観測を棚卸しし、非空虚性・in-run negative control・恒真性の自己申告で解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "再棚卸しで true orphan と判定した全件に処分区分と判断理由が記録されている",
+        "--op orphan-audit の orphan_summary.non_closed が系統 B の残数のみになる",
+        "unmapped_summary.parity_manifest_missing が再計算した期待値と一致し根拠が記録されている",
+        "node 化したものは C02 経由で登録され frontmatter 検証を通っている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-eshr",
+        "linked_at": "2026-07-26T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-mfh7 の棚卸しで系統 C に分類した 21 件。21 件分の spec 作成という独立した作業量を持ち、mfh7 の resource_scope では完結しないため切り出した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-26T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "非クローズの orphan external_ref が 0 件になり、parity_manifest_missing が実際の manifest 取りこぼしだけを指す状態",
+      "graph_node_id": "issue-orphan-external-ref-backlog-disposition-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-26T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-mfh7 で流入は止めたが在庫 21 件が残る。unmapped_summary.parity_manifest_missing が 26 件常駐したままでは、本物の manifest 取りこぼしが起きても区別できず警告が摩耗し続ける",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725"
+      ],
+      "resource_scope": [
+        ".dev-graph/state/graph.json",
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "issues/"
+      ],
+      "scope_in": [
+        "真の orphan 21 件それぞれの中身を読み、node 化 / 参照剥がし / 失効として終了 を個別に判断する",
+        "node 化と判断したものは issues/sys-*.md を作成し C02 upsert-node.py で graph へ登録する",
+        "graph 管理外と判断したものは external_ref を落とし external_ref_absent 側へ移す",
+        "処分後に --op orphan-audit と --op ready --parity-manifest を再実行し期待値との一致を記録する"
+      ],
+      "scope_out": [
+        "マージ待ち 9 件 (系統 B) への介入 (当該ブランチのマージで自然解消するため触ると壊す)",
+        "closed 済み 49 件の遡及復元",
+        "件数を 0 にするためだけの一括で閉じる操作 (バックログ破棄になるため禁止)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-26T00:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "parity",
+        "governance"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "真の orphan 21 件を node 化または参照剥がしで処分し非クローズ orphan を 0 にする",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T02:18:00Z"
+    },
+    {
+      "acceptance": [
+        "runbook §1 の 2-a / 2-b / 2-c を実行して secret / variable を投入する",
+        "node scripts/ci/check-actions-secrets.mjs --live が exit 0 で通る (これが投入完了の証跡)",
+        "hub-backup を workflow_dispatch で 1 回起動し、R2 に db-export/<YYYY>/<YYYY-MM-DD>.jsonl.gz が置かれることを確認する (feat-hub-foundation/runbook.md §7 U-1 の残条件)",
+        "ci.yml の deploy job が完走し、feat-hub-foundation/release-notes.md の未完了項目 #5 (GitHub Secrets / Variables 未確認) と A1 blocked を解消する",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-vns9",
+        "linked_at": "2026-07-28T00:24:44.663Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-actions-secrets-provisioning-evidence-20260725.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-vns9 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T03:37:11Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-actions-secrets-provisioning-evidence-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "GitHub Actions secret / variable を実投入し、backup 初回成功と A1 完走の証跡を取る",
+      "graph_node_id": "issue-actions-secrets-provisioning-evidence-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.663Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-vns9 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-vns9 の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.656Z",
+        "origin_kind": "generated",
+        "source_digest": "b40736724c6d713f67c509df3473fc31db7fdd7eee0aef97d9a677ceef0c4f80",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-vns9",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "GitHub Actions secret / variable を実投入し、backup 初回成功と A1 完走の証跡を取る",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T11:12:00Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-4d8 の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-4d8",
+        "linked_at": "2026-07-28T00:24:44.667Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-aggregate-completeness-file-split-20260722.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-4d8 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-22T00:45:56Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-aggregate-completeness-file-split-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "assign-system-spec-completeness-evaluator の aggregate-completeness.py (572 行) / test_aggregate_completeness.py (592 行) の 500 行超過を分割する",
+      "graph_node_id": "issue-aggregate-completeness-file-split-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.667Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-4d8 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-4d8 の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.667Z",
+        "origin_kind": "generated",
+        "source_digest": "70271fc47d20b459aed77f0c6f21d9bfee3c0eff5d23c372550ecf6fc6a025fd",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-4d8",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "assign-system-spec-completeness-evaluator の aggregate-completeness.py (572 行) / test_aggregate_completeness.py (592 行) の 500 行超過を分割する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T00:45:56Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-6ib の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-6ib",
+        "linked_at": "2026-07-28T00:24:44.668Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-completeness-report-session-id-migration-20260723.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-6ib の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-23T00:11:08Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-completeness-report-session-id-migration-20260723.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "completeness-report.json を session_id 付き実 fork 監査で再生成する (x4o migration)",
+      "graph_node_id": "issue-completeness-report-session-id-migration-20260723",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.668Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-6ib を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-6ib の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.668Z",
+        "origin_kind": "generated",
+        "source_digest": "c989ffc731729666ccfed9314a66b1e53b592e9efbfbe8cf6aad4a8901e556c7",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-6ib",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "completeness-report.json を session_id 付き実 fork 監査で再生成する (x4o migration)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T14:30:15Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-rzc の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-rzc",
+        "linked_at": "2026-07-28T00:24:44.674Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-contract-s10-unmappable-status-overstated-20260722.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-rzc の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T21:26:06Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-contract-s10-unmappable-status-overstated-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "execution-tracker-contract §10 の unmappable_status の説明が実測より過大で、回復手順の > 上書きが既存 receipt を壊しうる",
+      "graph_node_id": "issue-contract-s10-unmappable-status-overstated-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.674Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-rzc を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-rzc の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.674Z",
+        "origin_kind": "generated",
+        "source_digest": "18bb3add3f12e332db583858d1cc7e58983a6a65b0677c1b543a1b5ec561bc86",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-rzc",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "execution-tracker-contract §10 の unmappable_status の説明が実測より過大で、回復手順の > 上書きが既存 receipt を壊しうる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T02:52:04Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-ifo の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ifo",
+        "linked_at": "2026-07-28T00:24:44.675Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-devgraph-decompose-inline-dag-check-20260721.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-ifo の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T10:52:15Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-devgraph-decompose-inline-dag-check-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "run-dev-graph-decompose が同梱 validator を使わず inline python で DAG 検査を自作している",
+      "graph_node_id": "issue-devgraph-decompose-inline-dag-check-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.675Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-ifo を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-ifo の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.675Z",
+        "origin_kind": "generated",
+        "source_digest": "e6e07beaefb02f056013d18ca86d044d3de564aae3a049da79dccd38e5abeb1d",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-ifo",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-dev-graph-decompose が同梱 validator を使わず inline python で DAG 検査を自作している",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T10:52:15Z"
+    },
+    {
+      "acceptance": [
+        "並列実行でも exit code が内容を正しく反映する (workspace-concurrency の固定、vitest の pool/RPC timeout 設定、または spawn 系テストの直列化のいずれか)",
+        "是正後に pnpm -r test を既定並列度で複数回まわし、再現しないことを確認する",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pyb3",
+        "linked_at": "2026-07-28T00:24:44.678Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-g4-parallel-rpc-timeout-20260725.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-pyb3 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T11:02:02Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-g4-parallel-rpc-timeout-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "pnpm -r test の並列実行で vitest worker RPC が timeout し G4 が偽陽性で落ちる",
+      "graph_node_id": "issue-g4-parallel-rpc-timeout-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.678Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-pyb3 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-pyb3 の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.678Z",
+        "origin_kind": "generated",
+        "source_digest": "b817beb8db8fd1c31c0e58087e6ed48a0bdf8e3c5a102f85c11ca72857f94422",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-pyb3",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "pnpm -r test の並列実行で vitest worker RPC が timeout し G4 が偽陽性で落ちる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T11:02:02Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-f84o の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-f84o",
+        "linked_at": "2026-07-28T00:24:44.679Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-guard-graph-schema-inline-python-variable-path-20260726.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-f84o の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T20:43:11Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-guard-graph-schema-inline-python-variable-path-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す",
+      "graph_node_id": "issue-guard-graph-schema-inline-python-variable-path-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.679Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-f84o を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-f84o の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.679Z",
+        "origin_kind": "generated",
+        "source_digest": "e014a8f6ba6e6fbed10cacffacfa2d620dafd527f0324ba31d1f8b9536a23d0d",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-f84o",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T20:43:11Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-kzth の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-kzth",
+        "linked_at": "2026-07-28T00:24:44.682Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-guard-script-file-indirection-20260726.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-kzth の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T23:05:02Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-guard-script-file-indirection-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "dev-graph: guard-graph-schema の共起判定はコマンド文字列しか見ないため script file へ隠した graph authority 書込みを遮断できない",
+      "graph_node_id": "issue-guard-script-file-indirection-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.682Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-kzth を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-kzth の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.682Z",
+        "origin_kind": "generated",
+        "source_digest": "91e37bc560f21490df788d4899112e593a6bfcafafbf5aa06f126164f1831635",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-kzth",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "dev-graph: guard-graph-schema の共起判定はコマンド文字列しか見ないため script file へ隠した graph authority 書込みを遮断できない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T23:05:02Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-zrn の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-zrn",
+        "linked_at": "2026-07-28T00:24:44.684Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-harness-creator-entry-points-under-declared-20260721.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-zrn の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T09:26:18Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-harness-creator-entry-points-under-declared-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "harness-creator の entry_points が実体30 skill に対し1件のみで live-trial 被覆が欠落している",
+      "graph_node_id": "issue-harness-creator-entry-points-under-declared-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.684Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-zrn を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-zrn の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.684Z",
+        "origin_kind": "generated",
+        "source_digest": "7eed2f1fe3492141cee094ed9bafe6e65155f813c577d28f2b2bbeaee143b21d",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-zrn",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "harness-creator の entry_points が実体30 skill に対し1件のみで live-trial 被覆が欠落している",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T09:26:18Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-r65n の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-r65n",
+        "linked_at": "2026-07-28T00:24:44.685Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-verdict-staleness-hook-closure-20260726.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-r65n の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T21:00:25Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-verdict-staleness-hook-closure-20260726.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "plugin hooks が全 skill の挙動閉包に入るため hook 1 件の修正で dev-graph 8 skill の live-trial verdict が一斉に stale 化する",
+      "graph_node_id": "issue-live-trial-verdict-staleness-hook-closure-20260726",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.685Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-r65n を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-r65n の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.685Z",
+        "origin_kind": "generated",
+        "source_digest": "3caa841defecc3c802626cbc7b7cd2ed7466110004c5f4d36d240b489b9393a3",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-r65n",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "plugin hooks が全 skill の挙動閉包に入るため hook 1 件の修正で dev-graph 8 skill の live-trial verdict が一斉に stale 化する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-27T21:55:19Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-936 の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-936",
+        "linked_at": "2026-07-28T00:24:44.691Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-pkg-contract-skill-dependencies-undefined-20260721.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-936 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T12:28:11Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-pkg-contract-skill-dependencies-undefined-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "package-contract の skill_dependencies が正本 schema に未定義のまま実データで使われている",
+      "graph_node_id": "issue-pkg-contract-skill-dependencies-undefined-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.691Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-936 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-936 の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.691Z",
+        "origin_kind": "generated",
+        "source_digest": "1b69c8757958fa8d3a27df19590f06268a8b0d8468e886eca0bd569fd03a5d8f",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-936",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "package-contract の skill_dependencies が正本 schema に未定義のまま実データで使われている",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T12:28:11Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-ldq の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ldq",
+        "linked_at": "2026-07-28T00:24:44.692Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-resource-map-deep-cards-20260722.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-ldq の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-22T08:27:25Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-resource-map-deep-cards-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "resource-map deep card 不足の解消 (ui-ux/infrastructure/dev-workflow) と backend card 順整列",
+      "graph_node_id": "issue-resource-map-deep-cards-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.692Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-ldq を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-ldq の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.692Z",
+        "origin_kind": "generated",
+        "source_digest": "c2f8222adc5ba8ea28d2ba3ea306b9e65c76a96f4930d13efa33bd8fde9fcca7",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-ldq",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "resource-map deep card 不足の解消 (ui-ux/infrastructure/dev-workflow) と backend card 順整列",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-22T08:27:25Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-883 の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-883",
+        "linked_at": "2026-07-28T00:24:44.694Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-run-skill-feedback-ref-format-unify-20260722.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-883 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T19:11:55Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-run-skill-feedback-ref-format-unify-20260722.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "run-skill-feedback の ../../../../ 参照記法を repo root 相対へ統一する",
+      "graph_node_id": "issue-run-skill-feedback-ref-format-unify-20260722",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.694Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-883 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-883 の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.694Z",
+        "origin_kind": "generated",
+        "source_digest": "c376cb43c90829f9567f8f8f7613f5969b68b4cee1dd7ef9ca48f24d6e0067f7",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-883",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-skill-feedback の ../../../../ 参照記法を repo root 相対へ統一する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T19:11:55Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-42g の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-42g",
+        "linked_at": "2026-07-28T00:24:44.696Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-shared-layers-registry-baseline-drift-20260724.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-42g の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-24T12:36:11Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-shared-layers-registry-baseline-drift-20260724.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "requirements-baseline.md L130 github-actions-ci が旧 5 ゲートを inline 列挙 (登録簿 G1〜G11 へ未追随)",
+      "graph_node_id": "issue-shared-layers-registry-baseline-drift-20260724",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.697Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-42g を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-42g の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.696Z",
+        "origin_kind": "generated",
+        "source_digest": "c959ce4eb7e773b09cb9a1cdfff4e1a2a9f857f2c5b6a80b9c8c08e26f757c65",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-42g",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "requirements-baseline.md L130 github-actions-ci が旧 5 ゲートを inline 列挙 (登録簿 G1〜G11 へ未追随)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-24T12:36:11Z"
+    },
+    {
+      "acceptance": [
+        "Beads issue HarnessHub-d15 の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-d15",
+        "linked_at": "2026-07-28T00:24:44.698Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-spec-state-writer-implicit-contracts-20260721.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-d15 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-21T10:01:10Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-spec-state-writer-implicit-contracts-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "spec-state writer の暗黙挙動 4 件を契約化し、C06 早期停止の除外ルールを再設計する",
+      "graph_node_id": "issue-spec-state-writer-implicit-contracts-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.698Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-d15 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-d15 の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.697Z",
+        "origin_kind": "generated",
+        "source_digest": "438b211516b0c8e65e2c6cbbe3390d2be55682d4cb403a45e52b8741bb9a60cb",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-d15",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "spec-state writer の暗黙挙動 4 件を契約化し、C06 早期停止の除外ルールを再設計する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-21T10:01:10Z"
+    },
+    {
+      "acceptance": [
+        "infrastructure-spec §2 の Worker secret 台帳が security-spec の確定設計 (5 binding inventory + client_secret_enc) と一致する",
+        "SALARY_ENC_KEY についても、security-spec の KEK/DEK 封筒暗号化と用途が重複しないか確認し、正本を 1 つに定める",
+        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-x2x9",
+        "linked_at": "2026-07-28T00:24:44.698Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-worker-secret-ledger-conflict-20260725.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-x2x9 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-25T03:36:53Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-worker-secret-ledger-conflict-20260725.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "infrastructure-spec §2 の Worker secret 台帳が security-spec の確定設計と矛盾",
+      "graph_node_id": "issue-worker-secret-ledger-conflict-20260725",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:24:44.698Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "未解決の Beads issue HarnessHub-x2x9 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "Beads issue HarnessHub-x2x9 の題名・説明・notes・受入条件を保持した issue node の復元"
+      ],
+      "scope_out": [
+        "orphan 復元と同時に元 issue の実装や close を行うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:24:44.698Z",
+        "origin_kind": "generated",
+        "source_digest": "aff330402feacdf6bf2c4197aef209ffed1d8eac2d85a26669ebbf6f9171ac87",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-x2x9",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "orphan-recovery"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "infrastructure-spec §2 の Worker secret 台帳が security-spec の確定設計と矛盾",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-25T03:36:53Z"
+    },
+    {
+      "acceptance": [
+        "引数なし reap は失敗し、暗黙の lt-* 全削除へ戻らない",
+        "通常の reap は run-id と owner PID が両方一致する session だけを削除する",
+        "同じ run-id の別 owner、別 run-id、metadata 無し session は残る",
+        "全削除は明示的な --all でのみ実行できる",
+        "回帰テスト、内容レビュー、task 仕様書品質ゲートが通る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-cjwm",
+        "linked_at": "2026-07-28T00:42:38.774Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-reap-unscoped-kill-20260728.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "Beads HarnessHub-cjwm と重複 HarnessHub-0vs2 が報告した無差別 reap を実装対象として再確認し、run-id と owner PID の双方を必須にする所有権境界で解決した",
+      "completion_evidence": {
+        "completed_at": "2026-07-29T01:39:45Z",
+        "evidence_refs": [
+          "tests/test_live_trial_backend.py",
+          "tests/test_live_trial_boot_send.py",
+          "eval-log/harness-creator/run-skill-live-trial/content-review/elegance-verdict.json",
+          "eval-log/harness-creator/run-skill-live-trial/content-review/rubric-verdict.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-29T01:39:45Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T00:10:24Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-reap-unscoped-kill-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "live-trial-backend.py reap() が並行 trial の tmux session を無条件全 kill する",
+      "graph_node_id": "issue-live-trial-reap-unscoped-kill-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:42:38.774Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "並行 live-trial の後片付けが別実行の tmux session を巻き添えにしないよう、run-id と起動元 PID による所有権境界を実装して固定する",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725",
+        "issue-orphan-external-ref-backlog-disposition-20260726"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "live-trial session に run-id と owner PID を記録する",
+        "reap を同一 run-id かつ同一 owner PID の session に限定する",
+        "全 live-trial session の削除は明示的な --all 操作だけに限定する",
+        "並行 session を保護する回帰テストと運用文書を整備する"
+      ],
+      "scope_out": [
+        "tmux 以外の実行 backend の追加",
+        "古い metadata 無し session の自動削除",
+        "明示的な管理者操作 --all の廃止"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:42:38.774Z",
+        "origin_kind": "generated",
+        "source_digest": "bcf375bb2280a15e319ce73c012f65c059bb00a50cb8689ddf4ecbaede605859",
+        "source_path": "issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-cjwm",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "live-trial",
+        "tmux",
+        "parallel-safety"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "live-trial-backend.py reap() が並行 trial の tmux session を無条件全 kill する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T05:12:39.314910Z"
+    },
+    {
+      "acceptance": [
+        "3ファイルそれぞれについて要検査/対象外の判定が根拠付きで本ドキュメントまたは後続ドキュメントに記録されている",
+        "要検査と判定したファイルに重複ID fixture の回帰テストが追加され、重複時に非0終了することを確認できる",
+        "対象外と判定したファイルについて、なぜ qa_log と同型の実害が無いかの理由が記録されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ory6",
+        "linked_at": "2026-07-28T01:25:04Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-id-uniqueness-gate-generalization-20260728.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-33ho の最終レビュー中に scope_in の未消化項目を発見し、grep 実測で該当候補ファイルを特定した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T01:25:04Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-id-uniqueness-gate-generalization-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "3ファイルそれぞれについて、ID重複が実際に検査結果を偽陽性化しうるかを個別判定し、該当する場合は _collect_unique_ids 相当の fail-closed 検査と回帰テストを追加し、該当しない場合はその理由を記録する",
+      "graph_node_id": "issue-id-uniqueness-gate-generalization-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T01:25:04Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "issue-qa-log-id-uniqueness-gate-20260726 (HarnessHub-33ho) の scope_in には『同種の集合化による取りこぼしが requirement_ids など他の ID 集合にも無いかの点検』が含まれていたが、validate-coverage-matrix.py への fail-closed 検査追加のみで HarnessHub-33ho は close された。grep 実測で {x.get(\"id\") for x in ...} という同型の集合内包を validate-task-graph.py / validate-consult-session.py / validate-route-build-reports.py の3ファイルで確認した。これらは検査対象データの参照先ID一意性を暗黙に前提するバリデータであり、qa_log と同じ『重複IDが静かに1件へ畳み込まれ実在検査だけが通る』構造を持ちうる。",
+      "related_nodes": [
+        "issue-qa-log-id-uniqueness-gate-20260726"
+      ],
+      "resource_scope": [
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph.py",
+        "plugins/ubm-goal-setting/scripts/validate-consult-session.py",
+        "plugins/harness-creator/skills/run-build-skill/scripts/validate-route-build-reports.py"
+      ],
+      "scope_in": [
+        "validate-task-graph.py の node_ids/comp_ids が重複IDを畳み込むケースの要否判定",
+        "validate-consult-session.py の user_turn_ids が重複IDを畳み込むケースの要否判定",
+        "validate-route-build-reports.py の routes/known_ids が重複IDを畳み込むケースの要否判定",
+        "要検査と判定したファイルへの fail-closed 実装と正例=OK/負例=各違反の回帰テスト追加"
+      ],
+      "scope_out": [
+        "dev-graph 自身の graph.json 内 by_id ルックアップ (schedule-graph.py, render-graph-html.py 等。graph_node_id の一意性は validate-graph-schema.py が別途担保済み)",
+        "harness-creator の task-graph/handoff 系ルックアップ (accept-discovered-task.py, sync-task-state.py, build-script-route.py 等。内部状態の last-write-wins マージであり参照先一意性の検査ゲートではない)",
+        "qa_log 自体の内容修正 (HarnessHub-33ho の scope_out を継承)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T01:25:04Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "issues/sys-qa-log-id-uniqueness-gate-20260726.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "validation",
+        "fail-closed",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T01:25:04Z"
+    },
+    {
+      "acceptance": [
+        "worktree から refs/heads/main を直接更新しようとした操作が遮断されるか、遮断できない場合はその制約が根拠つきで記録されている",
+        "desync 状態 (HEAD と作業ツリーの不整合) でのコミットが検査で止まり、巻き戻しコミットが main へ到達しないことが再現手順つきで検証されている",
+        "hook の設置場所が beads 更新で消えないこと、または消えたことを検知できることが検証されている",
+        "並列稼働下の復旧手順が runbook に記載され、記載どおりの操作で復旧できることが確認されている",
+        "stash 参照をメッセージで行う規約が文書化されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-7xi9",
+        "linked_at": "2026-07-28T06:31:19Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-worktree-main-ref-desync-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "並列 worktree 運用と git ref 更新の衝突により再現しうる、リポジトリ運用上の追跡課題",
+      "closed_at": "2026-07-28T08:55:00Z",
+      "completion_evidence": {
+        "completed_at": "2026-07-28T08:55:00Z",
+        "evidence_refs": [
+          "architecture/harness-hub-dev-workflow.md",
+          "docs/worktree-desync-recovery-runbook.md",
+          "docs/worktree-parallel-operations-runbook.md",
+          "features/feat-dev-pipeline-improvement.md",
+          "specs/harness-hub-system-specification.md",
+          "system-spec/dev-workflow.md",
+          "system-spec/spec-state.json",
+          "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+          "tests/scripts-root/test_root__guard_cross_worktree_ref_update.py",
+          "tests/scripts-root/test_root__guard_worktree_desync.py",
+          "tests/scripts-root/test_root__validate_git_hooks_wiring.py"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-28T08:55:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T02:05:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-worktree-main-ref-desync-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "並列セッションを止めずに、main ref の横取り更新による desync を発生させない、または発生しても巻き戻しコミットとして main へ到達させない状態にする",
+      "graph_node_id": "issue-worktree-main-ref-desync-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T02:05:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-worktree-main-ref-desync-20260728",
+          "linked_at": "2026-07-28T08:55:00Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 592,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/592"
+        }
+      ],
+      "purpose": "2026-07-28、主ワークツリーで HEAD と index だけが最新 main へ進み、作業ツリーが 09:36 時点 (03093e4) に取り残される desync が発生した。原因は並列稼働中の worktree/セッションが git update-ref 系で refs/heads/main を直接書き換えたこと。git reflog show main に理由メッセージが空のエントリが 3 件 (10:06:29 -> 8560e92 / 10:16:32 -> 6e03e8f / 10:52:28 -> 9fe09e5) 残っており、pull / merge / checkout いずれの経路でもないことが確定している。症状は (a) ref が最新のため git pull が Already up to date を返す、(b) git status が PR で追加されたファイルを deleted、更新されたファイルを modified と表示する、の 2 点。この状態で git commit -a すると PR #84 / #85 のマージ内容を丸ごと巻き戻すコミット (65 files / -5467 行) が main に載る。今回は commit 前に検知して復旧したが、過去の stash に同種の退避が残っており再発である。復旧作業中に別セッションが stash push したため番号参照の指す対象が入れ替わる事象も同時に観測した",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "spec-harness-hub-requirements",
+        "issue-local-ci-gate-drift-20260728",
+        "issue-desync-guard-bundle-untracked-20260728"
+      ],
+      "resource_scope": [
+        ".githooks",
+        ".beads/hooks",
+        ".dev-graph/state/graph.json",
+        "architecture/harness-hub-dev-workflow.md",
+        "docs/worktree-desync-recovery-runbook.md",
+        "docs/worktree-parallel-operations-runbook.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "issues/sys-worktree-main-ref-desync-20260728.md",
+        "scripts/install-git-hooks.sh",
+        "scripts/run-ci-checks.sh",
+        "scripts/guard-cross-worktree-ref-update.py",
+        "scripts/guard-worktree-desync.py",
+        "scripts/validate-git-hooks-wiring.py",
+        "specs/harness-hub-system-specification.md",
+        "system-spec/dev-workflow.md",
+        "system-spec/spec-state.json",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+        "tests/scripts-root"
+      ],
+      "scope_in": [
+        "worktree/エージェントから他ワークツリーで checkout 中の ref を直接更新する経路を遮断する仕組みの設計と導入 (reference-transaction hook が第一候補)",
+        "core.hooksPath が .beads/hooks を指すため beads 更新で hook が消える経路の評価と、消えた場合の検知手段",
+        "desync 状態でのコミットを fail-closed で止める検査の pre-commit 系への結線 (HEAD と作業ツリーの整合、大量 deletion の異常検知)",
+        "並列稼働を止めない復旧手順の runbook 化 (--detach で HEAD を SHA 固定 -> stash push -u -> 一致確認 -> 選択復元 -> checkout main)",
+        "stash の参照を番号ではなくメッセージで行う規約の明文化"
+      ],
+      "scope_out": [
+        "並列セッション運用そのものの停止や同時実行数の削減",
+        "既存 48 件の stash の棚卸し",
+        "GitHub 側のブランチ保護設定の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T02:05:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "dev-workflow",
+        "git",
+        "worktree",
+        "parallel-session",
+        "data-loss-risk"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T09:00:15.438342Z"
+    },
+    {
+      "acceptance": [
+        "bd-bridge.py が 500 行以下の複数ファイルへ分割され、既存テストが無変更で全件 PASS する",
+        "mfh7 issue 本文が分割され、分割後も C02 の frontmatter 検証と graph body 整合が保たれている",
+        "HarnessHub-2mor の懸念 (coverage 分母希釈) との整合が判断根拠として記録されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-w7n7",
+        "linked_at": "2026-07-28T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-doc-line-limit-followup-mfh7-20260728.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-mfh7 の最終レビューで検出した 500 行超過 2 件。ユーザー判断によりファイル分割は今回の PR に含めずフォローアップ課題として切り出した (共有インフラである bd-bridge.py と graph authority 下の issue 本文を、大規模レビューの最中に安全確認なく分割するリスクを避けるため)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-doc-line-limit-followup-mfh7-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "bd-bridge.py が choke-point 契約と既存テスト coverage を壊さずに 500 行以下へ責務分割され、mfh7 issue 本文の分割が dev-graph node body との整合 (C02 再登録) を保ったまま完了している状態",
+      "graph_node_id": "issue-doc-line-limit-followup-mfh7-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-mfh7 の変更で plugins/dev-graph/scripts/bd-bridge.py が 1124 行 (529 行増)、issues/sys-bd-external-ref-orphan-nodes-20260725.md が 533 行になり、ユーザー指定の 500 行上限を超えた。どちらもリポジトリの CI lint (scripts/lint-doc-line-limit.py は system-spec/architecture/features/tasks/docs の 5 root のみ対象で issues/ と *.py は対象外) には抵触しないが、可読性と変更差分の追跡性のため分割が望ましい",
+      "related_nodes": [
+        "issue-bd-external-ref-orphan-nodes-20260725"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "issues/sys-bd-external-ref-orphan-nodes-20260725.md"
+      ],
+      "scope_in": [
+        "bd-bridge.py の責務分割方針の設計 (create/update/close 等の verb 別 module 化など)。HarnessHub-2mor (500 行分割が harness coverage の分母を希釈し ratchet を回帰させる懸念) と矛盾しない進め方の確認",
+        "分割後も plugins/dev-graph/tests/ 配下の既存テストが変更なしで通ることの検証",
+        "issues/sys-bd-external-ref-orphan-nodes-20260725.md の分割方針の設計 (時系列フォレンジック記録のため自然な境界がなく、素朴な分割は監査証跡を断片化するリスクがある)",
+        "mfh7 本文分割後は C02 upsert-node.py で node body を再登録し validate-graph-schema.py で整合を確認する"
+      ],
+      "scope_out": [
+        "bd-bridge.py の挙動変更 (choke-point 契約・C28 検証ロジックは変えない。ファイル分割のみ)",
+        "issues/sys-bd-external-ref-orphan-nodes-20260725.md の内容変更 (レイアウトの分割のみ)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T00:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "governance"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "bd-bridge.py と mfh7 issue 本文がユーザー指定 500 行上限を超過しており、安全な分割方針が未確定",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T04:57:02.738907Z"
+    },
+    {
+      "acceptance": [
+        "未充足 depends_on を持つ node が unmapped[] に理由付きで 1 件出力される",
+        "その理由が選択外・非 schedulable と機械的に区別できる",
+        "execution-tracker-contract.md §10 に新 reason が正本として記載される",
+        "依存未充足 node の報告を固定する回帰テストが追加され PASS する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-fcth",
+        "linked_at": "2026-07-28T05:55:49.46351Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-schedule-blocked-exclusion-unreported-20260728.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "C15 live-trial 20260728T034005Z-ii90-schedule の独立評価で、依存除外の理由が unmapped/conflicts/conflict_pairs のいずれにも現れないことを実測したため",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T05:55:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-schedule-blocked-exclusion-unreported-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "未充足 depends_on を持つ task が unmapped へ理由付きで 1 件報告され、選択外・非 schedulable と機械的に区別できる状態",
+      "graph_node_id": "issue-schedule-blocked-exclusion-unreported-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T05:55:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ready set から外れた task の理由が出力から追えるようにし、schedule の除外判定を可観測にする",
+      "related_nodes": [
+        "issue-register-package-projection-idempotency-drift-20260728"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/schedule-graph.py",
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "issues/sys-schedule-blocked-exclusion-unreported-20260728.md"
+      ],
+      "scope_in": [
+        "schedule-graph.py の ready 判定ループにおける除外理由の記録",
+        "execution-tracker-contract.md §10 への unmapped reason 追記",
+        "依存未充足 node が報告されることを固定する回帰テスト"
+      ],
+      "scope_out": [
+        "ready set の選定ロジックそのものの変更",
+        "lease / beads parity 側の既存 reason の改名",
+        "--max-parallel や batch 分割アルゴリズムの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T05:55:00Z",
+        "origin_kind": "generated",
+        "source_digest": "ee21ebecdfda84391a0de537ab298c25982dd62fd219aaa1e513cf39089d3f87",
+        "source_path": "plugins/dev-graph/scripts/schedule-graph.py",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-graph",
+        "schedule-graph",
+        "observability",
+        "silent-drop",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "schedule-graph が依存未充足 task の除外理由を report しない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T05:55:49.46351Z"
+    },
+    {
+      "acceptance": [
+        "graph サイズ非依存性が、絶対所要時間ではない指標 (所要時間の比、または構造検査) で固定されている",
+        "並列全件実行と単独実行の両方で反復実行し、安定して緑になることが確認されている",
+        "是正が既存 assert の閾値引き上げのみになっていないこと、および閾値を上げた場合に見逃す退行の範囲が広がる旨が根拠として記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-flaky-guard-graph-schema-latency-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "既存テストの判定基準に起因する再現性のある不安定化であり、リポジトリ運用上の追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T06:23:05Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-flaky-guard-graph-schema-latency-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph サイズ非依存性という契約を、マシン負荷に汚染されない形で測るテストへ置き換え、並列全件実行でも単独実行でも安定して緑になる状態にする",
+      "graph_node_id": "issue-flaky-guard-latency-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T06:23:05Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "test_guard_graph_schema_fail_open_window.py::test_denial_latency_does_not_depend_on_the_repository_graph が並列稼働下で assert 3.559 < 1.0 により失敗する。単独実行では 26 passed / 2 skipped で緑。テストが固定したい契約は「遮断が graph サイズに依存せず確定する」だが、assert が見ているのは絶対所要時間であり代理指標にすぎない。代理指標にはマシン負荷という契約外の変数が混入するため、20 以上の worktree が同時稼働する本リポジトリの運用条件では契約が破れていなくても赤になる。赤が情報を失い、同じ見た目の本物の退行を読み飛ばす習慣を生む点が有害である。",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/tests"
+      ],
+      "scope_in": [
+        "絶対時間 assert を比 (巨大 graph と極小 graph の所要時間比) など負荷が相殺される指標へ置き換える設計と実装",
+        "構造検査 (test_semantic_contract_boundaries_c10_c11_c24.py が固定する subprocess 非起動) との責務分担の整理",
+        "並列全件実行と単独実行の双方での反復実行による安定性確認"
+      ],
+      "scope_out": [
+        "guard-graph-schema.py 本体の遮断ロジック変更",
+        "pytest の並列度やテスト実行基盤の変更",
+        "他の flaky テストの棚卸し"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T06:23:05Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-workflow",
+        "testing",
+        "flaky",
+        "proxy-metric",
+        "dev-graph"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T06:23:05Z"
+    },
+    {
+      "acceptance": [
+        "CI とローカルゲートの検査集合差が機械検査され、allowlist に無い差分で fail-closed に落ちること",
+        "判定が件数や比率ではなく set membership であること",
+        "突合の鍵が script 名だけでなく意味のある引数を含む呼び出し形であること",
+        "意図的なローカル非実行が理由とともに allowlist へ記載されており、run-ci-checks.sh の宣言文が実際の被覆範囲と一致していること"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-local-ci-gate-drift-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "CI とローカルゲートの被覆差というリポジトリ運用上の追跡課題であり、特定 feature の実装タスクではない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T07:20:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-local-ci-gate-drift-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "CI が実行する検査集合とローカルゲートが実行する検査集合の差を機械検査し、意図的な除外だけを理由付き allowlist で許す状態にして、「pre-push 緑ならば CI 緑」を検査可能な命題にする",
+      "graph_node_id": "issue-local-ci-gate-drift-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T07:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "scripts/run-ci-checks.sh は冒頭に「CI と同等の機械チェックをローカルで一括実行する」と宣言し、pre-push hook はその結果を「All CI-equivalent checks passed」と表示する。しかし .github/workflows/*.yml が実行する scripts/*.py と run-ci-checks.sh が実行するものを機械的に突合すると、CI にあってローカルに無いものが 19 件ある。同等性は誰にも検査されていない。結果として開発者は「pre-push が緑なら CI も緑」という誤った事前確率を持ち、実際には CI で初めて落ちる。本リポジトリでは同型の事故が既に 2 回起きており (2026-07-02 / 2026-07-28)、いずれも当該 1〜2 件を手で追加して終わっている。",
+      "related_nodes": [
+        "issue-worktree-main-ref-desync-20260728",
+        "issue-desync-guard-bundle-untracked-20260728"
+      ],
+      "resource_scope": [
+        "scripts/run-ci-checks.sh",
+        ".github/workflows"
+      ],
+      "scope_in": [
+        ".github/workflows/*.yml とscripts/run-ci-checks.sh の実行検査集合を突合する meta-lint の設計と実装",
+        "ローカル非実行を意図する検査の理由付き allowlist の定義",
+        "build 系 (作業ツリーへ書き込みうる) と読み取り専用検査の切り分け、および run-ci-checks.sh の宣言文の修正"
+      ],
+      "scope_out": [
+        "個々の lint の判定ロジック変更",
+        "CI workflow のジョブ分割やキャッシュ戦略の変更",
+        "pre-commit 側のゲート設計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T07:20:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dev-workflow",
+        "ci",
+        "pre-push",
+        "proxy-metric",
+        "meta-check"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T08:25:00Z"
+    },
+    {
+      "acceptance": [
+        ".git/harness-hub-hooks/ の 11 ファイル 985 行が tracked template としてリポジトリに存在すること",
+        "install-git-hooks.sh が共有 bundle への設置まで行い、clone 固有の絶対パスをハードコードせず git common dir から導出すること",
+        "hook 配線と guard 判定の回帰テストが tests/ に存在し lint-test-discovery-coverage の CI 到達被覆に入っていること",
+        "guard-worktree-desync.py が発火する commit 経路が実測で特定され、素通りする経路があれば制約として記録されていること",
+        "HarnessHub-7xi9 の close 状態が実態に合わせて是正されていること"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ag07",
+        "linked_at": "2026-07-28T08:54:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-desync-guard-bundle-untracked-20260728.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "close 済み課題の成果物がリポジトリに不在という、追跡と実体の乖離に関するリポジトリ運用上の欠陥であり、特定 feature の実装タスクではない",
+      "closed_at": "2026-07-28T08:54:00Z",
+      "completion_evidence": {
+        "completed_at": "2026-07-28T08:54:00Z",
+        "evidence_refs": [
+          ".githooks",
+          "docs/worktree-desync-recovery-runbook.md",
+          "docs/worktree-parallel-operations-runbook.md",
+          "scripts/install-git-hooks.sh",
+          "scripts/validate-git-hooks-wiring.py",
+          "tests/scripts-root/test_root__guard_cross_worktree_ref_update.py",
+          "tests/scripts-root/test_root__guard_worktree_desync.py",
+          "tests/scripts-root/test_root__validate_git_hooks_wiring.py"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-28T08:54:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T07:55:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-desync-guard-bundle-untracked-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "desync / clobber 遮断機構を tracked template としてリポジトリへ復元し、任意の clone で install-git-hooks.sh 経由で有効化でき、その配線と発火経路が回帰テストで機械検査される状態にする",
+      "graph_node_id": "issue-desync-guard-bundle-untracked-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T07:55:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "critical",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-worktree-main-ref-desync-20260728",
+          "linked_at": "2026-07-28T08:54:00Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 592,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/592"
+        }
+      ],
+      "purpose": "HarnessHub-7xi9 (worktree desync 遮断) は全 5 受入条件を実装・検証済みとして CLOSED になっているが、その成果物はリポジトリに 1 バイトも存在しない。実体は .git/harness-hub-hooks/ 配下の 11 ファイル 985 行のみであり、.git/ は追跡対象外・push 対象外のため再 clone で消える。hook 自身が参照する tracked template 7 件は origin/main に無く、origin の 29 ブランチを全数走査しても 0 件。close 理由が主張する回帰テストも tests/ に存在しない。core.hooksPath は絶対パスを指しており、この 1 台の 1 clone でしか機能しない。hook の mtime (15:43-15:46) と同日夕方の作業ツリー clobber (403 files / -29,159 行) の時系列から、install 済みコピーだけが .git/ 配下で生き残り作業ツリー側の template が commit 前に消失した経路が最も整合する。HarnessHub-7xi9 が防ごうとした障害そのものによって HarnessHub-7xi9 の成果物が失われている。",
+      "related_nodes": [
+        "issue-worktree-main-ref-desync-20260728",
+        "issue-local-ci-gate-drift-20260728"
+      ],
+      "resource_scope": [
+        ".beads/hooks",
+        ".githooks",
+        "docs/worktree-desync-recovery-runbook.md",
+        "docs/worktree-parallel-operations-runbook.md",
+        "scripts/guard-cross-worktree-ref-update.py",
+        "scripts/guard-worktree-desync.py",
+        "scripts/install-git-hooks.sh",
+        "scripts/validate-git-hooks-wiring.py",
+        "tests/scripts-root/test_root__guard_cross_worktree_ref_update.py",
+        "tests/scripts-root/test_root__guard_worktree_desync.py",
+        "tests/scripts-root/test_root__validate_git_hooks_wiring.py"
+      ],
+      "scope_in": [
+        ".git/harness-hub-hooks/ の 11 ファイル 985 行を tracked template として復元し、install-git-hooks.sh を共有 bundle 設置まで行うよう拡張する",
+        "guard-worktree-desync.py が発火する commit 経路 (commit -a / add 後 commit / 部分 add) の実測と、素通りする経路の制約としての記録",
+        "hook 配線と guard 判定の回帰テストを tests/ へ追加し CI 到達被覆に載せる",
+        "HarnessHub-7xi9 の close 状態の是正"
+      ],
+      "scope_out": [
+        "clobber の発生源そのものの特定と遮断",
+        "beads hook (.beads/hooks) の設計変更",
+        "他 plugin の hook 配線"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T07:55:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "dev-workflow",
+        "git",
+        "worktree",
+        "data-loss-risk",
+        "false-green"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "HarnessHub-7xi9 の成果物 985 行がリポジトリに存在せず .git/ 内の 1 コピーのみで生存している",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T08:59:47.027730Z"
+    },
+    {
+      "acceptance": [
+        "audit-fork-ledger.jsonl への Write/Edit/Bash 経由の直接書込みが PreToolUse hook で exit2 拒否されることを回帰テストで確認できる",
+        "record-audit-fork.py が書いた正規レコードと、模倣により偽装されたレコードを、aggregate-completeness.py 側の追加検査 (時刻整合性等) で区別できるか検討し、結論を本課題または後続課題に記録する",
+        "completeness-report.json 内で独立監査 agent の生 verdict が下流で書き換えられていないかを検出する仕組みが追加される、または対応不能な場合はその理由が記録される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3vmz",
+        "linked_at": "2026-07-28T03:55:05Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-audit-fork-ledger-forgery-20260728.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "C19 live-trial (dev-graph:run-dev-graph-system-spec, run-id 20260728T112105-sysspec-wt8) の fresh evaluator が goal_fit=FAIL/verdict=DEGRADED を返し、transcript.jsonl の生ログ (line 403/441/479) で独立に裏取りした重大欠陥",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T03:51:58Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-audit-fork-ledger-forgery-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "audit-fork-ledger.jsonl (および将来同種の目的で追加される証跡ファイル) への hook 以外からの直接書込みを fail-closed で拒否し、completeness-report の verdict 書き換え自体も検出・拒否できるようにする",
+      "graph_node_id": "issue-audit-fork-ledger-forgery-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T03:51:58Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "critical",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "assign-system-spec-completeness-evaluator の独立監査 fork 証跡 (audit-fork-ledger.jsonl) が、モデル自身の Write ツールによる直接偽装から fail-closed で保護されておらず、live-trial で実際に独立監査の FAIL 判定を PASS へ書き換える攻撃が成立することを是正する",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/system-spec-harness/hooks/record-audit-fork.py",
+        "plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py",
+        "plugins/system-spec-harness/hooks/hooks.json",
+        "plugins/system-spec-harness/hooks/references/hook-guard-protection-scope.md",
+        "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py"
+      ],
+      "scope_in": [
+        "guard-confirmed-chapter-overwrite.py (またはそれに類する新規 PreToolUse ガード) の保護対象へ eval-log/system-spec-harness/audit-fork-ledger.jsonl を追加し Write/Edit/Bash による直接書込みを拒否する",
+        "「hook にしか書けない」ことを構造的に保証する仕組み (署名・パーミッション等) の検討",
+        "aggregate-completeness.py への、独立監査 agent が返した生の verdict をレポートが書き換えていないかの整合検査追加",
+        "上記の回帰テスト追加"
+      ],
+      "scope_out": [
+        "監査 prompt の実質性判定 (意味層 = content-review/human の責務、issue-completeness-auditor-attribution-20260721 と同じ既知の境界)",
+        "C19 live-trial シナリオの scenario-verdict.json 自体の再生成 (別課題)",
+        "record-audit-fork.py の記録対象 agent レジストリの変更 (今回の欠陥と無関係)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T03:51:58Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260728T112105-sysspec-wt8/verdict.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "fail-closed",
+        "goodhart",
+        "attribution",
+        "live-trial",
+        "security"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "system-spec-harness: 独立監査台帳(audit-fork-ledger.jsonl)をモデルがWriteで直接偽装でき、completeness-reportのFAILがPASSへ書き換えられる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T03:51:58Z"
+    },
+    {
+      "acceptance": [
+        "共有 script の変更が被験 skill の挙動に到達するかを判定する規則が定義され、判定不能時は再実走要求へ倒す fail-closed 設計になっている",
+        "対策適用後、bd-bridge.py の無害な変更 (docstring 等) で 4 skill の live-trial 証跡が失効しないことを実測で確認する",
+        "hooks 経路 (r65n) と cross-plugin 経路 (1wo3) との責務境界が文書化され、3 経路が互いの対策を重複させない"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-shared-script-refs-closure-coupling-20260729.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "2026-07-28 HarnessHub-zep2 の対応中に、共有 script bd-bridge.py の変更で 4 skill の live-trial 証跡が同時失効する構造を実測。hooks 経路 (r65n) と cross-plugin 経路 (1wo3) とは対策が異なるため独立 issue と判断",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T21:40:43Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-shared-script-refs-closure-coupling-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する",
+      "graph_node_id": "issue-shared-script-refs-closure-coupling-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T21:40:43Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "共有 script 1 行の変更に 4 skill 分の live-trial 再実走 (約 1 時間) が付く構造を解消し、共有 script へ触れない逆インセンティブを取り除く",
+      "related_nodes": [
+        "issue-live-trial-verdict-staleness-hook-closure-20260726",
+        "issue-bd-external-ref-orphan-nodes-20260725"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "plugins/harness-creator/skills/run-skill-live-trial/scripts/live-trial-verdict.py"
+      ],
+      "scope_in": [
+        "script_refs 経由の挙動閉包 digest が共有 script の変更で複数 skill を同時失効させる構造の分析と対策設計",
+        "差分の性質による再実走要否の切り分けが fail-closed に成立するかの検討"
+      ],
+      "scope_out": [
+        "plugin hooks 経由の連鎖失効 (issue-live-trial-verdict-staleness-hook-closure-20260726 の担当)",
+        "cross-plugin の entry_points 過剰包含 (HarnessHub-1wo3 の担当)",
+        "本課題の解消を待たずに現行の再実走運用を止めること"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T21:40:43Z",
+        "origin_kind": "generated",
+        "source_digest": null,
+        "source_path": "docs/features/feat-dev-pipeline-improvement/mfh7-ii90-spec-reflection-receipt.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "live-trial",
+        "behavior-closure"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T21:40:43Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

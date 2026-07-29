@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+# pre-commit: repo ガード (desync 検査) を実行してから beads hook へ委譲する。
+# 本ファイルは共有 hook bundle へコピーされる tracked template。
+# 配線の全体像は .githooks/lib/run-repo-guards.sh と
+# docs/worktree-parallel-operations-runbook.md を参照。
+set -u
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+HOOKS_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+LIB="$HOOKS_DIR/lib"
+[ -d "$LIB" ] || exit 0
+
+sh "$LIB/run-repo-guards.sh" pre-commit "$@" || exit $?
+
+# 委譲先の .beads/hooks/pre-commit からも同じガードが呼ばれるため、実行済みを伝える。
+HH_REPO_GUARDS_DONE="${HH_REPO_GUARDS_DONE:-}:pre-commit"
+export HH_REPO_GUARDS_DONE
+
+exec sh "$LIB/delegate-beads.sh" pre-commit "$@"

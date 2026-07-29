@@ -189,6 +189,20 @@ def test_foundation_goal_empty_text():
     assert any("text が空" in f for f in c12.validate_foundation(d))
 
 
+# F3: goal id の一意性 (同種の集合化取りこぼし。set(goal_ids) の前に重複を検査する)
+def test_foundation_duplicate_goal_id_fails():
+    d = _valid_state()
+    d["requirements_foundation"]["goals"].append({"id": "G1", "text": "別内容の二重採番"})
+    findings = c12.validate_foundation(d)
+    assert any("goal id" in f and "重複" in f and "G1" in f for f in findings)
+
+
+def test_foundation_unique_goal_ids_keep_passing():
+    d = _valid_state()
+    d["requirements_foundation"]["goals"].append({"id": "G3", "text": "追加ゴール"})
+    assert c12.validate_foundation(d) == []
+
+
 # ── (b)(c) serves_goals トレース (drift 候補 / dangling) ────────────────────
 def test_foundation_confirmed_cell_without_serves_is_drift():
     d = _valid_state()

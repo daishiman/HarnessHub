@@ -1,0 +1,31 @@
+PASS
+
+Fresh evaluator: /root/system_spec_r5_fresh_evaluator
+
+Evidence:
+- Claude Code 2.1.220 rejected the namespaced alias, then the installed
+  `Skill(run-dev-graph-system-spec)` entrypoint loaded successfully.
+- Parent-context R0/R1/R2/R3 Agent forks occurred; R2/R3 were analysis-only,
+  while Stage 3/4 checks ran in the parent context.
+- The canonical C01 -> C02 -> C03 -> C05 flow ran. After the initial
+  completeness FAIL, repairs and re-evaluation used the required Skill
+  entrypoints. C06/C07/C08 all returned PASS for session
+  `8c75a17e-338d-4fef-b8bc-90e7f2b5b080`, and the aggregate gate exited 0.
+- Every actual C01 chunk used `--max-loops 5`, with at most five turns per
+  turns file. The final state is complete with zero unresolved cells.
+- C02 performed exactly two real registrations: architecture 0 -> 1, then
+  specification 1 -> 2. Each was preceded by its own parent
+  `Skill(run-dev-graph-node)` invocation. The intervening architecture probe
+  was a write_count=0 noop, not a mutation or recovery.
+- The final graph has revision 2 and two valid nodes. Source digest checked 2
+  with zero mismatches; evidence refs scanned 2 with zero dangling refs.
+- FastAPI's official measurement was 0.140.6. OAuth evidence and D3 were
+  updated to BCP 240 / RFC 9700.
+- Goal evidence contains exactly two hash-valid rows. Stage 3/4 positive and
+  negative controls passed, and the registered Markdown references source
+  lineage instead of duplicating system-spec chapters.
+- Exactly two textual operator interventions addressed notification lag for
+  already-completed work. They supplied no domain decision, relaxed no gate,
+  and replaced no execution. Escape-key UI controls were not extra nudges.
+
+Blocking violations: none.

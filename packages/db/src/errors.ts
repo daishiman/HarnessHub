@@ -1,6 +1,11 @@
 // repository 境界で投げる例外。driver 固有のエラーをアプリ層へ素通しさせないための共通語彙。
 
-export type RepositoryErrorCode = 'not-found' | 'driver-not-supported' | 'invalid-page-request' | 'invalid-context';
+export type RepositoryErrorCode =
+  | 'not-found'
+  | 'conflict'
+  | 'driver-not-supported'
+  | 'invalid-page-request'
+  | 'invalid-context';
 
 export class RepositoryError extends Error {
   readonly code: RepositoryErrorCode;

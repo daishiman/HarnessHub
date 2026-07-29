@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/guard-cross-worktree-ref-update.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 90,
+    "notes": "genuine code-review + py_compile OK。reference-transaction の prepared phase だけを対象にし、refs/heads/* の owner を git worktree list --porcelain から取得して、実行元以外の worktree が checkout 中の ref 更新だけを拒否する責務が明確。remote-tracking/tag/未 checkout branch/自 worktree の通常 commit は対象外で、re-entry env により guard 自身の read-only git 呼出しが再帰しても停止しない。判定材料を取れない場合は ref 修復経路を封鎖しない fail-open とし、理由・残余リスク・pre-commit の fail-closed 二層目を docstring と runbook に明記している。old/new/ref の malformed hook 行は skip するが、入力は Git 自身が生成する契約であり、Git が worktree 情報を返せない場合と同じ fail-open 境界に収まる。明示 bypass は警告を出し、通常操作との混同を避ける。TESTS: parse、owner 判定、phase/re-entry/bypass/fail-open、他 worktree 更新の遮断、未 checkout branch の許可、実 git reference-transaction 統合を含む対象 suite が PASS。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

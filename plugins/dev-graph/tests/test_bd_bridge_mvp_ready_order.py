@@ -72,7 +72,12 @@ def manifest_row(issue_id: str, node_id: str, **extra) -> dict:
 
 def ready_receipt(module, monkeypatch, capsys, tmp_path: Path, rows: list[dict]):
     manifest = tmp_path / "parity.json"
-    manifest.write_text(json.dumps({**PROVENANCE, "nodes": rows}), encoding="utf-8")
+    # graph_node_ids は「snapshot 時点で graph に実在した node の全集合」。この fixture では
+    # 投影対象 (`nodes`) がそのまま実在集合なので rows から導出する。
+    manifest.write_text(json.dumps({
+        **PROVENANCE, "nodes": rows,
+        "graph_node_ids": sorted({row["graph_node_id"] for row in rows}),
+    }), encoding="utf-8")
     return call_main(
         module, monkeypatch, capsys,
         "--op", "ready", "--repo-root", tmp_path, "--parity-manifest", manifest,

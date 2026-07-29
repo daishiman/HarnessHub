@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "--repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260728-082322-wt-11/eval-log/dev-graph/live-trial-fixtures/system-spec-lp36-merged-r3",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 1,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-system-spec"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "bc70aee900dc093bfea35eaab6bb89fb5e3473c4be1a722f77c7644bb863edd6",
+  "transcript_sha256": "13fb6afc9eb5e9937a1aeae23f33582549f4bf3ab90b864c8b266f5dc696b36a",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 10.0,
+    "poll_exit": "STALL",
+    "wall_clock_s": 600.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r3"
+}

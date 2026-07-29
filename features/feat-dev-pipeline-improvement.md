@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-25T22:55:12.292521Z"
+updated_at: "2026-07-29T05:22:10.828117Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-21T14:40:00Z","origin_kind":"generated","source_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-29T05:21:27Z","origin_kind":"generated","source_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -108,6 +108,19 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - C10 guard の破壊操作遮断を subprocess 非依存へ変更し、hook timeout による fail-open 窓を解消した。
 - quote 外 redirect だけを解析して、Beads notes 等に記載した例示コマンドの誤遮断を解消した。
 - `.dev-graph/config.json` と初期 graph store に preview/receipt 付き sanctioned writer を追加し、init が `Path.write_text()` を含む直接書込みへ退避しない契約にした。
+
+## 2026-07-28 並列 worktree 安全契約の横断追補
+
+`HarnessHub-7xi9`（`issue-worktree-main-ref-desync-20260728`）で、別 worktree が
+checkout 中の branch ref だけを動かして作業ツリーを古いまま残す事故への二層防御を
+追加した。これは本 feature の promoted exact-13 package を再生成する変更ではなく、
+開発管理パイプラインを利用する全 feature に共通する repository 運用の追補である。
+
+- 仕様正本: `system-spec/dev-workflow.md` `qa-088`
+- 設計正本: `architecture/harness-hub-dev-workflow.md`
+- 運用正本: `docs/worktree-parallel-operations-runbook.md`
+- 検査: `reference-transaction` で ref 更新を予防し、`pre-commit` で巻き戻しを遮断、
+  `pre-push` / CI で共有 hook bundle の欠落・陳腐化を検知する
 - C02 node upsert は既存 Markdown 本文を既定保持し、明示 `--regenerate-body` だけが再生成できる。
 - `local_only` task の PR 連動完了 policy を `manual` へ正規化し、完了不能な 167 node を移行した。
 - 500 行を超えた手書き実装・テスト・命名例外台帳を責務別ファイルへ分離し、今回変更した手書き Python をすべて 500 行以下にした。
@@ -126,6 +139,60 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 - 残る被覆差 (repo 全体の `validate-plugin-completeness.py` は hooks について `declared ⊆ actual` しか強制せず、`hooks.json` 登録との parity は dev-graph 専用テストにしか無い) は `HarnessHub-vf66` として分離した。
 - 3 例目として `validate-plugin-packages.py` の PKG-006 (hook 登録整合) / PKG-007 (script shebang・実行ビット) も落ちた。両 check は「`hooks/`・`scripts/` 配下は全て起動対象」を前提にしており、import 専用 module 5 件を P0 で遮断していた。entry point 契約テストと同じ構造判定 (`is_import_only_support_module`: `.py` / import 可能名 / shebang なし / `__main__` なし) で統一し、単体テスト 8 件で境界を固定。同時に検出された `build-repo-config.py` の実行ビット欠落は真の不備だったので `chmod +x` で是正した。986 行の契約テストは責務で 3 分割 (364 / 386 / 301 行 + 共有 fixture 73 行)。
 - 同じ衝突が harness coverage にも現れた。`scripts/llm_eval` は分母をファイル数で数えるため、500 行分割で新規 7 件が verdict 未添付のまま母数へ加わり 64.1% → 63.1% へ希釈された。7 件を除くと 64.2% で floor 超え、分割元 `upsert-node.py` の verdict も PASS/91 のままであり、回帰の全量が分母希釈に由来する。先例 2 件と同型に floor を実測値へ手動 baseline reset し (`--update-floor` は回帰時据え置きのため使えない)、verdict を書いて率を戻す Goodhart 経路は取らなかった。構造的是正は `HarnessHub-2mor` として分離した。
+
+## 2026-07-28 追記: C19 task / fixture 前提契約
+
+- `HarnessHub-768b` を実装し、C19 fixture が置く入力、置かない成果物、必須 entry point、観測条件を `TASK_CONTRACT` と scenario JSON から一つの digest へ束ねた。
+- 旧 task の「確定成果物は事前配置済み」「正規 flow を再実行しない」前提を実物回帰で拒否し、fixture 契約へ合わせた fresh PASS task は誤検出しない。
+- 650 行だった lint は CLI／report と契約解析 module に分け、双方を 500 行未満へ収束した。
+- focused pytest 29 PASS、latest verdict task に対する `--all` は checked 1 / violation 0。
+- 技術契約は `plugins/dev-graph/references/live-trial-task-contract.md`、仕様影響なしの層別判断は `docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md` を正本とする。
+
+## 2026-07-29 追記: interpreter 書込み guard の被覆修正
+
+`HarnessHub-lp36` で C10 の interpreter 判定を補正した。`Path.write_text/write_bytes`、
+`shutil.copy*/move`、`os.replace/rename`、`json.dump` と書込み可能な `open()` mode を
+graph authority 直書込みとして遮断し、読取専用の `r` / `rb` は許可する。判定は静的な
+共起検査であり、任意の Python 実行を完全解析するものではない。既存正本
+`plugins/dev-graph/references/claude-code-hooks-contract.md` の「graph authority 直書込み禁止」
+に対する適合修正であり、列挙 API の保証境界は実装 docstring と focused test に固定した。
+
+本変更は既存プラグイン内部契約への適合を直し、HarnessHub 製品の API・state・security・UI
+contract は変えない。`system-spec/`・`specs/` は qa-066 の二重正本防止に従い非変更、
+凍結済み exact-13 の `tasks/feat-dev-pipeline-improvement/` も手編集せず、実装結果は
+本 feature 履歴、architecture、final review、standalone issue に記録する。
+
+最終受入では focused pytest 48 passed / 2 skipped、Dev Graph 全体 697 passed / 2 skipped、
+9 skill の fresh live-trial 9/9 PASS、exact-13 P01-P13 / violation 0、graph schema violation 0、
+repository CI PASS 123 / WARN 4 / FAIL 0 を確認した。`HarnessHub-lp36` は証跡を追記して
+close した。
+
+## 2026-07-29 追記: C14 live-trial acceptance の証拠完全性
+
+- `HarnessHub-9ndl` で C14 decompose 監査を、preview の自己申告ではなく実 graph、pre/post state 差分、永続 `tracker_binding`、実装 schema probe から判定するよう修正した。
+- `HarnessHub-dyxr` で scenario 正本の required observations と実引数を verdict に束縛し、未回収、scenario 更新・削除、存在しない evidence ref を fail-closed にした。
+- 最終実走で feature promotion に task 完了専用 operation を誤指定した task.md を検出したため、通常 C02 upsert を必須、完了専用 operation を禁止として task 手順そのものも verdict に束縛した。
+- `main` 統合レビューで、旧 r6 の昇格証跡が 64 桁形式を満たすだけで最終 node 内容と一致しないことを検出した。scenario r7 は最終 persisted node の正準 digest 突合と、同じ graph から作る 2 種の gate 違反を正準 validator が拒否する negative control を必須化した。
+- none 系列の再実走で、生成時の draft feature を同じ入力で再 upsert すると先に進めた lifecycle が退行する別責務の欠陥を検出し、`HarnessHub-bk8v` へ分離した。C14 の最終判定は通常 C02 経路で明示的に再昇格した後の graph を監査する。
+- draft gate の起票 0 件と promoted candidate の external adapter dry-run による 0 件を別の帰属として記録する。
+- 500 行を超えた手書き実装・テストは import 専用 support module と責務別テストへ分離し、監査 provenance は全 module の複合 digest を保持する。
+- 仕様・設計への影響は開発品質ゲートの証拠経路に限定される。qa-089、`architecture/harness-hub-testing-qa.md`、[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) に反映した。
+- 最新 `main` (`bb95580`) 統合後の最終ゲートは広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。後続 main の CI token 最小権限変更は本 feature の Python / C14 behavior closure を変えない。
+- PR #598 のコンフリクト解消では、本 feature の lp36 interpreter guard、C14 acceptance 強化、PR #600 の live-trial session ownership 履歴をすべて保持した。C14 受領証拠は統合後も有効な behavior closure `c0d843d7…4801` の beads r3 / none r1 とし、旧 reaper に終了された beads r1/r2 は監査用の失敗証跡としてのみ保持した。無差別回収の原因は最新 main の ownership 契約で修正済みである。
+
+## 2026-07-29 追記: live-trial reaper の並行安全性
+
+- `HarnessHub-cjwm` と重複 `HarnessHub-0vs2` を実装し、通常の `reap` を
+  run-id と boot owner PID の完全一致へ限定した。
+- session 作成時に tmux metadata へ所有情報を記録し、別 owner、別 run、
+  metadata 無し session は通常 cleanup の対象外とする。
+- 暗黙の全件削除を廃止し、全 live-trial session の回収は明示 `--all` だけに分離した。
+- 1,600 行超だった test module は 6 責務と共通 support へ分割し、全ファイルを
+  500 行未満へ収束した。
+- 仕様影響はローカル開発運用に限定される。system-spec `qa-090`、
+  `architecture/harness-hub-dev-workflow.md`、
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
+  に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
 ## アーキテクチャ参照
 

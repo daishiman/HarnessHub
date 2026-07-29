@@ -2,13 +2,13 @@
   "target": {
     "plugin": "harness-creator",
     "skill": "run-skill-live-trial",
-    "skill_md_sha256": "50bc2817dba6dd2a737cb208a51571407e69445b952abc31f13c368fa4c21352"
+    "skill_md_sha256": "d7d1e16084b802f2f64eeffa2cc0245181f197a0422c3a7ad0a37318c9d9a6b7"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent-content-reviewer-20260722",
-  "reviewed_at": "2026-07-22",
-  "iterations": 1,
+  "reviewer": "codex-final-merge-review-20260729",
+  "reviewed_at": "2026-07-29T05:14:45Z",
+  "iterations": 3,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
@@ -20,14 +20,18 @@
       "OUT3"
     ],
     "positive_feedback": [
-      "FM/BD/PD 準拠: name=run-skill-live-trial (kebab + run prefix・ディレクトリ名一致)、description は Use-when 形、argument-hint に --proof/--model を宣言。Purpose (Output Contract 相当) + Gotchas 節があり本文 300 行以内。completeness_exempt で prompts/manifest の免除理由を具体的に明記し PD を満たす。",
-      "単一責務・境界・検証可能性: acceptance 専用 (selection を扱わない・1 実走=1 skill) に責務を絞り、ローカル開発環境限定 / 量産先配備対象外 / denylist の配備境界を明示。poll exit code 表・STALL 分岐表・self-test/pytest コマンド・actual_model 機械 gate で検証可能性が高く、数値上限を convergence-policy.json 正本へ委譲する SSOT も守られている。"
+      "単一責務を live acceptance に保ったまま、scenario 契約、挙動閉包 digest、所有権付き cleanup を独立した機械境界として実装している。入口と各 support script の API が SKILL.md の実行契約と一致する。",
+      "schema の required・additionalProperties・uniqueItems、scenario evidence_ref の containment、task_contract の必須/禁止断片、run-id と owner PID の cleanup scope がいずれも fail-closed である。",
+      "fake tmux と実 tmux の双方で別 owner・別 run・metadata 無し session の生存を検証し、boot READY の OWNER_PID handoff と SESSION_ID 行末互換も固定している。"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "negative_feedback": [
+      "LOW: --all は tmux server 上の live-trial session を広く削除するため、文書化された管理者用 escape hatch としてのみ扱う必要がある。",
+      "LOW: frontmatter の簡易 parser が非対応 YAML を拒否する経路には、将来さらにエラーメッセージ固定テストを追加できる。"
+    ],
+    "iteration": 3,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "run-skill-live-trial の機械 gate 追加を rubric 観点で再評価。IN1/IN2/OUT1/OUT2/OUT3 は本文で受入条件化されたまま維持され、追加 gate は OUT 側 (proxy 防止) を測定可能な形で補強 (invoked_skills / goal_seek_evidence_violations を verdict へ記録)。重大 0 件で PASS。"
+  "notes": "最終 rubric review。main の acceptance hardening と reaper ownership を統合した SHA-256 に証跡を結び直し、feedback contract 全 5 条件を確認した。高・中 severity 0 件、LOW 2 件は仕様化済みの運用注意であり、最終 verdict は PASS。"
 }

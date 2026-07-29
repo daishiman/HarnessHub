@@ -1,0 +1,7 @@
+PASS
+
+- target skill と system-spec-harness の必須 4 entry point はすべて Skill tool 経由で実行された。
+- requirements brief から正規 harness flow が完走し、coverage / source citation / completeness gate は exit 0。
+- C02 upsert-node.py だけで specification 9件・architecture 1件を登録し、source lineage、confirmation evidence、readiness、source digest、evidence ref は全件妥当。
+- goal-seek は正しい original_goal hash、必須6キー、Skill 委譲前の1行目、実行後に append した2行目、pending/null なしを満たす。
+- fixture と明示された status 出力以外への永続的な repository mutation はなく、終端は nudge なしの `DONE: PASS`。

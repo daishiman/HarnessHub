@@ -1,25 +1,30 @@
 {
-  "target": {"plugin": "slide-report-generator", "skill": "run-slide-report-generate", "skill_md_sha256": "37f991560886f6cdff32c0603bc7e6f33e1037837c56ec2ffbfdf7b3bae86b64"},
+  "target": {"plugin": "slide-report-generator", "skill": "run-slide-report-generate", "skill_md_sha256": "360d9ccc12576cdf2334ab3d5d9aaf1b2bbb712fee75985649cd55b9ded0ec05"},
   "review_kind": "rubric",
   "verdict": "PASS",
-  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
-  "reviewer": "review-group-c-independent-rubric",
-  "reviewed_at": "2026-07-12T00:22:24Z",
-  "iterations": 2,
+  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 1, "dependency_break": 0, "smell": 1},
+  "reviewer": "claude-opus-5-rescue-independent-rubric",
+  "reviewed_at": "2026-07-28T00:00:00Z",
+  "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "Deterministic rubric initially scored 70 because Japanese equivalent headings did not satisfy exact BD-001/BD-002. After correction, rubric 1.3.0 score=100/threshold=80 with no findings.",
-      "The skill is a new-generation orchestrator with explicit generate/modify/cross-review boundaries, 7-layer prompt SSOT, owner-mapped private references, schemas and deterministic exit-code gates.",
-      "Criteria are purpose-specific mode propagation and mode-aware visual acceptance, backed by validate-output-mode, validate-report-visual and 131 passing plugin tests."
+      "決定論採点を再実行 (L0 ref-skill-design-rubric + L2 evaluator override を deep-merge/most-specific-wins で合成) し、score=100 / threshold=80 / passed=true / findings=[] / required_fixes=[] / pending_human=[] を実測。high severity 0 で threshold を満たす。FM(frontmatter)・BD(Output contract/Gotchas/行数)・NM(命名)・PD-001(本文 200 行に対する references/ 実在)・RG 系いずれも減点なし。",
+      "IN1: 送信前ゲート validate-output-mode.py が実在し SRG_ROOT 優先の自己解決 (L91-98) で配置非依存に動作、fail-closed exit 2 の宣言と一致。伝播先の欠落 0 は workflow-manifest.json の exitHook=validate-output-mode と R1-orchestrate.md L149/163 で配線が確認でき、plugin pytest 136 passed が回帰を担保する。",
+      "OUT1: 強化後の受入文 (共有課題→読者の変化→専門的で具体的な解決→自分へ移す行動) が frontmatter・本文 combinators 節・EVALS.json の criteria-test 行で同義に維持され、汎用品質ゲートの言い換えへ退化していない。検証系の実体も report-quality-checklist.md の RQ31〜RQ34、html-generation-rules.md の CONST_039、deck-evaluation-rubric.md / R3-agent-deck-evaluator.md の D5 として存在し、purpose-acceptance として採点可能な粒度になっている。",
+      "改名整合: SKILL.md の deterministic_checks と『plugin 共有 scripts』節が build-playwright-runtime.py を指し、実体・workflow-manifest.json の path・R1-orchestrate.md L92/113 の記述が一致。本 skill 配下に `npx playwright install` / setup-playwright.py の旧記述は残っていない。"
     ],
-    "negative_feedback": [],
-    "iteration": 2,
+    "negative_feedback": [
+      "[low・smell] 決定論 rubric では検出されない本文構造の退行が 1 件ある。追加リソース節で `workflow-manifest.json` 項目の直後の空行が削除され、`**skill 私有 references (10 本…)**` が CommonMark 上は直前リスト項目への lazy continuation となり節ラベルとして描画されない。空行 1 行の復帰で解消する。",
+      "[low・inconsistency] 改名の語彙が一部未追従。workflow-manifest.json の resource id が `glue-setup-playwright` のまま残る (path は build-playwright-runtime.py に更新済で解決には影響しない)。SKILL.md が manifest を resources[] の id↔path↔phaseIds 正本と宣言している以上、id を build-playwright-runtime 系へ揃えるのが望ましい。",
+      "[low] 参考値として composition_hash が旧 verdict から変化している (964f754f… → 993e0c21…)。rubric_hash (6e1843e5…) は不変で、L0/L2 合成側の更新に起因する。採点結果への影響はないが再現時は合成 hash も併記して比較すること。"
+    ],
+    "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual-skill-sha-change",
     "next_action": "none"
   },
-  "notes": "rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d; composition_hash=sha256:964f754f53128715cc6da07f933f12e466d5fe943dad21929bc9b83adf7bcef9。"
+  "notes": "救出 branch の未レビュー変更 (origin/main 比 +30 -28) に対する genuine 再評価。旧 verdict の score をそのまま引き写さず render-findings-score.py を実走して採点した実測値: score=100 / threshold=80 / passed=true / findings 0 / high severity 0、rubric_id=skill-design、rubric_version=1.3.0、rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d、composition_hash=sha256:993e0c21ed1e5cc71d7f5d1214e5ed062069d27b7df966d412d5aded301392d0。IN1/OUT1 は purpose-acceptance として検証系の実体 (validate-output-mode.py / RQ31〜34 / CONST_039 / D5) と対応づくことを実測確認済み。high severity 0 につき PASS。ただし決定論採点が拾わない low 2 件 (markdown 空行退行・manifest resource id の改名漏れ) を負のフィードバックとして残す。"
 }

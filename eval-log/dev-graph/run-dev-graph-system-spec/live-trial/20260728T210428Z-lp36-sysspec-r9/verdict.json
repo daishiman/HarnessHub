@@ -1,0 +1,53 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/system-spec-lp36-current-r9",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "OUT1 no-duplication proof used broad/different partial searches and one command exited 1",
+      "C02-only writer control did not prove build-graph-store.py with a real write predicate",
+      "completeness evaluator did not run canonical aggregate-completeness report/knowledge-graph gates",
+      "goal-seek first intermediate row was late and required R0/R1/R2/R3 Agent forks were absent",
+      "registered nodes lacked architecture_refs and retained template placeholder bodies"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node",
+    "dev-graph:run-dev-graph-system-spec",
+    "system-spec-harness:assign-system-spec-completeness-evaluator",
+    "system-spec-harness:run-system-spec-compile",
+    "system-spec-harness:run-system-spec-doc-fetch",
+    "system-spec-harness:run-system-spec-elicit"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "306d57497704e57d7d99176fd7b715227082ad4aa46067f86cac321cde784968",
+  "transcript_sha256": "dc7c1063cecd9d34d88c28385ff87f4412ba3d452bea86666ccfdfa9bc1f8078",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 1815.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

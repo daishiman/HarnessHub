@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # /// script
 # name: audit-decompose-live-trial
-# purpose: Derive C14 live-trial evidence from repository state, preview data, and real dry-run adapter receipts.
-# inputs: ["snapshot|audit plus explicit repository, preview, scenario, plugin, and output paths"]
+# purpose: Derive C14 live-trial evidence from repository state, preview data, the implementation publication gate, and real adapter receipts.
+# inputs: ["snapshot|audit plus explicit repository, preview, scenario, plugin, and output paths; audit additionally requires --run-mode (dry-run|apply) and --run-binding (none|beads|github)"]
 # outputs: ["JSON state snapshot or audit report"]
 # requires-python = ">=3.10"
 # dependencies: []
@@ -16,8 +16,8 @@
 snapshot し、skill が生成した一つの preview と、実 adapter の dry-run receipt だけから
 受け入れ証拠を導出する。試験中に監査コードを即席生成して期待値を自己申告することを防ぐ。
 
-状態 snapshot と before/after 比較は audit_live_trial_state.py に分離した (責務分割)。
-provenance は両 module の合成 identity で測るため、どちらを試験中に書き換えても
+状態 snapshot、publication route、証跡整合性は sibling module に分離した (責務分割)。
+provenance は全 module と scenario 契約の合成 identity で測るため、どれかを試験中に書き換えても
 `provenance_valid` が落ちる。
 """
 
@@ -33,6 +33,9 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 STATE_MODULE = "audit_live_trial_state.py"
+PUBLICATION_MODULE = "audit_decompose_publication.py"
+INTEGRITY_MODULE = "audit_decompose_integrity.py"
+SCENARIO_CONTRACT = "live-trial-positive-scenarios.json"
 
 
 def _load_sibling(filename: str, module_name: str):
@@ -44,6 +47,8 @@ def _load_sibling(filename: str, module_name: str):
 
 
 STATE = _load_sibling(STATE_MODULE, "audit_live_trial_state")
+PUBLICATION = _load_sibling(PUBLICATION_MODULE, "audit_decompose_publication")
+INTEGRITY = _load_sibling(INTEGRITY_MODULE, "audit_decompose_integrity")
 AuditError = STATE.AuditError
 _load_object = STATE.load_object
 _write_object = STATE.write_object
@@ -53,9 +58,16 @@ _git_status = STATE.git_status
 _content_inventory = STATE.content_inventory
 _state_comparison = STATE.state_comparison
 
-SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r2"
-BINDINGS = ("none", "beads", "github")
-AUDIT_MODULES = (Path(__file__).resolve(), HERE / STATE_MODULE)
+SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r7"
+BINDINGS = PUBLICATION.BINDINGS
+RUN_MODES = ("dry-run", "apply")
+AUDIT_MODULES = (
+    Path(__file__).resolve(),
+    HERE / STATE_MODULE,
+    HERE / PUBLICATION_MODULE,
+    HERE / INTEGRITY_MODULE,
+    HERE / SCENARIO_CONTRACT,
+)
 
 
 def _helper_identity() -> dict[str, Any]:
@@ -135,152 +147,13 @@ def _graph_measurements(nodes: list[dict[str, Any]], threshold: dict[str, Any]) 
     }
 
 
-def _is_publication_candidate(node: dict[str, Any]) -> bool:
-    return (
-        node.get("confirmation_status") == "confirmed"
-        and node.get("evaluation_status") == "pass"
-        and (node.get("implementation_readiness") or {}).get("status") == "complete"
-    )
-
-
-def _publication_measurements(features: list[dict[str, Any]]) -> dict[str, Any]:
-    if not features:
-        raise AuditError("preview must contain at least one produced feature")
-    draft_features = [
-        node
-        for node in features
-        if node.get("confirmation_status") == "draft"
-    ]
-    candidates = [
-        node["graph_node_id"]
-        for node in features
-        if _is_publication_candidate(node)
-    ]
-    lifecycle_candidates = [
-        node["graph_node_id"]
-        for node in features
-        if (
-            _is_publication_candidate(node)
-            and (node.get("confirmation_evidence") or {}).get("evaluator")
-            == "live-trial-lifecycle-probe"
-        )
-    ]
-    draft_candidates = {
-        binding: [
-            node["graph_node_id"]
-            for node in draft_features
-            if _is_publication_candidate(node)
-        ]
-        for binding in BINDINGS
-    }
-    candidate_conditions = {
-        node["graph_node_id"]: {
-            "confirmation_confirmed": node.get("confirmation_status") == "confirmed",
-            "evaluation_pass": node.get("evaluation_status") == "pass",
-            "readiness_complete": (
-                (node.get("implementation_readiness") or {}).get("status") == "complete"
-            ),
-            "candidate": _is_publication_candidate(node),
-        }
-        for node in features
-    }
-    return {
-        "draft_candidates": {
-            binding: {"ids": ids, "count": len(ids)}
-            for binding, ids in draft_candidates.items()
-        },
-        "publication_candidates": {
-            binding: {"ids": candidates, "count": len(candidates)}
-            for binding in BINDINGS
-        },
-        "lifecycle_probe": {
-            "source": "actual-preview-nodes",
-            "draft_feature_ids": [node["graph_node_id"] for node in draft_features],
-            "candidate_conditions": candidate_conditions,
-            "candidate_ids": candidates,
-            "lifecycle_candidate_ids": lifecycle_candidates,
-            "has_draft_exclusion": bool(draft_features) and not any(
-                _is_publication_candidate(node)
-                for node in draft_features
-            ),
-            "has_positive_candidate": (
-                bool(lifecycle_candidates)
-                and set(candidates) == set(lifecycle_candidates)
-            ),
-        },
-    }
-
-
-def _adapter_receipts(
-    repo_root: Path,
-    plugin_root: Path,
-    sample: dict[str, Any],
-) -> dict[str, dict[str, Any]]:
-    scripts = plugin_root / "scripts"
-    node_id = sample.get("graph_node_id")
-    title = sample.get("title")
-    if not isinstance(node_id, str) or not isinstance(title, str):
-        raise AuditError("sample feature requires graph_node_id and title")
-    description = sample.get("purpose") if isinstance(sample.get("purpose"), str) else title
-    body = json.dumps(
-        {
-            "graph_node_id": node_id,
-            "acceptance": sample.get("acceptance", []),
-            "implementation_readiness": sample.get("implementation_readiness"),
-        },
-        ensure_ascii=False,
-        sort_keys=True,
-    )
-    return {
-        "beads": _run_json([
-            "python3",
-            str(scripts / "bd-bridge.py"),
-            "--op",
-            "create",
-            "--repo-root",
-            str(repo_root),
-            "--graph-node-id",
-            node_id,
-            "--title",
-            title,
-            "--description",
-            description,
-            "--artifact-kind",
-            "feature",
-            "--dry-run",
-        ]),
-        "github_issue": _run_json([
-            "python3",
-            str(scripts / "gh-bridge.py"),
-            "--op",
-            "issue-create",
-            "--repo",
-            "example/dev-graph-live-trial",
-            "--title",
-            title,
-            "--body",
-            body,
-            "--dry-run",
-        ]),
-        "github_projects": _run_json([
-            "python3",
-            str(scripts / "gh-bridge.py"),
-            "--op",
-            "project-item-add",
-            "--content-id",
-            node_id,
-            "--project-id",
-            node_id,
-            "--dry-run",
-        ]),
-    }
-
-
-def _suppression_from(receipt: dict[str, Any]) -> bool:
-    payload = receipt["payload"]
-    if payload.get("op") == "create":
-        return isinstance(payload.get("dry_run_preview"), dict)
-    return payload.get("dry_run") is True and payload.get("mutation_suppressed") is True
+_schema_receipt = PUBLICATION.schema_receipt
+_violations_of = PUBLICATION.violations_of
+_state_graph = PUBLICATION.state_graph
+_publication_decisions = PUBLICATION.publication_decisions
+_persisted_bindings = PUBLICATION.persisted_bindings
+_binding_projections = PUBLICATION.binding_projections
+_suppression_from = PUBLICATION.suppression_from
 
 
 def audit(
@@ -290,7 +163,13 @@ def audit(
     scenario_path: Path,
     pre_state_path: Path,
     plugin_root: Path,
+    run_mode: str,
+    run_binding: str,
 ) -> dict[str, Any]:
+    if run_mode not in RUN_MODES:
+        raise AuditError(f"run mode must be one of {RUN_MODES}: {run_mode}")
+    if run_binding not in BINDINGS:
+        raise AuditError(f"run binding must be one of {BINDINGS}: {run_binding}")
     preview = _load_object(preview_path)
     nodes = preview.get("nodes")
     if not isinstance(nodes, list) or not all(isinstance(node, dict) for node in nodes):
@@ -313,10 +192,17 @@ def audit(
         raise AuditError("scenario requires declared_granularity_threshold")
 
     features = [node for node in nodes if node.get("artifact_kind") == "feature"]
+    preview_consistency = INTEGRITY.preview_consistency(preview, features)
     graph = _graph_measurements(nodes, threshold)
-    publication = _publication_measurements(features)
+    # DAG と粒度は skill が生成した preview で測る。publication は run 終了時の実 graph で
+    # 判定する。同じ node 集合の別の時点であり、混ぜると昇格が観測できなくなる。
+    state_graph = _state_graph(repo_root)
+    state_features = [
+        node for node in state_graph["nodes"] if node.get("artifact_kind") == "feature"
+    ]
     pre_state = _load_object(pre_state_path)
     local = _state_comparison(pre_state, capture_state(repo_root))
+    delta = local["publication_delta"]
     helper = _helper_identity()
     helper_pre = pre_state.get("audit_implementation")
     helper_provenance_valid = (
@@ -325,41 +211,104 @@ def audit(
         and helper["tracked_in_index"]
         and helper["index_matches_worktree"]
     )
-    adapters = _adapter_receipts(repo_root, plugin_root, features[0])
-    adapter_suppression = {
-        name: _suppression_from(receipt)
-        for name, receipt in adapters.items()
-    }
-    schema = _run_json(
-        [
-            "python3",
-            str(plugin_root / "scripts/validate-graph-schema.py"),
-            "--graph",
-            "-",
-            "--repo-root",
-            str(repo_root),
-        ],
-        stdin=json.dumps(preview, ensure_ascii=False),
+    decisions = _publication_decisions(repo_root, plugin_root, state_graph, state_features)
+    draft_ids = sorted(node_id for node_id, gate in decisions.items() if not gate["publishable"])
+    candidate_ids = sorted(node_id for node_id, gate in decisions.items() if gate["publishable"])
+    # 昇格が run に帰属することの証拠は pre-state 差分から取る。以前はここで監査側が決めた
+    # evaluator 名を candidate に要求していたが、それは実装の正規 lifecycle 経路が書く値では
+    # なく監査の合言葉でしかない。合言葉を要求すると、trial 側は正規経路の代わりに監査を
+    # 満たすためだけの細工をすることになり、判定の正本がまた実装から離れる。
+    # fixture は node を一件も持たない状態から始まるので、「pre-state に無かった node が
+    # candidate になっている」ことが、その candidate を fixture が播いたのではないことの
+    # 直接証拠になる。
+    pre_node_ids = set(pre_state["publication_inventory"]["node_linkages"])
+    lifecycle_ids = sorted(node_id for node_id in candidate_ids if node_id not in pre_node_ids)
+    projections = _binding_projections(
+        repo_root, plugin_root, state_graph, state_features, decisions, delta, run_binding
     )
-    violations = schema["payload"].get("violations")
-    if not isinstance(violations, list):
-        raise AuditError("schema receipt requires violations[]")
+    persisted_bindings = _persisted_bindings(state_graph["nodes"])
+    # 申告 (--run-binding) と実測 (graph に残った tracker_binding) の突合。ここが無いと、
+    # 実際には none で登録された run に github を申告しても監査は気付かず、0 件の理由を
+    # 「draft gate が効いた」と取り違えたまま緑を返す。
+    run_binding_attested = set(persisted_bindings) == {run_binding}
+    adapter_suppression = {
+        f"{binding}:{entry['route']}:{entry['node']}": _suppression_from(entry["receipt"])
+        for binding, projection in projections.items()
+        for entry in projection["candidate_route_receipts"]
+    }
+    schema = _schema_receipt(repo_root, plugin_root, preview)
+    violations = _violations_of(schema)
     structural_violations = [
         item
         for item in violations
         if not isinstance(item, dict) or item.get("code") != "artifact_missing"
     ]
-
-    suppression = {"local": local["mutation_suppressed"], **adapter_suppression}
-    write_counts = {
-        name: int(not value)
-        for name, value in suppression.items()
-    }
-    draft_empty = all(
-        not result["ids"]
-        for result in publication["draft_candidates"].values()
+    state_schema = _schema_receipt(repo_root, plugin_root, state_graph)
+    evidence_binding = INTEGRITY.evidence_binding(state_features)
+    negative_controls = INTEGRITY.gate_negative_controls(
+        document=state_graph,
+        baseline=state_schema,
+        blocked_ids=draft_ids,
+        validate=lambda document: _schema_receipt(repo_root, plugin_root, document),
     )
-    lifecycle = publication["lifecycle_probe"]
+
+    write_counts = {
+        "local_issue_files": delta["issues"]["added_count"],
+        "beads_export_records": delta["beads_export"]["added_count"],
+        "beads_linked_nodes": len(delta["linked_nodes"]["beads"]),
+        "github_linked_nodes": len(delta["linked_nodes"]["github"]),
+    }
+    # draft ゲートの検査。判定は実装側 probe の返り値からしか作らないので、実装のゲートを
+    # 壊すと draft も publishable になり discriminates が False へ落ちる (mutation test)。
+    gate = {
+        "decided_by": "plugins/dev-graph/scripts/validate-graph-schema.py (code=active_not_ready)",
+        "draft_node_ids": draft_ids,
+        "candidate_node_ids": candidate_ids,
+        "lifecycle_candidate_ids": lifecycle_ids,
+        "excludes_every_draft": bool(draft_ids),
+        "admits_promoted_candidate": bool(candidate_ids),
+        "promotion_attributable_to_run": (
+            bool(lifecycle_ids) and set(candidate_ids) == set(lifecycle_ids)
+        ),
+    }
+    gate["discriminates"] = gate["excludes_every_draft"] and gate["admits_promoted_candidate"]
+    draft_publication_zero = all(
+        projection["observed"]["unproven_zero_count"] == 0
+        for projection in projections.values()
+    )
+    binding_observations_distinct = (
+        len({
+            json.dumps(
+                {
+                    "routes": projection["routes"],
+                    "invocations": projection["candidate_route_invocations"],
+                    "argv": [
+                        entry["receipt"]["argv"][1:]
+                        for entry in projection["candidate_route_receipts"]
+                    ],
+                    "declarable": projection["route_declarable"],
+                    "persisted": projection["persisted_node_ids"],
+                    "attribution": projection["zero_attribution"],
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+            for projection in projections.values()
+        })
+        == len(BINDINGS)
+    )
+    if run_mode == "dry-run":
+        mode_checks = {
+            "local_state_unchanged": local["mutation_suppressed"],
+            "no_publication_written": all(value == 0 for value in write_counts.values()),
+        }
+    else:
+        # 実書込み run では graph/content が動くのが正常。ここで「何も動いていないこと」を
+        # 要求すると監査は構造的に必ず赤くなり、dry-run 前提でしか緑にならなくなる。
+        mode_checks = {
+            "local_state_advanced": not local["mutation_suppressed"],
+            "graph_store_written": not local["checks"]["graph_sha_unchanged"],
+        }
     passed = all([
         bool(nodes),
         bool(features),
@@ -367,16 +316,24 @@ def audit(
         graph["acyclic"],
         graph["threshold_pass"],
         not bool(graph["task_count"]),
-        draft_empty,
-        lifecycle["has_draft_exclusion"],
-        lifecycle["has_positive_candidate"],
-        all(suppression.values()),
+        gate["discriminates"],
+        gate["promotion_attributable_to_run"],
+        evidence_binding["all_bound"],
+        negative_controls["all_rejected"],
+        preview_consistency["consistent"],
+        draft_publication_zero,
+        binding_observations_distinct,
+        run_binding_attested,
+        all(adapter_suppression.values()),
+        all(mode_checks.values()),
         not structural_violations,
         helper_provenance_valid,
     ])
     return {
         "scenario_id": SCENARIO_ID,
         "preview": str(preview_path),
+        "run_mode": run_mode,
+        "run_binding": run_binding,
         "audit_implementation": {
             **helper,
             "same_as_pre_state": (
@@ -386,11 +343,28 @@ def audit(
             "provenance_valid": helper_provenance_valid,
         },
         "graph": graph,
-        "publication": publication,
+        "preview_consistency": preview_consistency,
+        "publication_gate": gate,
+        "evidence_binding": evidence_binding,
+        "gate_negative_controls": negative_controls,
+        "publication_decisions": decisions,
+        "binding_projections": projections,
+        "persisted_bindings": persisted_bindings,
+        "run_binding_attested": run_binding_attested,
+        "binding_source": (
+            "tracker_binding persisted in the run's graph store; --run-binding is only "
+            "cross-checked against it and never used as an observation"
+        ),
+        "binding_observations_distinct": binding_observations_distinct,
+        "draft_publication_zero": draft_publication_zero,
         "local_state": local,
-        "adapter_receipts": adapters,
-        "mutation_suppression": suppression,
+        "adapter_mutation_suppression": adapter_suppression,
         "derived_write_counts": write_counts,
+        "write_count_source": (
+            "pre/post publication_inventory diff: issues/ files, .beads/issues.jsonl records, "
+            "graph node issue/beads/project linkages"
+        ),
+        "run_mode_checks": mode_checks,
         "schema_validation": {
             "stdin_path_used": (
                 "--graph" in schema["argv"]
@@ -417,6 +391,10 @@ def main() -> int:
     audit_parser.add_argument("--scenario", required=True, type=Path)
     audit_parser.add_argument("--pre-state", required=True, type=Path)
     audit_parser.add_argument("--plugin-dir", required=True, type=Path)
+    # 既定値を置かない: 監査が自分の run 条件を推測すると、dry-run 抑止・binding 無効化・
+    # draft ゲートのどれで 0 件になったかを取り違える (本 helper の既知欠陥の温床)。
+    audit_parser.add_argument("--run-mode", required=True, choices=RUN_MODES)
+    audit_parser.add_argument("--run-binding", required=True, choices=BINDINGS)
     audit_parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
 
@@ -430,9 +408,11 @@ def main() -> int:
                 scenario_path=args.scenario.resolve(strict=True),
                 pre_state_path=args.pre_state.resolve(strict=True),
                 plugin_root=args.plugin_dir.resolve(strict=True),
+                run_mode=args.run_mode,
+                run_binding=args.run_binding,
             )
         _write_object(args.output, result)
-    except (AuditError, OSError, json.JSONDecodeError) as exc:
+    except (AuditError, OSError, ValueError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return os.EX_DATAERR
     return os.EX_OK
