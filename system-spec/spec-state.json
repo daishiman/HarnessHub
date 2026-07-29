@@ -200,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-091",
+        "qa_ref": "qa-093",
         "serves_goals": [
           "G1",
           "G4",
@@ -318,7 +318,7 @@
     "maintenance-ops": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-058",
+        "qa_ref": "qa-093",
         "serves_goals": [
           "G1",
           "G2",
@@ -881,6 +881,16 @@
       "id": "qa-091",
       "question": "production Worker の認証設定と GitHub Actions の Cloudflare token 最小権限分離を、infrastructure.web 単独で情報を失わない契約としてどう確定しますか?",
       "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-084 の production 認証・rollout 契約を全面維持し、GitHub Actions の Cloudflare token 分離を統合した次の infrastructure.web 契約を確定する。\n\n【1. Worker runtime の Secret / 環境設定】production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、文書、ログへ記録しない。\n\n【2. GitHub Actions の Cloudflare token 分離】CLOUDFLARE_API_TOKEN は Worker deploy / rollback 専用とし Workers Scripts Edit を付与するが R2 write 権限を付与しない。CLOUDFLARE_R2_API_TOKEN は日次 backup と production smoke の R2 object put/get/delete 専用とし Workers Scripts 権限を付与しない。Wrangler の r2 object put/get --remote は Cloudflare REST API を使い、bucket-scoped の Workers R2 Storage Bucket Item Write は S3-compatible API 専用で REST API では利用できないため、R2 token には account-scoped の Workers R2 Storage Write を使う。2 token は別々の GitHub Actions secret として投入し、値を引数・文書・ログへ残さない。\n\n【3. rollout 順序】DB backup と migration dry-run、本適用、認証 Secret/環境設定と Actions required secret の存在確認、Worker deploy、/health、2 tenant OIDC・Device Flow smoke、本番 R2 smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。\n\n【4. 検証境界】workflow の secret 参照と scripts/ci/actions-secrets-registry.json は CI で双方向突合し、実投入状況は check-actions-secrets.mjs --live で検査する。静的 test は deploy step が deploy token だけを、backup / R2 smoke が R2 token だけを参照することを固定する。token 発行、GitHub への投入、deploy token による R2 write 拒否、R2 token による workflow 完走は外部状態の実測が揃うまで完了扱いにしない。\n\n【5. 境界】本変更は CI/CD credential の権限境界と運用契約を強化する。Hub の外部 API、DB schema、認証認可モデル、UI、Cloudflare deploy unit 自体は変更しない。"
+    },
+    {
+      "id": "qa-092",
+      "question": "日次 backup の失敗・cron 不発が無音にならないようにするため、Worker cron と GitHub Actions backup の heartbeat、required secret、完了判定をどの契約で確定しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-011 / qa-019 / qa-034 のバックアップ・監視・RPO/RTO・Better Stack 採用を全面維持し、HarnessHub-dbx6 で判明した観測経路の欠落を次の契約で補強する。(1) Worker 日次 cron と GitHub Actions 日次 backup は異なる仕事であり、一方の成功が他方の失敗を隠さないよう Better Stack heartbeat 資源を分離する。Worker は CRON_HEARTBEAT_URL、backup は BACKUP_HEARTBEAT_URL を使い、同じ URL を共用しない。(2) backup 専用 heartbeat hub-backup-daily は period=86400 秒、grace=3600 秒とし、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化する。(3) BACKUP_HEARTBEAT_URL は optional ではなく required とする。backup workflow は開始時に未投入を fail-closed で拒否し、heartbeat は全 backup step 成功後だけ送る。cron 不発は heartbeat 期限超過、途中失敗は GitHub Actions failure と同じ heartbeat 期限超過の両方で観測可能にする。(4) Better Stack API token と heartbeat URL は設定・成果物・引数・ログへ保存せず、用途別 secret store へ stdin で投入する。監視設定ファイルは binding 名、period/grace、外部適用状態だけを保持する。(5) repository 内の設定・テストが揃っても外部適用済みとは数えない。backup heartbeat の provisioning_state が applied、GitHub repository secret が投入済み、main 上の成功 run 後に着信を実測するまで HarnessHub-dbx6 と受入条件は未完了を維持する。(6) 本変更は infrastructure / maintenance-ops の運用契約を強化するが、Hub の外部 API、DB schema、認証認可、UI、Cloudflare Worker の deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-093",
+      "question": "qa-092 の backup heartbeat 契約を追加したうえで、直前まで確定していた infrastructure.web と maintenance-ops.web の契約を情報欠落なくどう統合しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-091 の production Worker Secret / 環境設定、Cloudflare deploy token と R2 token の最小権限分離、rollout 順序、静的検査と外部実測の完了境界を全面維持する。また qa-058 の phase 別監視有効化、qa-011 / qa-019 の日次 control-plane JSONL backup・RPO 24h・RTO 4h・復元不能断面を成功と数えない契約、機械可読 secret 台帳と workflow 実参照の双方向突合、実投入状態を --live で判定する契約も全面維持する。そのうえで qa-092 を統合し、次を追加確定する。(1) Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使い、CRON_HEARTBEAT_URL と BACKUP_HEARTBEAT_URL の URL を共用しない。(2) backup 専用 hub-backup-daily は period=86400 秒 / grace=3600 秒で、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化する。(3) BACKUP_HEARTBEAT_URL は required とし、workflow 開始時の未投入を fail-closed で拒否する。heartbeat は全 backup step 成功後だけ送るため、cron 不発も途中失敗も期限超過として外形監視へ表れる。(4) Better Stack API token と heartbeat URL は設定・成果物・引数・ログへ保存せず、stdin で用途別 secret store へ投入する。設定は binding 名・period/grace・外部適用状態だけを持つ。(5) repository 内実装だけで完了扱いにせず、backup heartbeat の provisioning_state=applied、GitHub secret 投入、main の成功 run、heartbeat 着信実測が揃うまで HarnessHub-dbx6 を継続する。(6) Hub の外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -1600,6 +1610,30 @@
       "category": "infrastructure",
       "platform": "web",
       "reason": "HarnessHub-bda4 の Cloudflare credential 分離を qa-091 として再確定し、origin/main の qa-090 live-trial cleanup 契約との QA ID 衝突を解消する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "HarnessHub-dbx6 により、backup heartbeat が optional で Worker cron と監視責務が未分離だったため、required secret と外部資源分離の infrastructure 契約を追加する",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "日次 backup の 3 夜連続失敗が無音だった実測を受け、cron 不発・途中失敗を当日中に検知する heartbeat period/grace と完了境界を追加する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "qa-092 の正規 compile 後レビューで qa-091 の credential・rollout 契約継承が最新章に明記されない情報欠落を検出したため、既存契約と backup heartbeat 契約を統合する",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "qa-092 の正規 compile 後レビューで qa-058 と qa-011/qa-019 の既存運用契約継承が最新章に明記されない情報欠落を検出したため、既存契約と backup heartbeat 契約を統合する",
       "from": "確定"
     }
   ],

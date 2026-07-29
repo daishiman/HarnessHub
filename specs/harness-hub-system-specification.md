@@ -175,6 +175,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
   を正とする。
 
+**運用監視反映 (2026-07-29 / `HarnessHub-dbx6` / qa-093)**:
+
+- 日次 backup は Worker 日次 cron と別の Better Stack heartbeat を使い、`CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` を共用しない。
+- `BACKUP_HEARTBEAT_URL` は required。backup workflow は未投入を前提確認で拒否し、全 step 成功後だけ heartbeat を送る。
+- backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
+- 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)

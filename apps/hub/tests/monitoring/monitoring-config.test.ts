@@ -42,10 +42,20 @@ interface BetterStackConfig {
   };
   heartbeat: {
     external_id: string | null;
+    provisioning_state: (typeof APPLICATION_STATES)[number];
     secret_binding: string;
     request: {
       endpoint: string;
-      payload: { period: number; grace: number; paused: boolean };
+      payload: { name: string; period: number; grace: number; paused: boolean };
+    };
+  };
+  backup_heartbeat: {
+    external_id: string | null;
+    provisioning_state: (typeof APPLICATION_STATES)[number];
+    secret_binding: string;
+    request: {
+      endpoint: string;
+      payload: { name: string; period: number; grace: number; paused: boolean };
     };
   };
   status_page: {
@@ -100,14 +110,28 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
     });
   });
 
-  it('日次 cron の heartbeat と secret binding を宣言する', () => {
+  it('Worker 日次 cron の heartbeat と secret binding を宣言する', () => {
     expect(monitoring.heartbeat.request.endpoint).toBe('https://uptime.betterstack.com/api/v2/heartbeats');
     expect(monitoring.heartbeat.request.payload).toMatchObject({
+      name: 'Harness Hub daily cron',
       period: 86_400,
       grace: 3_600,
       paused: false,
     });
+    expect(monitoring.heartbeat.provisioning_state).toBe('applied');
     expect(monitoring.heartbeat.secret_binding).toBe('CRON_HEARTBEAT_URL');
+  });
+
+  it('backup 専用 heartbeat を Worker cron と分離し、当日中に異常化させる', () => {
+    expect(monitoring.backup_heartbeat.request.endpoint).toBe('https://uptime.betterstack.com/api/v2/heartbeats');
+    expect(monitoring.backup_heartbeat.request.payload).toMatchObject({
+      name: 'Harness Hub daily backup',
+      period: 86_400,
+      grace: 3_600,
+      paused: false,
+    });
+    expect(monitoring.backup_heartbeat.secret_binding).toBe('BACKUP_HEARTBEAT_URL');
+    expect(monitoring.backup_heartbeat.secret_binding).not.toBe(monitoring.heartbeat.secret_binding);
   });
 
   it('status page に 30 日の履歴と health monitor の関連付けを宣言する', () => {
@@ -164,6 +188,7 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
     if (monitoring.application_state === 'pending_credentials') {
       expect(monitoring.applied_at).toBeNull();
       expect(externalIds).toStrictEqual([null, null, null, null]);
+      expect(monitoring.backup_heartbeat.external_id).toBeNull();
       expect(dashboard.verdict.status).toBe('collecting_not_started');
       expect(dashboard.verdict.observation_started_at).toBeNull();
       expect(dashboard.verdict.first_monthly_verdict_due_at).toBeNull();
@@ -174,6 +199,12 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
     for (const externalId of externalIds) {
       expect(typeof externalId).toBe('string');
       expect(externalId).not.toBe('');
+    }
+    if (monitoring.backup_heartbeat.provisioning_state === 'pending_credentials') {
+      expect(monitoring.backup_heartbeat.external_id).toBeNull();
+    } else {
+      expect(typeof monitoring.backup_heartbeat.external_id).toBe('string');
+      expect(monitoring.backup_heartbeat.external_id).not.toBe('');
     }
     expect(monitoring.applied_at).toMatch(ISO_INSTANT);
     expect(['collecting', 'collection_blocked']).toContain(dashboard.verdict.status);
@@ -208,8 +239,9 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
       // token は「値そのもの」を検出できないため、置き場としての key 名の出現を禁じる
       expect(raw).not.toMatch(/"(?:api_token|token|authorization)"\s*:/i);
     }
-    // heartbeat URL の受け渡し口は Worker secret 名の宣言だけであること
+    // heartbeat URL の受け渡し口は用途別 secret 名の宣言だけであること
     expect(monitoring.heartbeat.secret_binding).toBe('CRON_HEARTBEAT_URL');
+    expect(monitoring.backup_heartbeat.secret_binding).toBe('BACKUP_HEARTBEAT_URL');
     expect(JSON.stringify(monitoring)).not.toContain('/api/v1/heartbeat/');
   });
 });
