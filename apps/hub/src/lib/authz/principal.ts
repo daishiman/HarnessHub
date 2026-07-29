@@ -53,6 +53,7 @@ async function resolveFromAccessToken(token: string, deps: PrincipalResolverDeps
     workspaceIds: [claims.workspace_id],
     scope: claims.scope,
     credential: 'access_token',
+    tokenId: claims.token_id,
   };
 }
 
@@ -77,6 +78,7 @@ async function resolveFromSession(
     // session は scope 概念の外。null を「無制限」と読まないこと (decide がそう扱う)
     scope: null,
     credential: 'session',
+    tokenId: null,
   };
 }
 

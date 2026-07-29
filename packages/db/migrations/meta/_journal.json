@@ -15,6 +15,13 @@
       "when": 1784968192412,
       "tag": "0001_auth-tenancy-device-flow-contract",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1785275491061,
+      "tag": "0002_hearing-intake-ai-queue",
+      "breakpoints": true
     }
   ]
 }

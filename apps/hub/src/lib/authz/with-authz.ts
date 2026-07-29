@@ -71,6 +71,11 @@ export interface AuthzContext {
   readonly principal: AuthzPrincipal;
   readonly effectiveRole: EffectiveRole;
   readonly resource: AuthzResourceRef;
+  /**
+   * 同じ principal/resource に対する追加 capability の照会。
+   * route 側で role 文字列を比較せず、認可規則表を単一正本のまま利用する。
+   */
+  readonly can: (action: string) => boolean;
 }
 
 export interface WithAuthzOptions<TParams> {
@@ -159,7 +164,16 @@ export function withAuthz<TParams = Record<string, never>>(
     if (!outcome.allowed) return denyResponse(outcome.reason);
 
     try {
-      return await handler(request, { principal, effectiveRole: outcome.effectiveRole, resource }, params);
+      return await handler(
+        request,
+        {
+          principal,
+          effectiveRole: outcome.effectiveRole,
+          resource,
+          can: (action) => decide({ action, principal, resource, sessionRevoked }).allowed,
+        },
+        params,
+      );
     } catch (error) {
       // handler 内で追加判定した結果の拒否も、同じ形の応答へ寄せる
       if (error instanceof AuthzError) {

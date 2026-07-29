@@ -4,6 +4,7 @@
 // 業務ドメイン固有の schema であってもこの単一入口から再エクスポートする以外に経路が無い。
 // contract-registry (OpenAPI drift 検査の入力) には登録しない — 登録簿の責務は共通契約までのため。
 export * from '../auth-tenancy/index.js';
+export * from '../hearing-intake/index.js';
 export type { ContractSchemaName } from './contract-registry.js';
 export {
   buildContractComponents,
