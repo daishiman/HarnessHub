@@ -20,7 +20,7 @@ serves_goals: [G1, G4, G5]
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-088 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-090 |
 
 ## 確定内容 (質疑録)
 
@@ -30,7 +30,7 @@ serves_goals: [G1, G4, G5]
 
 **回答**: 現行は AI が文脈から『本質的なシステムを作り上げること』を最優先に選定するため、同じ基盤タスクを繰り返し実行して解決せず、依存関係でつながった他タスクまで止まり、いちばん作りたかった機能から離れていく (根本原因は品質と再現性を求めすぎる完璧主義がスケジューラの優先度に転写されたこと)。変更後の判断軸は (1) 目的=何のために作るか、(2) 背景=どういう経緯で必要になったか、(3) MVP=今必要な動くもの、の3軸とし、品質を先回りする基盤・本質課題解決タスクよりも『まず使えるものを構築する』タスクを優先して選定する。まず作って、使って、課題をあぶり出す回転 (build-use-learn) に戻すことが狙い。具体的には feature/task の選定時に MVP 適合 (今必要な動くものに直結するか) を第一ソートキーへ昇格し、品質・再現性強化系は MVP 成立後に繰り延べる。CI/CD・quality gate 等の既確定の dev-workflow 要件 (qa-066) 自体は維持し、優先度選定の判断軸のみ組み替える
 
-### qa-088 (対応セル: desktop-windows, desktop-macos)
+### qa-088 (対応セル: desktop-windows)
 
 **質問**: qa-039 のローカル開発契約と qa-087 の並列 worktree 安全契約を、章単独で情報を失わない自己完結した契約としてどう確定しますか?
 
@@ -47,6 +47,12 @@ serves_goals: [G1, G4, G5]
 【5. ローカルからの本番操作】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。ローカル開発は preview Turso または local SQLite を使い production DB を指さない。
 
 【6. Web App 出口との境界】作者 local session から顧客 Web App を公開する I5 は Hub 本体の開発フローと分離する。本契約は Hub repository の開発フローに限り、Hub の外部 API、データモデル、認証認可、Cloudflare deploy unit は変更しない。
+
+### qa-090 (対応セル: desktop-macos)
+
+**質問**: 並行 live-trial の後片付けが別実行の tmux session を終了させないため、macOS のローカル開発契約へどの所有権境界を追加しますか?
+
+**回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 のローカル開発契約を全面維持し、live-trial cleanup の所有権境界を追補する。各 tmux session は起動時に安全な run-id と owner PID を metadata として保持する。通常の reap は session 名の run prefix、記録済み run-id、記録済み owner PID の三つが完全一致した session だけを削除し、同じ run-id の別 owner、別 run-id、metadata 無し session を削除しない。run-id または owner PID が無い通常 reap は fail-closed で拒否する。全 live-trial session の削除は明示的な管理者操作 --all に限定し、通常の終了経路で使用しない。boot は記録した owner PID を READY 出力で呼出元へ渡し、cleanup は現在の shell PID で代用しない。fake tmux と実 tmux の回帰テストで sibling session の生存を固定する。本契約は repository 内の開発用 acceptance harness に限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ## 上流指針 (doctrine anchor)
 
