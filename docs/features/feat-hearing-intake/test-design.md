@@ -11,7 +11,7 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend, arch-ha
 
 # feat-hearing-intake テストファースト設計
 
-> **位置づけ**: P04 の成果物。[architecture-decision-record.md](./architecture-decision-record.md) (P02) と [design-review-notes.md](./design-review-notes.md) (P03) で確定した設計を、**P05 実装の受入契約**として実行可能なテスト ID へ写像した記録。ここで定義した ID の主体を P05 が実装し、P06 が実行し、P07/P10 は**実行された証拠のみ**を裁定する (task spec の Trace rule)。
+> **位置づけ**: P04 の成果物。[architecture-decision-record.md](./architecture-decision-record.md) と [architecture-decisions-application.md](./architecture-decisions-application.md) (P02)、[design-review-notes.md](./design-review-notes.md) (P03) で確定した設計を、**P05 実装の受入契約**として実行可能なテスト ID へ写像した記録。ここで定義した ID の主体を P05 が実装し、P06 が実行し、P07/P10 は**実行された証拠のみ**を裁定する (task spec の Trace rule)。
 
 ## 0. サマリ
 
@@ -225,6 +225,7 @@ feature 固有 `kind=hearing` は作らず、共通 boundary の重複検出ゲ�
 | 正本 | 参照箇所 |
 |---|---|
 | `docs/features/feat-hearing-intake/architecture-decision-record.md` | AD-1〜AD-9 |
+| `docs/features/feat-hearing-intake/architecture-decisions-application.md` | AD-6〜AD-9 の詳細 |
 | `docs/features/feat-hearing-intake/design-review-notes.md` | 承認条件 C-1/C-2/C-3、§5 R-4/R-7、§7 P04 引き継ぎ |
 | `docs/backend-spec.md` | §2.3 (テーブル)、§4.3 (sheets API)、§4.11 (AiJob 権限)、§5.2 (status)、§6.2 (`sheetEstimate`) |
 | `apps/hub/src/lib/authz/{rules,decide,types}.ts` | 認可の実測対象 |

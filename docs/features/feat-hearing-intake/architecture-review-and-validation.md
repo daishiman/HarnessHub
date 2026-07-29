@@ -9,8 +9,9 @@ source: docs/features/feat-hearing-intake/architecture-decision-record.md
 
 # feat-hearing-intake 設計レビュー・検証付録
 
-本書は [architecture-decision-record.md](./architecture-decision-record.md) から、
-500 行上限を守るために分離したレビュー・検証付録である。
+本書は [architecture-decision-record.md](./architecture-decision-record.md) と
+[architecture-decisions-application.md](./architecture-decisions-application.md) から、
+リポジトリ固有の300行文書上限を守るために分離したレビュー・検証付録である。
 
 ## 1. 解決済み論点
 

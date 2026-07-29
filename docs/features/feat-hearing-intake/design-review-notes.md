@@ -11,7 +11,7 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend, arch-ha
 
 # feat-hearing-intake 独立設計レビュー記録
 
-> **位置づけ**: P03 の成果物。[architecture-decision-record.md](./architecture-decision-record.md) (P02) の AD-1〜AD-9 を、設計文の主張ではなく **正本仕様と実装コードの実測** に突き合わせて検証した記録。承認可否と、P04 へ引き継ぐ検証要件をここで確定する。設計そのものの修正は P03 の scope 外であり、修正が必要な指摘は P02 の再実行として処理した (§5 に経緯を記録)。
+> **位置づけ**: P03 の成果物。[architecture-decision-record.md](./architecture-decision-record.md) と [architecture-decisions-application.md](./architecture-decisions-application.md) (P02) の AD-1〜AD-9 を、設計文の主張ではなく **正本仕様と実装コードの実測** に突き合わせて検証した記録。承認可否と、P04 へ引き継ぐ検証要件をここで確定する。設計そのものの修正は P03 の scope 外であり、修正が必要な指摘は P02 の再実行として処理した (§5 に経緯を記録)。
 
 ## 0. 判定サマリ
 
@@ -160,6 +160,7 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 ### 消費した正本
 
 - `docs/features/feat-hearing-intake/architecture-decision-record.md` (P02 成果物・レビュー対象)
+- `docs/features/feat-hearing-intake/architecture-decisions-application.md` (P02 成果物・AD-6〜AD-9 詳細)
 - `docs/features/feat-hearing-intake/requirements-baseline.md` (P01 成果物・制約の正本)
 - `docs/backend-spec.md` §2.3 / §3.3 / §4.3 / §4.11 / §5.2 / §5.5 / §6.2
 - `docs/frontend-spec.md` §3.2 / §6.2、`docs/shared-layers.md` §2 / §5

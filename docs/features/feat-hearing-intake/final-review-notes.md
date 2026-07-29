@@ -28,9 +28,11 @@ P01〜P09の成果物と実行済みゲートを、goal-specのquality constrain
 10/10 pass。受入3件も3/3 pass。URL・S11 filter/cursor・AI queue workspace分離の
 仕様ずれを実装側で是正し、正本に新しい意味変更は生じていない。
 
-手書きの変更ファイルはすべて500行以下とした。超過していた repository は
+手書きの変更ファイルはすべてリポジトリ固有の300行文書上限、またはユーザー指定の
+500行コード上限以下とした。超過していた repository は
 `hearing-intake.ts` / `hearing-intake-queue.ts`、queue test は contract / runtime、
-ADR は本編 / review appendix に分割した。`packages/db/migrations/meta/0002_snapshot.json` と
+ADR は基盤決定 / アプリケーション境界 / review appendix に分割した。
+`packages/db/migrations/meta/0002_snapshot.json` と
 `.dev-graph/state/graph.json` は各ツールが単一ファイルとして読み書きする機械生成正本のため、
 分割すると migration lineage / graph schema を壊す。この2件だけは生成形式を維持する。
 

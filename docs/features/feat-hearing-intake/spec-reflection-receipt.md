@@ -39,7 +39,8 @@ spec_impact: none
 1. 画面 URL を旧 `/hearing-*` から正本の `/sheets/new`・`/sheets`・`/sheets/[id]` へ修正。
 2. S11 に status・department・全文検索と cursor ページングを追加。
 3. sheet の読取・更新と AI job の claim/complete/fail を tenant と workspace の両方へ束縛。
-4. 500 行を超えた repository・test・ADR を単一責務ごとに分割。
+4. 500 行を超えた repository・test と、リポジトリ固有の300行文書上限を超えた
+   ADR を単一責務ごとに分割。
 
 これらは既存契約の不足実装を埋めたものであり、新しい route、status、payload、
 権限、テーブル、デプロイ単位は追加していない。
