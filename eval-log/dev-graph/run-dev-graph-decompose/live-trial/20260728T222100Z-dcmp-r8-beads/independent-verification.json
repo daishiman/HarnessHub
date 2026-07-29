@@ -1,0 +1,28 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": {
+    "skill_invoked": "2 Skill tool calls invoked dev-graph:run-dev-graph-decompose",
+    "skill_args_no_dry_run": "Both calls used identical want + --repo-root args without --dry-run; audit run_mode=apply",
+    "task_contract": "All 4 required fragments are present and the forbidden apply-lifecycle-request fragment is absent",
+    "dag_acyclic": "Independent Kahn check visited 5/5 nodes across 3 edges; no cycle",
+    "granularity_threshold": "Measured max inter-feature depends_on per feature=1, declared max=3",
+    "no_task_nodes": "artifact kinds are architecture=1 and feature=4; task/phase/parent/package markers=0",
+    "draft_excluded": "Three produced features remain draft/pending/incomplete and are excluded by active_not_ready",
+    "sole_candidate": "feat-user-auth-001 is the sole confirmed/pass/complete candidate",
+    "persisted_binding": "All 5 graph nodes persist tracker_binding=beads; run_binding_attested=true",
+    "zero_attributions_distinct": "beads=draft-gate, github=binding-route-unreachable, none=not-exercised-by-run",
+    "github_schema_unreachable": "local_only violates the github binding requirement for issue or issue_and_projects",
+    "write_counts_pre_post_derived": "Counts are derived from pre/post publication_inventory; external linkage counts remain 0",
+    "stdin_schema_validation": "validate-graph-schema.py was invoked with --graph -",
+    "goal_seek_snapshots": "Two snapshots retain the same goal SHA-256 and report no drift",
+    "status_json": "PASS for scenario r6 and binding beads",
+    "graph_revision": "revision=6; no duplicate graph_node_id and second Skill run was a no-op"
+  },
+  "notes": [
+    "The promoted lifecycle remained intact through the second Skill call.",
+    "Candidate adapter dry-run zero and draft-gate zero are recorded separately."
+  ],
+  "reviewer": "independent-verifier-opus-4-6",
+  "reviewed_at": "2026-07-29T00:00:00Z"
+}

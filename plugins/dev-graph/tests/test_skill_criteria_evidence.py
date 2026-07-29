@@ -52,11 +52,26 @@ def _skill_criteria(skill_path: Path) -> dict[str, dict]:
     return {criterion["id"]: criterion for criterion in criteria}
 
 
+def _positive_scenario_by_skill() -> dict[str, dict]:
+    suite = json.loads(POSITIVE_SCENARIOS.read_text(encoding="utf-8"))
+    return {scenario["skill"]: scenario for scenario in suite["scenarios"]}
+
+
 def _contained_repo_ref(value: str) -> Path:
     ref = Path(value)
     assert not ref.is_absolute(), f"evidence ref must be repo-relative: {value}"
     path = (REPO / ref).resolve(strict=True)
     path.relative_to(REPO.resolve())
+    return path
+
+
+def _contained_run_evidence(verdict_path: Path, value: str) -> Path:
+    """fragment を除いた evidence_ref が verdict の run 内で実在することを検査する。"""
+    relative = Path(value.partition("#")[0])
+    assert not relative.is_absolute(), f"run evidence ref must be relative: {value}"
+    path = (verdict_path.parent / relative).resolve(strict=True)
+    path.relative_to(verdict_path.parent.resolve())
+    assert path.is_file(), f"run evidence ref must be a file: {value}"
     return path
 
 
@@ -110,6 +125,7 @@ def test_independent_scenario_receipt_covers_exact_criteria(
     assert set(criteria) == criteria_ids
     live_verdict_module = _load_live_trial_verdict()
     live_schema = json.loads(LIVE_TRIAL_SCHEMA.read_text(encoding="utf-8"))
+    positive_scenarios = _positive_scenario_by_skill()
     for criterion_id, result in results.items():
         assert result["status"] == "PASS", f"{component_id}/{criterion_id}"
         expected_verify_by = criteria[criterion_id]["verify_by"]
@@ -136,6 +152,33 @@ def test_independent_scenario_receipt_covers_exact_criteria(
         verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
         jsonschema.Draft202012Validator(live_schema).validate(verdict)
         assert verdict["scenario_id"] == result["scenario_id"]
+        # 受領書が束ねる scenario は fixture の現行版でなければならない。scenario を改訂した
+        # まま受領書を据え置くと、改訂前の緩い契約で取った緑が現行契約の充足として通る。
+        # 実際に C14 は r5 改訂後も改訂前 id の verdict を指したままだった。
+        current_scenario = positive_scenarios.get(skill_name)
+        if current_scenario is not None:
+            assert result["scenario_id"] == current_scenario["scenario_id"], (
+                f"{component_id}/{criterion_id}: receipt cites a stale scenario "
+                f"({result['scenario_id']}) while the fixture declares "
+                f"{current_scenario['scenario_id']}"
+            )
+        # scenario_contract は旧 verdict との互換で任意項目。あるなら required_observations の
+        # 全回収と正本 file の一致まで見る (id 一致だけの PASS を残さない)。
+        contract = verdict.get("scenario_contract")
+        if contract is not None:
+            assert contract["scenario_id"] == verdict["scenario_id"]
+            assert _contained_repo_ref(contract["scenario_file"]) == POSITIVE_SCENARIOS.resolve()
+            assert contract["unobserved"] == [], (
+                f"{component_id}/{criterion_id}: unobserved required_observations remain"
+            )
+            assert contract["required_observations"] == current_scenario["required_observations"]
+            assert contract["args_divergence"]["matches"] is True
+            if current_scenario.get("task_contract") is not None:
+                assert contract["task_contract"]["declared"] is True
+                assert contract["task_contract"]["task_file_exists"] is True
+                assert contract["task_contract"]["matches"] is True
+            for observation in contract["observed"]:
+                _contained_run_evidence(verdict_path, observation["evidence_ref"])
         assert verdict["target_skill"] == f"dev-graph:{skill_name}"
         assert verdict["tier"] == "live"
         assert verdict["downgrade_reason"] is None
