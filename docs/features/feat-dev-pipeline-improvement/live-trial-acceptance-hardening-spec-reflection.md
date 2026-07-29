@@ -54,7 +54,7 @@ reviewed_at: 2026-07-29
 - task package: `feature-package/feat-dev-pipeline-improvement` の現行 generation digest `af8a73…da6` を検証し、P01〜P13 exact-set・contract `1.1.0`・violations 0。
 - Dev Graph schema: repository graph は `implementation_readiness=complete`、missing/violations 0。
 - content review: 独立 reviewer score 94、high/medium finding 0。統合した C14 監査の focused test は 42 PASS。
-- live-trial: interpreter guard と C14 契約の統合後 behavior closure `c0d843d7…4801` に対し、beads r3 と none r1 の fresh apply 2 系列が scenario r7 の observations 7/7、args/task contract 一致、独立 verifier PASS。最新 `main` (`b631aa9`) 取り込み後も closure と verdict の鮮度を再検証した。両 run で最終 node digest の再計算一致と negative control 2/2 拒否を確認した。旧 global reaper に終了された beads r1/r2 は append-only の失敗証跡として保持し、合格判定には使用していない。原因は main の PR #600 で ownership 境界として修正済みである。
+- live-trial: interpreter guard と C14 契約の統合後 behavior closure `c0d843d7…4801` に対し、beads r3 と none r1 の fresh apply 2 系列が scenario r7 の observations 7/7、args/task contract 一致、独立 verifier PASS。最新 `main` (`bb95580`) 取り込み後も closure と verdict の鮮度を再検証した。両 run で最終 node digest の再計算一致と negative control 2/2 拒否を確認した。旧 global reaper に終了された beads r1/r2 は append-only の失敗証跡として保持し、合格判定には使用していない。原因は main の PR #600 で ownership 境界として修正済みである。
 - lint: content-review 75 skills、Dev Graph verdict 9 件、script naming `VIOLATION=0`、Python compile、`git diff --check` を通過。repository 全体 verdict lint の既存 6 missing は record-only WARN で、本変更対象 Dev Graph の missing は 0。
 - CI portability: system PATH に `bd` が無い環境でも、対象 3 test module へ read-only preflight stub を注入して外部 CLI 依存を隔離。focused 27 tests と Dev Graph plugin 全体 680 tests が PASS（2 skipped）。
 
@@ -75,7 +75,7 @@ reviewed_at: 2026-07-29
 
 ## 2026-07-29 PR #598 コンフリクト解消の再受領
 
-- local `main` と `origin/main` を `b631aa99f57bfd269fc495cf4302757ce39bc0f6` へ同期し、その local `main` を `devgraph/issue-guard-graph-schema-interpreter-write-coverage-20260726` へ merge した。
+- local `main` と `origin/main` を `bb955807f535da43ecdb226a1237552f171af783` へ同期し、その local `main` を `devgraph/issue-guard-graph-schema-interpreter-write-coverage-20260726` へ merge した。
 - `features/feat-dev-pipeline-improvement.md` は lp36 の interpreter guard 履歴と、main の C14 acceptance 強化履歴を両方保持した。C14 criteria receipt は古い r10/r11 を採用せず、統合後 closure に対する beads r3 / none r1 へ更新した。
-- 再検証は focused `69 passed / 2 skipped`、reaper 専用 `84 passed`、広域 `9308 passed / 7 skipped`、repository CI `123 PASS / 4 WARN / 0 FAIL`、exact-13 P01〜P13 violations 0、graph schema violations 0、artifact placement violations 0 である。
+- 再検証は focused `69 passed / 2 skipped`、reaper 専用 `84 passed`、広域 `9308 passed / 7 skipped`、後続 main の Actions secret 専用 Vitest `15 passed`、repository CI `123 PASS / 4 WARN / 0 FAIL`、exact-13 P01〜P13 violations 0、graph schema violations 0、artifact placement violations 0 である。
 - `system-spec/`・`specs/`・testing architecture・P12/P13 には main で確定した qa-089 の受入証拠契約を正規フローのまま取り込んだ。lp36 側から追加の製品契約変更はなく、追加反映は統合後証拠の鮮度更新だけである。

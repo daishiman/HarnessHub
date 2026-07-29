@@ -204,10 +204,10 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 
 ### PR #598 コンフリクト解消後の統合レビュー
 
-- local `main` / `origin/main` を `b631aa99f57bfd269fc495cf4302757ce39bc0f6` へ同期し、その local `main` を本 branch へ merge した。
+- local `main` / `origin/main` を `bb955807f535da43ecdb226a1237552f171af783` へ同期し、その local `main` を本 branch へ merge した。後続 main の CI token 最小権限変更も取り込み済みである。
 - 競合した feature / architecture 文書は lp36 interpreter guard、C14 acceptance、live-trial session ownership の履歴をすべて保持した。C14 criteria receipt は統合後も有効な closure `c0d843d7…4801` の beads r3 / none r1 fresh PASS を参照する。
 - 旧 global reaper に終了された beads r1/r2 は append-only の失敗証跡として残し、最終合格判定から除外した。原因は main の PR #600 で ownership 境界として修正済みである。
-- focused pytest は 69 passed / 2 skipped、reaper 専用 pytest は 84 passed、広域 pytest は 9308 passed / 7 skipped。exact-13 P01〜P13、graph schema、artifact placement は違反 0、repository CI は PASS 123 / WARN 4 / FAIL 0。
+- focused pytest は 69 passed / 2 skipped、reaper 専用 pytest は 84 passed、広域 pytest は 9308 passed / 7 skipped、後続 main の Actions secret 専用 Vitest は 15 passed。exact-13 P01〜P13、graph schema、artifact placement は違反 0、repository CI は PASS 123 / WARN 4 / FAIL 0。
 - main の `system-spec/`・`specs/`・testing architecture・P12/P13 にある qa-089 契約を正規フローのまま統合した。lp36 は既存の graph authority 直書込み禁止への適合修正であり、追加の製品仕様影響はない。
 
 ## 運用・更新方法

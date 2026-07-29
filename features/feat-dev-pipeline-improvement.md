@@ -177,7 +177,7 @@ close した。
 - draft gate の起票 0 件と promoted candidate の external adapter dry-run による 0 件を別の帰属として記録する。
 - 500 行を超えた手書き実装・テストは import 専用 support module と責務別テストへ分離し、監査 provenance は全 module の複合 digest を保持する。
 - 仕様・設計への影響は開発品質ゲートの証拠経路に限定される。qa-089、`architecture/harness-hub-testing-qa.md`、[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) に反映した。
-- `main` (`b631aa9`) 統合後の最終ゲートは広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。
+- 最新 `main` (`bb95580`) 統合後の最終ゲートは広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。後続 main の CI token 最小権限変更は本 feature の Python / C14 behavior closure を変えない。
 - PR #598 のコンフリクト解消では、本 feature の lp36 interpreter guard、C14 acceptance 強化、PR #600 の live-trial session ownership 履歴をすべて保持した。C14 受領証拠は統合後も有効な behavior closure `c0d843d7…4801` の beads r3 / none r1 とし、旧 reaper に終了された beads r1/r2 は監査用の失敗証跡としてのみ保持した。無差別回収の原因は最新 main の ownership 契約で修正済みである。
 
 ## 2026-07-29 追記: live-trial reaper の並行安全性

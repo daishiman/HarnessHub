@@ -128,7 +128,7 @@ open\s*\(\s*(?P<q>['"])(?P<path>[^'"]+)(?P=q)\s*,\s*['"][waxr]\+?[bt]?['"]
 
 ## 2026-07-29 PR #598 コンフリクト解消後の再確認
 
-- local `main` / `origin/main` を `b631aa99f57bfd269fc495cf4302757ce39bc0f6` へ同期し、本 branch へ merge した。feature 文書の競合は lp36、C14、live-trial session ownership の履歴をすべて保持して解消した。
+- local `main` / `origin/main` を `bb955807f535da43ecdb226a1237552f171af783` へ同期し、本 branch へ merge した。feature 文書の競合は lp36、C14、live-trial session ownership の履歴をすべて保持して解消した。後続 main の CI token 最小権限変更も取り込み済みである。
 - 統合後も有効な behavior closure `c0d843d7…4801` に対する C14 fresh live-trial beads / none 2 系列を PASS とし、旧 reaper に終了された試行は失敗証跡としてのみ保持した。無差別回収の原因は最新 main の PR #600 で修正済みである。
-- focused pytest 69 passed / 2 skipped、reaper 専用 pytest 84 passed、広域 pytest 9308 passed / 7 skipped、exact-13 / graph schema / artifact placement は違反 0、repository CI は PASS 123 / WARN 4 / FAIL 0。
+- focused pytest 69 passed / 2 skipped、reaper 専用 pytest 84 passed、広域 pytest 9308 passed / 7 skipped、後続 main の Actions secret 専用 Vitest 15 passed、exact-13 / graph schema / artifact placement は違反 0、repository CI は PASS 123 / WARN 4 / FAIL 0。
 - main から qa-089 の品質証拠契約を `system-spec/`・`specs/`・`architecture/`・`tasks/` へ正規フローで取り込んだ。本課題から追加の製品 API・DB・security・UI 契約変更はない。

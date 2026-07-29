@@ -149,7 +149,7 @@ live-trial 証跡の調査 (`HarnessHub-s7b`/`-rix`/`-aoe`/`-m7d`) で、**成�
 正規 4 entry point と C02 writer だけを使い、lineage・digest・evidence を独立 evaluator と
 canonical verdict の双方で PASS とした。
 
-PR #598 の最終統合では `main` (`b631aa9`) が追加した C14 live-trial acceptance と
+PR #598 の最終統合では最新 `main` (`bb95580`) に含まれる C14 live-trial acceptance と
 session ownership 契約を本 guard と同一ツリーで再検証した。feature 文書の競合は各設計履歴を
 保持し、C14 receipt は統合後も有効な behavior closure `c0d843d7…4801` の beads / none
 fresh 2 系列へ更新した。旧 reaper で終了した試行は失敗証跡として残し、その原因は main の
