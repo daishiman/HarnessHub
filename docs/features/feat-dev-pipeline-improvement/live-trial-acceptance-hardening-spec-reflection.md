@@ -56,6 +56,7 @@ reviewed_at: 2026-07-29
 - content review: 独立 reviewer score 94、high/medium finding 0。統合した C14 監査の focused test は 42 PASS。
 - live-trial: r10 beads と r11 none の fresh apply 2 系列が scenario r7 の observations 7/7、args/task contract 一致、独立 verifier PASS。両 run で最終 node digest の再計算一致と negative control 2/2 拒否を確認した。
 - lint: content-review 75 skills、Dev Graph verdict 9 件、script naming `VIOLATION=0`、Python compile、`git diff --check` を通過。repository 全体 verdict lint の既存 6 missing は record-only WARN で、本変更対象 Dev Graph の missing は 0。
+- CI portability: system PATH に `bd` が無い環境でも、対象 3 test module へ read-only preflight stub を注入して外部 CLI 依存を隔離。focused 27 tests と Dev Graph plugin 全体 680 tests が PASS（2 skipped）。
 
 ## Beads / dev-graph
 
