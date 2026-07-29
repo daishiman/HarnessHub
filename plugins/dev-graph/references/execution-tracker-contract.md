@@ -103,6 +103,12 @@ PR merged (事実 authority)
 - metadataだけのpatchは本文を暗黙再生成しない。既存本文を破棄してtemplateへ戻す操作は `--regenerate-body` の明示opt-inに限る。
 - transaction receipt は `body_source` (`from_file|from_input|preserved|template|regenerated`) と `replaced_body_lines` を返す。一括更新の本文非破壊性は `body_source=preserved` と `replaced_body_lines=null` で検証する。
 
+### C02 feature lifecycle の stale before-image 拒否
+
+- `node` または bare canonical node による feature 全体の再 upsert は、C14 が生成した同一入力を再試行する snapshot 経路である。既存 feature が前進済みなのに snapshot が `status` を `draft`、`confirmation_status` を `draft`、`evaluation_status` を `pending`、または `implementation_readiness.status` を `incomplete` へ戻す場合、C02 は stale before-image として dry-run / apply の両方を fail-closed で拒否する。
+- 拒否時は graph revision・node・artifact Markdown を変更しない。呼出側は最新 node snapshot を取り直して再試行する。
+- source 変更などに伴う意図的な再評価・lifecycle reset は、変更フィールドを列挙した `patch` で明示する。これにより、冪等な snapshot 再試行と意図的な状態遷移を入力形式で区別する。
+
 ## 5. worktree 並列実行との対応
 
 - Beads bindingではC28の`bd update <id> --claim`をtask所有権authorityとし、C27はworktree identity/resource_scope reservationの追加制約に限定する。GitHub bindingではC27 leaseがtask claim authorityとなる。

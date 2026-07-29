@@ -27,13 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260728T115514Z-zep2b-node/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260728T115514Z-zep2b-node/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260728T115514Z-zep2b-node/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260728T115514Z-zep2b-node/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/independent-verification.json"
       ],
-      "observed": "fresh live trial PASS (run 20260728T115514Z-zep2b-node)。mixed artifact の atomic upsert、既存 Markdown 本文保持、schema/frontmatter parity、goal-seek を独立評価で確認した。C02 は script_refs に共有スクリプト plugins/dev-graph/scripts/bd-bridge.py を宣言しているため、その変更 (commit a0d9bbf: bd external_ref orphan の逆方向全数検査) で挙動閉包 digest が変化した。SKILL.md 本体は無変更だが受領書の live-trial 参照は現ツリーに対して取り直す必要があるため再実走した。"
+      "observed": "2026-07-29 fresh live trial PASS (run 20260729T012500Z-bk8v-node, nudge=0, gate=0, poll DONE 555s)。Skill ツールを実起動し、5 artifact kind の canonical path 登録、既存 Markdown 本文保持、2 種類の連続更新が operation=updated、feature 直接登録の fail-closed と write 0、goal-seek 3 点セットを実測した。fresh evaluator は PASS / blockers=[]。今回変更した upsert-node.py を含む現行 behavior closure digest に対して verdict を機械生成した。"
     },
     "OUT2": {
       "status": "PASS",

@@ -27,13 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260728T205448Z-zep2b-sync/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260728T205448Z-zep2b-sync/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260728T205448Z-zep2b-sync/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260728T205448Z-zep2b-sync/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/independent-verification.json"
       ],
-      "observed": "2026-07-28 再実走 (run 20260728T205448Z-zep2b-sync, fresh claude session, 自走完走 nudge=0/gate=0, Skill ツール起動, poll DONE)。commit a0d9bbf (bd external_ref orphan の逆方向全数検査) が共有スクリプト bd-bridge.py を変更し、C03 は script_refs にこれを宣言しているため behavior closure digest が変化した。SKILL.md 本体は無変更だが live-trial 証跡は現ツリーに対して取り直した。独立 fresh evaluator の判定 PASS: (1) Skill ツール呼出しで起動 (script 直叩きは skill 内 protocol に従う起動後の実行のみ)。(2) goal-spec.original_goal は SKILL.md の正本 Goal と repr 比較で完全一致、original_goal_hash=ab2f296e0c39c58a4ea7f3a58096f702728aa38be198eaff465ce9d5970b8c43 を評価者が独立再計算して一致。(3) intermediate.jsonl は 2 行・各行 6 キー、1 行目は Skill 起動前の Write、2 行目は 3 パス完了後の `cat >>` append で、既存行の Edit/まとめ書きなし。(4) scenario 眼目の 2 回目 sync が changes=0 / converged=true / imports=[] / exports=[] / write_count=0、graph_sha256・remote_sha256・snapshot_sha256 が before==after。(5) 冪等の偽装でないことの裏取りとして 1 回目 apply が remote.json の Status を OPT_InProgress001 へ実際に書き換えている (git diff 4 files)。(6) progress checklist に pending / evidence:null は 0 件。"
+      "observed": "2026-07-29 fresh live trial PASS (run 20260729T012501Z-bk8v-sync, nudge=0, gate=0, poll DONE 285s)。Skill ツールを実起動し、初回 sync が実際の delta を適用した後、2 回目 sync が changes=0 / converged=true / write_count=0 となり、graph・remote・snapshot の SHA-256 が before/after 一致することを実測した。goal-seek 3 点セットも成立し、fresh evaluator は PASS / blockers=[]。今回変更した upsert-node.py を含む現行 behavior closure digest に対して verdict を機械生成した。"
     },
     "OUT2": {
       "status": "PASS",
