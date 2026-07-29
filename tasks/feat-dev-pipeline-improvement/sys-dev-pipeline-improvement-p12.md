@@ -137,7 +137,7 @@ qa-067 要件 1 と 8 の運用面の恒久化である。検査 (lint-open-resi
 
 `HarnessHub-9ndl` / `HarnessHub-dyxr` の最終レビューは、P12 の「運用手順を再現可能な証拠へする」責務へ次を追補した。live-trial verdict の observation は run directory 内の実在ファイルへ解決し、scenario 更新・削除で旧証拠を失効させる。scenario が必須・禁止手順を持つ場合は task.md も照合し、別 operation への読み替えを許さない。監査値は pre/post state と永続 graph から導出し、起動引数や dry-run echo を代理値にしない。昇格証跡は最終 persisted node の正準 digest と突合し、同じ graph の gate 違反を正準 validator が拒否することを負の検体で確認する。実測コマンドと受領結果は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` に記録する。
 
-再実行結果は PR #598 の `main` (`ca776dea`) 統合後ツリーで広域 pytest 9306 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。live-trial は統合後 behavior closure `c0d843d7…4801` へ束縛した。
+再実行結果は PR #598 の `main` (`b631aa9`) 統合後ツリーで広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。live-trial は統合後も有効な behavior closure `c0d843d7…4801` へ束縛し、旧 reaper による別 worktree session 回収は main の ownership 契約で解消した。
 
 ## Inner goal-seek execution loop
 
@@ -227,3 +227,16 @@ This section is the current source closure and supersedes older counts or wordin
 再検証は `python3 scripts/validate-git-hooks-wiring.py --check-local-config` と、
 対象 3 test file の pytest を使う。stash は `stash@{N}` でなく固有メッセージから得た
 commit SHA で参照し、古い branch でも git common dir の共有 hook bundle を使う。
+
+## 2026-07-29 実装後の live-trial 運用追補
+
+本 P12 の promoted task spec と完了判定は変更しない。live-trial の通常終了では、
+boot READY 行の `OWNER_PID` と同じ値を
+`reap --run-id "$RUN_ID" --owner-pid "$OWNER_PID"` へ渡す。
+現在の shell の `$$` で代用しない。
+
+引数なし `reap` と、通常フローでの `reap --all` は禁止する。
+`--all` は tmux server 上の全 live-trial session を管理者が明示回収する場合だけ使う。
+障害調査で metadata 無し session を見つけても通常 reaper は削除しないため、
+必要性と対象を確認してから個別 `kill-session` または管理者 `--all` を選ぶ。
+詳細は `docs/worktree-parallel-operations-runbook.md` と system-spec `qa-090` を正とする。

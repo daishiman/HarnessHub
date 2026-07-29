@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-29T04:14:11Z"
+updated_at: "2026-07-29T05:22:10.828117Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-21T14:40:00Z","origin_kind":"generated","source_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-29T05:21:27Z","origin_kind":"generated","source_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -177,8 +177,22 @@ close した。
 - draft gate の起票 0 件と promoted candidate の external adapter dry-run による 0 件を別の帰属として記録する。
 - 500 行を超えた手書き実装・テストは import 専用 support module と責務別テストへ分離し、監査 provenance は全 module の複合 digest を保持する。
 - 仕様・設計への影響は開発品質ゲートの証拠経路に限定される。qa-089、`architecture/harness-hub-testing-qa.md`、[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) に反映した。
-- `main` (`ca776dea`) 統合後の最終ゲートは広域 pytest 9306 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。
-- PR #598 のコンフリクト解消では、本 feature の lp36 interpreter guard 履歴と main の C14 acceptance 強化履歴を両方保持した。C14 受領証拠は統合後 behavior closure `c0d843d7…4801` に対する beads r3 / none r1 へ更新し、外部 session 回収で終了した beads r1/r2 は監査用の失敗証跡としてのみ保持した。
+- `main` (`b631aa9`) 統合後の最終ゲートは広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。
+- PR #598 のコンフリクト解消では、本 feature の lp36 interpreter guard、C14 acceptance 強化、PR #600 の live-trial session ownership 履歴をすべて保持した。C14 受領証拠は統合後も有効な behavior closure `c0d843d7…4801` の beads r3 / none r1 とし、旧 reaper に終了された beads r1/r2 は監査用の失敗証跡としてのみ保持した。無差別回収の原因は最新 main の ownership 契約で修正済みである。
+
+## 2026-07-29 追記: live-trial reaper の並行安全性
+
+- `HarnessHub-cjwm` と重複 `HarnessHub-0vs2` を実装し、通常の `reap` を
+  run-id と boot owner PID の完全一致へ限定した。
+- session 作成時に tmux metadata へ所有情報を記録し、別 owner、別 run、
+  metadata 無し session は通常 cleanup の対象外とする。
+- 暗黙の全件削除を廃止し、全 live-trial session の回収は明示 `--all` だけに分離した。
+- 1,600 行超だった test module は 6 責務と共通 support へ分割し、全ファイルを
+  500 行未満へ収束した。
+- 仕様影響はローカル開発運用に限定される。system-spec `qa-090`、
+  `architecture/harness-hub-dev-workflow.md`、
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
+  に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
 ## アーキテクチャ参照
 

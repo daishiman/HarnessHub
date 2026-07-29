@@ -20,7 +20,7 @@ prefix: run
 effect: local-artifact
 owner: team-platform
 since: 2026-07-02
-version: 0.1.0
+version: 0.2.0
 schema_refs:
   - schemas/live-trial-verdict.schema.json
 reference_refs:
@@ -68,7 +68,7 @@ feedback_contract: # per-skill 評価基準(SSOT=scripts/feedback_contract_ssot.
       verify_by: live-trial
     - id: OUT3
       loop_scope: outer
-      text: 全終了経路で tmux セッションが reaper により回収され denylist 被験 skill の起動が boot と verdict の機械 gate で拒否される
+      text: 全終了経路で tmux セッションが所有 run-id と owner PID の完全一致に限定した reaper により回収され denylist 被験 skill の起動が boot と verdict の機械 gate で拒否される
       verify_by: script
 ---
 
@@ -181,11 +181,11 @@ scenario PASS にする事故を防ぐ。completion 専用 operation と feature
 ### boot
 
 ```bash
-python3 $SCRIPTS/live-trial-boot.py "$SESSION" "$(pwd)" --model "$MODEL" --target-skill "<plugin:skill>"
-# → READY: lt-... (Ns) MODEL:<model|default> SESSION_ID:<uuid>
+python3 $SCRIPTS/live-trial-boot.py "$SESSION" "$(pwd)" --run-id "$RUN_ID" --model "$MODEL" --target-skill "<plugin:skill>"
+# → READY: lt-... (Ns) MODEL:<model|default> OWNER_PID:<pid> SESSION_ID:<uuid>
 ```
 
-`READY:` を確認してから次へ。`SESSION_ID` (行末固定) は以後の send / poll / verdict に env / 引数で渡す — transcript JSONL 一次判定が有効になる。boot は対話shellを経由せず、model/session-idを検証したargvで`claude`をpaneに直接起動し、`--setting-sources local`でuser/project settingsを読まない。qualified targetではcwd配下のtarget pluginとpackage contractが宣言するdependencyだけを複数`--plugin-dir`でloadするため、plugin自身のskill/hookと正規delegateはacceptance対象に残る。初回の bypass-permissions 確認は `WARNING: Claude Code running in Bypass Permissions mode` + `1. No, exit` + `2. Yes, I accept` + `Enter to confirm` の4 markerが全て一致する場合だけ、`Down`→短いrender待ち→Enterでoption 2を1回受理する (実TUIで数字2は選択移動にならない)。他のgateは自動応答しない。その後の`for shortcuts`、または行頭`❯` + space/NBSP + `Try ...`/空promptを検出するまでREADYを返さない。番号付き`❯ 1.`はREADY対象外。`TIMEOUT:` は project trust / claude PATH を確認。`BOOT_FAIL:` はcapture tailにCLIエラー原文が残る。**proof trial では model 必須** — 空のまま boot したら即 kill して確定後に再 boot (既定 model の完走を proof と報告するのが最悪の故障モード)。**boot は安全な文字集合でない model/session-id を起動前に拒否するが、存在しない model id の有効性は検出しない** (READY 行の MODEL: は requested の echo)。tmux 不在は exit 3 BLOCKED — verdict を `--blocked` で記録して中断 (fail-closed)。
+`READY:` を確認してから次へ。`SESSION_ID` (行末固定) は以後の send / poll / verdict に env / 引数で渡す — transcript JSONL 一次判定が有効になる。`OWNER_PID` も同じ READY 行から取り、回収時の `--owner-pid` にそのまま渡す (現在の shell の `$$` で代用しない)。boot は対話shellを経由せず、model/session-idを検証したargvで`claude`をpaneに直接起動し、`--setting-sources local`でuser/project settingsを読まない。qualified targetではcwd配下のtarget pluginとpackage contractが宣言するdependencyだけを複数`--plugin-dir`でloadするため、plugin自身のskill/hookと正規delegateはacceptance対象に残る。初回の bypass-permissions 確認は `WARNING: Claude Code running in Bypass Permissions mode` + `1. No, exit` + `2. Yes, I accept` + `Enter to confirm` の4 markerが全て一致する場合だけ、`Down`→短いrender待ち→Enterでoption 2を1回受理する (実TUIで数字2は選択移動にならない)。他のgateは自動応答しない。その後の`for shortcuts`、または行頭`❯` + space/NBSP + `Try ...`/空promptを検出するまでREADYを返さない。番号付き`❯ 1.`はREADY対象外。`TIMEOUT:` は project trust / claude PATH を確認。`BOOT_FAIL:` はcapture tailにCLIエラー原文が残る。**proof trial では model 必須** — 空のまま boot したら即 kill して確定後に再 boot (既定 model の完走を proof と報告するのが最悪の故障モード)。**boot は安全な文字集合でない model/session-id を起動前に拒否するが、存在しない model id の有効性は検出しない** (READY 行の MODEL: は requested の echo)。tmux 不在は exit 3 BLOCKED — verdict を `--blocked` で記録して中断 (fail-closed)。
 
 ### send
 
@@ -239,10 +239,10 @@ python3 $SCRIPTS/live-trial-verdict.py --workdir "$WORKDIR" --target-skill "<plu
   [--scenario-id "<stable id>" --scenario-file "<required_observations の正本 JSON>" \
    --observation "1=<evidence ref>" --observation "2=<evidence ref>" ...]
 python3 $SCRIPTS/live-trial-backend.py kill-session "$SESSION"
-python3 $SCRIPTS/live-trial-backend.py reap   # 取りこぼした lt-* 残骸の一括回収
+python3 $SCRIPTS/live-trial-backend.py reap --run-id "$RUN_ID" --owner-pid "$OWNER_PID"
 ```
 
-verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから書き出される (`skill_dir_tree_sha` = 互換field名を維持した宣言済み挙動閉包 digest。SKILL.md、local scripts/prompts、`script_refs`/`reference_refs`/`responsibility_refs`/`schema_refs`、native manifest/hooks/package-contract、direct dependency manifest/hooksを含み、missing/escape/undeclared cross-plugin refはfail-closed / `transcript_sha256` / `scenario_origin` / `environment` / `tier` + `downgrade_reason` を含む)。**DONE / STALL / HARD_CAP / 中断のどの経路でも kill-session + reap を必ず実行** (残すと claude プロセスがリークする)。
+verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから書き出される (`skill_dir_tree_sha` = 互換field名を維持した宣言済み挙動閉包 digest。SKILL.md、local scripts/prompts、`script_refs`/`reference_refs`/`responsibility_refs`/`schema_refs`、native manifest/hooks/package-contract、direct dependency manifest/hooksを含み、missing/escape/undeclared cross-plugin refはfail-closed / `transcript_sha256` / `scenario_origin` / `environment` / `tier` + `downgrade_reason` を含む)。**DONE / STALL / HARD_CAP / 中断のどの経路でも kill-session + `reap --run-id "$RUN_ID" --owner-pid "$OWNER_PID"` を必ず実行** (残すと claude プロセスがリークする)。boot は tmux session に `@lt_run_id` と `@lt_owner_pid` を記録し、通常の reap は session 名の prefix・`@lt_run_id`・READY が返した `@lt_owner_pid` の 3 点が一致する自分の trial だけを回収する。同じ run-id の並列 sibling は PID が違うため対象外。tmux server 全体の孤児を管理者が回収するときだけ `reap --all` を明示する。引数なしの reap は安全のため拒否される。
 
 ## 判定ロジック
 
@@ -268,7 +268,7 @@ verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから
 python3 $SCRIPTS/live-trial-backend.py --self-test    # session名検証 + denylist
 python3 $SCRIPTS/live-trial-status.py --self-test     # 4状態分類 + interrupt 例外
 python3 $SCRIPTS/live-trial-boot.py --self-test       # model 検証 + コマンド組立
-python3 -m pytest -q tests/test_live_trial_harness.py # 合成 fixture の poll 4分岐ほか
+python3 -m pytest -q tests/test_live_trial_*.py       # 責務別 fixture の poll/reaper/scenario 検証
 ```
 
 ## Gotchas

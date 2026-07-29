@@ -157,6 +157,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 影響は repository 内の開発品質ゲートに限定され、Harness Hub 製品の外部 API・データモデル・認証認可・UI・Cloudflare deploy unit は変更しない。
 - 反映先と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) を正とする。
 
+**開発運用反映 (2026-07-29 / `HarnessHub-cjwm`・`HarnessHub-0vs2`)**:
+
+- `system-spec/dev-workflow.md` の qa-090 として、live-trial session の通常 cleanup は
+  session 名の run prefix、記録済み run-id、記録済み owner PID の完全一致へ限定する。
+- run-id または owner PID が無い通常 `reap` は拒否し、全件削除は明示的な管理者操作
+  `--all` だけに限定する。別 owner、別 run、metadata 無し session は通常 cleanup で削除しない。
+- 影響は repository 内の macOS 開発用 acceptance harness に限定される。製品仕様は非変更。
+  反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
+  を正とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
