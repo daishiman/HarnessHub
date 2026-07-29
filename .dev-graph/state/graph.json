@@ -1,5 +1,5 @@
 {
-  "graph_revision": 966,
+  "graph_revision": 974,
   "nodes": [
     {
       "acceptance": [
@@ -5582,7 +5582,7 @@
     },
     {
       "acceptance": [
-        "architecture-decision-record.md に HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer のカラム一覧、受付番号採番方式、AI キュー API 契約、共通 ai_jobs consumer contractと重複schema禁止の明記、S10-S12 の画面構成表が記載されている",
+        "architecture-decision-record.md と architecture-decisions-application.md に HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer のカラム一覧、受付番号採番方式、AI キュー API 契約、共通 ai_jobs consumer contractと重複schema禁止の明記、S10-S12 の画面構成表が記載されている",
         "現行feature context sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507のscope_in/acceptance全件をP02責務として追跡し、未割当0件である",
         "Normative closure: feature固有 AiJob schema や kind=hearing を作らず、共通 ai_jobs の kind=sheet_generation を consumer として使う。POST /api/v1/sheets は server-side packages/estimation の sheetEstimate を実行し estimate snapshot を保存してから、同一transactionでsheet_generationをenqueueする。共通 package/boundary の実装ownerは feat-hub-foundationであり、hearingは公開contractを消費する。P1は後発metrics完了を前提にしない。 Evidence: kind=sheet_generation、shared queue consumer、sheetEstimate server execution、estimate snapshot、tenant/role、enqueue/complete round-trip の contract testsを必須とする。"
       ],
@@ -5662,10 +5662,14 @@
         "arch-harness-hub-data"
       ],
       "resource_scope": [
-        "docs/features/feat-hearing-intake/architecture-decision-record.md"
+        "docs/features/feat-hearing-intake/architecture-decision-record.md",
+        "docs/features/feat-hearing-intake/architecture-decisions-application.md",
+        "docs/features/feat-hearing-intake/architecture-review-and-validation.md"
       ],
       "scope_in": [
-        "docs/features/feat-hearing-intake/architecture-decision-record.md"
+        "docs/features/feat-hearing-intake/architecture-decision-record.md",
+        "docs/features/feat-hearing-intake/architecture-decisions-application.md",
+        "docs/features/feat-hearing-intake/architecture-review-and-validation.md"
       ],
       "scope_out": [
         "published task spec の『スコープ外』節を正本とする"
@@ -5691,7 +5695,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-29T00:10:32.588547Z"
     },
     {
       "acceptance": [
@@ -5889,14 +5893,14 @@
       ],
       "resource_scope": [
         "apps/hub/src/app/api/v1/sheets/",
-        "apps/hub/src/features/hearing-intake/__tests__/",
+        "apps/hub/tests/hearing-intake/",
         "apps/hub/src/features/hearing-intake/ai-job-adapter/",
         "apps/hub/src/features/hearing-intake/estimation-adapter/",
         "docs/features/feat-hearing-intake/test-design.md"
       ],
       "scope_in": [
         "apps/hub/src/app/api/v1/sheets/",
-        "apps/hub/src/features/hearing-intake/__tests__/",
+        "apps/hub/tests/hearing-intake/",
         "apps/hub/src/features/hearing-intake/ai-job-adapter/",
         "apps/hub/src/features/hearing-intake/estimation-adapter/",
         "docs/features/feat-hearing-intake/test-design.md"
@@ -5925,7 +5929,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-28T23:37:47.151668Z"
     },
     {
       "acceptance": [
@@ -6009,22 +6013,22 @@
         "arch-harness-hub-data"
       ],
       "resource_scope": [
-        "apps/hub/src/app/(dashboard)/hearing-intake/",
-        "apps/hub/src/app/(dashboard)/hearing-sheets/",
+        "apps/hub/src/app/(dashboard)/sheets/",
         "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/app/api/v1/ai-jobs/",
         "apps/hub/src/features/hearing-intake/",
-        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
-        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "packages/db/repository/hearing-intake.ts",
+        "packages/db/repository/hearing-intake-queue.ts",
         "packages/db/schema/hearing-intake/",
         "packages/schemas/hearing-intake/"
       ],
       "scope_in": [
-        "apps/hub/src/app/(dashboard)/hearing-intake/",
-        "apps/hub/src/app/(dashboard)/hearing-sheets/",
+        "apps/hub/src/app/(dashboard)/sheets/",
         "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/app/api/v1/ai-jobs/",
         "apps/hub/src/features/hearing-intake/",
-        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
-        "apps/hub/src/features/hearing-intake/estimation-adapter/",
+        "packages/db/repository/hearing-intake.ts",
+        "packages/db/repository/hearing-intake-queue.ts",
         "packages/db/schema/hearing-intake/",
         "packages/schemas/hearing-intake/"
       ],
@@ -6052,7 +6056,7 @@
       "template_version": "1.0.0",
       "title": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-28T23:37:47.968705Z"
     },
     {
       "acceptance": [

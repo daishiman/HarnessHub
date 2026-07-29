@@ -15,5 +15,5 @@
     "noEmit": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "vitest.config.ts"]
+  "include": ["src", "auth-tenancy", "hearing-intake", "vitest.config.ts"]
 }

@@ -52,8 +52,8 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend, arch-ha
 | ai-queue-pull-type-d5 | ヒアリングシート生成の AI 処理キューは D5 確定の pull 型: ジョブ登録 → Claude Code セッションが pull → 結果書戻しで完結し、サーバ側 AI 課金は発生しない | system-spec/00-requirements-definition.md D5; system-spec/backend.md qa-023 (B5) |
 | ai-queue-authz-payload-secret-ban | AiJob (AI キュー) の pull/書戻しの認可は Device Flow token 保有者に限定し、job payload に secret を含めない | system-spec/security.md qa-025 (SEC8) |
 | markdown-sanitize-sec7 | ヒアリングシート本文などの Markdown は共通レンダラの sanitize で一括担保し、XSS を防ぐ | system-spec/security.md qa-025 (SEC7) |
-| tenant-scope-d4-new-entities | HearingSheet/FormData/AiJob を含む全新規テーブルに tenant_id/workspace_id スコープ列を必須とする (row-level tenant scope) | system-spec/00-requirements-definition.md D4; system-spec/database.md qa-024 |
-| hearing-sheet-entities-and-receipt-number | HearingSheet (受付番号・status・生成物参照)・FormData (ウィザード入力)・AiJob (D5 pull 型キュー: kind/status/payload/result) は qa-024 で確定したエンティティ。受付番号の採番はこのエンティティ設計に属する | system-spec/database.md qa-024 |
+| tenant-scope-d4-new-entities | 新規テーブルは tenant_id を必須とし、業務資源には必要に応じて workspace_id を持たせる。hearing_sheets と共通 ai_jobs は tenant/workspace の両方、tenant全体の採番・試算係数は tenant で分離する | system-spec/00-requirements-definition.md D4; system-spec/database.md qa-032; docs/backend-spec.md §2.1/§2.3 |
+| hearing-sheet-entities-and-receipt-number | HearingSheet/FormDataは本featureが所有し、AI処理は共通ai_jobsのkind=sheet_generationを消費する。feature固有AiJob schema/kindを作らない。受付番号採番とserver-side sheetEstimate snapshot保存を同じsheet作成契約で行う。 | system-spec/database.md qa-024 |
 | wizard-common-component-qa022 | ヒアリング 4 ステップウィザードの進捗表示・戻る/次へ・キーボード操作は共通部品 (packages/ui のステップウィザード) で担保し、独自実装しない | system-spec/frontend.md qa-022 |
 | estimate-server-computed-only | 削減効果の自動試算表示 (時給換算・削減額) はサーバ計算値の表示専用とし、クライアント側での金額再計算・自己申告を行わない | system-spec/frontend.md qa-022; system-spec/security.md qa-025 (SEC5) |
 | b1-zod-single-source-authz-mw | ヒアリング/シート関連の新規 REST 資源は zod スキーマ単一ソースへ追加し、全て認可単一ミドルウェア (deny-by-default) 配下に置く | system-spec/backend.md qa-023 (B1) |

@@ -1,5 +1,5 @@
 // 2 テナント完全 fixture (DMDB-T03/T06/T12 / security-spec §8.4)。
-// tenant A / B の双方で 19 テーブル全てに行を作る。seed は必ずリポジトリ層経由で行い、
+// tenant A / B の双方で全 tenant-scoped テーブルに行を作る。seed は原則リポジトリ層経由で行い、
 // 「全エンティティの CRUD が接続層越しに動作する」ことを fixture 構築自体が検証する。
 // 新テーブル追加時にこの fixture が未追随なら tenant-isolation.test.ts が fail する (スキーマ駆動)。
 
@@ -9,6 +9,7 @@ import { createTargetChannelsRepo } from '../../repository/channels';
 import { createScopedCrud } from '../../repository/crud';
 import type { ColumnCipher } from '../../repository/crypto';
 import type { CoreAdapter } from '../../repository/db';
+import { createHearingIntakeRepository } from '../../repository/hearing-intake';
 import { createIdpConnectionsRepo } from '../../repository/idp';
 import { createIdempotencyLedgerRepo, createSessionRevocationsRepo } from '../../repository/misc';
 import { createPackagesRepo } from '../../repository/packages';
@@ -19,6 +20,7 @@ import { createUserWorkspacesRepo } from '../../repository/workspaces';
 import { catalogEntries, deploymentReferences, projects } from '../../schema/core/catalog';
 import { userSettings, workspaces } from '../../schema/core/identity';
 import { deviceAuthorizations, publisherTokens, publishRequests } from '../../schema/core/publish';
+import { tenantCoefficients } from '../../schema/hearing-intake/schema';
 import { createRepositoryContext } from '../../src/context';
 import type { RepositoryContext } from '../../src/types';
 
@@ -69,6 +71,14 @@ async function seedTenant(
     salary,
     role: 'workspace-admin',
     status: 'active',
+  });
+
+  await adapter.client.insert(tenantCoefficients).values({
+    tenantId: tenant.id,
+    annualHours: 2_000,
+    minutesPerRun: 15,
+    sheetReductionRate: 0.35,
+    updatedBy: user.id,
   });
 
   await adapter.client.insert(userSettings).values({ userId: user.id });
@@ -206,6 +216,38 @@ async function seedTenant(
     responseStatus: 201,
     responseBodyJson: null,
     expiresAt: Date.now() + 24 * 3600 * 1000,
+  });
+
+  const hearing = createHearingIntakeRepository(adapter);
+  await hearing.createSheetAndEnqueue(context, {
+    workspaceId,
+    title: `Fixture hearing ${slug}`,
+    applicantUserId: user.id,
+    formJson: JSON.stringify({
+      taskName: `Fixture hearing ${slug}`,
+      company: `Tenant ${slug}`,
+      applicant: user.name,
+      domain: 'engineering',
+      issue: 'fixture issue',
+      tools: 'fixture tool',
+      hours: 10,
+      people: 2,
+      features: 'fixture feature',
+      output: 'fixture output',
+      priority: 'medium',
+    }),
+    estimateJson: JSON.stringify({
+      savedMinutesPerYear: 50_400,
+      savedHoursPerYear: 840,
+      savedAmountPerYear: 2_520_000,
+    }),
+    buildPayloadJson: (sheetId, code) =>
+      JSON.stringify({
+        sheet_id: sheetId,
+        sheet_code: code,
+        form: { taskName: `Fixture hearing ${slug}` },
+        estimate: { savedHoursPerYear: 840, savedAmountPerYear: 2_520_000 },
+      }),
   });
 
   return {

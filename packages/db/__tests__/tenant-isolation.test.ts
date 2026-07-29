@@ -1,5 +1,5 @@
 // DMDB-T03: テナント分離 (D4 / security-spec §8.4)。CI 必須ゲート。
-// スキーマ駆動: barrel の coreTables から tenant_id 保有テーブルを実行時に列挙し、
+// スキーマ駆動: barrel の allTables から tenant_id 保有テーブルを実行時に列挙し、
 // fixture が未追随の新テーブルや未宣言の非スコープテーブルを fail-closed で検出する。
 
 import { eq, getTableColumns } from 'drizzle-orm';
@@ -8,7 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { TursoAdapter } from '../connection/turso';
 import { createScopedCrud } from '../repository/crud';
 import { projects } from '../schema/core/catalog';
-import { coreTables, TENANT_SCOPE_EXEMPT } from '../schema/index';
+import { allTables, TENANT_SCOPE_EXEMPT } from '../schema/index';
 import { EntityNotFoundError } from '../src/errors';
 import { seedTwoTenants, type TwoTenantsFixture } from './fixtures/two-tenants';
 import { asCore, createLibsqlTestDb, testCipher } from './support/test-db';
@@ -32,7 +32,7 @@ describe('DMDB-T03 tenant isolation (schema-driven)', () => {
   it('tenant_id を持たないテーブルは TENANT_SCOPE_EXEMPT の宣言と完全一致する', () => {
     const undeclared: string[] = [];
     const staleDeclarations: string[] = [];
-    for (const [name, table] of Object.entries(coreTables)) {
+    for (const [name, table] of Object.entries(allTables)) {
       const hasTenantId = tenantColumn(table) !== undefined;
       const declared = name in TENANT_SCOPE_EXEMPT;
       if (!hasTenantId && !declared) undeclared.push(name);
@@ -44,7 +44,7 @@ describe('DMDB-T03 tenant isolation (schema-driven)', () => {
   });
 
   it('全 tenant-scoped テーブルに両テナントの fixture 行が存在する (網羅の担保)', async () => {
-    for (const [name, table] of Object.entries(coreTables)) {
+    for (const [name, table] of Object.entries(allTables)) {
       const column = tenantColumn(table);
       if (column === undefined) continue;
       for (const tenantId of [fixture.a.tenantId, fixture.b.tenantId]) {
@@ -55,7 +55,7 @@ describe('DMDB-T03 tenant isolation (schema-driven)', () => {
   });
 
   it('tenant A のスコープから B の行が 1 件も返らない (全 tenant-scoped テーブル)', async () => {
-    for (const [name, table] of Object.entries(coreTables)) {
+    for (const [name, table] of Object.entries(allTables)) {
       const column = tenantColumn(table);
       if (column === undefined) continue;
       const rows = (await adapter.client.select().from(table).where(eq(column, fixture.a.tenantId))) as Record<
