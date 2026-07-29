@@ -31,6 +31,13 @@ import {
   type PublisherTokensRepo,
 } from './device-flow';
 import {
+  type AiJobRow as AiJobRowShape,
+  createHearingIntakeRepository as createHearingIntakeRepositoryLeaf,
+  type HearingIntakeRepository as HearingIntakeRepositoryShape,
+  type HearingSheetRow as HearingSheetRowShape,
+  type TenantCoefficientRow as TenantCoefficientRowShape,
+} from './hearing-intake';
+import {
   createIdpConnectionsRepo,
   type IdpConnectionRow as IdpConnectionRowShape,
   type IdpConnectionsRepo,
@@ -47,6 +54,15 @@ export type UserRow = UserRowShape;
 export type IdpConnectionRow = IdpConnectionRowShape;
 export type DeviceAuthorizationRow = DeviceAuthorizationRowShape;
 export type PublisherTokenRow = PublisherTokenRowShape;
+export type AiJobRow = AiJobRowShape;
+export type HearingSheetRow = HearingSheetRowShape;
+export type TenantCoefficientRow = TenantCoefficientRowShape;
+export type HearingIntakeRepository = HearingIntakeRepositoryShape;
+
+/** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
+export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
+  return createHearingIntakeRepositoryLeaf(adapter);
+}
 
 /**
  * core schema の repository 一式。
