@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:10:00Z"
+updated_at: "2026-07-29T05:16:09.124941Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"}
-source_lineage: {"imported_at":"2026-07-26T06:10:00Z","origin_kind":"system-spec-harness","source_digest":"37f83d648993da8f6b69ced5aca0d2cecd5d05dcb94c29ddbfd9dfce86642a55","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-26T06:10:00Z","origin_kind":"system-spec-harness","source_digest":"4600d4d47a055ee1cccc1f0604c512db727ad7e42c743a8b2c25f5cb09b71f54","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -120,7 +120,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 **差分追記 (2026-07-25 / feat-domain-model-db P13)**
 
-- **未達リスク**: `CLOUDFLARE_API_TOKEN` を Workers deploy と R2 write で共用しており、最小権限分離 (2 token) が未達。追跡: `issue-ci-token-least-privilege-20260725` (`HarnessHub-bda4`)。
+- **最小権限リスク**: 2026-07-25 時点では `CLOUDFLARE_API_TOKEN` を Workers deploy と R2 write で共用していた。2026-07-29 に repository 内の参照分離を実装し、外部環境での token 発行・投入・拒否確認・workflow 完走は `issue-ci-token-least-privilege-20260725` (`HarnessHub-bda4`) で継続追跡する。
 - **未検証境界**: 更新版 `backup.yml` の成功と、main 上の `ci.yml` が migration → deploy → health → smoke を完走することは landing 後の GitHub Actions 実走待ち。追跡: `issue-actions-secrets-missing-20260725` (`HarnessHub-fnzl`)。
 - **検証済み**: 本番 Turso 18 table / 12 index、D1 hedge 同一断面、R2 往復、スモーク 6/6、restore drill 2 段、rollback 3 分岐 (deploy 未成功 / rollback 成功 / rollback 失敗)。証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
 
@@ -128,3 +128,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 - **未検証境界の更新**: `HarnessHub-fnzl` 由来の secret / variable 投入は完了し `check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。`ci.yml` の完走は run `30143422049` で達成済み。**残るのは `backup.yml` の成功のみ**で、是正版が main へ land した後の `workflow_dispatch` 実走待ち。
 - **観測経路の欠落**: `BACKUP_HEARTBEAT_URL` が未投入のため、backup の cron 不発も step 失敗も外形監視側では同じ無音になる (qa-027 の意図が実装上未達)。実際に 3 夜連続の失敗が数日誰にも気づかれなかった。追跡: `issue-backup-failure-undetected-20260728` (`HarnessHub-dbx6`)。
+
+**差分追記 (2026-07-29 / `HarnessHub-bda4` / qa-090)**
+
+- **credential 境界**: `CLOUDFLARE_API_TOKEN` は Workers deploy / rollback 専用、`CLOUDFLARE_R2_API_TOKEN` は日次 backup と本番 smoke の R2 object 操作専用とする。前者へ R2 write、後者へ Workers Scripts 権限を付与しない。
+- **permission 選択**: Wrangler の `r2 object ... --remote` は Cloudflare REST API 経路のため、S3 互換 API 専用の bucket-scoped item 権限ではなく account-scoped の `Workers R2 Storage Write` を使う。account scope の広さは、Worker 改変権限との分離と workflow 利用箇所の限定で補う。
+- **完了境界**: repository の静的ゲートは token の相互利用を拒否する。Cloudflare token 発行、GitHub secret 投入、deploy token の R2 write 拒否、R2 token での backup / production smoke 完走は外部証跡が揃うまで未完了とする。
+- **非影響範囲**: 外部 API、DB schema、認証認可モデル、UI、Cloudflare Worker の deploy unit は変更しない。

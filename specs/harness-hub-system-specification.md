@@ -143,6 +143,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **復元契約**: `backup.yml` は `export-control-plane.ts` の JSONL を gzip して R2 に保存し、`restore-control-plane.ts` が header・行数・audit chain・暗号断面を fail-closed で検査する。日次形式と drill の不一致を許容しない。
 - **仕様影響判定**: qa-011 / qa-019 の RPO・RTO・復元可能性要件を具体化した実装反映であり、外部 API・データモデル・確定 QA の変更はない。
 
+**差分追記 (2026-07-29 / `HarnessHub-bda4` / qa-090)**
+
+- **Cloudflare credential 契約**: Actions の deploy / rollback は R2 write 権限を持たない `CLOUDFLARE_API_TOKEN`、backup / production smoke の R2 object 操作は Workers Scripts 権限を持たない `CLOUDFLARE_R2_API_TOKEN` を使う。
+- **R2 permission 契約**: Wrangler の remote object 操作は Cloudflare REST API を使うため、R2 token には account-scoped の `Workers R2 Storage Write` を付与する。bucket-scoped item 権限は S3 互換 API 専用なので代替にしない。
+- **受入契約**: workflow と `scripts/ci/actions-secrets-registry.json` の双方向一致、および deploy / R2 token の相互不参照を静的ゲートで遮断する。実投入は `--live`、拒否系と完走は GitHub Actions の外部実測を根拠とし、文書更新だけで完了扱いにしない。
+- **仕様影響判定**: CI/CD credential の権限境界を変更したため infrastructure.web を正式に reopen し qa-090 として反映した。外部 API、DB schema、認証認可モデル、UI、deploy unit の変更はない。
+
 ## テストと受入条件
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。

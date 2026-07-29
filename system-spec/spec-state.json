@@ -200,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-084",
+        "qa_ref": "qa-090",
         "serves_goals": [
           "G1",
           "G4",
@@ -871,6 +871,11 @@
       "id": "qa-089",
       "question": "AI skill の live-trial を task/feature の受入証拠として再利用するとき、文字列上の PASS や一時ファイル参照を実証済みと誤認しないために何を必須としますか?",
       "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、開発品質ゲートの実走証拠契約を確定する。\n\n【1. scenario 束縛】受領書と verdict は positive scenario 正本の現行 scenario_id に一致し、required_observations を全件回収し、task_args_template と実引数の option flag が一致しなければならない。scenario が task.md の必須・禁止手順を宣言する場合は実 task.md も一致させ、実装不能な指示を別 operation へ読み替えて結果だけを合わせる run を拒否する。scenario_id の更新または scenario の削除は旧証拠を失効させる。\n\n【2. durable evidence】各 observation の evidence_ref は verdict の run directory を起点とした相対パスとし、生成時に workdir 内の実在する通常ファイルへ解決する。絶対パス、workdir 外への逸脱、ignored fixture や削除済み一時領域だけに残る参照を受入根拠にしない。PR に採用する run は参照先を含めて repository へ保持し、clean clone の品質ゲートでも解決できなければならない。\n\n【3. 実測と帰属】write count は実行前後の repository state 差分から導出し、binding は graph に永続した tracker_binding から導出する。起動引数や adapter の dry-run echo を実測値として書き戻さない。draft node の publication gate による 0 件と、promoted candidate の external-adapter dry-run による 0 件は別の帰属として記録する。昇格済み node の confirmation_evidence.evaluated_digest は、最終 persisted node から自己参照となる confirmation_evidence だけを除いた正準 JSON の SHA-256 と突合し、形式だけを満たす placeholder や昇格後の stale PASS を拒否する。\n\n【4. provenance】監査 helper は scenario 契約を含む責務分割した全 module の複合 digest と Git index 一致を pre/post で束縛し、監査自身や合格条件を書き換えた trial を拒否する。正例だけでなく同じ最終 graph から publication gate や schema rule を壊した負の検体を作り、正準 validator の該当節が赤になることを要求する。\n\n【5. 境界】本契約は Harness Hub の開発管理・テスト証拠に限定する。製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-090",
+      "question": "production Worker の認証設定と GitHub Actions の Cloudflare token 最小権限分離を、infrastructure.web 単独で情報を失わない契約としてどう確定しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-084 の production 認証・rollout 契約を全面維持し、GitHub Actions の Cloudflare token 分離を統合した次の infrastructure.web 契約を確定する。\n\n【1. Worker runtime の Secret / 環境設定】production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、文書、ログへ記録しない。\n\n【2. GitHub Actions の Cloudflare token 分離】CLOUDFLARE_API_TOKEN は Worker deploy / rollback 専用とし Workers Scripts Edit を付与するが R2 write 権限を付与しない。CLOUDFLARE_R2_API_TOKEN は日次 backup と production smoke の R2 object put/get/delete 専用とし Workers Scripts 権限を付与しない。Wrangler の r2 object put/get --remote は Cloudflare REST API を使い、bucket-scoped の Workers R2 Storage Bucket Item Write は S3-compatible API 専用で REST API では利用できないため、R2 token には account-scoped の Workers R2 Storage Write を使う。2 token は別々の GitHub Actions secret として投入し、値を引数・文書・ログへ残さない。\n\n【3. rollout 順序】DB backup と migration dry-run、本適用、認証 Secret/環境設定と Actions required secret の存在確認、Worker deploy、/health、2 tenant OIDC・Device Flow smoke、本番 R2 smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。\n\n【4. 検証境界】workflow の secret 参照と scripts/ci/actions-secrets-registry.json は CI で双方向突合し、実投入状況は check-actions-secrets.mjs --live で検査する。静的 test は deploy step が deploy token だけを、backup / R2 smoke が R2 token だけを参照することを固定する。token 発行、GitHub への投入、deploy token による R2 write 拒否、R2 token による workflow 完走は外部状態の実測が揃うまで完了扱いにしない。\n\n【5. 境界】本変更は CI/CD credential の権限境界と運用契約を強化する。Hub の外部 API、DB schema、認証認可モデル、UI、Cloudflare deploy unit 自体は変更しない。"
     }
   ],
   "approval_log": [
@@ -1574,6 +1579,12 @@
       "category": "dev-workflow",
       "platform": "desktop-macos",
       "reason": "qa-087 は qa-039 の維持を参照で表したため、compile 後の dev-workflow.md 単独ではローカル環境・CI 一致・本番操作禁止の詳細が展開されない。旧契約と worktree 安全契約を統合する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "HarnessHub-bda4 で GitHub Actions の Worker deploy token と R2 object 操作 token を分離し、qa-084 の infrastructure.web 契約へ最小権限境界・REST API permission・外部実測待ちの完了境界を統合する必要が生じた",
       "from": "確定"
     }
   ],
