@@ -12,10 +12,10 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-28T08:39:07.757446Z"
+updated_at: "2026-07-29T06:08:25Z"
 status: "active"
 depends_on: []
-related_nodes: ["issue-audit-followups-20260717"]
+related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729"]
 resource_scope: ["features/feat-dev-pipeline-improvement.md"]
 purpose: "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する"
 goal: "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態"
@@ -159,6 +159,19 @@ checkout 中の branch ref だけを動かして作業ツリーを古いまま�
 - 500 行を超えた手書き実装・テストは import 専用 support module と責務別テストへ分離し、監査 provenance は全 module の複合 digest を保持する。
 - 仕様・設計への影響は開発品質ゲートの証拠経路に限定される。qa-089、`architecture/harness-hub-testing-qa.md`、[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) に反映した。
 - `main` 統合後の最終ゲートは広域 pytest 9284 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。
+
+## 2026-07-29 追記: C02 stale feature lifecycle の拒否
+
+- `HarnessHub-bk8v` で、C14 の古い full feature snapshot が昇格済み lifecycle を
+  `draft` / `pending` / `incomplete` へ暗黙に戻す経路を、C02 の書込み前に拒否した。
+- `node` envelope と bare canonical node は再試行 snapshot、変更フィールドを列挙した
+  `patch` は意図的な reset として区別する。feature 以外の artifact kind は従来挙動を保つ。
+- 各退行フィールドを単独に検証する回帰テストと正の対照を追加し、main 統合後の C14
+  fresh live-trial `20260729T054655Z-bk8v-final-r5-none` も独立評価込みで PASS した。
+- plugin 契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、
+  製品仕様・設計へ影響しない判断は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
+  に記録した。
 
 ## アーキテクチャ参照
 

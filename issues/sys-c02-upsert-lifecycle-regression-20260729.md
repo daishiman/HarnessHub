@@ -12,11 +12,11 @@ iteration: null
 title: "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す"
 owners: ["daishiman"]
 created_at: "2026-07-29T01:20:52Z"
-updated_at: "2026-07-29T02:36:45.356164Z"
+updated_at: "2026-07-29T06:17:06Z"
 status: "closed"
 depends_on: []
 related_nodes: ["issue-decompose-live-trial-audit-defects-20260726","feat-dev-pipeline-improvement"]
-resource_scope: ["plugins/dev-graph/scripts/upsert-node.py","plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py","plugins/dev-graph/references/execution-tracker-contract.md"]
+resource_scope: ["plugins/dev-graph/scripts/upsert-node.py","plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py","plugins/dev-graph/references/execution-tracker-contract.md","docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md","docs/features/feat-dev-pipeline-improvement/final-review.md","features/feat-dev-pipeline-improvement.md"]
 purpose: "C02 の再試行で前進済み feature lifecycle を暗黙に巻き戻さない"
 goal: "古い feature snapshot の再 upsert が fail-closed で拒否され、意図的な reset だけが明示 patch で実行できる"
 scope_in: ["feature 全体 snapshot の stale lifecycle before-image 検出","dry-run と apply の無変更拒否","意図的な lifecycle reset の明示 patch 経路","C02 正本契約と回帰テスト"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-29T02:33:40Z","evidence_refs":["plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py","plugins/dev-graph/references/execution-tracker-contract.md","eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json","eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T021657Z-bk8v-decompose-r3/verdict.json"],"policy":"manual","reconciled_at":"2026-07-29T02:33:40Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-07-29T06:17:06Z","evidence_refs":["plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py","plugins/dev-graph/references/execution-tracker-contract.md","docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md","eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json","eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"],"policy":"manual","reconciled_at":"2026-07-29T06:17:06Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-29T01:20:52Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -70,6 +70,9 @@ C02 の再試行を安全にし、古い feature snapshot が前進済み lifecy
 - `plugins/dev-graph/scripts/upsert-node.py`
 - `plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py`
 - `plugins/dev-graph/references/execution-tracker-contract.md`
+- `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
+- `docs/features/feat-dev-pipeline-improvement/final-review.md`
+- `features/feat-dev-pipeline-improvement.md`
 
 ## スコープ外
 
@@ -95,7 +98,8 @@ C02 の再試行を安全にし、古い feature snapshot が前進済み lifecy
 
 - Beads: `HarnessHub-bk8v`
 - 発見元 node: `issue-decompose-live-trial-audit-defects-20260726`
-- 仕様反映受領書: `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md`
+- 仕様反映受領書:
+  `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
 
 ## 実装結果
 
@@ -108,13 +112,22 @@ C02 の再試行を安全にし、古い feature snapshot が前進済み lifecy
 
 ## 検証結果
 
-- focused pytest: `12 passed`
-- Dev Graph plugin pytest: `676 passed, 2 skipped`
+- focused pytest: `22 passed`
+- Dev Graph plugin pytest: `691 passed, 2 skipped, 5 subtests passed`
+- task 仕様書: P01〜P13 exact set、digest `af8a73df…`、violations 0
 - Python compile: PASS
 - `git diff --check`: PASS
-- live-trial verdict lint: `9 verdict(s) verified, 0 missing`
+- live-trial verdict lint: `9 verdict(s) verified`
 - live-trial planner: `reuse=3, run=0, defer=0`
 - repository CI parity: `PASS 123 / WARN 4 / FAIL 0`
 
-live-trial は現行 behavior closure に対して C02・C03・C14 を実走し、
-各 run の独立 evaluator が PASS / blockers なしと判定した。
+main 統合後は C02 node と C03 sync の現行 PASS 証跡を再利用し、behavior closure が
+変わった C14 decompose だけを fresh fixture で再実走した。r4 は tool result 後に
+transcript が進まず上限時間へ達したため FAIL として保存し、新 session の r5 を取得した。
+r5 は required observations 7/7、nudge 0、gate 0 で PASS し、fresh な独立 evaluator も
+PASS / blockers なしと判定した。
+
+製品 API、DB、認証認可、UI、deploy unit、運用 SLO、C02 単一 writer 境界は変わらない。
+したがって `system-spec/`、`specs/`、`architecture/`、exact-13 `tasks/` は非変更とし、
+二重正本を避ける層別判断を仕様反映受領書へ記録した。plugin 内部契約への影響は
+`plugins/dev-graph/references/execution-tracker-contract.md` へ正規反映した。

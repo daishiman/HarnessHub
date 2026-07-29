@@ -98,6 +98,22 @@ CI で検出した PKG-007 に対して分割 helper 2 本へ Python shebang と
 `plugins/dev-graph/references/live-trial-task-contract.md`、仕様影響なしの層別判断は
 `c19-task-contract-spec-reflection.md` に記録した。
 
+## C02 stale feature lifecycle の最終レビュー (2026-07-29)
+
+`HarnessHub-bk8v` の実装をレビューし、C14 が生成した古い feature snapshot の再送で、
+既に `confirmed`・評価 PASS・実装準備完了へ進んだ状態が draft へ戻る不具合を修正した。
+full snapshot の暗黙退行は書込み前に拒否し、意図的な再評価だけを明示 `patch` で許可する。
+
+回帰テストは各 lifecycle フィールドを単独で戻すケース、`node` envelope と bare canonical
+入力、退行しない正の対照、feature 以外の非影響、明示 reset を分離して検証する。main
+統合後の live-trial は C02 node と C03 sync の現行証跡を再利用し、C14 decompose のみ
+fresh r5 を実走して PASS、独立 evaluator も blocker なし PASS と判定した。
+
+中学生向けには「前に合格した申請書へ古い下書きをもう一度出しても、合格済みの印を勝手に
+消さない仕組み」である。技術契約は
+`plugins/dev-graph/references/execution-tracker-contract.md`、製品仕様への影響なしの層別判断は
+`bk8v-c02-lifecycle-spec-reflection.md` に記録した。
+
 ### 仕様・設計影響
 
 新しい製品仕様・API・データ・セキュリティ・配備契約への影響はない。

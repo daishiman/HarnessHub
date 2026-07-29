@@ -1,5 +1,5 @@
 {
-  "graph_revision": 977,
+  "graph_revision": 979,
   "nodes": [
     {
       "acceptance": [
@@ -25324,7 +25324,8 @@
       "pull_request_linkages": [],
       "purpose": "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する",
       "related_nodes": [
-        "issue-audit-followups-20260717"
+        "issue-audit-followups-20260717",
+        "issue-c02-upsert-lifecycle-regression-20260729"
       ],
       "resource_scope": [
         "features/feat-dev-pipeline-improvement.md"
@@ -25368,7 +25369,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T08:39:07.757446Z"
+      "updated_at": "2026-07-29T06:08:25Z"
     },
     {
       "acceptance": [
@@ -43031,16 +43032,17 @@
       "classification_confidence": 0.99,
       "classification_reason": "C14 r7-r11 の実走で同一 feature snapshot による lifecycle 退行を beads/none 両系列で再現した",
       "completion_evidence": {
-        "completed_at": "2026-07-29T02:33:40Z",
+        "completed_at": "2026-07-29T06:17:06Z",
         "evidence_refs": [
           "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
           "plugins/dev-graph/references/execution-tracker-contract.md",
+          "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
           "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
           "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T021657Z-bk8v-decompose-r3/verdict.json"
+          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-07-29T02:33:40Z",
+        "reconciled_at": "2026-07-29T06:17:06Z",
         "source": "manual",
         "status": "done"
       },
@@ -43089,7 +43091,10 @@
       "resource_scope": [
         "plugins/dev-graph/scripts/upsert-node.py",
         "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
-        "plugins/dev-graph/references/execution-tracker-contract.md"
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+        "docs/features/feat-dev-pipeline-improvement/final-review.md",
+        "features/feat-dev-pipeline-improvement.md"
       ],
       "scope_in": [
         "feature 全体 snapshot の stale lifecycle before-image 検出",
@@ -43124,7 +43129,7 @@
       "template_version": "1.0.0",
       "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T02:36:45.356164Z"
+      "updated_at": "2026-07-29T06:17:06Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
