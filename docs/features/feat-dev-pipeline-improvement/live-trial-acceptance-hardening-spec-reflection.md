@@ -1,3 +1,16 @@
+---
+status: confirmed
+layer: feature-spec-reflection
+beads_ids:
+  - HarnessHub-9ndl
+  - HarnessHub-dyxr
+  - HarnessHub-bk8v
+dev_graph_node_id: issue-decompose-live-trial-audit-defects-20260726
+feature_node_id: feat-dev-pipeline-improvement
+spec_impact: reflected
+reviewed_at: 2026-07-29
+---
+
 # C14 live-trial acceptance 強化 — 仕様反映受領書
 
 ## 依頼と目的
