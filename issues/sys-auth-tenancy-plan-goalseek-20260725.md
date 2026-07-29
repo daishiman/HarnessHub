@@ -49,47 +49,52 @@ implementation_readiness: {"checked_at":"2026-07-25T00:37:03Z","missing_sections
 
 # 概要
 
-<問題または要望を一文で記載>
+P01-P13 実装完了後に validate-system-plan.py を走らせたところ status=fail / violations 27 件 (task-spec-section-missing 13 + inner-goal-seek-contract 13 + p13-spec-architecture-writeback 1) が出た。違反はすべて feature-package/feat-auth-tenancy/task-specs/*.md 側の記述欠落であり、実装成果物 (apps/hub 配下) の欠陥ではない。package digest sha256:98fd3cc3... は一致しており、13 task-spec は本作業で一切変更していない (git status clean) ため、plan 生成時点の planner 版と現行 validator 版の drift と判断する。fail のまま放置すると、実装側に本物の違反が出たときに 27 件のノイズへ埋もれる
 
 ## 背景と問題
 
-<誰が、どの状況で、何に困っているか>
+`issue-auth-tenancy-plan-goalseek-20260725` は「feature-package/feat-auth-tenancy の 13 task-spec が validate-system-plan.py で fail (inner goal-seek 節の欠落 27 件)」を追跡する issue である。背景と根本原因は Beads `HarnessHub-mvdc` の description / notes と node の purpose に記録している。
 
 ## 現在の挙動
 
-<観測事実。再現不能の場合はその旨と理由>
+課題登録時には `feature-package/feat-auth-tenancy の 13 task-spec が validate-system-plan.py で fail (inner goal-seek 節の欠落 27 件)` の状態だった。現在は `completion_evidence.status=done` として収束証跡を保持している。
 
 ## 期待する挙動
 
-<解決後に観測できる状態>
+feat-auth-tenancy の plan package が現行 validator で status=pass に収束している
 
 ## 再現手順またはユースケース
 
-1. <step>
+Beads `HarnessHub-mvdc` の description に記録した入力条件を用い、対象 script / workflow / validator を実行して現象を再現する。再現条件と実測結果は同 issue の notes に追記し、完了時は node の evidence_refs へ repository 内の証跡を係留する。
 
 ## 影響と優先度
 
-- 影響範囲: <users/data/system>
-- 深刻度: <critical|high|medium|low>
-- 緊急度: <理由>
+priority は `medium`。P01-P13 実装完了後に validate-system-plan.py を走らせたところ status=fail / violations 27 件 (task-spec-section-missing 13 + inner-goal-seek-contract 13 + p13-spec-architecture-writeback 1) が出た。違反はすべて feature-package/feat-auth-tenancy/task-specs/*.md 側の記述欠落であり、実装成果物 (apps/hub 配下) の欠陥ではない。package digest sha256:98fd3cc3... は一致しており、13 task-spec は本作業で一切変更していない (git status clean) ため、plan 生成時点の planner 版と現行 validator 版の drift と判断する。fail のまま放置すると、実装側に本物の違反が出たときに 27 件のノイズへ埋もれる という影響があるため、他 issue と依存・write scope を分離して追跡する。
 
 ## スコープ
 
-- In: <対象>
-- Out: <非対象>
+**対象:**
+
+- 13 task-spec への Inner goal-seek execution loop 節の追記
+- phase-13 への spec write-back 節の追記
+- 追記後の package digest 再計算と inventory 更新
+
+**対象外:**
+
+- validator 側の検査緩和・skip 追加 (ゲートを弱める操作)
+- 実装成果物 (apps/hub / packages) の変更
 
 ## 関連グラフ
 
-- 原因/親ノード: <graph_node_id>
-- 関連仕様: <graph_node_id>
-- 関連アーキテクチャ: <graph_node_id>
-- 解決タスク: <graph_node_id>
+- feat-auth-tenancy
+- Beads: `HarnessHub-mvdc`
 
 ## 受入条件
 
-- [ ] <観測可能な結果>
+- validate-system-plan.py --feature-package feature-package/feat-auth-tenancy が status=pass を返す
+- 13 task-spec すべてに Inner goal-seek execution loop 節が存在する
+- phase-13 に spec write-back の節が存在する
 
 ## 検証証跡
 
-- コマンド/テスト: <how-to-verify>
-- 証跡 path: <path-or-url>
+- issues/sys-lint-open-residue-ci-red-20260725.md

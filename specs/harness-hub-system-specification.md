@@ -168,6 +168,20 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
   を正とする。
 
+**開発品質反映 (2026-07-29 / `HarnessHub-4t9g`)**:
+
+- `system-spec/dev-workflow.md` の `qa-091` として、Dev Graph C11 が artifact の
+  required section 本文を検査する契約を確定した。
+- 空本文、canonical placeholder の残存、`TBD` / `TODO` / `未定` だけの節は
+  `implementation_readiness=incomplete` とし、節名を `missing_sections` に返す。
+- C02 の template-only 新規生成と placeholder への再生成は transaction rollback
+  する。実本文の保持と substantive body による作成・復旧は維持する。
+- 影響は repository 内の readiness、tracker 投影、system build handoff に限定する。
+  製品 API・DB・認証認可・UI・Cloudflare deploy unit は変更しない。
+  反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
+  を正とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)

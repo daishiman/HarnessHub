@@ -94,6 +94,8 @@ render は `HarnessHub-s7b` の再 trial に伴い参照を更新するため、
 
 ## 再現手順またはユースケース
 
+Beads `HarnessHub-yg3` の description に記録した入力条件を用い、対象 script / workflow / validator を実行して現象を再現する。再現条件と実測結果は同 issue の notes に追記し、完了時は node の evidence_refs へ repository 内の証跡を係留する。
+
 ```bash
 for s in run-dev-graph-init run-dev-graph-node run-dev-graph-requirements run-dev-graph-status; do
   python3 -c "

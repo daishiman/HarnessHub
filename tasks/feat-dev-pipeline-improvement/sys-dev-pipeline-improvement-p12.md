@@ -240,3 +240,18 @@ boot READY 行の `OWNER_PID` と同じ値を
 障害調査で metadata 無し session を見つけても通常 reaper は削除しないため、
 必要性と対象を確認してから個別 `kill-session` または管理者 `--all` を選ぶ。
 詳細は `docs/worktree-parallel-operations-runbook.md` と system-spec `qa-090` を正とする。
+
+## 2026-07-29 C11 artifact 本文の運用追補
+
+本 P12 の promoted task spec と完了判定は変更しない。Dev Graph node を新規作成または
+本文再生成するときは、template の placeholder を残したまま C02 を完了扱いにしない。
+
+本文を用意できない場合は node を投影せず、必須節名を `missing_sections` として返して
+停止する。既存本文を残す metadata-only update は `--body-file` を省略してよい。
+壊れた本文を復旧する場合は、required section に具体的内容を持つ body file を
+repository 内の一時領域から明示的に渡す。`--regenerate-body` だけで placeholder template
+へ戻す操作は C11 が rollback する。
+
+仕様正本は `system-spec/dev-workflow.md` `qa-091`、設計正本は
+`architecture/harness-hub-dev-workflow.md`、plugin 内部契約は
+`plugins/dev-graph/templates/README.md` とする。

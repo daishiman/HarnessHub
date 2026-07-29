@@ -21,6 +21,9 @@ repo-local runtime 契約の共通正本は system-dev-planner の `plugin-plans
 - `template-contract.json` が種別ごとの必須セクションと subtype 合成規則の正本である。
 - `common-frontmatter.md` が全 Markdown 成果物の共通メタデータ正本である。
 - `validate-graph-schema.py` は frontmatter、見出し、placeholder、参照先、`file_path` parity を fail-closed で検証する。
+- C11 は YAML frontmatter と fenced code block を本文量から除外する。必須節の本文が空、canonical template の angle-bracket placeholder を残す、または `TBD` / `TODO` / `未定` だけの場合は `placeholder_only_section` とし、`implementation_readiness=incomplete` と `missing_sections` へ反映する。
+- 親節が構造 container の場合、実内容を持つ child section を含めば親節を空扱いしない。コード例だけ、見出しだけ、placeholder だけでは充足しない。
+- C02 の新規生成・本文再生成も書込後に同じ C11 を通し、未記入 template へ戻る場合は graph と artifact を transaction ごと rollback する。
 - `implementation_readiness` は必須セクションの `complete / incomplete / not_applicable` と不足一覧から算出する。単なる文字数では判定しない。
 - テンプレートの変更は `template_version` を更新し、既存文書は自動全書換せず migration preview を生成する。
 - システム開発task planはplugin固有のcomponent_kind/build_targetを流用せず、system workstreamと実装対象pathへ置換する。
@@ -28,4 +31,3 @@ repo-local runtime 契約の共通正本は system-dev-planner の `plugin-plans
 - realpathがrepository root外へ出る設定、content symlink、`..` traversal、repository_id不一致、shared cache/lock pathはfail-closedにする。
 - `repository_id`はcanonical GitHub remoteから`github:<owner>/<repo>`を再導出して比較する。remoteがない場合はgit common-dir realpathをSHA-256化した`local:sha256:<64hex>`を用い、repo移動時は明示的rebind確認を要求する。
 - C24は起動後に検査できるcontent symlinkの壊れ/移動を診断する。harness自身のsymlinkが壊れるとC24を起動できないため、host launcher/installerがentrypoint実在性を起動前検査する。
-

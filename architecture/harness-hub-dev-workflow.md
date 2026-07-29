@@ -259,3 +259,24 @@ tmux server は複数 worktree・複数 trial から共有されるため、`lt-
 owner PID の代用品にせず、boot の READY 出力をそのまま cleanup へ渡す。
 全 session の回収は通常フローから分離した明示 `--all` だけに許可する。
 fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠とする。
+
+### 差分追記 (2026-07-29): C11 artifact 本文 readiness 境界
+
+出典: system-spec `qa-091`、bd `HarnessHub-4t9g`。
+
+Dev Graph の tracker 投影と system build handoff は、frontmatter と artifact file が
+存在するだけでは開始しない。C11 は `template-contract.json` の artifact kind 別
+`required_sections` を読み、各節を次の境界で検査する。
+
+1. YAML frontmatter と fenced code block は本文の実内容として数えない。
+2. 空本文、canonical angle-bracket placeholder の残存、`TBD` / `TODO` / `未定`
+   だけの本文は `placeholder_only_section` とする。
+3. architecture の overview のような構造 container は、実内容のある child section
+   を含む場合だけ充足とする。
+4. 違反した節名は `missing_sections` へ集約し、
+   `implementation_readiness=incomplete` として後段を止める。
+
+C02 upsert は artifact 書込後に同じ C11 を実行する。新規 node の template-only 本文や
+`--regenerate-body` による placeholder 復帰は、graph と artifact の双方を transaction
+rollback する。既存の実本文を保持する metadata-only update と、実内容を渡す
+`--body-file` / input body は維持する。

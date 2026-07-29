@@ -81,6 +81,8 @@ workflow-level にも job-level にも `env:` は無い (1-60 行)。`steps.if` 
 
 ## 再現手順またはユースケース
 
+Beads `HarnessHub-5u5k` の description に記録した入力条件を用い、対象 script / workflow / validator を実行して現象を再現する。再現条件と実測結果は同 issue の notes に追記し、完了時は node の evidence_refs へ repository 内の証跡を係留する。
+
 ```bash
 # defect 形が token 投入でも skip のままであることを再現する
 python3 scripts/lint-workflow-step-guard.py --self-test

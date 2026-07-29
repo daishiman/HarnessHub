@@ -7,7 +7,7 @@
     "skill_md_sha256": "3749ff518403e2b48d02aeb7f3dd5aa3567331426db1850de75d3ab5db994bd1"
   },
   "verdict": "PASS",
-  "reviewer": "independent-live-goal-evaluator-c02-live-goal-eval-20260726",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-20260729",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260728T115514Z-zep2b-node/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T064720Z-wt28-c11-node/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260728T115514Z-zep2b-node/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260728T115514Z-zep2b-node/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260728T115514Z-zep2b-node/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T064720Z-wt28-c11-node/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T064720Z-wt28-c11-node/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T064720Z-wt28-c11-node/independent-verification.json"
       ],
-      "observed": "fresh live trial PASS (run 20260728T115514Z-zep2b-node)。mixed artifact の atomic upsert、既存 Markdown 本文保持、schema/frontmatter parity、goal-seek を独立評価で確認した。C02 は script_refs に共有スクリプト plugins/dev-graph/scripts/bd-bridge.py を宣言しているため、その変更 (commit a0d9bbf: bd external_ref orphan の逆方向全数検査) で挙動閉包 digest が変化した。SKILL.md 本体は無変更だが受領書の live-trial 参照は現ツリーに対して取り直す必要があるため再実走した。"
+      "observed": "fresh live trial PASS (run 20260729T064720Z-wt28-c11-node)。現行 C11 本文 readiness を含む挙動閉包で、5 artifact kind の atomic upsert と正規 path、連続更新後の frontmatter/path parity と本文保持、C14 外 feature 登録の rollback、goal-seek 3 点セットを実測した。別 Claude コンテキストの goal evaluator は blockers=[] で PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

@@ -49,47 +49,53 @@ implementation_readiness: {"checked_at":"2026-07-22T23:04:59Z","missing_sections
 
 # 概要
 
-<問題または要望を一文で記載>
+features/feat-*.md 14 件の source_lineage.source_digest (a4c26b6d…) が import 時点の specs/harness-hub-system-specification.md の姿のまま残り、現行実体 digest (56c60159…) と不一致の既存 drift になっている。validate-source-digest.py は registered_this_run のみ検査するため既存 node の drift は検出されず、lineage の追跡性が劣化している。
 
 ## 背景と問題
 
-<誰が、どの状況で、何に困っているか>
+`issue-features-source-digest-drift-20260722` は「features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随」を追跡する issue である。背景と根本原因は Beads `HarnessHub-5kh` の description / notes と node の purpose に記録している。
 
 ## 現在の挙動
 
-<観測事実。再現不能の場合はその旨と理由>
+graph status は `draft`、completion status は `open` であり、Beads `HarnessHub-5kh` が残作業の実行状態を管理する。
 
 ## 期待する挙動
 
-<解決後に観測できる状態>
+features 14 件の source_lineage が現行 source 実体へ追随済みで、source 変更が feature の意味に影響する場合は再 import 経路へ差し戻されている
 
 ## 再現手順またはユースケース
 
-1. <step>
+Beads `HarnessHub-5kh` の description に記録した入力条件を用い、対象 script / workflow / validator を実行して現象を再現する。再現条件と実測結果は同 issue の notes に追記し、完了時は node の evidence_refs へ repository 内の証跡を係留する。
 
 ## 影響と優先度
 
-- 影響範囲: <users/data/system>
-- 深刻度: <critical|high|medium|low>
-- 緊急度: <理由>
+priority は `medium`。features/feat-*.md 14 件の source_lineage.source_digest (a4c26b6d…) が import 時点の specs/harness-hub-system-specification.md の姿のまま残り、現行実体 digest (56c60159…) と不一致の既存 drift になっている。validate-source-digest.py は registered_this_run のみ検査するため既存 node の drift は検出されず、lineage の追跡性が劣化している。 という影響があるため、他 issue と依存・write scope を分離して追跡する。
 
 ## スコープ
 
-- In: <対象>
-- Out: <非対象>
+**対象:**
+
+- source (specs/harness-hub-system-specification.md) の変更内容が各 feature の意味に影響するかの判定
+- 影響なしの feature の lineage refresh (source_digest 実測更新) を正規 writer upsert-node.py patch で実施
+- 影響ありの feature の再 import 経路への差し戻し
+
+**対象外:**
+
+- sha 手書換での digest 合わせ (偽装として禁止)
+- validate-source-digest.py の検査範囲拡張 (別課題)
+- t9q の R3 再 import 対象 (spec-harness-hub-requirements / arch-harness-hub-infrastructure)
 
 ## 関連グラフ
 
-- 原因/親ノード: <graph_node_id>
-- 関連仕様: <graph_node_id>
-- 関連アーキテクチャ: <graph_node_id>
-- 解決タスク: <graph_node_id>
+- spec-harness-hub-requirements
+- Beads: `HarnessHub-5kh`
 
 ## 受入条件
 
-- [ ] <観測可能な結果>
+- features 14 件の source_digest が実測値と一致するか、再 import 差し戻しの記録がある
+- digest 更新は upsert-node.py patch 経由のみで行われている
+- 意味影響の判定根拠が本 issue に記録されている
 
 ## 検証証跡
 
-- コマンド/テスト: <how-to-verify>
-- 証跡 path: <path-or-url>
+未完了のため、現時点の一次記録は Beads `HarnessHub-5kh` の description / notes と本 issue である。完了時に実行コマンド、結果、repository 内 evidence path を追記する。

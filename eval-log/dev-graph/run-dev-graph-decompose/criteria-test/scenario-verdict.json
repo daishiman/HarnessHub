@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "codex-final-review-20260729",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-20260729",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,18 +27,16 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/evidence/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T031000Z-dcmp-r11-none/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T031000Z-dcmp-r11-none/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T031000Z-dcmp-r11-none/evidence/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T031000Z-dcmp-r11-none/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/evidence/combined-binding-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/evidence/decompose-audit-manifest.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T064720Z-wt28-c11-decompose/transcript.jsonl"
       ],
-      "observed": "現行 r7 scenario を apply mode で 2 系列 (r10 tracker_binding=beads / r11 tracker_binding=none) fresh 実走し、両 verdict が launch/completion/goal_fit=PASS、required_observations 7/7、args_divergence.matches=true、task_contract.matches=true となった。両系列とも DAG 5 node/3 edge/acyclic、task 0、粒度実測 1<=3、3 draft 除外と sole promoted candidate、persisted binding 一致、stdin schema 検証、zero attribution 分離を確認した。独立 verifier は最終 persisted feat-user-auth-001 から digest を再計算し、beads=2eb2640c…b2779 / none=40d2cbc4…e8df が宣言値と一致することを確認した。2 種の in-memory negative control は各 run で canonical validator の該当節により拒否された。旧 r6 の r8/r9 は digest 不一致を main 統合レビューで検出したため最終受入証拠から除外した。同一入力の再 upsert による lifecycle 退行は通常 C02 upsert で再昇格し、別責務の回帰を HarnessHub-bk8v で追跡する。"
+      "observed": "現行 C11 本文 readiness を含む挙動閉包で beads/none の2系列を fresh 実走した。beads run 20260729T064720Z-wt28-c11-decompose と none run 20260729T074206Z-wt28-c11-decompose-none は各5 node、DAG acyclic、feature依存最大1<=3、draft 3件除外、promoted candidate 1件、persisted tracker_binding の系列一致、stdin schema 検証、外部 mutation 0、final confirmation_evidence digest 一致、negative control 全拒否を実測した。none run は template-only architecture を現行 C11 が10節の placeholder_only_section として rollback する負例も通過後、substantive body で回復した。fresh evaluator は2 transcript と分割監査証跡を横断し blockers=[] で PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",
