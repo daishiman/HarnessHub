@@ -1,0 +1,69 @@
+⏺ Bash(shasum -a 256 /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-init-r3/.dev-graph/templates/issue.md)
+  ⎿  f304c326a94f591e5a3594b08150ac71be496f712b461ccf1cbe70ca60ff5bdb  /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-init-r3/.dev-graph/templates
+     /issue.md
+
+⏺ SHA-256 matches: f304c326a94f591e5a3594b08150ac71be496f712b461ccf1cbe70ca60ff5bdb - unchanged after pass 2.
+
+  Now proceeding to 工程4: verification and output files.
+
+  First, verify no absolute paths, tokens, or GitHub node IDs in config:
+
+⏺ Bash(python3 -c "
+      import json, re…)
+  ⎿  Absolute paths in config: 0 ([])
+     Tokens in config: 0
+     GitHub node IDs in config: 0
+     GitHub enabled: False
+
+⏺ All clear. Now run the goal-seek verification script:
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-init-r3" && python3 - "$DEV_GRAPH_ROOT/eval-log…)
+  ⎿  Goal-seek verification PASSED
+     Rows: 1
+     Expected hash: 4e3fee6288f589997e759a2d929f4a7a7489caf16ec31a95abd9c4ca1b80e1ec
+
+⏺ Now write the intermediate.jsonl second line (append-only). Read the existing line first to get the merged_directive_for_next:
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  Appended line 2
+
+⏺ Now write the progress file:
+
+⏺ Write(eval-log/run-dev-graph-init-progress.json)
+  ⎿  Wrote 45 lines to eval-log/run-dev-graph-init-progress.json
+       1 {
+       2   "checklist": [
+       3     {
+       4       "item": "resolve-repo-context receipt matches caller repo",
+       5       "status": "PASS",
+       6       "evidence": "repository_id=local:sha256:f2323dabfdc683ca0cf80098f07368d9cd13cf257cdff5c13de88bb240e59813, git_toplevel_verified=true, selected_by=explicit --repo-root"
+       7     },
+       8     {
+       9       "item": "6 content roots and .dev-graph dirs exist",
+      10       "status": "PASS",
+     … +35 lines (ctrl+o to expand)
+
+⏺ Run the goal-seek verification again with 2 rows:
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-init-r3" && python3 - "$DEV_GRAPH_ROOT/eval-log…)
+  ⎿  Goal-seek verification PASSED (2 rows)
+
+⏺ Now write the completion marker:
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T105300Z-wt28-postmerge-c11-init/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-init/live-trial/20260729T105300Z-wt28-postmerge-c11-init/out/status.json
+      1 {"status": "PASS", "scenario": "C01-OUT1-positive-idempotence-r17"}
+
+⏺ DONE: PASS
+
+✻ Cogitated for 11m 57s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-20260729",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,16 +27,16 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/evidence/combined-binding-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/evidence/decompose-audit-manifest.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T064720Z-wt28-c11-decompose/transcript.jsonl"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/evidence/combined-binding-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/evidence/decompose-audit-manifest.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100000Z-wt28-postmerge-c11-decompose/transcript.jsonl"
       ],
-      "observed": "現行 C11 本文 readiness を含む挙動閉包で beads/none の2系列を fresh 実走した。beads run 20260729T064720Z-wt28-c11-decompose と none run 20260729T074206Z-wt28-c11-decompose-none は各5 node、DAG acyclic、feature依存最大1<=3、draft 3件除外、promoted candidate 1件、persisted tracker_binding の系列一致、stdin schema 検証、外部 mutation 0、final confirmation_evidence digest 一致、negative control 全拒否を実測した。none run は template-only architecture を現行 C11 が10節の placeholder_only_section として rollback する負例も通過後、substantive body で回復した。fresh evaluator は2 transcript と分割監査証跡を横断し blockers=[] で PASS と判定した。"
+      "observed": "latest main merge 後、現行 C11 本文 readiness を含む挙動閉包で beads/none の2系列を fresh 実走した。beads run 20260729T100000Z-wt28-postmerge-c11-decompose と none run 20260729T100001Z-wt28-postmerge-c11-decompose-none は各5 node、DAG acyclic、feature依存最大1<=3、draft 3件除外、promoted candidate 1件、persisted tracker_binding の系列一致、stdin schema 検証、外部 mutation 0、final confirmation_evidence digest 一致、negative control 全拒否を実測した。none run は template-only architecture を現行 C11 が10節の placeholder_only_section として rollback する負例も通過後、substantive body で回復した。fresh evaluator は2 transcript と分割監査証跡を横断し blockers=[] で PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

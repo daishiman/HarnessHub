@@ -1,0 +1,69 @@
+
+  LT-TASK-001:
+  - status: graph="active", report="active" ✓
+  - closed_at: graph=null, report=null ✓
+  - depends_on: graph=[], report=[] ✓
+  - dependents: graph has LT-TASK-002 depending on LT-TASK-001 → report=["LT-TASK-002"] ✓
+  - artifact_kind: graph="task", report="task" ✓
+  - domain: graph="documentation", report="documentation" ✓
+  - file_path: graph="tasks/lt-task-001.md", report="tasks/lt-task-001.md" ✓
+  - tracker_binding: graph="none", report="none" ✓
+
+  LT-TASK-002:
+  - status: graph="active", report="active" ✓
+  - closed_at: graph=null, report=null ✓
+  - depends_on: graph=["LT-TASK-001"], report=["LT-TASK-001"] ✓
+  - dependents: no node depends on LT-TASK-002 → report=[] ✓
+  - artifact_kind: graph="task", report="task" ✓
+  - tracker_binding: graph="none", report="none" ✓
+
+  Required observation 2: LT-TASK-002 depends_on LT-TASK-001, so it is blocked by its predecessor. LT-TASK-001 has no dependencies, so it is ready. ✓
+
+  Required observation 3 (read-only):
+  - graph_sha256_before = graph_sha256_after = 120a1ed8... ✓
+  - authority_sha256_before = authority_sha256_after = f17afa62... ✓
+  - read_only: true ✓
+
+  Now write the progress file and append the second intermediate line.
+
+⏺ Write(eval-log/run-dev-graph-status-progress.json)
+  ⎿  Wrote 41 lines to eval-log/run-dev-graph-status-progress.json
+       1 {
+       2   "skill": "run-dev-graph-status",
+       3   "checklist": [
+       4     {
+       5       "item": "query は許可 filter field と明示 tag match mode だけを持つ",
+       6       "status": "PASS",
+       7       "evidence": "filters.tag_match=all, all filters are null or schema-defined fields"
+       8     },
+       9     {
+      10       "item": "validate-graph-schema.py が exit0 で root 外 file_path と dangling dependency が0件である",
+     … +31 lines (ctrl+o to expand)
+
+⏺ Now append the second intermediate line (append-only, not overwrite).
+
+⏺ Bash(printf '%s\n' '{"original_goal":"特定のissue/task/specification/architecture/documentをgraph_node_id/artifact_kind/project_id/domain/status/tagsで検索し、依存関係・close/tomb…)
+  ⎿  (No output)
+
+⏺ Now run the goal-seek verification script.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-status && python3 - "$DEV_GRAPH_ROOT/eval-log/ru…)
+  ⎿  PASS: goal-seek verification succeeded, rows=2
+
+⏺ Goal-seek verification passed. Now write the completion marker and the out/status.json.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-status/live-trial/20260729T100000Z-wt28-postmerge-c11-status/out 2>&1)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-status/live-trial/20260729T100000Z-wt28-postmerge-c11-status/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-status/live-trial/20260729T100000Z-wt28-postmerge-c11-status/out/status.json
+      1 {"status": "PASS", "scenario": "C18-OUT1-positive-read-only-status"}
+
+⏺ DONE: PASS
+
+✻ Brewed for 7m 59s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

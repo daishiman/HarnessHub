@@ -71,17 +71,18 @@ SHA-256 が実走 transcript の完全な byte 列を束縛する機械証跡な
 ## 品質ゲート
 
 - main 統合: local `main` は `origin/main` と同一の `7153859`。
-  feature branch への統合は本受領書を含む merge commit の第 2 parent で追跡する。
+  feature branch への merge commit は `a9a5b5e` (第 2 parent=`7153859`)。
 - focused pytest: 実装 3 suite は `23 passed`、命名回帰を含む再検証は `55 passed`。
-- Dev Graph 全体: `687 passed / 2 skipped / 5 subtests passed`。
+- Dev Graph 全体: `709 passed / 2 skipped / 5 subtests passed`。
 - repository 全体: `make test` は `7620 passed / 5 skipped`、
   LLM coverage 100%、Phase 0 PASS。
-- live trial: 変更の影響を受ける 8 skill を実走し、独立 goal evaluator は全件 PASS。
-  `lib/` への配置修正後、同じ transcript・goal-seek 3 点セット・独立評価を正規 generator
-  で再判定し、Dev Graph は `9 verdicts verified / 0 missing`。
+- live trial: main 統合後に影響を受ける 8 skill を fresh session で再実走し、
+  独立 goal evaluator は全件 PASS。挙動 digest が不変の schedule を含め、
+  incremental planner は `reuse=9 / run=0 / defer=0`、
+  Dev Graph lint は `9 verdicts verified / 0 missing`。
 - task package: exact P01〜P13、digest `af8a73…da6`、violations 0。
 - system-spec coverage: final 未収集 0、foundation trace PASS。
-- repository lint、plugin package check、script naming、graph schema、
+- repository lint、300 行文書上限、plugin package check、script naming、graph schema、
   `git diff --check` はすべて PASS。
 
 ## Beads / dev-graph

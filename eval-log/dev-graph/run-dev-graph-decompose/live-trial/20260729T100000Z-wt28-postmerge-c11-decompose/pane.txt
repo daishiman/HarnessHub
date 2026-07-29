@@ -1,0 +1,69 @@
+⏺ Bash(git -C /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose status --short)
+  ⎿   M .dev-graph/state/graph.json
+     ?? .dev-graph/state/.graph.json.register.lock
+     ?? .dev-graph/tmp/arch-webapp-foundation-body.md
+     … +14 lines (ctrl+o to expand)
+
+⏺ Managed content changes: graph.json modified, 1 architecture file created, 4 feature files created, 1 docs file created = 6 new content files + 1 graph modification. No issues/ files, no .beads/
+  files. This confirms:
+  - local_issue_files: 0
+  - beads_export_records: 0
+  - beads_linked_nodes: 0
+  - github_linked_nodes: 0
+
+  Now create the progress file and goal-seek completion.
+
+⏺ Write(eval-log/run-dev-graph-decompose-progress.json)
+  ⎿  Wrote 56 lines to eval-log/run-dev-graph-decompose-progress.json
+       1 {
+       2   "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+       3   "binding": "beads",
+       4   "checklist": [
+       5     {
+       6       "item": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+       7       "status": "pass",
+       8       "evidence": "5 nodes registered: 1 architecture + 4 features. artifact_kind counts: architecture=1, feature=4, task=0. 3 edges (all inter-feature depends_on to feat-user-auth-001)
+         . DFS cycle detection: no cycle. phase_ref set=0, parent_feature set=0, feature_package_id set=0, P01..P13 IDs=0."
+       9     },
+      10     {
+     … +46 lines (ctrl+o to expand)
+
+⏺ Now append the second line to intermediate.jsonl and verify goal-seek.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Update(eval-log/run-dev-graph-decompose-intermediate.jsonl)
+  ⎿  Added 1 line
+      1  {"original_goal":"自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起
+         動または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects
+         、binding=noneはローカルのみへ冪等投影した状態になっている","original_goal_hash":"ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795","current_goal_snapshot":"macro decomp
+         ose with beads binding - starting skill execution","delta_from_original":"none - initial entry","merged_directive_for_next":"execute skill, capture preview, validate, promote one featur
+         e, re-run, audit","drift_signal":"none"}
+      2 +{"original_goal":"自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起
+        +動または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects
+        +、binding=noneはローカルのみへ冪等投影した状態になっている","original_goal_hash":"ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795","current_goal_snapshot":"macro decomp
+        +ose complete: 5 nodes (1 arch + 4 feat), 1 promoted, audit pass=true, all 7 observations verified","delta_from_original":"none - goal achieved as stated","merged_directive_for_next":"al
+        +l checklist items pass or not_applicable; no further action needed","drift_signal":"none"}
+
+⏺ Now verify the goal-seek files.
+
+⏺ Bash(python3 - /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose/eval-log/run-dev-graph-decompose-goal-spec.…)
+  ⎿  OK: 2 rows, hash verified
+
+⏺ All verifications pass. Now write the status marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100000Z-wt28-postmerge-c11-decompose/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100000Z-wt28-postmerge-c11-decompose/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-decompose/live-trial/20260729T100000Z-wt28-postmerge-c11-decompose/out/status.json
+      1 {"status": "PASS", "scenario": "C14-OUT1-positive-macro-decomposition-r7", "binding": "beads"}
+
+⏺ DONE: PASS
+
+✻ Sautéed for 16m 40s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

@@ -7,7 +7,7 @@
     "skill_md_sha256": "3b7080713c94b4d81bdf95df07fcada9ec333b745afc74f731e96d7abb5e7abf"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-20260729",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -30,13 +30,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C01-OUT1-positive-idempotence-r17",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T090420Z-wt28-c11-init-final6/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T105300Z-wt28-postmerge-c11-init/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T090420Z-wt28-c11-init-final6/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T090420Z-wt28-c11-init-final6/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T090420Z-wt28-c11-init-final6/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T105300Z-wt28-postmerge-c11-init/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T105300Z-wt28-postmerge-c11-init/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260729T105300Z-wt28-postmerge-c11-init/independent-verification.json"
       ],
-      "observed": "fresh live trial PASS (run 20260729T090420Z-wt28-c11-init-final6)。nudge 0 / gate 応答 0 / poll DONE。Skill ツールを同じ outer session から 2 回起動し、pass 1 で 6 content root・routing policy・graph store・plugin hook source を作成、between-pass で issue template を編集して SHA-256=1d5f74b…1dd を記録し、substantive issue node を C02 で 1 件登録した。pass 2 は config unchanged / graph preserved_existing / template copy 0 の planned changes 0、編集済み template bytes 不変、config の絶対 path・token・GitHub node ID 0、node 1 件の C11 valid=true を実測した。goal-seek 1 行目は Skill 前から必須 6 キーと正しい hash を持ち、1 行目の書換えなしで結果の 2 行目だけを append した。別 Claude コンテキストの goal evaluator は transcript と fixture を再検証して blockers=[] の PASS と判定した。"
+      "observed": "latest main merge 後の fresh live trial PASS (run 20260729T105300Z-wt28-postmerge-c11-init)。nudge 0 / gate 応答 0 / poll DONE。Skill ツールを同じ outer session から 2 回起動し、pass 1 で 6 content root・routing policy・graph store・plugin hook source を作成、between-pass で issue template を編集して SHA-256 を記録し、substantive issue node を C02 で 1 件登録した。pass 2 は config unchanged / graph preserved_existing / template copy 0 の planned changes 0、編集済み template bytes 不変、config の絶対 path・token・GitHub node ID 0、node 1 件の C11 valid=true を実測した。goal-seek 1 行目は Skill 前から必須 6 キーと正しい hash を持ち、1 行目の書換えなしで結果の 2 行目だけを append した。別 Claude コンテキストの goal evaluator は transcript と fixture を再検証して blockers=[] の PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

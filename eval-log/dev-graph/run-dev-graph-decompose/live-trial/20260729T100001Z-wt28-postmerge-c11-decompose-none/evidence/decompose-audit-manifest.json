@@ -1,0 +1,249 @@
+{
+  "parts": {
+    "beads": [
+      {
+        "lines": 5,
+        "path": "decompose-beads-adapter-mutation-suppression.json",
+        "sha256": "c215d0d38816194f2193c9f68d7c142c2349e45b9afd02af9068e6ea909ed474"
+      },
+      {
+        "lines": 50,
+        "path": "decompose-beads-audit-implementation.json",
+        "sha256": "60bf40b614c3970127c1fa3f16d7d0e8a529dd8380c07ca0fe75bdea2f31c369"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-binding-observations-distinct.json",
+        "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+      },
+      {
+        "lines": 380,
+        "path": "decompose-beads-binding-projections.json",
+        "sha256": "94871d705af772933f04aec926f1eda19b583461e5506ff1c3e8ffa7dbd552cb"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-binding-source.json",
+        "sha256": "d9ca529463bdba27e492cee3b23041f7d1c2955d7b4a5bd90cb70c6f44e1a1f9"
+      },
+      {
+        "lines": 6,
+        "path": "decompose-beads-derived-write-counts.json",
+        "sha256": "dd3c4848cb067e1bb135051df6d0151ce3746a570e8969b7cbe8c2bcb3c88a45"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-draft-publication-zero.json",
+        "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+      },
+      {
+        "lines": 45,
+        "path": "decompose-beads-evidence-binding.json",
+        "sha256": "5017f87a3bb74bec8237931fd8f2a33a63c2c77ac2e99b208d0fdefe16ad2920"
+      },
+      {
+        "lines": 54,
+        "path": "decompose-beads-gate-negative-controls.json",
+        "sha256": "86086b89dfeacf942f78b2ee9d7e523bb6b15e3903630c4d96dc6fc89a6576ad"
+      },
+      {
+        "lines": 17,
+        "path": "decompose-beads-graph.json",
+        "sha256": "3485aa41eca35d5953cb79962d96b2951611fc14815ad64b847ac165d1780c0e"
+      },
+      {
+        "lines": 440,
+        "path": "decompose-beads-local-state.json",
+        "sha256": "bbd8e544f41f9c124088528d82c2f2ab47739cce39b55bc42c9e4ded758ac9fb"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-pass.json",
+        "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+      },
+      {
+        "lines": 9,
+        "path": "decompose-beads-persisted-bindings.json",
+        "sha256": "c2835362bc52aca7443de3765df958d3f264c39d2fe0b186936d1adbac64070a"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-preview.json",
+        "sha256": "1eeb7056a9fe3d5438e2dbf87986573f903e9b4a758ecc51e361960f93052b7c"
+      },
+      {
+        "lines": 6,
+        "path": "decompose-beads-preview-consistency.json",
+        "sha256": "e3d5e6405cd2eaa94e8d97c531956ca06b52f7f1a0c602ef562517f6d193f48a"
+      },
+      {
+        "lines": 100,
+        "path": "decompose-beads-publication-decisions.json",
+        "sha256": "9c9b7261d8d21db608561e13609f1a154589074ff3917a17a98f202e7b283195"
+      },
+      {
+        "lines": 18,
+        "path": "decompose-beads-publication-gate.json",
+        "sha256": "1a842f3d56c10669dbb0a2b20a10d2bdbf663461e1b8cb55de6a7c4cf5e0eac9"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-run-binding.json",
+        "sha256": "22a0ddb92a57dc91d330a745aac8d406a77eee31b33460e670d4c0025d8e206d"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-run-binding-attested.json",
+        "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-run-mode.json",
+        "sha256": "8e9d3598142fe2beff96f3741c435c282dc227de5301a73570027bdf6381d97e"
+      },
+      {
+        "lines": 4,
+        "path": "decompose-beads-run-mode-checks.json",
+        "sha256": "3b22613a972f0102d8fa2f2fcda5d595c832a868de49cc1e3f3af29f4f11039a"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-scenario-id.json",
+        "sha256": "283eb861c3f06f766e1867d58cc6f93174ab6d891d22d925ae6d4600090621ae"
+      },
+      {
+        "lines": 25,
+        "path": "decompose-beads-schema-validation.json",
+        "sha256": "585ffc06b1147cd34c231d2a3df8ce73892a87216b7cab8fc9e852c3b4304991"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-beads-write-count-source.json",
+        "sha256": "52e6c3484cdf6f3bff27b0f7c4501a4e98f88e98cfc48a6cfdba1c1b04c87ad1"
+      }
+    ],
+    "none": [
+      {
+        "lines": 5,
+        "path": "decompose-none-adapter-mutation-suppression.json",
+        "sha256": "c215d0d38816194f2193c9f68d7c142c2349e45b9afd02af9068e6ea909ed474"
+      },
+      {
+        "lines": 50,
+        "path": "decompose-none-audit-implementation.json",
+        "sha256": "60bf40b614c3970127c1fa3f16d7d0e8a529dd8380c07ca0fe75bdea2f31c369"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-binding-observations-distinct.json",
+        "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+      },
+      {
+        "lines": 380,
+        "path": "decompose-none-binding-projections.json",
+        "sha256": "c331f4064f6d9ce5b817a937a71c6b32b46d05b1d610f3af270dc46b2e1b9a83"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-binding-source.json",
+        "sha256": "d9ca529463bdba27e492cee3b23041f7d1c2955d7b4a5bd90cb70c6f44e1a1f9"
+      },
+      {
+        "lines": 6,
+        "path": "decompose-none-derived-write-counts.json",
+        "sha256": "dd3c4848cb067e1bb135051df6d0151ce3746a570e8969b7cbe8c2bcb3c88a45"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-draft-publication-zero.json",
+        "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+      },
+      {
+        "lines": 45,
+        "path": "decompose-none-evidence-binding.json",
+        "sha256": "7de594dd62720c8d2a51e291008d786b0c8d15074a985f585e385ca0f2073496"
+      },
+      {
+        "lines": 50,
+        "path": "decompose-none-gate-negative-controls.json",
+        "sha256": "c118b89a073dc10c665a665988d26a514599aa62bf36ac9905148559df9b4c9a"
+      },
+      {
+        "lines": 17,
+        "path": "decompose-none-graph.json",
+        "sha256": "3485aa41eca35d5953cb79962d96b2951611fc14815ad64b847ac165d1780c0e"
+      },
+      {
+        "lines": 261,
+        "path": "decompose-none-local-state.json",
+        "sha256": "ea7ec98668caab6136a2931cf926710325e94461700fa8a0ba8b174462f63da3"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-pass.json",
+        "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+      },
+      {
+        "lines": 9,
+        "path": "decompose-none-persisted-bindings.json",
+        "sha256": "4ca6fabfd8047569aa0c512b49828949863f79bcf71cc6cea52879dc180d6822"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-preview.json",
+        "sha256": "b9fda7a1f2f5e7fa9eec4a9432452ab125e778c061164335cc6b6687bd9c8063"
+      },
+      {
+        "lines": 6,
+        "path": "decompose-none-preview-consistency.json",
+        "sha256": "e3d5e6405cd2eaa94e8d97c531956ca06b52f7f1a0c602ef562517f6d193f48a"
+      },
+      {
+        "lines": 100,
+        "path": "decompose-none-publication-decisions.json",
+        "sha256": "b1d205e4032885f3999f2bb279769d673c8332e499c0882c85db789c2f463b9b"
+      },
+      {
+        "lines": 18,
+        "path": "decompose-none-publication-gate.json",
+        "sha256": "1a842f3d56c10669dbb0a2b20a10d2bdbf663461e1b8cb55de6a7c4cf5e0eac9"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-run-binding.json",
+        "sha256": "b9ca9244fa4639a7ad1b0be4d9ffbf905e7ddea75162e98611b5f0f6f1e168a8"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-run-binding-attested.json",
+        "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-run-mode.json",
+        "sha256": "8e9d3598142fe2beff96f3741c435c282dc227de5301a73570027bdf6381d97e"
+      },
+      {
+        "lines": 4,
+        "path": "decompose-none-run-mode-checks.json",
+        "sha256": "3b22613a972f0102d8fa2f2fcda5d595c832a868de49cc1e3f3af29f4f11039a"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-scenario-id.json",
+        "sha256": "283eb861c3f06f766e1867d58cc6f93174ab6d891d22d925ae6d4600090621ae"
+      },
+      {
+        "lines": 25,
+        "path": "decompose-none-schema-validation.json",
+        "sha256": "bc1b6c204bc95a7d234d5a294cea342c23fb17fe944b592575171e560d7866bb"
+      },
+      {
+        "lines": 1,
+        "path": "decompose-none-write-count-source.json",
+        "sha256": "52e6c3484cdf6f3bff27b0f7c4501a4e98f88e98cfc48a6cfdba1c1b04c87ad1"
+      }
+    ]
+  },
+  "schema_version": 1
+}
