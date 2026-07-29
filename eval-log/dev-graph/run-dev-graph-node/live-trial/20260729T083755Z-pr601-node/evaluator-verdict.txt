@@ -1,0 +1,4 @@
+FAIL
+Blockers:
+- The session replaced the protected fixture .dev-graph/config.json through rsync instead of the canonical build-repo-config.py path.
+- The target scenario did not complete.

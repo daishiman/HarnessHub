@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T02:29:49Z",
+  "evaluator": "fresh-agent/eval_bk8v_decompose_r3",
+  "scenario": "C14-OUT1-positive-macro-decomposition-r2",
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json",
+    "../../../live-trial-fixtures/bk8v-decompose-r3/eval-log"
+  ]
+}

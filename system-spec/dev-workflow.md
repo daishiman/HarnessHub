@@ -54,6 +54,21 @@ serves_goals: [G1, G4, G5]
 
 **回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 と qa-090 のローカル開発契約を全面維持し、Dev Graph C11 の artifact 本文検査を追補する。C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が各 artifact kind に定める required section の内容を canonical template と照合する。節本文が空、canonical template の angle-bracket placeholder を残す、または本文全体が TBD / TODO / 未定だけの場合は placeholder_only_section として implementation_readiness=incomplete にし、該当節名を missing_sections へ列挙する。architecture のように親節が構造 container である場合は substantive な必須 child section を含めば親節を未記入扱いしない。C02 upsert は生成後に同じ C11 を通すため、本文なしの新規 template 生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。一方、既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。全 artifact kind の canonical template、実内容、見出しだけへ潰した mutation を回帰テストで固定する。本契約は repository 内の Dev Graph readiness、tracker 投影、system build handoff に限定し、Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
+### 実装反映注記 (2026-07-29 / `HarnessHub-bk8v`)
+
+dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、
+`status`、`confirmation_status`、`evaluation_status`、
+`implementation_readiness.status` の後退を stale before-image として拒否する。
+拒否は dry-run / apply の双方で無変更かつ fail-closed とし、意図的な再評価は
+変更フィールドを列挙した明示 patch に限る。
+
+これは qa-088 / qa-090 の開発フローを安全に実行する内部整合性ガードであり、
+確定済み QA の回答、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は
+変更しない。実装契約の正本は
+`plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は
+`docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
+とする。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

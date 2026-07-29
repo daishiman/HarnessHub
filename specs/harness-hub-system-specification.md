@@ -189,6 +189,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
   を正とする。
 
+**開発管理整合性の反映 (2026-07-29 / `HarnessHub-bk8v`)**:
+
+- dev-graph C02 は、昇格済み feature へ古い full snapshot が再送されても lifecycle を
+  暗黙に後退させない。stale before-image は dry-run / apply とも無変更で拒否し、
+  意図的な再評価は変更フィールドを列挙した明示 patch に限定する。
+- 反映対象は repository 内の開発管理契約である。Harness Hub 製品の外部 API、
+  DB schema、認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 実装契約、設計判断、検証結果の対応は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
+  を正とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)

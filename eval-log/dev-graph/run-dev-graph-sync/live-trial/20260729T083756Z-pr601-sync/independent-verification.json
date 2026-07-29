@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T08:47:00Z",
+  "evaluator": "fresh-agent/fresh_c03_pr601_evaluator",
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json"
+  ]
+}

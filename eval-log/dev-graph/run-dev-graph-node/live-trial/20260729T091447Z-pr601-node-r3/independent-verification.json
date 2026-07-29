@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T09:27:00Z",
+  "evaluator": "fresh-agent/fresh_c02_pr601_r3_evaluator",
+  "scenario": "C02-OUT1-positive-mixed-artifacts",
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "verdict": "FAIL",
+  "blockers": [
+    "progress.json omits checklist evidence",
+    "CL1 through CL5 remain pending without evidence in goal-spec.json"
+  ],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json"
+  ]
+}

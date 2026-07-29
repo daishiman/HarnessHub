@@ -285,13 +285,10 @@ owner PID の代用品にせず、boot の READY 出力をそのまま cleanup �
 全 session の回収は通常フローから分離した明示 `--all` だけに許可する。
 fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠とする。
 
-### 差分追記 (2026-07-29): C11 artifact 本文 readiness 境界
+### 差分追記 (2026-07-29): C02/C11 の安全境界
 
-出典: system-spec `qa-092`、bd `HarnessHub-4t9g`。
-
-C11 は frontmatter・見出し・placeholder だけの artifact を
-`implementation_readiness=incomplete` とし、tracker 投影と system build handoff を止める。
-C02 upsert は artifact 書込後に同じ検査を行い、template-only 本文への新規作成・再生成を
-graph と artifact の transaction rollback で取り消す。判定表、互換移行、検証証跡は
-[C11 artifact 本文 readiness 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
-を正とし、本 architecture へ複製しない。
+- C11 は frontmatter・見出し・placeholder だけの artifact を incomplete とし、後段を止める。
+  詳細は [C11 readiness 受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)。
+- C02 は stale full snapshot による feature lifecycle 後退を無変更で拒否する。
+  詳細は [C02 lifecycle 受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)。
+- いずれも repository 内の開発管理 graph に限定し、製品 runtime 契約は変更しない。

@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS",
+  "reviewer": "fresh-c14-evaluator-20260729",
+  "blockers": [],
+  "fixture": "eval-log/dev-graph/live-trial-fixtures/bk8v-final-r5-none",
+  "checks": {
+    "graph": {
+      "revision": 6,
+      "node_count": 5,
+      "feature_count": 4,
+      "architecture_count": 1,
+      "task_count": 0,
+      "edge_count": 3,
+      "acyclic": true,
+      "measured_max_inter_feature_depends_on": 1,
+      "declared_max": 3
+    },
+    "binding": {
+      "persisted": "none",
+      "run_binding_attested": true
+    },
+    "promoted_evidence": {
+      "graph_node_id": "feat-user-auth-001",
+      "declared_digest": "0329806891f63070181fdc435e76c3a3db6e95df7723ad3c7d4c7d796fa537d0",
+      "recomputed_digest": "0329806891f63070181fdc435e76c3a3db6e95df7723ad3c7d4c7d796fa537d0",
+      "matches": true,
+      "recipe": "sha256 of final node canonical JSON excluding only confirmation_evidence"
+    },
+    "audit": {
+      "pass": true,
+      "evidence_all_bound": true,
+      "negative_controls_all_rejected": true,
+      "preview_consistent": true,
+      "structural_contract_valid": true
+    },
+    "scenario": {
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+      "required_observations": "7/7",
+      "task_contract_match": true,
+      "nudge_count": 0,
+      "gate_response_count": 0
+    }
+  },
+  "note": "The evaluator independently read the final graph, transcript, audit evidence, task contract, and goal-seek artifacts; no file was modified during evaluation."
+}

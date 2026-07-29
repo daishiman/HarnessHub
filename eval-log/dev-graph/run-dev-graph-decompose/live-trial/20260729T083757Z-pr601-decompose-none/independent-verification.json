@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T09:09:00Z",
+  "evaluator": "fresh-agent/fresh_c14_pr601_evaluator",
+  "scenario": "C14-OUT1-positive-macro-decomposition-r7",
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "verdict": "FAIL",
+  "blockers": [
+    "paired beads run was absent from the evaluator evidence set",
+    "second skill pass rejected the promoted node stale before-image instead of all-node no-op convergence",
+    "all distinct write-count dimensions were not independently established"
+  ],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json",
+    "evidence/decompose-audit.json"
+  ]
+}
