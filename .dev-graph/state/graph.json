@@ -1,5 +1,5 @@
 {
-  "graph_revision": 976,
+  "graph_revision": 977,
   "nodes": [
     {
       "acceptance": [
@@ -33947,9 +33947,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"
+        "evaluated_digest": "926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -33968,7 +33968,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-076/qa-077/qa-078/qa-079/qa-080/qa-081 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・失敗時改善ループの指針を提供する",
+      "goal": "qa-076/qa-077/qa-078/qa-079/qa-080/qa-081/qa-089 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・再利用可能な live-trial 証拠・失敗時改善ループの指針を提供する",
       "graph_node_id": "arch-harness-hub-testing-qa",
       "implementation_readiness": {
         "checked_at": "2026-07-24T12:35:34Z",
@@ -34005,9 +34005,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-24T12:35:34Z",
+        "imported_at": "2026-07-28T22:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d",
+        "source_digest": "926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34023,7 +34023,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-24T12:35:34Z"
+      "updated_at": "2026-07-28T22:00:00Z"
     },
     {
       "acceptance": [

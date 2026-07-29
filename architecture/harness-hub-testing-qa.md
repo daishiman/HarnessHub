@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-07-24T12:35:34Z"
+updated_at: "2026-07-28T22:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
 resource_scope: ["architecture/harness-hub-testing-qa.md"]
 purpose: "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅 (単体・結合・境界値・回帰)、カバレッジ 80% 品質ゲートと改善ループ、FE/BE/インフラ層別テスト方針、behavior ベースの保守しやすい UI テスト、タスク仕様書へのテスト戦略の冪等組込 — を dev-graph から参照する"
-goal: "qa-076/qa-077/qa-078/qa-079/qa-080/qa-081 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・失敗時改善ループの指針を提供する"
+goal: "qa-076/qa-077/qa-078/qa-079/qa-080/qa-081/qa-089 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・再利用可能な live-trial 証拠・失敗時改善ループの指針を提供する"
 scope_in: ["system-spec/testing-qa.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"}
-source_lineage: {"imported_at":"2026-07-24T12:35:34Z","origin_kind":"system-spec-harness","source_digest":"39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md"}
+source_lineage: {"imported_at":"2026-07-28T22:00:00Z","origin_kind":"system-spec-harness","source_digest":"926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `fd302fb5f8f8…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `926f62d923b0…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json`)
-- 取込日時: 2026-07-24T12:35:34Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `codex-final-review` → **PASS** (`docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md`)
+- 取込日時: 2026-07-28T22:00:00Z / plugin: system-spec-harness v0.1.0
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 
@@ -66,6 +66,12 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 - **冪等な仕組み化 (qa-079/qa-081)**: テスト戦略セクションをタスク仕様書テンプレート必須項目とし、system-dev-planner の task spec 必須 section 契約で機械検証、欠落は fail-closed で拒否。
 - **platform 境界 (qa-080)**: CI 実行=web 行、作者ローカル実行=desktop-windows/desktop-macos 行。mobile/tablet/desktop-linux は対象外。
 - **ツール確定 (D8)**: Vitest (単体・結合) + Playwright (E2E) + @testing-library/react (UI コンポーネント、behavior ベース) の 3 点構成。
+- **実走証拠の完全性 (qa-089)**: live-trial の PASS は scenario 正本・全 observation・実引数・task.md の必須/禁止手順・transcript digest・挙動閉包 SHA を束縛し、observation の evidence ref を run 内の実在ファイルへ閉じ込める。再利用 planner は scenario ID の変更だけでなく削除も失効として扱う。
+- **実測アーキテクチャ (qa-089)**: publication/write は pre/post state、binding は永続 graph から導出する。draft gate と candidate adapter dry-run のゼロ帰属を分離する。昇格済み node の `confirmation_evidence.evaluated_digest` は、最終 persisted node から自己参照 field だけを除いた正準 JSON の SHA-256 と突合する。監査 module と scenario 契約全体の composite provenance、同一 graph を壊して正準 validator の拒否節まで確認する negative control を品質ゲートにする。
+
+## 2026-07-29 実装反映
+
+`HarnessHub-9ndl` / `HarnessHub-dyxr` で上記境界を `run-skill-live-trial` と C14 decompose 監査へ実装した。製品 API・DB・認証認可・UI・deploy unit への影響は無く、設計影響は開発品質ゲートの証拠経路に限定される。反映と検証の対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) を参照する。
 
 ## 上流指針 (doctrine anchor)
 

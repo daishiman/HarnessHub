@@ -1,12 +1,14 @@
 """dev-graph plugin テストの共有 fixture。
 
-現状の利用者は lint-orphan-external-ref の 2 ファイルで、実装側の分離軸と 1:1 で対応する。
+lint-orphan-external-ref の共有疑似 repo と、C14 decompose 監査テストの hermetic bd
+preflight（外部 CLI を入れないテスト用の事前確認）を提供する。
 
   test_lint_orphan_external_ref.py      -> lib/orphan_external_ref.py     (検査ロジック)
   test_lint_orphan_external_ref_cli.py  -> scripts/lint-orphan-external-ref.py (CLI 契約)
 
-両者は同じ疑似 repo 構築を必要とするため、ヘルパを各ファイルへ複製せずここへ置く。
-fixture は要求したテストでしか評価されないので、同ディレクトリの他テストには影響しない。
+orphan lint の 2 ファイルは同じ疑似 repo 構築を必要とするため、ヘルパを複製せずここへ
+置く。C14 用 autouse fixture は対象 3 ファイルを名前で限定し、同ディレクトリの他テスト
+には影響しない。
 """
 from __future__ import annotations
 
@@ -15,6 +17,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Generator
 
 import pytest
 
@@ -25,6 +28,49 @@ REPO_ROOT = PLUGIN.parents[1]
 # 本番 baseline の縮小 (= 正しい変化) でテストが壊れないようにするため。借りると
 # テストが縮小の抑止力として働いてしまい、shrink-only ratchet の目的と衝突する。
 BASELINED = "issue-known-orphan-fixture"
+DECOMPOSE_AUDIT_TESTS = {
+    "test_decompose_live_trial_audit.py",
+    "test_decompose_live_trial_binding_audit.py",
+    "test_decompose_live_trial_integrity.py",
+}
+
+
+@pytest.fixture(autouse=True)
+def hermetic_bd_for_decompose_audit(
+    request: pytest.FixtureRequest,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path_factory: pytest.TempPathFactory,
+) -> Generator[None, None, None]:
+    """C14 監査テストの dry-run preflight を system bd の有無から分離する。
+
+    監査は beads route の候補を ``bd-bridge.py --dry-run`` で観測するため、bridge が
+    ``bd version`` と ``bd where --json`` を preflight する。本番 live-trial は実 bd を
+    使うが、CI runner に bd をインストールする必要はない。対象テストだけに read-only
+    preflight 応答を返す stub を注入し、create/update などへ到達したら fail-closed にする。
+    """
+    if Path(str(request.node.path)).name not in DECOMPOSE_AUDIT_TESTS:
+        yield
+        return
+
+    stub_root = tmp_path_factory.mktemp("decompose-audit-bd")
+    stub = stub_root / "bd"
+    stub.write_text(
+        "#!/usr/bin/env python3\n"
+        "import json\n"
+        "import sys\n"
+        "args = sys.argv[1:]\n"
+        "if args == ['version']:\n"
+        "    print('bd version 1.1.0')\n"
+        "elif args == ['where', '--json']:\n"
+        f"    print(json.dumps({json.dumps({'database_path': str(stub_root / 'database'), 'prefix': 'Fixture', 'schema_version': '1'})}))\n"
+        "else:\n"
+        "    print(f'hermetic bd forbids mutation: {args}', file=sys.stderr)\n"
+        "    raise SystemExit(2)\n",
+        encoding="utf-8",
+    )
+    stub.chmod(0o755)
+    monkeypatch.setenv("DEV_GRAPH_BD", str(stub))
+    yield
 
 
 class OrphanLintHarness:
