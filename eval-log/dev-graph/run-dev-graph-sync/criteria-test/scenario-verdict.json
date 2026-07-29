@@ -7,7 +7,7 @@
     "skill_md_sha256": "29baae336110074cb542880cb8641858eab6fa9f0f25edade6c227e0896e8fa0"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-goal-evaluator-mfh7-20260726",
+  "reviewer": "fresh-independent-evaluator-20260729T021400Z-lp36-sync",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,14 +27,23 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T083756Z-pr601-sync/verdict.json",
       "test_refs": [
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/transcript.jsonl",
         "independent: eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T013603Z-lp36-sync-final/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T013603Z-lp36-sync-final/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T013603Z-lp36-sync-final/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T013603Z-lp36-sync-final/evaluator-verdict.txt",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T083756Z-pr601-sync/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T083756Z-pr601-sync/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T083756Z-pr601-sync/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T083756Z-pr601-sync/evaluator-verdict.txt",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T083756Z-pr601-sync/independent-verification.json"
       ],
-      "observed": "2026-07-29 fresh live trial PASS (run 20260729T012501Z-bk8v-sync, nudge=0, gate=0, poll DONE 285s)。Skill ツールを実起動し、初回 sync が実際の delta を適用した後、2 回目 sync が changes=0 / converged=true / write_count=0 となり、graph・remote・snapshot の SHA-256 が before/after 一致することを実測した。goal-seek 3 点セットも成立し、fresh evaluator は PASS / blockers=[]。今回変更した upsert-node.py を含む現行 behavior closure digest に対して verdict を機械生成した。"
+      "observed": "2026-07-29 conflict-resolution fresh live trial PASS (run 20260729T083756Z-pr601-sync, nudge=0, gate=0, poll DONE 390s)。Skill ツールを実起動し、初回 sync が実際の import/export delta を適用した後、2 回目 sync が imports changes=0 / exports changes=0 へ収束し、stable IDs と snapshots が不変であることを実測した。goal-seek evidence violations=0、required observations 3/3、args flags 一致、fresh evaluator は PASS / blockers=[]。current behavior closure digest=6b691720cf7890376c2e103db67bce223ff0fb6bb83ac41d3faa599b8648dcca。先行 PR run と main 側 fresh run の参照も競合解消時に保持した。"
     },
     "OUT2": {
       "status": "PASS",

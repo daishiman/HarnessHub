@@ -7,7 +7,7 @@
     "skill_md_sha256": "3749ff518403e2b48d02aeb7f3dd5aa3567331426db1850de75d3ab5db994bd1"
   },
   "verdict": "PASS",
-  "reviewer": "independent-live-goal-evaluator-c02-live-goal-eval-20260726",
+  "reviewer": "fresh-independent-evaluator-20260729T020800Z-lp36-node",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -18,23 +18,34 @@
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_validate_graph_schema_and_main",
         "plugins/dev-graph/tests/test_register_package.py::RegisterPackageInProcessCoverageTest::test_schema_engine_covers_ref_condition_arrays_and_objects",
-        "independent: python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root ."
+        "independent: python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph eval-log/dev-graph/live-trial-fixtures/r3-init/.dev-graph/state/graph.json"
       ],
-      "observed": "validate-graph-schema.py returned exit 0 with valid=true and violations=[] on the final 330-node repository graph. The focused C02 schema, registration, residue, and body-preservation suites also passed."
+      "observed": "validate-graph-schema.py returned exit 0 with valid=true, violations=[] on a schema-complete graph store (0 missing required keys). The C02 single-writer write path runs the same graph-node schema engine before atomic replace; the register-package schema-engine and runtime schema pytest nodes passed."
     },
     "OUT1": {
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T092856Z-pr601-node-r4/verdict.json",
       "test_refs": [
         "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
         "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/transcript.jsonl",
         "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T014800Z-lp36-node-final-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T014800Z-lp36-node-final-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T014800Z-lp36-node-final-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T014800Z-lp36-node-final-r2/evaluator-verdict.txt",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T014800Z-lp36-node-final-r2/pane.txt",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T092856Z-pr601-node-r4/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T092856Z-pr601-node-r4/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T092856Z-pr601-node-r4/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T092856Z-pr601-node-r4/evaluator-verdict.txt",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T092856Z-pr601-node-r4/independent-verification.json",
+        "plugins/dev-graph/tests/test_operational_loop_v2.py::test_node_upsert_is_atomic_idempotent_and_patchable"
       ],
-      "observed": "2026-07-29 fresh live trial PASS (run 20260729T012500Z-bk8v-node, nudge=0, gate=0, poll DONE 555s)。Skill ツールを実起動し、5 artifact kind の canonical path 登録、既存 Markdown 本文保持、2 種類の連続更新が operation=updated、feature 直接登録の fail-closed と write 0、goal-seek 3 点セットを実測した。fresh evaluator は PASS / blockers=[]。今回変更した upsert-node.py を含む現行 behavior closure digest に対して verdict を機械生成した。"
+      "observed": "2026-07-29 conflict-resolution fresh live trial PASS (run 20260729T092856Z-pr601-node-r4, nudge=0, gate=0, poll DONE 495s)。Skill ツールを実起動し、5 artifact kind を自動分類して canonical path へ登録し、入力本文の全体が各 Markdown に連続保持され、初回 receipt 5 件すべて body_source=from_input であることを独立再検証した。issue/specification の実差分更新は revision 5→6→7、operation=updated、本文保持へ収束し、feature 直接登録は fail-closed / write_count=0。goal-spec は不変、progress の CL1..CL5 と OUT1 は全て PASS かつ pending/null evidence=0。fresh evaluator は PASS / blockers=[]、current behavior closure digest=ae714d1df079e616e0f1fca696dce632e9a4425f6da9f58f4e58232233cbc9e9。先行 PR run と main 側 fresh run の参照も競合解消時に保持した。"
     },
     "OUT2": {
       "status": "PASS",
@@ -44,7 +55,7 @@
         "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause",
         "independent: eval-log/dev-graph/live-trial-fixtures/r3-node/architecture/R3-ARCH-001.md + specs/R3-SPEC-001.md heading inspection"
       ],
-      "observed": "R3-ARCH-001 contains the required backend and security subtype section trees; R3-SPEC-001 contains the API-contract overlay and endpoint request/response/error/test sections. The dedicated acceptance-clause contract test passed."
+      "observed": "R3-ARCH-001 (artifact_subtypes [backend, security]) contains both required subtype section trees '### Backend architecture' and '### Security architecture' with 0 missing headings; R3-SPEC-001 (subtype api) applied the '## API契約' api-contract overlay with per-endpoint Request/Response/Error contract/Contract tests sections. The OUT2 acceptance-clause contract test passed."
     },
     "OUT3": {
       "status": "PASS",
@@ -56,7 +67,7 @@
         "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_rejects_non_forward_dependency",
         "plugins/dev-graph/tests/test_register_package.py::RegisterPackageTest::test_rejects_conflicting_duplicate_registration"
       ],
-      "observed": "test_register_package.py passed in full. The exact-13 happy path produces expected_count=applied_count=13 with P01..P13 and graph revision evidence; partial, duplicate, non-forward, mixed, and cross-feature inputs remain all-or-none failures. Local-only package binding now normalizes unreachable PR-linked completion policies to manual without changing GitHub-bound policies."
+      "observed": "test_register_package.py passed in full (34 tests across both suites). The exact-13 happy path commits expected_count=applied_count=13 with a P01..P13 node exact-set and a graph_revision receipt; partial batches, non-forward/cross-feature or phase-omitting dependencies, and conflicting duplicate registrations each commit applied_count=0 (all-or-none), and --dry-run writes nothing."
     }
   }
 }

@@ -17,13 +17,15 @@ parent_feature: feat-dev-pipeline-improvement
 
 ## 結論
 
-Harness Hub 製品の仕様・設計への影響は **なし** と判定した。変更は dev-graph plugin
-内部の C02 再試行契約を強化する不具合修正であり、製品 API、DB、認証認可、UI、
-Cloudflare deploy unit、運用 SLO を変更しない。
+Harness Hub **製品**の仕様・設計への影響は **なし** と判定した。一方、
+repository 内の**開発管理仕様・設計**には影響があるため、C02 再試行の安全境界を
+`system-spec/`、`specs/`、`architecture/`、`tasks/` の正規書き戻し先へ反映した。
+製品 API、DB、認証認可、UI、Cloudflare deploy unit、運用 SLO は変更しない。
 
-plugin 契約への影響はあり、正本
-`plugins/dev-graph/references/execution-tracker-contract.md` へ反映した。製品仕様層へ同じ契約を
-複製すると二重正本になるため、下表の層は理由を記録したうえで非変更とした。
+plugin の実行契約は
+`plugins/dev-graph/references/execution-tracker-contract.md` を正本とする。
+上位文書にはアルゴリズムを複製せず、開発フローの安全境界、architecture 上の責務、
+P13 書き戻し、製品仕様非変更の trace だけを記録した。
 
 ## 層別確認
 
@@ -33,10 +35,10 @@ plugin 契約への影響はあり、正本
 | `docs/` | あり | 本受領書と最終レビューに変更理由・検証・運用上の区別を記録 |
 | `features/` | あり | 親 feature に follow-up の解消と正本リンクを C02 writer 経由で追記 |
 | `issues/` | あり | standalone issue に受入条件・実装結果・品質証跡を記録 |
-| `tasks/` | なし | exact-13 phase の goal・acceptance・実行順は不変。promoted task spec の手編集は source integrity を壊すため行わない |
-| `system-spec/` | なし | 製品要求、外部から観測できる振る舞い、運用 SLO の追加・変更なし |
-| `specs/` | なし | Harness Hub 製品仕様へ追加する外部契約なし |
-| `architecture/` | なし | C02 単一 writer、C14→C02 データフロー、component 境界、deploy unit は不変 |
+| `tasks/` | あり | P13 の仕様・architecture 書き戻し記録へ本修正の完了 trace と製品非影響を追記 |
+| `system-spec/` | あり | `dev-workflow.md` に C02 lifecycle 単調前進ガードを実装反映注記として記録 |
+| `specs/` | あり | 集約仕様に開発管理整合性の反映と製品 runtime 非変更を記録 |
+| `architecture/` | あり | C14 の最新 persisted node 再読込と C02 の stale before-image 拒否という二層境界を記録 |
 
 ## 技術的な判断根拠
 
@@ -51,17 +53,21 @@ fail-closed（安全側に停止）にする。feature 以外の artifact kind �
 
 - focused pytest: lifecycle 単独 4 フィールド × 2 入力形式、正の対照、
   feature 以外、明示 patch を含め PASS
-- Dev Graph plugin pytest: main 統合後の current criteria receipt で PASS
+- Dev Graph plugin pytest: main 統合・競合解消後 713 passed / 2 skipped /
+  5 subtests passed
 - task 仕様書: `feature-package/feat-dev-pipeline-improvement` の P01〜P13 exact set、
   digest `af8a73df…`、violations 0
 - graph schema: valid、violations 0
-- live-trial planner: C02 node / C03 sync は既存 current PASS を再利用し、C14 だけを再実走
-- C14 fresh live-trial:
-  `20260729T054655Z-bk8v-final-r5-none` が launch / completion / goal_fit 全て PASS、
-  required observations 7/7、nudge 0、gate 0
+- live-trial: main 統合後の current behavior closure で C02 / C03 / C14 を再実走。
+  C02 / C03 は fresh evaluator PASS。C14 は
+  `20260729T101543Z-pr601-decompose-paired-r4` で beads / none を同一 closure 上に
+  paired 実走し、各 binding 2 回、合計 4 回の Skill 呼出し、全 5 node の最終
+  `operation=noop` / `write_count=0`、nudge=0 / gate=0、fresh evaluator PASS を確認
+- repository CI: PASS 123 / WARN 4 / FAIL 0。4 warning は段階導入中の既存 plugin
+  completeness / rubric reference 検査で、本変更の blocking failure ではない
 
-先行 r4 は tool result 後の transcript 無進行が延長上限へ達したため FAIL として採用せず、
-新 fixture・新 session の r5 を取得した。
+停止・介入・古い closure などで不採用になった先行 trial は失敗証跡として残し、最終受入参照は
+介入なしで完走した fresh run だけへ更新した。
 
 ## 500 行確認
 
@@ -69,5 +75,5 @@ fail-closed（安全側に停止）にする。feature 以外の artifact kind �
 `.dev-graph/state/graph.json` は構造化された単一正本、live-trial transcript は機械生成の
 一次証拠であり、意味単位に分割すると参照 digest と原記録の完全性を壊すため分割対象外とした。
 
-PR 作成直前に `scripts/build-spec-reflection-receipt.py --spec-impact none` を実行し、
-この判断を最終 branch と HEAD に束縛する。
+PR 更新直前に `scripts/build-spec-reflection-receipt.py --spec-impact reflected` を実行し、
+仕様 path の実差分とこの判断を最終 branch / HEAD に束縛する。

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 982,
+  "graph_revision": 987,
   "nodes": [
     {
       "acceptance": [
@@ -621,7 +621,7 @@
       "source_lineage": {
         "imported_at": "2026-07-26T06:10:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "37f83d648993da8f6b69ced5aca0d2cecd5d05dcb94c29ddbfd9dfce86642a55",
+        "source_digest": "a74473d62712ab66f503f345e46b8f8e74cae30574b91aa05d1d3f0d4c06445e",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-26T06:10:00Z"
+      "updated_at": "2026-07-29T06:15:35.564276Z"
     },
     {
       "acceptance": [
@@ -843,7 +843,7 @@
       "source_lineage": {
         "imported_at": "2026-07-25T21:18:40Z",
         "origin_kind": "generated",
-        "source_digest": "2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c",
+        "source_digest": "e8a7f9308f00bcaa6e7d7df9f623cf3649d15c9f2242c18b31f0336ad8ce3dc9",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -860,7 +860,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T21:18:40Z"
+      "updated_at": "2026-07-29T06:15:52.997834Z"
     },
     {
       "acceptance": [
@@ -36343,11 +36343,14 @@
     },
     {
       "acceptance": [
-        "backup.yml が deploy token を参照しておらず、R2 write 権限のみを持つ token で完走する",
+        "backup.yml と production smoke が CLOUDFLARE_R2_API_TOKEN、deploy / rollback が CLOUDFLARE_API_TOKEN だけを参照し、静的ゲートが相互利用を拒否する",
+        "R2 専用 token で hub-backup と production smoke が完走する",
         "deploy 用 token で R2 バケットへ書き込もうとすると権限エラーになることを実測する",
-        "docs/infrastructure-spec.md §7 の残存リスク節から本 issue の未達記述が消えている"
+        "docs/infrastructure-spec.md §7 と system-spec/infrastructure.md qa-091 が分離設計と外部実測待ちの境界を記録している"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -36414,18 +36417,29 @@
       "pull_request_linkages": [],
       "purpose": "CI/CD の Cloudflare token が漏洩した場合の影響範囲を、Workers deploy と R2 write のどちらか一方に閉じ込める",
       "related_nodes": [
+        "SYS-HUB-FOUNDATION-P13",
         "SYS-DOMAIN-MODEL-DB-P13"
       ],
       "resource_scope": [
         ".github/workflows/backup.yml",
-        "docs/features/feat-hub-foundation/runbook.md"
+        ".github/workflows/ci.yml",
+        "apps/hub/tests/ci/actions-secrets.test.ts",
+        "scripts/ci/actions-secrets-registry.json",
+        "docs/infrastructure-spec.md",
+        "docs/features/feat-hub-foundation/",
+        "docs/features/feat-domain-model-db/release-record.md",
+        "system-spec/",
+        "features/feat-hub-foundation.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-infrastructure.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
+        "issues/ci-token-least-privilege-20260725.md"
       ],
       "scope_in": [
-        "Cloudflare API token を deploy 用 (Workers Scripts Edit) と backup 用 (R2 Write に限定) の 2 本へ分割発行",
-        "backup.yml の CLOUDFLARE_API_TOKEN 参照を R2 専用 secret 名へ差し替え",
-        "docs/infrastructure-spec.md §7 の secret 台帳と残存リスク節の更新",
-        "docs/features/feat-hub-foundation/runbook.md の secret 投入手順の更新",
-        "分割後に hub-backup を手動 dispatch して 1 回 green を実測"
+        "Cloudflare API token を deploy / rollback 用 Workers Scripts Edit と backup / production smoke 用 Workers R2 Storage Write の 2 本へ分離する",
+        "workflow と Actions secret 台帳を用途別 token 参照へ更新し、相互利用を静的テストで拒否する",
+        "infrastructure.web の credential 境界を正規 system-spec フローで qa-091 として反映する",
+        "Cloudflare token 発行と GitHub Secrets 投入後に --live 検査、拒否系、backup / production smoke の完走を実測する"
       ],
       "scope_out": [
         "Turso token の分割 (DB 接続 token と Platform API token は既に分離済み)",
@@ -36435,7 +36449,7 @@
       "source_lineage": {
         "imported_at": "2026-07-25T05:50:00Z",
         "origin_kind": "generated",
-        "source_digest": "a3ff8e3653e08fdd5d1f62d199b0b054aedf7a0c31ca8694fb3e3694862f4c22",
+        "source_digest": "f5e7935b007bb51d75b2209bd5b11ac87b02b4b9bf50ce8c438a5830b52f7f57",
         "source_path": "docs/features/feat-domain-model-db/release-record.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -36453,9 +36467,9 @@
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "CLOUDFLARE_API_TOKEN 1 本を deploy と R2 write で共用しており最小権限分離が未達",
+      "title": "Cloudflare deploy token と R2 token を分離し外部検証を完了する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T06:40:00Z"
+      "updated_at": "2026-07-29T06:16:12.710038Z"
     },
     {
       "acceptance": [
@@ -37382,7 +37396,9 @@
         "open(<graph authority>, 'r+') と 'w' / 'a' / 'x' が BLOCK のまま維持される",
         "pytest plugins/dev-graph/tests が 0 failed (修正後の closure に対する live-trial 再取得を含む)"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -37400,25 +37416,29 @@
       "classification_confidence": 0.95,
       "classification_reason": "hook 本体を import した静的 probe で 7 形の判定を実測し、live-trial transcript で pathlib write_text 形の素通りを実観測した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-29T04:14:11Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260729T042000Z-lp36-system-spec-hook-final-r4/verdict.json",
+          "docs/features/feat-dev-pipeline-improvement/final-review-20260726.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-29T04:14:11Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "edd14af39a3983f5725340b6e1901992c7ecae531c1b4096b5083b4f649c79ec",
+        "evaluator": "user-request-2026-07-29",
+        "evidence_ref": "HarnessHub-lp36"
       },
-      "confirmation_status": "draft",
+      "confirmation_status": "confirmed",
       "created_at": "2026-07-25T22:22:01Z",
       "depends_on": [
         "issue-guard-fix-closure-verdict-refresh-20260726"
       ],
       "domain": "quality",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/sys-guard-graph-schema-interpreter-write-coverage-20260726.md",
@@ -37453,7 +37473,11 @@
       ],
       "resource_scope": [
         "plugins/dev-graph/hooks/guard-graph-schema.py",
-        "plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py"
+        "plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py",
+        "plugins/dev-graph/references/claude-code-hooks-contract.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "docs/features/feat-dev-pipeline-improvement/final-review-20260726.md"
       ],
       "scope_in": [
         "INTERPRETER_WRITE の書込み API 集合の拡張 (write_text / write_bytes / shutil.copy* / shutil.move / os.replace / os.rename / json.dump)",
@@ -37475,7 +37499,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -37490,7 +37514,7 @@
       "template_version": "1.0.0",
       "title": "guard-graph-schema の interpreter 枝が pathlib/shutil 系書込みを取りこぼし、読取モード r を誤遮断する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T03:27:10.205075Z"
+      "updated_at": "2026-07-29T04:14:11Z"
     },
     {
       "acceptance": [
@@ -38419,7 +38443,7 @@
       "template_version": "1.0.0",
       "title": "Dev Graph 基盤変更 最終レビュー 2026-07-26",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T00:55:00Z"
+      "updated_at": "2026-07-28T23:16:20Z"
     },
     {
       "acceptance": [

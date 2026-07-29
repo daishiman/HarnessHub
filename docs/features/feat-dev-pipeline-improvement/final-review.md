@@ -106,8 +106,9 @@ full snapshot の暗黙退行は書込み前に拒否し、意図的な再評価
 
 回帰テストは各 lifecycle フィールドを単独で戻すケース、`node` envelope と bare canonical
 入力、退行しない正の対照、feature 以外の非影響、明示 reset を分離して検証する。main
-統合後の live-trial は C02 node と C03 sync の現行証跡を再利用し、C14 decompose のみ
-fresh r5 を実走して PASS、独立 evaluator も blocker なし PASS と判定した。
+統合・競合解消後に C02 node、C03 sync、C14 decompose を fresh 実走した。C14 は
+beads / none の paired run で各 2 回、合計 4 回の Skill 呼出しと全 5 node の最終 noop を
+介入なしで確認し、3 系列とも独立 evaluator が blocker なし PASS と判定した。
 
 中学生向けには「前に合格した申請書へ古い下書きをもう一度出しても、合格済みの印を勝手に
 消さない仕組み」である。技術契約は

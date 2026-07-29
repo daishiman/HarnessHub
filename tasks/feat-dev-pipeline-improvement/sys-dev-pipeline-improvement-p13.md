@@ -137,7 +137,22 @@ implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections
 
 C14 live-trial acceptance の証拠完全性、最終 persisted node への評価 digest 束縛、正準 validator の negative control を `system-spec/testing-qa.md` の qa-089、`specs/harness-hub-system-specification.md`、`architecture/harness-hub-testing-qa.md`、`features/feat-dev-pipeline-improvement.md` へ書き戻した。外部 API・DB・認証認可・UI・deploy unit は非変更で、変更境界は repository 内の開発品質ゲートである。受領書は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` を正とする。
 
-書き戻し後の再検証は広域 pytest 9284 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。
+書き戻し後の再検証は PR #598 の最新 `main` (`bb95580`) 統合後ツリーで広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。live-trial は統合後も有効な behavior closure `c0d843d7…4801` へ束縛し、旧 reaper による別 worktree session 回収は main の ownership 契約で解消した。
+
+### 2026-07-29 C02 lifecycle 回帰の最終レビュー追記
+
+`HarnessHub-bk8v` では、C14 の stale full feature snapshot が評価済み lifecycle を
+draft へ戻す回帰を C02 の単一 writer 境界で遮断した。明示 patch による意図的 reset は
+維持し、通常の同一入力は noop、stale full snapshot は graph / Markdown / revision を
+変えずに拒否する。
+
+書き戻し先は `system-spec/dev-workflow.md`、
+`architecture/harness-hub-dev-workflow.md`、
+`specs/harness-hub-system-specification.md`、
+`features/feat-dev-pipeline-improvement.md` とした。製品仕様への影響はなく、
+開発管理ツール内部の整合性契約だけを具体化した。検証と判断理由は
+`docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
+を正とする。
 
 ## Inner goal-seek execution loop
 

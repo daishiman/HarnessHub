@@ -54,6 +54,21 @@ serves_goals: [G1, G4, G5]
 
 **回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 のローカル開発契約を全面維持し、live-trial cleanup の所有権境界を追補する。各 tmux session は起動時に安全な run-id と owner PID を metadata として保持する。通常の reap は session 名の run prefix、記録済み run-id、記録済み owner PID の三つが完全一致した session だけを削除し、同じ run-id の別 owner、別 run-id、metadata 無し session を削除しない。run-id または owner PID が無い通常 reap は fail-closed で拒否する。全 live-trial session の削除は明示的な管理者操作 --all に限定し、通常の終了経路で使用しない。boot は記録した owner PID を READY 出力で呼出元へ渡し、cleanup は現在の shell PID で代用しない。fake tmux と実 tmux の回帰テストで sibling session の生存を固定する。本契約は repository 内の開発用 acceptance harness に限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
+### 実装反映注記 (2026-07-29 / `HarnessHub-bk8v`)
+
+dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、
+`status`、`confirmation_status`、`evaluation_status`、
+`implementation_readiness.status` の後退を stale before-image として拒否する。
+拒否は dry-run / apply の双方で無変更かつ fail-closed とし、意図的な再評価は
+変更フィールドを列挙した明示 patch に限る。
+
+これは qa-088 / qa-090 の開発フローを安全に実行する内部整合性ガードであり、
+確定済み QA の回答、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は
+変更しない。実装契約の正本は
+`plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は
+`docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
+とする。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

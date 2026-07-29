@@ -49,14 +49,27 @@ GH_MUTATION = re.compile(r"\bgh\s+(?:issue\s+(?:create|edit|close|delete)|projec
 FILE_WRITING_TOOLS = frozenset({"Write", "Edit", "MultiEdit", "NotebookEdit"})
 # python/ruby/node 等に file path と書込みモードが同居する呼び出し。rm/sed 等の語彙しか持たない
 # _mutating_operands では、インタプリタ本文に埋め込まれた open(...,'w') を検出できない。
+# mode は named group で切り出し、書込み判定 (_open_mode_is_write) へ委ねる。文字クラス列挙
+# ([waxr]\+?[bt]?) には 'r' が含まれ、読取専用の open(path, 'r') まで誤って BLOCK していた
+# (HarnessHub-lp36)。'r' 単体は読取、'r+' は書込み可なので、+ の有無で分岐させる。
 INTERPRETER_WRITE = re.compile(
-    r"""open\s*\(\s*(?P<q>['"])(?P<path>[^'"]+)(?P=q)\s*,\s*['"][waxr]\+?[bt]?['"]"""
-    r"""|['"](?P<path2>[^'"]*\.dev-graph[^'"]*)['"]\s*,\s*['"][wax]""",
+    r"""open\s*\(\s*(?P<q>['"])(?P<path>[^'"]+)(?P=q)\s*,\s*(?P<q2>['"])(?P<mode>[a-zA-Z+]{1,3})(?P=q2)"""
+    r"""|['"](?P<path2>[^'"]*\.dev-graph[^'"]*)['"]\s*,\s*['"](?P<mode2>[wax][a-zA-Z+]{0,2})""",
     re.I,
 )
+# graph authority path と同一コマンド内に現れたら BLOCK する書込み API の列挙 (HarnessHub-lp36)。
+# pathlib (write_text/write_bytes/touch/unlink/rmdir/.open(w|a|x)) に加えて、shutil.copy* /
+# shutil.move / os.replace / os.rename / json.dump を対象にする。path 引数の位置は API ごとに
+# 異なる (shutil.copy は第2引数、json.dump はそもそも path を取らない) ため、この関数は
+# 「同一コマンド内に書込み API 呼び出しと graph authority の文字列が共起するか」だけを見る
+# 共起判定であり、それらが同一操作の path/mode を指しているかまでは解析しない。
 PATHLIB_MUTATION = re.compile(
     r"""\.\s*(?:write_text|write_bytes|touch|unlink|rmdir)\s*\("""
-    r"""|\.\s*open\s*\(\s*['"][wax]""",
+    r"""|\.\s*open\s*\(\s*['"][wax]"""
+    r"""|\bshutil\s*\.\s*copy\w*\s*\("""
+    r"""|\bshutil\s*\.\s*move\s*\("""
+    r"""|\bos\s*\.\s*(?:replace|rename)\s*\("""
+    r"""|\bjson\s*\.\s*dump\s*\(""",
     re.I,
 )
 GRAPH_AUTHORITY_LITERAL = re.compile(
@@ -91,17 +104,41 @@ def written_paths_of(value: dict) -> list[str]:
     ]
 
 
+def _open_mode_is_write(mode: str) -> bool:
+    """open() の mode 文字列が書込みを含むか (w/a/x、または ``+`` を含む)。"""
+    mode = mode.lower()
+    if not mode:
+        return False
+    # Python の open() は ``rb+`` だけでなく ``br+`` / ``+rb``、``wb`` だけでなく
+    # ``bw`` も受理する。先頭文字だけを見ると同じ有効 mode の並び替えで guard を迂回
+    # できるため、書込み能力を与える文字が mode 内のどこにあるかで判定する。
+    return bool(set(mode) & {"w", "a", "x"}) or "+" in mode
+
+
 def interpreter_writes_graph_authority(command: str) -> bool:
-    """python -c / heredoc 内の open(..., 'w') が graph authority を指すか。"""
+    """python -c / heredoc 内の interpreter 経由書込みが graph authority を指すか。
+
+    保証範囲 (HarnessHub-lp36): 字面パターンに一致する次の書込み API のみを検出する。
+    ``open(path, mode)`` (mode が w/a/x/r+ 系)・``Path.write_text``・``Path.write_bytes``・
+    ``Path.touch``・``Path.unlink``・``Path.rmdir``・``Path.open(w/a/x)``・``shutil.copy*``・
+    ``shutil.move``・``os.replace``・``os.rename``・``json.dump``。これらは静的正規表現一致で
+    あり、変数を経由した path/mode (例: ``open(p, m)``)・エイリアス import
+    (``from shutil import copy as cp``)・``exec``/``eval`` 経由の間接呼出し・``os.open`` の
+    低レベル fd 系は検出できない。これらは C02 atomic writer (``upsert-node.py`` /
+    ``build-graph-store.py`` / ``build-repo-config.py``) の使用を運用規約として要求すること
+    でしか閉じられない。
+    """
     for match in INTERPRETER_WRITE.finditer(command):
         path = match.group("path") or match.group("path2") or ""
-        if GRAPH_AUTHORITY_PATH.search(path):
+        if not GRAPH_AUTHORITY_PATH.search(path):
+            continue
+        mode = match.group("mode") or match.group("mode2") or ""
+        if _open_mode_is_write(mode):
             return True
-    # ``Path.write_text`` does not contain ``open(..., 'w')`` in the shell
-    # payload.  The 2026-07-26 init live trial used exactly this spelling after
-    # Write and heredoc redirects were denied.  Requiring both a pathlib
-    # mutator and an authority path keeps ordinary ``Path.read_text`` calls
-    # available while closing that observed bypass without subprocess work.
+    # ``Path.write_text`` / ``shutil.copy`` 等は path を ``open(...)`` の第 1 引数として渡さない
+    # ため上の枝では検出できない。API 呼出しと graph authority の文字列が同一コマンド内に
+    # 共起するかだけを見る粗い判定にとどめ (path/mode の対応関係までは解析しない)、
+    # ``Path.read_text`` のような読取専用呼出しは対象外のまま残す。
     if PATHLIB_MUTATION.search(command) and GRAPH_AUTHORITY_LITERAL.search(command):
         return True
     return False

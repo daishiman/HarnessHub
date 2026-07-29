@@ -27,13 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C18-OUT1-positive-read-only-status",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260726T040700Z-status-final/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260729T024000Z-lp36-status-hook-final/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260726T040700Z-status-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260726T040700Z-status-final/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260726T040700Z-status-final/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260729T024000Z-lp36-status-hook-final/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260729T024000Z-lp36-status-hook-final/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260729T024000Z-lp36-status-hook-final/evaluator-verdict.txt",
+        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260729T024000Z-lp36-status-hook-final/out/status.json"
       ],
-      "observed": "fresh live trial PASS。read-only status、件数・状態集計、graph/content 不変、goal-seek を独立評価で確認した。"
+      "observed": "共有 hook 更新後の fresh live trial PASS。status 出力を graph authority と field 単位で照合し、graph/authority/repository digest の実行前後一致で read-only を証明、正しい 2 行 goal-seek と fixture 外変更 0 件を別プロセスの evaluator が確認した。nudge 0 / gate 応答 0 / DONE 259 秒。"
     },
     "OUT2": {
       "status": "PASS",
