@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-evaluator-20260729T022300Z-lp36-decompose",
+  "reviewer": "codex-merge-conflict-final-review-20260729",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,15 +26,19 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C14-OUT1-positive-macro-decomposition-r2",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T013604Z-lp36-decompose-final/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T013604Z-lp36-decompose-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T013604Z-lp36-decompose-final/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T013604Z-lp36-decompose-final/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T013604Z-lp36-decompose-final/evaluator-verdict.txt"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/evidence/decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T050101Z-lp36-merge-none/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T050101Z-lp36-merge-none/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T050101Z-lp36-merge-none/evidence/decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T050101Z-lp36-merge-none/independent-verification.json"
       ],
-      "observed": "2026-07-29 の fresh live trial (run 20260729T013604Z-lp36-decompose-final, actual_model=claude-opus-4-6, wall 375s, nudge=0, gate=0, poll_exit=DONE) が現行挙動閉包と一致して overall=PASS。空 fixture から architecture 1 件と feature 2 件の非循環 DAG を生成し、feature 間 fan-out 最大 1 (閾値 3) を実測した。昇格 feature 1 件と draft feature 1 件を同一 preview に保持し、canonical digest 一致、publication.discriminating=true、binding=none のみ eligible、negative controls 全拒否、provenance_valid=true、local/Beads/GitHub/Projects write count 0 を正準監査で確認した。fresh evaluator が transcript・preview・audit・goal-seek を再照合して PASS。"
+      "observed": "main ca776dea 統合後の現行 behavior closure c0d843d79b5c1c2c829dbd2edead66b680cd82772c04328c6b94f6bcfa644801 に対し、r7 scenario を apply mode の 2 系列で fresh 実走した。beads r3 は 720 秒、none r1 は 885 秒で完了し、両 verdict が launch/completion/goal_fit=PASS、required_observations 7/7、args_divergence.matches=true、task_contract.matches=true、nudge_count=0、quality_gate_count=0 となった。両系列とも DAG 5 node/3 edge/acyclic、task 0、粒度実測 1<=3、3 draft 除外と sole promoted candidate、persisted binding 一致、stdin schema 検証、zero attribution 分離を確認した。独立 verifier は最終 persisted feat-user-auth-001 から digest を再計算し、beads=3c0ddec2292a0e951dcef92cd9cd44c6661612b6dc60dbe37c89ebb2273db48e、none=b25a78b6261c33be64a57d5d299a08a6ea3e159e25d9a90803cb26d67e58c03c が宣言値と一致することを確認した。2 種の in-memory negative control は各 run で canonical validator の該当節により拒否された。標準 lt-* session が他 worktree の global reaper に終了された beads r1/r2 は append-only の失敗証跡として保持し、最終受入証拠からは除外した。"
     },
     "OUT2": {
       "status": "PASS",

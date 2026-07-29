@@ -202,6 +202,14 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 - `scripts/run-ci-checks.sh` は PASS 123 / WARN 4 / FAIL 0。WARN は段階導入中の既存 plugin completeness / rubric refs で、本変更の blocking failure はない。
 - Beads `HarnessHub-lp36` は最終証跡を追記して close した。HEAD 束縛の仕様反映 receipt は対象 commit 後に `spec_impact: reflected` として記録し、PR 作成 guard で検証する。
 
+### PR #598 コンフリクト解消後の統合レビュー
+
+- local `main` / `origin/main` を `ca776deaec372056ffef3630ddd6d57b7cc2aa7b` へ同期し、その local `main` を本 branch へ merge した。
+- 競合した feature 文書は lp36 interpreter guard と main の C14 acceptance 強化を両方保持した。C14 criteria receipt は統合後 closure `c0d843d7…4801` に対する beads r3 / none r1 の fresh PASS へ更新した。
+- 外部の global session reaper に終了された beads r1/r2 は append-only の失敗証跡として残し、最終合格判定から除外した。
+- focused pytest は 69 passed / 2 skipped、広域 pytest は 9306 passed / 7 skipped。exact-13 P01〜P13、graph schema、artifact placement は違反 0、repository CI は PASS 123 / WARN 4 / FAIL 0。
+- main の `system-spec/`・`specs/`・testing architecture・P12/P13 にある qa-089 契約を正規フローのまま統合した。lp36 は既存の graph authority 直書込み禁止への適合修正であり、追加の製品仕様影響はない。
+
 ## 運用・更新方法
 
 - 更新契機: 本 PR の検証結果、仕様反映受領書、PR URL、残課題が変わったとき
@@ -228,3 +236,4 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 | 2026-07-28 | qa_log/approval_log/categories/goals の ID 一意性検査 (HarnessHub-33ho) を追記、validate-coverage-matrix.py の 500 行分割 (4 例目・規約側の見直し不要と判定) を追記 | Claude |
 | 2026-07-28 | scope_in 未消化点検の記載誤り (scope_out→scope_in) を訂正し、follow-up issue HarnessHub-ory6 / issue-id-uniqueness-gate-generalization-20260728 への切り出しを追記 | Claude |
 | 2026-07-29 | HarnessHub-lp36 の interpreter BLOCK / ALLOW 境界、設計反映、9/9 live-trial と全品質ゲート PASS、Beads close を追記 | Codex |
+| 2026-07-29 | PR #598 の main コンフリクト解消、C14 統合後 fresh 証拠、pytest 9306件と仕様再受領を追記 | Codex |

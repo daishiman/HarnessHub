@@ -149,6 +149,12 @@ live-trial 証跡の調査 (`HarnessHub-s7b`/`-rix`/`-aoe`/`-m7d`) で、**成�
 正規 4 entry point と C02 writer だけを使い、lineage・digest・evidence を独立 evaluator と
 canonical verdict の双方で PASS とした。
 
+PR #598 の最終統合では `main` (`ca776dea`) が追加した C14 live-trial acceptance 契約と
+本 guard を同一ツリーで再検証した。feature 文書の競合は両設計履歴を保持し、C14 receipt は
+統合後 behavior closure `c0d843d7…4801` に対する beads / none の fresh 2 系列へ更新した。
+これは保証境界の追加変更ではなく、main の品質契約と lp36 の静的 guard が同時に成立する
+ことを確認した統合証拠である。製品 API・state・security・UI の契約は非変更である。
+
 ### 差分追記 (2026-07-28): 500 行分割規約が entry point 宣言契約と衝突する
 
 上記の責務分離で `hooks/` に import 専用の support module (`guard_graph_commands.py`) が生まれた。一方 plugin 完全性の契約テストは、`package-contract.json` の `entry_points.hooks` を **「`hooks/` にある `.py` / `.sh` の一覧」** と厳密一致で突合していた。両規約は個別には妥当だが同時には満たせず、PR #82 の CI がこれを「未宣言の entry point」として落とした。**片方の規約に従うともう片方を必ず破る**という構造であり、実装の不備ではない。

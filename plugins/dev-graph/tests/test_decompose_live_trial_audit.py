@@ -1,405 +1,475 @@
+"""C14 live-trial 監査ヘルパーの契約テスト。
+
+本 test の主眼は「監査が検査として成立しているか」であり、監査が緑を返すことではない。
+過去に次の 5 欠陥で `pass:true` が OUT1 充足を意味しなくなっていた (HarnessHub-9ndl):
+
+1. 反転     — 昇格適格 node を draft と呼んで数え、昇格させると落ちた
+2. トートロジー — 監査スクリプト内の述語を監査自身が検査していた
+3. 偽の次元 — binding 3 系列が同一値の 3 回計算だった
+4. 帰属誤り — write count が bridge の dry_run エコーで、実作成数ではなかった
+5. 実書込み不能 — pass 条件が「ローカル状態が動いていないこと」を含み、実書込み run では
+   構造的に必ず赤くなった
+
+したがって以下は「緑になること」と「壊した変異版で赤くなること」を対で固定する。
+"""
+
 from __future__ import annotations
 
+import copy
 import importlib.util
+import json
+import os
+import subprocess
 from pathlib import Path
+
+import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = Path(__file__).parent / "fixtures" / "audit_decompose_live_trial.py"
+SCENARIO_PATH = Path(__file__).parent / "fixtures" / "live-trial-positive-scenarios.json"
 SPEC = importlib.util.spec_from_file_location("audit_decompose_live_trial", SCRIPT)
 assert SPEC and SPEC.loader
 AUDIT = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(AUDIT)
 
+FIXED_TS = "2026-07-13T07:50:00Z"
+ARCHITECTURE_ID = "arch-webapp-base"
+DRAFT_ID = "feat-user-auth-001"
+PROMOTED_ID = "feat-dashboard-001"
+CONTENT_ROOTS = {
+    "issues": "issues",
+    "tasks": "tasks",
+    "specifications": "specs",
+    "architecture": "architecture",
+    "features": "features",
+    "documents": "docs",
+    "system_spec": "system-spec",
+}
+GATE_REMOVED_VALIDATOR = """#!/usr/bin/env python3
+import json, sys
+sys.stdin.read()
+json.dump(
+    {"valid": True, "implementation_readiness": "complete", "missing_sections": [], "violations": []},
+    sys.stdout,
+)
+"""
 
-def _feature(node_id: str, *, promoted: bool, binding: str = "none", depends_on=()) -> dict:
-    """schema allOf[7] と整合する feature を作る。
 
-    allOf[7] は evaluation_status=pass から readiness complete を含意するので、
-    「confirmed かつ pass かつ readiness incomplete」は schema-valid に作れない。
-    昇格側は 3 条件すべてを満たす形にしか組めないのが正しい (HarnessHub-ojh6)。
-    """
-    node = {
+# --------------------------------------------------------------------------- #
+# fixture 構築
+# --------------------------------------------------------------------------- #
+def _node(node_id: str, kind: str, root: str, depends_on: list[str]) -> dict:
+    """graph-node.schema.json の required key と kind 条件分岐を満たす決定論 node 雛形。"""
+    file_path = f"{root}/{node_id}.md"
+    # schema の allOf: architecture は artifact_subtypes 1件以上、feature は 0 件かつ
+    # architecture_refs 1件以上。graph 内に実在する node id を参照する。
+    return {
         "graph_node_id": node_id,
-        "artifact_kind": "feature",
-        "depends_on": list(depends_on),
-        "tracker_binding": binding,
-        "confirmation_status": "confirmed" if promoted else "draft",
-        "evaluation_status": "pass" if promoted else "pending",
+        "artifact_kind": kind,
+        "artifact_subtypes": ["backend"] if kind == "architecture" else [],
+        "title": f"{node_id} title",
+        "project_id": "live-trial-fixture",
+        "domain": "development",
+        "status": "draft",
+        "closed_at": None,
+        "owners": ["live-trial"],
+        "tags": ["live-trial", "fixture"],
+        "priority": None,
+        "start_date": None,
+        "target_date": None,
+        "iteration": None,
+        "created_at": FIXED_TS,
+        "updated_at": FIXED_TS,
+        "depends_on": depends_on,
+        "related_nodes": [],
+        "resource_scope": [],
+        "purpose": "C14 マクロ分解 live-trial の監査契約を固定するための決定論 node",
+        "goal": "publication gate の判定が実装側から導出できる状態",
+        "scope_in": ["preview graph の観測"],
+        "scope_out": ["実 repository の変更"],
+        "acceptance": ["publication gate の判定が実装 script の violation から導かれる"],
+        "architecture_refs": [ARCHITECTURE_ID] if kind == "feature" else [],
+        "parent_feature": None,
+        "feature_package_id": None,
+        "phase_ref": None,
+        "file_path": file_path,
+        "template_id": kind,
+        "template_version": "1.0.0",
+        "confirmation_status": "draft",
+        "evaluation_status": "pending",
+        "confirmation_evidence": {
+            "evaluated_digest": None,
+            "evaluator": None,
+            "evidence_ref": None,
+        },
+        "source_lineage": {
+            "imported_at": FIXED_TS,
+            "origin_kind": "manual",
+            "source_digest": None,
+            "source_path": None,
+            "source_plugin": None,
+            "source_version": None,
+        },
+        "classification_confidence": 1.0,
+        "classification_reason": "live-trial fixture として決定論生成された node",
+        "classification_candidates": [
+            {"artifact_kind": kind, "candidate_path": file_path, "confidence": 1.0}
+        ],
+        "issue_linkage": None,
+        "tracker_binding": "none",
+        "beads_linkage": None,
         "github_publication": {
-            "mode": "local_only",
-            "project_aliases": [],
             "labels": [],
             "milestone": None,
+            "mode": "local_only",
+            "project_aliases": [],
         },
-        "issue_linkage": None,
-        "beads_linkage": None,
         "github_project_linkages": [],
         "pull_request_linkages": [],
+        "execution_contexts": [],
+        "completion_evidence": {
+            "completed_at": None,
+            "evidence_refs": [],
+            "policy": "linked_pr_merged_all",
+            "reconciled_at": None,
+            "source": None,
+            "status": "open",
+        },
         "implementation_readiness": {
-            "status": "complete" if promoted else "incomplete"
+            "checked_at": FIXED_TS,
+            "missing_sections": [],
+            "status": "incomplete",
         },
     }
-    node["confirmation_evidence"] = (
+
+
+def _promote(node: dict) -> dict:
+    """run 中に confirmed / evaluation-pass / readiness-complete へ昇格した形。"""
+    promoted = copy.deepcopy(node)
+    promoted.update(
         {
-            "evaluator": "unit-test",
-            "evidence_ref": f"tests#{node_id}",
-            "evaluated_digest": AUDIT._evaluation_digest(node),
+            "status": "active",
+            "confirmation_status": "confirmed",
+            "evaluation_status": "pass",
+            "confirmation_evidence": {
+                "evaluated_digest": None,
+                "evaluator": "run-dev-graph-decompose",
+                "evidence_ref": "eval-log/macro-preview.json",
+            },
+            "implementation_readiness": {
+                "checked_at": FIXED_TS,
+                "missing_sections": [],
+                "status": "complete",
+            },
         }
-        if promoted
-        else {"evaluator": None, "evidence_ref": None, "evaluated_digest": None}
     )
-    return node
+    promoted["confirmation_evidence"]["evaluated_digest"] = (
+        AUDIT.INTEGRITY.evaluation_digest(promoted)
+    )
+    return promoted
 
 
+def _preview() -> dict:
+    architecture = _node(ARCHITECTURE_ID, "architecture", "architecture", [])
+    draft = _node(DRAFT_ID, "feature", "features", [])
+    promoted = _promote(_node(PROMOTED_ID, "feature", "features", [DRAFT_ID]))
+    return {"graph_revision": 1, "nodes": [architecture, draft, promoted]}
+
+
+def _rebind(nodes: list[dict], binding: str) -> list[dict]:
+    """run の graph に別の tracker_binding が永続した状態を作る。
+
+    binding 次元の観測は「graph に何が残ったか」から導かれるので、別系列の run を
+    再現する唯一の方法は node 宣言を差し替えることであって、監査へ渡す flag ではない。
+    """
+    rebound = copy.deepcopy(nodes)
+    for node in rebound:
+        node["tracker_binding"] = binding
+    return rebound
+
+
+def _write_json(path: Path, value: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n", "utf-8")
+
+
+def _init_repo(root: Path) -> None:
+    root.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", "-q", str(root)], check=True, capture_output=True)
+    _write_json(
+        root / ".dev-graph/config.json",
+        {
+            "content_roots": CONTENT_ROOTS,
+            "local_state": {
+                "graph": ".dev-graph/state/graph.json",
+                "cache": ".dev-graph/cache",
+                "locks": ".dev-graph/locks",
+            },
+        },
+    )
+    _write_json(root / ".dev-graph/state/graph.json", {"graph_revision": 0, "nodes": []})
+
+
+def _trial(tmp_path: Path, *, graph_nodes: list[dict] | None = None) -> dict:
+    """pre-state → 実書込み run → audit 引数一式、という live-trial の骨格を再現する。"""
+    repo = tmp_path / "fixture-repo"
+    _init_repo(repo)
+    pre_state_path = repo / "eval-log/pre-state.json"
+    _write_json(pre_state_path, AUDIT.capture_state(repo))
+
+    preview = _preview()
+    # 被験 skill が実書込みで登録した後の状態 (graph が実際に動く)。
+    _write_json(
+        repo / ".dev-graph/state/graph.json",
+        {"graph_revision": 1, "nodes": graph_nodes if graph_nodes is not None else preview["nodes"]},
+    )
+    preview_path = repo / "eval-log/macro-preview.json"
+    _write_json(preview_path, preview)
+    return {
+        "repo_root": repo,
+        "preview_path": preview_path,
+        "scenario_path": SCENARIO_PATH,
+        "pre_state_path": pre_state_path,
+        "plugin_root": PLUGIN_ROOT,
+        "run_mode": "apply",
+        "run_binding": "none",
+    }
+
+
+def _plugin_with_gate_removed(tmp_path: Path) -> Path:
+    """validate-graph-schema.py だけを「何も違反を返さない」版へ差し替えた plugin 木。
+
+    ゲートの正本は実装側にあるので、実装を壊せば監査も落ちなければならない。
+    """
+    fake = tmp_path / "mutated-plugin"
+    (fake / "scripts").mkdir(parents=True)
+    for entry in PLUGIN_ROOT.iterdir():
+        if entry.name != "scripts":
+            (fake / entry.name).symlink_to(entry)
+    for entry in (PLUGIN_ROOT / "scripts").iterdir():
+        (fake / "scripts" / entry.name).symlink_to(entry)
+    mutated = fake / "scripts/validate-graph-schema.py"
+    mutated.unlink()
+    mutated.write_text(GATE_REMOVED_VALIDATOR, "utf-8")
+    mutated.chmod(0o755)
+    return fake
+
+
+# --------------------------------------------------------------------------- #
+# graph 測定 (従来どおり preview から導出)
+# --------------------------------------------------------------------------- #
 def test_graph_measurements_are_derived_from_preview() -> None:
-    features = [
-        _feature("feature-source", promoted=False),
-        _feature("feature-consumer", promoted=False, depends_on=["feature-source"]),
-    ]
-    nodes = [
-        {
-            "graph_node_id": "architecture-root",
-            "artifact_kind": "architecture",
-            "depends_on": [],
-        },
-        *features,
-    ]
-
     graph = AUDIT._graph_measurements(
-        nodes,
-        {
-            "metric": "max_inter_feature_depends_on_per_feature",
-            "max_value": 3,
-        },
+        _preview()["nodes"],
+        {"metric": "max_inter_feature_depends_on_per_feature", "max_value": 3},
     )
 
     assert graph["acyclic"] is True
     assert graph["measured_max"] == 1
     assert graph["threshold_pass"] is True
     assert graph["task_count"] == 0
+    assert graph["architecture_count"] == 1
 
 
-def test_publication_gate_discriminates_promoted_from_draft() -> None:
-    """昇格 1 件 + draft 1 件の実ノードで、gate が両クラスを分離することを測る。"""
-    features = [
-        _feature("feature-source", promoted=True),
-        _feature("feature-consumer", promoted=False, depends_on=["feature-source"]),
+# --------------------------------------------------------------------------- #
+# 欠陥 2: publication 判定の正本が実装側にあること
+# --------------------------------------------------------------------------- #
+def test_publication_gate_is_decided_by_the_implementation_script(tmp_path: Path) -> None:
+    repo = tmp_path / "gate-repo"
+    _init_repo(repo)
+    preview = _preview()
+    features = [node for node in preview["nodes"] if node["artifact_kind"] == "feature"]
+
+    decisions = AUDIT._publication_decisions(repo, PLUGIN_ROOT, preview, features)
+
+    assert decisions[DRAFT_ID]["publishable"] is False
+    assert decisions[PROMOTED_ID]["publishable"] is True
+    # 判定は監査内の述語ではなく、実装 script の呼出し結果から来ている。
+    for decision in decisions.values():
+        assert decision["decided_by"][1].endswith("scripts/validate-graph-schema.py")
+    assert [item["code"] for item in decisions[DRAFT_ID]["blocking_violations"]] == [
+        "active_not_ready"
     ]
-
-    publication = AUDIT._publication_measurements(features)
-
-    assert publication["promoted"] == ["feature-source"]
-    assert [entry["graph_node_id"] for entry in publication["blocked"]] == [
-        "feature-consumer"
-    ]
-    assert publication["blocked"][0]["blocked_by"] == [
-        "confirmation_confirmed",
-        "evaluation_pass",
-        "readiness_complete",
-    ]
-    assert publication["eligible_by_binding"]["none"]["ids"] == ["feature-source"]
-    assert publication["eligible_by_binding"]["beads"]["count"] == 0
-    assert publication["eligible_by_binding"]["github"]["count"] == 0
-    assert publication["gate_respected"] is True
-    # 誰も投影していないので gate_respected は恒真側。受領書がそれを自己申告する。
-    assert publication["gate_respected_vacuous"] is True
-    assert publication["discriminating"] is True
+    assert decisions[PROMOTED_ID]["blocking_violations"] == []
 
 
-def test_projection_targets_differ_per_binding() -> None:
-    """binding ごとに異なる集合が出ることを固定する。
+def test_publication_gate_follows_the_implementation_when_it_is_mutated(tmp_path: Path) -> None:
+    repo = tmp_path / "gate-repo"
+    _init_repo(repo)
+    preview = _preview()
+    features = [node for node in preview["nodes"] if node["artifact_kind"] == "feature"]
 
-    旧実装の内包表記は本体で binding を参照しておらず、none/beads/github に同一集合が
-    入っていた。「binding 別に 0 件」という証跡は 1 つの集合を 3 回書き写しただけで、
-    binding 別の投影規律を何も示していなかった (HarnessHub-ojh6)。同一 preview から
-    binding ごとに違う答えが出ることを見せない限り、この退行は検出できない。
-    """
-    features = [
-        _feature("feature-local", promoted=True, binding="none"),
-        _feature("feature-beads", promoted=True, binding="beads"),
-        _feature("feature-draft-github", promoted=False, binding="github"),
-    ]
-
-    targets = AUDIT._publication_measurements(features)["eligible_by_binding"]
-
-    assert targets["none"]["ids"] == ["feature-local"]
-    assert targets["beads"]["ids"] == ["feature-beads"]
-    # github は昇格候補が居ないので空。3 binding が同一集合になっていないことが要点。
-    assert targets["github"]["ids"] == []
-
-
-def test_gate_violation_is_observed_from_the_node_projection_surface() -> None:
-    """gate 違反は述語の裏返しではなく node の投影面から観測する。
-
-    旧実装は投影先を「昇格した node」からしか作らなかったため、blocked と投影集合は
-    定義上素集合で、blocked_projected は必ず空・gate_respected は必ず真だった
-    (HarnessHub-ojh6 残課題 #1)。投影痕跡を直接読めば、draft のまま publication intent を
-    立てた成果物がその場で不合格材料になる = 観測が反証可能になる。
-    """
-    clean = _feature("feature-draft", promoted=False)
-    assert AUDIT._projection_evidence(clean) == []
-
-    leaked = _feature("feature-draft", promoted=False)
-    leaked["github_publication"]["mode"] = "issue"
-    leaked["beads_linkage"] = {"bd_issue_id": "X-1", "sync_state": "linked"}
-
-    publication = AUDIT._publication_measurements(
-        [_feature("feature-source", promoted=True), leaked]
+    decisions = AUDIT._publication_decisions(
+        repo, _plugin_with_gate_removed(tmp_path), preview, features
     )
 
-    assert publication["projected"] == ["feature-draft"]
-    assert publication["blocked_projected"] == ["feature-draft"]
-    assert publication["gate_respected"] is False
-    assert publication["gate_respected_vacuous"] is False
+    # 実装がゲートを失えば、監査の判定も追随して draft を通してしまう。
+    # (= 監査が実装から独立した自前述語を見ていないことの証拠)
+    assert decisions[DRAFT_ID]["publishable"] is True
 
 
-def test_evaluated_digest_must_be_bound_to_node_content() -> None:
-    """placeholder digest を通さない。
+# --------------------------------------------------------------------------- #
+# 欠陥 1 と 5: 昇格済み feature を含む実書込み run で緑になること
+# --------------------------------------------------------------------------- #
+def test_audit_passes_on_a_real_write_run_that_contains_a_promoted_feature(tmp_path: Path) -> None:
+    result = AUDIT.audit(**_trial(tmp_path))
 
-    schema は 64 桁 hex の正規表現しか課さないので `a`*64 でも通り、
-    「confirmation/evaluation を同一 artifact digest へ pin する」意図が実値にならない
-    (HarnessHub-ojh6 残課題 #2)。正準レシピで再計算して突き合わせる。
-    """
-    node = _feature("feature-source", promoted=True)
-    assert AUDIT._evidence_binding([node])["all_bound"] is True
-
-    placeholder = _feature("feature-source", promoted=True)
-    placeholder["confirmation_evidence"]["evaluated_digest"] = "a" * 64
-    assert AUDIT._evidence_binding([placeholder])["all_bound"] is False
-
-
-def test_evaluated_digest_detects_content_edited_after_promotion() -> None:
-    """昇格後に node を書き換えたら digest が外れる (stale PASS 拒否の実値)。"""
-    node = _feature("feature-source", promoted=True)
-    node["acceptance"] = ["登録できる"]
-    node["confirmation_evidence"]["evaluated_digest"] = AUDIT._evaluation_digest(node)
-    assert AUDIT._evidence_binding([node])["all_bound"] is True
-
-    node["acceptance"] = ["登録できる", "後から足した受け入れ条件"]
-    assert AUDIT._evidence_binding([node])["all_bound"] is False
-
-
-def test_evaluated_digest_recipe_excludes_only_the_self_reference() -> None:
-    """レシピは confirmation_evidence だけを除く: 除外を増やすと束縛が緩む。"""
-    assert AUDIT.EVALUATED_DIGEST_EXCLUDED == ("confirmation_evidence",)
-
-    node = _feature("feature-source", promoted=True)
-    before = AUDIT._evaluation_digest(node)
-    node["confirmation_evidence"] = {
-        "evaluator": "別の評価者",
-        "evidence_ref": "別の証跡",
-        "evaluated_digest": None,
+    assert result["pass"] is True
+    assert result["run_mode"] == "apply"
+    assert result["publication_gate"]["candidate_node_ids"] == [PROMOTED_ID]
+    assert result["publication_gate"]["draft_node_ids"] == [DRAFT_ID]
+    assert result["publication_gate"]["discriminates"] is True
+    assert result["publication_gate"]["promotion_attributable_to_run"] is True
+    # 実書込みなので「ローカル状態が動いていないこと」は要求されない (欠陥 5)。
+    assert result["local_state"]["mutation_suppressed"] is False
+    assert result["run_mode_checks"] == {
+        "local_state_advanced": True,
+        "graph_store_written": True,
     }
-    assert AUDIT._evaluation_digest(node) == before
 
 
-def test_unpromoted_node_may_omit_digest_but_not_forge_one() -> None:
-    draft = _feature("feature-draft", promoted=False)
-    assert AUDIT._evidence_binding([draft])["all_bound"] is True
+def test_a_promotion_made_after_the_preview_was_saved_is_still_observed(tmp_path: Path) -> None:
+    """preview 保存後に昇格した feature も candidate として観測される。
 
-    forged = _feature("feature-draft", promoted=False)
-    forged["confirmation_evidence"]["evaluated_digest"] = "b" * 64
-    assert AUDIT._evidence_binding([forged])["all_bound"] is False
-
-
-def test_promoted_node_requires_non_empty_evaluator_and_evidence_ref() -> None:
-    node = _feature("feature-source", promoted=True)
-    node["confirmation_evidence"]["evaluator"] = "   "
-    assert AUDIT._evidence_binding([node])["all_bound"] is False
-
-
-def test_all_draft_preview_is_not_discriminating() -> None:
-    """全 draft は候補 0 件になるが、それは gate が効いた証拠にならない。
-
-    「候補が空」が gate の成果ではなく「そもそも誰も昇格していない」の副産物である
-    状態を discriminating=True にしてしまうと、gate 実装を削除しても緑のままになる。
+    preview は skill が「登録したい」と提案した時点の姿であり、lifecycle 昇格はその後に起きる。
+    publication を preview で判定すると昇格は永久に観測されず、candidate gate は空集合しか見ない
+    — つまり scenario が要求する「draft 除外」と「candidate 昇格」の分離が成立しなくなる。
     """
-    features = [
-        _feature("feature-source", promoted=False),
-        _feature("feature-consumer", promoted=False),
-    ]
-
-    publication = AUDIT._publication_measurements(features)
-
-    assert publication["promoted"] == []
-    assert publication["gate_respected"] is True
-    assert publication["discriminating"] is False
-
-
-def test_all_promoted_preview_is_not_discriminating() -> None:
-    """全昇格も同様に非空虚性を満たさない: 除外される側の実例が無い。"""
-    features = [
-        _feature("feature-source", promoted=True),
-        _feature("feature-consumer", promoted=True),
-    ]
-
-    publication = AUDIT._publication_measurements(features)
-
-    assert publication["blocked"] == []
-    assert publication["discriminating"] is False
-
-
-def test_readiness_clause_of_the_predicate_is_checked_here_not_in_live_trial() -> None:
-    """述語の readiness 節はここで合成入力を使って検査する。
-
-    schema allOf[7] のため、この検体は schema-valid な graph node としては存在できない。
-    それでも述語自体は readiness で落とせなければならない (schema 検証前の preview に
-    対する多重防御)。合成検体を使うのは単体検査だから正当であり、これを live-trial の
-    「skill が gate を尊重した証拠」として提出したのが旧実装の誤りだった。
-    """
-    node = _feature("feature-probe", promoted=True)
-    node["implementation_readiness"]["status"] = "incomplete"
-
-    conditions = AUDIT._gate_conditions(node)
-
-    assert conditions == {
-        "confirmation_confirmed": True,
-        "evaluation_pass": True,
-        "readiness_complete": False,
-    }
-    assert AUDIT._is_publication_candidate(node) is False
-
-
-def test_mirror_array_diverging_from_nodes_is_rejected() -> None:
-    """`features[]` だけ昇格させた自己矛盾 preview を合格させない。
-
-    監査は `nodes[]` しか読まないので、便宜配列だけを昇格させると昇格が監査に届かず、
-    同一 id が配列ごとに別状態を持つ成果物が素通りする (2026-07-26 実走 2 本目の実害)。
-    """
-    canonical = _feature("feature-source", promoted=False)
-    mirror = _feature("feature-source", promoted=True)
-    preview = {"nodes": [canonical], "features": [mirror]}
-
-    consistency = AUDIT._preview_consistency(preview, [canonical])
-
-    assert consistency["canonical_array"] == "nodes"
-    assert consistency["mirror_arrays"] == ["features"]
-    assert consistency["consistent"] is False
-    assert consistency["divergent"][0]["graph_node_id"] == "feature-source"
-    assert consistency["divergent"][0]["reason"] == "gate_status_diverges_from_nodes"
-
-
-def test_mirror_array_matching_nodes_is_accepted() -> None:
-    node = _feature("feature-source", promoted=True)
-    preview = {"nodes": [node], "features": [dict(node)]}
-
-    consistency = AUDIT._preview_consistency(preview, [node])
-
-    assert consistency["consistent"] is True
-    assert consistency["divergent"] == []
-
-
-def test_mirror_array_node_absent_from_nodes_is_rejected() -> None:
-    canonical = _feature("feature-source", promoted=False)
-    preview = {"nodes": [canonical], "features": [_feature("feature-ghost", promoted=True)]}
-
-    consistency = AUDIT._preview_consistency(preview, [canonical])
-
-    assert consistency["consistent"] is False
-    assert consistency["divergent"][0]["reason"] == "absent_from_nodes"
-
-
-def test_unresolved_binding_sentinel_is_rejected() -> None:
-    """repo-config-default のまま preview に残るのは binding 解決が走っていない徴候。
-
-    黙って none へ倒すと「外部投影 0 件」が binding 解決の成果ではなく既定値の
-    副産物になり、beads/github が空である観測の意味が失われる。
-    """
-    node = _feature("feature-unresolved", promoted=True, binding="repo-config-default")
-
-    try:
-        AUDIT._publication_measurements([node])
-    except AUDIT.AuditError as exc:
-        assert "unresolved sentinel" in str(exc)
-    else:
-        raise AssertionError("unresolved binding sentinel must be rejected")
-
-
-def test_adapter_suppression_requires_real_dry_run_receipt_shape() -> None:
-    beads = {"payload": {"op": "create", "dry_run_preview": {"graph_node_id": "feature-source"}}}
-    github = {"payload": {"op": "issue-create", "dry_run": True, "mutation_suppressed": True}}
-    incomplete = {"payload": {"op": "issue-create", "dry_run": True}}
-
-    assert AUDIT._suppression_from(beads) is True
-    assert AUDIT._suppression_from(github) is True
-    assert AUDIT._suppression_from(incomplete) is False
-
-
-def test_helper_identity_is_bound_to_git_index() -> None:
-    identity = AUDIT._helper_identity()
-
-    assert identity["path"].endswith("audit_decompose_live_trial.py")
-    assert identity["tracked_in_index"] is True
-    assert identity["index_matches_worktree"] is True
-    assert len(identity["sha256"]) == 64
-
-
-def test_helper_identity_covers_every_audit_module() -> None:
-    """責務分割で provenance の穴を作らない: 監査 module 全部が identity に入る。
-
-    状態層を別ファイルへ出した後に代表 module だけを測ると、状態層を試験中に書き換えても
-    provenance_valid が緑のままになる。合成 identity は全 module を含み、どれか 1 本の
-    変更で sha256 が動くこと (= pre-state との比較で検出できること) を固定する。
-    """
-    identity = AUDIT._helper_identity()
-    covered = {module["path"] for module in identity["modules"]}
-
-    assert covered == {
-        path.relative_to(REPO_ROOT).as_posix() for path in AUDIT.AUDIT_PROVENANCE_FILES
-    }
-    assert all(module["index_matches_worktree"] for module in identity["modules"])
-
-    single = AUDIT.STATE.composite_identity([SCRIPT])
-    assert single["sha256"] != identity["sha256"]
-
-
-def test_helper_identity_covers_the_scenario_contract() -> None:
-    """合格条件を書いた契約まで provenance に含める。
-
-    監査コードだけを束縛すると、閾値や fixture_contract を試験中に緩めることで
-    コードを一行も触らずに要求を下げられる (HarnessHub-ojh6 残課題 #3)。
-    """
-    contract = (
-        Path(__file__).parent / "fixtures" / "live-trial-positive-scenarios.json"
-    ).resolve()
-
-    assert contract in AUDIT.AUDIT_PROVENANCE_FILES
-    covered = {module["path"] for module in AUDIT._helper_identity()["modules"]}
-    assert contract.relative_to(REPO_ROOT).as_posix() in covered
-
-    modules_only = AUDIT.STATE.composite_identity(list(AUDIT.AUDIT_MODULES))
-    assert modules_only["sha256"] != AUDIT._helper_identity()["sha256"]
-
-
-def test_negative_control_mutators_isolate_the_clause_they_target() -> None:
-    """反例合成が狙った節だけを壊すことを固定する。
-
-    readiness 用の変異が evidence 欠落も一緒に起こすと、schema が落ちた理由が
-    readiness 節かどうか判別できなくなり、negative control が「何かが落ちた」以上の
-    ことを言えなくなる。
-    """
-    node = _feature("feature-draft", promoted=False)
-    AUDIT._mutate_pass_without_readiness(node)
-
-    assert node["confirmation_status"] == "confirmed"
-    assert node["evaluation_status"] == "pass"
-    assert node["implementation_readiness"]["status"] == "incomplete"
-    evidence = node["confirmation_evidence"]
-    assert evidence["evaluator"] and evidence["evidence_ref"]
-    assert evidence["evaluated_digest"] == AUDIT._evaluation_digest(node)
-
-    intent = _feature("feature-draft", promoted=False)
-    AUDIT._mutate_publication_intent(intent)
-    assert intent["github_publication"]["mode"] == "issue"
-    assert AUDIT._projection_evidence(intent) == ["github_publication.mode=issue"]
-
-
-def test_negative_control_is_skipped_and_fails_when_no_blocked_feature_exists() -> None:
-    """反例の土台が無いときに「実行しなかった」を合格へ倒さない。"""
-    result = AUDIT._gate_negative_controls(
-        REPO_ROOT, REPO_ROOT / "plugins/dev-graph", {"nodes": []}, {"payload": {}}, []
+    trial = _trial(tmp_path)
+    # preview だけを「昇格前 = 全 feature が draft」の姿へ差し戻す。実 graph は昇格後のまま。
+    _write_json(
+        trial["preview_path"],
+        {
+            "graph_revision": 1,
+            "nodes": [
+                _node(ARCHITECTURE_ID, "architecture", "architecture", []),
+                _node(DRAFT_ID, "feature", "features", []),
+                _node(PROMOTED_ID, "feature", "features", [DRAFT_ID]),
+            ],
+        },
     )
 
-    assert result["executed"] is False
-    assert result["all_rejected"] is False
+    result = AUDIT.audit(**trial)
+
+    assert result["publication_gate"]["candidate_node_ids"] == [PROMOTED_ID]
+    assert result["publication_gate"]["draft_node_ids"] == [DRAFT_ID]
+    assert result["publication_gate"]["promotion_attributable_to_run"] is True
+    assert result["pass"] is True
+
+
+def test_a_candidate_the_fixture_already_held_is_not_attributed_to_the_run(tmp_path: Path) -> None:
+    """fixture が最初から昇格済み feature を持っていたら帰属は成立しない。
+
+    帰属の証拠は pre-state 差分だけである。この負例が落ちなければ
+    「run が昇格させた」という主張は測定されておらず、fixture へ完成品を播いた run と
+    実際に昇格させた run が同じ緑を返す。
+    """
+    trial = _trial(tmp_path)
+    # pre-state を「promoted feature を既に持っていた fixture」として取り直す。
+    _write_json(trial["pre_state_path"], AUDIT.capture_state(trial["repo_root"]))
+
+    result = AUDIT.audit(**trial)
+
+    assert result["publication_gate"]["candidate_node_ids"] == [PROMOTED_ID]
+    assert result["publication_gate"]["lifecycle_candidate_ids"] == []
+    assert result["publication_gate"]["promotion_attributable_to_run"] is False
+    assert result["pass"] is False
+
+
+def test_dry_run_mode_still_requires_full_suppression(tmp_path: Path) -> None:
+    trial = _trial(tmp_path)
+    trial["run_mode"] = "dry-run"
+
+    result = AUDIT.audit(**trial)
+
+    # 同じ実書込み証跡を dry-run として提出すると落ちる (mode を取り違えられない)。
+    assert result["pass"] is False
+    assert result["run_mode_checks"]["local_state_unchanged"] is False
+
+
+# --------------------------------------------------------------------------- #
+# 欠陥 4: write count が前後差分から出ること
+# --------------------------------------------------------------------------- #
+def test_write_counts_come_from_the_state_diff(tmp_path: Path) -> None:
+    result = AUDIT.audit(**_trial(tmp_path))
+
+    assert result["derived_write_counts"] == {
+        "local_issue_files": 0,
+        "beads_export_records": 0,
+        "beads_linked_nodes": 0,
+        "github_linked_nodes": 0,
+    }
+    assert "publication_inventory diff" in result["write_count_source"]
+
+
+def test_draft_publication_is_detected_from_the_state_diff(tmp_path: Path) -> None:
+    published_draft = _rebind(_preview()["nodes"], "beads")
+    for node in published_draft:
+        if node["graph_node_id"] == DRAFT_ID:
+            # draft のまま tracker へ投影されてしまった状態 (ゲートの退行)。
+            node["beads_linkage"] = {
+                "bd_issue_id": "Fixture-0001",
+                "linked_at": FIXED_TS,
+                "sync_state": "linked",
+            }
+    trial = _trial(tmp_path, graph_nodes=published_draft)
+    trial["run_binding"] = "beads"
+
+    result = AUDIT.audit(**trial)
+
+    assert result["derived_write_counts"]["beads_linked_nodes"] == 1
+    observed = result["binding_projections"]["beads"]["observed"]
+    assert observed["draft_published_node_ids"] == [DRAFT_ID]
+    assert result["draft_publication_zero"] is False
+    assert result["pass"] is False
+
+
+def test_state_comparison_refuses_a_pre_state_without_publication_inventory() -> None:
+    with pytest.raises(AUDIT.AuditError, match="publication_inventory"):
+        AUDIT.STATE.publication_delta({"publication_inventory": None}, {})
+
+
+# --------------------------------------------------------------------------- #
+# mutation test: draft ゲートを壊すと監査が落ちる
+# --------------------------------------------------------------------------- #
+def test_audit_fails_when_the_draft_publication_gate_is_removed(tmp_path: Path) -> None:
+    trial = _trial(tmp_path)
+    trial["plugin_root"] = _plugin_with_gate_removed(tmp_path)
+
+    result = AUDIT.audit(**trial)
+
+    assert result["pass"] is False
+    assert result["publication_gate"]["discriminates"] is False
+    assert result["publication_gate"]["draft_node_ids"] == []
+    # ゲートを失った実装は draft も昇格済みも同じ「投影可」に潰す。
+    assert sorted(result["publication_gate"]["candidate_node_ids"]) == sorted(
+        [PROMOTED_ID, DRAFT_ID]
+    )
+
+
+# --------------------------------------------------------------------------- #
+# CLI と provenance
+# --------------------------------------------------------------------------- #
+def test_audit_cli_requires_explicit_run_mode_and_binding(tmp_path: Path) -> None:
+    trial = _trial(tmp_path)
+    argv = [
+        "python3", str(SCRIPT), "audit",
+        "--repo-root", str(trial["repo_root"]),
+        "--preview", str(trial["preview_path"]),
+        "--scenario", str(SCENARIO_PATH),
+        "--pre-state", str(trial["pre_state_path"]),
+        "--plugin-dir", str(PLUGIN_ROOT),
+        "--output", str(tmp_path / "audit.json"),
+    ]
+
+    without_mode = subprocess.run(argv, capture_output=True, text=True)
+    with_mode = subprocess.run(
+        [*argv, "--run-mode", "apply", "--run-binding", "none"], capture_output=True, text=True
+    )
+
+    assert without_mode.returncode != os.EX_OK
+    assert "--run-mode" in without_mode.stderr
+    assert with_mode.returncode == os.EX_OK
+    assert json.loads((tmp_path / "audit.json").read_text("utf-8"))["pass"] is True

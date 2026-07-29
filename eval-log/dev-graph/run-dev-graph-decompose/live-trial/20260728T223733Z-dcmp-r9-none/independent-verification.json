@@ -1,0 +1,27 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": {
+    "skill_invoked": "Two Skill tool calls used identical want + --repo-root args and no --dry-run",
+    "task_contract": "Required C02 upsert and lifecycle fragments are present; apply-lifecycle-request was never invoked",
+    "graph_registration": "revision=8 with 1 architecture and 4 feature nodes",
+    "dag_acyclicity": "Independent traversal found 3 edges, no cycle, and measured granularity 1 <= 3",
+    "task_granularity": "task/phase/parent/package markers are all 0",
+    "draft_gate_separation": "Three produced drafts are excluded; feat-user-auth-001 is the sole confirmed/pass/complete candidate",
+    "persisted_binding": "All graph nodes persist tracker_binding=none and run_binding_attested=true",
+    "zero_attributions_distinct": "none=binding-route-absent, beads=not-exercised-by-run, github=binding-route-unreachable, drafts=draft-gate",
+    "github_schema_unreachable": "local_only violates the github binding requirement for issue or issue_and_projects",
+    "write_counts_pre_post_derived": "Pre/post inventory moved revision 0 to 8 and nodes 0 to 5 while all external linkage counts remained 0",
+    "stdin_schema_validation": "validate-graph-schema.py used --graph - with zero violations",
+    "goal_seek_snapshots": "Two snapshots retain the independently verified goal SHA-256",
+    "status_json": "PASS for scenario r6 and binding none",
+    "promote_via_c02_upsert": "Final restoration used ordinary upsert-node.py --input with the required feature lifecycle patch"
+  },
+  "notes": [
+    "The second identical Skill call regressed the promoted feature to its original draft state at revision 7; ordinary C02 upsert restored it at revision 8.",
+    "The regression is tracked separately as HarnessHub-bk8v and does not invalidate the final C14 observation contract.",
+    "Audit provenance matches the indexed modules and all external adapters were exercised with dry-run while local graph writes were real."
+  ],
+  "reviewer": "independent-live-trial-verifier-claude-opus-4-6",
+  "reviewed_at": "2026-07-29T00:00:00Z"
+}

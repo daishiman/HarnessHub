@@ -125,3 +125,10 @@ open\s*\(\s*(?P<q>['"])(?P<path>[^'"]+)(?P=q)\s*,\s*['"][waxr]\+?[bt]?['"]
 - focused pytest 48 passed / 2 skipped、Dev Graph 全体 pytest 697 passed / 2 skipped、fresh live-trial 9/9 PASS、exact-13 P01-P13 / violation 0、graph schema violation 0、repository CI PASS 123 / WARN 4 / FAIL 0 を確認した。
 - C19 r4 は system-spec-harness 正規 4 entry point と C02 writer だけを使い、仕様 9件・architecture 1件の lineage/digest/evidence と goal-seek 2行を独立 evaluator / canonical verdict の双方で PASS とした。
 - 受入条件をすべて満たしたため Beads `HarnessHub-lp36` は最終証跡を追記して close した。
+
+## 2026-07-29 PR #598 コンフリクト解消後の再確認
+
+- local `main` / `origin/main` を `ca776deaec372056ffef3630ddd6d57b7cc2aa7b` へ同期し、本 branch へ merge した。feature 文書の競合は lp36 と main の C14 履歴を両方保持して解消した。
+- 統合後 behavior closure `c0d843d7…4801` に対する C14 fresh live-trial beads / none 2 系列を PASS とし、外部 session 回収で終了した試行は失敗証跡としてのみ保持した。
+- focused pytest 69 passed / 2 skipped、広域 pytest 9306 passed / 7 skipped、exact-13 / graph schema / artifact placement は違反 0、repository CI は PASS 123 / WARN 4 / FAIL 0。
+- main から qa-089 の品質証拠契約を `system-spec/`・`specs/`・`architecture/`・`tasks/` へ正規フローで取り込んだ。本課題から追加の製品 API・DB・security・UI 契約変更はない。

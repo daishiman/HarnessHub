@@ -37,6 +37,8 @@ script_refs:
   - scripts/live-trial-status.py
   - scripts/live-trial-poll.py
   - scripts/live-trial-verdict.py
+  - scripts/build-skill-behavior-closure.py
+  - scripts/validate-live-trial-scenario-contract.py
   - scripts/validate-goal-seek-evidence.py
 source: eval-log/harness-creator/_plugin/elegant-review/20260702T160010-anti-goodhart/design-decisions.md
 source-tier: internal
@@ -115,11 +117,11 @@ fork subagent では自走 / 入れ子 Skill / 対話 gate / 本番 hook ロー�
 ### 完了チェックリスト (Checklist)
 
 - [ ] 被験 skill が denylist 外で、workdir が `eval-log/<plugin>/<skill>/live-trial/<run-id>/` に作られた
-- [ ] task.md が契約 5 項目 (下表) を満たし、`READY:` 確認後にファイル経由で送信された
+- [ ] task.md が契約 7 項目 (下表) を満たし、`READY:` 確認後にファイル経由で送信された
 - [ ] poll が終端 exit (DONE / STALL / GATE / HARD_CAP) で閉じ、`--state-file` で counter が呼び越し永続化された
 - [ ] out/ + pane.txt + transcript.jsonl の 3 点が workdir に揃った (回収完了条件)
 - [ ] fresh evaluator が PASS | FAIL + blocker 列挙のみを返した (点数出力なし。正本 = goal-seek-paradigm.md 達成判定節)
-- [ ] `verdict.json` が schema 自己検証を通過して書き出された (proof trial は actual_model 機械 gate 込み)
+- [ ] `verdict.json` が schema 自己検証を通過して書き出され、scenario 観測の `evidence_ref` が workdir 内の実在ファイルへ解決した (proof trial は actual_model 機械 gate 込み)
 - [ ] どの終了経路でも tmux セッションが kill され、reaper で残骸ゼロを確認した
 
 ### ゴールシークループ
@@ -153,7 +155,7 @@ python3 "$SCRIPTS/plan-live-trials.py" \
 - session 名 = `lt-<run-id>-<slug>` (一意。固定名は並行 trial が boot の kill-session で互いを殺す)
 - `references/task-template.md` を `<workdir>/task.md` へ cp し `{{...}}` を Edit で置換 (作文より速く契約漏れを防ぐ)
 
-**task.md 契約 (5 項目必須 — テンプレの構造がこれを満たす)**:
+**task.md 契約 (7 項目必須 — テンプレの構造がこれを満たす)**:
 
 | # | 項目 | 形 |
 |---|---|---|
@@ -162,6 +164,19 @@ python3 "$SCRIPTS/plan-live-trials.py" \
 | 3 | 終了報告 | 「DONE: <status>」と 1 行だけ報告 |
 | 4 | 自走文言 | 「途中で人間に質問せず最後まで自走」を明記 |
 | 5 | 裁量封じ | 「skill の手順に忠実に従い、人手の追加判断・省略をしない」を明記 |
+| 6 | scenario 契約の転記 | scenario がある run では、`args` は `task_args_template` の placeholder だけを実値へ置換して起こし、`required_observations` を**逐語で**転記する (要約・言い換え・取捨選択は禁止) |
+| 7 | task 手順契約 | scenario に `task_contract` がある場合、`required_fragments` を含み `forbidden_fragments` を含まない task.md にする |
+
+項目 6 の理由: task.md が scenario 契約から逸れると、判定の正本が「scenario」と「その run の task.md」の 2 つに分裂し、verdict は後者に対して緑になる。実際 `run-dev-graph-decompose` の再走で、契約が明文で「満たさない」と否定した状態のまま verdict が PASS になる事故が起きた。契約に合わない args で走らせたくなったときは、**task.md を書き換えるのではなく scenario を改訂して `scenario_id` を bump する** — bump は `plan-live-trials.py` が旧証跡を `scenario-contract-superseded` として失効させる操作でもある。
+
+`--observation N=<evidence_ref>` の参照先は workdir 内へ保存する。`evidence_ref` は
+`verdict.json` から見た相対パスで、生成時に実在と containment（閉じ込め＝`../` などで
+workdir 外へ出ないこと）を検査する。ignored fixture や一時ディレクトリの絶対パスを
+参照しても clone 後に証拠が残らないため禁止する。
+
+項目 7 は、agent が実装不能な指示を別 operation へ読み替えて完走し、結果だけを
+scenario PASS にする事故を防ぐ。completion 専用 operation と feature promotion の
+ように意味が異なる手順は、最終 graph が同じでも置換してはならない。
 
 ### boot
 
@@ -220,7 +235,9 @@ python3 $SCRIPTS/live-trial-verdict.py --workdir "$WORKDIR" --target-skill "<plu
   --skill-dir "<被験skillディレクトリ>" --session-id "$SESSION_ID" --requested-model "$MODEL" \
   --goal-seek-eval-root "<被験repoのeval-log>" \
   --launch PASS --completion PASS --goal-result PASS --nudge-count 0 --gate-response-count 0 \
-  --poll-exit DONE [--proof] [--blocked]
+  --poll-exit DONE [--proof] [--blocked] \
+  [--scenario-id "<stable id>" --scenario-file "<required_observations の正本 JSON>" \
+   --observation "1=<evidence ref>" --observation "2=<evidence ref>" ...]
 python3 $SCRIPTS/live-trial-backend.py kill-session "$SESSION"
 python3 $SCRIPTS/live-trial-backend.py reap   # 取りこぼした lt-* 残骸の一括回収
 ```
@@ -238,6 +255,7 @@ verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから
 
 - **被験 skill の Skill 呼出しが transcript に0件なら `launch` は機械的に `FAIL`** — `--launch PASS` の自己申告を上書きする。skill を起動せず、その中で使われる script を Bash から直接叩いた実走は、成果物が出ても受け入れ検証にならない (正本 = `live-trial-verdict.py` の `extract_skill_invocations()`、記録先 = verdict の `invoked_skills`)。
 - **被験 skill が `goal_seek` を宣言している場合、配線成果物 3 件の実在・intermediate の必須 6 キー・`original_goal`・その SHA-256 を実体検証し、違反時は `goal_fit=FAIL`** — fresh evaluator が PASS を返しても機械 gate が優先する。ファイル名の transcript 言及だけでは履行扱いにしない (正本 = `validate-goal-seek-evidence.py`、記録先 = verdict の `goal_seek_evidence_violations`)。
+- **`--scenario-id` を名乗る trial は `--scenario-file` が必須で、scenario 正本の `required_observations` を `--observation N=<evidence ref>` で回収宣言しないと `goal_fit=FAIL`** — scenario_id の一致は同一性の主張にすぎず契約の充足を意味しない。未回収項目と `task_args_template` との flag 乖離 (`missing_flags` / `extra_flags` の両方が違反) は verdict の `scenario_contract` へ機械列挙される。template が実態と違うなら**ゲートを緩めず** `task_args_template` を直して `scenario_id` を bump する (正本 = `scenario_contract_blockers()`、記録先 = verdict の `scenario_contract`)。
 - **nudge_count > 0 または gate 応答 > 0 の完走は `DEGRADED` (自走未達) に降格** (自動送信でも介入)。
 - **proof trial** は「人手介入なし PASS」が受け入れ条件 — DEGRADED 相当は `FAIL`、さらに actual_model ≠ requested_model で `FAIL` (機械 gate)。
 - tmux 不在 / HARD_CAP 超過は `BLOCKED` (fail-closed)。
