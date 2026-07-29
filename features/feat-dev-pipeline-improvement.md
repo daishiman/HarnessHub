@@ -207,6 +207,20 @@ close した。
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
+## 2026-07-29 追記: skill tree lint の test cache 偽陽性修正
+
+- `HarnessHub-xswf` で、per-plugin pytest が生成する `.pytest_cache/v/cache` を
+  skill tree の第13条違反として数える実行順序依存を修正した。
+- dot directory とその配下を一般規則で除外し、`__pycache__` / `.pyc` の既存除外と統合した。
+- `.pytest_cache`、`.mypy_cache`、`.tool-cache` の正例と通常 nested directory の負例、
+  root / plugin script の byte parity を回帰テストにした。
+- `system-spec/spec-state.json` を単一 writer で R4-reopen し、
+  `system-spec/testing-qa.md` qa-092、`architecture/harness-hub-testing-qa.md`、
+  `specs/harness-hub-system-specification.md`、P12/P13 task spec へ反映した。
+- 製品 API・DB・認証認可・UI・deploy unit は非変更。判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
+  を正とする。
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md)

@@ -240,3 +240,18 @@ boot READY 行の `OWNER_PID` と同じ値を
 障害調査で metadata 無し session を見つけても通常 reaper は削除しないため、
 必要性と対象を確認してから個別 `kill-session` または管理者 `--all` を選ぶ。
 詳細は `docs/worktree-parallel-operations-runbook.md` と system-spec `qa-090` を正とする。
+
+## 2026-07-29 skill tree lint 品質ゲート追補
+
+`HarnessHub-xswf` の最終レビューでは、focused test だけでなく
+per-plugin pytest の直後に repository criteria test を実行する順序回帰を必須にした。
+test tool が生成する dot cache は skill tree の設計物ではないため除外し、
+通常の nested directory 違反は引き続き fail-closed で拒否する。
+
+仕様反映は `system-spec/testing-qa.md` qa-092、
+`architecture/harness-hub-testing-qa.md`、
+`specs/harness-hub-system-specification.md`、
+`features/feat-dev-pipeline-improvement.md` に同一 wave で記録する。
+検証コマンドと結果の受領書は
+`docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
+を正とする。

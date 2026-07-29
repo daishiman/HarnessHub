@@ -12,18 +12,18 @@ iteration: null
 title: "lint-skill-tree.py の第13条が .pytest_cache を除外せず、per-plugin pytest 実行後に criteria テストが 7 件偽陽性で落ちる"
 owners: ["daishiman"]
 created_at: "2026-07-26T01:20:00Z"
-updated_at: "2026-07-26T03:27:35.277123Z"
-status: "draft"
+updated_at: "2026-07-29T12:15:39.081186Z"
+status: "closed"
 depends_on: []
 related_nodes: []
-resource_scope: ["scripts/lint-skill-tree.py","plugins/skill-governance-lint/scripts/lint-skill-tree.py","tests/criteria/test_all_skills_criteria.py",".github/workflows/harness-creator-kit-ci.yml"]
+resource_scope: ["scripts/lint-skill-tree.py","plugins/skill-governance-lint/scripts/lint-skill-tree.py","tests/criteria/test_all_skills_criteria.py","tests/scripts-plugins/test_skill_governance_lint__lint_skill_tree.py",".github/workflows/harness-creator-kit-ci.yml","docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md"]
 purpose: "第13条の生成物除外が __pycache__ と .pyc しか持たず .pytest_cache が漏れているため、CI 機構B (cwd=test_root の per-plugin pytest) の生成物が続く機構A を落とす。CI はクリーン checkout のため構造的に検出できず、ローカル実行者だけが踏む順序依存の偽陽性になっている"
 goal: "テスト実行順序に依存せず 0 failed になる状態にし、生成物ディレクトリの除外を個別名の列挙から一般規則へ移す"
 mvp_alignment: null
 scope_in: ["lint-skill-tree.py 第13条の生成物ディレクトリ除外の一般化","scripts/ と plugins/skill-governance-lint/scripts/ の複製 2 箇所への同時反映",".pytest_cache 相当の生成物を含む skill ツリーで exit 0 を確認する回帰テスト","機構B の直後に機構A を走らせても 0 failed になることの確認"]
 scope_out: ["lint-skill-tree.py の複製そのものの SSOT 化 (別課題として切り出す判断がありうる)","ルートからの pytest が pytest-asyncio の collect で INTERNALERROR になる件 (CI が per-plugin 実行を採る前提のため別問題)","ALLOWED_DIRS / ALLOWED_NESTED_DIRS の規約そのものの見直し"]
 acceptance: ["skill ディレクトリ配下に .pytest_cache/v/cache が存在する状態で lint-skill-tree.py が exit 0 を返す","CI 機構B (per-plugin pytest) の直後に機構A (pytest tests/) を走らせても 0 failed になる","除外が scripts/ と plugins/skill-governance-lint/scripts/ の両複製で同時に効いている","回帰テストが .pytest_cache という個別名のみに依存せず同性質の生成物ディレクトリ全般で通る"]
-architecture_refs: []
+architecture_refs: ["arch-harness-hub-testing-qa"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-29T12:10:50Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-07-29T12:10:50Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-26T01:20:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -129,3 +129,23 @@ skill ディレクトリ直下に `tests/` を持つ 10 箇所が `.pytest_cache
 ## 検出経緯
 
 2026-07-26、HarnessHub-6in4 / HarnessHub-q5h9 の完了確認として「変更範囲外への波及がないこと」をリポジトリ全体テストで検証しようとした際に判明した。まずルートから `pytest -q` を試したが pytest-asyncio の collect で INTERNALERROR になり (CI もこれを避けて per-plugin 実行にしている)、CI と同じ機構B を再現したところ生成された `.pytest_cache` が続く機構A を落とした。7 failed はいずれも 6in4 の変更 (dev-graph) とは無関係で、因果は本欠陥に限定される。
+
+## 最終レビュー結果 (2026-07-29)
+
+第13条は dot で始まる directory とその配下を test tool の生成物として除外し、
+通常の nested directory 違反、`__pycache__` / `.pyc` の既存境界を維持した。
+回帰検体は `.pytest_cache`、`.mypy_cache`、任意の `.tool-cache` を含み、
+root / plugin の実装が同一バイト列であることも固定した。
+
+- focused pytest: `41 passed`
+- CI と同じ実行順序: 全21 per-plugin group 成功後、
+  repository pytest `7626 passed, 5 skipped, 0 failed`
+- repository CI: `PASS 123 / WARN 4 / FAIL 0`
+- task package: P01-P13 exact、validation PASS
+- dev-graph: schema / source digest / evidence refs / open residue の対象検査 PASS
+
+仕様・設計への影響は製品機能ではなく repository の品質ゲート契約に限定される。
+`system-spec/testing-qa.md` の qa-092、仕様要約、architecture wrapper、feature、
+P12/P13 task へ正規反映し、詳細を
+`docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
+へ記録した。Beads `HarnessHub-xswf` と本 node は完了状態へ同期済みである。
