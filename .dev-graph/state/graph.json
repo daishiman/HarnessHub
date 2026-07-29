@@ -1,5 +1,5 @@
 {
-  "graph_revision": 977,
+  "graph_revision": 981,
   "nodes": [
     {
       "acceptance": [
@@ -12943,9 +12943,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"
+        "evaluated_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13000,9 +13000,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-23T04:45:00Z",
+        "imported_at": "2026-07-29T05:21:27Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13018,7 +13018,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T00:55:00Z"
+      "updated_at": "2026-07-29T05:22:00.507534Z"
     },
     {
       "acceptance": [
@@ -25347,9 +25347,9 @@
         "graph.json 分割の実装 (トリガー記録のみ)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-21T14:40:00Z",
+        "imported_at": "2026-07-29T05:21:27Z",
         "origin_kind": "generated",
-        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -25368,7 +25368,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T08:39:07.757446Z"
+      "updated_at": "2026-07-29T05:22:10.828117Z"
     },
     {
       "acceptance": [
