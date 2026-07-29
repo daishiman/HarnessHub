@@ -1,0 +1,1 @@
+{"status":"ERROR","scenario":"C14-OUT1-positive-macro-decomposition-r7","binding":"beads","reason":"A concurrent global lt-* reaper removed the tmux session after node generation, promotion and the second idempotent Skill invocation but before the audit and completion marker"}

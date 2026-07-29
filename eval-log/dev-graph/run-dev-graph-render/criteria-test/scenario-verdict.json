@@ -27,13 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C05-OUT1-positive-feature-progress",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260726T040700Z-render-final/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260729T024000Z-lp36-render-hook-final/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260726T040700Z-render-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260726T040700Z-render-final/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260726T040700Z-render-final/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260729T024000Z-lp36-render-hook-final/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260729T024000Z-lp36-render-hook-final/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260729T024000Z-lp36-render-hook-final/evaluator-verdict.txt",
+        "independent: eval-log/dev-graph/run-dev-graph-render/live-trial/20260729T024000Z-lp36-render-hook-final/out/status.json"
       ],
-      "observed": "fresh live trial PASS。feature progress 表示、read-only projection、実 graph との整合、goal-seek を独立評価で確認した。receipt 契約の残課題は HarnessHub-35ai に分離した。"
+      "observed": "共有 hook 更新後の fresh live trial PASS。13 task の denominator と graph から独立再計算した done=4、registration receipt/source digest、外部 runtime dependency 0 の inline SVG/JS、正しい 2 行 goal-seek を別プロセスの evaluator が再検査した。nudge 0 / gate 応答 0 / DONE 260 秒。receipt 契約の残課題は HarnessHub-35ai に分離済み。"
     }
   }
 }

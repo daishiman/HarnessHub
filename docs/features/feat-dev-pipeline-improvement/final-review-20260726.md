@@ -1,8 +1,8 @@
 ---
-layer: feature-design
 graph_node_id: "doc-dev-pipeline-final-review-20260726"
 artifact_kind: "document"
 artifact_subtypes: []
+layer: feature-design
 project_id: "harness-hub"
 domain: "dev-workflow"
 tags: ["dev-graph","final-review","spec-impact"]
@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-28T03:00:00Z"
+updated_at: "2026-07-28T23:16:20Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -34,7 +34,7 @@ confirmation_status: "draft"
 evaluation_status: "pending"
 confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
 source_lineage: {"imported_at":null,"origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
-classification_confidence: 1.0
+classification_confidence: 1
 classification_reason: "ユーザー要求による Dev Graph 基盤変更の最終レビュー記録"
 classification_candidates: []
 issue_linkage: null
@@ -84,9 +84,9 @@ C10 guard の timeout 起因 fail-open、`pathlib` 経由の authority 直書込
 
 ### Beads
 
-完了対象: `HarnessHub-6in4`, `HarnessHub-q5h9`, `HarnessHub-v1yh`, `HarnessHub-wdpq`, `HarnessHub-n7gw`, `HarnessHub-7dw`。
+完了対象: `HarnessHub-6in4`, `HarnessHub-q5h9`, `HarnessHub-v1yh`, `HarnessHub-wdpq`, `HarnessHub-n7gw`, `HarnessHub-7dw`, `HarnessHub-lp36`。
 
-継続対象: `HarnessHub-dyxr`, `HarnessHub-9ndl`, `HarnessHub-lp36`, `HarnessHub-xswf`, `HarnessHub-35ai`, `HarnessHub-768b`, `HarnessHub-dqca`, `HarnessHub-vf66`, `HarnessHub-2mor`。`HarnessHub-768b` は C19 task 指示と fixture 契約の前提ずれ、`HarnessHub-dqca` は graph 管理 docs の C02 再登録で `layer` が失われる契約不整合、`HarnessHub-vf66` は hooks entry point の宣言・登録 parity が dev-graph 専用テストにしか無い被覆差を決定論的に防ぐ後続課題。各 Dev Graph issue node の `beads_linkage` を C02 writer で補正し、本文保持 receipt を確認した。
+継続対象: `HarnessHub-dyxr`, `HarnessHub-9ndl`, `HarnessHub-xswf`, `HarnessHub-35ai`, `HarnessHub-768b`, `HarnessHub-dqca`, `HarnessHub-vf66`, `HarnessHub-2mor`。`HarnessHub-768b` は C19 task 指示と fixture 契約の前提ずれ、`HarnessHub-dqca` は graph 管理 docs の C02 再登録で `layer` が失われる契約不整合、`HarnessHub-vf66` は hooks entry point の宣言・登録 parity が dev-graph 専用テストにしか無い被覆差を決定論的に防ぐ後続課題。各 Dev Graph issue node の `beads_linkage` を C02 writer で補正し、本文保持 receipt を確認した。
 
 ### 仕様・設計への影響
 
@@ -188,7 +188,27 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 - entry point の宣言は「ディスク上のファイル一覧」ではなく「実際の登録内容」と突合する。代理指標は、規約どうしが衝突したとき正しい実装を偽陽性で落とす。
 - 「起動される実体」をファイルの存在や配置ディレクトリで代理しない。除外は命名規則ではなく構造 (import 可能名・shebang なし・`__main__` なし) で判定し、実 entry point の宣言漏れを素通りさせない。次に同型の 4 例目が出たら、検査側ではなく 500 行分割規約の側を見直す。
 - 指標が分割で希釈されたとき、verdict を書いて率を戻さない。実測値へ baseline reset し、理由を指標ファイル自身の note へ残す。指標を守るために指標の意味を壊さない。
-- `os` / `shutil` / `json.dump` 等の広域 interpreter API は誤遮断設計を伴うため、本変更へ無理に含めず `HarnessHub-lp36` で継続する。
+- `HarnessHub-lp36` で `shutil.copy*/move`、`os.replace/rename`、`json.dump` と `open()` mode の focused BLOCK / ALLOW 境界を実装した。静的共起判定の保証外は契約と docstring に明記し、完全解析とは主張しない。
+
+## 2026-07-29 追記: HarnessHub-lp36 最終レビュー
+
+- 実装は graph authority への列挙済み interpreter 書込みを BLOCK し、`r` / `rb` と読取 API を ALLOW する。
+- focused test は BLOCK 17 形 / ALLOW 5 形を固定し、変更した Python は 234 行 / 307 行で 500 行以下。
+- 既存プラグイン正本 `claude-code-hooks-contract.md` の「graph authority 直書込み禁止」への適合を確認し、列挙 API の保証境界は実装 docstring / focused test、履歴は feature / architecture / standalone issue に記録した。
+- 設計上の保証境界は `architecture/` へ反映した。一方、`system-spec/`・`specs/` は製品正本、`tasks/feat-dev-pipeline-improvement/` は凍結済み exact-13 投影であり、製品 API・state・security・UI を変えない内部 hook 修正を逆輸入すると二重正本になるため非変更と判断した。
+- local `main` と `origin/main` は `4638b97` で一致し、本 branch は merge commit `d14c021` で local `main` を取り込んだ。
+- focused pytest は 48 passed / 2 skipped、Dev Graph 全体 pytest は 697 passed / 2 skipped、task 仕様書の exact-13 検証は P01-P13 / violation 0、graph schema は violation 0 だった。
+- Dev Graph 9 skill の fresh live-trial は 9/9 PASS。C19 r4 は system-spec-harness 正規 4 entry point、C02 writer、lineage/digest/evidence、goal-seek 2行を独立 evaluator と canonical verdict の双方で PASS とし、nudge 0 / gate 応答 0 で完走した。
+- `scripts/run-ci-checks.sh` は PASS 123 / WARN 4 / FAIL 0。WARN は段階導入中の既存 plugin completeness / rubric refs で、本変更の blocking failure はない。
+- Beads `HarnessHub-lp36` は最終証跡を追記して close した。HEAD 束縛の仕様反映 receipt は対象 commit 後に `spec_impact: reflected` として記録し、PR 作成 guard で検証する。
+
+### PR #598 コンフリクト解消後の統合レビュー
+
+- local `main` / `origin/main` を `bb955807f535da43ecdb226a1237552f171af783` へ同期し、その local `main` を本 branch へ merge した。後続 main の CI token 最小権限変更も取り込み済みである。
+- 競合した feature / architecture 文書は lp36 interpreter guard、C14 acceptance、live-trial session ownership の履歴をすべて保持した。C14 criteria receipt は統合後も有効な closure `c0d843d7…4801` の beads r3 / none r1 fresh PASS を参照する。
+- 旧 global reaper に終了された beads r1/r2 は append-only の失敗証跡として残し、最終合格判定から除外した。原因は main の PR #600 で ownership 境界として修正済みである。
+- focused pytest は 69 passed / 2 skipped、reaper 専用 pytest は 84 passed、広域 pytest は 9308 passed / 7 skipped、後続 main の Actions secret 専用 Vitest は 15 passed。exact-13 P01〜P13、graph schema、artifact placement は違反 0、repository CI は PASS 123 / WARN 4 / FAIL 0。
+- main の `system-spec/`・`specs/`・testing architecture・P12/P13 にある qa-089 契約を正規フローのまま統合した。lp36 は既存の graph authority 直書込み禁止への適合修正であり、追加の製品仕様影響はない。
 
 ## 運用・更新方法
 
@@ -215,3 +235,5 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 | 2026-07-28 | PKG-006/007 の起動対象前提を構造判定へ是正 (3 例目)、契約テスト 3 分割、pytest 8037件を追記 | Claude |
 | 2026-07-28 | qa_log/approval_log/categories/goals の ID 一意性検査 (HarnessHub-33ho) を追記、validate-coverage-matrix.py の 500 行分割 (4 例目・規約側の見直し不要と判定) を追記 | Claude |
 | 2026-07-28 | scope_in 未消化点検の記載誤り (scope_out→scope_in) を訂正し、follow-up issue HarnessHub-ory6 / issue-id-uniqueness-gate-generalization-20260728 への切り出しを追記 | Claude |
+| 2026-07-29 | HarnessHub-lp36 の interpreter BLOCK / ALLOW 境界、設計反映、9/9 live-trial と全品質ゲート PASS、Beads close を追記 | Codex |
+| 2026-07-29 | PR #598 の main コンフリクト解消、C14 統合後 fresh 証拠、pytest 9306件と仕様再受領を追記 | Codex |

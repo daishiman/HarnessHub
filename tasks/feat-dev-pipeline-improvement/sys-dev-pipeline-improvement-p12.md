@@ -137,7 +137,7 @@ qa-067 要件 1 と 8 の運用面の恒久化である。検査 (lint-open-resi
 
 `HarnessHub-9ndl` / `HarnessHub-dyxr` の最終レビューは、P12 の「運用手順を再現可能な証拠へする」責務へ次を追補した。live-trial verdict の observation は run directory 内の実在ファイルへ解決し、scenario 更新・削除で旧証拠を失効させる。scenario が必須・禁止手順を持つ場合は task.md も照合し、別 operation への読み替えを許さない。監査値は pre/post state と永続 graph から導出し、起動引数や dry-run echo を代理値にしない。昇格証跡は最終 persisted node の正準 digest と突合し、同じ graph の gate 違反を正準 validator が拒否することを負の検体で確認する。実測コマンドと受領結果は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` に記録する。
 
-再実行結果は広域 pytest 9284 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。
+再実行結果は PR #598 の最新 `main` (`bb95580`) 統合後ツリーで広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。live-trial は統合後も有効な behavior closure `c0d843d7…4801` へ束縛し、旧 reaper による別 worktree session 回収は main の ownership 契約で解消した。
 
 ## Inner goal-seek execution loop
 

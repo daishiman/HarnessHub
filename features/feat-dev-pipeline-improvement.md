@@ -148,6 +148,25 @@ checkout 中の branch ref だけを動かして作業ツリーを古いまま�
 - focused pytest 29 PASS、latest verdict task に対する `--all` は checked 1 / violation 0。
 - 技術契約は `plugins/dev-graph/references/live-trial-task-contract.md`、仕様影響なしの層別判断は `docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md` を正本とする。
 
+## 2026-07-29 追記: interpreter 書込み guard の被覆修正
+
+`HarnessHub-lp36` で C10 の interpreter 判定を補正した。`Path.write_text/write_bytes`、
+`shutil.copy*/move`、`os.replace/rename`、`json.dump` と書込み可能な `open()` mode を
+graph authority 直書込みとして遮断し、読取専用の `r` / `rb` は許可する。判定は静的な
+共起検査であり、任意の Python 実行を完全解析するものではない。既存正本
+`plugins/dev-graph/references/claude-code-hooks-contract.md` の「graph authority 直書込み禁止」
+に対する適合修正であり、列挙 API の保証境界は実装 docstring と focused test に固定した。
+
+本変更は既存プラグイン内部契約への適合を直し、HarnessHub 製品の API・state・security・UI
+contract は変えない。`system-spec/`・`specs/` は qa-066 の二重正本防止に従い非変更、
+凍結済み exact-13 の `tasks/feat-dev-pipeline-improvement/` も手編集せず、実装結果は
+本 feature 履歴、architecture、final review、standalone issue に記録する。
+
+最終受入では focused pytest 48 passed / 2 skipped、Dev Graph 全体 697 passed / 2 skipped、
+9 skill の fresh live-trial 9/9 PASS、exact-13 P01-P13 / violation 0、graph schema violation 0、
+repository CI PASS 123 / WARN 4 / FAIL 0 を確認した。`HarnessHub-lp36` は証跡を追記して
+close した。
+
 ## 2026-07-29 追記: C14 live-trial acceptance の証拠完全性
 
 - `HarnessHub-9ndl` で C14 decompose 監査を、preview の自己申告ではなく実 graph、pre/post state 差分、永続 `tracker_binding`、実装 schema probe から判定するよう修正した。
@@ -158,7 +177,8 @@ checkout 中の branch ref だけを動かして作業ツリーを古いまま�
 - draft gate の起票 0 件と promoted candidate の external adapter dry-run による 0 件を別の帰属として記録する。
 - 500 行を超えた手書き実装・テストは import 専用 support module と責務別テストへ分離し、監査 provenance は全 module の複合 digest を保持する。
 - 仕様・設計への影響は開発品質ゲートの証拠経路に限定される。qa-089、`architecture/harness-hub-testing-qa.md`、[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) に反映した。
-- `main` 統合後の最終ゲートは広域 pytest 9284 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。
+- 最新 `main` (`bb95580`) 統合後の最終ゲートは広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。後続 main の CI token 最小権限変更は本 feature の Python / C14 behavior closure を変えない。
+- PR #598 のコンフリクト解消では、本 feature の lp36 interpreter guard、C14 acceptance 強化、PR #600 の live-trial session ownership 履歴をすべて保持した。C14 受領証拠は統合後も有効な behavior closure `c0d843d7…4801` の beads r3 / none r1 とし、旧 reaper に終了された beads r1/r2 は監査用の失敗証跡としてのみ保持した。無差別回収の原因は最新 main の ownership 契約で修正済みである。
 
 ## 2026-07-29 追記: live-trial reaper の並行安全性
 

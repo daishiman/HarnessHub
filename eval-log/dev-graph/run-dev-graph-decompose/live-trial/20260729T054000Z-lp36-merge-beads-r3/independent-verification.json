@@ -1,0 +1,49 @@
+{
+  "verdict": "PASS",
+  "reviewer": "codex-independent-deterministic-review-20260729",
+  "blockers": [],
+  "fixture": "eval-log/dev-graph/live-trial-fixtures/lp36-merge-beads-r3",
+  "checks": {
+    "graph": {
+      "revision": 6,
+      "node_count": 5,
+      "feature_count": 4,
+      "edge_count": 3,
+      "task_count": 0,
+      "acyclic": true,
+      "measured_max_inter_feature_depends_on": 1,
+      "declared_max": 3
+    },
+    "binding": {
+      "persisted": "beads",
+      "run_binding_attested": true
+    },
+    "promoted_evidence": {
+      "graph_node_id": "feat-user-auth-001",
+      "declared_digest": "3c0ddec2292a0e951dcef92cd9cd44c6661612b6dc60dbe37c89ebb2273db48e",
+      "recomputed_digest": "3c0ddec2292a0e951dcef92cd9cd44c6661612b6dc60dbe37c89ebb2273db48e",
+      "matches": true,
+      "recipe": "sha256 of final node canonical JSON excluding only confirmation_evidence"
+    },
+    "audit": {
+      "pass": true,
+      "evidence_all_bound": true,
+      "negative_controls_all_rejected": true,
+      "preview_consistent": true,
+      "structural_contract_valid": true
+    },
+    "goal_seek": {
+      "valid": true,
+      "intermediate_rows": 2,
+      "violations": []
+    },
+    "trial": {
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+      "observations": "7/7",
+      "nudge_count": 0,
+      "gate_response_count": 0,
+      "actual_model": "claude-opus-4-6"
+    }
+  },
+  "note": "The reviewer independently loaded the final graph, recomputed the promoted-node digest, and reran the canonical audit and goal-seek validators instead of trusting the trial's PASS marker."
+}

@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "scenario": "C19-OUT1-positive-system-spec-lineage",
+  "stages": {
+    "stage_1_preflight_and_harness_flow": "PASS",
+    "stage_2_c02_import_and_lineage": "PASS",
+    "stage_3_c02_only_writes": "PASS",
+    "stage_4_no_duplicate_logic": "PASS"
+  },
+  "evidence": {
+    "graph_revision": 2,
+    "registered_nodes": ["spec-requirements-definition", "arch-system-overview"],
+    "validate_source_digest_exit": 0,
+    "validate_evidence_refs_exit": 0,
+    "goal_seek_verification": "PASS",
+    "harness_logic_hits_in_dev_graph_scripts": 0,
+    "harness_logic_hits_in_harness_positive_control": 77
+  },
+  "completed_at": "2026-07-28T10:45:00Z"
+}
