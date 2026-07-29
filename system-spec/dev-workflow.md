@@ -20,7 +20,7 @@ serves_goals: [G1, G4, G5]
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-091 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-092 |
 
 ## 確定内容 (質疑録)
 
@@ -48,7 +48,7 @@ serves_goals: [G1, G4, G5]
 
 【6. Web App 出口との境界】作者 local session から顧客 Web App を公開する I5 は Hub 本体の開発フローと分離する。本契約は Hub repository の開発フローに限り、Hub の外部 API、データモデル、認証認可、Cloudflare deploy unit は変更しない。
 
-### qa-091 (対応セル: desktop-macos)
+### qa-092 (対応セル: desktop-macos)
 
 **質問**: Dev Graph の implementation readiness が本文未記入の成果物を通さないため、C11 のローカル開発契約へどの本文検査境界を追加しますか?
 

@@ -1,0 +1,1 @@
+[capture unavailable: tmux session disappeared after the second BUSY_TOOL_RUNNING stall]

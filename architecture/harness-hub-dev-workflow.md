@@ -130,6 +130,31 @@ live-trial 証跡の調査 (`HarnessHub-s7b`/`-rix`/`-aoe`/`-m7d`) で、**成�
 
 `Path.write_text/write_bytes/touch/unlink/rmdir` と書込み mode の `Path.open` は遮断対象へ含めた。一方、`os` / `shutil` / `json.dump` 等の広域 API は静的判定の誤遮断リスクを別途設計する必要があるため、architecture 上の既知の残余リスクとして `HarnessHub-lp36` で追跡する。
 
+### 差分追記 (2026-07-29): interpreter 書込み API の BLOCK / ALLOW 境界
+
+`HarnessHub-lp36` では、上記残余リスクのうち明示対象にした API を同一 command 内の
+「書込み API 字面 + graph authority path」の共起で遮断する。対象は
+`shutil.copy*/move`、`os.replace/rename`、`json.dump`、`Path.write_text/write_bytes` と
+`open(path, w|a|x|r+)` である。`open(path, r|rb)`、`json.load(open(path))`、
+`Path.read_text()` は read-only 調査を妨げないよう ALLOW に固定する。
+
+この境界は Python AST 全体の完全解析ではない。変数化された path/mode、alias import、
+`exec`/`eval`、`os.open` は保証外とし、C02 atomic writer の利用規約を残す。粗い共起判定に
+よる誤遮断可能性は実装 docstring と focused test に固定し、「任意の interpreter 書込みを
+完全遮断」とは表現しない。既存の「graph authority 直書込み禁止」契約への適合修正であり、
+製品仕様への影響はないため `system-spec/`・`specs/` は非変更とする。
+
+境界は BLOCK 17 形 / ALLOW 5 形の focused test、Dev Graph 9 skill の fresh live-trial
+9/9 PASS、全体 pytest 697 passed / 2 skipped で検証した。C19 は system-spec-harness の
+正規 4 entry point と C02 writer だけを使い、lineage・digest・evidence を独立 evaluator と
+canonical verdict の双方で PASS とした。
+
+PR #598 の最終統合では最新 `main` (`bb95580`) に含まれる C14 live-trial acceptance と
+session ownership 契約を本 guard と同一ツリーで再検証した。feature 文書の競合は各設計履歴を
+保持し、C14 receipt は統合後も有効な behavior closure `c0d843d7…4801` の beads / none
+fresh 2 系列へ更新した。旧 reaper で終了した試行は失敗証跡として残し、その原因は main の
+ownership 修正で閉じた。製品 API・state・security・UI の契約は非変更である。
+
 ### 差分追記 (2026-07-28): 500 行分割規約が entry point 宣言契約と衝突する
 
 上記の責務分離で `hooks/` に import 専用の support module (`guard_graph_commands.py`) が生まれた。一方 plugin 完全性の契約テストは、`package-contract.json` の `entry_points.hooks` を **「`hooks/` にある `.py` / `.sh` の一覧」** と厳密一致で突合していた。両規約は個別には妥当だが同時には満たせず、PR #82 の CI がこれを「未宣言の entry point」として落とした。**片方の規約に従うともう片方を必ず破る**という構造であり、実装の不備ではない。
@@ -262,7 +287,7 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 
 ### 差分追記 (2026-07-29): C11 artifact 本文 readiness 境界
 
-出典: system-spec `qa-091`、bd `HarnessHub-4t9g`。
+出典: system-spec `qa-092`、bd `HarnessHub-4t9g`。
 
 Dev Graph の tracker 投影と system build handoff は、frontmatter と artifact file が
 存在するだけでは開始しない。C11 は `template-contract.json` の artifact kind 別

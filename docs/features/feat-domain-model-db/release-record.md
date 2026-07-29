@@ -130,7 +130,7 @@ qa-038【3】により本番と同一構成を 2 系統常設しない。よっ�
 | F-5 | `apps/hub/wrangler.jsonc` に D1 binding が無い | hedge へ切り替える際は binding 追加が必要。現状は「切替可能性の確認」まで (§3) | 設計どおり。切替判断時に対応 |
 | F-6 | `validate-system-plan.py` が 27 violations で red | `task-spec-section-missing` (Inner goal-seek execution loop) 13 件 + `inner-goal-seek-contract` 13 件 + `p13-spec-architecture-writeback` 1 件。`feat-hub-foundation` / `feat-doc-governance-portability` も同一の 27 件を返す既存かつリポジトリ全域の状態で、本タスクは `.dev-graph/plans/` も `tasks/` も変更していない | **解消**。2026-07-25 の main 取り込みで validator 契約版管理 (`validate-task-spec-contract.py` + `validation-contract-baseline.json`) が landed し、`status: pass` / `violations: []` / `contract_baseline_exemption: true` になった。本 task 側の是正は不要だった |
 | F-7 | runbook の四半期 drill が JSONL CLI だけを案内し、日次 SQL dump の復元経路と不一致 | R2 SQL dump の取得 → 新 Turso へ標準入力 restore → 18 table / 12 index → JSONL semantic round-trip の 2 段検証へ修正。Turso `--from-dump` の偽成功経路を明示的に不採用 | **解消**。HarnessHub-0yvi の追補として実走済み |
-| F-8 | R2 write を `CLOUDFLARE_API_TOKEN` 1 本へ統合したため、infrastructure-spec §7 が推奨する「Workers deploy 権限と R2 write 権限を分離した 2 token」が未達 | secret 台帳は 3 件減ったが、token 漏洩時の影響範囲は deploy + R2 write の両方へ広がる (最小権限の後退)。ただし §4.5 は「Workers binding 利用時は R2 専用キー不要」を既に確定しており、キー削除自体は確定範囲内 | **未達として明示記録**。`issue-ci-token-least-privilege-20260725` (**HarnessHub-bda4**) で追跡 |
+| F-8 | R2 write を `CLOUDFLARE_API_TOKEN` 1 本へ統合したため、infrastructure-spec §7 が推奨する「Workers deploy 権限と R2 write 権限を分離した 2 token」が未達 | 2026-07-29 に repository 配線を deploy token と R2 token へ分離し、qa-091 として仕様反映した。Wrangler REST API の制約から R2 token は account scope とする | **repository 実装済み / 外部実測待ち**。token 発行・GitHub secret 投入・拒否系・workflow 完走を `issue-ci-token-least-privilege-20260725` (**HarnessHub-bda4**) で継続 |
 
 ## 9. CI 配線 (qa-038【5】)
 
@@ -213,7 +213,7 @@ P13 の実装は、確定済み仕様が前提としていた運用手順を 3 �
 
 **`system-spec/spec-state.json` は変更していない。** `qa_log` はユーザー確認済み Q&A の記録であり、qa-071【9】が「確定済み qa entry を AI が単独で書き換えること」を禁じている。本反映は確定済み qa (qa-011 / qa-019 / qa-038【5】) の**実装手順レベルの具体化**であって決定の変更ではないため、詳細正本 `docs/*-spec.md` への反映で足り、新規 qa entry の捏造は行わない。R2 キー削除も §4.5 が既に「Workers binding 利用時は不要」と確定した範囲内。
 
-**未達として持ち越す設計差**: `CLOUDFLARE_API_TOKEN` の 1 本共用 (F-8)。`issue-ci-token-least-privilege-20260725` (**HarnessHub-bda4**) で追跡し、infrastructure-spec §7 の残存リスク節にも明記した。
+**F-8 の追補 (2026-07-29)**: repository 内の 1 本共用は解消し、deploy / rollback 用 `CLOUDFLARE_API_TOKEN` と backup / production smoke 用 `CLOUDFLARE_R2_API_TOKEN` へ分離した。仕様は `system-spec/infrastructure.md` qa-091 と上位設計へ反映済み。外部 token 発行・GitHub secret 投入・拒否系・workflow 完走は未実測なので、`HarnessHub-bda4` を継続する。
 
 ## 15. 最終レビューと main 取り込み後の再検証 (2026-07-25)
 

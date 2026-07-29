@@ -8,7 +8,7 @@ feature_node_id: feat-dev-pipeline-improvement
 spec_impact: reflected
 reviewed_at: 2026-07-29
 approval_id: appr-013
-qa_id: qa-091
+qa_id: qa-092
 ---
 
 # C11 artifact 本文 readiness — 仕様反映受領書
@@ -31,8 +31,8 @@ Cloudflare deploy unit は変更しない。
 
 | 層 | 反映内容 |
 |---|---|
-| `system-spec/spec-state.json` | 単一 transition writer で `appr-013`、R4 reopen、`qa-091` の再確定を記録 |
-| `system-spec/dev-workflow.md` | C03 compiler で `qa-091` の本文 readiness 契約を再生成 |
+| `system-spec/spec-state.json` | 単一 transition writer で `appr-013`、R4 reopen、`qa-092` の再確定を記録 |
+| `system-spec/dev-workflow.md` | C03 compiler で `qa-092` の本文 readiness 契約を再生成 |
 | `specs/harness-hub-system-specification.md` | 製品境界と repository 開発品質差分を追記 |
 | `architecture/harness-hub-dev-workflow.md` | C11 判定境界と C02 transaction rollback を反映 |
 | `features/feat-dev-pipeline-improvement.md` | Beads 実装結果、互換移行、影響境界を履歴化 |
@@ -70,8 +70,8 @@ SHA-256 が実走 transcript の完全な byte 列を束縛する機械証跡な
 
 ## 品質ゲート
 
-- main 統合: local `main` は `origin/main` と同一の `b631aa9`、
-  feature branch への merge commit は `a5bc903`。
+- main 統合: local `main` は `origin/main` と同一の `7153859`。
+  feature branch への統合は本受領書を含む merge commit の第 2 parent で追跡する。
 - focused pytest: 実装 3 suite は `23 passed`、命名回帰を含む再検証は `55 passed`。
 - Dev Graph 全体: `687 passed / 2 skipped / 5 subtests passed`。
 - repository 全体: `make test` は `7620 passed / 5 skipped`、
@@ -89,7 +89,7 @@ SHA-256 が実走 transcript の完全な byte 列を束縛する機械証跡な
 - Beads: `HarnessHub-4t9g`
 - dev-graph node: `issue-implementation-readiness-body-validation-20260728`
 - 承認記録: `appr-013`
-- system-spec 確定質疑: `qa-091`
+- system-spec 確定質疑: `qa-092`
 
 ## 残課題
 

@@ -1,0 +1,49 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "",
+  "requested_model": "opus",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "task contract required Claude Code 2.1.220 / effort high, but transcript and pane measured Claude Code 2.1.62 / Opus 4.6 because tmux server PATH did not inherit the launch shim",
+      "ゴールシーク配線の実体検証に失敗: progress-missing: run-dev-graph-system-spec-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-system-spec"
+  ],
+  "missing_goal_seek_artifacts": [
+    "progress.json"
+  ],
+  "goal_seek_evidence_violations": [
+    "progress-missing: run-dev-graph-system-spec-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "306d57497704e57d7d99176fd7b715227082ad4aa46067f86cac321cde784968",
+  "transcript_sha256": "bf071541fb2b7cb2ec3f07b243d0f79a74968a3d671b34d7e7a0f23b6919ef5b",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 4.0,
+    "poll_exit": "ABORT_ENV_MISMATCH",
+    "wall_clock_s": 270.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

@@ -1,0 +1,48 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "--repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260728-082322-wt-11/eval-log/dev-graph/live-trial-fixtures/system-spec-lp36-merged-r5",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-5"
+  ],
+  "nudge_count": 2,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "assign-system-spec-completeness-evaluator",
+    "dev-graph:run-dev-graph-system-spec",
+    "run-dev-graph-node",
+    "run-dev-graph-system-spec",
+    "run-system-spec-compile",
+    "run-system-spec-doc-fetch",
+    "run-system-spec-elicit"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "bc70aee900dc093bfea35eaab6bb89fb5e3473c4be1a722f77c7644bb863edd6",
+  "transcript_sha256": "2ff31fb4950836963ad67afafb1983ec24e4fe90de6c85e4bfcb2fa1ad5dc33f",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.220",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "自走未達 (nudge=2 gate応答=0 — 自動送信でも介入)",
+  "timeline": {
+    "boot_s": 7.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 13095.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

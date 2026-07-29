@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-render",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/render-lp36-hook-final --feature-id LT-FEATURE-001 --registration-receipt eval-log/dev-graph/live-trial-fixtures/render-lp36-hook-final/system-plan/LT-FEATURE-001/dev-graph-registration-receipt.json",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-render"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "8b762494825f53f134ce53e43790665b1a13a63e83677e1c893169c99cc5132e",
+  "transcript_sha256": "3336420a8b17f44fc57436dcbf1f3c7bcaeec9619f7bc0e4381d717441dd7585",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 6.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 260.0
+  },
+  "scenario_id": "C05-OUT1-positive-feature-progress"
+}
