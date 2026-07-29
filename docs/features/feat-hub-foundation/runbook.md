@@ -35,7 +35,8 @@ wrangler login
 
 # 2. GitHub Secrets / Variables（CI の deploy job と日次 backup job が参照）
 #    用途・必須/任意の正本は scripts/ci/actions-secrets-registry.json（ci.yml が workflow と突合する）
-gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy + R2 Storage 編集権限
+gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy / rollback 専用。R2 write 権限なし
+gh secret set CLOUDFLARE_R2_API_TOKEN   # R2 backup / 本番 smoke 専用。Workers Scripts 権限なし
 gh secret set CLOUDFLARE_ACCOUNT_ID
 gh secret set TURSO_DATABASE_URL        # migration / 本番 smoke / 日次 export 用
 gh secret set TURSO_AUTH_TOKEN          # 同上の DB 接続 token（Platform API token とは別物）
@@ -50,6 +51,8 @@ wrangler secret put TURSO_AUTH_TOKEN
 wrangler secret put AUTH_SECRET
 wrangler secret put CRON_HEARTBEAT_URL   # Better Stack の heartbeat URL (未設定なら ping しない)
 ```
+
+Cloudflare token は 2 本を別々に発行する。deploy 用には `Workers Scripts Edit` を付与し、R2 write は付与しない。R2 用には account-scoped の `Workers R2 Storage Write` を付与し、Workers Scripts は付与しない。`wrangler r2 object put/get --remote` は Cloudflare REST API を使うため、S3 互換 API 専用の bucket-scoped `Workers R2 Storage Bucket Item Write` では動作しない。token 値はコマンド引数・文書・ログへ書かず、上記 `gh secret set` の入力待ちに貼り付ける。
 
 4. **Better Stack Free** の外形監視を適用する（**要求内容の正本は [`apps/hub/monitoring/better-stack.monitors.json`](../../../apps/hub/monitoring/better-stack.monitors.json)**。ダッシュボードで独自に値を決めない）
 
