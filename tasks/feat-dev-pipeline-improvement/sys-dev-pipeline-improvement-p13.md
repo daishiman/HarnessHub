@@ -133,6 +133,12 @@ implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .`
 - Required evidence: release-receipt.json と main 上での lint 3 本 + 回帰テストの exit 0
 
+### 2026-07-29 P13 書き戻し記録
+
+C14 live-trial acceptance の証拠完全性、最終 persisted node への評価 digest 束縛、正準 validator の negative control を `system-spec/testing-qa.md` の qa-089、`specs/harness-hub-system-specification.md`、`architecture/harness-hub-testing-qa.md`、`features/feat-dev-pipeline-improvement.md` へ書き戻した。外部 API・DB・認証認可・UI・deploy unit は非変更で、変更境界は repository 内の開発品質ゲートである。受領書は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` を正とする。
+
+書き戻し後の再検証は広域 pytest 9284 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。
+
 ## Inner goal-seek execution loop
 
 - Methodology contract: `system-task-goal-seek/v1`

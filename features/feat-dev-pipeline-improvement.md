@@ -148,6 +148,18 @@ checkout 中の branch ref だけを動かして作業ツリーを古いまま�
 - focused pytest 29 PASS、latest verdict task に対する `--all` は checked 1 / violation 0。
 - 技術契約は `plugins/dev-graph/references/live-trial-task-contract.md`、仕様影響なしの層別判断は `docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md` を正本とする。
 
+## 2026-07-29 追記: C14 live-trial acceptance の証拠完全性
+
+- `HarnessHub-9ndl` で C14 decompose 監査を、preview の自己申告ではなく実 graph、pre/post state 差分、永続 `tracker_binding`、実装 schema probe から判定するよう修正した。
+- `HarnessHub-dyxr` で scenario 正本の required observations と実引数を verdict に束縛し、未回収、scenario 更新・削除、存在しない evidence ref を fail-closed にした。
+- 最終実走で feature promotion に task 完了専用 operation を誤指定した task.md を検出したため、通常 C02 upsert を必須、完了専用 operation を禁止として task 手順そのものも verdict に束縛した。
+- `main` 統合レビューで、旧 r6 の昇格証跡が 64 桁形式を満たすだけで最終 node 内容と一致しないことを検出した。scenario r7 は最終 persisted node の正準 digest 突合と、同じ graph から作る 2 種の gate 違反を正準 validator が拒否する negative control を必須化した。
+- none 系列の再実走で、生成時の draft feature を同じ入力で再 upsert すると先に進めた lifecycle が退行する別責務の欠陥を検出し、`HarnessHub-bk8v` へ分離した。C14 の最終判定は通常 C02 経路で明示的に再昇格した後の graph を監査する。
+- draft gate の起票 0 件と promoted candidate の external adapter dry-run による 0 件を別の帰属として記録する。
+- 500 行を超えた手書き実装・テストは import 専用 support module と責務別テストへ分離し、監査 provenance は全 module の複合 digest を保持する。
+- 仕様・設計への影響は開発品質ゲートの証拠経路に限定される。qa-089、`architecture/harness-hub-testing-qa.md`、[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) に反映した。
+- `main` 統合後の最終ゲートは広域 pytest 9284 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md)
