@@ -2,12 +2,12 @@
   "target": {
     "plugin": "harness-creator",
     "skill": "run-skill-live-trial",
-    "skill_md_sha256": "50bc2817dba6dd2a737cb208a51571407e69445b952abc31f13c368fa4c21352"
+    "skill_md_sha256": "475ece65ad0328b3033de7c3e173824cbea4c84e6640e5f36c763ab006d27947"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent-content-reviewer-20260722",
-  "reviewed_at": "2026-07-22",
+  "reviewer": "independent-codex-focused-combined-review",
+  "reviewed_at": "2026-07-29T01:34:17Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -20,8 +20,8 @@
       "OUT3"
     ],
     "positive_feedback": [
-      "FM/BD/PD 準拠: name=run-skill-live-trial (kebab + run prefix・ディレクトリ名一致)、description は Use-when 形、argument-hint に --proof/--model を宣言。Purpose (Output Contract 相当) + Gotchas 節があり本文 300 行以内。completeness_exempt で prompts/manifest の免除理由を具体的に明記し PD を満たす。",
-      "単一責務・境界・検証可能性: acceptance 専用 (selection を扱わない・1 実走=1 skill) に責務を絞り、ローカル開発環境限定 / 量産先配備対象外 / denylist の配備境界を明示。poll exit code 表・STALL 分岐表・self-test/pytest コマンド・actual_model 機械 gate で検証可能性が高く、数値上限を convergence-policy.json 正本へ委譲する SSOT も守られている。"
+      "破壊的操作の安全境界が明示的で検証可能である。通常 reap は run-id と owner PID を必須化し、名前・記録 run-id・記録 owner PID の三条件で対象を限定する一方、tmux server 全体の回収は --all という明示 opt-in に隔離している。SKILL version 0.2.0、CLI、script metadata、READY 出力契約が同じ破壊的変更を整合して表現する。",
+      "回帰テストは同じ run-id で owner PID だけ異なる sibling、run-id metadata spoof、metadata 無し session、invalid/missing scope、--all 排他、実 tmux の生存確認まで含む。boot の cwd/model/session-id/run-id/session 所属検証も各分岐へ到達する形へ修正され、主要欠陥を false-positive なしで固定している。"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -29,5 +29,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "run-skill-live-trial の機械 gate 追加を rubric 観点で再評価。IN1/IN2/OUT1/OUT2/OUT3 は本文で受入条件化されたまま維持され、追加 gate は OUT 側 (proxy 防止) を測定可能な形で補強 (invoked_skills / goal_seek_evidence_violations を verdict へ記録)。重大 0 件で PASS。"
+  "notes": "independent Codex による incremental focused combined rubric review。中心責務である live acceptance を広げず、reaper の所有権境界と必要な boot handoff/test のみを変更している。feedback_contract の IN1、IN2、OUT1、OUT2、OUT3 を全件評価し、矛盾・漏れ・規約不整合・dependency/API break・high severity finding は 0 件。"
 }

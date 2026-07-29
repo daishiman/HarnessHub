@@ -1,5 +1,5 @@
 {
-  "graph_revision": 974,
+  "graph_revision": 976,
   "nodes": [
     {
       "acceptance": [
@@ -41826,10 +41826,15 @@
     },
     {
       "acceptance": [
-        "Beads issue HarnessHub-cjwm の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
-        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+        "引数なし reap は失敗し、暗黙の lt-* 全削除へ戻らない",
+        "通常の reap は run-id と owner PID が両方一致する session だけを削除する",
+        "同じ run-id の別 owner、別 run-id、metadata 無し session は残る",
+        "全削除は明示的な --all でのみ実行できる",
+        "回帰テスト、内容レビュー、task 仕様書品質ゲートが通る"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -41845,14 +41850,19 @@
         }
       ],
       "classification_confidence": 1,
-      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-cjwm の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "classification_reason": "Beads HarnessHub-cjwm と重複 HarnessHub-0vs2 が報告した無差別 reap を実装対象として再確認し、run-id と owner PID の双方を必須にする所有権境界で解決した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-29T01:39:45Z",
+        "evidence_refs": [
+          "tests/test_live_trial_backend.py",
+          "tests/test_live_trial_boot_send.py",
+          "eval-log/harness-creator/run-skill-live-trial/content-review/elegance-verdict.json",
+          "eval-log/harness-creator/run-skill-live-trial/content-review/rubric-verdict.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-29T01:39:45Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -41892,17 +41902,22 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "未解決の Beads issue HarnessHub-cjwm を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "purpose": "並行 live-trial の後片付けが別実行の tmux session を巻き添えにしないよう、run-id と起動元 PID による所有権境界を実装して固定する",
       "related_nodes": [
         "issue-bd-external-ref-orphan-nodes-20260725",
         "issue-orphan-external-ref-backlog-disposition-20260726"
       ],
       "resource_scope": [],
       "scope_in": [
-        "Beads issue HarnessHub-cjwm の題名・説明・notes・受入条件を保持した issue node の復元"
+        "live-trial session に run-id と owner PID を記録する",
+        "reap を同一 run-id かつ同一 owner PID の session に限定する",
+        "全 live-trial session の削除は明示的な --all 操作だけに限定する",
+        "並行 session を保護する回帰テストと運用文書を整備する"
       ],
       "scope_out": [
-        "orphan 復元と同時に元 issue の実装や close を行うこと"
+        "tmux 以外の実行 backend の追加",
+        "古い metadata 無し session の自動削除",
+        "明示的な管理者操作 --all の廃止"
       ],
       "source_lineage": {
         "imported_at": "2026-07-28T00:42:38.774Z",
@@ -41913,19 +41928,21 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
         "beads",
-        "orphan-recovery"
+        "live-trial",
+        "tmux",
+        "parallel-safety"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
       "title": "live-trial-backend.py reap() が並行 trial の tmux session を無条件全 kill する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T00:10:24Z"
+      "updated_at": "2026-07-29T05:12:39.314910Z"
     },
     {
       "acceptance": [
