@@ -49,7 +49,8 @@ deployed_at: "2026-07-25T09:59:09Z"
 
 | 名前 | 種別 | 用途 |
 |---|---|---|
-| `CLOUDFLARE_API_TOKEN` | secret | `wrangler deploy` の認証。権限は「アカウント → Workers スクリプト:編集」＋「アカウント → Workers R2 Storage:編集」 |
+| `CLOUDFLARE_API_TOKEN` | secret | `wrangler deploy` / rollback 専用。`Workers Scripts Edit`、R2 write なし |
+| `CLOUDFLARE_R2_API_TOKEN` | secret | backup / production smoke の R2 object 操作専用。account-scoped `Workers R2 Storage Write`、Workers Scripts なし。repository 配線済み、実投入待ち |
 | `CLOUDFLARE_ACCOUNT_ID` | secret | デプロイ先アカウント |
 | `HUB_HEALTH_URL` | variable | デプロイ後 `/health` 疎通確認の宛先 |
 
@@ -142,7 +143,7 @@ run 30143422049（branch `main` / event `push` / sha `ec0f3e45dfa2e72da6d6a24c08
 | 4 | 独自ドメイン（`hub.<domain>`） | **未設定** | 現状は workers.dev サブドメイン。運用上の必須要件ではない |
 | 5 | 日次 backup の初回成功 | **未達**（run 30321679596 / 30293639238 / 30213823182 が 3 回連続で export step 失敗）| R2 に成果物が 1 つも無く、RPO ≤ 24h を実際には満たしていない。原因は secret 不足ではなく「データ行 0 を不採用」とする判定で、稼働直後の本番 DB は 19 テーブルすべて 0 行のため恒常的に落ちていた。判定を `verify-export-artifact` CLI へ一本化して是正済み（未 land）。[evidence/actions-secrets-2026-07-28.json](evidence/actions-secrets-2026-07-28.json) |
 
-> **GitHub Actions の secret / variable 自体は 2026-07-28 に確認済み**。未参照だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を削除し、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0（台帳 9 件と workflow 参照 9 件が一致）になった。「secret が足りないから backup が落ちる」という読み方は、この時点で否定されている。
+> **2026-07-28 時点の GitHub Actions 設定**は、未参照だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を削除し、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0（当時の台帳 9 件と workflow 参照 9 件が一致）だった。2026-07-29 の最小権限分離で required secret `CLOUDFLARE_R2_API_TOKEN` を追加したため、現在の repository 台帳との `--live` 検査と workflow 完走は再実行待ちである。
 
 ### 5.1 監視設定の正本（2026-07-25 追加）
 

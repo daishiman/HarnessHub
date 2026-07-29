@@ -225,6 +225,24 @@ describe('Actions secret / variable 台帳の突合', () => {
     expect(runbook).not.toContain('gh secret set TURSO_DATABASE_NAME');
   });
 
+  it('Workers deploy token と R2 write token を workflow の役割ごとに分離する', () => {
+    const backup = readFileSync(path.join(REPO_ROOT, '.github/workflows/backup.yml'), 'utf8');
+    const ci = readFileSync(path.join(REPO_ROOT, '.github/workflows/ci.yml'), 'utf8');
+    const deployStart = ci.indexOf('- name: wrangler deploy');
+    const deployEnd = ci.indexOf('- name:', deployStart + 1);
+    const smokeStart = ci.indexOf('- name: 本番スモークテスト');
+    const smokeEnd = ci.indexOf('- name:', smokeStart + 1);
+
+    expect(backup).not.toContain('secrets.CLOUDFLARE_API_TOKEN');
+    expect(backup).toContain('secrets.CLOUDFLARE_R2_API_TOKEN');
+    expect(deployStart).toBeGreaterThan(-1);
+    expect(ci.slice(deployStart, deployEnd)).toContain('secrets.CLOUDFLARE_API_TOKEN');
+    expect(ci.slice(deployStart, deployEnd)).not.toContain('secrets.CLOUDFLARE_R2_API_TOKEN');
+    expect(smokeStart).toBeGreaterThan(-1);
+    expect(ci.slice(smokeStart, smokeEnd)).toContain('secrets.CLOUDFLARE_R2_API_TOKEN');
+    expect(ci.slice(smokeStart, smokeEnd)).not.toContain('secrets.CLOUDFLARE_API_TOKEN');
+  });
+
   it('DB 識別子の secret 系統が TURSO_DATABASE_URL の 1 本に統一されている', () => {
     const workflows = execFileSync(
       'grep',
