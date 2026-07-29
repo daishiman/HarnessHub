@@ -143,12 +143,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **復元契約**: `backup.yml` は `export-control-plane.ts` の JSONL を gzip して R2 に保存し、`restore-control-plane.ts` が header・行数・audit chain・暗号断面を fail-closed で検査する。日次形式と drill の不一致を許容しない。
 - **仕様影響判定**: qa-011 / qa-019 の RPO・RTO・復元可能性要件を具体化した実装反映であり、外部 API・データモデル・確定 QA の変更はない。
 
-**差分追記 (2026-07-29 / `HarnessHub-bda4` / qa-090)**
+**差分追記 (2026-07-29 / `HarnessHub-bda4` / qa-091)**
 
 - **Cloudflare credential 契約**: Actions の deploy / rollback は R2 write 権限を持たない `CLOUDFLARE_API_TOKEN`、backup / production smoke の R2 object 操作は Workers Scripts 権限を持たない `CLOUDFLARE_R2_API_TOKEN` を使う。
 - **R2 permission 契約**: Wrangler の remote object 操作は Cloudflare REST API を使うため、R2 token には account-scoped の `Workers R2 Storage Write` を付与する。bucket-scoped item 権限は S3 互換 API 専用なので代替にしない。
 - **受入契約**: workflow と `scripts/ci/actions-secrets-registry.json` の双方向一致、および deploy / R2 token の相互不参照を静的ゲートで遮断する。実投入は `--live`、拒否系と完走は GitHub Actions の外部実測を根拠とし、文書更新だけで完了扱いにしない。
-- **仕様影響判定**: CI/CD credential の権限境界を変更したため infrastructure.web を正式に reopen し qa-090 として反映した。外部 API、DB schema、認証認可モデル、UI、deploy unit の変更はない。
+- **仕様影響判定**: CI/CD credential の権限境界を変更したため infrastructure.web を正式に reopen し qa-091 として反映した。外部 API、DB schema、認証認可モデル、UI、deploy unit の変更はない。
 
 ## テストと受入条件
 
@@ -163,6 +163,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `system-spec/testing-qa.md` の qa-089 として、AI skill の live-trial を受入根拠にする場合の durable evidence（repository に残り clean clone でも解決できる証拠）、scenario・task 手順束縛と失効、pre/post 実測、最終 node への評価 digest 束縛、反証可能な negative control、監査 provenance を確定した。
 - 影響は repository 内の開発品質ゲートに限定され、Harness Hub 製品の外部 API・データモデル・認証認可・UI・Cloudflare deploy unit は変更しない。
 - 反映先と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) を正とする。
+
+**開発運用反映 (2026-07-29 / `HarnessHub-cjwm`・`HarnessHub-0vs2`)**:
+
+- `system-spec/dev-workflow.md` の qa-090 として、live-trial session の通常 cleanup は
+  session 名の run prefix、記録済み run-id、記録済み owner PID の完全一致へ限定する。
+- run-id または owner PID が無い通常 `reap` は拒否し、全件削除は明示的な管理者操作
+  `--all` だけに限定する。別 owner、別 run、metadata 無し session は通常 cleanup で削除しない。
+- 影響は repository 内の macOS 開発用 acceptance harness に限定される。製品仕様は非変更。
+  反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
+  を正とする。
 
 ## 未決事項
 

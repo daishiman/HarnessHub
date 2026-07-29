@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-090 |
+| Web (web) | 確定 | 確定質疑: qa-091 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,7 +24,7 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-090 (対応セル: web)
+### qa-091 (対応セル: web)
 
 **質問**: production Worker の認証設定と GitHub Actions の Cloudflare token 最小権限分離を、infrastructure.web 単独で情報を失わない契約としてどう確定しますか?
 

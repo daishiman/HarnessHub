@@ -77,4 +77,4 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - P13 後に判明した Cloudflare token の権限共用を、deploy / rollback 用 `CLOUDFLARE_API_TOKEN` と backup / production smoke 用 `CLOUDFLARE_R2_API_TOKEN` へ分離した。
 - repository 内の受入は、Actions secret 台帳と workflow 参照の双方向一致、deploy step と R2 操作 step の相互 token 不参照、task / graph / system-spec の品質ゲート再実行とする。
 - Cloudflare での token 発行、GitHub secret 投入、deploy token による R2 write 拒否、R2 token による workflow 完走は外部状態を変更する後続作業として `HarnessHub-bda4` で継続する。実測前に本項を完了証拠へ読み替えない。
-- 仕様影響は infrastructure.web の credential 境界にあり、正式な reopen / compile 結果を `system-spec/infrastructure.md` qa-090、詳細を `docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md` に記録する。
+- 仕様影響は infrastructure.web の credential 境界にあり、正式な reopen / compile 結果を `system-spec/infrastructure.md` qa-091、詳細を `docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md` に記録する。

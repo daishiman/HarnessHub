@@ -1,5 +1,5 @@
 {
-  "graph_revision": 979,
+  "graph_revision": 985,
   "nodes": [
     {
       "acceptance": [
@@ -621,7 +621,7 @@
       "source_lineage": {
         "imported_at": "2026-07-26T06:10:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "4600d4d47a055ee1cccc1f0604c512db727ad7e42c743a8b2c25f5cb09b71f54",
+        "source_digest": "a74473d62712ab66f503f345e46b8f8e74cae30574b91aa05d1d3f0d4c06445e",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-29T05:16:09.124941Z"
+      "updated_at": "2026-07-29T06:15:35.564276Z"
     },
     {
       "acceptance": [
@@ -843,7 +843,7 @@
       "source_lineage": {
         "imported_at": "2026-07-25T21:18:40Z",
         "origin_kind": "generated",
-        "source_digest": "3b0319a1ed7342ce34c87693647f0aa1fb8e318a78beaf58c9a0b5f4ac421412",
+        "source_digest": "e8a7f9308f00bcaa6e7d7df9f623cf3649d15c9f2242c18b31f0336ad8ce3dc9",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -860,7 +860,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T05:16:10.129267Z"
+      "updated_at": "2026-07-29T06:15:52.997834Z"
     },
     {
       "acceptance": [
@@ -12943,9 +12943,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"
+        "evaluated_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13000,9 +13000,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-23T04:45:00Z",
+        "imported_at": "2026-07-29T05:21:27Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13018,7 +13018,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T00:55:00Z"
+      "updated_at": "2026-07-29T05:22:00.507534Z"
     },
     {
       "acceptance": [
@@ -25347,9 +25347,9 @@
         "graph.json 分割の実装 (トリガー記録のみ)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-21T14:40:00Z",
+        "imported_at": "2026-07-29T05:21:27Z",
         "origin_kind": "generated",
-        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -25368,7 +25368,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T08:39:07.757446Z"
+      "updated_at": "2026-07-29T05:22:10.828117Z"
     },
     {
       "acceptance": [
@@ -36345,7 +36345,7 @@
         "backup.yml と production smoke が CLOUDFLARE_R2_API_TOKEN、deploy / rollback が CLOUDFLARE_API_TOKEN だけを参照し、静的ゲートが相互利用を拒否する",
         "R2 専用 token で hub-backup と production smoke が完走する",
         "deploy 用 token で R2 バケットへ書き込もうとすると権限エラーになることを実測する",
-        "docs/infrastructure-spec.md §7 と system-spec/infrastructure.md qa-090 が分離設計と外部実測待ちの境界を記録している"
+        "docs/infrastructure-spec.md §7 と system-spec/infrastructure.md qa-091 が分離設計と外部実測待ちの境界を記録している"
       ],
       "architecture_refs": [
         "arch-harness-hub-infrastructure"
@@ -36437,7 +36437,7 @@
       "scope_in": [
         "Cloudflare API token を deploy / rollback 用 Workers Scripts Edit と backup / production smoke 用 Workers R2 Storage Write の 2 本へ分離する",
         "workflow と Actions secret 台帳を用途別 token 参照へ更新し、相互利用を静的テストで拒否する",
-        "infrastructure.web の credential 境界を正規 system-spec フローで qa-090 として反映する",
+        "infrastructure.web の credential 境界を正規 system-spec フローで qa-091 として反映する",
         "Cloudflare token 発行と GitHub Secrets 投入後に --live 検査、拒否系、backup / production smoke の完走を実測する"
       ],
       "scope_out": [
@@ -36448,7 +36448,7 @@
       "source_lineage": {
         "imported_at": "2026-07-25T05:50:00Z",
         "origin_kind": "generated",
-        "source_digest": "6ccaa62a8a8e091a9d34aadde01aa9fa1f3b1dce781405020c2564c5420abd67",
+        "source_digest": "f5e7935b007bb51d75b2209bd5b11ac87b02b4b9bf50ce8c438a5830b52f7f57",
         "source_path": "docs/features/feat-domain-model-db/release-record.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -36468,7 +36468,7 @@
       "template_version": "1.0.0",
       "title": "Cloudflare deploy token と R2 token を分離し外部検証を完了する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T05:16:50.950141Z"
+      "updated_at": "2026-07-29T06:16:12.710038Z"
     },
     {
       "acceptance": [
@@ -42588,10 +42588,15 @@
     },
     {
       "acceptance": [
-        "Beads issue HarnessHub-cjwm の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
-        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+        "引数なし reap は失敗し、暗黙の lt-* 全削除へ戻らない",
+        "通常の reap は run-id と owner PID が両方一致する session だけを削除する",
+        "同じ run-id の別 owner、別 run-id、metadata 無し session は残る",
+        "全削除は明示的な --all でのみ実行できる",
+        "回帰テスト、内容レビュー、task 仕様書品質ゲートが通る"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -42607,14 +42612,19 @@
         }
       ],
       "classification_confidence": 1,
-      "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-cjwm の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
+      "classification_reason": "Beads HarnessHub-cjwm と重複 HarnessHub-0vs2 が報告した無差別 reap を実装対象として再確認し、run-id と owner PID の双方を必須にする所有権境界で解決した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-29T01:39:45Z",
+        "evidence_refs": [
+          "tests/test_live_trial_backend.py",
+          "tests/test_live_trial_boot_send.py",
+          "eval-log/harness-creator/run-skill-live-trial/content-review/elegance-verdict.json",
+          "eval-log/harness-creator/run-skill-live-trial/content-review/rubric-verdict.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-29T01:39:45Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -42654,17 +42664,22 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "未解決の Beads issue HarnessHub-cjwm を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "purpose": "並行 live-trial の後片付けが別実行の tmux session を巻き添えにしないよう、run-id と起動元 PID による所有権境界を実装して固定する",
       "related_nodes": [
         "issue-bd-external-ref-orphan-nodes-20260725",
         "issue-orphan-external-ref-backlog-disposition-20260726"
       ],
       "resource_scope": [],
       "scope_in": [
-        "Beads issue HarnessHub-cjwm の題名・説明・notes・受入条件を保持した issue node の復元"
+        "live-trial session に run-id と owner PID を記録する",
+        "reap を同一 run-id かつ同一 owner PID の session に限定する",
+        "全 live-trial session の削除は明示的な --all 操作だけに限定する",
+        "並行 session を保護する回帰テストと運用文書を整備する"
       ],
       "scope_out": [
-        "orphan 復元と同時に元 issue の実装や close を行うこと"
+        "tmux 以外の実行 backend の追加",
+        "古い metadata 無し session の自動削除",
+        "明示的な管理者操作 --all の廃止"
       ],
       "source_lineage": {
         "imported_at": "2026-07-28T00:42:38.774Z",
@@ -42675,19 +42690,21 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
         "beads",
-        "orphan-recovery"
+        "live-trial",
+        "tmux",
+        "parallel-safety"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
       "title": "live-trial-backend.py reap() が並行 trial の tmux session を無条件全 kill する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T00:10:24Z"
+      "updated_at": "2026-07-29T05:12:39.314910Z"
     },
     {
       "acceptance": [

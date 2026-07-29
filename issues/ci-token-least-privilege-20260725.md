@@ -12,7 +12,7 @@ iteration: null
 title: "Cloudflare deploy token と R2 token を分離し外部検証を完了する"
 owners: ["daishiman"]
 created_at: "2026-07-25T05:50:00Z"
-updated_at: "2026-07-29T05:16:50.950141Z"
+updated_at: "2026-07-29T06:16:12.710038Z"
 status: "draft"
 depends_on: ["issue-actions-secrets-missing-20260725"]
 related_nodes: ["SYS-HUB-FOUNDATION-P13","SYS-DOMAIN-MODEL-DB-P13"]
@@ -20,9 +20,9 @@ resource_scope: [".github/workflows/backup.yml",".github/workflows/ci.yml","apps
 purpose: "CI/CD の Cloudflare token が漏洩した場合の影響範囲を、Workers deploy と R2 write のどちらか一方に閉じ込める"
 goal: "backup.yml が R2 write 専用 token を使い、ci.yml の deploy token では R2 バケットへ書き込めない状態にして、infrastructure-spec §7 の 2 token 推奨を実装が満たす"
 mvp_alignment: null
-scope_in: ["Cloudflare API token を deploy / rollback 用 Workers Scripts Edit と backup / production smoke 用 Workers R2 Storage Write の 2 本へ分離する","workflow と Actions secret 台帳を用途別 token 参照へ更新し、相互利用を静的テストで拒否する","infrastructure.web の credential 境界を正規 system-spec フローで qa-090 として反映する","Cloudflare token 発行と GitHub Secrets 投入後に --live 検査、拒否系、backup / production smoke の完走を実測する"]
+scope_in: ["Cloudflare API token を deploy / rollback 用 Workers Scripts Edit と backup / production smoke 用 Workers R2 Storage Write の 2 本へ分離する","workflow と Actions secret 台帳を用途別 token 参照へ更新し、相互利用を静的テストで拒否する","infrastructure.web の credential 境界を正規 system-spec フローで qa-091 として反映する","Cloudflare token 発行と GitHub Secrets 投入後に --live 検査、拒否系、backup / production smoke の完走を実測する"]
 scope_out: ["Turso token の分割 (DB 接続 token と Platform API token は既に分離済み)","R2 S3 互換アクセスキー方式への差し戻し","backup / restore の設計そのものの変更"]
-acceptance: ["backup.yml と production smoke が CLOUDFLARE_R2_API_TOKEN、deploy / rollback が CLOUDFLARE_API_TOKEN だけを参照し、静的ゲートが相互利用を拒否する","R2 専用 token で hub-backup と production smoke が完走する","deploy 用 token で R2 バケットへ書き込もうとすると権限エラーになることを実測する","docs/infrastructure-spec.md §7 と system-spec/infrastructure.md qa-090 が分離設計と外部実測待ちの境界を記録している"]
+acceptance: ["backup.yml と production smoke が CLOUDFLARE_R2_API_TOKEN、deploy / rollback が CLOUDFLARE_API_TOKEN だけを参照し、静的ゲートが相互利用を拒否する","R2 専用 token で hub-backup と production smoke が完走する","deploy 用 token で R2 バケットへ書き込もうとすると権限エラーになることを実測する","docs/infrastructure-spec.md §7 と system-spec/infrastructure.md qa-091 が分離設計と外部実測待ちの境界を記録している"]
 architecture_refs: ["arch-harness-hub-infrastructure"]
 parent_feature: null
 feature_package_id: null
@@ -33,7 +33,7 @@ template_version: "1.0.0"
 confirmation_status: "draft"
 evaluation_status: "pending"
 confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
-source_lineage: {"imported_at":"2026-07-25T05:50:00Z","origin_kind":"generated","source_digest":"6ccaa62a8a8e091a9d34aadde01aa9fa1f3b1dce781405020c2564c5420abd67","source_path":"docs/features/feat-domain-model-db/release-record.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-25T05:50:00Z","origin_kind":"generated","source_digest":"f5e7935b007bb51d75b2209bd5b11ac87b02b4b9bf50ce8c438a5830b52f7f57","source_path":"docs/features/feat-domain-model-db/release-record.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.95
 classification_reason: "SYS-DOMAIN-MODEL-DB-P13 の finding F-8。backup.yml の secret 設計は P13 の resource_scope 外であり、かつ docs/infrastructure-spec.md §7 の推奨に対する未達なので別 issue として切り出す"
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/ci-token-least-privilege-20260725.md","confidence":0.95}]
@@ -66,7 +66,7 @@ repository 内の分離は実装済み。
 - `.github/workflows/backup.yml` は `CLOUDFLARE_R2_API_TOKEN` だけを参照する。
 - `.github/workflows/ci.yml` は deploy / rollback で `CLOUDFLARE_API_TOKEN`、production smoke の R2 往復で `CLOUDFLARE_R2_API_TOKEN` を使い分ける。
 - `scripts/ci/actions-secrets-registry.json` を secret 名・権限・利用 workflow の機械可読な正本とし、`apps/hub/tests/ci/actions-secrets.test.ts` が相互利用を拒否する。
-- `system-spec/infrastructure.md` を正式に reopen し、qa-090 として credential 境界と完了境界を確定した。
+- `system-spec/infrastructure.md` を正式に reopen し、qa-091 として credential 境界と完了境界を確定した。
 
 Wrangler の `r2 object put/get --remote` は Cloudflare REST API を使う。この経路では S3 互換 API 専用の bucket-scoped `Workers R2 Storage Bucket Item Write` を利用できないため、R2 token は account-scoped の `Workers R2 Storage Write` とする。これは「可能なら bucket スコープ」という当初案からの設計更新である。
 
@@ -85,7 +85,7 @@ Wrangler の `r2 object put/get --remote` は Cloudflare REST API を使う。�
 - [x] `backup.yml` が deploy token を参照せず、R2 専用 token を参照する（静的配線）
 - [ ] R2 専用 token で `hub-backup` が完走する（外部実測）
 - [ ] deploy 用 token では R2 バケットへ書き込めないことを実測する（権限エラーを確認）
-- [x] `docs/infrastructure-spec.md` §7 と qa-090 が、分離設計と外部実測待ちの境界を記録している
+- [x] `docs/infrastructure-spec.md` §7 と qa-091 が、分離設計と外部実測待ちの境界を記録している
 
 ## 参照
 
@@ -93,5 +93,5 @@ Wrangler の `r2 object put/get --remote` は Cloudflare REST API を使う。�
 - `docs/infrastructure-spec.md` §7 (GitHub Secrets 台帳・残存リスク)
 - `docs/security-spec.md` §4.5 (secret インベントリ)
 - `architecture/harness-hub-infrastructure.md` (Risks and verification)
-- `system-spec/infrastructure.md` qa-090
+- `system-spec/infrastructure.md` qa-091
 - `docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md`

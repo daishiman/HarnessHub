@@ -17,7 +17,7 @@ reviewed_at: 2026-07-29
 
 ## 2. 結論
 
-- **仕様影響: あり (`reflected`)**。CI/CD credential の権限境界が変わるため、`infrastructure.web` を正式に reopen し `qa-090` として再確定した。
+- **仕様影響: あり (`reflected`)**。CI/CD credential の権限境界が変わるため、`infrastructure.web` を正式に reopen し `qa-091` として再確定した。`qa-090` は最新 `main` の live-trial cleanup 所有権契約が使用しているため、main 取込時に両方を保持して採番を調整した。
 - **製品契約への影響: なし**。外部 API、DB schema、認証認可モデル、UI、Cloudflare Worker の deploy unit は変更しない。
 - **repository 実装: 完了**。workflow、機械可読 secret 台帳、静的回帰テスト、運用文書、feature / architecture / task / issue の正本を同期した。
 - **外部実測: 未完了**。Cloudflare token 発行、GitHub secret 投入、deploy token の R2 write 拒否、R2 token での workflow 完走が残るため、Beads は継続中とする。
@@ -37,7 +37,7 @@ reviewed_at: 2026-07-29
 ## 5. 仕様反映の正規フロー
 
 1. `system-spec/spec-state.json` の `infrastructure.web` を reopen。
-2. `qa-090` で qa-084 の runtime 認証・rollout 契約を保持しつつ、2 token の権限境界、REST API の permission 制約、外部実測待ちの完了境界を統合。
+2. `qa-091` で qa-084 の runtime 認証・rollout 契約を保持しつつ、2 token の権限境界、REST API の permission 制約、外部実測待ちの完了境界を統合。
 3. system-spec coverage / source citation を検証。
 4. 正規 compiler で `system-spec/infrastructure.md` を再生成。
 5. 詳細仕様・上位設計・feature・task・issue へ差分反映。
@@ -59,13 +59,13 @@ reviewed_at: 2026-07-29
 
 | ゲート | 結果 |
 | --- | --- |
-| main 同期 | `origin/main` = local `main` = `ca776dea`、本 branch へ fast-forward merge 済み |
+| main 同期 | `origin/main` = local `main` = `b631aa99`、本 branch へ merge 済み |
 | `git status` / diff review | 本件 17 ファイルだけを対象化。既存の無関係差分なし |
 | Actions secret 台帳 | workflow 参照 13 件 = 台帳 13 件 |
 | 対象 Vitest | `actions-secrets.test.ts`: 15/15 pass |
 | workflow step guard | 10 workflows / violations 0、self-test 6 pass |
 | task 仕様 | `feat-hub-foundation` / `feat-domain-model-db` とも `status: pass` / `violations: []` |
-| system-spec | coverage complete + foundation pass、source citation pass、harness tests 432 pass |
+| system-spec | coverage complete + foundation pass、source citation pass、harness tests 529 pass |
 | dev-graph | schema valid、変更 5 node の source digest mismatch 0 |
 | workspace 全体 | `pnpm verify` exit 0。Worker bundle 1.200 MiB / 3.000 MiB |
 | CI 集約 | 123 pass / 4 段階導入 warning / 0 fail |

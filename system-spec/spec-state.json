@@ -200,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-090",
+        "qa_ref": "qa-091",
         "serves_goals": [
           "G1",
           "G4",
@@ -384,7 +384,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-088",
+        "qa_ref": "qa-090",
         "serves_goals": [
           "G1",
           "G4"
@@ -874,6 +874,11 @@
     },
     {
       "id": "qa-090",
+      "question": "並行 live-trial の後片付けが別実行の tmux session を終了させないため、macOS のローカル開発契約へどの所有権境界を追加しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 のローカル開発契約を全面維持し、live-trial cleanup の所有権境界を追補する。各 tmux session は起動時に安全な run-id と owner PID を metadata として保持する。通常の reap は session 名の run prefix、記録済み run-id、記録済み owner PID の三つが完全一致した session だけを削除し、同じ run-id の別 owner、別 run-id、metadata 無し session を削除しない。run-id または owner PID が無い通常 reap は fail-closed で拒否する。全 live-trial session の削除は明示的な管理者操作 --all に限定し、通常の終了経路で使用しない。boot は記録した owner PID を READY 出力で呼出元へ渡し、cleanup は現在の shell PID で代用しない。fake tmux と実 tmux の回帰テストで sibling session の生存を固定する。本契約は repository 内の開発用 acceptance harness に限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-091",
       "question": "production Worker の認証設定と GitHub Actions の Cloudflare token 最小権限分離を、infrastructure.web 単独で情報を失わない契約としてどう確定しますか?",
       "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-084 の production 認証・rollout 契約を全面維持し、GitHub Actions の Cloudflare token 分離を統合した次の infrastructure.web 契約を確定する。\n\n【1. Worker runtime の Secret / 環境設定】production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、文書、ログへ記録しない。\n\n【2. GitHub Actions の Cloudflare token 分離】CLOUDFLARE_API_TOKEN は Worker deploy / rollback 専用とし Workers Scripts Edit を付与するが R2 write 権限を付与しない。CLOUDFLARE_R2_API_TOKEN は日次 backup と production smoke の R2 object put/get/delete 専用とし Workers Scripts 権限を付与しない。Wrangler の r2 object put/get --remote は Cloudflare REST API を使い、bucket-scoped の Workers R2 Storage Bucket Item Write は S3-compatible API 専用で REST API では利用できないため、R2 token には account-scoped の Workers R2 Storage Write を使う。2 token は別々の GitHub Actions secret として投入し、値を引数・文書・ログへ残さない。\n\n【3. rollout 順序】DB backup と migration dry-run、本適用、認証 Secret/環境設定と Actions required secret の存在確認、Worker deploy、/health、2 tenant OIDC・Device Flow smoke、本番 R2 smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。\n\n【4. 検証境界】workflow の secret 参照と scripts/ci/actions-secrets-registry.json は CI で双方向突合し、実投入状況は check-actions-secrets.mjs --live で検査する。静的 test は deploy step が deploy token だけを、backup / R2 smoke が R2 token だけを参照することを固定する。token 発行、GitHub への投入、deploy token による R2 write 拒否、R2 token による workflow 完走は外部状態の実測が揃うまで完了扱いにしない。\n\n【5. 境界】本変更は CI/CD credential の権限境界と運用契約を強化する。Hub の外部 API、DB schema、認証認可モデル、UI、Cloudflare deploy unit 自体は変更しない。"
     }
@@ -918,6 +923,10 @@
     {
       "id": "appr-011",
       "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks の文書にも反映」を明示承認として記録。HarnessHub-9ndl / HarnessHub-dyxr の最終レビューで確定した durable live-trial evidence、scenario 失効、実測帰属、最終 node への評価 digest 束縛、反証可能な negative control、監査 provenance の契約を qa-089 として反映する。"
+    },
+    {
+      "id": "appr-012",
+      "note": "ユーザーの 2026-07-29 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-cjwm / HarnessHub-0vs2 の最終レビューで確定した run-id + owner PID の live-trial cleanup 所有権境界を qa-090 として dev-workflow.desktop-macos へ反映する。"
     }
   ],
   "reopen_log": [
@@ -1582,9 +1591,15 @@
       "from": "確定"
     },
     {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-cjwm / HarnessHub-0vs2 の実装で、並行 live-trial cleanup の所有権境界が既存 qa-088 より具体化されたため、ユーザーの仕様反映指示に従い R4-reopen して qa-090 へ再確定する",
+      "from": "確定"
+    },
+    {
       "category": "infrastructure",
       "platform": "web",
-      "reason": "HarnessHub-bda4 で GitHub Actions の Worker deploy token と R2 object 操作 token を分離し、qa-084 の infrastructure.web 契約へ最小権限境界・REST API permission・外部実測待ちの完了境界を統合する必要が生じた",
+      "reason": "HarnessHub-bda4 の Cloudflare credential 分離を qa-091 として再確定し、origin/main の qa-090 live-trial cleanup 契約との QA ID 衝突を解消する",
       "from": "確定"
     }
   ],

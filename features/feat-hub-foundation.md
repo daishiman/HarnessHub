@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-29T05:16:10.129267Z"
+updated_at: "2026-07-29T06:15:52.997834Z"
 status: "active"
 depends_on: []
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-25T21:18:40Z","origin_kind":"generated","source_digest":"3b0319a1ed7342ce34c87693647f0aa1fb8e318a78beaf58c9a0b5f4ac421412","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-25T21:18:40Z","origin_kind":"generated","source_digest":"e8a7f9308f00bcaa6e7d7df9f623cf3649d15c9f2242c18b31f0336ad8ce3dc9","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-hub-foundation.md","confidence":0.9}]
