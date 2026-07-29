@@ -1,0 +1,53 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "",
+  "requested_model": "opus",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "Goal-seek chronology failed: C24 helper ran before goal-spec/first row; first row lacks required input_hash/output_hash.",
+      "Only one run-dev-graph-node Skill was called; specification dry-run/apply ran directly, and there were three dry-runs including one failure.",
+      "completeness-report.json was manually created with cat; aggregate only validated that hand-built report.",
+      "Required shared Python AST proof was absent; grep substitute reported harness run_chunk=0 and compile_docset=0.",
+      "Writer positive controls were not proven by the exact syntactic check; first inspection exited 1 and broad listings did not assert exact calls once each."
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node",
+    "dev-graph:run-dev-graph-system-spec",
+    "system-spec-harness:assign-system-spec-completeness-evaluator",
+    "system-spec-harness:run-system-spec-compile",
+    "system-spec-harness:run-system-spec-doc-fetch",
+    "system-spec-harness:run-system-spec-elicit"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "306d57497704e57d7d99176fd7b715227082ad4aa46067f86cac321cde784968",
+  "transcript_sha256": "629a50642a8bd3b31a86366fdd7e086d46aab35bfa246e085e6f4a9f9afc75f8",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 4.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 2070.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-28T00:55:00Z"
+updated_at: "2026-07-29T04:14:11Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -129,6 +129,25 @@ live-trial 証跡の調査 (`HarnessHub-s7b`/`-rix`/`-aoe`/`-m7d`) で、**成�
 実装責務は `guard-graph-schema.py` (entrypoint と判定順序)、`guard_graph_commands.py` (shell 書込み先解析)、`build-repo-config.py` (config writer)、`build-graph-store.py` (初期 graph writer) へ分離し、各手書きファイルを 500 行以下に保った。正本契約は `plugins/dev-graph/references/claude-code-hooks-contract.md`。これは製品 API・state・security・UI contract を変えないため、`system-spec/` と `specs/` へは反映しない。
 
 `Path.write_text/write_bytes/touch/unlink/rmdir` と書込み mode の `Path.open` は遮断対象へ含めた。一方、`os` / `shutil` / `json.dump` 等の広域 API は静的判定の誤遮断リスクを別途設計する必要があるため、architecture 上の既知の残余リスクとして `HarnessHub-lp36` で追跡する。
+
+### 差分追記 (2026-07-29): interpreter 書込み API の BLOCK / ALLOW 境界
+
+`HarnessHub-lp36` では、上記残余リスクのうち明示対象にした API を同一 command 内の
+「書込み API 字面 + graph authority path」の共起で遮断する。対象は
+`shutil.copy*/move`、`os.replace/rename`、`json.dump`、`Path.write_text/write_bytes` と
+`open(path, w|a|x|r+)` である。`open(path, r|rb)`、`json.load(open(path))`、
+`Path.read_text()` は read-only 調査を妨げないよう ALLOW に固定する。
+
+この境界は Python AST 全体の完全解析ではない。変数化された path/mode、alias import、
+`exec`/`eval`、`os.open` は保証外とし、C02 atomic writer の利用規約を残す。粗い共起判定に
+よる誤遮断可能性は実装 docstring と focused test に固定し、「任意の interpreter 書込みを
+完全遮断」とは表現しない。既存の「graph authority 直書込み禁止」契約への適合修正であり、
+製品仕様への影響はないため `system-spec/`・`specs/` は非変更とする。
+
+境界は BLOCK 17 形 / ALLOW 5 形の focused test、Dev Graph 9 skill の fresh live-trial
+9/9 PASS、全体 pytest 697 passed / 2 skipped で検証した。C19 は system-spec-harness の
+正規 4 entry point と C02 writer だけを使い、lineage・digest・evidence を独立 evaluator と
+canonical verdict の双方で PASS とした。
 
 ### 差分追記 (2026-07-28): 500 行分割規約が entry point 宣言契約と衝突する
 

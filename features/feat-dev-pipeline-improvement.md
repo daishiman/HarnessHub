@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-28T08:39:07.757446Z"
+updated_at: "2026-07-29T04:14:11Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717"]
@@ -147,6 +147,25 @@ checkout 中の branch ref だけを動かして作業ツリーを古いまま�
 - 650 行だった lint は CLI／report と契約解析 module に分け、双方を 500 行未満へ収束した。
 - focused pytest 29 PASS、latest verdict task に対する `--all` は checked 1 / violation 0。
 - 技術契約は `plugins/dev-graph/references/live-trial-task-contract.md`、仕様影響なしの層別判断は `docs/features/feat-dev-pipeline-improvement/c19-task-contract-spec-reflection.md` を正本とする。
+
+## 2026-07-29 追記: interpreter 書込み guard の被覆修正
+
+`HarnessHub-lp36` で C10 の interpreter 判定を補正した。`Path.write_text/write_bytes`、
+`shutil.copy*/move`、`os.replace/rename`、`json.dump` と書込み可能な `open()` mode を
+graph authority 直書込みとして遮断し、読取専用の `r` / `rb` は許可する。判定は静的な
+共起検査であり、任意の Python 実行を完全解析するものではない。既存正本
+`plugins/dev-graph/references/claude-code-hooks-contract.md` の「graph authority 直書込み禁止」
+に対する適合修正であり、列挙 API の保証境界は実装 docstring と focused test に固定した。
+
+本変更は既存プラグイン内部契約への適合を直し、HarnessHub 製品の API・state・security・UI
+contract は変えない。`system-spec/`・`specs/` は qa-066 の二重正本防止に従い非変更、
+凍結済み exact-13 の `tasks/feat-dev-pipeline-improvement/` も手編集せず、実装結果は
+本 feature 履歴、architecture、final review、standalone issue に記録する。
+
+最終受入では focused pytest 48 passed / 2 skipped、Dev Graph 全体 697 passed / 2 skipped、
+9 skill の fresh live-trial 9/9 PASS、exact-13 P01-P13 / violation 0、graph schema violation 0、
+repository CI PASS 123 / WARN 4 / FAIL 0 を確認した。`HarnessHub-lp36` は証跡を追記して
+close した。
 
 ## アーキテクチャ参照
 

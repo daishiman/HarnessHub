@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-requirements",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/requirements-lp36-hook-final --feature-id F-LIVE-001",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-requirements"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "574c7fdd09979ad57e5214d3ce8c5f318faf4f414b4c1c9e15d9fde179ccd557",
+  "transcript_sha256": "3f44d9625d18c935e5eb2f66ca9d336bfed5b3785a73d42542f7b7ce5a760914",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 6.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 440.0
+  },
+  "scenario_id": "C04-OUT1-positive-ready-handoff"
+}

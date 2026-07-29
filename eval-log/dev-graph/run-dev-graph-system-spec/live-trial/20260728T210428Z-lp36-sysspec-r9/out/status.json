@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "scenario": "C19-OUT1-positive-system-spec-lineage",
+  "summary": "All 8 checklist items PASS. 4 system-spec-harness Skill calls completed (elicit/doc-fetch/compile/evaluator). 2 nodes registered via C02 (spec-todo-api-system, arch-todo-api-requirements) with full source_lineage, confirmation_evidence, evaluation_status=pass. validate-source-digest exit 0, validate-evidence-refs exit 0. No elicit/compile duplication in dev-graph. Goal-seek 3-point set verified (2 intermediate lines, hash consistent).",
+  "registered_nodes": ["spec-todo-api-system", "arch-todo-api-requirements"],
+  "graph_revision": 2,
+  "gates": {
+    "validate-coverage-matrix": "exit 0",
+    "validate-source-citation": "exit 0",
+    "completeness-report": "PASS",
+    "validate-source-digest": "exit 0",
+    "validate-evidence-refs": "exit 0"
+  }
+}

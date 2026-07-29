@@ -27,13 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260726T040700Z-reqs-final/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T024000Z-lp36-requirements-hook-final/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260726T040700Z-reqs-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260726T040700Z-reqs-final/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260726T040700Z-reqs-final/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T024000Z-lp36-requirements-hook-final/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T024000Z-lp36-requirements-hook-final/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T024000Z-lp36-requirements-hook-final/evaluator-verdict.txt",
+        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T024000Z-lp36-requirements-hook-final/out/status.json"
       ],
-      "observed": "fresh live trial PASS。ready handoff、exact-13 package 接続、要求証跡、goal-seek を独立評価で確認した。"
+      "observed": "共有 hook 更新後の fresh live trial PASS。exact-13 package、feature/source digest に束縛された ready handoff、要求書・準備度表、実装 source 生成 0 件、正しい 2 行 goal-seek を別プロセスの evaluator が transcript と fixture から再検査した。nudge 0 / gate 応答 0 / DONE 440 秒。"
     },
     "OUT2": {
       "status": "PASS",

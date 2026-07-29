@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/status-lp36-hook-final",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-status"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "890e842069a50099111646910e4463e9f8131222cb9bd2061490eb146ca3961f",
+  "transcript_sha256": "f6692a21f10ed37f0ae95c9f6b739917e72947c206366284f6fdcb3f49821db6",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 6.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 259.0
+  },
+  "scenario_id": "C18-OUT1-positive-read-only-status"
+}
