@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1016,
+  "graph_revision": 1017,
   "nodes": [
     {
       "acceptance": [
@@ -729,9 +729,9 @@
         "課金・商用配布"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T02:46:40Z",
+        "imported_at": "2026-07-30T04:33:46Z",
         "origin_kind": "generated",
-        "source_digest": "d3cfacbce46414fcc6801d0619592b7c85bf18e9d3d11bd223ea03258ce1f439",
+        "source_digest": "349c4c0d32dd9afdf1eccc27b9948ed14bb4e4cc6e1bbc4412f8f88d4aa9f0c0",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -748,7 +748,7 @@
       "template_version": "1.0.0",
       "title": "Stage 0: 配布経路 technical gate (H7) 検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T02:46:53.302752Z"
+      "updated_at": "2026-07-30T04:34:28.070146Z"
     },
     {
       "acceptance": [
