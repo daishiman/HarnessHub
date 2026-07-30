@@ -237,6 +237,34 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
   を正とする。
 
+**開発品質反映 (2026-07-30 / `HarnessHub-ml57` / qa-088 実装具体化)**:
+
+- CI の repository-root Python 検査と local pre-push の hard gate を、
+  script path と正規化済み引数の集合として突合する meta-lint を追加した。
+- CI blocking invocation は local hard gate または理由付き allowlist のどちらかに
+  必ず属し、未被覆、理由欠落、stale allowlist は fail-closed で拒否する。
+- 外部資格情報、working-tree write、CI non-blocking の呼び出しは、実行しない理由を
+  exact invocation ごとに記録し、「CI 全体を local で完全再現する」という過大な宣言を避ける。
+- これは qa-088 の local development contract の具体化であり、製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit は変更しない。
+- 反映先と最終検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md)
+  を正とする。
+
+**公式出典鮮度と Stage 0 再検証の反映 (2026-07-30 / `HarnessHub-e2u`)**:
+
+- C08 公式出典台帳の確認値を Next.js 16.2.12、Drizzle stable 0.45.2 /
+  v1 prerelease rc.4、Wrangler 4.115.0、Claude Code 2.1.220 時点へ更新した。
+  これらは採用版の自動変更ではなく、実装・依存更新前に再確認する固定点である。
+- Claude Code の現行公式 `git-subdir` source は旧 H7 後に確認された有効な
+  配信候補である。ただし、macOS / Windows の Skills 列挙と実 skill 起動が
+  未検証なので、Stage 0 の `NOT_ESTABLISHED` と Stage 1 fail-closed を維持する。
+- 後続 `HarnessHub-n2c0` が公式契約の再照合、2 OS E2E、設定非汚染を検証する。
+  製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+- 層別の反映先、非影響判断、検証結果は
+  [仕様反映受領書](../docs/features/feat-stage0-distribution-gate/source-freshness-spec-reflection-receipt.md)
+  を正とする。
+
 **開発品質反映 (2026-07-30 / `HarnessHub-ory6`)**:
 
 - ID を `set` / `dict` へ正規化して参照実在性を検査する repository 内
