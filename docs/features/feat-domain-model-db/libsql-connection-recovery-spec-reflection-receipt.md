@@ -74,17 +74,21 @@ cause に残した `SQLITE_BUSY` を再試行可能と誤判定しない。
 - `docs/features/feat-domain-model-db/runbook.md`
 - `issues/sys-libsql-connection-recovery-20260726.md`
 
-## 6. 検証計画
+## 6. 検証結果
 
-- packages/db 全 test と focused connection/conflict test。
-- packages/db typecheck、Biome、`git diff --check`。
-- connection isolation、tenant isolation coverage、DDL、repository write gate。
-- apps/hub typecheck（`TursoAdapter` の公開型変更が consumer を壊さないこと）。
-- `validate-system-plan.py --feature-package feature-package/feat-domain-model-db`。
-- system-spec coverage / foundation / source citation gate と system-spec-harness pytest。
-- dev-graph schema、artifact placement、500 行 ratchet、PR 前 CI 集約。
+`origin/main` をローカル `main` へ同期し、その `main` を本ブランチへマージした状態で再実行した。
 
-最終数値と pass/fail は、マージ後の状態を取り込んで再実行した結果で本受領書を更新する。
+- focused DB test: 5 files / 47 tests pass。別プロセス write lock の実 libSQL test を含む。
+- packages/db 全 test: 29 files / 230 tests pass、statement coverage 93.6%。
+- packages/db typecheck / Biome、apps/hub typecheck、`pnpm verify`: pass。
+- connection isolation、tenant isolation coverage（19/19）、DDL（3 migrations）、
+  repository write gate（44 writes）: pass。
+- task spec gate: pass、現行 digest
+  `sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b`。
+- system-spec coverage / foundation / source citation: pass、system-spec-harness 529 tests pass。
+- Dev Graph schema、artifact placement、文書 300 行 ratchet、`git diff --check`: pass。
+- repository pre-push 集約: 136 PASS / 4 段階導入 WARN / 0 FAIL。
+  WARN は既存 plugin の completeness / rubric reference で、本変更の回帰ではない。
 
 ## 7. 500 行分割
 
