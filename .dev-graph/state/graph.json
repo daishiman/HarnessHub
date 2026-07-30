@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1024,
+  "graph_revision": 1025,
   "nodes": [
     {
       "acceptance": [
@@ -43534,6 +43534,252 @@
     },
     {
       "acceptance": [
+        "scenario_contract が欠落した live-trial verdict を criteria-test が合格させない",
+        "C15 の新しい live-trial 受領書が required_observations 4 件を全て観測し、引数と durable evidence を照合できる",
+        "qa-089 の仕様意図が system-spec・specs・architecture・features・tasks に同期される",
+        "関連品質ゲートと feature package validator が成功する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-yn71",
+        "linked_at": "2026-07-30T05:10:59Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-scenario-contract-required-20260730.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "既存 qa-089 の合格契約を受領側テストが省略可能として扱う実装欠陥であり、製品機能ではなく開発品質 feature の独立した修正単位である",
+      "completion_evidence": {
+        "completed_at": "2026-07-30T05:42:16Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_skill_criteria_evidence.py",
+          "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/evidence/schedule-execution.json",
+          "docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-30T05:42:16Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T05:08:29Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-scenario-contract-required-20260730.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "verify_by=live-trial の criteria evidence は正準 positive scenario と非省略の scenario_contract を必須とし、全 required_observations・引数・task 契約・証拠参照を照合できない受領書を必ず不合格にする",
+      "graph_node_id": "issue-live-trial-scenario-contract-required-20260730",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T05:08:29Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "qa-089 で required_observations と scenario 契約を live-trial 合格条件にした一方、受領側の criteria-test は scenario_contract が存在するときだけ検査していた。そのため古い形式や欠落した受領書が、観測の充足を証明せずに合格できる偽陽性を除去する",
+      "related_nodes": [
+        "issue-decompose-live-trial-audit-defects-20260726"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/tests/test_skill_criteria_evidence.py",
+        "eval-log/dev-graph/run-dev-graph-schedule/",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feature-package/feat-dev-pipeline-improvement/"
+      ],
+      "scope_in": [
+        "criteria evidence の検証で正準 positive scenario と scenario_contract を必須化する",
+        "required_observations 全件、unobserved の空、引数、task 契約、証拠参照の一致を検査する",
+        "C15 schedule の live-trial を実走して現行契約を満たす受領書へ更新する",
+        "品質仕様・設計・feature・task と仕様反映受領書を同期する"
+      ],
+      "scope_out": [
+        "run-dev-graph-schedule skill 本体のスケジューリング動作変更",
+        "公開 API・データモデル・認証認可・利用者向け UI の変更",
+        "legacy verdict schema 自体から optional field を削除する破壊的変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T05:08:29Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "plugins/dev-graph/tests/test_skill_criteria_evidence.py",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "live-trial",
+        "acceptance-criteria",
+        "scenario-contract"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "criteria-test が scenario_contract 欠落の live-trial 受領書を許容する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T05:42:16Z"
+    },
+    {
+      "acceptance": [
+        "Anthropic 公式 marketplace 文書と実行対象 Claude Code CLI の版を実行直前に再照合し、git-subdir の url/path/ref/sha 契約を証跡化する",
+        "macOS と Windows の両方で git-subdir source を install し、plugin details の Skills が 1 件以上で、対象 skill の実行が期待出力を返す",
+        "SSH 鍵や global git url rewrite に依存しない経路で成功し、隔離設定と cleanup の証跡を残す",
+        "A1/A2/A3 と Stage 1 entry condition は実行済み証跡だけで再判定し、未充足なら REJECTED / NOT_MET を維持する",
+        "docs/features・features・tasks・specs・architecture・system-spec の影響判断と仕様反映受領書を記録する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-n2c0",
+        "linked_at": "2026-07-30T02:13:08.338393Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "2026-07-30 の公式再照合で、H7 終結時の再開条件だった git-subdir source が現行 Claude Code の正式契約になったため",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T02:09:26Z",
+      "depends_on": [],
+      "domain": "platform",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "現行 git-subdir source で H7 の配布経路を macOS / Windows の実利用まで再検証し、Stage 1 entry condition を証拠に基づき再判定できる状態",
+      "graph_node_id": "issue-h7-git-subdir-revalidation-20260730",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T02:09:26Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "H7 終結時には存在しなかった正式 git-subdir source を、過去の観測と混同せず現行 CLI で再評価する",
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/",
+        "features/feat-stage0-distribution-gate.md",
+        "tasks/feat-stage0-distribution-gate/",
+        "system-spec/fetched-references.json",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-infrastructure.md"
+      ],
+      "scope_in": [
+        "現行 Claude Code の git-subdir source 契約と CLI 版の一次照合",
+        "url/path と ref または sha pin を使う最小 plugin の再現可能な検体",
+        "macOS / Windows の install・plugin details・skill 実行 E2E",
+        "SSH 鍵・global git rewrite・実環境汚染への非依存確認",
+        "A1/A2/A3 と Stage 1 entry condition の fail-closed 再判定"
+      ],
+      "scope_out": [
+        "過去の H7 実行証跡の書き換え",
+        "E2E 未完了のまま D7 を confirmed 登録すること",
+        "Publisher 本体の実装",
+        "有償 Windows 実行環境の常設"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T02:09:26Z",
+        "origin_kind": "manual",
+        "source_digest": "5c420336d7904d8f56e53cc537c80ef881ac9b88dc8aa641ba130788f0d58360",
+        "source_path": "system-spec/fetched-references.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "stage0",
+        "h7",
+        "claude-code",
+        "git-subdir",
+        "revalidation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "H7 を現行 git-subdir source で macOS / Windows 再検証する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T02:13:24.924968Z"
+    },
+    {
+      "acceptance": [
         "共通方式のtenant追加時にGoogle Cloud側のOAuth client作成・redirect URI追加が不要である",
         "共通callbackのstateを別tenantへ差し替えた要求が拒否され、tenant越境成功が0件である",
         "Google ID tokenのhdがtenantの許可Workspace domainと一致する場合だけ受理され、hd欠落・不一致は拒否される",
@@ -43791,129 +44037,6 @@
       "title": "顧客持ち込みGoogle OAuthクライアントの管理機能を実装する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T23:16:51.876731Z"
-    },
-    {
-      "acceptance": [
-        "Anthropic 公式 marketplace 文書と実行対象 Claude Code CLI の版を実行直前に再照合し、git-subdir の url/path/ref/sha 契約を証跡化する",
-        "macOS と Windows の両方で git-subdir source を install し、plugin details の Skills が 1 件以上で、対象 skill の実行が期待出力を返す",
-        "SSH 鍵や global git url rewrite に依存しない経路で成功し、隔離設定と cleanup の証跡を残す",
-        "A1/A2/A3 と Stage 1 entry condition は実行済み証跡だけで再判定し、未充足なら REJECTED / NOT_MET を維持する",
-        "docs/features・features・tasks・specs・architecture・system-spec の影響判断と仕様反映受領書を記録する"
-      ],
-      "architecture_refs": [
-        "arch-harness-hub-infrastructure"
-      ],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-n2c0",
-        "linked_at": "2026-07-30T02:13:08.338393Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
-          "confidence": 0.97
-        }
-      ],
-      "classification_confidence": 0.97,
-      "classification_reason": "2026-07-30 の公式再照合で、H7 終結時の再開条件だった git-subdir source が現行 Claude Code の正式契約になったため",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-07-30T02:09:26Z",
-      "depends_on": [],
-      "domain": "platform",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "現行 git-subdir source で H7 の配布経路を macOS / Windows の実利用まで再検証し、Stage 1 entry condition を証拠に基づき再判定できる状態",
-      "graph_node_id": "issue-h7-git-subdir-revalidation-20260730",
-      "implementation_readiness": {
-        "checked_at": "2026-07-30T02:09:26Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "medium",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "H7 終結時には存在しなかった正式 git-subdir source を、過去の観測と混同せず現行 CLI で再評価する",
-      "related_nodes": [
-        "feat-stage0-distribution-gate",
-        "SYS-STAGE0-DISTRIBUTION-GATE-P06",
-        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
-      ],
-      "resource_scope": [
-        "docs/features/feat-stage0-distribution-gate/",
-        "features/feat-stage0-distribution-gate.md",
-        "tasks/feat-stage0-distribution-gate/",
-        "system-spec/fetched-references.json",
-        "specs/harness-hub-system-specification.md",
-        "architecture/harness-hub-infrastructure.md"
-      ],
-      "scope_in": [
-        "現行 Claude Code の git-subdir source 契約と CLI 版の一次照合",
-        "url/path と ref または sha pin を使う最小 plugin の再現可能な検体",
-        "macOS / Windows の install・plugin details・skill 実行 E2E",
-        "SSH 鍵・global git rewrite・実環境汚染への非依存確認",
-        "A1/A2/A3 と Stage 1 entry condition の fail-closed 再判定"
-      ],
-      "scope_out": [
-        "過去の H7 実行証跡の書き換え",
-        "E2E 未完了のまま D7 を confirmed 登録すること",
-        "Publisher 本体の実装",
-        "有償 Windows 実行環境の常設"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-07-30T02:09:26Z",
-        "origin_kind": "manual",
-        "source_digest": "5c420336d7904d8f56e53cc537c80ef881ac9b88dc8aa641ba130788f0d58360",
-        "source_path": "system-spec/fetched-references.json",
-        "source_plugin": "system-spec-harness",
-        "source_version": "0.1.0"
-      },
-      "start_date": null,
-      "status": "draft",
-      "tags": [
-        "stage0",
-        "h7",
-        "claude-code",
-        "git-subdir",
-        "revalidation"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "H7 を現行 git-subdir source で macOS / Windows 再検証する",
-      "tracker_binding": "beads",
-      "updated_at": "2026-07-30T02:13:24.924968Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
