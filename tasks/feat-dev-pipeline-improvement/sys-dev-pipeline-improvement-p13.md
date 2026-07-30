@@ -12,7 +12,7 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-30T11:18:02Z"
+updated_at: "2026-07-30T11:57:56Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -294,5 +294,5 @@ architecture を同一 confirmed system-spec digest へ束縛し、C19 は conta
 監査台帳 path を tmux session へ明示して report・ledger・session の三点を canonical
 aggregate gate で突合した。実 tmux の stale/current/空値と隔離 cleanup も回帰化し、失敗 run
 は append-only で残して final PASS だけを planner が再利用できる状態にした。仕様・設計反映と
-全ゲート結果は `qa-101` / `appr-018` および
+全ゲート結果は `qa-102` / `appr-019` および
 `docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md` を正とする。

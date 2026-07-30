@@ -22,6 +22,11 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
   - **認可は単一ミドルウェア** に集約 (deny-by-default・全 API で Tenant/Workspace スコープ強制 = D4)。
   - **検査 pipeline / 試算エンジン / 通知ディスパッチは純関数の共有パッケージ** (Publisher と Hub で二重実装しない)。
   - secret は環境 binding のみ。コード・DB へ平文を持ち込まない。
+- **ローカル libSQL 接続の障害境界 (qa-101)**:
+  - `file:` / `:memory:` は `process-local` とし、同一プロセスの write は `guardedWrite` で直列化する。
+  - プロセス外の `SQLITE_BUSY` を踏んだ接続は poisoned として隔離し、read/write/transaction を `ConnectionPoisonedError` で止める。read を許すと未 commit 行を正常データとして観測するため、write だけの遮断では不十分。
+  - 復旧は `TursoAdapter.reconnect()` を明示的に呼び、raw client を factory から作り直す。外側の Client / Drizzle / repository 参照は変えない。
+  - Turso Web / D1 の `request-bound` は poison 対象外で、従来の競合再試行と DB 側 CAS を維持する。
 - **monorepo 構成 (pnpm workspace, 提案)**:
 
 ```text

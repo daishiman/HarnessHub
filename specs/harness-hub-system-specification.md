@@ -125,6 +125,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**データ接続復旧の反映 (2026-07-30 / `HarnessHub-njkm` / qa-101)**:
+
+- process-local の `file:` / `:memory:` libSQL が `SQLITE_BUSY` を踏んだ場合、接続を poisoned（復旧まで使用禁止）として隔離し、以後の read/write/transaction を `ConnectionPoisonedError` で fail-fast する。
+- `TursoAdapter.reconnect()` は raw client を factory から作り直すが、公開 Client / Drizzle / repository の参照は変えない。自動 reconnect は並行 transaction と障害観測を壊すため行わない。
+- request-bound の Turso Web client / D1 は poison 対象外とし、従来どおり DB 側排他・CAS・競合再試行へ委ねる。DB schema、migration、API payload は変更しない。
+- 正規反映と実測結果は [libSQL 接続復旧 仕様反映受領書](../docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md) を正とする。
+
 **開発フロー反映 (2026-07-28 / `HarnessHub-7xi9`)**:
 
 - `system-spec/dev-workflow.md` の desktop-windows / desktop-macos を R4-reopen し、`qa-088` で `qa-039` の既存ローカル開発契約と並列 worktree の整合性契約を自己完結して再確定した。
@@ -250,15 +257,15 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   を正とする。
 
-**開発管理整合性の反映 (2026-07-30 / `HarnessHub-dqca` / qa-101)**:
+**開発管理整合性の反映 (2026-07-30 / `HarnessHub-dqca` / qa-102)**:
 
-- `system-spec/dev-workflow.md` の qa-101 として、Dev Graph C02 の document metadata 契約を確定した。`artifact_kind=document` は `graph-node.schema.json#/$defs/documentLayer` に適合する小文字 kebab-case の `layer` を必須とし、非 document では禁止する。
+- `system-spec/dev-workflow.md` の qa-102 として、Dev Graph C02 の document metadata 契約を確定した。`artifact_kind=document` は `graph-node.schema.json#/$defs/documentLayer` に適合する小文字 kebab-case の `layer` を必須とし、非 document では禁止する。
 - legacy document は既存 frontmatter の単一 `layer` scalar を一度だけ graph へ移行できる。新規 document の暗黙 default、欠落、重複、形式不正は fail-closed とし、本文は保持する。
 - artifact placement lint は同じ schema 定義を参照し、graph validation と別の許容値表を持たない。
 - 影響は repository 内の開発管理 metadata と品質ゲートに限定される。Harness Hub 製品の外部 API・DB schema・認証認可・UI・Cloudflare deploy unit は変更しない。
 - 反映先、検証結果、500 行判断は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
 
-**CI 追補 (2026-07-30 / `HarnessHub-dqca` / qa-101)**:
+**CI 追補 (2026-07-30 / `HarnessHub-dqca` / qa-102)**:
 
 - C02 変更で stale になった Dev Graph 9 skill の live-trial を正規に再取得し、失敗 run も append-only で保持する。
 - tmux server の global environment は hook routing の正本にせず、boot 呼び出し元の `SYSTEM_SPEC_AUDIT_FORK_LEDGER` を `new-session -e` で対象 session へ明示する。未設定は空値で上書きし、過去 trial の一時 path を継承しない。

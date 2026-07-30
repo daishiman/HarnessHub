@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-30T11:18:00Z"
+updated_at: "2026-07-30T12:18:22.142120Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-30T10:32:01Z","origin_kind":"generated","source_digest":"118e4da81e2d3494ca927f2296c745da7eb8cadcf693ebe42696a53a5d7cbc4a","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T12:05:00Z","origin_kind":"generated","source_digest":"56c091cfa8bb285b4e591376387d1806085ae18ccb0f47290e91cad97428ada7","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -288,7 +288,7 @@ close した。
 
 ## 2026-07-30 追記: PR #610 CI の live-trial 証拠更新
 
-- `HarnessHub-dqca` では、C02 の共有挙動変更で stale になった Dev Graph 9 skill を fresh session で再取得した。C04 fixture の architecture lineage、C19 の tmux session-scoped 監査台帳注入も修正済みで、正本は `qa-101` / `appr-018`、最終判断は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
+- `HarnessHub-dqca` では、C02 の共有挙動変更で stale になった Dev Graph 9 skill を fresh session で再取得した。C04 fixture の architecture lineage、C19 の tmux session-scoped 監査台帳注入も修正済みで、正本は `qa-102` / `appr-019`、最終判断は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
 
 ## アーキテクチャ参照・機能間依存
 

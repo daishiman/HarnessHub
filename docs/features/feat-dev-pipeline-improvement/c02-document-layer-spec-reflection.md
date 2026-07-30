@@ -68,7 +68,7 @@ Dev Graph の document 契約には仕様・設計影響があるため、正本
 
 | 層 | 反映先 | 反映内容 |
 |---|---|---|
-| 正本仕様 | `system-spec/spec-state.json`、`system-spec/dev-workflow.md` | main の `qa-097`〜`qa-100` を保持し、`qa-101` と `appr-018` で document layer・live-trial session 隔離契約と承認根拠を記録 |
+| 正本仕様 | `system-spec/spec-state.json`、`system-spec/dev-workflow.md` | main の `qa-097`〜`qa-101` を保持し、`qa-102` と `appr-019` で document layer・live-trial session 隔離契約と承認根拠を記録 |
 | システム仕様 | `specs/harness-hub-system-specification.md` | Dev Graph の fail-closed 境界を追記 |
 | アーキテクチャ | `architecture/harness-hub-dev-workflow.md` | schema、writer、lint の責務分離を追記 |
 | feature | `features/feat-dev-pipeline-improvement.md` | C02 の変更範囲と仕様リンクを追記 |
@@ -93,10 +93,11 @@ graph-managed document の更新には Dev Graph の C02 writer を使った。
 | document line limit | PASS、architecture wrapper は上限ちょうどの300行 |
 | task 仕様書 Phase 1〜13 検査 | PASS、Phase 1〜13 を各1件確認 |
 | root lint / repository CI | `make lint` PASS、`136 PASS / 4 WARN / 0 FAIL` |
+| database package | `230 passed`、statement coverage 93.6% |
 | system-spec coverage / citation / knowledge graph | PASS |
 | system-spec harness tests | `529 passed` |
 | live-trial transport / fixture / render focused 回帰 | `82 passed` |
-| live-trial harness 全回帰 | `87 passed`（実 tmux の stale global 値上書き・隔離 cleanup を含む） |
+| live-trial harness 全回帰 | `107 passed`（実 tmux の stale global 値上書き・隔離 cleanup を含む） |
 | focused content review | 5 criteria PASS、未解決 LOW / MEDIUM / HIGH 0、75 skill の lint PASS |
 | Dev Graph plugin manifest validation | PASS |
 | fresh live-trial | 9 skill すべて PASS、nudge 0、gate 応答 0 |
@@ -131,14 +132,16 @@ repository の文書ゲートはさらに厳しい300行上限を持つ。main �
 
 ## main 再同期
 
-`origin/main` を local `main` の `7f485c3db4fdd85b54fbbddf4e7c1873b0224dba`
+`origin/main` を local `main` の `02947ebc7532c099da636a88f936874371b326f6`
 へ同期した後、local `main` を本ブランチへ merge した。同時進行の変更が
-`qa-097`〜`qa-100` / `appr-016`〜`appr-017` を使用していたため、その履歴を保持し、
-本変更を次の空き ID `qa-101` / `appr-018` へ正規 transition writer で再適用した。
+`qa-097`〜`qa-101` / `appr-016`〜`appr-018` を使用していたため、その履歴を保持し、
+本変更を次の空き ID `qa-102` / `appr-019` へ正規 transition writer で再適用した。
 
 graph、architecture、feature、spec、system-spec の競合は main 側の新規契約を基準に
 解消し、C02 の document 移行、本文保持、completion evidence を正規 writer で
-再登録した。競合解消後に品質ゲートを再実行している。
+再登録した。compiler が扱わない main の横断追補（qa-100）と実装反映注記
+（HarnessHub-ory6 / 35ai / ml57）も意味的競合として検出し、欠落させず保持した。
+競合解消後に品質ゲートを再実行している。
 
 ## 受領判断
 

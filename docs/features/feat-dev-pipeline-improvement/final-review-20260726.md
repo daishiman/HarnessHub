@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-30T11:18:01Z"
+updated_at: "2026-07-30T12:25:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","issue-id-uniqueness-gate-generalization-20260728"]
@@ -273,9 +273,9 @@ Dev Graph 9 skill の behavior closure digest を stale と判定した。旧 ve
 編集せず、fresh tmux session で再取得した。C04 fixture の architecture lineage 欠落を
 既存 source-digest 契約へ適合させ、C19 では tmux server が保持していた過去 trial の
 `SYSTEM_SPEC_AUDIT_FORK_LEDGER` 誤継承を検出した。boot が caller の現在値を session の
-`new-session -e` へ明示する隔離境界を追加し、正規フローで `qa-101` / `appr-018`、
+`new-session -e` へ明示する隔離境界を追加し、正規フローで `qa-102` / `appr-019`、
 system spec、architecture、feature、P13、仕様反映確認へ統合した。製品 runtime 契約は非変更。
 実 tmux の stale global/current/空値と shell metacharacter 保持を隔離 server で回帰化し、
-live-trial harness `87 passed`、focused content review 5/5、Dev Graph `730 passed / 2 skipped`、
+live-trial harness `107 passed`、focused content review 5/5、Dev Graph `730 passed / 2 skipped`、
 system-spec harness `529 passed`、repository CI `136 PASS / 4 WARN / 0 FAIL` を確認した。
 4 WARN は段階導入中の既存 plugin completeness / rubric refs で blocking failure ではない。

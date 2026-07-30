@@ -20,7 +20,7 @@ serves_goals: [G1, G4, G5]
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-101 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-102 |
 
 ## 確定内容 (質疑録)
 
@@ -60,7 +60,7 @@ serves_goals: [G1, G4, G5]
 
 【6. Web App 出口との境界】作者 local session から顧客 Web App を公開する I5 は Hub 本体の開発フローと分離する。本契約は Hub repository の開発フローに限り、Hub の外部 API、データモデル、認証認可、Cloudflare deploy unit は変更しない。
 
-### qa-101 (対応セル: desktop-macos)
+### qa-102 (対応セル: desktop-macos)
 
 **質問**: qa-092 の C11 本文 readiness を維持しながら、C02 の lifecycle・document layer 整合性と live-trial の session 環境隔離を、自己完結した dev-workflow.desktop-macos 契約としてどう統合しますか?
 
@@ -75,6 +75,22 @@ serves_goals: [G1, G4, G5]
 【4. 監査証拠の接地】system-spec 監査台帳は contained fixture 内の path と current session id に束縛し、canonical aggregate gate が report・ledger・session の三点を突合して exit 0 になった場合だけ C02 import と live-trial PASS を許す。台帳欠落・別 session・別 path は fail-closed とし、手作業で台帳を複製または捏造しない。失敗 run は上書きせず append-only に保持する。
 
 【5. 回帰と境界】document migration、本文保持、lifecycle 後退、layer 正負例、fake tmux の new-session -e argv、実 tmux の stale global 値上書き、C19 の正規四 entry point・三監査・canonical aggregate・C02 import を検証する。変更は repository 内の Dev Graph metadata、live-trial transport、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+
+### 実装反映注記 (2026-07-30 / `HarnessHub-ml57`)
+
+qa-088【2】の「CI と local の一致」を、運用上の心がけではなく repository gate として
+具体化した。GitHub Actions が repository root から実行する
+`python3 scripts/*.py` の呼び出しを script path と意味のある引数の組へ正規化し、
+local hard-fail gate または理由付き allowlist に含まれることを set membership で検査する。
+allowlist に無い差分、理由のない例外、CI から消えた stale 例外、動的 working-directory
+など静的に境界を確定できない入力は fail-closed とする。
+
+local gate の責務は「CI のうち手元で安全に再実行できる検査」であり、外部資格情報が必要、
+working tree を書き換える、CI 自体が non-blocking という呼び出しは、正確な引数形と理由を
+`scripts/ci-local-check-allowlist.json` に記録する。製品 API、DB schema、認証認可、UI、
+Cloudflare deploy unit は変更しない。判断と最終検証は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+を正とする。
 
 ## 上流指針 (doctrine anchor)
 
