@@ -12,8 +12,8 @@ iteration: null
 title: "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)"
 owners: ["daishiman"]
 created_at: "2026-07-28T01:25:04Z"
-updated_at: "2026-07-30T01:52:22.851635Z"
-status: "done"
+updated_at: "2026-07-30T02:02:24.868278Z"
+status: "draft"
 depends_on: []
 related_nodes: ["issue-qa-log-id-uniqueness-gate-20260726"]
 resource_scope: ["plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph.py","plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph-shapes.py","plugins/ubm-goal-setting/scripts/validate-consult-session.py","plugins/harness-creator/skills/run-build-skill/scripts/validate-route-build-reports.py","plugins/harness-creator/skills/run-build-skill/scripts/validate-route-report-contract.py"]
@@ -113,7 +113,7 @@ plugins/harness-creator/scripts/accept-discovered-task.py
 - plugin-dev-planner: 878 passed / 2 skipped
 - ubm-goal-setting: 203 passed
 - harness-creator: 988 passed
-- repo tests: 7625 passed / 5 skipped
+- repo tests: 7627 passed / 5 skipped
 - `make lint`: PASS
 - `make content-review`: PASS (75 skills verified、live-trial は既存 record-only 6 件の warning のみ)
 - `make harness-ratchet`: PASS (全軸 floor 以上)

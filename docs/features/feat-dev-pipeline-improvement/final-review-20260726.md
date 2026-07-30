@@ -232,7 +232,7 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
   保持して CLOSED。PR linkage と最終 HEAD 束縛 receipt は PR 作成時に追記する。
 - 最終 gate は focused 103 passed、Plugin Dev Planner 878 passed /
   2 skipped、UBM Goal Setting 203 passed、Harness Creator 988 passed、
-  repository 全体 7625 passed / 5 skipped。lint、content-review、
+  repository 全体 7627 passed / 5 skipped。lint、content-review、
   harness-ratchet、task P01〜P13、graph schema、plugin package も
   blocking failure なし。
 

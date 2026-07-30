@@ -113,11 +113,21 @@ unit、確定済み QA 回答は変更しない。既存 qa-076 / qa-081 の異�
 follow-up `HarnessHub-ory6` は、focused regression **103 passed**、
 Plugin Dev Planner **878 passed / 2 skipped**、UBM Goal Setting
 **203 passed**、Harness Creator **988 passed**、repository 全体
-**7625 passed / 5 skipped** で確認した。`make lint`、
+**7627 passed / 5 skipped** で確認した。`make lint`、
 `make content-review`、`make harness-ratchet`、task 仕様書 P01〜P13、
 graph schema、plugin package、`git diff --check` もすべて blocking
 failure なしである。新規 support script 2 件には実コードレビューの
 coverage receipt を追加し、harness ratchet は floor 以上を維持した。
+
+### 最新 main 統合後の再受領
+
+PR #603 の skill-tree cache 品質ゲートを含む `origin/main` を local `main`
+へ同期し、その local `main` を本ブランチへマージした。競合した
+`system-spec/testing-qa.md`、集約仕様、testing architecture、P12 は、
+`HarnessHub-xswf` の qa-095 と `HarnessHub-ory6` の ID 一意性 gate を
+両方保持して解消した。統合後の testing-qa 正本 digest は
+`a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158`
+であり、architecture wrapper の lineage と確認証拠を同じ値へ更新した。
 
 ## 6. follow-up 完了と残課題
 
