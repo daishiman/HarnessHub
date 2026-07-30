@@ -128,15 +128,27 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 
 ## 7. 最終検証
 
-最終値は `origin/main` を local `main` へ取り込み、local `main` を本 branch へ
-マージした後の統合 tree で記録する。必須ゲートは次のとおり。
+`origin/main`、local `main`、本 branch の統合元はすべて
+`732a4ecf5a443f7d9bc711c7110d4407fe759c0c` であり、2 回の merge は
+`Already up to date` だった。その統合後 tree で次を再実行した。
 
-- focused parity tests
-- `tests/scripts-root` 全体
-- `scripts/run-ci-checks.sh`
-- task specification package validator
-- PR-ready pre-flight
-- document line limit / graph schema / diff whitespace
+| Gate | 結果 |
+|---|---|
+| focused parity tests | PASS: 8 tests |
+| `tests/scripts-root` 全体 | PASS: 1,158 tests |
+| parity 実リポジトリ監査 | PASS: CI blocking 38 / non-blocking 1 / local hard 37 / allowlist 5 |
+| `scripts/run-ci-checks.sh` | PASS: 136 / WARN: 4 / FAIL: 0 |
+| task specification package validator | PASS: P01〜P13、violations 0 |
+| dev-graph schema | PASS: `valid=true`、missing section 0 |
+| architecture source digest | PASS: checked 1、mismatch 0 |
+| document line limit | PASS: 426 documents、上限 300 行、allowlist 4 |
+| `git diff --check` | PASS: whitespace error 0 |
+
+`scripts/run-ci-checks.sh` の WARN 4 件は段階導入中の既存警告であり、
+本変更に起因する blocking failure ではない。task-specification-creator が例示する
+`scripts/verify-pr-ready.sh` は本 repository に存在しないため直接実行できず、
+この repository の正本 pre-push gate である `scripts/run-ci-checks.sh` と、
+上記の task package / graph / source digest 検査を個別に再実行して代替した。
 
 ## 8. 残課題
 
