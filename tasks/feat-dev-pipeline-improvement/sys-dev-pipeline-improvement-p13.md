@@ -230,3 +230,16 @@ This section is the current source closure and supersedes older counts or wordin
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-29 skill tree lint P13 書き戻し
+
+`HarnessHub-xswf` の実装結果を testing-qa の R4-reopen → qa-095 再確定として
+`system-spec/spec-state.json` / `system-spec/testing-qa.md` へ書き戻した。
+参照 wrapper、system spec 要約、feature 履歴、P12 品質ゲート、仕様反映受領書も
+同一 wave で更新した。
+
+変更境界は repository 内の skill 構造 lint と local test reproducibility であり、
+Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+最終検証は
+`docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
+へ記録し、draft PR は `main` 向けに作成する。

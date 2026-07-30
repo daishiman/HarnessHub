@@ -189,6 +189,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
   を正とする。
 
+**運用監視反映 (2026-07-29 / `HarnessHub-dbx6` / qa-094)**:
+
+- 日次 backup は Worker 日次 cron と別の Better Stack heartbeat を使い、`CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` を共用しない。
+- `BACKUP_HEARTBEAT_URL` は required。backup workflow は未投入を前提確認で拒否し、全 step 成功後だけ heartbeat を送る。
+- backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
+- 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
+
 **開発管理整合性の反映 (2026-07-29 / `HarnessHub-bk8v`)**:
 
 - dev-graph C02 は、昇格済み feature へ古い full snapshot が再送されても lifecycle を
@@ -198,6 +205,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   DB schema、認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
 - 実装契約、設計判断、検証結果の対応は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
+  を正とする。
+
+**開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-095)**:
+
+- skill 構造 lint は人が管理する tree の深さ・命名・許可 directory を検査し、
+  test tool が生成する dot directory、`__pycache__`、`.pyc` は構造判定から除外する。
+- repository root と配布 plugin の lint 実装は同一バイト列を維持し、
+  `.pytest_cache` / `.mypy_cache` / 任意の dot cache と通常の nested directory 違反を
+  正負の回帰検体にする。
+- per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを
+  task の広域回帰証拠とする。製品 API・DB・認証認可・UI・deploy unit は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
   を正とする。
 
 **公式出典鮮度と Stage 0 再検証の反映 (2026-07-30 / `HarnessHub-e2u`)**:

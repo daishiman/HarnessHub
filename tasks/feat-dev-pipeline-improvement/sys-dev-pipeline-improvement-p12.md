@@ -255,3 +255,18 @@ repository 内の一時領域から明示的に渡す。`--regenerate-body` だ�
 仕様正本は `system-spec/dev-workflow.md` `qa-092`、設計正本は
 `architecture/harness-hub-dev-workflow.md`、plugin 内部契約は
 `plugins/dev-graph/templates/README.md` とする。
+
+## 2026-07-29 skill tree lint 品質ゲート追補
+
+`HarnessHub-xswf` の最終レビューでは、focused test だけでなく
+per-plugin pytest の直後に repository criteria test を実行する順序回帰を必須にした。
+test tool が生成する dot cache は skill tree の設計物ではないため除外し、
+通常の nested directory 違反は引き続き fail-closed で拒否する。
+
+仕様反映は `system-spec/testing-qa.md` qa-095、
+`architecture/harness-hub-testing-qa.md`、
+`specs/harness-hub-system-specification.md`、
+`features/feat-dev-pipeline-improvement.md` に同一 wave で記録する。
+検証コマンドと結果の受領書は
+`docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
+を正とする。

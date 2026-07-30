@@ -114,6 +114,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **backup 成果物の採否判定境界**: 採用するか否かの判定は `packages/db/scripts/verify-export-artifact.ts` (実体は `parseExportArtifact`) の**一箇所へ集約**する。workflow の shell 側に header の `grep` や行数の `awk` を置かない。判定が 2 箇所に分かれると**弱い方が先に判定する**ため、ライブラリ側の fail-closed 検査 (header 形式・`format_version`・`coreTables` 19 テーブルとの集合一致・header 宣言行数と実際の行数の一致) が届かなくなる。
 - **qa-019「復元できないバックアップを成功と数えない」の適用範囲**: この確定要件が禁じるのは*復元できない断面*の採用であって、*データ行 0 の断面*の採用ではない。migration 済みで全 19 テーブル 0 行の断面は restore すれば同じ空 DB を再現するため採用し、`::warning::` だけ残す。旧実装はこの取り違えにより、稼働直後の本番 DB を 3 夜連続で不採用にしていた。
 
+**差分追記 (2026-07-29 / `HarnessHub-dbx6` / qa-094)**:
+
+- **heartbeat の責務分離**: Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使う。`CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` を共用すると、一方の成功が他方の失敗を隠すため禁止する。
+- **失敗検知の時間境界**: backup 専用 `hub-backup-daily` は `period=86400` 秒 / `grace=3600` 秒とし、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化させる。heartbeat は全 backup step 成功後だけ送る。
+- **fail-closed と完了境界**: `BACKUP_HEARTBEAT_URL` は required。未投入なら workflow の前提確認で停止する。repository 内実装だけで適用済みと数えず、Better Stack 資源、GitHub secret、main の成功 run、着信実測が揃うまで `HarnessHub-dbx6` は継続する。
+
 **配信経路・依存版の差分追記 (2026-07-30 / `HarnessHub-e2u`)**:
 
 - Claude Code marketplace の候補経路に、`url` / `path` と任意の `ref` / `sha` を
@@ -140,7 +146,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 **差分追記 (2026-07-28 / `HarnessHub-vns9`)**
 
 - **未検証境界の更新**: `HarnessHub-fnzl` 由来の secret / variable 投入は完了し `check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。`ci.yml` の完走は run `30143422049` で達成済み。**残るのは `backup.yml` の成功のみ**で、是正版が main へ land した後の `workflow_dispatch` 実走待ち。
-- **観測経路の欠落**: `BACKUP_HEARTBEAT_URL` が未投入のため、backup の cron 不発も step 失敗も外形監視側では同じ無音になる (qa-027 の意図が実装上未達)。実際に 3 夜連続の失敗が数日誰にも気づかれなかった。追跡: `issue-backup-failure-undetected-20260728` (`HarnessHub-dbx6`)。
+- **観測経路の欠落 (2026-07-29 更新)**: 3 夜連続失敗が無音だった原因に対し、backup 専用 heartbeat、required secret、workflow 前提確認、限定適用 CLI をローカル実装した。外部適用・secret 投入・main 成功 run・着信実測は未完了であり、運用上の欠落が閉じたとはまだ数えない。追跡: `issue-backup-failure-undetected-20260728` (`HarnessHub-dbx6`)。
 
 **差分追記 (2026-07-29 / `HarnessHub-bda4` / qa-091)**
 

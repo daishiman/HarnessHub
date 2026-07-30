@@ -12,7 +12,7 @@ iteration: "Stage 0"
 title: "Stage 0: 配布経路 technical gate (H7) 検証"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-30T02:26:39.328873Z"
+updated_at: "2026-07-30T02:30:23.206423Z"
 status: "closed"
 depends_on: []
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-stage0-distribution-gate/30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-30T02:26:23Z","origin_kind":"generated","source_digest":"676590f363ed619505b337889024456e24323f678459f6f8be90535367d59e0c","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T02:30:02Z","origin_kind":"generated","source_digest":"606ff30758d33576aa527ffae0d9228aeed47e4e8aeff8c6964938e7738a6f69","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-stage0-distribution-gate.md","confidence":0.9}]
