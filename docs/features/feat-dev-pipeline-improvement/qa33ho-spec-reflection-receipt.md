@@ -129,6 +129,15 @@ PR #603 の skill-tree cache 品質ゲートを含む `origin/main` を local `m
 `a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158`
 であり、architecture wrapper の lineage と確認証拠を同じ値へ更新した。
 
+### PR #607 の最新 main 競合解消
+
+`origin/main` / local `main` の `c122ae4` を本ブランチへ再マージした。
+同コミットで追加された `HarnessHub-foq6` の workflow 空走査 fail-closed
+契約と、`HarnessHub-ory6` の ID 一意性 gate を feature、集約仕様、P12、
+Dev Graph で両方保持した。Dev Graph は main 側を基底に単一 writer で
+本変更の node metadata を再適用し、`__merge_conflict__` sentinel を残して
+いない。
+
 ## 6. follow-up 完了と残課題
 
 - `HarnessHub-ory6` (`issue-id-uniqueness-gate-generalization-20260728`) は

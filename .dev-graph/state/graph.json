@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1004,
+  "graph_revision": 1014,
   "nodes": [
     {
       "acceptance": [
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T01:37:27Z"
+      "updated_at": "2026-07-30T02:46:06Z"
     },
     {
       "acceptance": [
@@ -12943,9 +12943,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
-        "evaluator": "codex-final-review",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md"
+        "evaluated_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
+        "evaluator": "assign-system-spec-completeness-evaluator + merge-reconciliation",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -12964,7 +12964,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069 の確定内容に適合し、P0〜P5 の開発運用・feature baseline の source lineage 逆引き・開発管理パイプライン改善 8 要件 (qa-067)・タスク優先度選定の MVP ファースト判断軸 (qa-069: 目的=何のために作るか / 背景=どういう経緯か / MVP=今必要な動くもの の3軸を第一ソートキーとし、品質・再現性強化系タスクは MVP 成立後へ繰り延べる。既確定 CI/CD・quality gate 要件は維持) の指針を提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096 の確定内容に適合し、C11 artifact readiness と CI/local 品質ゲートの空走査境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -12981,7 +12981,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration)、作者ローカル環境規律、dev-graph/beads (bd) タスク優先度選定の MVP ファースト判断軸 (目的・背景・MVP) を参照する",
+      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、および検査対象 0 件を既定 fail-closed にする品質ゲート境界を参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -13000,9 +13000,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-29T05:21:27Z",
+        "imported_at": "2026-07-30T01:53:05Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
+        "source_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13018,7 +13018,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-29T05:22:00.507534Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -25350,9 +25350,9 @@
         "graph.json 分割の実装 (トリガー記録のみ)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-29T05:21:27Z",
+        "imported_at": "2026-07-30T01:53:05Z",
         "origin_kind": "generated",
-        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
+        "source_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -25371,7 +25371,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T01:37:27Z"
+      "updated_at": "2026-07-30T02:46:06Z"
     },
     {
       "acceptance": [
@@ -26593,7 +26593,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:56:36.431928Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -26701,7 +26701,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T01:37:27Z"
+      "updated_at": "2026-07-30T02:46:06Z"
     },
     {
       "acceptance": [
@@ -39524,7 +39524,7 @@
         "存在しない --workflows-dir を渡すと非 0 で落ちる",
         "空ディレクトリを渡すと非 0 で落ちる",
         "--allow-empty を付けた場合に限り 0 を返す",
-        "上記 3 ケースが tests/scripts-root/test_root__lint_workflow_step_guard.py に追加されている"
+        "上記 3 ケースが tests/scripts-root/test_root__lint_workflow_step_guard_empty_scan.py に追加されている"
       ],
       "architecture_refs": [
         "arch-harness-hub-dev-workflow"
@@ -39546,12 +39546,17 @@
       "classification_confidence": 0.9,
       "classification_reason": "HarnessHub-5u5k の最終レビューで検出した、追加した lint 自身に残る空走査 fail-open。5u5k のスコープ (defect 是正 + 同型遮断) を膨らませないため独立 issue として分離した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-29T12:47:25Z",
+        "evidence_refs": [
+          "scripts/lint-workflow-step-guard.py",
+          "tests/scripts-root/test_root__lint_workflow_step_guard_empty_scan.py",
+          "system-spec/dev-workflow.md",
+          "docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-29T12:47:25Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -39596,12 +39601,27 @@
       ],
       "resource_scope": [
         "scripts/lint-workflow-step-guard.py",
-        "tests/scripts-root/test_root__lint_workflow_step_guard.py"
+        "tests/scripts-root/test_root__lint_workflow_step_guard.py",
+        "tests/scripts-root/test_root__lint_workflow_step_guard_empty_scan.py",
+        "system-spec/spec-state.json",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+        "docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md",
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl",
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260729-qa092.json",
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c06-hearing-auditor.json",
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c07-matrix-auditor.json",
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c08-doc-freshness-auditor.json"
       ],
       "scope_in": [
         "main() の空走査 fail-closed 化 (dir 不在 / 検査 0 件)",
         "--allow-empty による明示 opt-in の追加",
-        "self-test fixture と単体テストによる分岐固定"
+        "self-test fixture と単体テストによる分岐固定",
+        "system-spec qa-096 と下流仕様・設計文書への正規反映"
       ],
       "scope_out": [
         "lint の検出ルール自体の変更 (classify_env_reference の判定基準)",
@@ -39617,7 +39637,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "follow-up",
         "ci",
@@ -39630,7 +39650,7 @@
       "template_version": "1.0.0",
       "title": "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T04:30:00Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -42094,7 +42114,7 @@
       "template_version": "1.0.0",
       "title": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T02:02:24.868278Z"
+      "updated_at": "2026-07-30T02:47:04.316273Z"
     },
     {
       "acceptance": [

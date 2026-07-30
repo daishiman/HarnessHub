@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-30T01:37:27Z"
+updated_at: "2026-07-30T02:46:06Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-29T05:21:27Z","origin_kind":"generated","source_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T01:53:05Z","origin_kind":"generated","source_digest":"7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -238,6 +238,17 @@ close した。
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
   を正とする。
 
+## 2026-07-29 追記: workflow step guard の空走査 fail-closed
+
+- `HarnessHub-foq6` で、workflow directory 不在または YAML 0 件を成功扱いしていた
+  `lint-workflow-step-guard.py` を既定 fail-closed に変更した。
+- 意図的な空走査だけを `--allow-empty` で許可し、通常の CI / `make lint` /
+  pre-push 経路は実検査件数を伴う緑だけを受け入れる。
+- 520 行になった包括テストから空走査契約を専用ファイルへ分離し、全対象を 500 行未満にした。
+- 仕様影響は開発品質ゲートに限定され、system-spec `qa-096` と
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
+  に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
 ## 2026-07-30 追記: validator ID 一意性の横断 gate
 
 - `HarnessHub-ory6` で、task graph、consult transcript、route build handoff の
@@ -252,7 +263,6 @@ close した。
   `architecture/harness-hub-testing-qa.md`、P12 write-back と
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
   に同一 wave で反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
-
 ## アーキテクチャ参照
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md)
