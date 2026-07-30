@@ -103,6 +103,13 @@ PR merged (事実 authority)
 - metadataだけのpatchは本文を暗黙再生成しない。既存本文を破棄してtemplateへ戻す操作は `--regenerate-body` の明示opt-inに限る。
 - transaction receipt は `body_source` (`from_file|from_input|preserved|template|regenerated`) と `replaced_body_lines` を返す。一括更新の本文非破壊性は `body_source=preserved` と `replaced_body_lines=null` で検証する。
 
+### C02 document layer の graph/frontmatter parity
+
+- `artifact_kind=document` は `graph-node.schema.json#/$defs/documentLayer` に適合する `layer` を必須とする。形式は空でない小文字 kebab-case とし、役割追加を妨げる固定 enum は置かない。
+- `layer` は document 専用 metadata であり、issue / task / specification / architecture / feature には置かない。schema は document での必須化と非 document での禁止を同時に強制する。
+- 旧 document node だけが graph に `layer` を持たず artifact frontmatter に値を持つ場合、C02 は既存 frontmatter の単一 scalar を一度だけ移行元として読み、graph へ保存してから正準 frontmatter を再生成する。新規 document の暗黙 default、重複 key、形式不正、既存 artifact にも値が無い状態は fail-closed とする。
+- docs 配置 lint は同じ `$defs.documentLayer` を参照し、C02 と別の許容値表を持たない。これにより graph validation と repository placement の判定を一つの schema へ束縛する。
+
 ### C02 feature lifecycle の stale before-image 拒否
 
 - `node` または bare canonical node による feature 全体の再 upsert は、C14 が生成した同一入力を再試行する snapshot 経路である。既存 feature が前進済みなのに snapshot が `status` を `draft`、`confirmation_status` を `draft`、`evaluation_status` を `pending`、または `implementation_readiness.status` を `incomplete` へ戻す場合、C02 は stale before-image として dry-run / apply の両方を fail-closed で拒否する。

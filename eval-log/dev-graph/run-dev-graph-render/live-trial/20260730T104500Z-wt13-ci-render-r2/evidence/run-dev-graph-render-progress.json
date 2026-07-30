@@ -1,0 +1,39 @@
+{
+  "checklist": [
+    {
+      "item": "input graph/scope が schema PASS で output realpath が caller repo 内にある",
+      "status": "pass",
+      "evidence": "validate-graph-schema.py returned valid=true; output path is within DEV_GRAPH_ROOT"
+    },
+    {
+      "item": "render model の node/edge/feature progress counts が input graph と一致する",
+      "status": "pass",
+      "evidence": "renderer receipt: nodes=14, edges=12, feature_progress LT-FEATURE-001 done=4 total=13"
+    },
+    {
+      "item": "生成 HTML の外部 script/link/CDN/npm reference が0件で SVG と inline JS が実在する",
+      "status": "pass",
+      "evidence": "zero external scripts/links, SVG element present, inline script present"
+    },
+    {
+      "item": "renderer receipt の input/output digest と実ファイル digest が一致する",
+      "status": "pass",
+      "evidence": "input_sha256=6251071a24054cefcace9f23e54fba01f2528a71a043b261b91dbbdf51c9475e matches graph.json; output_sha256=6d7fad0a8bea87a9623b3b344b24cd74c6105fea378a71826455bd65c10f4586 matches index.html"
+    },
+    {
+      "item": "registration receipt 指定時は照合状態が verified",
+      "status": "pass",
+      "evidence": "registration_verification.status=verified in renderer receipt, render-metadata, and HTML text 'Registration verification: VERIFIED'"
+    },
+    {
+      "item": "ブラウザ live trial で追加 runtime なしに SVG と feature X/Y progress が表示される",
+      "status": "pass",
+      "evidence": "self_contained=true, SVG present, progress 4/13 displayed for LT-FEATURE-001"
+    }
+  ],
+  "criteria": {
+    "IN1": "pass",
+    "OUT1": "pass"
+  },
+  "overall": "pass"
+}

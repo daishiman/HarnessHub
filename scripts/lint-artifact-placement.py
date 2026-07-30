@@ -31,9 +31,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
 
 ROOT_FILE_ALLOWLIST = {
     "AGENTS.md",
@@ -60,7 +62,17 @@ SYSTEM_SPEC_JSON_ALLOWLIST = {
     "completeness-findings.json",  # system-dev-planner C08 が読む正準名 (report と同内容)
 }
 GRAPH_GOVERNED_ROOT_KEYS = ("specifications", "architecture", "features", "tasks")
-DOCS_REQUIRED_FRONTMATTER_KEYS = ("status:", "layer:")
+DOCS_REQUIRED_FRONTMATTER_KEYS = ("status", "layer")
+GRAPH_NODE_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "plugins"
+    / "dev-graph"
+    / "schemas"
+    / "graph-node.schema.json"
+)
+FRONTMATTER_SCALAR = re.compile(
+    r"^([A-Za-z_][A-Za-z0-9_-]*):(?:\s*(.*))?$"
+)
 
 
 PLUGIN_PACKAGE_MARKER = Path(".claude-plugin") / "plugin.json"
@@ -100,6 +112,70 @@ def _read_frontmatter_block(path: Path) -> list[str] | None:
         if line.strip() == "---":
             return lines[1:i]
     return None
+
+
+def _frontmatter_scalars(block: list[str]) -> tuple[dict[str, Any], set[str]]:
+    """Parse canonical flat scalars and report duplicate keys."""
+    result: dict[str, Any] = {}
+    duplicates: set[str] = set()
+    for line in block:
+        match = FRONTMATTER_SCALAR.match(line)
+        if not match:
+            continue
+        key = match.group(1)
+        if key in result:
+            duplicates.add(key)
+        raw = (match.group(2) or "").strip()
+        try:
+            value = json.loads(raw)
+        except json.JSONDecodeError:
+            if (
+                len(raw) >= 2
+                and raw[0] == raw[-1]
+                and raw[0] in {"'", '"'}
+            ):
+                value = raw[1:-1]
+            else:
+                value = raw
+        result[key] = value
+    return result, duplicates
+
+
+def _document_layer_schema() -> dict[str, Any]:
+    """Return the one canonical definition used by graph validation and this lint."""
+    try:
+        schema = json.loads(GRAPH_NODE_SCHEMA_PATH.read_text(encoding="utf-8"))
+        contract = schema["$defs"]["documentLayer"]
+    except (OSError, json.JSONDecodeError, KeyError, TypeError) as exc:
+        raise SystemExit(
+            f"設定エラー: document layer 正本を読めない: {GRAPH_NODE_SCHEMA_PATH}: {exc}"
+        ) from exc
+    if (
+        not isinstance(contract, dict)
+        or contract.get("type") != "string"
+        or not isinstance(contract.get("minLength"), int)
+        or not isinstance(contract.get("pattern"), str)
+    ):
+        raise SystemExit(
+            "設定エラー: graph-node.schema.json の $defs.documentLayer は "
+            "type/minLength/pattern を宣言する"
+        )
+    try:
+        re.compile(contract["pattern"])
+    except re.error as exc:
+        raise SystemExit(
+            "設定エラー: graph-node.schema.json の documentLayer.pattern が不正: "
+            f"{exc}"
+        ) from exc
+    return contract
+
+
+def _valid_document_layer(value: Any, contract: dict[str, Any]) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) >= contract["minLength"]
+        and re.search(contract["pattern"], value) is not None
+    )
 
 
 def lint(repo_root: Path) -> tuple[list[str], str]:
@@ -145,6 +221,7 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
     # 2. docs/ の frontmatter 必須
     docs_root = repo_root / roots.get("documents", "docs")
     if docs_root.is_dir():
+        layer_contract = _document_layer_schema()
         for md in sorted(docs_root.rglob("*.md")):
             rp = md.relative_to(repo_root).as_posix()
             if _in_plugin_package(md, docs_root):
@@ -156,12 +233,24 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
                     "status/layer を宣言する (無標識の文書を置かない)"
                 )
                 continue
-            joined = "\n".join(block)
+            frontmatter, duplicate_keys = _frontmatter_scalars(block)
+            for duplicate in sorted(duplicate_keys):
+                violations.append(
+                    f"VIOLATION: docs-frontmatter: {rp} の frontmatter に "
+                    f"{duplicate}: が重複している"
+                )
             for req in DOCS_REQUIRED_FRONTMATTER_KEYS:
-                if req not in joined:
+                if req not in frontmatter:
                     violations.append(
-                        f"VIOLATION: docs-frontmatter: {rp} の frontmatter に {req} が無い"
+                        f"VIOLATION: docs-frontmatter: {rp} の frontmatter に {req}: が無い"
                     )
+            if "layer" in frontmatter and not _valid_document_layer(
+                frontmatter["layer"], layer_contract
+            ):
+                violations.append(
+                    f"VIOLATION: docs-frontmatter: {rp} の layer は "
+                    "graph-node.schema.json#/$defs/documentLayer に適合しない"
+                )
 
     # 3. system-spec/ 直下の混入遮断
     ss_root = repo_root / roots.get("system_spec", "system-spec")
@@ -232,6 +321,41 @@ def self_test() -> int:
         (root / "system-spec" / "spec-state.json").write_text("{}", encoding="utf-8")
         v, _ = lint(root)
         assert v == [], f"クリーン状態で違反を誤検出: {v}"
+
+        # layer の許容形式は graph-node.schema.json の documentLayer が唯一の正本。
+        # `xlayer:` のような部分一致や大文字・空白入りの値は layer 宣言として扱わない。
+        invalid_layer = root / "docs" / "invalid-layer.md"
+        invalid_layer.write_text(
+            "---\nstatus: draft\nlayer: Feature Design\n---\nbody",
+            encoding="utf-8",
+        )
+        v, _ = lint(root)
+        assert any(
+            "invalid-layer.md" in line and "documentLayer" in line for line in v
+        ), "schema 不適合の layer を検出しない"
+        invalid_layer.unlink()
+
+        lookalike_layer = root / "docs" / "lookalike-layer.md"
+        lookalike_layer.write_text(
+            "---\nstatus: draft\nxlayer: feature-design\n---\nbody",
+            encoding="utf-8",
+        )
+        v, _ = lint(root)
+        assert any(
+            "lookalike-layer.md" in line and "layer: が無い" in line for line in v
+        ), "frontmatter key の部分一致を layer 宣言として扱っている"
+        lookalike_layer.unlink()
+
+        duplicate_layer = root / "docs" / "duplicate-layer.md"
+        duplicate_layer.write_text(
+            "---\nstatus: draft\nlayer: feature-design\nlayer: operations\n---\nbody",
+            encoding="utf-8",
+        )
+        v, _ = lint(root)
+        assert any(
+            "duplicate-layer.md" in line and "layer: が重複" in line for line in v
+        ), "重複 layer を単一の正本として受理している"
+        duplicate_layer.unlink()
 
         # plugin package 実体 (.claude-plugin/plugin.json を持つツリー) は
         # docs-frontmatter の対象外。SKILL.md の frontmatter 正本は Claude Code 側の仕様。
