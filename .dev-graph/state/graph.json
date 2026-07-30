@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1028,
+  "graph_revision": 1031,
   "nodes": [
     {
       "acceptance": [
@@ -34005,9 +34005,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4",
+        "evaluated_digest": "f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0",
         "evaluator": "codex-final-review",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md"
+        "evidence_ref": "docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -34063,9 +34063,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T07:08:55Z",
+        "imported_at": "2026-07-30T11:41:12Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4",
+        "source_digest": "f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34081,7 +34081,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T07:08:55Z"
+      "updated_at": "2026-07-30T11:41:12Z"
     },
     {
       "acceptance": [
@@ -34185,9 +34185,9 @@
         "P01..P13 exact-13 契約そのものの変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-24T20:58:52Z",
+        "imported_at": "2026-07-30T11:41:12Z",
         "origin_kind": "generated",
-        "source_digest": "39b66cb40e83ad4b7977c1ed0734b1c86bf1b746511d584e8a72282019b1fd7d",
+        "source_digest": "f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -34210,7 +34210,7 @@
       "template_version": "1.0.0",
       "title": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T00:46:48.794028Z"
+      "updated_at": "2026-07-30T11:41:12Z"
     },
     {
       "acceptance": [
@@ -44063,6 +44063,138 @@
       "title": "顧客持ち込みGoogle OAuthクライアントの管理機能を実装する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T23:16:51.876731Z"
+    },
+    {
+      "acceptance": [
+        "plugin または workflow の変更で専用 GitHub Actions job が発火する",
+        "clean runner で runtime install、npm test、runtime check を順番に実行する",
+        "npm test が plugin-local Chromium 起動、16:9 検査、2 slide screenshot、report self-test を含む",
+        "workflow の配線を Python 契約テストが検査する",
+        "EVALS の mechanical checks と README の script inventory が実態に一致する",
+        "testing-qa の system-spec、compiled spec、architecture、feature、task、受領書が同期される",
+        "対象品質ゲートと repository CI が blocking failure 0 で完了する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-nznu",
+        "linked_at": "2026-07-30T11:41:12Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/task-slide-report-generator-browser-ci-20260730.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "既存 plugin の実装を変えずに CI 到達と検証証拠を補完する、単一責務の repository tooling task",
+      "completion_evidence": {
+        "completed_at": "2026-07-30T11:41:12Z",
+        "evidence_refs": [
+          "docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md",
+          "plugins/slide-report-generator/tests/test_build_playwright_runtime.py",
+          ".github/workflows/slide-report-generator-ci.yml"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-30T11:41:12Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "3865ef3f39c5dd1c20adb54bd38f89139d702b0ecbb33b76389e0d299f1b21ce",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-30T11:41:12Z",
+      "depends_on": [],
+      "domain": "testing-qa",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/task-slide-report-generator-browser-ci-20260730.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "plugin または専用 workflow の変更時に clean runner が runtime 復元、実 Chromium を使う npm test、plugin-local runtime check を順番に完走し、配線消失を契約テストが検知する状態",
+      "graph_node_id": "task-slide-report-generator-browser-ci-20260730",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T11:41:12Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ローカルで成立している plugin-local Chromium 受入試験を CI から到達可能にし、未実行の検査を緑と誤認する経路を閉じる",
+      "related_nodes": [
+        "feat-task-spec-test-strategy",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        ".github/workflows/slide-report-generator-ci.yml",
+        "plugins/slide-report-generator/",
+        "system-spec/spec-state.json",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-task-spec-test-strategy.md",
+        "tasks/task-slide-report-generator-browser-ci-20260730.md",
+        "docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "slide-report-generator 専用 GitHub Actions workflow",
+        "plugin-local Playwright runtime の clean-runner 復元と read-only check",
+        "実 Chromium 起動、16:9 検査、複数 slide screenshot の npm test 到達",
+        "workflow 配線の Python 契約テスト",
+        "EVALS、README、testing-qa 仕様・設計・受領書の同期"
+      ],
+      "scope_out": [
+        "Harness Hub 製品の UI、API、DB schema、認証認可の変更",
+        "Cloudflare deploy unit と production runtime の変更",
+        "Playwright version の更新",
+        "flaky test の quarantine や retry による失敗の隠蔽",
+        "GitHub repository secret の追加"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T11:41:12Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "slide-report-generator",
+        "playwright",
+        "chromium",
+        "github-actions",
+        "testing-qa"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "slide-report-generator の実 Chromium 受入試験を CI へ接続する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T11:41:12Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

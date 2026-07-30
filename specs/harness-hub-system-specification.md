@@ -195,6 +195,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - qa-100 は qa-089 の受領境界を fail-closed（確認不能なら失敗）にし、live-trial の `scenario_contract`、全 required observation、引数、宣言済み task 契約、run 内 evidence を criteria-test で再照合する。旧形式の欠落は互換成功にせず fresh run で更新する。
 - 影響は開発証拠の受領だけで、schedule skill 本体と製品契約は非変更。反映対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) を正とする。
 
+**plugin browser CI 到達追補 (2026-07-30 / `HarnessHub-nznu` / qa-101)**:
+
+- 実ブラウザを必要とする plugin acceptance は EVALS やローカル `npm test` への列挙だけで完了とせず、plugin path 変更時に GitHub Actions から runtime install → 同一 test → read-only check へ到達させる。
+- Node/Playwright と OS/CPU 別 Chromium は plugin 配下へ復元する。cache は高速化に限定し、最終 check が version、実行ファイル実在、plugin-local path 包含を検証する。
+- `slide-report-generator` は Chromium 起動、16:9、2 slide screenshot、report self-test を vendor test で実測し、workflow 配線を Python 契約テストで固定する。
+- 影響は repository 内の品質ゲートに限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。反映対応は [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md) を正とする。
+
 **開発運用反映 (2026-07-29 / `HarnessHub-cjwm`・`HarnessHub-0vs2`)**:
 
 - `system-spec/dev-workflow.md` の qa-090 として、live-trial session の通常 cleanup は
