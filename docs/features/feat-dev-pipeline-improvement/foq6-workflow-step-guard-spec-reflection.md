@@ -36,8 +36,8 @@ updated: 2026-07-29
 
 ## 正規フローの反映
 
-- 承認記録: `system-spec/spec-state.json` `appr-013`
-- 確定質疑: `system-spec/spec-state.json` `qa-092`
+- 承認記録: `system-spec/spec-state.json` `appr-015`
+- 確定質疑: `system-spec/spec-state.json` `qa-096`
 - 確定章: `system-spec/dev-workflow.md`
 - 仕様 wrapper: `specs/harness-hub-system-specification.md`
 - 設計: `architecture/harness-hub-dev-workflow.md`
@@ -66,6 +66,13 @@ updated: 2026-07-29
 - Dev Graph: source-digest / evidence-ref / schema gate PASS
 - `make lint`: PASS
 - CI 等価チェック: PASS 123 / WARN 4（既存・非 blocking）/ FAIL 0
+
+## main 統合時の ID 競合解消
+
+PR 作成後に main へ別契約の `qa-092` / `appr-013` が統合されたため、その履歴を優先し、
+本契約は意味内容を変えず `qa-096` / `appr-015` へ再採番した。既存 completeness
+report と auditor JSON の path・本文に残る `qa092` は、再採番前に実施した独立評価の
+履歴識別子であり、最終仕様 ID の正本は `system-spec/spec-state.json` とする。
 
 ## 残課題
 

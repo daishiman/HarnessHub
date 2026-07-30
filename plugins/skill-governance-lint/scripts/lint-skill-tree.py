@@ -203,10 +203,17 @@ def lint_one(root: Path) -> list[str]:
 
     # 第13条 フラットツリー (深さ <= 2)
     for p in root.rglob("*"):
-        # __pycache__ / .pyc を除外
-        if "__pycache__" in p.parts or p.suffix == ".pyc":
-            continue
         rel = p.relative_to(root)
+        # Python / test tools が生成する cache は人が設計した skill tree ではない。
+        # ALLOWED_DIRS に dot directory は無いため、個別ツール名を列挙せず、
+        # dot で始まる directory とその配下を一律に除外する。
+        dir_parts = rel.parts if p.is_dir() else rel.parts[:-1]
+        if (
+            "__pycache__" in rel.parts
+            or p.suffix == ".pyc"
+            or any(part.startswith(".") for part in dir_parts)
+        ):
+            continue
         # templates/ 配下は雛形なので skill 規約検査を skip (生成後の skill 側で検査)
         if rel.parts and rel.parts[0] == "templates" and len(rel.parts) > 1:
             continue

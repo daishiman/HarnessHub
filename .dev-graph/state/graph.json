@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1001,
+  "graph_revision": 1008,
   "nodes": [
     {
       "acceptance": [
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-29T12:47:25Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -12943,9 +12943,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "cd7a3727715931eac0479642bb414df2b90c42ba36395bd7a3327f07bc47ccc7",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260729-qa092.json"
+        "evaluated_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
+        "evaluator": "assign-system-spec-completeness-evaluator + merge-reconciliation",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -12964,7 +12964,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-092 の確定内容に適合し、MVP ファースト判断軸を維持しながら CI/local 品質ゲートの空走査を明示 opt-in 以外では失敗させる開発運用指針を提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096 の確定内容に適合し、C11 artifact readiness と CI/local 品質ゲートの空走査境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -12981,7 +12981,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration)、作者ローカル環境規律、dev-graph/beads (bd) タスク優先度選定の MVP ファースト判断軸、および検査対象 0 件を既定 fail-closed にする品質ゲート境界を参照する",
+      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、および検査対象 0 件を既定 fail-closed にする品質ゲート境界を参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -13000,9 +13000,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-29T12:44:14Z",
+        "imported_at": "2026-07-30T01:53:05Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "cd7a3727715931eac0479642bb414df2b90c42ba36395bd7a3327f07bc47ccc7",
+        "source_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13018,7 +13018,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-29T12:44:14Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -25348,9 +25348,9 @@
         "graph.json 分割の実装 (トリガー記録のみ)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-29T12:44:14Z",
+        "imported_at": "2026-07-30T01:53:05Z",
         "origin_kind": "generated",
-        "source_digest": "cd7a3727715931eac0479642bb414df2b90c42ba36395bd7a3327f07bc47ccc7",
+        "source_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -25369,7 +25369,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T12:44:14Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -26591,7 +26591,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T12:47:25Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -26699,7 +26699,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T12:47:25Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -33948,9 +33948,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb",
+        "evaluated_digest": "f06ac1cf4045c7ca38ea7794fb92706a744f86161990a78b8904d8fd52d20bac",
         "evaluator": "codex-final-review",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md"
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -33969,7 +33969,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-076/qa-077/qa-078/qa-079/qa-080/qa-081/qa-089 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・再利用可能な live-trial 証拠・失敗時改善ループの指針を提供する",
+      "goal": "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・一時生成物に左右されない skill lint・再利用可能な live-trial 証拠・失敗時改善ループの指針を提供する",
       "graph_node_id": "arch-harness-hub-testing-qa",
       "implementation_readiness": {
         "checked_at": "2026-07-24T12:35:34Z",
@@ -34006,9 +34006,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-28T22:00:00Z",
+        "imported_at": "2026-07-30T01:27:32Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb",
+        "source_digest": "f06ac1cf4045c7ca38ea7794fb92706a744f86161990a78b8904d8fd52d20bac",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34024,7 +34024,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T22:00:00Z"
+      "updated_at": "2026-07-30T01:27:32Z"
     },
     {
       "acceptance": [
@@ -37159,7 +37159,9 @@
         "除外が scripts/ と plugins/skill-governance-lint/scripts/ の両複製で同時に効いている",
         "回帰テストが .pytest_cache という個別名のみに依存せず同性質の生成物ディレクトリ全般で通る"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -37177,12 +37179,14 @@
       "classification_confidence": 0.95,
       "classification_reason": "lint-skill-tree.py:205-221 の除外条件を原文で確認し、.pytest_cache 削除前 7 failed / 削除後 0 failed を同一 HEAD で実測して因果を本欠陥に限定した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-29T12:10:50Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-29T12:10:50Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -37228,7 +37232,9 @@
         "scripts/lint-skill-tree.py",
         "plugins/skill-governance-lint/scripts/lint-skill-tree.py",
         "tests/criteria/test_all_skills_criteria.py",
-        ".github/workflows/harness-creator-kit-ci.yml"
+        "tests/scripts-plugins/test_skill_governance_lint__lint_skill_tree.py",
+        ".github/workflows/harness-creator-kit-ci.yml",
+        "docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md"
       ],
       "scope_in": [
         "lint-skill-tree.py 第13条の生成物ディレクトリ除外の一般化",
@@ -37250,7 +37256,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "lint",
@@ -37266,7 +37272,7 @@
       "template_version": "1.0.0",
       "title": "lint-skill-tree.py の第13条が .pytest_cache を除外せず、per-plugin pytest 実行後に criteria テストが 7 件偽陽性で落ちる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T03:27:35.277123Z"
+      "updated_at": "2026-07-29T12:15:39.081186Z"
     },
     {
       "acceptance": [
@@ -39612,7 +39618,7 @@
         "main() の空走査 fail-closed 化 (dir 不在 / 検査 0 件)",
         "--allow-empty による明示 opt-in の追加",
         "self-test fixture と単体テストによる分岐固定",
-        "system-spec qa-092 と下流仕様・設計文書への正規反映"
+        "system-spec qa-096 と下流仕様・設計文書への正規反映"
       ],
       "scope_out": [
         "lint の検出ルール自体の変更 (classify_env_reference の判定基準)",
@@ -39641,7 +39647,7 @@
       "template_version": "1.0.0",
       "title": "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T12:55:00Z"
+      "updated_at": "2026-07-30T01:53:05Z"
     },
     {
       "acceptance": [
@@ -43191,6 +43197,254 @@
       "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
       "tracker_binding": "beads",
       "updated_at": "2026-07-29T06:17:06Z"
+    },
+    {
+      "acceptance": [
+        "canonical template の未記入 required section が incomplete となり節名を missing_sections に返す",
+        "全 6 artifact kind の実本文は受理し、見出しだけへ潰した mutation は拒否する",
+        "C02 の template-only 新規生成と placeholder 再生成を transaction rollback する",
+        "task 仕様書品質ゲート、plugin package gate、repository 品質ゲートが通る",
+        "仕様反映受領書と Beads 更新を完了し draft PR を作成する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-4t9g",
+        "linked_at": "2026-07-29T06:17:57Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-implementation-readiness-body-validation-20260728.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "HarnessHub-4t9g の受入条件と qa-091 が C11 artifact 本文 readiness の単一責務を確定する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T13:59:42Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-implementation-readiness-body-validation-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "空本文・canonical placeholder・sentinel-only・code-example-only の必須節が implementation_readiness=complete にならない",
+      "graph_node_id": "issue-implementation-readiness-body-validation-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T06:17:57Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "本文が未記入の artifact を tracker 投影や system build handoff へ進めないよう、C11 readiness を本文実体へ係留する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/validate-graph-schema.py",
+        "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py",
+        "plugins/dev-graph/tests/test_upsert_node_body_preservation.py",
+        "plugins/dev-graph/templates/README.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/"
+      ],
+      "scope_in": [
+        "required section 本文の deterministic 検査",
+        "missing_sections への未記入節名の反映",
+        "全 6 artifact kind の canonical template と mutation 回帰テスト",
+        "C02 template-only 作成・再生成の rollback 回帰",
+        "仕様・設計・task・feature・docs への契約反映"
+      ],
+      "scope_out": [
+        "required heading の名称移行と欠落 heading の新規拒否",
+        "既存 promoted task package の immutable source 書換",
+        "Harness Hub 製品 API・DB・認証認可・UI・Cloudflare deploy unit の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T06:17:57Z",
+        "origin_kind": "generated",
+        "source_digest": "26ad9ea7e825da5bedd2ff3952fa7013065c1dbbfc5fc120cbc723bce86af95e",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "c11",
+        "implementation-readiness",
+        "artifact-body"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "implementation_readiness が本文未記入の artifact を complete と判定する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T06:17:57Z"
+    },
+    {
+      "acceptance": [
+        "必須見出し名を削除した artifact が専用 violation で拒否される",
+        "欠落した節名が missing_sections に返る",
+        "全 artifact kind の正例・負例が回帰テストで固定される",
+        "既存 artifact の互換移行手順と rollback が検証される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-85z0",
+        "linked_at": "2026-07-29T09:37:50Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-required-heading-presence-validation-20260729.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "HarnessHub-4t9g が required heading 名称の欠落を明示的に scope out とした後続単一責務",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T09:35:58Z",
+      "depends_on": [
+        "issue-implementation-readiness-body-validation-20260728"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-required-heading-presence-validation-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "required heading の欠落を本文 placeholder と区別した専用 violation で拒否する",
+      "graph_node_id": "issue-required-heading-presence-validation-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T09:35:58Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "必須見出し名の欠落を安全に診断し、既存 artifact を正規移行できるようにする",
+      "related_nodes": [
+        "issue-implementation-readiness-body-validation-20260728",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/validate-graph-schema.py",
+        "plugins/dev-graph/scripts/graph_artifact_readiness.py",
+        "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py",
+        "plugins/dev-graph/tests/test_graph_artifact_readiness.py",
+        "plugins/dev-graph/templates/README.md",
+        "issues/"
+      ],
+      "scope_in": [
+        "required heading 欠落の専用 violation",
+        "missing_sections への欠落節名の反映",
+        "全 artifact kind の heading mutation 回帰",
+        "既存 artifact の互換移行手順"
+      ],
+      "scope_out": [
+        "本文 placeholder 判定の再実装",
+        "Harness Hub 製品 API・DB・認証認可・UI の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T09:35:58Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "c11",
+        "required-heading",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "required heading 欠落を C11 readiness で専用拒否する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T09:37:50Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

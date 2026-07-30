@@ -44,6 +44,7 @@
   "heartbeat": {
     "local_id": "hub-cron-daily",
     "external_id": "475650",
+    "provisioning_state": "applied",
     "request": {
       "method": "POST",
       "endpoint": "https://uptime.betterstack.com/api/v2/heartbeats",
@@ -60,6 +61,27 @@
     },
     "secret_binding": "CRON_HEARTBEAT_URL",
     "$comment": "日次 cron (0 15 * * *) の全ジョブ成功時だけ Worker が heartbeat URL を呼ぶ。URL は Cloudflare Worker secret として投入し、ファイルやログへ保存しない。"
+  },
+  "backup_heartbeat": {
+    "local_id": "hub-backup-daily",
+    "external_id": null,
+    "provisioning_state": "pending_credentials",
+    "request": {
+      "method": "POST",
+      "endpoint": "https://uptime.betterstack.com/api/v2/heartbeats",
+      "payload": {
+        "name": "Harness Hub daily backup",
+        "period": 86400,
+        "grace": 3600,
+        "paused": false,
+        "email": true,
+        "sms": false,
+        "call": false,
+        "push": true
+      }
+    },
+    "secret_binding": "BACKUP_HEARTBEAT_URL",
+    "$comment": "GitHub Actions の日次 backup (0 17 * * *) が upload 後の再取得・byte 一致まで完走したときだけ ping する。Worker cron とは資源を分離し、片方の成功がもう片方の失敗を隠さない。URL は GitHub Actions repository secret として投入し、ファイルやログへ保存しない。"
   },
   "status_page": {
     "local_id": "harness-hub-status",

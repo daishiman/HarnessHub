@@ -1,0 +1,45 @@
+{
+  "checklist": {
+    "system_spec_content_root_match": {
+      "status": "PASS",
+      "evidence": "repo_root=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-system-spec matches content_roots.repository"
+    },
+    "system_spec_harness_version_entry_points": {
+      "status": "PASS",
+      "evidence": "name=system-spec-harness, version=0.1.0 (>=0.1.0 <1.0.0), required 4 entry points present"
+    },
+    "elicit_compile_evaluator_via_skill": {
+      "status": "PASS",
+      "evidence": "4 Skill invocations: run-system-spec-elicit, run-system-spec-doc-fetch, run-system-spec-compile, assign-system-spec-completeness-evaluator"
+    },
+    "coverage_source_evaluator_gate_pass": {
+      "status": "PASS",
+      "evidence": "validate-coverage-matrix.py exit 0, validate-source-citation.py exit 0, aggregate-completeness.py --report exit 0"
+    },
+    "c02_registration_source_lineage": {
+      "status": "PASS",
+      "evidence": "spec-todo-api-requirements (specification) + arch-todo-api-system (architecture) registered via upsert-node.py, source_lineage 6 fields all non-null"
+    },
+    "validate_source_digest_exit0": {
+      "status": "PASS",
+      "evidence": "validate-source-digest.py exit 0, checked=2, registered_mismatch=[]"
+    },
+    "validate_evidence_refs_exit0": {
+      "status": "PASS",
+      "evidence": "validate-evidence-refs.py exit 0, scanned=2, registered_dangling=[], existing_dangling=[]"
+    },
+    "no_duplicate_logic": {
+      "status": "PASS",
+      "evidence": "No elicit/compile logic found in plugins/dev-graph/ (陽性対照 confirmed in system-spec-harness)"
+    }
+  },
+  "registered_this_run": [
+    "spec-todo-api-requirements",
+    "arch-todo-api-system"
+  ],
+  "evidence_ref_audit": {
+    "scanned_nodes_with_evidence": 2,
+    "registered_dangling": [],
+    "existing_dangling": []
+  }
+}

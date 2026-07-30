@@ -12,14 +12,14 @@ iteration: null
 title: "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)"
 owners: ["daishiman"]
 created_at: "2026-07-28T04:30:00Z"
-updated_at: "2026-07-29T12:55:00Z"
+updated_at: "2026-07-30T01:53:05Z"
 status: "done"
 depends_on: []
 related_nodes: ["issue-governance-notion-steps-always-skipped-20260725"]
 resource_scope: ["scripts/lint-workflow-step-guard.py","tests/scripts-root/test_root__lint_workflow_step_guard.py","tests/scripts-root/test_root__lint_workflow_step_guard_empty_scan.py","system-spec/spec-state.json","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md","eval-log/system-spec-harness/audit-fork-ledger.jsonl","eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260729-qa092.json","eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c06-hearing-auditor.json","eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c07-matrix-auditor.json","eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c08-doc-freshness-auditor.json"]
 purpose: "scripts/lint-workflow-step-guard.py の main() が workflows dir 不在および走査 0 件を成功として返すため、検査が起動していない緑と検査した結果の緑を区別できない。防ごうとしている defect と同型の fail-open が検査器自身に残っている"
 goal: "検査対象が 0 件のときに lint が非 0 で停止し、意図的な空走査だけが明示 opt-in で許される状態"
-scope_in: ["main() の空走査 fail-closed 化 (dir 不在 / 検査 0 件)","--allow-empty による明示 opt-in の追加","self-test fixture と単体テストによる分岐固定","system-spec qa-092 と下流仕様・設計文書への正規反映"]
+scope_in: ["main() の空走査 fail-closed 化 (dir 不在 / 検査 0 件)","--allow-empty による明示 opt-in の追加","self-test fixture と単体テストによる分岐固定","system-spec qa-096 と下流仕様・設計文書への正規反映"]
 scope_out: ["lint の検出ルール自体の変更 (classify_env_reference の判定基準)","--simulate の出力仕様変更","呼び出し 3 経路 (governance-check.yml / make lint / run-ci-checks.sh) の再設計"]
 acceptance: ["存在しない --workflows-dir を渡すと非 0 で落ちる","空ディレクトリを渡すと非 0 で落ちる","--allow-empty を付けた場合に限り 0 を返す","上記 3 ケースが tests/scripts-root/test_root__lint_workflow_step_guard_empty_scan.py に追加されている"]
 architecture_refs: ["arch-harness-hub-dev-workflow"]
@@ -80,6 +80,8 @@ if not workflows_dir.is_dir():
 
 ## 再現手順またはユースケース
 
+Beads `HarnessHub-foq6` の description に記録した入力条件を用い、対象 script / workflow / validator を実行して現象を再現する。再現条件と実測結果は同 issue の notes に追記し、完了時は node の evidence_refs へ repository 内の証跡を係留する。
+
 ```bash
 # dir 不在でも成功してしまう
 python3 scripts/lint-workflow-step-guard.py --workflows-dir /nonexistent; echo "exit=$?"
@@ -125,6 +127,6 @@ mkdir -p /tmp/empty-wf && python3 scripts/lint-workflow-step-guard.py --workflow
 - repository CI: PASS 123 / WARN 4（既存・非 blocking）/ FAIL 0
 - completeness evaluator: PASS（session `1068ed92-67cd-411a-b7f1-e08a496147fb`）
 - Dev Graph: source-digest / evidence-ref / schema gate PASS
-- 仕様反映: `system-spec/dev-workflow.md` qa-092 / appr-013
+- 仕様反映: `system-spec/dev-workflow.md` qa-096 / appr-015
 - 受領書:
   `docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`

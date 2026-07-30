@@ -1,0 +1,261 @@
+{
+  "after": {
+    "audit_implementation": {
+      "index_matches_worktree": true,
+      "modules": [
+        {
+          "index_blob": "110ff08e625513f61743fb8292f2f4ac30580fde",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/audit_decompose_integrity.py",
+          "sha256": "204089ca751a09759f51a7b3c8f6f73ad99eed399ad6c8e03d51b6af5791d0ba",
+          "tracked_in_index": true,
+          "worktree_blob": "110ff08e625513f61743fb8292f2f4ac30580fde"
+        },
+        {
+          "index_blob": "2f4e7d1adf03b26acb0ce473f2978f2ea34c72b8",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+          "sha256": "38b6204b484e5d5721ed59b607102b18cbffbcbdf316e962f0891e8f1246db50",
+          "tracked_in_index": true,
+          "worktree_blob": "2f4e7d1adf03b26acb0ce473f2978f2ea34c72b8"
+        },
+        {
+          "index_blob": "e9191702da1ae34c4b7efa1f4c1b71ab40403283",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/audit_decompose_publication.py",
+          "sha256": "81d7eded3db608b7d6d8724dee7a821dd4952914c23d1612b3c06ef072714dc2",
+          "tracked_in_index": true,
+          "worktree_blob": "e9191702da1ae34c4b7efa1f4c1b71ab40403283"
+        },
+        {
+          "index_blob": "f7a94de5885e2c6add3ba0d30f55f2a29e73c388",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+          "sha256": "ed99ef285e90516a107e902d80d95ef9239659c3c6a965b81d3c788ccbe43ee7",
+          "tracked_in_index": true,
+          "worktree_blob": "f7a94de5885e2c6add3ba0d30f55f2a29e73c388"
+        },
+        {
+          "index_blob": "0f89279b677cf4d2d81db0bdfb613f3de1ee38fa",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+          "sha256": "f9a794e6142368f57be46d672424231e0d7d6350741568219d486194e54104ab",
+          "tracked_in_index": true,
+          "worktree_blob": "0f89279b677cf4d2d81db0bdfb613f3de1ee38fa"
+        }
+      ],
+      "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+      "sha256": "be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f",
+      "tracked_in_index": true
+    },
+    "config": {
+      "path": ".dev-graph/config.json",
+      "sha256": "8ff77341c3cac143755abc32a787355728cb365d3d3a7720402fd9b1ff30d77d"
+    },
+    "content_inventory": {
+      "architecture": [
+        {
+          "bytes": 2487,
+          "path": "architecture/arch-webapp-foundation.md",
+          "sha256": "734d3387ffc77befd909ff111ce0a5e0884d8ddbe016fa2dbe05b887f42806cb"
+        }
+      ],
+      "documents": [
+        {
+          "bytes": 342,
+          "path": "docs/want.md",
+          "sha256": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577"
+        }
+      ],
+      "features": [
+        {
+          "bytes": 3307,
+          "path": "features/feat-admin-report.md",
+          "sha256": "784a7038e7bd614b13fb2d985cab7e86295be804354413ed862513ce5b4899f0"
+        },
+        {
+          "bytes": 3337,
+          "path": "features/feat-dashboard.md",
+          "sha256": "195ec47f97afbfd99431909593b0a7bee90f8497a87a2c18a7beb5f58974e069"
+        },
+        {
+          "bytes": 3064,
+          "path": "features/feat-notification.md",
+          "sha256": "e4123a1beec7651496a9e7597f5be3d487dfecf8f8cc718a72e012c64b1e989c"
+        },
+        {
+          "bytes": 3656,
+          "path": "features/feat-user-auth.md",
+          "sha256": "7f9c57a159ee082de3beb04d13f830d108e0608dc0c8945c49d65b099a78da4f"
+        }
+      ],
+      "issues": [],
+      "specifications": [],
+      "system_spec": [],
+      "tasks": []
+    },
+    "git_status": {
+      "all": [],
+      "managed": []
+    },
+    "graph": {
+      "node_count": 5,
+      "path": ".dev-graph/state/graph.json",
+      "revision": 9,
+      "sha256": "4c619f4ee5f1ff07bffd239b2733b71b7bfb5826e55a48111c7c091ec1ee12d5"
+    },
+    "publication_inventory": {
+      "beads_export": {
+        "count": 0,
+        "exists": false,
+        "ids": [],
+        "path": ".beads/issues.jsonl"
+      },
+      "issues": {
+        "count": 0,
+        "paths": [],
+        "root": "issues"
+      },
+      "node_linkages": {
+        "arch-webapp-foundation-001": {
+          "beads_linkage": false,
+          "github_project_linkages": 0,
+          "issue_linkage": false
+        },
+        "feat-admin-report-001": {
+          "beads_linkage": false,
+          "github_project_linkages": 0,
+          "issue_linkage": false
+        },
+        "feat-dashboard-001": {
+          "beads_linkage": false,
+          "github_project_linkages": 0,
+          "issue_linkage": false
+        },
+        "feat-notification-001": {
+          "beads_linkage": false,
+          "github_project_linkages": 0,
+          "issue_linkage": false
+        },
+        "feat-user-auth-001": {
+          "beads_linkage": false,
+          "github_project_linkages": 0,
+          "issue_linkage": false
+        }
+      }
+    },
+    "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose-none"
+  },
+  "before": {
+    "audit_implementation": {
+      "index_matches_worktree": true,
+      "modules": [
+        {
+          "index_blob": "110ff08e625513f61743fb8292f2f4ac30580fde",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/audit_decompose_integrity.py",
+          "sha256": "204089ca751a09759f51a7b3c8f6f73ad99eed399ad6c8e03d51b6af5791d0ba",
+          "tracked_in_index": true,
+          "worktree_blob": "110ff08e625513f61743fb8292f2f4ac30580fde"
+        },
+        {
+          "index_blob": "2f4e7d1adf03b26acb0ce473f2978f2ea34c72b8",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+          "sha256": "38b6204b484e5d5721ed59b607102b18cbffbcbdf316e962f0891e8f1246db50",
+          "tracked_in_index": true,
+          "worktree_blob": "2f4e7d1adf03b26acb0ce473f2978f2ea34c72b8"
+        },
+        {
+          "index_blob": "e9191702da1ae34c4b7efa1f4c1b71ab40403283",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/audit_decompose_publication.py",
+          "sha256": "81d7eded3db608b7d6d8724dee7a821dd4952914c23d1612b3c06ef072714dc2",
+          "tracked_in_index": true,
+          "worktree_blob": "e9191702da1ae34c4b7efa1f4c1b71ab40403283"
+        },
+        {
+          "index_blob": "f7a94de5885e2c6add3ba0d30f55f2a29e73c388",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+          "sha256": "ed99ef285e90516a107e902d80d95ef9239659c3c6a965b81d3c788ccbe43ee7",
+          "tracked_in_index": true,
+          "worktree_blob": "f7a94de5885e2c6add3ba0d30f55f2a29e73c388"
+        },
+        {
+          "index_blob": "0f89279b677cf4d2d81db0bdfb613f3de1ee38fa",
+          "index_matches_worktree": true,
+          "path": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+          "sha256": "f9a794e6142368f57be46d672424231e0d7d6350741568219d486194e54104ab",
+          "tracked_in_index": true,
+          "worktree_blob": "0f89279b677cf4d2d81db0bdfb613f3de1ee38fa"
+        }
+      ],
+      "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+      "sha256": "be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f",
+      "tracked_in_index": true
+    },
+    "config": {
+      "path": ".dev-graph/config.json",
+      "sha256": "8ff77341c3cac143755abc32a787355728cb365d3d3a7720402fd9b1ff30d77d"
+    },
+    "content_inventory": {
+      "architecture": [],
+      "documents": [],
+      "features": [],
+      "issues": [],
+      "specifications": [],
+      "system_spec": [],
+      "tasks": []
+    },
+    "git_status": {
+      "all": [],
+      "managed": []
+    },
+    "graph": {
+      "node_count": 0,
+      "path": ".dev-graph/state/graph.json",
+      "revision": 0,
+      "sha256": "236a61a32e2f7a4641c9f440b184757f961b62a65bed5fd72e78aa52197fb016"
+    },
+    "publication_inventory": {
+      "beads_export": {
+        "count": 0,
+        "exists": false,
+        "ids": [],
+        "path": ".beads/issues.jsonl"
+      },
+      "issues": {
+        "count": 0,
+        "paths": [],
+        "root": "issues"
+      },
+      "node_linkages": {}
+    },
+    "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose-none"
+  },
+  "checks": {
+    "config_sha_unchanged": true,
+    "content_inventory_unchanged": false,
+    "graph_node_count_unchanged": false,
+    "graph_revision_unchanged": false,
+    "graph_sha_unchanged": false,
+    "managed_git_status_unchanged": true,
+    "publication_inventory_unchanged": false
+  },
+  "mutation_suppressed": false,
+  "publication_delta": {
+    "beads_export": {
+      "added": [],
+      "added_count": 0
+    },
+    "issues": {
+      "added": [],
+      "added_count": 0
+    },
+    "linked_nodes": {
+      "beads": [],
+      "github": []
+    }
+  }
+}

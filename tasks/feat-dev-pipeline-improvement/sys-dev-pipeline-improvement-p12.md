@@ -12,7 +12,7 @@ iteration: null
 title: "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-29T12:47:25Z"
+updated_at: "2026-07-30T01:53:05Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P11"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -241,14 +241,44 @@ boot READY 行の `OWNER_PID` と同じ値を
 必要性と対象を確認してから個別 `kill-session` または管理者 `--all` を選ぶ。
 詳細は `docs/worktree-parallel-operations-runbook.md` と system-spec `qa-090` を正とする。
 
-## 2026-07-29 HarnessHub-foq6 仕様反映追補
+## 2026-07-29 C11 artifact 本文の運用追補
+
+本 P12 の promoted task spec と完了判定は変更しない。Dev Graph node を新規作成または
+本文再生成するときは、template の placeholder を残したまま C02 を完了扱いにしない。
+
+本文を用意できない場合は node を投影せず、必須節名を `missing_sections` として返して
+停止する。既存本文を残す metadata-only update は `--body-file` を省略してよい。
+壊れた本文を復旧する場合は、required section に具体的内容を持つ body file を
+repository 内の一時領域から明示的に渡す。`--regenerate-body` だけで placeholder template
+へ戻す操作は C11 が rollback する。
+
+仕様正本は `system-spec/dev-workflow.md` `qa-092`、設計正本は
+`architecture/harness-hub-dev-workflow.md`、plugin 内部契約は
+`plugins/dev-graph/templates/README.md` とする。
+
+## 2026-07-29 skill tree lint 品質ゲート追補
+
+`HarnessHub-xswf` の最終レビューでは、focused test だけでなく
+per-plugin pytest の直後に repository criteria test を実行する順序回帰を必須にした。
+test tool が生成する dot cache は skill tree の設計物ではないため除外し、
+通常の nested directory 違反は引き続き fail-closed で拒否する。
+
+仕様反映は `system-spec/testing-qa.md` qa-095、
+`architecture/harness-hub-testing-qa.md`、
+`specs/harness-hub-system-specification.md`、
+`features/feat-dev-pipeline-improvement.md` に同一 wave で記録する。
+検証コマンドと結果の受領書は
+`docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
+を正とする。
+
+## 2026-07-30 HarnessHub-foq6 仕様反映追補
 
 本 P12 の promoted task spec と完了判定は変更しない。空走査 fail-open は
-repository 内の開発品質契約へ影響するため、`appr-013` を承認根拠として
-`system-spec/dev-workflow.md` の web セルを R4 reopen し、qa-092 へ再確定した。
+repository 内の開発品質契約へ影響するため、`appr-015` を承認根拠として
+`system-spec/dev-workflow.md` の web セルを R4 reopen し、qa-096 へ再確定した。
+`qa-092` / `appr-013` は main 側 C11 契約の履歴として維持した。
 `specs/`、`architecture/`、`features/`、`docs/`、本 `tasks/` の参照を同一 wave で同期し、
 製品 API・DB・認証認可・UI・deploy unit は非変更と記録した。受領書は
 `docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`
-を正とする。C05 completeness evaluator は同一 session の C07/C06/C08 fork 証跡を
-hook 台帳で裏取りして PASS し、Architecture/Feature の source digest も qa-092 反映後の
-`system-spec/dev-workflow.md` と一致する。
+を正とする。pre-merge completeness evaluator は同じ意味内容を旧ローカル ID
+`qa-092` / `appr-013` として評価済みで、競合解消では意味を変えず ID だけを移した。

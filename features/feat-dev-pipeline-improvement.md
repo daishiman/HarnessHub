@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-29T12:44:14Z"
+updated_at: "2026-07-30T01:53:05Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-29T12:44:14Z","origin_kind":"generated","source_digest":"cd7a3727715931eac0479642bb414df2b90c42ba36395bd7a3327f07bc47ccc7","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T01:53:05Z","origin_kind":"generated","source_digest":"7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -207,6 +207,37 @@ close した。
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
+## 2026-07-29 追記: C11 artifact 本文 readiness
+
+- `HarnessHub-4t9g` で、artifact file と frontmatter だけが揃った未記入 template を
+  `implementation_readiness=complete` とする fail-open を是正した。
+- C11 は artifact kind 別の canonical template と required section を照合し、
+  空本文、canonical placeholder、`TBD` / `TODO` / `未定` だけの節を
+  `placeholder_only_section` として `missing_sections` へ返す。
+- fenced code block は説明本文として数えず、構造 container は実内容のある child
+  section を含む場合だけ充足とする。
+- C02 の template-only 作成と placeholder 再生成は rollback し、実本文を保持する
+  metadata-only update と substantive body による作成・復旧を維持する。
+- 仕様影響は repository 内の readiness、tracker 投影、system build handoff に限定する。
+  system-spec `qa-092`、
+   `architecture/harness-hub-dev-workflow.md`、
+   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
+   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
+## 2026-07-29 追記: skill tree lint の test cache 偽陽性修正
+
+- `HarnessHub-xswf` で、per-plugin pytest が生成する `.pytest_cache/v/cache` を
+  skill tree の第13条違反として数える実行順序依存を修正した。
+- dot directory とその配下を一般規則で除外し、`__pycache__` / `.pyc` の既存除外と統合した。
+- `.pytest_cache`、`.mypy_cache`、`.tool-cache` の正例と通常 nested directory の負例、
+  root / plugin script の byte parity を回帰テストにした。
+- `system-spec/spec-state.json` を単一 writer で R4-reopen し、
+  `system-spec/testing-qa.md` qa-095、`architecture/harness-hub-testing-qa.md`、
+  `specs/harness-hub-system-specification.md`、P12/P13 task spec へ反映した。
+- 製品 API・DB・認証認可・UI・deploy unit は非変更。判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
+  を正とする。
+
 ## 2026-07-29 追記: workflow step guard の空走査 fail-closed
 
 - `HarnessHub-foq6` で、workflow directory 不在または YAML 0 件を成功扱いしていた
@@ -214,7 +245,7 @@ close した。
 - 意図的な空走査だけを `--allow-empty` で許可し、通常の CI / `make lint` /
   pre-push 経路は実検査件数を伴う緑だけを受け入れる。
 - 520 行になった包括テストから空走査契約を専用ファイルへ分離し、全対象を 500 行未満にした。
-- 仕様影響は開発品質ゲートに限定され、system-spec `qa-092` と
+- 仕様影響は開発品質ゲートに限定され、system-spec `qa-096` と
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 

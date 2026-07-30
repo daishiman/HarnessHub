@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "plugins" / "skill-governance-lint" / "scripts" / "lint-skill-tree.py"
+ROOT_SCRIPT = ROOT / "scripts" / "lint-skill-tree.py"
 
 _SPEC = importlib.util.spec_from_file_location("lint_skill_tree", SCRIPT)
 LST = importlib.util.module_from_spec(_SPEC)
@@ -156,6 +157,20 @@ def test_lint_one_nested_dir_violation(tmp_path):
     (d / "references" / "deep").mkdir(parents=True)
     errs = LST.lint_one(d)
     assert any("第13条違反" in e and "deep" in e for e in errs)
+
+
+def test_lint_one_ignores_generated_hidden_directories(tmp_path):
+    d = _make_skill(tmp_path)
+    for dirname in (".pytest_cache", ".mypy_cache", ".tool-cache"):
+        generated = d / dirname / "v" / "cache"
+        generated.mkdir(parents=True)
+        (generated / "state").write_text("generated", encoding="utf-8")
+
+    assert LST.lint_one(d) == []
+
+
+def test_lint_skill_tree_distributed_copy_matches_root():
+    assert SCRIPT.read_bytes() == ROOT_SCRIPT.read_bytes()
 
 
 def test_lint_one_scripts_bad_extension(tmp_path):

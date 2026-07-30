@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-29T12:47:25Z"
+updated_at: "2026-07-30T01:53:05Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -175,6 +175,39 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
   を正とする。
 
+**開発品質反映 (2026-07-29 / `HarnessHub-4t9g`)**:
+
+- `system-spec/dev-workflow.md` の `qa-092` として、Dev Graph C11 が artifact の
+  required section 本文を検査する契約を確定した。
+- 空本文、canonical placeholder の残存、`TBD` / `TODO` / `未定` だけの節は
+  `implementation_readiness=incomplete` とし、節名を `missing_sections` に返す。
+- C02 の template-only 新規生成と placeholder への再生成は transaction rollback
+  する。実本文の保持と substantive body による作成・復旧は維持する。
+- 影響は repository 内の readiness、tracker 投影、system build handoff に限定する。
+  製品 API・DB・認証認可・UI・Cloudflare deploy unit は変更しない。
+  反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
+  を正とする。
+
+**運用監視反映 (2026-07-29 / `HarnessHub-dbx6` / qa-094)**:
+
+- 日次 backup は Worker 日次 cron と別の Better Stack heartbeat を使い、`CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` を共用しない。
+- `BACKUP_HEARTBEAT_URL` は required。backup workflow は未投入を前提確認で拒否し、全 step 成功後だけ heartbeat を送る。
+- backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
+- 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
+
+**開発品質ゲートの空走査反映 (2026-07-30 / `HarnessHub-foq6` / qa-096)**:
+
+- `system-spec/dev-workflow.md` の web セルを正規に reopen し、qa-069 の
+  MVP ファースト契約を維持したまま qa-096 へ再確定した。
+- 品質ゲートは directory 不在・検査対象 0 件を既定で失敗させ、
+  意図的な空走査だけを明示 opt-in で許可する。
+- `qa-092` / `appr-013` は main 側 C11 契約を保持し、本変更は空き ID
+  `qa-096` / `appr-015` へ再採番した。
+- 製品 API・DB・認証認可・UI・deploy unit は変更しない。反映と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
+  を正とする。
+
 **開発管理整合性の反映 (2026-07-29 / `HarnessHub-bk8v`)**:
 
 - dev-graph C02 は、昇格済み feature へ古い full snapshot が再送されても lifecycle を
@@ -186,16 +219,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   を正とする。
 
-**開発品質ゲートの空走査反映 (2026-07-29 / `HarnessHub-foq6`)**:
+**開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-095)**:
 
-- `system-spec/dev-workflow.md` の web セルを正規に reopen し、qa-069 の
-  MVP ファースト契約を維持したまま qa-092 へ再確定した。
-- 品質ゲートは directory 不在・検査対象 0 件を既定で失敗させ、
-  意図的な空走査だけを明示 opt-in で許可する。
-- completeness evaluator は C07/C06/C08 の fork 証跡を同一 session へ束縛して PASS し、
-  `arch-harness-hub-dev-workflow` の source digest は確定章の実 digest と一致する。
-- 製品 API・DB・認証認可・UI・deploy unit は変更しない。反映と検証は
-  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
+- skill 構造 lint は人が管理する tree の深さ・命名・許可 directory を検査し、
+  test tool が生成する dot directory、`__pycache__`、`.pyc` は構造判定から除外する。
+- repository root と配布 plugin の lint 実装は同一バイト列を維持し、
+  `.pytest_cache` / `.mypy_cache` / 任意の dot cache と通常の nested directory 違反を
+  正負の回帰検体にする。
+- per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを
+  task の広域回帰証拠とする。製品 API・DB・認証認可・UI・deploy unit は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
   を正とする。
 
 ## 未決事項

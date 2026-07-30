@@ -6,30 +6,28 @@
 // script は .mjs で tsconfig が allowJs:false のため静的 import できない。
 // 変数指定子の動的 import は TS が静的解決しないので、型検査を通したまま実体を読める。
 
-import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
+import {
+  type ApiNode,
+  BACKUP_HEARTBEAT_URL,
+  createFakeClient,
+  HEARTBEAT_URL,
+  HUB_ROOT,
+  loadConfig,
+  loadDashboard,
+  payloadOf,
+  seededHeartbeats,
+} from './better-stack-monitoring-test-support';
 
-const HUB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SCRIPT = path.join(HUB_ROOT, 'scripts/apply-better-stack-monitoring.mjs');
-
-interface ApiNode {
-  id: string;
-  attributes: Record<string, unknown>;
-}
-
-interface FakeClient {
-  request(method: string, path: string, body?: unknown): Promise<unknown>;
-  listAll(path: string): Promise<ApiNode[]>;
-  calls: { method: string; path: string }[];
-  requestBodies: { method: string; path: string; body: unknown }[];
-}
 
 interface ApplyResult {
   config: Record<string, unknown>;
   dashboard: Record<string, unknown>;
   heartbeatUrl: string | null;
+  heartbeatUrls: Record<string, string>;
   actions: { kind: string; action: string; external_id?: string; id?: string }[];
 }
 
@@ -43,6 +41,7 @@ interface ScriptModule {
     listAll(path: string): Promise<ApiNode[]>;
   };
   applyMonitoring(options: { config: unknown; dashboard: unknown; client: unknown; now: Date }): Promise<ApplyResult>;
+  applyBackupHeartbeat(options: { config: unknown; client: unknown }): Promise<ApplyResult>;
   MONITORS_CONFIG_PATH: string;
   SLO_DASHBOARD_PATH: string;
 }
@@ -52,89 +51,6 @@ let script: ScriptModule;
 beforeAll(async () => {
   script = (await import(pathToFileURL(SCRIPT).href)) as ScriptModule;
 });
-
-function loadConfig(): Record<string, unknown> {
-  return JSON.parse(readFileSync(path.join(HUB_ROOT, 'monitoring/better-stack.monitors.json'), 'utf8'));
-}
-
-function loadDashboard(): Record<string, unknown> {
-  return JSON.parse(readFileSync(path.join(HUB_ROOT, 'monitoring/slo-dashboard.json'), 'utf8'));
-}
-
-const HEARTBEAT_URL = 'https://uptime.betterstack.com/api/v1/heartbeat/secretsecretsecret';
-
-/**
- * メモリ上の Better Stack。POST が来た件数を calls で数えられるので
- * 「再実行しても作りに行かない」を直接主張できる。
- */
-function createFakeClient(
-  seed: { monitors?: ApiNode[]; heartbeats?: ApiNode[]; statusPages?: ApiNode[]; resources?: ApiNode[] } = {},
-): FakeClient {
-  const store: Record<string, ApiNode[]> = {
-    '/api/v2/monitors': seed.monitors ?? [],
-    '/api/v2/heartbeats': seed.heartbeats ?? [],
-    '/api/v2/status-pages': seed.statusPages ?? [],
-  };
-  const resources: Record<string, ApiNode[]> = {};
-  const calls: { method: string; path: string }[] = [];
-  const requestBodies: { method: string; path: string; body: unknown }[] = [];
-  let nextId = 1000;
-
-  function resourcePath(p: string): string | null {
-    return /^\/api\/v2\/status-pages\/[^/]+\/resources$/.test(p) ? p : null;
-  }
-
-  return {
-    calls,
-    requestBodies,
-    async listAll(p: string) {
-      calls.push({ method: 'GET', path: p });
-      const asResource = resourcePath(p);
-      if (asResource !== null) return resources[asResource] ?? seed.resources ?? [];
-      return store[p] ?? [];
-    },
-    async request(method: string, p: string, body?: unknown) {
-      calls.push({ method, path: p });
-      requestBodies.push({ method, path: p, body });
-      if (method === 'PATCH') {
-        const matched = p.match(/^(\/api\/v2\/(?:monitors|heartbeats))\/([^/]+)$/);
-        if (matched === null) throw new Error(`想定外の ${method} ${p}`);
-        const collectionPath = matched[1];
-        const id = matched[2];
-        if (collectionPath === undefined || id === undefined) throw new Error(`更新先を解析できません: ${p}`);
-        const collection = store[collectionPath] ?? [];
-        const index = collection.findIndex((item) => item.id === id);
-        if (index < 0) throw new Error(`更新対象がありません: ${p}`);
-        const current = collection[index];
-        if (current === undefined) throw new Error(`更新対象がありません: ${p}`);
-        const attributes = { ...current.attributes, ...(body as Record<string, unknown>) };
-        if ((body as Record<string, unknown>)?.paused === false) {
-          attributes.paused_at = null;
-          attributes.status = collectionPath === '/api/v2/monitors' ? 'up' : 'pending';
-        }
-        const updated = { ...current, attributes };
-        collection[index] = updated;
-        store[collectionPath] = collection;
-        return { data: updated };
-      }
-      if (method !== 'POST') throw new Error(`想定外の ${method} ${p}`);
-      nextId += 1;
-      const id = String(nextId);
-      const attributes = { ...(body as Record<string, unknown>) };
-      const asResource = resourcePath(p);
-      if (asResource !== null) {
-        const created = { id, attributes };
-        resources[asResource] = [...(resources[asResource] ?? []), created];
-        return { data: created };
-      }
-      if (p === '/api/v2/heartbeats') attributes.url = HEARTBEAT_URL;
-      const created = { id, attributes };
-      store[p] = [...(store[p] ?? []), created];
-      // status page だけ公式ドキュメントの例が data で包まれていないので、その形も通ることを見ておく
-      return p === '/api/v2/status-pages' ? created : { data: created };
-    },
-  };
-}
 
 describe('HF-A3-SLO-002: Better Stack 適用器', () => {
   describe('秘密の伏字化', () => {
@@ -279,7 +195,7 @@ describe('HF-A3-SLO-002: Better Stack 適用器', () => {
   describe('適用', () => {
     const now = new Date('2026-08-01T00:00:00.000Z');
 
-    it('新規適用で 4 資源を作り、採番結果を書き戻す', async () => {
+    it('新規適用で 5 資源を作り、採番結果を書き戻す', async () => {
       const client = createFakeClient();
       const result = await script.applyMonitoring({ config: loadConfig(), dashboard: loadDashboard(), client, now });
 
@@ -287,6 +203,10 @@ describe('HF-A3-SLO-002: Better Stack 適用器', () => {
       expect(result.config.applied_at).toBe('2026-08-01T00:00:00.000Z');
       const monitor = result.config.monitor as { external_id: string };
       const heartbeat = result.config.heartbeat as { external_id: string };
+      const backupHeartbeat = result.config.backup_heartbeat as {
+        external_id: string;
+        provisioning_state: string;
+      };
       const statusPage = result.config.status_page as {
         external_id: string;
         resource_external_ids: Record<string, string>;
@@ -294,13 +214,21 @@ describe('HF-A3-SLO-002: Better Stack 適用器', () => {
       for (const id of [
         monitor.external_id,
         heartbeat.external_id,
+        backupHeartbeat.external_id,
         statusPage.external_id,
         statusPage.resource_external_ids['hub-health'],
       ]) {
         expect(typeof id).toBe('string');
         expect(id).not.toBe('');
       }
-      expect(result.actions.map((a) => a.action)).toStrictEqual(['created', 'created', 'created', 'created']);
+      expect(backupHeartbeat.provisioning_state).toBe('applied');
+      expect(result.actions.map((a) => a.action)).toStrictEqual([
+        'created',
+        'created',
+        'created',
+        'created',
+        'created',
+      ]);
     });
 
     it('観測開始を適用時刻に合わせ、初回月次判定を +30 日に置く', async () => {
@@ -317,6 +245,10 @@ describe('HF-A3-SLO-002: Better Stack 適用器', () => {
       const client = createFakeClient();
       const result = await script.applyMonitoring({ config: loadConfig(), dashboard: loadDashboard(), client, now });
       expect(result.heartbeatUrl).toBe(HEARTBEAT_URL);
+      expect(result.heartbeatUrls).toMatchObject({
+        CRON_HEARTBEAT_URL: HEARTBEAT_URL,
+        BACKUP_HEARTBEAT_URL,
+      });
       expect(JSON.stringify(result.config)).not.toContain('secretsecretsecret');
       expect(JSON.stringify(result.dashboard)).not.toContain('secretsecretsecret');
       expect(JSON.stringify(result.actions)).not.toContain('secretsecretsecret');
@@ -333,33 +265,29 @@ describe('HF-A3-SLO-002: Better Stack 適用器', () => {
           blocker: null,
         },
       };
-      const payloadOf = (key: 'monitor' | 'heartbeat' | 'status_page') =>
-        (config[key] as { request: { payload: Record<string, unknown> } }).request.payload;
-
       const client = createFakeClient({
-        monitors: [{ id: '11', attributes: { ...payloadOf('monitor') } }],
-        heartbeats: [{ id: '22', attributes: { ...payloadOf('heartbeat'), url: HEARTBEAT_URL } }],
-        statusPages: [{ id: '33', attributes: { ...payloadOf('status_page') } }],
+        monitors: [{ id: '11', attributes: { ...payloadOf(config, 'monitor') } }],
+        heartbeats: seededHeartbeats(config),
+        statusPages: [{ id: '33', attributes: { ...payloadOf(config, 'status_page') } }],
         resources: [{ id: '44', attributes: { resource_id: '11', resource_type: 'Monitor' } }],
       });
 
       const result = await script.applyMonitoring({ config, dashboard, client, now });
 
       expect(client.calls.filter((c) => c.method === 'POST')).toStrictEqual([]);
-      expect(result.actions.map((a) => a.action)).toStrictEqual(['reused', 'reused', 'reused', 'reused']);
+      expect(result.actions.map((a) => a.action)).toStrictEqual(['reused', 'reused', 'reused', 'reused', 'reused']);
       expect((result.config.monitor as { external_id: string }).external_id).toBe('11');
       // 再実行で 30 日の起点を now へ動かすと、月次判定が永遠に先送りされる。
       expect(result.config.applied_at).toBe(config.applied_at);
       expect(result.dashboard.verdict).toStrictEqual(dashboard.verdict);
       // 既存 heartbeat からも URL を回収できないと、secret 再投入の経路が消える
       expect(result.heartbeatUrl).toBe(HEARTBEAT_URL);
+      expect(result.heartbeatUrls.BACKUP_HEARTBEAT_URL).toBe(BACKUP_HEARTBEAT_URL);
     });
 
     it('既存 monitor が paused なら PATCH で正本の paused:false へ戻す', async () => {
       const config = loadConfig();
-      const payloadOf = (key: 'monitor' | 'heartbeat' | 'status_page') =>
-        (config[key] as { request: { payload: Record<string, unknown> } }).request.payload;
-      const monitorPayload = payloadOf('monitor');
+      const monitorPayload = payloadOf(config, 'monitor');
       const client = createFakeClient({
         monitors: [
           {
@@ -372,8 +300,8 @@ describe('HF-A3-SLO-002: Better Stack 適用器', () => {
             },
           },
         ],
-        heartbeats: [{ id: '22', attributes: { ...payloadOf('heartbeat'), url: HEARTBEAT_URL } }],
-        statusPages: [{ id: '33', attributes: { ...payloadOf('status_page') } }],
+        heartbeats: seededHeartbeats(config),
+        statusPages: [{ id: '33', attributes: { ...payloadOf(config, 'status_page') } }],
         resources: [{ id: '44', attributes: { resource_id: '11', resource_type: 'Monitor' } }],
       });
 
@@ -407,19 +335,72 @@ describe('HF-A3-SLO-002: Better Stack 適用器', () => {
 
     it('monitor と status page が既存でも関連付けだけは補う', async () => {
       const config = loadConfig();
-      const payloadOf = (key: 'monitor' | 'heartbeat' | 'status_page') =>
-        (config[key] as { request: { payload: Record<string, unknown> } }).request.payload;
-
       const client = createFakeClient({
-        monitors: [{ id: '11', attributes: { ...payloadOf('monitor') } }],
-        heartbeats: [{ id: '22', attributes: { ...payloadOf('heartbeat'), url: HEARTBEAT_URL } }],
-        statusPages: [{ id: '33', attributes: { ...payloadOf('status_page') } }],
+        monitors: [{ id: '11', attributes: { ...payloadOf(config, 'monitor') } }],
+        heartbeats: seededHeartbeats(config),
+        statusPages: [{ id: '33', attributes: { ...payloadOf(config, 'status_page') } }],
       });
 
       const result = await script.applyMonitoring({ config, dashboard: loadDashboard(), client, now });
       const posts = client.calls.filter((c) => c.method === 'POST');
       expect(posts).toStrictEqual([{ method: 'POST', path: '/api/v2/status-pages/33/resources' }]);
       expect(result.actions.at(-1)).toMatchObject({ kind: 'status_page_resource', action: 'created' });
+    });
+
+    it('backup 限定適用は他の監視資源と SLO dashboard に触れない', async () => {
+      const config = loadConfig();
+      const client = createFakeClient({
+        monitors: [
+          {
+            id: '11',
+            attributes: {
+              ...payloadOf(config, 'monitor'),
+              paused: undefined,
+              paused_at: '2026-07-27T00:00:00.000Z',
+              status: 'paused',
+            },
+          },
+        ],
+        heartbeats: [{ id: '22', attributes: { ...payloadOf(config, 'heartbeat'), url: HEARTBEAT_URL } }],
+      });
+
+      const result = await script.applyBackupHeartbeat({ config, client });
+
+      expect(client.calls).toStrictEqual([
+        { method: 'GET', path: '/api/v2/heartbeats' },
+        { method: 'POST', path: '/api/v2/heartbeats' },
+      ]);
+      expect(result.dashboard).toBeNull();
+      expect(result.config).toMatchObject({
+        ...config,
+        backup_heartbeat: {
+          ...(config.backup_heartbeat as Record<string, unknown>),
+          external_id: '1001',
+          provisioning_state: 'applied',
+        },
+      });
+      expect(result.heartbeatUrls).toStrictEqual({ BACKUP_HEARTBEAT_URL });
+      expect(result.actions).toStrictEqual([
+        {
+          kind: 'heartbeat',
+          local_id: 'hub-backup-daily',
+          action: 'created',
+          external_id: '1001',
+        },
+      ]);
+      expect(client.calls.some((call) => call.path.startsWith('/api/v2/monitors'))).toBe(false);
+      expect(client.calls.some((call) => call.path.startsWith('/api/v2/status-pages'))).toBe(false);
+    });
+
+    it('backup 限定適用を再実行しても重複を作らない', async () => {
+      const config = loadConfig();
+      const client = createFakeClient({ heartbeats: seededHeartbeats(config) });
+
+      const result = await script.applyBackupHeartbeat({ config, client });
+
+      expect(client.calls).toStrictEqual([{ method: 'GET', path: '/api/v2/heartbeats' }]);
+      expect(result.actions[0]).toMatchObject({ action: 'reused', external_id: '23' });
+      expect(result.heartbeatUrls.BACKUP_HEARTBEAT_URL).toBe(BACKUP_HEARTBEAT_URL);
     });
   });
 });

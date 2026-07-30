@@ -1,0 +1,203 @@
+{
+  "graph_revision": 2,
+  "nodes": [
+    {
+      "acceptance": [
+        "未認証要求で全 TODO エンドポイント 401",
+        "作成→再起動→一覧取得で TODO が戻る",
+        "外部送信 0 件"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [
+        "api",
+        "backend",
+        "data"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness confirmed requirements definition import",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7e3732f5b155cd85fd21b6a6119411a8f9f14be96f254ec4ac9a794e2ef95551",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-29T08:30:59Z",
+      "depends_on": [],
+      "domain": "requirements",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/spec-todo-api-requirements.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "自分の TODO を外部サービスに依存せず手元の 1 プロセスで管理・自動化する",
+      "graph_node_id": "spec-todo-api-requirements",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T08:30:59Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "todo-api",
+      "pull_request_linkages": [],
+      "purpose": "ローカル専用 TODO REST API の要件定義 (U1-U9 上位概念 + 8 カテゴリ確定仕様)",
+      "related_nodes": [],
+      "resource_scope": [
+        "specs/spec-todo-api-requirements.md"
+      ],
+      "scope_in": [
+        "認証",
+        "TODO CRUD",
+        "SQLite永続化",
+        "localhost HTTP提供"
+      ],
+      "scope_out": [
+        "GUI実装",
+        "複数ユーザー共有",
+        "外部同期",
+        "クラウド配備"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T08:30:59Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "7e3732f5b155cd85fd21b6a6119411a8f9f14be96f254ec4ac9a794e2ef95551",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec",
+        "requirements",
+        "todo-api"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "ローカル専用 TODO REST API 仕様",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T08:30:59Z"
+    },
+    {
+      "acceptance": [
+        "3層分離が実装に反映",
+        "認証がミドルウェアとして全エンドポイントに適用"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "infrastructure",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness confirmed backend/infrastructure/security architecture import",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "14cc8f85e4b9984abe58140abd346181f57c864e414fee504fef6f13bcc52f1b",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-29T08:30:59Z",
+      "depends_on": [
+        "spec-todo-api-requirements"
+      ],
+      "domain": "architecture",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/arch-todo-api-system.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "FastAPI + SQLite + ローカル bearer token による 3 層 REST API アーキテクチャ",
+      "graph_node_id": "arch-todo-api-system",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T08:30:59Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "todo-api",
+      "pull_request_linkages": [],
+      "purpose": "TODO REST API のバックエンド・インフラ・セキュリティアーキテクチャ定義",
+      "related_nodes": [],
+      "resource_scope": [
+        "architecture/arch-todo-api-system.md"
+      ],
+      "scope_in": [
+        "router/service/repository 3層",
+        "SQLite永続化",
+        "bearer token認証",
+        "localhost固定"
+      ],
+      "scope_out": [
+        "フロントエンド",
+        "外部通信",
+        "複数ユーザー"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T08:30:59Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "14cc8f85e4b9984abe58140abd346181f57c864e414fee504fef6f13bcc52f1b",
+        "source_path": "system-spec/backend.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec",
+        "architecture",
+        "todo-api"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "TODO REST API システムアーキテクチャ",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T08:30:59Z"
+    }
+  ]
+}

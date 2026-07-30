@@ -73,6 +73,8 @@ implementation_readiness: {"checked_at":"2026-07-26T00:00:00Z","missing_sections
 
 ## 再現手順またはユースケース
 
+Beads `HarnessHub-dxfe` の description に記録した入力条件を用い、対象 script / workflow / validator を実行して現象を再現する。再現条件と実測結果は同 issue の notes に追記し、完了時は node の evidence_refs へ repository 内の証跡を係留する。
+
 ```bash
 python3 -c "import json;d=json.load(open('system-spec/spec-state.json'));print([e['id'] for e in d['qa_log'] if e['id']=='qa-070'])"
 # -> []  (期待: 確定エントリ 1 件)

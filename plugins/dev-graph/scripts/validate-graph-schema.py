@@ -23,6 +23,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from _common import ContractError, contained, dump, load_json
+from graph_artifact_readiness import markdown_sections_of, placeholder_sections
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = PLUGIN_ROOT / "schemas" / "graph-node.schema.json"
@@ -36,8 +37,6 @@ ROOT_BY_KIND = {
     "feature": "features",
     "document": "docs",
 }
-
-
 def nodes_of(data: Any) -> list[dict[str, Any]]:
     values = data.get("nodes") if isinstance(data, dict) else data
     if not isinstance(values, list) or not all(isinstance(item, dict) for item in values):
@@ -249,6 +248,19 @@ def artifact_findings(
         for key in ("graph_node_id", "artifact_kind", "file_path", "template_id", "template_version"):
             if key in node and frontmatter.get(key) != node.get(key):
                 findings.append({"node": node_id, "code": "frontmatter_parity_error", "detail": key})
+        for section in placeholder_sections(
+            artifact,
+            str(kind),
+            template_contract,
+            TEMPLATE_CONTRACT_PATH.parent,
+        ):
+            findings.append(
+                {
+                    "node": node_id,
+                    "code": "placeholder_only_section",
+                    "detail": section,
+                }
+            )
     return findings
 
 
@@ -359,6 +371,18 @@ def validate(
     return sorted(findings, key=lambda item: (item["node"], item["code"], item["detail"]))
 
 
+def readiness_missing_sections(violations: list[dict[str, str]]) -> list[str]:
+    return sorted({
+        item["detail"] for item in violations
+        if item["code"] in {
+            "frontmatter_missing",
+            "artifact_missing",
+            "placeholder_only_section",
+        }
+        or (item["code"] == "schema_violation" and "required property" in item["detail"])
+    })
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -381,11 +405,7 @@ def main() -> int:
         repo_root = _repo_root_for(graph, args.repo_root)
         nodes = nodes_of(load_json(graph))
     violations = validate(nodes, repo_root=repo_root)
-    missing = sorted({
-        item["detail"] for item in violations
-        if item["code"] in {"frontmatter_missing", "artifact_missing"}
-        or (item["code"] == "schema_violation" and "required property" in item["detail"])
-    })
+    missing = readiness_missing_sections(violations)
     dump({
         "valid": not violations,
         "implementation_readiness": "complete" if not violations else "incomplete",

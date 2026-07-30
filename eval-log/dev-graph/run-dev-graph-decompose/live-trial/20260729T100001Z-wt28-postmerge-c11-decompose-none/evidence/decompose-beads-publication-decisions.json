@@ -1,0 +1,100 @@
+{
+  "feat-admin-report-001": {
+    "blocking_violations": [
+      {
+        "code": "active_not_ready",
+        "detail": "active requires confirmed/pass/complete",
+        "node": "feat-admin-report-001"
+      }
+    ],
+    "decided_by": [
+      "python3",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+      "--graph",
+      "-",
+      "--repo-root",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose"
+    ],
+    "declared_input": {
+      "confirmation_status": "draft",
+      "evaluation_status": "pending",
+      "evaluator": null,
+      "readiness_status": "incomplete"
+    },
+    "node": "feat-admin-report-001",
+    "probe": "status=active",
+    "publishable": false
+  },
+  "feat-dashboard-001": {
+    "blocking_violations": [
+      {
+        "code": "active_not_ready",
+        "detail": "active requires confirmed/pass/complete",
+        "node": "feat-dashboard-001"
+      }
+    ],
+    "decided_by": [
+      "python3",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+      "--graph",
+      "-",
+      "--repo-root",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose"
+    ],
+    "declared_input": {
+      "confirmation_status": "draft",
+      "evaluation_status": "pending",
+      "evaluator": null,
+      "readiness_status": "incomplete"
+    },
+    "node": "feat-dashboard-001",
+    "probe": "status=active",
+    "publishable": false
+  },
+  "feat-notification-001": {
+    "blocking_violations": [
+      {
+        "code": "active_not_ready",
+        "detail": "active requires confirmed/pass/complete",
+        "node": "feat-notification-001"
+      }
+    ],
+    "decided_by": [
+      "python3",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+      "--graph",
+      "-",
+      "--repo-root",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose"
+    ],
+    "declared_input": {
+      "confirmation_status": "draft",
+      "evaluation_status": "pending",
+      "evaluator": null,
+      "readiness_status": "incomplete"
+    },
+    "node": "feat-notification-001",
+    "probe": "status=active",
+    "publishable": false
+  },
+  "feat-user-auth-001": {
+    "blocking_violations": [],
+    "decided_by": [
+      "python3",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+      "--graph",
+      "-",
+      "--repo-root",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose"
+    ],
+    "declared_input": {
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "evaluator": "dev-graph-decompose-trial",
+      "readiness_status": "complete"
+    },
+    "node": "feat-user-auth-001",
+    "probe": "status=active",
+    "publishable": true
+  }
+}
