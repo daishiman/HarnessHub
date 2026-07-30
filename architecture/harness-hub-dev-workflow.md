@@ -289,7 +289,8 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 
 - C11 は frontmatter・見出し・placeholder だけの artifact を incomplete とし、後段を止める。
   詳細は [C11 readiness 受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)。
-- C02 は stale full snapshot による feature lifecycle 後退を無変更で拒否する。
+- C02 は stale full snapshot による feature lifecycle 後退を無変更で拒否し、重複報告
+  `HarnessHub-j66m` は既存 node `issue-c02-upsert-lifecycle-regression-20260729` へ統合する。
   詳細は [C02 lifecycle 受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)。
 - workflow step guard は対象 directory 不在・対象 0 件を既定で拒否し、明示
   `--allow-empty` だけを許可する。詳細は [空走査受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)。

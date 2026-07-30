@@ -192,6 +192,9 @@ close した。
   製品仕様・設計へ影響しない判断は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   に記録した。
+- 2026-07-30 に重複報告 `HarnessHub-j66m` を現行 `main` で再検証し、別実装を作らず
+  `HarnessHub-bk8v` / `issue-c02-upsert-lifecycle-regression-20260729` の完了証拠へ統合した。
+  製品 runtime 契約は変えず、最終レビューと受領書に追跡関係を記録した。
 
 ## 2026-07-29 追記: live-trial reaper の並行安全性
 

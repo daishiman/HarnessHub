@@ -77,3 +77,21 @@ fail-closed（安全側に停止）にする。feature 以外の artifact kind �
 
 PR 更新直前に `scripts/build-spec-reflection-receipt.py --spec-impact reflected` を実行し、
 仕様 path の実差分とこの判断を最終 branch / HEAD に束縛する。
+
+## 2026-07-30 重複報告 j66m の再検証
+
+- `HarnessHub-j66m` は本件と同じ不具合を指し、依存・下流 task を持たない重複報告である。
+- 実装を二重化せず、Beads `HarnessHub-bk8v` と dev-graph node
+  `issue-c02-upsert-lifecycle-regression-20260729` を実装・完了証拠の正本として維持する。
+- 新しい製品 runtime 契約はない。既存の C02 開発管理契約が現行 `main` でも有効であることを
+  focused / plugin 全体 / live-trial freshness / repository CI の各ゲートで再検証する。
+- `system-spec/dev-workflow.md` の C02 契約は確定済み `qa-096` に含まれるため、
+  重複報告だけを理由とする新規 QA や C03 再コンパイルは行わず、二重正本を作らない。
+- 本追記は重複報告と既存正本の対応を失わないための trace であり、API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、運用 SLO は変更しない。
+- 再検証結果は focused pytest 22 passed、Dev Graph plugin pytest 720 passed / 2 skipped、
+  graph schema valid / violations 0、live-trial planner reuse 3 / run 0 / defer 0、
+  verdict lint 9 verified、P01〜P13 exact 13 / digest `af8a73df...` である。
+- repository CI parity は PASS 123 / WARN 4 / FAIL 0。4 WARN は段階導入中の既存
+  advisory であり、本差分の blocking failure ではない。`py_compile`、文書行数・配置、
+  generation lineage、task projection、`git diff --check` も通過した。
