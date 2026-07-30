@@ -12,7 +12,7 @@ iteration: null
 title: "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:57:02.733424Z"
+updated_at: "2026-07-30T01:37:27Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P11"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -255,3 +255,20 @@ repository 内の一時領域から明示的に渡す。`--regenerate-body` だ�
 仕様正本は `system-spec/dev-workflow.md` `qa-092`、設計正本は
 `architecture/harness-hub-dev-workflow.md`、plugin 内部契約は
 `plugins/dev-graph/templates/README.md` とする。
+
+## 2026-07-30 ID 一意性 gate の write-back
+
+本 P12 の promoted task spec と完了判定は変更しない。後続の standalone issue
+`HarnessHub-ory6` で、task graph、consult transcript、route build handoff の
+ID が `set` / `dict` 化される前に一意であることを検査する横断 gate を実装した。
+
+負例 fixture は同じ ID を持つ別内容の要素を投入し、各公開 CLI が非 0 終了する
+ところまで確認する。正常系は従来どおり exit 0 を維持する。500 行を超えていた
+validator / test は report contract、graph shape、shape regression の責務で分離し、
+公開 CLI path と JSON 出力契約を変えない。
+
+仕様正本への実装フィードバックは `system-spec/testing-qa.md`、集約仕様は
+`specs/harness-hub-system-specification.md`、設計は
+`architecture/harness-hub-testing-qa.md`、実装・検証・残課題の対応は
+`docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md`
+を正とする。

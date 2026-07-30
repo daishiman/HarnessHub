@@ -1,5 +1,5 @@
 {
-  "graph_revision": 999,
+  "graph_revision": 1006,
   "nodes": [
     {
       "acceptance": [
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-26T06:12:00Z"
+      "updated_at": "2026-07-30T01:37:27Z"
     },
     {
       "acceptance": [
@@ -25254,7 +25254,8 @@
         "validate-system-plan.py と system-dev-plan-evaluator が、feature 宣言 qa 要件の spec-state qa_log 登録と goal-spec/task spec への semantic coverage を tag/lineage 一致だけで PASS にせず fail-closed 検証している"
       ],
       "architecture_refs": [
-        "arch-harness-hub-dev-workflow"
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
       ],
       "artifact_kind": "feature",
       "artifact_subtypes": [],
@@ -25325,7 +25326,8 @@
       "purpose": "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する",
       "related_nodes": [
         "issue-audit-followups-20260717",
-        "issue-c02-upsert-lifecycle-regression-20260729"
+        "issue-c02-upsert-lifecycle-regression-20260729",
+        "issue-id-uniqueness-gate-generalization-20260728"
       ],
       "resource_scope": [
         "features/feat-dev-pipeline-improvement.md"
@@ -25369,7 +25371,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T06:08:25Z"
+      "updated_at": "2026-07-30T01:37:27Z"
     },
     {
       "acceptance": [
@@ -26699,7 +26701,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:57:02.733424Z"
+      "updated_at": "2026-07-30T01:37:27Z"
     },
     {
       "acceptance": [
@@ -33948,9 +33950,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb",
+        "evaluated_digest": "93b988db00715f6e67dfa6ddc046152dbc10e54c4272ad75d68ebcbaa6d2e91d",
         "evaluator": "codex-final-review",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md"
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -34006,9 +34008,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-28T22:00:00Z",
+        "imported_at": "2026-07-30T01:37:27Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "926f62d923b09f6d1561ed0a084b706e326574a9a7c12275df8077d4148eaebb",
+        "source_digest": "93b988db00715f6e67dfa6ddc046152dbc10e54c4272ad75d68ebcbaa6d2e91d",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34024,7 +34026,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T22:00:00Z"
+      "updated_at": "2026-07-30T01:37:27Z"
     },
     {
       "acceptance": [
@@ -38412,7 +38414,8 @@
       "purpose": null,
       "related_nodes": [
         "feat-dev-pipeline-improvement",
-        "arch-harness-hub-dev-workflow"
+        "arch-harness-hub-dev-workflow",
+        "issue-id-uniqueness-gate-generalization-20260728"
       ],
       "resource_scope": [
         "plugins/dev-graph",
@@ -38443,7 +38446,7 @@
       "template_version": "1.0.0",
       "title": "Dev Graph 基盤変更 最終レビュー 2026-07-26",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T23:16:20Z"
+      "updated_at": "2026-07-30T01:37:27Z"
     },
     {
       "acceptance": [
@@ -42048,10 +42051,10 @@
       ],
       "resource_scope": [
         "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph.py",
-        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/task_graph_shape_checks.py",
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph-shapes.py",
         "plugins/ubm-goal-setting/scripts/validate-consult-session.py",
         "plugins/harness-creator/skills/run-build-skill/scripts/validate-route-build-reports.py",
-        "plugins/harness-creator/skills/run-build-skill/scripts/route_report_contract.py"
+        "plugins/harness-creator/skills/run-build-skill/scripts/validate-route-report-contract.py"
       ],
       "scope_in": [
         "validate-task-graph.py の node_ids/comp_ids が重複IDを畳み込むケースの要否判定",
@@ -42085,7 +42088,7 @@
       "template_version": "1.0.0",
       "title": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T01:32:25.195923Z"
+      "updated_at": "2026-07-30T01:52:22.851635Z"
     },
     {
       "acceptance": [

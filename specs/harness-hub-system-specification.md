@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-07-30T01:37:27Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -205,6 +205,20 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   DB schema、認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
 - 実装契約、設計判断、検証結果の対応は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
+  を正とする。
+
+**開発品質反映 (2026-07-30 / `HarnessHub-ory6`)**:
+
+- ID を `set` / `dict` へ正規化して参照実在性を検査する repository 内
+  validator は、正規化の前に同一 ID の重複を fail-closed で拒否する。
+  重複した別要素を 1 件へ畳み込んだ後の「参照先あり」を合格根拠にしない。
+- 適用対象は plugin-dev-planner の task/component ID、ubm-goal-setting の
+  transcript turn ID、harness-creator の handoff route ID。正常系は従来の
+  exit 0 を維持し、重複 fixture は CLI 非 0 終了まで回帰テストで固定する。
+- 影響は repository 内の validation contract に限定される。製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
   を正とする。
 
 ## 未決事項

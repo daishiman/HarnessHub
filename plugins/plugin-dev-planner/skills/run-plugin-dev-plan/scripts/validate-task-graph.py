@@ -35,7 +35,19 @@ from pathlib import Path
 _SCRIPTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(_SCRIPTS))
 
-import task_graph_shape_checks as shape_checks
+
+def _load_shape_checks():
+    """命名規約に従うハイフン区切りの補助スクリプトをロードする。"""
+    path = _SCRIPTS / "validate-task-graph-shapes.py"
+    spec = importlib.util.spec_from_file_location("task_graph_shape_checks", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load task graph shape checks: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+shape_checks = _load_shape_checks()
 
 
 def _load_derive():

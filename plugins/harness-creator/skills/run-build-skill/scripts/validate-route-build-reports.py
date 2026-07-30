@@ -33,6 +33,7 @@ CLI 出力契約:
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import sys
@@ -41,12 +42,34 @@ from pathlib import Path, PurePosixPath
 _SCRIPTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(_SCRIPTS))
 
+
+def _load_route_report_contract() -> None:
+    """ハイフン区切りの補助スクリプトを後方互換名でロードする。"""
+    module_name = "route_report_contract"
+    path = _SCRIPTS / "validate-route-report-contract.py"
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load route report contract: {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+
+
+_load_route_report_contract()
+
 from route_report_contract import (
+    BUILDERS,
+    COMPONENT_KINDS,
+    OPTIONAL_KEYS,
+    REQUIRED_KEYS,
+    SCHEMA_PATH,
     SCHEMA_VERSION,
     SLUG_RE,
     STATUSES,
     _handoff_route_id_findings,
+    _hash_target,
     _is_str_list,
+    _producer_graph_hash,
     report_path,
     report_rel,
     validate_against_route,
