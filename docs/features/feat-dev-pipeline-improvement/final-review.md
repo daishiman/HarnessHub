@@ -115,6 +115,27 @@ beads / none の paired run で各 2 回、合計 4 回の Skill 呼出しと全
 `plugins/dev-graph/references/execution-tracker-contract.md`、製品仕様への影響なしの層別判断は
 `bk8v-c02-lifecycle-spec-reflection.md` に記録した。
 
+## renderer 登録検証表示の最終レビュー (2026-07-30)
+
+`HarnessHub-35ai` の変更は、13 task の進捗表示が正しくても registration receipt
+との照合を実施していなければ「登録検証済み」と誤解できた問題を解消する。
+receipt の件数、node ID、graph digest、source digest を検証した場合だけ
+`verified` とし、receipt 無しは CLI、可視 HTML、埋込み metadata のすべてで
+`not_performed` を返す。
+
+同じ 13 child graph を receipt 有り／無しで描画する正負テストを分離し、
+偶然の件数一致では検証済みにならないことを固定した。560 行だった混成テストは
+登録検証専用の `test_render_registration_verification.py` へ責務分離し、
+変更対象の手書きコード／文書を 500 行以下へ収束した。
+
+fresh live trial `20260730T053500Z-wt18-35ai-render` は nudge 0、
+gate response 0 で PASS、独立 evaluator の 8 検査も blocker 0 で PASS。
+最終ゲートの再実行結果と層別判断は
+`render-registration-verification-spec-reflection-receipt.md` に記録する。
+
+中学生向けには「名簿に 13 人いるだけでは登録完了と言わず、受付の受領書と
+名簿が一致したときだけ合格印を出す仕組み」である。
+
 ### 仕様・設計影響
 
 新しい製品仕様・API・データ・セキュリティ・配備契約への影響はない。

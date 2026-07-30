@@ -261,3 +261,17 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 仕様反映受領書は
 `docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
 とする。
+
+## 2026-07-30 `HarnessHub-35ai` Phase 13 引き継ぎ
+
+- branch: `devgraph/issue-render-registration-receipt-contract-mismatch-20260726`
+- base: repository default branch `main`
+- commit scope: renderer、skill 契約、正負の回帰テスト、評価証拠、
+  仕様反映文書、dev-graph / Beads 完了投影に限定する
+- registration receipt 有りは `verified`、無しは `not_performed` とし、
+  13 task の見かけの一致を成功根拠にしない
+- test 分割後の変更対象コード／文書は 500 行以下を維持する
+- `origin/main` → local `main` → 本 branch の順で統合し、統合後 tree で
+  task package、plugin test、content/live-trial、repository CI を再検証する
+- 仕様反映受領書:
+  `docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`

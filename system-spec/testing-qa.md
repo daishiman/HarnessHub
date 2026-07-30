@@ -66,6 +66,22 @@ qa-076 / qa-081 の「境界値・異常系を task spec と機械ゲートで�
 認証認可、UI、Cloudflare deploy unit は変更しない。内部 validation contract
 （検証契約＝不正な入力をどこで拒否するか）の設計影響だけを反映する。
 
+## 実装フィードバック (2026-07-30 / HarnessHub-35ai)
+
+qa-076 / qa-089 の「異常系を機械ゲートで再現し、証拠の由来を束縛する」
+確定要件を、Dev Graph renderer の登録検証表示へ具体化した。
+
+- `--registration-receipt` があり、件数・node ID・graph digest・source digest の
+  検証を通過した場合だけ `registration_verification.status=verified` とする。
+- receipt が無い探索表示は `not_performed` とし、子 task が偶然 13 件でも
+  登録成功の証拠として扱わない。
+- 判定は CLI receipt、HTML の可視 banner、埋込み `render-metadata` の
+  3 箇所で同じ状態を返し、正例と receipt 無しの負例を回帰テストで固定する。
+
+この追記は確定回答を変えず、repository 内の開発品質ゲートを具体化する
+実装フィードバックである。製品 API、DB schema、認証認可、UI、
+Cloudflare deploy unit は変更しない。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

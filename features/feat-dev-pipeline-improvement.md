@@ -278,10 +278,15 @@ close した。
   `architecture/harness-hub-testing-qa.md`、P12 write-back と
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
   に同一 wave で反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
+## 2026-07-30 追記: renderer の登録検証表示
+
+- `HarnessHub-35ai` で、registration receipt を検証できた描画だけを `verified` とし、
+  receipt 無しは 13 task が見えても `not_performed` とする契約を追加した。
+- 判断・テスト・層別反映は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md) を正とする。
 ## アーキテクチャ参照
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md)
-
 - 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)
 
 ## 機能間依存
