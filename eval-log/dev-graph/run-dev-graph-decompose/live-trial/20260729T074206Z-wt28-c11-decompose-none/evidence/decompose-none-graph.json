@@ -1,0 +1,17 @@
+{
+  "acyclic": true,
+  "architecture_count": 1,
+  "declared_max": 3,
+  "feature_count": 4,
+  "measured_max": 1,
+  "metric": "max_inter_feature_depends_on_per_feature",
+  "per_feature": {
+    "feat-admin-report-001": 1,
+    "feat-notification-email-001": 1,
+    "feat-user-auth-001": 0,
+    "feat-user-dashboard-001": 1
+  },
+  "produced_node_count": 5,
+  "task_count": 0,
+  "threshold_pass": true
+}

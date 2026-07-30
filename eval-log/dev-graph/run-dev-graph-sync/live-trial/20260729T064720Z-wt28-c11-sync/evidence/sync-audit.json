@@ -1,0 +1,20 @@
+{
+  "scenario_id": "C03-OUT1-positive-second-sync-zero",
+  "result": "PASS",
+  "observations": {
+    "first_sync": {
+      "imports": 1,
+      "exports": 1,
+      "conflicts": 0,
+      "imported_field": "title",
+      "exported_field": "Status"
+    },
+    "second_sync": {
+      "changes": 0,
+      "imports": 0,
+      "exports": 0,
+      "converged": true
+    },
+    "stable_ids_and_snapshots_unchanged": true
+  }
+}

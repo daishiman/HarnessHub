@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "codex-merge-conflict-final-review-20260729",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-finalmain-20260729",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,33 +27,19 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/evidence/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T030000Z-dcmp-r10-beads/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/evidence/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/evidence/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054000Z-lp36-merge-beads-r3/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T050101Z-lp36-merge-none/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T050101Z-lp36-merge-none/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T050101Z-lp36-merge-none/evidence/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T050101Z-lp36-merge-none/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2/evidence/beads-decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2/evidence/none-decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T131000Z-wt28-finalmain-c11-decompose-paired/verdict.json",
         "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/evidence/beads-decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/evidence/none-decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/evaluator-verdict.txt",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/independent-verification.json"
+        "plugins/dev-graph/tests/test_decompose_live_trial_audit.py"
       ],
-      "observed": "2026-07-29 conflict-resolution fresh paired live trial PASS (run 20260729T101543Z-pr601-decompose-paired-r4, nudge=0, gate=0, poll DONE 1800s)。同一 task 内で beads / none の順に target Skill を正確に各 2 回、合計 4 回実起動し、各 binding の最終再実行は全 5 node が operation=noop / write_count=0 へ収束した。両 graph は feature 4・architecture 1・task 0、3 edge/acyclic、粒度実測 1<=3、3 draft 除外と sole promoted candidate を満たし、両 audit は pass=true / run_binding_attested=true / implementation SHA-256=be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f で一致した。fresh evaluator は promoted feat-user-auth-001 の canonical digest が beads=e553bbed1239e4006d50c3381fa443a84209571190f24a3fe87fa8293dc5a017、none=8ffa7747854c5faf6fabcb0d64a1a17b55c74eae43e5f184ccbcad64c7fe4680 と各 persisted node に一致し、goal-seek pending/null evidence=0、negative controls all rejected を確認した。launch/completion/goal_fit/overall=PASS、required observations 7/7、args/task contract 一致、current behavior closure digest=0467a3057442a5a9a4ad0e1dc8f00eb15d475153ee8486a4dfd9f7458380831b。競合解消前後の成功参照と失敗 trial は追跡可能性のため保持し、最終受入参照だけを fresh paired run へ更新した。"
+      "observed": "2026-07-29 latest-main integration fresh paired live trial PASS (run 20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2, actual_model=claude-opus-4-6, nudge=0, gate=0, poll DONE 1275s)。beads / none の順に target Skill を正確に各2回、合計4回実起動し、両 binding の最終再実行は全5 node が operation=noop / write_count=0。両 graph は feature 4・architecture 1・task 0、3 edge/acyclic、粒度実測1<=3、3 draft除外と sole promoted candidate を満たす。両 audit は pass=true / run_binding_attested=true / implementation SHA-256=be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f。promoted feat-user-auth-001 の canonical digest は beads=9e81e31d13eb2b62107d18add6a44a38b3e2b74ce102c8d107c794a9531056c5、none=c9d61387e7e2e26856c58964220270e40cbd2cb50e14a31fe4341535f25a2643 と各 persisted node に一致し、各2回目 Skill 完了後の node mutation は0。goal-seek pending/null evidence=0、negative controls all rejected、fresh evaluator PASS / blockers=[]、required observations 7/7、args/task contract 一致、current behavior closure digest=727784f73d04a0b0961c9474a0f268154c88cd3edd9038f1f83455eec4edbc44。直前 run は2回目 Skill 後の digest 補正を検出して overall=FAIL とし、失敗証跡を保持した。main 側成功 run も履歴参照として保持した。"
     },
     "OUT2": {
       "status": "PASS",

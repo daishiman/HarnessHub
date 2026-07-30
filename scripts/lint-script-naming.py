@@ -37,6 +37,12 @@ EXCEPTION_PATTERNS = [
     (re.compile(r"^audit_[a-z0-9_]+\.py$"), "audit helper (§4.4)"),
 ]
 
+# CLI ではなく、hyphen 名の CLI から通常の Python import で読む内部 module。
+EXCEPTION_PATHS = {
+    "plugins/dev-graph/scripts/graph_artifact_readiness.py":
+        "import-only Python module (§4.4)",
+}
+
 # 暫定例外 (Change Governance 経由でリネーム予定)
 PENDING_RENAME_PATTERNS = [
     re.compile(r"^hook-[a-z0-9-]+\.py$"),
@@ -421,6 +427,8 @@ def classify(path: pathlib.Path):
     posix = path.as_posix()
     if name in BANNED_NAMES:
         return ("VIOLATION", f"banned name: {name}")
+    if posix in EXCEPTION_PATHS:
+        return ("EXCEPTION", EXCEPTION_PATHS[posix])
     if path.parent.name == "adapters":
         return ("EXCEPTION", "Hexagonal adapter (§4.6)")
     for pat, reason in EXCEPTION_PATTERNS:

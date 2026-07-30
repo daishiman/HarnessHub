@@ -1,0 +1,71 @@
+{
+  "authority_sha256_after": "01879f58b4c719dc2d5cdb175538fbd92556ed981882868e5bbfe4848e3479f3",
+  "authority_sha256_before": "01879f58b4c719dc2d5cdb175538fbd92556ed981882868e5bbfe4848e3479f3",
+  "count": 2,
+  "executed_at": "2026-07-29T08:12:41.775174Z",
+  "filters": {
+    "domain": null,
+    "id": null,
+    "keyword": null,
+    "kind": null,
+    "project": null,
+    "status": null,
+    "tag_match": "all",
+    "tags": []
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d",
+  "graph_sha256_before": "120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d",
+  "ok": true,
+  "read_only": true,
+  "results": [
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "LT-TASK-002"
+      ],
+      "depends_on": [],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-task-001.md",
+      "graph_node_id": "LT-TASK-001",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "live-trial-fixture",
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "title": "live-trial fixture の基点タスク",
+      "tracker_binding": "none"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [],
+      "depends_on": [
+        "LT-TASK-001"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-task-002.md",
+      "graph_node_id": "LT-TASK-002",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "live-trial-fixture",
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "title": "LT-TASK-001 に依存する後続タスク",
+      "tracker_binding": "none"
+    }
+  ]
+}

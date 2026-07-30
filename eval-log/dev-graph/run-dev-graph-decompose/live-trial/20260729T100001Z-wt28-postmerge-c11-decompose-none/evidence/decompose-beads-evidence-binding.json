@@ -1,0 +1,45 @@
+{
+  "all_bound": true,
+  "checks": [
+    {
+      "bound": true,
+      "declared_digest": "d57fb50a174174d9809e5595a4ca96d075667e5ffee2a39eb2c025b04b80f926",
+      "digest_matches": true,
+      "evidence_fields_present": true,
+      "expected_digest": "d57fb50a174174d9809e5595a4ca96d075667e5ffee2a39eb2c025b04b80f926",
+      "graph_node_id": "feat-user-auth-001",
+      "promoted": true
+    },
+    {
+      "bound": true,
+      "declared_digest": null,
+      "digest_matches": false,
+      "evidence_fields_present": false,
+      "expected_digest": "ad233d26e8af4be8ec943d469b588a977326949f213232ba569a906d85ab9be5",
+      "graph_node_id": "feat-dashboard-001",
+      "promoted": false
+    },
+    {
+      "bound": true,
+      "declared_digest": null,
+      "digest_matches": false,
+      "evidence_fields_present": false,
+      "expected_digest": "05bb56799c1a2489e411ea5f4ca0b67b3c5c541114d2e961787eba7f15cad3eb",
+      "graph_node_id": "feat-notification-001",
+      "promoted": false
+    },
+    {
+      "bound": true,
+      "declared_digest": null,
+      "digest_matches": false,
+      "evidence_fields_present": false,
+      "expected_digest": "5afcaacb5cb6647d189c0b637256b6f1044f7044337bd1eaced9ea4cf9b615a2",
+      "graph_node_id": "feat-admin-report-001",
+      "promoted": false
+    }
+  ],
+  "excluded_fields": [
+    "confirmation_evidence"
+  ],
+  "recipe": "sha256(json.dumps({k: v for k, v in node.items() if k != 'confirmation_evidence'}, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()"
+}

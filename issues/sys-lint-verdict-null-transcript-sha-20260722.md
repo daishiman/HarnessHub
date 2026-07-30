@@ -103,6 +103,8 @@ if recorded_transcript is not None and transcript.is_file():
 
 ## 再現手順またはユースケース
 
+Beads `HarnessHub-ofq` の description に記録した入力条件を用い、対象 script / workflow / validator を実行して現象を再現する。再現条件と実測結果は同 issue の notes に追記し、完了時は node の evidence_refs へ repository 内の証跡を係留する。
+
 ```bash
 # 任意の verdict の transcript_sha256 を null にする
 python3 - <<'PY'

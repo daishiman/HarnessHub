@@ -1,0 +1,69 @@
+      16 -      "status": "pending",
+      19 +      "status": "completed",
+      20        "criterion": "frontmatter kind and stored path agree after a consecutive update",
+      18 -      "evidence": null
+      21 +      "evidence": {
+      22 +        "result": "PASS",
+      23 +        "detail": "Issue sys-session-timeout-enforcement: operation=updated, revision 5→6, created_at=2026-07-29T10:04:48Z != updated_at=2026-07-29T10:09:49.544603Z, kind=issue, path=i
+         +ssues/ prefix correct, body preserved. Architecture sys-order-backend-security: operation=updated, revision 6→7, created_at=2026-07-29T10:06:27Z != updated_at=2026-07-29T10:09:50.13691
+         +7Z, kind=architecture, path=architecture/ prefix correct, body preserved. Both body_source=preserved."
+      24 +      }
+      25      },
+      26      {
+      27        "id": "V3",
+      28        "description": "Attempt direct feature registration outside C14 macro contract and verify fail-closed rejection with no revision/file increase",
+      23 -      "status": "pending",
+      29 +      "status": "completed",
+      30        "criterion": "no feature is created outside the C14 macro-feature contract",
+      25 -      "evidence": null
+      31 +      "evidence": {
+      32 +        "result": "PASS",
+      33 +        "detail": "Direct feature registration rejected with error: 'feature must come from the C14 macro contract: source_lineage.origin_kind manual is not one of [generated, system-s
+         +pec-harness]'. write_count=0, valid=false, exit_code=2. Post-attempt: revision=7 (unchanged), features/ file count=0 (unchanged)."
+      34 +      }
+      35      }
+      36    ],
+      28 -  "overall_status": "in_progress",
+      29 -  "final_status": null
+      37 +  "overall_status": "completed",
+      38 +  "final_status": "PASS"
+      39  }
+
+⏺ Now append the second line to intermediate.jsonl.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-node
+      printf '%s\n' '{"original_goal":"通常5 artifa…)
+  ⎿  appended
+
+⏺ Verify goal-seek artifacts one final time.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-node
+      python3 - "$DEV_GRAPH_ROOT/eval-log/run-dev…)
+  ⎿  goal-seek final verification PASS
+
+⏺ Verify progress.json has no pending steps.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-node
+      python3 -c "…)
+  ⎿  pending steps: 0
+     all criteria PASS: True
+     overall_status: completed
+     final_status: PASS
+
+⏺ All checks pass. Now write the completion marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T100000Z-wt28-postmerge-c11-node/out)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T100000Z-wt28-postmerge-c11-node/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T100000Z-wt28-postmerge-c11-node/out/status.json
+      1 {"status": "PASS", "scenario": "C02-OUT1-positive-mixed-artifacts"}
+
+⏺ DONE: PASS
+
+✻ Worked for 15m 32s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

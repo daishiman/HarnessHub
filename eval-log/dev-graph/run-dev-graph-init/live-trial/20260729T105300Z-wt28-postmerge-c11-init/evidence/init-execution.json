@@ -1,0 +1,45 @@
+{
+  "checklist": [
+    {
+      "item": "resolve-repo-context receipt matches caller repo",
+      "status": "PASS",
+      "evidence": "repository_id=local:sha256:f2323dabfdc683ca0cf80098f07368d9cd13cf257cdff5c13de88bb240e59813, git_toplevel_verified=true, selected_by=explicit --repo-root"
+    },
+    {
+      "item": "6 content roots and .dev-graph dirs exist",
+      "status": "PASS",
+      "evidence": "issues/ tasks/ specs/ architecture/ features/ docs/ .dev-graph/{config.json,state/graph.json,cache,locks,templates} all exist"
+    },
+    {
+      "item": "template-contract assets complete, user edits preserved",
+      "status": "PASS",
+      "evidence": "21 templates copied, issue.md user-edited (sha256:f304c326a94f591e5a3594b08150ac71be496f712b461ccf1cbe70ca60ff5bdb) preserved across pass 2"
+    },
+    {
+      "item": "effective hook is plugin, single path",
+      "status": "PASS",
+      "evidence": "claude_hooks.source=plugin in config.json"
+    },
+    {
+      "item": "validate-repo-config exit 0, no violations",
+      "status": "PASS",
+      "evidence": "valid=true, violations=[], schema=repo-config.schema.json"
+    },
+    {
+      "item": "validate-graph-schema exit 0, C11 PASS",
+      "status": "PASS",
+      "evidence": "valid=true, violations=[], 1 node (issue-init-seed-002)"
+    },
+    {
+      "item": "second init planned changes = 0",
+      "status": "PASS",
+      "evidence": "config: skipped_existing/changed=false, graph: preserved_existing/changed=false, templates: 0 missing/1 user-edited preserved"
+    },
+    {
+      "item": "no absolute paths, tokens, or GitHub node IDs in config",
+      "status": "PASS",
+      "evidence": "0 absolute paths, 0 tokens, 0 node IDs, github.enabled=false"
+    }
+  ],
+  "overall": "PASS"
+}

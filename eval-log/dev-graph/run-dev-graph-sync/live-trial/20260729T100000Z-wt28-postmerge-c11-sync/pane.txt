@@ -1,0 +1,69 @@
+       5        "status": "PASS",
+       6 -      "evidence": "dry-run shows 1 import (title) + 1 export (Status) with snapshot digests"
+       6 +      "evidence": "dry-run shows 1 import (title field, remote-only) + 1 export (Status field, local_to_project) with snapshot digests in report"
+       7      },
+       8      {
+       9        "item": "task ごとの mutation authority が beads/C28、github/C12、none の一経路だけである",
+      10        "status": "PASS",
+      11 -      "evidence": "LT-TASK-001 tracker_binding=github, authority=github/C12 only"
+      11 +      "evidence": "LT-TASK-001 tracker_binding=github, authority=github/C12 only; no beads/none mixing"
+      12      },
+      13      {
+      14        "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      15        "status": "PASS",
+      16 -      "evidence": "Pass 1 write_count=0, Pass 3 write_count=0"
+      16 +      "evidence": "Pass 1 (dry-run) write_count=0; Pass 3 (verification dry-run) write_count=0"
+      17      },
+      18      {
+      19        "item": "双方変更は manual conflict、片側変更は mapping どおりの反映 receipt を持つ",
+      20        "status": "PASS",
+      21 -      "evidence": "title: remote-only change imported; Status: local-only change exported; conflicts=[]"
+      21 +      "evidence": "title: remote-only change imported (Validate isolated live trial -> updated remotely r7); Status: local-only export (active->In Progress via option_map); conflicts=[
+         +]"
+      22      },
+      23      {
+      24        "item": "close/delete は graph_node_id を保持した tombstone/status transition になる",
+     ...
+      28      {
+      29        "item": "default-branch merge evidence を満たす場合だけ done となり、dirty/feature worktree event は pending に残る",
+      30        "status": "PASS",
+      31 -      "evidence": "No done transition; completion_evidence.status remains in_progress"
+      31 +      "evidence": "No done transition; completion_evidence.status remains in_progress; no PR merge evidence present"
+      32      },
+      33      {
+      34        "item": "同一状態の二回目 sync の imports/exports/Project item add が0件である",
+      35        "status": "PASS",
+      36 -      "evidence": "Pass 3: changes=0, imports=[], exports=[], converged=true"
+      36 +      "evidence": "Pass 3 (verification dry-run): changes=0, imports=[], exports=[], converged=true. Second sync apply: changes=0, write_count=0. SHA-256 graph=ddf5349a remote=5d97e403
+         + snapshot=ae94bd6d all before==after"
+      37      }
+      38    ],
+      39    "scenario": "C03-OUT1-positive-second-sync-zero",
+      40    "overall_status": "PASS",
+      41 -  "completed_at": "2026-07-29T07:11:00Z"
+      41 +  "completed_at": "2026-07-29T10:42:00Z"
+      42  }
+
+⏺ Now run the goal-seek verification.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-sync"
+      python3 - "$DEV_GRAPH_ROOT/eval-log/run-d…)
+  ⎿  PASS: 2 rows verified, hash=ab2f296e0c39c58a4ea7f3a58096f702728aa38be198eaff465ce9d5970b8c43
+
+⏺ All verified. Now write the status.json and complete.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T100000Z-wt28-postmerge-c11-sync/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T100000Z-wt28-postmerge-c11-sync/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-sync/live-trial/20260729T100000Z-wt28-postmerge-c11-sync/out/status.json
+      1 {"status": "PASS", "scenario": "C03-OUT1-positive-second-sync-zero"}
+
+⏺ DONE: PASS
+
+✻ Cooked for 12m 24s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

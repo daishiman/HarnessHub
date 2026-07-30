@@ -72,6 +72,14 @@ def test_classify_violation_underscore():
     assert "underscore" in reason
 
 
+def test_classify_exception_import_only_module():
+    status, reason = _classify(
+        "plugins/dev-graph/scripts/graph_artifact_readiness.py"
+    )
+    assert status == "EXCEPTION"
+    assert "import-only" in reason
+
+
 # ── classify: VIOLATION 形式不一致 (アンダースコアなし、動詞-構造でない) ──────
 def test_classify_violation_no_match_no_underscore():
     status, reason = _classify("scripts/Foo.py")  # 大文字始まり -> パターン非マッチ
