@@ -2,6 +2,7 @@
 graph_node_id: "doc-dev-pipeline-final-review-20260726"
 artifact_kind: "document"
 artifact_subtypes: []
+layer: feature-design
 project_id: "harness-hub"
 domain: "dev-workflow"
 tags: ["dev-graph","final-review","spec-impact"]
