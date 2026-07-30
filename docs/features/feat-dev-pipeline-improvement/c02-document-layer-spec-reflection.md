@@ -90,6 +90,7 @@ graph-managed document の更新には Dev Graph の C02 writer を使った。
 | artifact placement self-test | PASS |
 | graph schema validation | valid、implementation readiness complete |
 | artifact placement lint | PASS |
+| document line limit | PASS、architecture wrapper は上限ちょうどの300行 |
 | task 仕様書 Phase 1〜13 検査 | PASS、Phase 1〜13 を各1件確認 |
 | root lint | PASS |
 | system-spec coverage / citation / knowledge graph | PASS |
@@ -116,6 +117,10 @@ scope-out「取得済み live-trial verdict の再取得」に従い、PR の残
 これらを物理分割すると既存 writer、schema validator、digest 契約を同時に変更する
 別スコープの移行になる。今回追加した手書きロジックを分離して隠すのではなく、
 正本形式を維持することを優先した。
+
+repository の文書ゲートはさらに厳しい300行上限を持つ。main 取込後に319行となった
+`architecture/harness-hub-dev-workflow.md` は、architecture 側を契約要約と本書への参照に
+圧縮し、詳細責務を本書へ分離した結果、300行へ収束した。
 
 ## main 再同期
 

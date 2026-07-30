@@ -296,24 +296,5 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 - いずれも repository 内の開発管理・品質ゲートに限定し、製品 runtime 契約は変更しない。
 
 ### 差分追記 (2026-07-30): C02 document layer の graph/frontmatter parity
-
-出典: system-spec `qa-097`、Beads `HarnessHub-dqca`。
-
-C02 が document artifact を再登録するとき、graph node と Markdown frontmatter は同じ
-`layer` を保持する。許容形式の唯一の正本は
-`plugins/dev-graph/schemas/graph-node.schema.json#/$defs/documentLayer` とし、
-artifact placement lint はその定義を直接参照する。これにより writer、graph validator、
-repository lint の三者に別々の役割一覧を持たせない。
-
-移行境界は次のとおりである。
-
-1. 新規 document は入力 node に `layer` を明示し、暗黙 default を使わない。
-2. 旧 document node だけが `layer` を欠き、既存 artifact に単一 scalar がある場合は、
-   C02 がその値を graph へ一度だけ移行する。
-3. 欠落、重複、形式不正、非 document の `layer` は書込み前に拒否する。
-4. metadata 移行は本文を変更せず、同じ入力の再実行は noop とする。
-
-本境界は Dev Graph の document metadata に限定され、Harness Hub 製品 runtime の
-API、DB schema、認証認可、UI、deploy unit を変更しない。詳細と検証は
-[仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md)
-を参照する。
+- `qa-097` は schema を `layer` の正本とし、C02 の本文保持移行と lint の fail-closed 境界を確定した。詳細は
+  [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md)。
