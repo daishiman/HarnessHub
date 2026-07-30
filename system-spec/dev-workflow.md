@@ -66,6 +66,22 @@ serves_goals: [G1, G4, G5]
 
 **回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 と qa-090 のローカル開発契約を全面維持し、Dev Graph C11 の artifact 本文検査を追補する。C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が各 artifact kind に定める required section の内容を canonical template と照合する。節本文が空、canonical template の angle-bracket placeholder を残す、または本文全体が TBD / TODO / 未定だけの場合は placeholder_only_section として implementation_readiness=incomplete にし、該当節名を missing_sections へ列挙する。architecture のように親節が構造 container である場合は substantive な必須 child section を含めば親節を未記入扱いしない。C02 upsert は生成後に同じ C11 を通すため、本文なしの新規 template 生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。一方、既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。全 artifact kind の canonical template、実内容、見出しだけへ潰した mutation を回帰テストで固定する。本契約は repository 内の Dev Graph readiness、tracker 投影、system build handoff に限定し、Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
+### 実装反映注記 (2026-07-30 / `HarnessHub-ml57`)
+
+qa-088【2】の「CI と local の一致」を、運用上の心がけではなく repository gate として
+具体化した。GitHub Actions が repository root から実行する
+`python3 scripts/*.py` の呼び出しを script path と意味のある引数の組へ正規化し、
+local hard-fail gate または理由付き allowlist に含まれることを set membership で検査する。
+allowlist に無い差分、理由のない例外、CI から消えた stale 例外、動的 working-directory
+など静的に境界を確定できない入力は fail-closed とする。
+
+local gate の責務は「CI のうち手元で安全に再実行できる検査」であり、外部資格情報が必要、
+working tree を書き換える、CI 自体が non-blocking という呼び出しは、正確な引数形と理由を
+`scripts/ci-local-check-allowlist.json` に記録する。製品 API、DB schema、認証認可、UI、
+Cloudflare deploy unit は変更しない。判断と最終検証は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+を正とする。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1017,
+  "graph_revision": 1018,
   "nodes": [
     {
       "acceptance": [
@@ -12946,9 +12946,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
-        "evaluator": "assign-system-spec-completeness-evaluator + merge-reconciliation",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md"
+        "evaluated_digest": "25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789",
+        "evaluator": "assign-system-spec-completeness-evaluator + codex-final-review + merge-reconciliation",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -12967,7 +12967,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096 の確定内容に適合し、C11 artifact readiness と CI/local 品質ゲートの空走査境界を情報欠落なく提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096 の確定内容に適合し、C11 artifact readiness、CI/local 品質ゲートの空走査・呼び出し parity 境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -12984,7 +12984,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、および検査対象 0 件を既定 fail-closed にする品質ゲート境界を参照する",
+      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、および検査対象 0 件と CI/local 呼び出し parity の品質ゲート境界を参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -13003,9 +13003,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T01:53:05Z",
+        "imported_at": "2026-07-30T02:50:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
+        "source_digest": "25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13021,7 +13021,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T01:53:05Z"
+      "updated_at": "2026-07-30T02:50:00Z"
     },
     {
       "acceptance": [
@@ -42658,7 +42658,11 @@
       ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ml57",
+        "linked_at": "2026-07-30T02:24:26Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
@@ -42669,12 +42673,17 @@
       "classification_confidence": 0.95,
       "classification_reason": "CI とローカルゲートの被覆差というリポジトリ運用上の追跡課題であり、特定 feature の実装タスクではない",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-30T02:36:43Z",
+        "evidence_refs": [
+          "scripts/lint-ci-local-check-parity.py",
+          "scripts/ci-local-check-allowlist.json",
+          "tests/scripts-root/test_root__lint_ci_local_check_parity.py",
+          "docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-30T02:36:43Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -42712,15 +42721,42 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-local-ci-gate-drift-20260728",
+          "linked_at": "2026-07-30T02:36:43Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 608,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/608"
+        }
+      ],
       "purpose": "scripts/run-ci-checks.sh は冒頭に「CI と同等の機械チェックをローカルで一括実行する」と宣言し、pre-push hook はその結果を「All CI-equivalent checks passed」と表示する。しかし .github/workflows/*.yml が実行する scripts/*.py と run-ci-checks.sh が実行するものを機械的に突合すると、CI にあってローカルに無いものが 19 件ある。同等性は誰にも検査されていない。結果として開発者は「pre-push が緑なら CI も緑」という誤った事前確率を持ち、実際には CI で初めて落ちる。本リポジトリでは同型の事故が既に 2 回起きており (2026-07-02 / 2026-07-28)、いずれも当該 1〜2 件を手で追加して終わっている。",
       "related_nodes": [
         "issue-worktree-main-ref-desync-20260728",
         "issue-desync-guard-bundle-untracked-20260728"
       ],
       "resource_scope": [
+        ".github/workflows/governance-check.yml",
+        "Makefile",
         "scripts/run-ci-checks.sh",
-        ".github/workflows"
+        "scripts/lint-ci-local-check-parity.py",
+        "scripts/ci-local-check-allowlist.json",
+        "tests/scripts-root/test_root__lint_ci_local_check_parity.py",
+        "issues/sys-local-ci-gate-drift-20260728.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
+        ".dev-graph/state/graph.json"
       ],
       "scope_in": [
         ".github/workflows/*.yml とscripts/run-ci-checks.sh の実行検査集合を突合する meta-lint の設計と実装",
@@ -42741,7 +42777,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-workflow",
         "ci",
@@ -42754,7 +42790,7 @@
       "template_version": "1.0.0",
       "title": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T08:25:00Z"
+      "updated_at": "2026-07-30T02:36:43Z"
     },
     {
       "acceptance": [
@@ -43125,6 +43161,131 @@
     },
     {
       "acceptance": [
+        "昇格済み feature に古い draft snapshot を再 upsert すると dry-run と apply の両方が明示エラーになる",
+        "拒否時に graph revision・node・artifact Markdown が変化しない",
+        "意図的な lifecycle reset は変更フィールドを列挙した patch で実行できる",
+        "通常の冪等 upsert と既存 artifact kind の挙動を壊さない",
+        "C02 正本契約と回帰テストが実装を説明し、必要な品質ゲートが PASS する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-bk8v",
+        "linked_at": "2026-07-29T01:20:52Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "C14 r7-r11 の実走で同一 feature snapshot による lifecycle 退行を beads/none 両系列で再現した",
+      "completion_evidence": {
+        "completed_at": "2026-07-29T06:17:06Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
+          "plugins/dev-graph/references/execution-tracker-contract.md",
+          "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-29T06:17:06Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T01:20:52Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "古い feature snapshot の再 upsert が fail-closed で拒否され、意図的な reset だけが明示 patch で実行できる",
+      "graph_node_id": "issue-c02-upsert-lifecycle-regression-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T01:20:52Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C02 の再試行で前進済み feature lifecycle を暗黙に巻き戻さない",
+      "related_nodes": [
+        "issue-decompose-live-trial-audit-defects-20260726",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+        "docs/features/feat-dev-pipeline-improvement/final-review.md",
+        "features/feat-dev-pipeline-improvement.md"
+      ],
+      "scope_in": [
+        "feature 全体 snapshot の stale lifecycle before-image 検出",
+        "dry-run と apply の無変更拒否",
+        "意図的な lifecycle reset の明示 patch 経路",
+        "C02 正本契約と回帰テスト"
+      ],
+      "scope_out": [
+        "C14 live-trial 監査実装の変更",
+        "製品 API・DB・UI の変更",
+        "task・issue・specification・architecture・document の lifecycle policy 変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T01:20:52Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "c02",
+        "lifecycle",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T06:17:06Z"
+    },
+    {
+      "acceptance": [
         "canonical template の未記入 required section が incomplete となり節名を missing_sections に返す",
         "全 6 artifact kind の実本文は受理し、見出しだけへ潰した mutation は拒否する",
         "C02 の template-only 新規生成と placeholder 再生成を transaction rollback する",
@@ -43370,131 +43531,6 @@
       "title": "required heading 欠落を C11 readiness で専用拒否する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-29T09:37:50Z"
-    },
-    {
-      "acceptance": [
-        "昇格済み feature に古い draft snapshot を再 upsert すると dry-run と apply の両方が明示エラーになる",
-        "拒否時に graph revision・node・artifact Markdown が変化しない",
-        "意図的な lifecycle reset は変更フィールドを列挙した patch で実行できる",
-        "通常の冪等 upsert と既存 artifact kind の挙動を壊さない",
-        "C02 正本契約と回帰テストが実装を説明し、必要な品質ゲートが PASS する"
-      ],
-      "architecture_refs": [],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-bk8v",
-        "linked_at": "2026-07-29T01:20:52Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
-          "confidence": 0.99
-        }
-      ],
-      "classification_confidence": 0.99,
-      "classification_reason": "C14 r7-r11 の実走で同一 feature snapshot による lifecycle 退行を beads/none 両系列で再現した",
-      "completion_evidence": {
-        "completed_at": "2026-07-29T06:17:06Z",
-        "evidence_refs": [
-          "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
-          "plugins/dev-graph/references/execution-tracker-contract.md",
-          "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
-          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"
-        ],
-        "policy": "manual",
-        "reconciled_at": "2026-07-29T06:17:06Z",
-        "source": "manual",
-        "status": "done"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-07-29T01:20:52Z",
-      "depends_on": [],
-      "domain": "quality",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "古い feature snapshot の再 upsert が fail-closed で拒否され、意図的な reset だけが明示 patch で実行できる",
-      "graph_node_id": "issue-c02-upsert-lifecycle-regression-20260729",
-      "implementation_readiness": {
-        "checked_at": "2026-07-29T01:20:52Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "high",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "C02 の再試行で前進済み feature lifecycle を暗黙に巻き戻さない",
-      "related_nodes": [
-        "issue-decompose-live-trial-audit-defects-20260726",
-        "feat-dev-pipeline-improvement"
-      ],
-      "resource_scope": [
-        "plugins/dev-graph/scripts/upsert-node.py",
-        "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
-        "plugins/dev-graph/references/execution-tracker-contract.md",
-        "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
-        "docs/features/feat-dev-pipeline-improvement/final-review.md",
-        "features/feat-dev-pipeline-improvement.md"
-      ],
-      "scope_in": [
-        "feature 全体 snapshot の stale lifecycle before-image 検出",
-        "dry-run と apply の無変更拒否",
-        "意図的な lifecycle reset の明示 patch 経路",
-        "C02 正本契約と回帰テスト"
-      ],
-      "scope_out": [
-        "C14 live-trial 監査実装の変更",
-        "製品 API・DB・UI の変更",
-        "task・issue・specification・architecture・document の lifecycle policy 変更"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-07-29T01:20:52Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "closed",
-      "tags": [
-        "quality",
-        "dev-graph",
-        "c02",
-        "lifecycle",
-        "follow-up"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
-      "tracker_binding": "beads",
-      "updated_at": "2026-07-29T06:17:06Z"
     },
     {
       "acceptance": [

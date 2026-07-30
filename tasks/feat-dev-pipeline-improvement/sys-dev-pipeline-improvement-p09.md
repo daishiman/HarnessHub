@@ -209,3 +209,16 @@ This section is the current source closure and supersedes older counts or wordin
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-30 `HarnessHub-ml57` 品質ゲート実装記録
+
+P09 の fail-closed 品質保証として、CI の repository-root Python 検査を
+local hard gate または理由付き allowlist へ exact invocation 単位で束縛する
+`scripts/lint-ci-local-check-parity.py` を追加した。件数・比率は合否に使わず、
+未被覆、理由欠落、stale allowlist、静的解決不能な実行位置を失敗とする。
+
+同一実装を governance CI、`make lint`、pre-push runner へ結線し、
+future CI-only drift を追加時点で遮断する。製品 runtime は非変更。
+最終証拠は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+に集約する。

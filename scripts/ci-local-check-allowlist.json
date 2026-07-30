@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "script": "scripts/build-yaml-spec-cache.py",
+      "args": [],
+      "reason": "週次の専用 workflow が外部サイトを取得して仕様キャッシュと作業ツリーを書き換える writer であり、read-only の pre-push では実行しない"
+    },
+    {
+      "script": "scripts/skill-fixture-runner.py",
+      "args": [],
+      "reason": "CI 自体が || true で結果を通知用途に限定した non-blocking smoke であり、local hard gate へ意味を変えて昇格させない"
+    },
+    {
+      "script": "scripts/sync-notion-schema.py",
+      "args": [
+        "--check"
+      ],
+      "reason": "Notion token と 3 件の database ID が設定された CI step だけで条件付き実行する外部サービス検査であり、資格情報の無い通常の pre-push では再現できない"
+    },
+    {
+      "script": "scripts/lint-notion-relations.py",
+      "args": [],
+      "reason": "Notion token と database ID が設定された CI step だけで条件付き実行する外部サービス検査であり、資格情報の無い通常の pre-push では再現できない"
+    },
+    {
+      "script": "scripts/validate-llm-coverage.py",
+      "args": [
+        "--all",
+        "--threshold",
+        "80",
+        "--gate-new",
+        "--since",
+        "2026-01-01"
+      ],
+      "reason": "この gate 形は eval-log/llm-coverage.json を無条件に書き換えるため read-only pre-push では走らせず、同じ生成結果を確認する --all --check 形を local で実行する"
+    }
+  ]
+}
