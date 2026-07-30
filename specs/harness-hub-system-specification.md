@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T02:46:06Z"
+updated_at: "2026-07-30T04:40:19Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -109,11 +109,23 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - Auth.js 本番 route、DB-backed AuthPorts、CAS 一回性、テナント付き所属主キー、Worker Secret、要求間 write 分離と rollout 順序を正本へ書き戻した。
 - 反映先と検証の対応は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) を正とする。
 
+**本番反映 (2026-07-30 / `SYS-AUTH-TENANCY-P13` / qa-097〜qa-099)**:
+
+- productionはGoogle OIDC / HarnessHub 1テナントを現行rollout境界とする。製品の複数テナント分離契約、
+  分離試験、将来の共通Google OAuth client方式と顧客持ち込み方式は維持する。
+- tenant別CSRF cookie/tokenを取得してから同じAuth.js basePathへnative form POSTし、
+  Googleへの302をブラウザ遷移として処理する。CSRF取得失敗・空値・不一致はfail-closedとする。
+- Google client secretは1Passwordから登録時だけmasked展開し、purpose別DEKでDBへ暗号化する。
+  Workerは共通`ENCRYPTION_KEK`を使い、GitHubやテナント別Worker Secretへ値を複製しない。
+- 正本は[auth](../system-spec/auth.md)・[security](../system-spec/security.md)・
+  [infrastructure](../system-spec/infrastructure.md)、対応表は
+  [P13仕様反映受領書](../docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md)を参照する。
+
 ## エラー・例外・回復
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
-**データ接続復旧の反映 (2026-07-30 / `HarnessHub-njkm` / qa-097)**:
+**データ接続復旧の反映 (2026-07-30 / `HarnessHub-njkm` / qa-101)**:
 
 - process-local の `file:` / `:memory:` libSQL が `SQLITE_BUSY` を踏んだ場合、接続を poisoned（復旧まで使用禁止）として隔離し、以後の read/write/transaction を `ConnectionPoisonedError` で fail-fast する。
 - `TursoAdapter.reconnect()` は raw client を factory から作り直すが、公開 Client / Drizzle / repository の参照は変えない。自動 reconnect は並行 transaction と障害観測を壊すため行わない。
@@ -137,6 +149,20 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 互換性・移行・リリース
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**認証production rollout (2026-07-30 / `SYS-AUTH-TENANCY-P13`)**:
+
+- `wrangler.jsonc`の公開URL 3変数と必須Worker Secret名5件を配備契約とし、値はGitへ保存しない。
+- Google/HarnessHub 1テナントでprovider/CSRF/sign-in、JIT、Workspace所属、Device Flow、
+  refresh rotation/reuse失効、session revocationをR1〜R5として本番実測した。
+- 2番目のproduction tenantを本リリース条件から外したことと、製品全体の複数テナント分離保証を
+  外したことを混同しない。後続方式は`HarnessHub-fnej` / `HarnessHub-uk2i`で追跡する。
+- **実装ゲート追補**: CIはmigration前にdeploy依存設定の存在を検査し、deploy後は
+  provider/canonical callback、未知tenant拒否、CSRF、Google認可URLの
+  `state`・`nonce`・PKCEまでを本番URLで検査する。owner認可はDBのbase roleではなく
+  resourceとの関係roleとして、全action×role表とcross-tenant拒否を名前付きゲートで再実行する。
+  これは`qa-091` / `qa-097` / `qa-099`と既存認可表の検証手段を固定する追補であり、
+  製品仕様・role順序・API・DB schemaは変更しない。
 
 **差分追記 (2026-07-25 / feat-domain-model-db P13 / `SYS-DOMAIN-MODEL-DB-P13`)** — 詳細正本は [docs/infrastructure-spec.md](../docs/infrastructure-spec.md) §7 / §10、実測証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
 
@@ -170,6 +196,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `system-spec/testing-qa.md` の qa-089 として、AI skill の live-trial を受入根拠にする場合の durable evidence（repository に残り clean clone でも解決できる証拠）、scenario・task 手順束縛と失効、pre/post 実測、最終 node への評価 digest 束縛、反証可能な negative control、監査 provenance を確定した。
 - 影響は repository 内の開発品質ゲートに限定され、Harness Hub 製品の外部 API・データモデル・認証認可・UI・Cloudflare deploy unit は変更しない。
 - 反映先と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) を正とする。
+
+**開発品質追補 (2026-07-30 / `HarnessHub-yn71`)**:
+
+- qa-100 は qa-089 の受領境界を fail-closed（確認不能なら失敗）にし、live-trial の `scenario_contract`、全 required observation、引数、宣言済み task 契約、run 内 evidence を criteria-test で再照合する。旧形式の欠落は互換成功にせず fresh run で更新する。
+- 影響は開発証拠の受領だけで、schedule skill 本体と製品契約は非変更。反映対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) を正とする。
 
 **開発運用反映 (2026-07-29 / `HarnessHub-cjwm`・`HarnessHub-0vs2`)**:
 

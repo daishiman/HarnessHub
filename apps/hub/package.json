@@ -13,6 +13,7 @@
     "deploy": "opennextjs-cloudflare deploy",
     "test": "vitest run --coverage",
     "test:a11y": "vitest run tests/a11y",
+    "test:auth-release-contract": "vitest run tests/auth-tenancy/authjs-handler.test.ts tests/auth-tenancy/tenant-oidc-signin-form.test.ts tests/auth-tenancy/authz-matrix.test.ts tests/auth-tenancy/tenant-isolation.test.ts tests/auth-tenancy/production-oidc-smoke.test.ts",
     "test:tenant-isolation": "vitest run tests/auth-tenancy/tenant-isolation.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "pnpm --workspace-root exec biome check apps/hub",

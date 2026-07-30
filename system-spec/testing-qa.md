@@ -46,6 +46,12 @@ serves_goals: [G1, G2, G5]
 
 【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
+### qa-100 (横断追補: web, desktop-windows, desktop-macos)
+
+**質問**: qa-089 の live-trial 証拠契約を受領する criteria-test は、scenario_contract が欠落した旧形式の PASS をどう扱い、何を照合して初めて合格にしますか?
+
+**回答**: `verify_by=live-trial` は正準 positive scenario と非省略の `scenario_contract` を必須とし、legacy schema 上で field が optional でも欠落を不合格にする。scenario ID、required observations と observed の同数・同順、`unobserved=[]`、実行引数、宣言済み task 契約、run 内に包含された evidence ref の実在を受領側で再照合する。旧受領書は field や digest の手編集で追認せず、現行 scenario と挙動閉包で fresh live-trial を実走して更新する。影響は repository の開発品質ゲートに限定し、schedule skill 本体と製品 API・DB・認証認可・UI・deploy unit は変更しない。判断と検証は `docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md` を正とする。
+
 ## 実装フィードバック (2026-07-30 / HarnessHub-ory6)
 
 qa-076 / qa-081 の「境界値・異常系を task spec と機械ゲートで再現可能にする」

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1018,
+  "graph_revision": 1025,
   "nodes": [
     {
       "acceptance": [
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T02:46:06Z"
+      "updated_at": "2026-07-30T04:40:19Z"
     },
     {
       "acceptance": [
@@ -317,7 +317,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub backend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-26T06:10:00Z"
+      "updated_at": "2026-07-30T04:40:19Z"
     },
     {
       "acceptance": [
@@ -512,9 +512,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-26T06:10:00Z",
+        "imported_at": "2026-07-30T04:40:19Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "8d4e9a33e32e01eccf27043108740c57ce58892c6d0de5c80a3eedbdfc3ec161",
+        "source_digest": "4c4572235580b8a6916f7d3a2203801a50cd51f71055f4df2358de207f1db477",
         "source_path": "system-spec/security.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -530,7 +530,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub security アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-26T06:10:00Z"
+      "updated_at": "2026-07-30T04:40:19Z"
     },
     {
       "acceptance": [
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-26T06:10:00Z",
+        "imported_at": "2026-07-30T04:40:19Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "a74473d62712ab66f503f345e46b8f8e74cae30574b91aa05d1d3f0d4c06445e",
+        "source_digest": "7d41dd5eec8e690b938df18bd37eff64a493355fd8aab2dacec182319dc69d8f",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-29T06:15:35.564276Z"
+      "updated_at": "2026-07-30T04:40:19Z"
     },
     {
       "acceptance": [
@@ -1087,7 +1087,7 @@
       "template_version": "1.0.0",
       "title": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:12:00Z"
+      "updated_at": "2026-07-30T04:40:19Z"
     },
     {
       "acceptance": [
@@ -16097,7 +16097,7 @@
       "template_version": "1.0.0",
       "title": "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T04:40:19Z"
     },
     {
       "acceptance": [
@@ -43161,131 +43161,6 @@
     },
     {
       "acceptance": [
-        "昇格済み feature に古い draft snapshot を再 upsert すると dry-run と apply の両方が明示エラーになる",
-        "拒否時に graph revision・node・artifact Markdown が変化しない",
-        "意図的な lifecycle reset は変更フィールドを列挙した patch で実行できる",
-        "通常の冪等 upsert と既存 artifact kind の挙動を壊さない",
-        "C02 正本契約と回帰テストが実装を説明し、必要な品質ゲートが PASS する"
-      ],
-      "architecture_refs": [],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-bk8v",
-        "linked_at": "2026-07-29T01:20:52Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
-          "confidence": 0.99
-        }
-      ],
-      "classification_confidence": 0.99,
-      "classification_reason": "C14 r7-r11 の実走で同一 feature snapshot による lifecycle 退行を beads/none 両系列で再現した",
-      "completion_evidence": {
-        "completed_at": "2026-07-29T06:17:06Z",
-        "evidence_refs": [
-          "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
-          "plugins/dev-graph/references/execution-tracker-contract.md",
-          "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
-          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"
-        ],
-        "policy": "manual",
-        "reconciled_at": "2026-07-29T06:17:06Z",
-        "source": "manual",
-        "status": "done"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-07-29T01:20:52Z",
-      "depends_on": [],
-      "domain": "quality",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "古い feature snapshot の再 upsert が fail-closed で拒否され、意図的な reset だけが明示 patch で実行できる",
-      "graph_node_id": "issue-c02-upsert-lifecycle-regression-20260729",
-      "implementation_readiness": {
-        "checked_at": "2026-07-29T01:20:52Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "high",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "C02 の再試行で前進済み feature lifecycle を暗黙に巻き戻さない",
-      "related_nodes": [
-        "issue-decompose-live-trial-audit-defects-20260726",
-        "feat-dev-pipeline-improvement"
-      ],
-      "resource_scope": [
-        "plugins/dev-graph/scripts/upsert-node.py",
-        "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
-        "plugins/dev-graph/references/execution-tracker-contract.md",
-        "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
-        "docs/features/feat-dev-pipeline-improvement/final-review.md",
-        "features/feat-dev-pipeline-improvement.md"
-      ],
-      "scope_in": [
-        "feature 全体 snapshot の stale lifecycle before-image 検出",
-        "dry-run と apply の無変更拒否",
-        "意図的な lifecycle reset の明示 patch 経路",
-        "C02 正本契約と回帰テスト"
-      ],
-      "scope_out": [
-        "C14 live-trial 監査実装の変更",
-        "製品 API・DB・UI の変更",
-        "task・issue・specification・architecture・document の lifecycle policy 変更"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-07-29T01:20:52Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "closed",
-      "tags": [
-        "quality",
-        "dev-graph",
-        "c02",
-        "lifecycle",
-        "follow-up"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
-      "tracker_binding": "beads",
-      "updated_at": "2026-07-29T06:17:06Z"
-    },
-    {
-      "acceptance": [
         "canonical template の未記入 required section が incomplete となり節名を missing_sections に返す",
         "全 6 artifact kind の実本文は受理し、見出しだけへ潰した mutation は拒否する",
         "C02 の template-only 新規生成と placeholder 再生成を transaction rollback する",
@@ -43534,6 +43409,254 @@
     },
     {
       "acceptance": [
+        "昇格済み feature に古い draft snapshot を再 upsert すると dry-run と apply の両方が明示エラーになる",
+        "拒否時に graph revision・node・artifact Markdown が変化しない",
+        "意図的な lifecycle reset は変更フィールドを列挙した patch で実行できる",
+        "通常の冪等 upsert と既存 artifact kind の挙動を壊さない",
+        "C02 正本契約と回帰テストが実装を説明し、必要な品質ゲートが PASS する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-bk8v",
+        "linked_at": "2026-07-29T01:20:52Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "C14 r7-r11 の実走で同一 feature snapshot による lifecycle 退行を beads/none 両系列で再現した",
+      "completion_evidence": {
+        "completed_at": "2026-07-29T06:17:06Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
+          "plugins/dev-graph/references/execution-tracker-contract.md",
+          "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-29T06:17:06Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T01:20:52Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "古い feature snapshot の再 upsert が fail-closed で拒否され、意図的な reset だけが明示 patch で実行できる",
+      "graph_node_id": "issue-c02-upsert-lifecycle-regression-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T01:20:52Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C02 の再試行で前進済み feature lifecycle を暗黙に巻き戻さない",
+      "related_nodes": [
+        "issue-decompose-live-trial-audit-defects-20260726",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+        "docs/features/feat-dev-pipeline-improvement/final-review.md",
+        "features/feat-dev-pipeline-improvement.md"
+      ],
+      "scope_in": [
+        "feature 全体 snapshot の stale lifecycle before-image 検出",
+        "dry-run と apply の無変更拒否",
+        "意図的な lifecycle reset の明示 patch 経路",
+        "C02 正本契約と回帰テスト"
+      ],
+      "scope_out": [
+        "C14 live-trial 監査実装の変更",
+        "製品 API・DB・UI の変更",
+        "task・issue・specification・architecture・document の lifecycle policy 変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T01:20:52Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "c02",
+        "lifecycle",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T06:17:06Z"
+    },
+    {
+      "acceptance": [
+        "scenario_contract が欠落した live-trial verdict を criteria-test が合格させない",
+        "C15 の新しい live-trial 受領書が required_observations 4 件を全て観測し、引数と durable evidence を照合できる",
+        "qa-089 の仕様意図が system-spec・specs・architecture・features・tasks に同期される",
+        "関連品質ゲートと feature package validator が成功する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-yn71",
+        "linked_at": "2026-07-30T05:10:59Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-scenario-contract-required-20260730.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "既存 qa-089 の合格契約を受領側テストが省略可能として扱う実装欠陥であり、製品機能ではなく開発品質 feature の独立した修正単位である",
+      "completion_evidence": {
+        "completed_at": "2026-07-30T05:42:16Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_skill_criteria_evidence.py",
+          "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/evidence/schedule-execution.json",
+          "docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-30T05:42:16Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T05:08:29Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-scenario-contract-required-20260730.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "verify_by=live-trial の criteria evidence は正準 positive scenario と非省略の scenario_contract を必須とし、全 required_observations・引数・task 契約・証拠参照を照合できない受領書を必ず不合格にする",
+      "graph_node_id": "issue-live-trial-scenario-contract-required-20260730",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T05:08:29Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "qa-089 で required_observations と scenario 契約を live-trial 合格条件にした一方、受領側の criteria-test は scenario_contract が存在するときだけ検査していた。そのため古い形式や欠落した受領書が、観測の充足を証明せずに合格できる偽陽性を除去する",
+      "related_nodes": [
+        "issue-decompose-live-trial-audit-defects-20260726"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/tests/test_skill_criteria_evidence.py",
+        "eval-log/dev-graph/run-dev-graph-schedule/",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feature-package/feat-dev-pipeline-improvement/"
+      ],
+      "scope_in": [
+        "criteria evidence の検証で正準 positive scenario と scenario_contract を必須化する",
+        "required_observations 全件、unobserved の空、引数、task 契約、証拠参照の一致を検査する",
+        "C15 schedule の live-trial を実走して現行契約を満たす受領書へ更新する",
+        "品質仕様・設計・feature・task と仕様反映受領書を同期する"
+      ],
+      "scope_out": [
+        "run-dev-graph-schedule skill 本体のスケジューリング動作変更",
+        "公開 API・データモデル・認証認可・利用者向け UI の変更",
+        "legacy verdict schema 自体から optional field を削除する破壊的変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T05:08:29Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "plugins/dev-graph/tests/test_skill_criteria_evidence.py",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "live-trial",
+        "acceptance-criteria",
+        "scenario-contract"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "criteria-test が scenario_contract 欠落の live-trial 受領書を許容する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T05:42:16Z"
+    },
+    {
+      "acceptance": [
         "Anthropic 公式 marketplace 文書と実行対象 Claude Code CLI の版を実行直前に再照合し、git-subdir の url/path/ref/sha 契約を証跡化する",
         "macOS と Windows の両方で git-subdir source を install し、plugin details の Skills が 1 件以上で、対象 skill の実行が期待出力を返す",
         "SSH 鍵や global git url rewrite に依存しない経路で成功し、隔離設定と cleanup の証跡を残す",
@@ -43654,6 +43777,266 @@
       "title": "H7 を現行 git-subdir source で macOS / Windows 再検証する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-30T02:13:24.924968Z"
+    },
+    {
+      "acceptance": [
+        "共通方式のtenant追加時にGoogle Cloud側のOAuth client作成・redirect URI追加が不要である",
+        "共通callbackのstateを別tenantへ差し替えた要求が拒否され、tenant越境成功が0件である",
+        "Google ID tokenのhdがtenantの許可Workspace domainと一致する場合だけ受理され、hd欠落・不一致は拒否される",
+        "共有client secretがtenant別idp_connectionsへ複製されず、ログ・レスポンス・Git・GitHub Secretsへ露出しない",
+        "既存の顧客別client方式が同じ認証テスト群で継続動作し、方式不明時は共有方式へ暗黙fallbackせずfail-closedになる",
+        "認証、tenant分離、secret scan、typecheck、lint、buildの品質ゲートがpassする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-fnej",
+        "linked_at": "2026-07-28T23:15:50.962085Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-auth-tenancy-shared-google-oidc-20260729.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "ユーザーが、現在のテナント別Google OAuth方式で本番を先行しつつ、将来のオンボーディング負荷を減らす共通方式を独立した実装タスクとして明示的に要求したため",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "62ca8f40b93e696e727294171a1041e6502955e60c00821c9575eb41fbd047c5",
+        "evaluator": "codex-task-specification-creator",
+        "evidence_ref": "issues/sys-auth-tenancy-shared-google-oidc-20260729.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-28T23:10:15Z",
+      "depends_on": [
+        "SYS-AUTH-TENANCY-P13"
+      ],
+      "domain": "security",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-auth-tenancy-shared-google-oidc-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "共通方式を選んだ新規テナントはGoogle OAuth clientを新規作成せず、HarnessHub上のtenant policy登録と必要なWorkspace管理者承認だけで安全にGoogleログインを開始できる",
+      "graph_node_id": "issue-auth-tenancy-shared-google-oidc-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T23:10:15Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "新規テナントごとにGoogle CloudでOAuth clientとtenant固有callbackを追加する運用を、HarnessHub所有の共通Google OAuth clientを利用できる選択肢へ拡張する",
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/lib/auth/",
+        "apps/hub/src/app/api/auth/",
+        "packages/schemas/auth-tenancy/",
+        "packages/db/schema/core/identity.ts",
+        "packages/db/repository/",
+        "packages/db/migrations/",
+        "docs/features/feat-auth-tenancy/"
+      ],
+      "scope_in": [
+        "共有credentialと顧客credentialを切り替えられるOIDC credential source abstractionを定義する",
+        "共通callbackへtenant contextを署名付きstateで束縛し、別tenantへの差し替えを拒否する",
+        "Google ID tokenのhd claimをtenantの許可Workspace domainと厳密照合し、欠落・不一致を拒否する",
+        "共有client ID/secretを環境単位で一度だけ安全に保管し、tenant行へsecretを複製しない",
+        "既存のテナント別credential方式を壊さない移行・rollback・回帰テストを用意する"
+      ],
+      "scope_out": [
+        "Google OAuth clientをAPIから自動作成・変更する機能",
+        "Google以外のIdP対応",
+        "顧客持ち込みcredentialの管理画面・登録・ローテーションUI",
+        "現在進行中のP13本番投入方式の置換"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T23:10:15Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/features/feat-auth-tenancy/requirements-baseline.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "follow-up",
+        "auth-tenancy",
+        "google-oidc",
+        "multi-tenant",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "HarnessHub共通Google OAuthクライアント方式を実装する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T23:16:50.690748Z"
+    },
+    {
+      "acceptance": [
+        "provider-adminだけが対象tenantの顧客Google credentialを登録・更新・無効化でき、全変更に監査eventが残る",
+        "管理画面とAPIがclient secret全値を保存後に返さず、ログ・エラー・監査にはlast4以外が出ない",
+        "client secretがENCRYPTION_KEKを使って暗号化保存され、直接SQLとGitHub Secretsを使用しない",
+        "新secret登録、接続テスト、新secret有効化、旧secret無効化確認の順で無停止rotationできる",
+        "顧客方式の接続失敗時に共有方式へ暗黙fallbackせず、tenantのログインをfail-closedにする",
+        "tenant Aのprovider-adminがtenant Bのcredentialを参照・更新できないことを分離テストで証明する",
+        "UI/API、認証、tenant分離、secret scan、typecheck、lint、buildの品質ゲートがpassする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-uk2i",
+        "linked_at": "2026-07-28T23:16:19.236177Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-auth-tenancy-customer-managed-google-oidc-20260729.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "ユーザーが、将来の顧客持ち込みGoogle OAuth方式を共通方式とは別の実装タスクとして明示的に要求したため",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "597d1ddac916bf7dc5e0283126215fbe21a3ae3638089f59d28a2fdfd9162dd3",
+        "evaluator": "codex-task-specification-creator",
+        "evidence_ref": "issues/sys-auth-tenancy-customer-managed-google-oidc-20260729.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-28T23:10:15Z",
+      "depends_on": [
+        "issue-auth-tenancy-shared-google-oidc-20260729"
+      ],
+      "domain": "security",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-auth-tenancy-customer-managed-google-oidc-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "共通方式を利用できない顧客でも、credentialをメール・GitHub・手動SQLへ露出させず、provider-adminが監査可能な手順で顧客所有Google SSOを運用できる",
+      "graph_node_id": "issue-auth-tenancy-customer-managed-google-oidc-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T23:10:15Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "顧客が所有するGoogle OAuth clientを、Google側作成後にHarnessHubの管理画面から安全に登録・検証・ローテーション・無効化できるようにする",
+      "related_nodes": [
+        "feat-auth-tenancy",
+        "arch-harness-hub-security",
+        "arch-harness-hub-backend"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/",
+        "apps/hub/src/lib/auth/",
+        "apps/hub/src/lib/authz/",
+        "packages/schemas/auth-tenancy/",
+        "packages/db/repository/idp.ts",
+        "packages/db/schema/core/identity.ts",
+        "packages/db/migrations/",
+        "docs/features/feat-auth-tenancy/"
+      ],
+      "scope_in": [
+        "provider-admin専用のGoogle OIDC接続管理UI/APIを追加する",
+        "tenant固有callbackとGoogle Cloud手動設定値を画面に表示する",
+        "client IDとclient secretをマスク入力し、secretを封筒暗号化して保存する",
+        "登録前検証、接続テスト、段階的secretローテーション、無効化、mode切替を監査event付きで実装する",
+        "レスポンスにはsecretを返さず、識別用last4・作成時刻・状態だけを返す",
+        "tenant分離、role認可、CSRF、secret非露出、rollbackのテストを追加する"
+      ],
+      "scope_out": [
+        "Google OAuth clientをGoogle Cloudへ自動作成・変更・削除する機能",
+        "Google以外のIdP対応",
+        "client secretをGitHub Secretsまたはtenant別Cloudflare Worker Secretへ保存すること",
+        "失敗時に顧客方式から共通方式へ暗黙fallbackすること",
+        "現在進行中のP13手動投入を待たせること"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T23:10:15Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/features/feat-auth-tenancy/production-auth-manual-setup.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "follow-up",
+        "auth-tenancy",
+        "google-oidc",
+        "byo-credential",
+        "admin-ui"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "顧客持ち込みGoogle OAuthクライアントの管理機能を実装する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T23:16:51.876731Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-097 |
+| Web (web) | 確定 | 確定質疑: qa-101 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,7 +24,7 @@ serves_goals: [G1, G2, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-097 (対応セル: web)
+### qa-101 (対応セル: web)
 
 **質問**: HarnessHub-njkm の接続復旧実装を受け、qa-086 の schema・migration・書き込み共有範囲を失わず、プロセス外 SQLITE_BUSY 後の database.web 契約をどう確定しますか?
 
@@ -36,7 +36,7 @@ serves_goals: [G1, G2, G4, G5]
 
 【3. 壊れた接続の隔離】process-local 接続が SQLITE_BUSY / database is locked を踏んだ場合、接続層は raw client を poisoned（復旧まで使用禁止）として記録する。以後の read/write/transaction 操作は ConnectionPoisonedError で fail-fast し、未 commit の行を同じ接続から読ませず、『成功したのに別接続から行が見えない』silent data loss を防ぐ。UNIQUE などロック以外の確定失敗は poison にしない。request-bound 接続は 1 要求ごとに状態が閉じるため poison にせず従来の再試行を維持する。
 
-【4. 復旧口と参照安定性】TursoAdapter は reconnect() と isPoisoned() を公開する。reconnect() は古い raw client を閉じ、同じ factory から新しい client を作り、poison を解除する。公開 Client と Drizzle adapter の参照は変えないため、既に構築済み repository や spread された test adapter を作り直さない。poison 検知時の自動 reconnect は、並行 transaction を途中で巻き込み故障の観測も消すため採用しない。
+【4. 復旧口と参照安定性】TursoAdapter は reconnect() と isPoisoned() を公開する。reconnect() は同じ factory から新しい client を先に生成し、成功後に poison を解除して古い raw client を閉じる。公開 Client と Drizzle adapter の参照は変えないため、既に構築済み repository や spread された test adapter を作り直さない。poison 検知時の自動 reconnect は、並行 transaction を途中で巻き込み故障の観測も消すため採用しない。
 
 【5. 再試行と検証】ConnectionPoisonedError は元の SQLITE_BUSY を cause に保持するが、isLockConflict はこれを再試行対象から除外し、壊れた接続を 25 回叩かない。fake Client の状態遷移テストに加え、子プロセスが同じ file DB の write lock を保持する実 libSQL テストで、BUSY 後の read/write fail-fast、未 commit 行が別接続から見えないこと、lock 解放と reconnect 後の書き込みが別接続から見えることを固定する。
 

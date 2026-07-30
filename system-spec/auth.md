@@ -15,7 +15,7 @@ serves_goals: [G2, G4, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-074 |
+| Web (web) | 確定 | 確定質疑: qa-097 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,11 +24,11 @@ serves_goals: [G2, G4, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-074 (対応セル: web)
+### qa-097 (対応セル: web)
 
-**質問**: HarnessHub-b7ng の本番 Auth.js / AuthPorts 結線で確定した認証契約を auth.web の正本へ反映するか。
+**質問**: SYS-AUTH-TENANCY-P13 の本番実行で確定した Google OIDC rollout とテナント別 CSRF sign-in を、auth.web の既存契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-26 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映」を明示承認として、qa-072 までの auth.web 確定内容を全面維持し、次の実装追補を確定する。Auth endpoint は GET/POST /api/auth/{tenant_slug}/{action} とし、slug から当該 tenant の idp_connections だけを解決する。Auth.js の JWT encode/decode は SessionClaims の署名・検証へ委譲し、edge 認可と cookie が同じ 7 claims 契約を使う。callback origin は要求 Host ではなく AUTH_CANONICAL_ORIGIN へ固定する。JIT provisioning は同一 (tenant_id,idp_subject) の同時初回ログインを UNIQUE 制約後の再読込で 1 user へ収束させ、role=member/status=active 以外を IdP claims から与えない。Workers Secret は session と Publisher access token の blast radius を分離するため AUTH_SESSION_SECRET と AUTH_ACCESS_TOKEN_SECRET に分ける。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-074 までの auth.web 契約を全面維持し、次を追加確定する。(1) 現行 production rollout は Google OIDC と HarnessHub (`tenant_slug=harness-hub`) 1テナントだけを有効化する。これはリリース境界であり、製品の row-level tenant isolation、複数テナント回帰試験、将来の共通 Google OAuth client / 顧客持ち込み方式を削除しない。(2) tenant別サインイン画面は GET `/api/auth/{tenant_slug}/csrf` を `credentials=same-origin` で呼び、応答で設定されるCSRF cookieと`csrfToken`を同じtenant basePathのPOST `/api/auth/{tenant_slug}/signin/tenant-oidc`へ送る。(3) Googleへの302はfetchで追わずnative form navigationへ渡す。token取得失敗、空token、入力欠落では外部遷移せず再試行可能なエラーを表示する。(4) callback origin、JIT provisioning、7 claims、role=member/status=active、session/access署名鍵分離はqa-074を維持する。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

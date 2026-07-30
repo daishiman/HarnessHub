@@ -9,12 +9,13 @@
  */
 
 import { signinRouteParamsSchema } from '@harness-hub/schemas';
-import { Alert, Button } from '@harness-hub/ui';
+import { Alert } from '@harness-hub/ui';
 import { notFound } from 'next/navigation';
 
 import { resolveTenantOidcConfig } from '../../../lib/auth/index.js';
 import { authRuntime } from '../../../lib/authz/index.js';
-import { tenantOidcSigninAction } from './tenant-oidc-action.js';
+import { tenantOidcCsrfAction, tenantOidcSigninAction } from './tenant-oidc-action.js';
+import { TenantOidcSigninForm } from './tenant-oidc-signin-form.js';
 
 interface SigninPageProps {
   readonly params: Promise<{ tenant_slug: string }>;
@@ -58,11 +59,11 @@ export default async function SigninPage({ params }: SigninPageProps) {
     <section aria-labelledby="signin-heading">
       <h2 id="signin-heading">サインイン</h2>
       <p>{connection.displayName} のアカウントでサインインします。</p>
-      <form method="post" action={tenantOidcSigninAction(parsed.data.tenant_slug)}>
-        <Button type="submit" variant="primary">
-          {connection.displayName} でサインイン
-        </Button>
-      </form>
+      <TenantOidcSigninForm
+        action={tenantOidcSigninAction(parsed.data.tenant_slug)}
+        csrfEndpoint={tenantOidcCsrfAction(parsed.data.tenant_slug)}
+        displayName={connection.displayName}
+      />
     </section>
   );
 }

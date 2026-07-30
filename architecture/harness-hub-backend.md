@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub backend アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:10:00Z"
+updated_at: "2026-07-30T04:40:19Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -53,7 +53,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/backend.md](../system-spec/backend.md) (sha256: `18d2b7d508afdf32…`)
+- [system-spec/backend.md](../system-spec/backend.md) (sha256: `0ec0f8b86acd29ef…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
 - 再取込日時: 2026-07-26T06:10:00Z / plugin: system-spec-harness v0.1.0
@@ -95,6 +95,16 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `/api/auth/{tenant_slug}/{action}` を Auth.js handler へ結線し、Auth.js 型は `lib/auth/adapter/` から外へ出さない。
 - production の AuthPorts・監査・Device Flow は `packages/db` の同じ CoreRepositories へ合成し、in-memory fallback を持たない。
 - 詳細な変更と検証は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) を参照する。
+
+**差分追記 (2026-07-30 / SYS-AUTH-TENANCY-P13)**:
+
+- サインインUIは`GET /api/auth/{tenant_slug}/csrf`でcookie/tokenを取得し、
+  `POST /api/auth/{tenant_slug}/signin/tenant-oidc`へnative form送信する。
+- client側fetchはCSRF取得だけに限定し、Googleへの302を追わない。これによりCORS依存を避け、
+  Auth.jsの外部redirectを通常のブラウザnavigationとして扱う。
+- Google client secretの保存はCoreRepositoriesを通し、DB暗号化・tenant scope・鍵台帳を
+  直接SQLやUIへ重複実装しない。runtimeはDBから接続を解決する。
+- 失敗時はform送信を止め、再試行可能な表示へ戻す。API path、DB schema、role契約は変更しない。
 
 ## Delivery, migration and rollback
 

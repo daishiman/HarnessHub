@@ -7,7 +7,7 @@
     "skill_md_sha256": "8c6f7de616403cf3664b6332a66f082a6b6e903213c7de2254da06808c852641"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-evaluator-20260729T022100Z-lp36-schedule",
+  "reviewer": "fresh-independent-evaluator-20260730T042500Z-wt16-pxwo-schedule",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,14 +27,15 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C15-OUT1-positive-ready-set-r16",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260729T013605Z-lp36-schedule-final/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260729T013605Z-lp36-schedule-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260729T013605Z-lp36-schedule-final/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260729T013605Z-lp36-schedule-final/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260729T013605Z-lp36-schedule-final/evaluator-verdict.txt"
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/evidence/schedule-execution.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/evaluator-verdict.txt"
       ],
-      "observed": "2026-07-29 の fresh live trial (run 20260729T013605Z-lp36-schedule-final, actual_model=claude-opus-4-6, wall 465s, nudge=0, gate=0, poll_exit=DONE) が現行挙動閉包と一致して overall=PASS。tracker_binding=none fixture に対して self ready-source へ収束し、alpha.py を共有する task は別 batch、未完了依存 task は理由付き除外、active lease task は抑止、stale lease task は ready へ復帰した。全 batch は max-parallel=2、branch/claim command は一意、graph/lease digest は不変。C17 verifier と別プロセスの fresh evaluator が batch・lease・goal-seek を再計算して PASS。"
+      "observed": "2026-07-30 の fresh live trial (run 20260730T041426Z-wt16-pxwo-schedule, actual_model=claude-opus-4-6, wall 510s, nudge=0, gate=0, poll_exit=DONE) が現行挙動閉包と一致して overall=PASS。scenario_contract は required_observations 4/4 回収、unobserved=[]、args_divergence.matches=true。tracker_binding=none fixture の authority から再計算し、alpha.py を共有する task は別 batch、未完了依存 task は理由付き除外、active lease task は抑止、stale lease task は ready へ復帰した。全 batch は max-parallel=2、branch/claim command は一意、graph/lease digest は不変。C17 verifier と別プロセスの fresh evaluator が batch・lease・goal-seek を再計算して PASS。"
     },
     "OUT2": {
       "status": "PASS",

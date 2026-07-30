@@ -114,4 +114,4 @@ HarnessHub-b7ng では「踏ませない」側で解決した (`guardedWrite` �
 - `TursoAdapter.reconnect()` は raw client を factory から作り直すが、外側の Client 参照を変えないため既存 repository を再構築しない。
 - request-bound の Turso remote は poison 対象外とし、従来の競合再試行を維持する。
 - `packages/db/__tests__/connection-recovery.test.ts` は fake Client の状態遷移と、別プロセスが実 file DB の write lock を保持する経路の両方を検証する。
-- DB schema / migration / API payload の変更はない。設計影響は qa-097 として `database.web` へ正規反映し、受領書は `docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md` に記録する。
+- DB schema / migration / API payload の変更はない。設計影響は qa-101 として `database.web` へ正規反映し、受領書は `docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md` に記録する。

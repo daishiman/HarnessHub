@@ -22,7 +22,7 @@ reviewed_at: 2026-07-30
 - **仕様影響: あり (`reflected`)**。`TursoAdapter` の公開契約、ローカル障害時の read/write
   挙動、再試行可否、復旧手順が増えるため、内部実装だけの変更ではない。
 - **正規反映: 完了**。`database.web` を transition writer で R4-reopen し、既存 qa-086 を
-  情報欠落なく維持した qa-097 として再確定し、compiler で `system-spec/database.md` を再生成した。
+  情報欠落なく維持した qa-101 として再確定し、compiler で `system-spec/database.md` を再生成した。
 - **実装と実プロセス競合テスト: 完了**。process-local の poison 隔離、明示 reconnect、
   request-bound 非隔離、別プロセス write lock の回帰テストを揃えた。
 - **完了境界**: draft PR の required checks と merge までは Beads `HarnessHub-njkm` を
@@ -56,7 +56,7 @@ cause に残した `SQLITE_BUSY` を再試行可能と誤判定しない。
 ## 5. 仕様反映の正規フロー
 
 1. `apply-spec-transition.py apply` で `database.web` を根拠付き R4-reopen。
-2. ユーザー指示を `appr-016`、統合契約を `qa-097` として `chunk` で確定。
+2. ユーザー指示を `appr-018`、統合契約を `qa-101` として `chunk` で確定。
 3. `compile-spec-doc.py compile` で `system-spec/database.md` を再生成。
 4. `specs/`、`architecture/`、`features/`、`tasks/`、`docs/`、issue 文書へ同一変更単位で反映。
 5. commit 後に `build-spec-reflection-receipt.py --spec-impact reflected` で

@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-094 |
+| Web (web) | 確定 | 確定質疑: qa-099 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-094 (対応セル: web)
+### qa-099 (対応セル: web)
 
-**質問**: qa-093 の backup heartbeat 契約を追加したうえで、直前まで確定していた infrastructure.web と maintenance-ops.web の契約を情報欠落なくどう統合しますか?
+**質問**: production Worker の認証bindingと現行1テナントrolloutを、infrastructure.web の既存運用契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-091 の production Worker Secret / 環境設定、Cloudflare deploy token と R2 token の最小権限分離、rollout 順序、静的検査と外部実測の完了境界を全面維持する。また qa-058 の phase 別監視有効化、qa-011 / qa-019 の日次 control-plane JSONL backup・RPO 24h・RTO 4h・復元不能断面を成功と数えない契約、機械可読 secret 台帳と workflow 実参照の双方向突合、実投入状態を --live で判定する契約も全面維持する。そのうえで qa-093 を統合し、次を追加確定する。(1) Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使い、CRON_HEARTBEAT_URL と BACKUP_HEARTBEAT_URL の URL を共用しない。(2) backup 専用 hub-backup-daily は period=86400 秒 / grace=3600 秒で、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化する。(3) BACKUP_HEARTBEAT_URL は required とし、workflow 開始時の未投入を fail-closed で拒否する。heartbeat は全 backup step 成功後だけ送るため、cron 不発も途中失敗も期限超過として外形監視へ表れる。(4) Better Stack API token と heartbeat URL は設定・成果物・引数・ログへ保存せず、stdin で用途別 secret store へ投入する。設定は binding 名・period/grace・外部適用状態だけを持つ。(5) repository 内実装だけで完了扱いにせず、backup heartbeat の provisioning_state=applied、GitHub secret 投入、main の成功 run、heartbeat 着信実測が揃うまで HarnessHub-dbx6 を継続する。(6) Hub の外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit は変更しない。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 のbackup/heartbeat、token分離、RPO/RTO、外部実測境界を全面維持し、production authの差分を次のとおり追加確定する。(1) `apps/hub/wrangler.jsonc`は秘密でない`AUTH_CANONICAL_ORIGIN`、`AUTH_ALLOWED_ORIGINS`、`AUTH_DEVICE_VERIFICATION_URI`をproduction varsの正本とする。(2) production runtimeの必須Worker Secret名は`AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、`TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`、`ENCRYPTION_KEK`の5件とし、値は設定・source・文書へ保存しない。OIDC client secretや`IDP_SECRET_<tenant_slug>`をWorker Secretへ追加しない。(3) 現行rolloutの外部受入対象はGoogle / HarnessHub 1テナントである。二つ目のproduction tenantはP13完了条件にしないが、複数テナント分離試験と将来方式のtaskは維持する。(4) rolloutはbinding確認、deploy、health/provider/CSRF/sign-in、JIT、workspace membership、Device Flow token/refresh/reuse失効、session revocationをR1〜R5で実測し、証跡とrollback先をrelease recordへ残す。repository内実装だけで外部受入を完了扱いにしない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 
