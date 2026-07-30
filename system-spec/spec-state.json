@@ -54,7 +54,7 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-086",
+        "qa_ref": "qa-097",
         "serves_goals": [
           "G1",
           "G2",
@@ -906,6 +906,11 @@
       "id": "qa-096",
       "question": "MVP ファーストの優先度判断を維持したまま、CI / local の品質ゲートが検査対象 0 件で緑になる fail-open を防ぐ dev-workflow.web 契約を、章単独で情報を失わない形でどう確定しますか?",
       "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-069 の MVP ファーストな優先度契約を全面維持し、品質ゲートの空走査境界を統合した次の dev-workflow.web 契約を確定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は plugins/dev-graph/references/execution-tracker-contract.md、判断と検証の受領書は docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md とする。\n\n【6. 境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-097",
+      "question": "HarnessHub-njkm の接続復旧実装を受け、qa-086 の schema・migration・書き込み共有範囲を失わず、プロセス外 SQLITE_BUSY 後の database.web 契約をどう確定しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-086 の schema、migration、guardedWrite、実行環境別共有範囲を全面維持し、次の database.web 契約を再確定する。\n\n【1. 既存データ契約の維持】user_workspaces は tenant_id,user_id,workspace_id の複合主キー、device_authorizations は tenant_id NOT NULL と workspace_id/scopes_json/device_name/attempts/last_polled_at を保持し、expired は expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持ち、旧 token は移送せず Device Flow で再発行する。repository write は HarnessHub-mb7c で全量 guardedWrite 経由へ統一済みで、packages/db/scripts/check-db-write-gate.mjs が新規迂回を拒否する。\n\n【2. 実行環境別の競合境界】Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一プロセス内の write を guardedWrite で直列化する。別プロセスが同じ file DB を触る競合は直列化の外に残る。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、要求間 Promise を共有せず、DB 側の排他と CAS、競合再試行へ委ねる。\n\n【3. 壊れた接続の隔離】process-local 接続が SQLITE_BUSY / database is locked を踏んだ場合、接続層は raw client を poisoned（復旧まで使用禁止）として記録する。以後の read/write/transaction 操作は ConnectionPoisonedError で fail-fast し、未 commit の行を同じ接続から読ませず、『成功したのに別接続から行が見えない』silent data loss を防ぐ。UNIQUE などロック以外の確定失敗は poison にしない。request-bound 接続は 1 要求ごとに状態が閉じるため poison にせず従来の再試行を維持する。\n\n【4. 復旧口と参照安定性】TursoAdapter は reconnect() と isPoisoned() を公開する。reconnect() は古い raw client を閉じ、同じ factory から新しい client を作り、poison を解除する。公開 Client と Drizzle adapter の参照は変えないため、既に構築済み repository や spread された test adapter を作り直さない。poison 検知時の自動 reconnect は、並行 transaction を途中で巻き込み故障の観測も消すため採用しない。\n\n【5. 再試行と検証】ConnectionPoisonedError は元の SQLITE_BUSY を cause に保持するが、isLockConflict はこれを再試行対象から除外し、壊れた接続を 25 回叩かない。fake Client の状態遷移テストに加え、子プロセスが同じ file DB の write lock を保持する実 libSQL テストで、BUSY 後の read/write fail-fast、未 commit 行が別接続から見えないこと、lock 解放と reconnect 後の書き込みが別接続から見えることを固定する。\n\n【6. 境界】DB schema、migration、API payload、Cloudflare request-bound runtime の公開挙動は変更しない。本差分はローカル file DB 接続の障害検知・明示復旧契約を追加する。"
     }
   ],
   "approval_log": [
@@ -964,6 +969,10 @@
     {
       "id": "appr-015",
       "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映。500 行超過時は分離」を明示承認として記録。HarnessHub-foq6 の空走査 fail-closed、明示 allow-empty、回帰証拠、500 行分冊を qa-096 として dev-workflow.web へ反映する。qa-092 / appr-013 は並行して main へ統合済みの C11 artifact 本文 readiness 契約が使用しているため、その履歴を保持して次の空き ID へ再採番する。"
+    },
+    {
+      "id": "appr-016",
+      "note": "ユーザーの 2026-07-30 指示『今回変更しているすべてのタスクを最終レビューし、仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks にも反映する』を明示承認として記録。HarnessHub-njkm の process-local libSQL 接続 poison 隔離、ConnectionPoisonedError、明示 reconnect、request-bound 非隔離、実プロセス外競合テストを qa-097 として database.web へ統合する。"
     }
   ],
   "reopen_log": [
@@ -1673,6 +1682,12 @@
       "category": "dev-workflow",
       "platform": "web",
       "reason": "HarnessHub-foq6 で品質ゲート自身に残っていた対象 0 件成功の fail-open を解消し、qa-069 の MVP ファースト契約を維持したまま CI / local の空走査境界を自己完結して再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "HarnessHub-njkm で process-local libSQL がプロセス外 SQLITE_BUSY を踏んだ後の silent data loss を接続層で隔離し、qa-086 のプロセス内直列化契約へ明示復旧境界を追加する必要が生じたため",
       "from": "確定"
     }
   ],

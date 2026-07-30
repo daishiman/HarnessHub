@@ -97,6 +97,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - ローカル libSQL のゲートは process 内だけで共有し、Workers の Turso/D1 は要求間 Promise を共有しない。
 - 旧 publisher token は Workspace 帰属を復元できないため移送せず、Device Flow 再認証で再発行する。
 
+**差分追記 (2026-07-30 / `HarnessHub-njkm` / qa-097)**:
+
+- **障害隔離境界**: process-local libSQL が `SQLITE_BUSY` を返した接続は、未終了 statement を抱えた可能性があるため poisoned として隔離する。read も止め、未 commit 行を正常データとして観測させない。
+- **復旧境界**: `TursoAdapter.reconnect()` が古い raw client を捨てて factory から再生成する。外側の Client / Drizzle / repository 参照は安定させ、consumer の再構築を要求しない。
+- **環境分離**: request-bound の Turso remote / D1 は隔離対象にせず、競合再試行と DB 側 CAS を維持する。自動 reconnect は並行 transaction を巻き込み故障の観測を消すため採用しない。
+- **検証**: fake Client の状態遷移だけでなく、子プロセスが同じ file DB の write lock を保持する実 libSQL テストで silent loss 防止と明示 reconnect 後の可視性を固定する。
+
 ## Delivery, migration and rollback
 
 正本章 (system-spec/database.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。

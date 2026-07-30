@@ -1,11 +1,12 @@
 // connection 層の毒検知・fail-fast・reconnect のテスト (HarnessHub-njkm)。
 //
-// 実 BUSY を再現するには別プロセスで同じファイルを掴む必要があり、テストが重く不安定になる。
-// ここで検証したいのは「BUSY を踏んだ**後**の接続の扱い」なので、driver 例外の
-// 包まれ方だけを fake Client で再現し、ラッパの状態遷移を直接観測する。
+// 状態遷移の細部は fake Client で決定的に検証し、受入条件の「別プロセスが同じ file を掴む」
+// 経路は実 libSQL の子プロセスを 1 ケースだけ起動して検証する。fake だけでは driver の
+// 実際の例外連鎖や、接続層への結線漏れを検出できないためである。
 //
-// 実 libSQL を通す確認は末尾の 1 ケースだけに絞る (reconnect が正常経路を壊さないことの確認)。
+// 実 libSQL の正常系でも、reconnect が commit 済みデータを壊さないことを別ケースで固定する。
 
+import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -15,7 +16,103 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { createRecoverableClient } from '../connection/recoverable-client';
 import { createTursoClient } from '../connection/turso';
 import { ConnectionPoisonedError } from '../src/errors';
-import { isLockConflict } from '../src/lock-conflict';
+import { isConnectionPoisoned, isLockConflict } from '../src/lock-conflict';
+
+const EXTERNAL_WRITE_LOCK_SCRIPT = String.raw`
+  import { createClient } from '@libsql/client';
+
+  const client = createClient({ url: process.argv[1] });
+  const transaction = await client.transaction('write');
+  await transaction.execute('insert into connection_recovery_probe (value) values (100)');
+  process.stdout.write('LOCKED\n');
+
+  let releasing = false;
+  async function release() {
+    if (releasing) return;
+    releasing = true;
+    try {
+      await transaction.rollback();
+    } finally {
+      transaction.close();
+      client.close();
+      process.exit(0);
+    }
+  }
+
+  process.on('SIGTERM', () => void release());
+  process.on('SIGINT', () => void release());
+  await new Promise(() => {});
+`;
+
+async function startExternalWriteLock(url: string): Promise<ChildProcessWithoutNullStreams> {
+  const child = spawn(process.execPath, ['--input-type=module', '--eval', EXTERNAL_WRITE_LOCK_SCRIPT, url], {
+    cwd: join(import.meta.dirname, '..'),
+    stdio: ['pipe', 'pipe', 'pipe'],
+  });
+  child.stdout.setEncoding('utf8');
+  child.stderr.setEncoding('utf8');
+
+  await new Promise<void>((resolve, reject) => {
+    let stdout = '';
+    let stderr = '';
+    const timeout = setTimeout(() => {
+      cleanup();
+      child.kill('SIGKILL');
+      reject(new Error(`別プロセスのロック取得がタイムアウトしました (stdout=${stdout}, stderr=${stderr})`));
+    }, 30_000);
+
+    const cleanup = () => {
+      clearTimeout(timeout);
+      child.off('error', onError);
+      child.off('exit', onExit);
+      child.stdout.off('data', onStdout);
+      child.stderr.off('data', onStderr);
+    };
+    const onError = (error: Error) => {
+      cleanup();
+      reject(error);
+    };
+    const onExit = (code: number | null, signal: NodeJS.Signals | null) => {
+      cleanup();
+      reject(
+        new Error(
+          `ロック取得前に別プロセスが終了しました (code=${String(code)}, signal=${String(signal)}, stderr=${stderr})`,
+        ),
+      );
+    };
+    const onStdout = (chunk: string) => {
+      stdout += chunk;
+      if (!stdout.includes('LOCKED\n')) return;
+      cleanup();
+      resolve();
+    };
+    const onStderr = (chunk: string) => {
+      stderr += chunk;
+    };
+
+    child.on('error', onError);
+    child.on('exit', onExit);
+    child.stdout.on('data', onStdout);
+    child.stderr.on('data', onStderr);
+  });
+
+  return child;
+}
+
+async function stopExternalWriteLock(child: ChildProcessWithoutNullStreams): Promise<void> {
+  if (child.exitCode !== null || child.signalCode !== null) return;
+  await new Promise<void>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      child.kill('SIGKILL');
+      reject(new Error('別プロセスのロック解放がタイムアウトしました'));
+    }, 10_000);
+    child.once('exit', () => {
+      clearTimeout(timeout);
+      resolve();
+    });
+    child.kill('SIGTERM');
+  });
+}
 
 /** drizzle が driver の BUSY を包んだ形。message は差し替えられ、元の例外は cause に入る。 */
 function busyError(): Error {
@@ -324,6 +421,48 @@ describe('createTursoClient — adapter 境界への露出', () => {
       cloned.close();
     }
   });
+
+  it('別プロセスの書き込みロックで BUSY を踏んでも silent loss にせず、reconnect 後の書き込みが別接続から見える', async () => {
+    const url = tempFileUrl();
+    const writer = createTursoClient({ url });
+    const reader = createTursoClient({ url });
+    let lockHolder: ChildProcessWithoutNullStreams | null = null;
+    try {
+      await writer.client.run(sql`create table connection_recovery_probe (value integer not null)`);
+      lockHolder = await startExternalWriteLock(url);
+
+      const busy = await writer.client
+        .run(sql`insert into connection_recovery_probe (value) values (1)`)
+        .catch((error: unknown) => error);
+
+      expect(isConnectionPoisoned(busy)).toBe(true);
+      expect(writer.isPoisoned()).toBe(true);
+      const blockedRead = await writer.client
+        .get(sql`select count(*) as count from connection_recovery_probe`)
+        .catch((error: unknown) => error);
+      expect(isConnectionPoisoned(blockedRead)).toBe(true);
+
+      await stopExternalWriteLock(lockHolder);
+      lockHolder = null;
+
+      const beforeRecovery = await reader.client.get<{ count: number }>(
+        sql`select count(*) as count from connection_recovery_probe`,
+      );
+      expect(beforeRecovery?.count).toBe(0);
+
+      writer.reconnect();
+      await writer.client.run(sql`insert into connection_recovery_probe (value) values (2)`);
+
+      const afterRecovery = await reader.client.get<{ count: number }>(
+        sql`select count(*) as count from connection_recovery_probe`,
+      );
+      expect(afterRecovery?.count).toBe(1);
+    } finally {
+      if (lockHolder !== null) await stopExternalWriteLock(lockHolder);
+      reader.close();
+      writer.close();
+    }
+  }, 60_000);
 
   it('reconnect() 後も commit 済みの内容を読める — 復旧が正常経路を壊さない', async () => {
     const adapter = createTursoClient({ url: tempFileUrl() });

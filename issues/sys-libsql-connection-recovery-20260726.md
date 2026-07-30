@@ -58,7 +58,7 @@ implementation_readiness: {"checked_at":"2026-07-26T00:00:00Z","missing_sections
 - libSQL のローカル backend は BUSY で失敗した**単発 `execute()`** を後片付けしない (`batch()` / `executeMultiple()` には `finally { ROLLBACK }` があるが `execute()` には無い)。
 - 踏んだ接続は未終了 statement を抱えたまま固まり、以降の書き込みは自分からは見えるが他接続からは見えない。
 - `ROLLBACK` では戻らない (`SQLITE_ERROR` = 有効なトランザクションが無い)。
-- 復旧手段は接続を捨てて張り直すこと (`Sqlite3Client.reconnect()`) **だけ**で、これは driver 内部 API なので drizzle 越しには届かない。
+- 復旧手段は接続を捨てて張り直すことだけ。`Client.reconnect()` 自体は公開 API だが、Drizzle が raw Client を内部に隠すため Drizzle instance からは届かない。
 
 HarnessHub-b7ng では「踏ませない」側で解決した (`guardedWrite` によるプロセス内直列化)。これで同一プロセス内の競合は消えるが、**別プロセスが同じ file を触る場合は防げない**。
 
@@ -107,3 +107,11 @@ HarnessHub-b7ng では「踏ませない」側で解決した (`guardedWrite` �
 
 - 機序と実測: `packages/db/repository/conflict.ts` ヘッダ
 - プロセス内側の回帰テスト: `packages/db/__tests__/write-conflict.test.ts`
+
+## 実装結果 (2026-07-30 / `HarnessHub-njkm`)
+
+- `packages/db/connection/recoverable-client.ts` が process-local 接続の lock conflict を検知し、read/write/transaction を `ConnectionPoisonedError` で fail-fast させる。
+- `TursoAdapter.reconnect()` は raw client を factory から作り直すが、外側の Client 参照を変えないため既存 repository を再構築しない。
+- request-bound の Turso remote は poison 対象外とし、従来の競合再試行を維持する。
+- `packages/db/__tests__/connection-recovery.test.ts` は fake Client の状態遷移と、別プロセスが実 file DB の write lock を保持する経路の両方を検証する。
+- DB schema / migration / API payload の変更はない。設計影響は qa-097 として `database.web` へ正規反映し、受領書は `docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md` に記録する。

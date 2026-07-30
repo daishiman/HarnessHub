@@ -86,6 +86,13 @@ Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメイ�
 - runbook のコマンドは `packages/db/__tests__/runbook-invocation.test.ts` が記載どおりに実走し、`pnpm --filter` の cwd 差と引数透過の回帰を検出する (`HarnessHub-0yvi`)。
 - remote の backup / deploy 実走確認は `HarnessHub-fnzl` に残し、最小権限 token 分離は `HarnessHub-bda4` に分離している。
 
+## 接続復旧の実装反映 (2026-07-30 / `HarnessHub-njkm`)
+
+- process-local libSQL 接続が `SQLITE_BUSY` で壊れた可能性を検知し、read/write/transaction を `ConnectionPoisonedError` で止める fail-fast 境界を追加した。
+- `TursoAdapter.reconnect()` / `isPoisoned()` を公開し、公開 client の参照を変えずに raw 接続だけを作り直す。
+- request-bound の Turso remote / D1 は従来の競合再試行を維持し、ローカル固有の隔離を本番経路へ波及させない。
+- 子プロセスによる実 file lock テストで、未 commit 行が別接続から見えないことと、明示 reconnect 後の書き込みが見えることを確認する。
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-data](../architecture/harness-hub-data.md)
