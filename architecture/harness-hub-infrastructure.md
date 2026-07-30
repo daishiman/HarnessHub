@@ -114,6 +114,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **backup 成果物の採否判定境界**: 採用するか否かの判定は `packages/db/scripts/verify-export-artifact.ts` (実体は `parseExportArtifact`) の**一箇所へ集約**する。workflow の shell 側に header の `grep` や行数の `awk` を置かない。判定が 2 箇所に分かれると**弱い方が先に判定する**ため、ライブラリ側の fail-closed 検査 (header 形式・`format_version`・`coreTables` 19 テーブルとの集合一致・header 宣言行数と実際の行数の一致) が届かなくなる。
 - **qa-019「復元できないバックアップを成功と数えない」の適用範囲**: この確定要件が禁じるのは*復元できない断面*の採用であって、*データ行 0 の断面*の採用ではない。migration 済みで全 19 テーブル 0 行の断面は restore すれば同じ空 DB を再現するため採用し、`::warning::` だけ残す。旧実装はこの取り違えにより、稼働直後の本番 DB を 3 夜連続で不採用にしていた。
 
+**配信経路・依存版の差分追記 (2026-07-30 / `HarnessHub-e2u`)**:
+
+- Claude Code marketplace の候補経路に、`url` / `path` と任意の `ref` / `sha` を
+  持つ公式 `git-subdir` source を加える。旧 `github` source の `path` 無視とは
+  別契約として扱い、macOS / Windows の install、component inventory、skill 実行が
+  揃うまで採用 decision を確定しない。追跡は `HarnessHub-n2c0`。
+- Wrangler は project-local dependency と frozen lockfile を CI / deploy の固定点にする。
+  台帳上の現行確認値 4.115.0 は自動更新せず、依存更新 PR で build / dry-run /
+  deploy 関連ゲートを通してから lockfile を更新する。
+- Next.js 16.2.12、Drizzle stable 0.45.2 / v1 rc.4 は出典鮮度と採用判断の
+  境界を明確にする記録であり、本変更では runtime dependency、deploy unit、
+  DB schema、外部 API を変更しない。
+
 ## Risks and verification
 
 正本章 (system-spec/infrastructure.md, system-spec/maintenance-ops.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。

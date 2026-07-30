@@ -1,5 +1,5 @@
 {
-  "graph_revision": 996,
+  "graph_revision": 1004,
   "nodes": [
     {
       "acceptance": [
@@ -665,12 +665,15 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-21T03:20:08Z",
+        "evidence_refs": [
+          "docs/features/feat-stage0-distribution-gate/stage0-gate-conclusion.md",
+          "docs/features/feat-stage0-distribution-gate/acceptance-record.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-30T02:24:47Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
@@ -726,9 +729,9 @@
         "課金・商用配布"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T22:35:48Z",
+        "imported_at": "2026-07-30T02:26:23Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "676590f363ed619505b337889024456e24323f678459f6f8be90535367d59e0c",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -745,7 +748,7 @@
       "template_version": "1.0.0",
       "title": "Stage 0: 配布経路 technical gate (H7) 検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-21T03:20:08Z"
+      "updated_at": "2026-07-30T02:26:39.328873Z"
     },
     {
       "acceptance": [
@@ -18955,12 +18958,16 @@
       "classification_confidence": 0.84,
       "classification_reason": "採用経路 (P07 の acceptance 結果に基づく) の作者向け onboarding 手順・更新導線 (marketplace / Bootstrap Installer の「更新あり」表示 + 手動 update)・障害時対応手順を runbook として確立する P12 文書化・運用タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-21T03:18:16Z",
+        "evidence_refs": [
+          "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md",
+          "docs/features/feat-stage0-distribution-gate/stage0-gate-conclusion.md",
+          "docs/features/feat-stage0-distribution-gate/acceptance-record.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-07-30T02:24:47Z",
+        "source": "manual",
+        "status": "not_applicable"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30b40c7f947918bd751c6a32832ea781ff6b7d8d7449d2a975c93bfc6134d00b",
@@ -19036,7 +19043,7 @@
       "template_version": "1.0.0",
       "title": "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T02:25:21.272203Z"
     },
     {
       "acceptance": [
@@ -27352,8 +27359,9 @@
     },
     {
       "acceptance": [
-        "4 件の再照合タイミングが該当 feature/task の手順に組み込まれている",
-        "nextjs / claude-code-plugins の記録が次回 run-system-spec-doc-fetch で現行版へ更新されている"
+        "nextjs / drizzle-orm / claude-code-plugins / wrangler を公式一次資料で再照合し、canonical registry と生成 index が更新されている",
+        "仕様・設計影響が docs / features / system-spec / specs / architecture / tasks に dated addendum として反映され、受領書がある",
+        "現行 git-subdir の macOS / Windows E2E を、旧 H7 の判定を改変せず後続 Beads issue で fail-closed に追跡している"
       ],
       "architecture_refs": [],
       "artifact_kind": "issue",
@@ -27373,12 +27381,25 @@
       "classification_confidence": 0.95,
       "classification_reason": "C08 出典鮮度監査 (2026-07-22) の low findings 3 件 (追随運用の示唆) を追跡する issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-30T00:33:34Z",
+        "evidence_refs": [
+          "system-spec/fetched-references.json",
+          "system-spec/index.md",
+          "specs/harness-hub-system-specification.md",
+          "architecture/harness-hub-infrastructure.md",
+          "features/feat-stage0-distribution-gate.md",
+          "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md",
+          "docs/features/feat-stage0-distribution-gate/requirements-baseline.md",
+          "docs/features/feat-stage0-distribution-gate/test-design.md",
+          "docs/features/feat-stage0-distribution-gate/stage0-gate-conclusion.md",
+          "docs/features/feat-stage0-distribution-gate/source-freshness-spec-reflection-receipt.md",
+          "issues/sys-source-freshness-ops-20260722.md",
+          "issues/sys-h7-git-subdir-revalidation-20260730.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-30T00:33:34Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -27400,7 +27421,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "高頻度リリース系の出典 3 件に追随運用が定義され、実装着手時の再照合が漏れない状態",
+      "goal": "4 対象の公式出典が現行値と追随条件へ更新され、仕様・設計影響と H7 再検証境界が正本へ反映された状態",
       "graph_node_id": "issue-source-freshness-ops-20260722",
       "implementation_readiness": {
         "checked_at": "2026-07-21T23:30:33Z",
@@ -27417,33 +27438,46 @@
       "priority": "low",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "C08 出典鮮度監査 (2026-07-22) の low findings 3 件を運用として追跡する",
+      "purpose": "C08 出典鮮度監査の findings を一次資料で解消し、仕様ドリフトを履歴と後続検証へ正しく接続する",
       "related_nodes": [
-        "feat-stage0-distribution-gate"
+        "feat-stage0-distribution-gate",
+        "issue-h7-git-subdir-revalidation-20260730"
       ],
       "resource_scope": [
+        "system-spec/fetched-references.json",
         "system-spec/index.md",
-        "system-spec/fetched-references.json"
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-infrastructure.md",
+        "features/feat-stage0-distribution-gate.md",
+        "tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md",
+        "docs/features/feat-stage0-distribution-gate/requirements-baseline.md",
+        "docs/features/feat-stage0-distribution-gate/test-design.md",
+        "docs/features/feat-stage0-distribution-gate/stage0-gate-conclusion.md",
+        "docs/features/feat-stage0-distribution-gate/source-freshness-spec-reflection-receipt.md",
+        "issues/sys-source-freshness-ops-20260722.md",
+        "issues/sys-h7-git-subdir-revalidation-20260730.md"
       ],
       "scope_in": [
-        "claude-code-plugins: H7 (Stage 0 technical gate) 直前の changelog 再照合と marketplace.json 仕様不変確認 (2026-07-22 第2回監査: anchor v2.1.215 に対し現行 v2.1.216・moderate。git-subdir source type の一部クライアント schema 検証エラー事例も H7 で要確認)",
-        "drizzle-orm: v1 系採用時の GitHub releases 最新 rc 再確認 (npm rc dist-tag は rc.3 を指し rc.4 を取得できない構造に注意)",
-        "wrangler: pinned version 記録追加の要否検討",
-        "nextjs: 記録 16.2.10 に対し現行 16.2.11 (patch 1 世代遅れ・low)。次回 doc-fetch で更新"
+        "nextjs / drizzle-orm / claude-code-plugins / wrangler の公式一次資料による現行値と追随時点の再照合",
+        "canonical source registry と deterministic index の正規 writer 経由更新",
+        "git-subdir による H7 前提変化の仕様・設計・feature・task・evidence 層への追記",
+        "macOS / Windows E2E を別 issue として fail-closed に追跡"
       ],
       "scope_out": [
-        "fetched-references.json の即時再取得 (現記録は全件鮮度 PASS)"
+        "runtime dependency と lockfile の更新",
+        "過去の H7 実行証跡と NOT_ESTABLISHED 判定の書き換え",
+        "E2E 未完了のまま Stage 1 gate を解除すること"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-21T23:54:58Z",
+        "imported_at": "2026-07-30T00:24:25Z",
         "origin_kind": "manual",
-        "source_digest": "ece8e03c27620e76a1cf4e06598f2e0d8067234974f605d54e2186501f59f17f",
+        "source_digest": "58d85cb5ff4c828f6fbf75ec093fa059f41c4cb4fa65c125ed46056d7dbcdc36",
         "source_path": "system-spec/index.md",
-        "source_plugin": null,
-        "source_version": null
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "system-spec",
         "freshness",
@@ -27454,7 +27488,7 @@
       "template_version": "1.0.0",
       "title": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T00:49:29Z"
+      "updated_at": "2026-07-30T02:19:59.351983Z"
     },
     {
       "acceptance": [
@@ -43419,6 +43453,129 @@
       "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
       "tracker_binding": "beads",
       "updated_at": "2026-07-29T06:17:06Z"
+    },
+    {
+      "acceptance": [
+        "Anthropic 公式 marketplace 文書と実行対象 Claude Code CLI の版を実行直前に再照合し、git-subdir の url/path/ref/sha 契約を証跡化する",
+        "macOS と Windows の両方で git-subdir source を install し、plugin details の Skills が 1 件以上で、対象 skill の実行が期待出力を返す",
+        "SSH 鍵や global git url rewrite に依存しない経路で成功し、隔離設定と cleanup の証跡を残す",
+        "A1/A2/A3 と Stage 1 entry condition は実行済み証跡だけで再判定し、未充足なら REJECTED / NOT_MET を維持する",
+        "docs/features・features・tasks・specs・architecture・system-spec の影響判断と仕様反映受領書を記録する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-n2c0",
+        "linked_at": "2026-07-30T02:13:08.338393Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "2026-07-30 の公式再照合で、H7 終結時の再開条件だった git-subdir source が現行 Claude Code の正式契約になったため",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T02:09:26Z",
+      "depends_on": [],
+      "domain": "platform",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "現行 git-subdir source で H7 の配布経路を macOS / Windows の実利用まで再検証し、Stage 1 entry condition を証拠に基づき再判定できる状態",
+      "graph_node_id": "issue-h7-git-subdir-revalidation-20260730",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T02:09:26Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "H7 終結時には存在しなかった正式 git-subdir source を、過去の観測と混同せず現行 CLI で再評価する",
+      "related_nodes": [
+        "feat-stage0-distribution-gate",
+        "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
+      ],
+      "resource_scope": [
+        "docs/features/feat-stage0-distribution-gate/",
+        "features/feat-stage0-distribution-gate.md",
+        "tasks/feat-stage0-distribution-gate/",
+        "system-spec/fetched-references.json",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-infrastructure.md"
+      ],
+      "scope_in": [
+        "現行 Claude Code の git-subdir source 契約と CLI 版の一次照合",
+        "url/path と ref または sha pin を使う最小 plugin の再現可能な検体",
+        "macOS / Windows の install・plugin details・skill 実行 E2E",
+        "SSH 鍵・global git rewrite・実環境汚染への非依存確認",
+        "A1/A2/A3 と Stage 1 entry condition の fail-closed 再判定"
+      ],
+      "scope_out": [
+        "過去の H7 実行証跡の書き換え",
+        "E2E 未完了のまま D7 を confirmed 登録すること",
+        "Publisher 本体の実装",
+        "有償 Windows 実行環境の常設"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T02:09:26Z",
+        "origin_kind": "manual",
+        "source_digest": "5c420336d7904d8f56e53cc537c80ef881ac9b88dc8aa641ba130788f0d58360",
+        "source_path": "system-spec/fetched-references.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "stage0",
+        "h7",
+        "claude-code",
+        "git-subdir",
+        "revalidation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "H7 を現行 git-subdir source で macOS / Windows 再検証する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T02:13:24.924968Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

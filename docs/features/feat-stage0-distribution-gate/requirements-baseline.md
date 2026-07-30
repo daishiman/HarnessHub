@@ -141,3 +141,19 @@ E5 の現況 (P01 時点の観測): `features/feat-publisher-plugin.md` およ�
   2. 現行 feature context の scope_in / acceptance 全件に実行責務 phase が割り当てられ、未割当 0 件であること (§5・§4.1)
   3. Normative closure (§7) が固定され、P07 が「P13 で登録予定」を pass 根拠にできない fail-closed 契約が明示されていること
 - 検証コマンド: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-stage0-distribution-gate`（世代非依存形式。current pointer から現行世代を解決する。`--staging .` は repository root から解決できないため使わない。contract §2.3）
+
+## 9. 公式出典の再照合による再検証トリガー (2026-07-30)
+
+`HarnessHub-e2u` の C08 出典鮮度監査で、Anthropic の公式 marketplace 仕様に
+`git-subdir` source が追加済みであることを確認した。これは `url` / `path` を必須、
+`ref` / `sha` を任意の固定値として monorepo の一部を取得する経路であり、
+旧 H7 が観測した `github` source の `path` 無視とは別の契約である。
+
+- §6 の fail-closed 契約と、過去の H7 `NOT_ESTABLISHED` 判定は変更しない。
+- Stage 1 へ進む前に `HarnessHub-n2c0` で macOS / Windows の
+  install → `plugin details` → skill 実行を再検証する。
+- 成功条件は Skills 1 件以上と実 skill の期待出力であり、install の exit 0 や
+  enabled 表示だけを成功根拠にしない。
+- SSH URL 書換えや利用者の global Git 設定を前提にせず、失敗時は fail-closed とする。
+- 実行直前に `system-spec/fetched-references.json` の公式 URL とローカル CLI 版を
+  再照合し、仕様ドリフト（前回確認後の変更）があれば試験条件を更新する。
