@@ -12,7 +12,7 @@ iteration: null
 title: "C02 writer が graph 管理 docs の layer frontmatter を削除する"
 owners: ["daishiman"]
 created_at: "2026-07-26T06:26:22Z"
-updated_at: "2026-07-30T02:56:16.890070Z"
+updated_at: "2026-07-30T10:32:04Z"
 status: "closed"
 depends_on: []
 related_nodes: ["doc-dev-pipeline-final-review-20260726","feat-dev-pipeline-improvement"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-30T02:10:33Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md","plugins/dev-graph/tests/test_upsert_node_document_layer.py","plugins/dev-graph/references/execution-tracker-contract.md","system-spec/dev-workflow.md"],"policy":"manual","reconciled_at":"2026-07-30T02:48:20Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-07-30T02:10:33Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md","plugins/dev-graph/tests/test_upsert_node_document_layer.py","plugins/dev-graph/references/execution-tracker-contract.md","system-spec/dev-workflow.md"],"policy":"manual","reconciled_at":"2026-07-30T10:32:04Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-26T06:26:22Z","missing_sections":[],"status":"complete"}
 ---
 

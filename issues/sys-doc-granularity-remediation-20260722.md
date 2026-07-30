@@ -12,7 +12,7 @@ iteration: null
 title: "qa-070 粒度規約: 300 行超過 6 文書の remediation (縮小のみ許す初期一覧)"
 owners: ["daishiman"]
 created_at: "2026-07-21T23:30:33Z"
-updated_at: "2026-07-22T09:30:00Z"
+updated_at: "2026-07-30T01:29:25.900884Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-qa070-implementation-feature-20260722"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-30T00:38:16Z","evidence_refs":["scripts/doc-line-limit-allowlist.json","docs/backend-spec-api-state.md","docs/features/feat-hub-foundation/design-review-findings.md","docs/features/feat-stage0-distribution-gate/design-review-environment-evidence.md","docs/features/feat-doc-governance-portability/doc-granularity-remediation-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-07-30T00:38:30Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-21T23:30:33Z","missing_sections":[],"status":"complete"}
 ---
 

@@ -68,7 +68,7 @@ Dev Graph の document 契約には仕様・設計影響があるため、正本
 
 | 層 | 反映先 | 反映内容 |
 |---|---|---|
-| 正本仕様 | `system-spec/spec-state.json`、`system-spec/dev-workflow.md` | `qa-097` と `appr-016` で document layer 契約と承認根拠を記録 |
+| 正本仕様 | `system-spec/spec-state.json`、`system-spec/dev-workflow.md` | main の `qa-097`〜`qa-100` を保持し、`qa-101` と `appr-018` で document layer・live-trial session 隔離契約と承認根拠を記録 |
 | システム仕様 | `specs/harness-hub-system-specification.md` | Dev Graph の fail-closed 境界を追記 |
 | アーキテクチャ | `architecture/harness-hub-dev-workflow.md` | schema、writer、lint の責務分離を追記 |
 | feature | `features/feat-dev-pipeline-improvement.md` | C02 の変更範囲と仕様リンクを追記 |
@@ -92,18 +92,22 @@ graph-managed document の更新には Dev Graph の C02 writer を使った。
 | artifact placement lint | PASS |
 | document line limit | PASS、architecture wrapper は上限ちょうどの300行 |
 | task 仕様書 Phase 1〜13 検査 | PASS、Phase 1〜13 を各1件確認 |
-| root lint | PASS |
+| root lint / repository CI | `make lint` PASS、`136 PASS / 4 WARN / 0 FAIL` |
 | system-spec coverage / citation / knowledge graph | PASS |
 | system-spec harness tests | `529 passed` |
+| live-trial transport / fixture / render focused 回帰 | `82 passed` |
+| live-trial harness 全回帰 | `87 passed`（実 tmux の stale global 値上書き・隔離 cleanup を含む） |
+| focused content review | 5 criteria PASS、未解決 LOW / MEDIUM / HIGH 0、75 skill の lint PASS |
 | Dev Graph plugin manifest validation | PASS |
-| Dev Graph 全機能テスト（live-trial 証跡検査を除く） | `719 passed, 2 skipped` |
-| Dev Graph 全テスト | 機能テストは通過。9 skill の既存 live-trial verdict が変更後 digest に対して stale |
+| fresh live-trial | 9 skill すべて PASS、nudge 0、gate 応答 0 |
+| live-trial criteria receipt | `22 passed`、9 verdict の現行 digest・scenario・証拠参照を受領 |
+| Dev Graph 全テスト | `730 passed, 2 skipped` |
 
-最後の9件は、今回変更した共有スクリプト・内部契約が各 skill の
-behavior closure（挙動を決めるファイル集合）に含まれるため、過去の実地試験証跡の
-digest が古くなったものである。digest の手編集はせず、対象 task で明示された
-scope-out「取得済み live-trial verdict の再取得」に従い、PR の残課題として
-`HarnessHub-ntip`、`HarnessHub-r65n`、`HarnessHub-1wo3` に紐づける。
+共有 behavior closure（挙動を決めるファイル集合）の変更で stale になった9件は、
+過去 verdict の digest を編集せず、各 skill を fresh tmux session で再実行した。
+途中で検出した C04 architecture lineage 欠落と C19 の tmux stale environment 混入は
+実装・fixture を修正して再試験し、失敗 run も append-only の反証証拠として保持した。
+最終9件は外部 evaluator が `blockers=[]` の PASS と判定している。
 
 ## 500 行超ファイルの確認
 
@@ -113,6 +117,9 @@ scope-out「取得済み live-trial verdict の再取得」に従い、PR の残
 - `.dev-graph/state/graph.json`: graph 全体を原子的に検証・digest 計算する正本
 - `system-spec/spec-state.json`: transition writer が単一状態として更新する正本
 - `plugins/dev-graph/schemas/graph-node.schema.json`: `$ref` で内部分割済みの単一 schema 正本
+- `eval-log/dev-graph/**/live-trial/` の transcript / pane / audit JSON:
+  実行時刻順と SHA-256 に束縛された機械取得の append-only 証拠であり、分割や再整形を
+  行うと verdict の完全性を失うため、`eval-log/README.md` の live-trial 証拠例外を適用
 
 これらを物理分割すると既存 writer、schema validator、digest 契約を同時に変更する
 別スコープの移行になる。今回追加した手書きロジックを分離して隠すのではなく、
@@ -124,11 +131,10 @@ repository の文書ゲートはさらに厳しい300行上限を持つ。main �
 
 ## main 再同期
 
-PR 作成直後に `origin/main` が `c122ae4a7876455932fe7787ac85d818ba9c5ed1`
-へ更新されたため、local `main` へ fast-forward した後、本ブランチへ merge した。
-同時進行していた `HarnessHub-foq6` の workflow 空走査契約が
-`qa-096` / `appr-015` を使用していたため、その履歴を保持し、本変更を次の空き ID
-`qa-097` / `appr-016` へ正規 transition writer で再適用した。
+`origin/main` を local `main` の `7f485c3db4fdd85b54fbbddf4e7c1873b0224dba`
+へ同期した後、local `main` を本ブランチへ merge した。同時進行の変更が
+`qa-097`〜`qa-100` / `appr-016`〜`appr-017` を使用していたため、その履歴を保持し、
+本変更を次の空き ID `qa-101` / `appr-018` へ正規 transition writer で再適用した。
 
 graph、architecture、feature、spec、system-spec の競合は main 側の新規契約を基準に
 解消し、C02 の document 移行、本文保持、completion evidence を正規 writer で
@@ -137,5 +143,5 @@ graph、architecture、feature、spec、system-spec の競合は main 側の新�
 ## 受領判断
 
 開発ワークフロー仕様への影響を正規フローで反映済みであり、製品ランタイムへの影響は
-ない。対象 task の受入条件は満たす。上記 live-trial 証跡の再取得は、実装不具合では
-なく共有 closure の証跡運用課題として既存 Beads で継続管理する。
+ない。対象 task の受入条件は満たす。共有 closure の stale 証跡は9件すべて再取得し、
+C19 の session 環境混入も caller 値の明示上書きと正規 aggregate gate で解消した。

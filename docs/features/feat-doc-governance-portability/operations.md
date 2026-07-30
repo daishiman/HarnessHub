@@ -32,7 +32,9 @@ CI は `.github/workflows/governance-check.yml` change-category-guard job で fa
 確認手順: 変更後にローカルで
 `python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main` を実行し
 exit 0 を確認してから PR を出す。exit 1 の `allowlist-ratchet:` 行が出たらその変更は不正。
-分割 remediation の進捗管理は HarnessHub-3d8 (issue-doc-granularity-remediation-20260722) 側。
+分割 remediation は 2026-07-30 に HarnessHub-3d8
+(issue-doc-granularity-remediation-20260722) で完了し、allowlist は 0 entries へ収束した。
+完了後も新規超過は allowlist へ追加せず、責務分割で解消する。
 
 **注意**: allowlist を持つ文書を改名したい場合は、先に 300 行以下へ分割してから
 (卒業してから) 改名する。改名先エントリの新規追加は ratchet が遮断するため。

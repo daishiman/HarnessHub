@@ -12,17 +12,17 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-30T09:47:06.679162Z"
+updated_at: "2026-07-30T11:18:00Z"
 status: "active"
 depends_on: []
-related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729"]
+related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728"]
 resource_scope: ["features/feat-dev-pipeline-improvement.md"]
 purpose: "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する"
 goal: "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態"
 scope_in: ["lifecycle close-loop の機械化 (open 残置検出と md/graph/beads 3 表現の同時 close 導線)","eval-log/ 配置規約の明文化と CI lint 強制","improvement-handoff schema への disposition 必須化と未消化 findings の beads 起票","tasks/ frontmatter status の意味論明記","graph.json 肥大対策の再検討トリガー記録","dev-graph 中核 handoff 31 findings の差分監査と disposition 遡及付与","spec-drift-guardian の verdict close gate 配線","陳腐化文書の定期棚卸し GC の sync verb 運用組込み","qa-071 方法論要件 (外側/内側ループ・スコープ分離・情報配置・P13 書き戻し) の feature context・goal-spec・P01..P13 task spec への意味的伝播と semantic coverage 検査の恒常化"]
 scope_out: ["Hub プロダクト本体機能 (Web/API/DB) の変更","dev-graph への新 verb 追加","bd CLI 本体の変更","graph.json 分割の実装 (トリガー記録のみ)"]
 acceptance: ["解決済み事象の open 残置を検出する決定論検査が存在し、issue-bd-bridge-notes-passthrough-20260721 が close-loop で閉じている","eval-log/ 配置規約が README に明文化され、CI lint が直下残置・バイト同一重複・1MB 超の git 追跡を遮断する","improvement-handoff schema に per-finding disposition と根拠 ref が必須化され、既存 21 ファイル 94 findings に消化状態が付与されている","task template に status = 文書ライフサイクル (active/superseded) の意味論が明記され、実行状態の二重正本が無い","graph.json 分割の再検討トリガーが仕様に記録されている","spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される","陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている","feature の purpose/goal/scope_in/acceptance と context JSON・goal-spec が qa-071 の方法論要件 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を明示的に保持している","P01..P13 の task spec が外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復契約・スコープ分離・情報配置 (正本への参照と lineage のみ)・P13 の仕様/architecture への書き戻しを実行可能な形で trace している","validate-system-plan.py と system-dev-plan-evaluator が、feature 宣言 qa 要件の spec-state qa_log 登録と goal-spec/task spec への semantic coverage を tag/lineage 一致だけで PASS にせず fail-closed 検証している"]
-architecture_refs: ["arch-harness-hub-dev-workflow"]
+architecture_refs: ["arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-30T09:45:46Z","origin_kind":"generated","source_digest":"ef5b3071615fa5a06356c153a81a8abcc6932c23b41a943164c839fd8ed7096d","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T10:32:01Z","origin_kind":"generated","source_digest":"118e4da81e2d3494ca927f2296c745da7eb8cadcf693ebe42696a53a5d7cbc4a","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -180,6 +180,11 @@ close した。
 - 最新 `main` (`bb95580`) 統合後の最終ゲートは広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。後続 main の CI token 最小権限変更は本 feature の Python / C14 behavior closure を変えない。
 - PR #598 のコンフリクト解消では、本 feature の lp36 interpreter guard、C14 acceptance 強化、PR #600 の live-trial session ownership 履歴をすべて保持した。C14 受領証拠は統合後も有効な behavior closure `c0d843d7…4801` の beads r3 / none r1 とし、旧 reaper に終了された beads r1/r2 は監査用の失敗証跡としてのみ保持した。無差別回収の原因は最新 main の ownership 契約で修正済みである。
 
+## 2026-07-30 追記: scenario contract 受領の fail-closed 化
+
+- `HarnessHub-yn71` は criteria-test が `scenario_contract` 欠落を許容した穴を閉じ、全 required observation の同数・同順、引数、task 契約、run 内 evidence を再照合する。C15 schedule は現行 scenario で fresh live-trial を実走し、4/4 観測の durable run へ更新した。
+- 製品機能は変えず、開発品質ゲートの設計影響を qa-100 と [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) へ記録する。
+
 ## 2026-07-29 追記: C02 stale feature lifecycle の拒否
 
 - `HarnessHub-bk8v` で、C14 の古い full feature snapshot が昇格済み lifecycle を
@@ -238,6 +243,21 @@ close した。
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
   を正とする。
 
+## 2026-07-30 追記: CI-local 品質ゲート parity
+
+- `HarnessHub-ml57` で、GitHub Actions の repository-root Python 検査が
+  local hard gate または理由付き allowlist に含まれることを検証する meta-lint を追加した。
+- 比較 key は script path と意味のある引数であり、件数・比率や script 名だけの
+  proxy metric（代理指標＝本当に守りたい性質を間接的に測る値）は採用しない。
+- 読み取り専用検査を `scripts/run-ci-checks.sh` へ追加し、外部資格情報、
+  working-tree write、CI non-blocking の例外は exact invocation と理由を台帳化した。
+- `governance-check.yml`、`make lint`、pre-push の 3 入口へ同じ meta-lint を結線した。
+- 製品 runtime への影響はなく、system-spec `qa-088` と
+  `architecture/harness-hub-dev-workflow.md` の development tooling contract を具体化した。
+  判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md)
+  を正とする。
+
 ## 2026-07-29 追記: workflow step guard の空走査 fail-closed
 
 - `HarnessHub-foq6` で、workflow directory 不在または YAML 0 件を成功扱いしていた
@@ -249,33 +269,32 @@ close した。
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
-## 2026-07-30 追記: C02 document layer 消失の恒久修正
+## 2026-07-30 追記: validator ID 一意性の横断 gate
 
-- `HarnessHub-dqca` で、graph 管理 document の再登録時に `layer` frontmatter が消える契約差を解消した。
-- `graph-node.schema.json#/$defs/documentLayer` を許容形式の単一正本とし、document で必須、非 document で禁止した。役割追加を妨げる固定 enum は置かない。
-- C02 は legacy artifact の単一 `layer` scalar を graph へ一度だけ移行する。新規 document の暗黙 default、欠落、重複、形式不正は拒否し、本文を保持する。
-- `system-spec/spec-state.json` を正規 writer で R4-reopen し、`system-spec/dev-workflow.md` qa-097、`specs/harness-hub-system-specification.md`、`architecture/harness-hub-dev-workflow.md`、P13 task、最終レビュー、仕様反映確認へ同一 wave で書き戻した。
-- 変更境界は repository 内の Dev Graph metadata と品質ゲートであり、製品 API・DB・認証認可・UI・deploy unit は非変更。詳細は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
+- `HarnessHub-ory6` で、task graph、consult transcript、route build handoff の
+  ID が `set` / `dict` 化の前に一意であることを fail-closed で検査するようにした。
+- task node / component、turn、route の各重複を別内容の負例 fixture で再現し、
+  公開 CLI の非 0 終了まで固定した。正常な既存入力は exit 0 を維持する。
+- 500 行を超えていた validator / test は `validate-route-report-contract.py`、
+  `validate-task-graph-shapes.py`、`test_validate_task_graph_shapes.py` へ
+  責務分離し、変更対象の手書きファイルをすべて 500 行以下にした。
+- 仕様・設計への影響は repository 内の validation contract に限定される。
+  `system-spec/testing-qa.md`、`specs/harness-hub-system-specification.md`、
+  `architecture/harness-hub-testing-qa.md`、P12 write-back と
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
+  に同一 wave で反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
+- 2026-07-30 `HarnessHub-35ai`: receipt 検証済みだけを `verified`、未指定を `not_performed` とする契約・層別反映は [受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md) を正とする。
 
 ## 2026-07-30 追記: PR #610 CI の live-trial 証拠更新
 
-- C02 の共有挙動閉包変更で stale になった Dev Graph 9 skill の verdict を、digest の手編集なしで fresh session から再取得した。
-- C04 fixture は architecture node も同じ confirmed system-spec digest へ束縛し、scope closure 全体を source-digest gate に通した。
-- C19 で tmux server に残った過去の監査台帳 path が新 session へ混入する問題を検出し、boot が caller の session-scoped 値を `new-session -e` で上書きするようにした。
-- 正本反映は `qa-099` / `appr-018`、最終判断と実走履歴は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
+- `HarnessHub-dqca` では、C02 の共有挙動変更で stale になった Dev Graph 9 skill を fresh session で再取得した。C04 fixture の architecture lineage、C19 の tmux session-scoped 監査台帳注入も修正済みで、正本は `qa-101` / `appr-018`、最終判断は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
 
-## アーキテクチャ参照
+## アーキテクチャ参照・機能間依存
 
-- [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md)
-
-- 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)
-
-## 機能間依存
-
-- なし (プロダクト feature と独立。既存パイプライン実装への改善)
+- [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md) / 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)
+- 機能間依存: なし (プロダクト feature と独立。既存パイプライン実装への改善)
 
 ## Handoff
 
-- 現行世代: `.dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/`
-- 再 plan する場合: `/dev-graph plan --feature-id feat-dev-pipeline-improvement --feature-context features/feat-dev-pipeline-improvement.context.json` (exact-13 task 仕様化)
-- 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+- 現行世代: `.dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/`。再 plan は `/dev-graph plan --feature-id feat-dev-pipeline-improvement --feature-context features/feat-dev-pipeline-improvement.context.json`、昇格条件は `confirmation_status=confirmed` + `evaluation_status=pass` + `implementation_readiness=complete`。

@@ -7,7 +7,7 @@
     "skill_md_sha256": "8c6f7de616403cf3664b6332a66f082a6b6e903213c7de2254da06808c852641"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-evaluator-20260729T022100Z-lp36-schedule; OUT1 refresh=fresh-agent/eval_c02_live_trial",
+  "reviewer": "fresh-independent-evaluator-20260730T042500Z-wt16-pxwo-schedule; OUT1 refresh=fresh-agent/eval_c02_live_trial",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -31,9 +31,10 @@
       "test_refs": [
         "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T054000Z-wt13-ci-schedule/verdict.json",
         "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T054000Z-wt13-ci-schedule/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T054000Z-wt13-ci-schedule/schedule-execution.json",
         "independent: eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T054000Z-wt13-ci-schedule/independent-verification.json"
       ],
-      "observed": "2026-07-30 fresh live trial (20260730T054000Z-wt13-ci-schedule) は overall=PASS、nudge=0、gate=0、poll_exit=DONE。ready・blocked・active lease・stale lease を正しく分類し、競合しない batch と max-parallel 制約を確認した。 外部独立 evaluator fresh-agent/eval_c02_live_trial は blockers=[] で PASS と判定した。"
+      "observed": "2026-07-30 fresh live trial (20260730T054000Z-wt13-ci-schedule) は overall=PASS、nudge=0、gate=0、poll_exit=DONE。ready・blocked・active lease・stale lease を正しく分類し、競合しない batch と max-parallel 制約を確認した。外部独立 evaluator fresh-agent/eval_c02_live_trial は blockers=[] で PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

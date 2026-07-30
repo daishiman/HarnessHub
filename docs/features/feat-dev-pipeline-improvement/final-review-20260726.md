@@ -13,10 +13,10 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-30T09:45:46Z"
+updated_at: "2026-07-30T11:18:01Z"
 status: "draft"
 depends_on: []
-related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
+related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","issue-id-uniqueness-gate-generalization-20260728"]
 resource_scope: ["plugins/dev-graph","eval-log/dev-graph","issues","tasks","docs/features/feat-dev-pipeline-improvement/final-review-20260726.md"]
 purpose: null
 goal: null
@@ -210,6 +210,33 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 - focused pytest は 69 passed / 2 skipped、reaper 専用 pytest は 84 passed、広域 pytest は 9308 passed / 7 skipped、後続 main の Actions secret 専用 Vitest は 15 passed。exact-13 P01〜P13、graph schema、artifact placement は違反 0、repository CI は PASS 123 / WARN 4 / FAIL 0。
 - main の `system-spec/`・`specs/`・testing architecture・P12/P13 にある qa-089 契約を正規フローのまま統合した。lp36 は既存の graph authority 直書込み禁止への適合修正であり、追加の製品仕様影響はない。
 
+## 2026-07-30 追記: HarnessHub-ory6 最終レビュー
+
+- `issue-qa-log-id-uniqueness-gate-20260726` の未消化 scope を引き継ぎ、
+  `validate-task-graph.py`、`validate-consult-session.py`、
+  `validate-route-build-reports.py` の ID 集合化を個別監査した。3 件とも
+  重複した別要素を set/dict が 1 件へ畳み込み、参照実在検査を偽陽性化しうる。
+- task/component、transcript turn、handoff route の重複を raw entry の段階で
+  決定論的に列挙し、既存 findings と CLI 非 0 終了へ接続した。正常な入力の
+  公開 CLI path、JSON 出力、exit 0 は維持した。
+- 変更対象で 500 行を超えた validator / test は
+  `validate-route-report-contract.py`、`validate-task-graph-shapes.py`、
+  `test_validate_task_graph_shapes.py` へ分離し、対象の手書きファイルを
+  すべて 500 行以下にした。
+- `origin/main` を local `main` へ取り込んだ後、local `main` を
+  `devgraph/issue-id-uniqueness-gate-generalization-20260728` へ merge した。
+- 仕様影響は repository 内 validation contract にあると判定し、
+  `system-spec/testing-qa.md`、`specs/harness-hub-system-specification.md`、
+  `architecture/harness-hub-testing-qa.md`、feature、P12、本受領書へ
+  同一 wave で反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+- Beads `HarnessHub-ory6` は実装・focused regression・広域 gate の証跡を
+  保持して CLOSED。PR linkage と最終 HEAD 束縛 receipt は PR 作成時に追記する。
+- 最終 gate は focused 103 passed、Plugin Dev Planner 878 passed /
+  2 skipped、UBM Goal Setting 203 passed、Harness Creator 988 passed、
+  repository 全体 7627 passed / 5 skipped。lint、content-review、
+  harness-ratchet、task P01〜P13、graph schema、plugin package も
+  blocking failure なし。
+
 ## 運用・更新方法
 
 - 更新契機: 本 PR の検証結果、仕様反映受領書、PR URL、残課題が変わったとき
@@ -237,23 +264,7 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 | 2026-07-28 | scope_in 未消化点検の記載誤り (scope_out→scope_in) を訂正し、follow-up issue HarnessHub-ory6 / issue-id-uniqueness-gate-generalization-20260728 への切り出しを追記 | Claude |
 | 2026-07-29 | HarnessHub-lp36 の interpreter BLOCK / ALLOW 境界、設計反映、9/9 live-trial と全品質ゲート PASS、Beads close を追記 | Codex |
 | 2026-07-29 | PR #598 の main コンフリクト解消、C14 統合後 fresh 証拠、pytest 9306件と仕様再受領を追記 | Codex |
-
-### 差分追記 (2026-07-30): `HarnessHub-dqca` の恒久修正と仕様反映
-
-継続対象としていた `HarnessHub-dqca` を実装・最終レビューした。C02 writer は legacy
-document の `layer` を既存 frontmatter から graph へ一度だけ移行し、正準
-frontmatter を再生成する。許容形式は graph schema の `$defs.documentLayer` を唯一の
-正本とし、artifact placement lint も同じ定義を参照する。
-
-最終レビューでは、初期差分が非 document node の `layer` を許していた仕様ずれと、
-frontmatter の重複 key を lint が黙って上書きしていた境界を検出した。document で必須・
-非 document で禁止する schema、重複 key の fail-closed 検査、正負の回帰テストを追加した。
-
-`system-spec/spec-state.json` は正規 writer で R4-reopen → qa-097 再確定し、
-`system-spec/dev-workflow.md`、`specs/`、`architecture/`、`features/`、`tasks/`、
-plugin 内部契約、本レビューへ反映した。製品 runtime の API、DB、認証認可、UI、
-Cloudflare deploy unit は変更しない。判断と検証は
-[仕様反映確認](c02-document-layer-spec-reflection.md) を正とする。
+| 2026-07-30 | HarnessHub-ory6 の 3 validator ID 一意性 gate、500 行分割、main 同期、仕様書き戻しを追記 | Codex |
 
 ### CI follow-up (2026-07-30): stale live-trial 9件と tmux 環境混入の解消
 
@@ -262,5 +273,9 @@ Dev Graph 9 skill の behavior closure digest を stale と判定した。旧 ve
 編集せず、fresh tmux session で再取得した。C04 fixture の architecture lineage 欠落を
 既存 source-digest 契約へ適合させ、C19 では tmux server が保持していた過去 trial の
 `SYSTEM_SPEC_AUDIT_FORK_LEDGER` 誤継承を検出した。boot が caller の現在値を session の
-`new-session -e` へ明示する隔離境界を追加し、正規フローで `qa-099` / `appr-018`、
+`new-session -e` へ明示する隔離境界を追加し、正規フローで `qa-101` / `appr-018`、
 system spec、architecture、feature、P13、仕様反映確認へ統合した。製品 runtime 契約は非変更。
+実 tmux の stale global/current/空値と shell metacharacter 保持を隔離 server で回帰化し、
+live-trial harness `87 passed`、focused content review 5/5、Dev Graph `730 passed / 2 skipped`、
+system-spec harness `529 passed`、repository CI `136 PASS / 4 WARN / 0 FAIL` を確認した。
+4 WARN は段階導入中の既存 plugin completeness / rubric refs で blocking failure ではない。

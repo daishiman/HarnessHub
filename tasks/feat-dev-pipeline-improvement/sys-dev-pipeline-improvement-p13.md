@@ -12,7 +12,7 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-30T09:45:46Z"
+updated_at: "2026-07-30T11:18:02Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -139,6 +139,16 @@ C14 live-trial acceptance の証拠完全性、最終 persisted node への評�
 
 書き戻し後の再検証は PR #598 の最新 `main` (`bb95580`) 統合後ツリーで広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。live-trial は統合後も有効な behavior closure `c0d843d7…4801` へ束縛し、旧 reaper による別 worktree session 回収は main の ownership 契約で解消した。
 
+### 2026-07-30 scenario contract 受領ゲートの追補
+
+`HarnessHub-yn71` は P13 の release evidence 受領条件を qa-100 へ具体化した。
+`verify_by=live-trial` の verdict は `scenario_contract` を省略できず、required/observed
+の同数・同順、`unobserved=[]`、引数、宣言済み task 契約、run 内 evidence の実在を
+criteria-test が再照合する。C15 schedule は 4/4 観測の fresh run へ更新した。
+schedule 実装と製品契約は非変更で、判断・検証の正本は
+`docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md`
+とする。
+
 ### 2026-07-29 C02 lifecycle 回帰の最終レビュー追記
 
 `HarnessHub-bk8v` では、C14 の stale full feature snapshot が評価済み lifecycle を
@@ -244,28 +254,45 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 `docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
 へ記録し、draft PR は `main` 向けに作成する。
 
-## 2026-07-30 C02 document layer P13 書き戻し
+## 2026-07-30 `HarnessHub-ml57` Phase 13 引き継ぎ
 
-`HarnessHub-dqca` の実装結果を `system-spec/dev-workflow.md` の R4-reopen →
-qa-097 再確定として書き戻した。`specs/harness-hub-system-specification.md`、
-`architecture/harness-hub-dev-workflow.md`、親 feature、最終レビュー、plugin 内部契約、
-仕様反映確認も同一 wave で更新した。
+- branch: `devgraph/issue-local-ci-gate-drift-20260728`
+- base: repository default branch `main`
+- commit scope: implementation、focused tests、CI/local wiring、仕様反映文書、
+  dev-graph / Beads linkage に限定する
+- excluded dirty files: 既存の
+  `eval-log/run-dev-graph-schedule-beads-ready.json` と
+  `eval-log/run-dev-graph-schedule-execution.json`
+- PR body: 目的、変更内容、検証結果、仕様反映、Beads ID、dev-graph node ID、
+  残課題を明記し Draft で作成する
+- merge order: `origin/main` → local `main` → 本 branch の順に統合し、
+  統合後 tree で品質ゲートを再実行する
 
-document の `layer` は graph schema を唯一の形式正本とし、document で必須、
-非 document で禁止する。legacy artifact からの一度限りの移行は本文を保持し、
-再実行を noop にする。欠落・重複・形式不正・新規 document の暗黙 default は拒否する。
+仕様反映受領書は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+とする。
 
-変更境界は repository 内の Dev Graph metadata と品質ゲートであり、Harness Hub 製品の
-API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。最終検証は
-`docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md`
-に記録し、draft PR は `main` 向けに作成する。
+## 2026-07-30 `HarnessHub-35ai` Phase 13 引き継ぎ
+
+- branch: `devgraph/issue-render-registration-receipt-contract-mismatch-20260726`
+- base: repository default branch `main`
+- commit scope: renderer、skill 契約、正負の回帰テスト、評価証拠、
+  仕様反映文書、dev-graph / Beads 完了投影に限定する
+- registration receipt 有りは `verified`、無しは `not_performed` とし、
+  13 task の見かけの一致を成功根拠にしない
+- test 分割後の変更対象コード／文書は 500 行以下を維持する
+- `origin/main` → local `main` → 本 branch の順で統合し、統合後 tree で
+  task package、plugin test、content/live-trial、repository CI を再検証する
+- 仕様反映受領書:
+  `docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`
 
 ## 2026-07-30 PR #610 CI follow-up
 
 共有 behavior closure の変更で stale になった Dev Graph 9 skill の live-trial を、
-過去 verdict の digest を編集せず fresh session で再実行する。C04 は feature から参照する
+過去 verdict の digest を編集せず fresh session で再実行した。C04 は feature から参照する
 architecture を同一 confirmed system-spec digest へ束縛し、C19 は contained fixture の
 監査台帳 path を tmux session へ明示して report・ledger・session の三点を canonical
-aggregate gate で突合する。失敗 run も append-only で残し、final PASS だけを planner が
-再利用できる状態にする。仕様・設計反映は `qa-099` / `appr-018` と
+aggregate gate で突合した。実 tmux の stale/current/空値と隔離 cleanup も回帰化し、失敗 run
+は append-only で残して final PASS だけを planner が再利用できる状態にした。仕様・設計反映と
+全ゲート結果は `qa-101` / `appr-018` および
 `docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md` を正とする。

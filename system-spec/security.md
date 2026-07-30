@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-075 |
+| Web (web) | 確定 | 確定質疑: qa-098 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,11 +24,11 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-075 (対応セル: web)
+### qa-098 (対応セル: web)
 
-**質問**: HarnessHub-b7ng で確定した Device Flow / refresh token の並行更新契約を security.web の正本へ反映するか。
+**質問**: 本番 Google OIDC の client_secret と CSRF を、security.web の秘密管理・要求検証契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-061 までの security.web 確定内容を全面維持し、次の実装追補を確定する。device authorization の approve/consume/失敗計数は status と attempts の組を条件にする compare-and-swap (CAS) とし、同じ device_code の token 発行成功は 1 本だけ、user_code の同時失敗は取りこぼさず 5 回で denied とする。refresh rotation は revoked_at IS NULL の CAS で旧枝を先に失効し、新しい枝は 1 本だけ作る。既に失効した refresh token の再提示では family 全体を一括失効して token.reuse_detected を記録する。一方、同時提示で CAS に負けただけの要求は invalid_grant とし、その瞬間に family 失効へ昇格しない。昇格すると勝者の新枝作成との競走で掃討漏れが生じるためであり、同じ旧 token の再提示時に再利用検知へ昇格する。認証 runtime は Worker binding/Secret の値変更を要求ごとに比較し、変更後も旧鍵・旧接続先を使い続けない。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-075 までの security.web 契約を全面維持し、次を追加確定する。(1) Google `client_secret` の復元可能な運用原本と安全な受渡し元は1Passwordとし、登録処理中だけmasked `op run`で展開する。値を文書、ログ、issue、PR、GitHub Secrets、テナント別Cloudflare Worker Secretsへ置かない。(2) repository経由でpurpose別DEKにより暗号化し、production DB `idp_connections.client_secret_enc`へ保存する。Workerは要求時にDBを読み、Cloudflare Worker Secretの共通`ENCRYPTION_KEK`で復号する。Workerは実行時に1Passwordを参照しない。(3) sign-in CSRFはtenant別basePathのcookie/token対を要求し、取得失敗・不一致・空値をfail-closedにする。別slugのcookie/tokenを混用しない。(4) Device FlowのCAS、refresh rotation/reuse検知、runtime binding再読込はqa-075を維持する。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

@@ -89,6 +89,9 @@ lint: contract-intake vendored-ssot legacy-plugin-name tenant-isolation runtime-
 	#   governance-check.yml と同一実装を local からも呼べるようにする (HarnessHub-5u5k / 2026-07-28)
 	python3 scripts/lint-workflow-step-guard.py --self-test
 	python3 scripts/lint-workflow-step-guard.py
+	# CI の repo-root Python 検査が local pre-push へ同じ引数形で結線されているか集合突合する。
+	# 副作用・認証・non-blocking による除外は空でない理由付き allowlist のみ許可する。
+	python3 scripts/lint-ci-local-check-parity.py
 
 ## vendored-ssot: plugin 同梱 SSOT (notion_config.py / feedback_contract_ssot.py) が正本と byte 一致か検証
 vendored-ssot:

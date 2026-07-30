@@ -39,6 +39,11 @@ acceptance 1 の allowlist ratchet 項目は、P08 (baseline 遡及付与 = 5 �
 P08 spec 記載時点 (365 行) から HarnessHub-3d8 側 remediation が進んだ結果であり、
 縮小のみ許す ratchet の意図どおりの正方向変化。
 
+> **Follow-up (2026-07-30):** `HarnessHub-3d8` が残り 4 文書を責務分割し、
+> allowlist は 0 entries へ収束した。既存 6 文書はすべて 300 行以下である。
+> 仕様影響なしの判断根拠は
+> [remediation 仕様反映受領書](doc-granularity-remediation-spec-reflection-receipt.md) を参照する。
+
 ## 既知の逸脱 (本 feature 起因ではない)
 
 - `validate-system-plan.py` は package digest 一致 (`sha256:d33c…8aee`)・errors 0 だが、

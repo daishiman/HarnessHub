@@ -230,7 +230,7 @@ describe('Actions secret / variable 台帳の突合', () => {
     const ci = readFileSync(path.join(REPO_ROOT, '.github/workflows/ci.yml'), 'utf8');
     const deployStart = ci.indexOf('- name: wrangler deploy');
     const deployEnd = ci.indexOf('- name:', deployStart + 1);
-    const smokeStart = ci.indexOf('- name: 本番スモークテスト');
+    const smokeStart = ci.indexOf('- name: 本番 DB / R2 スモークテスト');
     const smokeEnd = ci.indexOf('- name:', smokeStart + 1);
 
     expect(backup).not.toContain('secrets.CLOUDFLARE_API_TOKEN');
