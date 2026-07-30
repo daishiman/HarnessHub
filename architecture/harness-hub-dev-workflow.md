@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-29T05:22:00.507534Z"
+updated_at: "2026-07-30T02:22:48.331901Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -292,3 +292,26 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 - C02 は stale full snapshot による feature lifecycle 後退を無変更で拒否する。
   詳細は [C02 lifecycle 受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)。
 - いずれも repository 内の開発管理 graph に限定し、製品 runtime 契約は変更しない。
+
+### 差分追記 (2026-07-30): C02 document layer の graph/frontmatter parity
+
+出典: system-spec `qa-096`、Beads `HarnessHub-dqca`。
+
+C02 が document artifact を再登録するとき、graph node と Markdown frontmatter は同じ
+`layer` を保持する。許容形式の唯一の正本は
+`plugins/dev-graph/schemas/graph-node.schema.json#/$defs/documentLayer` とし、
+artifact placement lint はその定義を直接参照する。これにより writer、graph validator、
+repository lint の三者に別々の役割一覧を持たせない。
+
+移行境界は次のとおりである。
+
+1. 新規 document は入力 node に `layer` を明示し、暗黙 default を使わない。
+2. 旧 document node だけが `layer` を欠き、既存 artifact に単一 scalar がある場合は、
+   C02 がその値を graph へ一度だけ移行する。
+3. 欠落、重複、形式不正、非 document の `layer` は書込み前に拒否する。
+4. metadata 移行は本文を変更せず、同じ入力の再実行は noop とする。
+
+本境界は Dev Graph の document metadata に限定され、Harness Hub 製品 runtime の
+API、DB schema、認証認可、UI、deploy unit を変更しない。詳細と検証は
+[仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md)
+を参照する。

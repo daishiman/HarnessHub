@@ -20,7 +20,7 @@ serves_goals: [G1, G4, G5]
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-092 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-096 |
 
 ## 確定内容 (質疑録)
 
@@ -48,26 +48,19 @@ serves_goals: [G1, G4, G5]
 
 【6. Web App 出口との境界】作者 local session から顧客 Web App を公開する I5 は Hub 本体の開発フローと分離する。本契約は Hub repository の開発フローに限り、Hub の外部 API、データモデル、認証認可、Cloudflare deploy unit は変更しない。
 
-### qa-092 (対応セル: desktop-macos)
+### qa-096 (対応セル: desktop-macos)
 
-**質問**: Dev Graph の implementation readiness が本文未記入の成果物を通さないため、C11 のローカル開発契約へどの本文検査境界を追加しますか?
+**質問**: Dev Graph の C02 writer が graph 管理 document の layer frontmatter を失わず、graph validation と docs 配置 lint が同じ正本を使うため、ローカル開発契約へどの metadata 境界を追加しますか?
 
-**回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 と qa-090 のローカル開発契約を全面維持し、Dev Graph C11 の artifact 本文検査を追補する。C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が各 artifact kind に定める required section の内容を canonical template と照合する。節本文が空、canonical template の angle-bracket placeholder を残す、または本文全体が TBD / TODO / 未定だけの場合は placeholder_only_section として implementation_readiness=incomplete にし、該当節名を missing_sections へ列挙する。architecture のように親節が構造 container である場合は substantive な必須 child section を含めば親節を未記入扱いしない。C02 upsert は生成後に同じ C11 を通すため、本文なしの新規 template 生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。一方、既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。全 artifact kind の canonical template、実内容、見出しだけへ潰した mutation を回帰テストで固定する。本契約は repository 内の Dev Graph readiness、tracker 投影、system build handoff に限定し、Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-088 / qa-090 / qa-092 のローカル開発契約と HarnessHub-bk8v の C02 lifecycle 保全契約を全面維持し、HarnessHub-dqca で実測した document layer の graph/frontmatter 不整合を次の契約で補強する。
 
-### 実装反映注記 (2026-07-29 / `HarnessHub-bk8v`)
+【1. C11 本文 readiness】C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が artifact kind ごとに定める required section を検査する。空節、canonical placeholder、TBD / TODO / 未定だけの本文は implementation_readiness=incomplete とし、C02 は本文なしの新規生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。
 
-dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、
-`status`、`confirmation_status`、`evaluation_status`、
-`implementation_readiness.status` の後退を stale before-image として拒否する。
-拒否は dry-run / apply の双方で無変更かつ fail-closed とし、意図的な再評価は
-変更フィールドを列挙した明示 patch に限る。
+【2. C02 lifecycle 保全】昇格済み feature に古い full snapshot が再送され、status / confirmation_status / evaluation_status / implementation_readiness.status が後退する場合、C02 は stale before-image として dry-run / apply の双方で無変更のまま拒否する。意図的な再評価は変更 field を列挙した explicit patch に限る。
 
-これは qa-088 / qa-090 の開発フローを安全に実行する内部整合性ガードであり、
-確定済み QA の回答、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は
-変更しない。実装契約の正本は
-`plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は
-`docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
-とする。
+【3. document layer parity】artifact_kind=document は graph-node.schema.json#/$defs/documentLayer に適合する空でない小文字 kebab-case の layer を必須とし、非 document node では layer を禁止する。固定 enum は置かず役割追加を許すが、許容形式の正本はこの schema 定義一つとする。旧 document node だけが graph に layer を持たず既存 artifact frontmatter に単一 scalar を持つ場合、C02 はその値を一度だけ graph へ移行して正準 frontmatter を再生成する。新規 document への暗黙 default、既存 artifact にも layer が無い状態、重複 key、形式不正は fail-closed とする。docs 配置 lint は同じ $defs.documentLayer を読み、別の許容値表を持たない。metadata 移行時も既存本文は byte-for-byte 保持し、再実行は noop とする。
+
+【4. 検証と境界】document / legacy migration / missing / invalid / non-document の focused regression、全 Dev Graph test、graph schema、artifact placement、repository lint を実行する。変更は repository 内の Dev Graph metadata と開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ## 上流指針 (doctrine anchor)
 

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 998,
+  "graph_revision": 1006,
   "nodes": [
     {
       "acceptance": [
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-26T06:12:00Z"
+      "updated_at": "2026-07-30T02:21:37.673002Z"
     },
     {
       "acceptance": [
@@ -13018,7 +13018,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-29T05:22:00.507534Z"
+      "updated_at": "2026-07-30T02:22:48.331901Z"
     },
     {
       "acceptance": [
@@ -25369,7 +25369,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T06:08:25Z"
+      "updated_at": "2026-07-30T02:23:24.662136Z"
     },
     {
       "acceptance": [
@@ -26807,7 +26807,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:57:34.035214Z"
+      "updated_at": "2026-07-30T02:24:03.570266Z"
     },
     {
       "acceptance": [
@@ -38407,6 +38407,7 @@
       },
       "issue_linkage": null,
       "iteration": null,
+      "layer": "feature-design",
       "owners": [
         "daishiman"
       ],
@@ -38449,7 +38450,7 @@
       "template_version": "1.0.0",
       "title": "Dev Graph 基盤変更 最終レビュー 2026-07-26",
       "tracker_binding": "none",
-      "updated_at": "2026-07-28T23:16:20Z"
+      "updated_at": "2026-07-30T02:24:43.397719Z"
     },
     {
       "acceptance": [
@@ -38726,12 +38727,17 @@
       "classification_confidence": 0.99,
       "classification_reason": "最終レビュー文書の C02 再登録直後に artifact placement lint が layer 不在を実測した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-30T02:10:33Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md",
+          "plugins/dev-graph/tests/test_upsert_node_document_layer.py",
+          "plugins/dev-graph/references/execution-tracker-contract.md",
+          "system-spec/dev-workflow.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-30T02:33:46Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -38800,7 +38806,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -38813,7 +38819,7 @@
       "template_version": "1.0.0",
       "title": "C02 writer が graph 管理 docs の layer frontmatter を削除する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:26:22Z"
+      "updated_at": "2026-07-30T02:33:59.044413Z"
     },
     {
       "acceptance": [

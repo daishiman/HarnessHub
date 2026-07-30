@@ -12,7 +12,7 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:57:34.035214Z"
+updated_at: "2026-07-30T02:24:03.570266Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -243,3 +243,19 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 最終検証は
 `docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
 へ記録し、draft PR は `main` 向けに作成する。
+
+## 2026-07-30 C02 document layer P13 書き戻し
+
+`HarnessHub-dqca` の実装結果を `system-spec/dev-workflow.md` の R4-reopen →
+qa-096 再確定として書き戻した。`specs/harness-hub-system-specification.md`、
+`architecture/harness-hub-dev-workflow.md`、親 feature、最終レビュー、plugin 内部契約、
+仕様反映確認も同一 wave で更新した。
+
+document の `layer` は graph schema を唯一の形式正本とし、document で必須、
+非 document で禁止する。legacy artifact からの一度限りの移行は本文を保持し、
+再実行を noop にする。欠落・重複・形式不正・新規 document の暗黙 default は拒否する。
+
+変更境界は repository 内の Dev Graph metadata と品質ゲートであり、Harness Hub 製品の
+API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。最終検証は
+`docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md`
+に記録し、draft PR は `main` 向けに作成する。

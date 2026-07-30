@@ -2,7 +2,7 @@
 graph_node_id: "doc-dev-pipeline-final-review-20260726"
 artifact_kind: "document"
 artifact_subtypes: []
-layer: feature-design
+layer: "feature-design"
 project_id: "harness-hub"
 domain: "dev-workflow"
 tags: ["dev-graph","final-review","spec-impact"]
@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-28T23:16:20Z"
+updated_at: "2026-07-30T02:24:43.397719Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -237,3 +237,20 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 | 2026-07-28 | scope_in 未消化点検の記載誤り (scope_out→scope_in) を訂正し、follow-up issue HarnessHub-ory6 / issue-id-uniqueness-gate-generalization-20260728 への切り出しを追記 | Claude |
 | 2026-07-29 | HarnessHub-lp36 の interpreter BLOCK / ALLOW 境界、設計反映、9/9 live-trial と全品質ゲート PASS、Beads close を追記 | Codex |
 | 2026-07-29 | PR #598 の main コンフリクト解消、C14 統合後 fresh 証拠、pytest 9306件と仕様再受領を追記 | Codex |
+
+### 差分追記 (2026-07-30): `HarnessHub-dqca` の恒久修正と仕様反映
+
+継続対象としていた `HarnessHub-dqca` を実装・最終レビューした。C02 writer は legacy
+document の `layer` を既存 frontmatter から graph へ一度だけ移行し、正準
+frontmatter を再生成する。許容形式は graph schema の `$defs.documentLayer` を唯一の
+正本とし、artifact placement lint も同じ定義を参照する。
+
+最終レビューでは、初期差分が非 document node の `layer` を許していた仕様ずれと、
+frontmatter の重複 key を lint が黙って上書きしていた境界を検出した。document で必須・
+非 document で禁止する schema、重複 key の fail-closed 検査、正負の回帰テストを追加した。
+
+`system-spec/spec-state.json` は正規 writer で R4-reopen → qa-096 再確定し、
+`system-spec/dev-workflow.md`、`specs/`、`architecture/`、`features/`、`tasks/`、
+plugin 内部契約、本レビューへ反映した。製品 runtime の API、DB、認証認可、UI、
+Cloudflare deploy unit は変更しない。判断と検証は
+[仕様反映確認](c02-document-layer-spec-reflection.md) を正とする。

@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-07-30T02:21:37.673002Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -223,3 +223,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
+
+**開発管理整合性の反映 (2026-07-30 / `HarnessHub-dqca` / qa-096)**:
+
+- `system-spec/dev-workflow.md` の qa-096 として、Dev Graph C02 の document metadata 契約を確定した。`artifact_kind=document` は `graph-node.schema.json#/$defs/documentLayer` に適合する小文字 kebab-case の `layer` を必須とし、非 document では禁止する。
+- legacy document は既存 frontmatter の単一 `layer` scalar を一度だけ graph へ移行できる。新規 document の暗黙 default、欠落、重複、形式不正は fail-closed とし、本文は保持する。
+- artifact placement lint は同じ schema 定義を参照し、graph validation と別の許容値表を持たない。
+- 影響は repository 内の開発管理 metadata と品質ゲートに限定される。Harness Hub 製品の外部 API・DB schema・認証認可・UI・Cloudflare deploy unit は変更しない。
+- 反映先、検証結果、500 行判断は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。

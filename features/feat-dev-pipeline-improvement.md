@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-29T06:08:25Z"
+updated_at: "2026-07-30T02:23:24.662136Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729"]
@@ -253,3 +253,11 @@ close した。
 - 現行世代: `.dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/`
 - 再 plan する場合: `/dev-graph plan --feature-id feat-dev-pipeline-improvement --feature-context features/feat-dev-pipeline-improvement.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## 2026-07-30 追記: C02 document layer 消失の恒久修正
+
+- `HarnessHub-dqca` で、graph 管理 document の再登録時に `layer` frontmatter が消える契約差を解消した。
+- `graph-node.schema.json#/$defs/documentLayer` を許容形式の単一正本とし、document で必須、非 document で禁止した。役割追加を妨げる固定 enum は置かない。
+- C02 は legacy artifact の単一 `layer` scalar を graph へ一度だけ移行する。新規 document の暗黙 default、欠落、重複、形式不正は拒否し、本文を保持する。
+- `system-spec/spec-state.json` を正規 writer で R4-reopen し、`system-spec/dev-workflow.md` qa-096、`specs/harness-hub-system-specification.md`、`architecture/harness-hub-dev-workflow.md`、P13 task、最終レビュー、仕様反映確認へ同一 wave で書き戻した。
+- 変更境界は repository 内の Dev Graph metadata と品質ゲートであり、製品 API・DB・認証認可・UI・deploy unit は非変更。詳細は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
