@@ -12,6 +12,7 @@ fail-open)。悪性 (step 自身の env のみ / どこにも無い / steps.if �
 - ゲート実効性: 修正形は token 有無で run/skip が切り替わり、defect 形は token を入れても skip
 - 実リポジトリ契約: CLI が exit 0 / governance-check.yml の Notion 3 step の run/skip 実測
 - 注入した defect workflow を CLI が exit 1 で落とすこと
+- 空走査契約は sibling の `test_root__lint_workflow_step_guard_empty_scan.py` へ分離
 - 実行環境契約: PyYAML の install が CI で本 lint より前に配線され、local 入口 2 経路
   (make lint / run-ci-checks.sh) からも同一実装が呼ばれること
 

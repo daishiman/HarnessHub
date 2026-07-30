@@ -129,20 +129,31 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 
 ## 7. 最終検証
 
-`origin/main`、local `main`、本 branch の統合元はすべて
-`732a4ecf5a443f7d9bc711c7110d4407fe759c0c` であり、2 回の merge は
-`Already up to date` だった。その統合後 tree で次を再実行した。
+最初の最終レビュー時点では `origin/main` と local `main` は
+`732a4ecf5a443f7d9bc711c7110d4407fe759c0c` で一致しており、
+local `main` と本 branch への merge は `Already up to date` だった。
+Draft PR 作成後に `origin/main` が
+`c122ae4a7876455932fe7787ac85d818ba9c5ed1` へ進んだため、
+local `main` を同 commit へ fast-forward（履歴を分岐させず先端へ進めること）し、
+改めて local `main` を本 branch へ merge した。
+
+merge 競合は Dev Graph、architecture、feature、system spec、P12 task で発生した。
+`HarnessHub-foq6` の workflow 空スキャン防止仕様と `HarnessHub-ml57` の
+CI/local parity 仕様をどちらも失わない union として解消し、
+architecture が参照する `system-spec/dev-workflow.md` の source digest を
+`25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789`
+へ正規フローで更新した。その最終統合 tree で次を再実行した。
 
 | Gate | 結果 |
 |---|---|
 | focused parity tests | PASS: 8 tests |
-| `tests/scripts-root` 全体 | PASS: 1,158 tests |
+| `tests/scripts-root` 全体 | PASS: 1,162 tests |
 | parity 実リポジトリ監査 | PASS: CI blocking 38 / non-blocking 1 / local hard 37 / allowlist 5 |
 | `scripts/run-ci-checks.sh` | PASS: 136 / WARN: 4 / FAIL: 0 |
 | task specification package validator | PASS: P01〜P13、violations 0 |
 | dev-graph schema | PASS: `valid=true`、missing section 0 |
 | architecture source digest | PASS: checked 1、mismatch 0 |
-| document line limit | PASS: 426 documents、上限 300 行、allowlist 4 |
+| document line limit | PASS: 427 documents、上限 300 行、allowlist 4 |
 | `git diff --check` | PASS: whitespace error 0 |
 
 `scripts/run-ci-checks.sh` の WARN 4 件は段階導入中の既存警告であり、

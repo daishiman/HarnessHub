@@ -355,7 +355,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-069",
+        "qa_ref": "qa-096",
         "serves_goals": [
           "G1",
           "G4",
@@ -901,6 +901,11 @@
       "id": "qa-095",
       "question": "作者のローカル desktop 環境で skill 構造 lint を実行するとき、pytest などが生成した隠し cache を人が設計した skill tree と誤認せず、同じ品質基準を Windows と macOS で再現するには何を必須としますか?",
       "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-078 と qa-081 の既存契約を全面維持し、skill 構造 lint の生成物境界を追補する。\n\n【1. テスト戦略】タスク仕様書は単体・結合・境界値・既存回帰の各テストを変更内容から選び、focused test と実際の実行順序を再現する広域回帰の両方を記録する。失敗時は原因分析、修正、同一コマンド再実行の改善ループを回す。\n\n【2. 層別方針】frontend は behavior ベースの component / 操作フロー、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界を検証する。pixel・DOM 内部構造・一時生成物の物理配置など、本来の設計契約ではない実装詳細へ品質判定を密結合させない。\n\n【3. skill tree の生成物境界】skill 構造 lint は人が管理する SKILL.md、許可 directory、命名、深さを検査する。一方、pytest・mypy 等の test tool が skill 配下へ作る dot で始まる directory とその配下、Python の __pycache__ / .pyc は生成物として構造判定から除外する。許可 directory 集合に dot directory は含めず、個別 cache 名の列挙ではなく同じ性質を持つ生成物へ一般化する。\n\n【4. 複製と回帰】repository root の scripts/lint-skill-tree.py と配布 plugin 内の実装は同一バイト列を維持する。回帰テストは .pytest_cache だけでなく .mypy_cache と任意の dot cache を含め、通常の nested directory 違反は引き続き検出する。per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを確認する。\n\n【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-096",
+      "question": "MVP ファーストの優先度判断を維持したまま、CI / local の品質ゲートが検査対象 0 件で緑になる fail-open を防ぐ dev-workflow.web 契約を、章単独で情報を失わない形でどう確定しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-069 の MVP ファーストな優先度契約を全面維持し、品質ゲートの空走査境界を統合した次の dev-workflow.web 契約を確定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は plugins/dev-graph/references/execution-tracker-contract.md、判断と検証の受領書は docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md とする。\n\n【6. 境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -955,6 +960,10 @@
     {
       "id": "appr-014",
       "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-xswf の最終レビューで確定した skill tree lint の生成物境界、root/plugin 複製 parity、per-plugin→repository 実行順序回帰を qa-095 として testing-qa の desktop-windows / desktop-macos へ反映する。"
+    },
+    {
+      "id": "appr-015",
+      "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映。500 行超過時は分離」を明示承認として記録。HarnessHub-foq6 の空走査 fail-closed、明示 allow-empty、回帰証拠、500 行分冊を qa-096 として dev-workflow.web へ反映する。qa-092 / appr-013 は並行して main へ統合済みの C11 artifact 本文 readiness 契約が使用しているため、その履歴を保持して次の空き ID へ再採番する。"
     }
   ],
   "reopen_log": [
@@ -1658,6 +1667,12 @@
       "category": "testing-qa",
       "platform": "desktop-macos",
       "reason": "HarnessHub-xswf の実装で、per-plugin pytest 後の .pytest_cache が repository criteria test を偽陽性にする実行順序依存を解消したため、qa-078 を維持しつつ生成物境界を qa-095 へ統合する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "HarnessHub-foq6 で品質ゲート自身に残っていた対象 0 件成功の fail-open を解消し、qa-069 の MVP ファースト契約を維持したまま CI / local の空走査境界を自己完結して再確定する",
       "from": "確定"
     }
   ],
@@ -2899,7 +2914,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 3,
+    "loop_count": 1,
     "next_question": null,
     "complete": true
   }
