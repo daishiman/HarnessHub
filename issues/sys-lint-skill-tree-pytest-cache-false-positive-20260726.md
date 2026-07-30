@@ -145,7 +145,7 @@ root / plugin の実装が同一バイト列であることも固定した。
 - dev-graph: schema / source digest / evidence refs / open residue の対象検査 PASS
 
 仕様・設計への影響は製品機能ではなく repository の品質ゲート契約に限定される。
-`system-spec/testing-qa.md` の qa-092、仕様要約、architecture wrapper、feature、
+`system-spec/testing-qa.md` の qa-095、仕様要約、architecture wrapper、feature、
 P12/P13 task へ正規反映し、詳細を
 `docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
 へ記録した。Beads `HarnessHub-xswf` と本 node は完了状態へ同期済みである。

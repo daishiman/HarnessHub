@@ -1,0 +1,43 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "ユーザー登録とログインができて、ログイン後にダッシュボードで自分の利用状況を見られる小規模 Web アプリを作りたい。登録完了時と重要な変更時には通知メールを送りたい。運営者向けには全ユーザーの利用状況を集計したレポート画面もほしい。 --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none",
+  "requested_model": "claude-opus-4-6",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "none-binding confirmation_evidence was patched after the second target Skill call, violating the no-post-correction task contract"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "727784f73d04a0b0961c9474a0f268154c88cd3edd9038f1f83455eec4edbc44",
+  "transcript_sha256": "f252db62ac556809a52136be332e81806ed241e1c23d4d0e60b9b1e16c506c4f",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 4.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 1740.0
+  }
+}

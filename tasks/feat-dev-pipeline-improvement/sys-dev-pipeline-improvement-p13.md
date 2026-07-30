@@ -233,7 +233,7 @@ This section is the current source closure and supersedes older counts or wordin
 
 ## 2026-07-29 skill tree lint P13 書き戻し
 
-`HarnessHub-xswf` の実装結果を testing-qa の R4-reopen → qa-092 再確定として
+`HarnessHub-xswf` の実装結果を testing-qa の R4-reopen → qa-095 再確定として
 `system-spec/spec-state.json` / `system-spec/testing-qa.md` へ書き戻した。
 参照 wrapper、system spec 要約、feature 履歴、P12 品質ゲート、仕様反映受領書も
 同一 wave で更新した。

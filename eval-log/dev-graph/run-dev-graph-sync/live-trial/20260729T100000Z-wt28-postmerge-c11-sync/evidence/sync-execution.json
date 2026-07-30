@@ -1,0 +1,42 @@
+{
+  "checklist": [
+    {
+      "item": "全 Issue/Project 差分が3-way planの一分類と snapshot digest を持つ",
+      "status": "PASS",
+      "evidence": "dry-run shows 1 import (title field, remote-only) + 1 export (Status field, local_to_project) with snapshot digests in report"
+    },
+    {
+      "item": "task ごとの mutation authority が beads/C28、github/C12、none の一経路だけである",
+      "status": "PASS",
+      "evidence": "LT-TASK-001 tracker_binding=github, authority=github/C12 only; no beads/none mixing"
+    },
+    {
+      "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "PASS",
+      "evidence": "Pass 1 (dry-run) write_count=0; Pass 3 (verification dry-run) write_count=0"
+    },
+    {
+      "item": "双方変更は manual conflict、片側変更は mapping どおりの反映 receipt を持つ",
+      "status": "PASS",
+      "evidence": "title: remote-only change imported (Validate isolated live trial -> updated remotely r7); Status: local-only export (active->In Progress via option_map); conflicts=[]"
+    },
+    {
+      "item": "close/delete は graph_node_id を保持した tombstone/status transition になる",
+      "status": "PASS",
+      "evidence": "No close/delete in this scenario; tombstones=[]"
+    },
+    {
+      "item": "default-branch merge evidence を満たす場合だけ done となり、dirty/feature worktree event は pending に残る",
+      "status": "PASS",
+      "evidence": "No done transition; completion_evidence.status remains in_progress; no PR merge evidence present"
+    },
+    {
+      "item": "同一状態の二回目 sync の imports/exports/Project item add が0件である",
+      "status": "PASS",
+      "evidence": "Pass 3 (verification dry-run): changes=0, imports=[], exports=[], converged=true. Second sync apply: changes=0, write_count=0. SHA-256 graph=ddf5349a remote=5d97e403 snapshot=ae94bd6d all before==after"
+    }
+  ],
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "overall_status": "PASS",
+  "completed_at": "2026-07-29T10:42:00Z"
+}

@@ -4,7 +4,7 @@ feature_id: feat-dev-pipeline-improvement
 graph_node_id: issue-lint-skill-tree-pytest-cache-false-positive-20260726
 beads_id: HarnessHub-xswf
 status: recorded
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # skill tree cache 偽陽性修正 — 仕様反映受領書
@@ -54,22 +54,29 @@ updated: 2026-07-29
 
 | 層 | 反映先 | 内容 |
 |---|---|---|
-| system-spec | `system-spec/spec-state.json` / `system-spec/testing-qa.md` | R4-reopen → qa-092 再確定。Windows / macOS の生成物境界を確定 |
+| system-spec | `system-spec/spec-state.json` / `system-spec/testing-qa.md` | R4-reopen → qa-095 再確定。Windows / macOS の生成物境界を確定 |
 | specs | `specs/harness-hub-system-specification.md` | repository tooling の受入契約を要約 |
-| architecture | `architecture/harness-hub-testing-qa.md` | qa-092 の参照 wrapper と source digest を更新 |
+| architecture | `architecture/harness-hub-testing-qa.md` | qa-095 の参照 wrapper と source digest を更新 |
 | feature | `features/feat-dev-pipeline-improvement.md` | 実装履歴・影響境界・受領書導線 |
 | task | P12 / P13 task spec | 品質ゲート再実行と仕様書き戻しを記録 |
 | issue | `issues/sys-lint-skill-tree-pytest-cache-false-positive-20260726.md` | completion evidence と最終結果を記録 |
 
-`system-spec/spec-state.json` は
-`apply-spec-transition.py chunk` の単一 writer で `appr-013` / `qa-092` を追加し、
+`system-spec/spec-state.json` に
+`apply-spec-transition.py chunk` の単一 writer で追加した契約は、main 取込時の
+ID 衝突を正規化して `appr-014` / `qa-095` として保持し、
 `testing-qa.desktop-windows` と `testing-qa.desktop-macos` を R4-reopen 後に再確定した。
 章本文は `compile-spec-doc.py` で再生成した。
 既存の qa-089 横断追補は今回の変更範囲外であるため、コンパイル後も内容を保持した。
 
+2026-07-30 の `origin/main` 取込では、main 側の `qa-092`〜`qa-094` と
+`appr-013` を優先して保持し、本契約だけを次の空き ID へ再採番した。
+意味内容、対象セル、製品境界は変更していない。
+
 ## 6. 品質ゲート
 
-2026-07-29 の最終レビューで次を再実行し、すべての blocking gate を通過した。
+2026-07-29 の最終レビューに加え、2026-07-30 に `origin/main`
+（`3bfedc424b216ff`）を取り込んで競合を解消した後にも、
+次を再実行し、すべての blocking gate を通過した。
 
 | ゲート | 結果 |
 |---|---|
@@ -80,6 +87,14 @@ updated: 2026-07-29
 | dev-graph | schema valid、source digest mismatch 0、対象 evidence dangling 0、open residue 0 |
 | repository CI | `PASS 123 / WARN 4 / FAIL 0`。WARN は段階導入中の既知 advisory |
 | package / docs | 22 plugin blocking failure 0、artifact placement PASS、tracked docs 500 行制限 PASS |
+
+競合解消後の再検証では focused pytest `41 passed`、compile integration
+`7 passed`、task package digest
+`sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6`
+を再確認した。coverage matrix、source citation、dev-graph schema / digest /
+evidence / open residue、artifact placement、document line limit もすべて成功し、
+repository CI は終了コード 0 で完了した。表示された警告は段階導入中の既知 advisory
+であり、本変更による blocking failure は無い。
 
 ## 7. 残課題
 

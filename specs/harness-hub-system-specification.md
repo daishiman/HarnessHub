@@ -175,6 +175,27 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
   を正とする。
 
+**開発品質反映 (2026-07-29 / `HarnessHub-4t9g`)**:
+
+- `system-spec/dev-workflow.md` の `qa-092` として、Dev Graph C11 が artifact の
+  required section 本文を検査する契約を確定した。
+- 空本文、canonical placeholder の残存、`TBD` / `TODO` / `未定` だけの節は
+  `implementation_readiness=incomplete` とし、節名を `missing_sections` に返す。
+- C02 の template-only 新規生成と placeholder への再生成は transaction rollback
+  する。実本文の保持と substantive body による作成・復旧は維持する。
+- 影響は repository 内の readiness、tracker 投影、system build handoff に限定する。
+  製品 API・DB・認証認可・UI・Cloudflare deploy unit は変更しない。
+  反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
+  を正とする。
+
+**運用監視反映 (2026-07-29 / `HarnessHub-dbx6` / qa-094)**:
+
+- 日次 backup は Worker 日次 cron と別の Better Stack heartbeat を使い、`CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` を共用しない。
+- `BACKUP_HEARTBEAT_URL` は required。backup workflow は未投入を前提確認で拒否し、全 step 成功後だけ heartbeat を送る。
+- backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
+- 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
+
 **開発管理整合性の反映 (2026-07-29 / `HarnessHub-bk8v`)**:
 
 - dev-graph C02 は、昇格済み feature へ古い full snapshot が再送されても lifecycle を
@@ -186,7 +207,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   を正とする。
 
-**開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-092)**:
+**開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-095)**:
 
 - skill 構造 lint は人が管理する tree の深さ・命名・許可 directory を検査し、
   test tool が生成する dot directory、`__pycache__`、`.pyc` は構造判定から除外する。

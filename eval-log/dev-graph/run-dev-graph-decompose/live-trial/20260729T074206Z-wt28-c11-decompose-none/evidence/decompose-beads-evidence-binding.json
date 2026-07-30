@@ -1,0 +1,45 @@
+{
+  "all_bound": true,
+  "checks": [
+    {
+      "bound": true,
+      "declared_digest": "0d598fa6ed1f5484cdeee3b53820dea87bf1895e608b352c7fe034aa6de60cb6",
+      "digest_matches": true,
+      "evidence_fields_present": true,
+      "expected_digest": "0d598fa6ed1f5484cdeee3b53820dea87bf1895e608b352c7fe034aa6de60cb6",
+      "graph_node_id": "feat-user-auth-001",
+      "promoted": true
+    },
+    {
+      "bound": true,
+      "declared_digest": null,
+      "digest_matches": false,
+      "evidence_fields_present": false,
+      "expected_digest": "c97cc29281c6b718194dbbead251b91428635d33239e679fb0e72cd0867ef5f9",
+      "graph_node_id": "feat-dashboard-001",
+      "promoted": false
+    },
+    {
+      "bound": true,
+      "declared_digest": null,
+      "digest_matches": false,
+      "evidence_fields_present": false,
+      "expected_digest": "7c6fbe5e1a65c5bac80bd74f7c26baeef4419cd8a23cbaa479721215dde47156",
+      "graph_node_id": "feat-notification-001",
+      "promoted": false
+    },
+    {
+      "bound": true,
+      "declared_digest": null,
+      "digest_matches": false,
+      "evidence_fields_present": false,
+      "expected_digest": "29e1afad2612c3a702be7db8e8a5834b78077f85ba2fdd91232a544eb8c707f4",
+      "graph_node_id": "feat-admin-report-001",
+      "promoted": false
+    }
+  ],
+  "excluded_fields": [
+    "confirmation_evidence"
+  ],
+  "recipe": "sha256(json.dumps({k: v for k, v in node.items() if k != 'confirmation_evidence'}, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()"
+}

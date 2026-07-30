@@ -17,6 +17,8 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 > **投入状況の正本は本文ではなく `node scripts/ci/check-actions-secrets.mjs --live` の出力**。散文で書いた一覧は書いた翌日には古くなるため、判断前に必ずコマンドを叩く（未投入・用途不明・台帳との食い違いを一度に出す）。
 
 > **実施状況**: `HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**2026-07-28 に Better Stack 外部資源を適用し、`CRON_HEARTBEAT_URL` を Worker secret へ投入した**（monitor `4724920` / heartbeat `475650` / status page `256797` / resource `8978911`、適用時刻 `2026-07-27T20:46:37.686Z` UTC）。しかし、同日 `21:38:14Z` の公開 status page 再確認で個別 resource が `not_monitored`（Better Stack 公式仕様では underlying monitor が paused）と判明した。適用器は既存資源の設定差分を `PATCH` するよう是正済みであり、Uptime API token を渡して同じ適用コマンドを再実行し、resource が `operational` になった時点から 30 日観測を開始する。現在の `slo-dashboard.json` は `collection_blocked` であり、99.5% 達成を主張しない。証跡は [evidence/monitoring-applied.json](evidence/monitoring-applied.json) と [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。なお、workflow から参照されなくなった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は **2026-07-28 に削除し、`--live` は exit 0 になった**（証跡は [evidence/actions-secrets-2026-07-28.json](evidence/actions-secrets-2026-07-28.json)）。同日その状態で日次 backup を実起動したところ、**secret とは別の原因**で失敗している（§7 U-1）。以下の手順は再構築時のために残す。
+>
+> **backup heartbeat の分離判断 (HarnessHub-dbx6)**: Worker の日次 cron (`0 15 * * *`) と GitHub Actions の日次 backup (`0 17 * * *`) は、同じ heartbeat 資源を**共用しない**。共用すると Worker 側の成功 ping が backup 側の失敗・不発を上書きし、backup が取れていなくても監視が正常に見えるためである。backup 専用資源 `hub-backup-daily` は `period=86400` 秒 / `grace=3600` 秒とし、JST 2:00 の予定 run が完走しなければ、おおむね JST 3:00 までに異常化する。`BACKUP_HEARTBEAT_URL` はこの検知経路に必須なので台帳上 `required` とし、未投入なら backup workflow 自体も前提確認で fail-closed（失敗として停止）する。ローカル正本への宣言は 2026-07-29 に追加済みだが、`apps/hub/monitoring/better-stack.monitors.json` の `backup_heartbeat.provisioning_state` が `pending_credentials` の間は外部適用・着信実測が未完了である。
 
 > **順序制約（重要）**: `wrangler secret put` は **Worker が存在しないと実行できない**ため、初回だけは「deploy → secret 投入」の順になり、その間 `/health` は 503 を返します。`ci.yml` の post-deploy `/health` チェックは 200 必須なので、**初回は CI に任せず手動 bootstrap を行ってください**（CI 側のチェックを緩めるとゲートが恒久的に甘くなるため、この方式を採ります）。
 >
@@ -40,7 +42,7 @@ gh secret set CLOUDFLARE_R2_API_TOKEN   # R2 backup / 本番 smoke 専用。Work
 gh secret set CLOUDFLARE_ACCOUNT_ID
 gh secret set TURSO_DATABASE_URL        # migration / 本番 smoke / 日次 export 用
 gh secret set TURSO_AUTH_TOKEN          # 同上の DB 接続 token（Platform API token とは別物）
-gh secret set BACKUP_HEARTBEAT_URL      # 任意。未設定なら backup cron 失敗の外形監視なし
+gh secret set BACKUP_HEARTBEAT_URL      # 必須。backup 専用 heartbeat URL
 gh variable set HUB_HEALTH_URL --body "https://hub.<domain>/health"
 gh variable set HUB_PUBLIC_URL --body "https://hub.<domain>"   # cwv.yml の計測対象
 
@@ -56,21 +58,31 @@ Cloudflare token は 2 本を別々に発行する。deploy 用には `Workers S
 
 4. **Better Stack Free** の外形監視を適用する（**要求内容の正本は [`apps/hub/monitoring/better-stack.monitors.json`](../../../apps/hub/monitoring/better-stack.monitors.json)**。ダッシュボードで独自に値を決めない）
 
-   登録内容は monitor（production `/health` を **3 分間隔**・SLO 99.5% の一次計測源）・heartbeat（日次バッチ完了 ping 用。period 86,400s / 猶予 3,600s）・status page（履歴 30 日。monitor を resource として関連付け）の 3 点。**画面から手で登録せず、正本ファイルを適用する script を使う**：
+   登録内容は monitor（production `/health` を **3 分間隔**・SLO 99.5% の一次計測源）・heartbeat 2 本（Worker 日次 cron / GitHub Actions 日次 backup。いずれも period 86,400s / 猶予 3,600s）・status page（履歴 30 日。monitor を resource として関連付け）の 4 点。**画面から手で登録せず、正本ファイルを適用する script を使う**：
 
    ```bash
    # a. 何を送るかを先に確認する (ネットワークへは出ない)
    node apps/hub/scripts/apply-better-stack-monitoring.mjs --dry-run
 
    # b. 適用する。token は環境変数で渡す (引数は ps とシェル履歴に残る)
-   #    --put-secret を付けると heartbeat URL を標準出力へ出さずに wrangler の stdin へ直接流す
+   #    --put-secrets を付けると 2 本の heartbeat URL を標準出力へ出さず、
+   #    Worker secret と GitHub Actions secret の stdin へそれぞれ直接流す
    export BETTER_STACK_API_TOKEN=...   # 取得場所は下の注記を参照
    node apps/hub/scripts/apply-better-stack-monitoring.mjs \
-     --put-secret \
+     --put-secrets \
      --json docs/features/feat-hub-foundation/evidence/monitoring-applied.json
    unset BETTER_STACK_API_TOKEN
 
-   # c. 書き戻しと状態遷移を検証する
+   # c. 既存環境へ backup heartbeat だけを追加する場合 (HarnessHub-dbx6)
+   #    別タスクが扱う monitor / Worker heartbeat / status page / SLO dashboard は変更しない
+   export BETTER_STACK_API_TOKEN=...   # 取得場所は下の注記を参照
+   node apps/hub/scripts/apply-better-stack-monitoring.mjs \
+     --only-backup-heartbeat \
+     --put-github-secret \
+     --json docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied.json
+   unset BETTER_STACK_API_TOKEN
+
+   # d. 書き戻しと状態遷移を検証する
    pnpm --filter @harness-hub/hub test tests/monitoring
    ```
 
@@ -78,7 +90,8 @@ Cloudflare token は 2 本を別々に発行する。deploy 用には `Workers S
    - token は可視 ASCII のみ。全角文字・改行・空白が混ざると script が**適用前に**落ちる（HTTP ヘッダへ載せると token の文字コードが例外メッセージへ出てしまうため、手前で塞いでいる）。コピー時に改行が付いていないか確認する。
    - script は既存資源を名前・URL・subdomain で同定し、monitor / heartbeat は正本との差分だけを `PATCH` してから不足分だけを作るため、**再実行しても二重登録にならず、paused のような dashboard 側 drift も正本へ戻る**。中断したら同じコマンドをそのまま流し直す。
    - 適用に成功すると設定ファイルへ `external_id` / `applied_at` が書き戻り `application_state` が `applied` になり、`slo-dashboard.json` の `verdict` が `collecting`（`observation_started_at` と `first_monthly_verdict_due_at` 付き）へ進む。**書き戻るまで SLO は「計測開始前」として扱う**。
-   - heartbeat URL は secret。script は標準出力・設定ファイル・エラーメッセージのいずれにも出さない。`--put-secret` を使わず手で入れる場合は `cd apps/hub && wrangler secret put CRON_HEARTBEAT_URL` で標準入力から渡す。
+   - heartbeat URL は secret。script は標準出力・設定ファイル・エラーメッセージのいずれにも出さない。`--put-secret` は Worker の `CRON_HEARTBEAT_URL` だけ、`--put-github-secret` は repository secret の `BACKUP_HEARTBEAT_URL` だけ、`--put-secrets` は両方を投入する。既存環境で backup だけを追加するときは、対象外の monitor を更新しないよう `--only-backup-heartbeat --put-github-secret` を使う。値をコマンド引数へ渡してはいけない。
+   - **分離を維持する**: `CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` は異なる Better Stack heartbeat の URL でなければならない。前者は Worker cron、後者は backup workflow の成功だけが ping する。片方の成功で他方の失敗を隠さないことが目的である。
    - 書き戻しは JSON を丸ごと再出力する（2 space インデント）。差分が状態遷移分だけになるよう正本側の数値表記は正規化済み（例: `1.0` ではなく `1`）。適用後の差分に状態以外の行が出たら、それは正本の書式が崩れた合図なので取り込む前に確認する。
    - **API フィールド名は 2026-07-26 に公式ドキュメント（`create-a-new-monitor` / `create-a-hearbeat` / `create-a-new-status-page` / `create-a-new-status-page-resource`）へ照合済み**。422 が出た場合は Better Stack 側の仕様変更なので、**ダッシュボードではなく設定ファイルを直して**再適用する。
    - **403 `Cannot modify status page advanced settings` はプラン制限**であり、フィールド名の誤りではない。Free プランでは status page の advanced settings 群（`automatic_reports` / `subscribable` / `hide_from_search_engines` など）は**既定値と同じ値でも送信自体が拒否される**（2026-07-26 実測）。該当フィールドは正本の payload から外し、理由を `$comment_omitted_fields` に残してある。有料プランへ上げたときに復活を検討する。

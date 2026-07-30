@@ -285,12 +285,10 @@ owner PID の代用品にせず、boot の READY 出力をそのまま cleanup �
 全 session の回収は通常フローから分離した明示 `--all` だけに許可する。
 fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠とする。
 
-### 差分追記 (2026-07-29): feature lifecycle の単調前進を C02 境界で守る
+### 差分追記 (2026-07-29): C02/C11 の安全境界
 
-出典: `issue-c02-upsert-lifecycle-regression-20260729` (bd `HarnessHub-bk8v`)。
-C14 は最新 persisted feature を読み直して C02 へ渡し、C02 も stale full snapshot が
-`status`、`confirmation_status`、`evaluation_status`、
-`implementation_readiness.status` を後退させる場合は Markdown / graph / revision を
-変えずに拒否する。通常の冪等再送は noop、stale snapshot は fail-closed、意図的な再評価は
-変更対象を列挙した patch として経路を分離する。この境界は repository 内の開発管理 graph
-だけに適用し、Harness Hub 製品の runtime architecture は変更しない。
+- C11 は frontmatter・見出し・placeholder だけの artifact を incomplete とし、後段を止める。
+  詳細は [C11 readiness 受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)。
+- C02 は stale full snapshot による feature lifecycle 後退を無変更で拒否する。
+  詳細は [C02 lifecycle 受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)。
+- いずれも repository 内の開発管理 graph に限定し、製品 runtime 契約は変更しない。

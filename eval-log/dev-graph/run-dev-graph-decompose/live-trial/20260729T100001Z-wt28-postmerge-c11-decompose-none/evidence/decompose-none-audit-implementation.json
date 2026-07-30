@@ -1,0 +1,50 @@
+{
+  "index_matches_worktree": true,
+  "modules": [
+    {
+      "index_blob": "110ff08e625513f61743fb8292f2f4ac30580fde",
+      "index_matches_worktree": true,
+      "path": "plugins/dev-graph/tests/fixtures/audit_decompose_integrity.py",
+      "sha256": "204089ca751a09759f51a7b3c8f6f73ad99eed399ad6c8e03d51b6af5791d0ba",
+      "tracked_in_index": true,
+      "worktree_blob": "110ff08e625513f61743fb8292f2f4ac30580fde"
+    },
+    {
+      "index_blob": "2f4e7d1adf03b26acb0ce473f2978f2ea34c72b8",
+      "index_matches_worktree": true,
+      "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+      "sha256": "38b6204b484e5d5721ed59b607102b18cbffbcbdf316e962f0891e8f1246db50",
+      "tracked_in_index": true,
+      "worktree_blob": "2f4e7d1adf03b26acb0ce473f2978f2ea34c72b8"
+    },
+    {
+      "index_blob": "e9191702da1ae34c4b7efa1f4c1b71ab40403283",
+      "index_matches_worktree": true,
+      "path": "plugins/dev-graph/tests/fixtures/audit_decompose_publication.py",
+      "sha256": "81d7eded3db608b7d6d8724dee7a821dd4952914c23d1612b3c06ef072714dc2",
+      "tracked_in_index": true,
+      "worktree_blob": "e9191702da1ae34c4b7efa1f4c1b71ab40403283"
+    },
+    {
+      "index_blob": "f7a94de5885e2c6add3ba0d30f55f2a29e73c388",
+      "index_matches_worktree": true,
+      "path": "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+      "sha256": "ed99ef285e90516a107e902d80d95ef9239659c3c6a965b81d3c788ccbe43ee7",
+      "tracked_in_index": true,
+      "worktree_blob": "f7a94de5885e2c6add3ba0d30f55f2a29e73c388"
+    },
+    {
+      "index_blob": "0f89279b677cf4d2d81db0bdfb613f3de1ee38fa",
+      "index_matches_worktree": true,
+      "path": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+      "sha256": "f9a794e6142368f57be46d672424231e0d7d6350741568219d486194e54104ab",
+      "tracked_in_index": true,
+      "worktree_blob": "0f89279b677cf4d2d81db0bdfb613f3de1ee38fa"
+    }
+  ],
+  "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+  "provenance_valid": true,
+  "same_as_pre_state": true,
+  "sha256": "be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f",
+  "tracked_in_index": true
+}

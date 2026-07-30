@@ -241,6 +241,21 @@ boot READY 行の `OWNER_PID` と同じ値を
 必要性と対象を確認してから個別 `kill-session` または管理者 `--all` を選ぶ。
 詳細は `docs/worktree-parallel-operations-runbook.md` と system-spec `qa-090` を正とする。
 
+## 2026-07-29 C11 artifact 本文の運用追補
+
+本 P12 の promoted task spec と完了判定は変更しない。Dev Graph node を新規作成または
+本文再生成するときは、template の placeholder を残したまま C02 を完了扱いにしない。
+
+本文を用意できない場合は node を投影せず、必須節名を `missing_sections` として返して
+停止する。既存本文を残す metadata-only update は `--body-file` を省略してよい。
+壊れた本文を復旧する場合は、required section に具体的内容を持つ body file を
+repository 内の一時領域から明示的に渡す。`--regenerate-body` だけで placeholder template
+へ戻す操作は C11 が rollback する。
+
+仕様正本は `system-spec/dev-workflow.md` `qa-092`、設計正本は
+`architecture/harness-hub-dev-workflow.md`、plugin 内部契約は
+`plugins/dev-graph/templates/README.md` とする。
+
 ## 2026-07-29 skill tree lint 品質ゲート追補
 
 `HarnessHub-xswf` の最終レビューでは、focused test だけでなく
@@ -248,7 +263,7 @@ per-plugin pytest の直後に repository criteria test を実行する順序回
 test tool が生成する dot cache は skill tree の設計物ではないため除外し、
 通常の nested directory 違反は引き続き fail-closed で拒否する。
 
-仕様反映は `system-spec/testing-qa.md` qa-092、
+仕様反映は `system-spec/testing-qa.md` qa-095、
 `architecture/harness-hub-testing-qa.md`、
 `specs/harness-hub-system-specification.md`、
 `features/feat-dev-pipeline-improvement.md` に同一 wave で記録する。

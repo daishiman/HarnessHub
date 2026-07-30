@@ -1,0 +1,69 @@
+  ⎿  Wrote 6 lines to eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose-none/eval-log/run-dev-graph-decompose-goal-spec.json
+      1 {
+      2   "original_goal": "自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起
+        動または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects
+        、binding=noneはローカルのみへ冪等投影した状態になっている",
+      3   "original_goal_hash": "ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795",
+      4   "scenario": "C14-OUT1-positive-macro-decomposition-r7",
+      5   "binding": "none"
+      6 }
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose-none/eval-log/run-dev-graph-decompose-progress.json)
+  ⎿  Wrote 73 lines to eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose-none/eval-log/run-dev-graph-decompose-progress.json
+       1 {
+       2   "scenario": "C14-OUT1-positive-macro-decomposition-r7",
+       3   "binding": "none",
+       4   "checklist": [
+       5     {
+       6       "item": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+       7       "status": "pass",
+       8       "evidence": "5 nodes registered: 1 architecture (arch-webapp-foundation-001) + 4 features. 3 depends_on edges, all inter-feature (dashboard/notification/admin-report -> user-auth)
+         . DFS cycle detection: no cycle. task count: 0. phase_ref: 0, parent_feature: 0, feature_package_id: 0, P01..P13 pattern: 0."
+       9     },
+      10     {
+     … +63 lines (ctrl+o to expand)
+
+⏺ Append second line to intermediate:
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Update(eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose-none/eval-log/run-dev-graph-decompose-intermediate.jsonl)
+  ⎿  Added 1 line
+      1  {"original_goal":"自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起
+         動または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects
+         、binding=noneはローカルのみへ冪等投影した状態になっている","original_goal_hash":"ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795","current_goal_snapshot":"自然文の「や
+         りたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起動または手動`/system-dev-plan`
+         実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects、binding=noneはローカルのみへ
+         冪等投影した状態になっている","delta_from_original":"none","merged_directive_for_next":"run macro decompose with binding=none on fixture, promote one feature, verify observations 1-7","
+         drift_signal":"none"}
+      2 +{"original_goal":"自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起
+        +動または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects
+        +、binding=noneはローカルのみへ冪等投影した状態になっている","original_goal_hash":"ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795","current_goal_snapshot":"自然文の「や
+        +りたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起動または手動`/system-dev-plan`
+        +実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects、binding=noneはローカルのみへ
+        +冪等投影した状態になっている","delta_from_original":"none","merged_directive_for_next":"all 7 observations pass; audit pass=true; binding=none exercised; beads companion differs; github
+        + unreachable by schema","drift_signal":"none"}
+
+⏺ Now verify the goal-spec hash check:
+
+⏺ Bash(python3 - /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose-none/eval-log/run-dev-graph-decompose-goal-…)
+  ⎿  PASS: goal-spec/intermediate validation passed
+
+⏺ Now write the completion marker:
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/out)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T100001Z-wt28-postmerge-c11-decompose-none/out/status.json
+      1 {"status": "PASS", "scenario": "C14-OUT1-positive-macro-decomposition-r7", "binding": "none"}
+
+⏺ DONE: PASS
+
+✻ Baked for 25m 40s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                    Context left until auto-compact: 12%
+                                                                                                                                                        Update available! Run: brew upgrade claude-code

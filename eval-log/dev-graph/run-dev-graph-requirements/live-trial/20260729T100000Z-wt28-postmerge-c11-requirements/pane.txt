@@ -1,0 +1,69 @@
+  ⎿  Added 14 lines, removed 8 lines
+       2    "skill": "run-dev-graph-requirements",
+       3    "feature_id": "F-LIVE-001",
+       4    "checklist": [
+       5 -    {"id": "lineage_closure", "text": "scope 内 node の feature/package/system-spec lineage closure が欠落0である", "status": "pending"},
+       6 -    {"id": "c11_c02_match", "text": "C11 report と C02 保存済み readiness/evaluation が一致する", "status": "pending"},
+       7 -    {"id": "source_digest", "text": "scope 内 node 全件を --registered に渡した validate-source-digest.py が exit 0 である", "status": "pending"},
+       8 -    {"id": "missing_sections", "text": "incomplete/pending/fail/stale node の missing_sections と remediation owner が全件表示される", "status": "pending"},
+       9 -    {"id": "handoff_emit", "text": "全 gate PASS の場合だけ requirements と capability-build handoff が同一 snapshot digest で生成される", "status": "pending"},
+      10 -    {"id": "no_impl_code", "text": "本 skill が生成した実装 code file が0件である", "status": "pending"}
+       5 +    {"id": "lineage_closure", "text": "scope 内 node の feature/package/system-spec lineage closure が欠落0である", "status": "pass", "evidence": "F-LIVE-001 source_lineage present, 13
+         + task nodes all have parent_feature=F-LIVE-001 and feature_package_id=feature-package/F-LIVE-001"},
+       6 +    {"id": "c11_c02_match", "text": "C11 report と C02 保存済み readiness/evaluation が一致する", "status": "pass", "evidence": "validate-graph-schema.py exit 0, valid=true, violations
+         +=[]"},
+       7 +    {"id": "source_digest", "text": "scope 内 node 全件を --registered に渡した validate-source-digest.py が exit 0 である", "status": "pass", "evidence": "validate-source-digest.py ex
+         +it 0, checked=14, registered_mismatch=[]"},
+       8 +    {"id": "missing_sections", "text": "incomplete/pending/fail/stale node の missing_sections と remediation owner が全件表示される", "status": "pass", "evidence": "全 node が complet
+         +e/pass/confirmed — missing_sections=0, incomplete/pending/fail/stale=0"},
+       9 +    {"id": "handoff_emit", "text": "全 gate PASS の場合だけ requirements と capability-build handoff が同一 snapshot digest で生成される", "status": "pass", "evidence": "requirements-d
+         +ocument.json, readiness-matrix.json, capability-build-handoff.json emitted with graph_snapshot_digest=sha256:9362c97bc8d190af416788c3607c5b3036d5facd83b899ca2761764d659c7cc6"},
+      10 +    {"id": "no_impl_code", "text": "本 skill が生成した実装 code file が0件である", "status": "pass", "evidence": "emitted files are all JSON requirements/handoff artifacts, no impleme
+         +ntation source code generated"}
+      11    ],
+      12 -  "status": "in_progress",
+      13 -  "loop": 0
+      12 +  "status": "complete",
+      13 +  "loop": 1,
+      14 +  "system_plan_validation": {
+      15 +    "status": "pass",
+      16 +    "validated_digest": "sha256:02eeeca8c67b8743e734bc3bbb5d5d47802c23bee40b7276d194357ae2429b9e",
+      17 +    "phase_refs": ["P01","P02","P03","P04","P05","P06","P07","P08","P09","P10","P11","P12","P13"],
+      18 +    "task_count": 13
+      19 +  }
+      20  }
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now verify the goal-seek integrity:
+
+⏺ Bash(python3 - "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-requirements/eval-log/run-dev-graph-requirements-goa…)
+  ⎿  PASS: goal-seek verification OK (2 rows, hash verified)
+
+⏺ Now verify the scenario success conditions:
+
+⏺ Bash(# Verify: no implementation source files generated
+      find /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-require…)
+  ⎿  0
+
+⏺ Bash(# Verify handoff is bound to feature and source digest
+      python3 -c "…)
+  ⎿  PASS: handoff bound to feature and source digest
+
+⏺ All success conditions verified. Now write the status.json and the out directory:
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T100000Z-wt28-postmerge-c11-requirements/ou…)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T100000Z-wt28-postmerge-c11-requirements/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-requirements/live-trial/20260729T100000Z-wt28-postmerge-c11-requirements/out/status.json
+      1 {"status": "PASS", "scenario": "C04-OUT1-positive-ready-handoff"}
+
+⏺ DONE: PASS
+
+✻ Sautéed for 8m 40s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

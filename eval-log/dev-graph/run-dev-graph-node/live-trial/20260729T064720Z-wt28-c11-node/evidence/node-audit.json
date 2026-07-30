@@ -1,0 +1,31 @@
+{
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "result": "PASS",
+  "observations": {
+    "canonical_paths": {
+      "issue": "issues/sys-session-timeout-enforcement.md",
+      "task": "tasks/sys-api-rate-limit.md",
+      "specification": "specs/sys-rest-api-v2-migration.md",
+      "architecture": "architecture/sys-order-backend-security.md",
+      "document": "docs/sys-dev-environment-setup.md"
+    },
+    "consecutive_updates": {
+      "graph_revision": {
+        "before": 5,
+        "after": 7
+      },
+      "updated_nodes": [
+        "sys-session-timeout-enforcement",
+        "sys-rest-api-v2-migration"
+      ],
+      "frontmatter_path_parity": true,
+      "body_preserved": true
+    },
+    "feature_negative_control": {
+      "manual_feature_rejected": true,
+      "exit_code": 2,
+      "graph_revision_unchanged": 7,
+      "feature_file_count": 0
+    }
+  }
+}

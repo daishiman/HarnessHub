@@ -2,9 +2,9 @@
 
 契約:
   1. 既存 artifact があれば `--body-file` 省略時に本文を保持する
-  2. 本文の再生成は `--regenerate-body` の明示 opt-in
+  2. 本文の再生成は `--regenerate-body` の明示 opt-in だが、未記入 template は C11 が拒否する
   3. receipt は常に body_source を出し、既存本文が差し替わる場合 replaced_body_lines を添える
-  4. frontmatter が壊れた既存 artifact は fail-closed (--regenerate-body でのみ復旧)
+  4. frontmatter が壊れた既存 artifact は fail-closed (復旧には substantive な `--body-file` が必要)
 """
 from __future__ import annotations
 
@@ -96,16 +96,14 @@ def test_metadata_only_update_preserves_body(tmp_path):
     assert body_of(artifact).rstrip() == BODY.rstrip()
 
 
-def test_regenerate_body_is_explicit_opt_in_and_reports_loss(tmp_path):
+def test_regenerate_body_is_rejected_when_it_would_restore_placeholders(tmp_path):
     module, root, _graph, artifact = seeded(tmp_path)
+    before = artifact.read_text(encoding="utf-8")
 
-    receipt = module._perform(
-        upsert_args(root, reinject_input(root), regenerate_body=True)
-    )
+    with pytest.raises(Exception, match="placeholder_only_section"):
+        module._perform(upsert_args(root, reinject_input(root), regenerate_body=True))
 
-    assert receipt["body_source"] == "regenerated"
-    assert receipt["replaced_body_lines"] == len((BODY.rstrip() + "\n").splitlines())
-    assert "<問題または要望を一文で記載>" in artifact.read_text(encoding="utf-8")
+    assert artifact.read_text(encoding="utf-8") == before
 
 
 def test_body_file_reports_from_file_and_replaced_lines(tmp_path):
@@ -136,19 +134,19 @@ def test_input_body_reports_from_input(tmp_path):
     assert "JSON 由来" in body_of(artifact)
 
 
-def test_new_artifact_uses_template_without_replacement(tmp_path):
+def test_new_artifact_without_substantive_body_fails_closed(tmp_path):
     module = load("upsert-node.py", "upsert_node_body_template")
-    root, _graph, input_path = workspace(tmp_path)
+    root, graph, input_path = workspace(tmp_path)
     input_path.write_text(json.dumps({"node": node_fixture()}), encoding="utf-8")
 
-    receipt = module._perform(upsert_args(root, input_path))
+    with pytest.raises(Exception, match="placeholder_only_section"):
+        module._perform(upsert_args(root, input_path))
 
-    assert receipt["operation"] == "added"
-    assert receipt["body_source"] == "template"
-    assert receipt["replaced_body_lines"] is None
+    assert json.loads(graph.read_text(encoding="utf-8"))["nodes"] == []
+    assert not (root / ARTIFACT_REL).exists()
 
 
-def test_broken_frontmatter_fails_closed_and_regenerate_recovers(tmp_path):
+def test_broken_frontmatter_requires_substantive_body_to_recover(tmp_path):
     module, root, _graph, artifact = seeded(tmp_path)
     artifact.write_text("frontmatter のない壊れたファイル\n", encoding="utf-8")
     reinject = reinject_input(root)
@@ -157,9 +155,17 @@ def test_broken_frontmatter_fails_closed_and_regenerate_recovers(tmp_path):
         module._perform(upsert_args(root, reinject))
     assert "frontmatter" in str(excinfo.value)
 
-    receipt = module._perform(upsert_args(root, reinject, regenerate_body=True))
-    assert receipt["body_source"] == "regenerated"
-    assert receipt["replaced_body_lines"] is None
+    with pytest.raises(Exception, match="placeholder_only_section"):
+        module._perform(upsert_args(root, reinject, regenerate_body=True))
+    assert artifact.read_text(encoding="utf-8") == "frontmatter のない壊れたファイル\n"
+
+    replacement = root / ".dev-graph" / "recovery-body.md"
+    replacement.write_text(BODY, encoding="utf-8")
+    receipt = module._perform(
+        upsert_args(root, reinject, body_file=str(replacement), regenerate_body=True)
+    )
+    assert receipt["body_source"] == "from_file"
+    assert body_of(artifact).rstrip() == BODY.rstrip()
 
 
 def test_dry_run_reports_body_source_without_writing(tmp_path):

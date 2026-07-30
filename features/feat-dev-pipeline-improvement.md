@@ -207,6 +207,23 @@ close した。
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
+## 2026-07-29 追記: C11 artifact 本文 readiness
+
+- `HarnessHub-4t9g` で、artifact file と frontmatter だけが揃った未記入 template を
+  `implementation_readiness=complete` とする fail-open を是正した。
+- C11 は artifact kind 別の canonical template と required section を照合し、
+  空本文、canonical placeholder、`TBD` / `TODO` / `未定` だけの節を
+  `placeholder_only_section` として `missing_sections` へ返す。
+- fenced code block は説明本文として数えず、構造 container は実内容のある child
+  section を含む場合だけ充足とする。
+- C02 の template-only 作成と placeholder 再生成は rollback し、実本文を保持する
+  metadata-only update と substantive body による作成・復旧を維持する。
+- 仕様影響は repository 内の readiness、tracker 投影、system build handoff に限定する。
+  system-spec `qa-092`、
+   `architecture/harness-hub-dev-workflow.md`、
+   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
+   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
 ## 2026-07-29 追記: skill tree lint の test cache 偽陽性修正
 
 - `HarnessHub-xswf` で、per-plugin pytest が生成する `.pytest_cache/v/cache` を
@@ -215,7 +232,7 @@ close した。
 - `.pytest_cache`、`.mypy_cache`、`.tool-cache` の正例と通常 nested directory の負例、
   root / plugin script の byte parity を回帰テストにした。
 - `system-spec/spec-state.json` を単一 writer で R4-reopen し、
-  `system-spec/testing-qa.md` qa-092、`architecture/harness-hub-testing-qa.md`、
+  `system-spec/testing-qa.md` qa-095、`architecture/harness-hub-testing-qa.md`、
   `specs/harness-hub-system-specification.md`、P12/P13 task spec へ反映した。
 - 製品 API・DB・認証認可・UI・deploy unit は非変更。判断と検証は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)

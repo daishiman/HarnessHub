@@ -221,3 +221,19 @@ metadata 無し session が残ることを含む。全件削除は明示 `--all`
 引数なし `reap` を拒否する負例の両方を保持する。
 再検証は `python3 -m pytest tests/test_live_trial_*.py -q` と
 `python3 scripts/lint-content-review.py --all` を使う。
+
+## 2026-07-29 C11 artifact 本文の最終レビュー証跡
+
+本 P11 の promoted task spec と完了判定は変更しない。後続課題 `HarnessHub-4t9g` では、
+C11 の本文検査を全 6 artifact kind に対して固定した。
+
+- canonical template は `placeholder_only_section` で拒否する。
+- 実内容へ置換した本文は受理する。
+- 全 required section を見出しだけへ潰した mutation は拒否する。
+- `TODO` だけの節と fenced code block だけの節は拒否する。
+- architecture の構造 container は、実内容のある child section を含む場合に限り受理する。
+- C02 の template-only 新規生成と placeholder 再生成が rollback することを確認する。
+
+再検証は
+`python3 -m pytest plugins/dev-graph/tests/test_graph_artifact_readiness.py plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py plugins/dev-graph/tests/test_upsert_node_body_preservation.py -q`
+を使い、広域 gate では `plugins/dev-graph/tests` と repository `tests` を再実行する。

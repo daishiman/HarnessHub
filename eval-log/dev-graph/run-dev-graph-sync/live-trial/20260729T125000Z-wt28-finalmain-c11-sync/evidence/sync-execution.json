@@ -1,0 +1,26 @@
+{
+  "scenario_id": "C03-OUT1-positive-second-sync-zero",
+  "checklist": [
+    {
+      "id": "first-sync",
+      "status": "PASS",
+      "evidence": "Initial dry-run found one title import and one Projects Status export. Apply completed both changes and advanced graph, remote, and snapshot digests."
+    },
+    {
+      "id": "authority",
+      "status": "PASS",
+      "evidence": "LT-TASK-001 retained tracker_binding=github with GitHub/C12 as its sole mutation authority."
+    },
+    {
+      "id": "second-sync",
+      "status": "PASS",
+      "evidence": "Second apply and verification dry-run both reported changes=0, imports=[], exports=[], converged=true. Stable digests were graph=1359312a8af2378465dec5013858561252bbf03b3e8ed24831feeaa63b76052e, remote=aa185e113bb4115e4781deaec8cddb754a90174498273547a8c24ab65579be0b, snapshot=ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f, each before==after."
+    },
+    {
+      "id": "goal-seek",
+      "status": "PASS",
+      "evidence": "Goal-spec, progress, and two append-only intermediate rows exist; original_goal and SHA-256 agree and all criteria/checklist entries pass."
+    }
+  ],
+  "overall_status": "PASS"
+}

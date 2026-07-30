@@ -18,9 +18,9 @@ serves_goals: [G1, G2, G5]
 | Web (web) | 確定 | 確定質疑: qa-076 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-092 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。dev-workflow の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner 上のテスト実行は CI 実行基盤として web 行の品質ゲート要件でカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-092 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-095 |
 
 ## 確定内容 (質疑録)
 
@@ -30,7 +30,7 @@ serves_goals: [G1, G2, G5]
 
 **回答**: 単体テストだけでは不十分。タスク仕様書は、想定できるテストレベルを網羅する: (1) 単体テスト (関数・コンポーネント単位)、(2) 結合テスト (モジュール間・API 連携)、(3) 境界値テスト (入力境界・異常系)、(4) 既存回帰テスト (変更が既存機能を壊していないこと)。各タスク仕様書はテスト戦略セクションを必須で持ち、対象変更に対しどのレベルのテストを追加・実行するかを明記する。この機能がエラーなく使えるかの検証を目的とし、テスト種別の選定はタスクの変更内容から導出する
 
-### qa-092 (対応セル: desktop-windows, desktop-macos)
+### qa-095 (対応セル: desktop-windows, desktop-macos)
 
 **質問**: 作者のローカル desktop 環境で skill 構造 lint を実行するとき、pytest などが生成した隠し cache を人が設計した skill tree と誤認せず、同じ品質基準を Windows と macOS で再現するには何を必須としますか?
 
@@ -45,12 +45,6 @@ serves_goals: [G1, G2, G5]
 【4. 複製と回帰】repository root の scripts/lint-skill-tree.py と配布 plugin 内の実装は同一バイト列を維持する。回帰テストは .pytest_cache だけでなく .mypy_cache と任意の dot cache を含め、通常の nested directory 違反は引き続き検出する。per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを確認する。
 
 【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-
-### qa-089 (横断追補: web, desktop-windows, desktop-macos)
-
-**質問**: AI skill の live-trial を task/feature の受入証拠として再利用するとき、文字列上の PASS や一時ファイル参照を実証済みと誤認しないために何を必須としますか?
-
-**回答**: scenario 正本の現行 ID・required observations 全件・実引数を verdict に束縛し、scenario の更新または削除で旧証拠を失効させる。scenario が task.md の必須・禁止手順を宣言する場合は実 task.md も照合し、別 operation への読み替えで結果だけを合わせた run を拒否する。各 observation の evidence ref は run directory 内の実在ファイルへ解決し、PR に採用する run と一緒に保持して clean clone でも解決できることを必須とする。write count は pre/post repository state、binding は永続 graph から測り、起動引数や dry-run echo を実測の代理にしない。draft gate と candidate adapter suppression の 0 件理由を分離する。昇格証跡の digest は形式だけでなく最終 persisted node の正準内容から再計算して一致させ、昇格後の変更や placeholder を拒否する。監査 helper は scenario 契約を含む分割 module 全体の複合 digest と Git index 一致へ束縛し、同じ最終 graph から作る負の検体を正準 validator が拒否することまで確認する。詳細な受領対応は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` を正とする。
 
 ## 上流指針 (doctrine anchor)
 

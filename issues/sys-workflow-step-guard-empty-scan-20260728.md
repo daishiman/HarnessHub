@@ -80,6 +80,8 @@ if not workflows_dir.is_dir():
 
 ## 再現手順またはユースケース
 
+Beads `HarnessHub-foq6` の description に記録した入力条件を用い、対象 script / workflow / validator を実行して現象を再現する。再現条件と実測結果は同 issue の notes に追記し、完了時は node の evidence_refs へ repository 内の証跡を係留する。
+
 ```bash
 # dir 不在でも成功してしまう
 python3 scripts/lint-workflow-step-guard.py --workflows-dir /nonexistent; echo "exit=$?"

@@ -1,0 +1,18 @@
+{
+  "admits_promoted_candidate": true,
+  "candidate_node_ids": [
+    "feat-user-auth-001"
+  ],
+  "decided_by": "plugins/dev-graph/scripts/validate-graph-schema.py (code=active_not_ready)",
+  "discriminates": true,
+  "draft_node_ids": [
+    "feat-admin-report-001",
+    "feat-notification-email-001",
+    "feat-user-dashboard-001"
+  ],
+  "excludes_every_draft": true,
+  "lifecycle_candidate_ids": [
+    "feat-user-auth-001"
+  ],
+  "promotion_attributable_to_run": true
+}
