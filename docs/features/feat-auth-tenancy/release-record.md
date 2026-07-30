@@ -295,42 +295,5 @@ AC-1〜AC-3を再確認した。
 | 未実施事項を実施済みと混同せず記録したか | ✅ §1 に理由つきで列挙 |
 | 文書や計画で実装・証跡の欠落を代替していないか | ✅ 代替していない。§3 は計画であることを明記 |
 
-**本番反映とR1〜R5は完了した。** PR #612はmainへmerge済みだが、そのmain pushから始まった
-自動deployは§8のR2専用token未登録で失敗し、Workerは直前versionへ自動rollbackされた。
-本番の既存R1〜R5証跡は失われていないが、追補PR・token投入・main完走まではP13をopenとする。
-
----
-
-## 8. PR #612 main反映後の自動deployと追補
-
-| 項目 | 結果 |
-| --- | --- |
-| PR / merge commit | #612 / `b1009d04234f13083fadf3707183edd7f859fb7c` |
-| GitHub Actions | `hub-ci` run `30518334455` |
-| build / test | G2〜G13 pass |
-| migration / deploy / health | pass |
-| DB smoke | S1 schema、S2 ULID、S3 release不変性 pass |
-| R2 smoke | `CLOUDFLARE_R2_API_TOKEN`未登録によりWrangler object put前にfail |
-| cleanup | 検証tenantの残存行0件 |
-| rollback | 成功。Workerは直前versionへ復帰 |
-
-失敗時のenvironmentでは、R2 smoke用にマッピングされた`CLOUDFLARE_API_TOKEN`が空だった。
-GitHub repositoryの実設定にはWorkers deploy用tokenは存在したが、別権限に分離した
-`CLOUDFLARE_R2_API_TOKEN`は存在しなかった。個人Wrangler OAuth tokenの転用や、
-deploy tokenへのR2 write追加は`qa-091`の最小権限境界を壊すため採用しない。
-
-follow-upは次を追加する。
-
-1. migration前にdeploy依存secret/variableを一括検査するpreflight
-2. provider/未知tenant/CSRF/Google 302/state/nonce/PKCEの本番OIDC start-flow smoke
-3. owner関係role・非owner・cross-tenant拒否を含むG14 auth release contract
-4. OIDC smokeを含む各step outcomeのrollback記録
-
-追補CLIをrollback後のproduction originへ実走し、provider/callback、未知tenant 404、
-CSRF cookie/token、Google 302、`response_type=code`、identity scope、
-`state`・`nonce`・PKCE S256のO1〜O4はすべてpassした。
-
-仕様影響の判断と外部所有者アクションは
-[post-merge仕様影響受領書](./p13-postmerge-auth-gate-spec-receipt.md)を正とする。
-Cloudflare所有者による専用R2 token発行、GitHub secret投入、main run完走は未完了であり、
-repository側の追補だけをもって本番deploy解消とは数えない。
+**本番反映とR1〜R5は完了した。** PR #612後の自動deployはR2専用token未登録で失敗したが、rollbackと追補OIDC O1〜O4は成功した。
+token投入・main完走までP13をopenとする。事故・追補・仕様判断は[post-merge仕様影響受領書](./p13-postmerge-auth-gate-spec-receipt.md)を正とする。
