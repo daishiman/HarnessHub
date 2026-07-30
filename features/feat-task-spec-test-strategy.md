@@ -12,7 +12,7 @@ iteration: null
 title: "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T20:58:52Z"
-updated_at: "2026-07-30T11:41:12Z"
+updated_at: "2026-07-30T12:10:09Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","feat-doc-governance-portability","feat-mvp-first-scheduling"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-30T11:41:12Z","origin_kind":"generated","source_digest":"f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0","source_path":"system-spec/testing-qa.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T12:10:09Z","origin_kind":"generated","source_digest":"d6d83950b6538eabf593d6fd19233cc6eaac341777491ff56c4be7aea8ac3ffd","source_path":"system-spec/testing-qa.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 testing-qa 章 qa-076/qa-078/qa-079/qa-081 と D8 から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-task-spec-test-strategy.md","confidence":0.9}]
@@ -126,7 +126,7 @@ system-dev-planner が生成する P01..P13 タスク仕様書が、次の 4 項
 - 境界値: global browser cache を成功根拠にせず、plugin-local path 包含を最終 check。
 - 回帰: EVALS、`npm test`、GitHub Actions の三経路へ同じ受入試験を接続。
 
-正本は `system-spec/testing-qa.md` の qa-101、設計は
+正本は `system-spec/testing-qa.md` の qa-102、設計は
 `architecture/harness-hub-testing-qa.md`、task 仕様書は
 `tasks/task-slide-report-generator-browser-ci-20260730.md`、判断と証拠は
 `docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md`

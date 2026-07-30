@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-086 |
+| Web (web) | 確定 | 確定質疑: qa-101 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,11 +24,23 @@ serves_goals: [G1, G2, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-086 (対応セル: web)
+### qa-101 (対応セル: web)
 
-**質問**: HarnessHub-b7ng の database.web 正本を、schema・migration・書き込みゲートの共有範囲を失わない単独で完結した契約としてどう確定するか。
+**質問**: HarnessHub-njkm の接続復旧実装を受け、qa-086 の schema・migration・書き込み共有範囲を失わず、プロセス外 SQLITE_BUSY 後の database.web 契約をどう確定しますか?
 
-**回答**: ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 と qa-085 を統合した次の database.web 契約を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は Workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書き込みは guardedWrite を通す。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。残る repository write の全量掃き出しは HarnessHub-mb7c で追跡する。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-086 の schema、migration、guardedWrite、実行環境別共有範囲を全面維持し、次の database.web 契約を再確定する。
+
+【1. 既存データ契約の維持】user_workspaces は tenant_id,user_id,workspace_id の複合主キー、device_authorizations は tenant_id NOT NULL と workspace_id/scopes_json/device_name/attempts/last_polled_at を保持し、expired は expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持ち、旧 token は移送せず Device Flow で再発行する。repository write は HarnessHub-mb7c で全量 guardedWrite 経由へ統一済みで、packages/db/scripts/check-db-write-gate.mjs が新規迂回を拒否する。
+
+【2. 実行環境別の競合境界】Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一プロセス内の write を guardedWrite で直列化する。別プロセスが同じ file DB を触る競合は直列化の外に残る。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、要求間 Promise を共有せず、DB 側の排他と CAS、競合再試行へ委ねる。
+
+【3. 壊れた接続の隔離】process-local 接続が SQLITE_BUSY / database is locked を踏んだ場合、接続層は raw client を poisoned（復旧まで使用禁止）として記録する。以後の read/write/transaction 操作は ConnectionPoisonedError で fail-fast し、未 commit の行を同じ接続から読ませず、『成功したのに別接続から行が見えない』silent data loss を防ぐ。UNIQUE などロック以外の確定失敗は poison にしない。request-bound 接続は 1 要求ごとに状態が閉じるため poison にせず従来の再試行を維持する。
+
+【4. 復旧口と参照安定性】TursoAdapter は reconnect() と isPoisoned() を公開する。reconnect() は同じ factory から新しい client を先に生成し、成功後に poison を解除して古い raw client を閉じる。公開 Client と Drizzle adapter の参照は変えないため、既に構築済み repository や spread された test adapter を作り直さない。poison 検知時の自動 reconnect は、並行 transaction を途中で巻き込み故障の観測も消すため採用しない。
+
+【5. 再試行と検証】ConnectionPoisonedError は元の SQLITE_BUSY を cause に保持するが、isLockConflict はこれを再試行対象から除外し、壊れた接続を 25 回叩かない。fake Client の状態遷移テストに加え、子プロセスが同じ file DB の write lock を保持する実 libSQL テストで、BUSY 後の read/write fail-fast、未 commit 行が別接続から見えないこと、lock 解放と reconnect 後の書き込みが別接続から見えることを固定する。
+
+【6. 境界】DB schema、migration、API payload、Cloudflare request-bound runtime の公開挙動は変更しない。本差分はローカル file DB 接続の障害検知・明示復旧契約を追加する。
 
 ## 上流指針 (doctrine anchor)
 

@@ -44,11 +44,15 @@ export { createRepositoryContext, type RepositoryContextInput } from './context'
 export type { DrizzleSchema, QueryFilter } from './drizzle';
 
 export {
+  ConnectionPoisonedError,
   DriverNotSupportedError,
   EntityNotFoundError,
   RepositoryError,
   type RepositoryErrorCode,
 } from './errors';
+// 接続が壊れたときの判定述語。アプリ層が「再試行して良い競合」と「接続を作り直すべき故障」を
+// 見分けるために必要 (毒エラーは drizzle に包まれるので instanceof だけでは判らない)。
+export { isConnectionPoisoned, isLockConflict } from './lock-conflict';
 export {
   DEFAULT_PAGE_SIZE,
   defineRepositoryFactory,

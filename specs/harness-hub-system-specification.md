@@ -125,6 +125,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**データ接続復旧の反映 (2026-07-30 / `HarnessHub-njkm` / qa-101)**:
+
+- process-local の `file:` / `:memory:` libSQL が `SQLITE_BUSY` を踏んだ場合、接続を poisoned（復旧まで使用禁止）として隔離し、以後の read/write/transaction を `ConnectionPoisonedError` で fail-fast する。
+- `TursoAdapter.reconnect()` は raw client を factory から作り直すが、公開 Client / Drizzle / repository の参照は変えない。自動 reconnect は並行 transaction と障害観測を壊すため行わない。
+- request-bound の Turso Web client / D1 は poison 対象外とし、従来どおり DB 側排他・CAS・競合再試行へ委ねる。DB schema、migration、API payload は変更しない。
+- 正規反映と実測結果は [libSQL 接続復旧 仕様反映受領書](../docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md) を正とする。
+
 **開発フロー反映 (2026-07-28 / `HarnessHub-7xi9`)**:
 
 - `system-spec/dev-workflow.md` の desktop-windows / desktop-macos を R4-reopen し、`qa-088` で `qa-039` の既存ローカル開発契約と並列 worktree の整合性契約を自己完結して再確定した。
@@ -195,7 +202,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - qa-100 は qa-089 の受領境界を fail-closed（確認不能なら失敗）にし、live-trial の `scenario_contract`、全 required observation、引数、宣言済み task 契約、run 内 evidence を criteria-test で再照合する。旧形式の欠落は互換成功にせず fresh run で更新する。
 - 影響は開発証拠の受領だけで、schedule skill 本体と製品契約は非変更。反映対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) を正とする。
 
-**plugin browser CI 到達追補 (2026-07-30 / `HarnessHub-nznu` / qa-101)**:
+**plugin browser CI 到達追補 (2026-07-30 / `HarnessHub-nznu` / qa-102)**:
 
 - 実ブラウザを必要とする plugin acceptance は EVALS やローカル `npm test` への列挙だけで完了とせず、plugin path 変更時に GitHub Actions から runtime install → 同一 test → read-only check へ到達させる。
 - Node/Playwright と OS/CPU 別 Chromium は plugin 配下へ復元する。cache は高速化に限定し、最終 check が version、実行ファイル実在、plugin-local path 包含を検証する。

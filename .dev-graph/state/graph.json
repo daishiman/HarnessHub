@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1031,
+  "graph_revision": 1033,
   "nodes": [
     {
       "acceptance": [
@@ -34005,7 +34005,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0",
+        "evaluated_digest": "d6d83950b6538eabf593d6fd19233cc6eaac341777491ff56c4be7aea8ac3ffd",
         "evaluator": "codex-final-review",
         "evidence_ref": "docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"
       },
@@ -34063,9 +34063,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T11:41:12Z",
+        "imported_at": "2026-07-30T12:10:09Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0",
+        "source_digest": "d6d83950b6538eabf593d6fd19233cc6eaac341777491ff56c4be7aea8ac3ffd",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34081,7 +34081,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T11:41:12Z"
+      "updated_at": "2026-07-30T12:10:09Z"
     },
     {
       "acceptance": [
@@ -34185,9 +34185,9 @@
         "P01..P13 exact-13 契約そのものの変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T11:41:12Z",
+        "imported_at": "2026-07-30T12:10:09Z",
         "origin_kind": "generated",
-        "source_digest": "f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0",
+        "source_digest": "d6d83950b6538eabf593d6fd19233cc6eaac341777491ff56c4be7aea8ac3ffd",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -34210,7 +34210,7 @@
       "template_version": "1.0.0",
       "title": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T11:41:12Z"
+      "updated_at": "2026-07-30T12:10:09Z"
     },
     {
       "acceptance": [

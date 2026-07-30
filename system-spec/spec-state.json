@@ -54,7 +54,7 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-086",
+        "qa_ref": "qa-101",
         "serves_goals": [
           "G1",
           "G2",
@@ -394,7 +394,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-101",
+        "qa_ref": "qa-102",
         "serves_goals": [
           "G1",
           "G2",
@@ -928,9 +928,14 @@
       "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-089 の scenario 束縛、durable evidence、実測、provenance、製品境界を全面維持し、受領側の fail-closed 契約を追補する。\n\n【1. 非省略契約】verify_by=live-trial の criteria evidence は、正準 positive scenario と verdict の scenario_contract を必須とする。legacy verdict schema 上で field が省略可能でも、criteria acceptance では欠落を互換成功として扱わず不合格にする。\n\n【2. 照合条件】scenario_id が正準 scenario と一致し、required_observations が全件 observed、unobserved が空、task_args_template と実引数の option flag が一致しなければならない。scenario が task.md 契約を宣言する場合は required/forbidden instruction も一致させる。各 evidence_ref は同じ run directory 内に包含される実在ファイルへ解決する。\n\n【3. 更新方法】旧受領書が新契約を満たさない場合、digest や field の手編集で追認せず、現行 scenario と現行挙動閉包を使って fresh live-trial を実走し、その durable run 一式を repository に保持する。\n\n【4. 回帰検証】criteria-test は field の存在と全照合条件を無条件に検査する。正例 run の成功に加え、scenario_contract を欠落させた負例が失敗する判別力を維持する。\n\n【5. 境界】本変更は Harness Hub repository の開発品質ゲートと証拠受領に限定する。run-dev-graph-schedule のスケジューリング動作、Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     },
     {
-      "id": "qa-101",
+      "id": "qa-102",
       "question": "既存のテスト戦略・品質保証契約を維持しながら、plugin-local Chromium を使う slide-report-generator の受入試験を、ローカルだけでなく GitHub Actions から必ず到達可能にするには何を必須としますか?",
       "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100 の既存契約を全面維持し、plugin-local browser acceptance の CI 到達契約を追補する。\n\n【1. テスト戦略】task 仕様書は単体・結合・境界値・既存回帰の4レベル、既定80%のカバレッジ目標、層別方針、実装詳細へ密結合しない保守性制約を持つ。実ブラウザを使う処理は、文字列・mock だけの単体試験で代替せず、Chromium 起動と生成物観測を結合／受入証拠に含める。\n\n【2. CI 到達】plugin の EVALS や npm test に受入試験を列挙するだけで完了としない。plugin または専用 workflow の変更を trigger とする GitHub Actions job から、plugin-local runtime 復元、同じ npm test、runtime の read-only check を順番に実行する。install/test/check のいずれかが失敗した場合は job を非0で停止する。\n\n【3. 再現可能な runtime】Node/Playwright 依存と OS/CPU 別 Chromium は plugin 配下へ復元し、利用者や runner の global browser cache を正本にしない。cache は高速化だけに使い、最終 check で Playwright version、実行ファイルの存在、plugin-local path への包含を再検証する。依存が無い clean runner でも install が npm ci と Chromium 復元へ収束する。\n\n【4. 回帰と証拠】Python 契約テストは workflow の path trigger、working-directory、install→npm test→check の配線を検査する。Node 受入試験は plugin-local Chromium を実起動し、16:9 検査と複数 slide screenshot の実在を確認する。EVALS、npm test、workflow の三経路に test-verify-slides を到達させ、宣言だけ・ローカルだけ・CIだけの片肺を許さない。\n\n【5. platform と境界】GitHub Actions は testing-qa.web の CI 実行基盤として扱い、作者の desktop platform と混同しない。本契約は repository 内の slide-report-generator 品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-101",
+      "question": "HarnessHub-njkm の接続復旧実装を受け、qa-086 の schema・migration・書き込み共有範囲を失わず、プロセス外 SQLITE_BUSY 後の database.web 契約をどう確定しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-086 の schema、migration、guardedWrite、実行環境別共有範囲を全面維持し、次の database.web 契約を再確定する。\n\n【1. 既存データ契約の維持】user_workspaces は tenant_id,user_id,workspace_id の複合主キー、device_authorizations は tenant_id NOT NULL と workspace_id/scopes_json/device_name/attempts/last_polled_at を保持し、expired は expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持ち、旧 token は移送せず Device Flow で再発行する。repository write は HarnessHub-mb7c で全量 guardedWrite 経由へ統一済みで、packages/db/scripts/check-db-write-gate.mjs が新規迂回を拒否する。\n\n【2. 実行環境別の競合境界】Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一プロセス内の write を guardedWrite で直列化する。別プロセスが同じ file DB を触る競合は直列化の外に残る。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、要求間 Promise を共有せず、DB 側の排他と CAS、競合再試行へ委ねる。\n\n【3. 壊れた接続の隔離】process-local 接続が SQLITE_BUSY / database is locked を踏んだ場合、接続層は raw client を poisoned（復旧まで使用禁止）として記録する。以後の read/write/transaction 操作は ConnectionPoisonedError で fail-fast し、未 commit の行を同じ接続から読ませず、『成功したのに別接続から行が見えない』silent data loss を防ぐ。UNIQUE などロック以外の確定失敗は poison にしない。request-bound 接続は 1 要求ごとに状態が閉じるため poison にせず従来の再試行を維持する。\n\n【4. 復旧口と参照安定性】TursoAdapter は reconnect() と isPoisoned() を公開する。reconnect() は同じ factory から新しい client を先に生成し、成功後に poison を解除して古い raw client を閉じる。公開 Client と Drizzle adapter の参照は変えないため、既に構築済み repository や spread された test adapter を作り直さない。poison 検知時の自動 reconnect は、並行 transaction を途中で巻き込み故障の観測も消すため採用しない。\n\n【5. 再試行と検証】ConnectionPoisonedError は元の SQLITE_BUSY を cause に保持するが、isLockConflict はこれを再試行対象から除外し、壊れた接続を 25 回叩かない。fake Client の状態遷移テストに加え、子プロセスが同じ file DB の write lock を保持する実 libSQL テストで、BUSY 後の read/write fail-fast、未 commit 行が別接続から見えないこと、lock 解放と reconnect 後の書き込みが別接続から見えることを固定する。\n\n【6. 境界】DB schema、migration、API payload、Cloudflare request-bound runtime の公開挙動は変更しない。本差分はローカル file DB 接続の障害検知・明示復旧契約を追加する。"
     }
   ],
   "approval_log": [
@@ -999,8 +1004,12 @@
       "note": "ユーザーの 2026-07-30 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/features/system-spec/architecture/tasks の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-yn71 の scenario_contract 非省略、全 observation・引数・task 契約・証拠参照照合、fresh live-trial による更新を qa-100 として qa-089 へ追補する。"
     },
     {
+      "id": "appr-019",
+      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-nznu / task-slide-report-generator-browser-ci-20260730 の plugin-local Chromium 受入試験を GitHub Actions から到達可能にする契約を qa-102 として testing-qa.web へ反映する。"
+    },
+    {
       "id": "appr-018",
-      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-nznu / task-slide-report-generator-browser-ci-20260730 の plugin-local Chromium 受入試験を GitHub Actions から到達可能にする契約を qa-101 として testing-qa.web へ反映する。"
+      "note": "ユーザーの 2026-07-30 指示『今回変更しているすべてのタスクを最終レビューし、仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks にも反映する』を明示承認として記録。HarnessHub-njkm の process-local libSQL 接続 poison 隔離、ConnectionPoisonedError、明示 reconnect、request-bound 非隔離、実プロセス外競合テストを qa-101 として database.web へ統合する。"
     }
   ],
   "reopen_log": [
@@ -1733,7 +1742,13 @@
     {
       "category": "testing-qa",
       "platform": "web",
-      "reason": "HarnessHub-nznu の完成度監査で、plugin-local Chromium 受入試験がローカル実走済みでも GitHub Actions から未到達である設計差が判明したため、既存 qa-076〜qa-081・qa-089・qa-095・qa-100 を維持して CI 到達契約を qa-101 へ統合する",
+      "reason": "HarnessHub-nznu の完成度監査で、plugin-local Chromium 受入試験がローカル実走済みでも GitHub Actions から未到達である設計差が判明したため、既存 qa-076〜qa-081・qa-089・qa-095・qa-100 を維持して CI 到達契約を qa-102 へ統合する",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "HarnessHub-njkm で process-local libSQL がプロセス外 SQLITE_BUSY を踏んだ後の silent data loss を接続層で隔離し、qa-086 のプロセス内直列化契約へ明示復旧境界を追加する必要が生じたため",
       "from": "確定"
     }
   ],

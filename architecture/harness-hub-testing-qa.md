@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-07-30T11:41:12Z"
+updated_at: "2026-07-30T12:10:09Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T11:41:12Z","origin_kind":"system-spec-harness","source_digest":"f61d4461615e623b2d8af3d6b55e5715e93e8692781f92f2fe4e93f026d16ee0","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"d6d83950b6538eabf593d6fd19233cc6eaac341777491ff56c4be7aea8ac3ffd","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-07-30T12:10:09Z","origin_kind":"system-spec-harness","source_digest":"d6d83950b6538eabf593d6fd19233cc6eaac341777491ff56c4be7aea8ac3ffd","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -136,7 +136,7 @@ plugin/workflow diff
 - workflow token は `contents: read` に限定し、repository secret を追加しない。
 - 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
-仕様正本は `system-spec/testing-qa.md` qa-101、実装判断と検証の対応は
+仕様正本は `system-spec/testing-qa.md` qa-102、実装判断と検証の対応は
 [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md)
 を参照する。
 
