@@ -6,8 +6,8 @@ beads_ids:
   - HarnessHub-ory6
 dev_graph_node_id: issue-qa-log-id-uniqueness-gate-20260726
 feature_node_id: feat-dev-pipeline-improvement
-spec_impact: none
-reviewed_at: 2026-07-28
+spec_impact: reflected
+reviewed_at: 2026-07-30
 ---
 
 # qa_log ID 一意性検査 (HarnessHub-33ho) の仕様反映受領書
@@ -21,7 +21,7 @@ reviewed_at: 2026-07-28
 一意か」を検査できていなかった問題を fail-closed 化した。500 行上限
 超過に伴うファイル分割 (4 例目) も同時に行った。
 
-- Beads ID: `HarnessHub-33ho` (対応本体・CLOSED), `HarnessHub-ory6` (follow-up・OPEN)
+- Beads ID: `HarnessHub-33ho` (対応本体・CLOSED), `HarnessHub-ory6` (follow-up・CLOSED)
 - dev-graph node ID: `issue-qa-log-id-uniqueness-gate-20260726`
 - follow-up dev-graph node ID: `issue-id-uniqueness-gate-generalization-20260728`
 - 対象 feature node: `feat-dev-pipeline-improvement`
@@ -30,7 +30,7 @@ reviewed_at: 2026-07-28
 
 ## 2. 仕様・設計影響の判定
 
-判定は **none（今回の差分による新しい仕様・設計影響なし）**。
+`HarnessHub-33ho` 単体の判定は **none（新しい仕様・設計影響なし）**。
 
 `validate-coverage-matrix.py` は goal-spec C7 (収集マトリクス網羅性の
 決定論ゲート) の実装であり、既存の入力形状・出力契約 (exit code /
@@ -46,16 +46,29 @@ stdout OK summary / stderr VIOLATION 一覧) を変えていない。追加し�
 変えず、既存関数をそのまま移動しただけの内部実装分割であり、これも
 仕様・設計への影響を持たない。
 
+### follow-up `HarnessHub-ory6` の再判定 (2026-07-30)
+
+follow-up は **reflected（内部 validation contract への設計影響あり）** と
+再判定した。3 plugin の公開 CLI path と正常系出力は維持する一方、不正入力の
+受理境界を「set/dict 化の後」から「raw entry の重複検査」へ前倒しし、
+重複 ID を新たに非 0 終了へ変えるためである。
+
+影響は repository 内の task graph / consult transcript / route build handoff の
+検証契約に限定される。製品 API、DB schema、認証認可、UI、Cloudflare deploy
+unit、確定済み QA 回答は変更しない。既存 qa-076 / qa-081 の異常系・冪等 gate
+要件を具体化する実装フィードバックとして、`system-spec/testing-qa.md`、
+集約仕様、testing architecture、feature、P12 task projection に反映した。
+
 ## 3. 確認した正本と設計
 
 | 層 | 確認結果 |
 |---|---|
-| `system-spec/` | `spec-state.json` の `qa_log`/`approval_log`/`categories`/goals に既存の重複なし。新要件なし |
-| `specs/` | Harness Hub 製品の外部契約に変更なし |
-| `architecture/` | component・責務境界・データフロー・配備構成に変更なし |
-| `features/` | `feat-dev-pipeline-improvement` の scope に変更なし (Dev Graph 基盤変更の一部として最終レビューへ追記) |
-| `tasks/` | 対応する task spec の変更なし (validator 内部実装の修正のため) |
-| `docs/` | `final-review-20260726.md` に差分追記、本受領書を新規追加 |
+| `system-spec/` | 確定 QA は変更せず、testing-qa へ「正規化前の ID 重複拒否」を実装フィードバックとして追記 |
+| `specs/` | 集約仕様の開発品質節へ同じ不変条件と製品影響なしの境界を追記 |
+| `architecture/` | testing-qa wrapper へ `raw entries → duplicate gate → lookup` の順序と plugin 間の責務分離を追記 |
+| `features/` | `feat-dev-pipeline-improvement` の実装履歴へ ory6 の完了・分割・反映先を追記 |
+| `tasks/` | P12 projection へ後続 standalone issue の write-back を追記。promoted package digest は不変 |
+| `docs/` | 本受領書と `final-review-20260726.md` を follow-up 完了状態へ更新 |
 
 ## 4. 正規フローによる反映
 
@@ -97,16 +110,59 @@ stdout OK summary / stderr VIOLATION 一覧) を変えていない。追加し�
 `_is_import_only_support_module()` が構造判定で起動対象から除外する
 条件を満たす。今回変更した手書き Python はすべて 500 行以下である。
 
-## 6. 残課題
+follow-up `HarnessHub-ory6` は、focused regression **103 passed**、
+Plugin Dev Planner **878 passed / 2 skipped**、UBM Goal Setting
+**203 passed**、Harness Creator **988 passed**、repository 全体
+**7627 passed / 5 skipped** で確認した。`make lint`、
+`make content-review`、`make harness-ratchet`、task 仕様書 P01〜P13、
+graph schema、plugin package、`git diff --check` もすべて blocking
+failure なしである。新規 support script 2 件には実コードレビューの
+coverage receipt を追加し、harness ratchet は floor 以上を維持した。
 
-- `HarnessHub-ory6` (`issue-id-uniqueness-gate-generalization-20260728`):
-  `validate-task-graph.py` / `validate-consult-session.py` /
-  `validate-route-build-reports.py` の 3 ファイルについて、同種の
-  集合化による ID 重複無検出が実害を持ちうるかの要否判定と、
-  該当する場合の fail-closed 実装・回帰テスト追加。
+### 最新 main 統合後の再受領
+
+PR #603 の skill-tree cache 品質ゲートを含む `origin/main` を local `main`
+へ同期し、その local `main` を本ブランチへマージした。競合した
+`system-spec/testing-qa.md`、集約仕様、testing architecture、P12 は、
+`HarnessHub-xswf` の qa-095 と `HarnessHub-ory6` の ID 一意性 gate を
+両方保持して解消した。統合後の testing-qa 正本 digest は
+`a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158`
+であり、architecture wrapper の lineage と確認証拠を同じ値へ更新した。
+
+### PR #607 の最新 main 競合解消
+
+`origin/main` / local `main` の `c122ae4` を本ブランチへ再マージした。
+同コミットで追加された `HarnessHub-foq6` の workflow 空走査 fail-closed
+契約と、`HarnessHub-ory6` の ID 一意性 gate を feature、集約仕様、P12、
+Dev Graph で両方保持した。Dev Graph は main 側を基底に単一 writer で
+本変更の node metadata を再適用し、`__merge_conflict__` sentinel を残して
+いない。
+
+## 6. follow-up 完了と残課題
+
+- `HarnessHub-ory6` (`issue-id-uniqueness-gate-generalization-20260728`) は
+  3 ファイルすべてを要検査と判定し、fail-closed 実装、負例 fixture、
+  CLI 非 0 終了、500 行分割、仕様書き戻しを完了して CLOSED。
 - `issues/sys-qa-log-id-uniqueness-gate-20260726.md` の frontmatter
   (`completion_evidence.status: "open"`, `confirmation_status: "draft"`)
   が、bd 上の `HarnessHub-33ho` CLOSED 状態と乖離している。scope_in の
   一部が follow-up issue へ切り出されて着地したため、frontmatter 側の
   更新 (status/confirmation_status の確定、または close 判断の追記) は
   別途対応が必要。本受領書の作成時点ではリスクと工数を鑑みて未着手。
+
+## 7. 開発内容の説明
+
+### 中学生向け
+
+名札が同じ人を名簿へ入れると、コンピューターは 2 人を 1 人だと思い込むことが
+あります。今回、名簿をまとめる前に「同じ名札が 2 枚ないか」を検査する係を、
+3 種類の名簿へ追加しました。同じ ID があれば処理を止め、正しいデータだけなら
+今までどおり通します。
+
+### 技術者向け
+
+task/component、transcript turn、handoff route の raw entries に対し、
+downstream の set/dict normalization より前に決定論的 duplicate scan を行う。
+違反は既存の fail-soft findings / fail-closed CLI exit へ接続し、last-write-wins
+または集合縮約後の referential-existence check が返す偽陽性を防ぐ。正常系、
+重複 fixture、CLI exit、support module split を同じ regression suite で固定する。

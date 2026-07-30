@@ -293,11 +293,4 @@ shared-layers 前文が名指しする 4 件を実装レベルで確認した。
 
 ## 13. 再レビュー以降
 
-Round 2 (2026-07-21 / 条件付き承認) とその実装フォローアップは、本書が 500 行を超えたため
-**[final-review-round2-notes.md](./final-review-round2-notes.md)** へ分離した。
-
-| ラウンド | 判定 | 記録 |
-|---|---|---|
-| Round 1 | 差し戻し（範囲限定） | 本書 §1〜§12 |
-| Round 2 | 条件付き承認 | `final-review-round2-notes.md` §13 |
-| フォローアップ | 条件 3 件を解消 | `final-review-round2-notes.md` §14 |
+Round 1（範囲限定の差し戻し）は本書 §1〜§12、Round 2（2026-07-21 / 条件付き承認）と条件 3 件の解消記録は [final-review-round2-notes.md](./final-review-round2-notes.md) §§13〜14 が正本。
