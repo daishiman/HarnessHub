@@ -19,53 +19,34 @@
 //   - 接続が差し替わると丸ごと消える (成功を返したのに行が無い)
 //   - あとから同じ接続で COMMIT すると `SQLITE_BUSY: cannot commit transaction` になる
 //   - `ROLLBACK` では戻らない (`SQLITE_ERROR` = 有効なトランザクションが無い)
-// つまり **BUSY を踏んだ時点で手遅れ**。復旧手段は接続を捨てること (`Sqlite3Client.reconnect()`)
-// だけで、これは driver 内部 API なので drizzle 越しには届かない。だから踏ませない方を選ぶ。
+// つまり **BUSY を踏んだ時点で手遅れ**。復旧手段は接続を捨てること (`Client.reconnect()` は
+// 公開 API だが、drizzle は `Client` を内部に隠すので drizzle インスタンスからは届かない)
+// だけである。だから踏ませない方を選ぶ。
 //
 // 再試行を残すのは本番 (Turso remote) 用。remote backend は 1 文が 1 HTTP 要求で接続に状態が
 // 残らないため、サーバ側が返す BUSY は再試行して安全。ローカル backend の BUSY はプロセス外
 // (別プロセスが同じファイルを触る) でしか起きなくなる。
+//
+// **踏んでしまった場合の受け皿 (HarnessHub-njkm)。** 直列化はプロセス内の競合しか消せないので、
+// プロセス外の競合で BUSY を踏む可能性は残る。そこは `connection/recoverable-client.ts` が
+// 引き受ける — ローカル経路で BUSY を踏んだ接続を「毒」として隔離し、以降の read/write を
+// `ConnectionPoisonedError` で止めて、commit されない書き込みを読ませない。復旧は
+// `TursoAdapter.reconnect()`。だから下の再試行と毒隔離は役割が分かれている:
+// 再試行は「まだ壊れていない競合」に、毒隔離は「もう壊れた接続」に対する処置である。
 //
 // SQLite の 1 文はそれ自体が原子的で、`SQLITE_BUSY` は**何も適用されなかった**ことを意味する。
 // だから CAS (`UPDATE ... WHERE <期待値> RETURNING`) を再試行しても二重適用にはならず、
 // 再試行時に WHERE 句が改めて評価される = 先に遷移させた要求がいれば 0 行のまま返る。
 // 「勝者が 1 本」という保証は再試行しても壊れない。
 
+// 判定述語は `src/lock-conflict.ts` にある。connection 層 (毒隔離) も同じ判定を要るので、
+// repository から import させると依存が逆流する。ここは後方互換の窓として re-export に留める。
+export { errorChainText, isConnectionPoisoned, isLockConflict } from '../src/lock-conflict';
+
+import { isLockConflict } from '../src/lock-conflict';
+
 /** 再試行の上限。audit.ts の上限と同じ値に揃えてある (経路ごとに待ち時間の上限を変えない)。 */
 export const CONFLICT_MAX_RETRY = 25;
-
-/** cause の連鎖をどこまで辿るか。ORM 1 段 + driver 2 段を見れば足りる。 */
-const CAUSE_DEPTH = 5;
-
-/**
- * error を判定用の文字列へ畳む。**`cause` の連鎖まで辿るのが要点**。
- *
- * drizzle は driver の例外を `DrizzleQueryError` で包み、message を
- * `Failed query: insert into "publisher_tokens" …` に差し替えて元の例外を `cause` に入れる。
- * `error.message` と `error.code` だけを見ると `SQLITE_BUSY` が見えず、
- * 「再試行の実装はあるのに一度も発火しない」状態になる (実際にそうなっていた)。
- */
-export function errorChainText(error: unknown): string {
-  const parts: string[] = [];
-  let current: unknown = error;
-  for (let depth = 0; current instanceof Error && depth < CAUSE_DEPTH; depth += 1) {
-    parts.push(current.message, (current as { code?: string }).code ?? '');
-    current = (current as { cause?: unknown }).cause;
-  }
-  return parts.join(' ');
-}
-
-/**
- * 書き込みロックの競合 (`SQLITE_BUSY` / `database is locked`) か。
- *
- * UNIQUE 違反は**含めない**。UNIQUE は「同じ値をもう入れられない」という確定的な失敗で、
- * 再試行しても結果は変わらない (25 回叩いて同じ例外を返すだけ遅くなる)。
- * 監査 append だけは UNIQUE(tenant_id, seq) を直列化の検出手段に使っているので、
- * あちらは独自の述語で `unique` も再試行対象に含める。
- */
-export function isLockConflict(error: unknown): boolean {
-  return /busy|locked/i.test(errorChainText(error));
-}
 
 /** ジッタ付き線形バックオフ。同時到着した writer 同士が同じ間隔で再衝突し続けるのを避ける。 */
 function backoff(attempt: number): Promise<void> {
