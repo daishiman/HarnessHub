@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1025,
+  "graph_revision": 1027,
   "nodes": [
     {
       "acceptance": [
@@ -33990,9 +33990,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158",
+        "evaluated_digest": "59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4",
         "evaluator": "codex-final-review",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md"
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -34048,9 +34048,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T02:00:31Z",
+        "imported_at": "2026-07-30T07:08:55Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158",
+        "source_digest": "59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34066,7 +34066,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T02:00:31Z"
+      "updated_at": "2026-07-30T07:08:55Z"
     },
     {
       "acceptance": [
@@ -37571,7 +37571,9 @@
         "receipt あり実行で applied_count / expected_count と総数 Y の一致、および source_digest の HTML 出現 1 件以上を機械検証する単体テストが存在する",
         "子 task 件数が receipt 件数と偶然一致する負例で照合未実施が正しく報告される"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -37589,12 +37591,18 @@
       "classification_confidence": 0.95,
       "classification_reason": "live-trial の独立評価者が receipt 未指定 run を FAIL 判定し、同一条件の過去 run が PASS になっていた事実から、評価者の厳しさに依存して緑赤が変わる仕様不整合であることを確定した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-30T06:43:32Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md",
+          "eval-log/dev-graph/run-dev-graph-render/live-trial/20260730T053500Z-wt18-35ai-render/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-render/live-trial/20260730T053500Z-wt18-35ai-render/independent-verification.json",
+          "plugins/dev-graph/tests/test_render_registration_verification.py",
+          "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-30T06:43:32Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -37638,11 +37646,15 @@
       "pull_request_linkages": [],
       "purpose": "receipt を渡さない実行では render-metadata の registration が null になり OUT1 の照合が成立しないが、仕様は optional と表記している。表示総数が偶然一致すると照合したように見える真空合格が成立し、呼び出し側から本物の合格と区別できない",
       "related_nodes": [
-        "issue-guard-graph-schema-timeout-fail-open-20260725"
+        "issue-guard-graph-schema-timeout-fail-open-20260725",
+        "feat-dev-pipeline-improvement"
       ],
       "resource_scope": [
         "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
-        "plugins/dev-graph/skills/run-dev-graph-render/scripts/render-graph-html.py"
+        "plugins/dev-graph/scripts/render-graph-html.py",
+        "plugins/dev-graph/tests/test_render_registration_verification.py",
+        "plugin-plans/dev-graph/component-inventory.json",
+        "eval-log/dev-graph/run-dev-graph-render/"
       ],
       "scope_in": [
         "SKILL.md 11 行 / 73 行 / 48 行 / 133 行 の必須性表記の整合",
@@ -37650,9 +37662,8 @@
         "receipt あり / なしの両系統と、子 task 件数が偶然一致する負例の単体テスト"
       ],
       "scope_out": [
-        "done 数 X の照合 (SKILL.md 133 行で明示的に対象外。register-package.py が 13 子を active 強制するため X は常に 0)",
-        "receipt を required にして receipt なし render を廃止する案 (探索的 render の正当な用途を潰すため非採用)",
-        "本課題単独での live-trial 再取得 (skill_md_sha256 が動くため修正と 1 バッチで実施する)"
+        "done 数 X の照合 (register-package.py が 13 子を active 強制するため、本変更は登録件数 Y と証拠由来を検証する)",
+        "receipt を required にして receipt なし render を廃止する案 (探索的 render の正当な用途を維持する)"
       ],
       "source_lineage": {
         "imported_at": "2026-07-25T22:22:01Z",
@@ -37663,7 +37674,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -37678,7 +37689,7 @@
       "template_version": "1.0.0",
       "title": "run-dev-graph-render の --registration-receipt が optional 表記なのに OUT1 受入条件は receipt 照合を必須要求している",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T03:28:01.451963Z"
+      "updated_at": "2026-07-30T06:43:32Z"
     },
     {
       "acceptance": [
@@ -43161,6 +43172,131 @@
     },
     {
       "acceptance": [
+        "昇格済み feature に古い draft snapshot を再 upsert すると dry-run と apply の両方が明示エラーになる",
+        "拒否時に graph revision・node・artifact Markdown が変化しない",
+        "意図的な lifecycle reset は変更フィールドを列挙した patch で実行できる",
+        "通常の冪等 upsert と既存 artifact kind の挙動を壊さない",
+        "C02 正本契約と回帰テストが実装を説明し、必要な品質ゲートが PASS する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-bk8v",
+        "linked_at": "2026-07-29T01:20:52Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "C14 r7-r11 の実走で同一 feature snapshot による lifecycle 退行を beads/none 両系列で再現した",
+      "completion_evidence": {
+        "completed_at": "2026-07-29T06:17:06Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
+          "plugins/dev-graph/references/execution-tracker-contract.md",
+          "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-29T06:17:06Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T01:20:52Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "古い feature snapshot の再 upsert が fail-closed で拒否され、意図的な reset だけが明示 patch で実行できる",
+      "graph_node_id": "issue-c02-upsert-lifecycle-regression-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T01:20:52Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C02 の再試行で前進済み feature lifecycle を暗黙に巻き戻さない",
+      "related_nodes": [
+        "issue-decompose-live-trial-audit-defects-20260726",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+        "docs/features/feat-dev-pipeline-improvement/final-review.md",
+        "features/feat-dev-pipeline-improvement.md"
+      ],
+      "scope_in": [
+        "feature 全体 snapshot の stale lifecycle before-image 検出",
+        "dry-run と apply の無変更拒否",
+        "意図的な lifecycle reset の明示 patch 経路",
+        "C02 正本契約と回帰テスト"
+      ],
+      "scope_out": [
+        "C14 live-trial 監査実装の変更",
+        "製品 API・DB・UI の変更",
+        "task・issue・specification・architecture・document の lifecycle policy 変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T01:20:52Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "c02",
+        "lifecycle",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T06:17:06Z"
+    },
+    {
+      "acceptance": [
         "canonical template の未記入 required section が incomplete となり節名を missing_sections に返す",
         "全 6 artifact kind の実本文は受理し、見出しだけへ潰した mutation は拒否する",
         "C02 の template-only 新規生成と placeholder 再生成を transaction rollback する",
@@ -43409,43 +43545,38 @@
     },
     {
       "acceptance": [
-        "昇格済み feature に古い draft snapshot を再 upsert すると dry-run と apply の両方が明示エラーになる",
-        "拒否時に graph revision・node・artifact Markdown が変化しない",
-        "意図的な lifecycle reset は変更フィールドを列挙した patch で実行できる",
-        "通常の冪等 upsert と既存 artifact kind の挙動を壊さない",
-        "C02 正本契約と回帰テストが実装を説明し、必要な品質ゲートが PASS する"
+        "Anthropic 公式 marketplace 文書と実行対象 Claude Code CLI の版を実行直前に再照合し、git-subdir の url/path/ref/sha 契約を証跡化する",
+        "macOS と Windows の両方で git-subdir source を install し、plugin details の Skills が 1 件以上で、対象 skill の実行が期待出力を返す",
+        "SSH 鍵や global git url rewrite に依存しない経路で成功し、隔離設定と cleanup の証跡を残す",
+        "A1/A2/A3 と Stage 1 entry condition は実行済み証跡だけで再判定し、未充足なら REJECTED / NOT_MET を維持する",
+        "docs/features・features・tasks・specs・architecture・system-spec の影響判断と仕様反映受領書を記録する"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
-        "bd_issue_id": "HarnessHub-bk8v",
-        "linked_at": "2026-07-29T01:20:52Z",
+        "bd_issue_id": "HarnessHub-n2c0",
+        "linked_at": "2026-07-30T02:13:08.338393Z",
         "sync_state": "linked"
       },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
-          "candidate_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
-          "confidence": 0.99
+          "candidate_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
+          "confidence": 0.97
         }
       ],
-      "classification_confidence": 0.99,
-      "classification_reason": "C14 r7-r11 の実走で同一 feature snapshot による lifecycle 退行を beads/none 両系列で再現した",
+      "classification_confidence": 0.97,
+      "classification_reason": "2026-07-30 の公式再照合で、H7 終結時の再開条件だった git-subdir source が現行 Claude Code の正式契約になったため",
       "completion_evidence": {
-        "completed_at": "2026-07-29T06:17:06Z",
-        "evidence_refs": [
-          "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
-          "plugins/dev-graph/references/execution-tracker-contract.md",
-          "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
-          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-07-29T06:17:06Z",
-        "source": "manual",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -43453,13 +43584,13 @@
         "evidence_ref": null
       },
       "confirmation_status": "draft",
-      "created_at": "2026-07-29T01:20:52Z",
+      "created_at": "2026-07-30T02:09:26Z",
       "depends_on": [],
-      "domain": "quality",
+      "domain": "platform",
       "evaluation_status": "pending",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+      "file_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
       "github_project_linkages": [],
       "github_publication": {
         "labels": [],
@@ -43467,10 +43598,10 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "古い feature snapshot の再 upsert が fail-closed で拒否され、意図的な reset だけが明示 patch で実行できる",
-      "graph_node_id": "issue-c02-upsert-lifecycle-regression-20260729",
+      "goal": "現行 git-subdir source で H7 の配布経路を macOS / Windows の実利用まで再検証し、Stage 1 entry condition を証拠に基づき再判定できる状態",
+      "graph_node_id": "issue-h7-git-subdir-revalidation-20260730",
       "implementation_readiness": {
-        "checked_at": "2026-07-29T01:20:52Z",
+        "checked_at": "2026-07-30T02:09:26Z",
         "missing_sections": [],
         "status": "complete"
       },
@@ -43481,56 +43612,59 @@
       ],
       "parent_feature": null,
       "phase_ref": null,
-      "priority": "high",
+      "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "C02 の再試行で前進済み feature lifecycle を暗黙に巻き戻さない",
+      "purpose": "H7 終結時には存在しなかった正式 git-subdir source を、過去の観測と混同せず現行 CLI で再評価する",
       "related_nodes": [
-        "issue-decompose-live-trial-audit-defects-20260726",
-        "feat-dev-pipeline-improvement"
+        "feat-stage0-distribution-gate",
+        "SYS-STAGE0-DISTRIBUTION-GATE-P06",
+        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
       ],
       "resource_scope": [
-        "plugins/dev-graph/scripts/upsert-node.py",
-        "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
-        "plugins/dev-graph/references/execution-tracker-contract.md",
-        "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
-        "docs/features/feat-dev-pipeline-improvement/final-review.md",
-        "features/feat-dev-pipeline-improvement.md"
+        "docs/features/feat-stage0-distribution-gate/",
+        "features/feat-stage0-distribution-gate.md",
+        "tasks/feat-stage0-distribution-gate/",
+        "system-spec/fetched-references.json",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-infrastructure.md"
       ],
       "scope_in": [
-        "feature 全体 snapshot の stale lifecycle before-image 検出",
-        "dry-run と apply の無変更拒否",
-        "意図的な lifecycle reset の明示 patch 経路",
-        "C02 正本契約と回帰テスト"
+        "現行 Claude Code の git-subdir source 契約と CLI 版の一次照合",
+        "url/path と ref または sha pin を使う最小 plugin の再現可能な検体",
+        "macOS / Windows の install・plugin details・skill 実行 E2E",
+        "SSH 鍵・global git rewrite・実環境汚染への非依存確認",
+        "A1/A2/A3 と Stage 1 entry condition の fail-closed 再判定"
       ],
       "scope_out": [
-        "C14 live-trial 監査実装の変更",
-        "製品 API・DB・UI の変更",
-        "task・issue・specification・architecture・document の lifecycle policy 変更"
+        "過去の H7 実行証跡の書き換え",
+        "E2E 未完了のまま D7 を confirmed 登録すること",
+        "Publisher 本体の実装",
+        "有償 Windows 実行環境の常設"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-29T01:20:52Z",
+        "imported_at": "2026-07-30T02:09:26Z",
         "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
+        "source_digest": "5c420336d7904d8f56e53cc537c80ef881ac9b88dc8aa641ba130788f0d58360",
+        "source_path": "system-spec/fetched-references.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "draft",
       "tags": [
-        "quality",
-        "dev-graph",
-        "c02",
-        "lifecycle",
-        "follow-up"
+        "stage0",
+        "h7",
+        "claude-code",
+        "git-subdir",
+        "revalidation"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
+      "title": "H7 を現行 git-subdir source で macOS / Windows 再検証する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T06:17:06Z"
+      "updated_at": "2026-07-30T02:13:24.924968Z"
     },
     {
       "acceptance": [
@@ -43654,129 +43788,6 @@
       "title": "criteria-test が scenario_contract 欠落の live-trial 受領書を許容する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-30T05:42:16Z"
-    },
-    {
-      "acceptance": [
-        "Anthropic 公式 marketplace 文書と実行対象 Claude Code CLI の版を実行直前に再照合し、git-subdir の url/path/ref/sha 契約を証跡化する",
-        "macOS と Windows の両方で git-subdir source を install し、plugin details の Skills が 1 件以上で、対象 skill の実行が期待出力を返す",
-        "SSH 鍵や global git url rewrite に依存しない経路で成功し、隔離設定と cleanup の証跡を残す",
-        "A1/A2/A3 と Stage 1 entry condition は実行済み証跡だけで再判定し、未充足なら REJECTED / NOT_MET を維持する",
-        "docs/features・features・tasks・specs・architecture・system-spec の影響判断と仕様反映受領書を記録する"
-      ],
-      "architecture_refs": [
-        "arch-harness-hub-infrastructure"
-      ],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-n2c0",
-        "linked_at": "2026-07-30T02:13:08.338393Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
-          "confidence": 0.97
-        }
-      ],
-      "classification_confidence": 0.97,
-      "classification_reason": "2026-07-30 の公式再照合で、H7 終結時の再開条件だった git-subdir source が現行 Claude Code の正式契約になったため",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-07-30T02:09:26Z",
-      "depends_on": [],
-      "domain": "platform",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-h7-git-subdir-revalidation-20260730.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "現行 git-subdir source で H7 の配布経路を macOS / Windows の実利用まで再検証し、Stage 1 entry condition を証拠に基づき再判定できる状態",
-      "graph_node_id": "issue-h7-git-subdir-revalidation-20260730",
-      "implementation_readiness": {
-        "checked_at": "2026-07-30T02:09:26Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "medium",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "H7 終結時には存在しなかった正式 git-subdir source を、過去の観測と混同せず現行 CLI で再評価する",
-      "related_nodes": [
-        "feat-stage0-distribution-gate",
-        "SYS-STAGE0-DISTRIBUTION-GATE-P06",
-        "SYS-STAGE0-DISTRIBUTION-GATE-P07"
-      ],
-      "resource_scope": [
-        "docs/features/feat-stage0-distribution-gate/",
-        "features/feat-stage0-distribution-gate.md",
-        "tasks/feat-stage0-distribution-gate/",
-        "system-spec/fetched-references.json",
-        "specs/harness-hub-system-specification.md",
-        "architecture/harness-hub-infrastructure.md"
-      ],
-      "scope_in": [
-        "現行 Claude Code の git-subdir source 契約と CLI 版の一次照合",
-        "url/path と ref または sha pin を使う最小 plugin の再現可能な検体",
-        "macOS / Windows の install・plugin details・skill 実行 E2E",
-        "SSH 鍵・global git rewrite・実環境汚染への非依存確認",
-        "A1/A2/A3 と Stage 1 entry condition の fail-closed 再判定"
-      ],
-      "scope_out": [
-        "過去の H7 実行証跡の書き換え",
-        "E2E 未完了のまま D7 を confirmed 登録すること",
-        "Publisher 本体の実装",
-        "有償 Windows 実行環境の常設"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-07-30T02:09:26Z",
-        "origin_kind": "manual",
-        "source_digest": "5c420336d7904d8f56e53cc537c80ef881ac9b88dc8aa641ba130788f0d58360",
-        "source_path": "system-spec/fetched-references.json",
-        "source_plugin": "system-spec-harness",
-        "source_version": "0.1.0"
-      },
-      "start_date": null,
-      "status": "draft",
-      "tags": [
-        "stage0",
-        "h7",
-        "claude-code",
-        "git-subdir",
-        "revalidation"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "H7 を現行 git-subdir source で macOS / Windows 再検証する",
-      "tracker_binding": "beads",
-      "updated_at": "2026-07-30T02:13:24.924968Z"
     },
     {
       "acceptance": [
