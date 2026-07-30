@@ -12,8 +12,8 @@ iteration: null
 title: "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている"
 owners: ["daishiman"]
 created_at: "2026-07-28T07:20:00Z"
-updated_at: "2026-07-30T02:24:26Z"
-status: "draft"
+updated_at: "2026-07-30T02:36:43Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-worktree-main-ref-desync-20260728","issue-desync-guard-bundle-untracked-20260728"]
 resource_scope: [".github/workflows/governance-check.yml","Makefile","scripts/run-ci-checks.sh","scripts/lint-ci-local-check-parity.py","scripts/ci-local-check-allowlist.json","tests/scripts-root/test_root__lint_ci_local_check_parity.py","issues/sys-local-ci-gate-drift-20260728.md","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",".dev-graph/state/graph.json"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-ml57","linked_at":"2026-07-30T02:24:26Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-local-ci-gate-drift-20260728","linked_at":"2026-07-30T02:36:43Z","merge_commit_sha":null,"merged_at":null,"pr_number":608,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/608"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":["scripts/lint-ci-local-check-parity.py","scripts/ci-local-check-allowlist.json","tests/scripts-root/test_root__lint_ci_local_check_parity.py","docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":null,"source":"manual","status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-30T02:36:43Z","evidence_refs":["scripts/lint-ci-local-check-parity.py","scripts/ci-local-check-allowlist.json","tests/scripts-root/test_root__lint_ci_local_check_parity.py","docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-07-30T02:36:43Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-28T07:20:00Z","missing_sections":[],"status":"complete"}
 ---
 

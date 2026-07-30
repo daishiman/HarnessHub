@@ -28,6 +28,7 @@ fail-closed（判定できないときは安全側に倒して失敗させる）
 | dev-graph node | `issue-local-ci-gate-drift-20260728` |
 | branch | `devgraph/issue-local-ci-gate-drift-20260728` |
 | base | `main` |
+| draft PR | `daishiman/HarnessHub#608` |
 | task type | implementation / NON_VISUAL |
 | deploy unit | repository development tooling |
 
@@ -156,3 +157,10 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 `HarnessHub-11qt`（メタ層 lint の local 入口）と `HarnessHub-yhc3`
 （required checks の未結線）は、本 meta-lint が検出・例外理由を要求する対象として
 引き続き独立管理する。
+
+## 9. PR 受領
+
+2026-07-30、repository の default branch `main` 向け Draft PR
+[#608](https://github.com/daishiman/HarnessHub/pull/608) を作成した。
+PR 本文には目的、変更内容、検証結果、仕様反映、Beads ID、
+dev-graph node ID、残課題を記録済みである。

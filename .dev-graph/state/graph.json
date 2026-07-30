@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1000,
+  "graph_revision": 1001,
   "nodes": [
     {
       "acceptance": [
@@ -42603,7 +42603,7 @@
       "classification_confidence": 0.95,
       "classification_reason": "CI とローカルゲートの被覆差というリポジトリ運用上の追跡課題であり、特定 feature の実装タスクではない",
       "completion_evidence": {
-        "completed_at": null,
+        "completed_at": "2026-07-30T02:36:43Z",
         "evidence_refs": [
           "scripts/lint-ci-local-check-parity.py",
           "scripts/ci-local-check-allowlist.json",
@@ -42611,9 +42611,9 @@
           "docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"
         ],
         "policy": "manual",
-        "reconciled_at": null,
+        "reconciled_at": "2026-07-30T02:36:43Z",
         "source": "manual",
-        "status": "in_progress"
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -42651,7 +42651,20 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-local-ci-gate-drift-20260728",
+          "linked_at": "2026-07-30T02:36:43Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 608,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/608"
+        }
+      ],
       "purpose": "scripts/run-ci-checks.sh は冒頭に「CI と同等の機械チェックをローカルで一括実行する」と宣言し、pre-push hook はその結果を「All CI-equivalent checks passed」と表示する。しかし .github/workflows/*.yml が実行する scripts/*.py と run-ci-checks.sh が実行するものを機械的に突合すると、CI にあってローカルに無いものが 19 件ある。同等性は誰にも検査されていない。結果として開発者は「pre-push が緑なら CI も緑」という誤った事前確率を持ち、実際には CI で初めて落ちる。本リポジトリでは同型の事故が既に 2 回起きており (2026-07-02 / 2026-07-28)、いずれも当該 1〜2 件を手で追加して終わっている。",
       "related_nodes": [
         "issue-worktree-main-ref-desync-20260728",
@@ -42694,7 +42707,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-workflow",
         "ci",
@@ -42707,7 +42720,7 @@
       "template_version": "1.0.0",
       "title": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T02:24:26Z"
+      "updated_at": "2026-07-30T02:36:43Z"
     },
     {
       "acceptance": [
