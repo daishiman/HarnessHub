@@ -1,0 +1,6 @@
+{
+  "result": "FAIL",
+  "blockers": [
+    "The none-binding confirmation_evidence digest was corrected by a C02 upsert at 2026-07-29T13:35:59Z after the second target Skill invocation at 2026-07-29T13:32:06Z. The task contract forbids every node patch after the second Skill call and requires an audit failure to terminate without repair."
+  ]
+}

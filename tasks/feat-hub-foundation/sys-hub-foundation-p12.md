@@ -83,7 +83,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 上記「landing 後の削除待ち」だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除済み。`node scripts/ci/check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件) になり、投入状態と台帳の乖離は解消した。
 - deploy の remote 実走は run `30143422049` で完走済み。**backup の remote 実走だけが未達**で、原因は secret ではなく `backup.yml` の採否判定にあった (データ行 0 を不採用にしており、稼働直後で全 19 テーブル 0 行の本番 DB を 3 夜連続で落としていた)。
 - 是正として採否判定を `packages/db/scripts/verify-export-artifact.ts` へ一本化した。設計境界は [architecture/harness-hub-infrastructure.md](../../architecture/harness-hub-infrastructure.md)、検査内容の詳細正本は [docs/infrastructure-spec.md](../../docs/infrastructure-spec.md) §7 / §10。
-- 3 夜連続の失敗が無音だった観測側の欠落 (`BACKUP_HEARTBEAT_URL` 未投入) は本 task の責務外として `HarnessHub-dbx6` へ分離した。2026-07-29 に同 issue でローカル実装と qa-093 の仕様反映まで完了し、外部適用・main 実走・着信実測は未完了として継続する。
+- 3 夜連続の失敗が無音だった観測側の欠落 (`BACKUP_HEARTBEAT_URL` 未投入) は本 task の責務外として `HarnessHub-dbx6` へ分離した。2026-07-29 に同 issue でローカル実装と qa-094 の仕様反映まで完了し、外部適用・main 実走・着信実測は未完了として継続する。
 
 ## 追補実行記録 (2026-07-29 / `HarnessHub-dbx6`)
 

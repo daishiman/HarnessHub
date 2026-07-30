@@ -1,0 +1,477 @@
+
+ ▐▛███▜▌   Claude Code v2.1.62
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-28
+
+❯ 次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手:
+  /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/task.md
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Let me start by reading key files and setting up the initial state.
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ Bash(printf '%s' '自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready
+      featureごとにsystem-dev-planner(ミクロ層)を自動起動または手動`/system-dev-plan`実行結果を受理…)
+  ⎿  ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795  -
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Good. Empty graph as expected. Now let me create the intermediate JSONL first line and take the pre-state snapshot.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/eval-log)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/eval-log/run-dev-graph-decompose-intermediate.jsonl)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/eval-log/run-dev-graph-decompose-intermediate.jsonl
+      1 {"original_goal":"自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起動
+        または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects、b
+        inding=noneはローカルのみへ冪等投影した状態になっている","original_goal_hash":"ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795","current_goal_snapshot":"自然文の「やりた
+        いこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起動または手動`/system-dev-plan`実行結
+        果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects、binding=noneはローカルのみへ冪等投
+        影した状態になっている","delta_from_original":"none","merged_directive_for_next":"Execute run-dev-graph-decompose with binding=none on wt28-decompose-none fixture, verify all 7 observati
+        ons for scenario C14-OUT1-positive-macro-decomposition-r7","drift_signal":"none"}
+
+⏺ Now take the pre-state snapshot.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py snapshot \
+        --repo-root /Users/dm/orca/worksp…)
+  ⎿  (No output)
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Pre-state captured. Now execute the Skill tool for run-dev-graph-decompose.
+
+⏺ Skill(dev-graph:run-dev-graph-decompose)
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ Now I need to execute the skill's instructions. Let me start by resolving the repo context and reading key scripts.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root /Users/dm/orca/workspaces/HarnessH…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +25 lines (ctrl+o to expand)
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ Now let me read the upsert-node.py to understand node registration format, and create the goal-spec.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/eval-log/run-dev-graph-decompose-goal-spec.json)
+  ⎿  Wrote 6 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/eval-log/run-dev-graph-decompose-goal-spec.json
+      1 {
+      2   "original_goal": "自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起
+        動または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects
+        、binding=noneはローカルのみへ冪等投影した状態になっている",
+      3   "original_goal_hash": "ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795",
+      4   "scenario": "C14-OUT1-positive-macro-decomposition-r7",
+      5   "binding": "none"
+      6 }
+
+⏺ Now let me understand the node schema and look at examples from the beads companion trial.
+
+⏺ Bash(cat /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose/eval-log/macro-preview.json 2>/dev/null | python3 -m json.t…)
+  ⎿  {
+         "graph_revision": 5,
+         "nodes": [
+     … +66 lines (ctrl+o to expand)
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now I need to create the want.md source file, compute its digest, and then register the macro decomposition nodes. Let me start.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/docs/want.md)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/docs/want.md
+      1 ユーザー登録とログインができて、ログイン後にダッシュボードで自分の利用状況を見られる小規模 Web アプリを作りたい。登録完了時と重要な変更時には通知メールを送りたい。運営者向けには全ユーザ
+        ーの利用状況を集計したレポート画面もほしい。
+
+⏺ Bash(shasum -a 256 /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/docs/want.md)
+  ⎿  7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577  /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/docs/want.md
+
+⏺ Now I'll create the node input JSONs and register them via upsert-node.py. Let me create all 5 nodes (1 architecture + 4 features).
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-arch-webapp-foundation-001.json)
+  ⎿  Wrote 78 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-arch-webapp-foundation-001.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "arch-webapp-foundation-001",
+       4     "artifact_kind": "architecture",
+       5     "artifact_subtypes": ["backend", "frontend"],
+       6     "title": "Web アプリ基盤アーキテクチャ",
+       7     "project_id": "webapp",
+       8     "domain": "platform",
+       9     "status": "draft",
+      10     "owners": ["dev-team"],
+     … +68 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-feat-user-auth-001.json)
+  ⎿  Wrote 91 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-feat-user-auth-001.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "feat-user-auth-001",
+       4     "artifact_kind": "feature",
+       5     "artifact_subtypes": [],
+       6     "title": "ユーザー登録・ログイン機能",
+       7     "project_id": "webapp",
+       8     "domain": "authentication",
+       9     "status": "draft",
+      10     "owners": ["dev-team"],
+     … +81 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-feat-user-dashboard-001.json)
+  ⎿  Wrote 90 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-feat-user-dashboard-001.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "feat-user-dashboard-001",
+       4     "artifact_kind": "feature",
+       5     "artifact_subtypes": [],
+       6     "title": "ユーザーダッシュボード",
+       7     "project_id": "webapp",
+       8     "domain": "dashboard",
+       9     "status": "draft",
+      10     "owners": ["dev-team"],
+     … +80 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-feat-notification-email-001.json)
+  ⎿  Wrote 90 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-feat-notification-email-001.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "feat-notification-email-001",
+       4     "artifact_kind": "feature",
+       5     "artifact_subtypes": [],
+       6     "title": "通知メール送信機能",
+       7     "project_id": "webapp",
+       8     "domain": "notification",
+       9     "status": "draft",
+      10     "owners": ["dev-team"],
+     … +80 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-feat-admin-report-001.json)
+  ⎿  Wrote 90 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/node-feat-admin-report-001.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "feat-admin-report-001",
+       4     "artifact_kind": "feature",
+       5     "artifact_subtypes": [],
+       6     "title": "運営者レポート画面",
+       7     "project_id": "webapp",
+       8     "domain": "reporting",
+       9     "status": "draft",
+      10     "owners": ["dev-team"],
+     … +80 lines (ctrl+o to expand)
+
+⏺ Now register all 5 nodes via upsert-node.py. Architecture first, then features.
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts && python3 upsert-node.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-lo…)
+  ⎿  Error: Exit code 2
+     {
+       "error": "generated artifact is invalid: [{\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Architecture decisions\"}, {\"node\":
+     \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Architecture overview\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\",
+     \"detail\": \"Container and component view\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Context and drivers\"}, {\"node\":
+     \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Cross-cutting contracts\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\",
+      \"detail\": \"Delivery, migration and rollback\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Goals and non-goals\"}, {\"node\":
+     \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Risks and verification\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\",
+     \"detail\": \"Subtype architecture\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"System context and boundaries\"}]",
+       "valid": false,
+       "write_count": 0
+     }
+
+     {
+       "error": "generated artifact is invalid: [{\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Architecture decisions\"}, {\"node\":
+     \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Architecture overview\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\",
+     \"detail\": \"Container and component view\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Context and drivers\"}, {\"node\":
+     \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Cross-cutting contracts\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\",
+      \"detail\": \"Delivery, migration and rollback\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Goals and non-goals\"}, {\"node\":
+     \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"Risks and verification\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\",
+     \"detail\": \"Subtype architecture\"}, {\"node\": \"arch-webapp-foundation-001\", \"code\": \"placeholder_only_section\", \"detail\": \"System context and boundaries\"}]",
+       "valid": false,
+     … +2 lines (ctrl+o to see all)
+
+⏺ Need to provide body content. Let me check the architecture template and the companion's approach.
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ I need to provide body content. Let me create body files for all nodes.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-arch-webapp-foundation-001.md)
+  ⎿  Wrote 63 lines to eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-arch-webapp-foundation-001.md
+      1 # Architecture overview
+      2
+      3 小規模 Web アプリケーションの共通基盤アーキテクチャ。ユーザー認証、データストア、メール送信、管理者機能を横断する技術スタックと構成を定義する。
+      4
+      5 ## Context and drivers
+      6
+      7 - Business/technical context: 小規模 Web アプリで、ユーザー登録・ログイン、ダッシュボード、通知メール、管理者レポートを提供する
+      8 - Quality attribute priorities: security, reliability, delivery
+      9 - Constraints: 小規模チーム、標準的な Web 技術スタック
+     … +53 lines (ctrl+o to expand)
+
+⏺ Now register the architecture node with body file.
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts && python3 upsert-node.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-lo…)
+  ⎿  {
+       "artifact_sha256_after": "a2383008ab1de2d48330461847ac5bbff9b165aef9369f0293fff6aa7d4e7c25",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Architecture node registered. Now register the 4 feature nodes. Features need body files too - let me check the feature template.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-feat-user-auth-001.md)
+  ⎿  Wrote 35 lines to ../../../eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-feat-user-auth-001.md
+      1 # 目的
+      2
+      3 Web アプリの利用者がアカウントを作成し、認証済みセッションでアプリを使えるようにする
+      4
+      5 ## 到達状態
+      6
+      7 ユーザーがメールアドレスとパスワードで登録・ログインでき、認証済みセッションが維持される状態
+      8
+      9 ## スコープ
+     … +25 lines (ctrl+o to expand)
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-feat-user-dashboard-001.md)
+  ⎿  Wrote 34 lines to ../../../eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-feat-user-dashboard-001.md
+      1 # 目的
+      2
+      3 ログイン後のユーザーが自分の利用状況をひと目で把握できるようにする
+      4
+      5 ## 到達状態
+      6
+      7 ログイン後にダッシュボード画面が表示され、自分の利用状況データが確認できる状態
+      8
+      9 ## スコープ
+     … +24 lines (ctrl+o to expand)
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-feat-notification-email-001.md)
+  ⎿  Wrote 34 lines to ../../../eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-feat-notification-email-001.md
+      1 # 目的
+      2
+      3 ユーザーに登録完了や重要な変更を確実に通知し、利便性と安全性を高める
+      4
+      5 ## 到達状態
+      6
+      7 登録完了時と重要な変更時に通知メールが自動送信される状態
+      8
+      9 ## スコープ
+     … +24 lines (ctrl+o to expand)
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-feat-admin-report-001.md)
+  ⎿  Wrote 34 lines to ../../../eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/cache/body-feat-admin-report-001.md
+      1 # 目的
+      2
+      3 運営者が全ユーザーの利用状況を集計して把握し、サービス改善に活かせるようにする
+      4
+      5 ## 到達状態
+      6
+      7 運営者向けに全ユーザーの利用状況を集計したレポート画面が利用できる状態
+      8
+      9 ## スコープ
+     … +24 lines (ctrl+o to expand)
+
+⏺ Now register all 4 feature nodes.
+
+⏺ Bash(python3 upsert-node.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none --input .dev-graph/cach…)
+  ⎿  {
+       "artifact_sha256_after": "ec847fc37eb3568338d9c6d35c7dffcc85561f738e446b09acfc5d58ef5e9a8d",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 upsert-node.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none --input .dev-graph/cach…)
+  ⎿  {
+       "artifact_sha256_after": "a99c56a14de2b164c1896f21c17fb7577c77204cd20dedff7d27361c332a1ee6",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 upsert-node.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none --input .dev-graph/cach…)
+  ⎿  {
+       "artifact_sha256_after": "8fd03868e3f02ebd4aad8874cf4ea7c702d80c1427d26fc8844398f9444702fd",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 upsert-node.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none --input .dev-graph/cach…)
+  ⎿  {
+       "artifact_sha256_after": "6e17822917f68c4f9b7c9c903da739ae342a92d1885b1a7d3dde58adfc68a392",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ All 5 nodes registered (graph_revision=5). Now save the macro preview graph and validate via stdin.
+
+⏺ Bash(cp /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/.dev-graph/state/graph.json /Users/dm/orca/workspaces/H…)
+  ⎿  Done
+
+⏺ Now validate via stdin (observation 5).
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py --graph - --repo-root /Users/dm/orca/workspaces/HarnessHub…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +4 lines (ctrl+o to expand)
+
+⏺ Graph validates. Now I need to promote one feature (feat-user-auth-001) to confirmed/pass/readiness-complete. I need to:
+  1. Compute the evaluated_digest from the final node content
+  2. Create a patch via upsert-node.py
+
+  Let me first read the current feat-user-auth-001 node from graph.json to prepare the patch.
+
+⏺ Bash(python3 -c "
+      import json, hashlib…)
+  ⎿  DIGEST: 5de4f6b7eacdd7029d210be86a9baf1ba4ed8f68f976ae3c25989d097e6d7413
+     Patch written
+
+⏺ I need to set updated_at explicitly to ensure the digest is deterministic. Let me redo this.
+
+⏺ Bash(python3 -c "
+      import json, hashlib, copy…)
+  ⎿  DIGEST: 2c39a50f8a01d0b2905c10e2b5a6e3da2266cf2a3b4f8699312035b5f1edf896
+     Patch written
+
+⏺ Bash(python3 upsert-node.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none --input .dev-graph/cach…)
+  ⎿  {
+       "artifact_sha256_after": "3d350b9a3d31a644ac899e345acdd0911168b613623b37a7b09b1520449cddec",
+       "body_source": "preserved",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Promotion applied (graph_revision=6). Now re-run the Skill for idempotency check (second run as required by task).
+
+⏺ Skill(dev-graph:run-dev-graph-decompose)
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ Second Skill invocation (idempotency check). The nodes already exist, so I need to verify they're all still present and re-running upsert produces noop.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  graph_revision: 6
+     node_count: 5
+       arch-webapp-foundation-001 (architecture) tracker_binding=none
+     … +4 lines (ctrl+o to expand)
+
+⏺ All 5 nodes present with tracker_binding=none. Let me verify idempotency by re-upserting each node - they should all return noop.
+
+⏺ Bash(for node in arch-webapp-foundation-001 feat-user-auth-001 feat-user-dashboard-001 feat-notification-email-001 feat-admin-report-001; do
+        body_file=".dev-graph/…)
+  ⎿  arch-webapp-foundation-001: noop True
+     feat-user-auth-001: noop True
+     feat-user-dashboard-001: noop True
+     … +2 lines (ctrl+o to expand)
+
+⏺ All noops - idempotency confirmed. No node duplication on second run. Now run the audit.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py audit \
+        --repo-root /Users/dm/orca/workspace…)
+  ⎿  (No output)
+  ⎿  (timeout 2m)
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  pass: True
+     run_binding_attested: True
+     persisted_bindings: {
+     … +66 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  dag_acyclic: NOT FOUND
+     task_contamination: NOT FOUND
+     write_counts: NOT FOUND
+     … +2 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  adapter_mutation_suppression: (object/array)
+     audit_implementation: (object/array)
+     binding_observations_distinct: True
+     … +21 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  === graph ===
+     {
+       "acyclic": true,
+     … +92 lines (ctrl+o to expand)
+
+⏺ Audit PASS. Now let me do the manual verification from graph.json and check the git diff for write counts.
+
+⏺ Bash(python3 -c "
+      import json, hashlib, copy…)
+  ⎿  === 1. 実登録の確認 ===
+     graph_revision: 6 (>0: OK)
+     node count: 5 (non-empty: OK)
+     … +69 lines (ctrl+o to expand)
+
+⏺ Now verify write counts via git diff (observation 5).
+
+⏺ Bash(git -C /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none status --short 2>&1)
+  ⎿   M .dev-graph/state/graph.json
+     ?? .dev-graph/cache/
+     ?? .dev-graph/state/.graph.json.register.lock
+     … +7 lines (ctrl+o to expand)
+
+⏺ Now read the companion beads audit for observation 4 comparison.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  Beads companion:
+       run_binding: beads
+       persisted_bindings: {"beads": ["arch-webapp-foundation-001", "feat-admin-report-001", "feat-dashboard-001", "feat-notification-001", "feat-user-auth-001"]}
+     … +14 lines (ctrl+o to expand)
+
+⏺ Good. Both runs show distinct bindings (beads vs none) and different publication routes. Now let me run the goal-seek verification and create the progress file.
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/eval-log/run-dev-graph-decompose-progress.json)
+  ⎿  Wrote 66 lines to ../../../eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none/eval-log/run-dev-graph-decompose-progress.json
+       1 {
+       2   "scenario": "C14-OUT1-positive-macro-decomposition-r7",
+       3   "binding": "none",
+       4   "checklist": [
+       5     {
+       6       "item": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+       7       "status": "pass",
+       8       "evidence": "graph に architecture=1, feature=4, task=0 を確認。Kahn のアルゴリズムで visited=5, total=5, has_cycle=false。phase_ref/parent_feature/feature_package_id を持つ node
+         は 0 件"
+       9     },
+      10     {
+     … +56 lines (ctrl+o to expand)
+
+⏺ Now append the second line to intermediate.jsonl and run the goal-seek verification.
+
+⏺ Bash(printf '%s\n' '{"original_goal":"自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready
+      featureごとにsystem-dev-planner(ミクロ層)を自動起動または手動`/sys…)
+  ⎿  (No output)
+
+⏺ Now run the goal-seek verification.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none
+      python3 - "$DEV_GRAPH_ROOT/eval-log/run-dev…)
+  ⎿  Goal-seek verification: PASS
+       rows: 2
+       expected hash: ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795
+
+⏺ All verifications pass. Now write the completion marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/out/status.json)
+  ⎿  Wrote 1 lines to ../../../eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T074206Z-wt28-c11-decompose-none/out/status.json
+      1 {"status": "PASS", "scenario": "C14-OUT1-positive-macro-decomposition-r7", "binding": "none"}
+
+⏺ DONE: PASS
+
+✻ Crunched for 12m 10s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

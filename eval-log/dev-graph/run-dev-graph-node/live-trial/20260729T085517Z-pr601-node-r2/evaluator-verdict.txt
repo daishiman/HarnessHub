@@ -1,0 +1,5 @@
+FAIL
+Blockers:
+- Byte-for-byte contiguous body preservation fails for task, specification, architecture, and document; template sections were inserted inside the original bodies.
+- Only the issue body remains contiguous.
+- The run checked seven API tokens in one specification and incorrectly marked overall body preservation as PASS.

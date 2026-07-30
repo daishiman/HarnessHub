@@ -114,7 +114,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **backup 成果物の採否判定境界**: 採用するか否かの判定は `packages/db/scripts/verify-export-artifact.ts` (実体は `parseExportArtifact`) の**一箇所へ集約**する。workflow の shell 側に header の `grep` や行数の `awk` を置かない。判定が 2 箇所に分かれると**弱い方が先に判定する**ため、ライブラリ側の fail-closed 検査 (header 形式・`format_version`・`coreTables` 19 テーブルとの集合一致・header 宣言行数と実際の行数の一致) が届かなくなる。
 - **qa-019「復元できないバックアップを成功と数えない」の適用範囲**: この確定要件が禁じるのは*復元できない断面*の採用であって、*データ行 0 の断面*の採用ではない。migration 済みで全 19 テーブル 0 行の断面は restore すれば同じ空 DB を再現するため採用し、`::warning::` だけ残す。旧実装はこの取り違えにより、稼働直後の本番 DB を 3 夜連続で不採用にしていた。
 
-**差分追記 (2026-07-29 / `HarnessHub-dbx6` / qa-093)**:
+**差分追記 (2026-07-29 / `HarnessHub-dbx6` / qa-094)**:
 
 - **heartbeat の責務分離**: Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使う。`CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` を共用すると、一方の成功が他方の失敗を隠すため禁止する。
 - **失敗検知の時間境界**: backup 専用 `hub-backup-daily` は `period=86400` 秒 / `grace=3600` 秒とし、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化させる。heartbeat は全 backup step 成功後だけ送る。

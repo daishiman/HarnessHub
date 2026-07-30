@@ -1,0 +1,209 @@
+{
+  "graph_revision": 2,
+  "nodes": [
+    {
+      "acceptance": [
+        "spec-state.json の全48セルが終端 (未収集0)",
+        "completeness-report.json verdict=PASS",
+        "全確定セルが serves_goals で G1-G4 へトレース"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness 要件定義書からの直接 import",
+      "completion_evidence": {
+        "completed_at": "2026-07-29T11:30:00Z",
+        "evidence_refs": [
+          "system-spec/completeness-report.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7e3732f5b155cd85fd21b6a6119411a8f9f14be96f254ec4ac9a794e2ef95551",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-29T11:00:00Z",
+      "depends_on": [],
+      "domain": "system",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/spec-requirements-definition.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "G1=外部送信0件 G2=認証必須 G3=再起動後データ保持 G4=1コマンド起動停止",
+      "graph_node_id": "spec-requirements-definition",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T11:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "wt28-postmerge-system-spec",
+      "pull_request_linkages": [],
+      "purpose": "自分の TODO を外部サービスにデータを渡さずに手元 1 プロセスで管理・自動化する仕様の上位概念 (U1-U9) と技術要件を定義する",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "要件定義 (U1-U9)",
+        "データベース (SQLite)",
+        "認証 (bearer token)",
+        "バックエンド (FastAPI)",
+        "インフラ (localhost)",
+        "セキュリティ",
+        "UI-UX (web)",
+        "フロントエンド (web)",
+        "保守運用"
+      ],
+      "scope_out": [
+        "モバイルアプリ",
+        "タブレット専用UI",
+        "Windowsデスクトップ",
+        "Linuxデスクトップ",
+        "macOSネイティブ"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T11:30:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "7e3732f5b155cd85fd21b6a6119411a8f9f14be96f254ec4ac9a794e2ef95551",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "requirements"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "要件定義書 — 上位概念 U1-U9",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T11:00:00Z"
+    },
+    {
+      "acceptance": [
+        "常駐ミドルウェア0",
+        "起動1コマンド",
+        "バックアップ=ファイル1個コピー",
+        "外部通信0件"
+      ],
+      "architecture_refs": [
+        "spec-requirements-definition"
+      ],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "infrastructure"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness infrastructure 章からの直接 import",
+      "completion_evidence": {
+        "completed_at": "2026-07-29T11:30:00Z",
+        "evidence_refs": [
+          "system-spec/completeness-report.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b7c7e0e1d4091124ecb6850ea97b0765a13f4d9f67cdc969c834879d01027fb6",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-29T11:00:00Z",
+      "depends_on": [
+        "spec-requirements-definition"
+      ],
+      "domain": "system",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/arch-system-infrastructure.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "G1=外部送信0件 G4=追加ミドルウェアなし1コマンド起動停止バックアップ",
+      "graph_node_id": "arch-system-infrastructure",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T11:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "wt28-postmerge-system-spec",
+      "pull_request_linkages": [],
+      "purpose": "TODO管理APIのインフラ構成 (SQLite/FastAPI/localhost bearer token) を定義し、外部依存0・単一ファイル永続化・1コマンド運用を実現する",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "SQLite 単一ファイルDB",
+        "FastAPI バックエンド",
+        "localhost bearer token 認証",
+        "ファイルコピーバックアップ"
+      ],
+      "scope_out": [
+        "クラウドDB",
+        "コンテナオーケストレーション",
+        "OAuth2外部IDP",
+        "CDN"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T11:30:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "b7c7e0e1d4091124ecb6850ea97b0765a13f4d9f67cdc969c834879d01027fb6",
+        "source_path": "system-spec/infrastructure.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "architecture",
+        "infrastructure"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "システムインフラストラクチャ — SQLite / FastAPI / localhost bearer token",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T11:00:00Z"
+    }
+  ],
+  "repository_id": "local:sha256:dacc6d12e2802f06adfcc22882ac3f36fe4147bc7bc5f46e27e0c8cdf17ea85d",
+  "schema_version": "1.0.0"
+}

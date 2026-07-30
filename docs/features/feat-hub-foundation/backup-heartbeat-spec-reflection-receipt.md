@@ -6,7 +6,7 @@ beads_ids:
 dev_graph_node_id: issue-backup-failure-undetected-20260728
 feature_node_id: feat-hub-foundation
 spec_impact: reflected
-reviewed_at: 2026-07-29
+reviewed_at: 2026-07-30
 ---
 
 # backup heartbeat 分離 仕様反映受領書
@@ -18,8 +18,9 @@ reviewed_at: 2026-07-29
 ## 2. 結論
 
 - **仕様影響: あり (`reflected`)**。監視資源の責務分離、`BACKUP_HEARTBEAT_URL` の必須度、失敗検知時間、外部実測までの完了境界が変わる。
-- **正規反映: 完了**。`infrastructure.web` と `maintenance-ops.web` を単一 transition writer で reopen し、qa-092 を経て、既存 qa-091 / qa-058 / qa-011 / qa-019 を情報欠落なく維持する qa-093 として再確定した。
+- **正規反映: 完了**。`main` の qa-092 を保持したうえで `infrastructure.web` と `maintenance-ops.web` を単一 transition writer で reopen し、backup heartbeat 契約を qa-093、既存 qa-091 / qa-058 / qa-011 / qa-019 を情報欠落なく維持する統合契約を qa-094 として再確定した。
 - **repository 実装: 完了**。backup 専用 heartbeat、required secret、workflow 前提確認、限定適用 CLI、回帰テスト、運用文書を同期した。
+- **競合解消: 完了**。`main` の Dev Graph C11 仕様 (`qa-092`) と本変更の QA ID が衝突していたため、`main` を優先土台として取り込み、本変更を `qa-093/qa-094` へ正規 writer で再登録した。`main` 側の仕様、設計、実装注記は保持した。
 - **外部実測: 未完了**。Better Stack 資源適用、GitHub secret 投入、main 上の成功 run、heartbeat 着信実測が残るため、Beads は `in_progress` を維持する。
 
 ## 3. 中学生向けの説明
@@ -37,11 +38,12 @@ Better Stack heartbeat を Worker cron (`CRON_HEARTBEAT_URL`) と GitHub Actions
 ## 5. 仕様反映の正規フロー
 
 1. `system-spec/spec-state.json` の `infrastructure.web` / `maintenance-ops.web` を writer 経由で reopen。
-2. qa-092 で backup heartbeat 契約を追加。
-3. compiler 出力レビューで直前契約の継承記述不足を検出。
-4. qa-093 で qa-091 / qa-058 / qa-011 / qa-019 と backup heartbeat 契約を統合して再確定。
-5. coverage / foundation gate を通し、正規 compiler で `system-spec/infrastructure.md` / `maintenance-ops.md` を再生成。
-6. `specs/` / `architecture/` / `features/` / `tasks/` / `docs/` へ同一変更単位で反映。
+2. `main` 側で先に確定していた qa-092 を保持。
+3. qa-093 で backup heartbeat 契約を追加。
+4. compiler 出力レビューで直前契約の継承記述不足を検出。
+5. qa-094 で qa-091 / qa-058 / qa-011 / qa-019 と backup heartbeat 契約を統合して再確定。
+6. coverage / foundation gate を通し、正規 compiler で `system-spec/infrastructure.md` / `maintenance-ops.md` を再生成。
+7. `specs/` / `architecture/` / `features/` / `tasks/` / `docs/` へ同一変更単位で反映。
 
 反映先:
 
@@ -57,11 +59,11 @@ Better Stack heartbeat を Worker cron (`CRON_HEARTBEAT_URL`) と GitHub Actions
 
 ## 6. 品質ゲート
 
-2026-07-29 に最終差分へ次を再実行した。
+2026-07-29 の実装時、および `main` 競合解消後の 2026-07-30 に最終差分へ次を再実行した。
 
 - focused Vitest: 4 files / 55 tests PASS。監視設定、適用器、CLI 境界、Actions secret 台帳を検証した。
 - Hub typecheck / Biome: PASS。
-- workspace `pnpm verify`: PASS。全 workspace の lint、型検査、build、test、テナント分離、secret scan、契約 drift、Worker / client bundle 予算を含む。
+- workspace `pnpm verify`: PASS。全 workspace の lint、型検査、build、test、テナント分離、secret scan、契約 drift、Worker / client bundle 予算を含む。2026-07-30 の初回は全 assertion PASS 後に Vitest worker RPC timeout が 1 件出たが、対象 schemas 86 tests の単独再実行と `pnpm verify` 全体の再実行がともに PASS し、競合差分由来の再現性ある失敗でないことを確認した。
 - workflow guard: self-test と 10 workflows が PASS。Actions secret の workflow 参照 13 件と台帳 13 件が一致した。
 - task 仕様 validator: `feat-hub-foundation` と `feat-domain-model-db` がともに PASS。
 - system-spec: coverage / foundation / source citation gate が PASS、validator は 529 tests PASS。

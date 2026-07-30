@@ -1,0 +1,90 @@
+{
+  "graph_revision": 1,
+  "nodes": [
+    {
+      "acceptance": [
+        "Second init reports 0 changes"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "Explicitly created as test fixture issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T09:04:20Z",
+      "depends_on": [],
+      "domain": "dev-graph",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-init-idempotence-test-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Confirm second init pass reports zero planned changes",
+      "graph_node_id": "sys-init-idempotence-test-20260729",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "wt28-init-final6",
+      "pull_request_linkages": [],
+      "purpose": "Verify that dev-graph init is idempotent",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "init idempotence"
+      ],
+      "scope_out": [
+        "production use"
+      ],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "init-test"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Init idempotence test fixture issue",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-29T09:04:20Z"
+    }
+  ],
+  "repository_id": "local:sha256:498d49886573d5d542840d045757bbec4d7ec6cd16489b78b628fd78ab5531d9",
+  "schema_version": "1.0.0"
+}

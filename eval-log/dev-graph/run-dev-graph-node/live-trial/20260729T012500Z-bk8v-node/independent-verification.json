@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T01:49:47Z",
+  "evaluator": "fresh-agent/eval_bk8v_node",
+  "scenario": "C02-OUT1-positive-mixed-artifacts",
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json",
+    "../../../live-trial-fixtures/bk8v-node/eval-log"
+  ]
+}

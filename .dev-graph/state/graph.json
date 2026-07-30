@@ -1,5 +1,5 @@
 {
-  "graph_revision": 986,
+  "graph_revision": 996,
   "nodes": [
     {
       "acceptance": [
@@ -25324,7 +25324,8 @@
       "pull_request_linkages": [],
       "purpose": "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する",
       "related_nodes": [
-        "issue-audit-followups-20260717"
+        "issue-audit-followups-20260717",
+        "issue-c02-upsert-lifecycle-regression-20260729"
       ],
       "resource_scope": [
         "features/feat-dev-pipeline-improvement.md"
@@ -25368,7 +25369,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T05:22:10.828117Z"
+      "updated_at": "2026-07-29T06:08:25Z"
     },
     {
       "acceptance": [
@@ -43045,6 +43046,379 @@
       "title": "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T21:40:43Z"
+    },
+    {
+      "acceptance": [
+        "canonical template の未記入 required section が incomplete となり節名を missing_sections に返す",
+        "全 6 artifact kind の実本文は受理し、見出しだけへ潰した mutation は拒否する",
+        "C02 の template-only 新規生成と placeholder 再生成を transaction rollback する",
+        "task 仕様書品質ゲート、plugin package gate、repository 品質ゲートが通る",
+        "仕様反映受領書と Beads 更新を完了し draft PR を作成する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-4t9g",
+        "linked_at": "2026-07-29T06:17:57Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-implementation-readiness-body-validation-20260728.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "HarnessHub-4t9g の受入条件と qa-091 が C11 artifact 本文 readiness の単一責務を確定する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T13:59:42Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-implementation-readiness-body-validation-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "空本文・canonical placeholder・sentinel-only・code-example-only の必須節が implementation_readiness=complete にならない",
+      "graph_node_id": "issue-implementation-readiness-body-validation-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T06:17:57Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "本文が未記入の artifact を tracker 投影や system build handoff へ進めないよう、C11 readiness を本文実体へ係留する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/validate-graph-schema.py",
+        "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py",
+        "plugins/dev-graph/tests/test_upsert_node_body_preservation.py",
+        "plugins/dev-graph/templates/README.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/"
+      ],
+      "scope_in": [
+        "required section 本文の deterministic 検査",
+        "missing_sections への未記入節名の反映",
+        "全 6 artifact kind の canonical template と mutation 回帰テスト",
+        "C02 template-only 作成・再生成の rollback 回帰",
+        "仕様・設計・task・feature・docs への契約反映"
+      ],
+      "scope_out": [
+        "required heading の名称移行と欠落 heading の新規拒否",
+        "既存 promoted task package の immutable source 書換",
+        "Harness Hub 製品 API・DB・認証認可・UI・Cloudflare deploy unit の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T06:17:57Z",
+        "origin_kind": "generated",
+        "source_digest": "26ad9ea7e825da5bedd2ff3952fa7013065c1dbbfc5fc120cbc723bce86af95e",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "beads",
+        "c11",
+        "implementation-readiness",
+        "artifact-body"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "implementation_readiness が本文未記入の artifact を complete と判定する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T06:17:57Z"
+    },
+    {
+      "acceptance": [
+        "必須見出し名を削除した artifact が専用 violation で拒否される",
+        "欠落した節名が missing_sections に返る",
+        "全 artifact kind の正例・負例が回帰テストで固定される",
+        "既存 artifact の互換移行手順と rollback が検証される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-85z0",
+        "linked_at": "2026-07-29T09:37:50Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-required-heading-presence-validation-20260729.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "HarnessHub-4t9g が required heading 名称の欠落を明示的に scope out とした後続単一責務",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T09:35:58Z",
+      "depends_on": [
+        "issue-implementation-readiness-body-validation-20260728"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-required-heading-presence-validation-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "required heading の欠落を本文 placeholder と区別した専用 violation で拒否する",
+      "graph_node_id": "issue-required-heading-presence-validation-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T09:35:58Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "必須見出し名の欠落を安全に診断し、既存 artifact を正規移行できるようにする",
+      "related_nodes": [
+        "issue-implementation-readiness-body-validation-20260728",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/validate-graph-schema.py",
+        "plugins/dev-graph/scripts/graph_artifact_readiness.py",
+        "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py",
+        "plugins/dev-graph/tests/test_graph_artifact_readiness.py",
+        "plugins/dev-graph/templates/README.md",
+        "issues/"
+      ],
+      "scope_in": [
+        "required heading 欠落の専用 violation",
+        "missing_sections への欠落節名の反映",
+        "全 artifact kind の heading mutation 回帰",
+        "既存 artifact の互換移行手順"
+      ],
+      "scope_out": [
+        "本文 placeholder 判定の再実装",
+        "Harness Hub 製品 API・DB・認証認可・UI の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T09:35:58Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "c11",
+        "required-heading",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "required heading 欠落を C11 readiness で専用拒否する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T09:37:50Z"
+    },
+    {
+      "acceptance": [
+        "昇格済み feature に古い draft snapshot を再 upsert すると dry-run と apply の両方が明示エラーになる",
+        "拒否時に graph revision・node・artifact Markdown が変化しない",
+        "意図的な lifecycle reset は変更フィールドを列挙した patch で実行できる",
+        "通常の冪等 upsert と既存 artifact kind の挙動を壊さない",
+        "C02 正本契約と回帰テストが実装を説明し、必要な品質ゲートが PASS する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-bk8v",
+        "linked_at": "2026-07-29T01:20:52Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "C14 r7-r11 の実走で同一 feature snapshot による lifecycle 退行を beads/none 両系列で再現した",
+      "completion_evidence": {
+        "completed_at": "2026-07-29T06:17:06Z",
+        "evidence_refs": [
+          "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
+          "plugins/dev-graph/references/execution-tracker-contract.md",
+          "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260729T012500Z-bk8v-node/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T012501Z-bk8v-sync/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T054655Z-bk8v-final-r5-none/verdict.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-29T06:17:06Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-29T01:20:52Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-c02-upsert-lifecycle-regression-20260729.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "古い feature snapshot の再 upsert が fail-closed で拒否され、意図的な reset だけが明示 patch で実行できる",
+      "graph_node_id": "issue-c02-upsert-lifecycle-regression-20260729",
+      "implementation_readiness": {
+        "checked_at": "2026-07-29T01:20:52Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "C02 の再試行で前進済み feature lifecycle を暗黙に巻き戻さない",
+      "related_nodes": [
+        "issue-decompose-live-trial-audit-defects-20260726",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "plugins/dev-graph/tests/test_upsert_node_lifecycle_regression.py",
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md",
+        "docs/features/feat-dev-pipeline-improvement/final-review.md",
+        "features/feat-dev-pipeline-improvement.md"
+      ],
+      "scope_in": [
+        "feature 全体 snapshot の stale lifecycle before-image 検出",
+        "dry-run と apply の無変更拒否",
+        "意図的な lifecycle reset の明示 patch 経路",
+        "C02 正本契約と回帰テスト"
+      ],
+      "scope_out": [
+        "C14 live-trial 監査実装の変更",
+        "製品 API・DB・UI の変更",
+        "task・issue・specification・architecture・document の lifecycle policy 変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-29T01:20:52Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "c02",
+        "lifecycle",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-29T06:17:06Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

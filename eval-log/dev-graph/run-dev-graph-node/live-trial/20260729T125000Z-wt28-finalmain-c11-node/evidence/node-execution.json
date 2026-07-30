@@ -1,0 +1,26 @@
+{
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "steps": [
+    {
+      "id": "V1",
+      "status": "PASS",
+      "evidence": "Five artifacts were added at canonical paths: issue=issues/session-timeout-not-enforced.md, task=tasks/implement-api-rate-limiting.md, specification=specs/rest-api-v2-migration.md, architecture=architecture/order-processing-backend-security.md, document=docs/development-environment-setup-guide.md. Graph revision advanced from 0 to 5 and schema validation returned valid=true."
+    },
+    {
+      "id": "V2",
+      "status": "PASS",
+      "evidence": "Specification update was operation=updated at revision 5→6 and architecture update was operation=updated at revision 6→7. Both retained kind/path consistency, body_source=preserved, and updated_at != created_at."
+    },
+    {
+      "id": "V3",
+      "status": "PASS",
+      "evidence": "A direct feature registration outside the C14 macro contract was rejected with exit_code=2 and write_count=0. Graph revision remained 7 and features/ count remained 0."
+    },
+    {
+      "id": "V4",
+      "status": "PASS",
+      "evidence": "All five original bodies remained byte-for-byte contiguous substrings. GET /api/v1/users, POST /api/v2/orders, items, line_items, X-API-Key, Authorization: Bearer, and DELETE /api/v2/sessions/bulk were preserved."
+    }
+  ],
+  "overall_status": "PASS"
+}

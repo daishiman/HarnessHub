@@ -1,0 +1,380 @@
+{
+  "beads": {
+    "candidate_route_invocations": 1,
+    "candidate_route_receipts": [
+      {
+        "node": "feat-user-auth-001",
+        "receipt": {
+          "argv": [
+            "python3",
+            "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/bd-bridge.py",
+            "--op",
+            "create",
+            "--repo-root",
+            "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none",
+            "--graph-node-id",
+            "feat-user-auth-001",
+            "--title",
+            "ユーザー登録・ログイン機能",
+            "--description",
+            "Web アプリの利用者がアカウントを作成し、認証済みセッションでアプリを使えるようにする",
+            "--artifact-kind",
+            "feature",
+            "--dry-run"
+          ],
+          "payload": {
+            "dry_run_preview": {
+              "artifact_kind": "feature",
+              "description": "Web アプリの利用者がアカウントを作成し、認証済みセッションでアプリを使えるようにする",
+              "expected_depends_on": [],
+              "graph_node_id": "feat-user-auth-001",
+              "op": "create",
+              "registration": {
+                "graph_node_count": 5,
+                "graph_node_ids": [
+                  "feat-user-auth-001"
+                ],
+                "registered": true,
+                "unregistered": []
+              },
+              "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none",
+              "scan_refs": false,
+              "title": "ユーザー登録・ログイン機能",
+              "verify_parity": false
+            },
+            "op": "create",
+            "version": "1.1.0",
+            "workspace_identity": {
+              "attributes": {
+                "schema_version": "1"
+              },
+              "workspace_id": "bdw_5e8693161ce3c913ee2ba9a4"
+            }
+          },
+          "returncode": 0,
+          "stderr": ""
+        },
+        "route": "beads_issue"
+      }
+    ],
+    "candidate_zero_attribution": "external-adapter-dry-run",
+    "declaration_probes": [
+      {
+        "blocking_rules": [],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": true,
+        "node": "feat-admin-report-001",
+        "probe": "tracker_binding=beads"
+      },
+      {
+        "blocking_rules": [],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": true,
+        "node": "feat-notification-email-001",
+        "probe": "tracker_binding=beads"
+      },
+      {
+        "blocking_rules": [],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": true,
+        "node": "feat-user-auth-001",
+        "probe": "tracker_binding=beads"
+      },
+      {
+        "blocking_rules": [],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": true,
+        "node": "feat-user-dashboard-001",
+        "probe": "tracker_binding=beads"
+      }
+    ],
+    "draft_node_ids": [
+      "feat-admin-report-001",
+      "feat-notification-email-001",
+      "feat-user-dashboard-001"
+    ],
+    "draft_zero_attribution": "draft-gate",
+    "exercised_by_run": false,
+    "observed": {
+      "draft_published_node_ids": [],
+      "published_node_ids": [],
+      "unattributed_artifacts": [],
+      "unproven_zero_count": 0
+    },
+    "persisted_node_ids": [],
+    "route_declarable": true,
+    "routes": [
+      "beads_issue"
+    ],
+    "zero_attribution": "not-exercised-by-run"
+  },
+  "github": {
+    "candidate_route_invocations": 2,
+    "candidate_route_receipts": [
+      {
+        "node": "feat-user-auth-001",
+        "receipt": {
+          "argv": [
+            "python3",
+            "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/gh-bridge.py",
+            "--op",
+            "issue-create",
+            "--repo",
+            "example/dev-graph-live-trial",
+            "--title",
+            "ユーザー登録・ログイン機能",
+            "--body",
+            "{\"acceptance\": [\"新規ユーザーがメールアドレスとパスワードで登録できる\", \"登録済みユーザーがログインできる\", \"ログイン後にセッションが維持される\", \"ログアウトでセッションが破棄される\"], \"graph_node_id\": \"feat-user-auth-001\", \"implementation_readiness\": {\"checked_at\": \"2026-07-29T08:01:00Z\", \"missing_sections\": [], \"status\": \"complete\"}}",
+            "--dry-run"
+          ],
+          "payload": {
+            "dry_run": true,
+            "mutation_suppressed": true,
+            "op": "issue-create",
+            "preview": {
+              "body": "{\"acceptance\": [\"新規ユーザーがメールアドレスとパスワードで登録できる\", \"登録済みユーザーがログインできる\", \"ログイン後にセッションが維持される\", \"ログアウトでセッションが破棄される\"], \"graph_node_id\": \"feat-user-auth-001\", \"implementation_readiness\": {\"checked_at\": \"2026-07-29T08:01:00Z\", \"missing_sections\": [], \"status\": \"complete\"}}",
+              "op": "issue-create",
+              "repo": "example/dev-graph-live-trial",
+              "title": "ユーザー登録・ログイン機能",
+              "value_type": "single_select"
+            }
+          },
+          "returncode": 0,
+          "stderr": ""
+        },
+        "route": "github_issue"
+      },
+      {
+        "node": "feat-user-auth-001",
+        "receipt": {
+          "argv": [
+            "python3",
+            "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/gh-bridge.py",
+            "--op",
+            "project-item-add",
+            "--content-id",
+            "feat-user-auth-001",
+            "--project-id",
+            "feat-user-auth-001",
+            "--dry-run"
+          ],
+          "payload": {
+            "dry_run": true,
+            "mutation_suppressed": true,
+            "op": "project-item-add",
+            "preview": {
+              "content_id": "feat-user-auth-001",
+              "op": "project-item-add",
+              "project_id": "feat-user-auth-001",
+              "value_type": "single_select"
+            }
+          },
+          "returncode": 0,
+          "stderr": ""
+        },
+        "route": "github_project_item"
+      }
+    ],
+    "candidate_zero_attribution": "external-adapter-dry-run",
+    "declaration_probes": [
+      {
+        "blocking_rules": [
+          "schema_violation|$.github_publication.mode: not in enum ['issue', 'issue_and_projects']"
+        ],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": false,
+        "node": "feat-admin-report-001",
+        "probe": "tracker_binding=github"
+      },
+      {
+        "blocking_rules": [
+          "schema_violation|$.github_publication.mode: not in enum ['issue', 'issue_and_projects']"
+        ],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": false,
+        "node": "feat-notification-email-001",
+        "probe": "tracker_binding=github"
+      },
+      {
+        "blocking_rules": [
+          "schema_violation|$.github_publication.mode: not in enum ['issue', 'issue_and_projects']"
+        ],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": false,
+        "node": "feat-user-auth-001",
+        "probe": "tracker_binding=github"
+      },
+      {
+        "blocking_rules": [
+          "schema_violation|$.github_publication.mode: not in enum ['issue', 'issue_and_projects']"
+        ],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": false,
+        "node": "feat-user-dashboard-001",
+        "probe": "tracker_binding=github"
+      }
+    ],
+    "draft_node_ids": [
+      "feat-admin-report-001",
+      "feat-notification-email-001",
+      "feat-user-dashboard-001"
+    ],
+    "draft_zero_attribution": "draft-gate",
+    "exercised_by_run": false,
+    "observed": {
+      "draft_published_node_ids": [],
+      "published_node_ids": [],
+      "unattributed_artifacts": [],
+      "unproven_zero_count": 0
+    },
+    "persisted_node_ids": [],
+    "route_declarable": false,
+    "routes": [
+      "github_issue",
+      "github_project_item"
+    ],
+    "zero_attribution": "binding-route-unreachable"
+  },
+  "none": {
+    "candidate_route_invocations": 0,
+    "candidate_route_receipts": [],
+    "candidate_zero_attribution": "binding-route-absent",
+    "declaration_probes": [
+      {
+        "blocking_rules": [],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": true,
+        "node": "feat-admin-report-001",
+        "probe": "tracker_binding=none"
+      },
+      {
+        "blocking_rules": [],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": true,
+        "node": "feat-notification-email-001",
+        "probe": "tracker_binding=none"
+      },
+      {
+        "blocking_rules": [],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": true,
+        "node": "feat-user-auth-001",
+        "probe": "tracker_binding=none"
+      },
+      {
+        "blocking_rules": [],
+        "decided_by": [
+          "python3",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "--graph",
+          "-",
+          "--repo-root",
+          "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-decompose-none"
+        ],
+        "declarable": true,
+        "node": "feat-user-dashboard-001",
+        "probe": "tracker_binding=none"
+      }
+    ],
+    "draft_node_ids": [
+      "feat-admin-report-001",
+      "feat-notification-email-001",
+      "feat-user-dashboard-001"
+    ],
+    "draft_zero_attribution": "draft-gate",
+    "exercised_by_run": true,
+    "observed": {
+      "draft_published_node_ids": [],
+      "published_node_ids": [],
+      "unattributed_artifacts": [],
+      "unproven_zero_count": 0
+    },
+    "persisted_node_ids": [
+      "arch-webapp-foundation-001",
+      "feat-admin-report-001",
+      "feat-notification-email-001",
+      "feat-user-auth-001",
+      "feat-user-dashboard-001"
+    ],
+    "route_declarable": true,
+    "routes": [],
+    "zero_attribution": "binding-route-absent"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "checklist": [
+    {
+      "item": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+      "status": "pass",
+      "evidence": "graph has 5 nodes: 1 architecture + 4 feature. artifact_kind breakdown: architecture=1, feature=4, task=0. DFS cycle detection: no cycle. 3 inter-feature edges, max 1 per feature (threshold 3). phase_ref=0, parent_feature=0, feature_package_id=0, P01..P13 IDs=0."
+    },
+    {
+      "item": "draft/unconfirmed/evaluation非pass/readiness非complete の tracker publication が0件である",
+      "status": "pass",
+      "evidence": "draft_publication_zero=true. 3 draft features (feat-dashboard-001, feat-notification-001, feat-admin-report-001) have 0 issue publications. Zero is due to draft gate suppression: drafts never reach publication gate. binding=none has no external projection route (zero_attribution=binding-route-absent for none binding)."
+    },
+    {
+      "item": "各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす",
+      "status": "not_applicable",
+      "evidence": "macro decomposition run does not invoke system-dev-planner. No ready feature packages exist because this is a macro-only run. The P01..P13 exact-13 contract belongs to the micro layer (system-dev-planner), not the macro decompose skill."
+    },
+    {
+      "item": "C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である",
+      "status": "pass",
+      "evidence": "5 nodes added in 5 sequential C02 upserts (graph_revision 0→5), then 1 promotion update (revision 5→6). 2nd Skill run achieved all 5 nodes noop/write_count=0. No duplicate node IDs."
+    },
+    {
+      "item": "beads/github/none の各 task が単一 projection authority と linkage を持つ",
+      "status": "pass",
+      "evidence": "All 5 nodes have tracker_binding=none, beads_linkage=null, issue_linkage=null, github_project_linkages=[]. run_binding_attested=true. persisted_bindings={none: [all 5 nodes]}. beads: route_declarable=true but exercised_by_run=false (zero_attribution=not-exercised-by-run). github: route_declarable=false (schema_violation: $.github_publication.mode not in enum ['issue','issue_and_projects']), zero_attribution=binding-route-unreachable. none: route_declarable=true, exercised_by_run=true, zero_attribution=binding-route-absent (no external projection for none binding)."
+    },
+    {
+      "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "not_applicable",
+      "evidence": "This run used --apply mode (no --dry-run). The --dry-run write 0 contract is verified by criteria:OUT3, not this live trial (C14-OUT1)."
+    }
+  ]
+}

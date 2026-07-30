@@ -1,0 +1,34 @@
+{
+  "checklist": [
+    {
+      "item": "input graph/scope が schema PASS で output realpath が caller repo 内にある",
+      "status": "PASS",
+      "evidence": "C24 resolve-repo-context PASS; output at .dev-graph/render/index.html inside repo"
+    },
+    {
+      "item": "render model の node/edge/feature progress counts が input graph と一致する",
+      "status": "PASS",
+      "evidence": "nodes=14, edges=12, feature_progress total=13 matches graph child count"
+    },
+    {
+      "item": "生成 HTML の外部 script/link/CDN/npm reference が0件で SVG と inline JS が実在する",
+      "status": "PASS",
+      "evidence": "0 external scripts, 0 external stylesheets, 0 CDN refs, 1 SVG, 1 inline script"
+    },
+    {
+      "item": "renderer receipt の input/output digest と実ファイル digest が一致する",
+      "status": "PASS",
+      "evidence": "input_sha256=6251071a..., output_sha256=1641428f..., graph_sha256 before==after"
+    },
+    {
+      "item": "ブラウザ live trial で追加 runtime なしに SVG と feature X/Y progress が表示される",
+      "status": "PASS",
+      "evidence": "self_contained=true, progress 4/13 displayed, registration non-null with source_digest matching receipt"
+    }
+  ],
+  "criteria": {
+    "IN1": "PASS",
+    "OUT1": "PASS"
+  },
+  "completed_at": "2026-07-29T10:01:00Z"
+}

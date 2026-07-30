@@ -1,0 +1,12 @@
+{
+  "scenario": "C01-OUT1-positive-idempotence-r17",
+  "checklist": {
+    "resolve_repo_context": {"status": "PASS", "evidence": "repository_id matches, content roots within repo"},
+    "six_roots_and_state": {"status": "PASS", "evidence": "issues/tasks/specs/architecture/features/docs and .dev-graph/{config.json,state/graph.json,cache,locks} exist"},
+    "template_scaffold": {"status": "PASS", "evidence": "21 templates copied pass 1, 0 copies pass 2, edited issue.md SHA-256 1d5f74b875fea00393a0abdcd405a0c30ed48482eb0c235777b5417e785f81dd preserved"},
+    "hook_source": {"status": "PASS", "evidence": "plugin hook source, no project fallback needed"},
+    "validate_repo_config": {"status": "PASS", "evidence": "valid=true, violations=[], no absolute paths/tokens/node IDs"},
+    "validate_graph_schema": {"status": "PASS", "evidence": "valid=true, violations=[], C11 pass with 1 node"},
+    "idempotence": {"status": "PASS", "evidence": "pass 2: config unchanged, graph preserved_existing, template copy 0"}
+  }
+}

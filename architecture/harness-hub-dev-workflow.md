@@ -284,3 +284,11 @@ tmux server は複数 worktree・複数 trial から共有されるため、`lt-
 owner PID の代用品にせず、boot の READY 出力をそのまま cleanup へ渡す。
 全 session の回収は通常フローから分離した明示 `--all` だけに許可する。
 fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠とする。
+
+### 差分追記 (2026-07-29): C02/C11 の安全境界
+
+- C11 は frontmatter・見出し・placeholder だけの artifact を incomplete とし、後段を止める。
+  詳細は [C11 readiness 受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)。
+- C02 は stale full snapshot による feature lifecycle 後退を無変更で拒否する。
+  詳細は [C02 lifecycle 受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)。
+- いずれも repository 内の開発管理 graph に限定し、製品 runtime 契約は変更しない。
