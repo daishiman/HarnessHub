@@ -243,3 +243,21 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 最終検証は
 `docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
 へ記録し、draft PR は `main` 向けに作成する。
+
+## 2026-07-30 `HarnessHub-ml57` Phase 13 引き継ぎ
+
+- branch: `devgraph/issue-local-ci-gate-drift-20260728`
+- base: repository default branch `main`
+- commit scope: implementation、focused tests、CI/local wiring、仕様反映文書、
+  dev-graph / Beads linkage に限定する
+- excluded dirty files: 既存の
+  `eval-log/run-dev-graph-schedule-beads-ready.json` と
+  `eval-log/run-dev-graph-schedule-execution.json`
+- PR body: 目的、変更内容、検証結果、仕様反映、Beads ID、dev-graph node ID、
+  残課題を明記し Draft で作成する
+- merge order: `origin/main` → local `main` → 本 branch の順に統合し、
+  統合後 tree で品質ゲートを再実行する
+
+仕様反映受領書は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+とする。

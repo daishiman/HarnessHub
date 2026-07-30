@@ -238,6 +238,21 @@ close した。
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
   を正とする。
 
+## 2026-07-30 追記: CI-local 品質ゲート parity
+
+- `HarnessHub-ml57` で、GitHub Actions の repository-root Python 検査が
+  local hard gate または理由付き allowlist に含まれることを検証する meta-lint を追加した。
+- 比較 key は script path と意味のある引数であり、件数・比率や script 名だけの
+  proxy metric（代理指標＝本当に守りたい性質を間接的に測る値）は採用しない。
+- 読み取り専用検査を `scripts/run-ci-checks.sh` へ追加し、外部資格情報、
+  working-tree write、CI non-blocking の例外は exact invocation と理由を台帳化した。
+- `governance-check.yml`、`make lint`、pre-push の 3 入口へ同じ meta-lint を結線した。
+- 製品 runtime への影響はなく、system-spec `qa-088` と
+  `architecture/harness-hub-dev-workflow.md` の development tooling contract を具体化した。
+  判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md)
+  を正とする。
+
 ## 2026-07-29 追記: workflow step guard の空走査 fail-closed
 
 - `HarnessHub-foq6` で、workflow directory 不在または YAML 0 件を成功扱いしていた

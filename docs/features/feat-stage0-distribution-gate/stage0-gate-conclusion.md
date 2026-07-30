@@ -104,3 +104,21 @@ macOS で成功していたのは、検証実行環境にローカルの GitHub 
 - [test-run-results.md](./test-run-results.md) — macOS 実機検証結果
 - [acceptance-record.md](./acceptance-record.md) — 受入判定 (REJECTED) と改訂 2
 - `.dev-graph/cache/stage0-stage1-gate-receipt.json` — Stage 1 開始条件判定 receipt
+
+## 8. 公式仕様の変化に対する追記 (2026-07-30)
+
+`HarnessHub-e2u` の再照合で、Anthropic の現行公式文書には monorepo 内の
+subdirectory を取得する `git-subdir` source が存在することを確認した。
+したがって §4.1 の「plugin を専用 repository root に置く必要がある」は、
+**当時試験した `github` source についての履歴**としてのみ有効であり、
+現行 `git-subdir` の不成立根拠には使わない。
+
+ただし、仕様が存在することと Harness Hub の受入条件を満たすことは別である。
+macOS / Windows の Skills 列挙と実 skill 起動が未検証なので、Stage 0 の
+`NOT_ESTABLISHED`、A3 未充足、P08〜P13 非実行、runbook 未作成は変更しない。
+再検証は `HarnessHub-n2c0` で行い、結果が揃うまで Stage 1 を開始しない。
+
+- 仕様反映受領書:
+  [source-freshness-spec-reflection-receipt.md](./source-freshness-spec-reflection-receipt.md)
+- 再検証 issue:
+  [sys-h7-git-subdir-revalidation-20260730.md](../../../issues/sys-h7-git-subdir-revalidation-20260730.md)

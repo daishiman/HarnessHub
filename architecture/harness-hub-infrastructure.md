@@ -132,6 +132,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **失敗検知の時間境界**: backup 専用 `hub-backup-daily` は `period=86400` 秒 / `grace=3600` 秒とし、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化させる。heartbeat は全 backup step 成功後だけ送る。
 - **fail-closed と完了境界**: `BACKUP_HEARTBEAT_URL` は required。未投入なら workflow の前提確認で停止する。repository 内実装だけで適用済みと数えず、Better Stack 資源、GitHub secret、main の成功 run、着信実測が揃うまで `HarnessHub-dbx6` は継続する。
 
+**配信経路・依存版の差分追記 (2026-07-30 / `HarnessHub-e2u`)**:
+
+- Claude Code marketplace の候補経路に、`url` / `path` と任意の `ref` / `sha` を
+  持つ公式 `git-subdir` source を加える。旧 `github` source の `path` 無視とは
+  別契約として扱い、macOS / Windows の install、component inventory、skill 実行が
+  揃うまで採用 decision を確定しない。追跡は `HarnessHub-n2c0`。
+- Wrangler は project-local dependency と frozen lockfile を CI / deploy の固定点にする。
+  台帳上の現行確認値 4.115.0 は自動更新せず、依存更新 PR で build / dry-run /
+  deploy 関連ゲートを通してから lockfile を更新する。
+- Next.js 16.2.12、Drizzle stable 0.45.2 / v1 rc.4 は出典鮮度と採用判断の
+  境界を明確にする記録であり、本変更では runtime dependency、deploy unit、
+  DB schema、外部 API を変更しない。
+
 ## Risks and verification
 
 正本章 (system-spec/infrastructure.md, system-spec/maintenance-ops.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
