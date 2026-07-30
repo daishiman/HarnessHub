@@ -153,200 +153,45 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 ## 4. API エンドポイント一覧
 
-### 4.1 認証・Device Flow (qa-008)
+> 詳細正本: [backend-spec-api-state.md](backend-spec-api-state.md)。既存の節番号参照を維持するため、以下の見出しを索引として残す。
 
-| Method Path | 認証 | 概要 |
-|---|---|---|
-| `GET/POST /api/auth/{tenant_slug}/{action}` | — | Auth.js (`@auth/core`) によるテナント別 OIDC。tenant slug を path で維持し、session cookie は認可 middleware と同じ JWT 署名・検証契約を使う。adapter 境界内 |
-| `POST /api/v1/device/code` | なし (rate limit) | device_code + user_code + verification_uri + interval 発行 |
-| `POST /api/v1/device/token` | なし (polling) | RFC 8628 準拠。`authorization_pending / slow_down / expired_token` → 承認後 access+refresh 発行 |
-| `POST /api/v1/device/approve` | session | ブラウザ側承認 (user_code 入力)。SSO ログイン済み前提 |
-| `POST /api/v1/token/refresh` | refresh token | access token 再発行 (rotation) |
-| `GET /api/v1/tokens` | session | 自分の Publisher token 一覧 (admin は Workspace 全体) |
-| `DELETE /api/v1/tokens/:id` | session | 失効 (本人 or admin)。監査 event |
+### 4.1 [認証・Device Flow (qa-008)](backend-spec-api-state.md#41-認証device-flow-qa-008)
 
-### 4.2 ユーザー・組織管理 (B10)
+### 4.2 [ユーザー・組織管理 (B10)](backend-spec-api-state.md#42-ユーザー組織管理-b10)
 
-| Method Path | 最小 role | 概要 |
-|---|---|---|
-| `GET /api/v1/me` / `PATCH /api/v1/me` | member | プロフィール・通知/表示設定 (user_settings) |
-| `GET /api/v1/users` | member (簡易) / admin (全列) | member には name/department のみ。**salary は admin のみ** |
-| `POST /api/v1/users` | workspace-admin | 事前登録 (role/department/salary)。初回ログインは IdP JIT で idp_subject を紐付け |
-| `GET /api/v1/users/:id` | workspace-admin | 個別ダッシュボード用 (削減効果 rollup 込み) |
-| `PATCH /api/v1/users/:id` | workspace-admin | role/department/salary/status。監査 event |
-| `GET/PATCH /api/v1/tenant/coefficients` | workspace-admin | annual_hours / minutes_per_run / sheet_reduction_rate。監査 event |
+### 4.3 [ヒアリングシート (B1: form / sheets)](backend-spec-api-state.md#43-ヒアリングシート-b1-form--sheets)
 
-### 4.3 ヒアリングシート (B1: form / sheets)
+### 4.4 [構築パイプライン (pipeline board)](backend-spec-api-state.md#44-構築パイプライン-pipeline-board)
 
-| Method Path | 最小 role | 概要 |
-|---|---|---|
-| `POST /api/v1/sheets` | member | ウィザード 12 項目提出 → HS コード発行、status=`received`、試算 snapshot 保存、AiJob(`sheet_generation`) 投入、受付通知 |
-| `GET /api/v1/sheets` | member | 一覧 (filter: status/department/q, cursor)。member/owner は `applicant_user_id = principal.user_id` の自分のシートだけ、workspace-admin は自テナント全件。item は `id, code, status, title, domain, department, people, hours, applicant{name}, updated_at` を返す |
-| `GET /api/v1/sheets/:id` | member | 詳細。自分のシートまたは admin のみ。`form_snapshot, estimate_snapshot, generated_sections{overview, issue, feature_tags, estimated_effect}, applicant, department, created_at, ai_job_status, build_ref, publish_request_ref` を返す。salary 原値は返さない |
-| `PATCH /api/v1/sheets/:id` | workspace-admin | status 遷移 (§5.2)。監査 event |
-| `POST /api/v1/sheets/:id/regenerate` | workspace-admin | AiJob 再投入 (status→`generating`) |
+### 4.5 [ハーネスカタログ (I4/I6 既存整合)](backend-spec-api-state.md#45-ハーネスカタログ-i4i6-既存整合)
 
-**FormData 12 項目 (mockup 実測。ラベル和訳は表示層)**: `taskName, company, applicant, domain, issue, tools, hours, people, salary, features, output, priority`
+### 4.6 [公開 (B4/B9: PublishRequest / Release / Channel — §7.2/qa-009)](backend-spec-api-state.md#46-公開-b4b9-publishrequest--release--channel--72qa-009)
 
-- `applicant` は表示用の自由入力を保存するが、認可の所有者判定は改ざん可能な form 値でなく session の `principal.user_id` を `applicant_user_id` へ固定して行う。
-- status の保存値は §5.2 の `received/generating/review/completed`。mock の「下書き」は `received` の旧表示とみなし、統一 UI ラベルは「受付」。
-- PDF は独立した非認可 API を作らず、認可済み詳細 DTO を frontend-spec §3.2 の印刷表示へ再利用する。
+### 4.7 [フィードバック (B6)](backend-spec-api-state.md#47-フィードバック-b6)
 
-### 4.4 構築パイプライン (pipeline board)
+### 4.8 [ドキュメント CMS (B7)](backend-spec-api-state.md#48-ドキュメント-cms-b7)
 
-| Method Path | 最小 role | 概要 |
-|---|---|---|
-| `GET /api/v1/builds` | member | 7 工程ボード一覧 (stage 別グルーピングはクライアント) |
-| `GET /api/v1/builds/:id` | member | 詳細 + stage 履歴 |
-| `POST /api/v1/builds` | workspace-admin | 手動復旧/例外用。`sheet_id` または `feedback_id` の一方だけを指定。通常経路は AiJob 完了時の自動作成 (§4.11) |
-| `PATCH /api/v1/builds/:id` | workspace-admin | title/risk/eta/assignee/note |
-| `POST /api/v1/builds/:id/stage` | workspace-admin | 工程遷移 (§5.3)。`publish` 工程は publish_request_id の接続を要求 (B4)。監査 event |
+### 4.9 [メトリクス (B2/B3)](backend-spec-api-state.md#49-メトリクス-b2b3)
 
-### 4.5 ハーネスカタログ (I4/I6 既存整合)
+### 4.10 [通知 (B8/D6)](backend-spec-api-state.md#410-通知-b8d6)
 
-| Method Path | 最小 role | 概要 |
-|---|---|---|
-| `GET /api/v1/harnesses` | member | CatalogEntry 一覧 (filter: target/status/q) |
-| `GET /api/v1/harnesses/:projectId` | member | 詳細: channels + stable release + install 導線 (marketplace URL / web_app URL) + 利用統計 |
-| `POST /api/v1/harnesses/:projectId/install` | member | 利用者の「追加/ダウンロード」操作。安定版だけを解決し、target 別 descriptor を返す (§4.5.1)。`Idempotency-Key` で download count の重複加算を防ぐ |
-| marketplace 配信 (catalog.json / package 取得) | member | 既存 feat (S01-S04 / I6 URL 型 marketplace) の契約を維持。R2 key は公開せず Worker が tenant scope と安定版を再確認する |
+### 4.11 [AI ジョブキュー (B5/D5: pull 型)](backend-spec-api-state.md#411-ai-ジョブキュー-b5d5-pull-型)
 
-#### 4.5.1 install/download descriptor (target 判別 union)
-
-```json
-{ "target": "skill", "release_id": "...", "marketplace_url": "https://...", "install_commands": ["..."], "download_url": null }
-{ "target": "web_app", "release_id": "...", "launch_url": "https://..." }
-```
-
-- `skill`: Stage 0 の配布 Gate で採用した marketplace/Bootstrap Installer のコマンドを返す。raw ZIP 直接取得が Gate で採用された場合だけ `download_url` に 5 分以内の単回・短命 URL を返し、それまでは `null`。mock 内の `plugin install ./zip` は既定経路にしない。
-- `web_app`: 健全性確認済み deployment の `launch_url` を返す。Hub は WebApp 本体を代理 download しない。
-- suspended/非 stable/別 tenant の release は `404`。member が release id や R2 object key を指定して版をすり替える入力は受けない。
-
-#### 4.5.2 Project 管理 (S01 公開ウィザードの入口)
-
-| Method Path | 最小 role | 概要 |
-|---|---|---|
-| `POST /api/v1/projects` | member | 現在の tenant/workspace に draft Project を作成し、`owner_user_id = principal.user_id` に固定。slug/name は Workspace 内一意。`project.create` を監査 |
-| `PATCH /api/v1/projects/:id` | owner | name/description の変更。tenant/workspace/owner は body から変更不可。`project.update` を監査 |
-
-1 Workspace に Project を複数作れ、各 Project は `skill` / `web_app` の複数 TargetChannel を持てる。S01 の Web 公開ウィザードは Project 作成後に §4.6 を **session 認証**で呼ぶ。既存 Project の再公開は S02 から同じ §4.6 を呼び、Project を重複作成しない。
-
-### 4.6 公開 (B4/B9: PublishRequest / Release / Channel — §7.2/qa-009)
-
-| Method Path | 認証/最小 role | 概要 |
-|---|---|---|
-| `POST /api/v1/publish` | session or Bearer / owner | PublishRequest 作成 (project, target, visibility)。Idempotency-Key 必須。直列化違反は 409。session は S01/S02 Web ウィザード、Bearer は Publisher CLI |
-| `GET /api/v1/publish` | session or Bearer | PublishRequest 一覧 (filter: project/channel/status, cursor)。owner = 自 Project のみ、workspace-admin = Workspace 全体。S03 (公開状態) の進行中 request 発見と S05 (承認キュー = status=approval_pending) の供給元 (frontend-spec §3.4 の additive 追加要求。qa-040。状態機械・直列化 (qa-009) は不変) |
-| `PUT /api/v1/publish/:id/package` | session or Bearer / owner | package upload (multipart) → R2 staging + content hash。サイズ/種別制限 (SEC7)。session は CSRF token も必須 |
-| `POST /api/v1/publish/:id/submit` | session or Bearer / owner | Draft→Validating。検査 pipeline を Worker 内同期実行 (skills-only 小サイズ前提) し結果を DB 記録 |
-| `GET /api/v1/publish/:id` | Bearer or session | 状態 polling (Publisher/Hub Web 共用, qa-009) |
-| `POST /api/v1/publish/:id/approve` | session / workspace-admin | Yellow 承認 (Stage 2 approval queue)。監査 event |
-| `POST /api/v1/publish/:id/cancel` | Bearer / owner | 非終端のみ→Draft 差戻し |
-| `GET /api/v1/projects/:id/releases` | member | Release 履歴 (immutable 一覧) |
-| `POST /api/v1/channels/:id/promote` | owner | stable pointer 昇格。監査 event |
-| `POST /api/v1/channels/:id/rollback` | owner | 2 版目以降のみ rollback 先検査 (§7.2)。監査 event |
-| `POST /api/v1/releases/:id/suspend` | owner or admin | 公開停止 (Release status=suspended) |
-| `POST /api/v1/projects/:id/deployment` | Bearer / owner | wrangler 実行結果 (exit code/URL) の登録 + HTTP health 確認。Catalog 昇格失敗時は orphan_candidate 記録 (§7.2) |
-
-### 4.7 フィードバック (B6)
-
-| Method Path | 認証/最小 role | 概要 |
-|---|---|---|
-| `POST /api/v1/feedback` | session=`manual` / Bearer=`harness` | source は principal 種別から導出。同一キューへ格納。`project_id, type=improvement/review/bug, priority=high/medium/low, body` を受理 |
-| `GET /api/v1/feedback` | member | 一覧 (filter: status/type/project) |
-| `GET /api/v1/feedback/:id` | member | 詳細 (ai_response 含む) |
-| `PATCH /api/v1/feedback/:id` | workspace-admin | status 遷移 (§5.4)。監査 event。AI 対応は AiJob(`feedback_response`) 書戻しで `ai_response` 更新 + 起票者へ通知 |
-
-### 4.8 ドキュメント CMS (B7)
-
-| Method Path | 最小 role | 概要 |
-|---|---|---|
-| `GET /api/v1/docs` | member | scope 合成一覧 (common + 自テナント)。filter: category/scope/q |
-| `GET /api/v1/docs/:id` | member | body_md は raw 保存・レンダリング時 sanitize (SEC7) |
-| `POST /api/v1/docs` | workspace-admin (tenant) / provider-admin (common) | 作成。監査 event |
-| `PATCH /api/v1/docs/:id` | 同上 | 更新。監査 event |
-| `POST /api/v1/docs/:id/draft` | workspace-admin | AI 下書き AiJob(`doc_draft`) 投入 |
-
-### 4.9 メトリクス (B2/B3)
-
-| Method Path | 認証/最小 role | 概要 |
-|---|---|---|
-| `POST /api/v1/metrics/events` | Bearer (短命 token) | 実行ログ ingest。**回数のみ受理・時刻はサーバ採用・Idempotency-Key 必須** (SEC5)。207 なし、重複 key は 200 (既存応答再生) |
-| `GET /api/v1/metrics/summary` | member | dashboard KPI 6 カード + 推移 (rollup 読取のみ。Turso 読取予算対策) |
-| `GET /api/v1/metrics/rollups` | member (集計値) / admin (user 次元の金額) | dim=`tenant/department/project` は全員、dim=`user` の金額換算は admin のみ (SEC4 逆算対策) |
-
-### 4.10 通知 (B8/D6)
-
-| Method Path | 最小 role | 概要 |
-|---|---|---|
-| `GET /api/v1/notifications` | member | 自分宛て一覧 (未読数含む) |
-| `POST /api/v1/notifications/read` | member | 個別 or 一括既読 |
-| (送信は API でなく共通層) | — | NotificationDispatcher 純関数層: アプリ内 (正本) + Resend メール (opt-in・日次 100 通制限はバッチ分割+リトライ, D6) |
-
-### 4.11 AI ジョブキュー (B5/D5: pull 型)
-
-| Method Path | 認証 | 概要 |
-|---|---|---|
-| `POST /api/v1/ai-jobs/pull` | Bearer (**workspace-admin = 自テナントのみ / provider-admin = 全テナント**, qa-048 で改訂) | 最古の `queued` を lease 付き claim (`processing`, lease 10 分)。kind filter 可。空なら 204 |
-| `POST /api/v1/ai-jobs/:id/complete` | Bearer (claim 者のみ) | result 書戻し → 参照先 (sheet/feedback/doc) へ反映 + 通知。`sheet_generation` は P2 有効後に `sheet_id` 一意で Build (`hearing`) を、`feedback_response` は P3 有効後に `feedback_id` 一意で修正版 Build (`improvement/review`=`design`, `bug`=`test`) を冪等に自動作成する。監査 event |
-| `POST /api/v1/ai-jobs/:id/fail` | Bearer (claim 者のみ) | attempt++。max_attempts 到達で `dead` + admin 通知 |
-| `GET /api/v1/ai-jobs` | workspace-admin | キュー監視 (滞留は保守運用 qa-027 の監視対象) |
-
-- **pull 権限 (qa-048 で改訂・2026-07-18 中立再確認)**: workspace-admin にも開放する。workspace-admin の pull は自テナントのジョブに限定 (D4 row-level scope 内で完結)。provider-admin の pull のみ cross-tenant で、audit_events へ tenant 明示で記録する (D4 の唯一の明示例外は従来どおり)。開放の目的は提供者単一障害点の解消。workspace-admin 側の Claude Code 契約が処理の前提となる点を運用ドキュメントへ明記する。
-- **phase 境界**: P1 の間は生成済み Sheet を完成扱いにでき、S12 の Build 導線は非表示。P2 有効化 migration で `build_id IS NULL AND status IN ('review','completed')` の既存 Sheet を 1 回だけ backfill し、以後は `complete` と同一トランザクションで Build を作る。これにより mock の「生成後に構築パイプラインへ登録」を満たしつつ P1→P2 の順序を守る。
-
-### 4.12 監査・検索
-
-| Method Path | 最小 role | 概要 |
-|---|---|---|
-| `GET /api/v1/audit-events` | workspace-admin | append-only 閲覧 (filter: action/entity/actor/期間, cursor) |
-| `GET /api/v1/search?q=` | member | ハーネス + ユーザー横断 (ユーザーは name/department のみ返す) |
+### 4.12 [監査・検索](backend-spec-api-state.md#412-監査検索)
 
 ## 5. 状態機械
 
-### 5.1 PublishRequest (§7.2 完全準拠, qa-009)
+> 詳細正本: [backend-spec-api-state.md §5](backend-spec-api-state.md#5-状態機械)。
 
-```text
-Draft → Validating ├─ Needs Fix → Draft (差戻し)
-                   └─ Ready ├─ Approval Pending → Approved (管理者承認)   ← Stage 2 で有効化
-                            └─ Approved (policy 自動承認 = Green)
-                            → Publishing ├─ Failed (既存 stable 維持)
-                                         └─ Published (Release 生成 → Promote)
-```
+### 5.1 [PublishRequest (§7.2 完全準拠, qa-009)](backend-spec-api-state.md#51-publishrequest-72-完全準拠-qa-009)
 
-- MVP サブセット: Yellow/Red 相当は `Needs Fix` 差戻し。`Approval Pending` は Stage 2 まで到達しない。
-- 同一 TargetChannel の直列化: 先行が終端 (`Published/Failed/Draft` 差戻し) になるまで後続は `Draft` に留める。
+### 5.2 [HearingSheet](backend-spec-api-state.md#52-hearingsheet)
 
-### 5.2 HearingSheet
+### 5.3 [Build (7 工程, mockup pipeline)](backend-spec-api-state.md#53-build-7-工程-mockup-pipeline)
 
-```text
-received (受付) → generating (生成中: AiJob 投入中) → review (レビュー待ち) → completed (完了)
-                       └─ AiJob dead → received へ戻し admin 通知 (再生成可能)
-```
+### 5.4 [Feedback](backend-spec-api-state.md#54-feedback)
 
-### 5.3 Build (7 工程, mockup pipeline)
-
-```text
-hearing → requirements → design → build → test → review → publish
-```
-
-- 遷移は隣接工程間 (前進/差戻し) のみ。`publish` 遷移時は接続済み PublishRequest の `Published` を確認する (B4)。
-- **初期配置は遷移ではない**: HearingSheet 起点は `hearing`、Feedback 起点は `improvement/review`=`design`・`bug`=`test` で作成する。作成後の移動だけが隣接遷移制約と `build.stage_change` 監査の対象。
-
-### 5.4 Feedback
-
-```text
-open (未対応) → in_progress (対応中) → resolved (対応済み)
-```
-
-### 5.5 AiJob
-
-```text
-queued → processing (lease 10 分) ├─ completed
-                                  ├─ failed → attempt < 3 なら queued へ再投入
-                                  └─ lease 失効 → queued へ自動返却
-attempt = 3 → dead (admin 通知)
-```
+### 5.5 [AiJob](backend-spec-api-state.md#55-aijob)
 
 ## 6. 共有パッケージ (純関数層, qa-020)
 
