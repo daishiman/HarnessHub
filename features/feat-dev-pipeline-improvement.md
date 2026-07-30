@@ -12,17 +12,17 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-29T06:08:25Z"
+updated_at: "2026-07-30T02:46:06Z"
 status: "active"
 depends_on: []
-related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729"]
+related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728"]
 resource_scope: ["features/feat-dev-pipeline-improvement.md"]
 purpose: "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する"
 goal: "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態"
 scope_in: ["lifecycle close-loop の機械化 (open 残置検出と md/graph/beads 3 表現の同時 close 導線)","eval-log/ 配置規約の明文化と CI lint 強制","improvement-handoff schema への disposition 必須化と未消化 findings の beads 起票","tasks/ frontmatter status の意味論明記","graph.json 肥大対策の再検討トリガー記録","dev-graph 中核 handoff 31 findings の差分監査と disposition 遡及付与","spec-drift-guardian の verdict close gate 配線","陳腐化文書の定期棚卸し GC の sync verb 運用組込み","qa-071 方法論要件 (外側/内側ループ・スコープ分離・情報配置・P13 書き戻し) の feature context・goal-spec・P01..P13 task spec への意味的伝播と semantic coverage 検査の恒常化"]
 scope_out: ["Hub プロダクト本体機能 (Web/API/DB) の変更","dev-graph への新 verb 追加","bd CLI 本体の変更","graph.json 分割の実装 (トリガー記録のみ)"]
 acceptance: ["解決済み事象の open 残置を検出する決定論検査が存在し、issue-bd-bridge-notes-passthrough-20260721 が close-loop で閉じている","eval-log/ 配置規約が README に明文化され、CI lint が直下残置・バイト同一重複・1MB 超の git 追跡を遮断する","improvement-handoff schema に per-finding disposition と根拠 ref が必須化され、既存 21 ファイル 94 findings に消化状態が付与されている","task template に status = 文書ライフサイクル (active/superseded) の意味論が明記され、実行状態の二重正本が無い","graph.json 分割の再検討トリガーが仕様に記録されている","spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される","陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている","feature の purpose/goal/scope_in/acceptance と context JSON・goal-spec が qa-071 の方法論要件 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を明示的に保持している","P01..P13 の task spec が外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復契約・スコープ分離・情報配置 (正本への参照と lineage のみ)・P13 の仕様/architecture への書き戻しを実行可能な形で trace している","validate-system-plan.py と system-dev-plan-evaluator が、feature 宣言 qa 要件の spec-state qa_log 登録と goal-spec/task spec への semantic coverage を tag/lineage 一致だけで PASS にせず fail-closed 検証している"]
-architecture_refs: ["arch-harness-hub-dev-workflow"]
+architecture_refs: ["arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-29T05:21:27Z","origin_kind":"generated","source_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T01:53:05Z","origin_kind":"generated","source_digest":"7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -220,10 +220,49 @@ close した。
   metadata-only update と substantive body による作成・復旧を維持する。
 - 仕様影響は repository 内の readiness、tracker 投影、system build handoff に限定する。
   system-spec `qa-092`、
-  `architecture/harness-hub-dev-workflow.md`、
-  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
+   `architecture/harness-hub-dev-workflow.md`、
+   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
+   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
+## 2026-07-29 追記: skill tree lint の test cache 偽陽性修正
+
+- `HarnessHub-xswf` で、per-plugin pytest が生成する `.pytest_cache/v/cache` を
+  skill tree の第13条違反として数える実行順序依存を修正した。
+- dot directory とその配下を一般規則で除外し、`__pycache__` / `.pyc` の既存除外と統合した。
+- `.pytest_cache`、`.mypy_cache`、`.tool-cache` の正例と通常 nested directory の負例、
+  root / plugin script の byte parity を回帰テストにした。
+- `system-spec/spec-state.json` を単一 writer で R4-reopen し、
+  `system-spec/testing-qa.md` qa-095、`architecture/harness-hub-testing-qa.md`、
+  `specs/harness-hub-system-specification.md`、P12/P13 task spec へ反映した。
+- 製品 API・DB・認証認可・UI・deploy unit は非変更。判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
+  を正とする。
+
+## 2026-07-29 追記: workflow step guard の空走査 fail-closed
+
+- `HarnessHub-foq6` で、workflow directory 不在または YAML 0 件を成功扱いしていた
+  `lint-workflow-step-guard.py` を既定 fail-closed に変更した。
+- 意図的な空走査だけを `--allow-empty` で許可し、通常の CI / `make lint` /
+  pre-push 経路は実検査件数を伴う緑だけを受け入れる。
+- 520 行になった包括テストから空走査契約を専用ファイルへ分離し、全対象を 500 行未満にした。
+- 仕様影響は開発品質ゲートに限定され、system-spec `qa-096` と
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
+## 2026-07-30 追記: validator ID 一意性の横断 gate
+
+- `HarnessHub-ory6` で、task graph、consult transcript、route build handoff の
+  ID が `set` / `dict` 化の前に一意であることを fail-closed で検査するようにした。
+- task node / component、turn、route の各重複を別内容の負例 fixture で再現し、
+  公開 CLI の非 0 終了まで固定した。正常な既存入力は exit 0 を維持する。
+- 500 行を超えていた validator / test は `validate-route-report-contract.py`、
+  `validate-task-graph-shapes.py`、`test_validate_task_graph_shapes.py` へ
+  責務分離し、変更対象の手書きファイルをすべて 500 行以下にした。
+- 仕様・設計への影響は repository 内の validation contract に限定される。
+  `system-spec/testing-qa.md`、`specs/harness-hub-system-specification.md`、
+  `architecture/harness-hub-testing-qa.md`、P12 write-back と
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
+  に同一 wave で反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 ## アーキテクチャ参照
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md)

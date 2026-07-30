@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "auditor": "system-spec-hearing-auditor",
+  "component": "C06",
+  "session_id": "1068ed92-67cd-411a-b7f1-e08a496147fb",
+  "evaluated_at": "2026-07-29T12:15:36Z",
+  "verdict": "FAIL",
+  "counts": {
+    "uncollected": 0,
+    "missed_collection": 0,
+    "premature_stop": 0,
+    "cell_qa_ref_dangling": 0
+  },
+  "findings": [
+    {
+      "id": "F-LQ-1",
+      "severity": "medium",
+      "summary": "qa-092 の質問は MVP 維持、空走査防止、章完結性を一問へ束ねる。ただし appr-013 のユーザー明示承認があり、回答内容への実害は限定的。"
+    },
+    {
+      "id": "F-TR-1",
+      "severity": "medium",
+      "summary": "qa-071 が内部参照する qa-070 が qa_log に存在しない。matrix の確定セルは qa-070 を参照せず、セル単位の dangling は 0 件。"
+    },
+    {
+      "id": "F-RF-1",
+      "severity": "low",
+      "summary": "requirements_foundation.approval_ref は appr-007 のみを指し、初期承認 appr-001 を直接参照しない。"
+    }
+  ],
+  "qa092_answer_self_contained": true
+}

@@ -12,7 +12,7 @@ iteration: null
 title: "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:57:02.733424Z"
+updated_at: "2026-07-30T02:46:06Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P11"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -255,3 +255,46 @@ repository 内の一時領域から明示的に渡す。`--regenerate-body` だ�
 仕様正本は `system-spec/dev-workflow.md` `qa-092`、設計正本は
 `architecture/harness-hub-dev-workflow.md`、plugin 内部契約は
 `plugins/dev-graph/templates/README.md` とする。
+
+## 2026-07-29 skill tree lint 品質ゲート追補
+
+`HarnessHub-xswf` の最終レビューでは、focused test だけでなく
+per-plugin pytest の直後に repository criteria test を実行する順序回帰を必須にした。
+test tool が生成する dot cache は skill tree の設計物ではないため除外し、
+通常の nested directory 違反は引き続き fail-closed で拒否する。
+
+仕様反映は `system-spec/testing-qa.md` qa-095、
+`architecture/harness-hub-testing-qa.md`、
+`specs/harness-hub-system-specification.md`、
+`features/feat-dev-pipeline-improvement.md` に同一 wave で記録する。
+検証コマンドと結果の受領書は
+`docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
+を正とする。
+
+## 2026-07-30 HarnessHub-foq6 仕様反映追補
+
+本 P12 の promoted task spec と完了判定は変更しない。空走査 fail-open は
+repository 内の開発品質契約へ影響するため、`appr-015` を承認根拠として
+`system-spec/dev-workflow.md` の web セルを R4 reopen し、qa-096 へ再確定した。
+`qa-092` / `appr-013` は main 側 C11 契約の履歴として維持した。
+`specs/`、`architecture/`、`features/`、`docs/`、本 `tasks/` の参照を同一 wave で同期し、
+製品 API・DB・認証認可・UI・deploy unit は非変更と記録した。受領書は
+`docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`
+を正とする。pre-merge completeness evaluator は同じ意味内容を旧ローカル ID
+`qa-092` / `appr-013` として評価済みで、競合解消では意味を変えず ID だけを移した。
+
+## 2026-07-30 ID 一意性 gate の write-back
+
+本 P12 の promoted task spec と完了判定は変更しない。後続の standalone issue
+`HarnessHub-ory6` で、task graph、consult transcript、route build handoff の
+ID が `set` / `dict` 化される前に一意であることを検査する横断 gate を実装した。
+
+負例 fixture は同じ ID の別内容を投入し、公開 CLI の非 0 終了と正常系の exit 0 維持を確認する。
+500 行超の validator / test は report contract、graph shape、shape regression に責務分離し、
+公開 CLI path と JSON 出力契約を変えない。
+
+仕様正本への実装フィードバックは `system-spec/testing-qa.md`、集約仕様は
+`specs/harness-hub-system-specification.md`、設計は
+`architecture/harness-hub-testing-qa.md`、実装・検証・残課題の対応は
+`docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md`
+を正とする。

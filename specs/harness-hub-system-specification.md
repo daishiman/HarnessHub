@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-07-30T02:46:06Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -196,6 +196,18 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
 - 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
 
+**開発品質ゲートの空走査反映 (2026-07-30 / `HarnessHub-foq6` / qa-096)**:
+
+- `system-spec/dev-workflow.md` の web セルを正規に reopen し、qa-069 の
+  MVP ファースト契約を維持したまま qa-096 へ再確定した。
+- 品質ゲートは directory 不在・検査対象 0 件を既定で失敗させ、
+  意図的な空走査だけを明示 opt-in で許可する。
+- `qa-092` / `appr-013` は main 側 C11 契約を保持し、本変更は空き ID
+  `qa-096` / `appr-015` へ再採番した。
+- 製品 API・DB・認証認可・UI・deploy unit は変更しない。反映と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
+  を正とする。
+
 **開発管理整合性の反映 (2026-07-29 / `HarnessHub-bk8v`)**:
 
 - dev-graph C02 は、昇格済み feature へ古い full snapshot が再送されても lifecycle を
@@ -205,6 +217,33 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   DB schema、認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
 - 実装契約、設計判断、検証結果の対応は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
+  を正とする。
+
+**開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-095)**:
+
+- skill 構造 lint は人が管理する tree の深さ・命名・許可 directory を検査し、
+  test tool が生成する dot directory、`__pycache__`、`.pyc` は構造判定から除外する。
+- repository root と配布 plugin の lint 実装は同一バイト列を維持し、
+  `.pytest_cache` / `.mypy_cache` / 任意の dot cache と通常の nested directory 違反を
+  正負の回帰検体にする。
+- per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを
+  task の広域回帰証拠とする。製品 API・DB・認証認可・UI・deploy unit は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
+  を正とする。
+
+**開発品質反映 (2026-07-30 / `HarnessHub-ory6`)**:
+
+- ID を `set` / `dict` へ正規化して参照実在性を検査する repository 内
+  validator は、正規化の前に同一 ID の重複を fail-closed で拒否する。
+  重複した別要素を 1 件へ畳み込んだ後の「参照先あり」を合格根拠にしない。
+- 適用対象は plugin-dev-planner の task/component ID、ubm-goal-setting の
+  transcript turn ID、harness-creator の handoff route ID。正常系は従来の
+  exit 0 を維持し、重複 fixture は CLI 非 0 終了まで回帰テストで固定する。
+- 影響は repository 内の validation contract に限定される。製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
   を正とする。
 
 ## 未決事項

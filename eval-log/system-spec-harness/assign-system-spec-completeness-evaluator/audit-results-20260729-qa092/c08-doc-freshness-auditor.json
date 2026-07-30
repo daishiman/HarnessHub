@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "auditor": "system-spec-doc-freshness-auditor",
+  "component": "C08",
+  "session_id": "1068ed92-67cd-411a-b7f1-e08a496147fb",
+  "evaluated_at": "2026-07-29T12:36:55Z",
+  "verdict": "PASS",
+  "summary": {
+    "total_targets": 20,
+    "current": 16,
+    "stale_high": 0,
+    "stale_medium": 2,
+    "stale_low": 2,
+    "unknown": 0
+  },
+  "gate_result": {
+    "command": "python3 plugins/system-spec-harness/scripts/validate-source-citation.py --targets system-spec/spec-state.json --references system-spec/fetched-references.json --state system-spec/spec-state.json",
+    "exit_code": 0
+  },
+  "findings": [
+    {
+      "target_id": "drizzle-orm",
+      "severity": "medium",
+      "recorded": "v1.0.0-rc.4 pre-release / 0.45.2 stable",
+      "observed": "v1.0.0-beta.22 pre-release / 0.45.2 stable"
+    },
+    {
+      "target_id": "playwright",
+      "severity": "medium",
+      "recorded": "1.61.1",
+      "observed": "1.62.0 stable"
+    },
+    {
+      "target_id": "pnpm",
+      "severity": "low",
+      "recorded": "11.16.0",
+      "observed": "11.18.0"
+    },
+    {
+      "target_id": "zod",
+      "severity": "low",
+      "recorded": "4 (major only)",
+      "observed": "4.4.3 stable"
+    }
+  ],
+  "note": "公式ソース再照合で high finding 0。stale 4 件は C08 の PASS 閾値内で、次回 doc-fetch の追跡事項とする。"
+}
