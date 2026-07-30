@@ -183,7 +183,7 @@ close した。
 ## 2026-07-30 追記: scenario contract 受領の fail-closed 化
 
 - `HarnessHub-yn71` は criteria-test が `scenario_contract` 欠落を許容した穴を閉じ、全 required observation の同数・同順、引数、task 契約、run 内 evidence を再照合する。C15 schedule は現行 scenario で fresh live-trial を実走し、4/4 観測の durable run へ更新した。
-- 製品機能は変えず、開発品質ゲートの設計影響を qa-097 と [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) へ記録する。
+- 製品機能は変えず、開発品質ゲートの設計影響を qa-100 と [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) へ記録する。
 
 ## 2026-07-29 追記: C02 stale feature lifecycle の拒否
 

@@ -196,7 +196,7 @@ task spec が「共有 CI は不可侵。本 task は feature 固有チェック
 
 ### 3.2 新規テナントの登録手順 (一般)
 
-1. テナント側の IdP (Google Workspace / Microsoft Entra ID / Okta 等) で OIDC アプリケーションを作成する。
+1. 現行対象では、テナント側のGoogle WorkspaceでOIDCアプリケーションを作成する。
 2. リダイレクト URI に `https://<hub-host>/api/auth/callback/<provider-id>` を登録する。
 3. IdP から `issuer` / `client_id` / `client_secret` を受け取る。
 4. `feat-domain-model-db` が提供するリポジトリ層関数経由で `idp_connections` へ登録する

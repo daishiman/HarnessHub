@@ -52,15 +52,23 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 
 - **secret 台帳 (`wrangler secret put`。コード・DB へ平文を持ち込まない = qa-020)**:
 
+> **正本は [security-spec-data-integrity.md §4.5](security-spec-data-integrity.md) の secret インベントリ**であり、本表はそれを infrastructure 視点で再掲する。
+> 差分が出たら §4.5 を正として本表を直す。**この表にないものを Workers Secret に置かない。**
+
 | secret 名 | 用途 | ローテーション |
 |---|---|---|
 | `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` | libSQL 接続 | token 失効時・年 1 回 |
 | `AUTH_SESSION_SECRET` | Auth.js session JWT cookie 署名 | 年 1 回 (全セッション失効を伴う) |
 | `AUTH_ACCESS_TOKEN_SECRET` | Publisher access token JWT 署名 | 年 1 回 (短命 access token の再発行を伴う) |
+| `ENCRYPTION_KEK` | 封筒暗号化の KEK (base64 32 byte)。**1 本のみでテナント数に依存しない**。`users.salary` (purpose=`salary`) と `idp_connections.client_secret_enc` (purpose=`idp_secret`) の DEK を wrap して `encryption_keys` へ保存する (security-spec-data-integrity §4.1/§4.3) | 年 1 回。**DEK の re-wrap のみで列の再暗号化は不要** |
 | `RESEND_API_KEY` | メール送信 (SEC9) | 年 1 回 |
-| `SALARY_ENC_KEY` | users.salary の AES-GCM 鍵 (qa-032) | 計画ローテーション時は再暗号化 migration を伴う (runbook 化) |
-| `IDP_SECRET_<tenant_slug>` | テナント別 OIDC client secret (`idp_connections.client_secret_ref` が参照) | テナント IdP 側の更新に追随 |
 | `CRON_HEARTBEAT_URL` | scheduled handler が日次ジョブ完走時に ping する外形監視の heartbeat URL (§5/§9)。URL 自体が事実上の秘匿情報のため wrangler.jsonc の var ではなく secret で投入する | 監視側で再発行したとき |
+
+- **2026-07-28 台帳訂正 (`HarnessHub-x2x9`)**: 本表は旧設計の `SALARY_ENC_KEY` と `IDP_SECRET_<tenant_slug>` を載せ、
+  実装が起動時に必須とする `ENCRYPTION_KEK` を欠いていた。両者はいずれも `ENCRYPTION_KEK` 1 本の封筒暗号化へ統合済みで、
+  実装 (`packages/db/repository/crypto.ts`) にも `apps/hub/src/lib/authz/runtime.ts` にも該当 binding は存在しない。
+  **旧表のまま本番投入すると `ENCRYPTION_KEK` 未投入で Worker が起動時例外になる**ため、実装と §4.5 に合わせて訂正した。
+  テナント IdP の client secret は Workers Secret ではなく `idp_connections.client_secret_enc` へ封筒暗号化で保存する。
 
 - **サイズ予算**: Worker bundle ≤ 3 MiB (gzip, Free 上限) を CI ゲートで計測 (§7)。恒常超過は Workers Paid ($5/月) 移行と C2 再交渉をユーザーへ差し戻す (D1 caveat)。
 - **CPU 予算**: Workers Free は CPU 10ms/呼出。API はポーリング統一 (qa-031) で接続保持なし。cron の集計は chunk 処理 (§5) で 1 呼出の CPU を抑える。恒常超過時は D1 caveat と同じ経路で Paid 移行を再交渉。

@@ -86,7 +86,7 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-074",
+        "qa_ref": "qa-097",
         "serves_goals": [
           "G2",
           "G4"
@@ -162,7 +162,7 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-075",
+        "qa_ref": "qa-098",
         "serves_goals": [
           "G4",
           "G5"
@@ -200,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-094",
+        "qa_ref": "qa-099",
         "serves_goals": [
           "G1",
           "G4",
@@ -909,6 +909,21 @@
     },
     {
       "id": "qa-097",
+      "question": "SYS-AUTH-TENANCY-P13 の本番実行で確定した Google OIDC rollout とテナント別 CSRF sign-in を、auth.web の既存契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-074 までの auth.web 契約を全面維持し、次を追加確定する。(1) 現行 production rollout は Google OIDC と HarnessHub (`tenant_slug=harness-hub`) 1テナントだけを有効化する。これはリリース境界であり、製品の row-level tenant isolation、複数テナント回帰試験、将来の共通 Google OAuth client / 顧客持ち込み方式を削除しない。(2) tenant別サインイン画面は GET `/api/auth/{tenant_slug}/csrf` を `credentials=same-origin` で呼び、応答で設定されるCSRF cookieと`csrfToken`を同じtenant basePathのPOST `/api/auth/{tenant_slug}/signin/tenant-oidc`へ送る。(3) Googleへの302はfetchで追わずnative form navigationへ渡す。token取得失敗、空token、入力欠落では外部遷移せず再試行可能なエラーを表示する。(4) callback origin、JIT provisioning、7 claims、role=member/status=active、session/access署名鍵分離はqa-074を維持する。"
+    },
+    {
+      "id": "qa-098",
+      "question": "本番 Google OIDC の client_secret と CSRF を、security.web の秘密管理・要求検証契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-075 までの security.web 契約を全面維持し、次を追加確定する。(1) Google `client_secret` の復元可能な運用原本と安全な受渡し元は1Passwordとし、登録処理中だけmasked `op run`で展開する。値を文書、ログ、issue、PR、GitHub Secrets、テナント別Cloudflare Worker Secretsへ置かない。(2) repository経由でpurpose別DEKにより暗号化し、production DB `idp_connections.client_secret_enc`へ保存する。Workerは要求時にDBを読み、Cloudflare Worker Secretの共通`ENCRYPTION_KEK`で復号する。Workerは実行時に1Passwordを参照しない。(3) sign-in CSRFはtenant別basePathのcookie/token対を要求し、取得失敗・不一致・空値をfail-closedにする。別slugのcookie/tokenを混用しない。(4) Device FlowのCAS、refresh rotation/reuse検知、runtime binding再読込はqa-075を維持する。"
+    },
+    {
+      "id": "qa-099",
+      "question": "production Worker の認証bindingと現行1テナントrolloutを、infrastructure.web の既存運用契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 のbackup/heartbeat、token分離、RPO/RTO、外部実測境界を全面維持し、production authの差分を次のとおり追加確定する。(1) `apps/hub/wrangler.jsonc`は秘密でない`AUTH_CANONICAL_ORIGIN`、`AUTH_ALLOWED_ORIGINS`、`AUTH_DEVICE_VERIFICATION_URI`をproduction varsの正本とする。(2) production runtimeの必須Worker Secret名は`AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、`TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`、`ENCRYPTION_KEK`の5件とし、値は設定・source・文書へ保存しない。OIDC client secretや`IDP_SECRET_<tenant_slug>`をWorker Secretへ追加しない。(3) 現行rolloutの外部受入対象はGoogle / HarnessHub 1テナントである。二つ目のproduction tenantはP13完了条件にしないが、複数テナント分離試験と将来方式のtaskは維持する。(4) rolloutはbinding確認、deploy、health/provider/CSRF/sign-in、JIT、workspace membership、Device Flow token/refresh/reuse失効、session revocationをR1〜R5で実測し、証跡とrollback先をrelease recordへ残す。repository内実装だけで外部受入を完了扱いにしない。"
+    },
+    {
+      "id": "qa-100",
       "question": "qa-089 の live-trial 証拠契約を受領する criteria-test は、scenario_contract が欠落した旧形式の PASS をどう扱い、何を照合して初めて合格にしますか?",
       "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-089 の scenario 束縛、durable evidence、実測、provenance、製品境界を全面維持し、受領側の fail-closed 契約を追補する。\n\n【1. 非省略契約】verify_by=live-trial の criteria evidence は、正準 positive scenario と verdict の scenario_contract を必須とする。legacy verdict schema 上で field が省略可能でも、criteria acceptance では欠落を互換成功として扱わず不合格にする。\n\n【2. 照合条件】scenario_id が正準 scenario と一致し、required_observations が全件 observed、unobserved が空、task_args_template と実引数の option flag が一致しなければならない。scenario が task.md 契約を宣言する場合は required/forbidden instruction も一致させる。各 evidence_ref は同じ run directory 内に包含される実在ファイルへ解決する。\n\n【3. 更新方法】旧受領書が新契約を満たさない場合、digest や field の手編集で追認せず、現行 scenario と現行挙動閉包を使って fresh live-trial を実走し、その durable run 一式を repository に保持する。\n\n【4. 回帰検証】criteria-test は field の存在と全照合条件を無条件に検査する。正例 run の成功に加え、scenario_contract を欠落させた負例が失敗する判別力を維持する。\n\n【5. 境界】本変更は Harness Hub repository の開発品質ゲートと証拠受領に限定する。run-dev-graph-schedule のスケジューリング動作、Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
@@ -972,7 +987,11 @@
     },
     {
       "id": "appr-016",
-      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/features/system-spec/architecture/tasks の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-yn71 の scenario_contract 非省略、全 observation・引数・task 契約・証拠参照照合、fresh live-trial による更新を qa-097 として qa-089 へ追補する。"
+      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべての Beads タスクを最終レビューし、仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映して仕様反映の受領書を記録し、docs/・features/・system-spec/・architecture/・tasks/ に反映」を明示承認として記録。SYS-AUTH-TENANCY-P13 / HarnessHub-15h.13 の本番 Google OIDC、credential custody、tenant別CSRF、production rollout の確定差分を qa-097〜qa-099 として反映する。"
+    },
+    {
+      "id": "appr-017",
+      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/features/system-spec/architecture/tasks の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-yn71 の scenario_contract 非省略、全 observation・引数・task 契約・証拠参照照合、fresh live-trial による更新を qa-100 として qa-089 へ追補する。"
     }
   ],
   "reopen_log": [
@@ -1682,6 +1701,24 @@
       "category": "dev-workflow",
       "platform": "web",
       "reason": "HarnessHub-foq6 で品質ゲート自身に残っていた対象 0 件成功の fail-open を解消し、qa-069 の MVP ファースト契約を維持したまま CI / local の空走査境界を自己完結して再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "SYS-AUTH-TENANCY-P13 の本番実行で、Google・HarnessHub 1テナントという現行rollout境界と、Auth.js signin前のtenant別CSRF cookie/token取得が新たに確定したため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "Google client_secret の1Password受渡し、DB封筒暗号化、Worker共通ENCRYPTION_KEKというcredential境界とCSRF fail-closed契約が本番実測で確定したため",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "production Workerの公開URL3変数、必須Secret 5件、本番1テナントrolloutとR1-R5完了証跡が従来の2tenant前提を更新したため",
       "from": "確定"
     }
   ],

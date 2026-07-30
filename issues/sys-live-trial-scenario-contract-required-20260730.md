@@ -89,4 +89,4 @@ criteria evidence が合格する偽陽性が残っていた。
 - C15 fresh live-trial は required observation 4/4、独立 evaluator PASS。
 - task package、system-spec、graph、Dev Graph 721 件、repository 7640 件、
   CI/local parity 136 PASS / 4 既存 WARN / 0 FAIL を確認した。
-- qa-097 / appr-016 と全ドキュメント層へ反映し、仕様反映受領書を記録した。
+- qa-100 / appr-017 と全ドキュメント層へ反映し、仕様反映受領書を記録した。

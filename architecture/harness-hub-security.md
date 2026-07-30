@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub security アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:10:00Z"
+updated_at: "2026-07-30T04:40:19Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"}
-source_lineage: {"imported_at":"2026-07-26T06:10:00Z","origin_kind":"system-spec-harness","source_digest":"8d4e9a33e32e01eccf27043108740c57ce58892c6d0de5c80a3eedbdfc3ec161","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-30T04:40:19Z","origin_kind":"system-spec-harness","source_digest":"4c4572235580b8a6916f7d3a2203801a50cd51f71055f4df2358de207f1db477","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.95}]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/security.md](../system-spec/security.md) (sha256: `8d4e9a33e32e01ec…`)
-- [system-spec/auth.md](../system-spec/auth.md) (sha256: `9ac779ad29ed2d86…`)
+- [system-spec/security.md](../system-spec/security.md) (sha256: `4c4572235580b8a6…`)
+- [system-spec/auth.md](../system-spec/auth.md) (sha256: `ee2467537a90363e…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 再取込日時: 2026-07-26T06:10:00Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-07-30T04:40:19Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -96,6 +96,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - Auth.js cookie と edge 認可は同じ SessionClaims JWT を使い、callback origin を設定値へ固定する。
 - device_code / refresh token の一回性と user_code 失敗計数を CAS で保証する。
 - session / access token の署名鍵を別 Secret に分け、binding 更新時は runtime を再構成する。
+
+**差分追記 (2026-07-30 / SYS-AUTH-TENANCY-P13)**:
+
+- credential境界は`Google → 1Password（運用受渡し）→ masked登録処理 →
+  idp_connectionsの暗号文 → Worker共通ENCRYPTION_KEK`とする。
+- Google client secretをGitHub Secrets、文書、ログ、テナント別Worker Secretへ複製しない。
+  Workerは実行時に1Passwordを参照しない。
+- sign-inはtenant別CSRF endpointのcookie/token対を同じAuth.js basePathへ送る。
+  別slugのtoken混用、取得失敗、空tokenでは外部IdPへ遷移しない。
+- 本番対象はGoogle/HarnessHub 1テナントだが、row-level tenant isolationと
+  複数テナント回帰試験は製品の防御境界として維持する。
+- 正式な確定記録は`system-spec/auth.md`のqa-097と`system-spec/security.md`のqa-098、
+  対応証跡は[P13仕様反映受領書](../docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md)を参照する。
 
 ## Delivery, migration and rollback
 

@@ -21,8 +21,8 @@ reviewed_at: 2026-07-30
 
 **仕様・設計への影響は反映あり。ただし製品契約と scheduler の動作は非変更。**
 
-`qa-089` が要求する scenario 束縛を受領側で省略不可にするため、`qa-097` と
-`appr-016` を正規 writer で記録した。Harness Hub 製品の外部 API、DB schema、
+`qa-089` が要求する scenario 束縛を受領側で省略不可にするため、`qa-100` と
+`appr-017` を正規 writer で記録した。Harness Hub 製品の外部 API、DB schema、
 認証認可、UI、Cloudflare deploy unit、`run-dev-graph-schedule` の計算処理は変更しない。
 
 ## TL;DR
@@ -45,11 +45,11 @@ C15 run へ更新した。仕様書・設計書・feature・task・Beads も同�
 
 | 層 | 反映内容 |
 |---|---|
-| `system-spec/spec-state.json` | 単一 transition writer で `qa-097` / `appr-016` を追記 |
+| `system-spec/spec-state.json` | 単一 transition writer で `qa-100` / `appr-017` を追記 |
 | `system-spec/testing-qa.md` | qa-089 の横断追補として非省略・全観測再照合・fresh run 更新を確定 |
 | `specs/harness-hub-system-specification.md` | 開発品質への影響と製品非変更の境界を記録 |
 | `architecture/harness-hub-testing-qa.md` | schema 互換性と acceptance 合格条件を分離する設計を記録 |
-| `features/feat-dev-pipeline-improvement.md` | 実装結果、C15 4/4、qa-097 への参照を記録 |
+| `features/feat-dev-pipeline-improvement.md` | 実装結果、C15 4/4、qa-100 への参照を記録 |
 | `tasks/feat-dev-pipeline-improvement/*-p13.md` | P13 release evidence の受領条件を追補 |
 | `issues/sys-live-trial-scenario-contract-required-20260730.md` | dev-graph 正規 issue と完了証拠を記録 |
 
@@ -78,9 +78,11 @@ QA/承認 1 件だけを正規 writer で追記した。live-trial transcript �
 
 ## main 統合
 
-`origin/main` を fetch し、一時 worktree の local `main` へ `--ff-only` で統合した
-（`5bacf2e52bab26cfb9a9a9ad790b9d6c329c13a9`、更新不要）。その local `main` を
-本 branch へ merge し、競合なしで `5dcb85b` を作成した。統合後に上記ゲートを再実行した。
+初回は `origin/main` と local `main` の `5bacf2e` を確認し、本 branch へ merge した。
+PR 作成後に main が `b1009d0` へ進んだため、remote と local main の一致を再確認して
+もう一度 merge した。`spec-state.json` の ID だけが競合したので、main の auth 契約
+`qa-097`〜`qa-099` / `appr-016` を保持し、本変更を次の空き ID `qa-100` /
+`appr-017` へ単一 transition writer で再登録した。統合後に全ゲートを再実行した。
 
 ## Beads / dev-graph
 

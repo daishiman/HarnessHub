@@ -93,6 +93,7 @@ control-plane DB へ問い合わせできない場合、`isRevoked()` は `true`
 
 ```
 GET /api/v1/tokens
+X-Harness-Tenant-Id: <tenant_id>
 ```
 
 自分の token を一覧する。workspace-admin / provider-admin は所管範囲の token を一覧できる。
@@ -102,6 +103,7 @@ GET /api/v1/tokens
 
 ```
 DELETE /api/v1/tokens/:id
+X-Harness-Tenant-Id: <tenant_id>
 ```
 
 - **冪等 (べきとう＝何回実行しても結果が同じ)** である。既に失効済みの token を再度削除しても

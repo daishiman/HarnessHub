@@ -141,7 +141,7 @@ C14 live-trial acceptance の証拠完全性、最終 persisted node への評�
 
 ### 2026-07-30 scenario contract 受領ゲートの追補
 
-`HarnessHub-yn71` は P13 の release evidence 受領条件を qa-097 へ具体化した。
+`HarnessHub-yn71` は P13 の release evidence 受領条件を qa-100 へ具体化した。
 `verify_by=live-trial` の verdict は `scenario_contract` を省略できず、required/observed
 の同数・同順、`unobserved=[]`、引数、宣言済み task 契約、run 内 evidence の実在を
 criteria-test が再照合する。C15 schedule は 4/4 観測の fresh run へ更新した。
