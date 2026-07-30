@@ -55,7 +55,7 @@ OWASP ASVS + Secrets Management Cheat Sheet (`https://owasp.org/www-project-appl
 [作者/利用者ブラウザ] --(1)--> [Hub Web/API (Cloudflare Workers)] --(2)--> [Turso (control plane DB)]
                                         |                                 --(3)--> [R2 (package/backup)]
 [Publisher CLI / AI worker] --(4)------>|
-[顧客 IdP (Google/Entra)] --(5)-------->|
+[顧客 IdP (現行: Google)] --(5)-------->|
                                         |--(6)--> [Resend (メール)]
 [ハーネス実行環境 (顧客端末)] --(7)---->|  (metrics ingest / feedback)
 ```

@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T02:46:06Z"
+updated_at: "2026-07-30T04:40:19Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -109,6 +109,18 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - Auth.js 本番 route、DB-backed AuthPorts、CAS 一回性、テナント付き所属主キー、Worker Secret、要求間 write 分離と rollout 順序を正本へ書き戻した。
 - 反映先と検証の対応は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) を正とする。
 
+**本番反映 (2026-07-30 / `SYS-AUTH-TENANCY-P13` / qa-097〜qa-099)**:
+
+- productionはGoogle OIDC / HarnessHub 1テナントを現行rollout境界とする。製品の複数テナント分離契約、
+  分離試験、将来の共通Google OAuth client方式と顧客持ち込み方式は維持する。
+- tenant別CSRF cookie/tokenを取得してから同じAuth.js basePathへnative form POSTし、
+  Googleへの302をブラウザ遷移として処理する。CSRF取得失敗・空値・不一致はfail-closedとする。
+- Google client secretは1Passwordから登録時だけmasked展開し、purpose別DEKでDBへ暗号化する。
+  Workerは共通`ENCRYPTION_KEK`を使い、GitHubやテナント別Worker Secretへ値を複製しない。
+- 正本は[auth](../system-spec/auth.md)・[security](../system-spec/security.md)・
+  [infrastructure](../system-spec/infrastructure.md)、対応表は
+  [P13仕様反映受領書](../docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md)を参照する。
+
 ## エラー・例外・回復
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
@@ -130,6 +142,14 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 互換性・移行・リリース
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**認証production rollout (2026-07-30 / `SYS-AUTH-TENANCY-P13`)**:
+
+- `wrangler.jsonc`の公開URL 3変数と必須Worker Secret名5件を配備契約とし、値はGitへ保存しない。
+- Google/HarnessHub 1テナントでprovider/CSRF/sign-in、JIT、Workspace所属、Device Flow、
+  refresh rotation/reuse失効、session revocationをR1〜R5として本番実測した。
+- 2番目のproduction tenantを本リリース条件から外したことと、製品全体の複数テナント分離保証を
+  外したことを混同しない。後続方式は`HarnessHub-fnej` / `HarnessHub-uk2i`で追跡する。
 
 **差分追記 (2026-07-25 / feat-domain-model-db P13 / `SYS-DOMAIN-MODEL-DB-P13`)** — 詳細正本は [docs/infrastructure-spec.md](../docs/infrastructure-spec.md) §7 / §10、実測証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
 

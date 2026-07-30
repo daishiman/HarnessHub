@@ -12,7 +12,7 @@ iteration: null
 title: "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+updated_at: "2026-07-30T04:40:19Z"
 status: "active"
 depends_on: ["SYS-AUTH-TENANCY-P12"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
@@ -72,14 +72,50 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
 
-## 2026-07-28 リリース準備追補
+## 2026-07-28〜30 リリース実行・最終レビュー追補
 
 - Beads: `HarnessHub-15h.13` / feature: `HarnessHub-15h`
 - `docs/features/feat-auth-tenancy/production-auth-manual-setup.md` に、
-  Worker Secret・通常変数・2 テナント OIDC 接続・確認・rollback を具体化した。
-- read-only の本番確認結果と、未投入の設定・未実施のデプロイ / smoke を
-  `release-record.md` に分離記録した。
-- 本番資格情報投入、デプロイ、2 テナントログイン、Device Flow E2E は未実施である。
-  P13 の acceptance を満たしていないため、`in_progress` を維持する。
-- 仕様影響なしの判断は
-  `docs/features/feat-auth-tenancy/spec-reflection-receipt.md` §10 を参照する。
+  Worker Secret・通常変数・HarnessHub OIDC 接続・確認・rollback を具体化した。
+- 2026-07-30 の運用判断により、本番IdPはGoogle、対象はHarnessHub 1テナントだけとする。
+  追加テナントや他のIdPの登録・検証はP13の対象外とする。
+- Googleの`client_secret`は1Passwordを運用保管・受け渡し元とし、登録時に
+  `ENCRYPTION_KEK`で暗号化して本番DBへ保存する。GitHub Secretsやテナント別の
+  Cloudflare Worker Secretsには登録しない。
+- 初期read-only確認、途中の未投入状態、最終的な本番R1〜R5完了を
+  `release-record.md`へ時系列で分離記録した。最新判定は同文書§7を正とする。
+- 本番資格情報投入、暗号化DB登録、Worker配信、HarnessHubログイン/JIT、
+  Device Flow E2E、refresh再利用検知、session失効は完了した。
+- 本変更はrollout境界・credential境界・CSRF flowに仕様影響があるため、
+  `system-spec`のauth/security/infrastructureをR4 reopenし、qa-097〜qa-099へ再確定した。
+  対応表は`docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md`を正とする。
+- published task specの実装・本番acceptanceは完了したが、linked PR mergeと
+  default-branch reconciliationが未完了のため`completion_evidence.status=in_progress`を維持する。
+
+## 2026-07-29 Google OIDC実行タスク
+
+P13内のGoogle設定は次の順序で実行し、各完了ゲートを満たした場合だけ次へ進む。
+正確な入力値、停止条件、公式資料は`runbook-oidc-provider-onboarding.md`を正本とする。
+
+| ID | 作業単位 | 完了ゲート |
+| --- | --- | --- |
+| G-01 | HarnessHubの入力値・callback確定 | 確定値が実環境と一致 |
+| G-02 | 顧客所有Cloud project・Organization・IAM確定 | owner/operator記録済み |
+| G-03 | Branding・Audience・連絡先設定 | G-01と保存値が一致 |
+| G-04 | identity scope限定 | 3 scopeのみ |
+| G-05 | 1Password受取item準備 | secret以外のfield入力済み |
+| G-06 | Web OAuth client作成・secret保存 | redirect/client/itemが同一tenant |
+| G-07 | tenant単位のGoogle設定検証 | 秘密値を含まない合格記録 |
+| G-08 | HarnessHub設定値の最終確認 | project/client/callback/itemの混線0件 |
+| G-09 | 暗号化DB登録へ引渡し | 本番手順§7を開始可能 |
+
+## 2026-07-30 完了証跡
+
+- 本番: Google/HarnessHub 1テナント、login/JIT、Workspace所属、role 4種、
+  Device Flow、refresh rotation/reuse失効、session緊急失効をR1〜R5で確認。
+- 実装: Auth.js MissingCSRFループをtenant別CSRF取得＋native form navigationで修正。
+- 秘密管理: 1Passwordは運用受渡し、DBは暗号文、Workerは共通`ENCRYPTION_KEK`。
+  GitHub Secretsとテナント別Worker SecretにGoogle client secretを置かない。
+- 後続: 共通Google client方式`HarnessHub-fnej`、顧客持ち込み方式`HarnessHub-uk2i`。
+  いずれも今回の本番acceptanceを置換せずopenで継続する。
+- task状態: draft PRのmergeまでは`HarnessHub-15h.13`を`in_progress`に維持する。
