@@ -130,6 +130,21 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 本変更のdraft PRがdefault branchへmergeされるまでは、task completion policyによりP13を
   `in_progress`のまま維持する。
 
+## main反映後のrelease gate追補 (2026-07-30)
+
+- PR #612はmainへmerge済み。mainの自動deployはDB検査S1〜S3を通過後、
+  GitHub repositoryにR2専用tokenが未登録だったためS4で失敗し、自動rollbackは成功した。
+- 同じ欠落を本番変更前に止めるdeploy preflightと、tenant/CSRF/Google
+  state・nonce・PKCEを確認するOIDC start-flow smokeを追加した。
+- 既存のowner関係role、非owner拒否、cross-tenant拒否をOIDC契約と一緒に
+  G14の名前付きrelease gateとして再実行する。
+- 製品仕様やroleモデルは変更せず、`qa-091` / `qa-097` / `qa-099`の実装接地である。
+  判断理由は
+  [post-merge仕様影響受領書](../docs/features/feat-auth-tenancy/p13-postmerge-auth-gate-spec-receipt.md)
+  を正とする。
+- Cloudflare所有者による最小権限R2 token発行、GitHub secret投入、main run完走までは
+  `HarnessHub-15h.13` / `HarnessHub-bda4`を`in_progress`で維持する。
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-security](../architecture/harness-hub-security.md)

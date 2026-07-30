@@ -150,6 +150,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   refresh rotation/reuse失効、session revocationをR1〜R5として本番実測した。
 - 2番目のproduction tenantを本リリース条件から外したことと、製品全体の複数テナント分離保証を
   外したことを混同しない。後続方式は`HarnessHub-fnej` / `HarnessHub-uk2i`で追跡する。
+- **実装ゲート追補**: CIはmigration前にdeploy依存設定の存在を検査し、deploy後は
+  provider/canonical callback、未知tenant拒否、CSRF、Google認可URLの
+  `state`・`nonce`・PKCEまでを本番URLで検査する。owner認可はDBのbase roleではなく
+  resourceとの関係roleとして、全action×role表とcross-tenant拒否を名前付きゲートで再実行する。
+  これは`qa-091` / `qa-097` / `qa-099`と既存認可表の検証手段を固定する追補であり、
+  製品仕様・role順序・API・DB schemaは変更しない。
 
 **差分追記 (2026-07-25 / feat-domain-model-db P13 / `SYS-DOMAIN-MODEL-DB-P13`)** — 詳細正本は [docs/infrastructure-spec.md](../docs/infrastructure-spec.md) §7 / §10、実測証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
 
