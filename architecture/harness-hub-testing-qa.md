@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-07-30T01:27:32Z"
+updated_at: "2026-07-30T02:00:31Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f06ac1cf4045c7ca38ea7794fb92706a744f86161990a78b8904d8fd52d20bac","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T01:27:32Z","origin_kind":"system-spec-harness","source_digest":"f06ac1cf4045c7ca38ea7794fb92706a744f86161990a78b8904d8fd52d20bac","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-07-30T02:00:31Z","origin_kind":"system-spec-harness","source_digest":"a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `f06ac1cf4045…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `a38a0acb5248…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `codex-final-review` → **PASS** (`docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`)
-- 取込日時: 2026-07-30T01:27:32Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `codex-final-review` → **PASS** (`docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md`)
+- 取込日時: 2026-07-30T02:00:31Z / plugin: system-spec-harness v0.1.0
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 
@@ -79,6 +79,24 @@ skill tree と誤認しない境界を qa-095 として実装した。生成物�
 dot directory 全般へ一般化し、通常の深さ違反、root / plugin parity、実行順序回帰を
 テストで固定した。詳細は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md) を参照する。
 
+## 2026-07-30 ID 一意性 gate の実装反映
+
+`HarnessHub-ory6` で、複数 plugin の validator に共通する
+「ID を集合・辞書へ変換してから参照を検査する」境界を見直した。
+設計上の順序を `raw entries → duplicate ID gate → set/dict lookup →
+既存の参照・shape 検査` に固定し、同一 ID の別要素が last-write-wins
+（後勝ち＝後の定義が前を消す挙動）で隠れる経路を閉じた。
+
+task/component、transcript turn、handoff route は別 bounded context
+（責務境界）なので共通ライブラリへ過剰統合せず、各 plugin 内の小さな
+決定論 helper と負例 fixture で同じ不変条件を実装する。500 行を超えた
+validator / test は CLI、report contract、graph shape、回帰テストの責務で
+分離し、公開 CLI path と JSON 出力契約を維持する。
+
+影響は repository 内の validation contract に限定される。製品 API、DB、
+認証認可、UI、deploy unit、確定 QA の内容は変えない。反映と検証の対応は
+[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
+を参照する。
 ## 上流指針 (doctrine anchor)
 
 - reliability + operations (Google SRE)。doctrine-anchor-registry.json の pending_exceptions に approved 登録済み (owner: daishiman, 2026-07-24)。

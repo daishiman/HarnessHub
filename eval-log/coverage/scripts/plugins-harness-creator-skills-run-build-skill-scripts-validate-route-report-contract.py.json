@@ -1,0 +1,19 @@
+{
+  "artifact": "plugins/harness-creator/skills/run-build-skill/scripts/validate-route-report-contract.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 91,
+    "notes": "最終コードレビュー済み。route build report の schema、handoff、provenance 検査を CLI wrapper から分離し、handoff route ID は dict/set 化より前に重複拒否する。read-only で副作用なし。公開定数・補助関数は wrapper が後方互換で再公開。Harness Creator 全体 988 PASS、focused 60 PASS、py_compile PASS。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "backward-compatibility",
+    "frontmatter"
+  ]
+}
