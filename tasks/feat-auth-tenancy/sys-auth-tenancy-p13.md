@@ -12,8 +12,8 @@ iteration: null
 title: "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-30T04:40:19Z"
-status: "active"
+updated_at: "2026-07-30T10:59:32.786142Z"
+status: "done"
 depends_on: ["SYS-AUTH-TENANCY-P12"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/api/v1/device/","apps/hub/src/app/api/v1/token/","docs/features/feat-auth-tenancy/release-record.md","packages/schemas/auth-tenancy/"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-15h.13","linked_at":"2026-07-18T01:42:04Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/sys-auth-tenancy-p13-oidc-owner-gate","linked_at":"2026-07-30T10:59:32.781110Z","merge_commit_sha":"bcca528c76fd2c15d4973547542f34df2a352628","merged_at":"2026-07-30T07:17:10Z","pr_number":614,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/614"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-30T07:17:10Z","evidence_refs":["https://github.com/daishiman/HarnessHub/pull/614"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-30T10:59:32.781983Z","source":"github_pr_merge","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -89,8 +89,8 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 本変更はrollout境界・credential境界・CSRF flowに仕様影響があるため、
   `system-spec`のauth/security/infrastructureをR4 reopenし、qa-097〜qa-099へ再確定した。
   対応表は`docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md`を正とする。
-- published task specの実装・本番acceptanceは完了したが、linked PR mergeと
-  default-branch reconciliationが未完了のため`completion_evidence.status=in_progress`を維持する。
+- published task specの実装・本番acceptance、PR #614 merge、mainの本番CI完走、
+  default-branch C26 reconciliationが完了し、`completion_evidence.status=done`へ収束した。
 
 ## 2026-07-29 Google OIDC実行タスク
 
@@ -118,7 +118,7 @@ P13内のGoogle設定は次の順序で実行し、各完了ゲートを満た�
   GitHub Secretsとテナント別Worker SecretにGoogle client secretを置かない。
 - 後続: 共通Google client方式`HarnessHub-fnej`、顧客持ち込み方式`HarnessHub-uk2i`。
   いずれも今回の本番acceptanceを置換せずopenで継続する。
-- task状態: draft PRのmergeまでは`HarnessHub-15h.13`を`in_progress`に維持する。
+- task状態: PR #614 mergeとC26 reconciliationを根拠に`HarnessHub-15h.13`をclosedへ収束した。
 
 ## 2026-07-30 main反映後の追補
 
@@ -134,4 +134,7 @@ P13内のGoogle設定は次の順序で実行し、各完了ゲートを満た�
 - Cloudflare account所有者がWorkers Scripts権限なしのaccount-scoped
   `Workers R2 Storage Write` tokenを発行し、GitHub secretへ投入した後、
   `check-actions-secrets.mjs --live`とmainの`hub-ci`完走を最終証跡とする。
-- 上記外部証跡が揃うまで`HarnessHub-15h.13`と`HarnessHub-bda4`は`in_progress`を維持する。
+- PR #614 merge後のmain `hub-ci` run `30522434412`で全項目が成功し、
+  C26により`HarnessHub-15h.13`をclosedへ収束した。
+- `HarnessHub-bda4`はbackup workflow所有の`BACKUP_HEARTBEAT_URL`
+  （`HarnessHub-fnzl`）が残るため、P13とは分離して`in_progress`を維持する。

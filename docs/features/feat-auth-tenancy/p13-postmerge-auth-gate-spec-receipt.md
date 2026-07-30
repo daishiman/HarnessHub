@@ -7,7 +7,7 @@ beads_ids:
   - "HarnessHub-15h.13"
   - "HarnessHub-bda4"
 recorded_at: "2026-07-30"
-status: "accepted_with_external_action"
+status: "accepted"
 spec_impact: "none"
 ---
 
@@ -18,6 +18,11 @@ spec_impact: "none"
 PR #612 の main 反映後、`hub-ci` run `30518334455` は DB 系の S1〜S3 を通過した後、
 R2 操作用の `CLOUDFLARE_R2_API_TOKEN` が GitHub repository に未登録だったため失敗した。
 自動 rollback は成功し、本番 Worker は直前 version へ復帰した。
+
+その後、最小権限のaccount-scoped R2 tokenを1PasswordからGitHub Actionsへ
+値を開示せず登録した。PR #614 merge後の`hub-ci` run `30522434412`を再実行し、
+G14、deploy preflight、migration、Worker deploy、health、OIDC O1〜O4、
+DB/R2 smoke S1〜S6、cleanupの全項目が成功した。
 
 今回の追補に**製品仕様・認証認可モデル・API・DB schemaへの変更はない**。
 既に確定している次の契約を、CI と本番スモークへ fail-closed
@@ -70,7 +75,7 @@ G14は次を専用ゲートとして固定する。
 3. 同じID表現でも別tenantならowner権限を合成しない
 4. routeが共通認可wrapperを通り、session失効を迂回しない
 
-## 5. 外部所有者アクション
+## 5. 外部所有者アクションの完了
 
 repository側の契約は実装できるが、Cloudflareのaccount token発行はアカウント所有者の
 権限境界である。ローカルWrangler OAuthでaccount token permission APIを読んだ結果は
@@ -82,13 +87,18 @@ HTTP 403であり、個人OAuth tokenをGitHubへ転用しない。
 登録後の完了証跡は `check-actions-secrets.mjs --live`で本secretの欠落が0件になることと、
 mainの`hub-ci`完走である。他workflowの設定欠落は、それを所有するBeadsで別に判定する。
 
+このアクションは2026-07-30に完了した。R2 bucketへのread/writeは成功し、
+同じtokenによるWorkers Scripts APIはHTTP 403となったため、権限分離も確認できた。
+`BACKUP_HEARTBEAT_URL`の未登録はbackup workflow所有の別課題
+`HarnessHub-fnzl`で追跡し、P13の完了判定には混在させない。
+
 ## 6. 反映先
 
 - `docs/`: 本受領書、release record、infrastructure spec
 - `features/`: P13 post-merge追補
 - `specs/`: 既存確定契約と実装ゲートの対応
 - `architecture/`: deploy前提検査・OIDC smoke・rollback順序
-- `tasks/`: P13のmerge後事故と未完了の外部所有者アクション
+- `tasks/`: P13のmerge後事故、外部所有者アクション完了、C26完了投影
 - `system-spec/`: `qa-091` / `qa-097` / `qa-099` を再確認。意味変更がないため再生成なし
 
 ## 7. 検証
@@ -96,6 +106,8 @@ mainの`hub-ci`完走である。他workflowの設定欠落は、それを所有
 | ゲート | 結果 |
 | --- | --- |
 | production OIDC smoke | O1〜O4 pass |
+| main hub-ci | run `30522434412`、全job success |
+| DB/R2 production smoke | S1〜S6 pass、R2 cleanup deleted、最終cleanup clean |
 | auth release contract | 5 files / 59 tests pass |
 | Hub全テスト（single fork） | 57 files / 634 tests pass、coverage閾値pass |
 | schema | 6 files / 86 tests pass |
@@ -105,6 +117,7 @@ mainの`hub-ci`完走である。他workflowの設定欠落は、それを所有
 | a11y | UI 30 + Hub 3 tests pass |
 | Worker / client bundle | 1.201 MiB / 3 MiB、signin 109.0 KiB / 120 KiB |
 | P13 task plan / lineage / projection | violations 0 / missing 0 |
+| C26 lifecycle reconciliation | policy complete、conflicts 0、writer / Beads close適用 |
 
 rootの`pnpm verify`は高負荷のworkspace並列testで、DB runbook 1件とschema drift 2件が
 timeoutしexit 1になった。各対象を単独で再実行すると全件passし、Hubはsingle forkで
