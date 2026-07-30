@@ -180,6 +180,11 @@ close した。
 - 最新 `main` (`bb95580`) 統合後の最終ゲートは広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、task package P01〜P13・graph schema・fresh r7 live-trial 2 系列が PASS。後続 main の CI token 最小権限変更は本 feature の Python / C14 behavior closure を変えない。
 - PR #598 のコンフリクト解消では、本 feature の lp36 interpreter guard、C14 acceptance 強化、PR #600 の live-trial session ownership 履歴をすべて保持した。C14 受領証拠は統合後も有効な behavior closure `c0d843d7…4801` の beads r3 / none r1 とし、旧 reaper に終了された beads r1/r2 は監査用の失敗証跡としてのみ保持した。無差別回収の原因は最新 main の ownership 契約で修正済みである。
 
+## 2026-07-30 追記: scenario contract 受領の fail-closed 化
+
+- `HarnessHub-yn71` は criteria-test が `scenario_contract` 欠落を許容した穴を閉じ、全 required observation の同数・同順、引数、task 契約、run 内 evidence を再照合する。C15 schedule は現行 scenario で fresh live-trial を実走し、4/4 観測の durable run へ更新した。
+- 製品機能は変えず、開発品質ゲートの設計影響を qa-100 と [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) へ記録する。
+
 ## 2026-07-29 追記: C02 stale feature lifecycle の拒否
 
 - `HarnessHub-bk8v` で、C14 の古い full feature snapshot が昇格済み lifecycle を

@@ -68,6 +68,8 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 - **ツール確定 (D8)**: Vitest (単体・結合) + Playwright (E2E) + @testing-library/react (UI コンポーネント、behavior ベース) の 3 点構成。
 - **実走証拠の完全性 (qa-089)**: live-trial の PASS は scenario 正本・全 observation・実引数・task.md の必須/禁止手順・transcript digest・挙動閉包 SHA を束縛し、observation の evidence ref を run 内の実在ファイルへ閉じ込める。再利用 planner は scenario ID の変更だけでなく削除も失効として扱う。
 - **実測アーキテクチャ (qa-089)**: publication/write は pre/post state、binding は永続 graph から導出する。draft gate と candidate adapter dry-run のゼロ帰属を分離する。昇格済み node の `confirmation_evidence.evaluated_digest` は、最終 persisted node から自己参照 field だけを除いた正準 JSON の SHA-256 と突合する。監査 module と scenario 契約全体の composite provenance、同一 graph を壊して正準 validator の拒否節まで確認する negative control を品質ゲートにする。
+- **受領側の非省略境界 (qa-100)**: `verify_by=live-trial` の criteria-test は `scenario_contract` の存在を必須にし、required/observed の同数・同順、`unobserved=[]`、引数、宣言済み task 契約、run 内 evidence の実在を再照合する。schema の後方互換性と acceptance の合格条件を分離し、旧受領書は fresh run で更新する。
+- **変更境界 (qa-100)**: 変更は証拠を受領するテスト層に閉じる。C15 schedule の新規 run は現行動作の再観測であり、scheduler、公開 API、DB、認証認可、UI、deploy unit の構造は変えない。
 - **一時生成物の境界 (qa-095)**: skill 構造 lint は dot directory、`__pycache__`、`.pyc` を test tool の生成物として構造判定から除外し、通常の nested directory 違反は維持する。root / plugin 実装の byte parity と per-plugin → repository の実行順序回帰を固定する。
 
 ## 2026-07-29 実装反映
