@@ -921,6 +921,11 @@
       "id": "qa-099",
       "question": "production Worker の認証bindingと現行1テナントrolloutを、infrastructure.web の既存運用契約へどう統合しますか?",
       "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 のbackup/heartbeat、token分離、RPO/RTO、外部実測境界を全面維持し、production authの差分を次のとおり追加確定する。(1) `apps/hub/wrangler.jsonc`は秘密でない`AUTH_CANONICAL_ORIGIN`、`AUTH_ALLOWED_ORIGINS`、`AUTH_DEVICE_VERIFICATION_URI`をproduction varsの正本とする。(2) production runtimeの必須Worker Secret名は`AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、`TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`、`ENCRYPTION_KEK`の5件とし、値は設定・source・文書へ保存しない。OIDC client secretや`IDP_SECRET_<tenant_slug>`をWorker Secretへ追加しない。(3) 現行rolloutの外部受入対象はGoogle / HarnessHub 1テナントである。二つ目のproduction tenantはP13完了条件にしないが、複数テナント分離試験と将来方式のtaskは維持する。(4) rolloutはbinding確認、deploy、health/provider/CSRF/sign-in、JIT、workspace membership、Device Flow token/refresh/reuse失効、session revocationをR1〜R5で実測し、証跡とrollback先をrelease recordへ残す。repository内実装だけで外部受入を完了扱いにしない。"
+    },
+    {
+      "id": "qa-100",
+      "question": "qa-089 の live-trial 証拠契約を受領する criteria-test は、scenario_contract が欠落した旧形式の PASS をどう扱い、何を照合して初めて合格にしますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-089 の scenario 束縛、durable evidence、実測、provenance、製品境界を全面維持し、受領側の fail-closed 契約を追補する。\n\n【1. 非省略契約】verify_by=live-trial の criteria evidence は、正準 positive scenario と verdict の scenario_contract を必須とする。legacy verdict schema 上で field が省略可能でも、criteria acceptance では欠落を互換成功として扱わず不合格にする。\n\n【2. 照合条件】scenario_id が正準 scenario と一致し、required_observations が全件 observed、unobserved が空、task_args_template と実引数の option flag が一致しなければならない。scenario が task.md 契約を宣言する場合は required/forbidden instruction も一致させる。各 evidence_ref は同じ run directory 内に包含される実在ファイルへ解決する。\n\n【3. 更新方法】旧受領書が新契約を満たさない場合、digest や field の手編集で追認せず、現行 scenario と現行挙動閉包を使って fresh live-trial を実走し、その durable run 一式を repository に保持する。\n\n【4. 回帰検証】criteria-test は field の存在と全照合条件を無条件に検査する。正例 run の成功に加え、scenario_contract を欠落させた負例が失敗する判別力を維持する。\n\n【5. 境界】本変更は Harness Hub repository の開発品質ゲートと証拠受領に限定する。run-dev-graph-schedule のスケジューリング動作、Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -983,6 +988,10 @@
     {
       "id": "appr-016",
       "note": "ユーザーの 2026-07-30 指示「今回変更しているすべての Beads タスクを最終レビューし、仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映して仕様反映の受領書を記録し、docs/・features/・system-spec/・architecture/・tasks/ に反映」を明示承認として記録。SYS-AUTH-TENANCY-P13 / HarnessHub-15h.13 の本番 Google OIDC、credential custody、tenant別CSRF、production rollout の確定差分を qa-097〜qa-099 として反映する。"
+    },
+    {
+      "id": "appr-017",
+      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/features/system-spec/architecture/tasks の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-yn71 の scenario_contract 非省略、全 observation・引数・task 契約・証拠参照照合、fresh live-trial による更新を qa-100 として qa-089 へ追補する。"
     }
   ],
   "reopen_log": [
@@ -2951,7 +2960,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 4,
+    "loop_count": 1,
     "next_question": null,
     "complete": true
   }

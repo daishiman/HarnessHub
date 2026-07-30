@@ -1,0 +1,142 @@
+{
+  "scenario_id": "C15-OUT1-positive-ready-set-r16",
+  "observations": {
+    "1": {
+      "observation": "the overlapping resource_scope pair is never placed in the same batch",
+      "measured_value": {
+        "conflict_pair": {
+          "left": "LT-SCHED-001",
+          "right": "LT-SCHED-002",
+          "shared_resource": "src/alpha.py"
+        },
+        "batch_placement": {
+          "batch_0": ["LT-SCHED-001", "LT-SCHED-003"],
+          "batch_1": ["LT-SCHED-002", "LT-SCHED-006"]
+        },
+        "LT_SCHED_001_batch": 0,
+        "LT_SCHED_002_batch": 1,
+        "same_batch": false,
+        "intra_batch_resource_intersections": {
+          "batch_0": {
+            "LT-SCHED-001": ["src/alpha.py"],
+            "LT-SCHED-003": ["src/beta.py"],
+            "intersection": []
+          },
+          "batch_1": {
+            "LT-SCHED-002": ["src/alpha.py"],
+            "LT-SCHED-006": ["src/delta.py"],
+            "intersection": []
+          }
+        }
+      },
+      "pass": true,
+      "root_paths": {
+        "graph": ".dev-graph/state/graph.json",
+        "execution_receipt": "eval-log/run-dev-graph-schedule-execution.json"
+      }
+    },
+    "2": {
+      "observation": "the blocked task is excluded from the ready set and the reason is reported",
+      "measured_value": {
+        "blocked_task": "LT-SCHED-005",
+        "depends_on": ["LT-SCHED-001"],
+        "dependency_status": {
+          "LT-SCHED-001": {
+            "completion_evidence_status": "open",
+            "is_done": false
+          }
+        },
+        "present_in_ready_set": false,
+        "present_in_batches": false,
+        "present_in_assignment_hints": false,
+        "exclusion_reason": "depends_on=[LT-SCHED-001]; LT-SCHED-001.completion_evidence.status=open; dependency not satisfied",
+        "recomputed_ready_set": ["LT-SCHED-001", "LT-SCHED-002", "LT-SCHED-003", "LT-SCHED-006"],
+        "receipt_ready_set": ["LT-SCHED-001", "LT-SCHED-002", "LT-SCHED-003", "LT-SCHED-006"],
+        "sets_match": true
+      },
+      "pass": true,
+      "root_paths": {
+        "graph": ".dev-graph/state/graph.json",
+        "execution_receipt": "eval-log/run-dev-graph-schedule-execution.json"
+      }
+    },
+    "3": {
+      "observation": "the active lease suppresses its task while the stale lease is reclaimed",
+      "measured_value": {
+        "active_lease": {
+          "graph_node_id": "LT-SCHED-004",
+          "expires_at": "2099-01-01T00:00:00+00:00",
+          "state": "in_progress",
+          "resource_scope": ["src/gamma.py"],
+          "is_active": true,
+          "evaluation_date": "2026-07-30",
+          "suppressed_from_ready_set": true,
+          "reported_in_conflicts": true,
+          "conflict_pair_kind": "lease"
+        },
+        "stale_lease": {
+          "graph_node_id": "LT-SCHED-006",
+          "expires_at": "2020-01-01T00:00:00+00:00",
+          "state": "claimed",
+          "resource_scope": ["src/delta.py"],
+          "is_active": false,
+          "evaluation_date": "2026-07-30",
+          "reclaimed_into_ready_set": true,
+          "has_assignment_hint": true,
+          "suggested_branch": "devgraph/LT-SCHED-006"
+        }
+      },
+      "pass": true,
+      "root_paths": {
+        "leases": ".git/dev-graph/leases.json",
+        "execution_receipt": "eval-log/run-dev-graph-schedule-execution.json"
+      }
+    },
+    "4": {
+      "observation": "batches respect --max-parallel and suggested_branch and worktree claim commands stay unique",
+      "measured_value": {
+        "max_parallel": 2,
+        "batch_sizes": [2, 2],
+        "all_within_limit": true,
+        "assignment_hints": [
+          {
+            "graph_node_id": "LT-SCHED-001",
+            "suggested_branch": "devgraph/LT-SCHED-001",
+            "claim_command": "/dev-graph worktree claim LT-SCHED-001 --branch devgraph/LT-SCHED-001 --session-id <session>"
+          },
+          {
+            "graph_node_id": "LT-SCHED-002",
+            "suggested_branch": "devgraph/LT-SCHED-002",
+            "claim_command": "/dev-graph worktree claim LT-SCHED-002 --branch devgraph/LT-SCHED-002 --session-id <session>"
+          },
+          {
+            "graph_node_id": "LT-SCHED-003",
+            "suggested_branch": "devgraph/LT-SCHED-003",
+            "claim_command": "/dev-graph worktree claim LT-SCHED-003 --branch devgraph/LT-SCHED-003 --session-id <session>"
+          },
+          {
+            "graph_node_id": "LT-SCHED-006",
+            "suggested_branch": "devgraph/LT-SCHED-006",
+            "claim_command": "/dev-graph worktree claim LT-SCHED-006 --branch devgraph/LT-SCHED-006 --session-id <session>"
+          }
+        ],
+        "all_branches_unique": true,
+        "all_commands_unique": true,
+        "duplicate_branches": [],
+        "duplicate_commands": []
+      },
+      "pass": true,
+      "root_paths": {
+        "execution_receipt": "eval-log/run-dev-graph-schedule-execution.json"
+      }
+    }
+  },
+  "c17_verifier_pass": true,
+  "digest_immutability": {
+    "graph_sha256_before": "e4d17190c75575639238f0b168528bba1aee3a9f373f86a4fa1cbbd1c1f34484",
+    "graph_sha256_after": "e4d17190c75575639238f0b168528bba1aee3a9f373f86a4fa1cbbd1c1f34484",
+    "lease_sha256_before": "b10e1c1670e6cf36ca3155b2d390bdbd45183fff76b04c91c562d9f1f8c32b41",
+    "lease_sha256_after": "b10e1c1670e6cf36ca3155b2d390bdbd45183fff76b04c91c562d9f1f8c32b41",
+    "all_match": true
+  }
+}
