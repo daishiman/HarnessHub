@@ -295,6 +295,6 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
   `--allow-empty` だけを許可する。詳細は [空走査受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)。
 - いずれも repository 内の開発管理・品質ゲートに限定し、製品 runtime 契約は変更しない。
 
-### 差分追記 (2026-07-30): C02 document layer の graph/frontmatter parity
-- `qa-097` は schema を `layer` の正本とし、C02 の本文保持移行と lint の fail-closed 境界を確定した。詳細は
+### 差分追記 (2026-07-30): C02 document parity と live-trial session 環境隔離
+- `qa-099` は C02 の本文保持・schema/lint parity に加え、tmux global environment を routing 正本にせず `new-session -e` で trial 固有の監査台帳 path を上書きする境界を確定した。詳細は
   [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md)。

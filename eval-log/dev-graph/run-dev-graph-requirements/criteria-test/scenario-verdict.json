@@ -7,7 +7,7 @@
     "skill_md_sha256": "6d2058664b908138d4349663bcd0b0f0aaeba4d50dfe5f3f3fddbdd20ddaa653"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729; OUT1 refresh=fresh-agent-eval_c02_live_trial",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T100000Z-wt28-postmerge-c11-requirements/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260730T045000Z-wt13-ci-requirements-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T100000Z-wt28-postmerge-c11-requirements/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T100000Z-wt28-postmerge-c11-requirements/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260729T100000Z-wt28-postmerge-c11-requirements/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260730T045000Z-wt13-ci-requirements-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260730T045000Z-wt13-ci-requirements-r2/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260730T045000Z-wt13-ci-requirements-r2/independent-verification.json"
       ],
-      "observed": "latest main merge 後の fresh live trial PASS (run 20260729T100000Z-wt28-postmerge-c11-requirements)。現行 C11/C02/source-digest/P01..P13 exact-13 の4 gate、feature と source digest に束縛された capability-build handoff、実装 source file 生成0、goal-seek 3点セットを実測した。別 Claude コンテキストの goal evaluator は blockers=[] で PASS と判定した。"
+      "observed": "2026-07-30 fresh live trial (20260730T045000Z-wt13-ci-requirements-r2) は overall=PASS、nudge=0、gate=0、poll_exit=DONE。確定済み system-spec digest を specification と architecture が共有し、ready handoff の source-lineage 閉包を確認した。 外部独立 evaluator fresh-agent-eval_c02_live_trial は blockers=[] で PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-30T01:53:05Z"
+updated_at: "2026-07-30T09:47:06.679162Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-30T01:53:05Z","origin_kind":"generated","source_digest":"7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T09:45:46Z","origin_kind":"generated","source_digest":"ef5b3071615fa5a06356c153a81a8abcc6932c23b41a943164c839fd8ed7096d","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -256,6 +256,13 @@ close した。
 - C02 は legacy artifact の単一 `layer` scalar を graph へ一度だけ移行する。新規 document の暗黙 default、欠落、重複、形式不正は拒否し、本文を保持する。
 - `system-spec/spec-state.json` を正規 writer で R4-reopen し、`system-spec/dev-workflow.md` qa-097、`specs/harness-hub-system-specification.md`、`architecture/harness-hub-dev-workflow.md`、P13 task、最終レビュー、仕様反映確認へ同一 wave で書き戻した。
 - 変更境界は repository 内の Dev Graph metadata と品質ゲートであり、製品 API・DB・認証認可・UI・deploy unit は非変更。詳細は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
+
+## 2026-07-30 追記: PR #610 CI の live-trial 証拠更新
+
+- C02 の共有挙動閉包変更で stale になった Dev Graph 9 skill の verdict を、digest の手編集なしで fresh session から再取得した。
+- C04 fixture は architecture node も同じ confirmed system-spec digest へ束縛し、scope closure 全体を source-digest gate に通した。
+- C19 で tmux server に残った過去の監査台帳 path が新 session へ混入する問題を検出し、boot が caller の session-scoped 値を `new-session -e` で上書きするようにした。
+- 正本反映は `qa-099` / `appr-018`、最終判断と実走履歴は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
 
 ## アーキテクチャ参照
 

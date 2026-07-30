@@ -54,6 +54,9 @@ def test_backend_tmux_wrappers_with_fake_subprocess(monkeypatch, tmp_path):
     backend_mod.new_session(
         "lt-direct", str(tmp_path), run_id="direct", owner_pid=111,
         command_argv=("printf", "%s", "safe; touch /tmp/not-created"),
+        environment_overrides={
+            "SYSTEM_SPEC_AUDIT_FORK_LEDGER": "/tmp/current ledger.jsonl",
+        },
     )
     backend_mod.send_line("lt-x", "hello")
     backend_mod.paste_text("lt-x", "task body\nwith newline")
@@ -91,6 +94,10 @@ def test_backend_tmux_wrappers_with_fake_subprocess(monkeypatch, tmp_path):
     assert backend_mod.valid_buffer_name(load_call[3])
     assert len(load_call[3]) <= backend_mod._BUFFER_NAME_MAX
     direct = next(c for c in calls if c[1:5] == ["new-session", "-d", "-s", "lt-direct"])
+    env_index = direct.index("-e")
+    assert direct[env_index + 1] == (
+        "SYSTEM_SPEC_AUDIT_FORK_LEDGER=/tmp/current ledger.jsonl"
+    )
     assert direct[-1] == "printf %s 'safe; touch /tmp/not-created'"
     # CLI dispatch も同じ境界を通る
     assert backend_mod.main([
@@ -124,6 +131,25 @@ def test_backend_cli_does_not_expose_arbitrary_direct_command(tmp_path):
             "new-session", "lt-x", str(tmp_path), "; touch /tmp/injected"
         ])
     assert exc.value.code == 2
+
+
+@pytest.mark.parametrize(
+    ("overrides", "message"),
+    [
+        ({"BAD-NAME": "value"}, "invalid environment override name"),
+        ({"SAFE_NAME": "line1\nline2"}, "invalid environment override value"),
+    ],
+)
+def test_backend_rejects_unsafe_environment_overrides(
+    monkeypatch, tmp_path, overrides, message
+):
+    monkeypatch.setattr(backend_mod, "require_tmux", lambda: None)
+    monkeypatch.setattr(backend_mod, "kill_session", lambda _session: True)
+    with pytest.raises(ValueError, match=message):
+        backend_mod.new_session(
+            "lt-env-guard", str(tmp_path), run_id="env-guard",
+            environment_overrides=overrides,
+        )
 
 
 def test_backend_paste_buffer_name_is_deterministic_isolated_and_injection_safe(tmp_path):

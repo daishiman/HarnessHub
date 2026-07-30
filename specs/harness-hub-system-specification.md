@@ -227,6 +227,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 影響は repository 内の開発管理 metadata と品質ゲートに限定される。Harness Hub 製品の外部 API・DB schema・認証認可・UI・Cloudflare deploy unit は変更しない。
 - 反映先、検証結果、500 行判断は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
 
+**CI 追補 (2026-07-30 / `HarnessHub-dqca` / qa-099)**:
+
+- C02 変更で stale になった Dev Graph 9 skill の live-trial を正規に再取得し、失敗 run も append-only で保持する。
+- tmux server の global environment は hook routing の正本にせず、boot 呼び出し元の `SYSTEM_SPEC_AUDIT_FORK_LEDGER` を `new-session -e` で対象 session へ明示する。未設定は空値で上書きし、過去 trial の一時 path を継承しない。
+- C19 は fixture 内台帳と current session id を canonical aggregate gate で突合し、正規 system-spec 4 entry point、独立3監査、C02 import が揃った場合だけ PASS とする。
+- これは repository 内の acceptance harness と証拠配送の設計であり、製品 API・DB・認証認可・UI・Cloudflare deploy unit は変更しない。
+
 **開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-095)**:
 
 - skill 構造 lint は人が管理する tree の深さ・命名・許可 directory を検査し、

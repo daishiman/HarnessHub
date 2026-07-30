@@ -1,0 +1,99 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-schedule",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-13/eval-log/dev-graph/live-trial-fixtures/wt13-ci-schedule-20260730 --max-parallel 2",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-schedule"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "528262f7f4223fb64fd9c38177981001ed2e03dbc6528d72c2af265b1835b79b",
+  "transcript_sha256": "23691c047e8698c74dad48e49f42cb26ff657215f0664f3efb5069c53ce3cc94",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 7.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 615.0
+  },
+  "scenario_id": "C15-OUT1-positive-ready-set-r16",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C15-OUT1-positive-ready-set-r16",
+    "required_observations": [
+      "the overlapping resource_scope pair is never placed in the same batch",
+      "the blocked task is excluded from the ready set and the reason is reported",
+      "the active lease suppresses its task while the stale lease is reclaimed",
+      "batches respect --max-parallel and suggested_branch and worktree claim commands stay unique"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the overlapping resource_scope pair is never placed in the same batch",
+        "evidence_ref": "schedule-execution.json"
+      },
+      {
+        "index": 2,
+        "observation": "the blocked task is excluded from the ready set and the reason is reported",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 3,
+        "observation": "the active lease suppresses its task while the stale lease is reclaimed",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 4,
+        "observation": "batches respect --max-parallel and suggested_branch and worktree claim commands stay unique",
+        "evidence_ref": "independent-verification.json"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo> --max-parallel 2",
+      "template_flags": [
+        "--max-parallel",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--max-parallel",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

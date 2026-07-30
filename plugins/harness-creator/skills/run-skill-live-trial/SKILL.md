@@ -187,6 +187,10 @@ python3 $SCRIPTS/live-trial-boot.py "$SESSION" "$(pwd)" --run-id "$RUN_ID" --mod
 
 `READY:` を確認してから次へ。`SESSION_ID` (行末固定) は以後の send / poll / verdict に env / 引数で渡す — transcript JSONL 一次判定が有効になる。`OWNER_PID` も同じ READY 行から取り、回収時の `--owner-pid` にそのまま渡す (現在の shell の `$$` で代用しない)。boot は対話shellを経由せず、model/session-idを検証したargvで`claude`をpaneに直接起動し、`--setting-sources local`でuser/project settingsを読まない。qualified targetではcwd配下のtarget pluginとpackage contractが宣言するdependencyだけを複数`--plugin-dir`でloadするため、plugin自身のskill/hookと正規delegateはacceptance対象に残る。初回の bypass-permissions 確認は `WARNING: Claude Code running in Bypass Permissions mode` + `1. No, exit` + `2. Yes, I accept` + `Enter to confirm` の4 markerが全て一致する場合だけ、`Down`→短いrender待ち→Enterでoption 2を1回受理する (実TUIで数字2は選択移動にならない)。他のgateは自動応答しない。その後の`for shortcuts`、または行頭`❯` + space/NBSP + `Try ...`/空promptを検出するまでREADYを返さない。番号付き`❯ 1.`はREADY対象外。`TIMEOUT:` は project trust / claude PATH を確認。`BOOT_FAIL:` はcapture tailにCLIエラー原文が残る。**proof trial では model 必須** — 空のまま boot したら即 kill して確定後に再 boot (既定 model の完走を proof と報告するのが最悪の故障モード)。**boot は安全な文字集合でない model/session-id を起動前に拒否するが、存在しない model id の有効性は検出しない** (READY 行の MODEL: は requested の echo)。tmux 不在は exit 3 BLOCKED — verdict を `--blocked` で記録して中断 (fail-closed)。
 
+tmux server は作成時の環境変数を保持するため、hook の出力先など session 固有の routing
+変数は boot 呼び出し元の現在値を `new-session -e` で上書きする。呼び出し元で未設定の
+変数も空値を明示し、過去の別 trial が残した一時パスを新しい session へ継承させない。
+
 ### send
 
 ```bash

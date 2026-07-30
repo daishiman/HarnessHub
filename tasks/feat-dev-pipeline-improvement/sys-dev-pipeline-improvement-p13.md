@@ -12,7 +12,7 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-30T02:54:58.446131Z"
+updated_at: "2026-07-30T09:45:46Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -259,3 +259,13 @@ document の `layer` は graph schema を唯一の形式正本とし、document 
 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。最終検証は
 `docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md`
 に記録し、draft PR は `main` 向けに作成する。
+
+## 2026-07-30 PR #610 CI follow-up
+
+共有 behavior closure の変更で stale になった Dev Graph 9 skill の live-trial を、
+過去 verdict の digest を編集せず fresh session で再実行する。C04 は feature から参照する
+architecture を同一 confirmed system-spec digest へ束縛し、C19 は contained fixture の
+監査台帳 path を tmux session へ明示して report・ledger・session の三点を canonical
+aggregate gate で突合する。失敗 run も append-only で残し、final PASS だけを planner が
+再利用できる状態にする。仕様・設計反映は `qa-099` / `appr-018` と
+`docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md` を正とする。

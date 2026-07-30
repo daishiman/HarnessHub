@@ -384,7 +384,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-097",
+        "qa_ref": "qa-099",
         "serves_goals": [
           "G1",
           "G4"
@@ -911,6 +911,16 @@
       "id": "qa-097",
       "question": "Dev Graph の C02 writer が graph 管理 document の layer frontmatter を失わず、graph validation と docs 配置 lint が同じ正本を使うため、ローカル開発契約へどの metadata 境界を追加しますか?",
       "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-088 / qa-090 / qa-092 のローカル開発契約と HarnessHub-bk8v の C02 lifecycle 保全契約を全面維持し、HarnessHub-dqca で実測した document layer の graph/frontmatter 不整合を次の契約で補強する。\n\n【1. C11 本文 readiness】C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が artifact kind ごとに定める required section を検査する。空節、canonical placeholder、TBD / TODO / 未定だけの本文は implementation_readiness=incomplete とし、C02 は本文なしの新規生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。\n\n【2. C02 lifecycle 保全】昇格済み feature に古い full snapshot が再送され、status / confirmation_status / evaluation_status / implementation_readiness.status が後退する場合、C02 は stale before-image として dry-run / apply の双方で無変更のまま拒否する。意図的な再評価は変更 field を列挙した explicit patch に限る。\n\n【3. document layer parity】artifact_kind=document は graph-node.schema.json#/$defs/documentLayer に適合する空でない小文字 kebab-case の layer を必須とし、非 document node では layer を禁止する。固定 enum は置かず役割追加を許すが、許容形式の正本はこの schema 定義一つとする。旧 document node だけが graph に layer を持たず既存 artifact frontmatter に単一 scalar を持つ場合、C02 はその値を一度だけ graph へ移行して正準 frontmatter を再生成する。新規 document への暗黙 default、既存 artifact にも layer が無い状態、重複 key、形式不正は fail-closed とする。docs 配置 lint は同じ $defs.documentLayer を読み、別の許容値表を持たない。metadata 移行時も既存本文は byte-for-byte 保持し、再実行は noop とする。\n\n【4. 検証と境界】document / legacy migration / missing / invalid / non-document の focused regression、全 Dev Graph test、graph schema、artifact placement、repository lint を実行する。変更は repository 内の Dev Graph metadata と開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-098",
+      "question": "複数 worktree と live-trial が共有する tmux server に過去の hook 出力先が残っていても、新しい trial の監査証拠を別 repository や一時 directory へ誤配送しないため、dev-workflow.desktop-macos 契約へどの環境隔離境界を追加しますか?",
+      "answer": "ユーザーの 2026-07-30 CI 失敗修正・最終レビュー・仕様反映指示を明示承認として、qa-090 の live-trial session 所有権境界と qa-097 の Dev Graph fail-closed 契約を全面維持し、tmux server の環境 cache に対する次の契約を追加確定する。\n\n【1. session 環境の正本】tmux server が保持する global environment は live-trial の routing 正本にしない。hook の証拠出力先など trial 固有の環境変数は、boot 呼び出し元の現在値を new-session -e で対象 session へ明示的に上書きする。呼び出し元で未設定なら空値を渡し、過去 trial の値へ fallback しない。\n\n【2. 入力境界】backend は環境変数名を identifier 形式に限定し、値に NUL・改行・復帰を許さない。boot が転送する変数は harness が宣言した session-scoped allow-list に限定し、任意の user 入力や tmux global environment 全体を複製しない。\n\n【3. 証拠の接地】system-spec 監査台帳は contained fixture 内の path と current session id に束縛し、canonical aggregate gate が report・ledger・session の三点を突合して exit 0 になった場合だけ C02 import と live-trial PASS を許す。台帳欠落・別 session・別 path は fail-closed とし、手作業で台帳を複製または捏造しない。\n\n【4. 回帰証拠】fake tmux で new-session -e の argv 境界、実 tmux で stale global 値より session override が優先されること、C19 live-trial で正規四 entry point・三監査・canonical aggregate・C02 import が完走することを確認する。失敗 run は上書きせず append-only に保持する。\n\n【5. 製品境界】変更は repository 内の live-trial transport と開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-099",
+      "question": "qa-097 の C02 document 安全契約と qa-098 の live-trial session 環境隔離を、章単独で情報を失わない自己完結した dev-workflow.desktop-macos 契約としてどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 CI 失敗修正・最終レビュー・仕様反映指示を明示承認として、qa-090 の live-trial session 所有権境界、qa-092 の C11 本文 readiness、HarnessHub-bk8v の C02 lifecycle 保全、qa-097 の document layer parity、qa-098 の tmux 環境隔離を統合した次の契約を確定する。\n\n【1. C11 本文 readiness】C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が artifact kind ごとに定める required section を検査する。空節、canonical placeholder、TBD / TODO / 未定だけの本文は implementation_readiness=incomplete とし、C02 は本文なしの新規生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。\n\n【2. C02 lifecycle と document layer parity】昇格済み feature に古い full snapshot が再送され、status / confirmation_status / evaluation_status / implementation_readiness.status が後退する場合、C02 は stale before-image として dry-run / apply の双方で無変更のまま拒否する。artifact_kind=document は graph-node.schema.json#/$defs/documentLayer に適合する空でない小文字 kebab-case の layer を必須とし、非 document node では layer を禁止する。旧 document node だけが graph に layer を持たず既存 artifact frontmatter に単一 scalar を持つ場合、C02 はその値を一度だけ graph へ移行する。新規 document の暗黙 default、欠落、重複、形式不正を fail-closed にし、既存本文を byte-for-byte 保持して再実行を noop にする。docs 配置 lint は同じ schema 定義を読み、別の許容値表を持たない。\n\n【3. live-trial session 環境の正本】tmux server が保持する global environment は live-trial の routing 正本にしない。hook の証拠出力先など trial 固有の環境変数は、boot 呼び出し元の現在値を new-session -e で対象 session へ明示的に上書きする。呼び出し元で未設定なら空値を渡し、過去 trial の値へ fallback しない。backend は環境変数名を identifier 形式に限定し、値に NUL・改行・復帰を許さない。転送対象は harness が宣言した session-scoped allow-list に限定する。\n\n【4. 監査証拠の接地】system-spec 監査台帳は contained fixture 内の path と current session id に束縛し、canonical aggregate gate が report・ledger・session の三点を突合して exit 0 になった場合だけ C02 import と live-trial PASS を許す。台帳欠落・別 session・別 path は fail-closed とし、手作業で台帳を複製または捏造しない。失敗 run は上書きせず append-only に保持する。\n\n【5. 回帰と境界】document migration、本文保持、lifecycle 後退、layer 正負例、fake tmux の new-session -e argv、実 tmux の stale global 値上書き、C19 の正規四 entry point・三監査・canonical aggregate・C02 import を検証する。変更は repository 内の Dev Graph metadata、live-trial transport、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -973,6 +983,14 @@
     {
       "id": "appr-016",
       "note": "ユーザーの 2026-07-30 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-dqca の C02 document layer graph/frontmatter parity、schema SSOT、legacy migration、fail-closed 境界を qa-097 として dev-workflow.desktop-macos へ反映する。qa-096 / appr-015 は並行して main へ統合済みの workflow step guard 空走査契約が使用しているため、その履歴を保持して次の空き ID へ再採番する。"
+    },
+    {
+      "id": "appr-017",
+      "note": "ユーザーの 2026-07-30 指示「CI 失敗を修正し、task 仕様書の品質ゲートを再実行し、仕様・設計影響を system-spec/・specs/・architecture/・docs/・features/・tasks/ へ正規フローで反映」を明示承認として記録。tmux server の stale hook routing 値を session 単位で上書きする live-trial 環境隔離を qa-098 として dev-workflow.desktop-macos へ反映する。"
+    },
+    {
+      "id": "appr-018",
+      "note": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-097 の C02 document layer 契約と qa-098 の tmux session 環境隔離を、章単独で情報を失わない qa-099 へ統合して dev-workflow.desktop-macos を再確定する。"
     }
   ],
   "reopen_log": [
@@ -1688,6 +1706,18 @@
       "category": "dev-workflow",
       "platform": "desktop-macos",
       "reason": "HarnessHub-dqca で C02 writer が document layer frontmatter を失う既存契約差を実測し、graph schema と docs 配置 lint の単一正本境界を追加するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "C19 live-trial で tmux server に残った過去の SYSTEM_SPEC_AUDIT_FORK_LEDGER が現 trial の監査台帳を別一時 directory へ誤配送したため、qa-097 を維持したまま session-scoped 環境隔離を追加する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "qa-098 が qa-097 の契約を参照のみで保持し、生成章単独では document layer 安全境界が欠落するため、C02 と live-trial の両契約を自己完結して統合する",
       "from": "確定"
     }
   ],

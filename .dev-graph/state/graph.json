@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1011,
+  "graph_revision": 1014,
   "nodes": [
     {
       "acceptance": [
@@ -25348,9 +25348,9 @@
         "graph.json 分割の実装 (トリガー記録のみ)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T01:53:05Z",
+        "imported_at": "2026-07-30T09:45:46Z",
         "origin_kind": "generated",
-        "source_digest": "7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda",
+        "source_digest": "ef5b3071615fa5a06356c153a81a8abcc6932c23b41a943164c839fd8ed7096d",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -25369,7 +25369,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T01:53:05Z"
+      "updated_at": "2026-07-30T09:47:06.679162Z"
     },
     {
       "acceptance": [
@@ -26807,7 +26807,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T02:54:58.446131Z"
+      "updated_at": "2026-07-30T09:45:46Z"
     },
     {
       "acceptance": [
@@ -38450,7 +38450,7 @@
       "template_version": "1.0.0",
       "title": "Dev Graph 基盤変更 最終レビュー 2026-07-26",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T02:48:36.037905Z"
+      "updated_at": "2026-07-30T09:45:46Z"
     },
     {
       "acceptance": [

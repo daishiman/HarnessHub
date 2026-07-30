@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-30T02:48:36.037905Z"
+updated_at: "2026-07-30T09:45:46Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -254,3 +254,13 @@ frontmatter の重複 key を lint が黙って上書きしていた境界を検
 plugin 内部契約、本レビューへ反映した。製品 runtime の API、DB、認証認可、UI、
 Cloudflare deploy unit は変更しない。判断と検証は
 [仕様反映確認](c02-document-layer-spec-reflection.md) を正とする。
+
+### CI follow-up (2026-07-30): stale live-trial 9件と tmux 環境混入の解消
+
+PR #610 の governance / Plugin Governance が、C02 の共有 writer 変更により
+Dev Graph 9 skill の behavior closure digest を stale と判定した。旧 verdict の digest は
+編集せず、fresh tmux session で再取得した。C04 fixture の architecture lineage 欠落を
+既存 source-digest 契約へ適合させ、C19 では tmux server が保持していた過去 trial の
+`SYSTEM_SPEC_AUDIT_FORK_LEDGER` 誤継承を検出した。boot が caller の現在値を session の
+`new-session -e` へ明示する隔離境界を追加し、正規フローで `qa-099` / `appr-018`、
+system spec、architecture、feature、P13、仕様反映確認へ統合した。製品 runtime 契約は非変更。
