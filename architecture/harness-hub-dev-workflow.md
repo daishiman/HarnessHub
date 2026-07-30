@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-29T05:22:00.507534Z"
+updated_at: "2026-07-30T01:53:05Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
-purpose: "Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration)、作者ローカル環境規律、dev-graph/beads (bd) タスク優先度選定の MVP ファースト判断軸 (目的・背景・MVP) を参照する"
-goal: "qa-038/qa-039/qa-066/qa-067/qa-069 の確定内容に適合し、P0〜P5 の開発運用・feature baseline の source lineage 逆引き・開発管理パイプライン改善 8 要件 (qa-067)・タスク優先度選定の MVP ファースト判断軸 (qa-069: 目的=何のために作るか / 背景=どういう経緯か / MVP=今必要な動くもの の3軸を第一ソートキーとし、品質・再現性強化系タスクは MVP 成立後へ繰り延べる。既確定 CI/CD・quality gate 要件は維持) の指針を提供する"
+purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、および検査対象 0 件を既定 fail-closed にする品質ゲート境界を参照する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096 の確定内容に適合し、C11 artifact readiness と CI/local 品質ゲートの空走査境界を情報欠落なく提供する"
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md"}
-source_lineage: {"imported_at":"2026-07-29T05:21:27Z","origin_kind":"system-spec-harness","source_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda","evaluator":"assign-system-spec-completeness-evaluator + merge-reconciliation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md"}
+source_lineage: {"imported_at":"2026-07-30T01:53:05Z","origin_kind":"system-spec-harness","source_digest":"7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -291,4 +291,6 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
   詳細は [C11 readiness 受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)。
 - C02 は stale full snapshot による feature lifecycle 後退を無変更で拒否する。
   詳細は [C02 lifecycle 受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)。
-- いずれも repository 内の開発管理 graph に限定し、製品 runtime 契約は変更しない。
+- workflow step guard は対象 directory 不在・対象 0 件を既定で拒否し、明示
+  `--allow-empty` だけを許可する。詳細は [空走査受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)。
+- いずれも repository 内の開発管理・品質ゲートに限定し、製品 runtime 契約は変更しない。

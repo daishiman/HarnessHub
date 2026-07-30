@@ -12,7 +12,7 @@ iteration: null
 title: "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:57:02.733424Z"
+updated_at: "2026-07-30T01:53:05Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P11"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -270,3 +270,15 @@ test tool が生成する dot cache は skill tree の設計物ではないた�
 検証コマンドと結果の受領書は
 `docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
 を正とする。
+
+## 2026-07-30 HarnessHub-foq6 仕様反映追補
+
+本 P12 の promoted task spec と完了判定は変更しない。空走査 fail-open は
+repository 内の開発品質契約へ影響するため、`appr-015` を承認根拠として
+`system-spec/dev-workflow.md` の web セルを R4 reopen し、qa-096 へ再確定した。
+`qa-092` / `appr-013` は main 側 C11 契約の履歴として維持した。
+`specs/`、`architecture/`、`features/`、`docs/`、本 `tasks/` の参照を同一 wave で同期し、
+製品 API・DB・認証認可・UI・deploy unit は非変更と記録した。受領書は
+`docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`
+を正とする。pre-merge completeness evaluator は同じ意味内容を旧ローカル ID
+`qa-092` / `appr-013` として評価済みで、競合解消では意味を変えず ID だけを移した。
