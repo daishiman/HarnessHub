@@ -166,3 +166,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **permission 選択**: Wrangler の `r2 object ... --remote` は Cloudflare REST API 経路のため、S3 互換 API 専用の bucket-scoped item 権限ではなく account-scoped の `Workers R2 Storage Write` を使う。account scope の広さは、Worker 改変権限との分離と workflow 利用箇所の限定で補う。
 - **完了境界**: repository の静的ゲートは token の相互利用を拒否する。Cloudflare token 発行、GitHub secret 投入、deploy token の R2 write 拒否、R2 token での backup / production smoke 完走は外部証跡が揃うまで未完了とする。
 - **非影響範囲**: 外部 API、DB schema、認証認可モデル、UI、Cloudflare Worker の deploy unit は変更しない。
+
+**deploy検証追補 (2026-07-30 / `SYS-AUTH-TENANCY-P13`)**
+
+- pipeline順序を`required settings preflight → migration → deploy → health →
+  OIDC start-flow smoke → DB/R2 smoke`に固定する。
+- preflight失敗はdeploy前失敗なのでrollback対象なし。deploy成功後のhealth/OIDC/DB-R2失敗は
+  直前Workerへrollbackし、DBはexpand-onlyのため前進状態を維持する。
+- OIDC smokeは秘密値を保持せず、tenant provider・canonical callback・未知tenant拒否・
+  CSRF・Google 302・state/nonce/PKCEを検査する。Google callback後の実ログインは
+  人の資格情報をCIへ置かず、運用E2E証跡で扱う。
+- owner認可は既存の`tenant境界 → base role → resource owner関係合成`を変更せず、
+  G14で全action×role・非owner・cross-tenantを名指し再検証する。
+- PR #612後のrun `30518334455`はR2専用token未登録で失敗したが自動rollbackは成功した。
+  repository側の再発防止と、Cloudflare所有者による最小権限token発行は別の信頼境界として扱う。

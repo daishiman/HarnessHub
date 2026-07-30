@@ -119,3 +119,19 @@ P13内のGoogle設定は次の順序で実行し、各完了ゲートを満た�
 - 後続: 共通Google client方式`HarnessHub-fnej`、顧客持ち込み方式`HarnessHub-uk2i`。
   いずれも今回の本番acceptanceを置換せずopenで継続する。
 - task状態: draft PRのmergeまでは`HarnessHub-15h.13`を`in_progress`に維持する。
+
+## 2026-07-30 main反映後の追補
+
+- PR #612はmainへmerge済み。`hub-ci` run `30518334455`はDB S1〜S3とcleanupが成功し、
+  R2専用`CLOUDFLARE_R2_API_TOKEN`未登録によりS4で失敗した。Worker rollbackは成功した。
+- follow-upではmigration前の必須設定preflight、本番OIDC start-flow smoke、
+  owner関係roleを含むG14認可契約ゲート、rollback outcome記録を追加する。
+- OIDC自動試験はprovider/CSRF/native POST/Google 302/state/nonce/PKCEまでとし、
+  人のGoogle資格情報が必要なcallback後のlogin/JITは既存R1手動証跡を正とする。
+- 本追補は既存`qa-091` / `qa-097` / `qa-099`とowner認可表の実装接地で、
+  仕様・roleモデル・API・DB schemaへの意味変更はない。受領書:
+  `docs/features/feat-auth-tenancy/p13-postmerge-auth-gate-spec-receipt.md`。
+- Cloudflare account所有者がWorkers Scripts権限なしのaccount-scoped
+  `Workers R2 Storage Write` tokenを発行し、GitHub secretへ投入した後、
+  `check-actions-secrets.mjs --live`とmainの`hub-ci`完走を最終証跡とする。
+- 上記外部証跡が揃うまで`HarnessHub-15h.13`と`HarnessHub-bda4`は`in_progress`を維持する。
