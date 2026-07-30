@@ -79,6 +79,8 @@ cause に残した `SQLITE_BUSY` を再試行可能と誤判定しない。
 `origin/main` をローカル `main` へ同期し、その `main` を本ブランチへマージした状態で再実行した。
 
 - focused DB test: 5 files / 47 tests pass。別プロセス write lock の実 libSQL test を含む。
+- GitHub CI の初回実行で、未解決 Promise だけでは Linux の Node.js 子プロセスが生存しない
+  非決定性を検出。明示 keep-alive を追加し、実競合 test を5回連続で再実行して全て pass。
 - packages/db 全 test: 29 files / 230 tests pass、statement coverage 93.6%。
 - packages/db typecheck / Biome、apps/hub typecheck、`pnpm verify`: pass。
 - connection isolation、tenant isolation coverage（19/19）、DDL（3 migrations）、

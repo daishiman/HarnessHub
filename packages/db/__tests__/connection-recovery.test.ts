@@ -24,6 +24,9 @@ const EXTERNAL_WRITE_LOCK_SCRIPT = String.raw`
   const client = createClient({ url: process.argv[1] });
   const transaction = await client.transaction('write');
   await transaction.execute('insert into connection_recovery_probe (value) values (100)');
+  // 未解決 Promise だけでは Node.js の event loop は維持されない。CI でも SIGTERM まで
+  // transaction とプロセスを確実に生存させ、外部ロックの再現を決定的にする。
+  const keepAlive = setInterval(() => {}, 1_000);
   process.stdout.write('LOCKED\n');
 
   let releasing = false;
@@ -33,6 +36,7 @@ const EXTERNAL_WRITE_LOCK_SCRIPT = String.raw`
     try {
       await transaction.rollback();
     } finally {
+      clearInterval(keepAlive);
       transaction.close();
       client.close();
       process.exit(0);
