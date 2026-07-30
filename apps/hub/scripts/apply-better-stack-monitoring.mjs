@@ -3,7 +3,7 @@
 //
 // 何をするか:
 //   apps/hub/monitoring/better-stack.monitors.json を「要求内容の正本」として読み、
-//   Better Stack Uptime API v2 へ monitor / heartbeat / status page とその resource 関連付けを
+//   Better Stack Uptime API v2 へ monitor / heartbeats / status page とその resource 関連付けを
 //   適用する。採番された external_id と適用時刻を設定ファイルへ書き戻し、
 //   slo-dashboard.json の verdict を「観測開始」へ進める。
 //
@@ -11,29 +11,34 @@
 //   1. 値の正本がファイル側にある (runbook §1 手順 4)。画面で入力すると正本と静かにずれる。
 //   2. 「再実行しても重複を作らない」を機械で保証したい。外形監視の二重登録は
 //      課金と誤アラートの両方を生むうえ、片方だけ paused といった非対称な状態を作る。
-//   3. heartbeat URL は secret。人間の目とシェル履歴を経由させずに wrangler へ渡したい。
+//   3. heartbeat URL は secret。人間の目とシェル履歴を経由させずに
+//      Cloudflare Worker / GitHub Actions へ渡したい。
 //
 // 秘密の扱い (受け入れ条件 4: 秘密値を成果物・コマンド出力・ログへ残さない):
 //   - API token は環境変数 BETTER_STACK_API_TOKEN からのみ受け取る。
 //     コマンド引数は ps とシェル履歴に残るため、引数経由は用意しない。
 //   - heartbeat URL は標準出力・設定ファイル・エラーメッセージのいずれにも出さない。
-//     --put-secret 指定時だけ `wrangler secret put CRON_HEARTBEAT_URL` の stdin へ直接流す。
+//     --put-secret 指定時だけ `wrangler secret put CRON_HEARTBEAT_URL` の stdin へ、
+//     --put-github-secret 指定時だけ `gh secret set BACKUP_HEARTBEAT_URL` の stdin へ直接流す。
 //   - API 応答を人が読む経路へ出すときは必ず redactSecrets() を通す。
 //     Better Stack の 422 応答は送った値をそのまま echo し返すことがあるため。
 //
 // 使い方:
 //   node apps/hub/scripts/apply-better-stack-monitoring.mjs --dry-run
 //   BETTER_STACK_API_TOKEN=... node apps/hub/scripts/apply-better-stack-monitoring.mjs --put-secret
+//   BETTER_STACK_API_TOKEN=... node apps/hub/scripts/apply-better-stack-monitoring.mjs --put-github-secret
+//   BETTER_STACK_API_TOKEN=... node apps/hub/scripts/apply-better-stack-monitoring.mjs --put-secrets
+//   BETTER_STACK_API_TOKEN=... node apps/hub/scripts/apply-better-stack-monitoring.mjs \
+//     --only-backup-heartbeat --put-github-secret
 //   BETTER_STACK_API_TOKEN=... node apps/hub/scripts/apply-better-stack-monitoring.mjs --json evidence.json
 //
 // API のフィールド名は 2026-07-26 に Better Stack 公式 API ドキュメントへ照合済み
 // (monitors / heartbeats / status-pages / status page resources の各 create)。
 // 照合結果は docs/features/feat-hub-foundation/runbook.md §1 に記録する。
 
-import { spawn } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { runMonitoringCli } from './better-stack-monitoring-cli.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const HUB_ROOT = resolve(HERE, '..');
@@ -45,6 +50,8 @@ export const SLO_DASHBOARD_PATH = resolve(HUB_ROOT, 'monitoring/slo-dashboard.js
 export const API_BASE = 'https://uptime.betterstack.com';
 export const TOKEN_ENV = 'BETTER_STACK_API_TOKEN';
 export const SECRET_NAME = 'CRON_HEARTBEAT_URL';
+export const BACKUP_SECRET_NAME = 'BACKUP_HEARTBEAT_URL';
+export const HEARTBEAT_CONFIG_KEYS = ['heartbeat', 'backup_heartbeat'];
 
 const DAY_MS = 86_400_000;
 
@@ -57,8 +64,8 @@ const HEARTBEAT_URL_PATTERN = /https:\/\/uptime\.betterstack\.com\/api\/v\d+\/he
 /** HTTP ヘッダ値として安全な文字だけ (可視 ASCII、空白・改行なし)。Better Stack の token はこの範囲に収まる */
 const TOKEN_CHARSET = /^[\x21-\x7e]+$/;
 
-/** 適用対象。列挙順がそのまま適用順で、status page resource は monitor と status page の後にしか作れない */
-export const RESOURCE_KINDS = ['monitor', 'heartbeat', 'status_page'];
+/** 宣言可能な適用対象。実際の順序は依存関係に従い applyMonitoring() が制御する */
+export const RESOURCE_KINDS = ['monitor', 'heartbeat', 'backup_heartbeat', 'status_page'];
 
 const LIST_PATH = {
   monitor: '/api/v2/monitors',
@@ -299,7 +306,13 @@ async function ensureStatusPageResource({ client, statusPageId, monitorId, confi
  * 設定ファイルの内容を Better Stack へ適用し、書き戻し後の設定と dashboard を返す。
  * 純粋関数ではないが、副作用は client と now に閉じているのでテストから完全に制御できる。
  *
- * @returns {Promise<{config: object, dashboard: object, heartbeatUrl: string | null, actions: object[]}>}
+ * @returns {Promise<{
+ *   config: object,
+ *   dashboard: object,
+ *   heartbeatUrl: string | null,
+ *   heartbeatUrls: Record<string, string>,
+ *   actions: object[]
+ * }>}
  */
 export async function applyMonitoring({ config, dashboard, client, now }) {
   const actions = [];
@@ -307,8 +320,22 @@ export async function applyMonitoring({ config, dashboard, client, now }) {
   const monitor = await ensureResource({ client, kind: 'monitor', desired: config.monitor.request.payload });
   actions.push({ kind: monitor.kind, action: monitor.action, external_id: monitor.id });
 
-  const heartbeat = await ensureResource({ client, kind: 'heartbeat', desired: config.heartbeat.request.payload });
-  actions.push({ kind: heartbeat.kind, action: heartbeat.action, external_id: heartbeat.id });
+  const appliedHeartbeats = {};
+  for (const configKey of HEARTBEAT_CONFIG_KEYS) {
+    const declaration = config[configKey];
+    if (declaration === null || declaration === undefined) continue;
+    const applied = await ensureResource({ client, kind: 'heartbeat', desired: declaration.request.payload });
+    appliedHeartbeats[configKey] = applied;
+    actions.push({
+      kind: applied.kind,
+      local_id: declaration.local_id,
+      action: applied.action,
+      external_id: applied.id,
+    });
+  }
+  if (appliedHeartbeats.heartbeat === undefined) {
+    throw new Error('必須 heartbeat 設定がありません: heartbeat');
+  }
 
   const statusPage = await ensureResource({
     client,
@@ -336,15 +363,31 @@ export async function applyMonitoring({ config, dashboard, client, now }) {
     Number.isNaN(previousAppliedAt) === false;
   const appliedAt = canPreserveObservationStart ? new Date(previousAppliedAt).toISOString() : now.toISOString();
 
-  // heartbeat URL は設定ファイルへ書かない。呼び出し側が wrangler へ流すためだけに返す
-  const heartbeatUrl = typeof heartbeat.attributes.url === 'string' ? heartbeat.attributes.url : null;
+  // heartbeat URL は設定ファイルへ書かない。呼び出し側が secret store へ流すためだけに返す。
+  // binding 名を key にすることで Worker 用と backup 用の取り違えを防ぐ。
+  const heartbeatUrls = Object.fromEntries(
+    Object.entries(appliedHeartbeats).flatMap(([configKey, applied]) => {
+      const binding = config[configKey]?.secret_binding;
+      const url = typeof applied.attributes.url === 'string' ? applied.attributes.url : null;
+      return typeof binding === 'string' && url !== null ? [[binding, url]] : [];
+    }),
+  );
+  // 既存 caller / test との互換用。新規処理は heartbeatUrls を使う。
+  const heartbeatUrl = heartbeatUrls[SECRET_NAME] ?? null;
+
+  const heartbeatConfigUpdates = Object.fromEntries(
+    Object.entries(appliedHeartbeats).map(([configKey, applied]) => [
+      configKey,
+      { ...config[configKey], external_id: applied.id, provisioning_state: 'applied' },
+    ]),
+  );
 
   const nextConfig = {
     ...config,
     application_state: 'applied',
     applied_at: appliedAt,
     monitor: { ...config.monitor, external_id: monitor.id },
-    heartbeat: { ...config.heartbeat, external_id: heartbeat.id },
+    ...heartbeatConfigUpdates,
     status_page: {
       ...config.status_page,
       external_id: statusPage.id,
@@ -366,117 +409,72 @@ export async function applyMonitoring({ config, dashboard, client, now }) {
     },
   };
 
-  return { config: nextConfig, dashboard: nextDashboard, heartbeatUrl, actions };
+  return { config: nextConfig, dashboard: nextDashboard, heartbeatUrl, heartbeatUrls, actions };
 }
-
-// ---------------------------------------------------------------------------
-// heartbeat URL の受け渡し
-// ---------------------------------------------------------------------------
 
 /**
- * heartbeat URL を wrangler secret へ流し込む。
- * 引数ではなく stdin を使うのは、コマンド引数が ps とシェル履歴に残るため。
- * 呼び出し側はこの関数の戻り値 (成否) だけを扱い、URL 自体には触れない。
+ * backup heartbeat だけを適用する限定経路。
+ *
+ * 既存の health monitor / Worker cron heartbeat / status page / SLO dashboard には触れない。
+ * dbx6 の外部適用時に、別タスクが扱う paused monitor を意図せず再開しないために分離している。
  */
-export function putWranglerSecret(
-  url,
-  { cwd = HUB_ROOT, command = 'npx', args = ['wrangler', 'secret', 'put', SECRET_NAME] } = {},
-) {
-  return new Promise((resolvePromise, rejectPromise) => {
-    const child = spawn(command, args, { cwd, stdio: ['pipe', 'inherit', 'inherit'] });
-    child.on('error', rejectPromise);
-    child.on('close', (code) => {
-      if (code === 0) resolvePromise(true);
-      else rejectPromise(new Error(`wrangler secret put ${SECRET_NAME} が exit ${code} で失敗しました`));
-    });
-    child.stdin.end(url);
+export async function applyBackupHeartbeat({ config, client }) {
+  const declaration = config.backup_heartbeat;
+  if (declaration === null || declaration === undefined) {
+    throw new Error('必須 heartbeat 設定がありません: backup_heartbeat');
+  }
+  if (declaration.secret_binding !== BACKUP_SECRET_NAME) {
+    throw new Error(`backup_heartbeat.secret_binding は ${BACKUP_SECRET_NAME} でなければなりません`);
+  }
+
+  const applied = await ensureResource({
+    client,
+    kind: 'heartbeat',
+    desired: declaration.request.payload,
   });
-}
+  const heartbeatUrl = typeof applied.attributes.url === 'string' ? applied.attributes.url : null;
 
-// ---------------------------------------------------------------------------
-// CLI
-// ---------------------------------------------------------------------------
-
-function readJson(path) {
-  return JSON.parse(readFileSync(path, 'utf8'));
-}
-
-function writeJson(path, value) {
-  writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
-}
-
-/** dry-run で表示する適用計画。秘密は含まないが、念のため伏字化を通してから出す */
-export function describePlan(config) {
-  return RESOURCE_KINDS.map((kind) => {
-    const node = config[kind];
-    return `  ${kind}: ${node.request.method} ${node.request.endpoint} (local_id=${node.local_id}, external_id=${node.external_id ?? 'null'})`;
-  }).join('\n');
-}
-
-async function main(argv) {
-  const dryRun = argv.includes('--dry-run');
-  const putSecret = argv.includes('--put-secret');
-  const jsonIndex = argv.indexOf('--json');
-  const jsonPath = jsonIndex >= 0 ? argv[jsonIndex + 1] : null;
-
-  const config = readJson(MONITORS_CONFIG_PATH);
-  const dashboard = readJson(SLO_DASHBOARD_PATH);
-
-  if (dryRun) {
-    console.log('[apply-better-stack-monitoring] dry-run: 以下を適用します (ネットワークへは出ません)');
-    console.log(describePlan(config));
-    console.log(
-      `  status_page resource: ${config.status_page.resource_request.method} ${config.status_page.resource_request.endpoint_template}`,
-    );
-    console.log(`  現在の application_state: ${config.application_state}`);
-    return 0;
-  }
-
-  const token = process.env[TOKEN_ENV];
-  if (typeof token !== 'string' || token.trim().length === 0) {
-    console.error(`[apply-better-stack-monitoring] ${TOKEN_ENV} が未設定です。`);
-    console.error('  Better Stack の Uptime API token を環境変数で渡してください (引数では渡さないこと)。');
-    return 2;
-  }
-
-  const client = createUptimeClient({ token });
-  const result = await applyMonitoring({ config, dashboard, client, now: new Date() });
-
-  let secretDelivery = 'skipped';
-  if (putSecret) {
-    if (result.heartbeatUrl === null) {
-      console.error(
-        '[apply-better-stack-monitoring] heartbeat URL を取得できませんでした。secret は投入していません。',
-      );
-      return 3;
-    }
-    await putWranglerSecret(result.heartbeatUrl);
-    secretDelivery = 'delivered';
-  }
-
-  // --put-secret 指定時は secret 投入まで成功して初めて applied と書き戻す。
-  // 先に書くと wrangler 失敗時に「設定だけ applied / secret は未投入」という中間状態が残る。
-  writeJson(MONITORS_CONFIG_PATH, result.config);
-  writeJson(SLO_DASHBOARD_PATH, result.dashboard);
-
-  const evidence = {
-    applied_at: result.config.applied_at,
-    api_base: API_BASE,
-    actions: result.actions,
-    heartbeat_secret: secretDelivery,
-    $comment: 'heartbeat URL と API token は本証跡に含めない (受け入れ条件 4)',
+  return {
+    config: {
+      ...config,
+      backup_heartbeat: {
+        ...declaration,
+        external_id: applied.id,
+        provisioning_state: 'applied',
+      },
+    },
+    dashboard: null,
+    heartbeatUrl: null,
+    heartbeatUrls: heartbeatUrl === null ? {} : { [BACKUP_SECRET_NAME]: heartbeatUrl },
+    actions: [
+      {
+        kind: applied.kind,
+        local_id: declaration.local_id,
+        action: applied.action,
+        external_id: applied.id,
+      },
+    ],
   };
-  if (jsonPath !== null && jsonPath !== undefined) {
-    writeJson(resolve(REPO_ROOT, jsonPath), evidence);
-  }
-  console.log(redactSecrets(JSON.stringify(evidence, null, 2), token));
-  return 0;
 }
 
 const isDirectRun =
   process.argv[1] !== undefined && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url));
 if (isDirectRun) {
-  main(process.argv.slice(2))
+  runMonitoringCli(process.argv.slice(2), {
+    apiBase: API_BASE,
+    applyBackupHeartbeat,
+    applyMonitoring,
+    backupSecretName: BACKUP_SECRET_NAME,
+    createUptimeClient,
+    dashboardPath: SLO_DASHBOARD_PATH,
+    heartbeatConfigKeys: HEARTBEAT_CONFIG_KEYS,
+    hubRoot: HUB_ROOT,
+    monitorsConfigPath: MONITORS_CONFIG_PATH,
+    redactSecrets,
+    repoRoot: REPO_ROOT,
+    secretName: SECRET_NAME,
+    tokenEnv: TOKEN_ENV,
+  })
     .then((code) => {
       process.exitCode = code;
     })

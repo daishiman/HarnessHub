@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-058 |
+| Web (web) | 確定 | 確定質疑: qa-094 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-058 (対応セル: web)
+### qa-094 (対応セル: web)
 
-**質問**: 構築優先順位 P0-P5 に伴う監視・運用の段階的有効化 (docs/infrastructure-spec.md §13・docs/shared-layers.md の 2026-07-18 追記) を保守運用仕様へ反映するか。
+**質問**: qa-093 の backup heartbeat 契約を追加したうえで、直前まで確定していた infrastructure.web と maintenance-ops.web の契約を情報欠落なくどう統合しますか?
 
-**回答**: 監視・運用ジョブは必要 phase で段階的に有効化する: P1 で AiJob キュー滞留監視 (qa-027 の監視対象) と生成完了通知、P2 で orphan 通知 (承認 queue UI は P5 でも監査記録は P2 から有効)、P4 で metrics rollup cron・Turso 使用量監視・週次通知、P5 で dashboard/承認/監査 UI 向け route の外形確認。P0 時点では metrics rollup・週次サマリー・dashboard monitor を有効化しない。AI 処理主体の表記は D5 確定 (pull 型 = Claude Code セッション消費・サーバ側 AI 課金なし) へ統一 (旧「D5 候補」表記の解消)。既確定の監視・バックアップ・運用手順 (qa-027 ほか) は不変で有効化タイミングだけを追加確定。
+**回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-091 の production Worker Secret / 環境設定、Cloudflare deploy token と R2 token の最小権限分離、rollout 順序、静的検査と外部実測の完了境界を全面維持する。また qa-058 の phase 別監視有効化、qa-011 / qa-019 の日次 control-plane JSONL backup・RPO 24h・RTO 4h・復元不能断面を成功と数えない契約、機械可読 secret 台帳と workflow 実参照の双方向突合、実投入状態を --live で判定する契約も全面維持する。そのうえで qa-093 を統合し、次を追加確定する。(1) Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使い、CRON_HEARTBEAT_URL と BACKUP_HEARTBEAT_URL の URL を共用しない。(2) backup 専用 hub-backup-daily は period=86400 秒 / grace=3600 秒で、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化する。(3) BACKUP_HEARTBEAT_URL は required とし、workflow 開始時の未投入を fail-closed で拒否する。heartbeat は全 backup step 成功後だけ送るため、cron 不発も途中失敗も期限超過として外形監視へ表れる。(4) Better Stack API token と heartbeat URL は設定・成果物・引数・ログへ保存せず、stdin で用途別 secret store へ投入する。設定は binding 名・period/grace・外部適用状態だけを持つ。(5) repository 内実装だけで完了扱いにせず、backup heartbeat の provisioning_state=applied、GitHub secret 投入、main の成功 run、heartbeat 着信実測が揃うまで HarnessHub-dbx6 を継続する。(6) Hub の外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit は変更しない。
 
 ### qa-044 (対応セル: desktop-windows, desktop-macos)
 

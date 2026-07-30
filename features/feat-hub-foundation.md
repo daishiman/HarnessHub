@@ -93,7 +93,7 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - GitHub Actions の secret / variable は実投入済みで、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。未参照になっていた `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除した。
 - 日次 backup の**採否判定を `packages/db/scripts/verify-export-artifact.ts` へ一本化**した。旧実装は workflow の shell で「データ行が 0 なら不採用」と判定しており、migration 済みだが全 19 テーブル 0 行の稼働直後 DB を恒常的に落としていた (3 夜連続失敗)。判定の詳細正本は [infrastructure-spec §7 / §10](../docs/infrastructure-spec.md)。
 - 受入「CI が test→deploy を完走する」(A1) は run `30143422049` で達成済み。**日次 backup の初回成功は未達**で、是正版が main へ land した後の `workflow_dispatch` 再実行まで残る ([release-notes.md](../docs/features/feat-hub-foundation/release-notes.md) §4.1 の #5)。
-- 3 夜連続の失敗が誰にも気づかれなかった経路の欠落 (`BACKUP_HEARTBEAT_URL` 未投入で外形監視が無音) は本 feature の範囲外として `HarnessHub-dbx6` / `issue-backup-failure-undetected-20260728` へ分離した。
+- 3 夜連続の失敗が誰にも気づかれなかった経路の欠落は `HarnessHub-dbx6` / `issue-backup-failure-undetected-20260728` へ分離した。2026-07-29 に backup 専用 heartbeat、`BACKUP_HEARTBEAT_URL` required 化、workflow 前提確認、限定適用 CLI をローカル実装した。Better Stack 適用・GitHub secret 投入・main 成功 run・着信実測が揃うまでは未完了を維持する。
 - 証跡: [evidence/actions-secrets-2026-07-28.json](../docs/features/feat-hub-foundation/evidence/actions-secrets-2026-07-28.json)
 
 ## 実装反映 (2026-07-29 / HarnessHub-bda4)
@@ -102,6 +102,7 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - R2 経路は Wrangler の Cloudflare REST API を使うため、R2 token は account-scoped の `Workers R2 Storage Write` とする。S3 互換 API 専用の bucket item 権限へ読み替えない。
 - workflow と機械可読台帳の静的整合は実装済み。Cloudflare 側の token 発行、GitHub secret 投入、deploy token による R2 write 拒否、本番 workflow 完走は外部実測待ちのため、`HarnessHub-bda4` は継続中とする。
 - 仕様反映と最終レビューの記録: [Cloudflare token 最小権限分離 仕様反映受領書](../docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md)
+- backup 失敗検知の仕様反映: [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md)
 
 ## アーキテクチャ参照
 
