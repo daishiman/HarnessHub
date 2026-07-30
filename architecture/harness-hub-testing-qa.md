@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-07-30T06:43:32Z"
+updated_at: "2026-07-30T07:08:55Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"ada486c34e818a38edc966e1861b24d565c1a3cf79996eba3800a13114ab48eb","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T06:43:32Z","origin_kind":"system-spec-harness","source_digest":"ada486c34e818a38edc966e1861b24d565c1a3cf79996eba3800a13114ab48eb","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-07-30T07:08:55Z","origin_kind":"system-spec-harness","source_digest":"59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `ada486c34e81…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `59aa87850fd7…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `codex-final-review` → **PASS** (`docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`)
-- 取込日時: 2026-07-30T06:43:32Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-07-30T07:08:55Z / plugin: system-spec-harness v0.1.0
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 

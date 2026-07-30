@@ -90,8 +90,21 @@ live-trial の transcript も追記不能な一次証拠であり、行数によ
 | graph / source lineage | graph schema valid、testing architecture digest mismatch 0 |
 | docs | artifact placement PASS、tracked docs 300 行上限 PASS |
 
-`origin/main` → local `main` → 本 branch の統合後にも同じゲートと
-repository CI を再実行し、仕様反映 receipt は最終 HEAD に対して生成する。
+`origin/main` (`ee885fa`) → local `main` → 本 branch の順で統合し、競合なしで
+merge commit `58a9f80` を作成した。統合後の再検証結果は次のとおり。
+
+| ゲート | main 統合後の最終結果 |
+|---|---|
+| focused renderer / sync pytest | 13 passed |
+| Dev Graph 全回帰 | 721 passed / 2 skipped |
+| task 仕様書 | P01〜P13 exact-set、digest `af8a73df…`、violations 0 |
+| content / live-trial | 75 skill verified / 9 verdict verified、対象 run PASS |
+| plugin / graph / docs | 22 plugin blocking failure 0、schema・source lineage・配置・300 行制限 PASS |
+| repository CI | 136 PASS / 4 WARN / 0 FAIL |
+
+repository CI の 4 WARN は段階導入中の既存 plugin completeness / rubric refs であり、
+本変更の blocking failure ではない。`llm-coverage` の派生台帳も新しい checklist
+件数へ更新し parity PASS を確認した。仕様反映 receipt は最終 clean HEAD に対して生成する。
 
 ## 7. 開発内容の説明
 

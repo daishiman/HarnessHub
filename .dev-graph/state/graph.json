@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1026,
+  "graph_revision": 1027,
   "nodes": [
     {
       "acceptance": [
@@ -33990,7 +33990,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "ada486c34e818a38edc966e1861b24d565c1a3cf79996eba3800a13114ab48eb",
+        "evaluated_digest": "59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4",
         "evaluator": "codex-final-review",
         "evidence_ref": "docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md"
       },
@@ -34048,9 +34048,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T06:43:32Z",
+        "imported_at": "2026-07-30T07:08:55Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "ada486c34e818a38edc966e1861b24d565c1a3cf79996eba3800a13114ab48eb",
+        "source_digest": "59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34066,7 +34066,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T06:43:32Z"
+      "updated_at": "2026-07-30T07:08:55Z"
     },
     {
       "acceptance": [

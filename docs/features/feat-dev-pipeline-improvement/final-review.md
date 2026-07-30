@@ -130,7 +130,8 @@ receipt の件数、node ID、graph digest、source digest を検証した場合
 
 fresh live trial `20260730T053500Z-wt18-35ai-render` は nudge 0、
 gate response 0 で PASS、独立 evaluator の 8 検査も blocker 0 で PASS。
-最終ゲートの再実行結果と層別判断は
+main 統合後は focused pytest 13 passed、Dev Graph 全回帰 721 passed / 2 skipped、
+repository CI 136 PASS / 4 既存 WARN / 0 FAIL。最終結果と層別判断は
 `render-registration-verification-spec-reflection-receipt.md` に記録する。
 
 中学生向けには「名簿に 13 人いるだけでは登録完了と言わず、受付の受領書と
