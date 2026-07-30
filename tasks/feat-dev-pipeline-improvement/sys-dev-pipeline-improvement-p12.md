@@ -270,3 +270,15 @@ test tool が生成する dot cache は skill tree の設計物ではないた�
 検証コマンドと結果の受領書は
 `docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
 を正とする。
+
+## 2026-07-30 `HarnessHub-ml57` 仕様反映記録
+
+CI-local parity の実装結果を `system-spec/dev-workflow.md` の qa-088 実装注記、
+`specs/harness-hub-system-specification.md`、`architecture/harness-hub-dev-workflow.md`、
+`features/feat-dev-pipeline-improvement.md`、P09/P12/P13 task spec へ同一 wave で反映した。
+
+仕様影響は repository development tooling の品質ゲート契約に限定される。
+製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は非変更。
+中学生向け説明、技術契約、受入条件、最終検証、残課題は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+を正とする。

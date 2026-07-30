@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-29T05:22:00.507534Z"
+updated_at: "2026-07-30T02:30:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md"}
-source_lineage: {"imported_at":"2026-07-29T05:21:27Z","origin_kind":"system-spec-harness","source_digest":"91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"26b37f25e7e959fae5540bb4c89fee36677d5be8566ff16420daf515b8505485","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-07-30T02:30:00Z","origin_kind":"system-spec-harness","source_digest":"26b37f25e7e959fae5540bb4c89fee36677d5be8566ff16420daf515b8505485","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -53,7 +53,7 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `43336931b9d8…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `26b37f25e7e…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json`)
 - 取込日時: 2026-07-23T04:45:00Z / plugin: system-spec-harness v0.1.0
@@ -292,3 +292,9 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 - C02 は stale full snapshot による feature lifecycle 後退を無変更で拒否する。
   詳細は [C02 lifecycle 受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)。
 - いずれも repository 内の開発管理 graph に限定し、製品 runtime 契約は変更しない。
+
+### 差分追記 (2026-07-30): CI-local parity の集合契約
+CI blocking invocation を local hard gate または理由付き exact allowlist へ束縛する。
+引数を保持した集合包含、fail-closed 境界、3 入口への結線は
+[設計受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md)
+§4 を正とし、本 wrapper は 300 行上限を守るため要約だけを保持する。

@@ -69,6 +69,22 @@ dev-graph の C02 writer は、昇格済み feature に古い full snapshot が�
 `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
 とする。
 
+### 実装反映注記 (2026-07-30 / `HarnessHub-ml57`)
+
+qa-088【2】の「CI と local の一致」を、運用上の心がけではなく repository gate として
+具体化した。GitHub Actions が repository root から実行する
+`python3 scripts/*.py` の呼び出しを script path と意味のある引数の組へ正規化し、
+local hard-fail gate または理由付き allowlist に含まれることを set membership で検査する。
+allowlist に無い差分、理由のない例外、CI から消えた stale 例外、動的 working-directory
+など静的に境界を確定できない入力は fail-closed とする。
+
+local gate の責務は「CI のうち手元で安全に再実行できる検査」であり、外部資格情報が必要、
+working tree を書き換える、CI 自体が non-blocking という呼び出しは、正確な引数形と理由を
+`scripts/ci-local-check-allowlist.json` に記録する。製品 API、DB schema、認証認可、UI、
+Cloudflare deploy unit は変更しない。判断と最終検証は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+を正とする。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

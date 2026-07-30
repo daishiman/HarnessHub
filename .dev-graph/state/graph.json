@@ -1,5 +1,5 @@
 {
-  "graph_revision": 998,
+  "graph_revision": 1000,
   "nodes": [
     {
       "acceptance": [
@@ -12943,9 +12943,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
+        "evaluated_digest": "26b37f25e7e959fae5540bb4c89fee36677d5be8566ff16420daf515b8505485",
         "evaluator": "codex-final-review",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md"
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13000,9 +13000,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-29T05:21:27Z",
+        "imported_at": "2026-07-30T02:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "91e67b94d2dca75394be4a58acc94e5a1319fea0cbdaa2d5bfacf3fb2f0724a1",
+        "source_digest": "26b37f25e7e959fae5540bb4c89fee36677d5be8566ff16420daf515b8505485",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13018,7 +13018,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-29T05:22:00.507534Z"
+      "updated_at": "2026-07-30T02:30:00Z"
     },
     {
       "acceptance": [
@@ -42588,7 +42588,11 @@
       ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ml57",
+        "linked_at": "2026-07-30T02:24:26Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
@@ -42600,11 +42604,16 @@
       "classification_reason": "CI とローカルゲートの被覆差というリポジトリ運用上の追跡課題であり、特定 feature の実装タスクではない",
       "completion_evidence": {
         "completed_at": null,
-        "evidence_refs": [],
+        "evidence_refs": [
+          "scripts/lint-ci-local-check-parity.py",
+          "scripts/ci-local-check-allowlist.json",
+          "tests/scripts-root/test_root__lint_ci_local_check_parity.py",
+          "docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
         "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "source": "manual",
+        "status": "in_progress"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -42649,8 +42658,22 @@
         "issue-desync-guard-bundle-untracked-20260728"
       ],
       "resource_scope": [
+        ".github/workflows/governance-check.yml",
+        "Makefile",
         "scripts/run-ci-checks.sh",
-        ".github/workflows"
+        "scripts/lint-ci-local-check-parity.py",
+        "scripts/ci-local-check-allowlist.json",
+        "tests/scripts-root/test_root__lint_ci_local_check_parity.py",
+        "issues/sys-local-ci-gate-drift-20260728.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",
+        ".dev-graph/state/graph.json"
       ],
       "scope_in": [
         ".github/workflows/*.yml とscripts/run-ci-checks.sh の実行検査集合を突合する meta-lint の設計と実装",
@@ -42684,7 +42707,7 @@
       "template_version": "1.0.0",
       "title": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T08:25:00Z"
+      "updated_at": "2026-07-30T02:24:26Z"
     },
     {
       "acceptance": [
