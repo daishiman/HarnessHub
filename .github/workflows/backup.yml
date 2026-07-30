@@ -29,6 +29,7 @@ jobs:
           [ -n "${{ secrets.TURSO_AUTH_TOKEN }}" ] || missing="$missing TURSO_AUTH_TOKEN"
           [ -n "${{ secrets.CLOUDFLARE_R2_API_TOKEN }}" ] || missing="$missing CLOUDFLARE_R2_API_TOKEN"
           [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ] || missing="$missing CLOUDFLARE_ACCOUNT_ID"
+          [ -n "${{ secrets.BACKUP_HEARTBEAT_URL }}" ] || missing="$missing BACKUP_HEARTBEAT_URL"
           if [ -n "$missing" ]; then
             echo "::error::backup に必要な secret が未設定です:$missing"
             echo "投入手順: docs/features/feat-hub-foundation/runbook.md §1"
@@ -102,8 +103,4 @@ jobs:
       - name: heartbeat 通知
         if: success()
         run: |
-          if [ -z "${{ secrets.BACKUP_HEARTBEAT_URL }}" ]; then
-            echo "::warning::BACKUP_HEARTBEAT_URL 未設定のため heartbeat を送出していません (cron 失敗検知が効きません)"
-            exit 0
-          fi
           curl -fsS -m 10 "${{ secrets.BACKUP_HEARTBEAT_URL }}"

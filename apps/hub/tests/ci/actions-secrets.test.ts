@@ -243,6 +243,27 @@ describe('Actions secret / variable 台帳の突合', () => {
     expect(ci.slice(smokeStart, smokeEnd)).not.toContain('secrets.CLOUDFLARE_API_TOKEN');
   });
 
+  it('backup heartbeat は required で、未投入時に workflow を fail-closed で止める', () => {
+    const registry = JSON.parse(
+      readFileSync(path.join(REPO_ROOT, 'scripts/ci/actions-secrets-registry.json'), 'utf8'),
+    ) as { entries: RegistryEntry[] };
+    const backup = readFileSync(path.join(REPO_ROOT, '.github/workflows/backup.yml'), 'utf8');
+    const heartbeatEntry = registry.entries.find((item) => item.name === 'BACKUP_HEARTBEAT_URL');
+    const preflightStart = backup.indexOf('- name: 前提 secret の存在確認');
+    const preflightEnd = backup.indexOf('- uses:', preflightStart);
+    const heartbeatStart = backup.indexOf('- name: heartbeat 通知');
+
+    expect(heartbeatEntry).toMatchObject({
+      kind: 'secret',
+      requirement: 'required',
+      workflows: ['backup.yml'],
+    });
+    expect(preflightStart).toBeGreaterThan(-1);
+    expect(backup.slice(preflightStart, preflightEnd)).toContain('[ -n "${{ secrets.BACKUP_HEARTBEAT_URL }}" ]');
+    expect(backup.slice(heartbeatStart)).not.toContain('BACKUP_HEARTBEAT_URL 未設定');
+    expect(backup.slice(heartbeatStart)).toContain('curl -fsS -m 10 "${{ secrets.BACKUP_HEARTBEAT_URL }}"');
+  });
+
   it('DB 識別子の secret 系統が TURSO_DATABASE_URL の 1 本に統一されている', () => {
     const workflows = execFileSync(
       'grep',
