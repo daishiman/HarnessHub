@@ -14,7 +14,8 @@ const PACKAGE_JSON = JSON.parse(readFileSync(path.join(REPO_ROOT, 'apps/hub/pack
 describe('production OIDC / owner authorization release gates', () => {
   it('owner 認可と OIDC の契約を、名前付き package script で fail-closed 実行する', () => {
     const script = PACKAGE_JSON.scripts?.['test:auth-release-contract'] ?? '';
-    expect(script).toContain('authz-matrix.test.ts');
+    expect(script).toContain('authz-decision-matrix.test.ts');
+    expect(script).toContain('authz-entry.test.ts');
     expect(script).toContain('tenant-isolation.test.ts');
     expect(script).toContain('authjs-handler.test.ts');
     expect(script).toContain('tenant-oidc-signin-form.test.ts');

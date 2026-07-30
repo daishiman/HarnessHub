@@ -2,8 +2,9 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // 認可層は公開入口 (src/middleware/index.ts) 経由でのみ参照する。内部ファイルへ直接入ると境界の迂回になる
 import { createSessionAuthProvider, systemAuthClock } from './lib/auth/index.js';
+import { readBearerToken, resolveAccessTokenPrincipal } from './lib/authz/index.js';
 import { authorize } from './middleware/index.js';
-import { createAuthAdapter, toAuthRequestContext } from './shared/auth/index.js';
+import { createAuthAdapter, type Principal, toAuthRequestContext } from './shared/auth/index.js';
 
 /**
  * feat-auth-tenancy の session provider を差し込む (foundation の deny-all を置き換える結線点)。
@@ -15,6 +16,7 @@ import { createAuthAdapter, toAuthRequestContext } from './shared/auth/index.js'
  * edge は DB へ届かないため、失効判定は route 側の withAuthz が担う 2 段構え (ADR AD-7)。
  */
 const sessionSecret = process.env.AUTH_SESSION_SECRET;
+const accessTokenSecret = process.env.AUTH_ACCESS_TOKEN_SECRET;
 const authAdapter =
   sessionSecret === undefined || sessionSecret.length === 0
     ? createAuthAdapter()
@@ -22,7 +24,29 @@ const authAdapter =
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const context = toAuthRequestContext(request);
-  const principal = await authAdapter.resolvePrincipal(context);
+  const bearer = readBearerToken(context.headers.get('authorization') ?? null);
+  let principal: Principal | null;
+
+  if (bearer === null) {
+    principal = await authAdapter.resolvePrincipal(context);
+  } else if (accessTokenSecret === undefined || accessTokenSecret.length === 0) {
+    // Bearer が提示されたのに検証鍵が無い場合、cookie へ fallback させず fail-closed にする。
+    principal = null;
+  } else {
+    const resolved = await resolveAccessTokenPrincipal(bearer, {
+      accessTokenSecret,
+      nowSeconds: systemAuthClock.nowSeconds(),
+    });
+    principal =
+      resolved === null
+        ? null
+        : {
+            subject: resolved.userId,
+            tenantId: resolved.tenantId,
+            workspaceIds: resolved.workspaceIds,
+            roles: [resolved.role],
+          };
+  }
 
   const decision = authorize({
     pathname: request.nextUrl.pathname,

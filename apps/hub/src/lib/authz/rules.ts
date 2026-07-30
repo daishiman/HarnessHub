@@ -122,6 +122,9 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   },
   'token.revoke': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
   'publish.write': { minRole: 'owner', requiredScope: 'publish:write', credential: EITHER, selfOnly: false },
+  // Publisher CLI 専用。publish.write と異なり session を許可しない。
+  'publish.cancel': { minRole: 'owner', requiredScope: 'publish:write', credential: TOKEN, selfOnly: false },
+  'deployment.register': { minRole: 'owner', requiredScope: 'publish:write', credential: TOKEN, selfOnly: false },
 };
 
 export function findActionRule(action: string): ActionRule | null {
