@@ -289,9 +289,8 @@ repository 内の開発品質契約へ影響するため、`appr-015` を承認�
 `HarnessHub-ory6` で、task graph、consult transcript、route build handoff の
 ID が `set` / `dict` 化される前に一意であることを検査する横断 gate を実装した。
 
-負例 fixture は同じ ID を持つ別内容の要素を投入し、各公開 CLI が非 0 終了する
-ところまで確認する。正常系は従来どおり exit 0 を維持する。500 行を超えていた
-validator / test は report contract、graph shape、shape regression の責務で分離し、
+負例 fixture は同じ ID の別内容を投入し、公開 CLI の非 0 終了と正常系の exit 0 維持を確認する。
+500 行超の validator / test は report contract、graph shape、shape regression に責務分離し、
 公開 CLI path と JSON 出力契約を変えない。
 
 仕様正本への実装フィードバックは `system-spec/testing-qa.md`、集約仕様は
