@@ -12,8 +12,8 @@ iteration: null
 title: "criteria-test が scenario_contract 欠落の live-trial 受領書を許容する"
 owners: ["daishiman"]
 created_at: "2026-07-30T05:08:29Z"
-updated_at: "2026-07-30T05:11:19Z"
-status: "draft"
+updated_at: "2026-07-30T05:42:16Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-decompose-live-trial-audit-defects-20260726"]
 resource_scope: ["plugins/dev-graph/tests/test_skill_criteria_evidence.py","eval-log/dev-graph/run-dev-graph-schedule/","system-spec/testing-qa.md","specs/harness-hub-system-specification.md","architecture/harness-hub-testing-qa.md","features/feat-dev-pipeline-improvement.md","tasks/feature-package/feat-dev-pipeline-improvement/"]
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-30T05:42:16Z","evidence_refs":["plugins/dev-graph/tests/test_skill_criteria_evidence.py","eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/verdict.json","eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260730T041426Z-wt16-pxwo-schedule/evidence/schedule-execution.json","docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md"],"policy":"manual","reconciled_at":"2026-07-30T05:42:16Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-30T05:08:29Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -80,3 +80,13 @@ criteria evidence が合格する偽陽性が残っていた。
 
 本変更は HarnessHub の開発品質保証に影響する。`run-dev-graph-schedule` 本体の
 スケジューリング、公開 API、データモデル、認証認可、利用者向け UI は変更しない。
+
+# 完了確認
+
+- criteria acceptance で `scenario_contract` を必須化し、required/observed の
+  同数・同順と run 内 evidence の実在まで再照合した。
+- field 欠落と observed 欠落の負例を追加した。
+- C15 fresh live-trial は required observation 4/4、独立 evaluator PASS。
+- task package、system-spec、graph、Dev Graph 721 件、repository 7640 件、
+  CI/local parity 136 PASS / 4 既存 WARN / 0 FAIL を確認した。
+- qa-097 / appr-016 と全ドキュメント層へ反映し、仕様反映受領書を記録した。
