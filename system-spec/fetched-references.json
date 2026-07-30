@@ -2,13 +2,13 @@
   "references": [
     {
       "target_id": "nextjs",
-      "retrieved_at": "2026-07-22T22:55:03Z",
+      "retrieved_at": "2026-07-30T00:24:25Z",
       "source_url": "https://nextjs.org/docs",
       "official_publisher": "Vercel, Inc.",
       "official_host": "nextjs.org",
-      "version": "16.2.11",
-      "latest_checked_at": "2026-07-22T22:55:03Z",
-      "summary": "Next.js は React ベースのフルスタック Web フレームワークで、現行安定版は 16.2.11 (メジャー 16)。Server Components 対応の App Router と従来の Pages Router の 2 ルーター構成。Hub Web は App Router を採用する。鮮度再照合 (2026-07-22): source_url を一次 GET (HTTP 200) し、GitHub releases (v16.2.11, published 2026-07-21T16:58:28Z) と npm dist-tags latest=16.2.11 の 2 経路一致で現行版を確認。16.2.11 はセキュリティ修正リリースで、リリースノート実測により High 4 件 (App Router Server Actions の DoS / Turbopack+単一 locale の Middleware bypass / rewrites の SSRF / custom server 上 Server Actions の SSRF) と Moderate 5 件 (cache confusion 2 件・SVG 画像最適化 DoS・Server Function endpoint 開示・Edge runtime の unbounded payload) の修正を確認。実装着手時は 16.2.11 以降へ固定する。"
+      "version": "16.2.12",
+      "latest_checked_at": "2026-07-30T00:24:25Z",
+      "summary": "Next.js は React ベースのフルスタック Web フレームワーク。2026-07-30 の一次再照合で公式 docs を HTTP 200 取得し、Vercel 公式 GitHub Releases の v16.2.12 (published 2026-07-25T23:55:42Z, prerelease=false) と npm registry の dist-tag latest=16.2.12 (published 2026-07-25T20:45:53.940Z) が一致することを確認した。16.3.0 は preview/canary のため安定版とは数えない。Hub 実装の採用 major は機能互換性を別ゲートで判断し、実装着手・依存更新時には latest 安定版と採用系列の最新 patch を再照合する。"
     },
     {
       "target_id": "typescript",
@@ -62,13 +62,13 @@
     },
     {
       "target_id": "drizzle-orm",
-      "retrieved_at": "2026-07-22T22:24:22Z",
+      "retrieved_at": "2026-07-30T00:24:25Z",
       "source_url": "https://github.com/drizzle-team/drizzle-orm/releases",
       "official_publisher": "Drizzle Team",
       "official_host": "github.com",
       "version": "v1.0.0-rc.4 (v1 プレリリース現行) / 安定版 0.45.2",
-      "latest_checked_at": "2026-07-22T22:24:22Z",
-      "summary": "Drizzle ORM は headless TypeScript ORM で serverless-ready を明記。SQLite 系ドキュメントに Turso 接続ガイド (connect-turso 系) と Cloudflare D1 接続ガイド (connect-cloudflare-d1) の両方が存在し、libSQL(Turso)/D1 両対応が公式に確認できる (D2 決定の退避経路の根拠)。バージョン系譜は publisher 直営 org (github.com/drizzle-team、正規 docs orm.drizzle.team からリンクされる公式 org) のreleases で確認: 安定版 (v0系) は 0.45.2、v1 系は v1.0.0-rc.4 まで到達 (beta.22→rc.1〜rc.4)。docs の latest-releases 静的ページは v1.0.0-beta.2 告知が最新掲載で、リリース実態は GitHub releases が先行する。v1 は rc 段階のため、実装着手時に安定版 (0.45.x) 採用か v1 追随かを再判定し、バージョン固定と追随方針を運用に含める。一次照合完了 (2026-07-22): source_url の一次データソースである GitHub Releases REST API を直接 GET し、安定版 0.45.2 (published 2026-03-27) / v1.0.0-rc.4 (published 2026-06-27) を npm dist-tags (latest=0.45.2, rc=1.0.0-rc.4) との複数一次ソース一致で確認 (C08 2026-07-18 指摘の一次 GET 照合 follow-up 完了)。"
+      "latest_checked_at": "2026-07-30T00:24:25Z",
+      "summary": "Drizzle ORM は headless TypeScript ORM で serverless-ready。2026-07-30 に publisher 直営 GitHub Releases API と npm registry を再照合し、安定版 latest=0.45.2 (published 2026-03-27) と v1 系 rc=1.0.0-rc.4 (published 2026-06-27) が一致し、v1 は引き続き prerelease であることを確認した。リポジトリの lockfile は安定版 0.45.2 を解決している。v1 採用は自動追随せず、採用判断の直前に GitHub Releases と npm dist-tags を再確認し、migration・SQLite/Turso 互換テストを通したうえで固定版を更新する。"
     },
     {
       "target_id": "authjs",
@@ -82,13 +82,13 @@
     },
     {
       "target_id": "claude-code-plugins",
-      "retrieved_at": "2026-07-22T22:28:36Z",
+      "retrieved_at": "2026-07-30T00:24:25Z",
       "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
       "official_publisher": "Anthropic",
       "official_host": "code.claude.com",
-      "last_updated": "2026-07-22 (直接取得日。ページ本文に最終更新日の明示なし。URL スキーム必須の挙動 anchor は Claude Code v2.1.196、本文 min-version anchor の最新は v2.1.205 (reserved marketplace names)。ローカル CLI 実測 2.1.218 で全 anchor をカバー)",
-      "latest_checked_at": "2026-07-22T22:28:36Z",
-      "summary": "2026-07-22 に Anthropic 公式 Claude Code plugin marketplace 文書を source_url の公式 markdown 表現 (plugin-marketplaces.md, HTTP 200) から直接再取得して一次照合した (既定 UA への HTTP 403 のためブラウザ UA で取得)。marketplace は .claude-plugin/marketplace.json で定義し、GitHub owner/repo・git URL・marketplace.json への remote URL・ローカルパスで追加できる。URL はスキーム必須で、当該挙動 anchor は Claude Code v2.1.196 のまま。本文 min-version anchor の最新は v2.1.205 (reserved marketplace name の再検査挙動)。remote URL 型は marketplace.json のみを取得するため相対パス source は解決できず、GitHub・npm・git URL 等の外部 source が必要。plugin source は relative path・github・git URL・git-subdir・npm を公式サポートしており 2026-07-21 取得時から仕様ドリフトなし (コンセプト文書 §8.1 の『npm 非対応』は現行仕様と不一致 = 仕様書で事実修正済み)。ローカル CLI 実測は 2.1.218 で本文の全 anchor を満たす。Stage 0 technical gate (H7) と実装着手時に本ページを再照合する。"
+      "last_updated": "2026-07-30 (直接取得日。ページ本文に最終更新日の明示なし。ローカル CLI 実測 2.1.220)",
+      "latest_checked_at": "2026-07-30T00:24:25Z",
+      "summary": "2026-07-30 に Anthropic 公式 plugin marketplace 文書を HTTP 200 で再取得し、ローカル Claude Code 2.1.220 で再照合した。plugin source は relative path・github・git URL・git-subdir・npm を正式サポートする。現行 git-subdir は url/path を必須とし、ref/sha で固定でき、sparse partial clone で monorepo の subdirectory を取得する。これは旧 H7 実測の『github source の path/subdir が無視される』前提に対する実質的な仕様追加である。remote URL 型 marketplace が marketplace.json のみを取得して相対 path source を解決できない制約は継続する。H7 再検証または Publisher 実装着手時は本ページと changelog を再照合し、git-subdir 経路を macOS/Windows で install→details→skill 実行まで再試験する。"
     },
     {
       "target_id": "cloudflare-workers",
@@ -102,13 +102,13 @@
     },
     {
       "target_id": "wrangler",
-      "retrieved_at": "2026-07-22T22:55:03Z",
-      "source_url": "https://developers.cloudflare.com/workers/wrangler/",
+      "retrieved_at": "2026-07-30T00:24:25Z",
+      "source_url": "https://github.com/cloudflare/workers-sdk/releases",
       "official_publisher": "Cloudflare, Inc.",
-      "official_host": "developers.cloudflare.com",
-      "last_updated": "Jul 3, 2026",
-      "latest_checked_at": "2026-07-22T22:55:03Z",
-      "summary": "Wrangler は Workers の公式 CLI で、本ページが commands・configuration・install/update 等の正本索引。Publisher が作者 local session でスクリプト実行する deploy 主経路 (HH-D13) と、Hub 自身の CI/CD デプロイの両方で使用する。実行コマンド・引数・exit code を監査記録に残せることが MCP 非採用の根拠。"
+      "official_host": "github.com",
+      "version": "4.115.0",
+      "latest_checked_at": "2026-07-30T00:24:25Z",
+      "summary": "Wrangler は Cloudflare Developer Platform の公式 CLI。2026-07-30 に Cloudflare 公式 install/update 文書 (last updated 2026-07-21) と公式 workers-sdk GitHub Releases、npm registry を再照合し、wrangler@4.115.0 (published 2026-07-28T19:42:23Z) と dist-tag latest=4.115.0 の一致を確認した。Cloudflare は project-local install によりチームで同じ版を使い、必要時に rollback できる運用を推奨する。本リポジトリは frozen lockfile の解決版を CI/deploy の固定点とし、Wrangler 更新は依存更新として明示し、worker build/dry-run と deploy 関連ゲートを通してから採用する。"
     },
     {
       "target_id": "cloudflare-r2",
