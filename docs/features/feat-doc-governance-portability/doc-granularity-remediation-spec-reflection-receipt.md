@@ -28,9 +28,9 @@ API、状態遷移、データ契約、認証認可、アーキテクチャ判�
 
 | 親文書 | 分割先 | 分割後行数 | 情報保持 |
 |---|---|---:|---|
-| `docs/backend-spec.md` | `docs/backend-spec-api-state.md` | 279 / 208 | 元の §§4–5 と分割先本文が文字単位で一致 |
-| `docs/features/feat-hub-foundation/design-review-notes.md` | `design-review-findings.md` | 300 / 95 | 元の §§7–8 と分割先本文が文字単位で一致 |
-| `docs/features/feat-stage0-distribution-gate/design-review-notes.md` | `design-review-environment-evidence.md` | 285 / 62 | 元の §§4–5 と分割先本文が文字単位で一致 |
+| `docs/backend-spec.md` | `docs/backend-spec-api-state.md` | 279 / 208 | 元の §§4–5 と分割先本文が末尾空行を除いて文字単位で一致 |
+| `docs/features/feat-hub-foundation/design-review-notes.md` | `design-review-findings.md` | 300 / 94 | 元の §§7–8 と分割先本文が末尾空行を除いて文字単位で一致 |
+| `docs/features/feat-stage0-distribution-gate/design-review-notes.md` | `design-review-environment-evidence.md` | 285 / 61 | 元の §§4–5 と分割先本文が末尾空行を除いて文字単位で一致 |
 | `docs/features/feat-hub-foundation/final-review-notes.md` | 既存 `final-review-round2-notes.md` への索引を縮約 | 296 | Round 1 / Round 2 / follow-up の責務と参照先を維持 |
 
 親文書には元の節番号と相対リンクを残したため、既存の章構造から詳細正本へ辿れる。
@@ -60,15 +60,16 @@ API、状態遷移、データ契約、認証認可、アーキテクチャ判�
 
 本変更は information-preserving refactor である。既存 section anchor を親文書の
 index heading として維持し、抽出本文を frontmatter 付き child document へ移した。
-`git show HEAD:<parent>` から抽出した旧 section と child body の byte-equivalent な
-文字列比較で 3 組すべて一致を確認した。contract surface は不変であり、変更境界は
+分割着手前の共通祖先 (`3bfedc4`) から抽出した旧 section と child body を、
+末尾の余分な空行を除く内容文字列として比較し、3 組すべて一致を確認した。
+contract surface は不変であり、変更境界は
 Markdown の配置・相対リンク・line-limit allowlist の縮小に限定される。
 
 ## 7. 検証
 
 - `git diff --check`: PASS
-- 分割本文の文字列一致比較: 3 / 3 PASS
-- `lint-doc-line-limit.py --ratchet-base origin/main`: 428 文書 PASS / allowlist 0
+- 分割本文の文字列一致比較（末尾空行を除外）: 3 / 3 PASS
+- `lint-doc-line-limit.py --ratchet-base main`: 430 文書 PASS / allowlist 0
 - `lint-artifact-placement.py`: PASS
 - `validate-graph-schema.py`: PASS / violations 0
 - `validate-system-plan.py`: 影響した 3 feature package がすべて P01–P13 / violations 0
