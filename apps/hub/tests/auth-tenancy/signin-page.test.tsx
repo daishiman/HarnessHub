@@ -92,7 +92,11 @@ describe('サインイン画面の接続解決', () => {
 
     expect(html).toContain('Acme IdP でサインイン');
     expect(html).toContain('action="/api/auth/acme/signin/tenant-oidc"');
+    expect(html).toContain('data-csrf-endpoint="/api/auth/acme/csrf"');
     expect(html).toContain('method="post"');
+    expect(html).toContain('name="csrfToken"');
+    expect(html).toContain('name="callbackUrl"');
+    expect(html).toContain('value="/"');
   });
 
   it('他テナントの slug では、そのテナントの接続だけを引く', async () => {

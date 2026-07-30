@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-07-30T04:40:19Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db"]
 related_nodes: []
@@ -101,7 +101,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   を参照）。
 - 詳細は [runbook §2.5.1](../docs/features/feat-auth-tenancy/runbook.md) を参照する。
 
-## 実装反映 (2026-07-28 / 最終レビュー)
+## 実装反映 (2026-07-28 / リリース前レビュー)
 
 - テナント別サインイン画面を、確定済みの Auth.js path
   `/api/auth/{tenant_slug}/signin/tenant-oidc` へ接続した。
@@ -109,11 +109,26 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   確認コード入力・Workspace 選択・状態別エラー表示を持つ承認画面を追加した。
 - `/device` の表示時にも session 緊急失効を確認し、承認 API は既存の
   `withAuthz` による認証・認可を維持する。
-- API・DB・role・数値・信頼境界の新しい仕様判断はなく、既存契約への実装接地である。
-  判断根拠と検証は
+- この時点では API・DB・role・数値・信頼境界の新しい仕様判断はなく、既存契約への実装接地と
+  判定した。判断根拠と検証は
   [仕様反映受領書 §10](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md)
   を参照する。
-- 本番設定・OIDC 登録・デプロイ・スモークは未実施のため、P13 は継続する。
+- この時点では本番設定・OIDC 登録・デプロイ・スモークは未実施だった。後続結果は次節を正とする。
+
+## 実装・本番反映 (2026-07-30 / SYS-AUTH-TENANCY-P13)
+
+- 現行 production rollout は Google OIDC と HarnessHub (`tenant_slug=harness-hub`)
+  1テナントへ限定した。製品の複数テナント分離契約と回帰試験は維持する。
+- Google OAuth client secret は1Passwordを運用上の受渡し元とし、repository経由で
+  `idp_connections.client_secret_enc`へ暗号化した。Workerは共通`ENCRYPTION_KEK`で復号し、
+  GitHub Secretsやテナント別Worker Secretには保存しない。
+- サインイン画面はtenant別CSRF endpointからcookie/tokenを揃えた後、native form navigationで
+  Auth.jsとGoogleへ遷移する。取得失敗時は外部送信せず再試行可能なエラーを表示する。
+- 本番でlogin/JIT、role 4種、Device Flow、refresh再利用検知、session緊急失効までR1〜R5を完了した。
+- 仕様正本は`system-spec`の`qa-097`〜`qa-099`へR4 reopen経由で反映した。設計・検証の対応は
+  [P13仕様反映受領書](../docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md)を参照する。
+- 本変更のdraft PRがdefault branchへmergeされるまでは、task completion policyによりP13を
+  `in_progress`のまま維持する。
 
 ## アーキテクチャ参照
 

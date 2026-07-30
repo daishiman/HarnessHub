@@ -7,3 +7,8 @@
 export function tenantOidcSigninAction(tenantSlug: string): string {
   return `/api/auth/${encodeURIComponent(tenantSlug)}/signin/tenant-oidc`;
 }
+
+/** form POST と同じ tenant basePath の CSRF endpoint。別 slug の cookie/token を混ぜない。 */
+export function tenantOidcCsrfAction(tenantSlug: string): string {
+  return `/api/auth/${encodeURIComponent(tenantSlug)}/csrf`;
+}
