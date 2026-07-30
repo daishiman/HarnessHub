@@ -125,6 +125,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**データ接続復旧の反映 (2026-07-30 / `HarnessHub-njkm` / qa-101)**:
+
+- process-local の `file:` / `:memory:` libSQL が `SQLITE_BUSY` を踏んだ場合、接続を poisoned（復旧まで使用禁止）として隔離し、以後の read/write/transaction を `ConnectionPoisonedError` で fail-fast する。
+- `TursoAdapter.reconnect()` は raw client を factory から作り直すが、公開 Client / Drizzle / repository の参照は変えない。自動 reconnect は並行 transaction と障害観測を壊すため行わない。
+- request-bound の Turso Web client / D1 は poison 対象外とし、従来どおり DB 側排他・CAS・競合再試行へ委ねる。DB schema、migration、API payload は変更しない。
+- 正規反映と実測結果は [libSQL 接続復旧 仕様反映受領書](../docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md) を正とする。
+
 **開発フロー反映 (2026-07-28 / `HarnessHub-7xi9`)**:
 
 - `system-spec/dev-workflow.md` の desktop-windows / desktop-macos を R4-reopen し、`qa-088` で `qa-039` の既存ローカル開発契約と並列 worktree の整合性契約を自己完結して再確定した。
