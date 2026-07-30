@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-07-30T01:53:05Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -195,6 +195,18 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `BACKUP_HEARTBEAT_URL` は required。backup workflow は未投入を前提確認で拒否し、全 step 成功後だけ heartbeat を送る。
 - backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
 - 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
+
+**開発品質ゲートの空走査反映 (2026-07-30 / `HarnessHub-foq6` / qa-096)**:
+
+- `system-spec/dev-workflow.md` の web セルを正規に reopen し、qa-069 の
+  MVP ファースト契約を維持したまま qa-096 へ再確定した。
+- 品質ゲートは directory 不在・検査対象 0 件を既定で失敗させ、
+  意図的な空走査だけを明示 opt-in で許可する。
+- `qa-092` / `appr-013` は main 側 C11 契約を保持し、本変更は空き ID
+  `qa-096` / `appr-015` へ再採番した。
+- 製品 API・DB・認証認可・UI・deploy unit は変更しない。反映と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
+  を正とする。
 
 **開発管理整合性の反映 (2026-07-29 / `HarnessHub-bk8v`)**:
 
