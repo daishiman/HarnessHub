@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-30T02:50:00Z"
+updated_at: "2026-07-30T12:57:15Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789","evaluator":"assign-system-spec-completeness-evaluator + codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T02:50:00Z","origin_kind":"system-spec-harness","source_digest":"25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"6931eace6542f1bb64c5e3685502fc19a463b7cf4b0e2859ff2419f7725192c0","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-07-30T12:57:15Z","origin_kind":"system-spec-harness","source_digest":"6931eace6542f1bb64c5e3685502fc19a463b7cf4b0e2859ff2419f7725192c0","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -295,3 +295,4 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 ### 差分追記 (2026-07-30): CI-local parity の集合契約
 
 CI blocking invocation を local hard gate または理由付き exact allowlist へ束縛する。引数を保持した集合包含、fail-closed 境界、3 入口への結線は [設計受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md) §4 を正とする。
+`HarnessHub-pyb3` は同じ入口の G4 を `workspaceConcurrency: 1` で安定化した。詳細は [受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)。

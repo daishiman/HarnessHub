@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1028,
+  "graph_revision": 1036,
   "nodes": [
     {
       "acceptance": [
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T04:40:19Z"
+      "updated_at": "2026-07-30T12:57:15Z"
     },
     {
       "acceptance": [
@@ -844,9 +844,9 @@
         "テナント固有の OIDC/role/Device Flow policy (共通 auth adapter・認可 MW の package 境界のみ対象)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-25T21:18:40Z",
+        "imported_at": "2026-07-30T13:02:00Z",
         "origin_kind": "generated",
-        "source_digest": "e8a7f9308f00bcaa6e7d7df9f623cf3649d15c9f2242c18b31f0336ad8ce3dc9",
+        "source_digest": "b29a0641c191de53606d71cb3f63faa73eb357c89757efda5d05ca20d24f536e",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -863,7 +863,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T06:15:52.997834Z"
+      "updated_at": "2026-07-30T13:02:00Z"
     },
     {
       "acceptance": [
@@ -2031,7 +2031,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 テスト設計 (test-first 受入契約)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-07-30T12:57:15Z"
     },
     {
       "acceptance": [
@@ -12946,9 +12946,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789",
-        "evaluator": "assign-system-spec-completeness-evaluator + codex-final-review + merge-reconciliation",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"
+        "evaluated_digest": "6931eace6542f1bb64c5e3685502fc19a463b7cf4b0e2859ff2419f7725192c0",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13003,9 +13003,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T02:50:00Z",
+        "imported_at": "2026-07-30T12:57:15Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789",
+        "source_digest": "6931eace6542f1bb64c5e3685502fc19a463b7cf4b0e2859ff2419f7725192c0",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13021,7 +13021,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T02:50:00Z"
+      "updated_at": "2026-07-30T12:57:15Z"
     },
     {
       "acceptance": [
@@ -40811,11 +40811,13 @@
     },
     {
       "acceptance": [
-        "並列実行でも exit code が内容を正しく反映する (workspace-concurrency の固定、vitest の pool/RPC timeout 設定、または spawn 系テストの直列化のいずれか)",
-        "是正後に pnpm -r test を既定並列度で複数回まわし、再現しないことを確認する",
-        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+        "workspaceConcurrency: 1 で package 間を直列化し、pnpm -r test の exit code が test 内容を反映する",
+        "pnpm -r test を複数回実行し、全 package の完走と worker RPC timeout 非再現を確認する",
+        "設定欠落・1 以外を専用負例が非ゼロ終了で拒否し、C02 writer・品質ゲート・仕様反映受領を通す"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -40834,22 +40836,24 @@
       "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-pyb3 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
       "completion_evidence": {
         "completed_at": null,
-        "evidence_refs": [],
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-30T13:19:43Z",
+        "source": "manual",
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "62a0a7645ea3b3dcd57cfa6c33bcc84203cb060d074aeda7c35a3406731c6228",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"
       },
-      "confirmation_status": "draft",
+      "confirmation_status": "confirmed",
       "created_at": "2026-07-25T11:02:02Z",
       "depends_on": [],
       "domain": "quality",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/sys-g4-parallel-rpc-timeout-20260725.md",
@@ -40860,7 +40864,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "pnpm -r test の並列実行で vitest worker RPC が timeout し G4 が偽陽性で落ちる",
+      "goal": "pnpm -r test が複数回安定して完走し、workspace 直列化設定の欠落・値変更を品質ゲートが fail-closed に拒否する状態",
       "graph_node_id": "issue-g4-parallel-rpc-timeout-20260725",
       "implementation_readiness": {
         "checked_at": "2026-07-28T00:24:44.678Z",
@@ -40878,17 +40882,36 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "未解決の Beads issue HarnessHub-pyb3 を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "purpose": "G4 の CI/local 共通入口を維持しつつ package 間の Vitest worker pool 競合を除き、test assertion と無関係な RPC timeout 偽陽性を防ぐ",
       "related_nodes": [
         "issue-bd-external-ref-orphan-nodes-20260725",
         "issue-orphan-external-ref-backlog-disposition-20260726"
       ],
-      "resource_scope": [],
+      "resource_scope": [
+        "pnpm-workspace.yaml",
+        "scripts/ci/check-pnpm-only.mjs",
+        "apps/hub/tests/ci/pnpm-only.test.ts",
+        "docs/shared-layers.md",
+        "docs/features/feat-hub-foundation/architecture-decision-record.md",
+        "docs/features/feat-hub-foundation/test-design.md",
+        "docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md",
+        "features/feat-hub-foundation.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p04.md",
+        "issues/sys-g4-parallel-rpc-timeout-20260725.md"
+      ],
       "scope_in": [
-        "Beads issue HarnessHub-pyb3 の題名・説明・notes・受入条件を保持した issue node の復元"
+        "pnpm workspace 間直列化",
+        "設定 drift の正負テスト",
+        "G4 設計・仕様反映",
+        "Beads と Dev Graph の完了同期"
       ],
       "scope_out": [
-        "orphan 復元と同時に元 issue の実装や close を行うこと"
+        "package 内の Vitest 並列性変更",
+        "個別 test timeout の緩和",
+        "製品 API・DB schema・認証認可・UI・deploy unit の変更"
       ],
       "source_lineage": {
         "imported_at": "2026-07-28T00:24:44.678Z",
@@ -40899,7 +40922,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "active",
       "tags": [
         "quality",
         "dev-graph",
@@ -40911,7 +40934,7 @@
       "template_version": "1.0.0",
       "title": "pnpm -r test の並列実行で vitest worker RPC が timeout し G4 が偽陽性で落ちる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T11:02:02Z"
+      "updated_at": "2026-07-30T13:19:43Z"
     },
     {
       "acceptance": [
