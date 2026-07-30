@@ -142,7 +142,14 @@ merge 競合は Dev Graph、architecture、feature、system spec、P12 task で�
 CI/local parity 仕様をどちらも失わない union として解消し、
 architecture が参照する `system-spec/dev-workflow.md` の source digest を
 `25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789`
-へ正規フローで更新した。その最終統合 tree で次を再実行した。
+へ正規フローで更新した。
+
+PR を Ready for review にした後、`origin/main` がさらに
+`4a60faebd6618d77189197376f1be389f8c3dd56` へ進んだため、
+local `main` を同期して本 branch へ再度 merge した。競合は集約仕様の 1 か所だけで、
+`HarnessHub-ml57`、`HarnessHub-e2u`、`HarnessHub-ory6` の要約をすべて保持した。
+合成で P12 が 312 行になったため、意味を受領書参照へ集約して 300 行へ戻し、
+allowlist による例外追加なしで文書行数ゲートを通した。その最終統合 tree で次を再実行した。
 
 | Gate | 結果 |
 |---|---|
@@ -153,7 +160,7 @@ architecture が参照する `system-spec/dev-workflow.md` の source digest を
 | task specification package validator | PASS: P01〜P13、violations 0 |
 | dev-graph schema | PASS: `valid=true`、missing section 0 |
 | architecture source digest | PASS: checked 1、mismatch 0 |
-| document line limit | PASS: 427 documents、上限 300 行、allowlist 4 |
+| document line limit | PASS: 432 documents、上限 300 行、allowlist 0 |
 | `git diff --check` | PASS: whitespace error 0 |
 
 `scripts/run-ci-checks.sh` の WARN 4 件は段階導入中の既存警告であり、
@@ -174,4 +181,4 @@ architecture が参照する `system-spec/dev-workflow.md` の source digest を
 2026-07-30、repository の default branch `main` 向け Draft PR
 [#608](https://github.com/daishiman/HarnessHub/pull/608) を作成した。
 PR 本文には目的、変更内容、検証結果、仕様反映、Beads ID、
-dev-graph node ID、残課題を記録済みである。
+dev-graph node ID、残課題を記録済みである。その後 Ready for review へ移行した。

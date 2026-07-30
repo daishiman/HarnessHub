@@ -46,6 +46,26 @@ serves_goals: [G1, G2, G5]
 
 【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
+## 実装フィードバック (2026-07-30 / HarnessHub-ory6)
+
+qa-076 / qa-081 の「境界値・異常系を task spec と機械ゲートで再現可能にする」
+確定要件を、repository 内 validator の ID 一意性へ具体化した。入力要素を
+`set` / `dict`（集合・辞書）へ変換する validator は、変換前に同一 ID の
+重複を検査し、重複した別要素が 1 件へ畳み込まれる偽陽性を許可しない。
+
+- task graph は task node ID と component ID を別々に検査する。
+- consult transcript は user solution の provenance（根拠となる発話）を
+  照合する前に turn ID の重複を検査する。
+- route build handoff は route/complete の両モードで route ID の重複を
+  検査する。
+- 各経路は正常な入力を exit 0 のまま維持し、重複 ID の負例 fixture では
+  CLI を非 0 終了させる。検査件数 0 を合格根拠にせず、違反を実際に投入して
+  gate の反転を確認する。
+
+この追記は既存 QA の実装フィードバックであり、確定回答、製品 API、DB schema、
+認証認可、UI、Cloudflare deploy unit は変更しない。内部 validation contract
+（検証契約＝不正な入力をどこで拒否するか）の設計影響だけを反映する。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

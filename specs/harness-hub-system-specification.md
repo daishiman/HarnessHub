@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T01:53:05Z"
+updated_at: "2026-07-30T02:46:06Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -244,6 +244,34 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   認証認可、UI、Cloudflare deploy unit は変更しない。
 - 反映先と最終検証は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md)
+  を正とする。
+
+**公式出典鮮度と Stage 0 再検証の反映 (2026-07-30 / `HarnessHub-e2u`)**:
+
+- C08 公式出典台帳の確認値を Next.js 16.2.12、Drizzle stable 0.45.2 /
+  v1 prerelease rc.4、Wrangler 4.115.0、Claude Code 2.1.220 時点へ更新した。
+  これらは採用版の自動変更ではなく、実装・依存更新前に再確認する固定点である。
+- Claude Code の現行公式 `git-subdir` source は旧 H7 後に確認された有効な
+  配信候補である。ただし、macOS / Windows の Skills 列挙と実 skill 起動が
+  未検証なので、Stage 0 の `NOT_ESTABLISHED` と Stage 1 fail-closed を維持する。
+- 後続 `HarnessHub-n2c0` が公式契約の再照合、2 OS E2E、設定非汚染を検証する。
+  製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+- 層別の反映先、非影響判断、検証結果は
+  [仕様反映受領書](../docs/features/feat-stage0-distribution-gate/source-freshness-spec-reflection-receipt.md)
+  を正とする。
+
+**開発品質反映 (2026-07-30 / `HarnessHub-ory6`)**:
+
+- ID を `set` / `dict` へ正規化して参照実在性を検査する repository 内
+  validator は、正規化の前に同一 ID の重複を fail-closed で拒否する。
+  重複した別要素を 1 件へ畳み込んだ後の「参照先あり」を合格根拠にしない。
+- 適用対象は plugin-dev-planner の task/component ID、ubm-goal-setting の
+  transcript turn ID、harness-creator の handoff route ID。正常系は従来の
+  exit 0 を維持し、重複 fixture は CLI 非 0 終了まで回帰テストで固定する。
+- 影響は repository 内の validation contract に限定される。製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
   を正とする。
 
 ## 未決事項
