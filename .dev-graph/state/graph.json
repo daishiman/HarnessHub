@@ -1,5 +1,5 @@
 {
-  "graph_revision": 996,
+  "graph_revision": 999,
   "nodes": [
     {
       "acceptance": [
@@ -41993,12 +41993,17 @@
       "classification_confidence": 0.9,
       "classification_reason": "HarnessHub-33ho の最終レビュー中に scope_in の未消化項目を発見し、grep 実測で該当候補ファイルを特定した",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-30T00:39:41Z",
+        "evidence_refs": [
+          "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/tests/test_validate_task_graph.py",
+          "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/tests/test_validate_task_graph_shapes.py",
+          "plugins/ubm-goal-setting/tests/test_validate_consult_session.py",
+          "tests/scripts-plugins/test_harness_creator__validate_route_build_reports.py"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-07-30T00:39:41Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -42043,8 +42048,10 @@
       ],
       "resource_scope": [
         "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph.py",
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/task_graph_shape_checks.py",
         "plugins/ubm-goal-setting/scripts/validate-consult-session.py",
-        "plugins/harness-creator/skills/run-build-skill/scripts/validate-route-build-reports.py"
+        "plugins/harness-creator/skills/run-build-skill/scripts/validate-route-build-reports.py",
+        "plugins/harness-creator/skills/run-build-skill/scripts/route_report_contract.py"
       ],
       "scope_in": [
         "validate-task-graph.py の node_ids/comp_ids が重複IDを畳み込むケースの要否判定",
@@ -42066,7 +42073,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "quality",
         "validation",
@@ -42078,7 +42085,7 @@
       "template_version": "1.0.0",
       "title": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T01:25:04Z"
+      "updated_at": "2026-07-30T01:32:25.195923Z"
     },
     {
       "acceptance": [
