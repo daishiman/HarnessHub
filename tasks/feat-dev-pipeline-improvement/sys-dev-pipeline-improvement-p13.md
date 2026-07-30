@@ -12,7 +12,7 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-30T02:24:03.570266Z"
+updated_at: "2026-07-30T02:54:58.446131Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -247,7 +247,7 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 ## 2026-07-30 C02 document layer P13 書き戻し
 
 `HarnessHub-dqca` の実装結果を `system-spec/dev-workflow.md` の R4-reopen →
-qa-096 再確定として書き戻した。`specs/harness-hub-system-specification.md`、
+qa-097 再確定として書き戻した。`specs/harness-hub-system-specification.md`、
 `architecture/harness-hub-dev-workflow.md`、親 feature、最終レビュー、plugin 内部契約、
 仕様反映確認も同一 wave で更新した。
 

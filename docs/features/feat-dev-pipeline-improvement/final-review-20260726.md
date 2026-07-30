@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-30T02:24:43.397719Z"
+updated_at: "2026-07-30T02:48:36.037905Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -249,7 +249,7 @@ frontmatter を再生成する。許容形式は graph schema の `$defs.documen
 frontmatter の重複 key を lint が黙って上書きしていた境界を検出した。document で必須・
 非 document で禁止する schema、重複 key の fail-closed 検査、正負の回帰テストを追加した。
 
-`system-spec/spec-state.json` は正規 writer で R4-reopen → qa-096 再確定し、
+`system-spec/spec-state.json` は正規 writer で R4-reopen → qa-097 再確定し、
 `system-spec/dev-workflow.md`、`specs/`、`architecture/`、`features/`、`tasks/`、
 plugin 内部契約、本レビューへ反映した。製品 runtime の API、DB、認証認可、UI、
 Cloudflare deploy unit は変更しない。判断と検証は

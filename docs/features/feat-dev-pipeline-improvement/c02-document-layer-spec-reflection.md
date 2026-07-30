@@ -68,7 +68,7 @@ Dev Graph の document 契約には仕様・設計影響があるため、正本
 
 | 層 | 反映先 | 反映内容 |
 |---|---|---|
-| 正本仕様 | `system-spec/spec-state.json`、`system-spec/dev-workflow.md` | `qa-096` と `appr-015` で document layer 契約と承認根拠を記録 |
+| 正本仕様 | `system-spec/spec-state.json`、`system-spec/dev-workflow.md` | `qa-097` と `appr-016` で document layer 契約と承認根拠を記録 |
 | システム仕様 | `specs/harness-hub-system-specification.md` | Dev Graph の fail-closed 境界を追記 |
 | アーキテクチャ | `architecture/harness-hub-dev-workflow.md` | schema、writer、lint の責務分離を追記 |
 | feature | `features/feat-dev-pipeline-improvement.md` | C02 の変更範囲と仕様リンクを追記 |
@@ -86,13 +86,14 @@ graph-managed document の更新には Dev Graph の C02 writer を使った。
 | ゲート | 結果 |
 |---|---|
 | C02 回帰テスト | `8 passed` |
+| C02 + main 競合対象 focused 回帰 | `49 passed` |
 | artifact placement self-test | PASS |
 | graph schema validation | valid、implementation readiness complete |
 | artifact placement lint | PASS |
 | task 仕様書 Phase 1〜13 検査 | PASS、Phase 1〜13 を各1件確認 |
 | root lint | PASS |
 | system-spec coverage / citation / knowledge graph | PASS |
-| system-spec harness tests | `218 passed` |
+| system-spec harness tests | `529 passed` |
 | Dev Graph plugin manifest validation | PASS |
 | Dev Graph 全機能テスト（live-trial 証跡検査を除く） | `719 passed, 2 skipped` |
 | Dev Graph 全テスト | 機能テストは通過。9 skill の既存 live-trial verdict が変更後 digest に対して stale |
@@ -115,6 +116,18 @@ scope-out「取得済み live-trial verdict の再取得」に従い、PR の残
 これらを物理分割すると既存 writer、schema validator、digest 契約を同時に変更する
 別スコープの移行になる。今回追加した手書きロジックを分離して隠すのではなく、
 正本形式を維持することを優先した。
+
+## main 再同期
+
+PR 作成直後に `origin/main` が `c122ae4a7876455932fe7787ac85d818ba9c5ed1`
+へ更新されたため、local `main` へ fast-forward した後、本ブランチへ merge した。
+同時進行していた `HarnessHub-foq6` の workflow 空走査契約が
+`qa-096` / `appr-015` を使用していたため、その履歴を保持し、本変更を次の空き ID
+`qa-097` / `appr-016` へ正規 transition writer で再適用した。
+
+graph、architecture、feature、spec、system-spec の競合は main 側の新規契約を基準に
+解消し、C02 の document 移行、本文保持、completion evidence を正規 writer で
+再登録した。競合解消後に品質ゲートを再実行している。
 
 ## 受領判断
 

@@ -12,7 +12,7 @@ iteration: null
 title: "C02 writer が graph 管理 docs の layer frontmatter を削除する"
 owners: ["daishiman"]
 created_at: "2026-07-26T06:26:22Z"
-updated_at: "2026-07-30T02:33:59.044413Z"
+updated_at: "2026-07-30T02:56:16.890070Z"
 status: "closed"
 depends_on: []
 related_nodes: ["doc-dev-pipeline-final-review-20260726","feat-dev-pipeline-improvement"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-30T02:10:33Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md","plugins/dev-graph/tests/test_upsert_node_document_layer.py","plugins/dev-graph/references/execution-tracker-contract.md","system-spec/dev-workflow.md"],"policy":"manual","reconciled_at":"2026-07-30T02:33:46Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-07-30T02:10:33Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md","plugins/dev-graph/tests/test_upsert_node_document_layer.py","plugins/dev-graph/references/execution-tracker-contract.md","system-spec/dev-workflow.md"],"policy":"manual","reconciled_at":"2026-07-30T02:48:20Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-26T06:26:22Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -80,7 +80,7 @@ C02 writer と docs 配置契約を整合させ、graph 管理文書を何度再
 ## 最終レビューと仕様反映
 
 最終レビューで非 document への `layer` 混入と重複 key の境界を追加修正した。
-`system-spec/spec-state.json` を正規 writer で R4-reopen → qa-096 再確定し、
+`system-spec/spec-state.json` を正規 writer で R4-reopen → qa-097 再確定し、
 `system-spec/`、`specs/`、`architecture/`、`features/`、`tasks/`、`docs/`、
 plugin 内部契約へ同一 wave で書き戻した。
 

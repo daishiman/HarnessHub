@@ -1,0 +1,244 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "verdict": "PASS",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "score": 95,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "requirements foundation と G1-G5 / O1-O4 が確定し、dev-workflow.web の qa-092 は G1/G4/G5 へ遡及できる。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-complete --require-foundation exit 0",
+        "system-spec/spec-state.json: dev-workflow.web qa_ref=qa-092",
+        "system-spec/spec-state.json: approval_log appr-013"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "score": 95,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "D1-D8 は confirmed で、選択肢、コスト、適合性、ユーザー決定を保持する。qa-092 は既存決定を変更しない。",
+      "evidence": [
+        "system-spec/spec-state.json: decisions D1-D8 status=confirmed",
+        "validate-source-citation.py exit 0"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "score": 100,
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "60 セルは確定 28 / 対象外 32 / 未収集 0。qa-092 と appr-013 は dev-workflow.web の確定根拠として自己完結する。C06 の既存ヒアリング所見はセル網羅性を破らないため補助 finding として保持する。",
+      "evidence": [
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c07-matrix-auditor.json",
+        "validate-coverage-matrix.py loop / complete / foundation 全 exit 0"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "score": 95,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "knowledge / doctrine / required-info / cross の 4 profile が合格し、qa-092 は Google SRE の fail-closed と観測可能性を空走査境界へ具体適用する。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph exit 0",
+        "system-spec/dev-workflow.md: qa-092",
+        "system-spec/dev-workflow.md: 上流指針 (doctrine anchor)"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "score": 80,
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "20 target を 2026-07-29 に再照合し、current 16 / stale medium 2 / stale low 2 / high 0 / unknown 0。既定の fail-closed 閾値を満たす。",
+      "evidence": [
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c08-doc-freshness-auditor.json",
+        "validate-source-citation.py exit 0",
+        "audit-fork-ledger.jsonl session 1068ed92-67cd-411a-b7f1-e08a496147fb"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "score": 100,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "R1-score と R2-delegate は 7 層構造、goal-seek 停止条件、Self-Evaluation を備え、repository 内 prompt validator が全て合格した。",
+      "evidence": [
+        "verify-completeness.py R1-score.md exit 0",
+        "verify-completeness.py R2-delegate.md exit 0",
+        "validate-prompt.py --phase prompt R1/R2 全 exit 0"
+      ]
+    }
+  },
+  "audit_delegations": [
+    {
+      "aspect": "matrix_coverage",
+      "role": "primary",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-matrix-auditor",
+        "session_id": "1068ed92-67cd-411a-b7f1-e08a496147fb"
+      },
+      "verdict": "PASS",
+      "evidence": [
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl ts=2026-07-29T12:14:15Z",
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c07-matrix-auditor.json"
+      ]
+    },
+    {
+      "aspect": "matrix_coverage",
+      "role": "sub_input",
+      "auditor": "system-spec-hearing-auditor",
+      "component": "C06",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-hearing-auditor",
+        "session_id": "1068ed92-67cd-411a-b7f1-e08a496147fb"
+      },
+      "verdict": "FAIL",
+      "evidence": [
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl ts=2026-07-29T12:15:36Z",
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c06-hearing-auditor.json"
+      ]
+    },
+    {
+      "aspect": "doc_freshness",
+      "role": "primary",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-doc-freshness-auditor",
+        "session_id": "1068ed92-67cd-411a-b7f1-e08a496147fb"
+      },
+      "verdict": "PASS",
+      "evidence": [
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl ts=2026-07-29T12:36:55Z",
+        "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/audit-results-20260729-qa092/c08-doc-freshness-auditor.json"
+      ]
+    }
+  ],
+  "gate_results": [
+    {
+      "id": "G-matrix-complete-foundation",
+      "name": "validate-coverage-matrix",
+      "conditions": [
+        "foundation_trace",
+        "matrix_coverage"
+      ],
+      "command": [
+        "python3",
+        "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "--matrix",
+        "system-spec/spec-state.json",
+        "--require-complete",
+        "--require-foundation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "G-knowledge-graph",
+      "name": "aggregate-completeness knowledge graph",
+      "conditions": [
+        "design_knowledge_reflection",
+        "matrix_coverage"
+      ],
+      "command": [
+        "python3",
+        "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py",
+        "--knowledge-graph"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "G-source-citation",
+      "name": "validate-source-citation",
+      "conditions": [
+        "doc_freshness",
+        "decision_guidance"
+      ],
+      "command": [
+        "python3",
+        "plugins/system-spec-harness/scripts/validate-source-citation.py",
+        "--targets",
+        "system-spec/spec-state.json",
+        "--references",
+        "system-spec/fetched-references.json",
+        "--state",
+        "system-spec/spec-state.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "G-prompt-validators",
+      "name": "prompt completeness and shape",
+      "conditions": [
+        "prompt_quality"
+      ],
+      "command": [
+        "python3",
+        "plugins/prompt-creator/skills/run-prompt-creator-7layer/scripts/verify-completeness.py",
+        "and",
+        "validate-prompt.py"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "qa-092-contract",
+      "observation": "qa-092 は qa-069 の MVP-first 契約、空走査 fail-closed、明示 allow-empty、三分岐回帰証拠、C02 stale snapshot 後退防止、500 行分冊、製品境界を情報欠落なく保持する。",
+      "evidence": [
+        "system-spec/spec-state.json qa-092 / appr-013",
+        "system-spec/dev-workflow.md qa-092"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "doc-freshness",
+      "observation": "drizzle-orm の pre-release 記録と Playwright の stable 記録は公式再照合時点より古い。今回の開発品質ゲート変更へ直接影響せず、C08 総合 PASS 閾値内。",
+      "suggested_fix": "次回 run-system-spec-doc-fetch で drizzle-orm と Playwright の記録を更新する。",
+      "evidence": [
+        "c08-doc-freshness-auditor.json"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "doc-freshness",
+      "observation": "pnpm は patch 更新、Zod は major のみの記録で、いずれも今回の変更へ直接影響しない。",
+      "suggested_fix": "次回 run-system-spec-doc-fetch で pnpm と Zod の version 記録を具体化する。",
+      "evidence": [
+        "c08-doc-freshness-auditor.json"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "hearing-lineage",
+      "observation": "qa-071 内の qa-070 参照は qa_log から遡れない。matrix の確定セルは qa-070 を参照せず、qa-092 の確定性へ直接影響しない。",
+      "suggested_fix": "別 follow-up で qa-070 を復元するか qa-071 を自己完結化する。",
+      "evidence": [
+        "c06-hearing-auditor.json"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "hearing-question-shape",
+      "observation": "qa-092 の質問は複数論点を束ねるが、appr-013 のユーザー明示承認があり回答への実害は限定的。今後は質問を分離する。",
+      "evidence": [
+        "c06-hearing-auditor.json",
+        "system-spec/spec-state.json appr-013"
+      ]
+    }
+  ],
+  "gaps": []
+}
