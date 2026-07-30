@@ -1,0 +1,145 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "system-spec",
+  "verdict": "PASS",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "要件定義書 (00-requirements-definition.md) に U1-U9 が全て記載され、各技術章 frontmatter の serves_goals が G1-G4 へトレースされている。requirements_foundation.confirmed=true、approval_ref が approval_log に実在。",
+      "evidence": [
+        "00-requirements-definition.md: status=confirmed, U1-U9 全セクション存在",
+        "全8章の frontmatter に serves_goals が存在し G1-G4 の少なくとも1つを参照",
+        "index.md が要件定義書を先頭に相互参照",
+        "requirements_foundation.confirmed=true, approval_ref=brief-section-7-bulk-approval-2026-07-21T00:00:00Z が approval_log に実在"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "3件の意思決定 (D1:sqlite, D2:fastapi, D3:local-bearer-token) がすべて confirmed 状態。各 decision に options (2件以上、free 候補含む)、recommendation、user_decision、serves_goals が揃っている。",
+      "evidence": [
+        "D1: sqlite vs postgresql, user_decision=sqlite, serves_goals=[G1,G3,G4]",
+        "D2: fastapi vs flask, user_decision=fastapi, serves_goals=[G2,G4]",
+        "D3: local-bearer-token vs oauth2-password-jwt, user_decision=local-bearer-token, serves_goals=[G2]",
+        "全 decision が confirmed_at=2026-07-21T00:00:00Z で確定"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "48セル全数 (8カテゴリ×6プラットフォーム) が確定または対象外で埋まっており、未収集0。validate-coverage-matrix.py --require-complete --require-foundation が exit 0。",
+      "evidence": [
+        "確定セル: 8件 (各カテゴリの web)",
+        "対象外セル: 40件 (各カテゴリの非web 5 platform、すべて理由付き)",
+        "未収集セル: 0件",
+        "category_aggregate: 全8カテゴリが確定 (真理値表導出と一致)",
+        "validate-coverage-matrix.py --require-complete --require-foundation: exit 0"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "全8章に上流指針 (doctrine anchor) と適用された設計知識が記載されている。database.md に DDD deep knowledge card と Clean Architecture / SRE doctrine anchor が具体適用されている。",
+      "evidence": [
+        "database.md: doctrine anchor (data-access=Clean Architecture, reliability=Google SRE) + DDD deep knowledge card",
+        "全章に上流指針テーブルと設計知識セクションが存在",
+        "設計知識ポインタが ref-system-design-knowledge/references/ を参照"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "3件の取得済み参照 (sqlite, fastapi, fastapi-security) がすべて必須フィールドを充足。source_url の host が official_host と一致。validate-source-citation.py が exit 0。",
+      "evidence": [
+        "sqlite: version=3.53.4, official_host=www.sqlite.org, source_url host一致",
+        "fastapi: version=0.141.1, official_host=fastapi.tiangolo.com, source_url host一致",
+        "fastapi-security: version=0.141.1, official_host=fastapi.tiangolo.com, source_url host一致",
+        "validate-source-citation.py: exit 0"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "各章が明確な frontmatter (status/category/aggregate/spec_cells/serves_goals) を持ち、カテゴリ別収集状態表、確定内容 (質疑録)、上流指針、設計知識、出典を含む。index.md が全章を相互参照。",
+      "evidence": [
+        "全章 frontmatter に status/category/aggregate/spec_cells/serves_goals が存在",
+        "全章にカテゴリ別収集状態表 (6 platform × 状態 + 根拠)",
+        "index.md が要件定義書を先頭に全8技術章を相互参照"
+      ]
+    }
+  },
+  "audit_delegations": [
+    {
+      "aspect": "matrix_coverage",
+      "role": "primary",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "dispatch": {"tool": "Task", "subagent_type": "system-spec-matrix-auditor", "session_id": "live-trial-wt13-ci-system-spec-r2"},
+      "verdict": "PASS",
+      "evidence": ["48セル全数検証: 確定8+対象外40=48, 未収集0", "validate-coverage-matrix.py --require-complete: exit 0", "category_aggregate 真理値表整合: 全8カテゴリ一致"]
+    },
+    {
+      "aspect": "matrix_coverage",
+      "role": "sub_input",
+      "auditor": "system-spec-hearing-auditor",
+      "component": "C06",
+      "dispatch": {"tool": "Task", "subagent_type": "system-spec-hearing-auditor", "session_id": "live-trial-wt13-ci-system-spec-r2"},
+      "verdict": "PASS",
+      "evidence": ["聞き漏れ: 0件", "誘導質問: 0件", "早期停止: 0件", "トレース欠落: 0件"]
+    },
+    {
+      "aspect": "doc_freshness",
+      "role": "primary",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "dispatch": {"tool": "Task", "subagent_type": "system-spec-doc-freshness-auditor", "session_id": "live-trial-wt13-ci-system-spec-r2"},
+      "verdict": "PASS",
+      "evidence": ["3件の参照が全件対応・必須フィールド充足・公式host一致", "validate-source-citation.py: exit 0"]
+    }
+  ],
+  "gate_results": [
+    {
+      "id": "G-matrix",
+      "name": "validate-coverage-matrix",
+      "exit_code": 0,
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-coverage-matrix.py", "--matrix", "system-spec/spec-state.json", "--require-complete", "--require-foundation"],
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-citation",
+      "name": "validate-source-citation",
+      "exit_code": 0,
+      "command": ["python3", "plugins/system-spec-harness/scripts/validate-source-citation.py", "--targets", "system-spec/_targets.json", "--references", "system-spec/fetched-references.json"],
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "foundation_trace",
+      "observation": "要件定義書 (00-requirements-definition.md) に U1-U9 が完全に記載され、全技術章から serves_goals でトレースされている。意思決定表 (D1-D3) も要件定義書内に含まれている。"
+    },
+    {
+      "severity": "info",
+      "bucket": "matrix_coverage",
+      "observation": "48セル全数が終端状態 (確定8+対象外40)。web列のみ対象で他5 platform は対象外 (理由: クライアント実装を含まないため)。"
+    },
+    {
+      "severity": "info",
+      "bucket": "doc_freshness",
+      "observation": "3件の取得済み参照 (sqlite 3.53.4, fastapi 0.141.1, fastapi-security 0.141.1) が公式host一致・version付きで取得されている。"
+    }
+  ],
+  "gaps": []
+}

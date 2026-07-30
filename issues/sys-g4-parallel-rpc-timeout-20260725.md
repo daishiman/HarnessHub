@@ -12,7 +12,7 @@ iteration: null
 title: "pnpm -r test の並列実行で vitest worker RPC が timeout し G4 が偽陽性で落ちる"
 owners: ["daishiman"]
 created_at: "2026-07-25T11:02:02Z"
-updated_at: "2026-07-30T13:19:43Z"
+updated_at: "2026-07-30T13:37:07Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
@@ -32,7 +32,7 @@ template_id: "issue"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"62a0a7645ea3b3dcd57cfa6c33bcc84203cb060d074aeda7c35a3406731c6228","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
+confirmation_evidence: {"evaluated_digest":"e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-07-28T00:24:44.678Z","origin_kind":"generated","source_digest":"b817beb8db8fd1c31c0e58087e6ed48a0bdf8e3c5a102f85c11ca72857f94422","source_path":"issues/sys-orphan-external-ref-backlog-disposition-20260726.md#HarnessHub-pyb3","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 1
 classification_reason: "2026-07-28 orphan 再棚卸しで HarnessHub-pyb3 の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断"
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-07-30T13:19:43Z","source":"manual","status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-07-30T13:37:07Z","source":"manual","status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-28T00:24:44.678Z","missing_sections":[],"status":"complete"}
 ---
 

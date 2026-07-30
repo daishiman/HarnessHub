@@ -311,13 +311,18 @@ class FakeBootBackend:
         self.sent = ""
         self.argv = None
         self.run_id = None
+        self.environment_overrides = None
         self.send_calls = 0
         self.key_sends = []
 
-    def new_session(self, _s, _c, command_argv=None, *, run_id, owner_pid):
+    def new_session(
+        self, _s, _c, command_argv=None, *, run_id, owner_pid,
+        environment_overrides=None,
+    ):
         self.argv = command_argv
         self.run_id = run_id
         self.owner_pid = owner_pid
+        self.environment_overrides = environment_overrides
         if command_argv:
             self.sent = " ".join(command_argv)
 
@@ -342,6 +347,9 @@ class FakeBootBackend:
 
 def test_boot_ready_line_contract(monkeypatch, capsys):
     monkeypatch.setattr(boot_mod.time, "sleep", lambda _s: None)
+    monkeypatch.setenv(
+        "SYSTEM_SPEC_AUDIT_FORK_LEDGER", "/tmp/current-session-ledger.jsonl"
+    )
     fb = FakeBootBackend(["Type /help for shortcuts\n❯ "], ["2.1.173"])
     rc = boot_mod.boot(fb, "lt-x", "x", "/tmp", "claude-opus-4-8", "u-1",
                        timeout=5, grace=1)
@@ -354,6 +362,9 @@ def test_boot_ready_line_contract(monkeypatch, capsys):
     assert "--model claude-opus-4-8" in fb.sent
     assert "--setting-sources local" in fb.sent
     assert fb.argv == boot_mod.build_claude_argv("u-1", "claude-opus-4-8")
+    assert fb.environment_overrides["SYSTEM_SPEC_AUDIT_FORK_LEDGER"] == (
+        "/tmp/current-session-ledger.jsonl"
+    )
     assert fb.run_id == "x"
     assert f"OWNER_PID:{fb.owner_pid}" in out
     assert fb.send_calls == 0  # 対話 shell への send-line を経由しない

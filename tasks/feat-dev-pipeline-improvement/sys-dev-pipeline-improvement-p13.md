@@ -12,7 +12,7 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:57:34.035214Z"
+updated_at: "2026-07-30T11:57:56Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -285,3 +285,14 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
   task package、plugin test、content/live-trial、repository CI を再検証する
 - 仕様反映受領書:
   `docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`
+
+## 2026-07-30 PR #610 CI follow-up
+
+共有 behavior closure の変更で stale になった Dev Graph 9 skill の live-trial を、
+過去 verdict の digest を編集せず fresh session で再実行した。C04 は feature から参照する
+architecture を同一 confirmed system-spec digest へ束縛し、C19 は contained fixture の
+監査台帳 path を tmux session へ明示して report・ledger・session の三点を canonical
+aggregate gate で突合した。実 tmux の stale/current/空値と隔離 cleanup も回帰化し、失敗 run
+は append-only で残して final PASS だけを planner が再利用できる状態にした。仕様・設計反映と
+全ゲート結果は `qa-102` / `appr-019` および
+`docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md` を正とする。

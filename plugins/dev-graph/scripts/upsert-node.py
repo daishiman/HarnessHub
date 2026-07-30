@@ -28,6 +28,7 @@ from typing import Any
 from _common import ContractError, atomic_json, contained, dump, load_json, utc_now
 from node_body import artifact_bytes as _artifact_bytes
 from node_body import resolve_body as _resolve_body
+from node_body import restore_document_layer as _restore_document_layer
 from node_lifecycle import apply_lifecycle_request
 from node_transaction import (
     finalize_transaction,
@@ -318,6 +319,7 @@ def _perform(args: argparse.Namespace) -> dict[str, Any]:
         ):
             _assert_c14_macro_contract(node, root)
         artifact = contained(root / relative_path, root, must_exist=False)
+        _restore_document_layer(node, artifact)
         body, body_source, replaced_body_lines = _resolve_body(
             payload,
             args.body_file,

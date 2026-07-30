@@ -26,7 +26,7 @@ reviewed_at: 2026-07-30
 - **確定済み QA の再回答: 不要**。本変更は qa-038 の G4 と qa-088 / qa-096 の
   CI-local 同値・fail-closed 契約を実装具体化するもので、要件の意味を変更しない。
 - **実装と回帰防止: 完了**。`workspaceConcurrency: 1`、設定 drift の正負テスト、
-  3 回の全 workspace test、task / system-spec / Dev Graph の品質ゲートを確認した。
+  4 回の全 workspace test、task / system-spec / Dev Graph の品質ゲートを確認した。
 
 ## 3. 中学生向けの説明
 
@@ -85,20 +85,21 @@ pnpm project 設定の `workspaceConcurrency: 1` を採用した。
 
 | ゲート | 結果 |
 | --- | --- |
+| main 同期 | `origin/main` = local `main` = `d99cd326` を確認し、local `main` を本 branch へ merge |
 | 設定検査 | `pnpm config get workspace-concurrency` = `1`、`pnpm check:pnpm` PASS |
 | 対象 Vitest | `pnpm-only.test.ts`: 11/11 PASS。設定欠落と値 `2` の負例を含む |
-| 全 workspace test | 通常実行、`CI=1`、`pnpm verify` 内の計 3 回が PASS。各回 6 package / 1310 tests、RPC timeout なし |
-| workspace 全体 | `pnpm verify` exit 0。lint、型検査、build、Worker build、全 test、tenant 分離、secret scan、contract drift、bundle 予算を含む |
+| 全 workspace test | 通常実行、`CI=1`、main 取込前後の `pnpm verify` 内の計 4 回が PASS。各回 6 package / 1310 tests、RPC timeout なし |
+| workspace 全体 | main 取込前後の `pnpm verify` がともに exit 0。lint、型検査、build、Worker build、全 test、tenant 分離、secret scan、contract drift、bundle 予算を含む |
 | task 仕様 | `feature-package/feat-hub-foundation`: Phase 1-13、violations 0 |
 | system-spec | coverage complete、foundation、source citation が全て PASS |
 | Dev Graph | schema valid、implementation readiness complete、violations 0 |
-| 文書 | artifact placement PASS、300 行 ratchet は 437 文書 PASS |
+| 文書 | artifact placement PASS、300 行 ratchet は 439 文書 PASS |
 | patch | `git diff --check` PASS |
 
 ## 7. ファイル分割
 
 変更した人間向け文書とコードは全て 500 行以下であり、本変更による分割対象はない。
-repository のより厳しい 300 行ゲートも対象 437 文書で PASS した。
+repository のより厳しい 300 行ゲートも対象 439 文書で PASS した。
 `specs/harness-hub-system-specification.md` は 300 行を超えるが、同ゲートの正規管理対象外かつ
 500 行以下であるため、今回の実装差分では分割しない。
 
