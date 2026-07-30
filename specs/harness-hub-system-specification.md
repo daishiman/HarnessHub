@@ -207,6 +207,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   を正とする。
 
+**開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-095)**:
+
+- skill 構造 lint は人が管理する tree の深さ・命名・許可 directory を検査し、
+  test tool が生成する dot directory、`__pycache__`、`.pyc` は構造判定から除外する。
+- repository root と配布 plugin の lint 実装は同一バイト列を維持し、
+  `.pytest_cache` / `.mypy_cache` / 任意の dot cache と通常の nested directory 違反を
+  正負の回帰検体にする。
+- per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを
+  task の広域回帰証拠とする。製品 API・DB・認証認可・UI・deploy unit は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
+  を正とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)

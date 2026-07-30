@@ -411,7 +411,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-081",
+        "qa_ref": "qa-095",
         "serves_goals": [
           "G1",
           "G5"
@@ -423,7 +423,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-078",
+        "qa_ref": "qa-095",
         "serves_goals": [
           "G1",
           "G5"
@@ -896,6 +896,11 @@
       "id": "qa-094",
       "question": "qa-093 の backup heartbeat 契約を追加したうえで、直前まで確定していた infrastructure.web と maintenance-ops.web の契約を情報欠落なくどう統合しますか?",
       "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-091 の production Worker Secret / 環境設定、Cloudflare deploy token と R2 token の最小権限分離、rollout 順序、静的検査と外部実測の完了境界を全面維持する。また qa-058 の phase 別監視有効化、qa-011 / qa-019 の日次 control-plane JSONL backup・RPO 24h・RTO 4h・復元不能断面を成功と数えない契約、機械可読 secret 台帳と workflow 実参照の双方向突合、実投入状態を --live で判定する契約も全面維持する。そのうえで qa-093 を統合し、次を追加確定する。(1) Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使い、CRON_HEARTBEAT_URL と BACKUP_HEARTBEAT_URL の URL を共用しない。(2) backup 専用 hub-backup-daily は period=86400 秒 / grace=3600 秒で、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化する。(3) BACKUP_HEARTBEAT_URL は required とし、workflow 開始時の未投入を fail-closed で拒否する。heartbeat は全 backup step 成功後だけ送るため、cron 不発も途中失敗も期限超過として外形監視へ表れる。(4) Better Stack API token と heartbeat URL は設定・成果物・引数・ログへ保存せず、stdin で用途別 secret store へ投入する。設定は binding 名・period/grace・外部適用状態だけを持つ。(5) repository 内実装だけで完了扱いにせず、backup heartbeat の provisioning_state=applied、GitHub secret 投入、main の成功 run、heartbeat 着信実測が揃うまで HarnessHub-dbx6 を継続する。(6) Hub の外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-095",
+      "question": "作者のローカル desktop 環境で skill 構造 lint を実行するとき、pytest などが生成した隠し cache を人が設計した skill tree と誤認せず、同じ品質基準を Windows と macOS で再現するには何を必須としますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-078 と qa-081 の既存契約を全面維持し、skill 構造 lint の生成物境界を追補する。\n\n【1. テスト戦略】タスク仕様書は単体・結合・境界値・既存回帰の各テストを変更内容から選び、focused test と実際の実行順序を再現する広域回帰の両方を記録する。失敗時は原因分析、修正、同一コマンド再実行の改善ループを回す。\n\n【2. 層別方針】frontend は behavior ベースの component / 操作フロー、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界を検証する。pixel・DOM 内部構造・一時生成物の物理配置など、本来の設計契約ではない実装詳細へ品質判定を密結合させない。\n\n【3. skill tree の生成物境界】skill 構造 lint は人が管理する SKILL.md、許可 directory、命名、深さを検査する。一方、pytest・mypy 等の test tool が skill 配下へ作る dot で始まる directory とその配下、Python の __pycache__ / .pyc は生成物として構造判定から除外する。許可 directory 集合に dot directory は含めず、個別 cache 名の列挙ではなく同じ性質を持つ生成物へ一般化する。\n\n【4. 複製と回帰】repository root の scripts/lint-skill-tree.py と配布 plugin 内の実装は同一バイト列を維持する。回帰テストは .pytest_cache だけでなく .mypy_cache と任意の dot cache を含め、通常の nested directory 違反は引き続き検出する。per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを確認する。\n\n【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -946,6 +951,10 @@
     {
       "id": "appr-013",
       "note": "ユーザーの 2026-07-29 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-4t9g の C11 artifact 本文 readiness 強化を qa-092 として dev-workflow.desktop-macos へ反映する。"
+    },
+    {
+      "id": "appr-014",
+      "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-xswf の最終レビューで確定した skill tree lint の生成物境界、root/plugin 複製 parity、per-plugin→repository 実行順序回帰を qa-095 として testing-qa の desktop-windows / desktop-macos へ反映する。"
     }
   ],
   "reopen_log": [
@@ -1637,6 +1646,18 @@
       "category": "maintenance-ops",
       "platform": "web",
       "reason": "main 側 qa-092 と本ブランチ側 qa-092/qa-093 の並行確定により QA ID と生成章が衝突したため、main の履歴を保持して backup heartbeat 契約を新しい QA ID で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-xswf の実装で、test tool が生成する dot cache と人が設計した skill tree の境界が qa-081 より具体化されたため、ユーザーの仕様反映指示に従い R4-reopen して qa-095 へ再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-xswf の実装で、per-plugin pytest 後の .pytest_cache が repository criteria test を偽陽性にする実行順序依存を解消したため、qa-078 を維持しつつ生成物境界を qa-095 へ統合する",
       "from": "確定"
     }
   ],
@@ -2878,7 +2899,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 2,
+    "loop_count": 3,
     "next_question": null,
     "complete": true
   }
