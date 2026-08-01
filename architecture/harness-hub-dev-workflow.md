@@ -288,7 +288,7 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 ### 差分追記 (2026-07-29): C02/C11 の安全境界
 
 - C11 は frontmatter・見出し・placeholder だけの artifact を incomplete として後段を止める ([受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md))。
-- C02 は stale full snapshot による lifecycle 後退を無変更で拒否する ([受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md))。
+- C02 は stale full snapshot による lifecycle 後退を無変更で拒否し、重複報告 `HarnessHub-j66m` は既存 node `issue-c02-upsert-lifecycle-regression-20260729` へ統合する ([受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md))。
 - workflow step guard は対象 directory 不在・対象 0 件を既定で拒否し、明示 `--allow-empty` だけを許可する ([受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md))。
 - いずれも repository 内の開発管理・品質ゲートに限定し、製品 runtime 契約は変更しない。
 

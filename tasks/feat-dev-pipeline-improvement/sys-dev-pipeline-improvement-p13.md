@@ -164,6 +164,8 @@ draft へ戻す回帰を C02 の単一 writer 境界で遮断した。明示 pat
 `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
 を正とする。
 
+2026-07-30 の最終レビューでは、重複報告 `HarnessHub-j66m` を別実装にせず `HarnessHub-bk8v` / `issue-c02-upsert-lifecycle-regression-20260729` の完了証拠へ統合し、現行 `main` で受入条件と品質ゲートを再実行して製品 runtime 契約に差分がない判断を仕様反映受領書へ記録する。
+
 ## Inner goal-seek execution loop
 
 - Methodology contract: `system-task-goal-seek/v1`

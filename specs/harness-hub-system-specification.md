@@ -256,6 +256,8 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 実装契約、設計判断、検証結果の対応は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   を正とする。
+- 重複報告 `HarnessHub-j66m` は別仕様・別実装を作らず、同じ受領書と dev-graph node
+  `issue-c02-upsert-lifecycle-regression-20260729` の再検証 trace に統合する。
 
 **開発管理整合性の反映 (2026-07-30 / `HarnessHub-dqca` / qa-102)**:
 
