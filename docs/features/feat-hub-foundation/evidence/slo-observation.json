@@ -1,0 +1,56 @@
+{
+  "checked_at": "2026-08-01T12:07:18.778Z",
+  "source": {
+    "kind": "better-stack-public-status-page",
+    "url": "https://harness-hub-daishimanju.betteruptime.com/index.json",
+    "http_status": 200,
+    "status_page_resource_id": "8978911",
+    "authenticated": false
+  },
+  "measurement": {
+    "current_status": "operational",
+    "monitor_live": true,
+    "reported_availability_30d": 0.988579,
+    "history_days": 30,
+    "completed_days": 29,
+    "observed_days": 6,
+    "excluded_today": 1,
+    "observed_window_seconds": 518400,
+    "external_downtime_seconds": 6312.313036,
+    "external_maintenance_seconds": 0,
+    "external_availability": 0.9878234702237655,
+    "first_observed_day": "2026-07-26",
+    "last_observed_day": "2026-07-31"
+  },
+  "observation_progress": {
+    "observed_days": 6,
+    "required_days": 30,
+    "complete": false
+  },
+  "error_budget": {
+    "availability_target_monthly": 0.995,
+    "allowed_downtime_30_day_seconds": 12960,
+    "external_downtime_seconds": 6312.313036,
+    "error_budget_consumed_ratio": 0.48706119104938267,
+    "triggered_actions": [],
+    "external_only_target_met": null
+  },
+  "verdict": {
+    "measured": {
+      "status": "collecting",
+      "observation_started_at": "2026-07-27T20:46:37.686Z",
+      "first_monthly_verdict_due_at": "2026-08-26T20:46:37.686Z",
+      "blocker": null
+    },
+    "declared": {
+      "status": "collecting",
+      "observation_started_at": "2026-07-27T20:46:37.686Z",
+      "first_monthly_verdict_due_at": "2026-08-26T20:46:37.686Z",
+      "blocker": null,
+      "$comment": "2026-08-01T05:19:15.333Z に公開 status page (https://harness-hub-daishimanju.betteruptime.com/index.json) を実測して収束させた値。observed_days=6/30。verify-slo-observation.mjs が正本で、手で書き換えないこと。"
+    },
+    "consistent": true,
+    "mismatches": []
+  },
+  "$comment": "公開 status page のみを読む実測証跡。API token / heartbeat URL は取得しない。最終的な SLO 達成判定には Workers analytics の 5xx 率が別途必要 (infrastructure-spec §9 / qa-019)。"
+}

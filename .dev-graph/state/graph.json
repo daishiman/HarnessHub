@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1085,
+  "graph_revision": 1089,
   "nodes": [
     {
       "acceptance": [
@@ -28,7 +28,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "1f3f0481d8aa38f6bf96355cd601fafd7ca0ec5963ed58bf950ac65541fb2ea1",
+        "evaluated_digest": "f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T12:29:53Z",
+        "imported_at": "2026-08-01T15:28:45Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "1f3f0481d8aa38f6bf96355cd601fafd7ca0ec5963ed58bf950ac65541fb2ea1",
+        "source_digest": "f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T12:29:53Z"
+      "updated_at": "2026-08-01T15:28:45Z"
     },
     {
       "acceptance": [
@@ -561,7 +561,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "1bdfccdf45a9b21f05a75804ce1764dceffe34da48ecce8d8564bae5db477f35",
+        "evaluated_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T11:54:39Z",
+        "imported_at": "2026-08-01T15:28:45Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "1bdfccdf45a9b21f05a75804ce1764dceffe34da48ecce8d8564bae5db477f35",
+        "source_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T11:54:39Z"
+      "updated_at": "2026-08-01T15:28:45Z"
     },
     {
       "acceptance": [
@@ -863,7 +863,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T13:27:46Z"
+      "updated_at": "2026-08-01T12:01:55.324015Z"
     },
     {
       "acceptance": [
@@ -2171,7 +2171,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-01T12:03:19.233775Z"
     },
     {
       "acceptance": [
@@ -2896,7 +2896,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 証跡収集",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-01T12:04:31.042165Z"
     },
     {
       "acceptance": [
@@ -38924,10 +38924,18 @@
         "arch-harness-hub-infrastructure"
       ],
       "resource_scope": [
-        "docs/features/feat-hub-foundation/runbook.md",
-        "docs/features/feat-hub-foundation/acceptance-report.md",
-        "docs/features/feat-hub-foundation/evidence/",
-        "docs/infrastructure-spec.md"
+        "apps/hub/monitoring/slo-dashboard.json",
+        "apps/hub/scripts/verify-slo-observation.mjs",
+        "apps/hub/tests/monitoring/",
+        "docs/features/feat-hub-foundation/",
+        "docs/infrastructure-spec.md",
+        "system-spec/infrastructure.md",
+        "system-spec/spec-state.json",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-infrastructure.md",
+        "features/feat-hub-foundation.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p05.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p11.md"
       ],
       "scope_in": [
         "Better Stack Free での production /health 3 分間隔 monitor 登録",
@@ -38964,7 +38972,7 @@
       "template_version": "1.0.0",
       "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T15:44:20Z"
+      "updated_at": "2026-08-01T12:11:25.870970Z"
     },
     {
       "acceptance": [
