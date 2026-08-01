@@ -197,13 +197,17 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 ### 差分追記 (2026-07-29): C02/C11 の安全境界
 
 - C11 は frontmatter・見出し・placeholder だけの artifact を incomplete として後段を止める ([受領書](../../../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md))。
-- C02 は stale full snapshot による lifecycle 後退を無変更で拒否する ([受領書](../../../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md))。
+- C02 は stale full snapshot による lifecycle 後退を無変更で拒否し、重複報告 `HarnessHub-j66m` は既存 node `issue-c02-upsert-lifecycle-regression-20260729` へ統合する ([受領書](../../../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md))。
 - workflow step guard は対象 directory 不在・対象 0 件を既定で拒否し、明示 `--allow-empty` だけを許可する ([受領書](../../../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md))。
 - いずれも repository 内の開発管理・品質ゲートに限定し、製品 runtime 契約は変更しない。
 
 ### 差分追記 (2026-07-30): CI-local parity の集合契約
 
-CI blocking invocation を local hard gate または理由付き exact allowlist へ束縛する。引数を保持した集合包含、fail-closed 境界、3 入口への結線は [設計受領書](../../../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md) §4 を正とする。
+CI blocking invocation を local hard gate または理由付き exact allowlist へ束縛する。引数を保持した集合包含、fail-closed 境界、3 入口への結線は [設計受領書](../../../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md) §4 を正とする。`HarnessHub-pyb3` は同じ入口の G4 を `workspaceConcurrency: 1` で安定化した。詳細は [受領書](../../../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)。
+
+### 差分追記 (2026-07-30): C02 document parity と live-trial session 環境隔離
+
+`qa-102` は C02 の本文保持・schema/lint parity と、tmux global environment を routing 正本にせず `new-session -e` で trial 固有の監査台帳 path を上書きする境界を確定した。詳細は [仕様反映確認](../../../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md)。
 
 ### 差分追記 (2026-08-01): 遮断レイテンシ test の代理指標 — 赤側の偽陽性
 

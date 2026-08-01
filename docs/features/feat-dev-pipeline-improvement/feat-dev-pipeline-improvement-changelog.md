@@ -100,7 +100,7 @@ close した。
 - plugin 契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、
   製品仕様・設計へ影響しない判断は
   [仕様反映受領書](bk8v-c02-lifecycle-spec-reflection.md)
-  に記録した。
+  に記録し、重複報告 `HarnessHub-j66m` は同じ `HarnessHub-bk8v` / `issue-c02-upsert-lifecycle-regression-20260729` の完了証拠へ統合した。
 
 ## 2026-07-29 追記: live-trial reaper の並行安全性
 
@@ -189,6 +189,10 @@ close した。
   に同一 wave で反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
 - 2026-07-30 `HarnessHub-35ai`: receipt 検証済みだけを `verified`、未指定を `not_performed` とする契約・層別反映は [受領書](render-registration-verification-spec-reflection-receipt.md) を正とする。
+
+## 2026-07-30 追記: PR #610 CI の live-trial 証拠更新
+
+- `HarnessHub-dqca` では、C02 の共有挙動変更で stale になった Dev Graph 9 skill を fresh session で再取得した。C04 fixture の architecture lineage、C19 の tmux session-scoped 監査台帳注入も修正済みで、正本は `qa-102` / `appr-019`、最終判断は [仕様反映確認](c02-document-layer-spec-reflection.md) を正とする。
 
 ## 2026-08-01 追記: 遮断レイテンシ test の代理指標を構造検査へ置換
 
