@@ -12,8 +12,8 @@ iteration: null
 title: "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-08-01T06:47:41.684217Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P12"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: [".github/workflows/ci.yml","docs/features/feat-domain-model-db/release-record.md","packages/db/__tests__/backup-restore.test.ts","packages/db/__tests__/fixtures/two-tenants.ts","packages/db/backup/","packages/db/scripts/export-control-plane.ts","packages/db/scripts/restore-control-plane.ts"]

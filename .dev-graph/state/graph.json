@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1072,
+  "graph_revision": 1073,
   "nodes": [
     {
       "acceptance": [
@@ -14575,7 +14575,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14587,7 +14587,7 @@
       "template_version": "1.0.0",
       "title": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-01T06:47:41.684217Z"
     },
     {
       "acceptance": [
