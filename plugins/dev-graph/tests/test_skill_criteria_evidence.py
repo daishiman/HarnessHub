@@ -90,6 +90,41 @@ def _targets() -> list[tuple[str, str, Path, set[str]]]:
     ]
 
 
+def _assert_scenario_contract(
+    *,
+    verdict: dict,
+    verdict_path: Path,
+    current_scenario: dict,
+    component_id: str,
+    criterion_id: str,
+) -> None:
+    """criteria acceptance が live-trial の scenario 契約を再照合する。"""
+    contract = verdict["scenario_contract"]
+    assert contract["scenario_id"] == verdict["scenario_id"]
+    assert _contained_repo_ref(contract["scenario_file"]) == POSITIVE_SCENARIOS.resolve()
+    assert contract["unobserved"] == [], (
+        f"{component_id}/{criterion_id}: unobserved required_observations remain"
+    )
+    required = current_scenario["required_observations"]
+    assert contract["required_observations"] == required
+    expected_observed = [
+        (index, observation) for index, observation in enumerate(required, start=1)
+    ]
+    actual_observed = [
+        (item["index"], item["observation"]) for item in contract["observed"]
+    ]
+    assert actual_observed == expected_observed, (
+        f"{component_id}/{criterion_id}: observed required_observations are incomplete"
+    )
+    assert contract["args_divergence"]["matches"] is True
+    if current_scenario.get("task_contract") is not None:
+        assert contract["task_contract"]["declared"] is True
+        assert contract["task_contract"]["task_file_exists"] is True
+        assert contract["task_contract"]["matches"] is True
+    for observation in contract["observed"]:
+        _contained_run_evidence(verdict_path, observation["evidence_ref"])
+
+
 @pytest.mark.parametrize(
     ("component_id", "skill_name", "skill_path", "criteria_ids"),
     _targets(),
@@ -156,29 +191,23 @@ def test_independent_scenario_receipt_covers_exact_criteria(
         # まま受領書を据え置くと、改訂前の緩い契約で取った緑が現行契約の充足として通る。
         # 実際に C14 は r5 改訂後も改訂前 id の verdict を指したままだった。
         current_scenario = positive_scenarios.get(skill_name)
-        if current_scenario is not None:
-            assert result["scenario_id"] == current_scenario["scenario_id"], (
-                f"{component_id}/{criterion_id}: receipt cites a stale scenario "
-                f"({result['scenario_id']}) while the fixture declares "
-                f"{current_scenario['scenario_id']}"
-            )
-        # scenario_contract は旧 verdict との互換で任意項目。あるなら required_observations の
-        # 全回収と正本 file の一致まで見る (id 一致だけの PASS を残さない)。
-        contract = verdict.get("scenario_contract")
-        if contract is not None:
-            assert contract["scenario_id"] == verdict["scenario_id"]
-            assert _contained_repo_ref(contract["scenario_file"]) == POSITIVE_SCENARIOS.resolve()
-            assert contract["unobserved"] == [], (
-                f"{component_id}/{criterion_id}: unobserved required_observations remain"
-            )
-            assert contract["required_observations"] == current_scenario["required_observations"]
-            assert contract["args_divergence"]["matches"] is True
-            if current_scenario.get("task_contract") is not None:
-                assert contract["task_contract"]["declared"] is True
-                assert contract["task_contract"]["task_file_exists"] is True
-                assert contract["task_contract"]["matches"] is True
-            for observation in contract["observed"]:
-                _contained_run_evidence(verdict_path, observation["evidence_ref"])
+        assert current_scenario is not None, (
+            f"{component_id}/{criterion_id}: no canonical positive scenario for {skill_name}"
+        )
+        assert result["scenario_id"] == current_scenario["scenario_id"], (
+            f"{component_id}/{criterion_id}: receipt cites a stale scenario "
+            f"({result['scenario_id']}) while the fixture declares "
+            f"{current_scenario['scenario_id']}"
+        )
+        # verify_by=live-trial の verdict は scenario id の一致だけで PASS にしない。
+        # required_observations の全回収と task_args_template の一致を必須にする。
+        _assert_scenario_contract(
+            verdict=verdict,
+            verdict_path=verdict_path,
+            current_scenario=current_scenario,
+            component_id=component_id,
+            criterion_id=criterion_id,
+        )
         assert verdict["target_skill"] == f"dev-graph:{skill_name}"
         assert verdict["tier"] == "live"
         assert verdict["downgrade_reason"] is None
@@ -195,6 +224,42 @@ def test_independent_scenario_receipt_covers_exact_criteria(
         assert verdict["skill_dir_tree_sha"] == live_verdict_module.skill_dir_tree_sha(
             skill_path.parent
         ), f"{component_id}/{criterion_id}: stale behavior closure digest"
+
+
+def test_live_trial_acceptance_rejects_missing_or_incomplete_scenario_contract() -> None:
+    """旧形式の field 欠落と、observed の自己申告欠落を負例で固定する。"""
+    receipt_path = (
+        REPO
+        / "eval-log/dev-graph/run-dev-graph-schedule/criteria-test/scenario-verdict.json"
+    )
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    verdict_path = _contained_repo_ref(
+        receipt["criteria_results"]["OUT1"]["live_trial_verdict_ref"]
+    )
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    scenario = _positive_scenario_by_skill()["run-dev-graph-schedule"]
+
+    missing_contract = json.loads(json.dumps(verdict))
+    missing_contract.pop("scenario_contract")
+    with pytest.raises(KeyError, match="scenario_contract"):
+        _assert_scenario_contract(
+            verdict=missing_contract,
+            verdict_path=verdict_path,
+            current_scenario=scenario,
+            component_id="C15",
+            criterion_id="OUT1",
+        )
+
+    incomplete_observed = json.loads(json.dumps(verdict))
+    incomplete_observed["scenario_contract"]["observed"].pop()
+    with pytest.raises(AssertionError, match="observed required_observations are incomplete"):
+        _assert_scenario_contract(
+            verdict=incomplete_observed,
+            verdict_path=verdict_path,
+            current_scenario=scenario,
+            component_id="C15",
+            criterion_id="OUT1",
+        )
 
 
 def test_positive_live_trial_scenarios_cover_out1_without_eval_log_fixture_coupling() -> None:

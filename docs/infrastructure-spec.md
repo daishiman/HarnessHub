@@ -52,15 +52,23 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 
 - **secret 台帳 (`wrangler secret put`。コード・DB へ平文を持ち込まない = qa-020)**:
 
+> **正本は [security-spec-data-integrity.md §4.5](security-spec-data-integrity.md) の secret インベントリ**であり、本表はそれを infrastructure 視点で再掲する。
+> 差分が出たら §4.5 を正として本表を直す。**この表にないものを Workers Secret に置かない。**
+
 | secret 名 | 用途 | ローテーション |
 |---|---|---|
 | `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` | libSQL 接続 | token 失効時・年 1 回 |
 | `AUTH_SESSION_SECRET` | Auth.js session JWT cookie 署名 | 年 1 回 (全セッション失効を伴う) |
 | `AUTH_ACCESS_TOKEN_SECRET` | Publisher access token JWT 署名 | 年 1 回 (短命 access token の再発行を伴う) |
+| `ENCRYPTION_KEK` | 封筒暗号化の KEK (base64 32 byte)。**1 本のみでテナント数に依存しない**。`users.salary` (purpose=`salary`) と `idp_connections.client_secret_enc` (purpose=`idp_secret`) の DEK を wrap して `encryption_keys` へ保存する (security-spec-data-integrity §4.1/§4.3) | 年 1 回。**DEK の re-wrap のみで列の再暗号化は不要** |
 | `RESEND_API_KEY` | メール送信 (SEC9) | 年 1 回 |
-| `SALARY_ENC_KEY` | users.salary の AES-GCM 鍵 (qa-032) | 計画ローテーション時は再暗号化 migration を伴う (runbook 化) |
-| `IDP_SECRET_<tenant_slug>` | テナント別 OIDC client secret (`idp_connections.client_secret_ref` が参照) | テナント IdP 側の更新に追随 |
 | `CRON_HEARTBEAT_URL` | scheduled handler が日次ジョブ完走時に ping する外形監視の heartbeat URL (§5/§9)。URL 自体が事実上の秘匿情報のため wrangler.jsonc の var ではなく secret で投入する | 監視側で再発行したとき |
+
+- **2026-07-28 台帳訂正 (`HarnessHub-x2x9`)**: 本表は旧設計の `SALARY_ENC_KEY` と `IDP_SECRET_<tenant_slug>` を載せ、
+  実装が起動時に必須とする `ENCRYPTION_KEK` を欠いていた。両者はいずれも `ENCRYPTION_KEK` 1 本の封筒暗号化へ統合済みで、
+  実装 (`packages/db/repository/crypto.ts`) にも `apps/hub/src/lib/authz/runtime.ts` にも該当 binding は存在しない。
+  **旧表のまま本番投入すると `ENCRYPTION_KEK` 未投入で Worker が起動時例外になる**ため、実装と §4.5 に合わせて訂正した。
+  テナント IdP の client secret は Workers Secret ではなく `idp_connections.client_secret_enc` へ封筒暗号化で保存する。
 
 - **サイズ予算**: Worker bundle ≤ 3 MiB (gzip, Free 上限) を CI ゲートで計測 (§7)。恒常超過は Workers Paid ($5/月) 移行と C2 再交渉をユーザーへ差し戻す (D1 caveat)。
 - **CPU 予算**: Workers Free は CPU 10ms/呼出。API はポーリング統一 (qa-031) で接続保持なし。cron の集計は chunk 処理 (§5) で 1 呼出の CPU を抑える。恒常超過時は D1 caveat と同じ経路で Paid 移行を再交渉。
@@ -144,6 +152,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | G10 | 共通層 duplicate detector | owner package 外の同名 export / 境界迂回 import に加え、**運用機構 (§3) の owner artifact 実在**と**認可 wrapper を迂回した route handler** を検出 |
 | G11 | Core Web Vitals | main 反映後の定期計測 (PR 単位では Actions 無料枠を圧迫するため) |
 | G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS を gzip 実測し 120 KiB / route 超過で fail (G5 の Worker 予算とは別軸。qa-018 / frontend-spec §8) |
+| G14 | OIDC / owner認可 release contract | tenant別OIDC開始フローと、owner関係roleを含む認可表・tenant分離を名指しで再実行 |
 
 **ゲートが空振りしないための実行順序と前提検査 (2026-07-21 追記)**
 
@@ -152,7 +161,21 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - **Actions 設定台帳の突合**: `scripts/ci/actions-secrets-registry.json` を用途・種類・必須度・利用 workflow の正本とし、`scripts/ci/check-actions-secrets.mjs` が workflow の実参照と双方向で照合する。静的ゲートでは構造 drift を、手動 `--live` では GitHub 上の実投入状況も fail-closed で検査する。
 
 - **`deploy.yml` への分離は行わない (2026-07-21 改訂)**。理由: feat-hub-foundation の acceptance「CI が test→deploy を完走する」は**単一 workflow run 内での連鎖**を判定条件としており、2 workflow に分けると別 run になって構造的に判定不能になる。ユーザー確認により `ci.yml` への統合を確定した。
-- deploy job の内容: production へ drizzle migrate → `wrangler deploy` → post-deploy `GET /health` 確認 → **本番スモークテスト 6 項目** → 失敗時 `wrangler rollback` (直前 version へ)。**常設 staging を経由しない** (§6 / qa-038【5】)。
+- deploy job の内容: 必須設定preflight → productionへdrizzle migrate → `wrangler deploy` →
+  post-deploy `GET /health` → **OIDC start-flow smoke** → **DB/R2本番スモーク6項目** →
+  失敗時`wrangler rollback` (直前versionへ)。**常設stagingを経由しない** (§6 / qa-038【5】)。
+- **deploy preflight (2026-07-30追補)**: GitHub Actionsが未登録値を空文字へ変換する性質を踏まえ、
+  migration前に`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_R2_API_TOKEN` /
+  `CLOUDFLARE_ACCOUNT_ID` / Turso 2件 / `HUB_HEALTH_URL` / `HUB_PUBLIC_URL`の
+  存在を一括確認する。欠落時は設定名だけを出して停止し、secret値は出力しない。
+- **OIDC start-flow smoke (2026-07-30追補)**: HarnessHub tenantのprovider/callback、
+  未登録tenantの404、CSRF cookie/token、native form POST後のGoogle 302、
+  `response_type=code`、identity scope、`state`、`nonce`、PKCE S256を本番URLで確認する。
+  人のGoogle資格情報をCIへ置かないためcallback後の実ログイン/JITは自動化せず、
+  release recordの手動E2E証跡と分ける。
+- **owner認可の名前付きゲート (2026-07-30追補)**: G14は`owner`をDB roleとして扱わず、
+  tenant境界確認後に対象resourceとの関係から合成する既存契約を、全action×role表、
+  非owner拒否、cross-tenant拒否とともに名指しで再実行する。
 - **migrate step の契約 (2026-07-25 / P13 実装確定)**: `packages/db/scripts/migrate-deploy.ts` を `--dry-run` → 本適用の 2 段で呼ぶ。`TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` が空なら step を **exit 1 で止める** (未投入のまま deploy へ進むと「migrate 済み」の緑が意味を失うため)。台帳は drizzle 公式の `__drizzle_migrations` を単一の正とし、`__drizzle_migrations` 不在のみ applied=0 と解釈して他の SQL 例外は再送出する (接続不能を「未適用」と誤読しないため)。適用後件数が journal 件数と一致しない場合は exit 1。
 - **本番スモークテスト (2026-07-25 / P13 実装確定)**: `packages/db/scripts/smoke-production.ts --url <turso> --r2-bucket <name>` が S1 接続 / S2 ULID 単調性 / S3 release 不変性 / S4 R2 往復 / S5 audit chain / S6 export→restore dry-run を検査し、**6 項目すべての ok** と検証データ cleanup 成功を満たさない限り exit≠0。検証で作成した行と R2 オブジェクトは `finally` で必ず削除し、削除失敗自体をスモーク失敗として扱う (本番に検証ゴミを残したまま緑にしない)。
 - デプロイは main merge で全自動 (qa-034 確定)。手動 gate は置かず、post-deploy health + smoke + rollback を防波堤とする。
@@ -162,6 +185,11 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 - **R2 専用アクセスキーは発行しない (2026-07-25 確定)**。`R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ACCOUNT_ID` の 3 件は wrangler 経路へ統一したため台帳から削除した (§4.5 が「Workers binding 利用時は不要」としていた線に実装を寄せた)。
 - **Cloudflare token の最小権限分離 (2026-07-29 / `HarnessHub-bda4`)**: `CLOUDFLARE_API_TOKEN` は Workers deploy / rollback 専用で R2 write を持たせず、`CLOUDFLARE_R2_API_TOKEN` は backup と本番 smoke の R2 往復専用で Workers Scripts を持たせない。Wrangler の `r2 object put/get --remote` は Cloudflare REST API を使い、bucket-scoped の `Workers R2 Storage Bucket Item Write` は S3 互換 API 専用で利用できないため、R2 token は account-scoped の `Workers R2 Storage Write` とする。実環境への投入状態と workflow 実走結果は台帳の `--live` 検査と Actions run を証跡とし、文書だけで達成扱いにはしない。
+- **main反映後の障害記録 (2026-07-30)**: PR #612後の`hub-ci` run
+  `30518334455`は、R2専用token未登録によりS4のWrangler object putで失敗した。
+  S1〜S3とcleanupは成功し、Worker rollbackも成功した。追補preflightは同じ欠落を
+  migration/deploy前に検出するが、token発行・GitHub投入・main完走の外部証跡が揃うまで
+  `HarnessHub-bda4`を完了扱いにしない。
 - GitHub Actions 無料枠 (private repo 2,000 分/月) は §11 の予算表で管理。
 
 ## 8. ドメイン・DNS・TLS・メール (qa-034 確定: 既存保有ドメイン流用)

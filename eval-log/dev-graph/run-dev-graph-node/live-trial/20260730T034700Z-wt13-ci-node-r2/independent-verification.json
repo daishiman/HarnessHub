@@ -1,0 +1,22 @@
+{
+  "evaluator": "fresh-agent-eval_c02_live_trial",
+  "result": "FAIL",
+  "blockers": [
+    "V1 and V2 were completed in one progress update instead of immediately and separately after each verification",
+    "the two update JSON files omitted body and therefore did not prove update bodies were read from JSON"
+  ],
+  "observations": {
+    "canonical_paths": {
+      "result": "PASS",
+      "evidence": "graph revision 7 contains all five artifact kinds at canonical paths"
+    },
+    "consecutive_update_integrity": {
+      "result": "PASS",
+      "evidence": "issue and architecture updates returned updated and retained matching kind/path, but the trial input-provenance contract was not met"
+    },
+    "macro_feature_guard": {
+      "result": "PASS",
+      "evidence": "direct feature registration was rejected with graph revision and features file count unchanged"
+    }
+  }
+}

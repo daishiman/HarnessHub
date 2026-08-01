@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-29T06:15:35.564276Z"
+updated_at: "2026-07-30T04:40:19Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"}
-source_lineage: {"imported_at":"2026-07-26T06:10:00Z","origin_kind":"system-spec-harness","source_digest":"a74473d62712ab66f503f345e46b8f8e74cae30574b91aa05d1d3f0d4c06445e","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-30T04:40:19Z","origin_kind":"system-spec-harness","source_digest":"7d41dd5eec8e690b938df18bd37eff64a493355fd8aab2dacec182319dc69d8f","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `e93554107124ea45…`)
+- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `7d41dd5eec8e690b…`)
 - [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `0329c87bf2e5be42…`)
 
 - confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 再取込日時: 2026-07-26T06:10:00Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-07-30T04:40:19Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -105,9 +105,21 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 **差分追記 (2026-07-26 / HarnessHub-b7ng)**:
 
-- migration → 認証 Secret/環境設定確認 → Worker deploy → 2 tenant OIDC / Device Flow smoke の順で rollout する。
+- migration → 認証 Secret/環境設定確認 → Worker deploy → OIDC / Device Flow smoke の順で rollout する。
 - migration は旧 publisher token を移送しないため、利用者告知と Device Flow 再認証を release 条件に含める。
 - rollback は既存どおり DB を前進させたまま Worker code を戻す。
+
+**差分追記 (2026-07-30 / `SYS-AUTH-TENANCY-P13` / qa-099)**:
+
+- productionの公開設定は`AUTH_CANONICAL_ORIGIN`、`AUTH_ALLOWED_ORIGINS`、
+  `AUTH_DEVICE_VERIFICATION_URI`を`wrangler.jsonc`で管理する。
+- 必須Worker Secret名は`AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、
+  `TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`、`ENCRYPTION_KEK`の5件。
+  Google client secretやテナント別`IDP_SECRET_*`を追加しない。
+- 現行rolloutの外部受入はGoogle/HarnessHub 1テナント。複数テナント分離試験を維持し、
+  「本番1件」と「製品が単一テナント」を混同しない。
+- R1〜R5はprovider/CSRF/sign-in、JIT、Workspace所属、Device Flow、
+  refresh再利用失効、session revocationまで本番実測し、release recordへ記録する。
 
 **差分追記 (2026-07-28 / `HarnessHub-vns9`)** — 詳細正本は [docs/infrastructure-spec.md](../docs/infrastructure-spec.md) §7 / §10。
 
@@ -119,6 +131,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **heartbeat の責務分離**: Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使う。`CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` を共用すると、一方の成功が他方の失敗を隠すため禁止する。
 - **失敗検知の時間境界**: backup 専用 `hub-backup-daily` は `period=86400` 秒 / `grace=3600` 秒とし、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化させる。heartbeat は全 backup step 成功後だけ送る。
 - **fail-closed と完了境界**: `BACKUP_HEARTBEAT_URL` は required。未投入なら workflow の前提確認で停止する。repository 内実装だけで適用済みと数えず、Better Stack 資源、GitHub secret、main の成功 run、着信実測が揃うまで `HarnessHub-dbx6` は継続する。
+
+**配信経路・依存版の差分追記 (2026-07-30 / `HarnessHub-e2u`)**:
+
+- Claude Code marketplace の候補経路に、`url` / `path` と任意の `ref` / `sha` を
+  持つ公式 `git-subdir` source を加える。旧 `github` source の `path` 無視とは
+  別契約として扱い、macOS / Windows の install、component inventory、skill 実行が
+  揃うまで採用 decision を確定しない。追跡は `HarnessHub-n2c0`。
+- Wrangler は project-local dependency と frozen lockfile を CI / deploy の固定点にする。
+  台帳上の現行確認値 4.115.0 は自動更新せず、依存更新 PR で build / dry-run /
+  deploy 関連ゲートを通してから lockfile を更新する。
+- Next.js 16.2.12、Drizzle stable 0.45.2 / v1 rc.4 は出典鮮度と採用判断の
+  境界を明確にする記録であり、本変更では runtime dependency、deploy unit、
+  DB schema、外部 API を変更しない。
 
 ## Risks and verification
 
@@ -141,3 +166,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **permission 選択**: Wrangler の `r2 object ... --remote` は Cloudflare REST API 経路のため、S3 互換 API 専用の bucket-scoped item 権限ではなく account-scoped の `Workers R2 Storage Write` を使う。account scope の広さは、Worker 改変権限との分離と workflow 利用箇所の限定で補う。
 - **完了境界**: repository の静的ゲートは token の相互利用を拒否する。Cloudflare token 発行、GitHub secret 投入、deploy token の R2 write 拒否、R2 token での backup / production smoke 完走は外部証跡が揃うまで未完了とする。
 - **非影響範囲**: 外部 API、DB schema、認証認可モデル、UI、Cloudflare Worker の deploy unit は変更しない。
+
+**deploy検証追補 (2026-07-30 / `SYS-AUTH-TENANCY-P13`)**
+
+- pipeline順序を`required settings preflight → migration → deploy → health →
+  OIDC start-flow smoke → DB/R2 smoke`に固定する。
+- preflight失敗はdeploy前失敗なのでrollback対象なし。deploy成功後のhealth/OIDC/DB-R2失敗は
+  直前Workerへrollbackし、DBはexpand-onlyのため前進状態を維持する。
+- OIDC smokeは秘密値を保持せず、tenant provider・canonical callback・未知tenant拒否・
+  CSRF・Google 302・state/nonce/PKCEを検査する。Google callback後の実ログインは
+  人の資格情報をCIへ置かず、運用E2E証跡で扱う。
+- owner認可は既存の`tenant境界 → base role → resource owner関係合成`を変更せず、
+  G14で全action×role・非owner・cross-tenantを名指し再検証する。
+- PR #612後のrun `30518334455`はR2専用token未登録で失敗したが自動rollbackは成功した。
+  repository側の再発防止と、Cloudflare所有者による最小権限token発行は別の信頼境界として扱う。

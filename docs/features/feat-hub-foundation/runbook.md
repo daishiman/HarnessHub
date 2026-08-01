@@ -44,7 +44,7 @@ gh secret set TURSO_DATABASE_URL        # migration / 本番 smoke / 日次 expo
 gh secret set TURSO_AUTH_TOKEN          # 同上の DB 接続 token（Platform API token とは別物）
 gh secret set BACKUP_HEARTBEAT_URL      # 必須。backup 専用 heartbeat URL
 gh variable set HUB_HEALTH_URL --body "https://hub.<domain>/health"
-gh variable set HUB_PUBLIC_URL --body "https://hub.<domain>"   # cwv.yml の計測対象
+gh variable set HUB_PUBLIC_URL --body "https://hub.<domain>"   # ci.yml の OIDC smoke / cwv.yml の計測対象
 
 # 3. Worker secret（wrangler 経由。コード・DB に平文を置かない）
 cd apps/hub

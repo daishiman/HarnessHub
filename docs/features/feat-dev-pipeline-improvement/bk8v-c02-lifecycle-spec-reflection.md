@@ -95,3 +95,12 @@ PR 更新直前に `scripts/build-spec-reflection-receipt.py --spec-impact refle
 - repository CI parity は PASS 123 / WARN 4 / FAIL 0。4 WARN は段階導入中の既存
   advisory であり、本差分の blocking failure ではない。`py_compile`、文書行数・配置、
   generation lineage、task projection、`git diff --check` も通過した。
+
+## 2026-08-01 main 競合解消の再受領
+
+- 最新 `main` `c793f9c` の `qa-102`、CI-local parity、lineage を保持し、C02 の既存項目へ
+  `HarnessHub-j66m` の統合 trace を重ねた。製品 runtime 契約の変更はない。
+- focused pytest 22 passed、Dev Graph plugin pytest 730 passed / 2 skipped、graph schema
+  violations 0、live-trial planner reuse 3 / run 0 / defer 0 を確認した。
+- repository CI parity は PASS 136 / WARN 4 / FAIL 0。文書は全件300行以内、artifact 配置、
+  exact P01〜P13、generation lineage、task projection、Python compile、差分検査も通過した。

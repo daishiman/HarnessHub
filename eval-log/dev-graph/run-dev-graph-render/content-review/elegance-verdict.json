@@ -2,22 +2,31 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-render",
-    "skill_md_sha256": "e31e1245beaec6ad6b62b0079d0108db03532c40a82ea071bf039eefca4eebf6"
+    "skill_md_sha256": "128c9ae12517217a4530d64750a1d2f276a71a28082215805501de086f761369"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "content-review-out1-clarification-20260721",
-  "reviewed_at": "2026-07-21",
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
+  "reviewer": "focused-content-review-f5e76715",
+  "reviewed_at": "2026-07-30T05:47:27Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1"],
+    "criteria_evaluated": [
+      "IN1",
+      "OUT1"
+    ],
     "positive_feedback": [
-      "C1 矛盾なし: 改訂後 OUT1 (frontmatter L50) と `## Criteria acceptance` OUT1 (L133) がともに『総数Yのみ receipt と一致・done数Xは一致を求めない』で一致し、旧文言にあった二読可能性が解消された。完了チェックリストの『ブラウザ live trial で追加 runtime なしに SVG と feature X/Y progress が表示される』(L97) は表示の有無だけを条件化しており X の一致を要求しないため改訂と衝突しない。Purpose の『receipt の counts/digests が実体に一致する』(L60) も node/edge/feature-progress counts と input/output digest を指し、receipt 照合が総数閉包である点と両立する。",
-      "C2 漏れなし: 改訂は criterion を弱めるだけでなく、なぜ X を一致条件から外すかの根拠 (register-package.py が登録時に13子すべてを active 固定、status 遷移は graph_digest_after を stale 化) を acceptance 節に明記しており、後続読者が『検査の手抜き』と誤読する余地を塞いでいる。IN1/OUT1 の2 criteria はいずれも acceptance 節に対応記述を持ち未受入条件化の criterion はない。",
-      "C3 規約整合: criteria は {id, loop_scope, text, verify_by} の構造を保ち、OUT1 は loop_scope=outer / verify_by=live-trial のまま。name=dir 名=prefix run の一致、allowed-tools に Write 非付与 (read-only graph 原則) も改訂で崩れていない。",
-      "C4 依存関係整合: 改訂文言が実装と一致することを実コードで確認した。render-graph-html.py L118 `len(child_nodes) != receipt[\"applied_count\"]` は子 node の総数だけを照合し、done 数は L173-174 で graph から導出するのみで receipt と突合しない。L123 の `receipt[\"graph_digest_after\"] != f\"sha256:{graph_sha}\"` が status 遷移後の receipt 再利用を落とすため acceptance 節の根拠記述も正しい。register-package.py L324-326 の `projected[\"status\"] = \"active\"` 強制も確認済み。既存テスト test_render_scope_containment_and_registration_receipt (test_sync_render_schedule_v2.py) は done=4/total=13 かつ applied_count=13 で exit 0 を期待しており、改訂後文言と同じ弱い読みを固定している。script_refs 3件・schema_refs 1件・prompts R1-R3 は全て実在し、argument-hint の CLI flag 集合も render-graph-html.py L284-288 の argparse 定義と一致する。"
+      "`registration` と `registration_verification` を分離したことで、receipt 不在時の `registration=null` という既存の falsy 契約を維持しながら、新しい明示状態を additive に追加している。truthiness に依存する既存 caller を壊さず、真空合格の曖昧さだけを除去する設計になっている。",
+      "13 子を持つ同一 fixture を receipt なしで描画する負例が、stdout・visible HTML・render-metadata の `not_performed` と source_digest 非出現を同時に固定している。課題の検出原因だった『件数が偶然一致しただけ』を直接回帰テスト化している。",
+      "HTML の verification banner は、人が読める大文字の状態・説明文と、機械が読める `data-status`・CSS class を同一 artifact に持ち、手動確認と自動検査の二重化を避けている。"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -25,5 +34,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "OUT1 文言明確化 (feature 子task進捗 X/Y のうち総数 Y のみを registration receipt と一致させ、done 数 X は登録後の status 遷移で変動するため一致を求めない旨の明記) に伴う incremental profile 再評価。exhaustive の30思考法は使用していない。SKILL.md を実読し、(a)矛盾なし (b)漏れなし (c)規約整合 (d)依存関係整合 (e)rubric high severity 0 の5軸で判定。改訂は到達不能だった強い読みを排し実装 (render-graph-html.py の総数のみ照合) と criterion を一致させる方向で、4条件のいずれも破壊していない。skill_md_sha256 は shasum -a 256 の実測値。findings 0件のため incremental 規定に従い同一評価結果を互換2 verdict へ投影。PASS。"
+  "notes": "incremental focused combined review。fresh read-only evaluator session f5e76715-04b9-4aec-a248-f8fba17eee04 が C1 矛盾なし、C2 漏れなし、C3 規約整合、C4 依存・実装整合、rubric high severity 0 の 5 軸を 1 context で評価した。exhaustive 30 思考法は未使用。IN1/OUT1 とも PASS、findings 0 件。"
 }

@@ -136,3 +136,19 @@ desktop Linux 向けのチェックリストは**作成しない** (baseline §6
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-stage0-distribution-gate`（世代非依存形式。current pointer から現行世代を解決する。generation path 直書きは再計画で stale になるため使わない。contract §2.3）
 - Required evidence: quality_constraints 8 件と acceptance 3 件の全件に対応する実機検証ケース (macOS/Windows 別チェックリストを含む) が記載されていること → §2・§3・§5・§6 で確認可能
 - rollback trigger: T-Q4 の changelog 再照合で marketplace 仕様の変更が判明した場合、該当 test ID の判定条件を修正し P05 以降を再実行する
+
+## 8. `git-subdir` 再検証ケース (2026-07-30 addendum)
+
+旧 H7 の証跡は当時の `github` source に対する履歴として保持する。現行の
+`git-subdir` 契約は後続 issue `HarnessHub-n2c0` で次の追加ケースを順番どおりに実行する。
+
+| ID | 検証 | 合格条件 |
+|---|---|---|
+| T-H7R-01 | 公式文書・changelog・CLI 版の snapshot | `url` / `path` と `ref` または `sha` の実行時契約が記録される |
+| T-H7R-02 | macOS / Windows で `git-subdir` install | 両 OS で隔離した設定領域へ install できる |
+| T-H7R-03 | `plugin details` の component inventory | 両 OS で Skills が 1 件以上列挙される |
+| T-H7R-04 | 実 skill の起動 | fixture が定める期待出力を返す |
+| T-H7R-05 | 独立性と cleanup | SSH 書換え・global Git 設定なしで成功し、試験後に隔離領域を撤去できる |
+
+T-H7R-01〜05 のいずれかが未実行または不合格なら A1〜A3 を成立扱いにせず、
+H7 は fail-closed のままとする。

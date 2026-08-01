@@ -13,6 +13,7 @@
 #   secrets.TURSO_DATABASE_URL      migration / 本番 smoke の接続先 URL
 #   secrets.TURSO_AUTH_TOKEN        migration / 本番 smoke の DB 認証トークン
 #   vars.HUB_HEALTH_URL            デプロイ後の /health 疎通確認先 (未設定なら疎通確認が exit 1)
+#   vars.HUB_PUBLIC_URL            デプロイ後の OIDC start-flow smoke の公開 origin
 name: hub-ci
 
 on:
@@ -131,6 +132,12 @@ jobs:
           node scripts/ci/check-tenant-isolation-gate.mjs --json artifacts/tenant-isolation-gate.json
           node scripts/ci/check-required-package-script.mjs apps/hub/package.json test:tenant-isolation
           pnpm --filter @harness-hub/hub run test:tenant-isolation
+      # G4 全体に含まれるだけでは test の移動・skip で契約が無言で消え得る。Google OIDC の
+      # start-flow と「owner は DB role ではなく資源との関係から合成する」認可表を名指しで再実行する。
+      - name: G14 OIDC / owner authorization contract
+        run: |
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json test:auth-release-contract
+          pnpm --filter @harness-hub/hub run test:auth-release-contract
       - name: G6 secret scan (packages/inspection を CI からも呼ぶ / qa-038【2】)
         run: |
           node scripts/ci/check-required-package-script.mjs packages/inspection/package.json scan:secrets
@@ -190,6 +197,32 @@ jobs:
           cache: pnpm
       - name: install (frozen lockfile)
         run: pnpm install --frozen-lockfile
+      # GitHub Actions は未登録の secret / variable を空文字にする。migration や deploy を始めてから
+      # 欠落へ気付くと、本番を前進させた後に失敗するため、依存する設定を最初に名前だけ検査する。
+      - name: production deploy preflight (required secrets / variables)
+        id: preflight
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_R2_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          HUB_HEALTH_URL: ${{ vars.HUB_HEALTH_URL }}
+          HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
+        run: |
+          set -euo pipefail
+          missing=()
+          for name in \
+            CLOUDFLARE_API_TOKEN CLOUDFLARE_R2_API_TOKEN CLOUDFLARE_ACCOUNT_ID \
+            TURSO_DATABASE_URL TURSO_AUTH_TOKEN HUB_HEALTH_URL HUB_PUBLIC_URL; do
+            if [ -z "${!name:-}" ]; then missing+=("$name"); fi
+          done
+          if [ "${#missing[@]}" -ne 0 ]; then
+            echo "::error::production deploy の必須設定が未登録です: ${missing[*]}"
+            exit 1
+          fi
+          echo "production deploy preflight: required settings are present"
       # qa-038【5】: 常設 staging を置かず、deploy 直前に CI が production Turso へ migration を適用する
       # (手動適用は採らない)。Worker が先に出ると新コードが未作成の表を参照して落ちるため、順序は
       # 「migration → deploy」で固定する。secret 欠落は「適用していないのに成功」を意味するので中止する。
@@ -223,9 +256,18 @@ jobs:
           code=$(curl -s -o /tmp/health.json -w "%{http_code}" "$url")
           echo "health: $code"; cat /tmp/health.json
           [ "$code" = "200" ]
+      # Google 資格情報を CI に保存せず、tenant provider → CSRF → native form POST →
+      # Google authorization redirect (state / nonce / PKCE) までを本番 URL で確認する。
+      - name: 本番 OIDC start-flow smoke (tenant / CSRF / Google redirect)
+        id: oidc_smoke
+        run: |
+          node apps/hub/scripts/smoke-production-oidc.mjs \
+            --origin "$HUB_PUBLIC_URL" --tenant harness-hub
+        env:
+          HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
       # P13 スモークテスト 6 項目 (DB 接続 / ULID PK / releases immutable / R2 put-get /
       # audit hash chain / 日次 export dry-run) を毎デプロイ再実行する。専用テナントは検査後に自動削除される。
-      - name: 本番スモークテスト (P13 受入条件 6 項目)
+      - name: 本番 DB / R2 スモークテスト (P13 受入条件 6 項目)
         id: smoke
         run: |
           pnpm --filter @harness-hub/db exec tsx scripts/smoke-production.ts \
@@ -247,13 +289,15 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PREFLIGHT_OUTCOME: ${{ steps.preflight.outcome }}
           MIGRATE_OUTCOME: ${{ steps.migrate.outcome }}
           DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
           HEALTH_OUTCOME: ${{ steps.health.outcome }}
+          OIDC_SMOKE_OUTCOME: ${{ steps.oidc_smoke.outcome }}
           SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
         run: |
           set -euo pipefail
-          echo "migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} smoke=${SMOKE_OUTCOME}"
+          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME}"
           echo "DB migration は expand-only のため自動では巻き戻さない (巻き戻しは実データ喪失を伴う手動判断)"
           if [ "${DEPLOY_OUTCOME}" != "success" ]; then
             echo "wrangler deploy が未成功 (${DEPLOY_OUTCOME}) = 本番は旧 Worker のまま。戻す対象なし"

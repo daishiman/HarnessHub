@@ -4,7 +4,7 @@
 # purpose: 隔離 claude セッションを tmux 上で起動し READY まで待つ (session UUID 固定で transcript を決定的に引けるようにする)。
 # inputs:
 #   - argv: <session> <cwd> --run-id ID [--model M] [--session-id UUID] [--target-skill plugin:skill] [--self-test]
-#   - env: BOOT_TIMEOUT(90) BOOT_GRACE(3) — テスト高速化用。通常は触らない
+#   - env: BOOT_TIMEOUT(90) BOOT_GRACE(3)、hook routing 変数 (tmux stale 値を session 単位で上書き)
 # outputs:
 #   - stdout: "READY: <session> (Ns) MODEL:<model|default> OWNER_PID:<pid> SESSION_ID:<uuid>" / BOOT_FAIL / TIMEOUT
 #   - exit: 0=READY / 1=BOOT_FAIL・TIMEOUT / 2=usage・denylist / 3=BLOCKED (tmux 不在)
@@ -58,6 +58,7 @@ _BYPASS_CONFIRM_MARKERS = (
 # (`*sh` は ssh 等を誤爆)。blacklist 外 shell (tcsh/ksh/nu/pwsh) では BOOT_FAIL も READY
 # 偽陽性 guard も無効 → TIMEOUT へ縮退 (安全側)。
 _SHELL_BLACKLIST = {"zsh", "bash", "sh", "fish", "dash", ""}
+_SESSION_SCOPED_ENV = ("SYSTEM_SPEC_AUDIT_FORK_LEDGER",)
 
 
 def _load_sibling(stem: str):
@@ -286,6 +287,9 @@ def boot(backend, session: str, run_id: str, cwd: str, model: str, session_id: s
         command_argv=build_claude_argv(session_id, model, plugin_dir),
         run_id=run_id,
         owner_pid=effective_owner_pid,
+        environment_overrides={
+            name: os.environ.get(name, "") for name in _SESSION_SCOPED_ENV
+        },
     )
     bypass_confirmed = False
     for i in range(1, timeout + 1):

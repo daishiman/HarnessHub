@@ -46,6 +46,12 @@ serves_goals: [G1, G2, G5]
 
 【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
+### qa-100 (横断追補: web, desktop-windows, desktop-macos)
+
+**質問**: qa-089 の live-trial 証拠契約を受領する criteria-test は、scenario_contract が欠落した旧形式の PASS をどう扱い、何を照合して初めて合格にしますか?
+
+**回答**: `verify_by=live-trial` は正準 positive scenario と非省略の `scenario_contract` を必須とし、legacy schema 上で field が optional でも欠落を不合格にする。scenario ID、required observations と observed の同数・同順、`unobserved=[]`、実行引数、宣言済み task 契約、run 内に包含された evidence ref の実在を受領側で再照合する。旧受領書は field や digest の手編集で追認せず、現行 scenario と挙動閉包で fresh live-trial を実走して更新する。影響は repository の開発品質ゲートに限定し、schedule skill 本体と製品 API・DB・認証認可・UI・deploy unit は変更しない。判断と検証は `docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md` を正とする。
+
 ## 実装フィードバック (2026-07-30 / HarnessHub-ory6)
 
 qa-076 / qa-081 の「境界値・異常系を task spec と機械ゲートで再現可能にする」
@@ -65,6 +71,22 @@ qa-076 / qa-081 の「境界値・異常系を task spec と機械ゲートで�
 この追記は既存 QA の実装フィードバックであり、確定回答、製品 API、DB schema、
 認証認可、UI、Cloudflare deploy unit は変更しない。内部 validation contract
 （検証契約＝不正な入力をどこで拒否するか）の設計影響だけを反映する。
+
+## 実装フィードバック (2026-07-30 / HarnessHub-35ai)
+
+qa-076 / qa-089 の「異常系を機械ゲートで再現し、証拠の由来を束縛する」
+確定要件を、Dev Graph renderer の登録検証表示へ具体化した。
+
+- `--registration-receipt` があり、件数・node ID・graph digest・source digest の
+  検証を通過した場合だけ `registration_verification.status=verified` とする。
+- receipt が無い探索表示は `not_performed` とし、子 task が偶然 13 件でも
+  登録成功の証拠として扱わない。
+- 判定は CLI receipt、HTML の可視 banner、埋込み `render-metadata` の
+  3 箇所で同じ状態を返し、正例と receipt 無しの負例を回帰テストで固定する。
+
+この追記は確定回答を変えず、repository 内の開発品質ゲートを具体化する
+実装フィードバックである。製品 API、DB schema、認証認可、UI、
+Cloudflare deploy unit は変更しない。
 
 ## 上流指針 (doctrine anchor)
 

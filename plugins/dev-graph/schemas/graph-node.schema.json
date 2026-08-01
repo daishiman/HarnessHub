@@ -85,6 +85,9 @@
       "uniqueItems": true,
       "description": "architecture subtype または specification の conditional template。architecture は1種以上、非該当kindは空配列を許す"
     },
+    "layer": {
+      "$ref": "#/$defs/documentLayer"
+    },
     "kind": {
       "type": "string",
       "deprecated": true,
@@ -1034,6 +1037,27 @@
       "if": {
         "properties": {
           "artifact_kind": {
+            "const": "document"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "layer"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "layer"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_kind": {
             "const": "feature"
           }
         }
@@ -1531,7 +1555,12 @@
         "feature",
         "document"
       ]
+    },
+    "documentLayer": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "docs 文書の役割を表す小文字 kebab-case。固定 enum にはせず役割追加を許容するが、許容形式の正本は本定義だけとする。artifact_kind=document では必須、他 kind では使用しない"
     }
   }
 }
-

@@ -12,11 +12,11 @@ iteration: null
 title: "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている"
 owners: ["daishiman"]
 created_at: "2026-07-28T07:20:00Z"
-updated_at: "2026-07-28T08:25:00Z"
-status: "draft"
+updated_at: "2026-07-30T02:36:43Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-worktree-main-ref-desync-20260728","issue-desync-guard-bundle-untracked-20260728"]
-resource_scope: ["scripts/run-ci-checks.sh",".github/workflows"]
+resource_scope: [".github/workflows/governance-check.yml","Makefile","scripts/run-ci-checks.sh","scripts/lint-ci-local-check-parity.py","scripts/ci-local-check-allowlist.json","tests/scripts-root/test_root__lint_ci_local_check_parity.py","issues/sys-local-ci-gate-drift-20260728.md","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p09.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md",".dev-graph/state/graph.json"]
 purpose: "scripts/run-ci-checks.sh は冒頭に「CI と同等の機械チェックをローカルで一括実行する」と宣言し、pre-push hook はその結果を「All CI-equivalent checks passed」と表示する。しかし .github/workflows/*.yml が実行する scripts/*.py と run-ci-checks.sh が実行するものを機械的に突合すると、CI にあってローカルに無いものが 19 件ある。同等性は誰にも検査されていない。結果として開発者は「pre-push が緑なら CI も緑」という誤った事前確率を持ち、実際には CI で初めて落ちる。本リポジトリでは同型の事故が既に 2 回起きており (2026-07-02 / 2026-07-28)、いずれも当該 1〜2 件を手で追加して終わっている。"
 goal: "CI が実行する検査集合とローカルゲートが実行する検査集合の差を機械検査し、意図的な除外だけを理由付き allowlist で許す状態にして、「pre-push 緑ならば CI 緑」を検査可能な命題にする"
 scope_in: [".github/workflows/*.yml とscripts/run-ci-checks.sh の実行検査集合を突合する meta-lint の設計と実装","ローカル非実行を意図する検査の理由付き allowlist の定義","build 系 (作業ツリーへ書き込みうる) と読み取り専用検査の切り分け、および run-ci-checks.sh の宣言文の修正"]
@@ -38,12 +38,12 @@ classification_reason: "CI とローカルゲートの被覆差というリポ�
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-local-ci-gate-drift-20260728.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-ml57","linked_at":"2026-07-30T02:24:26Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-local-ci-gate-drift-20260728","linked_at":"2026-07-30T02:36:43Z","merge_commit_sha":null,"merged_at":null,"pr_number":608,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/608"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-30T02:36:43Z","evidence_refs":["scripts/lint-ci-local-check-parity.py","scripts/ci-local-check-allowlist.json","tests/scripts-root/test_root__lint_ci_local_check_parity.py","docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-07-30T02:36:43Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-28T07:20:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -182,3 +182,21 @@ CI にあってローカルゲートに無いもの:
 **これは当該 4 件の再発しか防がない。**残り 15 件は未対応であり、さらに上記のとおり残り 15 件の「PASS」判定自体が CI と同じ引数形での確認ではない。上記の機械検査が入るまで「pre-push 緑 = CI 緑」は成立しない。
 
 なお、この 3 件は**同じ PR の作業中に連続して発生**している。1 件ずつ手で足す運用が追いついていないことの直接の証拠である。3 度とも「push → CI 赤 → 1 件足す → push」を繰り返しており、1 サイクルあたり CI の実行時間 (verify で約 4 分) を消費している。
+
+## 実装結果 (2026-07-30)
+
+`scripts/lint-ci-local-check-parity.py` を追加し、CI blocking invocation が
+local hard gate または理由付き exact allowlist に含まれることを set membership で
+検査するようにした。比較 key は script path と正規化済み引数であり、
+件数・比率や script 名だけでは合格にしない。
+
+外部資格情報、working-tree write、CI non-blocking のため local で再実行しないものは
+`scripts/ci-local-check-allowlist.json` に exact invocation と理由を記録する。
+未被覆、理由欠落、stale allowlist、解析不能な実行位置は fail-closed で拒否する。
+meta-lint 自体は governance CI、`make lint`、pre-push の 3 入口へ結線した。
+
+仕様影響は repository development tooling に限定される。system-spec `qa-088`、
+architecture、feature、P09/P12/P13 task spec への反映と中学生向け・技術者向け説明は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+を正とする。既存の schedule eval-log 2 ファイルは本 issue の実装差分ではないため
+commit scope から除外する。

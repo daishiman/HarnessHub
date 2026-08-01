@@ -36,6 +36,7 @@ PLUGIN = Path(__file__).resolve().parents[1]
 BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 VALIDATOR = PLUGIN / "scripts" / "validate-graph-schema.py"
 CONFIG_VALIDATOR = PLUGIN / "scripts" / "validate-repo-config.py"
+SOURCE_DIGEST_VALIDATOR = PLUGIN / "scripts" / "validate-source-digest.py"
 
 
 def _load_builder():
@@ -254,6 +255,34 @@ def test_requirements_fixture_does_not_preseed_c04_outputs(built: dict[str, Path
     # ファイルが 1 件でもあれば実走前から成果物が置かれていることになる。
     assert [path for path in (out / "eval-log").rglob("*") if path.is_file()] == []
     assert baseline["subject_outputs_absent_at_baseline"]
+
+
+def test_requirements_fixture_scope_closure_passes_source_digest(
+    built: dict[str, Path],
+) -> None:
+    """C04 が feature の architecture closure を除外せず gate できる。"""
+    out = built["requirements"]
+    graph = json.loads(
+        (out / ".dev-graph" / "state" / "graph.json").read_text(encoding="utf-8")
+    )
+    registered = ",".join(node["graph_node_id"] for node in graph["nodes"])
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(SOURCE_DIGEST_VALIDATOR),
+            "--repo-root",
+            str(out),
+            "--registered",
+            registered,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    report = json.loads(proc.stdout)
+    assert report["registered_mismatch"] == []
+    assert report["checked"] == len(graph["nodes"])
 
 
 def test_status_fixture_exposes_a_dependency_edge(built: dict[str, Path]) -> None:

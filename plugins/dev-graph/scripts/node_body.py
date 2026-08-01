@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +22,63 @@ BODY_SOURCE_FROM_INPUT = "from_input"
 BODY_SOURCE_PRESERVED = "preserved"
 BODY_SOURCE_TEMPLATE = "template"
 BODY_SOURCE_REGENERATED = "regenerated"
+FRONTMATTER_SCALAR = re.compile(
+    r"^([A-Za-z_][A-Za-z0-9_-]*):(?:\s*(.*))?$"
+)
+
+
+def _frontmatter_scalar(path: Path, key: str) -> Any | None:
+    """Read one legacy frontmatter scalar without treating Markdown as node authority."""
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        raise ContractError(f"existing artifact has no frontmatter: {path}")
+    marker = text.find("\n---\n", 4)
+    if marker < 0:
+        raise ContractError(f"existing artifact frontmatter is not terminated: {path}")
+
+    matches: list[Any] = []
+    for line in text[4:marker].splitlines():
+        match = FRONTMATTER_SCALAR.match(line)
+        if not match or match.group(1) != key:
+            continue
+        raw = (match.group(2) or "").strip()
+        try:
+            value = json.loads(raw)
+        except json.JSONDecodeError:
+            if (
+                len(raw) >= 2
+                and raw[0] == raw[-1]
+                and raw[0] in {"'", '"'}
+            ):
+                value = raw[1:-1]
+            else:
+                value = raw
+        matches.append(value)
+    if len(matches) > 1:
+        raise ContractError(f"existing artifact has duplicate {key} frontmatter: {path}")
+    return matches[0] if matches else None
+
+
+def restore_document_layer(node: dict[str, Any], artifact: Path) -> None:
+    """Migrate a legacy document layer from its artifact into the canonical node.
+
+    Before HarnessHub-dqca, document artifacts carried ``layer`` but graph nodes did
+    not.  A C02 rewrite therefore rendered frontmatter only from the node and erased
+    the value.  Existing artifacts are the one-time migration source; new documents
+    must declare the layer explicitly instead of receiving an ambiguous default.
+    """
+    if node.get("artifact_kind") != "document" or "layer" in node:
+        return
+    if not artifact.is_file():
+        raise ContractError(
+            "new document requires layer; declare a lowercase kebab-case role"
+        )
+    layer = _frontmatter_scalar(artifact, "layer")
+    if layer is None:
+        raise ContractError(
+            f"existing document has no layer frontmatter to preserve: {artifact}"
+        )
+    node["layer"] = layer
 
 
 def _body_from_artifact(path: Path) -> str:

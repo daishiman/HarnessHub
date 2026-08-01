@@ -1,0 +1,27 @@
+{
+  "evaluator": "fresh-agent-eval_c01_live_trial",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "self_contained_svg": {
+      "result": "PASS",
+      "evidence": "the generated HTML contains inline CSS, inline JavaScript, and SVG with no external runtime reference"
+    },
+    "receipt_denominator": {
+      "result": "PASS",
+      "evidence": "render metadata records applied_count=13 and expected_count=13 and displays total 13"
+    },
+    "independent_numerator": {
+      "result": "PASS",
+      "evidence": "four child tasks are done in the graph and the rendered feature displays 4/13"
+    },
+    "source_digest_binding": {
+      "result": "PASS",
+      "evidence": "render metadata retains receipt source digest sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807"
+    },
+    "goal_seek_execution": {
+      "result": "PASS",
+      "evidence": "goal-seek evidence is append-only and the declared Agent fork independently passed all five checks"
+    }
+  }
+}

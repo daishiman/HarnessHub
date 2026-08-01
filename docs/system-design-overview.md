@@ -18,7 +18,7 @@ graph LR
         WR["wrangler CLI<br/>(WebApp deploy 実行)"]
     end
     subgraph 顧客側["顧客 IdP / Cloudflare (Hub 外部境界)"]
-        IDP["顧客 IdP<br/>(Google Workspace /<br/>Entra ID)"]
+        IDP["顧客 IdP<br/>(現行: Google Workspace)"]
         CFA["顧客 Cloudflare<br/>(公開 WebApp)"]
     end
     subgraph Hub["Hub (Cloudflare Workers 1 個 / D1 決定)"]

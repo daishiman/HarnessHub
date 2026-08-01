@@ -143,7 +143,7 @@ def _write_system_spec(out: Path) -> None:
     )
 
 
-def _architecture_node() -> dict:
+def _architecture_node(spec_digest_hex: str) -> dict:
     """feature.architecture_refs の参照先となる architecture node。
 
     C11 domain_findings は architecture_refs を graph node id として解決するため
@@ -163,6 +163,17 @@ def _architecture_node() -> dict:
             "evaluated_digest": hashlib.sha256(ARCHITECTURE_ID.encode("utf-8")).hexdigest(),
             "evaluator": "build_live_trial_fixture",
             "evidence_ref": ARCHITECTURE_REL,
+        },
+        # C04 の scope closure は feature.architecture_refs も source-digest gate
+        # へ渡す。manual/null lineage のままだと runner が architecture を除外して
+        # handoff を出せてしまうため、feature と同じ確定 system-spec へ束縛する。
+        "source_lineage": {
+            "imported_at": FIXED_TS,
+            "origin_kind": "system-spec-harness",
+            "source_digest": spec_digest_hex,
+            "source_path": SYSTEM_SPEC_REQUIREMENTS_REL,
+            "source_plugin": "system-spec-harness",
+            "source_version": "0.1.0",
         },
         "classification_candidates": [
             {"artifact_kind": "architecture", "candidate_path": ARCHITECTURE_REL, "confidence": 1.0}
@@ -383,7 +394,8 @@ def build(out: Path) -> None:
     repository_id = _add_plan_roots(out)
     _write_system_spec(out)
 
-    architecture = _architecture_node()
+    spec_digest_hex = sha256_file(out / SYSTEM_SPEC_REQUIREMENTS_REL)
+    architecture = _architecture_node(spec_digest_hex)
     _write_node_markdown(out, architecture)
 
     source_feature_digest = _write_feature_context(out)
@@ -401,9 +413,7 @@ def build(out: Path) -> None:
 
     depends = {phase: ([] if index == 0 else [task_id(PHASES[index - 1])])
                for index, phase in enumerate(PHASES)}
-    feature = _feature_node(
-        package_digest_hex, sha256_file(out / SYSTEM_SPEC_REQUIREMENTS_REL)
-    )
+    feature = _feature_node(package_digest_hex, spec_digest_hex)
     task_nodes = [
         _package_task_node(phase, responsibility, depends[phase], package_digest_hex)
         for phase, responsibility, _kind in PHASE_META

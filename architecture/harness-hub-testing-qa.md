@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-07-30T02:00:31Z"
+updated_at: "2026-07-30T07:08:55Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T02:00:31Z","origin_kind":"system-spec-harness","source_digest":"a38a0acb524828ee53e78e2f95bd21cd41e42418c41b326b9e60f2219c06d158","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-07-30T07:08:55Z","origin_kind":"system-spec-harness","source_digest":"59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `a38a0acb5248…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `59aa87850fd7…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `codex-final-review` → **PASS** (`docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md`)
-- 取込日時: 2026-07-30T02:00:31Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `codex-final-review` → **PASS** (`docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`)
+- 取込日時: 2026-07-30T07:08:55Z / plugin: system-spec-harness v0.1.0
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 
@@ -68,6 +68,8 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 - **ツール確定 (D8)**: Vitest (単体・結合) + Playwright (E2E) + @testing-library/react (UI コンポーネント、behavior ベース) の 3 点構成。
 - **実走証拠の完全性 (qa-089)**: live-trial の PASS は scenario 正本・全 observation・実引数・task.md の必須/禁止手順・transcript digest・挙動閉包 SHA を束縛し、observation の evidence ref を run 内の実在ファイルへ閉じ込める。再利用 planner は scenario ID の変更だけでなく削除も失効として扱う。
 - **実測アーキテクチャ (qa-089)**: publication/write は pre/post state、binding は永続 graph から導出する。draft gate と candidate adapter dry-run のゼロ帰属を分離する。昇格済み node の `confirmation_evidence.evaluated_digest` は、最終 persisted node から自己参照 field だけを除いた正準 JSON の SHA-256 と突合する。監査 module と scenario 契約全体の composite provenance、同一 graph を壊して正準 validator の拒否節まで確認する negative control を品質ゲートにする。
+- **受領側の非省略境界 (qa-100)**: `verify_by=live-trial` の criteria-test は `scenario_contract` の存在を必須にし、required/observed の同数・同順、`unobserved=[]`、引数、宣言済み task 契約、run 内 evidence の実在を再照合する。schema の後方互換性と acceptance の合格条件を分離し、旧受領書は fresh run で更新する。
+- **変更境界 (qa-100)**: 変更は証拠を受領するテスト層に閉じる。C15 schedule の新規 run は現行動作の再観測であり、scheduler、公開 API、DB、認証認可、UI、deploy unit の構造は変えない。
 - **一時生成物の境界 (qa-095)**: skill 構造 lint は dot directory、`__pycache__`、`.pyc` を test tool の生成物として構造判定から除外し、通常の nested directory 違反は維持する。root / plugin 実装の byte parity と per-plugin → repository の実行順序回帰を固定する。
 
 ## 2026-07-29 実装反映
@@ -97,6 +99,21 @@ validator / test は CLI、report contract、graph shape、回帰テストの責
 認証認可、UI、deploy unit、確定 QA の内容は変えない。反映と検証の対応は
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
 を参照する。
+
+## 2026-07-30 renderer 登録検証表示の実装反映
+
+`HarnessHub-35ai` では、feature progress projection と registration proof を
+分離した。証拠経路は `registration receipt → receipt validator →
+registration_verification state → CLI / visible banner / embedded metadata`
+とし、validator を通過した場合だけ `verified` を返す。
+
+receipt が無い探索表示は `not_performed` とする。同じ 13 child graph を
+receipt 有り／無しで描画する正負テストにより、件数が偶然一致しただけの
+偽陽性を遮断する。影響は repository 内の renderer 品質契約だけであり、
+製品 API、DB、認証認可、UI、deploy unit は変えない。詳細は
+[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
+を参照する。
+
 ## 上流指針 (doctrine anchor)
 
 - reliability + operations (Google SRE)。doctrine-anchor-registry.json の pending_exceptions に approved 登録済み (owner: daishiman, 2026-07-24)。

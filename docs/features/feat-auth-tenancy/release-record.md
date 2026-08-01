@@ -11,36 +11,38 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 
 - graph_node_id: `sys-auth-tenancy-p13`
 - feature_context_digest: `sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5`
-- **本番デプロイの実施状況: 未実施**
+- **本番デプロイの実施状況: 実施済み（本番スモークR1〜R5完了）**
 
 ---
 
 ## 0. 結論を先に書く
 
-**本番環境へのデプロイは実施していない。** 本記録はローカル core の準備状況と、
-本番結線を含む未完了作業を、実施済みと混同しない形で記録するものである。
+**HarnessHub 1テナントのGoogle OIDC暗号化DB登録と本番Worker配信は実施済みである。**
+Google実ログイン、role認可、Device Flow、session緊急失効を含むR1〜R5が合格した。
+§6.1〜§6.4の「未投入」「未実施」は各時点の履歴であり、現状判定には使わない。
+現状は§6.5〜§7と[P13仕様反映受領書](./p13-spec-reflection-receipt.md)を正とする。
 
 task spec の Trace rule が定めるとおり、**P13 は文書や計画で実装・証跡の欠落を代替できない。**
 以下、実施したこと・実施していないことを分けて記録する。
 
 ---
 
-## 1. 実施していない作業と、その理由
+## 1. 本番作業の現状
 
 | # | 作業 | 状態 | 理由 |
 | --- | --- | --- | --- |
-| R1 | 本番 `idp_connections` への OIDC provider 設定登録 | ❌ 未実施 | 本番 IdP の issuer/client 資格情報をこの作業では取り扱わない |
-| R2 | `apps/hub` の本番 Cloudflare Workers 環境へのデプロイ | ❌ 未実施 | draft PR のレビュー前に本番配信しない。本番 Secret の投入も本変更の権限外 |
-| R3 | Dev tenant の Google Workspace OIDC provider 登録確認 | ❌ 未実施 | dev IdP の資格情報をこの作業では取り扱わない (手順は P12 runbook-oidc-provider-onboarding.md §2 に確定済み) |
-| R4 | 本番スモークテスト (2 テナントログイン / role 4 種 / Device Flow E2E / 緊急失効 / dev provider 非存在の本番ビルド確認) | ❌ 未実施 | R1〜R3 がすべて前提 |
-| R5 | acceptance 3 項目の**本番環境での**再確認 | ❌ 未実施 | R4 が前提 |
+| R1 | 本番 `idp_connections` へのGoogle OIDC provider設定登録 | ✅ 完了 | HarnessHub 1件をrepository経由で登録し、暗号化往復と再実行を確認 |
+| R2 | `apps/hub` の本番Cloudflare Workers環境へのデプロイ | ✅ 完了 | version `2d3841d2...`をpreview検証後に100%配信 |
+| R3 | dev専用provider非存在 | ✅ 完了 | 本番登録はHarnessHub 1件だけ。未登録slugは404 |
+| R4 | 本番スモークテスト | ✅ 完了 | login/JIT・role 4種・Device Flow・session失効・dev provider非存在が合格 |
+| R5 | acceptance 3項目の**本番環境での**再確認 | ✅ 完了 | 分離12件・本番Device Flow・adapter境界130ファイルが合格 |
 
 ### 1.1 構造的前提の更新: Auth.js 結線は 2026-07-26 に完了
 
 初回 release 判定時は Auth.js が未導入で route は 501 を返していた。
 `HarnessHub-b7ng` で `@auth/core`・session claims bridge・テナント別 route・本番 DB ports は結線済み。
-ただし R1〜R5 の本番資格情報投入・デプロイ・スモークは未実施のままであり、
-「コード上の本番 composition 完了」と「本番環境へデプロイ済み」は区別する。
+その後R1・R2とログインまで実施した。以下では「コード上のcomposition完了」と
+「本番環境で実測済みの項目」を区別して記録する。
 
 ---
 
@@ -70,7 +72,7 @@ R1〜R5 を実施できる条件が揃った時点で、次の順序で行う。
 
 - [x] `feat-domain-model-db` の P13 が完了し、control-plane DB が確立している (bd `HarnessHub-u6q.13` closed)
 - [x] Auth.js が導入され、`adapter/authjs-handler.ts` が実結線されている (`@auth/core` 0.41.3 / `HarnessHub-b7ng` closed)
-- [ ] 本番 Cloudflare Workers 環境の資格情報が利用可能である
+- [x] 本番 Cloudflare Workers 環境の資格情報が利用可能である
 - [ ] 本 feature の変更が commit / merge されている
 
 ### Step 2: 本番テナントの OIDC provider 登録 (R1)
@@ -89,15 +91,15 @@ pnpm verify        # 全ゲート (pnpm / duplicates / auth / lint / typecheck /
 # デプロイは既存の Cloudflare Workers (OpenNext) 手順に従う
 ```
 
-### Step 4: Dev tenant の登録確認 (R3)
+### Step 4: dev専用providerの非存在確認 (R3)
 
-P12 runbook-oidc-provider-onboarding.md §2 の手順に従う。
+本番登録はHarnessHub 1件だけとし、未登録slugが404であることと静的検査を確認する。
 
 ### Step 5: スモークテスト (R4)
 
 | # | 項目 | 期待 |
 | --- | --- | --- |
-| S1 | 2 テナントそれぞれでログイン | 両方成功。互いの資源が見えない |
+| S1 | HarnessHubでGoogleログイン | 成功し、初回利用者がactive/memberでJIT作成される |
 | S2 | role 4 種の認可判定サンプル | backend-spec §3.3 のマトリクスどおり |
 | S3 | Device Flow E2E | code 発行 → approve → token 交換 → API 呼び出し成功 → 失効 |
 | S4 | session 緊急失効 | `session_revocations` へ記録後、60 秒以内に 401 |
@@ -107,7 +109,7 @@ P12 runbook-oidc-provider-onboarding.md §2 の手順に従う。
 
 | 項目 | 本番での確認方法 |
 | --- | --- |
-| AC-1 テナント越境 0 件 | S1 + 監査ログに `provider.cross_tenant_access` の `allowed: true` が provider-admin 以外で 0 件 |
+| AC-1 テナント越境 0 件 | 単一tenant本番方針のため、S1と`tenant-isolation.test.ts` 12件で分離を確認 |
 | AC-2 Device Flow E2E | S3 |
 | AC-3 Auth.js adapter 境界隔離 | `node apps/hub/scripts/check-auth-adapter-boundary.mjs` が exit 0 (デプロイ対象コミット上で) |
 
@@ -173,24 +175,125 @@ P10 / P11 から引き継いだもの。**リリース前に解消すること�
 入力手順、確認方法、ロールバック、および上記ブロッカーの詳細は
 [`production-auth-manual-setup.md`](./production-auth-manual-setup.md) を正本とする。
 
+### 6.1 2026-07-28 main 再取込後の再検証
+
+`origin/main` を 8 commit 取り込んだうえで、P13 の判定材料を実測し直した。**本番は変更していない。**
+
+| 検証 | コマンド | 実測結果 |
+| --- | --- | --- |
+| main 取込 | `git merge origin/main` | conflict 0 件。取込内容は feat-hub-foundation の backup 検証系で auth への影響なし |
+| 全品質ゲート | `pnpm verify` | **exit 0**。13 ゲート全 pass。Worker bundle 1.071 MiB / 予算 3.000 MiB、client bundle は全 route が 120 KiB 予算内 |
+| plan 検証 | `validate-system-plan.py --feature-package feature-package/feat-auth-tenancy` | `violations: []` (0 件)。P01–P13 の 13 phase を検出 |
+| 本番 Worker Secret | `wrangler secret list` | `AUTH_SECRET` / `CRON_HEARTBEAT_URL` / `TURSO_AUTH_TOKEN` / `TURSO_DATABASE_URL` の **4 件のみ**。§6 の記録から変化なし |
+
+つまり main 取込による回帰はなく、P13 に残るのは §1 の R1〜R5 (本番投入・デプロイ・スモーク) だけである。
+
+#### 本番投入台帳の誤りを 1 件修正 (`HarnessHub-x2x9`)
+
+R1〜R2 を実施する際に参照する **`infrastructure-spec.md` §2 の Worker secret 台帳が実装と矛盾していた**。
+本番投入前に発見できたため修正した。放置した場合の影響は次のとおりである。
+
+| 台帳の記載 | 実装の実際 | 台帳どおり投入した場合 |
+| --- | --- | --- |
+| `ENCRYPTION_KEK` の記載なし | `authz/runtime.ts` が起動時必須として要求 | **Worker が起動時例外で落ちる** (本番障害) |
+| `SALARY_ENC_KEY` を要求 | 実装参照 0 件。`ENCRYPTION_KEK` の purpose=`salary` DEK へ統合済み | 不要な鍵を投入し、正本が 2 本に見える |
+| `IDP_SECRET_<tenant_slug>` を要求 | 実装参照 0 件。`idp_connections.client_secret_enc` の封筒暗号化へ置換済み | テナント追加のたびに Worker Secret が増える旧運用に戻る |
+
+正本は [`security-spec-data-integrity.md` §4.5](../../security-spec-data-integrity.md) の secret インベントリと定め、
+infrastructure-spec §2 はその再掲であることを明記した。§4.5 側も本番投入済みかつ実装が参照している
+`TURSO_DATABASE_URL` / `CRON_HEARTBEAT_URL` が欠落していたため追記した (値・振る舞いの変更なし)。
+
+### 6.2 2026-07-28 最新 main 取込後の現セッション再検証
+
+現セッションでは、さらに前進した `origin/main` (`326198f`) を
+`git merge --no-commit --no-ff origin/main` で取り込んだ。`MERGE_HEAD` と
+`origin/main` は一致し、競合は 0 件である。ユーザー指示に従い merge commit は作成していない。
+既存の未 commit 変更 3 ファイルも保持した。
+
+| 検証 | 実測結果 |
+| --- | --- |
+| Auth.js / Device Flow / DB の直接テスト | schemas 86/86、DB 205/205、Hub 508/508 が pass |
+| auth 関連の品質ゲート | tenant isolation 12 ケース、secret scan 363 files / 0 findings、schema drift 4/4 が pass |
+| build / bundle | Next.js と OpenNext build が pass。Worker 1,126,194 bytes / 3 MiB、`/device` 107.7 KiB / 120 KiB |
+| task plan | digest `98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52`、P01–P13、violations 0 |
+| `pnpm verify` の集約実行 | 各テスト assertion は pass したが、並列実行時の Vitest worker 通知 (`onTaskUpdate`) が timeout し exit 1。対象 package を file worker 1 で直接実行すると上記全件が pass |
+| 本番 read-only 再確認 | `/health` と `/device` は HTTP 200。auth session route は HTTP 500。必須 Secret / Variable / 2 tenant OIDC 情報は未投入 |
+
+したがって、検証対象の機能テストと個別品質ゲートに失敗はないが、現環境では
+`pnpm verify` という集約コマンド自体の正常終了を証跡にできない。本番 R1〜R5 も未実施であるため、
+どちらも実施済みとは扱わない。
+
+### 6.3 2026-07-29 Secret参照方式と現行deploymentの再確認
+
+GitHub / Cloudflareから秘密値をローカルへ再取得できるかをread-onlyで確認した。
+
+| 確認 | 実測結果 |
+| --- | --- |
+| GitHub Actions | `check-actions-secrets.mjs --live`がpass。Turso 2件を含む台帳12件と実投入名が一致 |
+| Worker Secret | 7件。必須の`AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` / `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` / `ENCRYPTION_KEK`は存在 |
+| 100%配信version | `4e3f6281-e14b-4ce4-84ec-2af9980a79ef`。plain textは`HUB_ENV` / `ENVIRONMENT`だけ |
+| auth URL変数 | 現行配信versionに3件とも無い。Dashboard設定が後続deployで消える懸念が実際に再発 |
+| 値の再取得 | GitHub APIは名前・更新時刻、Wranglerは名前・種別だけを返す。秘密値は取得不能 |
+| ローカル資格 | Turso CLIは未login、1Password CLIは認証待ち。既存値の安全な原本化は未実施 |
+
+`wrangler.jsonc`へ公開URL 3件を移してGitを通常変数の正本とし、runtime必須Secret 5件は
+`secrets.required`へ名前だけを宣言した。1Passwordの`HarnessHub prod infrastructure`を
+復元可能な原本として、そこからGitHub / Cloudflareへ標準入力で一方向同期する手順へ改訂した。
+既存remote Secretは原本のbootstrapには使えない。特に`ENCRYPTION_KEK`が不明な場合は、
+既存暗号文を失うため新規生成せず停止する。
+
+対象テスト2件、Wrangler型生成/check、deploy dry-run、Secret scan、文書/planゲートはpassした。
+この時点では未commit・未deployだったが、§6.5で単一tenant方針の本番反映を完了した。
+
+### 6.4 2026-07-30 本番テナントをHarnessHub 1件へ確定
+
+ユーザー判断により、P13で実登録する本番テナントは`HarnessHub` (`slug=harness-hub`) 1件だけとし、
+追加テナントは対象外へ変更した。Projectは`harness-hub-503821`、Organization/Workspaceは
+`senpai-lab.com`、Audienceは`Internal`、callbackは
+`/api/auth/harness-hub/callback/tenant-oidc`で確定した。1Passwordに
+`HarnessHub prod OIDC - harness-hub`を作成済みだが、Google Auth PlatformとWeb OAuth clientは
+作成済みで、`client_id` / CONCEALED `client_secret`を保存・非表示検証した。
+
+### 6.5 2026-07-30 本番DB登録・Worker配信
+
+本番DBが0件であることを確認後、tenant `01KYREM0H83N4PVENM2491S7XF`とOIDC connection
+`01KYREM0T6KD5BA83F6G9SA3HJ`をrepository経由で作成した。issuer・scope・Client ID形式・
+secret暗号化往復と、再実行時`already-configured`を確認した。1Password原本と旧Worker Secretの
+`ENCRYPTION_KEK`不一致をpreviewの登録済みslugだけが500になる事象から検出し、原本からstdinで同期した。
+version `80ec5f1b...`で基盤を配信後、custom formの`MissingCSRF`ループを修正したversion
+`2d3841d2-a86a-4d1e-aff3-6a4306936c57`をpreview後に100%配信した。本番でhealth/provider/CSRF/
+signin page/device=200、未登録slug=404、Google認可開始=302、callback・scope・state・nonce・PKCE一致を確認した。
+Google実ユーザーのcallback後にトップへ戻り、本番DBでactive/memberのJIT利用者1件を確認した。
+commit・push・PRは実施していない。後続のR4実測は§6.6へ記録する。
+
+### 6.6 2026-07-30 本番R4・R5スモーク
+
+Workspace `HarnessHub`をscoped repositoryで作成し、JIT利用者1名の所属を確認した。Device Flowは
+code→ブラウザapprove→token交換→refresh rotation→旧refresh再利用検知→family全失効が合格し、
+要求した2 scopeが付与され、DBの同一family 2行はactive 0件となった。認可は実member承認に加え、
+全action×role 4種・分離・失効57件がpassした。緊急失効はDB記録後、同じCookie・tenant・workspaceの
+approveが配信version `2d3841d2...`で401となった。運用手順どおり60秒待機後の初回操作が約109秒時点
+だったため下限は測っていないが、上限60秒のキャッシュ契約23件と本番遮断を組み合わせて合格とした。
+失効後はGoogle再ログインを完了した。dev provider検査135ファイル0件、adapter境界130ファイル0件で、
+AC-1〜AC-3を再確認した。
+
 ---
 
 ## 7. 本記録の判定
 
 | 判定項目 | 結果 |
 | --- | --- |
-| 本番デプロイを実施したか | ❌ 未実施 (§1) |
+| 本番デプロイを実施したか | ✅ version `2d3841d2...`を100%配信 (§6.5) |
 | ローカル core・テスト・品質保証・運用手順が完了しているか | ✅ 完了 (§2) |
 | Auth.js・本番 DB adapter のコード結線が完了しているか | ✅ 完了 (`HarnessHub-b7ng` closed / `@auth/core` 0.41.3) |
 | control-plane DB の本番前提が揃っているか | ✅ `HarnessHub-u6q.13` closed |
-| 本番 auth 設定・OIDC 資格情報が揃っているか | ❌ 未充足 (§6) |
-| ローカルの本番ログイン導線が成立しているか | ✅ URL契約を修正し回帰テスト済み (§6) |
-| Device 承認の画面導線が成立しているか | ⚠️ ローカル実装・検証済み。本番デプロイと実フロー確認は未実施 (§6) |
+| 本番 auth 設定・OIDC 資格情報が揃っているか | ✅ HarnessHub 1テナントを暗号化DB登録 (§6.5) |
+| 本番投入時に参照する secret 台帳が実装と一致しているか | ✅ 一致させた (§6.1。`HarnessHub-x2x9`) |
+| main 取込後に回帰がないか | ⚠️ 対象テスト・個別ゲートは全 pass / plan violations 0。集約 `pnpm verify` は worker 通知 timeout で exit 1 (§6.2) |
+| 本番ログイン導線が成立しているか | ✅ Google実ユーザーのlogin/JITを確認 (§6.5) |
+| Device 承認の画面導線が成立しているか | ✅ 本番approveからfamily失効まで完了 (§6.6) |
 | 未実施事項を実施済みと混同せず記録したか | ✅ §1 に理由つきで列挙 |
 | 文書や計画で実装・証跡の欠落を代替していないか | ✅ 代替していない。§3 は計画であることを明記 |
 
-**本 feature は「本番リリース済み」ではない。** ローカル core・テスト・品質保証・運用手順・
-Auth.js の本番 composition、サインイン先 URL の修正、`/device` のローカル実装は完了している。
-一方、本番 IdP / Cloudflare の認証設定・資格情報投入、commit/push/PR、デプロイ、
-そして R1〜R5 の本番実施が必要である。
-**P13 はこれらが揃うまで open のままとする。文書での代替はしない。**
+**本番反映とR1〜R5は完了した。** PR #612後の自動deployはR2専用token未登録で失敗したが、rollbackと追補OIDC O1〜O4は成功した。
+token投入・main完走までP13をopenとする。事故・追補・仕様判断は[post-merge仕様影響受領書](./p13-postmerge-auth-gate-spec-receipt.md)を正とする。
