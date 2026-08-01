@@ -2,7 +2,7 @@
 graph_node_id: "doc-dev-pipeline-final-review-20260726"
 artifact_kind: "document"
 artifact_subtypes: []
-layer: feature-design
+layer: "feature-design"
 project_id: "harness-hub"
 domain: "dev-workflow"
 tags: ["dev-graph","final-review","spec-impact"]
@@ -13,7 +13,7 @@ iteration: null
 title: "Dev Graph 基盤変更 最終レビュー 2026-07-26"
 owners: ["daishiman"]
 created_at: "2026-07-26T03:25:49Z"
-updated_at: "2026-07-30T01:37:27Z"
+updated_at: "2026-07-30T12:25:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","issue-id-uniqueness-gate-generalization-20260728"]
@@ -265,3 +265,17 @@ ID 一意性検査の追加で `validate-coverage-matrix.py` が 585 行に達�
 | 2026-07-29 | HarnessHub-lp36 の interpreter BLOCK / ALLOW 境界、設計反映、9/9 live-trial と全品質ゲート PASS、Beads close を追記 | Codex |
 | 2026-07-29 | PR #598 の main コンフリクト解消、C14 統合後 fresh 証拠、pytest 9306件と仕様再受領を追記 | Codex |
 | 2026-07-30 | HarnessHub-ory6 の 3 validator ID 一意性 gate、500 行分割、main 同期、仕様書き戻しを追記 | Codex |
+
+### CI follow-up (2026-07-30): stale live-trial 9件と tmux 環境混入の解消
+
+PR #610 の governance / Plugin Governance が、C02 の共有 writer 変更により
+Dev Graph 9 skill の behavior closure digest を stale と判定した。旧 verdict の digest は
+編集せず、fresh tmux session で再取得した。C04 fixture の architecture lineage 欠落を
+既存 source-digest 契約へ適合させ、C19 では tmux server が保持していた過去 trial の
+`SYSTEM_SPEC_AUDIT_FORK_LEDGER` 誤継承を検出した。boot が caller の現在値を session の
+`new-session -e` へ明示する隔離境界を追加し、正規フローで `qa-102` / `appr-019`、
+system spec、architecture、feature、P13、仕様反映確認へ統合した。製品 runtime 契約は非変更。
+実 tmux の stale global/current/空値と shell metacharacter 保持を隔離 server で回帰化し、
+live-trial harness `107 passed`、focused content review 5/5、Dev Graph `730 passed / 2 skipped`、
+system-spec harness `529 passed`、repository CI `136 PASS / 4 WARN / 0 FAIL` を確認した。
+4 WARN は段階導入中の既存 plugin completeness / rubric refs で blocking failure ではない。

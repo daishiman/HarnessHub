@@ -6,7 +6,13 @@
  */
 
 export { type AuthzDecisionInput, decide, type RoleResolution, resolveEffectiveRole } from './decide.js';
-export { type PrincipalResolverDeps, readBearerToken, resolveRequestPrincipal } from './principal.js';
+export {
+  type AccessTokenPrincipalResolverDeps,
+  type PrincipalResolverDeps,
+  readBearerToken,
+  resolveAccessTokenPrincipal,
+  resolveRequestPrincipal,
+} from './principal.js';
 export { type RequestScopedResourceInput, requestScopedResource } from './resource.js';
 export { createRevocationChecker, type RevocationChecker } from './revocation.js';
 export { ACTION_RULES, type ActionRule, findActionRule } from './rules.js';

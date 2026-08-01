@@ -1,0 +1,223 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/mmk3-publish-pipeline-v12",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:9ac6c4384b4c451f6ca2b169330cbc382c56e240dcf0a9cf834692741afb5db2",
+  "verdict": "FAIL",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "FAIL",
+      "summary": "CI gate の確立宣言と write scope/結線、P13 の正本書き戻し要求と write scope が相互に矛盾する。",
+      "evidence": [
+        "task-specs/phase-08-refactoring-migration.md: CI 恒久検査の確立を成果物とする一方、共有 CI パイプライン本体をスコープ外とし、結線先を特定していない。",
+        "task-specs/phase-09-quality-assurance.md: secret scan の CI ゲート化を完了条件とする一方、write scope は apps/hub/scripts/ と report/API に限られ、CI からの呼び出し経路を所有しない。",
+        "task-specs/phase-13-release-deploy.md: P13 spec/architecture writeback は docs/backend-spec.md と architecture 3 文書への反映を required とするが、task spec と inventory の write scope にこれらがない。"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "FAIL",
+      "summary": "exact-13 と主要要件の本文 trace は存在するが、テスト・CI・本番 deploy/smoke を再現可能に実行するコマンドと、現行 QA を束縛した goal baseline が不足する。",
+      "evidence": [
+        "feature-package.json と workstream-inventory.json: task_count=13、P01..P13 exact-set。",
+        "task-specs/phase-06-test-run.md: Automated commands は validate-system-plan.py のみで、宣言した 7 系統のテストを実行するコマンドがない。",
+        "task-specs/phase-09-quality-assurance.md: Automated commands は plan validator のみで、レート制限・Idempotency-Key・tenant 分離・secret scan gate の実行コマンドがない。",
+        "task-specs/phase-13-release-deploy.md: Automated commands は plan validator のみで、本番 deploy と full smoke 6 項目のコマンドがない。",
+        "goal-spec.json と system-spec/spec-state.json#qa_log/qa-059: session/Bearer の dual principal と session state-changing 経路の CSRF 要件は全 task の後付け normative closure に現れるが、goal-spec の purpose/goal/scope/acceptance/quality_constraints には現れない。"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "P01..P13、task path、phase 名、workstream 語彙は正本と一致する。",
+      "evidence": [
+        "plugins/system-dev-planner/references/system-plan-phase-names.md",
+        "feature-package.json#phase_refs",
+        "feature-package.json#task_spec_paths",
+        "workstream-inventory.json#tasks",
+        "validate-system-plan.py: status=pass, violations=[]"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "FAIL",
+      "summary": "DAG と handoff exact-set/owner 境界は正常だが、source_lineage の verified digest が現行 repository bytes に接地していない。",
+      "evidence": [
+        "task-graph.json: 13 node の P01→P13 前方直列 DAG、dangling/cycle なし。",
+        "system-build-handoff.json#source_inputs は staging-manifest.json#files から handoff 自身を除いた 16 file exact-set と一致する。",
+        "system-build-handoff.json#registration_request: promotion owner=system-dev-planner/C11、registration receipt owner=dev-graph/C02。",
+        "goal-spec.json#lineage architecture/harness-hub-backend.md: declared bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b, current 0492143b1af6f618f5c1c528fa7e695d98451fcc76404a185f25d1eba454fecb。",
+        "goal-spec.json#lineage architecture/harness-hub-data.md: declared be578235037d18ee5fb16aa44cf51160511e9e403b6873bfeac29c6f1313233d, current 80babb65607dcce3434a75e03ce7b8c246f3fd7de56cbe2bcaedd5c2af2de767。",
+        "goal-spec.json#lineage architecture/harness-hub-security.md: declared 5af5237572ae6fe9d661ad09ee074377967c6f9d276779e2105645cd89d51605, current d30aaa33150c24f422638947bfca768b90067422f8bfb385883ab763e801d3a8。",
+        "goal-spec.json#lineage specs/harness-hub-system-specification.md: declared a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d, current e969b0fb8ca6aea8381f544d6fbb44be26692c1f879a47b21da96f05f2c6a644。"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/mmk3-publish-pipeline-v12"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:9ac6c4384b4c451f6ca2b169330cbc382c56e240dcf0a9cf834692741afb5db2\",\n  \"feature_package_id\": \"feature-package/feat-publish-pipeline\",\n  \"parent_feature\": \"feat-publish-pipeline\",\n  \"phase_refs\": [\"P01\", \"P02\", \"P03\", \"P04\", \"P05\", \"P06\", \"P07\", \"P08\", \"P09\", \"P10\", \"P11\", \"P12\", \"P13\"],\n  \"contract_version\": \"1.2.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\"mode\": \"enforced\", \"contract_version\": \"1.2.0\", \"enforced_from\": \"1.2.0\"},\n  \"violations\": []\n}",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "83155a1ce33cd288eebdd0cd9a1b740f894e78f8c05768de3a9ea5606f3f32f8"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "b97187126d33a7ed2184ebf96cf17e80d36597be0a352bc7e2d6df6ad5b62717"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "54e81ca38e7703401a3014e5efffcefcf8a2e520abbf020c14d04b1342cc1843"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "2324e1529861c1660068dd93b7ed600285e9ed07e5b1f49f636c98b17223a415"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "d8810ee8ee9f1020979259274d1099eabff4c0c8cfcd4be9ca2a25a94d149a23"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "3e4de5620da296383186e61c80070189f5f255d565153e2d0f377dd0b96afc0b"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "07d1ac6ad6f3dce7711bf1fe55e441772eabc2d81c28fcbbc4dd8f09c87debd1"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "eab5e07063ca19956484eae52b6513425bb6e10ffde386226e58cfb49011bdfe"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "392402d6655822fca8a5f26674bcaf717b5bb6242c2f010a804bbcd42d12dd5f"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "5d6465c197c74db771ca787e26598a6dc747e81b543a6d22c81fef3afa6b1489"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "0d230712226221bcac8b9d06376d80d70b4dace5a24cd604159112f2f513334a"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "2f36424b35c65714211f836d3af8797c3c2a408090c86919bb9e8e66cbc14e6d"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "d0ca6fd1d27b718160f6ca7b7d31585e474f58460d973627d0cff4082bba4d46"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "7f803e6125e43a08b1468ad4655d3b3387df98528fe34001e456484c9cc06309"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "a27b8fb66d6e9677e8e1e97adc5b1580a0c41909c4d7a659c663a79978d6f88f"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "c652a6ff9e0be49e8f81f1f801d45381c7aa262d664516c89fa7e1e8a14f5251"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "32409d6c1f7963b5effe55a60f7cc0da7d7b874403a2d2a6d5c894115fa93c95"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a1e4c9f59fb1cf1ae69bd958d950e086a4316108309fb9dae0ab2bc858e1c06a"
+    }
+  ],
+  "staleness_rule": "C11 must reject this evaluation if the canonical digest changes or if any SHA-256 in the exact evaluated_inputs set (all staging-manifest.json files plus staging-manifest.json itself) differs from the current staging bytes.",
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "ci-gate-write-scope-contradiction",
+      "observation": "P08 と P09 は CI gate の確立を完了条件にするが、共有 CI pipeline の変更を明示的にスコープ外とし、追加する check script を CI から必ず呼ぶ具体的な結線先・write scope・検証コマンドを持たない。未結線 script でも acceptance 文書だけで完了できるため fail-open である。CI workflow または既存の canonical CI dispatcher への結線を明示的な成果物/write scope/acceptance に追加し、negative control を含む実行コマンドを固定する必要がある。",
+      "evidence": [
+        "task-specs/phase-08-refactoring-migration.md#目的",
+        "task-specs/phase-08-refactoring-migration.md#成果物",
+        "task-specs/phase-08-refactoring-migration.md#スコープ外",
+        "task-specs/phase-09-quality-assurance.md#成果物",
+        "task-specs/phase-09-quality-assurance.md#スコープ外",
+        "workstream-inventory.json#tasks/P08/write_scope",
+        "workstream-inventory.json#tasks/P09/write_scope"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "verification-commands-do-not-exercise-task-outcomes",
+      "observation": "P06、P09、P13 の Automated commands は package の構造を検査する validate-system-plan.py だけであり、P06 の 7 系統テスト、P09 の security/quality gate、P13 の production deploy と smoke 6 項目を一つも実行しない。文書への pass 記載を実測と誤認でき、P11 も存在しない実行コマンドを後から集約する契約になる。各 phase に対象テスト/gate/deploy/smoke の再実行可能な具体コマンド、期待 exit、evidence path を追加する必要がある。",
+      "evidence": [
+        "task-specs/phase-06-test-run.md#Verification and evidence",
+        "task-specs/phase-09-quality-assurance.md#Verification and evidence",
+        "task-specs/phase-11-evidence.md#背景",
+        "task-specs/phase-13-release-deploy.md#Verification and evidence",
+        "workstream-inventory.json#tasks/P06/verification",
+        "workstream-inventory.json#tasks/P09/verification",
+        "workstream-inventory.json#tasks/P13/verification"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "p13-required-writeback-outside-write-scope",
+      "observation": "P13 の goal-seek 契約は docs/backend-spec.md と architecture 3 文書への writeback を required とするが、task spec の write scope は release-record.md のみで、inventory もこれら正本を含まない。write scope を守ると必須 writeback を達成できず、writeback を行うと scope 違反で rubric FAIL になる。P13 の正本書き戻し対象を明示的な write scope/produced artifacts に加えるか、意味変更なし時の照合 receipt のみに契約を限定する必要がある。",
+      "evidence": [
+        "task-specs/phase-13-release-deploy.md#成果物",
+        "task-specs/phase-13-release-deploy.md#Inner goal-seek execution loop",
+        "workstream-inventory.json#tasks/P13/write_scope",
+        "workstream-inventory.json#tasks/P13/acceptance"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "source-lineage-not-grounded-to-current-repository",
+      "observation": "goal-spec は architecture 3 文書と system specification の digest_status を verified、verification.digest_match_architecture_files を true とするが、4 件すべての申告 SHA-256 が現行 repository bytes と不一致である。2026-07-30 の readiness source pin を使う評価対象として lineage が stale であり、現行 spec-state の意味被覆を証明できない。現行正本から goal-spec と exact-13 を再生成し、lineage digest を実バイトへ再接地する必要がある。",
+      "evidence": [
+        "goal-spec.json#lineage/architecture/harness-hub-backend.md declared=bd5a3821ec76b881b5a39c53c90534db720aeb6cc588a712995f8d0bc1ba702b current=0492143b1af6f618f5c1c528fa7e695d98451fcc76404a185f25d1eba454fecb",
+        "goal-spec.json#lineage/architecture/harness-hub-data.md declared=be578235037d18ee5fb16aa44cf51160511e9e403b6873bfeac29c6f1313233d current=80babb65607dcce3434a75e03ce7b8c246f3fd7de56cbe2bcaedd5c2af2de767",
+        "goal-spec.json#lineage/architecture/harness-hub-security.md declared=5af5237572ae6fe9d661ad09ee074377967c6f9d276779e2105645cd89d51605 current=d30aaa33150c24f422638947bfca768b90067422f8bfb385883ab763e801d3a8",
+        "goal-spec.json#lineage/specs/harness-hub-system-specification.md declared=a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d current=e969b0fb8ca6aea8381f544d6fbb44be26692c1f879a47b21da96f05f2c6a644",
+        ".dev-graph/state/evaluations/mmk3-publish-pipeline-v12-readiness.json#source_pin"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "goal-spec-current-qa-semantic-drift",
+      "observation": "現行 spec-state の qa-059 が確定する publish API の dual principal と CSRF 境界は全 13 task の後付け normative closure には現れるが、goal-spec の purpose/goal/scope/acceptance/quality_constraints には含まれない。task だけが goal より強い別 baseline を持つ状態なので、qa-059 を goal-level quality constraint として意味反映し exact-13 と同じ source pin に束縛する必要がある。",
+      "evidence": [
+        "system-spec/spec-state.json#qa_log/qa-059",
+        "goal-spec.json#quality_constraints",
+        "task-specs/phase-01-requirements.md#Normative implementation closure (2026-07-19)",
+        "task-specs/phase-13-release-deploy.md#Normative implementation closure (2026-07-19)"
+      ]
+    }
+  ]
+}

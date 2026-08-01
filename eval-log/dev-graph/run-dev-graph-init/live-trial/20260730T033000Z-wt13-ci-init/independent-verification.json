@@ -1,0 +1,31 @@
+{
+  "evaluator": "fresh-agent-eval_c01_live_trial",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "first_pass_scaffold": {
+      "result": "PASS",
+      "evidence": "six content roots, routing config, graph store, and 21 canonical templates exist"
+    },
+    "second_pass_noop": {
+      "result": "PASS",
+      "evidence": "second Skill invocation preserved config and graph and copied zero templates"
+    },
+    "edited_template_preserved": {
+      "result": "PASS",
+      "evidence": "edited issue.md retained SHA-256 d8144546832b712db61fd3214d60f24c632cdf4a72ddad4543f65edd161ddc11"
+    },
+    "plugin_hook_source": {
+      "result": "PASS",
+      "evidence": "config claude_hooks.source is plugin and plugin hook resolution was recorded"
+    },
+    "portable_config": {
+      "result": "PASS",
+      "evidence": "repo config validation found no absolute path, token, or node id"
+    },
+    "nonempty_c11": {
+      "result": "PASS",
+      "evidence": "canonical graph validation passed at graph revision 1 with one node"
+    }
+  }
+}

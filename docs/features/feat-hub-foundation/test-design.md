@@ -20,6 +20,7 @@ depends_on: [SYS-HUB-FOUNDATION-P03]
 | HF-A1-CI-001 | integration | A1 | 単一 CI run 内で `test` job が success 後に `deploy` job が success 終了する。deploy が skip / 承認待ちで終わった run は fail 扱い | GitHub Actions |
 | HF-A1-CI-002 | security | A1 | `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` をリポジトリに置いた状態で CI が**非ゼロ終了**する（npm 混入検査の実効性） | CI + local |
 | HF-A1-CI-003 | unit | A1 | `packageManager` フィールドが `pnpm@` で始まる値に pin されている | local + CI |
+| HF-A1-CI-004 | unit | A1 | `pnpm-workspace.yaml` の `workspaceConcurrency` が `1` に固定され、設定欠落または `1` 以外を `pnpm check:pnpm` が非ゼロ終了で拒否する | local + CI |
 | HF-A2-BUNDLE-001 | performance | A2 | `apps/hub` の Worker bundle が gzip 後 **3 MiB 以内** | CI + local |
 | HF-A2-BUNDLE-002 | integration | A2 | 予算超過を模した閾値（例: 1 KiB）で bundle チェックが**非ゼロ終了**する（ゲートの実効性検証） | CI + local |
 | HF-A3-HEALTH-001 | integration | A3 | `GET /health` が **200** を返す | local + preview |
@@ -53,7 +54,7 @@ depends_on: [SYS-HUB-FOUNDATION-P03]
 
 ### 2.1 unit
 
-- 対象: `packages/*` の純関数・公開 API 表面、detector スクリプト、`packageManager` pin 検査
+- 対象: `packages/*` の純関数・公開 API 表面、detector スクリプト、`packageManager` pin と workspace test 直列化の検査
 - 合否: 全 test が pass。カバレッジ閾値は本 feature では課さない（C1: 過剰な品質管理を持ち込まない）。ただし**公開 API は全て 1 件以上の test を持つ**こと
 
 ### 2.2 contract（A4 の中核）
@@ -92,7 +93,7 @@ apps/hub/tests/
   health/
     health.route.test.ts        # HF-A3-HEALTH-001/002/003
   ci/
-    pnpm-only.test.ts           # HF-A1-CI-002/003
+    pnpm-only.test.ts           # HF-A1-CI-002/003/004
     bundle-budget.test.ts       # HF-A2-BUNDLE-001/002
   shared-layers/
     ownership.test.ts           # HF-A4-OWNER-001
@@ -131,6 +132,7 @@ apps/hub/tests/
 - 本書の test ID のうち、**実行されなかったものを pass と見なさない**。未実行は「未実行」として P07 へ報告する。
 - 外部サービス依存（`HF-A3-SLO-001`）が未設定の間、A3 は **blocked** であり pass ではない。
 - detector・ゲート類は「検出できること」（HF-A1-CI-002 / HF-A2-BUNDLE-002 / HF-A4-DUP-002）を必ず併せて検証する。ゲートが常時緑になる故障（Goodhart 化）を防ぐため。
+- G4 は `pnpm test` / `pnpm -r test` の入口を変えず、`pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間だけを直列化する。設定欠落・値変更の負例を HF-A1-CI-004 で固定し、package 内の Vitest 並列性は維持する。
 
 ## 6. 転記元と検証
 

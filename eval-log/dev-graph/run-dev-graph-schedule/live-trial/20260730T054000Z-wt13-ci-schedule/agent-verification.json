@@ -1,0 +1,59 @@
+{
+  "evaluator": "independent-agent",
+  "scenario": "C15-OUT1-positive-ready-set-r16",
+  "verdict": "PASS",
+  "evaluated_at": "2026-07-30T05:36:11Z",
+  "checks": [
+    {
+      "id": "ready-set-correctness",
+      "result": "PASS",
+      "detail": "Independently computed ready-set = [LT-SCHED-001, LT-SCHED-002, LT-SCHED-003, LT-SCHED-006]. All four nodes are confirmed, evaluation_status=pass, implementation_readiness.status=complete, depends_on all done (or empty), and have no active (non-expired) lease. Matches execution output exactly."
+    },
+    {
+      "id": "004-excluded-active-lease",
+      "result": "PASS",
+      "detail": "LT-SCHED-004 has an active lease expiring 2099-01-01T00:00:00+00:00 (far future, clearly not expired). Correctly excluded from ready-set despite meeting all other eligibility criteria (confirmed, pass, readiness complete, no depends_on)."
+    },
+    {
+      "id": "005-excluded-blocked-dependency",
+      "result": "PASS",
+      "detail": "LT-SCHED-005 depends_on LT-SCHED-001, whose completion_evidence.status='open' (not done). Correctly excluded from ready-set. No lease exists for 005."
+    },
+    {
+      "id": "006-included-stale-lease",
+      "result": "PASS",
+      "detail": "LT-SCHED-006 has a lease expiring 2020-01-01T00:00:00+00:00 which is well in the past (stale/expired). Correctly treated as having no active lease and included in the ready-set."
+    },
+    {
+      "id": "no-batch-resource-overlap",
+      "result": "PASS",
+      "detail": "Batch 0: [LT-SCHED-001(src/alpha.py), LT-SCHED-003(src/beta.py)] -- no overlap. Batch 1: [LT-SCHED-002(src/alpha.py), LT-SCHED-006(src/delta.py)] -- no overlap. No batch contains conflicting resource_scope entries."
+    },
+    {
+      "id": "001-002-different-batches",
+      "result": "PASS",
+      "detail": "LT-SCHED-001 (src/alpha.py) is in batch 0. LT-SCHED-002 (src/alpha.py) is in batch 1. They share resource_scope 'src/alpha.py' and are correctly placed in different batches."
+    },
+    {
+      "id": "batch-size-max-parallel",
+      "result": "PASS",
+      "detail": "max_parallel=2. Batch 0 has 2 items, batch 1 has 2 items. Both are at most 2, respecting the --max-parallel 2 constraint."
+    },
+    {
+      "id": "suggested-branch-format-unique",
+      "result": "PASS",
+      "detail": "4 assignment_hints with branches: devgraph/LT-SCHED-001, devgraph/LT-SCHED-002, devgraph/LT-SCHED-003, devgraph/LT-SCHED-006. All follow devgraph/<id> pattern. All 4 are unique."
+    },
+    {
+      "id": "digests-immutable",
+      "result": "PASS",
+      "detail": "graph_sha256 before=after=e4d17190c75575639238f0b168528bba1aee3a9f373f86a4fa1cbbd1c1f34484 (verified by independent shasum of graph.json). lease_sha256 before=after=b10e1c1670e6cf36ca3155b2d390bdbd45183fff76b04c91c562d9f1f8c32b41 (verified by independent shasum of leases.json). read_only=true. Files are unchanged."
+    },
+    {
+      "id": "goal-seek-files-valid",
+      "result": "PASS",
+      "detail": "goal-spec.json exists with original_goal and original_goal_hash. progress.json exists with 7 checklist items all completed, verdict=PASS. intermediate.jsonl exists with exactly 2 lines, each containing exactly 6 keys (original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal). original_goal_hash d0041ddebcc8144ed4c7a8f0f69d0ab279eed66f40807119d91a716b54e32ca6 matches independent SHA-256 computation of the original_goal text."
+    }
+  ],
+  "summary": "All 10 checks PASS. The schedule execution correctly identified 4 ready nodes (001, 002, 003, 006), excluded 004 (active lease) and 005 (blocked dependency), included 006 (stale/expired lease), split resource-conflicting nodes 001 and 002 into separate batches, respected max_parallel=2, generated unique devgraph/<id> branches, preserved graph and lease files unchanged (digests verified independently), and produced valid goal-seek artifacts with correct hashes."
+}

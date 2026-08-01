@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "evaluator": "fresh-agent/eval_c02_live_trial",
+  "scenario": "C15-OUT1-positive-ready-set-r16",
+  "target_skill": "dev-graph:run-dev-graph-schedule",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "conflicting_tasks_split": true,
+    "conflicting_resource_scope": "src/alpha.py",
+    "blocked_task_excluded": "issue-c15-task-005",
+    "active_lease_suppressed": "issue-c15-task-004",
+    "stale_lease_reclaimed_to_ready_set": "issue-c15-task-006",
+    "max_batch_size": 2,
+    "unique_suggested_branches": 4,
+    "unique_claim_commands": 4,
+    "graph_digest_unchanged": "e4d17190c75575639238f0b168528bba1aee3a9f373f86a4fa1cbbd1c1f34484",
+    "lease_digest_unchanged": "b10e1c1670e6cf36ca3155b2d390bdbd45183fff76b04c91c562d9f1f8c32b41",
+    "literal_skill_call_observed": true,
+    "fresh_agent_observed": true,
+    "goal_seek_rows": 2,
+    "goal_seek_hash_matches": true,
+    "out_contains_only_status": true
+  },
+  "caveats": [
+    "The blocked-task reason is recorded in progress and Agent evidence rather than the scheduler receipt itself.",
+    "Stale lease reclamation is read-only re-admission to the ready set, not deletion of the lease record.",
+    "Tracker digest is null because every fixture node uses tracker_binding=none."
+  ]
+}

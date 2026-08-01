@@ -3,6 +3,7 @@
 import os
 import shutil
 import sys
+import tempfile
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -54,6 +55,9 @@ def test_backend_tmux_wrappers_with_fake_subprocess(monkeypatch, tmp_path):
     backend_mod.new_session(
         "lt-direct", str(tmp_path), run_id="direct", owner_pid=111,
         command_argv=("printf", "%s", "safe; touch /tmp/not-created"),
+        environment_overrides={
+            "SYSTEM_SPEC_AUDIT_FORK_LEDGER": "/tmp/current ledger.jsonl",
+        },
     )
     backend_mod.send_line("lt-x", "hello")
     backend_mod.paste_text("lt-x", "task body\nwith newline")
@@ -91,6 +95,10 @@ def test_backend_tmux_wrappers_with_fake_subprocess(monkeypatch, tmp_path):
     assert backend_mod.valid_buffer_name(load_call[3])
     assert len(load_call[3]) <= backend_mod._BUFFER_NAME_MAX
     direct = next(c for c in calls if c[1:5] == ["new-session", "-d", "-s", "lt-direct"])
+    env_index = direct.index("-e")
+    assert direct[env_index + 1] == (
+        "SYSTEM_SPEC_AUDIT_FORK_LEDGER=/tmp/current ledger.jsonl"
+    )
     assert direct[-1] == "printf %s 'safe; touch /tmp/not-created'"
     # CLI dispatch も同じ境界を通る
     assert backend_mod.main([
@@ -124,6 +132,25 @@ def test_backend_cli_does_not_expose_arbitrary_direct_command(tmp_path):
             "new-session", "lt-x", str(tmp_path), "; touch /tmp/injected"
         ])
     assert exc.value.code == 2
+
+
+@pytest.mark.parametrize(
+    ("overrides", "message"),
+    [
+        ({"BAD-NAME": "value"}, "invalid environment override name"),
+        ({"SAFE_NAME": "line1\nline2"}, "invalid environment override value"),
+    ],
+)
+def test_backend_rejects_unsafe_environment_overrides(
+    monkeypatch, tmp_path, overrides, message
+):
+    monkeypatch.setattr(backend_mod, "require_tmux", lambda: None)
+    monkeypatch.setattr(backend_mod, "kill_session", lambda _session: True)
+    with pytest.raises(ValueError, match=message):
+        backend_mod.new_session(
+            "lt-env-guard", str(tmp_path), run_id="env-guard",
+            environment_overrides=overrides,
+        )
 
 
 def test_backend_paste_buffer_name_is_deterministic_isolated_and_injection_safe(tmp_path):
@@ -273,6 +300,85 @@ def test_backend_real_tmux_direct_process_avoids_interactive_shell(tmp_path):
         assert int(ownership[session][1]) > 0
     finally:
         backend_mod.kill_session(session)
+
+
+@pytest.mark.skipif(shutil.which("tmux") is None, reason="tmux unavailable")
+def test_backend_real_tmux_session_environment_overrides_stale_global_value(
+    monkeypatch, tmp_path
+):
+    """session 固有値が隔離 tmux server の stale global 値を上書きする。"""
+    # macOS の Unix socket path 上限に収めつつ、通常利用中の tmux server と隔離する。
+    socket_root = tempfile.mkdtemp(prefix="lt-env-")
+    monkeypatch.delenv("TMUX", raising=False)
+    monkeypatch.setenv("TMUX_TMPDIR", socket_root)
+
+    env_name = "SYSTEM_SPEC_AUDIT_FORK_LEDGER"
+    stale_value = "/tmp/stale-global-ledger.jsonl"
+    current_value = "current value; 'quoted' $(not-executed)"
+    token = f"env-override-{os.getpid()}"
+    anchor = f"lt-{token}-anchor"
+    current_session = f"lt-{token}-current"
+    empty_session = f"lt-{token}-empty"
+    sleeper = (sys.executable, "-u", "-c", "import time; time.sleep(30)")
+
+    def env_reporter():
+        return (
+            sys.executable,
+            "-u",
+            "-c",
+            (
+                "import os,time; "
+                f"print('ENV='+repr(os.environ.get('{env_name}')), flush=True); "
+                "time.sleep(30)"
+            ),
+        )
+
+    try:
+        backend_mod.new_session(
+            anchor, str(tmp_path), command_argv=sleeper, run_id=token
+        )
+        socket_path = backend_mod._tmux(
+            "display-message", "-p", "#{socket_path}", check=True
+        ).stdout.strip()
+        assert os.path.commonpath(
+            (os.path.realpath(socket_root), os.path.realpath(socket_path))
+        ) == os.path.realpath(socket_root)
+        backend_mod._tmux(
+            "set-environment", "-g", env_name, stale_value, check=True
+        )
+        backend_mod.new_session(
+            current_session,
+            str(tmp_path),
+            command_argv=env_reporter(),
+            run_id=token,
+            environment_overrides={env_name: current_value},
+        )
+        backend_mod.new_session(
+            empty_session,
+            str(tmp_path),
+            command_argv=env_reporter(),
+            run_id=token,
+            environment_overrides={env_name: ""},
+        )
+
+        captures = {}
+        for session in (current_session, empty_session):
+            for _ in range(40):
+                captures[session] = backend_mod.capture_pane(session)
+                if "ENV=" in captures[session]:
+                    break
+                time.sleep(0.05)
+
+        assert f"ENV={current_value!r}" in captures[current_session]
+        assert "ENV=''" in captures[empty_session]
+        assert stale_value not in captures[current_session]
+        assert stale_value not in captures[empty_session]
+    finally:
+        backend_mod._tmux("set-environment", "-gu", env_name)
+        for session in (current_session, empty_session, anchor):
+            backend_mod.kill_session(session)
+        backend_mod._tmux("kill-server")
+        shutil.rmtree(socket_root, ignore_errors=True)
 
 
 @pytest.mark.skipif(shutil.which("tmux") is None, reason="tmux unavailable")

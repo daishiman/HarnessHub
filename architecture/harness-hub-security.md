@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"}
-source_lineage: {"imported_at":"2026-07-30T04:40:19Z","origin_kind":"system-spec-harness","source_digest":"4c4572235580b8a6916f7d3a2203801a50cd51f71055f4df2358de207f1db477","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"system-spec-harness","source_digest":"50006262f86ccfe1603373b05f220f0816278dbefb0b8b7df31483f72aaa7f26","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.95}]
@@ -109,6 +109,15 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   複数テナント回帰試験は製品の防御境界として維持する。
 - 正式な確定記録は`system-spec/auth.md`のqa-097と`system-spec/security.md`のqa-098、
   対応証跡は[P13仕様反映受領書](../docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md)を参照する。
+
+**差分追記 (2026-07-30 / SYS-PUBLISH-PIPELINE-P13)**:
+
+- `Authorization: Bearer` がある要求は access token の署名・期限・tenant/workspace claims を
+  edge middleware で fail-closed に検証し、無効 token から Auth.js cookie へ fallback しない。
+- route 認可は共有 `withAuthz` に集約し、scope・Project 所有者・credential 種別・token 失効を
+  最終判定する。edge と route の二段階は防御の重複ではなく、到達可否と資源操作可否の責務分離である。
+- 本番 smoke の結果と rollback 判断は
+  [feat-publish-pipeline release record](../docs/features/feat-publish-pipeline/release-record.md) を証跡正本とする。
 
 ## Delivery, migration and rollback
 

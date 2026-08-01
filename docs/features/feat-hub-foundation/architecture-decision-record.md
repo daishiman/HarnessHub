@@ -25,6 +25,7 @@ architecture_refs: [arch-harness-hub-infrastructure, arch-harness-hub-frontend, 
 | D-P02-3 | 共通層の配置境界 | shared-layers §1〜§3 の各層を §3 の表で package へ一意に割当。所有者は全て feat-hub-foundation |
 | D-P02-4 | パッケージマネージャ | pnpm のみ。root `package.json` の `packageManager` で pin し、CI で npm 混入を fail させる（§6） |
 | D-P02-5 | 認可 middleware / auth adapter | 配置境界を `apps/hub/src/middleware/` `apps/hub/src/shared/auth/` に**予約**。共通境界は本 feature、テナント固有 policy は feat-auth-tenancy |
+| D-P02-6 | G4 の workspace 実行資源 | `pnpm -r test` の入口は維持し、`pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間を直列化する。package 内並列は各 Vitest 設定に委ねる（§6） |
 
 ## 2. 【設計判断】pnpm workspace 構成の比較検討
 
@@ -136,7 +137,7 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 | G1 | pnpm 強制 | **corepack で pin**（正本機構）+ `packageManager` 検証 + `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` / `bun.lockb` の混入検出 | 検出時に非ゼロ終了 | A1, qa-039 |
 | G2 | lint / format | リポジトリ規約に沿った静的整形検査 | 違反で fail | qa-038【2】 |
 | G3 | typecheck | `pnpm -r typecheck`（TypeScript strict） | 型エラーで fail | qa-038【2】 |
-| G4 | unit / integration test | `pnpm -r test`（Tenant 分離・検査 pipeline 挙動同値・contract を含む） | 失敗で fail | A1, A4, qa-006, qa-010 |
+| G4 | unit / integration test | `pnpm -r test`（Tenant 分離・検査 pipeline 挙動同値・contract を含む）。各 package の Vitest worker pool は `workspaceConcurrency: 1` で同時起動させない | 失敗で fail | A1, A4, qa-006, qa-010 |
 | G5 | bundle 予算 | OpenNext build 出力の gzip 後サイズを算出 | 3 MiB 超過で非ゼロ終了 | A2 |
 | G6 | secret scan | `packages/inspection` の secret scan を **CI からも呼ぶ**（qa-038【2】。publish pipeline と同一実装） | 検出で fail | A4, SEC |
 | G7 | 破壊的 DDL 検査 | drizzle migration の expand/contract 3 段階違反を検出 | 違反で fail | qa-038【5】 |
@@ -154,6 +155,7 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 - ゲートの実行順は「静的ゲート（G1・G10・G12）→ install → G2・G3 → build → G4・G6・G7・G8・G9 → G5・G13 → deploy」とし、**deploy は全ゲート通過後にのみ、同一 workflow run 内で実行**する（R-02。A1 の "test→deploy 完走" の定義）。G13 が静的ゲート段に入らないのは、`next build` の出力を読む必要があり install・build を前提とするためである。
 - **G12 の位置づけ (2026-07-25 追記 / issue-auth-tenancy-ci-wiring-20260725)**: feat-auth-tenancy が追加した 3 検査は、共有 CI が当該 feature の write scope 外だったため CI から 1 度も呼ばれていなかった。呼ばれない検査は存在しないのと同じなので、静的ゲート段へ結線する。3 検査はいずれも「名前と参照経路」から決定的に判定でき next-auth の導入有無に依存しないため、install 前に落とせる。G9・G10 と同じく qa-038【2】の「8 種」には数えない横断品質ゲートであり、qa-038【2】の列挙項目を増減させない。
 - **G4 の Tenant 分離を名指しで守る (同上)**: qa-038【2】は Tenant 分離テストを必須ゲートとして名指しするが、`pnpm -r test` に含まれるだけでは分割・`it.skip` で静かに外れる。`scripts/ci/check-tenant-isolation-gate.mjs` で対象実在・T-ISO ID 網羅・無効化の不在を検査したうえで名指し実行する（ゲート数は増えない）。
+- **G4 の package 間直列化 (2026-07-30 / `HarnessHub-pyb3`)**: 6 package がそれぞれ Vitest worker pool と child process を同時に起動すると、assertion は全件成功していても worker-main RPC の `onTaskUpdate` が timeout して exit 1 になることを実測した。`--workspace-concurrency=1` では同じ 648 tests が完走したため、個別 test の timeout 緩和ではなく pnpm project 設定で package 間を直列化する。`pnpm -r test` の共通入口と package 内並列は維持し、設定は G1 の `check:pnpm` で fail-closed に固定する。
 - **local 再現 (R-18)**: required status checks と同一コマンドを root の `pnpm verify` で実行できるようにする（qa-039【2】）。**2026-07-25 時点の未結線は G7 / G7b / G9** — 追加ゲートは CI と local 入口を同時に用意すること（CI にしか無いゲートは着手前に気づけず、PR で初めて落ちる）。G13 は `pnpm check:client-bundle` を root に用意して同時結線した。
 
 ## 7. 監視・SLO 構成（qa-019 / qa-027）

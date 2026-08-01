@@ -144,3 +144,11 @@ qa-071 / appr-009 は `system-spec/spec-state.json` に既に確定済みで、
 本変更はその本文を feature と P01〜P13 の実行契約へ投影する変更である。
 判断根拠と `system-spec/`・`specs/`・`architecture/` を編集しない理由は
 `qa071-spec-reflection-receipt.md` に記録した。
+
+## C02 重複報告 j66m の最終レビュー (2026-07-30)
+
+`HarnessHub-j66m` は `HarnessHub-bk8v` と同じ lifecycle 回帰を指す重複報告である。
+実装 commit `b1c5001` と PR #601 が現行 `main` に含まれ、C02 の拒否処理、回帰テスト、
+実行契約、各仕様層の trace が残ることを再確認した。新しい製品仕様や別実装は追加せず、
+再検証結果を既存 dev-graph node
+`issue-c02-upsert-lifecycle-regression-20260729` と本受領書へ集約する。

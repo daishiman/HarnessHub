@@ -162,6 +162,7 @@ def new_session(
     *,
     run_id: str,
     owner_pid: int | None = None,
+    environment_overrides: dict[str, str] | None = None,
 ) -> None:
     """tmux session を作成し、任意の検証済み argv を直接起動する。
 
@@ -183,6 +184,12 @@ def new_session(
         "new-session", "-d", "-s", session, "-c", cwd,
         "-x", str(width), "-y", str(height),
     ]
+    for name, value in sorted((environment_overrides or {}).items()):
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+            raise ValueError(f"invalid environment override name: {name!r}")
+        if "\x00" in value or "\n" in value or "\r" in value:
+            raise ValueError(f"invalid environment override value for {name}")
+        args += ["-e", f"{name}={value}"]
     if command_argv is not None:
         args.append(_direct_process_command(command_argv))
     _tmux(*args, check=True)

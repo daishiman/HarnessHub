@@ -35,9 +35,11 @@ Harness Hub 製品の UI、API、DB、認証、デプロイ契約は変わらな
 ## 3. 正規フローでの反映
 
 1. `testing-qa.web` を R4-reopen（確定済み回答を理由付きで再オープンする操作）した。
-2. `qa-102` で既存回答を維持しつつ、plugin-local Chromium の復元、
+2. main で追加された `qa-102`〜`qa-108` を保持し、次の空き `qa-109` で
+   既存回答を維持しつつ、plugin-local Chromium の復元、
    `npm test`、最終 `--check`、cache 非正本、契約テストを確定した。
-3. ユーザーの最終レビュー・仕様反映指示を `appr-019` として承認記録へ追加した。
+3. main の `appr-019`〜`appr-020` を保持し、ユーザーの最終レビュー・
+   仕様反映指示を `appr-021` として承認記録へ追加した。
 4. coverage matrix と出典検査を通し、`system-spec/testing-qa.md` へコンパイル結果を反映した。
 5. C02 writer（dev-graph の正規書き込み口）で task node、feature、architecture の
    lineage（どの正本から作られたかの追跡情報）を更新した。
@@ -46,7 +48,7 @@ Harness Hub 製品の UI、API、DB、認証、デプロイ契約は変わらな
 
 | 層 | 反映内容 |
 |---|---|
-| `system-spec/spec-state.json` | `testing-qa.web` を `qa-102` / `appr-019` で再確定 |
+| `system-spec/spec-state.json` | `testing-qa.web` を `qa-109` / `appr-021` で再確定 |
 | `system-spec/testing-qa.md` | CI 到達、実 Chromium、cache、回帰検知の正本契約 |
 | `specs/harness-hub-system-specification.md` | testing/QA の統合仕様へ横断追補 |
 | `architecture/harness-hub-testing-qa.md` | workflow の責務、実行順、権限、境界 |
