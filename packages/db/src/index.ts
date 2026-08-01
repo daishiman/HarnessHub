@@ -15,17 +15,30 @@
 // 迂回させるのではなく必要な能力をここから出す。
 export { applyDdlStatements, splitMigrationSql } from '../backup/ddl';
 export { createTursoClient, createTursoWebClient } from '../connection/turso';
+// R2 PackageRegistry。consumer (feat-publish-pipeline の package upload) は
+// `@harness-hub/db/registry` の subpath ではなく必ずこの入口から取る —
+// subpath 直参照は detector が boundary-bypass-deep-import として落とす。
+export {
+  createPackageRegistry,
+  type PackageRegistry,
+  type PutPackageResult,
+  packageR2Key,
+  type R2BucketLike,
+} from '../registry/index';
 export {
   type AiJobRow,
   type CoreRepositories,
   type CoreRepositoriesInput,
   createCoreRepositories,
   createHearingIntakeRepository,
+  createPublishSmokeDbProbe,
   type DeviceAuthorizationRow,
   type HearingIntakeRepository,
   type HearingSheetRow,
   type IdpConnectionRow,
   type PublisherTokenRow,
+  type PublishSmokeDbProbe,
+  type PublishSmokeEvidence,
   type TenantCoefficientRow,
   type TenantRow,
   type UserRow,

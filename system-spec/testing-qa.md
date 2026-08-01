@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-076 |
+| Web (web) | 確定 | 確定質疑: qa-108 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -24,11 +24,19 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-076 (対応セル: web)
+### qa-108 (対応セル: web)
 
-**質問**: タスク仕様書が担保すべきテストレベルの網羅方針は何ですか? 単体テストだけで十分ですか?
+**質問**: PublishRequest パイプラインの受入を testing-qa.web の既存品質契約へどう統合しますか?
 
-**回答**: 単体テストだけでは不十分。タスク仕様書は、想定できるテストレベルを網羅する: (1) 単体テスト (関数・コンポーネント単位)、(2) 結合テスト (モジュール間・API 連携)、(3) 境界値テスト (入力境界・異常系)、(4) 既存回帰テスト (変更が既存機能を壊していないこと)。各タスク仕様書はテスト戦略セクションを必須で持ち、対象変更に対しどのレベルのテストを追加・実行するかを明記する。この機能がエラーなく使えるかの検証を目的とし、テスト種別の選定はタスクの変更内容から導出する
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-076 までの testing-qa.web 契約を全面維持し、公開パイプラインの品質ゲートを追加確定する。
+
+【1. 振る舞い】状態遷移の許可・拒否直積、Green/Yellow/Red 写像、旧 stable 維持、immutable Release、TargetChannel 直列化、idempotency の replay/payload mismatch、tenant/workspace/role matrix を自動テストで固定する。
+
+【2. 結線と境界】共有 inspection が secret scan を含むことだけでなく Hub がその bundle を実際に使うことを静的 gate で検査する。apps/hub から packages/db schema subpath への依存を禁止し、各 detector は意図的な bypass を拒否できる負例テストを持つ。検査対象 0 件を成功にしない。
+
+【3. production acceptance】repository 内の test 合格だけで P13 を完了扱いにせず、production Worker、DB、R2 に対する S1〜S6、channel_busy、R2 hash、audit chain を実測する。自動 smoke の entrypoint と必須 action 集合も静的・単体テストで固定する。
+
+【4. 証跡】system-plan P01〜P13 の validator violations 0、対象 package test/typecheck/lint、boundary/security gate、文書 line limit、artifact placement、diff check を PR 前に再実行し、結果と既知の非 blocker follow-up を受領書、release record、Beads notes へ残す。
 
 ### qa-095 (対応セル: desktop-windows, desktop-macos)
 

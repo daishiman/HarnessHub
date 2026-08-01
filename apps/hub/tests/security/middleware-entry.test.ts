@@ -5,11 +5,13 @@ import { NextRequest } from 'next/server';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { SESSION_COOKIE_NAME } from '../../src/lib/auth/config.js';
-import { buildSessionClaims, type DirectoryUser, signSessionToken } from '../../src/lib/auth/index.js';
+import { buildSessionClaims, type DirectoryUser, signJwt, signSessionToken } from '../../src/lib/auth/index.js';
 import { TENANT_HEADER, WORKSPACE_HEADER } from '../../src/middleware/scope.js';
 
 const SESSION_SECRET = 'middleware-entry-test-secret';
+const ACCESS_TOKEN_SECRET = 'middleware-entry-access-token-secret';
 const ORIGINAL_SECRET = process.env.AUTH_SESSION_SECRET;
+const ORIGINAL_ACCESS_TOKEN_SECRET = process.env.AUTH_ACCESS_TOKEN_SECRET;
 
 const USER: DirectoryUser = {
   id: 'user-1',
@@ -26,10 +28,15 @@ type MiddlewareModule = typeof import('../../src/middleware.js');
  * middleware.ts は**モジュール評価時**に AUTH_SESSION_SECRET を読む。
  * 秘密の有無による分岐を見るには、環境変数を差し替えてから読み直すしかない。
  */
-async function loadMiddleware(secret: string | undefined): Promise<MiddlewareModule> {
+async function loadMiddleware(
+  secret: string | undefined,
+  accessTokenSecret: string | undefined,
+): Promise<MiddlewareModule> {
   vi.resetModules();
   if (secret === undefined) delete process.env.AUTH_SESSION_SECRET;
   else process.env.AUTH_SESSION_SECRET = secret;
+  if (accessTokenSecret === undefined) delete process.env.AUTH_ACCESS_TOKEN_SECRET;
+  else process.env.AUTH_ACCESS_TOKEN_SECRET = accessTokenSecret;
   return import('../../src/middleware.js');
 }
 
@@ -39,12 +46,14 @@ const loaded = {} as Record<'denyAll' | 'emptySecret' | 'secured', MiddlewareMod
 
 beforeAll(async () => {
   try {
-    loaded.denyAll = await loadMiddleware(undefined);
-    loaded.emptySecret = await loadMiddleware('');
-    loaded.secured = await loadMiddleware(SESSION_SECRET);
+    loaded.denyAll = await loadMiddleware(undefined, undefined);
+    loaded.emptySecret = await loadMiddleware('', '');
+    loaded.secured = await loadMiddleware(SESSION_SECRET, ACCESS_TOKEN_SECRET);
   } finally {
     if (ORIGINAL_SECRET === undefined) delete process.env.AUTH_SESSION_SECRET;
     else process.env.AUTH_SESSION_SECRET = ORIGINAL_SECRET;
+    if (ORIGINAL_ACCESS_TOKEN_SECRET === undefined) delete process.env.AUTH_ACCESS_TOKEN_SECRET;
+    else process.env.AUTH_ACCESS_TOKEN_SECRET = ORIGINAL_ACCESS_TOKEN_SECRET;
     vi.resetModules();
   }
 });
@@ -56,6 +65,24 @@ function requestFor(pathname: string, headers: Record<string, string> = {}): Nex
 async function sessionCookie(user: DirectoryUser = USER, secret = SESSION_SECRET): Promise<string> {
   const claims = buildSessionClaims(user, Math.floor(Date.now() / 1000));
   return `${SESSION_COOKIE_NAME}=${await signSessionToken(claims, secret)}`;
+}
+
+async function accessToken(secret = ACCESS_TOKEN_SECRET): Promise<string> {
+  const now = Math.floor(Date.now() / 1000);
+  return signJwt(
+    {
+      typ: 'access',
+      sub: USER.id,
+      tenant_id: USER.tenantId,
+      workspace_id: USER.workspaceIds[0],
+      token_id: 'publisher-token-1',
+      role: USER.role,
+      scope: ['publish:write'],
+      iat: now,
+      exp: now + 900,
+    },
+    secret,
+  );
 }
 
 describe('middleware エントリの provider 結線', () => {
@@ -98,6 +125,45 @@ describe('middleware エントリの provider 結線', () => {
     const response = await loaded.secured.middleware(requestFor('/t/tenant-a/w/ws-1/docs'));
 
     expect(response.status).toBe(401);
+  });
+
+  it('AUTH_ACCESS_TOKEN_SECRET が設定されていれば、署名済み Bearer の主体を解決して通す', async () => {
+    const response = await loaded.secured.middleware(
+      requestFor('/api/v1/publish', {
+        authorization: `Bearer ${await accessToken()}`,
+        [TENANT_HEADER]: USER.tenantId,
+        [WORKSPACE_HEADER]: USER.workspaceIds[0] ?? '',
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+  });
+
+  it('Bearer の検証鍵が未設定なら、正しく署名された token でも fail-closed にする', async () => {
+    const response = await loaded.denyAll.middleware(
+      requestFor('/api/v1/publish', {
+        authorization: `Bearer ${await accessToken()}`,
+        [TENANT_HEADER]: USER.tenantId,
+        [WORKSPACE_HEADER]: USER.workspaceIds[0] ?? '',
+      }),
+    );
+
+    expect(response.status).toBe(401);
+  });
+
+  it('無効な Bearer があれば、有効な session cookie へ fallback しない', async () => {
+    const response = await loaded.secured.middleware(
+      requestFor('/api/v1/publish', {
+        authorization: `Bearer ${await accessToken('another-access-secret')}`,
+        cookie: await sessionCookie(),
+        [TENANT_HEADER]: USER.tenantId,
+        [WORKSPACE_HEADER]: USER.workspaceIds[0] ?? '',
+      }),
+    );
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({ error: 'unauthenticated' });
   });
 });
 

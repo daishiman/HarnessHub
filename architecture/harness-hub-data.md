@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-07-26T08:35:00Z","origin_kind":"system-spec-harness","source_digest":"44731a240f143b9e386d165ca8706ebda887262bbd634d02681d2f06ec3a6239","source_path":"system-spec/database.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"system-spec-harness","source_digest":"5a4d5439793d391f019e66e49f4baf7684bc361b3bbfe15c08fd5cdc3e1fd83d","source_path":"system-spec/database.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-data.md","confidence":0.95}]
@@ -103,6 +103,24 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **復旧境界**: `TursoAdapter.reconnect()` が古い raw client を捨てて factory から再生成する。外側の Client / Drizzle / repository 参照は安定させ、consumer の再構築を要求しない。
 - **環境分離**: request-bound の Turso remote / D1 は隔離対象にせず、競合再試行と DB 側 CAS を維持する。自動 reconnect は並行 transaction を巻き込み故障の観測を消すため採用しない。
 - **検証**: fake Client の状態遷移だけでなく、子プロセスが同じ file DB の write lock を保持する実 libSQL テストで silent loss 防止と明示 reconnect 後の可視性を固定する。
+
+**Publish pipeline 差分追記 (2026-07-30 / `HarnessHub-dfm` / qa-105)**:
+
+- 本 feature は `publish_requests`、`target_channels`、`releases`、`packages`、
+  `deployment_references` の schema owner ではなく、`packages/db` の repository
+  公開入口だけを使う consumer とする。Hub から schema subpath へ直接到達させない。
+- Release と package object は immutable（作成後に内容を書き換えない）とし、
+  content hash を同一性の根拠にする。stable の変更は Release を更新せず、
+  TargetChannel の pointer だけを原子的に差し替える。
+- 同一 channel の未完了 PublishRequest は DB の partial UNIQUE 制約を最終防衛線とする。
+  サービス層の先読みは早期拒否の最適化であり、競合保証の正本にはしない。
+- rollback は R2 の旧 package を現行検査規則で再検査してから pointer を戻す。
+  検査失敗・object 不在・CAS 競合では stable を変更しない。
+- production smoke も schema table を deep import せず、`createPublishSmokeDbProbe`
+  facade へ fixture 準備・証跡読取・cleanup を閉じる。運用検証を理由に
+  consumer 境界を例外化しない。
+- 仕様遷移と証拠は
+  [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を参照する。
 
 ## Delivery, migration and rollback
 

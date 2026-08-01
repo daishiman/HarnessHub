@@ -73,6 +73,16 @@ jobs:
         run: |
           node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:auth-gates
           node apps/hub/scripts/check-auth-gates.mjs --json artifacts/auth-gates.json
+      # feat-publish-pipeline P08/P09: test が green でも公開経路から secret scan の合成が
+      # 外れたり、Hub が packages/db の schema 内部へ直接依存したりする退行を静的に遮断する。
+      - name: G15 publish pipeline 境界・検査結線ゲート (I2 / qa-006 / owner 境界)
+        run: |
+          node apps/hub/scripts/check-publish-inspection-gate.mjs \
+            --json artifacts/publish-inspection-gate.json
+          node apps/hub/scripts/check-db-schema-boundary.mjs \
+            --json artifacts/publish-db-schema-boundary.json
+      - name: G15 detector 実効性 (意図的な検査 bypass / DB subpath を拒否)
+        run: node apps/hub/scripts/check-publish-boundary-gates.mjs
       - name: detector 実効性の検証 (HF-A4-DUP-002 / 意図的違反を検出できること)
         run: |
           set +e

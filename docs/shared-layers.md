@@ -75,7 +75,7 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 | G1 | pnpm 強制 | corepack pin (正本機構) + `packageManager` 検証 + `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` / `bun.lockb` の混入検出 | 検出で非ゼロ終了 | 静的ゲート | qa-038【2】, qa-039, A1 |
 | G2 | lint / format | リポジトリ規約に沿った静的整形検査 (Biome) | 違反で fail | build & test | qa-038【2】 |
 | G3 | typecheck | `pnpm -r typecheck` (TypeScript strict) | 型エラーで fail | build & test | qa-038【2】 |
-| G4 | unit / integration / contract test | `pnpm -r test` (Tenant 分離・検査 pipeline 挙動同値・contract を含む)。うち Tenant 分離は下記「G4 の名指し部分」で対象実在・ケース無効化を検査したうえで名指し実行する | 失敗で fail | build & test | A1, A4, qa-006, qa-010, qa-038【2】 |
+| G4 | unit / integration / contract test | `pnpm -r test` (Tenant 分離・検査 pipeline 挙動同値・contract を含む)。各 package が独自の Vitest worker pool を持つため、`pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間を直列化する。うち Tenant 分離は下記「G4 の名指し部分」で対象実在・ケース無効化を検査したうえで名指し実行する | 失敗で fail | build & test | A1, A4, qa-006, qa-010, qa-038【2】 |
 | G5 | bundle 予算 | OpenNext build 出力の gzip 後サイズ ≤ 3 MiB (Worker) | 超過で非ゼロ終了 | build & test | A2, qa-018, qa-038【2】 |
 | G6 | secret scan | `packages/inspection` の secret scan を CI からも呼ぶ (publish pipeline と同一実装) | 検出で fail | build & test | A4, SEC, qa-038【2】 |
 | G7 | 破壊的 DDL 検査 | drizzle migration の expand/contract 3 段階違反を検出 | 違反で fail | build & test | qa-038【2】【5】 |
@@ -92,6 +92,7 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 - **G5 と G13 を分けている理由** (2026-07-25 追記, qa-018): 両者は名前が似ているが**測る対象が別物**である。G5 は wrangler が Cloudflare へ上げる Worker (サーバー側実行コード) を 3 MiB で測り、G13 はブラウザへ配る client JS を測る。TBT / INP を悪化させるのは後者であり、G5 では原理的に検知できない。実測 (2026-07-24 の本番初回 CWV): `/` の First Load JS が 159 kB へ膨らみ TBT 926ms (予算 200ms) を出したとき、G5 は 0.96 MiB / 3 MiB で緑のままだった。G11 は main 反映後の定期計測なので PR 段階では止められない。よって PR 段階で client 側の退行を止める G13 を独立に置く。
 - **G13 を PR 単位に置く理由**: Lighthouse 実行を伴わず既存の `next build` 出力を読むだけなので Actions 時間をほぼ消費せず、C2 と衝突しない。G11 (実測・事後) と G13 (静的予算・事前) は代替関係ではなく、事前の退行遮断と事後の実測確認という二段構えである。
 - **G4 の名指し部分** (2026-07-25 追記): qa-038【2】は Tenant 分離テストを必須ゲートとして名指しするが、`pnpm -r test` に含まれているだけでは、ファイル分割や `it.skip` で 1 件も実行されなくなっても緑のまま通る。そこで `scripts/ci/check-tenant-isolation-gate.mjs` が (1) 対象ファイル `apps/hub/tests/auth-tenancy/tenant-isolation.test.ts` の実在、(2) T-ISO-01〜07 の ID 網羅、(3) skip / todo / only による無効化の不在 を検査したうえで、`apps/hub` の `test:tenant-isolation` を名指し実行する。**これは G4 の内訳を明示するものでゲート数を増やさない** (qa-038【2】の「8 種」の数え方は変わらない)。`packages/db` 側の schema 駆動な網羅検査 (G7b `check:tenant-isolation-coverage`) が「どのテーブルを覆うか」を守るのに対し、こちらは「そのテストが実際に走り続けるか」を守る。
+- **G4 の workspace 実行資源** (2026-07-30 追記 / `HarnessHub-pyb3`): package 内の file / worker 並列性は Vitest に委ねる一方、複数 package の worker pool を同時に起動しない。`pnpm -r test` という CI / local 共通入口は維持し、project 設定の `workspaceConcurrency: 1` と `pnpm check:pnpm` の正負テストで直列化を固定する。これにより test assertion が全件成功した後の worker RPC `onTaskUpdate` timeout を G4 の失敗と誤認する偽陽性を防ぐ。
 
 **CI が 2 系統ある境界** (2026-07-21 追記): 本リポジトリは Hub 本体 (プロダクト) と Claude Code スキルハーネス (`plugins/`) の 2 つを同居させており、CI も 2 系統に分かれる。この登録簿 (G1〜G13) と qa-038【2】の required status checks 8 種が対象とするのは **プロダクト層 (`.github/workflows/ci.yml` / `.github/workflows/cwv.yml`)** のみである。
 
