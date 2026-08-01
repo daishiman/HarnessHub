@@ -21,7 +21,8 @@
     "check:auth-gates": "node scripts/check-auth-gates.mjs",
     "check:client-bundle": "node scripts/check-client-bundle.mjs",
     "smoke:publish-production": "tsx scripts/smoke-production-publish.ts",
-    "apply:monitoring": "node scripts/apply-better-stack-monitoring.mjs"
+    "apply:monitoring": "node scripts/apply-better-stack-monitoring.mjs",
+    "verify:slo-observation": "node scripts/verify-slo-observation.mjs"
   },
   "dependencies": {
     "@auth/core": "0.41.3",

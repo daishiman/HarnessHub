@@ -13,6 +13,25 @@ const MONITORING_FILES = [
 /** 適用状態はこの 2 値だけ。中間状態を作ると「半分適用」を緑で通してしまう */
 const APPLICATION_STATES = ['pending_credentials', 'applied'] as const;
 
+/**
+ * application_state=applied のときに取りうる verdict。
+ * observation_complete_pending_application_error_rate は「外形 30 日は揃ったが
+ * Workers analytics の 5xx 率が無いので最終判定できない」状態で、
+ * 外形単独で 99.5% 達成を主張する経路を塞ぐ (infrastructure-spec §9 / qa-019)。
+ */
+const APPLIED_VERDICT_STATUSES = [
+  'collecting',
+  'collection_blocked',
+  'observation_complete_pending_application_error_rate',
+] as const;
+
+/** verdict.status ごとに宣言してよい blocker。組み合わせがずれると状態が読めなくなる */
+const BLOCKER_BY_VERDICT: Record<string, string | null> = {
+  collecting: null,
+  collection_blocked: 'better-stack-monitor-paused',
+  observation_complete_pending_application_error_rate: 'workers-analytics-5xx-rate-not-collected',
+};
+
 /** heartbeat の ping URL。これ自体が cron 成功を偽装できる秘密なので成果物へ出さない */
 const HEARTBEAT_URL_PATTERN = /uptime\.betterstack\.com\/api\/v\d+\/heartbeat\//;
 
@@ -90,6 +109,7 @@ interface SloConfig {
     observation_started_at: string | null;
     first_monthly_verdict_due_at: string | null;
     blocker?: string | null;
+    $comment?: string;
   };
 }
 
@@ -207,7 +227,7 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
       expect(monitoring.backup_heartbeat.external_id).not.toBe('');
     }
     expect(monitoring.applied_at).toMatch(ISO_INSTANT);
-    expect(['collecting', 'collection_blocked']).toContain(dashboard.verdict.status);
+    expect(APPLIED_VERDICT_STATUSES).toContain(dashboard.verdict.status);
     if (dashboard.verdict.status === 'collection_blocked') {
       expect(dashboard.verdict.observation_started_at).toBeNull();
       expect(dashboard.verdict.first_monthly_verdict_due_at).toBeNull();
@@ -230,6 +250,20 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
     if (Number.isNaN(dueAt) || Date.now() >= dueAt) return;
     // 判定予定日より前に collecting 以外へ進んでいたら、根拠なく達成を宣言している
     expect(dashboard.verdict.status).toBe('collecting');
+  });
+
+  // status と blocker がずれると「止まっているのに理由が消えている」「動いているのに
+  // 古い理由が残っている」状態が作れてしまい、verdict を読んだ人が実態を誤認する
+  it('verdict.status と blocker の組が宣言どおりである', () => {
+    expect(Object.keys(BLOCKER_BY_VERDICT)).toContain(dashboard.verdict.status);
+    expect(dashboard.verdict.blocker ?? null).toBe(BLOCKER_BY_VERDICT[dashboard.verdict.status] ?? null);
+  });
+
+  // verdict を手で書き換えると、実測を伴わない状態宣言が復活する (2026-07-27 の実例)。
+  // 実測器の名前を出典として残させることで、少なくとも「誰が決めた値か」を追える形に固定する
+  it('applied 後の verdict は実測器を出典として記録する', () => {
+    if (monitoring.application_state !== 'applied') return;
+    expect(String(dashboard.verdict.$comment ?? '')).toContain('verify-slo-observation.mjs');
   });
 
   it('秘密値 (heartbeat URL・API token) を設定ファイルへ書かない', () => {
