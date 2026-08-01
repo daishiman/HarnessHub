@@ -175,13 +175,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 **差分追記 (2026-07-25 / feat-domain-model-db P13)**
 
 - **最小権限リスク**: 2026-07-25 時点では `CLOUDFLARE_API_TOKEN` を Workers deploy と R2 write で共用していた。2026-07-29 に repository 内の参照分離を実装し、外部環境での token 発行・投入・拒否確認・workflow 完走は `issue-ci-token-least-privilege-20260725` (`HarnessHub-bda4`) で継続追跡する。
-- **未検証境界**: 更新版 `backup.yml` の成功と、main 上の `ci.yml` が migration → deploy → health → smoke を完走することは landing 後の GitHub Actions 実走待ち。追跡: `issue-actions-secrets-missing-20260725` (`HarnessHub-fnzl`)。
+- **検証済み境界 (2026-08-01)**: main 上の `ci.yml` は run `30684710098` で migration → deploy → health → smoke を完走し、`backup.yml` は run `30686023662` で export 19 テーブル / 64 行、R2 往復一致、heartbeat ping まで完走した。追跡していた `HarnessHub-fnzl` は受入条件 6/6 で closed。
 - **検証済み**: 本番 Turso 18 table / 12 index、D1 hedge 同一断面、R2 往復、スモーク 6/6、restore drill 2 段、rollback 3 分岐 (deploy 未成功 / rollback 成功 / rollback 失敗)。証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
 
 **差分追記 (2026-07-28 / `HarnessHub-vns9`)**
 
-- **未検証境界の更新**: `HarnessHub-fnzl` 由来の secret / variable 投入は完了し `check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。`ci.yml` の完走は run `30143422049` で達成済み。**残るのは `backup.yml` の成功のみ**で、是正版が main へ land した後の `workflow_dispatch` 実走待ち。
-- **観測経路の欠落 (2026-07-29 更新)**: 3 夜連続失敗が無音だった原因に対し、backup 専用 heartbeat、required secret、workflow 前提確認、限定適用 CLI をローカル実装した。外部適用・secret 投入・main 成功 run・着信実測は未完了であり、運用上の欠落が閉じたとはまだ数えない。追跡: `issue-backup-failure-undetected-20260728` (`HarnessHub-dbx6`)。
+- **未検証境界の解消 (2026-08-01)**: `check-actions-secrets.mjs --live` は現行の workflow 参照 13 件 = 台帳 13 件で exit 0。main の `hub-ci` run `30684710098` と `hub-backup` run `30686023662` がともに success となり、deploy と日次 backup の外部受入を満たした。
+- **観測経路の欠落を解消**: backup 専用 Better Stack heartbeat `477775` を Worker cron 用 `475650` と分離して適用し、required secret 投入と ping の HTTP 2xx 受理を実測した。cron 不発と途中失敗はいずれも `period=86400` + `grace=3600` の期限超過として概ね JST 03:00 までに異常化する。`HarnessHub-dbx6` は受入条件 4/4 で closed。
 
 **差分追記 (2026-07-29 / `HarnessHub-bda4` / qa-091)**
 

@@ -12,8 +12,8 @@ iteration: null
 title: "日次 backup の連続失敗が 3 夜気づかれなかった (BACKUP_HEARTBEAT_URL 未投入で不発・失敗が無音になる)"
 owners: ["daishiman"]
 created_at: "2026-07-28T02:40:00Z"
-updated_at: "2026-07-28T04:49:52.215131Z"
-status: "draft"
+updated_at: "2026-08-01T05:40:00Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["issues/sys-backup-failure-undetected-20260728.md",".github/workflows/backup.yml","scripts/ci/actions-secrets-registry.json","apps/hub/monitoring/better-stack.monitors.json","docs/features/feat-hub-foundation/runbook.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-01T05:40:00Z","evidence_refs":[".github/workflows/backup.yml","scripts/ci/actions-secrets-registry.json","apps/hub/monitoring/better-stack.monitors.json","apps/hub/scripts/apply-better-stack-monitoring.mjs","docs/features/feat-hub-foundation/runbook.md","docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied-2026-08-01.json"],"policy":"manual","reconciled_at":"2026-08-01T05:40:00Z","source":null,"status":"done"}
 implementation_readiness: {"checked_at":"2026-07-28T02:40:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -100,12 +100,20 @@ implementation_readiness: {"checked_at":"2026-07-28T02:40:00Z","missing_sections
 - 関連アーキテクチャ: `apps/hub/monitoring/better-stack.monitors.json` (監視資源の正本)
 - 解決タスク: 未作成
 
+## 対応結果 (2026-08-01)
+
+Better Stack の backup 専用 heartbeat `hub-backup-daily` (external_id `477775`、period 86400 秒 / grace 3600 秒) を限定モード (`--only-backup-heartbeat --put-github-secret`) で作成し、URL を `gh secret set` の stdin へ直接投入した。既存の health monitor・Worker heartbeat・status page には API 呼び出しをしていない。`--live` は exit 0 になり、`hub-backup` run `30686023662` が success して heartbeat ping まで到達した。
+
+無音にならない根拠は 2 経路である。**cron 不発**は run が 1 つも残らないが、period 86400 + grace 3600 の期限を越えるため Better Stack 側が異常化する。**途中失敗**は heartbeat step が `if: success()` で実行されず、同じ期限超過として現れる。UTC 17:00 の予定 run が完走しなければ、おおむね UTC 18:00 (JST 03:00) までに検知される。
+
+なお実測できたのは「ping が `curl -fsS` で 2xx として受理された」ところまでで、provider 側の heartbeat 状態遷移そのものは Uptime API token を保持しない方針のため未確認である。証跡でも両者を区別して記録している。
+
 ## 受入条件
 
-- [ ] `BACKUP_HEARTBEAT_URL` を投入し、成功 run で heartbeat の着信を実測している
-- [ ] Worker cron 用 `CRON_HEARTBEAT_URL` と資源を共用するか分離するかを決め、根拠を runbook へ記録している
-- [ ] 日次 backup が連続失敗した場合に無音にならないことを、heartbeat の period と猶予の整合で説明できる
-- [ ] `scripts/ci/actions-secrets-registry.json` の requirement を optional 据え置きか required 昇格かで判断し反映している
+- [x] `BACKUP_HEARTBEAT_URL` を投入し、成功 run で heartbeat の着信を実測している
+- [x] Worker cron 用 `CRON_HEARTBEAT_URL` と資源を共用するか分離するかを決め、根拠を runbook へ記録している (分離。heartbeat `475650` と `477775` は別資源)
+- [x] 日次 backup が連続失敗した場合に無音にならないことを、heartbeat の period と猶予の整合で説明できる
+- [x] `scripts/ci/actions-secrets-registry.json` の requirement を optional 据え置きか required 昇格かで判断し反映している (`required` へ昇格済み)
 
 ## 検証証跡
 
@@ -113,4 +121,6 @@ implementation_readiness: {"checked_at":"2026-07-28T02:40:00Z","missing_sections
   - `node scripts/ci/check-actions-secrets.mjs --live`
   - `gh workflow run backup.yml --ref main` → `gh run view <id> --json conclusion,jobs`
   - `pnpm --filter @harness-hub/hub exec vitest run tests/monitoring`
-- 証跡 path: `docs/features/feat-hub-foundation/evidence/actions-secrets-2026-07-28.json` (3 連続失敗と R2 空の実測)
+- 証跡 path:
+  - `docs/features/feat-hub-foundation/evidence/actions-secrets-2026-07-28.json` (3 連続失敗と R2 空の実測)
+  - `docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied-2026-08-01.json` (heartbeat 適用・secret 投入・成功 run・成果物の独立検証)
