@@ -49,6 +49,7 @@ system-spec harness の単一 transition writer を使い、既存契約を次�
 - marketplace を private cache とし、Cookie/tenant/workspace の `Vary` を追加。
 - 一覧の draft filter と applied query を分離し、submit 1 回 = request 1 回に修正。
 - DC-TEN-06..10、DC-LIST-01、改訂 DC-MKT-07 を回帰テストへ追加。
+- PR #628 の Hub 全体検査で見つかった fixture 記法の誤検知を是正。実行時データと production 契約は不変のため、追加の仕様 transition は不要と判断した。
 
 ## 5. 行数ルール
 

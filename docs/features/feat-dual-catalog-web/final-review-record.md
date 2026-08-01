@@ -120,6 +120,13 @@ requirements-baseline §6 の 4 件を、実装側から再確認した。
 - **発見**: 入力 state の effect と form submit が同時に fetch を起動し、1 操作で 2 要求になる経路があった。
 - **是正**: draft 入力と適用 query を分離し、入力中は通信せず submit 1 回につき 1 回だけ取得する。DC-LIST-01 で要求数を固定した。
 
+### 4.8 GitHub CI 追補: AI queue 検査との記法衝突 (**是正済・追加仕様影響なし**)
+
+- **発見**: PR #628 の Hub 全体テストで、catalog failure fixture の `kind` を AI queue の feature-local kind と誤認した。
+- **是正**: fixture の property を computed key で表し、実行時の型・値・検証意図を変えず静的検査の対象から分離した。
+- **検証**: 直接関係する 2 files / 22 tests と Hub 全体 76 files / 908 passed / 1 skipped が PASS。
+- **仕様判断**: production code、schema、cache・認可契約に変更がないため、qa-110..112 と既存仕様反映受領を変更しない。
+
 ---
 
 ## 5. 未達事項の扱い
@@ -155,6 +162,7 @@ requirements-baseline §6 の 4 件を、実装側から再確認した。
 
 ```bash
 pnpm --filter @harness-hub/hub exec vitest run src/__tests__/dual-catalog-web  # 8 files / 63 tests passed
+pnpm --filter @harness-hub/hub test                                            # 76 files / 908 passed / 1 skipped
 pnpm --filter @harness-hub/hub run typecheck                                   # pass
 pnpm exec biome check <catalog changed scope>                              # 30 files / No fixes applied
 ```

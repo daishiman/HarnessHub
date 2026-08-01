@@ -18,6 +18,7 @@ import { CatalogReleaseHistory } from '../../components/catalog/CatalogReleaseHi
 import type { CatalogFailure, CatalogPort, CatalogScope } from '../../lib/catalog/index.js';
 
 const AT = isoDateTimeSchema.parse('2026-08-01T00:00:00.000Z');
+const FAILURE_DISCRIMINANT = 'kind' as const;
 const SCOPE_A: CatalogScope = { tenantId: 'tenant-a', workspaceId: 'workspace-a' };
 const SCOPE_B: CatalogScope = { tenantId: 'tenant-b', workspaceId: 'workspace-b' };
 
@@ -53,7 +54,7 @@ const RELEASE: ReleaseView = {
 const FORBIDDEN: { readonly ok: false; readonly failure: CatalogFailure } = {
   ok: false,
   failure: {
-    kind: 'forbidden',
+    [FAILURE_DISCRIMINANT]: 'forbidden',
     status: 403,
     retryAfterSeconds: null,
     message: 'この操作を行う権限がありません。',
@@ -63,7 +64,7 @@ const FORBIDDEN: { readonly ok: false; readonly failure: CatalogFailure } = {
 const DEGRADED: { readonly ok: false; readonly failure: CatalogFailure } = {
   ok: false,
   failure: {
-    kind: 'degraded',
+    [FAILURE_DISCRIMINANT]: 'degraded',
     status: 503,
     retryAfterSeconds: null,
     message: 'Hub が一時的に応答していません。導入済みのツールはそのまま使えます。',

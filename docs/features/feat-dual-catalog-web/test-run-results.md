@@ -104,6 +104,19 @@ axe 違反: **0 件** (DC-A11Y-01..04, 07 で `axe.run(document)` を実行。�
 > `/catalog/[projectId]` の余裕は 1.0 KiB と薄い。この route の計測値には、client-reference manifest の和集合として
 > 兄弟ルート `/catalog` の chunk も算入される。構成の余裕確保は P08 (refactoring-migration) で扱う。
 
+### 4.4 PR 作成後の Hub 全体回帰
+
+PR #628 の初回 GitHub CI は `ai-queue-contract.test.ts` が catalog failure fixture の `kind` を
+queue kind 新設と誤認して 1 件 fail した。fixture を computed key へ変え、実行時のデータ形状は維持した。
+
+| 検証 | 結果 |
+|---|---|
+| 誤検知検査 + catalog cache 境界 | 2 files / 22 tests pass |
+| Hub 全体 (`vitest run --coverage`) | 76 files / 908 passed / 1 skipped |
+| Hub 全体 coverage | statements/lines 81.84%、branches 86.47%、functions 84.47% |
+
+本追補はテスト記法だけの変更で、production code・schema・仕様契約への追加影響はない。
+
 ---
 
 ## 5. 未実施・未達 (差し戻し理由)
@@ -123,6 +136,7 @@ axe 違反: **0 件** (DC-A11Y-01..04, 07 で `axe.run(document)` を実行。�
 
 ```bash
 pnpm --filter @harness-hub/hub exec vitest run src/__tests__/dual-catalog-web
+pnpm --filter @harness-hub/hub test
 pnpm --filter @harness-hub/hub run test:a11y
 pnpm --filter @harness-hub/hub run typecheck
 pnpm --filter @harness-hub/schemas run typecheck
