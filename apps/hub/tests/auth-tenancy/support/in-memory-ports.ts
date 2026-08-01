@@ -327,3 +327,25 @@ export function directoryUser(
     ...overrides,
   };
 }
+
+/**
+ * OIDC 接続の素材。**既定は顧客持ち込み方式・許可ドメイン無し** — 共有 client 方式を足す前の
+ * 挙動と同じになるようにしてある。既存テストがこのヘルパ経由なら、mode の既定を変えた瞬間に
+ * 「既存方式が壊れていない」はずのテストが落ちて気付ける。
+ *
+ * literal を各テストに散らさずここへ寄せるのは、`TenantOidcConnection` に列が増えるたびに
+ * テスト全部が型エラーになるのを避けるため (本 issue で実際に 2 列増えた)。
+ */
+export function oidcConnection(
+  overrides: Partial<TenantOidcConnection> & Pick<TenantOidcConnection, 'tenantId' | 'tenantSlug'>,
+): TenantOidcConnection {
+  return {
+    issuer: 'https://idp.example.com',
+    clientId: `client-${overrides.tenantSlug}`,
+    displayName: overrides.tenantSlug,
+    enabled: true,
+    credentialMode: 'customer_google',
+    allowedWorkspaceDomains: [],
+    ...overrides,
+  };
+}

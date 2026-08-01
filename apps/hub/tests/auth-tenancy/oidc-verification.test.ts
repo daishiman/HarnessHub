@@ -12,27 +12,31 @@ import * as authPublicSurface from '../../src/lib/auth/index.js';
 import { resolveSignIn } from '../../src/lib/auth/index.js';
 import { type OidcVerificationInput, resolveTenantOidcConfig, verifyOidcIdToken } from '../../src/lib/auth/oidc.js';
 import type { TenantOidcConnection } from '../../src/lib/auth/ports.js';
-import { createInMemoryOidcConnections, createInMemoryUsers, TENANT_A, TENANT_B } from './support/in-memory-ports.js';
+import {
+  createInMemoryOidcConnections,
+  createInMemoryUsers,
+  oidcConnection,
+  TENANT_A,
+  TENANT_B,
+} from './support/in-memory-ports.js';
 
 const NOW = 1_800_000_000;
 
-const CONNECTION_A: TenantOidcConnection = {
+const CONNECTION_A: TenantOidcConnection = oidcConnection({
   tenantId: TENANT_A,
   tenantSlug: 'tenant-a',
   issuer: 'https://idp-a.example.com',
   clientId: 'client-a',
   displayName: 'Tenant A IdP',
-  enabled: true,
-};
+});
 
-const CONNECTION_B: TenantOidcConnection = {
+const CONNECTION_B: TenantOidcConnection = oidcConnection({
   tenantId: TENANT_B,
   tenantSlug: 'tenant-b',
   issuer: 'https://idp-b.example.com',
   clientId: 'client-b',
   displayName: 'Tenant B IdP',
-  enabled: true,
-};
+});
 
 /** 全条件を満たす入力。各テストは**壊したい 1 点だけ**を上書きする。 */
 function baseInput(overrides: Partial<OidcVerificationInput> = {}): OidcVerificationInput {

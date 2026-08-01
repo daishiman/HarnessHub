@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-30T04:40:19Z"
+updated_at: "2026-08-01T12:29:53Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db"]
 related_nodes: []
@@ -46,6 +46,8 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
+
+
 
 # 認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)
 
@@ -161,3 +163,20 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## 実装反映 (2026-08-01 / HarnessHub-fnej)
+
+- Google OAuth client を tenant ごとに作る従来方式へ、環境単位の共有 client と
+  固定 callback 1 本を使う `shared_google` mode を追加した。
+- tenant context は署名付き `state` と binding cookie で共通 callback に束縛し、
+  Auth.js の PKCE・nonce・ID token 署名検証を維持した。
+- Google ID token の `hd` を許可 Workspace domain と完全一致させ、個人 Google、
+  別 Workspace、tenant 差し替えを JIT/session 発行前に拒否する。
+- 共有 secret は Worker 環境に 1 組だけ置き、tenant DB 行へ複製しない。
+  既存 `customer_google` の callback・暗号化 secret・session は回帰試験で維持する。
+- schema、migration、rollout/rollback、AD-10、実 Auth.js 往復試験を追加した。
+  仕様正本は `qa-110`〜`qa-115`、対応表は
+  [共有 Google OIDC 仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  を参照する。
+- draft PR の merge と default branch reconciliation までは
+  `HarnessHub-fnej` と dev-graph node を `in_progress` のまま維持する。

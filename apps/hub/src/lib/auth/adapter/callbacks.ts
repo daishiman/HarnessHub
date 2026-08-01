@@ -9,7 +9,14 @@ import type { SessionClaims } from '@harness-hub/schemas';
 import type { DirectoryUser, UserDirectoryPort } from '../ports.js';
 import { buildSessionClaims } from '../session.js';
 
-export type SignInRejection = 'user_inactive' | 'provisioning_disabled';
+export type SignInRejection =
+  | 'user_inactive'
+  | 'provisioning_disabled'
+  /**
+   * ID token の `hd` が許可 Workspace ドメインと合わない (共有 client 方式のテナント帰属拒否)。
+   * 判定自体は `verifyWorkspaceDomain` が持ち、ここは結果を sign-in の語彙へ写しているだけ。
+   */
+  | 'workspace_domain_rejected';
 
 export type SignInOutcome =
   | { readonly ok: true; readonly user: DirectoryUser; readonly provisioned: boolean }

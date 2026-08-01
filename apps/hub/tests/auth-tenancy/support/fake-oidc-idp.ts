@@ -127,10 +127,134 @@ export interface OidcSignInFlow {
 }
 
 /**
- * csrf → signin(POST) → callback(GET) を実際の handler へ順に通す。
+ * ブラウザ相当の cookie 入れ物。
  *
- * cookie を跨いで運ぶのが本質で、state / nonce / PKCE verifier は Auth.js が cookie に封入する。
- * 手で組み立てると封入形式の変更を検出できないため、必ず handler の応答から拾い直す。
+ * state / nonce / PKCE verifier は Auth.js が cookie へ封入する。手で組み立てると封入形式の
+ * 変更を検出できないため、必ず handler の応答から拾い直す。共有 client 方式では
+ * **開始 (テナント path) と callback (共通 path) で応答が別**なので、跨いで運ぶ器が要る。
+ */
+export interface CookieJar {
+  /** 応答の `Set-Cookie` を取り込む。空値は削除指示として扱う。 */
+  absorb(response: Response): void;
+  /** `Cookie` ヘッダ値を組む。`exclude` に挙げた名前は落とす (欠落時の挙動を試すため)。 */
+  header(options?: { readonly exclude?: readonly string[] }): string;
+  entries(): ReadonlyMap<string, string>;
+}
+
+export function createCookieJar(): CookieJar {
+  const jar = new Map<string, string>();
+
+  return {
+    absorb(response) {
+      for (const raw of response.headers.getSetCookie()) {
+        const pair = raw.split(';')[0];
+        if (pair === undefined) continue;
+        const separator = pair.indexOf('=');
+        if (separator < 0) continue;
+        const name = pair.slice(0, separator).trim();
+        const value = pair.slice(separator + 1).trim();
+        if (value.length === 0) jar.delete(name);
+        else jar.set(name, value);
+      }
+    },
+    header(options) {
+      const exclude = new Set(options?.exclude ?? []);
+      return [...jar]
+        .filter(([name]) => !exclude.has(name))
+        .map(([name, value]) => `${name}=${value}`)
+        .join('; ');
+    },
+    entries: () => new Map(jar),
+  };
+}
+
+/** 認可開始まで進めた状態。callback をどこへ・どんな cookie で出すかは呼び出し側が決める。 */
+export interface StartedOidcSignIn {
+  /** signin(POST) の遷移先。state / nonce / code_challenge が載っている。 */
+  readonly authorizeUrl: URL;
+  /** signin(POST) の応答そのもの。共有方式の binding cookie はここに載る。 */
+  readonly signin: Response;
+  readonly jar: CookieJar;
+}
+
+/**
+ * csrf → signin(POST) までを実際の handler へ通す。
+ *
+ * ここで止めるのは、**callback の宛先が方式によって変わる**から。
+ * 顧客方式は `{basePath}/callback/{provider}`、共有方式は `/api/auth/shared/callback/tenant-oidc`。
+ */
+export async function startOidcSignIn(params: {
+  readonly handler: (request: Request) => Promise<Response>;
+  readonly origin: string;
+  /** 認可を開始する path。どちらの方式も `/api/auth/{tenant_slug}`。 */
+  readonly basePath: string;
+  readonly providerId?: string;
+}): Promise<StartedOidcSignIn> {
+  const { handler, origin, basePath } = params;
+  const providerId = params.providerId ?? 'tenant-oidc';
+  const jar = createCookieJar();
+
+  const csrf = await handler(new Request(`${origin}${basePath}/csrf`));
+  jar.absorb(csrf);
+  const { csrfToken } = (await csrf.json()) as { csrfToken: string };
+
+  const signin = await handler(
+    new Request(`${origin}${basePath}/signin/${providerId}`, {
+      method: 'POST',
+      headers: { cookie: jar.header(), 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ csrfToken, callbackUrl: `${origin}/` }).toString(),
+    }),
+  );
+  jar.absorb(signin);
+  const location = signin.headers.get('location');
+  if (location === null) throw new Error(`認可要求へ遷移しませんでした (status=${signin.status})`);
+
+  return { authorizeUrl: new URL(location), signin, jar };
+}
+
+/**
+ * 認可 callback を handler へ出す。IdP が返す id_token の `nonce` は認可要求から流し込む。
+ *
+ * `state` と `callbackPath` を呼び出し側が指定できるのが要点で、
+ * 「別テナントの state を共通 callback へ提示する」といった否定系をそのまま書ける。
+ */
+export async function completeOidcCallback(params: {
+  readonly handler: (request: Request) => Promise<Response>;
+  readonly idp: FakeOidcIdp;
+  readonly origin: string;
+  readonly started: StartedOidcSignIn;
+  /** callback を受ける path (`/api/auth/{slug}/callback/tenant-oidc` など)。 */
+  readonly callbackPath: string;
+  /** id_token に載せる claims (`sub` は必須、`nonce` は自動で足す)。 */
+  readonly idToken: Readonly<Record<string, unknown>>;
+  /** 既定は認可 URL に載った state。差し替え試験ではここへ別の値を渡す。 */
+  readonly state?: string | null;
+  /** callback 要求から落とす cookie 名。binding 欠落の試験で使う。 */
+  readonly excludeCookies?: readonly string[];
+}): Promise<Response> {
+  const { handler, idp, origin, started, callbackPath, idToken } = params;
+
+  idp.setIdTokenClaims({ ...idToken, nonce: started.authorizeUrl.searchParams.get('nonce') });
+
+  const callback = new URL(`${origin}${callbackPath}`);
+  callback.searchParams.set('code', 'fake-authorization-code');
+  const state = params.state === undefined ? started.authorizeUrl.searchParams.get('state') : params.state;
+  if (state !== null) callback.searchParams.set('state', state);
+
+  const headers: Record<string, string> = {};
+  const cookie = started.jar.header(
+    params.excludeCookies === undefined ? undefined : { exclude: params.excludeCookies },
+  );
+  if (cookie.length > 0) headers.cookie = cookie;
+
+  const response = await handler(new Request(callback.toString(), { headers }));
+  started.jar.absorb(response);
+  return response;
+}
+
+/**
+ * csrf → signin(POST) → callback(GET) を実際の handler へ順に通す (顧客持ち込み client 方式)。
+ * callback は認可を開始したのと同じテナント path で受ける。
  */
 export async function driveOidcSignIn(params: {
   readonly handler: (request: Request) => Promise<Response>;
@@ -142,50 +266,24 @@ export async function driveOidcSignIn(params: {
   readonly idToken: Readonly<Record<string, unknown>>;
   readonly providerId?: string;
 }): Promise<OidcSignInFlow> {
-  const { handler, idp, origin, basePath, idToken } = params;
   const providerId = params.providerId ?? 'tenant-oidc';
-  const jar = new Map<string, string>();
+  const started = await startOidcSignIn({
+    handler: params.handler,
+    origin: params.origin,
+    basePath: params.basePath,
+    providerId,
+  });
 
-  const absorb = (response: Response): void => {
-    for (const raw of response.headers.getSetCookie()) {
-      const pair = raw.split(';')[0];
-      if (pair === undefined) continue;
-      const separator = pair.indexOf('=');
-      if (separator < 0) continue;
-      const name = pair.slice(0, separator).trim();
-      const value = pair.slice(separator + 1).trim();
-      if (value.length === 0) jar.delete(name);
-      else jar.set(name, value);
-    }
-  };
-  const cookieHeader = (): string => [...jar].map(([name, value]) => `${name}=${value}`).join('; ');
+  const response = await completeOidcCallback({
+    handler: params.handler,
+    idp: params.idp,
+    origin: params.origin,
+    started,
+    callbackPath: `${params.basePath}/callback/${providerId}`,
+    idToken: params.idToken,
+  });
 
-  const csrf = await handler(new Request(`${origin}${basePath}/csrf`));
-  absorb(csrf);
-  const { csrfToken } = (await csrf.json()) as { csrfToken: string };
-
-  const signin = await handler(
-    new Request(`${origin}${basePath}/signin/${providerId}`, {
-      method: 'POST',
-      headers: { cookie: cookieHeader(), 'content-type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ csrfToken, callbackUrl: `${origin}/` }).toString(),
-    }),
-  );
-  absorb(signin);
-  const location = signin.headers.get('location');
-  if (location === null) throw new Error(`認可要求へ遷移しませんでした (status=${signin.status})`);
-  const authorizeUrl = new URL(location);
-
-  idp.setIdTokenClaims({ ...idToken, nonce: authorizeUrl.searchParams.get('nonce') });
-
-  const callback = new URL(`${origin}${basePath}/callback/${providerId}`);
-  callback.searchParams.set('code', 'fake-authorization-code');
-  callback.searchParams.set('state', authorizeUrl.searchParams.get('state') ?? '');
-
-  const response = await handler(new Request(callback.toString(), { headers: { cookie: cookieHeader() } }));
-  absorb(response);
-
-  return { authorizeUrl, response, cookies: jar };
+  return { authorizeUrl: started.authorizeUrl, response, cookies: started.jar.entries() };
 }
 
 /** 応答の `Set-Cookie` から指定 cookie の値を取り出す。削除指示 (空値) は null 扱い。 */
