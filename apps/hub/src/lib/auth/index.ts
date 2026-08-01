@@ -5,10 +5,13 @@ export {
   type AuthjsConfigDeps,
   type AuthjsHandlerDeps,
   type AuthRouteHandler,
+  type BuildOidcProviderOptions,
   buildOidcProvider,
   createAuthjsHandler,
   createSessionAuthProvider,
+  type OidcCheck,
   type OidcProviderConfig,
+  type ResolveAuthjsConfigOptions,
   type ResolvedAuthjsConfig,
   resolveAuthjsConfig,
   resolveAuthjsConfigForTenant,
@@ -24,11 +27,24 @@ export {
   isTrustedOrigin,
   SESSION_COOKIE_ATTRIBUTES,
   SESSION_COOKIE_NAME,
+  SHARED_OIDC_BASE_PATH,
+  SHARED_OIDC_CALLBACK_PATH,
+  SHARED_OIDC_CSRF_COOKIE_PREFIX,
+  SHARED_OIDC_PATH_SEGMENT,
+  SHARED_OIDC_PROVIDER_ID,
   STATE_CHANGING_METHODS,
   serializeClearedSessionCookie,
+  serializeClearedSharedOidcCsrfCookie,
   serializeSessionCookie,
+  serializeSharedOidcCsrfCookie,
+  sharedOidcCsrfCookieName,
 } from './config.js';
-export { AuthPortDataError, createDbAuthPorts, type DbAuthPortsDeps } from './db-ports.js';
+export {
+  AuthPortDataError,
+  createDbAuthPorts,
+  createDbClientSecretResolver,
+  type DbAuthPortsDeps,
+} from './db-ports.js';
 export {
   type ApproveRejection,
   type ApproveResult,
@@ -49,6 +65,7 @@ export {
   type OidcVerificationInput,
   resolveTenantOidcConfig,
   verifyOidcIdToken,
+  verifyWorkspaceDomain,
 } from './oidc.js';
 export type {
   AuthClock,
@@ -75,3 +92,21 @@ export {
   signSessionToken,
   verifySessionToken,
 } from './session.js';
+export {
+  createOidcCredentialResolver,
+  GOOGLE_OIDC_ISSUER,
+  type OidcCredentialResolverDeps,
+  readSharedGoogleCredentials,
+  SHARED_GOOGLE_CLIENT_ID_ENV,
+  SHARED_GOOGLE_CLIENT_SECRET_ENV,
+  type SharedGoogleCredentials,
+} from './shared-credentials.js';
+export {
+  type IssuedSharedOidcState,
+  type IssueSharedOidcStateInput,
+  issueSharedOidcState,
+  type SharedOidcStateRejectionReason,
+  type SharedOidcStateVerification,
+  type VerifySharedOidcStateInput,
+  verifySharedOidcState,
+} from './shared-oidc-state.js';

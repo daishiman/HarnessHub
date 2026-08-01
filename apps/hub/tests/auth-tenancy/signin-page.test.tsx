@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { TenantOidcConnection } from '../../src/lib/auth/index.js';
-import { createInMemoryOidcConnections } from './support/in-memory-ports.js';
+import { createInMemoryOidcConnections, oidcConnection } from './support/in-memory-ports.js';
 
 const { notFound, authRuntime } = vi.hoisted(() => ({
   notFound: vi.fn(),
@@ -18,15 +18,13 @@ vi.mock('../../src/lib/authz/index.js', () => ({ authRuntime }));
 const SigninPage = (await import('../../src/app/[tenant_slug]/signin/page.js')).default;
 
 function connection(overrides: Partial<TenantOidcConnection> = {}): TenantOidcConnection {
-  return {
+  return oidcConnection({
     tenantId: 'tenant-a',
     tenantSlug: 'acme',
-    issuer: 'https://idp.example.com',
     clientId: 'client-1',
     displayName: 'Acme IdP',
-    enabled: true,
     ...overrides,
-  };
+  });
 }
 
 function withConnections(connections: readonly TenantOidcConnection[]): void {

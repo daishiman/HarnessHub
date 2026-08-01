@@ -47,6 +47,15 @@ export interface AuthNumericContract {
   readonly refreshTokenTtlSeconds: number;
   /** session_revocations 参照結果をキャッシュする秒数。 */
   readonly revocationCacheTtlSeconds: number;
+  /**
+   * 共通 Google OAuth client 方式で使う署名付き `state` の有効期間 (秒)。
+   *
+   * 出所は issues/sys-auth-tenancy-shared-google-oidc-20260729.md (受入条件 2)。
+   * 「認可を開始してから Google の同意画面を終えて戻ってくるまで」の上限。
+   * 長すぎると、盗まれた認可 URL を後から踏ませる窓が広がる。短すぎると
+   * アカウント選択・2 段階認証を挟んだ正当な利用者が弾かれる。device_code と同じ 10 分に揃える。
+   */
+  readonly sharedOidcStateTtlSeconds: number;
 }
 
 /**
@@ -66,6 +75,7 @@ export const AUTH_NUMERIC_CONTRACT: AuthNumericContract = {
   accessTokenTtlSeconds: 15 * MINUTE,
   refreshTokenTtlSeconds: 90 * DAY,
   revocationCacheTtlSeconds: 60 * SECOND,
+  sharedOidcStateTtlSeconds: 10 * MINUTE,
 };
 
 export interface SessionCookieAttributes {
@@ -106,6 +116,78 @@ export function serializeSessionCookie(value: string, attributes: SessionCookieA
 /** 失効させるための `Set-Cookie`。値を空にし Max-Age=0 で即時削除させる。 */
 export function serializeClearedSessionCookie(): string {
   return `${SESSION_COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax; HttpOnly; Secure`;
+}
+
+// ---------------------------------------------------------------------------
+// 共通 Google OAuth client 方式 (issue-auth-tenancy-shared-google-oidc-20260729)
+// ---------------------------------------------------------------------------
+
+/**
+ * テナント slug の位置に置く固定セグメント。
+ *
+ * **テナント slug の予約語**でもある。テナントがこの slug を取ると
+ * `/api/auth/shared/...` が共通 callback とテナント経路のどちらにも読めてしまい、
+ * そのテナントは他テナントの callback を受け取れる位置に立つ。route 側で明示的に弾く。
+ */
+export const SHARED_OIDC_PATH_SEGMENT = 'shared';
+
+/** 共通 callback を駆動するときの Auth.js basePath。テナント slug を含まない固定値。 */
+export const SHARED_OIDC_BASE_PATH = `/api/auth/${SHARED_OIDC_PATH_SEGMENT}`;
+
+/**
+ * provider id。全テナント共通 (テナントの出し分けは設定解決の時点で終わっている)。
+ *
+ * callback path に現れる値なので config 側に置く。adapter 側のリテラルと二重管理にすると、
+ * 片方を変えたときに Google Cloud Console へ登録済みの URI と食い違う。
+ */
+export const SHARED_OIDC_PROVIDER_ID = 'tenant-oidc';
+
+/**
+ * 全テナント共通の callback path。**この 1 本だけ**を Google Cloud Console の
+ * 「承認済みのリダイレクト URI」へ登録する。テナントを増やすたびに URI を足す必要が無くなる、
+ * というのがこの issue の目的そのもの。
+ *
+ * 形は Auth.js の規約 `{basePath}/callback/{providerId}` に従う。
+ * 逆に言えば **この path を変えると全共有テナントが一斉に落ちる**ので、
+ * 変更時は Console 側の登録更新と同時に出す (runbook 参照)。
+ */
+export const SHARED_OIDC_CALLBACK_PATH = `${SHARED_OIDC_BASE_PATH}/callback/${SHARED_OIDC_PROVIDER_ID}`;
+
+/**
+ * CSRF binding cookie 名の接頭辞。実際の名前はテナント slug を後置した
+ * `__Host-harness-hub.shared-oidc-csrf.{slug}` になる。
+ *
+ * テナントごとに別 cookie にするのは、複数テナントへ並行にログインしようとしたとき
+ * 片方の binding がもう片方を上書きして無言で失敗するのを避けるため。
+ * `__Host-` 接頭辞は Path=/ を強制するので、path でテナントを分ける手は使えない。
+ */
+export const SHARED_OIDC_CSRF_COOKIE_PREFIX = '__Host-harness-hub.shared-oidc-csrf';
+
+export function sharedOidcCsrfCookieName(tenantSlug: string): string {
+  return `${SHARED_OIDC_CSRF_COOKIE_PREFIX}.${tenantSlug}`;
+}
+
+/**
+ * CSRF binding cookie の `Set-Cookie`。
+ *
+ * `SameSite=Lax` は必須。`Strict` にすると Google からの redirect (別サイトからの top-level GET) で
+ * cookie が送られず、正当な callback が必ず binding 不一致で落ちる。
+ * 寿命は state の TTL と同じ — cookie だけが生き残っても照合相手の state が失効しているため意味が無い。
+ */
+export function serializeSharedOidcCsrfCookie(tenantSlug: string, value: string): string {
+  return [
+    `${sharedOidcCsrfCookieName(tenantSlug)}=${value}`,
+    'Path=/',
+    `Max-Age=${AUTH_NUMERIC_CONTRACT.sharedOidcStateTtlSeconds}`,
+    'SameSite=Lax',
+    'HttpOnly',
+    'Secure',
+  ].join('; ');
+}
+
+/** 使い捨て後に消すための `Set-Cookie`。1 回の認可で 1 回しか使わせない。 */
+export function serializeClearedSharedOidcCsrfCookie(tenantSlug: string): string {
+  return `${sharedOidcCsrfCookieName(tenantSlug)}=; Path=/; Max-Age=0; SameSite=Lax; HttpOnly; Secure`;
 }
 
 /** 状態を変える HTTP メソッド。GET/HEAD/OPTIONS は Origin 検査の対象外。 */
