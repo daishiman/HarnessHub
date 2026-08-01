@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T13:25:47Z"
+updated_at: "2026-08-01T12:00:37Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -396,6 +396,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   Worker deploy unit は変更しない。正本は `system-spec/infrastructure.md` と
   [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
   [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
+
+**開発管理内部構造の反映 (2026-08-01 / `HarnessHub-w7n7`)**:
+
+- Beads mutation の単一入口と CLI / receipt 契約を維持したまま、内部判定を
+  pure contracts、graph read、Beads projection、read-only audit の四責務へ分離した。
+- 変更は repository 内の保守性とテスト差替え境界に限定され、製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 正本は `system-spec/dev-workflow.md` の実装反映注記、設計は
+  `architecture/harness-hub-dev-workflow.md`、判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+  とする。
 
 ## 未決事項
 
