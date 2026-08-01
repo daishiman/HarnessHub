@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T04:40:19Z"
+updated_at: "2026-07-30T13:25:47Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -338,6 +338,18 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
 - 反映先と検証は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
+  を正とする。
+
+**G4 実行安定化の反映 (2026-07-30 / `HarnessHub-pyb3`)**:
+
+- `pnpm -r test` は CI / local の共通入口として維持し、pnpm project 設定の
+  `workspaceConcurrency: 1` で package 間だけを直列化する。
+- 各 package 内の Vitest 並列性は維持する。設定欠落・値変更は
+  `pnpm check:pnpm` の正負テストで非ゼロ終了させる。
+- qa-038 の G4、qa-088 / qa-096 の CI-local 同値と fail-closed 契約を実装具体化する
+  もので、製品 API、DB schema、認証認可、UI、deploy unit、確定済み QA 回答は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)
   を正とする。
 
 ## 未決事項
