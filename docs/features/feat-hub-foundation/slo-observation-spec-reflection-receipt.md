@@ -61,14 +61,16 @@ CLI は一致を exit 0、不一致を exit 1、取得不能または引数不�
 
 ## 6. 最終品質ゲート
 
-最終差分と main 取込後の HEAD に対して、次を再実行して結果を PR 本文と Beads notes に記録する。
+最終差分と main 取込後の HEAD に対して再実行し、次を確認した。
 
-- Hub monitoring の focused Vitest、typecheck、format / lint
-- `verify:slo-observation` の公開実測と証跡の再生成
-- `feature-package/feat-hub-foundation` の Phase 1-13 task 仕様 validator
-- system-spec coverage / foundation / source citation
-- Dev Graph schema / source digest / evidence ref
-- artifact placement、文書行数、`git diff --check`、secret scan
+- Hub monitoring: 4 files / 67 tests PASS、typecheck・format / lint PASS
+- `verify:slo-observation`: 公開実測との一致で exit 0（観測 6 / 30 日、エラーバジェット消費 48.7%）
+- Phase 1-13 task 仕様 validator: 13 phases、violations 0、digest `8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502`
+- system-spec: coverage / foundation / source citation PASS、compiler tests 42 / 42 PASS
+- Dev Graph: schema valid、implementation readiness complete、登録対象の source digest mismatch 0・dangling evidence 0
+- repository: artifact placement PASS、文書 461 件の 300 行制限 PASS、`git diff --check` PASS、secret scan 478 files / findings 0
+- workspace test: DB 30 files / 231 tests、他 5 packages 99 files / 1,417 tests が全件 PASS。DB の既定並列実行では全テスト成功後に Vitest worker RPC の 60 秒 timeout が発生するため、DB は `--maxWorkers=1 --no-file-parallelism` で exit 0 を確認した。対象差分外の test runner 制約であり、SLO 実装の失敗ではないため本 PR には設定変更を混在させない。
+- build / budgets: Next.js build、OpenNext Worker build、Worker gzip 1.228 MiB / 3 MiB、全 page route client bundle 120 KiB 以下を確認した。
 
 ## 7. ファイル分割
 
