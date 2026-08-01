@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0.0",
-  "feature_package_id": "feature-package/feat-dev-pipeline-improvement",
-  "generation_id": "af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
-  "published_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
-  "published_digest": "sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6",
-  "receipt": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-publish-pipeline",
+  "generation_id": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "published_digest": "sha256:845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/atomic-promotion-receipt.json",
   "supersedes": {
-    "published_path": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-    "published_digest": "sha256:9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b",
-    "receipt": ".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/atomic-promotion-receipt.json"
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31",
+    "published_digest": "sha256:3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31/atomic-promotion-receipt.json"
   }
 }

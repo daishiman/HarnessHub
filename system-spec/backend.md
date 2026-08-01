@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-082 |
+| Web (web) | 確定 | 確定質疑: qa-103 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-010 |
@@ -24,11 +24,19 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-082 (対応セル: web)
+### qa-103 (対応セル: web)
 
-**質問**: HarnessHub-b7ng の本番 adapter と API 結線を backend.web の正本へ反映するか。
+**質問**: SYS-PUBLISH-PIPELINE-P01〜P13 で確定した公開 API・状態機械・認証境界を、backend.web の既存契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-059 までの backend.web 確定内容を全面維持し、次の実装追補を確定する。apps/hub の composition root は createDbAuthPorts、createDbAuditSink、createAuthjsHandler、DeviceFlowService を packages/db の CoreRepositories へ結線する。Auth.js 固有 import と型は lib/auth/adapter/ 内だけに閉じ、外部へは Web 標準の (Request)=>Promise<Response> を公開する。/api/v1/device/code・approve・token、/api/v1/token/refresh、/api/v1/tokens の本番経路は同じ AuthPorts を使い、in-memory adapter を production fallback にしない。必要な設定・OIDC 接続・client_secret・DB 接続が欠ける場合は既定 tenant/provider/secret へ落とさず fail-closed で停止する。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-082 までの backend.web 契約を全面維持し、PublishRequest パイプラインを次のとおり追加確定する。
+
+【1. API と principal】POST /publish、GET /publish、GET /publish/:id、PUT /publish/:id/package、POST /publish/:id/submit は session と短命 Bearer の dual principal を受理する。session の変更系は Origin/CSRF を必須とし、Bearer は CSRF 非該当とする。approve と Project release 一覧は session/workspace-admin、cancel、channel promote/rollback、deployment 登録は Bearer/Project owner の契約を維持し、全 route は共有 withAuthz と zod schema を通す。
+
+【2. 状態機械と直列化】POST /publish は編集可能な Draft を作るだけで TargetChannel を占有しない。PUT package で R2 staging と検査対象を準備し、POST submit の Draft→Validating 時に同一 channel の非終端 request を検出した場合は 409 channel_busy として Draft に留める。Green は Ready→Publishing→Published を進み、Yellow/Red は Needs Fix へ戻し旧 stable を変更しない。
+
+【3. 公開と監査】PublishRequest、inspection verdict、immutable Release、TargetChannel stable pointer、content-addressed Package を service と repository port で調停し、promote/rollback を transaction 内で行う。publish.request、package_upload、submit、approve、cancel、channel.promote、channel.rollback、release.suspend、deployment.register は append-only 監査 event へ記録する。
+
+【4. 冪等性と境界】変更系は tenant と endpoint に束縛した Idempotency-Key を使い、同一 key の payload 不一致は 422 とする。package 検査は packages/inspection の共有純関数を使い、apps/hub が packages/db の schema 内部へ直接依存しない。Publisher クライアント UI とカタログ UI は本差分の対象外とする。
 
 ### qa-010 (対応セル: desktop-windows, desktop-macos)
 

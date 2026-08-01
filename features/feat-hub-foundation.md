@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-29T06:15:52.997834Z"
+updated_at: "2026-07-30T13:27:46Z"
 status: "active"
 depends_on: []
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-25T21:18:40Z","origin_kind":"generated","source_digest":"e8a7f9308f00bcaa6e7d7df9f623cf3649d15c9f2242c18b31f0336ad8ce3dc9","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T13:27:46Z","origin_kind":"generated","source_digest":"a38866c48d0a49e4d203b48dd382167cc2b18df68a8970eaddc9246a0847820b","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-hub-foundation.md","confidence":0.9}]
@@ -103,6 +103,12 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - workflow と機械可読台帳の静的整合は実装済み。Cloudflare 側の token 発行、GitHub secret 投入、deploy token による R2 write 拒否、本番 workflow 完走は外部実測待ちのため、`HarnessHub-bda4` は継続中とする。
 - 仕様反映と最終レビューの記録: [Cloudflare token 最小権限分離 仕様反映受領書](../docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md)
 - backup 失敗検知の仕様反映: [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md)
+
+## 実装反映 (2026-07-30 / HarnessHub-pyb3)
+
+- G4 の `pnpm -r test` は入口を維持したまま、`pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間を直列化した。
+- 各 package 内の Vitest 並列性は維持し、設定欠落・値変更を `pnpm check:pnpm` の正負テストで拒否する。これにより assertion 全成功後の worker RPC timeout を G4 の失敗と誤認しない。
+- 製品仕様は変更せず、CI/CD 実行設計と検証結果は [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md) を正とする。
 
 ## アーキテクチャ参照
 

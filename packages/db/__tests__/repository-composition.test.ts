@@ -9,11 +9,19 @@ import { createRepositoryContext } from '../src/context';
 import { asCore, createLibsqlTestDb, TEST_KEK_B64 } from './support/test-db';
 
 // CoreRepositories の宣言と 1:1。ここが増減したら合成点の追随漏れとして落ちる。
+// 後半 6 件 (channels 以降) は feat-publish-pipeline で足したもの。
 const EXPECTED_KEYS = [
   'audit',
+  'channels',
+  'deploymentReferences',
   'deviceAuthorizations',
+  'idempotency',
   'idpConnections',
+  'packages',
+  'projects',
+  'publishRequests',
   'publisherTokens',
+  'releases',
   'sessionRevocations',
   'tenants',
   'userWorkspaces',
@@ -31,7 +39,7 @@ beforeEach(async () => {
 afterEach(() => adapter.close());
 
 describe('createCoreRepositories', () => {
-  it('CoreRepositories の 8 フィールドを過不足なく返す', () => {
+  it('CoreRepositories の 15 フィールドを過不足なく返す', () => {
     expect(Object.keys(repos).sort()).toStrictEqual(EXPECTED_KEYS);
   });
 
