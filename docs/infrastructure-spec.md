@@ -130,7 +130,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 | workflow | trigger | 内容 |
 |---|---|---|
-| `ci.yml` | PR / push (main・feature branch) | **静的ゲート → install → test → bundle → deploy を単一 workflow 内で連鎖**（下記）。deploy job は main への push のみで実行され、全ゲート通過が前提 |
+| `ci.yml` | PR / push (main・feature branch) / `workflow_dispatch` | **静的ゲート → install → test → bundle → deploy を単一 workflow 内で連鎖**（下記）。deploy job は main の push または main を明示した dispatch だけで実行され、全ゲート通過が前提 |
 | `backup.yml` | cron `0 17 * * *` | `export-control-plane.ts` で決定論的 JSONL を生成 → gzip → R2 へ **`wrangler r2 object put --remote` で upload → 再 download + `cmp` で往復検証** → 成功を heartbeat 通知 |
 
 - **backup.yml の export / upload 経路 (2026-07-26 実装反映)**: `packages/db/scripts/export-control-plane.ts` が生成する JSONL を日次保存形式の正本とする。restore CLI が同じ形式を直接読めるため、drill と障害復旧が日次成果物そのものを検証する。upload は R2 アクセスキーを追加発行せず `wrangler` を用い、再 download 後の `cmp` で byte 一致まで確認する。Turso CLI / `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` はこの経路では不要。
@@ -161,6 +161,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - **Actions 設定台帳の突合**: `scripts/ci/actions-secrets-registry.json` を用途・種類・必須度・利用 workflow の正本とし、`scripts/ci/check-actions-secrets.mjs` が workflow の実参照と双方向で照合する。静的ゲートでは構造 drift を、手動 `--live` では GitHub 上の実投入状況も fail-closed で検査する。
 
 - **`deploy.yml` への分離は行わない (2026-07-21 改訂)**。理由: feat-hub-foundation の acceptance「CI が test→deploy を完走する」は**単一 workflow run 内での連鎖**を判定条件としており、2 workflow に分けると別 run になって構造的に判定不能になる。ユーザー確認により `ci.yml` への統合を確定した。
+- **main の明示再実行 (2026-08-01 / `HarnessHub-o2i.13`)**: 通常経路は main merge による push のまま維持する。docs-only merge など、`on.push.paths` の対象外で deploy run が起動しなかった場合だけ、`workflow_dispatch` で main の同一 commit を再配備できる。dispatch も `static-gates` と `test` を省略せず、feature branch では deploy しない。これは手元の Wrangler 操作や手動承認 gate を追加するものではなく、同じ CI の再実行経路である。
 - deploy job の内容: 必須設定preflight → productionへdrizzle migrate → `wrangler deploy` →
   post-deploy `GET /health` → **OIDC start-flow smoke** → **DB/R2本番スモーク6項目** →
   失敗時`wrangler rollback` (直前versionへ)。**常設stagingを経由しない** (§6 / qa-038【5】)。
@@ -178,7 +179,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
   非owner拒否、cross-tenant拒否とともに名指しで再実行する。
 - **migrate step の契約 (2026-07-25 / P13 実装確定)**: `packages/db/scripts/migrate-deploy.ts` を `--dry-run` → 本適用の 2 段で呼ぶ。`TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` が空なら step を **exit 1 で止める** (未投入のまま deploy へ進むと「migrate 済み」の緑が意味を失うため)。台帳は drizzle 公式の `__drizzle_migrations` を単一の正とし、`__drizzle_migrations` 不在のみ applied=0 と解釈して他の SQL 例外は再送出する (接続不能を「未適用」と誤読しないため)。適用後件数が journal 件数と一致しない場合は exit 1。
 - **本番スモークテスト (2026-07-25 / P13 実装確定)**: `packages/db/scripts/smoke-production.ts --url <turso> --r2-bucket <name>` が S1 接続 / S2 ULID 単調性 / S3 release 不変性 / S4 R2 往復 / S5 audit chain / S6 export→restore dry-run を検査し、**6 項目すべての ok** と検証データ cleanup 成功を満たさない限り exit≠0。検証で作成した行と R2 オブジェクトは `finally` で必ず削除し、削除失敗自体をスモーク失敗として扱う (本番に検証ゴミを残したまま緑にしない)。
-- デプロイは main merge で全自動 (qa-034 確定)。手動 gate は置かず、post-deploy health + smoke + rollback を防波堤とする。
+- デプロイは main merge で全自動 (qa-034 確定)。path filter で run が起動しなかった場合のみ main の明示 dispatch で同じ全ゲートを再実行する。手動 gate は置かず、post-deploy health + smoke + rollback を防波堤とする。
 - **rollback step の契約 (2026-07-25 / P13 実装確定)**: `if: failure()` で起動し、**`wrangler rollback` は deploy step が success のときだけ**実行する (deploy 前に落ちた失敗で直前 version を巻き戻すと、無関係な回帰を持ち込むため)。**DB は自動 rollback しない** — migration は expand-only (§7 G7) で前方互換なので、旧 code は新 schema 上で動作する。step の exit code は rollback 自体の成否のみを表し、元の失敗を打ち消さない。
 - **GitHub Actions secret / variable 台帳 (2026-07-29 実装反映)**: 正本は [`scripts/ci/actions-secrets-registry.json`](../scripts/ci/actions-secrets-registry.json)。手動投入が必須なのは secret 6 件 (`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_R2_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` / `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` / `BACKUP_HEARTBEAT_URL`) と variable 2 件 (`HUB_HEALTH_URL` / `HUB_PUBLIC_URL`) の計 8 件。任意は secret 1 件 (`NOTION_TOKEN`) と variable 3 件 (`NOTION_DB_SKILL_LIST` / `INTAKE_NOTION_DATABASE_ID` / `NOTION_DB_IMPROVEMENT_REQUEST`)、`GITHUB_TOKEN` は Actions 自動注入である。値や投入済み判定を文書へ複製せず、`node scripts/ci/check-actions-secrets.mjs --live` の結果を現在状態の正とする。
 - **Notion 系 5 件は「任意だが条件付き必須」(2026-07-28 / `HarnessHub-5u5k`)**: これらはメタ層 (`governance-check.yml`) 専用で、プロダクト層の deploy には関与しない。`NOTION_TOKEN` 未投入なら該当 step は skip し workflow は成功するが、**投入した場合は DB ID 3 件 (variable) がすべて必要**であり、欠けていれば `prepare notion config` step が exit 1 で落ちる (未設定のまま「検査したつもりの緑」を出さないため)。DB ID に秘匿性は無いので secret ではなく variable で持つ。判定は job-level env の真偽値 `HAS_NOTION_TOKEN` 経由で行う — step-level `if` から同じ step の `env:` を参照すると、Actions の評価順 (`if` → `env` の順) により式が恒久的に false になり、secret を投入しても step が永久に skip される fail-open になるため (再発は `scripts/lint-workflow-step-guard.py` が全 workflow に対し fail-closed で遮断する)。
@@ -256,7 +257,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | 1 | 環境構成 | ~~production + staging の 2 環境~~ → **qa-038 により上書き (2026-07-21)**: 常設 staging を持たず preview は PR ごとに使い捨て | 上書き理由: 2 組常時維持は無料枠消費と運用導線を二重化し C1・C2 と衝突する (qa-038【3】)。migration 検証は CI の破壊的 DDL 検査、restore drill は一時 DB で代替 (§6/§7/§10) |
 | 2 | 独自ドメイン | **既存保有ドメインを流用** (AI 推奨に同意) | `hub.<domain>` + `mail.<domain>` のサブドメイン運用 (§8)。追加費用 0 円で C2 完全維持。Resend SPF/DKIM は qa-026 どおり初期構築 |
 | 3 | 外形監視 | **Better Stack Free** (AI 推奨に同意) | 10 monitors・3 分間隔・heartbeat・status page・商用利用可 (§9)。UptimeRobot Free は 2024-12 以降非商用限定のため棄却 (Vercel Hobby と同型の規約リスク回避) |
-| 4 | 本番デプロイ | **main merge で全自動** (AI 推奨に同意) | 単一 `ci.yml` 内で 全ゲート green → production migrate → deploy → post-deploy /health → 失敗時 wrangler rollback (§7)。**staging 経由と deploy.yml 分離は 2026-07-21 に取りやめ** (qa-038 / R-02) |
+| 4 | 本番デプロイ | **main merge で全自動** (AI 推奨に同意) | 単一 `ci.yml` 内で 全ゲート green → production migrate → deploy → post-deploy /health → 失敗時 wrangler rollback (§7)。path filter 非発火時は main の明示 dispatch で同じ run を再実行できる。**staging 経由と deploy.yml 分離は 2026-07-21 に取りやめ** (qa-038 / R-02) |
 
 ## 13. 構築優先順位によるインフラ有効化順 (2026-07-18 追記)
 

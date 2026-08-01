@@ -12,6 +12,13 @@ const PACKAGE_JSON = JSON.parse(readFileSync(path.join(REPO_ROOT, 'apps/hub/pack
 };
 
 describe('production OIDC / owner authorization release gates', () => {
+  it('main の push と明示 dispatch だけが、全ゲート後の production deploy へ進める', () => {
+    expect(WORKFLOW).toContain(
+      "if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')",
+    );
+    expect(WORKFLOW).toContain('needs: [static-gates, test]');
+  });
+
   it('owner 認可と OIDC の契約を、名前付き package script で fail-closed 実行する', () => {
     const script = PACKAGE_JSON.scripts?.['test:auth-release-contract'] ?? '';
     expect(script).toContain('authz-decision-matrix.test.ts');
