@@ -285,6 +285,15 @@ close した。
   に同一 wave で反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
 
 - 2026-07-30 `HarnessHub-35ai`: receipt 検証済みだけを `verified`、未指定を `not_performed` とする契約・層別反映は [受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-01 追記: 遮断レイテンシ test の代理指標を構造検査へ置換
+
+- `HarnessHub-5iuq` で、`test_guard_graph_schema_fail_open_window.py` が並列 worktree 稼働下のマシン負荷で偽陽性 (`assert 3.559s < 1.0s`) になっていた問題を是正した。
+- 絶対所要時間という代理指標を、遮断コマンドが `context_ok()` (repository context 解決) へ到達しないことを直接検証する構造契約へ置換した。陽性対照を添え、実プロセス exit-2 smoke は維持した。
+- `guard-graph-schema.py` 本体の遮断ロジックは非変更。仕様影響は開発品質ゲートのテスト検証方法に限定され、
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/5iuq-guard-latency-proxy-metric-spec-reflection.md)
+  に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md) / 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)

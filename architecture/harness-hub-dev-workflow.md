@@ -295,3 +295,15 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 ### 差分追記 (2026-07-30): CI-local parity の集合契約
 
 CI blocking invocation を local hard gate または理由付き exact allowlist へ束縛する。引数を保持した集合包含、fail-closed 境界、3 入口への結線は [設計受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md) §4 を正とする。
+
+### 差分追記 (2026-08-01): 遮断レイテンシ test の代理指標 — 赤側の偽陽性
+
+出典: bd `HarnessHub-5iuq` (`issues/sys-flaky-guard-graph-schema-latency-20260728.md`)。
+
+`test_guard_graph_schema_fail_open_window.py::test_denial_latency_does_not_depend_on_the_repository_graph` が、20+ worktree 並列稼働下で `assert 3.559s < 1.0s` により偽陽性で落ちていた。固定したい契約は「遮断が graph サイズに依存せず確定する」であり、絶対所要時間はそれを間接的に測る代理指標にすぎない。マシン負荷という契約外の変数が混入し、契約が破れていなくても赤になっていた。
+
+上記の系列 (2026-07-28 の 3 例、entry point 台帳・harness coverage・PKG-006/007) はいずれも**緑側の偽陰性** (実体は壊れているのに検査が通る) だったのに対し、本件は**赤側の偽陽性** (実体は健全なのに検査が落ちる) である。方向は逆だが、「検査が何を含意しているかの取り違え」という同じ原因に由来する。赤の偽陽性は緑の偽陰性と対称の害を持つ — 「またこれか」と読み飛ばす習慣がつき、同じ見た目の本物の退行を見逃す土壌になる。
+
+是正は閾値の引き上げを採らず、契約を直接測る構造検査へ置き換えた。遮断対象コマンドが `context_ok()` (repository context 解決。唯一 subprocess を起動する後段) へ到達しないことを `monkeypatch` で直接検証し、本体 repo (大きい graph) と空 repo の双方で成立することを固定した。陽性対照 (`echo safe` が `context_ok()` へ進み、trap が発火する) を添えて、判定ロジックの空振りを排除している。実プロセスでの exit-2 smoke test は維持し、遮断そのものの実測は残した。
+
+対象は `plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py` の 1 ファイルに限定され、`guard-graph-schema.py` の遮断ロジックは変更していない。製品 API・state・security・UI の契約は非変更のため `system-spec/`・`specs/` は非変更。検証は focused file 3 回連続 48 passed/2 skipped、`plugins/dev-graph/tests` 全体 pytest-xdist 721 passed/2 skipped、`make lint` / `plugin-package-check` PASS。判断と検証の全量は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/5iuq-guard-latency-proxy-metric-spec-reflection.md) を正とする。
