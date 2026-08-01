@@ -1,0 +1,55 @@
+{
+  "evaluator_id": "fresh-agent-eval_c01_live_trial",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "id": "launch",
+      "status": "PASS",
+      "detail": "transcript toolu_017EoHiGvGW3oe38TfVuc19b invokes Skill dev-graph:run-dev-graph-render with the exact fixture --repo-root. Before it, the session only read task/skill/fixture state and created the required goal-spec plus intermediate row 1; render-graph-html.py was not called before the Skill."
+    },
+    {
+      "id": "completion",
+      "status": "PASS",
+      "detail": "out/status.json is the only out artifact and records PASS for C05-OUT1-positive-feature-progress; pane.txt and transcript.jsonl end with DONE: PASS. The transcript has zero tool errors. poll-state.json records gate_ticks=0 and stall=0, and no nudge artifact or AskUserQuestion call exists."
+    },
+    {
+      "id": "goal",
+      "status": "PASS",
+      "detail": "The rendered evidence satisfies all four C05 observations: self-contained inline HTML/CSS/JS with an SVG graph, denominator 13 matching receipt applied_count and expected_count, independently recomputed numerator 4, and verified source_digest correspondence."
+    },
+    {
+      "id": "goal_seek",
+      "status": "PASS",
+      "detail": "run-dev-graph-render-intermediate.jsonl has exactly two valid rows. Transcript ordering proves row 1 was created before the Skill and row 2 was later appended with >> after render verification. Both rows contain all six required keys, preserve original_goal, and use its correct UTF-8 SHA-256 1c3829684b15a6a20d0a51a3f84fbed3867e6c3b30d2b730ef2fe1b103e846c8."
+    }
+  ],
+  "observations": [
+    {
+      "id": "C05-OUT1-1",
+      "status": "PASS",
+      "detail": "Independent HTML parsing found zero script src references, zero link href references, one inline style block, three inline script blocks, and one SVG with role=img. The focused renderer contract uses the same self-contained document checks. A new interactive browser target was unavailable to this evaluator, so displayability was verified from the complete static document rather than a new screenshot."
+    },
+    {
+      "id": "C05-OUT1-2",
+      "status": "PASS",
+      "detail": "Receipt applied_count=13 and expected_count=13. Embedded render-metadata and renderer stdout both report registration_verification.status=verified and the HTML visibly shows 13/13 nodes. Current render-graph-html.py rejects expected_count/applied_count disagreement and child-count mismatch before writing HTML."
+    },
+    {
+      "id": "C05-OUT1-3",
+      "status": "PASS",
+      "detail": "Independent graph recomputation selected 13 task children with parent_feature=LT-FEATURE-001 and counted exactly four whose status is done or closed: LT-FEATURE-001-P01 through P04. The SVG feature label and embedded graph-data report 4/13, independent of the receipt's counts."
+    },
+    {
+      "id": "C05-OUT1-4",
+      "status": "PASS",
+      "detail": "Receipt source_digest is sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807. Every rendered child node has the matching source_lineage digest without the sha256 prefix, and the full receipt digest appears twice in index.html, including render-metadata and the visible VERIFIED banner."
+    },
+    {
+      "id": "registration_and_digests",
+      "status": "PASS",
+      "detail": "Renderer stdout reports nodes=14, edges=12, feature progress 4/13, scope LT-FEATURE-001, self_contained=true, and registration verification verified. Evidence graph SHA-256 6251071a24054cefcace9f23e54fba01f2528a71a043b261b91dbbdf51c9475e and HTML SHA-256 6d7fad0a8bea87a9623b3b344b24cd74c6105fea378a71826455bd65c10f4586 match the renderer receipt; collected evidence files are byte-identical to fixture outputs."
+    }
+  ],
+  "blockers": [],
+  "reviewed_at": "2026-07-30T10:50:00Z"
+}

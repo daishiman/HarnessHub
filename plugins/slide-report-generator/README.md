@@ -15,7 +15,7 @@ Node 製レンダリング/画像/印刷/検証エンジンは `vendor/` に **b
 | agents | 17 thin Task adapters (詳細 7 層 prompt は各 owner skill の `prompts/R*.md`) |
 | commands | `/slide-report-generate` / `/slide-report-status` |
 | hooks | `hook-postgen-eval.py` (PostToolUse・生成後評価の自動起動・fail-soft) |
-| scripts | 6 plugin-root scripts: `validate-output-mode.py` / `lint-vendor-parity.py` / `validate-plugin-completeness.py` / `lint-reference-attribution.py` / `validate-report-visual.py` / `lint-contract-drift.py` |
+| scripts | 7 plugin-root scripts: `build-playwright-runtime.py` / `validate-output-mode.py` / `lint-vendor-parity.py` / `validate-plugin-completeness.py` / `lint-reference-attribution.py` / `validate-report-visual.py` / `lint-contract-drift.py` |
 | schemas | `structure.schema.json` (slide) / `report-structure.schema.json` (report・共通コア共有) ほか |
 | references | 42 upstream + report 新規 5 (report-types / report-writing-rules / report-visual-strategy / mermaid-integration / report-narrative-logic) |
 | vendor | Node engine 一式 (191 files byte 携行: 真 schema 4本は plugin-root `schemas/` live SSOT) + report 新規 Node 2 (render-report.js / mermaid-render.js) |

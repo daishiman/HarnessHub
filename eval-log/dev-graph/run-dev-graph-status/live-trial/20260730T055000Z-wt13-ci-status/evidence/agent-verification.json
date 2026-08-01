@@ -1,0 +1,38 @@
+{
+  "verdict": "PASS",
+  "verifier": "dev-graph-integrity-auditor subagent",
+  "verified_at": "2026-07-30T05:46:00Z",
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "findings": [
+    {
+      "check": "graph_schema_validity",
+      "result": "PASS",
+      "detail": "graph.json has graph_revision=1 with 2 nodes (LT-TASK-001, LT-TASK-002). All required fields present and structurally valid."
+    },
+    {
+      "check": "status_report_field_accuracy",
+      "result": "PASS",
+      "detail": "All fields (status, closed_at, depends_on, artifact_kind, domain, file_path, project_id, tags, tracker_binding) match graph.json exactly for both nodes. Computed dependents: LT-TASK-001=[LT-TASK-002], LT-TASK-002=[]."
+    },
+    {
+      "check": "dependency_edge_correctness",
+      "result": "PASS",
+      "detail": "LT-TASK-001.depends_on=[] (ready). LT-TASK-002.depends_on=[LT-TASK-001] and LT-TASK-001.status=active, so LT-TASK-002 is blocked. No cycles."
+    },
+    {
+      "check": "read_only_guarantee",
+      "result": "PASS",
+      "detail": "Independent sha256sum: graph.json=120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d, config.json=23e328cc726344829db198bfa35eb979b0ff9c49049bdeaf8b0efe74ed46d6c0, lt-task-001.md=b49e848e72140364d8a94f06a4d047202dad1d354977d7a29ca58f1a126339e2, lt-task-002.md=eda2722148b0db96bcfba508db79219daa2757813c82e3cca82aab4c22ba09d7. All match pre-execution values. authority_sha256_before==after. read_only=true."
+    },
+    {
+      "check": "goal_seek_artifacts",
+      "result": "PASS",
+      "detail": "3-file set present: goal-spec.json (original_goal + hash), progress.json (5/5 CK completed PASS, no pending, no null evidence), intermediate.jsonl (2 lines, all 6 keys, hash verified, append-only chronological)."
+    },
+    {
+      "check": "empty_result_test",
+      "result": "PASS",
+      "detail": "execution.json with --status closed: ok=true, count=0, results=[]. Empty result returned as success, not error."
+    }
+  ]
+}

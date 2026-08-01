@@ -107,3 +107,16 @@ rm -rf "$WORK_DIR"
 - [ ] R2 `harness-hub-backups` の lifecycle rule (直近 90 日 + 月次 12 ヶ月) が有効
 - [ ] `verify-audit-chain` cron の failed 記録が 0 件
 - [ ] 四半期境界の月は §2 の restore drill を実施し、結果 (exit code と report) を記録
+
+## 7. ローカル file DB が `ConnectionPoisonedError` になったとき
+
+対象は Node の `file:` / `:memory:` libSQL だけで、Turso remote / D1 の本番 request-bound 経路には適用しない。
+
+1. 現在の処理を失敗として終了する。同じ adapter の read/write を再試行しない。
+2. 併走中の export、restore drill、別テスト process、dev server が同じ file DB を開いていないか確認する。
+3. lock holder を正常終了させる。強制終了した場合は一時 DB と成果物の整合も確認する。
+4. 既存 adapter を継続利用する必要がある場合だけ `adapter.reconnect()` を呼ぶ。公開 client / Drizzle / repository の作り直しは不要。
+5. reconnect 後は、別接続から commit 済みデータが見えることを確認してから処理を再開する。
+
+`isPoisoned()` が `true` の間に同じ接続を叩き続けてはいけない。例外の `cause` に元の
+`SQLITE_BUSY` を残すのは原因調査用であり、再試行可能という意味ではない。

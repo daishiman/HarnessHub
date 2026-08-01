@@ -1,0 +1,180 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/mmk3-publish-pipeline-v12",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:91a9b1dd5e73c803c09c5e80a92c03101b58db8d3c67a1c3a66732f4abe3313d",
+  "verdict": "FAIL",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "FAIL",
+      "summary": "P08/P09/P13 の inventory write_scope、task spec の Write scope、Parallel safety の resource_scope が一致せず、実行時の変更権限と lease 境界に単一の正本がない。",
+      "evidence": [
+        "task-specs/phase-08-refactoring-migration.md:52-54,71 と workstream-inventory.json#tasks[phase_ref=P08].write_scope: inventory は publish API/auth/schema も許可する一方、task spec の成果物・write scope・resource_scope はそれらを含まない。",
+        "task-specs/phase-09-quality-assurance.md:52-54,71 と workstream-inventory.json#tasks[phase_ref=P09].write_scope: inventory の auth/schema と CI workflow を task spec の write/resource scope が一貫して被覆しない。",
+        "task-specs/phase-13-release-deploy.md:37-54,71 と workstream-inventory.json#tasks[phase_ref=P13].write_scope: task spec は deploy/smoke と文書4件への書き戻しを宣言するが、inventory は publish API/auth/schema の変更も許可し、resource_scope は release-record.md だけに限定される。"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "FAIL",
+      "summary": "exact-13、qa-059、P06/P09 の検証入口は被覆されたが、P13 の本番 full smoke 6項目を再実行して判定するコマンドが不足する。",
+      "evidence": [
+        "feature-package.json と workstream-inventory.json: task_count=13、P01..P13 exact-set。",
+        "goal-spec.json#quality_constraints[publish-api-dual-principal-csrf-boundary-qa059] と task-specs/phase-01..13: qa-059 の dual-principal/CSRF 境界を trace。",
+        "task-specs/phase-13-release-deploy.md:19-23 は S1-S6 相当の本番挙動を完了条件とするが、89-94 の Automated commands は build/deploy/health/local vitest/plan validator のみ。",
+        "task-specs/phase-13-release-deploy.md:95-97 は endpoint 操作、競合、R2 hash、Turso audit-chain を散文で指示するだけで、fixture 作成から cleanup までを実行する具体的コマンドまたは fail-closed script を指定しない。",
+        "docs/features/feat-publish-pipeline/runbook.md は運用切り分けと rollback 例を提供するが、P13 が委譲する S1-S6 の完全な production smoke 実行列を持たない。"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "P01..P13、phase_ref、task path、phase 名、workstream 語彙は正本と一致する。",
+      "evidence": [
+        "feature-package.json#phase_refs",
+        "feature-package.json#task_spec_paths",
+        "workstream-inventory.json#tasks",
+        "validate-system-plan.py: status=pass, violations=[]"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "13 task の前方 DAG、handoff source_inputs、owner 境界、goal lineage の現行 bytes 束縛は整合する。",
+      "evidence": [
+        "task-graph.json: P01→P13 の13 node前方直列 DAG、dangling/cycle なし。",
+        "system-build-handoff.json#source_inputs: staging-manifest.json#files から handoff 自身を除く16 file exact-setと一致。",
+        "system-build-handoff.json#registration_request: promotion owner=system-dev-planner/C11、registration receipt owner=dev-graph/C02。",
+        "goal-spec.json#lineage と現行 repository bytes: feature context、backend/data/security architecture、system specification の全 SHA-256 が一致し digest_status=verified。"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/mmk3-publish-pipeline-v12"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:91a9b1dd5e73c803c09c5e80a92c03101b58db8d3c67a1c3a66732f4abe3313d\",\n  \"feature_package_id\": \"feature-package/feat-publish-pipeline\",\n  \"parent_feature\": \"feat-publish-pipeline\",\n  \"phase_refs\": [\"P01\", \"P02\", \"P03\", \"P04\", \"P05\", \"P06\", \"P07\", \"P08\", \"P09\", \"P10\", \"P11\", \"P12\", \"P13\"],\n  \"contract_version\": \"1.2.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\"mode\": \"enforced\", \"contract_version\": \"1.2.0\", \"enforced_from\": \"1.2.0\"},\n  \"violations\": []\n}",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "83155a1ce33cd288eebdd0cd9a1b740f894e78f8c05768de3a9ea5606f3f32f8"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "2c46a459cd0cbeee0867129feba2a8707fe037113261360b132490df1d1c22af"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "8993bc18a506053a76eb4edf675642e618c0418bc646bd07e3c7a28f31eaafe7"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "f47fc2e80605bf1b8718446e9053b1278d758c87f3623ad9830a2e2440283ebc"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "3e4de5620da296383186e61c80070189f5f255d565153e2d0f377dd0b96afc0b"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "07d1ac6ad6f3dce7711bf1fe55e441772eabc2d81c28fcbbc4dd8f09c87debd1"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "8c0b3781bbaedd89ea09d5458e35421f9cd1ef3c5d7ca49dbe27eaad695c8420"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "392402d6655822fca8a5f26674bcaf717b5bb6242c2f010a804bbcd42d12dd5f"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "6ce87a51d1d25b1974ede7c198f4dddf75cb093d62b0fee7ceb9162b90d97f96"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "0d230712226221bcac8b9d06376d80d70b4dace5a24cd604159112f2f513334a"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "c9ce14b4394239d62b29e9aad91ef70b66bad506f93cfab8fbfa947c9078ab2c"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "d2dcd3d88e422b625ce7fd1389bc79c3f356a6f4da0a1e8c368e7492f5767a32"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "d630bc0e1a5f51af5b41168f49ece549cc242660623b2956ab0c9ed7bc304396"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e45c2782e2f044cbfbdd2b91264ae9b32367658f130c5e967525beed6895dbe3"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "c652a6ff9e0be49e8f81f1f801d45381c7aa262d664516c89fa7e1e8a14f5251"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "883405a7946ca9468fea53d42ccf09fc2e1c50bb1e7f52229e7215f6495f367e"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "4e484bbbc1a2b1265ab5fdcf0cb3a637681c089f2a14989105fe9e6ec2258303"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "0a463145fd9e83a32becf5c80aaee1716b37491a0335cc8e7ac2d7fa5f88ce33"
+    }
+  ],
+  "staleness_rule": "C11 must reject this evaluation if the canonical digest changes or if any SHA-256 in the exact evaluated_inputs set (all staging-manifest.json files plus staging-manifest.json itself) differs from the current staging bytes.",
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "scope_authority_drift",
+      "observation": "P08/P09/P13 では structured inventory の write_scope、task spec の Write scope/touches、Parallel safety の resource_scope が異なる。特に P13 は deploy/smoke と正本文書への書き戻しを責務としながら inventory が publish API/auth/schema の変更も許可し、lease 記述は release-record.md しか保護しないため、executor が変更できる範囲と競合防止範囲を一意に決められない。各 phase について最小権限の write set を決め、inventory・成果物・Write scope/touches・resource_scope を同じ exact-set（ディレクトリ表記を使う場合は同値な包含関係）へ揃えること。",
+      "evidence": [
+        "task-specs/phase-08-refactoring-migration.md:52-54,71",
+        "task-specs/phase-09-quality-assurance.md:52-54,71",
+        "task-specs/phase-13-release-deploy.md:37-54,71",
+        "workstream-inventory.json#tasks[phase_ref=P08|P09|P13].write_scope"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "production_smoke_not_rerunnable",
+      "observation": "P13 の Automated commands は Worker build/deploy、health、ローカル publish tests、plan validator までで、本番で必須とする S1-S6（Green/secret ZIP、409 競合、promote/rollback、R2 再取得 SHA-256、Turso audit-chain、cleanup）を実行・判定しない。後続の散文は具体的な payload/fixture、ID 引き回し、DB/R2 検査、hash-chain verifier の入口、cleanup をコマンドへ閉じておらず、参照先 runbook にも完全な実行列がない。fixture 作成から cleanup までを fail-closed に自動化する production smoke script を追加して P13 inventory/spec の verification から呼ぶか、同等に再実行可能な正確なコマンド列を記載すること。",
+      "evidence": [
+        "task-specs/phase-13-release-deploy.md:19-23",
+        "task-specs/phase-13-release-deploy.md:89-97",
+        "workstream-inventory.json#tasks[phase_ref=P13].verification",
+        "docs/features/feat-publish-pipeline/runbook.md:18-191",
+        "apps/hub/package.json#scripts"
+      ]
+    }
+  ]
+}

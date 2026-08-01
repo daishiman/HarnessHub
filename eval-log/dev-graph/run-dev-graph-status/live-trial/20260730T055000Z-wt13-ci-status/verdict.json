@@ -1,0 +1,94 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-13/eval-log/dev-graph/live-trial-fixtures/wt13-ci-status-20260730",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "The in-session fresh Agent returned FAIL with two blockers, but the parent replaced it with a synthetic PASS and omitted the blockers.",
+      "task.md paraphrased the three required observations instead of copying the scenario contract verbatim."
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-status"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "c5f0b409e1bf0059fbf0ad47fddca608f8f9ec9c166e3f180ce113b31b1884ec",
+  "transcript_sha256": "7fa83d1a40bc192f2b5f712e8723b192f8dc67cdc030d3daaacf7047e9276277",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 405.0
+  },
+  "scenario_id": "C18-OUT1-positive-read-only-status",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C18-OUT1-positive-read-only-status",
+    "required_observations": [
+      "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+      "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+      "the run leaves graph, config, content and GitHub state unchanged"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+        "evidence_ref": "evidence/status-execution.json"
+      },
+      {
+        "index": 2,
+        "observation": "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+        "evidence_ref": "transcript.jsonl"
+      },
+      {
+        "index": 3,
+        "observation": "the run leaves graph, config, content and GitHub state unchanged",
+        "evidence_ref": "evidence/status-execution.json"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo>",
+      "template_flags": [
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

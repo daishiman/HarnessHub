@@ -11,8 +11,8 @@ target_date: null
 iteration: null
 title: "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録"
 owners: ["daishiman"]
-created_at: "2026-07-19T14:17:23Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+created_at: "2026-07-30T12:25:36Z"
+updated_at: "2026-07-30T12:25:36Z"
 status: "active"
 depends_on: ["SYS-PUBLISH-PIPELINE-P04"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
@@ -28,17 +28,17 @@ feature_package_id: "feature-package/feat-publish-pipeline"
 phase_ref: "P05"
 file_path: "tasks/feat-publish-pipeline/sys-publish-pipeline-p05.md"
 template_id: "task"
-template_version: "1.0.0"
+template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-19T14:17:23Z","origin_kind":"system-dev-planner","source_digest":"fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b","source_path":".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-05-implementation.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-30T12:25:36Z","origin_kind":"system-dev-planner","source_digest":"845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d","source_path":".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-05-implementation.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.85
 classification_reason: "P02/P04 で確定した設計とテストスタブに基づき apps/hub の publish REST endpoint・状態機械・packages/inspection・promote/rollback・監査 event 記録を実装する P05 実装タスク"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-publish-pipeline/sys-publish-pipeline-p05.md","confidence":0.85}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: {"bd_issue_id":"HarnessHub-dfm.5","linked_at":"2026-07-18T16:04:21Z","sync_state":"linked"}
+beads_linkage: null
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -47,17 +47,18 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
+
 # 実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録
 
 > task projection (P05 / parent: feat-publish-pipeline)。実装要件の正本は下記の content-addressed published task spec であり、このファイルは実行入口だけを保持する。
 
 ## 正本仕様書
 
-- package: `.dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b`
-- task spec: `.dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-05-implementation.md`
-- package digest: `sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b`
-- task spec SHA-256: `sha256:aef17c234ab2d9f2bd42c5589996529338c4f2dc3bbcf7b3a1d8ea1bafed62ad`
-- registration receipt: `.dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/dev-graph-registration-receipt.json`
+- package: `.dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d`
+- task spec: `.dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-05-implementation.md`
+- package digest: `sha256:845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d`
+- task spec SHA-256: `sha256:6453b9730941b16dab5a86d543000a90ff61cbf8716136c42e455257832b493a`
+- registration receipt: `.dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/dev-graph-registration-receipt.json`
 
 ## 依存
 

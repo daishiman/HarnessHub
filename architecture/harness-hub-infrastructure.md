@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"}
-source_lineage: {"imported_at":"2026-07-30T04:40:19Z","origin_kind":"system-spec-harness","source_digest":"7d41dd5eec8e690b938df18bd37eff64a493355fd8aab2dacec182319dc69d8f","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"system-spec-harness","source_digest":"cff4f0f1635e3c595933f1e8ba707b23639b33fbf3f2eb0517cf75559b99a321","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -144,6 +144,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - Next.js 16.2.12、Drizzle stable 0.45.2 / v1 rc.4 は出典鮮度と採用判断の
   境界を明確にする記録であり、本変更では runtime dependency、deploy unit、
   DB schema、外部 API を変更しない。
+
+**Publish pipeline 差分追記 (2026-07-30 / `HarnessHub-dfm` / qa-106・qa-107)**:
+
+- Worker は Turso repository と R2 `PackageRegistry` binding を合成し、ZIP 本文は
+  圧縮時 10 MiB の上限まで stream で読み、上限超過時は早期に 413 を返す。
+- package は `packages/<sha256>` へ content-addressed 保存する。DB の package 行と
+  Release が同じ hash を参照し、本番 smoke は R2 再取得後の hash 一致まで検査する。
+- release gate は型・テスト・境界検査・secret scan・build の後に S1〜S6 smoke を実行し、
+  Green 公開、secret rejection、直列化、promote/rollback、R2、監査 chain を横断確認する。
+- 障害時は直前 Worker version へ code-only rollback し、DB migration、immutable Release、
+  R2 object、append-only 監査は戻さない。これにより調査履歴と参照整合性を保つ。
+- 実測値、残る運用リスク、正規仕様遷移は
+  [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を参照する。
 
 ## Risks and verification
 

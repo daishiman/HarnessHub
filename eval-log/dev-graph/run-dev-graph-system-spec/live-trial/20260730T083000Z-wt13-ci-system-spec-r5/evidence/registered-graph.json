@@ -1,0 +1,168 @@
+{
+  "graph_revision": 2,
+  "nodes": [
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness から import",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "303eb6bce93b8a3c2a9b69f68e587c7179ae233934de84d6fc9c304fd2eb58d2",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-30T10:00:01Z",
+      "depends_on": [],
+      "domain": "system",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/spec-system-spec-overview.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "spec-system-spec-overview",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T10:00:01Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "local-todo-api",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-30T10:00:01Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "303eb6bce93b8a3c2a9b69f68e587c7179ae233934de84d6fc9c304fd2eb58d2",
+        "source_path": "system-spec/index.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "システム仕様書 (ローカル専用 TODO REST API)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-30T10:00:01Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "data",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness の要件定義書から architecture decisions を import",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "2e05f3b2f4561e1316fde481de47b35605d68a9293c97089947da9304dc6650d",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-30T10:00:01Z",
+      "depends_on": [
+        "spec-system-spec-overview"
+      ],
+      "domain": "system",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/arch-system-requirements-definition.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "arch-system-requirements-definition",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T10:00:01Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "local-todo-api",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "spec-system-spec-overview"
+      ],
+      "resource_scope": [],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-30T10:00:01Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "2e05f3b2f4561e1316fde481de47b35605d68a9293c97089947da9304dc6650d",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "architecture-decision"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "要件定義書・アーキテクチャ決定 (D1:SQLite/D2:FastAPI/D3:Bearer Token)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-30T10:00:01Z"
+    }
+  ]
+}

@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-30T02:50:00Z"
+updated_at: "2026-07-30T13:37:07Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
-purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、および検査対象 0 件と CI/local 呼び出し parity の品質ゲート境界を参照する"
-goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096 の確定内容に適合し、C11 artifact readiness、CI/local 品質ゲートの空走査・呼び出し parity 境界を情報欠落なく提供する"
+purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、および検査対象 0 件と CI/local 呼び出し parity の品質ゲート境界を参照する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート境界を情報欠落なく提供する"
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789","evaluator":"assign-system-spec-completeness-evaluator + codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T02:50:00Z","origin_kind":"system-spec-harness","source_digest":"25b8ff7600351e65e5524224bb3190230a57f6d5210ee9ae7bba04f6a475d789","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-07-30T13:37:07Z","origin_kind":"system-spec-harness","source_digest":"dadd50e82509a1814c6cf9ccf05b7bc37a58f3fc0745364b28e7e799835f064b","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]

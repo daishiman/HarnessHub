@@ -22,6 +22,11 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
   - **認可は単一ミドルウェア** に集約 (deny-by-default・全 API で Tenant/Workspace スコープ強制 = D4)。
   - **検査 pipeline / 試算エンジン / 通知ディスパッチは純関数の共有パッケージ** (Publisher と Hub で二重実装しない)。
   - secret は環境 binding のみ。コード・DB へ平文を持ち込まない。
+- **ローカル libSQL 接続の障害境界 (qa-101)**:
+  - `file:` / `:memory:` は `process-local` とし、同一プロセスの write は `guardedWrite` で直列化する。
+  - プロセス外の `SQLITE_BUSY` を踏んだ接続は poisoned として隔離し、read/write/transaction を `ConnectionPoisonedError` で止める。read を許すと未 commit 行を正常データとして観測するため、write だけの遮断では不十分。
+  - 復旧は `TursoAdapter.reconnect()` を明示的に呼び、raw client を factory から作り直す。外側の Client / Drizzle / repository 参照は変えない。
+  - Turso Web / D1 の `request-bound` は poison 対象外で、従来の競合再試行と DB 側 CAS を維持する。
 - **monorepo 構成 (pnpm workspace, 提案)**:
 
 ```text
@@ -100,6 +105,8 @@ packages/db         Drizzle スキーマ + リポジトリ層
 - mockup のパスワードログイン画面は **採用しない** (SEC1・D3 維持)。IdP redirect へ置換。
 - **数値契約は security-spec §2 で確定済み**: session `maxAge` 8h / `updateAge` 15 分 (= **role/status 変更の失効許容 15 分**) / device_code TTL 10 分 / user_code 8 文字 Crockford Base32・5 回失敗で denied / polling interval 5 秒 / access token 15 分 / refresh 90 日 rotation + 再利用検知。緊急失効は `session_revocations` により即時 (§2.2)。
 - **開発・デモも同一経路**: dev 専用 provider (Credentials / SKIP_AUTH) を実装しない。提供者の Google Workspace を dev tenant の OIDC として使う (security-spec §2.5)。CI が該当文字列を禁止検査する。
+- **Publisher Bearer の入口契約 (2026-07-30 P13 実測反映)**: edge middleware は route 到達前に access token の署名・期限・`tenant_id`・`workspace_id` を session JWT と同じ claims 検証器で確認し、route の `withAuthz` が scope・Project 所有者・credential 種別・失効状態を最終判定する。`Authorization: Bearer` が存在するのに検証へ失敗した場合は session cookie へ fallback せず 401 とする。これにより「壊れた Bearer と有効 cookie の同居」で本人性が別経路へすり替わることを防ぐ。
+- **Publish 直列化の入口契約 (2026-07-30 P13 実測反映)**: `POST /publish` は編集可能な Draft を作るだけで channel を占有しない。partial UNIQUE index の対象になる `Draft→Validating` は `POST /publish/:id/submit` で行い、同一 TargetChannel に別の非終端 request があれば 409 `channel_busy` を返して後続を Draft に留める。詳細正本は [§4.6/§5.1](backend-spec-api-state.md)。
 
 ### 3.3 認可マトリクス (deny-by-default, SEC2。単一ミドルウェアで判定)
 

@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-07-30T02:46:06Z"
+updated_at: "2026-07-30T12:18:22.142120Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-30T01:53:05Z","origin_kind":"generated","source_digest":"7b23c1d586b61207056cf5f5ad403ba432ebeed9173fa357fb69dc54d815ceda","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T12:05:00Z","origin_kind":"generated","source_digest":"56c091cfa8bb285b4e591376387d1806085ae18ccb0f47290e91cad97428ada7","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -109,16 +109,11 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 > [feat-dev-pipeline-improvement-changelog.md](../docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md)
 > へ分割済み (300 行上限超過による remediation)。新規の差分追記は同ファイルへ追記する。
 
-## アーキテクチャ参照
+## アーキテクチャ参照・機能間依存
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md) / 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)
-
-## 機能間依存
-
-- なし (プロダクト feature と独立。既存パイプライン実装への改善)
+- 機能間依存: なし (プロダクト feature と独立。既存パイプライン実装への改善)
 
 ## Handoff
 
-- 現行世代: `.dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/`
-- 再 plan する場合: `/dev-graph plan --feature-id feat-dev-pipeline-improvement --feature-context features/feat-dev-pipeline-improvement.context.json` (exact-13 task 仕様化)
-- 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+- 現行世代: `.dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/`。再 plan は `/dev-graph plan --feature-id feat-dev-pipeline-improvement --feature-context features/feat-dev-pipeline-improvement.context.json`、昇格条件は `confirmation_status=confirmed` + `evaluation_status=pass` + `implementation_readiness=complete`。

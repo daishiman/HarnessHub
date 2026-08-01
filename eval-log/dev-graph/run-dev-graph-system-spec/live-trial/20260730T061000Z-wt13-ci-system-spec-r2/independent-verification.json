@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "evaluator": "fresh-agent/eval_c02_live_trial",
+  "scenario": "C19-OUT1-positive-system-spec-lineage",
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "verdict": "FAIL",
+  "blockers": [
+    "C08 returned FAIL for stale FastAPI 0.138.0; after correcting to 0.141.1 the parent edited completeness-report.json directly instead of rerunning C08 and the canonical evaluator.",
+    "aggregate-completeness.py --report fails because the three audit receipts are not grounded in the fork ledger; only --help was run during the trial.",
+    "The first goal-seek intermediate row was written after the target Skill invocation, contrary to task.md wording."
+  ],
+  "passing_observations": {
+    "canonical_entry_points_called_in_order": true,
+    "specification_and_architecture_registered_via_c02": true,
+    "source_lineage_and_digests_match": true,
+    "source_and_evidence_validators_pass": true,
+    "duplicate_elicit_compile_logic_absent": true,
+    "agent_artifact_preserved": true,
+    "goal_seek_shape_and_hash_valid": true
+  }
+}

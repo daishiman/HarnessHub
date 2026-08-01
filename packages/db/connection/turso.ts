@@ -17,6 +17,7 @@ import { createClient as createWebClient } from '@libsql/client/web';
 import { drizzle, type LibSQLDatabase } from 'drizzle-orm/libsql';
 import * as schema from '../schema/index';
 import type { DatabaseAdapter, TransactionalAdapter } from '../src/adapter';
+import { createRecoverableClient } from './recoverable-client';
 
 export type CoreSchema = typeof schema;
 export type TursoDatabase = LibSQLDatabase<CoreSchema>;
@@ -30,6 +31,16 @@ export interface TursoEnv {
 export interface TursoAdapter extends TransactionalAdapter<CoreSchema, TursoDatabase> {
   /** CLI・テストでファイルハンドルを解放するための明示 close。Workers 常駐時は呼ばない。 */
   close(): void;
+  /**
+   * ロック競合で復旧不能になった接続を捨てて作り直す (HarnessHub-njkm)。
+   * `client` の参照は変わらないので、この adapter から作った repository を作り直す必要はない。
+   */
+  reconnect(): void;
+  /**
+   * 接続が未 commit の文を抱えたまま固まっているか。`true` の間、read/write は
+   * `ConnectionPoisonedError` で即座に失敗する (詳細は connection/recoverable-client.ts)。
+   */
+  isPoisoned(): boolean;
 }
 
 /** driver 差を吸収する前段。`authToken` を「未指定」と「空文字」で区別する。 */
@@ -40,7 +51,7 @@ function toClientConfig(env: TursoEnv): { url: string; authToken?: string } {
 /** libSQL 接続を生成する。スキーマは常に barrel (schema/index.ts) を束ねる。 */
 export function createTursoClient(env: TursoEnv): TursoAdapter {
   const scope = /^(?:file:|:memory:)/i.test(env.url) ? 'process-local' : 'request-bound';
-  return buildTursoAdapter(createClient(toClientConfig(env)), scope);
+  return buildTursoAdapter(() => createClient(toClientConfig(env)), scope);
 }
 
 /**
@@ -57,12 +68,21 @@ export function createTursoWebClient(env: TursoEnv): TursoAdapter {
         'file: / :memory: は Node 経路 (createTursoClient) 専用です。',
     );
   }
-  return buildTursoAdapter(createWebClient(toClientConfig(env)), 'request-bound');
+  return buildTursoAdapter(() => createWebClient(toClientConfig(env)), 'request-bound');
 }
 
-/** 生 client を adapter 境界へ包む。entry (Node / Web) が違っても境界の挙動は同一に保つ。 */
-function buildTursoAdapter(raw: Client, writeConcurrencyScope: TursoAdapter['writeConcurrencyScope']): TursoAdapter {
-  const db = drizzle(raw, { schema });
+/**
+ * 生 client を adapter 境界へ包む。entry (Node / Web) が違っても境界の挙動は同一に保つ。
+ *
+ * 受け取るのは client 実体ではなく**ファクトリ**。ロック競合で壊れた接続を捨てて作り直す
+ * 経路 (`reconnect`) が、どちらの entry でも同じ手順で開き直せるようにするため。
+ */
+function buildTursoAdapter(
+  create: () => Client,
+  writeConcurrencyScope: TursoAdapter['writeConcurrencyScope'],
+): TursoAdapter {
+  const recoverable = createRecoverableClient(create, writeConcurrencyScope);
+  const db = drizzle(recoverable.client, { schema });
 
   const adapter: TursoAdapter = {
     driver: 'turso',
@@ -87,7 +107,13 @@ function buildTursoAdapter(raw: Client, writeConcurrencyScope: TursoAdapter['wri
       );
     },
     close(): void {
-      raw.close();
+      recoverable.client.close();
+    },
+    reconnect(): void {
+      recoverable.reconnect();
+    },
+    isPoisoned(): boolean {
+      return recoverable.isPoisoned();
     },
   };
   return adapter;

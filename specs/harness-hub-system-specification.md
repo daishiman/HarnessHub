@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T04:40:19Z"
+updated_at: "2026-07-30T13:25:47Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -125,6 +125,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**データ接続復旧の反映 (2026-07-30 / `HarnessHub-njkm` / qa-101)**:
+
+- process-local の `file:` / `:memory:` libSQL が `SQLITE_BUSY` を踏んだ場合、接続を poisoned（復旧まで使用禁止）として隔離し、以後の read/write/transaction を `ConnectionPoisonedError` で fail-fast する。
+- `TursoAdapter.reconnect()` は raw client を factory から作り直すが、公開 Client / Drizzle / repository の参照は変えない。自動 reconnect は並行 transaction と障害観測を壊すため行わない。
+- request-bound の Turso Web client / D1 は poison 対象外とし、従来どおり DB 側排他・CAS・競合再試行へ委ねる。DB schema、migration、API payload は変更しない。
+- 正規反映と実測結果は [libSQL 接続復旧 仕様反映受領書](../docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md) を正とする。
+
 **開発フロー反映 (2026-07-28 / `HarnessHub-7xi9`)**:
 
 - `system-spec/dev-workflow.md` の desktop-windows / desktop-macos を R4-reopen し、`qa-088` で `qa-039` の既存ローカル開発契約と並列 worktree の整合性契約を自己完結して再確定した。
@@ -195,6 +202,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - qa-100 は qa-089 の受領境界を fail-closed（確認不能なら失敗）にし、live-trial の `scenario_contract`、全 required observation、引数、宣言済み task 契約、run 内 evidence を criteria-test で再照合する。旧形式の欠落は互換成功にせず fresh run で更新する。
 - 影響は開発証拠の受領だけで、schedule skill 本体と製品契約は非変更。反映対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) を正とする。
 
+**plugin browser CI 到達追補 (2026-07-30 / `HarnessHub-nznu` / qa-109)**:
+
+- 実ブラウザを必要とする plugin acceptance は EVALS やローカル `npm test` への列挙だけで完了とせず、plugin path 変更時に GitHub Actions から runtime install → 同一 test → read-only check へ到達させる。
+- Node/Playwright と OS/CPU 別 Chromium は plugin 配下へ復元する。cache は高速化に限定し、最終 check が version、実行ファイル実在、plugin-local path 包含を検証する。
+- `slide-report-generator` は Chromium 起動、16:9、2 slide screenshot、report self-test を vendor test で実測し、workflow 配線を Python 契約テストで固定する。
+- 影響は repository 内の品質ゲートに限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。反映対応は [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md) を正とする。
+
 **開発運用反映 (2026-07-29 / `HarnessHub-cjwm`・`HarnessHub-0vs2`)**:
 
 - `system-spec/dev-workflow.md` の qa-090 として、live-trial session の通常 cleanup は
@@ -249,6 +263,23 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 実装契約、設計判断、検証結果の対応は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   を正とする。
+- 重複報告 `HarnessHub-j66m` は別仕様・別実装を作らず、同じ受領書と dev-graph node
+  `issue-c02-upsert-lifecycle-regression-20260729` の再検証 trace に統合する。
+
+**開発管理整合性の反映 (2026-07-30 / `HarnessHub-dqca` / qa-102)**:
+
+- `system-spec/dev-workflow.md` の qa-102 として、Dev Graph C02 の document metadata 契約を確定した。`artifact_kind=document` は `graph-node.schema.json#/$defs/documentLayer` に適合する小文字 kebab-case の `layer` を必須とし、非 document では禁止する。
+- legacy document は既存 frontmatter の単一 `layer` scalar を一度だけ graph へ移行できる。新規 document の暗黙 default、欠落、重複、形式不正は fail-closed とし、本文は保持する。
+- artifact placement lint は同じ schema 定義を参照し、graph validation と別の許容値表を持たない。
+- 影響は repository 内の開発管理 metadata と品質ゲートに限定される。Harness Hub 製品の外部 API・DB schema・認証認可・UI・Cloudflare deploy unit は変更しない。
+- 反映先、検証結果、500 行判断は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
+
+**CI 追補 (2026-07-30 / `HarnessHub-dqca` / qa-102)**:
+
+- C02 変更で stale になった Dev Graph 9 skill の live-trial を正規に再取得し、失敗 run も append-only で保持する。
+- tmux server の global environment は hook routing の正本にせず、boot 呼び出し元の `SYSTEM_SPEC_AUDIT_FORK_LEDGER` を `new-session -e` で対象 session へ明示する。未設定は空値で上書きし、過去 trial の一時 path を継承しない。
+- C19 は fixture 内台帳と current session id を canonical aggregate gate で突合し、正規 system-spec 4 entry point、独立3監査、C02 import が揃った場合だけ PASS とする。
+- これは repository 内の acceptance harness と証拠配送の設計であり、製品 API・DB・認証認可・UI・Cloudflare deploy unit は変更しない。
 
 **開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-095)**:
 
@@ -316,6 +347,37 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
 - 反映先と検証は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
+  を正とする。
+
+## Publish pipeline 実装反映 (2026-07-30 / `HarnessHub-dfm`)
+
+- `system-spec/backend.md` の `qa-103` で、公開要求から Release 生成までの REST API、
+  状態遷移、Green 自動公開、Yellow/Red の修正待ち、TargetChannel 単位の直列化を確定した。
+- `system-spec/security.md` の `qa-104` で、session/Bearer の経路別許可、
+  tenant/owner の fail-closed 判定、CSRF、冪等鍵、監査を確定した。
+- `system-spec/database.md` の `qa-105` で、既存 schema の consumer 境界、
+  immutable Release、partial UNIQUE、stable pointer 更新を確定した。
+- production smoke の DB 操作も root 公開 API の `createPublishSmokeDbProbe`
+  経由とし、運用検証を理由に schema subpath へ到達しない。
+- `system-spec/infrastructure.md` の `qa-106` と
+  `system-spec/maintenance-ops.md` の `qa-107` で、R2 binding、本番 smoke、
+  code-only rollback、履歴保持を確定した。
+- `system-spec/testing-qa.md` の `qa-108` で、状態機械・認可・検査・DB/R2・
+  production smoke の証拠束を受入条件へ固定した。
+- 正規遷移は `appr-020` を根拠に各セルを R4 reopen → confirm し、
+  compile と coverage/source-citation gate を通した。詳細は
+  [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を正とする。
+
+**G4 実行安定化の反映 (2026-07-30 / `HarnessHub-pyb3`)**:
+
+- `pnpm -r test` は CI / local の共通入口として維持し、pnpm project 設定の
+  `workspaceConcurrency: 1` で package 間だけを直列化する。
+- 各 package 内の Vitest 並列性は維持する。設定欠落・値変更は
+  `pnpm check:pnpm` の正負テストで非ゼロ終了させる。
+- qa-038 の G4、qa-088 / qa-096 の CI-local 同値と fail-closed 契約を実装具体化する
+  もので、製品 API、DB schema、認証認可、UI、deploy unit、確定済み QA 回答は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)
   を正とする。
 
 ## 未決事項
