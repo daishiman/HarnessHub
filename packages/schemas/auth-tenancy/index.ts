@@ -25,10 +25,19 @@ export {
   deviceErrorResponseSchema,
   deviceTokenRequestSchema,
 } from './device-flow.js';
-export type { PublisherTokenScope, SessionRole, TenantSlug, UserCode, UserStatus } from './primitives.js';
+export type {
+  OidcCredentialMode,
+  PublisherTokenScope,
+  SessionRole,
+  TenantSlug,
+  UserCode,
+  UserStatus,
+  WorkspaceDomain,
+} from './primitives.js';
 export {
   deviceCodeSchema,
   epochSecondsSchema,
+  oidcCredentialModeSchema,
   publisherTokenScopeSchema,
   refreshTokenSchema,
   sessionRoleSchema,
@@ -37,9 +46,12 @@ export {
   USER_CODE_LENGTH,
   userCodeSchema,
   userStatusSchema,
+  workspaceDomainSchema,
 } from './primitives.js';
 export type { OidcIdTokenClaims, SessionClaims, SigninRouteParams } from './session.js';
 export { oidcIdTokenClaimsSchema, sessionClaimsSchema, signinRouteParamsSchema } from './session.js';
+export type { SharedOidcStateClaims } from './shared-oidc.js';
+export { sharedOidcStateClaimsSchema } from './shared-oidc.js';
 export type {
   AccessTokenClaims,
   RefreshRequest,

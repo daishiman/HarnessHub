@@ -18,7 +18,7 @@ import {
   TENANT_SLUG,
   VERIFICATION_URI,
 } from './support/device-route-runtime.js';
-import { TENANT_A } from './support/in-memory-ports.js';
+import { oidcConnection, TENANT_A } from './support/in-memory-ports.js';
 
 // 合成点だけを差し替える。`index.js` は runtime.js のバレルなので、実体側を mock すれば route にも届く
 vi.mock('../../src/lib/authz/runtime.js', () => ({
@@ -105,14 +105,15 @@ describe('POST /api/v1/device/code: device 認可の開始', () => {
   });
 
   it('無効化された OIDC 接続も解決対象から外す', async () => {
-    harness.ports.oidcConnections.put({
-      tenantId: TENANT_A,
-      tenantSlug: TENANT_SLUG,
-      issuer: 'https://idp.example.com',
-      clientId: 'client-a',
-      displayName: 'Acme IdP',
-      enabled: false,
-    });
+    harness.ports.oidcConnections.put(
+      oidcConnection({
+        tenantId: TENANT_A,
+        tenantSlug: TENANT_SLUG,
+        clientId: 'client-a',
+        displayName: 'Acme IdP',
+        enabled: false,
+      }),
+    );
 
     const response = await POST(codeRequest({ tenant_slug: TENANT_SLUG }));
 

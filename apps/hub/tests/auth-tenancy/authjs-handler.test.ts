@@ -22,6 +22,7 @@ import {
   directoryUser,
   type InMemoryUsers,
   type MutableClock,
+  oidcConnection,
 } from './support/in-memory-ports.js';
 
 const SESSION_SECRET = 'test-session-secret-at-least-32-bytes';
@@ -41,20 +42,19 @@ function createHandler(
   } = {},
 ) {
   const oidcConnections = createInMemoryOidcConnections([
-    {
+    oidcConnection({
       tenantId: 'tenant-acme',
       tenantSlug: 'acme',
       issuer: ISSUER,
       clientId: CLIENT_ID,
       displayName: 'Acme ID',
-      enabled: true,
-    },
+    }),
   ]);
 
   return createAuthjsHandler({
     config: {
       oidcConnections,
-      clientSecretFor: async (tenantId) => (tenantId === 'tenant-acme' ? 'client-secret-acme' : null),
+      clientSecretFor: async (connection) => (connection.tenantId === 'tenant-acme' ? 'client-secret-acme' : null),
     },
     users: overrides.users ?? createInMemoryUsers(),
     clock: overrides.clock ?? createMutableClock(NOW_SECONDS),

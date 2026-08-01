@@ -54,7 +54,7 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-105",
+        "qa_ref": "qa-112",
         "serves_goals": [
           "G1",
           "G2",
@@ -86,7 +86,7 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-097",
+        "qa_ref": "qa-115",
         "serves_goals": [
           "G2",
           "G4"
@@ -162,7 +162,7 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-104",
+        "qa_ref": "qa-111",
         "serves_goals": [
           "G4",
           "G5"
@@ -200,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-110",
+        "qa_ref": "qa-116",
         "serves_goals": [
           "G1",
           "G4",
@@ -239,7 +239,7 @@
     "backend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-103",
+        "qa_ref": "qa-110",
         "serves_goals": [
           "G1",
           "G2",
@@ -318,7 +318,7 @@
     "maintenance-ops": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-107",
+        "qa_ref": "qa-114",
         "serves_goals": [
           "G1",
           "G2",
@@ -974,8 +974,38 @@
     },
     {
       "id": "qa-110",
-      "question": "qa-019 / qa-106 の SLO 契約を維持しながら、Better Stack の公開実測から観測進捗とエラーバジェットを再現可能かつ誤判定なく確定するには何を必須としますか?",
-      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-019 / qa-106 の既存インフラ契約を全面維持し、HarnessHub-37h.15 の SLO 観測契約を次のとおり追補する。\n\n【1. 実測の正本】Better Stack へ投入した設定や external_id の存在だけで監視稼働を宣言しない。認証不要の公開 status page /index.json から、status page resource の external_id を主鍵に status / availability / status_history を取得し、apps/hub/monitoring/slo-dashboard.json の verdict と突合する。公開実測を取得できない場合は判定不能として fail-closed にする。\n\n【2. 観測窓】UTC 日単位で完了した日だけを対象とし、進行中の当日と not_monitored（無データ）の日を分母から除外する。observed_days が minimum_observation_days_for_final_verdict=30 に満たない間は collecting とし、外形単独の目標達成判定 external_only_target_met は null に保つ。未観測時間を無停止時間へ読み替えない。\n\n【3. 判定境界】30 日到達後も外形監視だけで 99.5% 達成を主張せず、verdict を observation_complete_pending_application_error_rate、blocker を workers-analytics-5xx-rate-not-collected とする。最終判定には Better Stack downtime と Workers analytics 5xx 率の両方が必要で、70% 警告／100% 変更凍結の既存エラーバジェット方針を維持する。\n\n【4. 再実行と証跡】verify-slo-observation.mjs は一致=exit 0、不一致=exit 1、取得／入力不能=exit 2 とする。--write は dashboard の verdict を実測へ収束させ、--json 併用時は更新後に再突合した consistent=true の証跡だけを保存する。出力先欠落など不完全な CLI 引数を成功扱いにしない。\n\n【5. 秘密と範囲】検証器は公開 URL だけを読み、Better Stack API token と heartbeat URL を読み込まず証跡にも保存しない。本変更は SLO の観測・証跡・運用判定を具体化するもので、外部 API、DB schema、認証認可、UI、Cloudflare deploy unit、既存 99.5% 目標値は変更しない。"
+      "question": "共有 callback と credential resolver を backend.web の既存 API/runtime 契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-103 の API、principal、状態機械、監査、冪等性契約を全面維持し、認証 adapter の runtime 契約を追加確定する。\n\n【1. route dispatch】/api/auth/shared/callback/tenant-oidc は専用入口で処理し、state を先に検証して tenant を復元する。shared tenant の tenant 別 callback は 404、customer tenant を共通 callback へ向けた要求と予約 slug は 400 とし、曖昧な route fallback を作らない。\n\n【2. config resolution】TenantOidcConnectionPort は credential_mode と allowed_workspace_domains を返す。credential resolver は customer_google だけ tenant 行の暗号文を復号し、shared_google だけ環境 credential を返す。issuer/mode/設定の不一致と未知 mode は null として認可開始前に閉じる。\n\n【3. callback order】state 検証、tenant 接続一致、Auth.js の code exchange・署名・PKCE・nonce、Workspace hd、既存利用者/JIT、session 発行の順を守る。Workspace 拒否は user insert より前で、binding cookie は成功・拒否の callback 後に使い切る。\n\n【4. 互換性】customer_google の basePath、redirect_uri、Auth.js state cookie、secret 復号、session claims は変更しない。provider adapter の外へ Auth.js 型を漏らさない。"
+    },
+    {
+      "id": "qa-111",
+      "question": "共有 Google OAuth client の信頼境界を security.web の既存契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-104 の二段階認証認可、tenant 非開示、secret scan、append-only 監査を全面維持し、共有 OIDC の境界を追加確定する。\n\n【1. state 防御】tenant を運ぶ state は session secret による HS256、10分 TTL、token type、tenant id/slug、ランダム binding の SHA-256 を持つ。平文 binding は HttpOnly/Secure/SameSite=Lax/__Host- cookie にだけ置き、署名不正、期限切れ、cookie 欠落・不一致を一般化した拒否応答で閉じる。\n\n【2. IdP 防御】PKCE S256 と nonce を必須のまま維持する。Google ID token は Auth.js/oauth4webapi が issuer、署名、audience、nonce を検証し、その検証済み claims の hd を tenant 許可リストへ完全一致させる。authorization の hd parameter は表示ヒントであり認可境界に使わない。\n\n【3. secret 境界】共有 client_secret は Worker 環境 secret に1件だけ置き、tenant DB 行、ログ、API response、Git、GitHub Secretsへ複製しない。credential object は JSON 化時に secret を伏せ、shared 行への tenant secret 復号要求は明示エラーにする。\n\n【4. fail closed】unknown credential_mode、Google 以外の shared issuer、空の許可ドメイン、共有環境 secret の片方欠落では認可を開始しない。customer_google へも shared_google へも暗黙 fallback しない。"
+    },
+    {
+      "id": "qa-112",
+      "question": "共有 credential mode と Workspace allow-list を database.web の既存永続化契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-105 の tenant scope、transaction、既存 schema owner、immutable 公開資源契約を全面維持し、idp_connections の差分を追加確定する。\n\n【1. schema】idp_connections へ credential_mode TEXT NOT NULL DEFAULT customer_google と allowed_workspace_domains TEXT NOT NULL DEFAULT [] を追加する。既存行は migration 後も customer_google として意味を変えず、許可ドメイン JSON は読取境界で schema 検証する。\n\n【2. 保存不変条件】customer_google は従来どおり client_id と client_secret_enc を持つ。shared_google は tenant 行へ共有 client_id/client_secret を複製せず、両列を空 sentinel とし、issuer は Google 固定、allowed_workspace_domains を最低1件持つ。repository の discriminated input で方式ごとの必須項目を分ける。\n\n【3. read/decrypt】primary connection の決定順序と tenant scope を維持する。shared 行は環境 client_id を合成して auth port へ返し、decryptClientSecretForTenant は shared 行を復号対象として受け付けない。未知 mode、不正 JSON、空 allow-list は runtime で fail closed にする。\n\n【4. migration/rollback】0003 migration は ADD COLUMN 2本のみで既存データを移送・削除しない。旧 Worker へ戻す前に shared 行を customer_google へ戻すか削除し、旧コードが空 credential を読む状態を作らない。"
+    },
+    {
+      "id": "qa-113",
+      "question": "共有 Google OAuth client を infrastructure.web の既存 Cloudflare 配備契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-106 の Cloudflare Worker、GitHub Actions、health、rollback、R2 契約を全面維持し、認証配備差分を追加確定する。\n\n【1. OAuth 登録】環境ごとに Google OAuth client を1件作り、承認済み redirect URI は AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc の1本とする。tenant 追加のたびに Google Cloud Console の client/URI を増やさない。\n\n【2. secret】SHARED_GOOGLE_OAUTH_CLIENT_ID と SHARED_GOOGLE_OAUTH_CLIENT_SECRET は Cloudflare Worker の環境 secret/secret binding として投入し、repository と GitHub Actions Secrets を受渡し元にしない。共有方式を使わない環境では未設定を許し、その場合は shared tenant だけ fail closed にする。\n\n【3. 配備順序】DB backup・migration dry-run、0003 apply、Worker secret 投入、共有対応 Worker deploy、対象 tenant の shared_google 化、実ログイン smoke の順で段階導入する。customer tenant を canary 対照として残し、callback、hd、audit、secret 非露出を確認する。\n\n【4. rollback/rotation】障害時は tenant 行を customer_google へ戻して旧 callback/credential を確認してから旧 Worker version へ戻す。共有 secret rotation は新 secret 投入、Worker 反映、ログイン確認、旧 secret revoke の順とし、DB rollback と証跡削除は行わない。"
+    },
+    {
+      "id": "qa-114",
+      "question": "共有 OAuth client の rollout・rollback・完了収束を maintenance-ops.web の既存運用契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-107 の runbook、rollback、観測、default branch 収束契約を全面維持し、共有 OIDC の運用を追加確定する。\n\n【1. runbook】事前条件、Google Console の固定 callback、Cloudflare secret、DB backup/migration、tenant 登録、共有/顧客両方式の smoke、個人 Google・別 Workspace 拒否、ログ/response/DB の secret 非露出を1つの再実行可能な runbook にする。\n\n【2. 監視】認可開始失敗、state 拒否、Workspace 拒否、JIT/session 発行を値を漏らさない分類で観測し、tenant id/slug と secret、token、binding の平文をログへ出さない。拒否理由の細分を外部応答に露出しない。\n\n【3. rollback と回復】shared tenant の方式を戻し、customer callback が成功することを確認後に Worker をrollbackする。Google client 削除、secret revoke、migration down は最後に判断し、先に行って復旧経路を失わない。\n\n【4. 完了収束】ローカル品質ゲート、仕様 writer/compiler、dev-graph validator、対象差分 commit、draft PR までを証跡化する。draft PR の merge と default branch reconciliation までは HarnessHub-fnej と node を in_progress に維持し、merge 後に Beads、dev-graph、default branch を正規 sync して閉じる。"
+    },
+    {
+      "id": "qa-115",
+      "question": "HarnessHub-fnej の共有 Google OAuth client 方式を、auth.web の既存認証契約を維持しながらどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-097 の production Google OIDC、JIT、session、Device Flow 契約を全面維持し、次を追加確定する。\n\n【1. credential mode】idp connection は customer_google と shared_google を明示し、未知値や共有設定不備を既定方式へ fallback させない。既存行は customer_google を既定にして従来の tenant 別 issuer/client/secret と callback path を維持する。\n\n【2. 共有認可開始】shared_google は issuer を https://accounts.google.com に固定し、環境単位の client_id/client_secret を使う。認可開始は tenant path から行うが、Google へ渡す redirect_uri は /api/auth/shared/callback/tenant-oidc の1本に集約する。state には tenant id/slug、発行・期限、CSRF binding hash を HMAC 署名して載せ、PKCE と nonce は Auth.js の検査を維持する。\n\n【3. callback と帰属】共通 callback は署名・期限・binding cookie を DB lookup より先に検証し、復元した tenant id/slug と実接続を完全一致させる。Auth.js が署名・nonce 検証した Google ID token の hd を、tenant の allowed_workspace_domains と大文字小文字を正規化した完全一致で照合する。hd 欠落、別 Workspace、サブドメイン、tenant 差し替えでは session/JIT 行を作らない。\n\n【4. principal 分離】同じ Google sub でも principal は tenant_id と sub の組で束縛し、共有 client を tenant identity として使わない。shared は callback 用予約 slug として tenant route で拒否する。"
+    },
+    {
+      "id": "qa-116",
+      "question": "qa-019 / qa-106 / qa-113 の SLO・Cloudflare 配備契約を維持しながら、Better Stack の公開実測から観測進捗とエラーバジェットを再現可能かつ誤判定なく確定するには何を必須としますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示と 2026-08-02 の競合解消指示を明示承認として、qa-019 / qa-106 / qa-113 の既存インフラ契約を全面維持し、HarnessHub-37h.15 の SLO 観測契約を次のとおり追補する。\n\n【1. 実測の正本】Better Stack へ投入した設定や external_id の存在だけで監視稼働を宣言しない。認証不要の公開 status page /index.json から、status page resource の external_id を主鍵に status / availability / status_history を取得し、apps/hub/monitoring/slo-dashboard.json の verdict と突合する。公開実測を取得できない場合は判定不能として fail-closed にする。\n\n【2. 観測窓】UTC 日単位で完了した日だけを対象とし、進行中の当日と not_monitored（無データ）の日を分母から除外する。observed_days が minimum_observation_days_for_final_verdict=30 に満たない間は collecting とし、外形単独の目標達成判定 external_only_target_met は null に保つ。未観測時間を無停止時間へ読み替えない。\n\n【3. 判定境界】30 日到達後も外形監視だけで 99.5% 達成を主張せず、verdict を observation_complete_pending_application_error_rate、blocker を workers-analytics-5xx-rate-not-collected とする。最終判定には Better Stack downtime と Workers analytics 5xx 率の両方が必要で、70% 警告／100% 変更凍結の既存エラーバジェット方針を維持する。\n\n【4. 再実行と証跡】verify-slo-observation.mjs は一致=exit 0、不一致=exit 1、取得／入力不能=exit 2 とする。--write は dashboard の verdict を実測へ収束させ、--json 併用時は更新後に再突合した consistent=true の証跡だけを保存する。出力先欠落など不完全な CLI 引数を成功扱いにしない。\n\n【5. 秘密と範囲】検証器は公開 URL だけを読み、Better Stack API token と heartbeat URL を読み込まず証跡にも保存しない。本変更は SLO の観測・証跡・運用判定を具体化するもので、共有 Google OAuth client を含む既存の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit、既存 99.5% 目標値は変更しない。"
     }
   ],
   "approval_log": [
@@ -1842,9 +1872,51 @@
       "from": "確定"
     },
     {
+      "category": "auth",
+      "platform": "web",
+      "reason": "HarnessHub-fnej で Google OAuth client を環境単位で共有する第2の credential mode、共通 callback、署名付き tenant state、Workspace hd 強制が qa-097 より具体化されたため",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "共有 callback 受信時の state 先行検証、tenant 解決、Auth.js basePath 再構成、JIT provisioning 前の Workspace 判定を qa-103 の backend 契約へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "tenant state 差し替え、login CSRF、個人 Google account、別 Workspace、共有 secret 複製を防ぐ新しい信頼境界を qa-104 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "idp_connections に credential_mode と allowed_workspace_domains を追加し、共有 secret を tenant 行へ保存しない永続化契約を qa-105 へ統合するため",
+      "from": "確定"
+    },
+    {
       "category": "infrastructure",
       "platform": "web",
-      "reason": "HarnessHub-37h.15 で公開 status page の時系列から観測窓・終了コード・30日未満の判定禁止を実装し、qa-106 の SLO 実測契約を再現可能な運用境界まで具体化したため",
+      "reason": "共有 Google OAuth client の環境 secret、固定 redirect URI、migration と段階配備・rollback 順序を qa-106 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "共有 OAuth client の登録、段階導入、secret rotation、旧方式への rollback、PR merge 後の完了収束を qa-107 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "並行仕様更新が qa-109 を testing-qa.web に先行採番したため、共有 Google OAuth client の auth.web 契約を未使用の qa-115 へ付け直し、別タスクの質疑参照を解消する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "origin/main の qa-113 共有 Google OAuth 配備契約を保持した上で、HarnessHub-37h.15 の公開 status page 時系列・終了コード・30日未満の判定禁止を同じ infrastructure.web 契約へ追補するため",
       "from": "確定"
     }
   ],

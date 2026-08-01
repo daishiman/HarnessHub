@@ -136,4 +136,4 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - Better Stack の公開 status page を認証なしで実測する `verify:slo-observation` を追加し、設定の存在ではなく現在状態と日次履歴から SLO 観測進捗を判定する。
 - 当日と `not_monitored` を観測窓から除外し、30 日未満は合否を断定しない。2026-08-01 時点は 6 日 / 30 日の `collecting` で、外形エラーバジェット消費は 48.7%。
 - 30 日到達後も Workers Analytics の 5xx 率が揃うまで A3 を確定せず、`HarnessHub-37h.15` は `in_progress` を維持する。
-- 正規仕様は `system-spec/infrastructure.md` の qa-110、反映経路と残課題は [SLO 公開実測 仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を正とする。
+- 正規仕様は `system-spec/infrastructure.md` の qa-116、反映経路と残課題は [SLO 公開実測 仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を正とする。

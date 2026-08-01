@@ -6,7 +6,7 @@ beads_ids:
 dev_graph_node_id: issue-hub-slo-external-monitoring-20260725
 feature_node_id: feat-hub-foundation
 spec_impact: reflected
-reviewed_at: 2026-08-01
+reviewed_at: 2026-08-02
 ---
 
 # SLO 公開実測 仕様反映受領書
@@ -17,7 +17,7 @@ reviewed_at: 2026-08-01
 
 ## 2. 結論
 
-- **仕様・設計影響: あり (`reflected`)**。観測窓、終了コード、30 日未満の判定禁止、外形監視単独では最終合格にしない境界を `qa-110` として正式に追加した。
+- **仕様・設計影響: あり (`reflected`)**。観測窓、終了コード、30 日未満の判定禁止、外形監視単独では最終合格にしない境界を `qa-116` として正式に追加した。
 - **外部 API・DB・UI への影響: なし**。既存の 99.5% 目標、認証認可、DB schema、画面、Cloudflare deploy unit は変更しない。
 - **現在の受入状態: 継続中**。外形監視は稼働しているが観測済みは 6 日 / 必要 30 日で、Workers Analytics の 5xx 率も未収集のため、A3 と Beads は未完了を維持する。
 - **秘密情報への影響: なし**。検証器は認証不要の公開 JSON だけを読み、Better Stack API token と heartbeat URL を取得・保存しない。
@@ -39,7 +39,7 @@ CLI は一致を exit 0、不一致を exit 1、取得不能または引数不�
 ## 5. 仕様反映の正規フロー
 
 1. `system-spec/spec-state.json` の `infrastructure.web` を単一 transition writer で理由付き再オープンした。
-2. ユーザーの最終レビュー・仕様反映指示を明示承認として `qa-110` を追加し、qa-019 / qa-106 の既存契約を維持して再確定した。
+2. ユーザーの最終レビュー・仕様反映指示を明示承認として `qa-116` を追加し、qa-019 / qa-106 と origin/main の qa-113（共有 Google OAuth 配備契約）を維持して再確定した。
 3. coverage / foundation / source citation gate を通し、単一 compiler で `system-spec/infrastructure.md` を再生成した。
 4. Dev Graph の C02 writer で `specs/` と `architecture/` の参照型 wrapper、source lineage、confirmation evidence を同期する。
 5. `features/`、`tasks/`、`docs/` と実測 evidence を同じ変更単位で同期する。
@@ -67,6 +67,9 @@ CLI は一致を exit 0、不一致を exit 1、取得不能または引数不�
 - `verify:slo-observation`: 公開実測との一致で exit 0（観測 6 / 30 日、エラーバジェット消費 48.7%）
 - Phase 1-13 task 仕様 validator: 13 phases、violations 0、digest `8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502`
 - system-spec: coverage / foundation / source citation PASS、compiler tests 42 / 42 PASS
+- conflict resolution: origin/main の qa-110〜qa-115 と本変更を統合し、SLO 契約を未使用 ID `qa-116` へ再採番。`spec-state.json` source digest `f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f`
+- post-merge regression: `origin/main` / local `main` の `c1ff02244f07` を取り込み、Hub の認証＋監視 35 files / 454 tests、typecheck、Biome が PASS
+- post-merge repository gate: artifact placement PASS、465 文書の 300 行上限 PASS、`git diff --check` PASS
 - Dev Graph: schema valid、implementation readiness complete、登録対象の source digest mismatch 0・dangling evidence 0
 - repository: artifact placement PASS、文書 461 件の 300 行制限 PASS、`git diff --check` PASS、secret scan 478 files / findings 0
 - workspace test: DB 30 files / 231 tests、他 5 packages 99 files / 1,417 tests が全件 PASS。DB の既定並列実行では全テスト成功後に Vitest worker RPC の 60 秒 timeout が発生するため、DB は `--maxWorkers=1 --no-file-parallelism` で exit 0 を確認した。対象差分外の test runner 制約であり、SLO 実装の失敗ではないため本 PR には設定変更を混在させない。

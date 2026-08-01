@@ -7,8 +7,11 @@
 export {
   type AuthjsConfig,
   type AuthjsConfigDeps,
+  type BuildOidcProviderOptions,
   buildOidcProvider,
+  type OidcCheck,
   type OidcProviderConfig,
+  type ResolveAuthjsConfigOptions,
   type ResolvedAuthjsConfig,
   resolveAuthjsConfig,
   resolveAuthjsConfigForTenant,

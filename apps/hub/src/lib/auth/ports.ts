@@ -17,7 +17,7 @@
  * 遷移できなかった側 (= 競合に負けた側) を呼び出し側が識別できる形にしてある。
  */
 
-import type { PublisherTokenScope, SessionRole, UserStatus } from '@harness-hub/schemas';
+import type { OidcCredentialMode, PublisherTokenScope, SessionRole, UserStatus } from '@harness-hub/schemas';
 
 /** 時刻の注入口。TTL・rotation・失効の時間依存を決定論的に検査できるようにする。 */
 export interface AuthClock {
@@ -40,11 +40,33 @@ export interface TenantOidcConnection {
   readonly tenantSlug: string;
   /** discovery document の `issuer` と厳密一致すべき値。 */
   readonly issuer: string;
+  /**
+   * この接続の認可要求で使う client_id (= ID token の `aud` に期待する値)。
+   *
+   * **解決済みの値**であって「DB 行の列」ではない。共有方式 (`shared_google`) では
+   * DB 行の client_id 列が空で、port 実装が環境単位の共有 client_id をここへ埋める。
+   * 型を `string | null` にせず常に確定値にしてあるのは、`aud` 検証が
+   * 「client_id が無い場合」を分岐しないで済むようにするため — 分岐が生まれると
+   * その枝が `aud` 未検証の経路になる。
+   */
   readonly clientId: string;
   /** 表示名 (「〇〇でログイン」のボタン文言)。 */
   readonly displayName: string;
   /** 無効化された接続は解決対象から外す。 */
   readonly enabled: boolean;
+  /**
+   * credential の出所 (issue-auth-tenancy-shared-google-oidc-20260729)。
+   * 未知・未設定の値をここへ入れない。port 実装は不明値を解決失敗 (null) に倒す。
+   */
+  readonly credentialMode: OidcCredentialMode;
+  /**
+   * 受理する Google Workspace ドメイン (ID token の `hd` claim と照合する)。
+   *
+   * 空配列 = 未設定。共有方式では port 実装が空配列の接続を解決しない
+   * (`aud` がテナント識別子にならないため、`hd` 未設定は「誰でも入れる」と同義)。
+   * 顧客方式では空配列のとき `hd` を検査しない — 既存テナントの認証境界を変えないため。
+   */
+  readonly allowedWorkspaceDomains: readonly string[];
 }
 
 export interface TenantOidcConnectionPort {

@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-107 |
+| Web (web) | 確定 | 確定質疑: qa-114 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,19 +24,19 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-107 (対応セル: web)
+### qa-114 (対応セル: web)
 
-**質問**: 公開パイプラインの runbook、rollback、完了収束を maintenance-ops.web の既存契約へどう統合しますか?
+**質問**: 共有 OAuth client の rollout・rollback・完了収束を maintenance-ops.web の既存運用契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 までの maintenance-ops.web 契約を全面維持し、publish 運用を追加確定する。
+**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-107 の runbook、rollback、観測、default branch 収束契約を全面維持し、共有 OIDC の運用を追加確定する。
 
-【1. runbook】事前条件、短命 Publisher token、使い捨て Project/TargetChannel、S1〜S6、TargetChannel 409、R2 hash、audit chain、後処理を一つの runbook で再現する。smoke は途中失敗を成功扱いにせず、作成した一時 token を失効する。
+【1. runbook】事前条件、Google Console の固定 callback、Cloudflare secret、DB backup/migration、tenant 登録、共有/顧客両方式の smoke、個人 Google・別 Workspace 拒否、ログ/response/DB の secret 非露出を1つの再実行可能な runbook にする。
 
-【2. rollback】Worker code 障害は記録済み直前 version へ 100% rollback し、rollback 中は既知の認証制約を明示して Publisher API を一時停止扱いにする。Release、R2 object、監査 event は immutable/append-only の履歴として保持し、DB を巻き戻して証跡を消さない。
+【2. 監視】認可開始失敗、state 拒否、Workspace 拒否、JIT/session 発行を値を漏らさない分類で観測し、tenant id/slug と secret、token、binding の平文をログへ出さない。拒否理由の細分を外部応答に露出しない。
 
-【3. 観測と証跡】health dependency、bundle size、test/gate 件数、Worker version、stable Release、audit chain event 数、R2 content hash を release record へ記録する。確認していない再実行を実測済みと書かず、ローカル契約検証と本番実測を分離する。
+【3. rollback と回復】shared tenant の方式を戻し、customer callback が成功することを確認後に Worker をrollbackする。Google client 削除、secret revoke、migration down は最後に判断し、先に行って復旧経路を失わない。
 
-【4. 完了収束】実装・本番 acceptance が完了しても、Draft PR の merge と default branch reconciliation までは Beads P01〜P13 と親 epic を in_progress に維持する。merge 後に dev-graph、Beads、default branch を正規 sync して完了へ収束する。
+【4. 完了収束】ローカル品質ゲート、仕様 writer/compiler、dev-graph validator、対象差分 commit、draft PR までを証跡化する。draft PR の merge と default branch reconciliation までは HarnessHub-fnej と node を in_progress に維持し、merge 後に Beads、dev-graph、default branch を正規 sync して閉じる。
 
 ### qa-044 (対応セル: desktop-windows, desktop-macos)
 

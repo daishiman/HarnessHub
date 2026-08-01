@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-110 |
+| Web (web) | 確定 | 確定質疑: qa-116 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-110 (対応セル: web)
+### qa-116 (対応セル: web)
 
-**質問**: qa-019 / qa-106 の SLO 契約を維持しながら、Better Stack の公開実測から観測進捗とエラーバジェットを再現可能かつ誤判定なく確定するには何を必須としますか?
+**質問**: qa-019 / qa-106 / qa-113 の SLO・Cloudflare 配備契約を維持しながら、Better Stack の公開実測から観測進捗とエラーバジェットを再現可能かつ誤判定なく確定するには何を必須としますか?
 
-**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-019 / qa-106 の既存インフラ契約を全面維持し、HarnessHub-37h.15 の SLO 観測契約を次のとおり追補する。
+**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示と 2026-08-02 の競合解消指示を明示承認として、qa-019 / qa-106 / qa-113 の既存インフラ契約を全面維持し、HarnessHub-37h.15 の SLO 観測契約を次のとおり追補する。
 
 【1. 実測の正本】Better Stack へ投入した設定や external_id の存在だけで監視稼働を宣言しない。認証不要の公開 status page /index.json から、status page resource の external_id を主鍵に status / availability / status_history を取得し、apps/hub/monitoring/slo-dashboard.json の verdict と突合する。公開実測を取得できない場合は判定不能として fail-closed にする。
 
@@ -38,7 +38,7 @@ serves_goals: [G1, G4, G5, G2]
 
 【4. 再実行と証跡】verify-slo-observation.mjs は一致=exit 0、不一致=exit 1、取得／入力不能=exit 2 とする。--write は dashboard の verdict を実測へ収束させ、--json 併用時は更新後に再突合した consistent=true の証跡だけを保存する。出力先欠落など不完全な CLI 引数を成功扱いにしない。
 
-【5. 秘密と範囲】検証器は公開 URL だけを読み、Better Stack API token と heartbeat URL を読み込まず証跡にも保存しない。本変更は SLO の観測・証跡・運用判定を具体化するもので、外部 API、DB schema、認証認可、UI、Cloudflare deploy unit、既存 99.5% 目標値は変更しない。
+【5. 秘密と範囲】検証器は公開 URL だけを読み、Better Stack API token と heartbeat URL を読み込まず証跡にも保存しない。本変更は SLO の観測・証跡・運用判定を具体化するもので、共有 Google OAuth client を含む既存の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit、既存 99.5% 目標値は変更しない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 
@@ -62,13 +62,3 @@ serves_goals: [G1, G4, G5, G2]
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
-
-## P13 CI 再実行の実装反映 (2026-08-01 / `HarnessHub-o2i.13`)
-
-- qa-034 / qa-038 / qa-106 の「production deploy は GitHub Actions が正本」を維持する。
-- 通常は main merge の push で自動配備する。path filter 対象外の docs-only merge で run が発火しない場合だけ、
-  main の `workflow_dispatch` から同じ `static-gates → test → deploy → post-deploy smoke` を再実行できる。
-- dispatch は手動 Wrangler 操作でも承認 gate でもない。main 以外では deploy せず、全ゲート・secret 境界・
-  migration・rollback 契約を短絡しない。
-- 製品 API、DB schema、認証認可、UI、Worker deploy unit は変更しない。詳細と実測は
-  `docs/infrastructure-spec.md` §7 と P13 仕様反映受領書を正とする。

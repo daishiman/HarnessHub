@@ -98,4 +98,4 @@ A3 は**時間ゲート**であり、デプロイ作業ではない。3 分間�
 - `verify:slo-observation` は dashboard 宣言を実測へ収束させ、現在は `verdict.status=collecting` で一致する。30 日未満の外形合否は `null` とする。
 - 観測済み窓の downtime は約 6,312 秒、30 日許容 12,960 秒に対する消費は約 48.7% で、70% 警告と 100% 変更凍結は未発動。
 - 残作業は 30 日時間ゲート、Workers Analytics 5xx 率、Worker cron heartbeat 着信実測。これらが揃うまで本 issue と `HarnessHub-37h.15` は未完了を維持する。
-- 仕様反映は `system-spec/infrastructure.md` の qa-110、[仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
+- 仕様反映は `system-spec/infrastructure.md` の qa-116、[仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。

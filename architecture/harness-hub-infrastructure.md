@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T12:41:25.372730Z"
+updated_at: "2026-08-01T15:28:45Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"d8c52986afbd5881f90dbc935c66e20a1df8221f28ccd57dab05540d253974c0","evaluator":"codex-final-review + system-spec-harness","evidence_ref":"docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-01T11:50:06Z","origin_kind":"system-spec-harness","source_digest":"d8c52986afbd5881f90dbc935c66e20a1df8221f28ccd57dab05540d253974c0","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-01T15:28:45Z","origin_kind":"system-spec-harness","source_digest":"eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `d8c52986afbd5881…`)
-- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `0329c87bf2e5be42…`)
+- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `eca0eba6c0906893…`)
+- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `960ed37334a8cbcf…`)
 
-- confirmation: `confirmed` / evaluator: `codex-final-review + system-spec-harness` → **PASS**（網羅性・foundation trace・出典・compiler・Dev Graph の決定論ゲート。証跡は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md)）
-- 再取込日時: 2026-08-01T11:50:06Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（共有 Google OAuth 配備契約と SLO 観測契約を qa-116 へ統合）
+- 再取込日時: 2026-08-01T15:28:45Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -204,10 +204,28 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - PR #612後のrun `30518334455`はR2専用token未登録で失敗したが自動rollbackは成功した。
   repository側の再発防止と、Cloudflare所有者による最小権限token発行は別の信頼境界として扱う。
 
-## SLO 公開実測の差分追記 (2026-08-01 / `HarnessHub-37h.15` / qa-110)
+## SLO 公開実測の差分追記 (2026-08-02 / `HarnessHub-37h.15` / qa-116)
 
 - **実測境界**: Better Stack の設定申告ではなく、認証不要の status page `/index.json` を読み、resource `external_id` を主鍵に現在状態と日次履歴を突合する。取得不能は fail-closed とする。
 - **観測窓**: UTC の完了日だけを数え、進行中の当日と `not_monitored` を除外する。30 日未満は `collecting`、外形単独の目標判定は `null` を維持する。
 - **最終判定**: 30 日到達後も Workers Analytics 5xx 率が揃うまで `observation_complete_pending_application_error_rate` とし、外形監視だけで 99.5% 達成を主張しない。
 - **再現性と秘密**: 検証 CLI は一致 0 / 不一致 1 / 取得・入力不能 2 を返し、公開 URL だけを読む。API token と heartbeat URL を証跡へ保存しない。
-- 正本は [system-spec/infrastructure.md](../system-spec/infrastructure.md) の qa-110、実装・検証・残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
+- 正本は [system-spec/infrastructure.md](../system-spec/infrastructure.md) の qa-116、実装・検証・残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
+
+**差分追記 (2026-08-01 / `HarnessHub-fnej` / qa-113・qa-114)**:
+
+- 環境ごとに Google OAuth client を 1 件作り、redirect URI は
+  `AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc` の 1 本に固定する。
+  tenant 追加ごとの client/URI 登録は行わない。
+- `SHARED_GOOGLE_OAUTH_CLIENT_ID` と `SHARED_GOOGLE_OAUTH_CLIENT_SECRET` は
+  Cloudflare Worker の環境 secret とし、repository と GitHub Actions Secrets を
+  受渡し元にしない。共有 tenant がない環境では未設定を許す。
+- rollout は backup/dry-run → migration 0003 → secret 投入 → Worker deploy →
+  tenant mode 変更 → 共有/顧客両方式 smoke の順。個人 Google、別 Workspace、
+  tenant state 差し替えの拒否も確認する。
+- rollback は tenant を customer mode へ戻し、旧 callback の成功を確認してから
+  Worker code を戻す。DB migration と証跡は自動で戻さない。
+- secret rotation は新 secret 投入 → Worker 反映 → login 確認 → 旧 secret revoke。
+  手順と証跡は
+  [rollout runbook](../docs/features/feat-auth-tenancy/runbook-shared-google-oidc-rollout.md)
+  を正とする。
