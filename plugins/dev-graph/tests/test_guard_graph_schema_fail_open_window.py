@@ -8,7 +8,8 @@
   `.dev-graph/state/graph.json` への Bash 直書きが 2 回素通りした。
 
 本 test が固定する 3 つの契約:
-  1. 遮断は graph サイズ・マシン負荷に依存せず秒未満で確定する (受入条件 1 の機械化)。
+  1. 遮断は repository context 検査より前に確定し、graph サイズ・マシン負荷に依存しない
+     (受入条件 1 の機械化)。
   2. redirect の判定は shell 文法どおり quote の外だけを見る。遮断パターンを説明する散文を
      引数へ渡すコマンドを巻き込まない (7dw の散文誤遮断)。
   3. `.dev-graph/config.json` の sanctioned writer 呼出しは通り、writer の名前を騙るだけの
@@ -16,7 +17,8 @@
 
 判定の構造そのもの (遮断経路が subprocess を起動しないこと) は
 test_semantic_contract_boundaries_c10_c11_c24.py が固定する。ここでは *実プロセスの
-所要時間* と *入力の分類* を実測で押さえる。
+遮断結果* と *入力の分類* を実測で押さえる。絶対所要時間は machine load まで測る
+proxy metric であり、閾値を上げるほど graph 走査の退行を見逃す範囲が広がるため使わない。
 """
 from __future__ import annotations
 
@@ -25,7 +27,6 @@ import io
 import json
 import subprocess
 import sys
-import time
 from pathlib import Path
 
 import pytest
@@ -36,9 +37,6 @@ HOOK = PLUGIN / "hooks" / "guard-graph-schema.py"
 # graph である。書込先が別 repo (fixture) でも遅くなるのがこの bug の核心だったため、
 # live-trial と同じ条件を再現するために本体 repo を --repo-root に渡す (read-only)。
 REPO_ROOT = PLUGIN.parents[1]
-# 受入条件そのもの: 「graph サイズに依らず 1 秒未満で exit 2」。修正後の実測は 0.12-0.30s で、
-# 内訳はほぼ python 起動時間である (判定自体は正規表現とトークナイズのみ)。
-DENIAL_BUDGET_SECONDS = 1.0
 
 
 def load(path: Path, name: str):
@@ -55,15 +53,14 @@ def guard():
     return load(HOOK, "guard_fail_open_window")
 
 
-def run_hook_process(command: str) -> tuple[int, float, str]:
-    """hook を実プロセスとして起動し (exit code, 経過秒, stderr) を返す。"""
+def run_hook_process(command: str) -> tuple[int, str]:
+    """hook を実プロセスとして起動し (exit code, stderr) を返す。"""
     payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
-    started = time.monotonic()
     proc = subprocess.run(
         [sys.executable, str(HOOK), "--repo-root", str(REPO_ROOT)],
         input=payload, capture_output=True, text=True, check=False,
     )
-    return proc.returncode, time.monotonic() - started, proc.stderr
+    return proc.returncode, proc.stderr
 
 
 def decide(guard, monkeypatch, capsys, command: str, root: Path) -> tuple[int, str]:
@@ -78,45 +75,59 @@ def decide(guard, monkeypatch, capsys, command: str, root: Path) -> tuple[int, s
 
 
 @pytest.mark.parametrize("target", [".dev-graph/config.json", ".dev-graph/state/graph.json"])
-def test_bash_redirect_into_graph_authority_is_denied_within_budget(target):
-    """live-trial で素通りした 2 経路が、本体 graph を抱えたままでも秒未満で遮断される。"""
+def test_bash_redirect_into_graph_authority_is_denied_in_real_process(target):
+    """live-trial で素通りした 2 経路が、実プロセスでも exit 2 で遮断される。"""
     command = f"ROOT=/tmp/dev-graph-probe\ncat > \"$ROOT/{target}\" <<'EOF'\n{{}}\nEOF"
 
-    code, elapsed, stderr = run_hook_process(command)
+    code, stderr = run_hook_process(command)
 
     assert code == 2, f"遮断されていない: {stderr}"
     assert "C02 atomic writer" in stderr
-    assert elapsed < DENIAL_BUDGET_SECONDS, (
-        f"遮断に {elapsed:.2f}s かかった。PreToolUse hook が timeout すると tool は通るため、"
-        "遮断経路の所要時間はそのまま fail-open の窓になる"
-    )
 
 
-def test_denial_latency_does_not_depend_on_the_repository_graph(tmp_path):
-    """本体 repo (大きい graph) と空 repo で遮断時間が同程度であることを確認する。
+def test_denial_does_not_resolve_repository_context_for_any_graph_size(
+    guard, monkeypatch, capsys, tmp_path,
+):
+    """本体 repo (大きい graph) と空 repo の双方で graph 検査より前に遮断する。
 
     旧実装は --repo-root の graph 全件を C11 検証していたため、書込先が別 repo でも本体
-    graph の大きさがそのまま遅延になった。graph を読まなくなった今、両者の差は python
-    起動時間の揺れに収まる。
+    graph の大きさがそのまま遅延になった。絶対時間や大小 2 process の比は machine load
+    も測る proxy metric であり、並列実行では graph 非依存でも偽陽性になりうる。
+
+    現在の直接契約は、遮断対象が repository context 解決へ到達しないこと。context_ok()
+    は subprocess を起動する唯一の後段なので、これを呼んだ時点で失敗させれば graph
+    サイズ非依存性と fail-open window の不在を負荷に依存せず検査できる。
     """
     command = "cat > /tmp/dev-graph-probe/.dev-graph/config.json <<'EOF'\n{}\nEOF"
-    payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
-    elapsed: dict[str, float] = {}
-    for label, root in (("repo", REPO_ROOT), ("empty", tmp_path)):
-        started = time.monotonic()
-        proc = subprocess.run(
-            [sys.executable, str(HOOK), "--repo-root", str(root)],
-            input=payload, capture_output=True, text=True, check=False,
-        )
-        elapsed[label] = time.monotonic() - started
-        assert proc.returncode == 2, f"{label}: {proc.stderr}"
 
-    graph = REPO_ROOT / ".dev-graph" / "state" / "graph.json"
-    size = graph.stat().st_size if graph.is_file() else 0
-    assert elapsed["repo"] < DENIAL_BUDGET_SECONDS, (
-        f"graph {size} bytes を抱えた repo で {elapsed['repo']:.2f}s"
+    def context_must_not_run(_root):
+        raise AssertionError("遮断前に repository context 検査へ到達した")
+
+    monkeypatch.setattr(guard, "context_ok", context_must_not_run)
+    for label, root in (("repo", REPO_ROOT), ("empty", tmp_path)):
+        monkeypatch.setattr(sys, "argv", [str(HOOK), "--repo-root", str(root)])
+        monkeypatch.setattr(
+            sys,
+            "stdin",
+            io.StringIO(
+                json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
+            ),
+        )
+        assert guard.main() == 2, label
+        assert "C02 atomic writer" in capsys.readouterr().err
+
+    # 陽性対照: trap 自体が空振りしていないことを、遮断対象外の入力で確認する。
+    # static_denial() が None の場合は必ず context_ok() へ進むため、この入力だけは発火する。
+    monkeypatch.setattr(sys, "argv", [str(HOOK), "--repo-root", str(tmp_path)])
+    monkeypatch.setattr(
+        sys,
+        "stdin",
+        io.StringIO(
+            json.dumps({"tool_name": "Bash", "tool_input": {"command": "echo safe"}})
+        ),
     )
-    assert elapsed["empty"] < DENIAL_BUDGET_SECONDS
+    with pytest.raises(AssertionError, match="repository context 検査"):
+        guard.main()
 
 
 # quote の内側にある `>` は shell 文法上 redirect ではない。旧実装は command 全体を正規表現で

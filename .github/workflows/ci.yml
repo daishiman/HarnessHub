@@ -191,12 +191,14 @@ jobs:
             apps/hub/artifacts/
           if-no-files-found: warn
 
-  # ゲート最終: deploy。static-gates と test の両方が success したときだけ実行される (A1 の "test→deploy 完走")
+  # ゲート最終: deploy。static-gates と test の両方が success したときだけ実行される (A1 の "test→deploy 完走")。
+  # main push が通常経路。workflow_dispatch は docs-only merge などで path filter が発火しなかった場合に、
+  # main の同一 commit を正規 CI 経路で再配備する明示的な再実行経路であり、feature branch では許可しない。
   deploy:
     name: wrangler deploy (Cloudflare Workers)
     runs-on: ubuntu-latest
     needs: [static-gates, test]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     environment: production
     steps:
       - uses: actions/checkout@v4

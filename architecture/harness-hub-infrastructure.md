@@ -158,6 +158,16 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 実測値、残る運用リスク、正規仕様遷移は
   [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を参照する。
 
+**P13 CI 再実行経路 (2026-08-01 / `HarnessHub-o2i.13`)**:
+
+- main merge による自動 deploy を通常経路として維持する。`on.push.paths` 対象外の docs-only merge で
+  run が発火しない場合だけ、main の `workflow_dispatch` を同一 pipeline の再実行入口として許可する。
+- dispatch でも `static-gates → test → deploy → health → OIDC / DB-R2 smoke` の依存を短絡しない。
+  feature branch の dispatch と、手元からの通常 Wrangler deploy は引き続き本番経路にしない。
+- deploy unit、secret 境界、migration 順序、rollback の非対称性は変更しない。詳細正本は
+  [infrastructure spec](../docs/infrastructure-spec.md) §7、実測は
+  [hearing intake P13 release notes](../docs/features/feat-hearing-intake/release-notes.md) とする。
+
 ## Risks and verification
 
 正本章 (system-spec/infrastructure.md, system-spec/maintenance-ops.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
