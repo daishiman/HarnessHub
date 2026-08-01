@@ -64,8 +64,8 @@
   },
   "backup_heartbeat": {
     "local_id": "hub-backup-daily",
-    "external_id": null,
-    "provisioning_state": "pending_credentials",
+    "external_id": "477775",
+    "provisioning_state": "applied",
     "request": {
       "method": "POST",
       "endpoint": "https://uptime.betterstack.com/api/v2/heartbeats",

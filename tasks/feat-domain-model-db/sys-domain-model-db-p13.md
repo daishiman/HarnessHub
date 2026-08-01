@@ -12,8 +12,8 @@ iteration: null
 title: "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-08-01T06:47:41.684217Z"
+status: "closed"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P12"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
 resource_scope: [".github/workflows/ci.yml","docs/features/feat-domain-model-db/release-record.md","packages/db/__tests__/backup-restore.test.ts","packages/db/__tests__/fixtures/two-tenants.ts","packages/db/backup/","packages/db/scripts/export-control-plane.ts","packages/db/scripts/restore-control-plane.ts"]
@@ -76,7 +76,13 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - `HarnessHub-0yvi`: runbook 記載の export → restore をそのまま実走する regression test を追加し、JSONL の単一復元経路へ同期した。
 - `HarnessHub-fnzl`: backup を restore CLI と同じ JSONL 形式へ変更し、Actions 設定台帳と CI 突合を追加した。本番 smoke の Wrangler 起動は Hub workspace 経由へ固定した。
-- local の focused test と task package 検証後も、更新版 backup と main deploy の GitHub Actions 実走までは completion を `in_progress` / `blocked` のまま維持する。
+- local の focused test と task package 検証後も、更新版 backup と main deploy の GitHub Actions 実走までは completion を `in_progress` / `blocked` のまま維持する（2026-08-01 に両 run が success し、`HarnessHub-fnzl` は closed）。
+
+## backup / deploy 外部受入の追補 (2026-08-01 / `HarnessHub-fnzl`)
+
+- `hub-ci` run `30684710098` が migration → deploy → health → smoke を完走した。
+- `hub-backup` run `30686023662` が control-plane export 19 テーブル / 64 行、R2 upload / 再取得一致、heartbeat ping まで完走した。
+- run と独立に R2 object を再取得し、`verify-export-artifact.ts` で `ok=true` を再確認した。P13 の backup / deploy 外部実走残差は解消した。
 
 ## 接続復旧の追補実行記録 (2026-07-30 / `HarnessHub-njkm`)
 

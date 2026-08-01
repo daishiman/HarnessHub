@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1072,
+  "graph_revision": 1073,
   "nodes": [
     {
       "acceptance": [
@@ -14575,7 +14575,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-domain-model-db",
         "macro-feature",
@@ -14587,7 +14587,7 @@
       "template_version": "1.0.0",
       "title": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-01T06:47:41.684217Z"
     },
     {
       "acceptance": [
@@ -36251,19 +36251,20 @@
       "classification_confidence": 0.95,
       "classification_reason": "SYS-DOMAIN-MODEL-DB-P13 のリリース検証中に実測した F-1 / F-4。feature の実装欠陥ではなくリポジトリ運用設定の欠落であり、独立 issue として切り出す",
       "completion_evidence": {
-        "completed_at": null,
+        "completed_at": "2026-08-01T05:40:00Z",
         "evidence_refs": [
           ".github/workflows/backup.yml",
           ".github/workflows/ci.yml",
           "scripts/ci/actions-secrets-registry.json",
           "scripts/ci/check-actions-secrets.mjs",
           "apps/hub/tests/ci/actions-secrets.test.ts",
-          "docs/features/feat-hub-foundation/runbook.md"
+          "docs/features/feat-hub-foundation/runbook.md",
+          "docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied-2026-08-01.json"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-07-26T06:20:00Z",
+        "reconciled_at": "2026-08-01T05:40:00Z",
         "source": null,
-        "status": "blocked"
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -36335,7 +36336,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "blocked",
+      "status": "closed",
       "tags": [
         "ci",
         "deploy",
@@ -36350,7 +36351,7 @@
       "template_version": "1.0.0",
       "title": "GitHub Actions の Turso secrets が未登録で deploy migration と日次 backup が失敗する (secret 名の系統も二重)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:20:00Z"
+      "updated_at": "2026-08-01T05:40:00Z"
     },
     {
       "acceptance": [
@@ -39703,12 +39704,19 @@
       "classification_confidence": 0.95,
       "classification_reason": "HarnessHub-vns9 の実作業中に判明した監視側の欠陥。backup 自体の判定不具合は vns9 で是正したが、3 夜連続失敗が誰にも気づかれなかった経路の欠落は別問題であり独立 issue として切り出す",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-01T05:40:00Z",
+        "evidence_refs": [
+          ".github/workflows/backup.yml",
+          "scripts/ci/actions-secrets-registry.json",
+          "apps/hub/monitoring/better-stack.monitors.json",
+          "apps/hub/scripts/apply-better-stack-monitoring.mjs",
+          "docs/features/feat-hub-foundation/runbook.md",
+          "docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied-2026-08-01.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
+        "reconciled_at": "2026-08-01T05:40:00Z",
         "source": null,
-        "status": "open"
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -39776,7 +39784,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "backup",
         "monitoring",
@@ -39788,7 +39796,7 @@
       "template_version": "1.0.0",
       "title": "日次 backup の連続失敗が 3 夜気づかれなかった (BACKUP_HEARTBEAT_URL 未投入で不発・失敗が無音になる)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T04:49:52.215131Z"
+      "updated_at": "2026-08-01T05:40:00Z"
     },
     {
       "acceptance": [

@@ -76,18 +76,25 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - foundation runbook の GitHub Actions 設定一覧は `scripts/ci/actions-secrets-registry.json` への案内と投入コマンドだけを保持し、現在の投入状態は `node scripts/ci/check-actions-secrets.mjs --live` で判定する。
 - `HUB_HEALTH_URL` / `HUB_PUBLIC_URL` は variable、Turso / Cloudflare の認証値は secret として区別する。旧 backup 専用の `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は landing 後の削除待ちとして扱う。
-- 新 backup / deploy の remote 実走が終わるまでは `HarnessHub-fnzl` を blocked のまま維持する。
+- 新 backup / deploy の remote 実走が終わるまでは `HarnessHub-fnzl` を blocked のまま維持する（2026-08-01 に両方の成功 run が揃い、同課題は closed）。
 
 ## 追補実行記録 (2026-07-28 / `HarnessHub-vns9`)
 
 - 上記「landing 後の削除待ち」だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除済み。`node scripts/ci/check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件) になり、投入状態と台帳の乖離は解消した。
 - deploy の remote 実走は run `30143422049` で完走済み。**backup の remote 実走だけが未達**で、原因は secret ではなく `backup.yml` の採否判定にあった (データ行 0 を不採用にしており、稼働直後で全 19 テーブル 0 行の本番 DB を 3 夜連続で落としていた)。
 - 是正として採否判定を `packages/db/scripts/verify-export-artifact.ts` へ一本化した。設計境界は [architecture/harness-hub-infrastructure.md](../../architecture/harness-hub-infrastructure.md)、検査内容の詳細正本は [docs/infrastructure-spec.md](../../docs/infrastructure-spec.md) §7 / §10。
-- 3 夜連続の失敗が無音だった観測側の欠落 (`BACKUP_HEARTBEAT_URL` 未投入) は本 task の責務外として `HarnessHub-dbx6` へ分離した。2026-07-29 に同 issue でローカル実装と qa-094 の仕様反映まで完了し、外部適用・main 実走・着信実測は未完了として継続する。
+- 3 夜連続の失敗が無音だった観測側の欠落 (`BACKUP_HEARTBEAT_URL` 未投入) は本 task の責務外として `HarnessHub-dbx6` へ分離した。2026-07-29 に同 issue でローカル実装と qa-094 の仕様反映まで完了し、2026-08-01 に外部適用・main 実走・ping 受理まで完了した。
 
 ## 追補実行記録 (2026-07-29 / `HarnessHub-dbx6`)
 
 - Worker cron と backup の heartbeat を分離し、backup 専用 `hub-backup-daily` (`period=86400` / `grace=3600`) を設定正本へ追加した。
 - `BACKUP_HEARTBEAT_URL` を required へ昇格し、workflow は未投入を fail-closed で拒否する。heartbeat は全 backup step 成功後だけ送る。
 - Better Stack の backup 資源だけを扱う `--only-backup-heartbeat --put-github-secret` を追加し、別 task の paused health monitor / Worker heartbeat / status page / SLO dashboard を変更しない境界を回帰テストで固定した。
-- 外部適用、GitHub secret 投入、main の成功 run、着信実測は本 branch の landing 後に行うため、`HarnessHub-dbx6` は `in_progress` を維持する。
+- 外部適用、GitHub secret 投入、main の成功 run、着信実測は本 branch の landing 後に行うため、この時点では `HarnessHub-dbx6` を `in_progress` とした。
+
+## 追補実行記録 (2026-08-01 / `HarnessHub-fnzl`・`HarnessHub-dbx6`)
+
+- backup 専用 heartbeat `477775` を外部適用し、Worker cron 用 `475650` との資源・secret 分離を維持した。
+- `BACKUP_HEARTBEAT_URL` 投入後、Actions 台帳 live gate は 13/13 一致で exit 0。main の `hub-backup` run `30686023662` は export 19 テーブル / 64 行、R2 往復一致、heartbeat ping まで success した。
+- run と独立に R2 成果物を再取得し、`verify-export-artifact.ts` で同じ 19 テーブル / 64 行を検証した。`HarnessHub-fnzl` は 6/6、`HarnessHub-dbx6` は 4/4 の受入条件を満たして closed。
+- qa-094 の責務分離・fail-closed・検知時間契約は不変で、今回の追補は実現証跡と状態収束のみである。

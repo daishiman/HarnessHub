@@ -86,3 +86,5 @@ task-specification-creator の一般チェックリストが例示する `script
 - branch を main へ landing 後、`backup.yml` を成功完走させる。
 - Better Stack 側で heartbeat 着信と期限超過時の異常化を実測する。
 - 以上が揃うまで `HarnessHub-dbx6` を close しない。
+
+> **2026-08-01 追補**: 上記の外部残課題は完了した。適用結果と「今回新たな仕様・設計変更はない」という判断は [backup-heartbeat-application-spec-reflection-receipt.md](backup-heartbeat-application-spec-reflection-receipt.md) に分離して記録する。本受領書は 2026-07-30 時点の契約反映履歴として保持する。
