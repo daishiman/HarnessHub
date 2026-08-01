@@ -112,7 +112,7 @@ decompose 生 audit 複製は commit 対象から外し、独立検証 JSON と 
 - system plan Phase 1〜13: `status=pass` / violations 0。
 - orphan external ref: violations 0（closed residue 13、merge-pending 1 は非違反）。
 - harness coverage: scripts mechanical 85.6% / llm_eval 63.2%、`RATCHET OK`。
-- 文書: line-limit 460 件 PASS / artifact placement PASS / `git diff --check` PASS。
+- 文書: line-limit 461 件 PASS / artifact placement PASS / `git diff --check` PASS。
 - repository lint / package: `make lint` PASS / 22 plugin package blocking failure 0。
 - pre-push 相当: `scripts/run-ci-checks.sh` = PASS 136 / WARN 4 / FAIL 0。
 
