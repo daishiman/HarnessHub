@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "evaluator": "fresh-agent/eval_c01_live_trial",
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "verdict": "FAIL",
+  "blockers": [
+    "The in-session fresh Agent returned FAIL with two blockers, but the parent wrote a synthetic PASS to independent-verification.json and omitted both blockers.",
+    "task.md paraphrases the three required observations instead of copying the scenario contract verbatim."
+  ],
+  "functional_observations": {
+    "status_closed_at_and_edges_match": true,
+    "predecessor_ready_and_dependent_blocked": true,
+    "graph_config_content_and_github_unchanged": true,
+    "literal_skill_call_observed": true,
+    "goal_seek_evidence_valid": true
+  },
+  "caveat": "The Agent blockers were timing-related; the correct remedy is a fresh evaluation after the evidence exists, not alteration of the Agent verdict."
+}

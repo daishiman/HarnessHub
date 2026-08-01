@@ -1,0 +1,22 @@
+{
+  "scenario_id": "C05-OUT1-positive-feature-progress",
+  "result": "PASS",
+  "observations": {
+    "self_contained_render": {
+      "html_bytes": 9402,
+      "external_runtime_references": 0,
+      "svg_present": true,
+      "inline_javascript_present": true
+    },
+    "progress_denominator": {
+      "receipt_applied_count": 13,
+      "receipt_expected_count": 13,
+      "rendered_total": 13
+    },
+    "progress_numerator": {
+      "done_or_closed_children": 4,
+      "rendered_done": 4
+    },
+    "source_digest": "sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807"
+  }
+}

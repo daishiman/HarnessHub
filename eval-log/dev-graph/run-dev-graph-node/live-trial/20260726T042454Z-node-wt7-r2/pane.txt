@@ -1,0 +1,1 @@
+capture unavailable: tmux session lt-20260726T042454Z-node-wt7-r2 exited unexpectedly before the completion marker was written.

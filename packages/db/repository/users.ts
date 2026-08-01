@@ -7,6 +7,7 @@ import { and, eq } from 'drizzle-orm';
 import { users } from '../schema/core/identity';
 import { EntityNotFoundError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
+import { guardedWrite } from './conflict';
 import type { ColumnCipher } from './crypto';
 import type { CoreAdapter } from './db';
 import { serverNow } from './time';
@@ -54,6 +55,12 @@ const SALARY_REF = (rowId: string) => ({ table: 'users', column: 'salary', rowId
 export interface UsersRepo {
   insert(context: RepositoryContext, input: InsertUserInput): Promise<UserRow>;
   findById(context: RepositoryContext, id: string): Promise<UserRow | null>;
+  /**
+   * IdP の `sub` から引く。認証の主経路 (UNIQUE(tenant_id, idp_subject) を使う)。
+   * email では引かない — IdP 側で email が変わっても同一人物であり、逆に
+   * email 一致で人を同定すると別人の乗っ取り経路になる (security-spec §2.1)。
+   */
+  findByIdpSubject(context: RepositoryContext, idpSubject: string): Promise<UserRow | null>;
   list(context: RepositoryContext, options?: { readonly limit?: number }): Promise<UserRow[]>;
   /** salary 以外の可変列のみ更新できる。salary は updateSalary の明示経路に限定。 */
   update(context: RepositoryContext, id: string, input: UpdateUserInput): Promise<UserRow>;
@@ -75,27 +82,38 @@ export function createUsersRepo(adapter: CoreAdapter, cipher: ColumnCipher): Use
         input.salary === undefined || input.salary === null
           ? null
           : await cipher.encryptColumn('salary', String(input.salary), SALARY_REF(id));
-      const rows = await adapter.client
-        .insert(users)
-        .values({
-          id,
-          tenantId: context.tenantId,
-          idpSubject: input.idpSubject,
-          email: input.email,
-          name: input.name,
-          department: input.department ?? null,
-          salary: salaryEnc,
-          role: input.role,
-          status: input.status,
-          lastLoginAt: null,
-          createdAt: serverNow(),
-        })
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client
+          .insert(users)
+          .values({
+            id,
+            tenantId: context.tenantId,
+            idpSubject: input.idpSubject,
+            email: input.email,
+            name: input.name,
+            department: input.department ?? null,
+            salary: salaryEnc,
+            role: input.role,
+            status: input.status,
+            lastLoginAt: null,
+            createdAt: serverNow(),
+          })
+          .returning(),
+      );
       return rows[0] as UserRow;
     },
 
     async findById(context, id) {
       const rows = await adapter.client.select().from(users).where(scope(context, id)).limit(1);
+      return (rows[0] as UserRow | undefined) ?? null;
+    },
+
+    async findByIdpSubject(context, idpSubject) {
+      const rows = await adapter.client
+        .select()
+        .from(users)
+        .where(and(eq(users.tenantId, context.tenantId), eq(users.idpSubject, idpSubject)))
+        .limit(1);
       return (rows[0] as UserRow | undefined) ?? null;
     },
 
@@ -115,18 +133,18 @@ export function createUsersRepo(adapter: CoreAdapter, cipher: ColumnCipher): Use
       if (input.department !== undefined) patch.department = input.department;
       if (input.role !== undefined) patch.role = input.role;
       if (input.status !== undefined) patch.status = input.status;
-      const rows = await adapter.client.update(users).set(patch).where(scope(context, id)).returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client.update(users).set(patch).where(scope(context, id)).returning(),
+      );
       const updated = rows[0] as UserRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('users', id);
       return updated;
     },
 
     async markLastLogin(context, id) {
-      const rows = await adapter.client
-        .update(users)
-        .set({ lastLoginAt: serverNow() })
-        .where(scope(context, id))
-        .returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client.update(users).set({ lastLoginAt: serverNow() }).where(scope(context, id)).returning(),
+      );
       const updated = rows[0] as UserRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('users', id);
       return updated;
@@ -134,7 +152,9 @@ export function createUsersRepo(adapter: CoreAdapter, cipher: ColumnCipher): Use
 
     async updateSalary(context, id, salary) {
       const salaryEnc = salary === null ? null : await cipher.encryptColumn('salary', String(salary), SALARY_REF(id));
-      const rows = await adapter.client.update(users).set({ salary: salaryEnc }).where(scope(context, id)).returning();
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client.update(users).set({ salary: salaryEnc }).where(scope(context, id)).returning(),
+      );
       const updated = rows[0] as UserRow | undefined;
       if (updated === undefined) throw new EntityNotFoundError('users', id);
       return updated;
@@ -150,7 +170,7 @@ export function createUsersRepo(adapter: CoreAdapter, cipher: ColumnCipher): Use
     },
 
     async deleteById(context, id) {
-      await adapter.client.delete(users).where(scope(context, id));
+      await guardedWrite(adapter, () => adapter.client.delete(users).where(scope(context, id)));
     },
   };
 }

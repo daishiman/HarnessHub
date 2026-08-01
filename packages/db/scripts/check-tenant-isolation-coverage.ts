@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { getTableColumns } from 'drizzle-orm';
 import type { SQLiteColumn } from 'drizzle-orm/sqlite-core';
-import { coreTables, TENANT_SCOPE_EXEMPT } from '../schema/index';
+import { allTables, TENANT_SCOPE_EXEMPT } from '../schema/index';
 
 const PKG_ROOT = join(import.meta.dirname, '..');
 
@@ -18,7 +18,7 @@ function fail(message: string): never {
 
 const scoped: string[] = [];
 const unscoped: string[] = [];
-for (const [name, table] of Object.entries(coreTables)) {
+for (const [name, table] of Object.entries(allTables)) {
   const hasTenantId = Object.values(getTableColumns(table) as Record<string, SQLiteColumn>).some(
     (c) => c.name === 'tenant_id',
   );
@@ -34,7 +34,7 @@ const stale = Object.keys(TENANT_SCOPE_EXEMPT).filter((name) => scoped.includes(
 if (stale.length > 0) {
   fail(`tenant_id を持つのに除外宣言されている: ${stale.join(', ')}`);
 }
-const unknown = Object.keys(TENANT_SCOPE_EXEMPT).filter((name) => !(name in coreTables));
+const unknown = Object.keys(TENANT_SCOPE_EXEMPT).filter((name) => !(name in allTables));
 if (unknown.length > 0) {
   fail(`存在しないテーブルへの除外宣言: ${unknown.join(', ')}`);
 }
@@ -43,13 +43,14 @@ if (unknown.length > 0) {
 // fixture は挿入をリポジトリ層経由で行うため、テーブルごとの schema シンボル参照を静的に確認する。
 const fixtureSource = readFileSync(join(PKG_ROOT, '__tests__', 'fixtures', 'two-tenants.ts'), 'utf8');
 const isolationSource = readFileSync(join(PKG_ROOT, '__tests__', 'tenant-isolation.test.ts'), 'utf8');
-if (!isolationSource.includes('coreTables')) {
-  fail('tenant-isolation.test.ts が coreTables を列挙していません (スキーマ駆動が壊れています)');
+if (!isolationSource.includes('allTables')) {
+  fail('tenant-isolation.test.ts が allTables を列挙していません (スキーマ駆動が壊れています)');
 }
 const SYMBOL_BY_TABLE: Record<string, string> = {
   idp_connections: 'createIdpConnectionsRepo',
   workspaces: 'workspaces',
   users: 'createUsersRepo',
+  user_workspaces: 'createUserWorkspacesRepo',
   projects: 'projects',
   target_channels: 'createTargetChannelsRepo',
   releases: 'createReleasesRepo',
@@ -61,6 +62,10 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   audit_events: 'createAuditRepo',
   session_revocations: 'createSessionRevocationsRepo',
   idempotency_ledger: 'createIdempotencyLedgerRepo',
+  hearing_sheets: 'createHearingIntakeRepository',
+  ai_jobs: 'createHearingIntakeRepository',
+  display_code_counters: 'createHearingIntakeRepository',
+  tenant_coefficients: 'tenantCoefficients',
 };
 const uncovered = scoped.filter((name) => {
   const symbol = SYMBOL_BY_TABLE[name];

@@ -31,3 +31,22 @@ if command -v bd >/dev/null 2>&1; then
   if [ $_bd_exit -ne 0 ]; then exit $_bd_exit; fi
 fi
 # --- END BEADS INTEGRATION v1.1.0 ---
+
+# --- BEGIN HARNESS-HUB REPO GUARDS ---
+# core.hooksPath が .beads/hooks を指す構成へ戻されても repo ガード (desync 検査) が
+# 効くようにする保険経路。主経路は git common dir の共有 hook bundle。
+# beads がこのファイルを再生成すると本ブロックは失われるが、共有 bundle は無傷であり、
+# 消失は git diff -- .beads/hooks と scripts/validate-git-hooks-wiring.py で検知できる。
+# 主経路から委譲された場合は HH_REPO_GUARDS_DONE により二重実行されない。
+_hh_root="$(git rev-parse --show-toplevel 2>/dev/null)"
+_hh_common="$(git rev-parse --git-common-dir 2>/dev/null)"
+case "${_hh_common:-}" in
+  /*) ;;
+  ?*) _hh_common="$_hh_root/$_hh_common" ;;
+esac
+_hh_guards="$_hh_common/harness-hub-hooks/lib/run-repo-guards.sh"
+[ -f "$_hh_guards" ] || _hh_guards="$_hh_root/.githooks/lib/run-repo-guards.sh"
+if [ -n "${_hh_root:-}" ] && [ -f "$_hh_guards" ]; then
+  sh "$_hh_guards" pre-commit "$@" </dev/null || exit $?
+fi
+# --- END HARNESS-HUB REPO GUARDS ---

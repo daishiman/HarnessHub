@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "auditor": "system-spec-matrix-auditor",
+  "component": "C07",
+  "session_id": "1068ed92-67cd-411a-b7f1-e08a496147fb",
+  "evaluated_at": "2026-07-29T12:14:15Z",
+  "verdict": "PASS",
+  "loop_pass": "PASS",
+  "final_ready": "PASS",
+  "counts": {
+    "categories": 10,
+    "platforms": 6,
+    "cells": 60,
+    "confirmed": 28,
+    "out_of_scope": 32,
+    "uncollected": 0,
+    "qa_ref_findings": 0,
+    "aggregate_mismatches": 0
+  },
+  "gate_results": [
+    {
+      "command": "python3 plugins/system-spec-harness/scripts/validate-coverage-matrix.py --matrix system-spec/spec-state.json",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 plugins/system-spec-harness/scripts/validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-complete",
+      "exit_code": 0
+    }
+  ],
+  "qa092_assessment": {
+    "verdict": "PASS",
+    "approval_ref": "appr-013",
+    "summary": "qa-092 は qa-069 の MVP-first 契約を保持し、空走査 fail-closed、明示 allow-empty、三分岐回帰証拠、C02 stale snapshot 後退防止、製品境界を dev-workflow.web の確定根拠として自己完結している。"
+  },
+  "findings": []
+}

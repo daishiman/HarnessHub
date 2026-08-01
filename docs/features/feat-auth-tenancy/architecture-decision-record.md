@@ -97,13 +97,12 @@ apps/hub/src/lib/auth/
 
 ### 本 feature 時点の実装形態 (honest scope)
 
-`next-auth` パッケージは本 feature の write scope (`apps/hub/package.json` / `pnpm-lock.yaml` を含まない)
-では追加できない。adapter は **Auth.js が消費する config オブジェクトを組み立てるところまで**を実装し、
-`/api/auth/[...nextauth]` は未結線を隠さず 501 を返す。
+> **解消追記 (2026-07-26 / `HarnessHub-b7ng`)**: 以下は本 feature 初回完了時点の履歴である。
+> 現在は `@auth/core`、session claims bridge、テナント別 route、本番 DB `AuthPorts` を実結線済み。
+> 現行契約と検証は [spec-reflection-receipt.md](./spec-reflection-receipt.md) を参照。
 
-- これは D3 の要求 (「vendor API 表面を 1 箇所に閉じる」) を**満たす**。閉じ込め対象の面積がゼロではなく、config の形・callback の意味論・claims 構成という Auth.js 固有の意思決定が adapter の内側にある。
-- 一方「Auth.js が動いている」ことは**主張しない**。依存導入、Auth.js の JWT encode/decode と
-  本 feature の session claims の橋渡し、動的 tenant config の route 結線を後続作業として扱う。
+初回完了時点では依存を追加できず、adapter は Auth.js 用 config の組立までを実装し、
+`/api/auth/[...nextauth]` は未結線を明示する 501 を返していた。
 
 ## 3. AD-3: role は「列 3 値 + 関係 1 値」で 4 種を合成する
 
@@ -249,8 +248,8 @@ refresh token は使い捨てとし、交換のたびに新しい値を発行す
 | cookie 属性 | `HttpOnly` / `Secure` / `SameSite=Lax` / `Path=/` |
 | `maxAge` | 8 時間 |
 | `updateAge` | 15 分 |
-| claims | `sub` / `tenant_id` / `role` / `status` / `iat` / `exp` + **`workspace_ids`** (認可 MW が DB 往復なしで判定できる最小集合。`workspace_ids` は edge の Workspace 越境判定のため P05 で追加した確定値超過 — 追補 §10.2 / bd `HarnessHub-l2g9`) |
-| 署名鍵 | `AUTH_SECRET` (Workers Secret binding) |
+| claims | `sub` / `tenant_id` / `role` / `status` / **`workspace_ids`** / `iat` / `exp` (認可 MW が DB 往復なしで判定できる最小集合。`workspace_ids` は edge の Workspace 越境判定のため追加し、R4-reopen で `qa-072` として確定済み — 追補 §10.2 / bd `HarnessHub-l2g9`) |
+| 署名鍵 | session: `AUTH_SESSION_SECRET` / Publisher access token: `AUTH_ACCESS_TOKEN_SECRET` (Workers Secret binding、用途分離) |
 
 ### 失効の 2 段構え
 

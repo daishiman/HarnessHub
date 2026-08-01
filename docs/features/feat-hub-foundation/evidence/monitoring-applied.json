@@ -1,0 +1,46 @@
+{
+  "applied_at": "2026-07-27T20:46:37.686Z",
+  "api_base": "https://uptime.betterstack.com",
+  "actions": [
+    {
+      "kind": "monitor",
+      "action": "reused",
+      "external_id": "4724920"
+    },
+    {
+      "kind": "heartbeat",
+      "action": "reused",
+      "external_id": "475650"
+    },
+    {
+      "kind": "status_page",
+      "action": "created",
+      "external_id": "256797"
+    },
+    {
+      "kind": "status_page_resource",
+      "action": "created",
+      "id": "8978911"
+    }
+  ],
+  "heartbeat_secret": "delivered",
+  "post_apply_verification": {
+    "checked_at": "2026-07-27T21:38:14Z",
+    "health_http_status": 200,
+    "health_status": "ok",
+    "health_dependencies": {
+      "runtime-config": "ok",
+      "db": "ok",
+      "r2": "ok"
+    },
+    "worker_version": "ade02961-aecb-4f51-9a0a-0080cd19b0f8",
+    "status_page_http_status": 200,
+    "status_page_overview": "operational",
+    "status_page_resource_status": "not_monitored",
+    "monitor_up_confirmed": false,
+    "heartbeat_delivery_confirmed": false,
+    "heartbeat_next_scheduled_at": "2026-07-28T15:00:00Z",
+    "blocker": "Better Stack monitor 4724920 is paused; API token or authenticated dashboard session is required to apply paused=false"
+  },
+  "$comment": "heartbeat URL と API token は本証跡に含めない (受け入れ条件 4)"
+}

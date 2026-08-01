@@ -1,0 +1,111 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-init",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-init-r3 --hook-source plugin",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-init"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "c4e963dbe729211c57fc2ac558251c980b69b678fc102bf2e75698a4c5b3f971",
+  "transcript_sha256": "62371a0217a7a66849d204933e94fcd4ebdc6918006a6fcfda0f0c19ca79c21e",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 750.0
+  },
+  "scenario_id": "C01-OUT1-positive-idempotence-r17",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C01-OUT1-positive-idempotence-r17",
+    "required_observations": [
+      "the first pass creates the six content roots, the routing policy and the graph store",
+      "the second pass re-invokes the skill and reports zero planned changes",
+      "the template edited between the passes still holds its edited bytes after the second pass, proving non-overwrite by running init rather than by inspecting the file alone",
+      "the plugin hook source is resolved and its receipt or rejection diagnosis is recorded",
+      "config stores no absolute path and no token or node id",
+      "C11 passes against a graph that contains at least one node"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the first pass creates the six content roots, the routing policy and the graph store",
+        "evidence_ref": "evidence/init-execution.json#checklist/1/evidence"
+      },
+      {
+        "index": 2,
+        "observation": "the second pass re-invokes the skill and reports zero planned changes",
+        "evidence_ref": "evidence/init-execution.json#checklist/6/evidence"
+      },
+      {
+        "index": 3,
+        "observation": "the template edited between the passes still holds its edited bytes after the second pass, proving non-overwrite by running init rather than by inspecting the file alone",
+        "evidence_ref": "evidence/init-execution.json#checklist/2/evidence"
+      },
+      {
+        "index": 4,
+        "observation": "the plugin hook source is resolved and its receipt or rejection diagnosis is recorded",
+        "evidence_ref": "evidence/init-execution.json#checklist/3/evidence"
+      },
+      {
+        "index": 5,
+        "observation": "config stores no absolute path and no token or node id",
+        "evidence_ref": "evidence/init-execution.json#checklist/7/evidence"
+      },
+      {
+        "index": 6,
+        "observation": "C11 passes against a graph that contains at least one node",
+        "evidence_ref": "evidence/init-execution.json#checklist/5/evidence"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo> --hook-source plugin",
+      "template_flags": [
+        "--hook-source",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--hook-source",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

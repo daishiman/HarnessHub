@@ -179,6 +179,104 @@ def test_frontmatter_repo_root_and_artifact_failure_classification(tmp_path):
     assert mod.artifact_findings([{"id": "none", "file_path": None}], tmp_path, contract) == []
 
 
+@pytest.mark.parametrize(
+    ("kind", "content_root"),
+    [
+        ("issue", "issues"),
+        ("task", "tasks"),
+        ("document", "docs"),
+        ("specification", "specs"),
+        ("architecture", "architecture"),
+        ("feature", "features"),
+    ],
+)
+def test_required_section_placeholders_make_readiness_incomplete(
+    tmp_path, kind, content_root
+):
+    """HarnessHub-4t9g: template bodies and a body-crushing mutation must fail C11."""
+    mod = load()
+    canonical = json.loads((PLUGIN / "templates/template-contract.json").read_text(encoding="utf-8"))
+    artifact_contract = {
+        "placeholder_tokens": canonical["placeholder_tokens"],
+        "common_frontmatter": {"required": []},
+        "artifacts": {kind: canonical["artifacts"][kind]},
+    }
+    artifact = tmp_path / content_root / "placeholder.md"
+    artifact.parent.mkdir()
+    frontmatter = "\n".join([
+        "---",
+        f"graph_node_id: placeholder-{kind}",
+        f"artifact_kind: {kind}",
+        f"file_path: {content_root}/placeholder.md",
+        f"template_id: {kind}",
+        "template_version: 1.0.0",
+        "---",
+        "",
+    ])
+    template = (
+        PLUGIN / "templates" / canonical["artifacts"][kind]["template"]
+    ).read_text(encoding="utf-8")
+    artifact.write_text(frontmatter + template, encoding="utf-8")
+    node = {
+        "graph_node_id": f"placeholder-{kind}",
+        "artifact_kind": kind,
+        "file_path": f"{content_root}/placeholder.md",
+        "template_id": kind,
+        "template_version": "1.0.0",
+    }
+
+    findings = mod.artifact_findings([node], tmp_path, artifact_contract)
+    missing = canonical["artifacts"][kind]["required_sections"]
+    expected_missing = set(missing)
+    assert {item["code"] for item in findings} == {"placeholder_only_section"}
+    assert {item["detail"] for item in findings} == expected_missing
+    assert mod.readiness_missing_sections(findings) == sorted(expected_missing)
+
+    filled = "\n".join(
+        f"## {section}\n\n実装・検証済みの具体的内容。"
+        + (" コマンド引数 `<feature-id>` は説明用の変数。" if section == "Handoff" else "")
+        for section in missing
+    )
+    artifact.write_text(frontmatter + filled + "\n", encoding="utf-8")
+    assert mod.artifact_findings([node], tmp_path, artifact_contract) == []
+
+    crushed = "\n".join(f"## {section}\n" for section in missing)
+    artifact.write_text(frontmatter + crushed + "\n", encoding="utf-8")
+    mutated = mod.artifact_findings([node], tmp_path, artifact_contract)
+    assert {item["detail"] for item in mutated} == set(missing)
+
+    sentinel_target = missing[-1]
+    sentinel_body = "\n".join(
+        f"## {section}\n\n" + ("- TODO" if section == sentinel_target else "実装・検証済みの具体的内容。")
+        for section in missing
+    )
+    artifact.write_text(frontmatter + sentinel_body + "\n", encoding="utf-8")
+    sentinel_findings = mod.artifact_findings([node], tmp_path, artifact_contract)
+    assert sentinel_findings == [{
+        "node": f"placeholder-{kind}",
+        "code": "placeholder_only_section",
+        "detail": sentinel_target,
+    }]
+
+    fenced_target = missing[-1]
+    fenced_body = "\n".join(
+        f"## {section}\n\n"
+        + (
+            "```text\ncanonical template example only\n```"
+            if section == fenced_target
+            else "実装・検証済みの具体的内容。"
+        )
+        for section in missing
+    )
+    artifact.write_text(frontmatter + fenced_body + "\n", encoding="utf-8")
+    fenced_findings = mod.artifact_findings([node], tmp_path, artifact_contract)
+    assert fenced_findings == [{
+        "node": f"placeholder-{kind}",
+        "code": "placeholder_only_section",
+        "detail": fenced_target,
+    }]
+
+
 def task(node_id: str, **overrides):
     node = {
         "id": node_id,

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import re
 from pathlib import Path
 
 import jsonschema
@@ -51,11 +52,26 @@ def _skill_criteria(skill_path: Path) -> dict[str, dict]:
     return {criterion["id"]: criterion for criterion in criteria}
 
 
+def _positive_scenario_by_skill() -> dict[str, dict]:
+    suite = json.loads(POSITIVE_SCENARIOS.read_text(encoding="utf-8"))
+    return {scenario["skill"]: scenario for scenario in suite["scenarios"]}
+
+
 def _contained_repo_ref(value: str) -> Path:
     ref = Path(value)
     assert not ref.is_absolute(), f"evidence ref must be repo-relative: {value}"
     path = (REPO / ref).resolve(strict=True)
     path.relative_to(REPO.resolve())
+    return path
+
+
+def _contained_run_evidence(verdict_path: Path, value: str) -> Path:
+    """fragment を除いた evidence_ref が verdict の run 内で実在することを検査する。"""
+    relative = Path(value.partition("#")[0])
+    assert not relative.is_absolute(), f"run evidence ref must be relative: {value}"
+    path = (verdict_path.parent / relative).resolve(strict=True)
+    path.relative_to(verdict_path.parent.resolve())
+    assert path.is_file(), f"run evidence ref must be a file: {value}"
     return path
 
 
@@ -72,6 +88,41 @@ def _targets() -> list[tuple[str, str, Path, set[str]]]:
         )
         for component_id, contract in sorted(evals.items())
     ]
+
+
+def _assert_scenario_contract(
+    *,
+    verdict: dict,
+    verdict_path: Path,
+    current_scenario: dict,
+    component_id: str,
+    criterion_id: str,
+) -> None:
+    """criteria acceptance が live-trial の scenario 契約を再照合する。"""
+    contract = verdict["scenario_contract"]
+    assert contract["scenario_id"] == verdict["scenario_id"]
+    assert _contained_repo_ref(contract["scenario_file"]) == POSITIVE_SCENARIOS.resolve()
+    assert contract["unobserved"] == [], (
+        f"{component_id}/{criterion_id}: unobserved required_observations remain"
+    )
+    required = current_scenario["required_observations"]
+    assert contract["required_observations"] == required
+    expected_observed = [
+        (index, observation) for index, observation in enumerate(required, start=1)
+    ]
+    actual_observed = [
+        (item["index"], item["observation"]) for item in contract["observed"]
+    ]
+    assert actual_observed == expected_observed, (
+        f"{component_id}/{criterion_id}: observed required_observations are incomplete"
+    )
+    assert contract["args_divergence"]["matches"] is True
+    if current_scenario.get("task_contract") is not None:
+        assert contract["task_contract"]["declared"] is True
+        assert contract["task_contract"]["task_file_exists"] is True
+        assert contract["task_contract"]["matches"] is True
+    for observation in contract["observed"]:
+        _contained_run_evidence(verdict_path, observation["evidence_ref"])
 
 
 @pytest.mark.parametrize(
@@ -109,6 +160,7 @@ def test_independent_scenario_receipt_covers_exact_criteria(
     assert set(criteria) == criteria_ids
     live_verdict_module = _load_live_trial_verdict()
     live_schema = json.loads(LIVE_TRIAL_SCHEMA.read_text(encoding="utf-8"))
+    positive_scenarios = _positive_scenario_by_skill()
     for criterion_id, result in results.items():
         assert result["status"] == "PASS", f"{component_id}/{criterion_id}"
         expected_verify_by = criteria[criterion_id]["verify_by"]
@@ -135,6 +187,27 @@ def test_independent_scenario_receipt_covers_exact_criteria(
         verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
         jsonschema.Draft202012Validator(live_schema).validate(verdict)
         assert verdict["scenario_id"] == result["scenario_id"]
+        # 受領書が束ねる scenario は fixture の現行版でなければならない。scenario を改訂した
+        # まま受領書を据え置くと、改訂前の緩い契約で取った緑が現行契約の充足として通る。
+        # 実際に C14 は r5 改訂後も改訂前 id の verdict を指したままだった。
+        current_scenario = positive_scenarios.get(skill_name)
+        assert current_scenario is not None, (
+            f"{component_id}/{criterion_id}: no canonical positive scenario for {skill_name}"
+        )
+        assert result["scenario_id"] == current_scenario["scenario_id"], (
+            f"{component_id}/{criterion_id}: receipt cites a stale scenario "
+            f"({result['scenario_id']}) while the fixture declares "
+            f"{current_scenario['scenario_id']}"
+        )
+        # verify_by=live-trial の verdict は scenario id の一致だけで PASS にしない。
+        # required_observations の全回収と task_args_template の一致を必須にする。
+        _assert_scenario_contract(
+            verdict=verdict,
+            verdict_path=verdict_path,
+            current_scenario=current_scenario,
+            component_id=component_id,
+            criterion_id=criterion_id,
+        )
         assert verdict["target_skill"] == f"dev-graph:{skill_name}"
         assert verdict["tier"] == "live"
         assert verdict["downgrade_reason"] is None
@@ -151,6 +224,42 @@ def test_independent_scenario_receipt_covers_exact_criteria(
         assert verdict["skill_dir_tree_sha"] == live_verdict_module.skill_dir_tree_sha(
             skill_path.parent
         ), f"{component_id}/{criterion_id}: stale behavior closure digest"
+
+
+def test_live_trial_acceptance_rejects_missing_or_incomplete_scenario_contract() -> None:
+    """旧形式の field 欠落と、observed の自己申告欠落を負例で固定する。"""
+    receipt_path = (
+        REPO
+        / "eval-log/dev-graph/run-dev-graph-schedule/criteria-test/scenario-verdict.json"
+    )
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    verdict_path = _contained_repo_ref(
+        receipt["criteria_results"]["OUT1"]["live_trial_verdict_ref"]
+    )
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    scenario = _positive_scenario_by_skill()["run-dev-graph-schedule"]
+
+    missing_contract = json.loads(json.dumps(verdict))
+    missing_contract.pop("scenario_contract")
+    with pytest.raises(KeyError, match="scenario_contract"):
+        _assert_scenario_contract(
+            verdict=missing_contract,
+            verdict_path=verdict_path,
+            current_scenario=scenario,
+            component_id="C15",
+            criterion_id="OUT1",
+        )
+
+    incomplete_observed = json.loads(json.dumps(verdict))
+    incomplete_observed["scenario_contract"]["observed"].pop()
+    with pytest.raises(AssertionError, match="observed required_observations are incomplete"):
+        _assert_scenario_contract(
+            verdict=incomplete_observed,
+            verdict_path=verdict_path,
+            current_scenario=scenario,
+            component_id="C15",
+            criterion_id="OUT1",
+        )
 
 
 def test_positive_live_trial_scenarios_cover_out1_without_eval_log_fixture_coupling() -> None:
@@ -250,3 +359,28 @@ def test_positive_scenarios_are_not_vacuous_by_contract() -> None:
             f"{scenario['scenario_id']}: required_observations must assert on a case that is "
             "excluded, rejected or converges to zero; otherwise the criterion can hold vacuously"
         )
+
+
+def test_declared_thresholds_are_resolvable():
+    """observation が参照する閾値が実際に数値として宣言されていることを要求する。
+
+    2026-07-25 live-trial 再取得で、C14 の observation 1 が「declared granularity
+    threshold」を参照しているのに、その閾値が scenario にも SKILL.md にも数値として
+    存在しないことが判明した。上の exclusion_markers 検査は observation の「文言」に
+    zero/no が含まれるかしか見ないため、参照先が存在しない観測を通してしまう。
+    評価者は検証不能な観測を代替検査で読み替えるか、空虚に成立させるしかなくなる。
+    """
+    suite = json.loads(POSITIVE_SCENARIOS.read_text(encoding="utf-8"))
+    for scenario in suite["scenarios"]:
+        for observation in scenario["required_observations"]:
+            for field in sorted(set(re.findall(r"\b([a-z_]+_threshold)\.", observation))):
+                declared = scenario.get(field)
+                assert isinstance(declared, dict), (
+                    f"{scenario['scenario_id']}: observation references {field} but the "
+                    f"scenario declares no such object"
+                )
+                for key in ("metric", "max_value"):
+                    assert declared.get(key) is not None, (
+                        f"{scenario['scenario_id']}: {field}.{key} is unset, so the "
+                        f"observation referencing it cannot be verified"
+                    )

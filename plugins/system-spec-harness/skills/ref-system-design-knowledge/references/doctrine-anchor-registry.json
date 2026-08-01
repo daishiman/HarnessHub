@@ -35,6 +35,13 @@
       "owner": "daishiman",
       "reason": "CI/CD・GitHub フロー・リリース手順のプロジェクト発見カテゴリ (harness-hub)。上流指針は Google SRE の operations concern (release engineering・自動化・トイル削減) に帰属。全プロジェクト共通シード (categories) への昇格は見送り、本プロジェクト固有の確定として承認する。",
       "approval_state": "approved"
+    },
+    {
+      "category": "testing-qa",
+      "concerns": ["reliability", "operations"],
+      "owner": "daishiman",
+      "reason": "テスト戦略・品質保証のプロジェクト発見カテゴリ (harness-hub, qa-076〜qa-081)。上流指針は Google SRE の reliability concern (テストピラミッド・信頼性のためのテスト) と operations concern (品質ゲート自動化・改善ループ・トイル削減) に帰属。全プロジェクト共通シード (categories) への昇格は見送り、本プロジェクト固有の確定として承認する (2026-07-24 AskUserQuestion で owner 承認)。",
+      "approval_state": "approved"
     }
   ]
 }

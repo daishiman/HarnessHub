@@ -1,0 +1,169 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-system-spec/system-spec",
+  "verdict": "PASS",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "requirements_foundation (U1-U9) が全項目値あり・confirmed=true・approval_ref が approval_log に実在。00-requirements-definition.md が先頭章として生成され、各技術章の frontmatter serves_goals が上位ゴールへトレースされている。",
+      "evidence": [
+        "requirements_foundation.confirmed=true, approval_ref=brief-approval-2026-07-21T00:00:00Z",
+        "00-requirements-definition.md status=confirmed",
+        "全8技術章の frontmatter に serves_goals が存在し G1-G4 へトレース"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "3 件の意思決定 (D1:sqlite, D2:fastapi, D3:local-bearer-token) が全て status=confirmed、user_decision 付き、serves_goals が実在ゴールへトレース、各 option に evidence_refs (公式 URL) と cost_model を持つ。",
+      "evidence": [
+        "D1 confirmed: sqlite (serves G1,G3,G4)",
+        "D2 confirmed: fastapi (serves G2,G4)",
+        "D3 confirmed: local-bearer-token (serves G2)"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "validate-coverage-matrix.py --require-complete exit 0。8カテゴリ×6platform=48セル全て解決 (確定8+対象外40、未収集0)。category_aggregate 真理値表整合、canonical platform 全存在。C07 matrix auditor PASS。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-complete --require-foundation exit 0",
+        "確定セル8件全て qa_ref→qa_log 実在、dangling 0",
+        "対象外セル40件全て reason または approval_ref 付き",
+        "C07 verdict: PASS (5軸全PASS)"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "compile-spec-doc.py が各章に設計知識参照ポインタと出典表を注入済み。各技術章が serves_goals で上位概念へトレースされており、確定セルの要件が U1-U9 制約と具体的に整合している (例: database=G1外部通信0+G3永続化+G4単一ファイル)。",
+      "evidence": [
+        "全8技術章に serves_goals frontmatter が存在",
+        "各章に最新ドキュメント出典表セクションが存在",
+        "確定セル内容が上位概念 (G1-G4) の具体要件に対応"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "validate-source-citation.py exit 0。3 target (sqlite, fastapi, fastapi-security) 全件対応、official_host 一致、latest_checked_at=2026-07-29T08:20:39Z で当日取得。C08 は version フィールド欠落を指摘したが形式層 (C13) は last_updated で PASS。",
+      "evidence": [
+        "validate-source-citation.py --targets targets.json --references fetched-references.json exit 0",
+        "3 target 全件に source_url, official_host, latest_checked_at, last_updated 充足",
+        "official_host: www.sqlite.org, fastapi.tiangolo.com 全て公式一次ホスト"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "requirements-brief.md が U1-U9、48セル回答、技術選定、公式出典、一括承認を構造化して提供。brief §6 でヒアリング運用条件を明示し、§7 で一括承認を記録。ヒアリング品質は brief 固定入力のため誘導・聞き漏れリスクなし。",
+      "evidence": [
+        "requirements-brief.md に U1-U9、§3 カテゴリ別確定内容、§4 技術選定が構造化",
+        "§6 でヒアリング運用条件 (brief の記述をユーザー回答とみなす) を明示",
+        "§7 で 2026-07-21T00:00:00Z 一括承認を記録"
+      ]
+    }
+  },
+  "audit_delegations": [
+    {
+      "aspect": "matrix_coverage",
+      "role": "primary",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-matrix-auditor",
+        "session_id": "c879082e-9129-428f-a457-2e1c02bea3fb"
+      },
+      "verdict": "PASS",
+      "evidence": ["C07: 8カテゴリ×6platform=48セル全解決、未収集0、validate-coverage-matrix.py exit 0、5軸全PASS"]
+    },
+    {
+      "aspect": "matrix_coverage",
+      "role": "sub_input",
+      "auditor": "system-spec-hearing-auditor",
+      "component": "C06",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-hearing-auditor",
+        "session_id": "c879082e-9129-428f-a457-2e1c02bea3fb"
+      },
+      "verdict": "PASS",
+      "evidence": ["C06: fixture の qa_log 8件全て qa_ref→qa_log 実在、対象外40件全て理由付き"]
+    },
+    {
+      "aspect": "doc_freshness",
+      "role": "primary",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-doc-freshness-auditor",
+        "session_id": "c879082e-9129-428f-a457-2e1c02bea3fb"
+      },
+      "verdict": "PASS",
+      "evidence": ["C08: validate-source-citation.py exit 0、3 target 全件対応、official_host 一致、当日取得確認"]
+    }
+  ],
+  "gate_results": [
+    {
+      "id": "G-matrix",
+      "name": "validate-coverage-matrix",
+      "command": ["python3", "validate-coverage-matrix.py", "--matrix", "spec-state.json", "--require-complete", "--require-foundation"],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-citation",
+      "name": "validate-source-citation",
+      "command": ["python3", "validate-source-citation.py", "--targets", "targets.json", "--references", "fetched-references.json"],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド充足・公式 host 一致を満たす"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "foundation_trace",
+      "observation": "requirements_foundation U1-U9 が全項目確定、approval_ref=brief-approval-2026-07-21T00:00:00Z が approval_log に実在し、00-requirements-definition.md として先頭章に生成されている。"
+    },
+    {
+      "severity": "info",
+      "bucket": "matrix_coverage",
+      "observation": "8カテゴリ×6platform=48セル: 確定8件 (web列) + 対象外40件 (non-web列、全件理由付き)。未収集0件。validate-coverage-matrix.py --require-complete --require-foundation が exit 0。"
+    },
+    {
+      "severity": "info",
+      "bucket": "decision_guidance",
+      "observation": "3件の技術選定 (D1:sqlite, D2:fastapi, D3:local-bearer-token) が全て confirmed、user_decision 付き、2-3候補の比較根拠 (goal_fit/tco/security/operations/lock_in) と公式 evidence_refs を持つ。"
+    },
+    {
+      "severity": "low",
+      "bucket": "doc_freshness",
+      "observation": "fetched-references.json の3件全てに version フィールドが欠落し last_updated のみ。形式ゲート (C13) は PASS だが将来の世代落ち判定精度が低下する可能性あり。",
+      "suggested_fix": "sqlite に version=3.53.4、fastapi/fastapi-security に version=0.140.13 を追記 (C02 R3-record の担当)"
+    },
+    {
+      "severity": "info",
+      "bucket": "design_knowledge_reflection",
+      "observation": "compile-spec-doc.py が各章に設計知識参照ポインタと出典表を注入。serves_goals による上位概念トレースが全章で機能。"
+    },
+    {
+      "severity": "info",
+      "bucket": "prompt_quality",
+      "observation": "requirements-brief.md が U1-U9、48セル回答、技術選定、公式出典、一括承認を構造化して提供。ヒアリングの運用条件と承認を明示。"
+    }
+  ],
+  "gaps": []
+}

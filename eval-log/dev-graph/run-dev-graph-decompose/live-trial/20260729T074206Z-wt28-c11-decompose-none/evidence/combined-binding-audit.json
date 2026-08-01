@@ -1,0 +1,33 @@
+{
+  "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+  "result": "PASS",
+  "separate_runs": {
+    "beads": {
+      "run_id": "20260729T064720Z-wt28-c11-decompose",
+      "run_binding": "beads",
+      "persisted_node_count": 5,
+      "publication_candidate_count": 1,
+      "negative_controls_rejected": true,
+      "confirmation_evidence_bound": true
+    },
+    "none": {
+      "run_id": "20260729T074206Z-wt28-c11-decompose-none",
+      "run_binding": "none",
+      "persisted_node_count": 5,
+      "publication_candidate_count": 1,
+      "negative_controls_rejected": true,
+      "confirmation_evidence_bound": true
+    }
+  },
+  "github_binding": {
+    "reachable": false,
+    "reason": "macro local_only publication conflicts with the schema rule requiring issue or issue_and_projects"
+  },
+  "dag": {
+    "acyclic": true,
+    "max_inter_feature_depends_on_per_feature": 1,
+    "declared_max": 3
+  },
+  "external_tracker_mutations": 0,
+  "stdin_schema_validation": true
+}

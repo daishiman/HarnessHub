@@ -1,0 +1,47 @@
+{
+  "authority_sha256_after": "0e774270d8f0d65950e87e3ebd1e9420787db0fe03ef579f11c88a620d88d4e7",
+  "authority_sha256_before": "0e774270d8f0d65950e87e3ebd1e9420787db0fe03ef579f11c88a620d88d4e7",
+  "count": 1,
+  "executed_at": "2026-07-25T00:25:42.077790Z",
+  "filters": {
+    "domain": null,
+    "id": "arch-harness-hub-testing-qa",
+    "keyword": null,
+    "kind": null,
+    "project": null,
+    "status": null,
+    "tag_match": "all",
+    "tags": []
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "0adbf058f6f14249974e9eae2e99d37a4449490a1fe0f483380f224f6695d949",
+  "graph_sha256_before": "0adbf058f6f14249974e9eae2e99d37a4449490a1fe0f483380f224f6695d949",
+  "ok": true,
+  "read_only": true,
+  "results": [
+    {
+      "artifact_kind": "architecture",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [],
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "testing-qa",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/harness-hub-testing-qa.md",
+      "graph_node_id": "arch-harness-hub-testing-qa",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "harness-hub",
+      "status": "active",
+      "tags": [
+        "system-spec-import",
+        "testing-qa"
+      ],
+      "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
+      "tracker_binding": "none"
+    }
+  ]
+}

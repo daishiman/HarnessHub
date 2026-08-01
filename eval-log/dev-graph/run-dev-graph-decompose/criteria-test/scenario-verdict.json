@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-integrity-auditor-fresh-evaluator-20260725T103707Z-i09-decompose-merged",
+  "reviewer": "eval_c14_fcth_finalmain_r14",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,14 +26,23 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C14-OUT1-positive-macro-decomposition",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T103707Z-i09-decompose-merged/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T103707Z-i09-decompose-merged/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T103707Z-i09-decompose-merged/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260725T103707Z-i09-decompose-merged/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/evidence/beads-decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/evidence/none-decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/evidence/beads-progress.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/evidence/none-progress.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T134000Z-wt28-finalmain-c11-decompose-paired-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T131000Z-wt28-finalmain-c11-decompose-paired/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T101543Z-pr601-decompose-paired-r4/verdict.json",
+        "plugins/dev-graph/tests/test_decompose_live_trial_audit.py"
       ],
-      "observed": "2026-07-25 再実走 (run 20260725T103707Z-i09-decompose-merged, fresh claude session Opus 4.6, boot 6s / wall clock 630s / poll DONE, 自走完走 nudge=0 gate=0, Skill ツール起動 1 件のみで script 直叩き代替なし, --binding none --dry-run)。再実走理由: main (f055796) を本ブランチへ取り込むマージにより、本 skill の宣言済み挙動閉包 54 ファイルのうち 両親が別々に触れた 7 ファイル (本ブランチ側 plugins/dev-graph/references/execution-tracker-contract.md・plugins/dev-graph/scripts/bd-bridge.py / main 側 plugins/system-dev-planner/references/feature-execution-package-contract.md・scripts/promote-system-plan.py・scripts/validate-system-plan.py・scripts/validate-json-schema-subset.py・scripts/validate-task-spec-contract.py) が合成され、閉包 digest が本ブランチ単体 1cab3391… / main 単体 7d300266… の いずれとも異なる fd171fb9… となって両親の verdict が同時に stale 化したため (issue-c03-live-trial-closure-stale-after-merge-20260725 に記録した構造的欠陥の再発)。SKILL.md 自体は不変 (sha 2652930f… 一致) で、閉包 digest のみ 7d300266… → fd171fb9… へ更新。fixture は committed な決定論 builder (plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py --kind decompose --force) で 再生成し、head_sha cec0c6a8…, repository_id local:sha256:84b46b4e… を build 時に実測。fresh evaluator (独立個体, read-only) の判定は launch=PASS / completion=PASS / goal_fit=PASS: transcript 全 204 entry を機械走査し Skill tool_use は index 108 の 1 件のみ (dev-graph:run-dev-graph-decompose)、それ以前の Bash は task.md が許可した goal-seek 事前配線と Explore subagent のみで plugins/dev-graph/scripts/ 直叩きによる skill 代替は 0 件。preview graph は nodes=4 (architecture ARCH-LT-001 1 + feature FEAT-LT-001 / FEAT-LT-002 / FEAT-LT-003 3)、cycles=0、task 粒度の混入 0 で depends_on を独自に辿り非循環を再検証。全 feature が status=draft / confirmation_status=draft / evaluation_status=pending であり issue_linkage・beads_linkage とも 0 件、github_publication.mode=local_only で publish 0 件。外部トラッカー書込系コマンド (issue/project の create・edit・close・add 系、git の commit・push・add) は transcript 全 Bash 呼出しを grep して 0 件、fixture の .dev-graph/state/graph.json は実行後も {graph_revision:0, nodes:[]} のまま、git log に新規 commit なし、features/ architecture/ 配下に md 生成なしで local/Beads/GitHub/Projects の write count 全 0 を独立裏取り。preview graph の検証は validate-graph-schema.py --graph - の stdin 経路 (transcript index 143) で行われ、管理対象 repository 内への一時ファイル生成なし。goal-seek 3 点セットは必須 6 キー充足、original_goal の UTF-8 SHA-256 を evaluator が独自再計算して両行の original_goal_hash と一致 (ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795)、1 行目 index 97 (Skill 起動 index 108 より前) → 2 行目 index 178 (open mode='a') の順序で append-only を実証し、同梱の validate-goal-seek-evidence.py でも valid=true / violations=[] / intermediate_rows=2 を確認。out/ 配下は status.json 1 件のみ。非 blocker の留意点 2 件: (a) 2 行目 append の 1 回目試行 (index 171) がシェル変数を実体化せずリテラル文字列 \"FILEPATH\" を パスとして open(...,'a') したため worktree 直下に追跡外ファイルが 1 件生成された。append mode で別ファイルを新規作成しただけで 実データ intermediate.jsonl の 1 行目は byte 不変であり append-only 契約は健全、当該ファイルは commit 前に worktree 外へ退避済み。(b) 本 scenario は --binding none --dry-run の 1 通りのみを被覆するため『どの binding でも publish 0』は binding=none の範囲での確認であり、昇格イベントを伴う publication candidate 判定は本 run では vacuously true (HarnessHub-vnr で追跡)。skill_dir_tree_sha fd171fb995967e07eed8aa79ce0c8b7d1fdba71d44b81f6179d73629c3920b02 が現行 closure と一致。"
+      "observed": "2026-07-30 origin/main=d99cd326 統合後の fresh paired replay live trial PASS (run 20260730T131336Z-fcth-decompose-finalmain-r14, actual_model=claude-opus-4-6, nudge=0, gate=0, poll DONE 1365s)。初期 node 0 の beads / none fixture で target Skill を正確に各2回・合計4回、read-only Explore Task を各1回・合計2回実行。Task 内部の file write は0、各 Skill②後の node writer call は0。両系列は architecture 1 + feature 4 + task 0、3 edge、acyclic、最大依存1、系列別 tracker binding を満たした。両 audit は pass=true / run_binding_attested=true / implementation SHA-256=be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f、progress は overall=pass。Skill②前の誤コマンドは receipt write_count=0・graph revision/SHA不変または source 不在で destination write 0、その後に正しいパスで全5 noop / write_count=0 へ修正された。fresh evaluator PASS / blockers=[]、goal-seek violations=0、required observations 7/7、args/task contract 一致、current behavior closure digest=c225fdb0a4460de14ed53ec8b44c74616f3ee9a94894be3bd42d11feab8e3585。先行 run の不一致は FAIL/DEGRADED provenance として保持した。"
     },
     "OUT2": {
       "status": "PASS",

@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-19T14:15:47Z"
+updated_at: "2026-07-30T13:27:46Z"
 status: "active"
 depends_on: []
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T13:27:46Z","origin_kind":"generated","source_digest":"a38866c48d0a49e4d203b48dd382167cc2b18df68a8970eaddc9246a0847820b","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-hub-foundation.md","confidence":0.9}]
@@ -81,6 +81,34 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - Worker bundle が 3MiB 以内で bundle 予算チェックが CI に存在する
 - SLO 99.5% の計測と /health が稼働する
 - shared-layers 登録済み共通層が単一 package/境界に実装され、消費 feature が同じ実装を参照する
+
+## 実装反映 (2026-07-26)
+
+- CI の静的ゲートに GitHub Actions secret / variable 台帳の突合を追加した。用途・種類・必須度・利用 workflow の正本は `scripts/ci/actions-secrets-registry.json` で、散文の投入一覧を現在状態の正本にしない。
+- 本番 smoke が DB package から Hub workspace の Wrangler を起動する境界を固定し、package cwd や runner の PATH に依存しない形へ修正した (`HarnessHub-fnzl`)。
+- landing 前は remote workflow の完走を証明できないため、受入「CI が test→deploy を完走する」の最終判定は GitHub Actions 実走まで `blocked` を維持する。
+
+## 実装反映 (2026-07-28 / HarnessHub-vns9)
+
+- GitHub Actions の secret / variable は実投入済みで、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。未参照になっていた `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除した。
+- 日次 backup の**採否判定を `packages/db/scripts/verify-export-artifact.ts` へ一本化**した。旧実装は workflow の shell で「データ行が 0 なら不採用」と判定しており、migration 済みだが全 19 テーブル 0 行の稼働直後 DB を恒常的に落としていた (3 夜連続失敗)。判定の詳細正本は [infrastructure-spec §7 / §10](../docs/infrastructure-spec.md)。
+- 受入「CI が test→deploy を完走する」(A1) は run `30143422049` で達成済み。**日次 backup の初回成功は未達**で、是正版が main へ land した後の `workflow_dispatch` 再実行まで残る ([release-notes.md](../docs/features/feat-hub-foundation/release-notes.md) §4.1 の #5)。
+- 3 夜連続の失敗が誰にも気づかれなかった経路の欠落は `HarnessHub-dbx6` / `issue-backup-failure-undetected-20260728` へ分離した。2026-07-29 に backup 専用 heartbeat、`BACKUP_HEARTBEAT_URL` required 化、workflow 前提確認、限定適用 CLI をローカル実装した。Better Stack 適用・GitHub secret 投入・main 成功 run・着信実測が揃うまでは未完了を維持する。
+- 証跡: [evidence/actions-secrets-2026-07-28.json](../docs/features/feat-hub-foundation/evidence/actions-secrets-2026-07-28.json)
+
+## 実装反映 (2026-07-29 / HarnessHub-bda4)
+
+- GitHub Actions の Cloudflare token を、Workers deploy / rollback 用の `CLOUDFLARE_API_TOKEN` と、backup / 本番 smoke の R2 object 操作用 `CLOUDFLARE_R2_API_TOKEN` に分離した。一方の token が漏れても Worker と backup の両方を変更できない境界にする。
+- R2 経路は Wrangler の Cloudflare REST API を使うため、R2 token は account-scoped の `Workers R2 Storage Write` とする。S3 互換 API 専用の bucket item 権限へ読み替えない。
+- workflow と機械可読台帳の静的整合は実装済み。Cloudflare 側の token 発行、GitHub secret 投入、deploy token による R2 write 拒否、本番 workflow 完走は外部実測待ちのため、`HarnessHub-bda4` は継続中とする。
+- 仕様反映と最終レビューの記録: [Cloudflare token 最小権限分離 仕様反映受領書](../docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md)
+- backup 失敗検知の仕様反映: [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md)
+
+## 実装反映 (2026-07-30 / HarnessHub-pyb3)
+
+- G4 の `pnpm -r test` は入口を維持したまま、`pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間を直列化した。
+- 各 package 内の Vitest 並列性は維持し、設定欠落・値変更を `pnpm check:pnpm` の正負テストで拒否する。これにより assertion 全成功後の worker RPC timeout を G4 の失敗と誤認しない。
+- 製品仕様は変更せず、CI/CD 実行設計と検証結果は [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md) を正とする。
 
 ## アーキテクチャ参照
 

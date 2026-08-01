@@ -1,0 +1,211 @@
+{
+  "schema_version": "1.0.0",
+  "task": "SYS-TASK-SPEC-TEST-STRATEGY-P06",
+  "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+  "package_digest": "sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae",
+  "executed_at": "2026-07-25T10:45:13.957663Z",
+  "results": [
+    {
+      "test_id": "TS-A01",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_legacy_package_without_section_passes",
+      "category": "exact13-non-regression",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A11",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_legacy_package_with_malformed_section_is_rejected",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A14",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_cli_exit_code_is_two_on_missing_section",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A10",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_malformed_section_placement_is_rejected",
+      "category": "regeneration-idempotency",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A05",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_malformed_empty_section_body_is_rejected",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A06",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_malformed_partial_item_loss_is_rejected",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A03",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_enforced_package_with_complete_section_passes",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A07",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_malformed_item_order_swap_is_rejected",
+      "category": "regeneration-idempotency",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A09",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_malformed_missing_required_marker_is_rejected",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A02",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_enforced_package_without_section_is_rejected",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A08",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_malformed_empty_item_body_is_rejected",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A04",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_malformed_duplicate_section_is_rejected",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A15",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TestStrategySectionContractTests::test_report_declares_contract_mode",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A13",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TemplateAndParityTests::test_required_sections_parity_between_c12_and_c14",
+      "category": "exact13-non-regression",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-A12",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_sections.TemplateAndParityTests::test_template_reference_declares_section_and_items",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B11",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.LayerDerivationTests::test_non_layer_workstreams_derive_no_layer",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B01",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.LayerDerivationTests::test_frontend_applicable_requires_behavior_policy",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B12",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.LayerDerivationTests::test_layer_order_is_stable_for_multiple_applicable_workstreams",
+      "category": "regeneration-idempotency",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B02",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.LayerDerivationTests::test_backend_applicable_requires_contract_and_db_policy",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B05",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.LayerDerivationTests::test_all_layers_not_applicable_requires_explicit_na",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B04",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.LayerDerivationTests::test_api_or_data_alone_still_requires_backend_policy",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B03",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.LayerDerivationTests::test_infrastructure_applicable_requires_iac_and_smoke_policy",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B09",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.IdempotencyAndContractTests::test_contract_version_threshold_boundaries",
+      "category": "section-missing-rejection",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B10",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.IdempotencyAndContractTests::test_existing_generation_shape_stays_passing",
+      "category": "exact13-non-regression",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B06",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.IdempotencyAndContractTests::test_parse_is_idempotent_for_identical_input",
+      "category": "regeneration-idempotency",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B08",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.IdempotencyAndContractTests::test_schema_required_matches_canonical_item_labels",
+      "category": "complete-pass",
+      "status": "pass"
+    },
+    {
+      "test_id": "TS-B07",
+      "name": "plugins.system-dev-planner.tests.test_task_spec_test_strategy_derivation.IdempotencyAndContractTests::test_violations_are_idempotent_for_identical_input",
+      "category": "regeneration-idempotency",
+      "status": "pass"
+    }
+  ],
+  "categories": {
+    "section-missing-rejection": "テスト戦略 section および 4 項目の欠落・空・不正内容を validator が拒否する",
+    "complete-pass": "4 項目を正順で満たした task spec と層別方針の充足が PASS する",
+    "regeneration-idempotency": "項目集合と順序が再生成で一致し、parse/violation 列が決定的である",
+    "exact13-non-regression": "exact-13 契約・15 section 契約・既存世代の検証結果が非退行である"
+  },
+  "commands": [
+    {
+      "command": "python3 -m pytest plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py --junitxml=eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.xml",
+      "exit_code": 0,
+      "summary": "============================== 27 passed in 3.87s =============================="
+    },
+    {
+      "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-task-spec-test-strategy",
+      "exit_code": 0,
+      "summary": "status=pass digest=sha256:7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae violations=0 mode=legacy"
+    },
+    {
+      "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-mvp-first-scheduling",
+      "exit_code": 0,
+      "summary": "status=pass digest=sha256:55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387 violations=0 mode=legacy"
+    },
+    {
+      "command": "python3 -m pytest plugins/system-dev-planner/tests -q",
+      "exit_code": 0,
+      "summary": "137 passed in 63.84s (0:01:03)"
+    },
+    {
+      "command": "python3 -m pytest plugins/dev-graph/tests -q",
+      "exit_code": 1,
+      "summary": "4 failed, 419 passed in 227.76s (0:03:47)"
+    }
+  ],
+  "notes": [
+    "`--staging .` は staging generation ではないため実行できない。テンプレート正本が定める世代非依存の `--feature-package` 形へ読み替えて実行した (implementation-note.md §4)。",
+    "TS-B11 / TS-B12 は P05 実装中に追加した被覆 (非層 workstream の非導出・層順序の安定性)。test-plan.md §4 へ追記済み。",
+    "plugins/dev-graph/tests の 4 件失敗 (stale behavior closure digest) の帰属を実測で切り分けた。run-dev-graph-decompose / -node / -requirements の 3 件は **本 feature の変更が原因** である: これらの skill は package-contract.depends_on: system-dev-planner を宣言しており、live-trial の behavior closure に plugins/system-dev-planner/{scripts,schemas,agents,skills} が含まれる (live-trial-verdict.py behavior_closure_files)。closure digest を HEAD の git object から再構成すると記録値と完全一致し、現作業ツリーでのみ不一致になることを確認した。残る run-dev-graph-system-spec の 1 件は closure 内の plugins/system-spec-harness/.../doctrine-anchor-registry.json (本 feature 着手前からの既存差分) が原因で、本 feature とは無関係。",
+    "上記 3 件は実装の誤りではなくガバナンス鮮度ゲートである。landing 前に該当 3 skill の run-skill-live-trial 再実行と verdict.json 更新が必要 (P13 release-receipt の landing 前提条件)。",
+    "訂正記録: 本 notes の初版は 4 件すべてを『既存不合格・本 feature と無関係』と記載していたが、closure が plugin 境界を越える事実を見落としていた。git status --porcelain plugins/dev-graph が空であることは無関係性の根拠にならない (依存元 plugin の変更が closure に入るため)。"
+  ]
+}

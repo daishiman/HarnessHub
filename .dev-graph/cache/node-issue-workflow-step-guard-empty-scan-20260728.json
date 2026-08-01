@@ -1,0 +1,103 @@
+{
+  "node": {
+    "acceptance": [
+      "存在しない --workflows-dir を渡すと非 0 で落ちる",
+      "空ディレクトリを渡すと非 0 で落ちる",
+      "--allow-empty を付けた場合に限り 0 を返す",
+      "上記 3 ケースが tests/scripts-root/test_root__lint_workflow_step_guard.py に追加されている"
+    ],
+    "architecture_refs": ["arch-harness-hub-dev-workflow"],
+    "artifact_kind": "issue",
+    "artifact_subtypes": [],
+    "beads_linkage": {
+      "bd_issue_id": "HarnessHub-foq6",
+      "linked_at": "2026-07-28T04:26:49Z",
+      "sync_state": "linked"
+    },
+    "classification_candidates": [
+      {
+        "artifact_kind": "issue",
+        "candidate_path": "issues/sys-workflow-step-guard-empty-scan-20260728.md",
+        "confidence": 0.9
+      }
+    ],
+    "classification_confidence": 0.9,
+    "classification_reason": "HarnessHub-5u5k の最終レビューで検出した、追加した lint 自身に残る空走査 fail-open。5u5k のスコープ (defect 是正 + 同型遮断) を膨らませないため独立 issue として分離した",
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "open"
+    },
+    "confirmation_evidence": {
+      "evaluated_digest": null,
+      "evaluator": null,
+      "evidence_ref": null
+    },
+    "confirmation_status": "draft",
+    "created_at": "2026-07-28T04:30:00Z",
+    "depends_on": [],
+    "domain": "dev-workflow",
+    "evaluation_status": "pending",
+    "execution_contexts": [],
+    "feature_package_id": null,
+    "file_path": "issues/sys-workflow-step-guard-empty-scan-20260728.md",
+    "github_project_linkages": [],
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "goal": "検査対象が 0 件のときに lint が非 0 で停止し、意図的な空走査だけが明示 opt-in で許される状態",
+    "graph_node_id": "issue-workflow-step-guard-empty-scan-20260728",
+    "implementation_readiness": {
+      "checked_at": "2026-07-28T04:30:00Z",
+      "missing_sections": [],
+      "status": "complete"
+    },
+    "issue_linkage": null,
+    "iteration": null,
+    "owners": ["daishiman"],
+    "parent_feature": null,
+    "phase_ref": null,
+    "priority": "medium",
+    "project_id": "harness-hub",
+    "pull_request_linkages": [],
+    "purpose": "scripts/lint-workflow-step-guard.py の main() が workflows dir 不在および走査 0 件を成功として返すため、検査が起動していない緑と検査した結果の緑を区別できない。防ごうとしている defect と同型の fail-open が検査器自身に残っている",
+    "related_nodes": ["issue-governance-notion-steps-always-skipped-20260725"],
+    "resource_scope": [
+      "scripts/lint-workflow-step-guard.py",
+      "tests/scripts-root/test_root__lint_workflow_step_guard.py"
+    ],
+    "scope_in": [
+      "main() の空走査 fail-closed 化 (dir 不在 / 検査 0 件)",
+      "--allow-empty による明示 opt-in の追加",
+      "self-test fixture と単体テストによる分岐固定"
+    ],
+    "scope_out": [
+      "lint の検出ルール自体の変更 (classify_env_reference の判定基準)",
+      "--simulate の出力仕様変更",
+      "呼び出し 3 経路 (governance-check.yml / make lint / run-ci-checks.sh) の再設計"
+    ],
+    "source_lineage": {
+      "imported_at": "2026-07-28T04:30:00Z",
+      "origin_kind": "manual",
+      "source_digest": null,
+      "source_path": "issues/sys-governance-notion-steps-always-skipped-20260725.md",
+      "source_plugin": null,
+      "source_version": null
+    },
+    "start_date": null,
+    "status": "draft",
+    "tags": ["follow-up", "ci", "fail-open", "lint", "governance-check"],
+    "target_date": null,
+    "template_id": "issue",
+    "template_version": "1.0.0",
+    "title": "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)",
+    "tracker_binding": "beads",
+    "updated_at": "2026-07-28T04:30:00Z"
+  }
+}

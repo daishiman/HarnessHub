@@ -1,0 +1,12 @@
+{
+  "artifact": "plugins/dev-graph/scripts/build-merged-graph.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 84,
+    "notes": "genuine code-review + py_compile OK / frontmatter 正直 (network:false, write-scope: driver mode は git が渡す %A 一時パスのみ、--resolve-conflict は graph.json への C02 atomic writer)。graph.json 専用 git merge driver。約340ノードが単一配列に並ぶため行ベース3-wayが近接追加を誤衝突させる問題を、graph_node_id をキーにした集合演算で構造的に解く。_merge_scalar が base/ours/theirs の3値判定 (収束編集=無衝突、片側変更=変更側採用、両側発散=衝突) を担い、_merge_node がフィールド単位へ、_merge_nodes がノード単位へ持ち上げる責務分割が明快。出力順は ours 既存順を保持し theirs 新規のみ末尾追記で並べ替えノイズを避ける。SAFETY: 物理削除をしない規約 (schema の status enum で tombstoned へ遷移) に整合し、片側削除は既定で温存して stderr へ警告、--accept-deletion で明示承認した id だけを落とす。driver mode からは accept_deletions を渡さないため、git 自動実行が黙ってノードを消す経路が存在しない。衝突時は %A へ __merge_conflict__ sentinel を書いて exit 1 とし、git が未解決のまま残すのと validate-graph-schema での機械発見の両方を成立させる。--resolve-conflict は has_conflict なら graph を一切書かず return 1 の fail-closed で、書込みは ensure_no_pending_transaction + graph_operation_lock(exclusive) + atomic_json の C02 経路を通す。SMELL: (1) merge_graph L219 が ours['graph_revision'] / theirs['graph_revision'] を .get() ではなく直接添字で読むため、graph_revision 欠落 JSON では KeyError となる。driver mode の呼び出し (L376) は parse の try/except の外側なので raw traceback が出る (git は exit 非0 を衝突として扱うため被害は限定的だが sentinel は書かれない)。(2) _stage_blob が「stage 不在」と「空 blob」を同じ None へ畳むため delete/modify と空ファイルが区別されない (L291 でどちらも手動解決へ倒すので安全側)。(3) schema_version / repository_id の衝突時は merged に ours 値が入るが has_conflict=True で両経路とも採用されないため実害なし。REAL-WORLD: 2026-07-28 に本番の origin/main マージで 2 度発火し、344 nodes / duplicate 0 / sentinel 0 / validate-graph-schema valid=true で自動解決を確認。TESTS: plugins/dev-graph/tests/test_build_merged_graph.py 18 passed。ユニット12件 (収束/片側/発散、両側同一id追加、片側削除の温存と承認削除、revision 進行) に加え、実 git merge を起こして driver 無しでは衝突する配列追記シナリオが driver 有りで解決すること、.gitattributes が graph.json を driver へ経路付けていることを検査する統合3件を含む。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

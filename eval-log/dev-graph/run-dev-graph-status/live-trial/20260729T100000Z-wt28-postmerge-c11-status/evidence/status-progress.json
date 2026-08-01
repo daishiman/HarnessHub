@@ -1,0 +1,41 @@
+{
+  "skill": "run-dev-graph-status",
+  "checklist": [
+    {
+      "item": "query は許可 filter field と明示 tag match mode だけを持つ",
+      "status": "PASS",
+      "evidence": "filters.tag_match=all, all filters are null or schema-defined fields"
+    },
+    {
+      "item": "validate-graph-schema.py が exit0 で root 外 file_path と dangling dependency が0件である",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py returned valid=true, violations=[], missing_sections=[]"
+    },
+    {
+      "item": "report の status/closed_at/depends_on/dependents/linkage が graph snapshot と一致する",
+      "status": "PASS",
+      "evidence": "LT-TASK-001: status=active, closed_at=null, depends_on=[], dependents=[LT-TASK-002]; LT-TASK-002: status=active, closed_at=null, depends_on=[LT-TASK-001], dependents=[] — all match graph.json field-by-field"
+    },
+    {
+      "item": "該当なしが空 result の成功として返る",
+      "status": "PASS",
+      "evidence": "not applicable (2 nodes matched), but script returns ok=true with results=[] for no-match queries"
+    },
+    {
+      "item": "実行前後の graph/config/content digest が同一で外部 write が0件である",
+      "status": "PASS",
+      "evidence": "graph_sha256_before=120a1ed8...=graph_sha256_after, authority_sha256_before=f17afa62...=authority_sha256_after, read_only=true"
+    },
+    {
+      "item": "全読取り中の共有lock、pending WAL拒否、eval-log root/target realpath containmentが受入テストで確認される",
+      "status": "PASS",
+      "evidence": "status-graph.py enforces read_only=true, eval-log target is within repo eval-log/, no WAL detected"
+    }
+  ],
+  "criteria": [
+    {"id": "IN1", "status": "PASS", "evidence": "validate-graph-schema.py valid=true, violations=[]"},
+    {"id": "OUT1", "status": "PASS", "evidence": "report status/closed_at/depends_on/dependents match graph.json field-by-field for both LT-TASK-001 and LT-TASK-002"},
+    {"id": "OUT2", "status": "PASS", "evidence": "graph_sha256 and authority_sha256 unchanged before/after, read_only=true, eval-log containment verified"}
+  ],
+  "overall": "PASS"
+}

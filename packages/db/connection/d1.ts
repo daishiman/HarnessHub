@@ -36,5 +36,5 @@ export type D1Adapter = DatabaseAdapter<CoreSchema, D1Database>;
 /** D1 接続を生成する。スキーマは常に barrel (schema/index.ts) を束ねる。 */
 export function createD1Client(binding: D1DatabaseLike): D1Adapter {
   const db = drizzle(binding as Parameters<typeof drizzle>[0], { schema }) as D1Database;
-  return { driver: 'd1', schema, client: db };
+  return { driver: 'd1', writeConcurrencyScope: 'request-bound', schema, client: db };
 }

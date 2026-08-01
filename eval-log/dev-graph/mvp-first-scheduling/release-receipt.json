@@ -130,7 +130,7 @@
     "why_not_allowlist": "allowlist は歴史的残渣を段階的に解消するための凍結リストであり、新規追加は凍結の意味を失わせる。ゲート緩和として禁止",
     "untracked_paths": [
       "eval-log/run-dev-graph-render-execution.json",
-      "eval-log/run-dev-graph-schedule-parity-manifest.json",
+      "eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json",
       "eval-log/run-dev-graph-sync-execution.json",
       "eval-log/run-dev-graph-sync-projection-manifest.json"
     ],

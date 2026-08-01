@@ -2,7 +2,7 @@
   "target": {
     "plugin": "slide-report-generator",
     "skill": "run-cross-deck-review",
-    "skill_md_sha256": "8ff77c97609ac3607779a54bf16291b59e592f59953d93ac8b6c738e441377f7"
+    "skill_md_sha256": "3f24f600d61ac7e06796de44561b090fd37e1d67996d12fada34812cc7184fbd"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
@@ -11,10 +11,10 @@
     "omission": 0,
     "inconsistency": 0,
     "dependency_break": 0,
-    "smell": 0
+    "smell": 2
   },
-  "reviewer": "codex-independent-cross-deck-rubric",
-  "reviewed_at": "2026-07-12T00:41:31Z",
+  "reviewer": "claude-opus-5-rescue-independent-rubric",
+  "reviewed_at": "2026-07-28T00:00:00Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -24,16 +24,22 @@
       "OUT1"
     ],
     "positive_feedback": [
-      "Single responsibility remains read-only cross-deck detection and classification; generation and repair are explicitly delegated to run-slide-report-generate and run-slide-report-modify.",
-      "Progressive disclosure remains intact: SKILL.md routes to the R1 execution contract, workflow manifest, output schema, rule reference, and name-addressed cross-deck-reviewer adapter/R2 prompt without duplicating the full procedure in the router.",
-      "IN1 and OUT1 are purpose-specific and executable. The four-file input gate is fail-closed, machine and visual C-number ownership is unambiguous, and the Node fixture proves dirty detection plus a zero-issue clean PASS control.",
-      "Current validation evidence is validate-frontmatter exit 0, prompt-contract drift fatal=0/warn=0, feedback-contract exit 0, Node acceptance PASS, and 131 focused slide-report-generator pytest cases PASS."
+      "rubric 採点実走: render-findings-score.py を L0 (ref-skill-design-rubric) → L2 (assign-skill-design-evaluator/references/rubric.json) の順に合成して実行し score=100 / threshold=80 / passed=true / findings=[] / required_fixes=[] / pending_human=[] を取得 (rubric_version 1.3.0, rubric_hash sha256:6e1843e5..., composition_hash sha256:993e0c21...)。",
+      "FM 系: validate-frontmatter.py exit 0 (warn は source field 欠落の推奨事項のみ)、lint-skill-name.py は ok: run-cross-deck-review。name/kind/prefix/effect/allowed-tools が run 系の規約と整合し、read-only skill として Write/Edit を持たない。",
+      "BD/PD 系: frontmatter を除く本文は 80 行で PD-001 の 100 行閾値内、かつ references/ を保有。Purpose & Output Contract と Gotchas を備え、TODO(human) 残置は 0 件のため pending_human も 0。",
+      "REG-001 (L2 override): validate-plugin-completeness.py が plugin completeness: PASS (slide-report-generator) を返し、配布完全性ゲートを通過している。",
+      "IN1 (inner/script) と OUT1 (outer/test) は汎用ゲートの言い換えではなく purpose-acceptance として具体的。IN1 は 4 ファイル必須入力の欠落 0 件、OUT1 は注入不整合の全件検出 + clean series PASS を条件とし、いずれも実在スクリプト・実在テストで検証可能。",
+      "OUT1 の検証手段が実在し実際に通ることを確認済み: node vendor/tests/test-cross-deck-consistency.js が 16 アサーション全 PASS (exit 0)。verify_by: test の宣言と実装が乖離していない。",
+      "progressive disclosure が保たれている: SKILL.md は router に徹し、実行契約は prompts/R1-orchestrate.md、手続き知識は references/cross-deck-consistency-rules.md、資源解決は workflow-manifest.json、出力契約は schemas/cross-deck-review-report.schema.json へ委譲している。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "[low/smell] frontmatter に source フィールドがなく validate-frontmatter.py が warn: source field missing (doc/21 recommends for traceability) を出す。exit 0 の推奨事項であり減点 rule には該当しないが、trace 可能性の観点では補うのが望ましい。",
+      "[low/smell] 追加リソース節が workflow-manifest.json 宣言済みの prompts/R2-agent-cross-deck-reviewer.md を列挙していない。agents/cross-deck-reviewer.md 経由で解決されるため dangling ref ではなく、rubric 上の finding には至らない。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual-skill-sha-change",
     "next_action": "none"
   },
-  "notes": "Genuine rubric re-evaluation was required because SKILL.md changed from the prior reviewed SHA. Existing repository-wide feedback-contract baseline warnings are non-fatal and unrelated to this skill."
+  "notes": "救出 branch の未レビュー変更に対する genuine 再評価。既存 verdict の sha 8ff77c9 が現行 sha 3f24f60 と不一致 (stale-sha) だったため、規範 (assign-skill-design-evaluator SKILL.md / evaluator-contract.md / rubric.json L0+L2) を読み直した上で採点し直した。実測根拠: render-findings-score.py 実走で score=100 (findings 0, pending_human 0)、validate-frontmatter.py exit 0、lint-skill-name.py ok、validate-plugin-completeness.py PASS、lint-prompt-contract-drift.py --all fatal=0/warn=0、lint-feedback-contract.py --all の 19 warning に本 skill は非該当、OUT1 受入テスト 16 アサーション全 PASS。差分の実体は plugin root 参照 5 箇所を ${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT} へ揃えたもので、SRG_ROOT は plugin scripts/hooks が実装済みの override 変数、フォールバックにより未設定時の挙動は不変。high severity は 0 のため PASS。前 verdict の複写や force-pass は行っていない。"
 }

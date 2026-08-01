@@ -12,8 +12,8 @@ iteration: null
 title: "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)"
 owners: ["daishiman"]
 created_at: "2026-07-21T23:30:33Z"
-updated_at: "2026-07-22T09:30:00Z"
-status: "draft"
+updated_at: "2026-07-26T01:19:20.811908Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement"]
 resource_scope: ["system-spec/dev-workflow.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-24T08:49:25Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-21T23:30:33Z","missing_sections":[],"status":"complete"}
 ---
 

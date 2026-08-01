@@ -12,8 +12,8 @@ iteration: null
 title: "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-07-26T06:12:00Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P10"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/evidence-summary.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-25T00:47:04Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,11 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-auth-tenancy` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-26 追加エビデンス
+
+- 実装 issue: `HarnessHub-b7ng` / dev-graph node: `issue-auth-tenancy-production-adapter-20260725`
+- 仕様反映: system-spec の `qa-074`、`qa-075`、`qa-082`〜`qa-086`、architecture 4 wrapper、feature node、spec wrapper
+- 記録: `docs/features/feat-auth-tenancy/spec-reflection-receipt.md`
+- 検証: task spec validator、認証/DB 集中テスト、`pnpm verify` の結果を最終レビュー記録へ集約する。
+- 最終レビュー補正: Auth.js request body の stream 維持と DB write scope の要求分離を回帰テストへ追加した。

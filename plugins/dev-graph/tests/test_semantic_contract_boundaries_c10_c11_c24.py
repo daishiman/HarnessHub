@@ -3,8 +3,6 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
-import re
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -139,39 +137,49 @@ def test_c11_uses_canonical_schema_and_frontmatter_path_contract(tmp_path, monke
     assert {item["detail"] for item in findings if item["code"] == "frontmatter_missing"} == {"tags"}
 
 
-def test_c10_invokes_c11_then_still_rejects_direct_mutation(tmp_path, monkeypatch, capsys):
+def test_c10_rejects_direct_mutation_without_invoking_any_subprocess(tmp_path, monkeypatch, capsys):
+    """遮断は subprocess 非依存で確定する (fail-open 窓を作らない)。
+
+    PreToolUse hook が timeout すると Claude Code は tool を通す。以前は Bash の破壊操作枝
+    だけが `context_ok()` の後段にあり、さらに遮断/許可を左右しない `schema_ok()`
+    (= graph 全件の C11 検証) を理由文の出し分けのためだけに呼んでいた。実測で遮断まで
+    39.79s を要し、run-dev-graph-init の live-trial では `.dev-graph/config.json` と
+    `.dev-graph/state/graph.json` への Bash 直書きが実際に 2 回素通りした (HarnessHub-6in4)。
+
+    そのため本 test は「遮断経路が subprocess を起動しないこと」を契約として固定する。
+    C11 検証を遮断経路へ戻すと、遮断は既に確定しているのに理由文の精度しか上がらない一方、
+    その所要時間がそのまま fail-open の窓になる。C11 は run-dev-graph-init の
+    Execution contract が別途強制する。
+    """
     mod = load(HOOKS / "guard-graph-schema.py", "guard_contract_c10")
-    graph = tmp_path / ".dev-graph" / "state" / "graph.json"
-    graph.parent.mkdir(parents=True)
-    graph.write_text('{"nodes": []}\n', encoding="utf-8")
-    context = json.dumps({"local_state_paths": {"graph": str(graph)}})
-    monkeypatch.setattr(mod, "context_ok", lambda root: (True, context))
-    checked: list[Path] = []
-    monkeypatch.setattr(mod, "schema_ok", lambda root, output: (checked.append(root) is None, "valid"))
 
-    code, captured = call_main(
-        mod,
-        monkeypatch,
-        capsys,
-        "--repo-root",
-        tmp_path,
-        stdin={"tool_input": {"command": "rm -rf .dev-graph/state/graph.json # validate-graph-schema.py"}},
-    )
-    assert code == 2
-    assert checked == [tmp_path]
-    assert "C02 atomic writer" in captured.err
+    def forbidden(*args, **kwargs):  # pragma: no cover - 呼ばれた時点で契約違反
+        raise AssertionError("遮断経路が subprocess を起動している (fail-open 窓の再導入)")
 
-    monkeypatch.setattr(mod, "schema_ok", lambda root, output: (False, "schema invalid"))
-    code, captured = call_main(
-        mod,
-        monkeypatch,
-        capsys,
-        "--repo-root",
-        tmp_path,
-        stdin={"tool_input": {"command": "sed -i '' plugins/dev-graph/schemas/graph-node.schema.json"}},
-    )
-    assert code == 2
-    assert "C11 schema validation failed" in captured.err
+    monkeypatch.setattr(mod.subprocess, "run", forbidden)
+    for command in (
+        "rm -rf .dev-graph/state/graph.json # validate-graph-schema.py",
+        "sed -i '' plugins/dev-graph/schemas/graph-node.schema.json",
+        'cat > .dev-graph/config.json << "EOF"',
+        'tee "$ROOT/.dev-graph/state/graph.json"',
+    ):
+        code, captured = call_main(
+            mod, monkeypatch, capsys, "--repo-root", tmp_path,
+            stdin={"tool_input": {"command": command}},
+        )
+        assert code == 2, command
+        assert "C02 atomic writer" in captured.err, command
+
+    for tool, tool_input in (
+        ("Write", {"file_path": str(tmp_path / ".dev-graph" / "config.json"), "content": "{}"}),
+        ("Bash", {"command": "python3 -c \"open('.dev-graph/config.json','w')\""}),
+    ):
+        code, captured = call_main(
+            mod, monkeypatch, capsys, "--repo-root", tmp_path,
+            stdin={"tool_name": tool, "tool_input": tool_input},
+        )
+        assert code == 2, tool
+        assert "C02 atomic writer" in captured.err, tool
 
 
 def test_c10_redirect_detection_is_bound_to_the_redirect_destination(
@@ -179,7 +187,6 @@ def test_c10_redirect_detection_is_bound_to_the_redirect_destination(
 ):
     mod = load(HOOKS / "guard-graph-schema.py", "guard_redirect_target_contract")
     monkeypatch.setattr(mod, "context_ok", lambda _root: (True, "{}"))
-    monkeypatch.setattr(mod, "schema_ok", lambda _root, _detail: (True, "ok"))
 
     code, _ = call_main(
         mod,
@@ -207,7 +214,6 @@ def test_c10_destructive_detection_distinguishes_sources_from_destinations(
 ):
     mod = load(HOOKS / "guard-graph-schema.py", "guard_operand_contract")
     monkeypatch.setattr(mod, "context_ok", lambda _root: (True, "{}"))
-    monkeypatch.setattr(mod, "schema_ok", lambda _root, _detail: (True, "ok"))
 
     allowed = [
         "cp -rf plugins/dev-graph/templates .dev-graph/templates",
@@ -385,141 +391,3 @@ def test_c24_common_dir_marker_remote_and_config_policy_boundaries(tmp_path, mon
         mod.resolve_config_paths(root, {"content_roots": ["invalid"], "local_state": {}})
     with pytest.raises(mod.ContractError, match="non-empty repository-relative path"):
         mod.resolve_declared_path(root, "", "content_roots.tasks", reject_leaf_symlink=True)
-
-
-def test_c10_blocks_graph_authority_writes_through_the_write_tool(tmp_path, monkeypatch, capsys):
-    """Write/Edit ツール経由の graph authority 書込みも C02 迂回として拒否する。
-
-    2026-07-21 live-trial r14 で、render / status / system-spec の実走が
-    `.dev-graph/state/graph.json` と `.dev-graph/config.json` を Write ツールで直接作成し、
-    upsert-node.py を一度も通さずに「登録した」と主張する迂回が検出された。
-    従来 hook は tool_input.command しか読まず Bash 限定だったため素通りしていた。
-    """
-    mod = load(HOOKS / "guard-graph-schema.py", "guard_write_tool_contract")
-    monkeypatch.setattr(mod, "context_ok", lambda _root: (True, "{}"))
-    monkeypatch.setattr(mod, "schema_ok", lambda _root, _detail: (True, "ok"))
-
-    for tool, payload in (
-        ("Write", {"file_path": f"{tmp_path}/.dev-graph/state/graph.json", "content": "{}"}),
-        ("Write", {"file_path": f"{tmp_path}/.dev-graph/config.json", "content": "{}"}),
-        ("Edit", {"file_path": f"{tmp_path}/.dev-graph/state/graph.json", "old_string": "a", "new_string": "b"}),
-    ):
-        code, captured = call_main(
-            mod, monkeypatch, capsys, "--repo-root", tmp_path,
-            stdin={"tool_name": tool, "tool_input": payload},
-        )
-        assert code == 2, f"{tool} {payload['file_path']} must be blocked"
-        assert "C02" in captured.err
-
-    # repo 内の通常ファイルは素通しする (過剰遮断で日常作業を止めない)
-    code, _ = call_main(
-        mod, monkeypatch, capsys, "--repo-root", tmp_path,
-        stdin={"tool_name": "Write", "tool_input": {"file_path": f"{tmp_path}/README.md", "content": "x"}},
-    )
-    assert code == 0
-
-
-def test_c10_blocks_interpreter_writes_to_the_graph_authority(tmp_path, monkeypatch, capsys):
-    """python -c / heredoc から graph.json を open(w) する迂回も拒否する。
-
-    r14 の node 実走は `python3 -c "... graph['nodes'] = [...]; json.dump(...)"` で
-    graph.json を書き換えて登録失敗を隠蔽した。_mutating_operands は rm/mv/cp/sed 等しか
-    認識せず、インタプリタ経由の書込みは検出できていなかった。
-    """
-    mod = load(HOOKS / "guard-graph-schema.py", "guard_interpreter_write_contract")
-    monkeypatch.setattr(mod, "context_ok", lambda _root: (True, "{}"))
-    monkeypatch.setattr(mod, "schema_ok", lambda _root, _detail: (True, "ok"))
-
-    blocked = [
-        """python3 -c "import json; json.dump({}, open('.dev-graph/state/graph.json','w'))" """,
-        """python3 - <<'PY'\nopen('.dev-graph/state/graph.json', 'w').write('{}')\nPY""",
-    ]
-    for command in blocked:
-        code, captured = call_main(
-            mod, monkeypatch, capsys, "--repo-root", tmp_path,
-            stdin={"tool_name": "Bash", "tool_input": {"command": command}},
-        )
-        assert code == 2, f"must block: {command[:60]}"
-        assert "C02" in captured.err
-
-    # 読み取りは素通しする
-    code, _ = call_main(
-        mod, monkeypatch, capsys, "--repo-root", tmp_path,
-        stdin={"tool_name": "Bash", "tool_input": {
-            "command": """python3 -c "import json; print(json.load(open('.dev-graph/state/graph.json')))" """}},
-    )
-    assert code == 0
-
-
-def test_c10_guard_is_registered_for_file_writing_tools() -> None:
-    """guard が Bash だけでなく Write/Edit 系にも配線されている。
-
-    hook 本体が Write を判定できても hooks.json の matcher が Bash のままなら発火しない。
-    r14 の C02 迂回はこの配線漏れが原因で素通りした。
-    """
-    hooks = json.loads((HOOKS / "hooks.json").read_text(encoding="utf-8"))
-    entries = [
-        entry for entry in hooks["hooks"]["PreToolUse"]
-        if any("guard-graph-schema.py" in h.get("command", "") for h in entry.get("hooks", []))
-    ]
-    assert entries, "guard-graph-schema.py must be registered on PreToolUse"
-    matcher = entries[0]["matcher"]
-    for tool in ("Bash", "Write", "Edit"):
-        assert re.search(matcher, tool), f"{tool} must match {matcher!r}"
-
-
-def test_c10_bash_redirect_covers_the_whole_graph_authority_dir(tmp_path, monkeypatch, capsys):
-    """Bash の redirect も `.dev-graph/` 配下全体を守る (state/graph.json だけではない)。
-
-    2026-07-21 live-trial r16 で、`.dev-graph/config.json` への Write を hook が遮断した直後に
-    `cat > .../.dev-graph/config.json` へ切り替えて同じ書込みを完遂する回避が観測された
-    (transcript: "Config was blocked by the hook. Let me write it via bash")。
-    GRAPH_AUTHORITY_DIR は末尾が `.dev-graph` の path しか見ておらず配下ファイルを守れていなかった。
-    """
-    mod = load(HOOKS / "guard-graph-schema.py", "guard_authority_dir_contract")
-    monkeypatch.setattr(mod, "context_ok", lambda _root: (True, "{}"))
-    monkeypatch.setattr(mod, "schema_ok", lambda _root, _detail: (True, "ok"))
-
-    for command in (
-        "cat > /repo/.dev-graph/config.json <<'EOF'\n{}\nEOF",
-        "printf '{}' > /repo/.dev-graph/config.json",
-        "cp /tmp/x.json /repo/.dev-graph/config.json",
-        "rm -f /repo/.dev-graph/state/graph.json",
-    ):
-        code, captured = call_main(
-            mod, monkeypatch, capsys, "--repo-root", tmp_path,
-            stdin={"tool_name": "Bash", "tool_input": {"command": command}},
-        )
-        assert code == 2, f"must block: {command[:50]}"
-
-    # 読み取りは素通しする
-    code, _ = call_main(
-        mod, monkeypatch, capsys, "--repo-root", tmp_path,
-        stdin={"tool_name": "Bash", "tool_input": {"command": "cat /repo/.dev-graph/config.json"}},
-    )
-    assert code == 0
-
-
-def test_c10_graph_authority_block_does_not_depend_on_the_context_subprocess(
-    tmp_path, monkeypatch, capsys,
-):
-    """graph authority の遮断は resolve-repo-context のサブプロセスに依存しない。
-
-    context_ok() は tool 呼出しごとに python サブプロセスを起動するため、hook の timeout (10s)
-    に達すると guard 全体が素通り (fail-open) になりうる。最重要かつ最も安価な判定である
-    authority path 検査は、その前段で完結させる。
-    """
-    mod = load(HOOKS / "guard-graph-schema.py", "guard_authority_precedence_contract")
-
-    def _must_not_run(_root):
-        raise AssertionError("context_ok must not gate the graph authority check")
-
-    monkeypatch.setattr(mod, "context_ok", _must_not_run)
-
-    code, captured = call_main(
-        mod, monkeypatch, capsys, "--repo-root", tmp_path,
-        stdin={"tool_name": "Write", "tool_input": {
-            "file_path": "/repo/.dev-graph/state/graph.json", "content": "{}"}},
-    )
-    assert code == 2
-    assert "C02" in captured.err

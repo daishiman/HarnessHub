@@ -1,7 +1,7 @@
 # Spec Diff History
 
 このファイルは `.github/workflows/update-yaml-spec.yml` が週次自動更新する。最新が上。
-## 2026-07-20T03:17:13Z
+## 2026-07-20T02:43:21Z
 
 実仕様ページに変更を検知。
 

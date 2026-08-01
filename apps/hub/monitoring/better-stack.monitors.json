@@ -1,0 +1,121 @@
+{
+  "$comment": "Better Stack Uptime API へ適用する外形監視の正本。API token は保存せず、BETTER_STACK_API_TOKEN 経由で渡す。applied_at と external_id は実環境への適用が確認できるまで null のままにする。適用は apps/hub/scripts/apply-better-stack-monitoring.mjs が本ファイルを読んで行い、採番結果をここへ書き戻す。",
+  "field_names_verified_against": {
+    "source": "https://betterstack.com/docs/uptime/api/",
+    "verified_at": "2026-07-26",
+    "endpoints": [
+      "create-a-new-monitor",
+      "create-a-hearbeat",
+      "create-a-new-status-page",
+      "create-a-new-status-page-resource"
+    ],
+    "$comment": "本ファイルで使う全フィールド名が公式 API ドキュメントの body parameters に実在することを確認済み。http_method は doc の記法が大文字だが API 応答の表現は小文字なので小文字で保持する。なお **フィールド名が正しくてもプランで拒否される** ことがある: Free プランでは status page の advanced settings 群が 403 になった (2026-07-26 実測)。各 $comment_omitted_fields を参照。"
+  },
+  "schema_version": "1.0",
+  "provider": "better-stack",
+  "application_state": "applied",
+  "applied_at": "2026-07-27T20:46:37.686Z",
+  "monitor": {
+    "local_id": "hub-health",
+    "external_id": "4724920",
+    "request": {
+      "method": "POST",
+      "endpoint": "https://uptime.betterstack.com/api/v2/monitors",
+      "payload": {
+        "pronounceable_name": "Harness Hub production /health",
+        "monitor_type": "expected_status_code",
+        "url": "https://harness-hub.daishimanju.workers.dev/health",
+        "http_method": "get",
+        "check_frequency": 180,
+        "request_timeout": 10,
+        "expected_status_codes": [
+          200
+        ],
+        "verify_ssl": true,
+        "follow_redirects": false,
+        "paused": false,
+        "email": true,
+        "sms": false,
+        "call": false
+      }
+    },
+    "$comment": "3 分間隔で production /health の HTTP 200 を確認する。Turso 障害は 503、R2 障害は degraded の 200 なので、down 判定は critical dependency の停止と一致する。"
+  },
+  "heartbeat": {
+    "local_id": "hub-cron-daily",
+    "external_id": "475650",
+    "provisioning_state": "applied",
+    "request": {
+      "method": "POST",
+      "endpoint": "https://uptime.betterstack.com/api/v2/heartbeats",
+      "payload": {
+        "name": "Harness Hub daily cron",
+        "period": 86400,
+        "grace": 3600,
+        "paused": false,
+        "email": true,
+        "sms": false,
+        "call": false,
+        "push": true
+      }
+    },
+    "secret_binding": "CRON_HEARTBEAT_URL",
+    "$comment": "日次 cron (0 15 * * *) の全ジョブ成功時だけ Worker が heartbeat URL を呼ぶ。URL は Cloudflare Worker secret として投入し、ファイルやログへ保存しない。"
+  },
+  "backup_heartbeat": {
+    "local_id": "hub-backup-daily",
+    "external_id": null,
+    "provisioning_state": "pending_credentials",
+    "request": {
+      "method": "POST",
+      "endpoint": "https://uptime.betterstack.com/api/v2/heartbeats",
+      "payload": {
+        "name": "Harness Hub daily backup",
+        "period": 86400,
+        "grace": 3600,
+        "paused": false,
+        "email": true,
+        "sms": false,
+        "call": false,
+        "push": true
+      }
+    },
+    "secret_binding": "BACKUP_HEARTBEAT_URL",
+    "$comment": "GitHub Actions の日次 backup (0 17 * * *) が upload 後の再取得・byte 一致まで完走したときだけ ping する。Worker cron とは資源を分離し、片方の成功がもう片方の失敗を隠さない。URL は GitHub Actions repository secret として投入し、ファイルやログへ保存しない。"
+  },
+  "status_page": {
+    "local_id": "harness-hub-status",
+    "external_id": "256797",
+    "request": {
+      "method": "POST",
+      "endpoint": "https://uptime.betterstack.com/api/v2/status-pages",
+      "payload": {
+        "company_name": "Harness Hub",
+        "company_url": "https://harness-hub.daishimanju.workers.dev",
+        "subdomain": "harness-hub-daishimanju",
+        "timezone": "Tokyo",
+        "history": 30,
+        "published": true
+      },
+      "$comment_omitted_fields": "automatic_reports / subscribable / hide_from_search_engines は Free プランでは advanced settings 扱いで、送ると 403 (Cannot modify status page advanced settings) になる (2026-07-26 実測)。値が既定と同じでも送信自体を拒否されるため、payload から外す。有料化したら復活を検討する。"
+    },
+    "resource_local_ids": [
+      "hub-health"
+    ],
+    "resource_external_ids": {
+      "hub-health": "8978911"
+    },
+    "resource_request": {
+      "method": "POST",
+      "endpoint_template": "https://uptime.betterstack.com/api/v2/status-pages/{status_page_id}/resources",
+      "payload_template": {
+        "resource_id": "{monitor_id}",
+        "resource_type": "Monitor",
+        "public_name": "Harness Hub",
+        "widget_type": "history"
+      },
+      "$comment_omitted_fields": "mark_as_down_for / mark_as_degraded_for は送っていない。公式ドキュメントの既定値 (any_incident / no_incident) が意図と完全に一致するため、明示すると status page 本体と同じ advanced settings の 403 を踏むだけで得が無い。widget_type=history は既定ではないので必要 (30 日履歴の表示に使う)。"
+    },
+    "$comment": "monitor 作成後に status page resource API で hub-health を関連付ける。月次の外形監視履歴を SLO ダッシュボードの一面として使う。"
+  }
+}

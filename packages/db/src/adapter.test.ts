@@ -5,10 +5,16 @@ import type { DatabaseAdapter, TransactionalAdapter } from './adapter';
 import { assertSupportedDriver, DATABASE_DRIVERS, isDatabaseDriver, isTransactionalAdapter } from './adapter';
 import { DriverNotSupportedError } from './errors';
 
-const plainAdapter: DatabaseAdapter = { driver: 'turso', schema: {}, client: null };
+const plainAdapter: DatabaseAdapter = {
+  driver: 'turso',
+  writeConcurrencyScope: 'process-local',
+  schema: {},
+  client: null,
+};
 
 const txAdapter: TransactionalAdapter = {
   driver: 'd1',
+  writeConcurrencyScope: 'request-bound',
   schema: {},
   client: null,
   transaction: async (run) => run(plainAdapter),

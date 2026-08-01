@@ -7,11 +7,13 @@
 # deploy が要求する repository 設定。GitHub Actions は未設定の secret/variable を
 # エラーにせず空文字で渡すため、設定漏れは「認証情報が無い」ではなく「認証に失敗した」形で
 # deploy の途中に現れる。どの値が要るかをここで読めるようにしておく。
-#   secrets.CLOUDFLARE_API_TOKEN   Workers スクリプト:編集 + Workers R2 Storage:編集 を含む API トークン
+#   secrets.CLOUDFLARE_API_TOKEN   Workers deploy / rollback 用。R2 write 権限を含めない
+#   secrets.CLOUDFLARE_R2_API_TOKEN 本番 smoke の R2 往復用。Workers Scripts 権限を含めない
 #   secrets.CLOUDFLARE_ACCOUNT_ID  デプロイ先アカウント
 #   secrets.TURSO_DATABASE_URL      migration / 本番 smoke の接続先 URL
 #   secrets.TURSO_AUTH_TOKEN        migration / 本番 smoke の DB 認証トークン
 #   vars.HUB_HEALTH_URL            デプロイ後の /health 疎通確認先 (未設定なら疎通確認が exit 1)
+#   vars.HUB_PUBLIC_URL            デプロイ後の OIDC start-flow smoke の公開 origin
 name: hub-ci
 
 on:
@@ -24,7 +26,8 @@ on:
       - "package.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
-      - ".github/workflows/ci.yml"
+      # backup.yml など ci.yml 以外を壊しても検査が走るよう workflow 全体を対象にする
+      - ".github/workflows/**"
   pull_request:
     paths:
       - "apps/**"
@@ -33,7 +36,8 @@ on:
       - "package.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
-      - ".github/workflows/ci.yml"
+      # backup.yml など ci.yml 以外を壊しても検査が走るよう workflow 全体を対象にする
+      - ".github/workflows/**"
   workflow_dispatch:
 
 concurrency:
@@ -44,9 +48,10 @@ env:
   NODE_VERSION: "22"
 
 jobs:
-  # ゲート 1: 静的検査。依存インストール前に走らせ、npm 混入と共通層の重複実装を最速で落とす
+  # ゲート 1: 静的検査。依存インストール前に走らせ、npm 混入・共通層の重複実装・
+  # 認証構造違反・Actions secret/variable 台帳の乖離を最速で落とす
   static-gates:
-    name: 静的ゲート (pnpm 混入検査 / 共通層 duplicate detector)
+    name: 静的ゲート (pnpm / duplicate detector / auth / secret 台帳突合)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -60,6 +65,24 @@ jobs:
           node scripts/ci/check-shared-layer-duplicates.mjs \
             --json artifacts/duplicate-scan.json \
             --report artifacts/shared-layer-ownership.json
+      # G12: feat-auth-tenancy が追加した 3 つの静的検査 (Auth.js 境界隔離 / 認可判定の単一集約 /
+      # dev 専用 provider の非存在) を束ね役経由で呼ぶ。1 本でも fail すれば非ゼロ終了する。
+      # 依存インストール不要 (node のみ) のため静的ゲート段に置き、最速で落とす。
+      # local 側の同一入口は root の `pnpm check:auth` (ADR §6 R-18 / qa-039【2】)。
+      - name: G12 認証・認可 静的検査 (auth gates 3 種 / qa-020, SEC2, D3)
+        run: |
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:auth-gates
+          node apps/hub/scripts/check-auth-gates.mjs --json artifacts/auth-gates.json
+      # feat-publish-pipeline P08/P09: test が green でも公開経路から secret scan の合成が
+      # 外れたり、Hub が packages/db の schema 内部へ直接依存したりする退行を静的に遮断する。
+      - name: G15 publish pipeline 境界・検査結線ゲート (I2 / qa-006 / owner 境界)
+        run: |
+          node apps/hub/scripts/check-publish-inspection-gate.mjs \
+            --json artifacts/publish-inspection-gate.json
+          node apps/hub/scripts/check-db-schema-boundary.mjs \
+            --json artifacts/publish-db-schema-boundary.json
+      - name: G15 detector 実効性 (意図的な検査 bypass / DB subpath を拒否)
+        run: node apps/hub/scripts/check-publish-boundary-gates.mjs
       - name: detector 実効性の検証 (HF-A4-DUP-002 / 意図的違反を検出できること)
         run: |
           set +e
@@ -70,6 +93,11 @@ jobs:
             echo "detector が意図的違反を検出できていません (ゲートの故障)"; exit 1
           fi
           echo "detector 実効性チェック完了 (exit=$code)"
+      # workflow が要求する secret / variable と台帳 (actions-secrets-registry.json) の乖離を落とす。
+      # 散文の台帳は書いた翌日には腐るので、突合そのものをゲートにする (HarnessHub-fnzl)。
+      # ここでは --live を付けない。実投入状況の確認は gh 認証が要るため runbook §1 2-d の手動運用。
+      - name: Actions secret / variable 台帳の突合
+        run: node scripts/ci/check-actions-secrets.mjs --json artifacts/actions-secrets.json
       - uses: actions/upload-artifact@v4
         with:
           name: static-gate-evidence
@@ -105,6 +133,21 @@ jobs:
         run: pnpm --filter @harness-hub/hub run build:worker
       - name: G4 unit / integration / contract test (Tenant 分離・検査 pipeline 挙動同値を含む)
         run: pnpm -r test
+      # G4 の名指し部分。qa-038【2】は tenant 分離テストを必須ゲートとして名指ししているが、
+      # `pnpm -r test` に含まれているだけでは、ファイル分割や it.skip で 1 件も実行されなくなっても
+      # 緑のまま通る。対象の実在とケースの無効化を静的に確かめてから、名指しで実行する。
+      # ゲート数は増えない (G4 の内訳を明示するだけ) ため qa-038【2】の「8 種」の数え方は変わらない。
+      - name: G4 名指し tenant 分離テスト (SEC3 / D4 row-level-scope / apps/hub)
+        run: |
+          node scripts/ci/check-tenant-isolation-gate.mjs --json artifacts/tenant-isolation-gate.json
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json test:tenant-isolation
+          pnpm --filter @harness-hub/hub run test:tenant-isolation
+      # G4 全体に含まれるだけでは test の移動・skip で契約が無言で消え得る。Google OIDC の
+      # start-flow と「owner は DB role ではなく資源との関係から合成する」認可表を名指しで再実行する。
+      - name: G14 OIDC / owner authorization contract
+        run: |
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json test:auth-release-contract
+          pnpm --filter @harness-hub/hub run test:auth-release-contract
       - name: G6 secret scan (packages/inspection を CI からも呼ぶ / qa-038【2】)
         run: |
           node scripts/ci/check-required-package-script.mjs packages/inspection/package.json scan:secrets
@@ -133,6 +176,13 @@ jobs:
         run: pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/hub run test:a11y
       - name: G5 bundle 予算 (Worker gzip 後 3MiB / A2)
         run: pnpm --filter @harness-hub/hub run check:bundle
+      # G5 が測るのは Cloudflare へ上げる Worker (サーバー側) であって、ブラウザへ配る client JS ではない。
+      # 実測 (HarnessHub-aqi): / の First Load JS が 159 KiB へ膨らみ TBT 926ms を出したとき、
+      # G5 は 0.96MiB / 3MiB で緑のままだった。TBT/INP を守るには client 側の予算が別に要る。
+      - name: G13 client JS 予算 (route ごと First Load JS gzip 後 120KiB / qa-018)
+        run: |
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:client-bundle
+          pnpm --filter @harness-hub/hub run check:client-bundle
       - uses: actions/upload-artifact@v4
         with:
           name: test-evidence
@@ -141,12 +191,14 @@ jobs:
             apps/hub/artifacts/
           if-no-files-found: warn
 
-  # ゲート最終: deploy。static-gates と test の両方が success したときだけ実行される (A1 の "test→deploy 完走")
+  # ゲート最終: deploy。static-gates と test の両方が success したときだけ実行される (A1 の "test→deploy 完走")。
+  # main push が通常経路。workflow_dispatch は docs-only merge などで path filter が発火しなかった場合に、
+  # main の同一 commit を正規 CI 経路で再配備する明示的な再実行経路であり、feature branch では許可しない。
   deploy:
     name: wrangler deploy (Cloudflare Workers)
     runs-on: ubuntu-latest
     needs: [static-gates, test]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     environment: production
     steps:
       - uses: actions/checkout@v4
@@ -157,6 +209,32 @@ jobs:
           cache: pnpm
       - name: install (frozen lockfile)
         run: pnpm install --frozen-lockfile
+      # GitHub Actions は未登録の secret / variable を空文字にする。migration や deploy を始めてから
+      # 欠落へ気付くと、本番を前進させた後に失敗するため、依存する設定を最初に名前だけ検査する。
+      - name: production deploy preflight (required secrets / variables)
+        id: preflight
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_R2_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          HUB_HEALTH_URL: ${{ vars.HUB_HEALTH_URL }}
+          HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
+        run: |
+          set -euo pipefail
+          missing=()
+          for name in \
+            CLOUDFLARE_API_TOKEN CLOUDFLARE_R2_API_TOKEN CLOUDFLARE_ACCOUNT_ID \
+            TURSO_DATABASE_URL TURSO_AUTH_TOKEN HUB_HEALTH_URL HUB_PUBLIC_URL; do
+            if [ -z "${!name:-}" ]; then missing+=("$name"); fi
+          done
+          if [ "${#missing[@]}" -ne 0 ]; then
+            echo "::error::production deploy の必須設定が未登録です: ${missing[*]}"
+            exit 1
+          fi
+          echo "production deploy preflight: required settings are present"
       # qa-038【5】: 常設 staging を置かず、deploy 直前に CI が production Turso へ migration を適用する
       # (手動適用は採らない)。Worker が先に出ると新コードが未作成の表を参照して落ちるため、順序は
       # 「migration → deploy」で固定する。secret 欠落は「適用していないのに成功」を意味するので中止する。
@@ -190,9 +268,18 @@ jobs:
           code=$(curl -s -o /tmp/health.json -w "%{http_code}" "$url")
           echo "health: $code"; cat /tmp/health.json
           [ "$code" = "200" ]
+      # Google 資格情報を CI に保存せず、tenant provider → CSRF → native form POST →
+      # Google authorization redirect (state / nonce / PKCE) までを本番 URL で確認する。
+      - name: 本番 OIDC start-flow smoke (tenant / CSRF / Google redirect)
+        id: oidc_smoke
+        run: |
+          node apps/hub/scripts/smoke-production-oidc.mjs \
+            --origin "$HUB_PUBLIC_URL" --tenant harness-hub
+        env:
+          HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
       # P13 スモークテスト 6 項目 (DB 接続 / ULID PK / releases immutable / R2 put-get /
       # audit hash chain / 日次 export dry-run) を毎デプロイ再実行する。専用テナントは検査後に自動削除される。
-      - name: 本番スモークテスト (P13 受入条件 6 項目)
+      - name: 本番 DB / R2 スモークテスト (P13 受入条件 6 項目)
         id: smoke
         run: |
           pnpm --filter @harness-hub/db exec tsx scripts/smoke-production.ts \
@@ -200,7 +287,7 @@ jobs:
         env:
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       # deploy 以降のいずれかが失敗したときの復旧手順。方針は 3 点:
       #   1. DB は自動で戻さない。migration は expand-only (CREATE TABLE のみ) で、巻き戻すと実データを失う。
@@ -214,13 +301,15 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PREFLIGHT_OUTCOME: ${{ steps.preflight.outcome }}
           MIGRATE_OUTCOME: ${{ steps.migrate.outcome }}
           DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
           HEALTH_OUTCOME: ${{ steps.health.outcome }}
+          OIDC_SMOKE_OUTCOME: ${{ steps.oidc_smoke.outcome }}
           SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
         run: |
           set -euo pipefail
-          echo "migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} smoke=${SMOKE_OUTCOME}"
+          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME}"
           echo "DB migration は expand-only のため自動では巻き戻さない (巻き戻しは実データ喪失を伴う手動判断)"
           if [ "${DEPLOY_OUTCOME}" != "success" ]; then
             echo "wrangler deploy が未成功 (${DEPLOY_OUTCOME}) = 本番は旧 Worker のまま。戻す対象なし"

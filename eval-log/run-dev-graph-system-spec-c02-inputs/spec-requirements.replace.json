@@ -1,0 +1,107 @@
+{
+ "node": {
+  "acceptance": [
+   "正本章が confirmed かつ evaluator PASS",
+   "source_digest が正本と一致"
+  ],
+  "architecture_refs": [],
+  "artifact_kind": "specification",
+  "artifact_subtypes": [],
+  "beads_linkage": null,
+  "classification_candidates": [
+   {
+    "artifact_kind": "specification",
+    "candidate_path": "specs/harness-hub-system-specification.md",
+    "confidence": 0.95
+   }
+  ],
+  "classification_confidence": 0.95,
+  "classification_reason": "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)",
+  "completion_evidence": {
+   "completed_at": null,
+   "evidence_refs": [],
+   "policy": "manual",
+   "reconciled_at": null,
+   "source": null,
+   "status": "not_applicable"
+  },
+  "confirmation_evidence": {
+   "evaluated_digest": "2748f15ad0a98d49f1ecde38e32440cd538a8456dcc5a8af8b75708745983f0b",
+   "evaluator": "assign-system-spec-completeness-evaluator",
+   "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"
+  },
+  "confirmation_status": "confirmed",
+  "created_at": "2026-07-17T00:35:59Z",
+  "depends_on": [],
+  "domain": "platform",
+  "evaluation_status": "pass",
+  "execution_contexts": [],
+  "feature_package_id": null,
+  "file_path": "specs/harness-hub-system-specification.md",
+  "github_project_linkages": [],
+  "github_publication": {
+   "labels": [],
+   "milestone": null,
+   "mode": "local_only",
+   "project_aliases": []
+  },
+  "goal": "全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する",
+  "graph_node_id": "spec-harness-hub-requirements",
+  "implementation_readiness": {
+   "checked_at": "2026-07-17T00:35:59Z",
+   "missing_sections": [],
+   "status": "complete"
+  },
+  "issue_linkage": null,
+  "iteration": null,
+  "owners": [
+   "daishiman"
+  ],
+  "parent_feature": null,
+  "phase_ref": null,
+  "priority": "high",
+  "project_id": "harness-hub",
+  "pull_request_linkages": [],
+  "purpose": "非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する",
+  "related_nodes": [
+   "arch-harness-hub-backend",
+   "arch-harness-hub-data",
+   "arch-harness-hub-dev-workflow",
+   "arch-harness-hub-frontend",
+   "arch-harness-hub-infrastructure",
+   "arch-harness-hub-security",
+   "arch-harness-hub-testing-qa"
+  ],
+  "resource_scope": [
+   "specs/harness-hub-system-specification.md"
+  ],
+  "scope_in": [
+   "system-spec/00-requirements-definition.md",
+   "system-spec/index.md"
+  ],
+  "scope_out": [
+   "正本章の内容複製",
+   "未確定章の取込"
+  ],
+  "source_lineage": {
+   "imported_at": "2026-07-24T12:35:34Z",
+   "origin_kind": "system-spec-harness",
+   "source_digest": "2748f15ad0a98d49f1ecde38e32440cd538a8456dcc5a8af8b75708745983f0b",
+   "source_path": "system-spec/00-requirements-definition.md",
+   "source_plugin": "system-spec-harness",
+   "source_version": "0.1.0"
+  },
+  "start_date": null,
+  "status": "active",
+  "tags": [
+   "system-spec-import",
+   "platform"
+  ],
+  "target_date": null,
+  "template_id": "specification",
+  "template_version": "1.0.0",
+  "title": "Harness Hub システム要件仕様 (system-spec 取込)",
+  "tracker_binding": "none",
+  "updated_at": "2026-07-24T12:35:34Z"
+ }
+}

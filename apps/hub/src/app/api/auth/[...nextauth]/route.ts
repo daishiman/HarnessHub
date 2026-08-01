@@ -2,32 +2,23 @@
  * `/api/auth/*` — Auth.js (NextAuth) のハンドラを載せる結線点 (ADR AD-2 / §10)。
  *
  * **認証不要 path** なので `withAuthz` を通さない (登録簿の exemptions に明示登録済み)。
+ * 認証**前**に到達する経路なので wrapper を掛けられない。実質の統制は OIDC 検証契約 (AD-5) 側にある。
  *
- * 現時点で `next-auth` はワークスペースに入っていない。設定の組み立て
- * (`resolveAuthjsConfig`) と ID token 検証 (`verifyOidcIdToken`) は実装済みで単体テストもあるが、
- * 依存導入・session claims bridge・動的 tenant config の route 結線が未了 (HarnessHub-b7ng)。
+ * この file は結線だけを持つ。実処理は `lib/auth/adapter/authjs-handler.ts` にあり、
+ * `@auth/core` への依存はその adapter 境界の内側だけに閉じている
+ * (`scripts/check-auth-adapter-boundary.mjs` の T-BND-01 / T-BND-02)。
+ * ここから見えるのは `(Request) => Promise<Response>` だけ。
  *
- * ここを「それらしく動く自前の OIDC ハンドラ」で埋めない。埋めると
- *   - Auth.js の PKCE/state/nonce 実装を使わない別経路が生まれ、AD-2 の境界が崩れる
- *   - 未了が 200 応答で隠れる
- * ため、501 を返して未結線であることを明示する。
+ * URL は `/api/auth/{tenant_slug}/{action}` の形。テナントを path で運ぶので、
+ * IdP へ飛んで戻ってくる間もテナントが URL に残る (cookie へ退避する追加状態を持たない / AD-5)。
  */
 
-const NOT_WIRED = {
-  error: 'auth_provider_not_wired',
-  error_description:
-    'Auth.js (next-auth) が未導入のため /api/auth ハンドラは未結線です。' +
-    'テナント別 OIDC の設定生成と ID token 検証は lib/auth 側に実装済みです。',
-} as const;
+import { authRuntime } from '../../../../lib/authz/index.js';
 
-function notWired(): Response {
-  return Response.json(NOT_WIRED, { status: 501, headers: { 'cache-control': 'no-store' } });
+export async function GET(request: Request): Promise<Response> {
+  return authRuntime().authRoute(request);
 }
 
-export async function GET(): Promise<Response> {
-  return notWired();
-}
-
-export async function POST(): Promise<Response> {
-  return notWired();
+export async function POST(request: Request): Promise<Response> {
+  return authRuntime().authRoute(request);
 }

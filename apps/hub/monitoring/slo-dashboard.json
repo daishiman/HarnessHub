@@ -1,0 +1,55 @@
+{
+  "$comment": "可用性 SLO の機械可読な運用契約。専用の有料ダッシュボードは追加せず、Better Stack status page と Cloudflare Workers Analytics を組み合わせる。",
+  "schema_version": "1.0",
+  "slo": {
+    "availability_target_monthly": 0.995,
+    "window": "calendar_month",
+    "allowed_downtime_30_day_seconds": 12960,
+    "measurement_interval_seconds": 180,
+    "minimum_observation_days_for_final_verdict": 30,
+    "calculation": {
+      "external_availability_source": "better-stack:hub-health",
+      "application_error_source": "cloudflare-workers:harness-hub",
+      "formula": "1 - min(1, external_downtime_seconds / window_seconds + worker_5xx_requests / worker_requests)"
+    }
+  },
+  "error_budget_policy": [
+    {
+      "consumed_ratio": 0.7,
+      "action": "warn_and_prioritize_reliability"
+    },
+    {
+      "consumed_ratio": 1,
+      "action": "freeze_public_feature_changes"
+    }
+  ],
+  "panels": [
+    {
+      "id": "availability-timeline",
+      "source": "better-stack-status-page",
+      "config_ref": "apps/hub/monitoring/better-stack.monitors.json",
+      "provides": [
+        "monthly_availability",
+        "downtime_timeline",
+        "cron_heartbeat_status"
+      ]
+    },
+    {
+      "id": "workers-analytics",
+      "source": "cloudflare-workers-analytics",
+      "worker": "harness-hub",
+      "provides": [
+        "5xx_rate",
+        "p95_latency",
+        "request_count"
+      ]
+    }
+  ],
+  "verdict": {
+    "status": "collection_blocked",
+    "observation_started_at": null,
+    "first_monthly_verdict_due_at": null,
+    "blocker": "better-stack-monitor-paused",
+    "$comment": "2026-07-27T21:38:14Z に公開 status page で resource=not_monitored を確認。Better Stack 公式仕様上、これは underlying monitor が paused の状態を意味する。適用器を再実行して paused:false へ PATCH し、resource=operational を確認した時点を 30 日観測の開始にする。"
+  }
+}

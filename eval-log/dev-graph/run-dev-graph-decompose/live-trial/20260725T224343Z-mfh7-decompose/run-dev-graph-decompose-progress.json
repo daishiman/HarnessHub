@@ -1,0 +1,37 @@
+{
+  "checklist": [
+    {
+      "item": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+      "status": "PASS",
+      "evidence": "graph.acyclic=true, graph.task_count=0, graph.feature_count=2, graph.architecture_count=1"
+    },
+    {
+      "item": "draft/unconfirmed/evaluation非pass/readiness非complete の tracker publication が0件である",
+      "status": "PASS",
+      "evidence": "publication.draft_candidates: beads=0, github=0, none=0"
+    },
+    {
+      "item": "各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす",
+      "status": "N/A",
+      "evidence": "dry-run かつ binding=none のためpackage投影は対象外"
+    },
+    {
+      "item": "C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である",
+      "status": "PASS",
+      "evidence": "local_state.mutation_suppressed=true (dry-run)"
+    },
+    {
+      "item": "beads/github/none の各 task が単一 projection authority と linkage を持つ",
+      "status": "PASS",
+      "evidence": "mutation_suppression: beads=true, github_issue=true, github_projects=true"
+    },
+    {
+      "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "PASS",
+      "evidence": "derived_write_counts: local=0, beads=0, github_issue=0, github_projects=0"
+    }
+  ],
+  "overall": "PASS",
+  "audit_pass": true,
+  "provenance_valid": true
+}

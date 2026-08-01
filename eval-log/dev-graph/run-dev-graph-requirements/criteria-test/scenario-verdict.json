@@ -7,7 +7,7 @@
     "skill_md_sha256": "6d2058664b908138d4349663bcd0b0f0aaeba4d50dfe5f3f3fddbdd20ddaa653"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-evaluator-session-f7ee2ed8-20260725T011928Z-requirements-wt5",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729; OUT1 refresh=fresh-agent-eval_c02_live_trial",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T011928Z-requirements-wt5/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260730T045000Z-wt13-ci-requirements-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T011928Z-requirements-wt5/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T011928Z-requirements-wt5/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260725T011928Z-requirements-wt5/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260730T045000Z-wt13-ci-requirements-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260730T045000Z-wt13-ci-requirements-r2/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260730T045000Z-wt13-ci-requirements-r2/independent-verification.json"
       ],
-      "observed": "2026-07-25 再実走 (run 20260725T011928Z-requirements-wt5, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0/stall=0, Skill ツール起動が最初かつ唯一の実行アクションで script 直叩き代替なし)。再実走理由: system-dev-planner の C12 contract versioning (validate-system-plan.py の 601→401 行分割 + validate-task-spec-contract.py / validate-json-schema-subset.py 追加) が本 skill の宣言済み挙動閉包 (dependency plugin の scripts tree) に含まれるため旧 verdict (wt1r3) が stale 化した。本 skill の C04 受入条件は SKILL.md:52 で validate-system-plan.py を名指ししており、閉包に含まれるのは過剰検出ではなく意味的に正当。SKILL.md 自体は不変 (sha 6d205866… 一致) で、閉包 digest のみ 9c8a4673… → 487cd9c7… へ更新。fixture は committed な決定論 builder (plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py --kind requirements) で再生成し、repository_id は build 時に git common dir realpath から実測 (local:sha256:9c47ebcd…, head_sha 60c6347e…)。既知の故障モード (fixture が改修後 contract に対し stale) を先回りで排除するため、boot 前に改修版 validate-system-plan.py を --staging system-plan/F-LIVE-001 で実行し status=pass / contract_version=1.1.0 / exemption=False / violations=0 を確認済み。orchestrator と別個体の fresh evaluator (独立 claude session f7ee2ed8, read-only) の判定は blocker 0 で PASS: exact-13 package に対する handoff が kind=capability-build-handoff / handoff_target=capability-build/task-graph / execution_tasks 13 件 (SYS-LIVE-001-P01..P13) で emit されている。feature 束縛は feature_id=F-LIVE-001 が package と一致し、source_feature_digest sha256:9ea5885… を feature-context.json の実バイトから、source_lineage.source_digest sha256:13510cc3… を要件定義章の実バイトから evaluator が独自再計算して完全一致を確認 (digest 束縛の維持)。実装ソース生成は 0 件 — fixture の git status --porcelain は ?? eval-log/ のみ、eval-log 配下 6 ファイルは readiness-matrix / requirements-document / requirements-handoff / goal-spec / intermediate / progress の metadata のみで .ts/.js/.py 等の実装コードなし、handoff 自身も implementation_code_generated=false。goal-seek 3 点セットは 3 ファイルすべて実在、intermediate.jsonl はちょうど 2 行の append-only で、evaluator が goal-spec の original_goal から UTF-8 SHA-256 を独自再計算した値が両行の original_goal_hash と一致 (04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96)。機械 gate 側も missing_goal_seek_artifacts=[] / goal_seek_evidence_violations=[] / invoked_skills=['dev-graph:run-dev-graph-requirements'] / downgrade_reason=null。out/ 配下は status.json 1 件のみ。skill_dir_tree_sha 487cd9c7… が現行 closure と一致。"
+      "observed": "2026-07-30 fresh live trial (20260730T045000Z-wt13-ci-requirements-r2) は overall=PASS、nudge=0、gate=0、poll_exit=DONE。確定済み system-spec digest を specification と architecture が共有し、ready handoff の source-lineage 閉包を確認した。 外部独立 evaluator fresh-agent-eval_c02_live_trial は blockers=[] で PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

@@ -89,7 +89,7 @@ test_root: apps/hub/tests/auth-tenancy/
 | `T-DEV-01` | 単体 | `device_code` 発行 | 平文返却 + **保存は SHA-256** |
 | `T-DEV-02` | 単体 | `user_code` 8 文字 / Crockford Base32 (`0-9A-HJKMNP-TV-Z`) | 混同しやすい `I/L/O/U` を含まない |
 | `T-DEV-03` | 単体 | 未承認 polling | `authorization_pending` |
-| `T-DEV-04` | 単体 | `interval` 未満での連続 polling | `slow_down` + interval が +5 秒 (上限 60 秒。間隔を守った polling では −5 秒、下限 5 秒。ADR 実装追補 §10.7) |
+| `T-DEV-04` | 単体 | `interval` 未満での連続 polling | `slow_down` + interval が +5 秒 (上限 60 秒。間隔を守った polling では −5 秒、下限 5 秒。security-spec §2.2 = `qa-073` 確定) |
 | `T-DEV-05` | 単体 | TTL 10 分超過 | `expired_token` |
 | `T-DEV-06` | 単体 | `user_code` 照合失敗 5 回 | `denied` へ遷移 |
 | `T-DEV-07` | 単体 | 承認済み `user_code` の再利用 | 拒否 (照合後即失効) |
@@ -146,7 +146,7 @@ test_root: apps/hub/tests/auth-tenancy/
 |---|---|---|---|
 | `T-SESS-01` | 単体 | 数値契約: maxAge 8h / updateAge 15 分 / access 15 分 / refresh 90 日 / device TTL 10 分 / interval 5 秒 / backoff 5 秒 / interval 上限 60 秒 / user_code 8 文字 / 試行 5 回 / 失効キャッシュ TTL 60 秒 | **リテラル期待値**と一致 |
 | `T-SESS-02` | 単体 | cookie 名 `__Host-harness-hub.session` と属性 `HttpOnly`/`Secure`/`SameSite=Lax`/`Path=/` | 一致 |
-| `T-SESS-03` | 単体 | claims が `sub`/`tenant_id`/`role`/`status`/`iat`/`exp` を持つ | 一致 |
+| `T-SESS-03` | 単体 | claims が `sub`/`tenant_id`/`role`/`status`/`workspace_ids`/`iat`/`exp` を持つ (qa-072 確定の 7 種) | 一致 |
 | `T-SESS-04` | 単体 | **緊急失効**: `iat < revoked_at` の JWT | `revoked_session` で拒否 |
 | `T-SESS-05` | 単体 | `iat >= revoked_at` の JWT | 通過 |
 | `T-SESS-06` | 単体 | 失効情報はテナント単位で分離 (A の失効が B に波及しない) | B は通過 |

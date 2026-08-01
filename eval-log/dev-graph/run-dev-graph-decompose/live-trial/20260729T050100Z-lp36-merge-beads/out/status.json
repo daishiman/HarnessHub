@@ -1,0 +1,1 @@
+{"status":"ERROR","scenario":"C14-OUT1-positive-macro-decomposition-r7","binding":"beads","reason":"Task subagent stalled after a missing shell snapshot and the tmux session disappeared before graph generation"}

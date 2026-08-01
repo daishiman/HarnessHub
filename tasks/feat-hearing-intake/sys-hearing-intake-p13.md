@@ -12,7 +12,7 @@ iteration: null
 title: "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-19T14:14:59Z"
+updated_at: "2026-07-26T01:39:34.074446Z"
 status: "active"
 depends_on: ["SYS-HEARING-INTAKE-P12"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,12 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hearing-intake` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## P13 実行追補 (2026-08-01)
+
+- PR #623 の docs-only main merge は `ci.yml` の `on.push.paths` 対象外で、production deploy run が発火しなかった。
+- main の `workflow_dispatch` も deploy job の event 条件で skip されたため、P13 の「CI が本番反映を再実行」を
+  再現可能にする最小差分として、main の push または明示 dispatch だけを deploy 対象にする。
+- dispatch でも `needs: [static-gates, test]`、migration、health、OIDC / DB-R2 smoke、rollback を維持する。
+- この追補は user 指示で拡張された P13 scope とし、仕様反映先・実測 run・最終完了証跡は
+  `docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md` と `release-notes.md` に集約する。

@@ -11,6 +11,7 @@ import * as catalog from './core/catalog';
 import * as identity from './core/identity';
 import * as publish from './core/publish';
 import * as security from './core/security';
+import * as hearingIntake from './hearing-intake/schema';
 
 export * from './core/catalog';
 export * from './core/identity';
@@ -19,9 +20,9 @@ export * from './core/scope';
 export * from './core/security';
 
 // --- studio extensions (re-export のみ。各 feature が自身の write_scope から追加する) ---
-// 例: export * from './hearing-intake/schema';
+export * from './hearing-intake/schema';
 
-/** コアドメイン 18 テーブルの一覧 (export・分離テスト・網羅チェックが共用する単一ソース)。 */
+/** コアドメイン 19 テーブルの一覧 (export・分離テスト・網羅チェックが共用する単一ソース)。 */
 export const coreTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
   Object.fromEntries(
     [
@@ -29,6 +30,7 @@ export const coreTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
       identity.idpConnections,
       identity.workspaces,
       identity.users,
+      identity.userWorkspaces,
       identity.userSettings,
       catalog.projects,
       catalog.targetChannels,
@@ -46,3 +48,21 @@ export const coreTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
     ].map((table) => [getTableName(table), table]),
   ),
 );
+
+/** Studio extension の一覧。core の 19 件とは分け、全体検査では allTables を使う。 */
+export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
+  Object.fromEntries(
+    [
+      hearingIntake.hearingSheets,
+      hearingIntake.aiJobs,
+      hearingIntake.displayCodeCounters,
+      hearingIntake.tenantCoefficients,
+    ].map((table) => [getTableName(table), table]),
+  ),
+);
+
+/** migration / tenant 分離ゲートが参照する全テーブルの単一ソース。 */
+export const allTables: Readonly<Record<string, SQLiteTable>> = Object.freeze({
+  ...coreTables,
+  ...studioTables,
+});

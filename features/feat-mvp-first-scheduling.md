@@ -12,8 +12,8 @@ iteration: null
 title: "タスク優先度選定の MVP ファースト化 (目的・背景・MVP 3軸)"
 owners: ["daishiman"]
 created_at: "2026-07-23T05:00:00Z"
-updated_at: "2026-07-23T09:50:00Z"
-status: "active"
+updated_at: "2026-07-24T08:48:38Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement"]
 resource_scope: ["features/feat-mvp-first-scheduling.md"]

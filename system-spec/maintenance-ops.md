@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-058 |
+| Web (web) | 確定 | 確定質疑: qa-107 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,11 +24,19 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-058 (対応セル: web)
+### qa-107 (対応セル: web)
 
-**質問**: 構築優先順位 P0-P5 に伴う監視・運用の段階的有効化 (docs/infrastructure-spec.md §13・docs/shared-layers.md の 2026-07-18 追記) を保守運用仕様へ反映するか。
+**質問**: 公開パイプラインの runbook、rollback、完了収束を maintenance-ops.web の既存契約へどう統合しますか?
 
-**回答**: 監視・運用ジョブは必要 phase で段階的に有効化する: P1 で AiJob キュー滞留監視 (qa-027 の監視対象) と生成完了通知、P2 で orphan 通知 (承認 queue UI は P5 でも監査記録は P2 から有効)、P4 で metrics rollup cron・Turso 使用量監視・週次通知、P5 で dashboard/承認/監査 UI 向け route の外形確認。P0 時点では metrics rollup・週次サマリー・dashboard monitor を有効化しない。AI 処理主体の表記は D5 確定 (pull 型 = Claude Code セッション消費・サーバ側 AI 課金なし) へ統一 (旧「D5 候補」表記の解消)。既確定の監視・バックアップ・運用手順 (qa-027 ほか) は不変で有効化タイミングだけを追加確定。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 までの maintenance-ops.web 契約を全面維持し、publish 運用を追加確定する。
+
+【1. runbook】事前条件、短命 Publisher token、使い捨て Project/TargetChannel、S1〜S6、TargetChannel 409、R2 hash、audit chain、後処理を一つの runbook で再現する。smoke は途中失敗を成功扱いにせず、作成した一時 token を失効する。
+
+【2. rollback】Worker code 障害は記録済み直前 version へ 100% rollback し、rollback 中は既知の認証制約を明示して Publisher API を一時停止扱いにする。Release、R2 object、監査 event は immutable/append-only の履歴として保持し、DB を巻き戻して証跡を消さない。
+
+【3. 観測と証跡】health dependency、bundle size、test/gate 件数、Worker version、stable Release、audit chain event 数、R2 content hash を release record へ記録する。確認していない再実行を実測済みと書かず、ローカル契約検証と本番実測を分離する。
+
+【4. 完了収束】実装・本番 acceptance が完了しても、Draft PR の merge と default branch reconciliation までは Beads P01〜P13 と親 epic を in_progress に維持する。merge 後に dev-graph、Beads、default branch を正規 sync して完了へ収束する。
 
 ### qa-044 (対応セル: desktop-windows, desktop-macos)
 

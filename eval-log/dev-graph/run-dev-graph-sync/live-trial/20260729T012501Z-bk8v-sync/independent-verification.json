@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T01:49:47Z",
+  "evaluator": "fresh-agent/eval_bk8v_sync",
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json",
+    "../../../live-trial-fixtures/bk8v-sync/eval-log"
+  ]
+}

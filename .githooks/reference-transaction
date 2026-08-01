@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+# reference-transaction: 他ワークツリーが checkout 中の ref への直接更新を遮断する。
+#
+# git 2.28+ の hook。引数に transaction の状態 (prepared/committed/aborted)、
+# stdin に "<old-oid> <new-oid> <ref>" 行群が渡る。prepared で非 0 終了すると
+# transaction 全体が中止される。
+#
+# 本ファイルは git common dir の共有 hook bundle へコピーされる tracked template。
+#
+# beads は本 hook を生成しないため委譲は行わない。また stdin をガードが消費するため、
+# 委譲すると beads 側が空の stdin を読むことになる (validate-git-hooks-wiring.py の
+# HOOKS 定義で delegate=False としている理由)。
+set -u
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+HOOKS_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+LIB="$HOOKS_DIR/lib"
+[ -d "$LIB" ] || exit 0
+
+exec sh "$LIB/run-repo-guards.sh" reference-transaction "$@"

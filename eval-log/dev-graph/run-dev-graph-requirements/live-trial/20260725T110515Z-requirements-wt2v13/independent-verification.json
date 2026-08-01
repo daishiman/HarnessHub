@@ -1,0 +1,37 @@
+{
+  "fixture": "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260725-054631-wt-2/eval-log/dev-graph/live-trial-fixtures/requirements-wt2-v13",
+  "scenario_id": "C04-OUT1-positive-ready-handoff",
+  "checks": [
+    {
+      "name": "exact_13_tasks_bound_to_single_feature_and_package",
+      "pass": true,
+      "detail": "tasks=13 parents=['F-LIVE-001'] packages=['feature-package/F-LIVE-001'] phases_ok=True"
+    },
+    {
+      "name": "handoff_series_are_13_and_resolve_to_real_specs",
+      "pass": true,
+      "detail": "node_ids=13 unresolved=[] spec_files=13 digest_match=True"
+    },
+    {
+      "name": "source_digest_binds_to_actual_system_spec_bytes",
+      "pass": true,
+      "detail": "actual=13510cc39db4dfd2 declared=13510cc39db4dfd2"
+    },
+    {
+      "name": "no_implementation_source_generated",
+      "pass": true,
+      "detail": "non_doc_files=[] declared=0"
+    },
+    {
+      "name": "package_digest_binds_to_actual_bytes",
+      "pass": true,
+      "detail": "files=17 mismatched=[] recomputed=sha256:4d90375b612b13df declared=sha256:4d90375b612b13df"
+    },
+    {
+      "name": "goal_seek_evidence_valid",
+      "pass": true,
+      "detail": "rows=2 violations=[]"
+    }
+  ],
+  "all_pass": true
+}

@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-19T14:10:09Z"
+updated_at: "2026-07-30T04:40:19Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db"]
 related_nodes: []
@@ -79,6 +79,71 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - テナント越境アクセスが分離テストで 0 件
 - Device Flow の E2E (承認→token→失効) が成功する
 - Auth.js 依存が adapter 境界に隔離されている (D3 caveat)
+
+## 実装反映 (2026-07-26 / HarnessHub-b7ng)
+
+- 501 placeholder を実 Auth.js route へ置換し、テナント別 OIDC 設定と SessionClaims JWT を橋渡しした。
+- AuthPorts を `packages/db` へ結線し、Device Flow / refresh rotation / revocation を永続化した。
+- token の一回性、同時失敗 5 回、別 tenant の同一 Workspace 所属 ID を実 DB の並行テストで確認した。
+- 未認証 POST を stream のまま処理し、Workers の要求間では DB write の Promise 待ち行列を共有しない。
+- 詳細は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) と [最終レビュー記録](../docs/features/feat-auth-tenancy/final-review-record.md) を参照する。
+
+## 実装反映 (2026-07-27 / HarnessHub-v22l)
+
+- refresh rotation の CAS（compare-and-swap＝比較して一致した場合だけ更新する
+  排他制御）敗北、すなわち同時提示された refresh token のうち勝者以外の枝を、
+  監査 action `token.refresh_race` として記録するようにした。
+- `token.reuse_detected`（失効済み token の再提示という確定的な窃取シグナル）
+  とは意味を分け、昇格・合流させない。
+- 外部契約（`invalid_grant` 応答）と DB schema は無変更で、内部観測性のみを
+  追加した。仕様反映は不要と判断した（判断理由は
+  [仕様反映受領書 §9](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md)
+  を参照）。
+- 詳細は [runbook §2.5.1](../docs/features/feat-auth-tenancy/runbook.md) を参照する。
+
+## 実装反映 (2026-07-28 / リリース前レビュー)
+
+- テナント別サインイン画面を、確定済みの Auth.js path
+  `/api/auth/{tenant_slug}/signin/tenant-oidc` へ接続した。
+- `AUTH_DEVICE_VERIFICATION_URI` の現行配備先 `/device` に、
+  確認コード入力・Workspace 選択・状態別エラー表示を持つ承認画面を追加した。
+- `/device` の表示時にも session 緊急失効を確認し、承認 API は既存の
+  `withAuthz` による認証・認可を維持する。
+- この時点では API・DB・role・数値・信頼境界の新しい仕様判断はなく、既存契約への実装接地と
+  判定した。判断根拠と検証は
+  [仕様反映受領書 §10](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md)
+  を参照する。
+- この時点では本番設定・OIDC 登録・デプロイ・スモークは未実施だった。後続結果は次節を正とする。
+
+## 実装・本番反映 (2026-07-30 / SYS-AUTH-TENANCY-P13)
+
+- 現行 production rollout は Google OIDC と HarnessHub (`tenant_slug=harness-hub`)
+  1テナントへ限定した。製品の複数テナント分離契約と回帰試験は維持する。
+- Google OAuth client secret は1Passwordを運用上の受渡し元とし、repository経由で
+  `idp_connections.client_secret_enc`へ暗号化した。Workerは共通`ENCRYPTION_KEK`で復号し、
+  GitHub Secretsやテナント別Worker Secretには保存しない。
+- サインイン画面はtenant別CSRF endpointからcookie/tokenを揃えた後、native form navigationで
+  Auth.jsとGoogleへ遷移する。取得失敗時は外部送信せず再試行可能なエラーを表示する。
+- 本番でlogin/JIT、role 4種、Device Flow、refresh再利用検知、session緊急失効までR1〜R5を完了した。
+- 仕様正本は`system-spec`の`qa-097`〜`qa-099`へR4 reopen経由で反映した。設計・検証の対応は
+  [P13仕様反映受領書](../docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md)を参照する。
+- 本変更のdraft PRがdefault branchへmergeされるまでは、task completion policyによりP13を
+  `in_progress`のまま維持する。
+
+## main反映後のrelease gate追補 (2026-07-30)
+
+- PR #612はmainへmerge済み。mainの自動deployはDB検査S1〜S3を通過後、
+  GitHub repositoryにR2専用tokenが未登録だったためS4で失敗し、自動rollbackは成功した。
+- 同じ欠落を本番変更前に止めるdeploy preflightと、tenant/CSRF/Google
+  state・nonce・PKCEを確認するOIDC start-flow smokeを追加した。
+- 既存のowner関係role、非owner拒否、cross-tenant拒否をOIDC契約と一緒に
+  G14の名前付きrelease gateとして再実行する。
+- 製品仕様やroleモデルは変更せず、`qa-091` / `qa-097` / `qa-099`の実装接地である。
+  判断理由は
+  [post-merge仕様影響受領書](../docs/features/feat-auth-tenancy/p13-postmerge-auth-gate-spec-receipt.md)
+  を正とする。
+- Cloudflare所有者による最小権限R2 token発行、GitHub secret投入、main run完走までは
+  `HarnessHub-15h.13` / `HarnessHub-bda4`を`in_progress`で維持する。
 
 ## アーキテクチャ参照
 

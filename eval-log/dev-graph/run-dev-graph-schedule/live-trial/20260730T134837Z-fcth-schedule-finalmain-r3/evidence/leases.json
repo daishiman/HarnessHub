@@ -1,0 +1,22 @@
+{
+  "leases": [
+    {
+      "expires_at": "2099-01-01T00:00:00+00:00",
+      "graph_node_id": "LT-SCHED-004",
+      "resource_scope": [
+        "src/gamma.py"
+      ],
+      "state": "in_progress",
+      "worktree": ".worktrees/lt-sched-004"
+    },
+    {
+      "expires_at": "2020-01-01T00:00:00+00:00",
+      "graph_node_id": "LT-SCHED-006",
+      "resource_scope": [
+        "src/delta.py"
+      ],
+      "state": "claimed",
+      "worktree": ".worktrees/lt-sched-006"
+    }
+  ]
+}

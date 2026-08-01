@@ -12,7 +12,7 @@ iteration: null
 title: "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:12:28Z"
-updated_at: "2026-07-19T14:12:28Z"
+updated_at: "2026-07-26T01:19:20.811908Z"
 status: "active"
 depends_on: ["SYS-DOMAIN-MODEL-DB-P12"]
 related_nodes: ["feat-domain-model-db","arch-harness-hub-data","arch-harness-hub-backend"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-25T16:06:25Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,15 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-domain-model-db` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 追補実行記録 (2026-07-26)
+
+- `HarnessHub-0yvi`: runbook 記載の export → restore をそのまま実走する regression test を追加し、JSONL の単一復元経路へ同期した。
+- `HarnessHub-fnzl`: backup を restore CLI と同じ JSONL 形式へ変更し、Actions 設定台帳と CI 突合を追加した。本番 smoke の Wrangler 起動は Hub workspace 経由へ固定した。
+- local の focused test と task package 検証後も、更新版 backup と main deploy の GitHub Actions 実走までは completion を `in_progress` / `blocked` のまま維持する。
+
+## 接続復旧の追補実行記録 (2026-07-30 / `HarnessHub-njkm`)
+
+- P13 後に見つかった process-local libSQL の残余リスクを接続層で閉じた。`SQLITE_BUSY` 後は poisoned 接続を fail-fast させ、`TursoAdapter.reconnect()` で raw client を明示再生成する。
+- published task spec と package digest は変更せず、本 projection に実行結果だけを追記する。再検証は `validate-system-plan.py --feature-package feature-package/feat-domain-model-db` を使う。
+- fake Client の状態遷移に加え、別プロセスの実 write lock を使った回帰テストを必須証跡とする。PR merge まで Beads `HarnessHub-njkm` は `in_progress` を維持する。

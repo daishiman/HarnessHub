@@ -15,6 +15,10 @@ architecture_refs: [arch-harness-hub-security, arch-harness-hub-backend]
 
 > **構築順オーバーレイ (baseline 外)**: **P0・最初の業務機能**。SSO、tenant scope、role/deny-by-default、共通 route/API guard を完成させ、P1 以降の全画面へ先に適用する。管理 UI が後段でも認可は後回しにしない。優先順位の正本は [system-design-overview.md](../../system-design-overview.md) §3、全 feature の逆引きは [README.md](../README.md)。
 
+> **P13 production rollout オーバーレイ (baseline 外)**: 現行の本番対象はGoogle OIDC /
+> HarnessHub 1テナントである。これはP01の製品ベースラインや将来のprovider拡張を改変せず、
+> 今回の外部受入範囲だけを定める。正本は`system-spec/auth.md`の`qa-097`を参照する。
+
 ## 1. 目的 (purpose)
 
 テナント別 OIDC (Auth.js) と role 4 種、全 API への Tenant/Workspace スコープ強制 (D4 row-level-scope)、Publisher 向け OAuth Device Flow を確立する

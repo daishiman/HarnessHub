@@ -1,21 +1,21 @@
 {
  "schema": "run-dev-graph-decompose/goal-spec/1.0.0",
- "recorded_at": "2026-07-22T10:30:00Z",
- "original_goal": "小さなタスクを積み上げて仕組みにし、二重ループを目的・背景・ゴールで回し、載せる情報と参照する情報、仕組みとナレッジを分離して育てる",
+ "recorded_at": "2026-07-24T20:58:52Z",
+ "original_goal": "自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起動または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects、binding=noneはローカルのみへ冪等投影した状態になっている",
  "arguments": {
-  "want": "qa-071 確定 8 要件 (macro-structure/exact-13/outer-loop/inner-loop/scope-separation/information-placement/write-back/preservation) を macro feature/architecture/機能間依存へ分解し、既存 feat-dev-pipeline-improvement / feat-doc-governance-portability との冪等収束",
-  "input_source": "system-spec/dev-workflow.md#qa-071 + git diff HEAD",
-  "granularity": "feature 単位（P01..P13 task 細分解は system-dev-planner へ委譲）",
-  "dependency_policy": "既存 graph の depends_on を突き合わせて冪等収束（graph_node_id+source_digest 冪等キー、二重登録 0）",
+  "want": "タスク仕様書がテスト戦略 (単体・結合・境界値・回帰の4レベル網羅、カバレッジ80%目標、層別方針、保守性制約) を必ず持つよう system-dev-planner の task spec テンプレートへ必須セクションとして組み込み、欠落を fail-closed で拒否する仕組みを作る",
+  "input_source": "system-spec/testing-qa.md (confirmed, qa-070/qa-072/qa-073/qa-075 + D8) + arch-harness-hub-testing-qa",
+  "granularity": "feature 単位 macro 1件のみ（P01..P13 task 細分解は system-dev-planner へ委譲）。ユーザー判断で F1 のみ採用、層別テスト方針 (F4) は F1 の scope_in へ内包",
+  "dependency_policy": "既存 graph の feature を突き合わせ、変更対象領域 (plugins/system-dev-planner) が独立で先行依存を持たないため depends_on=[] とし ready 状態で登録。関連は related_nodes で表現 (graph_node_id+source_digest 冪等キー、二重登録 0)",
   "dry_run": false,
   "tracker_binding": "beads (execution_tracker.mode=beads, github.enabled=false)"
  },
  "repo_context": {
   "repo_root": "resolved via C24 resolve-repo-context.py --mode write",
-  "head_sha": "4e60f27f2f9549094ccd9d95f0bbf32f57f72352",
+  "head_sha": "abd46e5ac2e2413235b39d77b1c1912a6fd6f262",
   "branch": null,
   "repository_id": "github:daishiman/HarnessHub",
-  "worktree_id": "wt_c807ad9b04f1ecc0"
+  "worktree_id": "wt_c7ad933de460679c"
  },
  "checklist": [
   {"id": "CL1", "text": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である"},
@@ -23,7 +23,7 @@
   {"id": "CL3", "text": "各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす"},
   {"id": "CL4", "text": "C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である"},
   {"id": "CL5", "text": "beads/github/none の各 task が単一 projection authority と linkage を持つ"},
-  {"id": "CL6", "text": "--dry-run の local/Beads/GitHub/Projects write count が0である（本 run は dry-run 非指定のため既定 PASS 条件を維持）"}
+  {"id": "CL6", "text": "--dry-run の local/Beads/GitHub/Projects write count が0である（本 run は dry-run 非指定だが preview 段は stdin 経路で write 0 を維持）"}
  ],
- "run_note": "2026-07-22 wt-10: qa-071 8 要件を入力にした macro decompose。既存 2 feature (feat-dev-pipeline-improvement / feat-doc-governance-portability) との冪等収束確認。feat-dev-pipeline-improvement に qa-071 タグ追加のみ。新規 feature 不要。"
+ "run_note": "2026-07-24 wt-8: 確定 testing-qa 章を入力にした macro decompose。新規 feature 1件 (feat-task-spec-test-strategy) を draft/pending/incomplete で登録し、tracker 投影は plan verb の evaluator PASS 後まで行わない。F2〜F5 (実行基盤/カバレッジゲート/再現性) は本 run の対象外で後続 run へ繰り延べ。"
 }

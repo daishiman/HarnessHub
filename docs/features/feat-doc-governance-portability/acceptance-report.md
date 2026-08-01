@@ -71,3 +71,11 @@ goal_spec_digest: "sha256:d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f462
 
 なし。4 件すべて PASS。P13 (release) が所有する残項目は「main 反映後の CI 実環境での
 fail-closed 動作の実証」のみ (差し戻しではなく後続 phase の責務)。
+
+## Follow-up: remediation 完了 (2026-07-30)
+
+Beads `HarnessHub-3d8` が既存超過 6 文書の責務分割を完了し、現行 allowlist は
+**0 entries** になった。全対象 Markdown が 300 行以下であり、これは acceptance 1 の
+「縮小のみ許す」方向へ収束した結果である。仕様影響の判断と分割内容は
+[300 行超過文書 remediation 仕様反映受領書](doc-granularity-remediation-spec-reflection-receipt.md)
+を参照する。

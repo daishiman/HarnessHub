@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 運用ドキュメント整備"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
-status: "active"
+updated_at: "2026-07-26T01:19:20.811908Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P11"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-hub-foundation/runbook.md","README.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-24T21:01:55Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,23 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hub-foundation` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 追補実行記録 (2026-07-26)
+
+- foundation runbook の GitHub Actions 設定一覧は `scripts/ci/actions-secrets-registry.json` への案内と投入コマンドだけを保持し、現在の投入状態は `node scripts/ci/check-actions-secrets.mjs --live` で判定する。
+- `HUB_HEALTH_URL` / `HUB_PUBLIC_URL` は variable、Turso / Cloudflare の認証値は secret として区別する。旧 backup 専用の `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は landing 後の削除待ちとして扱う。
+- 新 backup / deploy の remote 実走が終わるまでは `HarnessHub-fnzl` を blocked のまま維持する。
+
+## 追補実行記録 (2026-07-28 / `HarnessHub-vns9`)
+
+- 上記「landing 後の削除待ち」だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除済み。`node scripts/ci/check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件) になり、投入状態と台帳の乖離は解消した。
+- deploy の remote 実走は run `30143422049` で完走済み。**backup の remote 実走だけが未達**で、原因は secret ではなく `backup.yml` の採否判定にあった (データ行 0 を不採用にしており、稼働直後で全 19 テーブル 0 行の本番 DB を 3 夜連続で落としていた)。
+- 是正として採否判定を `packages/db/scripts/verify-export-artifact.ts` へ一本化した。設計境界は [architecture/harness-hub-infrastructure.md](../../architecture/harness-hub-infrastructure.md)、検査内容の詳細正本は [docs/infrastructure-spec.md](../../docs/infrastructure-spec.md) §7 / §10。
+- 3 夜連続の失敗が無音だった観測側の欠落 (`BACKUP_HEARTBEAT_URL` 未投入) は本 task の責務外として `HarnessHub-dbx6` へ分離した。2026-07-29 に同 issue でローカル実装と qa-094 の仕様反映まで完了し、外部適用・main 実走・着信実測は未完了として継続する。
+
+## 追補実行記録 (2026-07-29 / `HarnessHub-dbx6`)
+
+- Worker cron と backup の heartbeat を分離し、backup 専用 `hub-backup-daily` (`period=86400` / `grace=3600`) を設定正本へ追加した。
+- `BACKUP_HEARTBEAT_URL` を required へ昇格し、workflow は未投入を fail-closed で拒否する。heartbeat は全 backup step 成功後だけ送る。
+- Better Stack の backup 資源だけを扱う `--only-backup-heartbeat --put-github-secret` を追加し、別 task の paused health monitor / Worker heartbeat / status page / SLO dashboard を変更しない境界を回帰テストで固定した。
+- 外部適用、GitHub secret 投入、main の成功 run、着信実測は本 branch の landing 後に行うため、`HarnessHub-dbx6` は `in_progress` を維持する。

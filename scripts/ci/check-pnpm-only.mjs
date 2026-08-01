@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // pnpm 混入検査。quality_constraints の pnpm-only-no-npm (system-spec/frontend.md qa-007 / shared-layers §3) を CI ゲート化する。
-// 検出したら非ゼロ終了する fail-closed 実装。test ID: HF-A1-CI-002 / HF-A1-CI-003
+// 検出したら非ゼロ終了する fail-closed 実装。test ID: HF-A1-CI-002 / HF-A1-CI-003 / HF-A1-CI-004
 //
 //   node scripts/ci/check-pnpm-only.mjs [--root <dir>] [--json <path>]
 
@@ -81,6 +81,27 @@ function main() {
     }
   }
 
+  // 3. workspace test の直列実行
+  // 各 package が独自の Vitest worker pool を起動するため、workspace 自体も並列にすると
+  // onTaskUpdate RPC が timeout し、テスト成功後に G4 が偽陽性で失敗する。
+  const workspacePath = join(args.root, 'pnpm-workspace.yaml');
+  if (!existsSync(workspacePath)) {
+    violations.push({
+      kind: 'missing-pnpm-workspace',
+      path: 'pnpm-workspace.yaml',
+      detail: 'pnpm workspace 設定が存在しない',
+    });
+  } else {
+    const workspaceConfig = readFileSync(workspacePath, 'utf8');
+    if (!/^workspaceConcurrency:\s*1(?:\s*#.*)?$/m.test(workspaceConfig)) {
+      violations.push({
+        kind: 'workspace-concurrency-not-serial',
+        path: 'pnpm-workspace.yaml',
+        detail: 'workspaceConcurrency が 1 に固定されていない',
+      });
+    }
+  }
+
   const result = { scanned_root: args.root, violation_count: violations.length, violations };
   if (args.json) {
     mkdirSync(dirname(args.json), { recursive: true });
@@ -88,7 +109,9 @@ function main() {
   }
 
   if (violations.length === 0) {
-    console.log('[pnpm-only] OK: npm/yarn lockfile の混入なし / packageManager は pnpm に pin 済み');
+    console.log(
+      '[pnpm-only] OK: npm/yarn lockfile の混入なし / packageManager は pnpm に pin 済み / workspace 実行は直列',
+    );
     process.exit(0);
   }
   console.error(`[pnpm-only] NG: ${violations.length} 件の違反を検出しました`);

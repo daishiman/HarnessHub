@@ -1,0 +1,47 @@
+{
+  "original_goal_hash": "ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795",
+  "checklist": [
+    {
+      "id": "macro-result-feature-only",
+      "description": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+      "status": "pass",
+      "evidence": "graph.json has 5 nodes: 1 architecture (arch-webapp-001), 4 features. artifact_kind breakdown: architecture=1, feature=4, task=0. DAG is acyclic (DFS verified). No phase_ref, parent_feature, feature_package_id set on any node. No P01..P13 IDs present."
+    },
+    {
+      "id": "draft-tracker-publication-zero",
+      "description": "draft/unconfirmed/evaluation非pass/readiness非complete の tracker publication が0件である",
+      "status": "pass",
+      "evidence": "3 draft features (feat-dashboard-001, feat-notification-001, feat-admin-report-001) have zero issue publications. Zero attribution: draft-gate (suppressed by draft gate, not by binding route absence or schema unreachability)."
+    },
+    {
+      "id": "ready-feature-package",
+      "description": "各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす",
+      "status": "not_applicable",
+      "evidence": "system-dev-planner package generation is not exercised in this macro-only decomposition trial. The trial verifies macro feature/architecture decomposition, not micro task spec generation."
+    },
+    {
+      "id": "c02-local-commit",
+      "description": "C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である",
+      "status": "pass",
+      "evidence": "graph_revision=6. All 5 nodes registered atomically via upsert-node.py. Second Skill call returned all 5 nodes with operation=noop/write_count=0, confirming no duplicates."
+    },
+    {
+      "id": "binding-projection-authority",
+      "description": "beads/github/none の各 task が単一 projection authority と linkage を持つ",
+      "status": "pass",
+      "evidence": "All 5 nodes declare tracker_binding=none. beads_linkage=null, issue_linkage=null, github_project_linkages=[] for all nodes. none binding has no external projection routes (routes=[]), zero_attribution=binding-route-absent. github binding is schema-unreachable: blocking_rules=['schema_violation|$.github_publication.mode: not in enum [issue, issue_and_projects]']."
+    },
+    {
+      "id": "dry-run-write-zero",
+      "description": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "not_applicable",
+      "evidence": "This trial uses --no-dry-run (real write mode, run_mode=apply). The dry-run write-zero criterion is tested by a separate dry-run trial, not this apply-mode trial."
+    },
+    {
+      "id": "github-binding-unreachable",
+      "description": "github binding が schema 規則で宣言不能",
+      "status": "pass",
+      "evidence": "github binding declaration_probes all show declarable=false with blocking_rules=['schema_violation|$.github_publication.mode: not in enum [issue, issue_and_projects]']. All macro-only nodes carry github_publication.mode=local_only, which violates the github tracker_binding schema requirement."
+    }
+  ]
+}

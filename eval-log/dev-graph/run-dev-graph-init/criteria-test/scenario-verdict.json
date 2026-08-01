@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
     "component_id": "C01",
-    "skill_md_sha256": "0381d338b69cee76b5ecb300d84b325a33d67d0b5c77cde4c3ed5d588c68bc5b"
+    "skill_md_sha256": "3b7080713c94b4d81bdf95df07fcada9ec333b745afc74f731e96d7abb5e7abf"
   },
   "verdict": "PASS",
-  "reviewer": "independent-criteria-scenario-reviewer-C01-init-wt9-20260725",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729; OUT1 refresh=fresh-agent-eval_c01_live_trial",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -30,15 +30,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C01-OUT1-positive-idempotence-r17",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260725T014705Z-init-wt9/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260730T033000Z-wt13-ci-init/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260725T014705Z-init-wt9/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260725T014705Z-init-wt9/transcript.jsonl",
-        "plugins/dev-graph/tests/test_skill_criteria_evidence.py::test_positive_live_trial_scenarios_cover_out1_without_eval_log_fixture_coupling",
-        "independent: skill_dir_tree_sha / transcript_sha256 の再計算と verdict 値の突合",
-        "independent: init-wt9 fixture に対する planned-changes 再計算 (read-only)"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260730T033000Z-wt13-ci-init/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260730T033000Z-wt13-ci-init/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260730T033000Z-wt13-ci-init/independent-verification.json"
       ],
-      "observed": "2026-07-25 実走の verdict を独立検証した。live-trial-verdict.schema.json で Draft202012 検証 VALID、tier=live、downgrade_reason=null、actual_model=[claude-opus-4-6]、environment.transcript_layer=jsonl、goal_verdict={PASS,[]}、overall 4 項目すべて PASS。live-trial-verdict.py の skill_dir_tree_sha() を自分で呼び直して bde90f18c9afa9fa3ad7bd0024e5d5caafd9f7b1a2a885e7679e5d41ededd4e2 を得、verdict 記載値と一致 (behavior closure が現行 skill dir と同期)。transcript.jsonl (270 行) の sha256 を再計算して 486d923bd5555777eb592a99953a7f04328f3b3ea94aeb8910928903dac5e171 が一致。transcript を自分で解析し Skill ツール起動が line 52 (pass1) と line 210 (pass2) の 2 回、間の line 178 で template 編集、pass2 側 tool_result (line 228) に \"Planned changes: 0\" を確認。さらにレビュア自身が fixture へ read-only の planned-changes 再計算を行い planned=0 (6 content root + .dev-graph/{config.json,state/graph.json,cache,locks,templates} + template 21 件すべて既存)、graph node 1 件、config.content_roots が issues/tasks/specs/architecture/features/docs+system_spec の routing policy を保持していることを確認した。"
+      "observed": "2026-07-30 fresh live trial (20260730T033000Z-wt13-ci-init) は overall=PASS、nudge=0、gate=0、poll_exit=DONE。同一 fixture への 2 回の init が利用者編集と登録済み node を保持し、2 回目を変更 0 件で完了した。 外部独立 evaluator fresh-agent-eval_c01_live_trial は blockers=[] で PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

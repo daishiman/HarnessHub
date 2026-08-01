@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "lint-orphan-external-ref.py (dev-graph OE-001 / OE-002) の shrink-only ratchet baseline。",
+    "ここに載る external_ref の残置は違反にせず baselined_orphans として可視化のみ行い、",
+    "新規発生だけを fail-closed で遮断する。",
+    "**追記禁止**: 新しい orphan をここへ足して緑化することは ratchet の規律違反であり、",
+    "本 lint の目的『orphan を生み続ける経路を塞ぐ』を無効化する。増やしてはならない。",
+    "変更は縮小方向のみ許可 (処分が済んだら該当行を削除する)。",
+    "棚卸しの owner は HarnessHub-mfh7 / HarnessHub-eshr。",
+    "本ファイルが repo 側 (plugins/ の外) にあるのは qa-070 の仕組み/ナレッジ境界による。",
+    "portable mechanism である plugins/dev-graph/ は repo 固有の node id を保持できないため、",
+    "既知 orphan という repo 固有ナレッジは repo 側データとして入力で受け渡す。",
+    "解消済みの行は lint 出力の resolved_baseline_entries[] に現れる (削除の督促)。",
+    "削除履歴 (2026-07-28): 初版 21 行のうち 15 行は live Dolt DB 側に対応する bd issue が",
+    "存在せず (bd export / bd search いずれも 0 件)、免除する対象が無い空振り行だった。",
+    "空振り行を残すと同じ external_ref が将来再発したとき違反として検出されない穴になるため、",
+    "resolved_baseline_entries[] の督促に従い削除した。残る 6 行は実測で観測された未処分 orphan。",
+    "同じく issue-governance-notion-steps-always-skipped-20260725 は HarnessHub-5u5k の",
+    "close により closed_residue へ移行したため削除済み。",
+    "削除履歴 (2026-07-28 第2回): 残り 6 行も origin/main 統合後の実測で全件が canonical graph",
+    "の実在 node を指すようになり (graph_node_count=370)、resolved_baseline_entries[] へ移行した。",
+    "ratchet は縮小のみ許可のため 6 行とも削除し、baselined_external_refs は空になった。",
+    "空 = 免除ゼロであり、以後の orphan は 1 件でも violation として fail-closed で止まる。",
+    "この状態が本 ratchet の到達目標であり、再び行を足すことは前述の追記禁止に該当する。"
+  ],
+  "baselined_external_refs": []
+}

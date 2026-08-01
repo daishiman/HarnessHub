@@ -1,0 +1,124 @@
+// 書き込み競合の扱い — repository 共通 (HarnessHub-b7ng)。
+// 「プロセス内では直列化して競合させない」+「プロセス外の競合だけ再試行する」の 2 段構え。
+//
+// **なぜ必要か。** 監査 append は hash chain (prev_hash) を繋ぐため read-modify-write を
+// `BEGIN IMMEDIATE` で直列化する (audit.ts / ADR §7)。libSQL はこのトランザクションを
+// **別接続**で開くため (@libsql/client の Sqlite3Client.transaction は保持していた接続を
+// トランザクションへ渡し、以降の素の文には新しい接続を開く)、監査を書いている最中に
+// 別の要求が素の INSERT/UPDATE を出すと書き込みロックが本当に競合し `SQLITE_BUSY` が返る。
+// 監査はほぼ全ての状態変更に付随するので、この競合は「監査を書く経路」と「状態を変える経路」が
+// 並走するたびに起きうる。device flow の並行要求 (同一 device_code / 同一 refresh token) が
+// 認可の判定ではなくドライバのロックで落ちるのがこれ。
+//
+// **なぜ再試行だけでは駄目か (実測)。** libSQL のローカル backend は BUSY で失敗した文を
+// 後片付けしない。`Sqlite3Client.batch()` / `executeMultiple()` には
+// `finally { if (db.inTransaction) ROLLBACK }` があるが、**単発の `execute()` には無い**
+// (@libsql/client/lib-esm/sqlite3.js)。結果その接続は未終了 statement を抱えたまま
+// 「SQL statements in progress」状態で固まり、
+//   - 以降その接続の書き込みは**自分からは見えるが他接続からは見えない** (commit されない)
+//   - 接続が差し替わると丸ごと消える (成功を返したのに行が無い)
+//   - あとから同じ接続で COMMIT すると `SQLITE_BUSY: cannot commit transaction` になる
+//   - `ROLLBACK` では戻らない (`SQLITE_ERROR` = 有効なトランザクションが無い)
+// つまり **BUSY を踏んだ時点で手遅れ**。復旧手段は接続を捨てること (`Client.reconnect()` は
+// 公開 API だが、drizzle は `Client` を内部に隠すので drizzle インスタンスからは届かない)
+// だけである。だから踏ませない方を選ぶ。
+//
+// 再試行を残すのは本番 (Turso remote) 用。remote backend は 1 文が 1 HTTP 要求で接続に状態が
+// 残らないため、サーバ側が返す BUSY は再試行して安全。ローカル backend の BUSY はプロセス外
+// (別プロセスが同じファイルを触る) でしか起きなくなる。
+//
+// **踏んでしまった場合の受け皿 (HarnessHub-njkm)。** 直列化はプロセス内の競合しか消せないので、
+// プロセス外の競合で BUSY を踏む可能性は残る。そこは `connection/recoverable-client.ts` が
+// 引き受ける — ローカル経路で BUSY を踏んだ接続を「毒」として隔離し、以降の read/write を
+// `ConnectionPoisonedError` で止めて、commit されない書き込みを読ませない。復旧は
+// `TursoAdapter.reconnect()`。だから下の再試行と毒隔離は役割が分かれている:
+// 再試行は「まだ壊れていない競合」に、毒隔離は「もう壊れた接続」に対する処置である。
+//
+// SQLite の 1 文はそれ自体が原子的で、`SQLITE_BUSY` は**何も適用されなかった**ことを意味する。
+// だから CAS (`UPDATE ... WHERE <期待値> RETURNING`) を再試行しても二重適用にはならず、
+// 再試行時に WHERE 句が改めて評価される = 先に遷移させた要求がいれば 0 行のまま返る。
+// 「勝者が 1 本」という保証は再試行しても壊れない。
+
+// 判定述語は `src/lock-conflict.ts` にある。connection 層 (毒隔離) も同じ判定を要るので、
+// repository から import させると依存が逆流する。ここは後方互換の窓として re-export に留める。
+export { errorChainText, isConnectionPoisoned, isLockConflict } from '../src/lock-conflict';
+
+import { isLockConflict } from '../src/lock-conflict';
+
+/** 再試行の上限。audit.ts の上限と同じ値に揃えてある (経路ごとに待ち時間の上限を変えない)。 */
+export const CONFLICT_MAX_RETRY = 25;
+
+/** ジッタ付き線形バックオフ。同時到着した writer 同士が同じ間隔で再衝突し続けるのを避ける。 */
+function backoff(attempt: number): Promise<void> {
+  const jitter = Math.floor(Math.random() * 20);
+  return new Promise((resolve) => setTimeout(resolve, attempt * 10 + jitter));
+}
+
+/**
+ * `run` が競合で失敗する間だけ再試行する。既定の述語はロック競合のみ。
+ *
+ * 冪等（べきとう＝何回実行しても結果が同じになる性質）でない操作にも使えるのは、
+ * 再試行するのが「適用されなかったと判っている失敗」に限られるため。
+ */
+export async function retryOnConflict<TResult>(
+  run: () => Promise<TResult>,
+  isRetryable: (error: unknown) => boolean = isLockConflict,
+): Promise<TResult> {
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      return await run();
+    } catch (error) {
+      if (!isRetryable(error) || attempt >= CONFLICT_MAX_RETRY) throw error;
+      await backoff(attempt);
+    }
+  }
+}
+
+/**
+ * ローカル adapter ごとの書き込み待ち行列。**adapter の同一性で引く**ので、同じ adapter から
+ * 作られた repository 群は 1 本の行列を共有し、別 adapter (別 DB / 別テスト) は互いに干渉しない。
+ * WeakMap なので adapter が捨てられれば行列も一緒に消える。
+ *
+ * Workers の request-bound adapter はこの行列へ入れない。module scope の Promise を要求間で
+ * 共有すると、別要求に属する I/O の完了を待つことになり workerd の要求分離に違反するため。
+ */
+const writeQueues = new WeakMap<object, Promise<unknown>>();
+
+/** 待ち行列を「常に解決する Promise」に正規化する。前の書き込みの失敗を後続へ伝播させないため。 */
+function settled(promise: Promise<unknown>): Promise<unknown> {
+  return promise.then(
+    () => undefined,
+    () => undefined,
+  );
+}
+
+/**
+ * ローカル書き込みを **プロセス内で直列化** しつつ、外部要因の競合だけ再試行する。
+ *
+ * SQLite の writer は元々 1 本しか居ない (WAL でも writer は排他)。だから直列化で失う並行性は
+ * 最初から存在せず、代わりに「同一プロセス内で自分の監査トランザクションと衝突して
+ * 接続を壊す」経路が消える。ロックを待って BUSY を食うか、行列に並んで待つかの違いでしかない。
+ *
+ * **再入禁止。** ゲートの中から更にゲートを取る書き込みを呼ぶと自分の完了を待つことになり
+ * 自己デッドロックする。repository の書き込み関数は互いを呼ばないこと
+ * (監査 append はトランザクション内で自分の SQL しか実行しない)。
+ *
+ * `request-bound` (Workers の Turso/D1) は直列化せず、競合再試行だけを行う。要求をまたぐ
+ * Promise 共有を避け、DB 側の排他/CAS に並行制御を委ねるためである。
+ *
+ * `packages/db/repository/` 配下の write (insert/update/delete) は全てこのゲートを経由する
+ * (HarnessHub-mb7c で掃き出し済み)。網羅は `packages/db/scripts/check-db-write-gate.mjs` が静的検査で保証する。
+ */
+export function guardedWrite<TResult>(
+  owner: { readonly writeConcurrencyScope: 'process-local' | 'request-bound' },
+  run: () => Promise<TResult>,
+  isRetryable: (error: unknown) => boolean = isLockConflict,
+): Promise<TResult> {
+  if (owner.writeConcurrencyScope === 'request-bound') {
+    return retryOnConflict(run, isRetryable);
+  }
+  const previous = writeQueues.get(owner) ?? Promise.resolve();
+  const result = previous.then(() => retryOnConflict(run, isRetryable));
+  writeQueues.set(owner, settled(result));
+  return result;
+}

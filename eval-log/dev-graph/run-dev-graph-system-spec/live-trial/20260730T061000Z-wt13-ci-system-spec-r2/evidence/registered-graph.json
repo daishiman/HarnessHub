@@ -1,0 +1,191 @@
+{
+  "graph_revision": 2,
+  "nodes": [
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [
+        "api",
+        "backend",
+        "infrastructure",
+        "data",
+        "security"
+      ],
+      "beads_linkage": null,
+      "body": "## 目的と成功状態\n\nsystem-spec-harness 由来の確定済み要件定義書。U1-U9 上位概念と意思決定 (D1-D3) を含む。\n\n## 出典\n\n- source: system-spec/00-requirements-definition.md\n- evaluator: assign-system-spec-completeness-evaluator (PASS)\n- evidence: system-spec/completeness-report.json",
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/system-requirements.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "system-spec-harness confirmed requirements definition R3-import",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f6607222a1a3433f63744d18a3dec52330823c04283f764b3f601dd93d4fc2c2",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-30T07:00:00Z",
+      "depends_on": [],
+      "domain": "system",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/system-requirements.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "spec-system-requirements",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T07:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "default",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [
+        "specs/system-requirements.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-30T07:00:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "a541d989a8ad3503f1acc2f0f2bc976ea6767a29809024235f42fb8b33747b17",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec-import",
+        "requirements"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "システム構築仕様 — 要件定義書",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-30T07:00:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "data",
+        "infrastructure"
+      ],
+      "beads_linkage": null,
+      "body": "## アーキテクチャ概要\n\nsystem-spec-harness 由来の確定済みデータベースアーキテクチャ章。SQLite (D1) 選定、Clean Architecture / SRE doctrine anchor 適用。\n\n## 出典\n\n- source: system-spec/database.md\n- evaluator: assign-system-spec-completeness-evaluator (PASS)\n- evidence: system-spec/completeness-report.json",
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/system-database.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "system-spec-harness confirmed database architecture chapter R3-import",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f6607222a1a3433f63744d18a3dec52330823c04283f764b3f601dd93d4fc2c2",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-30T07:00:00Z",
+      "depends_on": [
+        "spec-system-requirements"
+      ],
+      "domain": "database",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/system-database.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "arch-system-database",
+      "implementation_readiness": {
+        "checked_at": "2026-07-30T07:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "default",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [
+        "architecture/system-database.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-30T07:00:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "1113425036d4db4eccf1fb4b3d40188e9e7d6f32933ca0294341871b3b3c9fb8",
+        "source_path": "system-spec/database.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec-import",
+        "database",
+        "sqlite"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "システムアーキテクチャ — データベース",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-30T07:00:00Z"
+    }
+  ]
+}

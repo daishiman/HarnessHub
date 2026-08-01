@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+# prepare-commit-msg: beads hook へ委譲する。
+# 共有 hook bundle を core.hooksPath にしたため、beads の hook 連携はこの橋渡しで維持する。
+set -u
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+HOOKS_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+LIB="$HOOKS_DIR/lib"
+[ -d "$LIB" ] || exit 0
+
+exec sh "$LIB/delegate-beads.sh" prepare-commit-msg "$@"

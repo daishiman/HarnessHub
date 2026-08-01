@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T10:52:04Z",
+  "evaluator": "fresh-agent/fresh_c14_pr601_paired_r4_evaluator",
+  "scenario": "C14-OUT1-positive-macro-decomposition-r7",
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json",
+    "evidence/beads-decompose-audit.json",
+    "evidence/none-decompose-audit.json",
+    "evidence/beads-progress.json",
+    "evidence/none-progress.json"
+  ],
+  "observations": {
+    "target_skill_calls": {
+      "beads": 2,
+      "none": 2,
+      "total": 4
+    },
+    "human_nudge_count": 0,
+    "gate_response_count": 0,
+    "final_noop_write_count_zero": {
+      "beads": 5,
+      "none": 5
+    },
+    "artifact_counts_per_run": {
+      "feature": 4,
+      "architecture": 1,
+      "task": 0
+    },
+    "edge_count": 3,
+    "acyclic": true,
+    "max_inter_feature_depends_on": 1,
+    "declared_granularity_max": 3,
+    "draft_feature_count": 3,
+    "publication_candidate_count": 1,
+    "persisted_bindings": [
+      "beads",
+      "none"
+    ],
+    "github_route": "schema-unreachable",
+    "promoted_digest_match": {
+      "beads": true,
+      "none": true
+    },
+    "promoted_digest": {
+      "beads": "e553bbed1239e4006d50c3381fa443a84209571190f24a3fe87fa8293dc5a017",
+      "none": "8ffa7747854c5faf6fabcb0d64a1a17b55c74eae43e5f184ccbcad64c7fe4680"
+    },
+    "negative_controls_all_rejected": {
+      "beads": true,
+      "none": true
+    },
+    "audit_provenance_equal": true,
+    "audit_implementation_sha256": "be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f",
+    "goal_seek_pending_count": 0,
+    "skill_dir_tree_sha": "0467a3057442a5a9a4ad0e1dc8f00eb15d475153ee8486a4dfd9f7458380831b"
+  }
+}

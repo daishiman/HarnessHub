@@ -1,0 +1,70 @@
+       5     "artifact_subtypes": [],
+       6     "title": "直接登録テスト用の機能ノード",
+       7     "project_id": "default",
+       8     "domain": "test",
+       9     "status": "draft",
+      10     "priority": null,
+     … +70 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-002450-wt-6 && python3 plugins/dev-graph/scripts/upsert-node.py --repo-root /Users/dm/dev/dev/個人開発…)
+  ⎿  {
+       "error": "feature must come from the C14 macro contract: source_lineage.origin_kind 'manual' is not one of ['generated', 'system-spec-harness']",
+       "valid": false,
+     … +3 lines (ctrl+o to expand)
+
+⏺ Feature registration was rejected (fail-closed). Now verify graph_revision unchanged and no feature file created.
+
+⏺ Bash(cd /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-002450-wt-6/eval-log/dev-graph/live-trial-fixtures/node-v1yh-wt6 && python3 -c "
+      import json…)
+  ⎿  graph_revision after feature rejection: 7
+     Files in features/:
+     total 0
+     … +3 lines (ctrl+o to expand)
+
+⏺ Stage 3 complete. Verified:
+  - Exit code: 2
+  - Error: "feature must come from the C14 macro contract: source_lineage.origin_kind 'manual' is not one of ['generated', 'system-spec-harness']"
+  - graph_revision unchanged at 7
+  - No files created in features/
+
+  Now write the goal-seek progress and append the second intermediate line, then run the goal-seek verification.
+
+⏺ Write(eval-log/run-dev-graph-node-progress.json)
+  ⎿  Wrote 40 lines to eval-log/run-dev-graph-node-progress.json
+       1 {
+       2   "scenario": "C02-OUT1-positive-mixed-artifacts",
+       3   "checklist": [
+       4     {
+       5       "item": "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+       6       "status": "pass",
+       7       "evidence": "resolve-repo-context.py --mode write succeeded, repo_root matches content_roots.repository"
+       8     },
+       9     {
+      10       "item": "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ",
+     … +30 lines (ctrl+o to expand)
+
+⏺ Now append the second intermediate line (append-only, no overwrite).
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  appended second intermediate line
+
+⏺ Now run the goal-seek verification script.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-002450-wt-6/eval-log/dev-graph/live-trial-fixtures/node-v1yh-wt6" && python3 - "$DEV_…)
+  ⎿  GOAL-SEEK VERIFICATION PASSED: 2 rows, hash=eb23c32406fe579b...
+
+⏺ All verifications pass. Now write the status.json.
+
+⏺ Write(~/dev/dev/個人開発/HarnessHub/.worktrees/task-20260726-002450-wt-6/eval-log/dev-graph/run-dev-graph-node/live-trial/20260726T021147Z-node-v1yh/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-node/live-trial/20260726T021147Z-node-v1yh/out/status.json
+      1 {"status": "PASS", "scenario": "C02-OUT1-positive-mixed-artifacts"}
+
+⏺ DONE: PASS
+
+✻ Churned for 7m 18s
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                                                                           Update available! Run: brew upgrade claude-code

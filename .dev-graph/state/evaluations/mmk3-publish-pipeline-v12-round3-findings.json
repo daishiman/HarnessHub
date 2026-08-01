@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/mmk3-publish-pipeline-v12",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:7595f2f03db216983ef00a58bfd97d7e40661e16241d77abb8255d82469ba7df",
+  "verdict": "FAIL",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "FAIL",
+      "summary": "P08/P09/P13 の scope authority drift は解消したが、TargetChannel 直列化で 409 を返す endpoint が goal/task 群と P13 production runner の間で矛盾する。",
+      "evidence": [
+        "task-specs/phase-08-refactoring-migration.md:52-54,71、phase-09-quality-assurance.md:52-54,71、phase-13-release-deploy.md:52-54,71 は各 phase の Produced artifacts、Write scope/touches、resource_scope を workstream-inventory.json#tasks[].write_scope と同一集合に固定している。",
+        "goal-spec.json#quality_constraints[targetchannel-serialization-single-inflight-publishrequest] は直列化違反を POST /publish で 409 とする。",
+        "task-specs/phase-02-architecture.md:67-71、phase-04-test-design.md:23、phase-05-implementation.md:23、phase-06-test-run.md:23 は2件目の PublishRequest 作成または createPublishRequest() の直列化違反を 409 とする。",
+        "apps/hub/scripts/smoke-production-publish.ts:351-415 は blocker が ready の間も2件目の POST /api/v1/publish を 201 で成功させ、POST /api/v1/publish/:id/submit の 409 channel_busy を合格条件にしている。"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "FAIL",
+      "summary": "exact-13、QA trace、再実行可能な P13 entrypoint は存在するが、宣言した本番 REST 12経路と S3/S6 の必須不変条件を production smoke が漏れなく検証しない。",
+      "evidence": [
+        "feature-package.json と workstream-inventory.json: task_count=13、P01..P13 exact-set。",
+        "task-specs/phase-13-release-deploy.md:89-98 と workstream-inventory.json#tasks[phase_ref=P13].verification は pnpm --filter hub run smoke:publish-production を fail-closed production entrypoint として指定する。",
+        "apps/hub/package.json#scripts/smoke:publish-production は tsx scripts/smoke-production-publish.ts に解決し、pnpm --filter hub exec vitest run tests/publish-pipeline/production-smoke-script.test.ts は2件 pass。",
+        "task-specs/phase-13-release-deploy.md:36 は本番 REST endpoint 12経路の疎通を要求するが、runner の API 呼出しは create、package、submit、cancel、rollback、promote の6種類だけで、GET list/detail/releases、approve、suspend、deployment を実行しない。",
+        "task-specs/phase-13-release-deploy.md:23 は Yellow/Red 後の旧 stable 維持を要求するが、runner は secret rejection 後に stable_release_id が v1 のままかを assert しない。",
+        "goal-spec.json#quality_constraints[append-only-audit-event-all-publish-operations] は submit/approve/promote/rollback/suspend/deployment の監査を要求するが、runner の必須 action assert は publish.request/package_upload/submit/cancel と channel.rollback/promote に限られ、publish.approve、release.suspend、deployment 登録を fail-closed に要求しない。"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "P01..P13、phase_ref、task path、phase 名、workstream 語彙は正本と一致する。",
+      "evidence": [
+        "feature-package.json#phase_refs",
+        "feature-package.json#task_spec_paths",
+        "workstream-inventory.json#tasks",
+        "validate-system-plan.py: status=pass, violations=[]"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "13 task の前方 DAG、handoff source exact-set、promotion/registration owner 境界、goal lineage の現行 bytes 束縛は整合する。",
+      "evidence": [
+        "task-graph.json: P01→P13 の13 node前方直列 DAG、dangling/cycle なし。",
+        "system-build-handoff.json#source_inputs は staging-manifest.json#files から handoff 自身を除く16 file exact-setと一致し、全 manifest file hash は現行 bytes と一致する。",
+        "system-build-handoff.json#registration_request: promotion owner=system-dev-planner/C11、registration receipt owner=dev-graph/C02。",
+        "goal-spec.json#lineage: feature context、backend/data/security architecture、system specification の5 SHA-256が現行 repository bytes と一致する。"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/mmk3-publish-pipeline-v12"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:7595f2f03db216983ef00a58bfd97d7e40661e16241d77abb8255d82469ba7df\",\n  \"feature_package_id\": \"feature-package/feat-publish-pipeline\",\n  \"parent_feature\": \"feat-publish-pipeline\",\n  \"phase_refs\": [\"P01\", \"P02\", \"P03\", \"P04\", \"P05\", \"P06\", \"P07\", \"P08\", \"P09\", \"P10\", \"P11\", \"P12\", \"P13\"],\n  \"contract_version\": \"1.2.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\"mode\": \"enforced\", \"contract_version\": \"1.2.0\", \"enforced_from\": \"1.2.0\"},\n  \"violations\": []\n}",
+      "stderr": ""
+    },
+    {
+      "id": "production-smoke-entrypoint-contract-test",
+      "name": "P13 production smoke entrypoint contract test",
+      "command": [
+        "pnpm",
+        "--filter",
+        "hub",
+        "exec",
+        "vitest",
+        "run",
+        "tests/publish-pipeline/production-smoke-script.test.ts"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C2"
+      ],
+      "stdout": "Test Files 1 passed (1); Tests 2 passed (2).",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "83155a1ce33cd288eebdd0cd9a1b740f894e78f8c05768de3a9ea5606f3f32f8"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "96666a9db9d44aee713ab8fe7c3d1aa9cfc64dd23e697145542faf35f36d8718"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "8993bc18a506053a76eb4edf675642e618c0418bc646bd07e3c7a28f31eaafe7"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "f47fc2e80605bf1b8718446e9053b1278d758c87f3623ad9830a2e2440283ebc"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "3e4de5620da296383186e61c80070189f5f255d565153e2d0f377dd0b96afc0b"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "07d1ac6ad6f3dce7711bf1fe55e441772eabc2d81c28fcbbc4dd8f09c87debd1"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "8c0b3781bbaedd89ea09d5458e35421f9cd1ef3c5d7ca49dbe27eaad695c8420"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "392402d6655822fca8a5f26674bcaf717b5bb6242c2f010a804bbcd42d12dd5f"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "6ce87a51d1d25b1974ede7c198f4dddf75cb093d62b0fee7ceb9162b90d97f96"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "0d230712226221bcac8b9d06376d80d70b4dace5a24cd604159112f2f513334a"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "21b978075ca8afeb11bf3eb0597760b5e3ee442cb4882088851fe228fdefcca6"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "d0e31d1178118cde734b03f8cc7a885a97484bbe57c734bef5d1ee0c2d747665"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "d630bc0e1a5f51af5b41168f49ece549cc242660623b2956ab0c9ed7bc304396"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e45c2782e2f044cbfbdd2b91264ae9b32367658f130c5e967525beed6895dbe3"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "c652a6ff9e0be49e8f81f1f801d45381c7aa262d664516c89fa7e1e8a14f5251"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "ed4881723e90cac7713fd46b28a51052f9b55e829aa2551ed49f320919c3bf13"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a4ec60bb094f3522f1256a8cb67b477e7cd9ec3dba867c5c10fa4a9e47d52de7"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "c688a9a249aabd41374fb6c5bc76563b4332a11ed398a6e181a5289c6c5d3af7"
+    }
+  ],
+  "staleness_rule": "C11 must reject this evaluation if the canonical digest changes or if any SHA-256 in the exact evaluated_inputs set (all staging-manifest.json files plus staging-manifest.json itself) differs from the current staging bytes.",
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "serialization_endpoint_contract_mismatch",
+      "observation": "TargetChannel 直列化の 409 endpoint が一致しない。goal-spec と P02/P04/P05/P06 は、先行 request が非終端なら2件目の POST /api/v1/publish（作成）または createPublishRequest() を 409 にする。しかし P13 production runner と現行 route test は2件目の作成を成功させ、POST /api/v1/publish/:id/submit の 409 を合格条件にする。このままでは production smoke が plan の直列化受入条件を満たさない実装を PASS にできる。正本 endpoint を確定し、goal-spec、全 task spec、service/route、P13 runner、テストを同じ契約へ揃えること。",
+      "evidence": [
+        "goal-spec.json#quality_constraints[targetchannel-serialization-single-inflight-publishrequest]",
+        "task-specs/phase-02-architecture.md:67-71",
+        "task-specs/phase-04-test-design.md:23",
+        "task-specs/phase-05-implementation.md:23",
+        "task-specs/phase-06-test-run.md:23",
+        "apps/hub/scripts/smoke-production-publish.ts:351-415",
+        "apps/hub/tests/publish-pipeline/routes.test.ts:650-674"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "production_smoke_semantic_coverage_gap",
+      "observation": "P13 entrypoint は実行可能で、409、R2 remote hash、audit chain、finally cleanup の入口も持つが、P13 が宣言する本番 REST 12経路のうち6種類しか呼ばない。GET list/detail/releases、approve、suspend、deployment を未実行で、secret rejection 後の旧 stable 維持も直接 assert せず、必須監査 action から publish.approve/release.suspend/deployment 登録を除外している。さらに production-smoke-script.test.ts は source 文字列 marker の存在だけを確認するため、これらの意味欠落を検出しない。12経路と各 principal/role を実際に呼び、S3 stable pointer と全必須 audit action を fail-closed に検査する runner/test へ拡張するか、12経路要求を削る場合は上流 acceptance と意味を正式に再確定すること。",
+      "evidence": [
+        "task-specs/phase-13-release-deploy.md:23,32-40,89-98",
+        "goal-spec.json#quality_constraints[append-only-audit-event-all-publish-operations]",
+        "apps/hub/scripts/smoke-production-publish.ts:351-493",
+        "apps/hub/tests/publish-pipeline/production-smoke-script.test.ts:22-40",
+        "apps/hub/src/app/api/v1/publish/route.ts and the 10 related publish/channel/release/deployment route.ts files"
+      ]
+    }
+  ]
+}

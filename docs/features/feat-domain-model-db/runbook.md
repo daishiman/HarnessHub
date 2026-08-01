@@ -15,12 +15,17 @@ consumes: [docs/features/feat-domain-model-db/evidence-summary.md, docs/backend-
 
 ## 1. 日次 export (qa-019 / RPO ≤ 24h)
 
-- **正本経路**: GitHub Actions `backup.yml` (cron `0 17 * * *` = JST 2:00)。Turso dump → gzip → R2 `harness-hub-backups` の `db-export/<YYYY>/<YYYY-MM-DD>.sql.gz`。secret 欠落時は fail-closed (成功に数えない)。
-- **補完経路 (手動/検証用)**: 本 feature の export CLI。成果物は決定論的 JSONL で、salary / client_secret_enc は**暗号文のまま**転写される (復号処理が export 経路に存在しないため、平文はどの断面にも現れない)。
+- **正本経路**: GitHub Actions `backup.yml` (cron `0 17 * * *` = JST 2:00)。下記 export CLI → gzip → R2 `harness-hub-backups` の `db-export/<YYYY>/<YYYY-MM-DD>.jsonl.gz`。secret 欠落時は fail-closed (成功に数えない)。
+- **成果物を JSONL にしている理由**: §2 の restore drill が読める形でなければ「復元できないバックアップを成功と数えない」(qa-019) を満たせないため。SQL dump にすると日次成果物と drill の入力が別物になり、drill が検証しているのは本番バックアップではなくなる。副次的に、この経路は Turso CLI とその Platform API token を必要としない。
+- **手動実行 (検証・調査時)**: 正本経路と同じ CLI を手で叩く。成果物は決定論的 JSONL で、salary / client_secret_enc は**暗号文のまま**転写される (復号処理が export 経路に存在しないため、平文はどの断面にも現れない)。
   ```bash
+  # 成果物置き場を 1 つ決め、パスは必ず絶対で渡す。`pnpm --filter` は対象 package を cwd にして
+  # 子プロセスを起動するため、相対パスだと packages/db 基準になり打った場所と食い違う
+  WORK_DIR="$(mktemp -d)"
+
   # 認証トークンは argv (プロセス一覧に見えるコマンド引数) へ載せず、環境変数で渡す
   pnpm --filter @harness-hub/db exec tsx scripts/export-control-plane.ts \
-    --url "$TURSO_DATABASE_URL" --out export.jsonl
+    --url "$TURSO_DATABASE_URL" --out "$WORK_DIR/export.jsonl"
   ```
 - **Workers cron ジョブ**: `packages/db/cron/export-daily.ts` の `createDailyExportJob()` (feat-hub-foundation の CronJob 契約と構造互換)。apps/hub の cron registry への配線は消費側 feature の統合作業として行う。
 - **salary マスク確認手順**: export 成果物に対し `grep -c '"salary":"[0-9]\+:'` で暗号文形式 (`{key_version}:{iv}:{ct}:{tag}`) を確認し、平文数値が 0 件であることを見る。機械検証は DMDB-T06 (CI G4) が毎 PR で実施済み。
@@ -30,51 +35,37 @@ consumes: [docs/features/feat-domain-model-db/evidence-summary.md, docs/backend-
 常設 staging は持たない (qa-038)。**一時 DB を都度作成して使い捨てる**。
 
 ```bash
-# 1) backup.yml が作った最新 SQL dump を R2 から取得して展開
-#    LATEST_OBJECT_KEY の日付は R2 一覧で最新の成功日を選ぶ
-LATEST_OBJECT_KEY="db-export/YYYY/YYYY-MM-DD.sql.gz"
-pnpm --filter @harness-hub/hub exec wrangler r2 object get \
-  "harness-hub-backups/$LATEST_OBJECT_KEY" --file latest.sql.gz --remote
-gzip -dc latest.sql.gz > latest.sql
+# 0) 成果物置き場を 1 つ決める (§1 と同じ規約)。以降のパスはすべて絶対で渡す
+WORK_DIR="$(mktemp -d)"
 
-# 2) 一時 DB を作り、SQL dump を標準入力から直接 restore
-#    `turso db create --from-dump` でなく、この経路の完走を成功条件にする
-DRILL_DB_NAME="harness-hub-drill-$(date +%Y%m%d)"
-turso db create "$DRILL_DB_NAME" --wait
-turso db shell "$DRILL_DB_NAME" < latest.sql
+# 1) backup.yml が作った最新の export を R2 から取得して展開
+#    LATEST_OBJECT_KEY の日付は R2 一覧で最新の成功日を選ぶ
+#    展開先は §1 の手動 export と同じ名前にする。以降の restore は取得元 (R2 / 手動) を問わず同一コマンドになる
+LATEST_OBJECT_KEY="db-export/YYYY/YYYY-MM-DD.jsonl.gz"
+pnpm --filter @harness-hub/hub exec wrangler r2 object get \
+  "harness-hub-backups/$LATEST_OBJECT_KEY" --file "$WORK_DIR/latest.jsonl.gz" --remote
+gzip -dc "$WORK_DIR/latest.jsonl.gz" > "$WORK_DIR/export.jsonl"
+
+# 2) 空の一時 DB へ restore する。常設 staging は持たないので使い捨てのローカル DB を使う
+DRILL_DATABASE_URL="file:$WORK_DIR/drill.db"
+pnpm --filter @harness-hub/db exec tsx scripts/restore-control-plane.ts \
+  --url "$DRILL_DATABASE_URL" --in "$WORK_DIR/export.jsonl"
+# exit 0 かつ report の ok / chainOk がともに true = drill 成功。
+# 1 つでも欠ければ、そのバックアップを成功と数えない
 
 # 3) 復元 DB を独立クエリで確認 (baseline は domain table=18 / explicit index=12)
-turso db shell "$DRILL_DB_NAME" \
+sqlite3 "$WORK_DIR/drill.db" \
   "SELECT count(*) AS domain_tables FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name <> '__drizzle_migrations';
    SELECT count(*) AS explicit_indexes FROM sqlite_master WHERE type='index' AND sql IS NOT NULL;"
 
-# 4) 復元 DB から JSONL を再 export し、ローカル空 DB への round-trip で
-#    行数一致 / audit chain / salary・secret の暗号断面まで検証
-DRILL_DATABASE_URL="$(turso db show "$DRILL_DB_NAME" --url)"
-DRILL_AUTH_TOKEN="$(turso db tokens create "$DRILL_DB_NAME")"
-TURSO_AUTH_TOKEN="$DRILL_AUTH_TOKEN" pnpm --filter @harness-hub/db exec tsx scripts/export-control-plane.ts \
-  --url "$DRILL_DATABASE_URL" --out drill-export.jsonl
-LOCAL_VERIFY_DB="file:$(mktemp -d)/drill-verify.db"
-pnpm --filter @harness-hub/db exec tsx scripts/restore-control-plane.ts \
-  --url "$LOCAL_VERIFY_DB" \
-  --in drill-export.jsonl
-# exit 0 = drill 成功。いずれか exit 1 ならそのバックアップを成功と数えない
-
-# 5) 一時 DB を破棄
-turso db destroy "$DRILL_DB_NAME" --yes
+# 4) 作業ディレクトリごと破棄 (一時 DB もこの中にあるため Turso 側の後始末は不要)
+rm -rf "$WORK_DIR"
 ```
 
-日次 SQL dump ではなく、§1 の手動 JSONL export だけを単独検証するときは次の短縮経路も使える。
-
-```bash
-TURSO_AUTH_TOKEN="$DRILL_AUTH_TOKEN" pnpm --filter @harness-hub/db exec tsx scripts/restore-control-plane.ts \
-  --url "$DRILL_DATABASE_URL" \
-  --in export.jsonl
-```
-
-- 検証順序は ADR §9 のとおり CLI 内部で強制される: header 検証 → schema 適用 → insert → 行数一致 → audit chain 全体検証 → salary/secret 暗号断面検査。
-- SQL dump の復元は 2026-07-25 に本番 dump で実走し、直接 `turso db shell <name> < dump.sql` なら 18 table / 12 index を復元できることを確認した。同じ dump を `turso db create --from-dump` へ渡す経路は Turso CLI 1.0.30 で 0 table のまま成功表示になったため採らない。
-- ローカルでの手順予行は `--url file:/tmp/drill.db` で同一コマンドが動く (DMDB-T12 が CI で毎 PR 検証)。
+- **本番復旧のときも同じ 2) を打つ。** 復旧先を Turso にする場合は `DRILL_DATABASE_URL` を新規 DB の接続 URL に、`TURSO_AUTH_TOKEN` を発行済みの DB 接続 token に差し替えるだけで、コマンド本体は変わらない。drill と復旧で別のコマンドを持たない (drill で通した経路がそのまま復旧経路であることが RTO ≤ 4h の根拠)。
+- 検証順序は ADR §9 のとおり CLI 内部で強制される: header 検証 → schema 適用 → insert → 行数一致 → audit chain 全体検証 → salary/secret 暗号断面検査。schema は restore CLI 自身が適用するため、SQL dump を別途流し込む手順は要らない。
+- 2026-07-25 の実走で、Turso の SQL dump は `turso db create --from-dump` へ渡すと Turso CLI 1.0.30 で 0 table のまま成功表示になることを確認済み。**復元できたように見えて中身が空になる経路**があるため、成功判定は CLI の exit code ではなく上記 report の `ok` / `chainOk` で行う。
+- §1 の手動 export をそのまま検証する場合は 1) を飛ばして 2) から実行する (`$WORK_DIR/export.jsonl` が既にある状態)。この最短経路は DMDB-T14 が CI で毎 PR 実走している。
 
 ## 3. migration 積み増し手順 (Studio 拡張 feature 向け)
 
@@ -116,3 +107,16 @@ TURSO_AUTH_TOKEN="$DRILL_AUTH_TOKEN" pnpm --filter @harness-hub/db exec tsx scri
 - [ ] R2 `harness-hub-backups` の lifecycle rule (直近 90 日 + 月次 12 ヶ月) が有効
 - [ ] `verify-audit-chain` cron の failed 記録が 0 件
 - [ ] 四半期境界の月は §2 の restore drill を実施し、結果 (exit code と report) を記録
+
+## 7. ローカル file DB が `ConnectionPoisonedError` になったとき
+
+対象は Node の `file:` / `:memory:` libSQL だけで、Turso remote / D1 の本番 request-bound 経路には適用しない。
+
+1. 現在の処理を失敗として終了する。同じ adapter の read/write を再試行しない。
+2. 併走中の export、restore drill、別テスト process、dev server が同じ file DB を開いていないか確認する。
+3. lock holder を正常終了させる。強制終了した場合は一時 DB と成果物の整合も確認する。
+4. 既存 adapter を継続利用する必要がある場合だけ `adapter.reconnect()` を呼ぶ。公開 client / Drizzle / repository の作り直しは不要。
+5. reconnect 後は、別接続から commit 済みデータが見えることを確認してから処理を再開する。
+
+`isPoisoned()` が `true` の間に同じ接続を叩き続けてはいけない。例外の `cause` に元の
+`SQLITE_BUSY` を残すのは原因調査用であり、再試行可能という意味ではない。

@@ -93,6 +93,7 @@ control-plane DB へ問い合わせできない場合、`isRevoked()` は `true`
 
 ```
 GET /api/v1/tokens
+X-Harness-Tenant-Id: <tenant_id>
 ```
 
 自分の token を一覧する。workspace-admin / provider-admin は所管範囲の token を一覧できる。
@@ -102,6 +103,7 @@ GET /api/v1/tokens
 
 ```
 DELETE /api/v1/tokens/:id
+X-Harness-Tenant-Id: <tenant_id>
 ```
 
 - **冪等 (べきとう＝何回実行しても結果が同じ)** である。既に失効済みの token を再度削除しても
@@ -148,6 +150,28 @@ refresh token は使うたびに新しいものへ差し替わる (rotation)。
    短時間に複数プロセスからの発行があれば CLI の並行実行を疑う。
 3. 上記いずれにも該当せず、かつ利用者本人に心当たりが無い場合のみ、侵害として扱う。
    → §1 の session 緊急失効を実施し、該当利用者へ連絡する。
+
+### 2.5.1 `token.refresh_race` との切り分け (HarnessHub-v22l)
+
+同じ refresh rotation の分岐から出るもう 1 つの監査 action。**`token.reuse_detected` と混同しないこと。**
+
+| action | 何が起きたか | 確定度 |
+| --- | --- | --- |
+| `token.reuse_detected` | **失効済み** refresh token が提示された | 窃取の確定シグナル (family 全失効) |
+| `token.refresh_race` | 同じ refresh token が並行に提示され、rotation の CAS に負けた側 | 窃取と正当な並行 refresh (CLI の多重実行・再送) を**区別できない** |
+
+`token.refresh_race` は family を失効させない (負けた側の 1 本を `invalid_grant` で拒否するだけ)。
+対応手順:
+
+1. **単発なら静観してよい。** CLI の並行 refresh や network 再送でも 1 回は普通に出る。
+2. 同一 `family_id` で **短時間に複数回**記録されている場合のみ次へ進む。
+3. metadata の `family_id` で該当 family の後続 `token.reuse_detected` の有無を確認する。
+   出ていれば、負けた側の枝が再提示されて再利用検知へ昇格しており、`token.reuse_detected` の
+   対応手順 (本節冒頭) へ合流する。
+4. `token.reuse_detected` へ昇格せず `token.refresh_race` だけが繰り返される場合、
+   client が invalid_grant を受けて古い token を再提示していない = **この窓の窃取有無は
+   観測できない残余リスク**である。利用者本人に心当たりが無ければ §1 の session 緊急失効を
+   予防的に実施する。
 
 ---
 
@@ -203,11 +227,13 @@ D4 の決定により、テナント分離は **row-level-scope 方式** (1 つ�
 ## 付録: 参照コマンド
 
 ```bash
-# 認可・境界の静的検査を一括実行
-node apps/hub/scripts/check-auth-gates.mjs
+# 認可・境界の静的検査を一括実行 (CI の G12 と同一実装。2026-07-25 に verify へ結線)
+pnpm check:auth
+node apps/hub/scripts/check-auth-gates.mjs   # 束ね役を直接叩く場合
 
-# テナント分離テストのみ実行
-cd apps/hub && pnpm exec vitest run tests/auth-tenancy/tenant-isolation.test.ts
+# テナント分離テスト (CI の「G4 名指し」と同一実装。対象実在・ID 網羅・skip 不在も検査する)
+pnpm check:tenant-isolation
+cd apps/hub && pnpm exec vitest run tests/auth-tenancy/tenant-isolation.test.ts   # テストのみ
 
 # 認証・認可の全テスト
 cd apps/hub && pnpm exec vitest run tests/auth-tenancy

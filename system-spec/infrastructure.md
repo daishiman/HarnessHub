@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-068 |
+| Web (web) | 確定 | 確定質疑: qa-106 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,19 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-068 (対応セル: web)
+### qa-106 (対応セル: web)
 
-**質問**: matrix.infrastructure.web の確定根拠 qa-064 は「qa-034 の確定内容 (production + staging の 2 環境を含む意思決定 4 論点) を全面維持」および「P0: production/staging」と記述しており、D7 (ephemeral-preview-only, qa-067) と矛盾する stale reference になっている。qa-064 の R2 配布境界・§13 段階有効化順は維持しつつ、環境構成の記述だけを D7 整合へ改訂して qa_ref を差し替えるか。(2026-07-22 AskUserQuestion でユーザーが「D7 どおり改訂する」を選択)
+**質問**: Cloudflare Worker と R2 上の publish pipeline を infrastructure.web の既存配備契約へどう統合しますか?
 
-**回答**: D7 どおり改訂する。qa-064 の delta (R2 配布境界・§13 段階有効化順 P0-P5) は次の 2 点を除き一言一句維持する: (1) 冒頭の「qa-034 の確定内容を全面維持」は「qa-034 の確定内容のうち論点(1) 環境構成のみ D7 (ephemeral-preview-only, qa-067) が上書きし、残る論点 (独自ドメイン・CI/CD 3 workflow・監視/バックアップ) は維持」と読み替える。(2) P0 の「production/staging」は「production (1 組のみ)」へ改訂し、常設 staging は構築しない。環境は production 1 組 + PR ごとの使い捨て preview (Workers preview URL) とし、migration 検証と restore drill は PR preview と production 反映前チェックで受ける。R2 配布境界 (staging prefix への upload 収束・公開 write URL 不発行・install/download の Worker 経由・短命 URL 規則) の「staging prefix」は R2 バケット内の検査待ち prefix の名称であり環境としての staging とは無関係のため変更しない。P1-P5 の段階有効化・migration の tenant_id/workspace_id 必須・2 tenant fixture 分離テスト・1 tenant/1 Project 固定環境変数の禁止も全て維持する。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-099 までの infrastructure.web 契約を全面維持し、公開パイプラインの本番契約を追加確定する。
+
+【1. runtime 境界】apps/hub は Cloudflare Worker 上で実行し、package object は R2 binding を通じて content-addressed key packages/<sha256> へ保存する。Worker 内から Cloudflare REST API を使って R2 を操作せず、DB repository と object storage port の境界を維持する。
+
+【2. 配備と実測】production deploy は GitHub Actions を正本とし、緊急時の手動 Wrangler 操作は release record へ version、配信率、直前 version、rollback command を記録する。本番 health は runtime-config、db、r2 を fail-closed に確認し、S1〜S6 で create、upload/inspection、secret 拒否、公開、promote/rollback、audit hash chain を実測する。
+
+【3. R2 整合】Green package は API content hash、DB packages.content_hash、R2 再取得 SHA-256 が一致することを確認する。Secret 入り package は R2 registry へ登録しない。Release と参照中 object は証跡・参照整合のため rollback で削除せず、Worker code version だけを既知安定版へ戻す。
+
+【4. 再実行】smoke:publish-production は環境変数で本番対象を受け取り、12 API 操作、旧 stable 維持、Release 非生成、必須監査 action 9 種を fail-closed に検査する。短命 token は実行後に失効・削除する。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 
@@ -52,3 +60,13 @@ serves_goals: [G1, G4, G5, G2]
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+
+## P13 CI 再実行の実装反映 (2026-08-01 / `HarnessHub-o2i.13`)
+
+- qa-034 / qa-038 / qa-106 の「production deploy は GitHub Actions が正本」を維持する。
+- 通常は main merge の push で自動配備する。path filter 対象外の docs-only merge で run が発火しない場合だけ、
+  main の `workflow_dispatch` から同じ `static-gates → test → deploy → post-deploy smoke` を再実行できる。
+- dispatch は手動 Wrangler 操作でも承認 gate でもない。main 以外では deploy せず、全ゲート・secret 境界・
+  migration・rollback 契約を短絡しない。
+- 製品 API、DB schema、認証認可、UI、Worker deploy unit は変更しない。詳細と実測は
+  `docs/infrastructure-spec.md` §7 と P13 仕様反映受領書を正とする。

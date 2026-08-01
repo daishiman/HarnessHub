@@ -1,0 +1,69 @@
+
+⏺ Render succeeded. Key observations:
+  - registration is non-null with applied_count: 13, expected_count: 13, source_digest matches receipt
+  - self_contained: true (zero external dependencies)
+  - feature_progress.aggregate.total: 13 matches receipt's applied_count/expected_count
+  - ok: true
+
+  Now let me verify the inner criterion IN1 (zero external script/link references) and validate the HTML.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-render && python3 -c "
+      import re, sys…)
+  ⎿  External scripts: 0
+     External stylesheets: 0
+     CDN references: 0
+     … +4 lines (ctrl+o to expand)
+
+⏺ Now verify the required observations independently.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-render && python3 -c "
+      import json, sys…)
+  ⎿  Receipt applied_count: 13
+     Receipt expected_count: 13
+     Graph child nodes of LT-FEATURE-001: 13
+     … +6 lines (ctrl+o to expand)
+
+⏺ All observations verified. Now write the progress.json and append the second intermediate line.
+
+⏺ Write(eval-log/run-dev-graph-render-progress.json)
+  ⎿  Wrote 34 lines to eval-log/run-dev-graph-render-progress.json
+       1 {
+       2   "checklist": [
+       3     {
+       4       "item": "input graph/scope が schema PASS で output realpath が caller repo 内にある",
+       5       "status": "PASS",
+       6       "evidence": "C24 resolve-repo-context PASS; output at .dev-graph/render/index.html inside repo"
+       7     },
+       8     {
+       9       "item": "render model の node/edge/feature progress counts が input graph と一致する",
+      10       "status": "PASS",
+     … +24 lines (ctrl+o to expand)
+
+⏺ Now append the second intermediate line (append-only, no overwrite).
+
+⏺ Bash(printf '%s\n' '{"original_goal":"タスクグラフ情報から追加ランタイム依存なしでブラウザ表示可能な SVG + インライン JS 可視化済み静的 HTML/CSS
+      が生成された状態になっている","original_goal_hash":"1c3829684b15a6a20d0a51a3f…)
+  ⎿  (No output)
+
+⏺ Now run the goal-seek verification script.
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-render && python3 - "$DEV_GRAPH_ROOT/eval-log/ru…)
+  ⎿  goal-seek validation PASS (2 rows)
+
+⏺ All checks pass. Now write the status.json completion marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-render/live-trial/20260729T100000Z-wt28-postmerge-c11-render/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/run-dev-graph-render/live-trial/20260729T100000Z-wt28-postmerge-c11-render/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-render/live-trial/20260729T100000Z-wt28-postmerge-c11-render/out/status.json
+      1 {"status": "PASS", "scenario": "C05-OUT1-positive-feature-progress"}
+
+⏺ DONE: PASS
+
+✻ Sautéed for 7m 11s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

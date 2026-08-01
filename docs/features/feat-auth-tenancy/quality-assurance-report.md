@@ -11,29 +11,32 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 
 - graph_node_id: `sys-auth-tenancy-p09`
 - feature_context_digest: `sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc61b4dd256d284a5`
-- 判定: **該当する品質ゲート 6 件すべて pass**
-- ただし **CI パイプラインへの自動結線は未実施** (§4 に明記)
+- 判定: **該当する品質ゲート 6 件すべて pass、かつ 6 件すべてが CI で fail-closed に結線済み**
+- 初回 QA 時 (2026-07-25) は CI 未結線だったが、`HarnessHub-1f28` で結線済み。§1 の数値は 2026-07-28 の再実行実測値
 
 ---
 
 ## 1. 品質ゲート一覧と実行結果
 
-| # | ゲート | 対応 quality_constraint | 実行コマンド | 結果 |
-| --- | --- | --- | --- | --- |
-| G1 | テナント分離テスト | `tenant-workspace-row-level-scope-isolation-test-ci-d4` | `cd apps/hub && pnpm exec vitest run tests/auth-tenancy/tenant-isolation.test.ts` | ✅ 12 ケース pass / 越境成功 0 件 |
-| G2 | Auth.js adapter 境界隔離 | `auth-adapter-boundary-better-auth-migration-hedge-d3-qa020` | `node apps/hub/scripts/check-auth-adapter-boundary.mjs` | ✅ 走査 92 ファイル / 違反 0 件 |
-| G3 | 認可判定の単一集約 + route 例外の厳密一致 | `role4-authorization-matrix-single-middleware-deny-by-default-sec2` | `node apps/hub/scripts/check-single-authz-middleware.mjs` | ✅ 走査 97 ファイル / 違反 0 件 / allowlist 3 件 / route 例外 5 件一致 |
-| G4 | dev 専用 provider 非存在 | `no-hub-native-account-idp-delegation-i7` | `node apps/hub/scripts/check-dev-auth-provider-absence.mjs` | ✅ 走査 97 ファイル / 禁止語 15 種 / 検出 0 件 |
-| G5 | 数値契約の単一集約 | `session-jwt-staleness-emergency-revocation-qa036` ほか | `cd apps/hub && pnpm exec vitest run tests/auth-tenancy/session-revocation.test.ts` (`T-SESS-01`) | ✅ 11 項目一致 (10 項目は仕様書リテラル、1 項目は ADR 実装追補 §10.7 の決定値) |
-| G6 | secret scan | (G6 / qa-038【2】) | `pnpm check:secrets` | ✅ 走査 297 ファイル / 検出 0 件 / verdict=pass |
+実測日: **2026-07-28** (この表の数値はすべてこの日の再実行結果)。
+
+| # | ゲート | 対応 quality_constraint | 実行コマンド | 結果 | CI 結線先 |
+| --- | --- | --- | --- | --- | --- |
+| G1 | テナント分離テスト | `tenant-workspace-row-level-scope-isolation-test-ci-d4` | `pnpm check:tenant-isolation` | ✅ 12 ケース pass / 必須 ID 7 種確認 / 越境成功 0 件 | `ci.yml` build & test (G4 名指し) + root `verify` |
+| G2 | Auth.js adapter 境界隔離 | `auth-adapter-boundary-better-auth-migration-hedge-d3-qa020` | `node apps/hub/scripts/check-auth-adapter-boundary.mjs` | ✅ 走査 **127** ファイル / 違反 0 件 | `ci.yml` static-gates (G12) + root `check:auth` |
+| G3 | 認可判定の単一集約 + route 例外の厳密一致 | `role4-authorization-matrix-single-middleware-deny-by-default-sec2` | `node apps/hub/scripts/check-single-authz-middleware.mjs` | ✅ 走査 **132** ファイル / 違反 0 件 / allowlist 3 件 / route 例外 5 件一致 | 同上 |
+| G4 | dev 専用 provider 非存在 | `no-hub-native-account-idp-delegation-i7` | `node apps/hub/scripts/check-dev-auth-provider-absence.mjs` | ✅ 走査 **132** ファイル / 禁止語 15 種 / 検出 0 件 | 同上 |
+| G5 | 数値契約の単一集約 | `session-jwt-staleness-emergency-revocation-qa036` ほか | `pnpm exec vitest run tests/auth-tenancy/session-revocation.test.ts` (`T-SESS-01`) | ✅ 23 ケース pass / 11 項目一致 (10 項目は仕様書リテラル、1 項目は ADR 実装追補 §10.7 の決定値) | `ci.yml` build & test + root `verify` |
+| G6 | secret scan | (G6 / qa-038【2】) | `pnpm check:secrets` | ✅ 走査 **362** ファイル / 検出 0 件 / verdict=pass | root `verify` (`check:secrets`) |
 
 一括再実行:
 
 ```bash
-node apps/hub/scripts/check-auth-gates.mjs   # G2 + G3 + G4 (1 本でも fail なら非ゼロ終了)
-cd apps/hub && pnpm exec vitest run tests/auth-tenancy   # G1 + G5 を含む実行系 127 ケース
-pnpm check:secrets                            # G6
-node scripts/ci/check-shared-layer-duplicates.mjs  # 既存ゲート (§3)
+pnpm check:auth                    # G2 + G3 + G4 (1 本でも fail なら非ゼロ終了)
+pnpm check:tenant-isolation        # G1 (対象実在 / 必須 ID 網羅 / skip 不在 も検査)
+cd apps/hub && pnpm exec vitest run tests/auth-tenancy   # G1 + G5 を含む実行系 310 ケース
+pnpm check:secrets                 # G6
+node scripts/ci/check-shared-layer-duplicates.mjs        # 既存ゲート (§3)
 ```
 
 ---
@@ -56,7 +59,8 @@ DB-per-tenant を再評価する。監視手順は P12 runbook.md §3。
 ### G2 Auth.js adapter 境界隔離 (D3 caveat / qa-020)
 
 3 つの規則を静的に検査する。いずれも「名前と参照経路」から決定的に決まるため、
-実行環境にも `next-auth` のインストール有無にも依存しない。
+実行環境にも Auth.js パッケージのインストール有無にも依存しない
+(初回 QA 時は未導入、現在は `@auth/core` 導入済みだが、検査内容は変わっていない)。
 
 1. Auth.js 固有 module (`next-auth` / `@auth/*` / `@next-auth/*`) の import が `adapter/` の外に無い (`T-BND-01`)
 2. `adapter/` 配下への参照が公開入口 `adapter/index.js` 経由に閉じている
@@ -113,7 +117,7 @@ P08 refactoring-migration-note.md §2。走査範囲から外している場所�
 | device_code TTL | 10 分 |
 | polling interval | 5 秒 |
 | `slow_down` の加算幅 | 5 秒 |
-| polling interval の上限 | 60 秒 (仕様書由来ではなく ADR 実装追補 §10.7 の決定) |
+| polling interval の上限 | 60 秒 (`docs/security-spec.md` §2.2 = `qa-073` で確定。起点は ADR 実装追補 §10.7) |
 | user_code 桁数 | 8 |
 | user_code 最大試行 | 5 回 |
 | access token TTL | 15 分 |
@@ -143,30 +147,36 @@ route handler が `withAuthz()` を通っているかの検査 (`unwrapped-route
 
 ```
 $ node scripts/ci/check-shared-layer-duplicates.mjs
-[duplicate-detector] OK: 登録共通層 12 件 + 運用機構 4 件 / 走査 250 ファイル / 違反 0 件
+[duplicate-detector] OK: 登録共通層 12 件 + 運用機構 4 件 / 走査 274 ファイル / 違反 0 件
 ```
 
 ---
 
-## 4. 未実施事項 (fail-closed 化の残件)
+## 4. fail-closed 結線 — 完了
 
-**本 task の検査スクリプトは CI パイプラインへ結線されていない。**
+初回 QA (2026-07-25) 時点では「検査は存在し pass するが、CI が自動で落としてはくれない」状態だった。
+`apps/hub/package.json` と `.github/` が本 feature の write scope 外だったためで、
+`HarnessHub-1f28` へ分離した。**その結線は完了しており、残件は無い。**
 
-| 項目 | 状態 | 理由 |
+| 項目 | 状態 | 結線先 |
 | --- | --- | --- |
 | `apps/hub/scripts/check-*.mjs` の実装 | ✅ 完了 | — |
-| 手動実行での pass 確認 | ✅ 完了 | §1 |
-| `apps/hub/package.json` への script 追加 | ❌ 未実施 | task spec が「共有 CI は不可侵。本 task は feature 固有チェックスクリプトの追加のみ」と定めるため write scope 外 |
-| `.github/workflows/` への結線 | ❌ 未実施 | 同上 |
-| root `pnpm verify` への組み込み | ❌ 未実施 | 同上 |
+| `apps/hub/package.json` への script 追加 | ✅ 完了 | `check:auth-gates` / `test:tenant-isolation` |
+| `.github/workflows/` への結線 | ✅ 完了 | `static-gates` job の G12、`build & test` job の「G4 名指し tenant 分離テスト」 |
+| root `pnpm verify` への組み込み | ✅ 完了 | `check:auth` (3 番目) と `check:tenant-isolation` (`test` の直後) |
 
-必要な変更は 1 行 (`"check:auth-gates": "node scripts/check-auth-gates.mjs"` を
-`apps/hub/package.json` の `scripts` へ追加し、root の `verify` から呼ぶ) で、follow-up 課題として起票済み。
+### 4.1 「本当に落ちるか」の再実測 (2026-07-28)
 
-**したがって現状は「検査は存在し pass するが、CI が自動で落としてはくれない」状態である。**
-D4 の「分離テスト CI 必須ゲート化」および qa-020/qa-036 の「CI で機械検証」という要求は、
-この結線をもって初めて完全に満たされる。P10 final-review-record.md で該当 quality_constraint の
-判定条件として扱う。
+結線されていても検査が実質無効なら意味がないので、**赤くなることを実際に確認した**。
+
+| 投入した違反 | 実行 | 結果 |
+| --- | --- | --- |
+| `apps/hub/src/lib/authz/` から `@auth/core/types` を import (境界外) | `pnpm check:auth` | **exit 1** / `authjs-import-outside-adapter` を該当行つきで検出 |
+| `tenant-isolation.test.ts` の `T-ISO-01` を `it.skip` 化 | `node scripts/ci/check-tenant-isolation-gate.mjs` | **exit 1** / 無効化されたケースを行番号つきで検出 |
+| いずれも撤去後 | 同上 | **exit 0** に復帰 (最終HEADは走査 127/132/132 ファイル、12 ケース / 必須 ID 7 種) |
+
+これで D4 の「分離テスト CI 必須ゲート化」と qa-020 / qa-036 の「CI で機械検証」は、
+宣言ではなく**実測された遮断挙動**として満たされている。
 
 ---
 
@@ -174,10 +184,10 @@ D4 の「分離テスト CI 必須ゲート化」および qa-020/qa-036 の「C
 
 | 判定項目 | 結果 |
 | --- | --- |
-| 該当する品質ゲートがすべて実装され pass しているか | ✅ 6/6 pass |
-| ゲートが「落ちること」を確認したか | ✅ G2 は意図的違反を投入して赤化確認済み。G3 は死んだ allowlist を検出して実際に赤化した |
-| 既存ゲートとの重複を作っていないか | ✅ C2 は既存スクリプトを再利用 |
-| CI への fail-closed 結線が完了しているか | ❌ 未実施 (write scope 外 / follow-up 起票済み) |
+| 該当する品質ゲートがすべて実装され pass しているか | ✅ 6/6 pass (§1 / 2026-07-28 実測) |
+| ゲートが「落ちること」を確認したか | ✅ G1・G2 は意図的違反を投入して exit 1 を実測 (§4.1)。G3 は死んだ allowlist を検出して実際に赤化した |
+| 既存ゲートとの重複を作っていないか | ✅ C2 は既存スクリプトを再利用 (§3) |
+| CI への fail-closed 結線が完了しているか | ✅ 完了 (`HarnessHub-1f28` closed)。手動実行だけに依存する経路は無い |
 
-→ P10 の判定材料にはできるが、CI 結線が終わるまで P09 自体は完了扱いにしない
-(`HarnessHub-1f28`)。
+**→ P09 は完了。保留していた `HarnessHub-1f28` は closed であり、差し戻し条件は残っていない。**
+本節の結果は P10 final-review-record.md の QC-2 / QC-4 / QC-5 / QC-6 の判定材料として引き渡す。

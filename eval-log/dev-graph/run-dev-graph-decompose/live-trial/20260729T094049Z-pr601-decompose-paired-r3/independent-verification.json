@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T10:11:00Z",
+  "evaluator": "fresh-agent/fresh_c14_pr601_paired_r3_evaluator",
+  "scenario": "C14-OUT1-positive-macro-decomposition-r7",
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": [
+    "task.md",
+    "nudge-1-final-noop.md",
+    "nudge-2-closure-helper.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json",
+    "evidence/beads-decompose-audit.json",
+    "evidence/none-decompose-audit.json",
+    "evidence/beads-progress.json",
+    "evidence/none-progress.json"
+  ],
+  "observations": {
+    "target_skill_calls": {
+      "beads": 3,
+      "none": 2
+    },
+    "final_noop_write_count_zero": {
+      "beads": 5,
+      "none": 5
+    },
+    "artifact_counts_per_run": {
+      "feature": 4,
+      "architecture": 1,
+      "task": 0
+    },
+    "edge_count": 3,
+    "acyclic": true,
+    "max_inter_feature_depends_on": 1,
+    "declared_granularity_max": 3,
+    "draft_feature_count": 3,
+    "publication_candidate_count": 1,
+    "persisted_bindings": [
+      "beads",
+      "none"
+    ],
+    "github_route": "schema-unreachable",
+    "promoted_digest_match": {
+      "beads": true,
+      "none": true
+    },
+    "negative_controls_all_rejected": {
+      "beads": true,
+      "none": true
+    },
+    "audit_provenance_equal": true,
+    "goal_seek_pending_count": 0,
+    "skill_dir_tree_sha": "0467a3057442a5a9a4ad0e1dc8f00eb15d475153ee8486a4dfd9f7458380831b"
+  }
+}

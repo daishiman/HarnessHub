@@ -10,6 +10,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createTursoClient, type TursoAdapter } from '../connection/turso';
 import { ENCRYPTED_COLUMN_PATTERN } from '../repository/crypto';
 import { createTenantsRepo } from '../repository/tenants';
+import { coreTables } from '../schema/index';
 import { seedTwoTenants, type TwoTenantsFixture } from './fixtures/two-tenants';
 import { schemaDdl } from './support/schema-harness';
 import { asCore, createLibsqlTestDb, testCipher } from './support/test-db';
@@ -165,6 +166,63 @@ describe('DMDB-T12 CLI 経由の round-trip (executable-export-restore-ci-fixtur
   }, 120_000);
 });
 
+// 稼働直後の本番 DB は migration 済みだが全テーブル 0 行になる。旧 backup.yml は
+// 「データ行 0 なら失敗」で落としており、日次 backup が 3 夜連続で赤になっていた。
+// 空 DB の断面も restore すれば空 DB が再現する以上、これは採用しなければならない。
+describe('vns9 export 成果物の採否 (verify-export-artifact CLI)', () => {
+  const runVerify = (artifactPath: string) =>
+    spawnSync(process.execPath, ['--import', 'tsx', 'scripts/verify-export-artifact.ts', '--file', artifactPath], {
+      cwd: join(import.meta.dirname, '..'),
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+  it('全テーブル 0 行の export を採用する (稼働直後の本番 DB)', async () => {
+    const emptyPath = join(workDir, 'empty.db');
+    const emptyDb = await createLibsqlTestDb(`file:${emptyPath}`);
+    const emptyArtifact = await exportControlPlane(asCore(emptyDb));
+    emptyDb.close();
+
+    const artifactPath = join(workDir, 'empty-export.jsonl');
+    writeFileSync(artifactPath, emptyArtifact, 'utf8');
+
+    const result = runVerify(artifactPath);
+    expect(result.status).toBe(0);
+    const summary = JSON.parse(result.stdout.trim().split('\n').at(-1) as string);
+    expect(summary.ok).toBe(true);
+    expect(summary.totalRows).toBe(0);
+    expect(summary.tableCount).toBe(Object.keys(coreTables).length);
+    // 採用はするが、無言で通すと「バックアップは取れている」と読み違えるため警告は残す
+    expect(result.stdout).toContain('::warning::');
+  }, 120_000);
+
+  it('行のある export も同じ CLI で採用される', () => {
+    const artifactPath = join(workDir, 'seeded-export.jsonl');
+    writeFileSync(artifactPath, artifact, 'utf8');
+
+    const result = runVerify(artifactPath);
+    expect(result.status).toBe(0);
+    const summary = JSON.parse(result.stdout.trim().split('\n').at(-1) as string);
+    expect(summary.totalRows).toBeGreaterThan(0);
+    expect(result.stdout).not.toContain('::warning::');
+  }, 60_000);
+
+  // 検出力の裏取り。上 2 件は「通ること」しか示さず、検査が素通しになっても同じ緑になる。
+  // 0 行を通すようにした結果として検査全体が緩んでいないことを、負のコントロールで押さえる。
+  it('テーブルが欠けた成果物は採用しない', () => {
+    const header = JSON.parse(artifact.split('\n')[0] as string) as {
+      tables: Record<string, number>;
+    };
+    delete header.tables[Object.keys(header.tables)[0] as string];
+    const brokenPath = join(workDir, 'broken-export.jsonl');
+    writeFileSync(brokenPath, JSON.stringify(header), 'utf8');
+
+    const result = runVerify(brokenPath);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('テーブル集合が不正');
+  }, 60_000);
+});
+
 describe('P13 production migration / smoke CLI', () => {
   const runCli = (script: string, args: string[], env: NodeJS.ProcessEnv = process.env) =>
     execFileSync(process.execPath, ['--import', 'tsx', script, ...args], {
@@ -178,13 +236,13 @@ describe('P13 production migration / smoke CLI', () => {
     const dbPath = join(workDir, 'p13-migration.db');
     const url = `file:${dbPath}`;
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 1, applied: 0, pending: 1 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 3, applied: 0, pending: 3 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 1 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 3 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 1, appliedAfter: 1 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 3, appliedAfter: 3 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);
@@ -203,7 +261,7 @@ describe('P13 production migration / smoke CLI', () => {
     expect(result.stderr).toContain('--r2-bucket <name>');
   }, 60_000);
 
-  it('6 項目をローカル DB + R2 CLI stub で完走し、既存データを残して検証データだけを削除する', async () => {
+  it('6 項目を Hub workspace の R2 CLI 経由で完走し、既存データを残して検証データだけを削除する', async () => {
     const dbPath = join(workDir, 'p13-smoke.db');
     const url = `file:${dbPath}`;
     runCli('scripts/migrate-deploy.ts', ['--url', url]);
@@ -240,10 +298,33 @@ else process.exit(1);
     );
     chmodSync(fakeWrangler, 0o755);
 
-    const output = runCli('scripts/smoke-production.ts', ['--url', url, '--r2-bucket', 'p13-test'], {
+    // CI と同じく DB package から起動しても、Hub workspace にだけ存在する wrangler を選べることを検査する。
+    // pnpm 自体を stub にして、実際の R2 通信は上の Wrangler stub へ委譲する。
+    const fakePnpm = join(workDir, 'pnpm');
+    writeFileSync(
+      fakePnpm,
+      `#!/bin/sh
+if [ "$PWD" != "$EXPECTED_PNPM_CWD" ]; then exit 65; fi
+if [ "$1" != "--filter" ] || [ "$2" != "@harness-hub/hub" ] || [ "$3" != "exec" ] || [ "$4" != "wrangler" ]; then
+  exit 66
+fi
+shift 4
+exec "$FAKE_WRANGLER" "$@"
+`,
+      'utf8',
+    );
+    chmodSync(fakePnpm, 0o755);
+
+    const smokeEnv: NodeJS.ProcessEnv = {
       ...process.env,
+      EXPECTED_PNPM_CWD: join(import.meta.dirname, '..', '..', '..'),
       FAKE_R2_DIR: r2Dir,
-      WRANGLER_BIN: fakeWrangler,
+      FAKE_WRANGLER: fakeWrangler,
+      PATH: `${workDir}:${process.env.PATH ?? ''}`,
+    };
+    delete smokeEnv.WRANGLER_BIN;
+    const output = runCli('scripts/smoke-production.ts', ['--url', url, '--r2-bucket', 'p13-test'], {
+      ...smokeEnv,
     });
     const report = JSON.parse(output) as {
       ok: boolean;

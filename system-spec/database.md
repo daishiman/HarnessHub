@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-060 |
+| Web (web) | 確定 | 確定質疑: qa-105 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,11 +24,19 @@ serves_goals: [G1, G2, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-060 (対応セル: web)
+### qa-105 (対応セル: web)
 
-**質問**: builds/feedbacks/projects のスキーマ改訂 (docs/backend-spec.md §2 の 2026-07-18 追記) を database 仕様へ反映するか。 (訂正再登録: qa-053 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-060 として登録し直す)
+**質問**: PublishRequest と stable pointer の永続化不変条件を database.web の既存契約へどう統合しますか?
 
-**回答**: qa-045 の確定内容 (C4 改訂の業務データ保持 tenant_data_objects・封筒暗号化・即時完全削除を含む確定スキーマ) を全面維持しつつ、次の delta を確定する。builds へ sheet_id (NULL 可) と feedback_id (NULL 可) を持たせ、起点は Sheet/Feedback のどちらか一方 (CHECK 制約 + 非 NULL 値の partial UNIQUE で各起点=1 Build を保証)。feedbacks の type を improvement/review/bug の 3 値へ改訂し priority (high/medium/low) 列を追加。projects は owner_user_id を作成時の principal に固定し slug/name は Workspace 内一意。1 Workspace に複数 Project、各 Project は skill/web_app の複数 TargetChannel を持てる (マルチシステム前提)。全テーブルの tenant_id スコープ (D4) は P0 の最初の migration から必須で後付けしない。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-101 までの database.web 契約と既存 migration/schema を全面維持し、公開 repository 契約を追加確定する。
+
+【1. 既存 schema の消費】本差分は feat-domain-model-db が所有する publish_requests、inspection_results、releases、target_channels、packages、監査関連テーブルを consumer として使い、新しい schema owner を作らない。apps/hub は packages/db の repository composition だけを参照し、schema subpath と直接 SQL を使わない。
+
+【2. 状態と不変性】PublishRequest の許可遷移は状態機械に限定し、Release は作成後不変とする。Package は SHA-256 content hash を identity として R2 key と DB registry を一致させる。検査失敗では Release と Package registry を作らず、既存 stable pointer を維持する。
+
+【3. 直列化と原子性】同一 TargetChannel の非終端 PublishRequest は partial UNIQUE index と transaction で 1 件に制限する。Draft は非占有で、submit 時の競合を channel_busy へ写像する。promote/rollback は指定 Release の整合を検証して stable_release_id と監査 event を同じ transaction で更新し、失敗時に旧 stable を残す。
+
+【4. tenant scope と冪等台帳】repository は tenant_id と workspace_id を全操作へ伝播し、cross-tenant row を返さない。Idempotency-Key は tenant、endpoint、payload hash、24 時間 TTL に束縛し、同一 key の異なる payload を 422 とする。
 
 ## 上流指針 (doctrine anchor)
 

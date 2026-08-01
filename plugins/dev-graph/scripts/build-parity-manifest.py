@@ -18,8 +18,9 @@ C28 が、自分で作った答え合わせ用紙を採点することになり�
 したがって本 script は read-only な graph 投影に徹し、突合は C28、鮮度判定は C16 が担う。
 
 契約の正本は references/execution-tracker-contract.md §10。必須フィールドは
-`generated_at` / `source_graph_digest` / `nodes[]` で、`source_graph_digest` は C16
-schedule-graph.py `_canonical_digest` と同一式でなければならない (不一致は恒久 stale)。
+`generated_at` / `source_graph_digest` / `nodes[]` / `graph_node_ids[]` で、
+`source_graph_digest` は C16 schedule-graph.py `_canonical_digest` と同一式でなければ
+ならない (不一致は恒久 stale)。
 """
 from __future__ import annotations
 
@@ -34,7 +35,7 @@ from typing import Any
 from _common import ContractError, atomic_json, contained, dump, load_json, repository_eval_root
 from node_transaction import ensure_no_pending_transaction, graph_operation_lock
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 # 既定出力先。eval-log/ 直下は lint-eval-log-layout.py EL-001 が新規追跡を禁じるため、
 # skill 名のサブディレクトリ配下に置く。実体は毎回作り直す揮発 snapshot で git 追跡しない。
 DEFAULT_OUT = "eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json"
@@ -201,6 +202,13 @@ def build(graph: Any) -> tuple[dict[str, Any], dict[str, Any]]:
         "generated_at": _generated_at(),
         "source_graph_digest": _canonical_digest(graph),
         "nodes": projected["nodes"],
+        # graph に実在する node id の全集合。`nodes[]` (= beads 束縛済みの投影) との差は
+        # 「graph には居るが起票前 / linkage 欠落」であり、C28 が unmapped の理由を
+        # `graph_node_missing` (graph から消えた = C02 案件) と `parity_manifest_missing`
+        # (graph には居るのに投影から漏れた = C03 案件) へ切り分けるために要る。
+        # これが無いと両者が同じ札になり、GC で消えた node を指す orphan external_ref が
+        # 「sync すれば直る」と誤認され、何度 sync しても消えない警告として常駐する。
+        "graph_node_ids": sorted({_node_id(node) for node in nodes}),
     }
     diagnostics = {
         "node_count": len(projected["nodes"]),

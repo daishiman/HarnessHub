@@ -26,29 +26,30 @@ kind: index
 | フロントエンド (frontend) | [frontend.md](./frontend.md) | 確定 | `confirmed` | G1 G2 G3 G5 | frontend.web frontend.mobile frontend.tablet frontend.desktop-windows frontend.desktop-linux frontend.desktop-macos |
 | 保守運用管理 (maintenance-ops) | [maintenance-ops.md](./maintenance-ops.md) | 確定 | `confirmed` | G1 G2 G5 | maintenance-ops.web maintenance-ops.mobile maintenance-ops.tablet maintenance-ops.desktop-windows maintenance-ops.desktop-linux maintenance-ops.desktop-macos |
 | 開発フロー (dev-workflow) | [dev-workflow.md](./dev-workflow.md) | 確定 | `confirmed` | G1 G4 G5 | dev-workflow.web dev-workflow.mobile dev-workflow.tablet dev-workflow.desktop-windows dev-workflow.desktop-linux dev-workflow.desktop-macos |
+| テスト戦略・品質保証 (testing-qa) | [testing-qa.md](./testing-qa.md) | 確定 | `confirmed` | G1 G2 G5 | testing-qa.web testing-qa.mobile testing-qa.tablet testing-qa.desktop-windows testing-qa.desktop-linux testing-qa.desktop-macos |
 
 ## 集約状態サマリ
 
 - **未着手**: —
 - **収集中**: —
-- **確定**: database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops, dev-workflow
+- **確定**: database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops, dev-workflow, testing-qa
 - **対象外**: —
 
 ## 全体ドキュメント出典 (未割当参照)
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
 |---|---|---|---|---|---|
-| nextjs | 16.2.11 | Vercel, Inc. (nextjs.org) | https://nextjs.org/docs | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
+| nextjs | 16.2.12 | Vercel, Inc. (nextjs.org) | https://nextjs.org/docs | 2026-07-30T00:24:25Z | 2026-07-30T00:24:25Z |
 | typescript | 7.0 | Microsoft (www.typescriptlang.org) | https://www.typescriptlang.org/docs/ | 2026-07-22T22:18:01Z | 2026-07-22T22:18:01Z |
 | pnpm | 11.16.0 | pnpm maintainers (github.com) | https://github.com/pnpm/pnpm/releases | 2026-07-22T22:24:10Z | 2026-07-22T23:24:40Z |
 | zod | 4 | Zod maintainers (Colin McDonnell) (zod.dev) | https://zod.dev/ | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
 | github-actions | 2026-07-22 (取得日。ページ本文に最終更新日の明示なし) | GitHub, Inc. (docs.github.com) | https://docs.github.com/en/actions | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
 | turso | 2026-07-22 (取得日。ページ内に明示の更新日なし) | Turso (turso.tech) | https://turso.tech/pricing | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
-| drizzle-orm | v1.0.0-rc.4 (v1 プレリリース現行) / 安定版 0.45.2 | Drizzle Team (github.com) | https://github.com/drizzle-team/drizzle-orm/releases | 2026-07-22T22:24:22Z | 2026-07-22T22:24:22Z |
+| drizzle-orm | v1.0.0-rc.4 (v1 プレリリース現行) / 安定版 0.45.2 | Drizzle Team (github.com) | https://github.com/drizzle-team/drizzle-orm/releases | 2026-07-30T00:24:25Z | 2026-07-30T00:24:25Z |
 | authjs | next-auth@5.0.0-beta 以降 (@auth/* namespace) | Auth.js (OSS) (authjs.dev) | https://authjs.dev/getting-started | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
-| claude-code-plugins | 2026-07-22 (直接取得日。ページ本文に最終更新日の明示なし。URL スキーム必須の挙動 anchor は Claude Code v2.1.196、本文 min-version anchor の最新は v2.1.205 (reserved marketplace names)。ローカル CLI 実測 2.1.218 で全 anchor をカバー) | Anthropic (code.claude.com) | https://code.claude.com/docs/en/plugin-marketplaces | 2026-07-22T22:28:36Z | 2026-07-22T22:28:36Z |
+| claude-code-plugins | 2026-07-30 (直接取得日。ページ本文に最終更新日の明示なし。ローカル CLI 実測 2.1.220) | Anthropic (code.claude.com) | https://code.claude.com/docs/en/plugin-marketplaces | 2026-07-30T00:24:25Z | 2026-07-30T00:24:25Z |
 | cloudflare-workers | Jul 7, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/platform/pricing/ | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
-| wrangler | Jul 3, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/wrangler/ | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
+| wrangler | 4.115.0 | Cloudflare, Inc. (github.com) | https://github.com/cloudflare/workers-sdk/releases | 2026-07-30T00:24:25Z | 2026-07-30T00:24:25Z |
 | cloudflare-r2 | May 28, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/r2/pricing/ | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
 | cloudflare-d1 | Apr 21, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/d1/platform/pricing/ | 2026-07-22T22:55:03Z | 2026-07-22T22:55:03Z |
 | opennext-cloudflare | 1.20.2 (npm @opennextjs/cloudflare) | OpenNext (OSS) (opennext.js.org) | https://opennext.js.org/cloudflare | 2026-07-16T08:42:07Z | 2026-07-22T23:24:40Z |

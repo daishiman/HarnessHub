@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-schedule",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-schedule"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "9bfb764de358bd5f02ba726edc646703d85c3058ac13b946c85426cd201b489e",
+  "transcript_sha256": "b7517862b736a92bb22f1a71f7251f97fa681ec90767d57ca9cd8aed7a4e5cab",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 9.0,
+    "poll_exit": "0",
+    "wall_clock_s": 364.0
+  },
+  "scenario_id": "C15-OUT1-positive-ready-set-r16"
+}

@@ -139,6 +139,133 @@
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
       "description": "criteria receipt / positive scenario fixture と実走を束縛する stable id。単発 trial では省略可"
     },
+    "scenario_contract": {
+      "type": "object",
+      "description": "scenario 契約の回収状況。scenario_id を束ねた trial は required_observations の未回収項目と task_args_template との乖離をここへ機械的に列挙する (scenario_id 一致だけでは契約未充足の run も PASS になる穴を塞ぐ)。旧 verdict との互換のため required ではない",
+      "required": [
+        "scenario_file",
+        "scenario_id",
+        "required_observations",
+        "observed",
+        "unobserved",
+        "args_divergence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "scenario_file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "required_observations の正本 (scenarios[] を持つ JSON) のパス"
+        },
+        "scenario_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "scenario_file 内で一意に解決した scenario の id (トップレベル scenario_id と一致)"
+        },
+        "required_observations": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "scenario 正本が要求する観測項目 (この verdict の判定対象)"
+        },
+        "observed": {
+          "type": "array",
+          "description": "実 run 観測として evidence を提示した項目。各 evidence_ref は verdict 生成時に workdir 内の実在ファイルへ解決済み",
+          "items": {
+            "type": "object",
+            "required": ["index", "observation", "evidence_ref"],
+            "additionalProperties": false,
+            "properties": {
+              "index": {"type": "integer", "minimum": 1},
+              "observation": {"type": "string", "minLength": 1},
+              "evidence_ref": {
+                "type": "string",
+                "minLength": 1,
+                "description": "verdict.json のある workdir を起点にした相対ファイルパス。任意で #fragment を付けられるが、絶対パス・workdir 外・不存在ファイルは禁止"
+              }
+            }
+          }
+        },
+        "unobserved": {
+          "type": "array",
+          "description": "evidence が提示されなかった未回収項目。空でなければ goal_verdict は FAIL",
+          "items": {
+            "type": "object",
+            "required": ["index", "observation"],
+            "additionalProperties": false,
+            "properties": {
+              "index": {"type": "integer", "minimum": 1},
+              "observation": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "args_divergence": {
+          "type": "object",
+          "description": "task_args_template と実 args の option flag 差分。placeholder (<...>) を含む template でも比較できるよう flag 単位で測る",
+          "required": [
+            "task_args_template",
+            "template_flags",
+            "actual_flags",
+            "missing_flags",
+            "extra_flags",
+            "matches"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "task_args_template": {"type": "string"},
+            "template_flags": {"type": "array", "items": {"type": "string"}},
+            "actual_flags": {"type": "array", "items": {"type": "string"}},
+            "missing_flags": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "scenario が要求するのに実 args に無い flag (run が契約より弱い)"
+            },
+            "extra_flags": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "実 args にあるのに scenario が要求していない flag (--dry-run 等で run の強度が変わる)"
+            },
+            "matches": {"type": "boolean"}
+          }
+        },
+        "task_contract": {
+          "type": "object",
+          "description": "scenario が task.md の実手順へ要求する必須・禁止断片の照合結果。旧 verdict との互換のため scenario_contract の required には加えない",
+          "required": [
+            "declared",
+            "task_file",
+            "task_file_exists",
+            "required_fragments",
+            "forbidden_fragments",
+            "missing_required_fragments",
+            "present_forbidden_fragments",
+            "matches"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "declared": {"type": "boolean"},
+            "task_file": {"type": "string", "minLength": 1},
+            "task_file_exists": {"type": "boolean"},
+            "required_fragments": {
+              "type": "array",
+              "items": {"type": "string", "minLength": 1}
+            },
+            "forbidden_fragments": {
+              "type": "array",
+              "items": {"type": "string", "minLength": 1}
+            },
+            "missing_required_fragments": {
+              "type": "array",
+              "items": {"type": "string", "minLength": 1}
+            },
+            "present_forbidden_fragments": {
+              "type": "array",
+              "items": {"type": "string", "minLength": 1}
+            },
+            "matches": {"type": "boolean"}
+          }
+        }
+      }
+    },
     "environment": {
       "type": "object",
       "required": [
