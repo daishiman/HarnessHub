@@ -26,7 +26,7 @@ import {
   type PublisherTokenRow,
   type UserRow,
 } from '@harness-hub/db';
-import { type PublisherTokenScope, publisherTokenScopeSchema } from '@harness-hub/schemas';
+import { type PublisherTokenScope, publisherTokenScopeSchema, workspaceDomainSchema } from '@harness-hub/schemas';
 import type {
   AuthClock,
   AuthPorts,
@@ -36,6 +36,7 @@ import type {
   TenantOidcConnection,
 } from './ports.js';
 import { systemAuthClock } from './ports.js';
+import { createOidcCredentialResolver, type SharedGoogleCredentials } from './shared-credentials.js';
 
 /**
  * 永続化された行が port の型を満たさないときの故障。
@@ -83,6 +84,36 @@ function parseScopes(scopesJson: string, label: string): readonly PublisherToken
 }
 
 const serializeScopes = (scope: readonly PublisherTokenScope[]): string => JSON.stringify([...scope]);
+
+/**
+ * `allowed_workspace_domains` (JSON 配列 TEXT / NULL) を復元する。
+ *
+ * `parseScopes` と同じ姿勢: **壊れた値を空配列へ黙って倒さない**。
+ * ここで空配列に落とすと、共有方式の接続では「許可ドメイン未設定」と区別が付かなくなり、
+ * `resolveTenantOidcConfig` が接続を閉じてしまう。実際は列が壊れているだけなのに
+ * 「設定漏れ」に見えるので、運用が誤った方向 (再設定) へ誘導される。
+ * 逆に顧客方式では空配列 = `hd` 検査なしなので、壊れた値を空配列に倒すと**検査が消える**。
+ * どちらの方向にも黙って倒れないよう、故障は故障として上げる。
+ */
+function parseAllowedWorkspaceDomains(json: string | null, label: string): readonly string[] {
+  if (json === null || json.length === 0) return [];
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(json);
+  } catch {
+    throw new AuthPortDataError(`${label}: allowed_workspace_domains が JSON として読めません`);
+  }
+  if (!Array.isArray(parsed)) {
+    throw new AuthPortDataError(`${label}: allowed_workspace_domains が配列ではありません`);
+  }
+  return parsed.map((entry) => {
+    const result = workspaceDomainSchema.safeParse(entry);
+    if (!result.success) throw new AuthPortDataError(`${label}: 不正な Workspace ドメインが保存されています`);
+    // 比較は検証側でも小文字化するが、保存値の揺れをここで吸収しておく
+    return result.data.toLowerCase();
+  });
+}
 
 /**
  * 1 テナントに `idp_connections` が複数ある場合の選択規則。
@@ -144,6 +175,14 @@ export interface DbAuthPortsDeps {
   readonly repositories: CoreRepositories;
   /** 省略時はシステム時計。テストは進められる時計を注入して TTL 境界を検査する。 */
   readonly clock?: AuthClock;
+  /**
+   * 環境単位の共有 Google OAuth credential (issue-auth-tenancy-shared-google-oidc-20260729)。
+   *
+   * 省略・null は「共有方式を運用していない環境」。その場合 `credential_mode='shared_google'` の
+   * 行は**解決されない** (認証できない) — 共有 client_id が無いまま認可要求を組み立てさせない。
+   * 顧客持ち込み方式のテナントはこの値に依存しないので、未設定でも従来どおり動く (受入条件 5)。
+   */
+  readonly sharedGoogle?: SharedGoogleCredentials | null;
 }
 
 /**
@@ -153,17 +192,28 @@ export interface DbAuthPortsDeps {
  * port の戻り値に平文 secret を載せると、port を受け取る全ての層 (device flow・認可判定) が
  * 触れる位置に置かれる。必要なのは Auth.js 設定の組立時だけなので、そこへ直接渡す。
  *
+ * 引数が `tenantId` ではなく解決済み接続なのは、共有方式を足したときに
+ * 「どちらの出所から取るか」を接続の `credentialMode` で決めるため。tenantId だけを渡すと
+ * 呼び出し側が mode を見て分岐することになり、分岐が Auth.js 設定組立の外へ漏れる。
+ * 実際の分岐は `shared-credentials.ts` の 1 箇所に閉じてある。
+ *
  * 見つからないときは例外ではなく null。`resolveAuthjsConfigForTenant` が null を
  * 「このテナントでは認証できない」として 404 に倒す (既定 provider へ落とさない / AD-5)。
  */
-export function createDbClientSecretResolver(deps: DbAuthPortsDeps): (tenantId: string) => Promise<string | null> {
+export function createDbClientSecretResolver(
+  deps: DbAuthPortsDeps,
+): (connection: TenantOidcConnection) => Promise<string | null> {
   const idpConnectionsRepo = deps.repositories.idpConnections;
-  return async (tenantId) => {
-    const context = createRepositoryContext({ tenantId });
-    const connection = pickPrimaryConnection(await idpConnectionsRepo.list(context));
-    if (connection === null) return null;
-    return idpConnectionsRepo.decryptClientSecret(context, connection.id);
-  };
+
+  return createOidcCredentialResolver({
+    sharedGoogle: deps.sharedGoogle ?? null,
+    customerClientSecretFor: async (tenantId) => {
+      const context = createRepositoryContext({ tenantId });
+      const connection = pickPrimaryConnection(await idpConnectionsRepo.list(context));
+      if (connection === null) return null;
+      return idpConnectionsRepo.decryptClientSecret(context, connection.id);
+    },
+  });
 }
 
 /**
@@ -185,6 +235,28 @@ export function createDbAuthPorts(deps: DbAuthPortsDeps): AuthPorts {
   } = deps.repositories;
 
   const scopeOf = (tenantId: string) => createRepositoryContext({ tenantId });
+  const sharedGoogle = deps.sharedGoogle ?? null;
+
+  /**
+   * DB 行の client_id を「認可要求で使う client_id」へ翻訳する。
+   *
+   * 共有方式の行は client_id 列が空 (secret も置かない / 受入条件 4)。実際に使う値は
+   * 環境単位の共有 client_id なので、**ここで 1 回だけ**差し込む。
+   * 共有 credential 未設定なら null を返し、接続そのものを解決させない —
+   * 空文字の client_id で provider を組むと `aud` 検証が空文字と比較する経路になり、
+   * 検証の意味が消える。
+   */
+  const resolveClientId = (row: IdpConnectionRow): string | null => {
+    switch (row.credentialMode) {
+      case 'shared_google':
+        return sharedGoogle?.clientId ?? null;
+      case 'customer_google':
+        return row.clientId.length > 0 ? row.clientId : null;
+      default:
+        // 未知の mode を既定へ落とさない (oidc.ts の isCredentialModeUsable と同じ姿勢)
+        return null;
+    }
+  };
 
   /** `users` 1 行 + 所属一覧から `DirectoryUser` を組む。所属は必ず引く (既定を「所属なし」にしない)。 */
   const toDirectoryUser = async (row: UserRow): Promise<DirectoryUser> => {
@@ -208,15 +280,24 @@ export function createDbAuthPorts(deps: DbAuthPortsDeps): AuthPorts {
         if (tenant === null) return null;
         const connection = pickPrimaryConnection(await idpConnectionsRepo.list(scopeOf(tenant.id)));
         if (connection === null) return null;
+
+        const clientId = resolveClientId(connection);
+        if (clientId === null) return null;
+
         return {
           tenantId: tenant.id,
           tenantSlug: tenant.slug,
           issuer: connection.issuerUrl,
-          clientId: connection.clientId,
+          clientId,
           displayName: tenant.name,
           // 停止中テナントは接続を解決させない。認証の入口で閉じる方が、
           // 後段の認可でテナント状態を見落とす経路より安全側。
           enabled: tenant.status === 'active',
+          credentialMode: connection.credentialMode,
+          allowedWorkspaceDomains: parseAllowedWorkspaceDomains(
+            connection.allowedWorkspaceDomains,
+            `idp_connections(${connection.id})`,
+          ),
         };
       },
     },

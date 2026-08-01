@@ -125,7 +125,7 @@ requirements-baseline §6 の 4 件を、実装側から再確認した。
 - **発見**: PR #628 の Hub 全体テストで、catalog failure fixture の `kind` を AI queue の feature-local kind と誤認した。
 - **是正**: fixture の property を computed key で表し、実行時の型・値・検証意図を変えず静的検査の対象から分離した。
 - **検証**: 直接関係する 2 files / 22 tests と Hub 全体 76 files / 908 passed / 1 skipped が PASS。
-- **仕様判断**: production code、schema、cache・認可契約に変更がないため、qa-110..112 と既存仕様反映受領を変更しない。
+- **仕様判断**: production code、schema、cache・認可契約に変更はない。main 統合時の QA ID 衝突を解消し、同じ dual catalog 契約を qa-117..119 として再登録し、共有 Google OAuth との両立を qa-120 で正本化した。
 
 ---
 

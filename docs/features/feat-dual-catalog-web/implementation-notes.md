@@ -68,7 +68,7 @@ React 非依存の純関数に閉じている (P04 引き継ぎ 2)。DOM なし�
 読み取り専用の Route Handler。`withAuthz({ action: 'harnesses.read' })` で既存認可ミドルウェアを**消費するだけ**。
 `Cache-Control: private, max-age=60, stale-while-revalidate=300` と scope/session の `Vary` を付ける。
 同一 session/scope の private cache は Hub 停止時にも直近 document を返せる一方、認証済み応答を shared cache へ置かず、
-別 tenant/workspace への再配信を防ぐ (qa-110 / DC-MKT-07)。
+別 tenant/workspace への再配信を防ぐ (qa-117 / DC-MKT-07)。
 
 最終レビューで、401/403/契約不正後も取得済み行を残し得る実装を検出した。一覧・詳細・Release 履歴は
 非閲覧 failure で stale を描画せず、cache key を tenant/workspace/project に束縛した。同一 scope の 503 だけは

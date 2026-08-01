@@ -90,7 +90,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ### 仕様・設計反映
 
 影響あり。正規 transition writer で `security.web`、`frontend.web`、`testing-qa.web` を reopen し、
-`qa-110`、`qa-111`、`qa-112` として再確定後に compile した。
+main との統合時に QA ID の衝突を解消し、`qa-117`、`qa-118`、`qa-119` として再確定した。さらに共有 Google OAuth の `qa-111` と dual catalog security の `qa-117` を両方保持する統合正本 `qa-120` を確定後に compile した。
 反映先は `system-spec/`、`specs/harness-hub-dual-catalog-cache-addendum.md`、
 `architecture/`、`features/`、`docs/features/feat-dual-catalog-web/`。
 受領書は `docs/features/feat-dual-catalog-web/spec-reflection-receipt.md` を正とする。

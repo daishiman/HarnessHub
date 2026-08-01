@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub backend アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T04:40:19Z"
+updated_at: "2026-08-01T11:54:39Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f6ba21931374775143fb656c55c7689e8490662b56a19b170902c6ab565dd465","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"system-spec-harness","source_digest":"6381665fef864065b67525652cc87bcbcb23db18c7f7c3157e7573aee1111f8b","source_path":"system-spec/backend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"db30a63373f9994133e9c39a0ae7691d4e4b70abc6fe5561cf73bf2ec7356ffe","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-01T11:54:39Z","origin_kind":"system-spec-harness","source_digest":"db30a63373f9994133e9c39a0ae7691d4e4b70abc6fe5561cf73bf2ec7356ffe","source_path":"system-spec/backend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-backend.md","confidence":0.95}]
@@ -46,6 +46,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # Harness Hub backend アーキテクチャ (system-spec 取込)
 
@@ -125,3 +126,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## Risks and verification
 
 正本章 (system-spec/backend.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**差分追記 (2026-08-01 / `HarnessHub-fnej` / qa-110)**:
+
+- tenant path で認可を開始し、共有方式だけ Auth.js の basePath を
+  `/api/auth/shared` へ切り替える。共通 callback は自前 state を先に検証して tenant を
+  復元し、tenant id/slug と接続 mode の一致後に Auth.js を実行する。
+- shared tenant の tenant 別 callback、customer tenant の共通 callback、予約 slug
+  `shared` は別々に fail-closed とし、汎用 route fallback を作らない。
+- credential resolver は `customer_google` だけ DB 暗号文を復号し、
+  `shared_google` だけ環境 credential を返す。mode/issuer/設定不一致は認可開始前に閉じる。
+- callback 順序は state/tenant → code・PKCE・nonce・署名 → `hd` → JIT → session。
+  Workspace 拒否を user insert より前に置き、同じ Google `sub` も
+  `(tenant_id, sub)` で別 principal とする。
+- 顧客方式の basePath、Auth.js state cookie、secret 復号、session claims は非回帰とする。

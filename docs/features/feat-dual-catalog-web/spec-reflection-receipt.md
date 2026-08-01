@@ -4,6 +4,7 @@ layer: feature-spec-reflection
 beads_id: HarnessHub-dhy
 dev_graph_node_id: SYS-DUAL-CATALOG-WEB-P13
 recorded_at: 2026-08-01
+reconciled_at: 2026-08-02
 ---
 
 # feat-dual-catalog-web 仕様反映受領書
@@ -23,15 +24,27 @@ system-spec harness の単一 transition writer を使い、既存契約を次�
 
 1. `security.web`、`frontend.web`、`testing-qa.web` を理由付き R4 reopen。
 2. ユーザーの最終レビュー・仕様反映指示を明示承認として、既存契約を全面維持する追補を登録。
-3. `qa-110`、`qa-111`、`qa-112` で各セルを再確定。
-4. coverage matrix の complete/foundation 検査と source citation 検査を PASS。
-5. compile の単一 writer で `system-spec/` を再生成し、今回と無関係な既存追補は保持。
+3. main 統合時に QA ID の衝突を検出し、両方の質疑を保全するため `qa-117`、`qa-118`、`qa-119` で各セルを再確定。
+4. `qa-111` の共有 Google OAuth と `qa-117` の dual catalog cache をどちらも有効とする security 統合正本 `qa-120` を確定。
+5. coverage matrix の complete/foundation 検査と source citation 検査を PASS。
+6. compile の単一 writer で `system-spec/` を再生成し、今回と無関係な既存追補は保持。
 
 | QA | 正本 | 受領した契約 |
 |---|---|---|
-| `qa-110` | `system-spec/security.md` | 非閲覧 failure の stale 禁止、scope 束縛、private/Vary marketplace cache |
-| `qa-111` | `system-spec/frontend.md` | 縮退／認可表示境界、scope 切替、submit 単位の一覧取得 |
-| `qa-112` | `system-spec/testing-qa.md` | 成功→403、同一／別 scope 503、cache header、要求数の回帰束 |
+| `qa-117` | `system-spec/security.md` | 非閲覧 failure の stale 禁止、scope 束縛、private/Vary marketplace cache |
+| `qa-118` | `system-spec/frontend.md` | 縮退／認可表示境界、scope 切替、submit 単位の一覧取得 |
+| `qa-119` | `system-spec/testing-qa.md` | 成功→403、同一／別 scope 503、cache header、要求数の回帰束 |
+| `qa-120` | `system-spec/security.md` | 共有 Google OAuth (`qa-111`) と dual catalog cache (`qa-117`) の防御契約を両方維持する現行 security 統合正本 |
+
+### 2.1 main 統合受領 (2026-08-02)
+
+main 側の共有 Google OAuth 仕様が `qa-110`〜`qa-116` を先に使用したため、
+dual catalog 側の旧 `qa-110`〜`qa-112` をそのまま複数定義にせず、単一 transition writer の
+R4 reopen → confirm で `qa-117`〜`qa-119` へ再登録した。質問・回答・上位ゴールとの対応は変更していない。
+さらに security.web の最終参照を `qa-120` とし、先行した `qa-111` と再登録後の
+`qa-117` の双方を全面維持することを明示した。
+coverage matrix、source citation、compile、Dev Graph source digest の各ゲートで、
+共有 OAuth と dual catalog の両仕様が同時に保持されていることを受領した。
 
 ## 3. 反映先
 

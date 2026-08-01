@@ -12,7 +12,7 @@ iteration: null
 title: "Hub 基盤 証跡収集"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
+updated_at: "2026-08-01T12:04:31.042165Z"
 status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P10"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
@@ -47,6 +47,7 @@ completion_evidence: {"completed_at":"2026-07-24T21:01:50Z","evidence_refs":["is
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
+
 # Hub 基盤 証跡収集
 
 > task projection (P11 / parent: feat-hub-foundation)。実装要件の正本は下記の content-addressed published task spec であり、このファイルは実行入口だけを保持する。
@@ -71,3 +72,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hub-foundation` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 証跡追補 (2026-08-01 / HarnessHub-37h.15)
+
+P11 の証跡集合へ `docs/features/feat-hub-foundation/evidence/slo-observation.json` を追加した。証跡は公開 status page の取得時刻、対象 resource、観測済み日数、downtime、エラーバジェット、dashboard 宣言との一致を保持し、API token と heartbeat URL は含めない。30 日未満のため A3 は未完了であり、追跡先 `HarnessHub-37h.15` を継続する。

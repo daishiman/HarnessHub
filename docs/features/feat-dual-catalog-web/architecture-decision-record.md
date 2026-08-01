@@ -82,7 +82,7 @@ P02 spec が想定した前提と現行リポジトリ実測との差分。**D1-
 - **決定**: port が `5xx` / ネットワーク失敗 / 未実装 (`404`) を返した場合、UI は**エラーで画面全体を潰さず** `DegradedBanner` を出し「導入済みのツールはそのまま使えます」を明示する (qa-019 の文言規約)。
 - **決定**: 縮退時に**新規公開・追加・更新の操作導線のみ**を無効化し、閲覧済みデータの表示と install descriptor のコピー導線は残す。これが「Hub 停止中も導入済み Skill が動作継続する」の UI 面での担保になる。
 - **決定**: 判定は `lib/catalog/degradation.ts` の純関数 `classifyCatalogFailure(status)` に閉じ、`degraded` / `unauthorized` / `forbidden` / `fatal` の 4 分類を返す。401 は `/signin`、403 は権限トースト (frontend-spec §3.1)。
-- **最終レビュー追補 (qa-110 / qa-111)**: stale 表示を許すのは、同じ tenant/workspace/project で直前に認可済みだったデータがあり、最新失敗が `degraded` の場合だけとする。401/403/契約不正では以前の一覧・詳細・install descriptor・Release 履歴を描画せず、scope が変わった場合は新 scope の取得前から旧 scope の内容を表示対象外にする。
+- **最終レビュー追補 (qa-120 / qa-118、cache 原契約 qa-117)**: stale 表示を許すのは、同じ tenant/workspace/project で直前に認可済みだったデータがあり、最新失敗が `degraded` の場合だけとする。401/403/契約不正では以前の一覧・詳細・install descriptor・Release 履歴を描画せず、scope が変わった場合は新 scope の取得前から旧 scope の内容を表示対象外にする。
 
 ### 2.4 エラー時のリトライ上限とレート制御 (P03 指摘 R2 による追補)
 
@@ -112,7 +112,7 @@ CatalogEntry[] --(純関数: buildMarketplaceDocument)--> marketplace document
 
 - **決定 (確定)**: 生成部 `lib/catalog/marketplace.ts` の `buildMarketplaceDocument(entries)` は**純関数**とし、`.claude-plugin/marketplace.json` と同一スキーマ (`name` / `description` / `version` / `owner` / `plugins[]`) を出力する。既存 `scripts/build-plugins-from-harness.py --check-only` (marketplace-integrity CI) が検証している形式を正本とし、新形式を発明しない。
 - **決定 (確定)**: 配信は `apps/hub/src/app/marketplace.json/route.ts` の Route Handler による**動的生成**とする。静的ファイルを R2 へ事前生成する方式は採らない — Catalog pointer の atomic 更新 (feat-publish-pipeline 所有) と生成物の同期点が二重になり、pointer 切替と配信内容の不整合窓が生まれるため。
-- **決定 (2026-08-01 改訂)**: 認証済み tenant/workspace ごとに内容が変わるため、`Cache-Control: private, max-age=60, stale-while-revalidate=300` と `Vary: Cookie, x-harness-tenant-id, x-harness-workspace-id` を付す。private cache による同一 session/scope の停止時継続性は維持し、CDN 等の shared cache が別 tenant へ応答を再配信する経路は閉じる (qa-110)。
+- **決定 (2026-08-01 改訂)**: 認証済み tenant/workspace ごとに内容が変わるため、`Cache-Control: private, max-age=60, stale-while-revalidate=300` と `Vary: Cookie, x-harness-tenant-id, x-harness-workspace-id` を付す。private cache による同一 session/scope の停止時継続性は維持し、CDN 等の shared cache が別 tenant へ応答を再配信する経路は閉じる (qa-117)。
 - **未確定 (fail-closed)**: `plugins[].source` に入れる**経路固有の値** (`github` / `git-subdir` / `npm` のいずれか) は、feat-stage0-distribution-gate の採用経路 decision (D7) が `decisions[]` へ登録されるまで確定しない。実装では `resolvePluginSource()` を**未採用時に例外ではなく空 `plugins: []` + `x-catalog-source-status: pending-h7` ヘッダ**を返す形にし、「経路未確定」を配信面で観測可能にする。
 
 **根拠**: H7 の再検証 (`HarnessHub-n2c0`) 結果次第で source 型が変わる。ここで推測値を焼き込むと、gate の結論が出た時に配信済み marketplace.json が誤った source を指し続ける。空配信 + 明示ヘッダなら、経路確定時に adapter を 1 箇所差し替えるだけで済む。

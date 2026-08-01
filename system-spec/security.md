@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-110 |
+| Web (web) | 確定 | 確定質疑: qa-120 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,21 +24,19 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-110 (対応セル: web)
+### qa-120 (対応セル: web)
 
-**質問**: 認証済みの dual catalog で取得済みデータを再利用する場合、認可失敗とテナント切替をまたいだ情報露出をどう防ぎますか?
+**質問**: main の共有 Google OAuth client と dual catalog の認可 cache 境界を、security.web の現行契約としてどのように両立させますか?
 
-**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-104 までの deny-by-default、tenant/workspace/role、CSRF、監査、credential 境界を全面維持し、dual catalog の cache 境界を次のとおり追加確定する。
+**回答**: ユーザーの 2026-08-02 コンフリクト改善指示を明示承認として、qa-111 の共有 Google OAuth 防御契約と qa-117 の dual catalog cache 防御契約をどちらも全面維持する。
 
-【1. 認可失敗時の表示】catalog 一覧・詳細・Release 履歴は、同じ画面で以前の取得に成功していても、最新応答が 401、403、または契約不正を示した時点で以前の内容を描画しない。Hub 到達不能・404・408・429・5xx の degraded と、現在の主体に閲覧権限が無い unauthorized/forbidden/fatal を同じ stale 表示へ倒さない。
+【1. 共有 OAuth 境界】tenant を運ぶ state の HS256・10分 TTL・CSRF binding、PKCE S256、nonce、検証済み Google ID token の hd allow-list 完全一致、Worker 環境 secret 1件への集約、未知 mode・空 allow-list・片側 credential 欠落時の fail-closed を qa-111 のまま維持する。
 
-【2. scope 束縛】閲覧用 cache は tenant_id、workspace_id、および対象 project_id に束縛する。tenant/workspace/project が切り替わった場合、新 scope の取得が degraded でも旧 scope の一覧・詳細・履歴を再利用しない。同一 scope の degraded に限り、直近の認可済み表示と install descriptor のコピーを維持できる。
+【2. Catalog cache 境界】閲覧 cache を tenant/workspace/project scope に束縛し、401/403/契約不正と scope 切替で旧表示を消去する。認証済み marketplace 応答は private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を必須にし、同一 scope の degraded だけに stale 利用を限る qa-117 の契約を維持する。
 
-【3. marketplace 応答 cache】`/marketplace.json` は `withAuthz` と tenant/workspace resource 解決を通る認証済み応答であるため、共有 cache を許可しない。`Cache-Control` は private の短い max-age と stale-while-revalidate を使い、`Vary` に Cookie、tenant header、workspace header を含める。これにより同一 session/scope の停止時継続性を保ちつつ、CDN や別 scope への再配信を拒否する。
+【3. 責務分離】OAuth callback の本人性・tenant 確定と、認可後 catalog データの再利用境界は異なる防御層である。どちらかを他方の代替とせず、既存 lib/authz/ と API の deny-by-default を共通の正本とする。
 
-【4. 検証】成功後の 403 で一覧・詳細・履歴が消えること、同一 scope の 503 では stale を保つこと、scope 切替後の 503 では旧 tenant の内容が出ないこと、marketplace が private/Vary を返すことを自動テストで固定する。
-
-【5. 所有境界】role 判定は既存 `lib/authz/` と API の deny-by-default を正本とし、catalog client に認可規則を複製しない。本追補は既存の server-side 認可を弱めず、表示 cache と応答 cache の漏えい窓を閉じる。
+【4. 回帰】共有 OAuth の state/cookie/hd/secret 負例と、catalog の成功後 403・同一 scope 503・scope 切替後 503・private/Vary をそれぞれ自動テストで固定する。本統合は既存の応答・認可・DB schema を弱めず、QA ID 衝突解消後の現行契約を明確化する。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

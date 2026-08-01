@@ -102,4 +102,4 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 認可済み catalog の stale 表示を同一 tenant/workspace/project の `degraded` に限定し、401/403/契約不正と scope 切替では以前の内容を描画しない。
 - `/marketplace.json` は private cache + Cookie/tenant/workspace `Vary` へ改訂し、Hub 停止時の同一 scope 継続性を残したまま shared cache のテナント漏えい窓を閉じた。
 - 一覧の入力値と適用 query を分離し、入力中の自動取得と submit 時の二重取得を解消した。
-- 仕様正本は `qa-110〜112`、設計は [frontend](../architecture/harness-hub-frontend.md)・[security](../architecture/harness-hub-security.md)・[testing-qa](../architecture/harness-hub-testing-qa.md)、検証と残課題は [仕様反映受領書](../docs/features/feat-dual-catalog-web/spec-reflection-receipt.md) を参照する。
+- dual catalog の仕様正本は `qa-117`〜`qa-119`、main との security 統合正本は `qa-120`。設計は [frontend](../architecture/harness-hub-frontend.md)・[security](../architecture/harness-hub-security.md)・[testing-qa](../architecture/harness-hub-testing-qa.md)、検証と残課題は [仕様反映受領書](../docs/features/feat-dual-catalog-web/spec-reflection-receipt.md) を参照する。
