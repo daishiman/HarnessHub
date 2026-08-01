@@ -18,6 +18,8 @@ export interface PrincipalResolverDeps {
   readonly nowSeconds: number;
 }
 
+export type AccessTokenPrincipalResolverDeps = Pick<PrincipalResolverDeps, 'accessTokenSecret' | 'nowSeconds'>;
+
 /**
  * 主体を解決する。解決できなければ null (例外にしない)。
  * Bearer を先に見るのは、CLI が誤って cookie を送っても token 側の scope 制限が効くようにするため。
@@ -27,20 +29,43 @@ export async function resolveRequestPrincipal(
   deps: PrincipalResolverDeps,
 ): Promise<AuthzPrincipal | null> {
   const bearer = readBearerToken(request.headers.get('authorization'));
-  if (bearer !== null) return resolveFromAccessToken(bearer, deps);
+  if (bearer !== null) return resolveAccessTokenPrincipal(bearer, deps);
   return resolveFromSession(request.headers.get('cookie'), deps);
 }
 
-async function resolveFromAccessToken(token: string, deps: PrincipalResolverDeps): Promise<AuthzPrincipal | null> {
+/**
+ * Bearer access token だけを共通の AuthzPrincipal へ変換する。
+ *
+ * Next.js middleware は DB に接続できないが、JWT の署名・claims・期限は stateless に検証できる。
+ * route と同じ検証関数を使うことで、middleware 用の緩い token 解釈が増えるのを防ぐ。
+ */
+export async function resolveAccessTokenPrincipal(
+  token: string,
+  deps: AccessTokenPrincipalResolverDeps,
+): Promise<AuthzPrincipal | null> {
   const verified = await verifyJwt(token, deps.accessTokenSecret);
-  if (!verified.ok) return null;
+  if (!verified.ok) {
+    // token 本体・署名値・claim は出さない。署名鍵の不整合と入力破損を本番で切り分けるため、
+    // 公開しても資格情報にならない拒否段階と固定理由だけを残す。
+    console.warn('[authz] access token rejected', { stage: 'jwt', reason: verified.reason });
+    return null;
+  }
 
   const parsed = accessTokenClaimsSchema.safeParse(verified.payload);
   // typ: 'access' の literal 検査もここに含まれる。session token を Bearer に載せても通らない
-  if (!parsed.success) return null;
+  if (!parsed.success) {
+    console.warn('[authz] access token rejected', {
+      stage: 'claims',
+      issues: parsed.error.issues.map((issue) => ({ path: issue.path.join('.'), code: issue.code })),
+    });
+    return null;
+  }
 
   const claims = parsed.data;
-  if (claims.exp <= deps.nowSeconds) return null;
+  if (claims.exp <= deps.nowSeconds) {
+    console.warn('[authz] access token rejected', { stage: 'expiry' });
+    return null;
+  }
 
   return {
     userId: claims.sub,

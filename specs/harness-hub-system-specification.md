@@ -256,6 +256,8 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 実装契約、設計判断、検証結果の対応は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
   を正とする。
+- 重複報告 `HarnessHub-j66m` は別仕様・別実装を作らず、同じ受領書と dev-graph node
+  `issue-c02-upsert-lifecycle-regression-20260729` の再検証 trace に統合する。
 
 **開発管理整合性の反映 (2026-07-30 / `HarnessHub-dqca` / qa-102)**:
 
@@ -339,6 +341,25 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 反映先と検証は
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
   を正とする。
+
+## Publish pipeline 実装反映 (2026-07-30 / `HarnessHub-dfm`)
+
+- `system-spec/backend.md` の `qa-103` で、公開要求から Release 生成までの REST API、
+  状態遷移、Green 自動公開、Yellow/Red の修正待ち、TargetChannel 単位の直列化を確定した。
+- `system-spec/security.md` の `qa-104` で、session/Bearer の経路別許可、
+  tenant/owner の fail-closed 判定、CSRF、冪等鍵、監査を確定した。
+- `system-spec/database.md` の `qa-105` で、既存 schema の consumer 境界、
+  immutable Release、partial UNIQUE、stable pointer 更新を確定した。
+- production smoke の DB 操作も root 公開 API の `createPublishSmokeDbProbe`
+  経由とし、運用検証を理由に schema subpath へ到達しない。
+- `system-spec/infrastructure.md` の `qa-106` と
+  `system-spec/maintenance-ops.md` の `qa-107` で、R2 binding、本番 smoke、
+  code-only rollback、履歴保持を確定した。
+- `system-spec/testing-qa.md` の `qa-108` で、状態機械・認可・検査・DB/R2・
+  production smoke の証拠束を受入条件へ固定した。
+- 正規遷移は `appr-020` を根拠に各セルを R4 reopen → confirm し、
+  compile と coverage/source-citation gate を通した。詳細は
+  [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を正とする。
 
 **G4 実行安定化の反映 (2026-07-30 / `HarnessHub-pyb3`)**:
 
