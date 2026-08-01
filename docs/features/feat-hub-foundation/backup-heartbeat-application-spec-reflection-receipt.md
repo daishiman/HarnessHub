@@ -53,7 +53,25 @@ provider 側の状態表示そのものは Uptime API token を保持しない�
 - GitHub Actions: `hub-backup` run `30686023662`、`hub-ci` run `30684710098`
 - Beads: `HarnessHub-fnzl` 6/6、`HarnessHub-dbx6` 4/4 の受入条件を満たして closed
 
-## 7. 残課題
+## 7. 最終品質ゲート
+
+| ゲート | 結果 |
+| --- | --- |
+| main 同期 | `origin/main` = local `main` = `f3032740` を確認し、local `main` を本 branch へ merge |
+| task 仕様 | `feat-hub-foundation` / `feat-domain-model-db` とも P01〜P13、violations 0 |
+| system-spec | coverage complete + foundation、source citation、harness pytest 218/218 PASS。正規 compiler の情報欠落差分は不採用とし、最終 tracked byte diff 0 |
+| 対象回帰 | monitoring / Better Stack / Actions secrets の Vitest 55/55 PASS、Hub typecheck PASS |
+| 外部実測 | Actions secret 台帳 13/13、`hub-ci` run `30684710098`、`hub-backup` run `30686023662`、heartbeat 通知 step が success |
+| Dev Graph / 文書 | graph schema valid、source digest mismatch 0、artifact placement PASS、300 行 ratchet 460 文書 PASS、script naming violation 0 |
+| patch / data | `git diff --check` PASS、変更 JSON 3 件を `jq empty` で検証 |
+| workspace | `pnpm verify` は lint / typecheck / Next build / OpenNext build と DB 30 files / 231 tests の assertion が全件 PASS。coverage 90.54%。ただし高負荷なローカル環境で既知の Vitest worker RPC `onTaskUpdate` timeout が assertion 完了後に再現し、exit 1。DB 単独・worker 2・worker 1 でも assertion は全件 PASS し、今回差分の機能失敗ではないことを切り分けた。clean runner の remote CI を最終判定にする |
+
+## 8. ファイル分割
+
+変更した人間向け文書は全て 500 行以下であり、repository のより厳しい 300 行ゲートにも適合したため、追加分割は不要である。`.dev-graph/state/graph.json` は機械可読な正本（システムが読む一つの基準データ）であり、人間向け文書の行数制約で分割しない。
+
+## 9. 残課題
 
 - 月次 SLO 99.5% の達成判定は 30 日分の観測後に行う。これは `HarnessHub-fnzl` / `HarnessHub-dbx6` の完了条件ではなく、既存の SLO 観測タスクの責務である。
 - 四半期 restore drill は別の定期運用責務として継続する。今回の初回 backup 成功と混同しない。
+- ローカルで再現した Vitest worker RPC timeout は既知の `HarnessHub-pyb3` と同型であり、assertion の失敗ではない。draft PR の clean runner で remote CI を確認する。
