@@ -9,7 +9,7 @@ const SCRIPT = resolve(HUB_ROOT, 'scripts/smoke-production-publish.ts');
 
 describe('P13 production publish smoke script', () => {
   it('資格情報なしでも --help を実行できる', () => {
-    const output = execFileSync('pnpm', ['exec', 'tsx', SCRIPT, '--help'], {
+    const output = execFileSync('pnpm', ['run', 'smoke:publish-production', '--', '--help'], {
       cwd: HUB_ROOT,
       encoding: 'utf8',
       env: { NODE_ENV: 'test', PATH: process.env.PATH ?? '' },

@@ -72,3 +72,20 @@ test support 名衝突 1 件は `createPublishSmokeDbProbe` と test-only alias 
 本受領書は仕様反映の完了を示す。Beads task の完了は示さない。
 `HarnessHub-dfm.1`〜`.13` と親 `HarnessHub-dfm` は draft PR merge と
 default branch reconciliation まで `in_progress` を維持する。
+
+## 6. CI 是正追補（2026-08-01）
+
+PR #620 の GitHub Actions run `30552438567` では、Hub の production smoke
+entrypoint が使用する `tsx` を `apps/hub` が直接宣言しておらず、clean install
+環境で `Command "tsx" not found` となった。`tsx` を Hub の devDependency へ追加し、
+テストも内部 binary の直接呼び出しではなく公開 package script を検証する形へ揃えた。
+
+この是正による仕様・設計への**追加影響はなし**と判断する。変更対象は開発時の実行依存と
+テスト入口だけであり、REST API、PublishRequest 状態、認証認可、DB/R2、production smoke
+の S1〜S6 契約は変わらないためである。したがって qa-103〜qa-108 の再 reopen は不要で、
+本受領書の既存反映を維持する。
+
+再検証では smoke script test 2 件、Hub 842 件、schemas 86 件、workspace typecheck、
+Biome 423 files を pass した。workspace 並列テストで一度だけ schemas の全 86 件成功後に
+Vitest worker RPC timeout が発生したが、schemas 単独再実行は 86/86 pass しており、
+今回の差分に起因するテスト失敗ではないことを確認した。
