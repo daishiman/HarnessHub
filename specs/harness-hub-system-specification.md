@@ -380,6 +380,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)
   を正とする。
 
+**P13 production CI 再実行の反映 (2026-08-01 / `HarnessHub-o2i.13`)**:
+
+- production deploy の正本を GitHub Actions `ci.yml` に一本化する既存契約を維持する。
+- 通常は main merge の push で全自動配備する。path filter 非発火時だけ、main の明示
+  `workflow_dispatch` で同じ静的ゲート・test・migration・deploy・post-deploy smoke を再実行できる。
+- feature branch deploy、全ゲートの短絡、通常運用でのローカル Wrangler deploy は許可しない。
+- これは CI trigger の回復経路を具体化する差分で、製品 API、DB schema、認証認可、UI、
+  Worker deploy unit は変更しない。正本は `system-spec/infrastructure.md` と
+  [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
+  [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
