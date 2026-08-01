@@ -12,8 +12,8 @@ iteration: null
 title: "GitHub Actions の Turso secrets が未登録で deploy migration と日次 backup が失敗する (secret 名の系統も二重)"
 owners: ["daishiman"]
 created_at: "2026-07-25T00:41:30Z"
-updated_at: "2026-07-26T06:20:00Z"
-status: "blocked"
+updated_at: "2026-08-01T05:40:00Z"
+status: "closed"
 depends_on: []
 related_nodes: ["SYS-DOMAIN-MODEL-DB-P13"]
 resource_scope: [".github/workflows/ci.yml",".github/workflows/backup.yml","scripts/ci/actions-secrets-registry.json","scripts/ci/check-actions-secrets.mjs","apps/hub/tests/ci/actions-secrets.test.ts","docs/features/feat-hub-foundation/runbook.md"]
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[".github/workflows/backup.yml",".github/workflows/ci.yml","scripts/ci/actions-secrets-registry.json","scripts/ci/check-actions-secrets.mjs","apps/hub/tests/ci/actions-secrets.test.ts","docs/features/feat-hub-foundation/runbook.md"],"policy":"manual","reconciled_at":"2026-07-26T06:20:00Z","source":null,"status":"blocked"}
+completion_evidence: {"completed_at":"2026-08-01T05:40:00Z","evidence_refs":[".github/workflows/backup.yml",".github/workflows/ci.yml","scripts/ci/actions-secrets-registry.json","scripts/ci/check-actions-secrets.mjs","apps/hub/tests/ci/actions-secrets.test.ts","docs/features/feat-hub-foundation/runbook.md","docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied-2026-08-01.json"],"policy":"manual","reconciled_at":"2026-08-01T05:40:00Z","source":null,"status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T00:41:30Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -61,18 +61,23 @@ GitHub Actions の secret / variable を機械可読台帳で管理し、workflo
 - `smoke-production.ts` は DB package から bare `wrangler` を起動せず、Hub workspace の依存を repo root から解決
 - 台帳の 4 方向突合 14 tests、runbook 記載コマンド 3 tests、backup/smoke 10 testsを追加・更新
 
-## 未完了
+## 完了 (2026-08-01)
 
-GitHub 上の旧 `backup.yml` がまだ `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を参照しているため、旧 2 secrets は landing 前に削除しない。更新版の `hub-backup` success と、main push 後の migration → deploy → health → smoke の完走を確認するまで本 issue は blocked を維持する。
+残っていた 2 条件を実測で満たした。
+
+- 旧 `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は 2026-07-28 に削除済みで、`--live` は exit 0 (workflow 実参照 13 件 = 台帳 13 件)。
+- 最後まで未投入だった `BACKUP_HEARTBEAT_URL` を 2026-08-01 に投入した。これは backup 専用 heartbeat の分離 (`HarnessHub-dbx6`) で `required` へ昇格した項目で、未投入の間は `backup.yml` の前提確認が fail-closed で停止していた (7/29・7/30・7/31 の 3 連続 failure はいずれもこの 1 件が原因)。
+- `hub-backup` run `30686023662` (workflow_dispatch / main) が success。export 検証 19 テーブル 64 行、R2 往復一致、heartbeat ping まで到達した。
+- `hub-ci` は main HEAD `21339342` の run `30684710098` が success で、migration → deploy → health → smoke を完走している。
 
 ## 受入条件
 
-- [x] required 6 項目が GitHub に投入済み
-- [x] workflow 実参照 9 項目と台帳 9 項目が一致
+- [x] required 項目が GitHub に投入済み (`--live` exit 0)
+- [x] workflow 実参照 13 項目と台帳 13 項目が一致
 - [x] backup.yml / ci.yml / runbook の secret / variable 種別が一致
 - [x] R2 転送と本番 smoke の Wrangler 起動境界を regression test で固定
-- [ ] 更新後の `hub-backup` が GitHub Actions で success
-- [ ] main push 後の `hub-ci` deploy job が migration → deploy → smoke を完走
+- [x] 更新後の `hub-backup` が GitHub Actions で success (run `30686023662`)
+- [x] main push 後の `hub-ci` deploy job が migration → deploy → smoke を完走 (run `30684710098`)
 
 ## 検証証跡
 
@@ -82,3 +87,4 @@ GitHub 上の旧 `backup.yml` がまだ `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME
 - `scripts/ci/check-actions-secrets.mjs`
 - `apps/hub/tests/ci/actions-secrets.test.ts`
 - `docs/features/feat-hub-foundation/runbook.md`
+- `docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied-2026-08-01.json`

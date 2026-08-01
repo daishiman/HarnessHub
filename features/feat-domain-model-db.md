@@ -84,7 +84,7 @@ Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメイ�
 
 - 日次 export は `export-control-plane.ts` の JSONL を gzip して R2 に保存し、四半期 drill と障害復旧は同じ成果物を `restore-control-plane.ts` で検証付き restore する。
 - runbook のコマンドは `packages/db/__tests__/runbook-invocation.test.ts` が記載どおりに実走し、`pnpm --filter` の cwd 差と引数透過の回帰を検出する (`HarnessHub-0yvi`)。
-- remote の backup / deploy 実走確認は `HarnessHub-fnzl` に残し、最小権限 token 分離は `HarnessHub-bda4` に分離している。
+- remote の backup / deploy 実走確認は `HarnessHub-fnzl` へ分離した。2026-08-01 に `hub-ci` run `30684710098` と `hub-backup` run `30686023662` が success となり、同課題は closed。最小権限 token 分離の追跡は `HarnessHub-bda4` が担う。
 
 ## 接続復旧の実装反映 (2026-07-30 / `HarnessHub-njkm`)
 

@@ -1,0 +1,82 @@
+{
+  "applied_at": "2026-08-01T05:31:12.697Z",
+  "scope": "backup_heartbeat",
+  "api_base": "https://uptime.betterstack.com",
+  "issues": ["HarnessHub-fnzl", "HarnessHub-dbx6"],
+  "actions": [
+    {
+      "kind": "heartbeat",
+      "local_id": "hub-backup-daily",
+      "action": "created",
+      "external_id": "477775",
+      "period_seconds": 86400,
+      "grace_seconds": 3600
+    }
+  ],
+  "heartbeat_secret": "skipped",
+  "backup_heartbeat_secret": "delivered",
+  "separation_from_worker_cron": {
+    "worker_cron_heartbeat_external_id": "475650",
+    "worker_cron_secret_binding": "CRON_HEARTBEAT_URL",
+    "backup_heartbeat_external_id": "477775",
+    "backup_secret_binding": "BACKUP_HEARTBEAT_URL",
+    "shared": false,
+    "$comment": "資源も secret も分離済み。Worker cron の成功 ping が backup の失敗・不発を上書きしないことが分離の目的 (qa-093)。"
+  },
+  "actions_secrets_gate": {
+    "command": "node scripts/ci/check-actions-secrets.mjs --live",
+    "checked_at": "2026-08-01T05:31Z",
+    "exit_code": 0,
+    "workflow_references": 13,
+    "registry_entries": 13,
+    "violations": [],
+    "$comment": "適用前は not-configured: BACKUP_HEARTBEAT_URL の 1 件で exit 1 だった。"
+  },
+  "backup_run": {
+    "run_id": "30686023662",
+    "workflow": "backup.yml",
+    "event": "workflow_dispatch",
+    "ref": "main",
+    "started_at": "2026-08-01T05:32:23Z",
+    "conclusion": "success",
+    "duration_seconds": 38,
+    "steps_observed": {
+      "前提 secret の存在確認": "pass",
+      "control-plane export → gzip": "pass",
+      "R2 へ upload (Wrangler)": "pass",
+      "upload 結果の検証": "pass",
+      "heartbeat 通知": "pass"
+    },
+    "export_verification": {
+      "table_count": 19,
+      "total_rows": 64,
+      "notice": "export 検証 OK: 19 テーブル / 64 行"
+    },
+    "object_key": "db-export/2026/2026-08-01.jsonl.gz",
+    "in_run_roundtrip": "upload 後に再取得した backup は元ファイルと一致しました",
+    "$comment": "適用前の直近 3 run (30654813477 / 30569716449 / 30478540955) はいずれも 前提 secret の存在確認 step で failure。原因は BACKUP_HEARTBEAT_URL 未投入 1 件のみ。"
+  },
+  "artifact_independent_verification": {
+    "checked_at": "2026-08-01T05:34Z",
+    "method": "run とは独立に、ローカルの wrangler で R2 から再取得し verify-export-artifact.ts へ通した",
+    "object_key": "db-export/2026/2026-08-01.jsonl.gz",
+    "gz_bytes": 7337,
+    "ok": true,
+    "table_count": 19,
+    "total_rows": 64,
+    "empty_tables": ["catalog_entries", "deployment_references", "user_settings"],
+    "format": "harness-hub-control-plane-export",
+    "format_version": 1,
+    "$comment": "空テーブル 3 件は未利用の断面であり、復元可能な正しい export として採択する (qa-019 の『復元できないバックアップを成功と数えない』は満たす)。"
+  },
+  "heartbeat_delivery": {
+    "ping_accepted": true,
+    "evidence": "backup.yml の heartbeat 通知 step が curl -fsS -m 10 で exit 0。-f により 4xx/5xx なら非ゼロ終了するため、step 成功は Better Stack が 2xx を返したことを意味する",
+    "provider_side_state_confirmed": false,
+    "provider_side_blocker": "Better Stack 側の heartbeat 状態遷移 (up) の直接確認には Uptime API token が要る。本作業では token を保持し続けない方針のため未確認",
+    "next_scheduled_run": "2026-08-01T17:00:00Z",
+    "expected_alert_if_missed": "period 86400 秒 + grace 3600 秒により、予定 run が完走しなければ概ね 2026-08-02T18:00Z (JST 03:00) までに異常化する",
+    "$comment": "『ping が受理された』と『provider 側の状態が変化した』を区別して記録する。前者のみ実測済み。"
+  },
+  "$comment": "heartbeat URL と API token は本証跡に含めない (受け入れ条件 4)。API token は適用時のみ環境変数として渡し、作業後に破棄した。"
+}
