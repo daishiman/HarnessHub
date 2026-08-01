@@ -51,25 +51,40 @@ def is_schedulable(node: dict[str, Any]) -> bool:
     )
 
 
-def dependencies_satisfied(
+def blocking_dependencies(
     node: dict[str, Any], by_id: dict[str, dict[str, Any]], done: set[str]
-) -> bool:
-    """Evaluate task dependencies without copying macro feature edges.
+) -> list[str] | None:
+    """Return unfinished dependency IDs without copying macro feature edges.
 
     P01 is the package entry point. Its own ``depends_on`` remains an
     intra-feature task edge list (normally empty), while the parent feature's
     canonical macro dependencies are evaluated dynamically as an entry gate.
+
+    ``None`` preserves the existing fail-closed result for malformed dependency
+    shapes. Valid dependency lists return a deterministic, de-duplicated list
+    so the scheduler can report why a node was excluded.
     """
     dependencies = node.get("depends_on", [])
-    if not isinstance(dependencies, list) or any(dep not in done for dep in dependencies):
-        return False
+    if not isinstance(dependencies, list):
+        return None
+    blocking = [dep for dep in dependencies if dep not in done]
     if node.get("artifact_kind", node.get("kind")) != "task" or node.get("phase_ref") != "P01":
-        return True
+        return sorted(set(blocking))
     parent_id = node.get("parent_feature")
     if not isinstance(parent_id, str) or parent_id not in by_id:
-        return False
+        return None
     upstream = by_id[parent_id].get("depends_on", [])
-    return isinstance(upstream, list) and all(dep in done for dep in upstream)
+    if not isinstance(upstream, list):
+        return None
+    blocking.extend(dep for dep in upstream if dep not in done)
+    return sorted(set(blocking))
+
+
+def dependencies_satisfied(
+    node: dict[str, Any], by_id: dict[str, dict[str, Any]], done: set[str]
+) -> bool:
+    """Evaluate task dependencies while preserving the public bool helper."""
+    return blocking_dependencies(node, by_id, done) == []
 
 
 ACTIVE_LEASE_STATES = {
@@ -338,7 +353,20 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
 
     ready_ids: set[str] = set()
     for node_id, node in by_id.items():
-        if node_id not in selected or not is_schedulable(node) or not dependencies_satisfied(node, by_id, done):
+        if node_id not in selected:
+            continue
+        if not is_schedulable(node):
+            continue
+        blockers = blocking_dependencies(node, by_id, done)
+        if blockers is None:
+            continue
+        if blockers:
+            unmapped.append({
+                "external_ref": node_id,
+                "reason": "dependency_unsatisfied",
+                "blocking_depends_on": blockers,
+                "source": "schedule-graph",
+            })
             continue
         binding = node.get("tracker_binding")
         if binding == "beads":

@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-07-30T07:08:55Z"
+updated_at: "2026-08-01T05:03:56.967511Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T07:08:55Z","origin_kind":"system-spec-harness","source_digest":"59aa87850fd74abe7e18d0a8bf25cd10310d2cd9176ac1cb77695a89ccf9cab4","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97","evaluator":"codex-conflict-resolution","evidence_ref":"docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-01T04:59:08Z","origin_kind":"system-spec-harness","source_digest":"530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -112,6 +112,32 @@ receipt 有り／無しで描画する正負テストにより、件数が偶然
 偽陽性を遮断する。影響は repository 内の renderer 品質契約だけであり、
 製品 API、DB、認証認可、UI、deploy unit は変えない。詳細は
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
+を参照する。
+
+## 2026-07-30 plugin-local browser CI 到達設計
+
+`HarnessHub-nznu` / `task-slide-report-generator-browser-ci-20260730` では、
+slide/report の browser acceptance を「テストが存在する」状態から
+「clean GitHub-hosted runner が実行する」状態へ接続した。
+
+```
+plugin/workflow diff
+  → plugin-local Node/Playwright + Chromium 復元
+  → vendor npm test（Chromium 起動・16:9・2 screenshots・report self-test）
+  → read-only runtime check（version・実体・plugin-local path）
+```
+
+- GitHub Actions は `testing-qa.web` の CI 実行基盤であり、作者の
+  desktop-macos / desktop-windows 環境とは別の責務として扱う。
+- `actions/cache` は高速化だけを担い、成功判定の正本にしない。最終 check が
+  browser 実行ファイルの存在と plugin-local directory への包含を再確認する。
+- workflow 自体の path trigger、working directory、install/test/check 配線は
+  Python 契約テストで固定し、テスト本体があっても CI から未到達になる退行を遮断する。
+- workflow token は `contents: read` に限定し、repository secret を追加しない。
+- 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+
+仕様正本は `system-spec/testing-qa.md` qa-109、実装判断と検証の対応は
+[仕様反映受領書](../docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md)
 を参照する。
 
 ## 上流指針 (doctrine anchor)

@@ -202,6 +202,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - qa-100 は qa-089 の受領境界を fail-closed（確認不能なら失敗）にし、live-trial の `scenario_contract`、全 required observation、引数、宣言済み task 契約、run 内 evidence を criteria-test で再照合する。旧形式の欠落は互換成功にせず fresh run で更新する。
 - 影響は開発証拠の受領だけで、schedule skill 本体と製品契約は非変更。反映対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) を正とする。
 
+**plugin browser CI 到達追補 (2026-07-30 / `HarnessHub-nznu` / qa-109)**:
+
+- 実ブラウザを必要とする plugin acceptance は EVALS やローカル `npm test` への列挙だけで完了とせず、plugin path 変更時に GitHub Actions から runtime install → 同一 test → read-only check へ到達させる。
+- Node/Playwright と OS/CPU 別 Chromium は plugin 配下へ復元する。cache は高速化に限定し、最終 check が version、実行ファイル実在、plugin-local path 包含を検証する。
+- `slide-report-generator` は Chromium 起動、16:9、2 slide screenshot、report self-test を vendor test で実測し、workflow 配線を Python 契約テストで固定する。
+- 影響は repository 内の品質ゲートに限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。反映対応は [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md) を正とする。
+
 **開発運用反映 (2026-07-29 / `HarnessHub-cjwm`・`HarnessHub-0vs2`)**:
 
 - `system-spec/dev-workflow.md` の qa-090 として、live-trial session の通常 cleanup は
@@ -233,6 +240,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `BACKUP_HEARTBEAT_URL` は required。backup workflow は未投入を前提確認で拒否し、全 step 成功後だけ heartbeat を送る。
 - backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
 - 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
+
+**適用証跡追記 (2026-08-01 / `HarnessHub-fnzl`・`HarnessHub-dbx6`)**:
+
+- qa-094 の契約は変更しない。backup 専用 heartbeat `477775` を Worker cron 用 `475650` と分離したまま外部適用し、`BACKUP_HEARTBEAT_URL` を repository secret へ投入した。
+- `check-actions-secrets.mjs --live` は workflow 参照 13 件 = 台帳 13 件で exit 0。main の `hub-backup` run `30686023662` は export 19 テーブル / 64 行、R2 往復一致、heartbeat ping の HTTP 2xx 受理まで完走した。
+- これは確定済み仕様の実現証跡であり、外部 API、DB schema、認証認可、UI、deploy unit、period / grace の値を変更しない。判断と証跡は [外部適用 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-application-spec-reflection-receipt.md) を正とする。
 
 **開発品質ゲートの空走査反映 (2026-07-30 / `HarnessHub-foq6` / qa-096)**:
 
@@ -372,6 +385,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 反映先と検証は
   [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)
   を正とする。
+
+**P13 production CI 再実行の反映 (2026-08-01 / `HarnessHub-o2i.13`)**:
+
+- production deploy の正本を GitHub Actions `ci.yml` に一本化する既存契約を維持する。
+- 通常は main merge の push で全自動配備する。path filter 非発火時だけ、main の明示
+  `workflow_dispatch` で同じ静的ゲート・test・migration・deploy・post-deploy smoke を再実行できる。
+- feature branch deploy、全ゲートの短絡、通常運用でのローカル Wrangler deploy は許可しない。
+- これは CI trigger の回復経路を具体化する差分で、製品 API、DB schema、認証認可、UI、
+  Worker deploy unit は変更しない。正本は `system-spec/infrastructure.md` と
+  [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
+  [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
 
 ## 未決事項
 
