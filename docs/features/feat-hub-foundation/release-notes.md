@@ -50,7 +50,7 @@ deployed_at: "2026-07-25T09:59:09Z"
 | 名前 | 種別 | 用途 |
 |---|---|---|
 | `CLOUDFLARE_API_TOKEN` | secret | `wrangler deploy` / rollback 専用。`Workers Scripts Edit`、R2 write なし |
-| `CLOUDFLARE_R2_API_TOKEN` | secret | backup / production smoke の R2 object 操作専用。account-scoped `Workers R2 Storage Write`、Workers Scripts なし。repository 配線済み、実投入待ち |
+| `CLOUDFLARE_R2_API_TOKEN` | secret | backup / production smoke の R2 object 操作専用。account-scoped `Workers R2 Storage Write`、Workers Scripts なし。2026-07-30 に投入済みで、R2 token から Workers Scripts への 403 拒否と backup / production smoke の R2 操作を実測済み |
 | `CLOUDFLARE_ACCOUNT_ID` | secret | デプロイ先アカウント |
 | `HUB_HEALTH_URL` | variable | デプロイ後 `/health` 疎通確認の宛先 |
 
@@ -141,9 +141,9 @@ run 30143422049（branch `main` / event `push` / sha `ec0f3e45dfa2e72da6d6a24c08
 | 2 | SLO ダッシュボード | **算定式と閾値は確定済み・計測は未開始**（`verdict: collection_blocked`） | monitor が `operational` になった時点から 30 日を数える |
 | 3 | `CRON_HEARTBEAT_URL`（Worker secret） | **投入済み** | 次回日次 cron（2026-07-28T15:00:00Z）後の heartbeat 着信は未確認 |
 | 4 | 独自ドメイン（`hub.<domain>`） | **未設定** | 現状は workers.dev サブドメイン。運用上の必須要件ではない |
-| 5 | 日次 backup の初回成功 | **未達**（run 30321679596 / 30293639238 / 30213823182 が 3 回連続で export step 失敗）| R2 に成果物が 1 つも無く、RPO ≤ 24h を実際には満たしていない。原因は secret 不足ではなく「データ行 0 を不採用」とする判定で、稼働直後の本番 DB は 19 テーブルすべて 0 行のため恒常的に落ちていた。判定を `verify-export-artifact` CLI へ一本化して是正済み（未 land）。[evidence/actions-secrets-2026-07-28.json](evidence/actions-secrets-2026-07-28.json) |
+| 5 | 日次 backup の初回成功 | **達成**（run `30686023662` / 2026-08-01） | export 19 テーブル / 64 行、R2 upload 後の byte 一致、heartbeat ping まで success。run と独立に `db-export/2026/2026-08-01.jsonl.gz` を再取得し `verify-export-artifact.ts` で `ok=true` を確認。[evidence/backup-heartbeat-applied-2026-08-01.json](evidence/backup-heartbeat-applied-2026-08-01.json) |
 
-> **2026-07-28 時点の GitHub Actions 設定**は、未参照だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を削除し、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0（当時の台帳 9 件と workflow 参照 9 件が一致）だった。2026-07-29 の最小権限分離で required secret `CLOUDFLARE_R2_API_TOKEN` を追加したため、現在の repository 台帳との `--live` 検査と workflow 完走は再実行待ちである。
+> **2026-07-28 時点の GitHub Actions 設定**は、未参照だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を削除し、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0（当時の台帳 9 件と workflow 参照 9 件が一致）だった。2026-08-01 に最小権限分離後の台帳 13 件と workflow 参照 13 件が一致することを同じ live 検査で再確認し、`hub-ci` run `30684710098` と `hub-backup` run `30686023662` も success まで完走した。
 
 ### 5.1 監視設定の正本（2026-07-25 追加）
 
