@@ -78,5 +78,5 @@ CLI は一致を exit 0、不一致を exit 1、取得不能または引数不�
 
 - 観測済み 30 日へ到達するまで時間ゲートを継続する。
 - Workers Analytics の 5xx 率を同じ月次窓で収集し、最終 SLO を算定する。
-- Worker cron heartbeat の着信実測と、設定正本に残る backup heartbeat external ID の drift を別途収束させる。
+- Worker cron heartbeat の provider 側状態遷移を実測する（backup heartbeat の external ID drift は main 取込で解消済み）。
 - 以上が揃うまで `HarnessHub-37h.15` を close しない。

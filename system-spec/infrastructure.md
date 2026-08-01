@@ -62,3 +62,13 @@ serves_goals: [G1, G4, G5, G2]
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+
+## P13 CI 再実行の実装反映 (2026-08-01 / `HarnessHub-o2i.13`)
+
+- qa-034 / qa-038 / qa-106 の「production deploy は GitHub Actions が正本」を維持する。
+- 通常は main merge の push で自動配備する。path filter 対象外の docs-only merge で run が発火しない場合だけ、
+  main の `workflow_dispatch` から同じ `static-gates → test → deploy → post-deploy smoke` を再実行できる。
+- dispatch は手動 Wrangler 操作でも承認 gate でもない。main 以外では deploy せず、全ゲート・secret 境界・
+  migration・rollback 契約を短絡しない。
+- 製品 API、DB schema、認証認可、UI、Worker deploy unit は変更しない。詳細と実測は
+  `docs/infrastructure-spec.md` §7 と P13 仕様反映受領書を正とする。

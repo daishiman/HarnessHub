@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T11:58:35.959492Z"
+updated_at: "2026-08-01T12:42:04.486427Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,7 +31,7 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"5a388fc8f9f41f269f20175b6887c4727b7508e9fba9c7b5467c6ffede313224","evaluator":"codex-final-review + system-spec-harness","evidence_ref":"docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md"}
+confirmation_evidence: {"evaluated_digest":"d8c52986afbd5881f90dbc935c66e20a1df8221f28ccd57dab05540d253974c0","evaluator":"codex-final-review + system-spec-harness","evidence_ref":"docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-08-01T11:50:06Z","origin_kind":"system-spec-harness","source_digest":"190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b","source_path":"system-spec/00-requirements-definition.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
@@ -56,7 +56,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `190b5c6131b7c78…`)
 - [system-spec/index.md](../system-spec/index.md) (sha256: `58d85cb5ff4c828f…`)
 
-- confirmation: `confirmed` / evaluator: `codex-final-review + system-spec-harness` → **PASS**（網羅性・foundation trace・出典・compiler・Dev Graph の決定論ゲート。証跡は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md)、evaluated_digest `5a388fc8f9f41f26…`）
+- confirmation: `confirmed` / evaluator: `codex-final-review + system-spec-harness` → **PASS**（網羅性・foundation trace・出典・compiler・Dev Graph の決定論ゲート。証跡は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md)、evaluated_digest `d8c52986afbd5881…`）
 - 取込日時: 2026-08-01T11:50:06Z / plugin: system-spec-harness v0.1.0
 
 ## 目的と成功状態
@@ -241,6 +241,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
 - 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
 
+**適用証跡追記 (2026-08-01 / `HarnessHub-fnzl`・`HarnessHub-dbx6`)**:
+
+- qa-094 の契約は変更しない。backup 専用 heartbeat `477775` を Worker cron 用 `475650` と分離したまま外部適用し、`BACKUP_HEARTBEAT_URL` を repository secret へ投入した。
+- `check-actions-secrets.mjs --live` は workflow 参照 13 件 = 台帳 13 件で exit 0。main の `hub-backup` run `30686023662` は export 19 テーブル / 64 行、R2 往復一致、heartbeat ping の HTTP 2xx 受理まで完走した。
+- これは確定済み仕様の実現証跡であり、外部 API、DB schema、認証認可、UI、deploy unit、period / grace の値を変更しない。判断と証跡は [外部適用 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-application-spec-reflection-receipt.md) を正とする。
+
 **開発品質ゲートの空走査反映 (2026-07-30 / `HarnessHub-foq6` / qa-096)**:
 
 - `system-spec/dev-workflow.md` の web セルを正規に reopen し、qa-069 の
@@ -379,6 +385,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 反映先と検証は
   [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)
   を正とする。
+
+**P13 production CI 再実行の反映 (2026-08-01 / `HarnessHub-o2i.13`)**:
+
+- production deploy の正本を GitHub Actions `ci.yml` に一本化する既存契約を維持する。
+- 通常は main merge の push で全自動配備する。path filter 非発火時だけ、main の明示
+  `workflow_dispatch` で同じ静的ゲート・test・migration・deploy・post-deploy smoke を再実行できる。
+- feature branch deploy、全ゲートの短絡、通常運用でのローカル Wrangler deploy は許可しない。
+- これは CI trigger の回復経路を具体化する差分で、製品 API、DB schema、認証認可、UI、
+  Worker deploy unit は変更しない。正本は `system-spec/infrastructure.md` と
+  [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
+  [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
 
 ## 未決事項
 

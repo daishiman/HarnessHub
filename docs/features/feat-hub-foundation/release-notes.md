@@ -50,7 +50,7 @@ deployed_at: "2026-07-25T09:59:09Z"
 | 名前 | 種別 | 用途 |
 |---|---|---|
 | `CLOUDFLARE_API_TOKEN` | secret | `wrangler deploy` / rollback 専用。`Workers Scripts Edit`、R2 write なし |
-| `CLOUDFLARE_R2_API_TOKEN` | secret | backup / production smoke の R2 object 操作専用。account-scoped `Workers R2 Storage Write`、Workers Scripts なし。repository 配線・実投入済み |
+| `CLOUDFLARE_R2_API_TOKEN` | secret | backup / production smoke の R2 object 操作専用。account-scoped `Workers R2 Storage Write`、Workers Scripts なし。2026-07-30 に投入済みで、R2 token から Workers Scripts への 403 拒否と backup / production smoke の R2 操作を実測済み |
 | `CLOUDFLARE_ACCOUNT_ID` | secret | デプロイ先アカウント |
 | `HUB_HEALTH_URL` | variable | デプロイ後 `/health` 疎通確認の宛先 |
 
@@ -141,9 +141,9 @@ run 30143422049（branch `main` / event `push` / sha `ec0f3e45dfa2e72da6d6a24c08
 | 2 | SLO ダッシュボード | **計測中**（`verdict: collecting`、観測 6 日 / 30 日） | 30 日到達後に Workers Analytics 5xx 率と複合算定する |
 | 3 | `CRON_HEARTBEAT_URL`（Worker secret） | **投入済み** | Worker 日次 cron の heartbeat 着信を Better Stack 側で実測する |
 | 4 | 独自ドメイン（`hub.<domain>`） | **未設定** | 現状は workers.dev サブドメイン。運用上の必須要件ではない |
-| 5 | 日次 backup の初回成功 | **達成**（run 30686023662 success） | export 19 テーブル 64 行、R2 往復一致、backup heartbeat ping 2xx を確認済み |
+| 5 | 日次 backup の初回成功 | **達成**（run `30686023662` / 2026-08-01） | export 19 テーブル / 64 行、R2 upload 後の byte 一致、heartbeat ping まで success。run と独立に `db-export/2026/2026-08-01.jsonl.gz` を再取得し `verify-export-artifact.ts` で `ok=true` を確認。[evidence/backup-heartbeat-applied-2026-08-01.json](evidence/backup-heartbeat-applied-2026-08-01.json) |
 
-> **2026-08-01 時点の GitHub Actions 設定**は `node scripts/ci/check-actions-secrets.mjs --live` が exit 0（workflow 参照 13 件と台帳 13 件が一致し required secret を実投入済み）。日次 backup は run 30686023662 で初回成功し、R2 再取得と heartbeat ping 2xx まで確認した。
+> **2026-07-28 時点の GitHub Actions 設定**は、未参照だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を削除し、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0（当時の台帳 9 件と workflow 参照 9 件が一致）だった。2026-08-01 に最小権限分離後の台帳 13 件と workflow 参照 13 件が一致することを同じ live 検査で再確認し、`hub-ci` run `30684710098` と `hub-backup` run `30686023662` も success まで完走した。
 
 ### 5.1 監視設定の正本（2026-07-25 追加）
 

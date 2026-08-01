@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T11:56:35.742283Z"
+updated_at: "2026-08-01T12:41:25.372730Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"5a388fc8f9f41f269f20175b6887c4727b7508e9fba9c7b5467c6ffede313224","evaluator":"codex-final-review + system-spec-harness","evidence_ref":"docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-01T11:50:06Z","origin_kind":"system-spec-harness","source_digest":"5a388fc8f9f41f269f20175b6887c4727b7508e9fba9c7b5467c6ffede313224","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"d8c52986afbd5881f90dbc935c66e20a1df8221f28ccd57dab05540d253974c0","evaluator":"codex-final-review + system-spec-harness","evidence_ref":"docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-01T11:50:06Z","origin_kind":"system-spec-harness","source_digest":"d8c52986afbd5881f90dbc935c66e20a1df8221f28ccd57dab05540d253974c0","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -53,7 +53,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `5a388fc8f9f41f26…`)
+- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `d8c52986afbd5881…`)
 - [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `0329c87bf2e5be42…`)
 
 - confirmation: `confirmed` / evaluator: `codex-final-review + system-spec-harness` → **PASS**（網羅性・foundation trace・出典・compiler・Dev Graph の決定論ゲート。証跡は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md)）
@@ -158,6 +158,16 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 実測値、残る運用リスク、正規仕様遷移は
   [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を参照する。
 
+**P13 CI 再実行経路 (2026-08-01 / `HarnessHub-o2i.13`)**:
+
+- main merge による自動 deploy を通常経路として維持する。`on.push.paths` 対象外の docs-only merge で
+  run が発火しない場合だけ、main の `workflow_dispatch` を同一 pipeline の再実行入口として許可する。
+- dispatch でも `static-gates → test → deploy → health → OIDC / DB-R2 smoke` の依存を短絡しない。
+  feature branch の dispatch と、手元からの通常 Wrangler deploy は引き続き本番経路にしない。
+- deploy unit、secret 境界、migration 順序、rollback の非対称性は変更しない。詳細正本は
+  [infrastructure spec](../docs/infrastructure-spec.md) §7、実測は
+  [hearing intake P13 release notes](../docs/features/feat-hearing-intake/release-notes.md) とする。
+
 ## Risks and verification
 
 正本章 (system-spec/infrastructure.md, system-spec/maintenance-ops.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
@@ -165,13 +175,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 **差分追記 (2026-07-25 / feat-domain-model-db P13)**
 
 - **最小権限リスク**: 2026-07-25 時点では `CLOUDFLARE_API_TOKEN` を Workers deploy と R2 write で共用していた。2026-07-29 に repository 内の参照分離を実装し、外部環境での token 発行・投入・拒否確認・workflow 完走は `issue-ci-token-least-privilege-20260725` (`HarnessHub-bda4`) で継続追跡する。
-- **未検証境界**: 更新版 `backup.yml` の成功と、main 上の `ci.yml` が migration → deploy → health → smoke を完走することは landing 後の GitHub Actions 実走待ち。追跡: `issue-actions-secrets-missing-20260725` (`HarnessHub-fnzl`)。
+- **検証済み境界 (2026-08-01)**: main 上の `ci.yml` は run `30684710098` で migration → deploy → health → smoke を完走し、`backup.yml` は run `30686023662` で export 19 テーブル / 64 行、R2 往復一致、heartbeat ping まで完走した。追跡していた `HarnessHub-fnzl` は受入条件 6/6 で closed。
 - **検証済み**: 本番 Turso 18 table / 12 index、D1 hedge 同一断面、R2 往復、スモーク 6/6、restore drill 2 段、rollback 3 分岐 (deploy 未成功 / rollback 成功 / rollback 失敗)。証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
 
 **差分追記 (2026-07-28 / `HarnessHub-vns9`)**
 
-- **未検証境界の更新**: `HarnessHub-fnzl` 由来の secret / variable 投入は完了し `check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。`ci.yml` の完走は run `30143422049` で達成済み。**残るのは `backup.yml` の成功のみ**で、是正版が main へ land した後の `workflow_dispatch` 実走待ち。
-- **観測経路の欠落 (2026-07-29 更新)**: 3 夜連続失敗が無音だった原因に対し、backup 専用 heartbeat、required secret、workflow 前提確認、限定適用 CLI をローカル実装した。外部適用・secret 投入・main 成功 run・着信実測は未完了であり、運用上の欠落が閉じたとはまだ数えない。追跡: `issue-backup-failure-undetected-20260728` (`HarnessHub-dbx6`)。
+- **未検証境界の解消 (2026-08-01)**: `check-actions-secrets.mjs --live` は現行の workflow 参照 13 件 = 台帳 13 件で exit 0。main の `hub-ci` run `30684710098` と `hub-backup` run `30686023662` がともに success となり、deploy と日次 backup の外部受入を満たした。
+- **観測経路の欠落を解消**: backup 専用 Better Stack heartbeat `477775` を Worker cron 用 `475650` と分離して適用し、required secret 投入と ping の HTTP 2xx 受理を実測した。cron 不発と途中失敗はいずれも `period=86400` + `grace=3600` の期限超過として概ね JST 03:00 までに異常化する。`HarnessHub-dbx6` は受入条件 4/4 で closed。
 
 **差分追記 (2026-07-29 / `HarnessHub-bda4` / qa-091)**
 

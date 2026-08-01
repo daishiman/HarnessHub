@@ -105,7 +105,7 @@ measured_at: "2026-07-21"
 | 6 | Cloudflare Workers Analytics の 5xx 率を収集し §9 の算定式を完成させる（外形監視単独では A3 を確定しない） | **ユーザー** |
 | 7 | ~~`BACKUP_HEARTBEAT_URL` の投入と backup の初回成功~~ → **完了**（2026-08-01 `--live` exit 0、backup run 30686023662 success で heartbeat ping 2xx。`HarnessHub-fnzl` / `HarnessHub-dbx6` クローズ） | 完了 |
 | 8 | Worker cron (`CRON_HEARTBEAT_URL`) 側の heartbeat 着信実測（heartbeat 資源は公開 status page に露出しないため、確認には Better Stack API token が必要） | **ユーザー** |
-| 9 | `apps/hub/monitoring/better-stack.monitors.json` の `backup_heartbeat` へ `external_id` / `applied_at` を書き戻す（外部は適用済みなのに正本は `pending_credentials` のままで drift している。runbook §1 の警告を参照） | **ユーザー** |
+| ~~9~~ | ~~`backup_heartbeat` の `external_id` / `applied_at` を設定正本へ書き戻す~~ → **完了**（`external_id: 477775` / `provisioning_state: applied`） | — |
 
 ## 6. 裁定の限界
 
