@@ -92,9 +92,9 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 
 - GitHub Actions の secret / variable は実投入済みで、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0 (台帳 9 件 = workflow 参照 9 件)。未参照になっていた `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は削除した。
 - 日次 backup の**採否判定を `packages/db/scripts/verify-export-artifact.ts` へ一本化**した。旧実装は workflow の shell で「データ行が 0 なら不採用」と判定しており、migration 済みだが全 19 テーブル 0 行の稼働直後 DB を恒常的に落としていた (3 夜連続失敗)。判定の詳細正本は [infrastructure-spec §7 / §10](../docs/infrastructure-spec.md)。
-- 受入「CI が test→deploy を完走する」(A1) は run `30143422049` で達成済み。**日次 backup の初回成功は未達**で、是正版が main へ land した後の `workflow_dispatch` 再実行まで残る ([release-notes.md](../docs/features/feat-hub-foundation/release-notes.md) §4.1 の #5)。
-- 3 夜連続の失敗が誰にも気づかれなかった経路の欠落は `HarnessHub-dbx6` / `issue-backup-failure-undetected-20260728` へ分離した。2026-07-29 に backup 専用 heartbeat、`BACKUP_HEARTBEAT_URL` required 化、workflow 前提確認、限定適用 CLI をローカル実装した。Better Stack 適用・GitHub secret 投入・main 成功 run・着信実測が揃うまでは未完了を維持する。
-- 証跡: [evidence/actions-secrets-2026-07-28.json](../docs/features/feat-hub-foundation/evidence/actions-secrets-2026-07-28.json)
+- 受入「CI が test→deploy を完走する」(A1) は run `30143422049` で達成済み。**日次 backup の初回成功も 2026-08-01 に達成**し、run `30686023662` で export 19 テーブル / 64 行、R2 往復一致、heartbeat ping まで完走した ([release-notes.md](../docs/features/feat-hub-foundation/release-notes.md) §4.1 の #5)。
+- 3 夜連続の失敗が誰にも気づかれなかった経路の欠落は `HarnessHub-dbx6` / `issue-backup-failure-undetected-20260728` へ分離した。2026-07-29 に backup 専用 heartbeat、`BACKUP_HEARTBEAT_URL` required 化、workflow 前提確認、限定適用 CLI をローカル実装した。**2026-08-01 に外部適用まで完了**し、heartbeat `477775` 作成・secret 投入・`--live` exit 0・run `30686023662` success・ping 受理が揃った。
+- 証跡: [evidence/actions-secrets-2026-07-28.json](../docs/features/feat-hub-foundation/evidence/actions-secrets-2026-07-28.json) / [evidence/backup-heartbeat-applied-2026-08-01.json](../docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied-2026-08-01.json)
 
 ## 実装反映 (2026-07-29 / HarnessHub-bda4)
 

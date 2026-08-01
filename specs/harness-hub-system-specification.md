@@ -241,6 +241,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
 - 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
 
+**適用証跡追記 (2026-08-01 / `HarnessHub-fnzl`・`HarnessHub-dbx6`)**:
+
+- qa-094 の契約は変更しない。backup 専用 heartbeat `477775` を Worker cron 用 `475650` と分離したまま外部適用し、`BACKUP_HEARTBEAT_URL` を repository secret へ投入した。
+- `check-actions-secrets.mjs --live` は workflow 参照 13 件 = 台帳 13 件で exit 0。main の `hub-backup` run `30686023662` は export 19 テーブル / 64 行、R2 往復一致、heartbeat ping の HTTP 2xx 受理まで完走した。
+- これは確定済み仕様の実現証跡であり、外部 API、DB schema、認証認可、UI、deploy unit、period / grace の値を変更しない。判断と証跡は [外部適用 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-application-spec-reflection-receipt.md) を正とする。
+
 **開発品質ゲートの空走査反映 (2026-07-30 / `HarnessHub-foq6` / qa-096)**:
 
 - `system-spec/dev-workflow.md` の web セルを正規に reopen し、qa-069 の
