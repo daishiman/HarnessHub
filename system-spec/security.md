@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-104 |
+| Web (web) | 確定 | 確定質疑: qa-110 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,19 +24,21 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-104 (対応セル: web)
+### qa-110 (対応セル: web)
 
-**質問**: Publisher Bearer、tenant 分離、package 検査を security.web の既存契約へどう統合しますか?
+**質問**: 認証済みの dual catalog で取得済みデータを再利用する場合、認可失敗とテナント切替をまたいだ情報露出をどう防ぎますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-098 までの security.web 契約を全面維持し、公開パイプラインの信頼境界を追加確定する。
+**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-104 までの deny-by-default、tenant/workspace/role、CSRF、監査、credential 境界を全面維持し、dual catalog の cache 境界を次のとおり追加確定する。
 
-【1. 二段階認証認可】Authorization: Bearer がある要求は edge middleware で access token の署名、期限、tenant_id、workspace_id を fail-closed に検証する。無効 Bearer から有効 session cookie へ fallback しない。route の withAuthz は scope、Project 所有者、credential 種別、token 失効を最終判定する。
+【1. 認可失敗時の表示】catalog 一覧・詳細・Release 履歴は、同じ画面で以前の取得に成功していても、最新応答が 401、403、または契約不正を示した時点で以前の内容を描画しない。Hub 到達不能・404・408・429・5xx の degraded と、現在の主体に閲覧権限が無い unauthorized/forbidden/fatal を同じ stale 表示へ倒さない。
 
-【2. tenant 非開示と権限】全資源解決は principal の tenant/workspace と repository row scope を一致させ、cross-tenant 資源は存在を漏らさない 404 とする。approve は workspace-admin、owner 操作は当該 Project owner に限定し、role 判定表を publish route 側へ複製しない。
+【2. scope 束縛】閲覧用 cache は tenant_id、workspace_id、および対象 project_id に束縛する。tenant/workspace/project が切り替わった場合、新 scope の取得が degraded でも旧 scope の一覧・詳細・履歴を再利用しない。同一 scope の degraded に限り、直近の認可済み表示と install descriptor のコピーを維持できる。
 
-【3. package 防御】ZIP は size/content-type と archive path を検証し、static validation、secret scan、policy の共有 pipeline を必ず通す。Green 以外を stable へ昇格させず、secret を含む bundle は Release と package registry を作らない。検査結線と DB schema 境界は CI の負例付き静的 gate で遮断する。
+【3. marketplace 応答 cache】`/marketplace.json` は `withAuthz` と tenant/workspace resource 解決を通る認証済み応答であるため、共有 cache を許可しない。`Cache-Control` は private の短い max-age と stale-while-revalidate を使い、`Vary` に Cookie、tenant header、workspace header を含める。これにより同一 session/scope の停止時継続性を保ちつつ、CDN や別 scope への再配信を拒否する。
 
-【4. 監査】公開、承認、取消、昇格、rollback、停止、deployment 登録を append-only hash chain へ記録し、認証情報や package 内 secret をログへ残さない。監査 failure は公開成功として扱わない。
+【4. 検証】成功後の 403 で一覧・詳細・履歴が消えること、同一 scope の 503 では stale を保つこと、scope 切替後の 503 では旧 tenant の内容が出ないこと、marketplace が private/Vary を返すことを自動テストで固定する。
+
+【5. 所有境界】role 判定は既存 `lib/authz/` と API の deny-by-default を正本とし、catalog client に認可規則を複製しない。本追補は既存の server-side 認可を弱めず、表示 cache と応答 cache の漏えい窓を閉じる。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

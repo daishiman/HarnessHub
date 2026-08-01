@@ -140,6 +140,14 @@ plugin/workflow diff
 [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md)
 を参照する。
 
+## 2026-08-01 dual catalog 回帰設計
+
+- 成功→403 の順序付き component test で一覧・詳細・Release 履歴の stale 非表示を固定する。
+- 同一 scope の成功→503 は stale 維持、scope 切替後の成功→503 は旧 tenant 内容 0 件を要求する。
+- 認証済み marketplace route の private cache と Cookie/tenant/workspace `Vary` を route test で固定する。
+- 一覧は入力中 request 0 回、submit で 1 回だけ増えることを component test で固定する。
+- 本番 CWV と 2 社同時稼働は repository test で代替せず P13 の外部実測として残す。正本は [system-spec/testing-qa.md](../system-spec/testing-qa.md) の `qa-112`。
+
 ## 上流指針 (doctrine anchor)
 
 - reliability + operations (Google SRE)。doctrine-anchor-registry.json の pending_exceptions に approved 登録済み (owner: daishiman, 2026-07-24)。

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1072,
+  "graph_revision": 1074,
   "nodes": [
     {
       "acceptance": [
@@ -21934,7 +21934,7 @@
       "template_version": "1.0.0",
       "title": "独立最終レビュー — quality_constraints 7件・acceptance 3件の最終確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-01T12:13:42.728760Z"
     },
     {
       "acceptance": [
@@ -44178,6 +44178,129 @@
       "title": "slide-report-generator の実 Chromium 受入試験を CI へ接続する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-30T11:41:12Z"
+    },
+    {
+      "acceptance": [
+        "401/403/契約不正後に以前の catalog 内容を描画しない",
+        "同一 scope の一時障害だけ stale を許可し scope 切替後は再利用しない",
+        "認証済み marketplace は private cache と scope ごとの Vary を返す",
+        "一覧は入力中に通信せず submit 1 回につき 1 回だけ取得する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-dual-catalog-cache-addendum.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/harness-hub-security.md",
+          "confidence": 0.52
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "qa-110..112 の確定契約を横断参照する製品仕様追補",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "c2b6bb4aacc4d5e79a19e21e5aae578b168494b62e410b02b1b64576356d0f1c",
+        "evaluator": "system-spec-harness-final-review",
+        "evidence_ref": "docs/features/feat-dual-catalog-web/spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-01T09:00:00Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "platform",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-dual-catalog-cache-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-110..112 と実装・回帰検査を一つの追跡可能な仕様境界として維持する",
+      "graph_node_id": "spec-dual-catalog-cache-boundary",
+      "implementation_readiness": {
+        "checked_at": "2026-08-01T09:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "dual catalog の cache と認可失敗表示が tenant 境界を越えない製品契約を固定する",
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-security",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "specs/harness-hub-dual-catalog-cache-addendum.md",
+        "system-spec/security.md",
+        "system-spec/frontend.md",
+        "system-spec/testing-qa.md"
+      ],
+      "scope_in": [
+        "認証済み marketplace cache",
+        "catalog list/detail/release history の stale 表示",
+        "tenant/workspace/project scope 切替",
+        "一覧 query の要求回数"
+      ],
+      "scope_out": [
+        "製品 API と DB schema の変更",
+        "PublishRequest 状態機械と role 判定 owner の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-01T09:00:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "c2b6bb4aacc4d5e79a19e21e5aae578b168494b62e410b02b1b64576356d0f1c",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "dual-catalog",
+        "security",
+        "frontend",
+        "testing-qa",
+        "cache-boundary"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "Harness Hub Dual Catalog cache・認可境界追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-01T09:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

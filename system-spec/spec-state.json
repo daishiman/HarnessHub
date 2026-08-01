@@ -162,7 +162,7 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-104",
+        "qa_ref": "qa-110",
         "serves_goals": [
           "G4",
           "G5"
@@ -280,7 +280,7 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-062",
+        "qa_ref": "qa-111",
         "serves_goals": [
           "G1",
           "G2",
@@ -394,7 +394,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-109",
+        "qa_ref": "qa-112",
         "serves_goals": [
           "G1",
           "G2",
@@ -971,6 +971,21 @@
       "id": "qa-108",
       "question": "PublishRequest パイプラインの受入を testing-qa.web の既存品質契約へどう統合しますか?",
       "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-076 までの testing-qa.web 契約を全面維持し、公開パイプラインの品質ゲートを追加確定する。\n\n【1. 振る舞い】状態遷移の許可・拒否直積、Green/Yellow/Red 写像、旧 stable 維持、immutable Release、TargetChannel 直列化、idempotency の replay/payload mismatch、tenant/workspace/role matrix を自動テストで固定する。\n\n【2. 結線と境界】共有 inspection が secret scan を含むことだけでなく Hub がその bundle を実際に使うことを静的 gate で検査する。apps/hub から packages/db schema subpath への依存を禁止し、各 detector は意図的な bypass を拒否できる負例テストを持つ。検査対象 0 件を成功にしない。\n\n【3. production acceptance】repository 内の test 合格だけで P13 を完了扱いにせず、production Worker、DB、R2 に対する S1〜S6、channel_busy、R2 hash、audit chain を実測する。自動 smoke の entrypoint と必須 action 集合も静的・単体テストで固定する。\n\n【4. 証跡】system-plan P01〜P13 の validator violations 0、対象 package test/typecheck/lint、boundary/security gate、文書 line limit、artifact placement、diff check を PR 前に再実行し、結果と既知の非 blocker follow-up を受領書、release record、Beads notes へ残す。"
+    },
+    {
+      "id": "qa-110",
+      "question": "認証済みの dual catalog で取得済みデータを再利用する場合、認可失敗とテナント切替をまたいだ情報露出をどう防ぎますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-104 までの deny-by-default、tenant/workspace/role、CSRF、監査、credential 境界を全面維持し、dual catalog の cache 境界を次のとおり追加確定する。\n\n【1. 認可失敗時の表示】catalog 一覧・詳細・Release 履歴は、同じ画面で以前の取得に成功していても、最新応答が 401、403、または契約不正を示した時点で以前の内容を描画しない。Hub 到達不能・404・408・429・5xx の degraded と、現在の主体に閲覧権限が無い unauthorized/forbidden/fatal を同じ stale 表示へ倒さない。\n\n【2. scope 束縛】閲覧用 cache は tenant_id、workspace_id、および対象 project_id に束縛する。tenant/workspace/project が切り替わった場合、新 scope の取得が degraded でも旧 scope の一覧・詳細・履歴を再利用しない。同一 scope の degraded に限り、直近の認可済み表示と install descriptor のコピーを維持できる。\n\n【3. marketplace 応答 cache】`/marketplace.json` は `withAuthz` と tenant/workspace resource 解決を通る認証済み応答であるため、共有 cache を許可しない。`Cache-Control` は private の短い max-age と stale-while-revalidate を使い、`Vary` に Cookie、tenant header、workspace header を含める。これにより同一 session/scope の停止時継続性を保ちつつ、CDN や別 scope への再配信を拒否する。\n\n【4. 検証】成功後の 403 で一覧・詳細・履歴が消えること、同一 scope の 503 では stale を保つこと、scope 切替後の 503 では旧 tenant の内容が出ないこと、marketplace が private/Vary を返すことを自動テストで固定する。\n\n【5. 所有境界】role 判定は既存 `lib/authz/` と API の deny-by-default を正本とし、catalog client に認可規則を複製しない。本追補は既存の server-side 認可を弱めず、表示 cache と応答 cache の漏えい窓を閉じる。"
+    },
+    {
+      "id": "qa-111",
+      "question": "dual catalog の縮退表示と一覧絞り込みを、既存 frontend.web 契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-062 の画面構成、install descriptor、publish polling、レスポンシブ、共通部品、認可出し分けを全面維持し、dual catalog の差分を次のとおり追加確定する。\n\n【1. 縮退と認可の表示境界】`/catalog`、`/catalog/:projectId`、`/catalog/releases` は同一 tenant/workspace の 5xx 等では DegradedBanner と直近の認可済みデータを併記できる。一方 401/403/契約不正では ErrorState のみを表示し、以前の行、詳細、install descriptor、Release 履歴を描画しない。scope が変わった場合は新 scope の応答が返る前から旧 scope の内容を表示対象外にする。\n\n【2. 一覧絞り込み】種別・キーワードは入力中の draft 値と適用済み query を分ける。初回に 1 回取得し、入力だけでは通信せず「絞り込む」の submit ごとに 1 回だけ取得する。同一条件の明示的な再 submit は再取得できる。\n\n【3. Hub 停止時の継続性】stale 表示を許すのは同一 scope で認可済みだった閲覧データに限定する。導入済み Skill 自体の実行経路は Hub に依存せず、UI は新規変更操作を無効化して直近 descriptor のコピーだけを維持する既存 §6.1 契約を保つ。\n\n【4. 境界】PublishRequest 状態機械、catalog API 実装、role 判定はそれぞれ既存 owner のままとし、frontend は port の失敗分類と capability を描画へ適用するだけとする。"
+    },
+    {
+      "id": "qa-112",
+      "question": "dual catalog の認可 cache 境界と絞り込み要求数を、既存 testing-qa.web 契約へどう追加しますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-109 までの単体・結合・境界値・回帰、CI 到達、再現可能 runtime、実測証跡の契約を全面維持し、dual catalog の検証束を追加確定する。\n\n【1. 認可 cache 回帰】成功応答を描画した後に 403 を返す順序付きテストを一覧・詳細・Release 履歴へ置き、以前の内容と table が消えることを検査する。初期詳細を渡した経路も 403 後に消えることを含める。\n\n【2. scope と縮退の直積】同一 scope の成功→503 では DegradedBanner と以前の内容を維持し、tenant/workspace 切替の成功→503 では旧 tenant の識別可能な内容が 0 件であることを検査する。HTTP adapter の全 request が tenant/workspace header を送る既存検査と組み合わせる。\n\n【3. 配布応答】認証済み `/marketplace.json` が private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を返すことを route test で固定し、public cache への退行を拒否する。\n\n【4. 通信回数】一覧のキーワード入力中は request 数が増えず、submit で 1 回だけ増え、適用 query が送られることを component test で固定する。\n\n【5. CI と未実測境界】catalog 固有 Vitest は GitHub Actions から fail-closed に到達させ、axe 違反 0 と bundle 予算を維持する。production URL 上の LCP/INP/CLS と 2 社同時運用は repository test で代替せず P13 の外部実測として未完了を明示する。"
     }
   ],
   "approval_log": [
@@ -1834,6 +1849,24 @@
       "category": "testing-qa",
       "platform": "web",
       "reason": "状態機械、検査結線、DB schema 境界、tenant 分離、idempotency と production smoke の fail-closed 品質ゲートを製品受入契約へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "feat-dual-catalog-web 最終レビューで、認証済み marketplace の shared cache と、401/403 後も以前の表示を残し得る漏えい窓が判明したため、qa-104 を維持したまま cache scope 契約を追補する",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "feat-dual-catalog-web 最終レビューで、縮退 stale 表示と認可失敗表示の境界、および一覧入力ごとの重複取得が既存 qa-062 で具体化されていなかったため追補する",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "feat-dual-catalog-web の認可 cache、scope 切替、private marketplace cache、要求数の回帰検査を testing-qa.web の正本へ追加するため",
       "from": "確定"
     }
   ],
@@ -3075,7 +3108,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 6,
+    "loop_count": 3,
     "next_question": null,
     "complete": true
   }

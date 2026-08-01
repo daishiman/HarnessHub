@@ -126,3 +126,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## Risks and verification
 
 正本章 (system-spec/security.md, system-spec/auth.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## 2026-08-01 dual catalog cache 境界
+
+認証済み `/marketplace.json` は tenant/workspace ごとに内容が変わるため shared cache に置かない。
+`private, max-age=60, stale-while-revalidate=300` と Cookie/tenant/workspace の `Vary` を組み合わせ、
+同一 session/scope の停止時継続性とテナント分離を両立する。client 側の stale 表示も同一 scope の
+`degraded` に限定し、401/403/契約不正と scope 切替では以前の内容を描画しない。
+
+正本は [system-spec/security.md](../system-spec/security.md) の `qa-110`、回帰契約は
+[testing-qa architecture](./harness-hub-testing-qa.md) を参照する。
